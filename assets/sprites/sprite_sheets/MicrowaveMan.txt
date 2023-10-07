@@ -1,0 +1,75 @@
+MicrowaveMan.png
+size: 1024, 64
+format: RGBA8888
+reject: Nearest,Nearest
+repeat: none
+Head
+  rotate: false
+  xy: 0, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+HeadBounce
+  rotate: false
+  xy: 64, 0
+  size: 384, 64
+  orig: 384, 64
+  offset: 0, 0
+  index: -1
+HeadlessJump
+  rotate: false
+  xy: 448, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+HeadlessOpenDoor
+  rotate: false
+  xy: 512, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+HeadlessShoot
+  rotate: false
+  xy: 576, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+HeadlessStand
+  rotate: false
+  xy: 640, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+Jump
+  rotate: false
+  xy: 704, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+OpenDoor
+  rotate: false
+  xy: 768, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+Shoot
+  rotate: false
+  xy: 832, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+Stand
+  rotate: false
+  xy: 896, 0
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: -1

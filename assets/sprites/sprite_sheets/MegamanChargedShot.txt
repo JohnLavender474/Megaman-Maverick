@@ -1,0 +1,26 @@
+MegamanChargedShot.png
+size: 192, 32
+format: RGBA8888
+reject: Nearest,Nearest
+repeat: none
+Shoot
+  rotate: false
+  xy: 0, 0
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+Collide
+  rotate: false
+  xy: 64, 0
+  size: 96, 32
+  orig: 96, 32
+  offset: 0, 0
+  index: -1
+Orbs
+  rotate: false
+  xy: 160, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,89 @@
+Platforms1.png
+size: 448, 144
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+8bitBlueBlock
+  rotate: false
+  xy: 0, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+8bitBlueBlockNoBorder
+  rotate: false
+  xy: 8, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+8bitBlueBlockTransBorder
+  rotate: false
+  xy: 16, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+ConveyorBelt/LeftPart-MoveLeft
+  rotate: false
+  xy: 24, 0
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+ConveyorBelt/LeftPart-MoveRight
+  rotate: false
+  xy: 88, 0
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+ConveyorBelt/MiddlePart
+  rotate: false
+  xy: 152, 0
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+ConveyorBelt/RightPart-MoveLeft
+  rotate: false
+  xy: 216, 0
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+ConveyorBelt/RightPart-MoveRight
+  rotate: false
+  xy: 280, 0
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+DropperLift/Drop
+  rotate: false
+  xy: 0, 32
+  size: 240, 48
+  orig: 240, 48
+  offset: 0, 0
+  index: -1
+DropperLift/Normal
+  rotate: false
+  xy: 240, 32
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+GearTrolleyPlatform
+  rotate: false
+  xy: 288, 32
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+JeffBezosLittleDickRocket
+  rotate: false
+  xy: 0, 80
+  size: 448, 64
+  orig: 448, 64
+  offset: 0, 0
+  index: -1

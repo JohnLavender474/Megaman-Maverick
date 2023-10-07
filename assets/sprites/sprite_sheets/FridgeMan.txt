@@ -1,0 +1,54 @@
+FridgeMan.png
+size: 704, 64
+format: RGBA8888
+reject: Nearest,Nearest
+repeat: none
+AboutToOpenFridge
+  rotate: false
+  xy: 0, 0
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: -1
+GiveTheHand
+  rotate: false
+  xy: 128, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+Jump
+  rotate: false
+  xy: 192, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+JumpOpenFreezer
+  rotate: false
+  xy: 256, 0
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: -1
+StandLookDown
+  rotate: false
+  xy: 384, 0
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: -1
+StandLookUp
+  rotate: false
+  xy: 512, 0
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: -1
+StandOpenFridge
+  rotate: false
+  xy: 640, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1

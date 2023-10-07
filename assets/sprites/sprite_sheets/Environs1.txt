@@ -1,0 +1,61 @@
+Environs1.png
+size: 1152, 64
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Water/Splash
+  rotate: false
+  xy: 0, 0
+  size: 160, 32
+  orig: 160, 32
+  offset: 0, 0
+  index: -1
+Water/Surface
+  rotate: false
+  xy: 160, 0
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+Water/Under
+  rotate: false
+  xy: 224, 0
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+Water/Water
+  rotate: false
+  xy: 288, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Wood/DeadBranch
+  rotate: false
+  xy: 320, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+Wood/FallingLeaf
+  rotate: false
+  xy: 384, 0
+  size: 640, 64
+  orig: 640, 64
+  offset: 0, 0
+  index: -1
+Wood/Leaf
+  rotate: false
+  xy: 1024, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+Wood/Stump
+  rotate: false
+  xy: 1088, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1

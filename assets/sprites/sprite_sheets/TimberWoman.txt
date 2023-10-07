@@ -1,0 +1,47 @@
+TimberWoman.png
+size: 2016, 96
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Damaged
+  rotate: false
+  xy: 0, 0
+  size: 192, 96
+  orig: 192, 96
+  offset: 0, 0
+  index: -1
+Jump
+  rotate: false
+  xy: 192, 0
+  size: 384, 96
+  orig: 384, 96
+  offset: 0, 0
+  index: -1
+JustLand
+  rotate: false
+  xy: 576, 0
+  size: 480, 96
+  orig: 480, 96
+  offset: 0, 0
+  index: -1
+OnFire
+  rotate: false
+  xy: 1056, 0
+  size: 192, 96
+  orig: 192, 96
+  offset: 0, 0
+  index: -1
+Stand
+  rotate: false
+  xy: 1248, 0
+  size: 192, 96
+  orig: 192, 96
+  offset: 0, 0
+  index: -1
+Swing
+  rotate: false
+  xy: 1440, 0
+  size: 576, 96
+  orig: 576, 96
+  offset: 0, 0
+  index: -1

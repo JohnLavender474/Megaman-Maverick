@@ -1,0 +1,19 @@
+Specials1.png
+size: 384, 56
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+SpringBounce
+  rotate: false
+  xy: 0, 0
+  size: 320, 56
+  orig: 320, 56
+  offset: 0, 0
+  index: -1
+SpringBounceStill
+  rotate: false
+  xy: 320, 0
+  size: 64, 56
+  orig: 64, 56
+  offset: 0, 0
+  index: -1

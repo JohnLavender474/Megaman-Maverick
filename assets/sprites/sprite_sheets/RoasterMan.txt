@@ -1,0 +1,68 @@
+RoasterMan.png
+size: 1024, 64
+format: RGBA8888
+reject: Nearest,Nearest
+repeat: none
+Aim
+  rotate: false
+  xy: 0, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+CoolPose
+  rotate: false
+  xy: 64, 0
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: -1
+FallingWithStyle
+  rotate: false
+  xy: 192, 0
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: -1
+FlyFlap
+  rotate: false
+  xy: 320, 0
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: -1
+RetractWings
+  rotate: false
+  xy: 448, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+Stand
+  rotate: false
+  xy: 512, 0
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: -1
+StandFlap
+  rotate: false
+  xy: 640, 0
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: -1
+SuaveCombSweep
+  rotate: false
+  xy: 768, 0
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: -1
+Wet
+  rotate: false
+  xy: 896, 0
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: -1

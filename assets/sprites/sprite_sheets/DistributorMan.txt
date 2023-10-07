@@ -1,0 +1,47 @@
+DistributorMan.png
+size: 352, 32
+format: RGBA8888
+reject: Nearest,Nearest
+repeat: none
+Damaged
+  rotate: false
+  xy: 0, 0
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+Jump
+  rotate: false
+  xy: 64, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+JumpShock
+  rotate: false
+  xy: 96, 0
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+JustLand
+  rotate: false
+  xy: 160, 0
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+Shock
+  rotate: false
+  xy: 224, 0
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+Stand
+  rotate: false
+  xy: 288, 0
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1

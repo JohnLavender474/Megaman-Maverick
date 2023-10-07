@@ -1,0 +1,54 @@
+FreezerMan.png
+size: 768, 64
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+GiveTheHand
+  rotate: false
+  xy: 0, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+Jump
+  rotate: false
+  xy: 64, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+JumpOpenFreezer
+  rotate: false
+  xy: 128, 0
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: -1
+Opening
+  rotate: false
+  xy: 256, 0
+  size: 192, 64
+  orig: 192, 64
+  offset: 0, 0
+  index: -1
+StandLookDown
+  rotate: false
+  xy: 448, 0
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: -1
+StandLookUp
+  rotate: false
+  xy: 576, 0
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: -1
+StandOpenFridge
+  rotate: false
+  xy: 704, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1

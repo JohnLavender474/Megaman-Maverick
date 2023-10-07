@@ -1,0 +1,47 @@
+BluntMan.png
+size: 320, 32
+format: RGBA8888
+reject: Nearest,Nearest
+repeat: none
+Damaged
+  rotate: false
+  xy: 0, 0
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+Flaming
+  rotate: false
+  xy: 64, 0
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+Flex
+  rotate: false
+  xy: 128, 0
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+Jump
+  rotate: false
+  xy: 192, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Slide
+  rotate: false
+  xy: 224, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Stand
+  rotate: false
+  xy: 256, 0
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1

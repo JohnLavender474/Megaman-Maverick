@@ -1,0 +1,47 @@
+PreciousMan.png
+size: 768, 48
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Jump
+  rotate: false
+  xy: 0, 0
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+JumpFreeze
+  rotate: false
+  xy: 96, 0
+  size: 192, 48
+  orig: 192, 48
+  offset: 0, 0
+  index: -1
+Run
+  rotate: false
+  xy: 288, 0
+  size: 192, 48
+  orig: 192, 48
+  offset: 0, 0
+  index: -1
+Stand
+  rotate: false
+  xy: 480, 0
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+StandFreeze
+  rotate: false
+  xy: 576, 0
+  size: 144, 48
+  orig: 144, 48
+  offset: 0, 0
+  index: -1
+StandShoot
+  rotate: false
+  xy: 720, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1

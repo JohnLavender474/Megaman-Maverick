@@ -1,0 +1,54 @@
+Explosions1.png
+size: 832, 96
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Disintegration
+  rotate: false
+  xy: 0, 0
+  size: 96, 32
+  orig: 96, 32
+  offset: 0, 0
+  index: -1
+Explosion
+  rotate: false
+  xy: 0, 32
+  size: 704, 64
+  orig: 704, 64
+  offset: 0, 0
+  index: -1
+ExplosionOrbs
+  rotate: false
+  xy: 704, 32
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: -1
+HalfChargedShot
+  rotate: false
+  xy: 96, 0
+  size: 96, 32
+  orig: 96, 32
+  offset: 0, 0
+  index: -1
+PreciousExplosion
+  rotate: false
+  xy: 192, 0
+  size: 96, 32
+  orig: 96, 32
+  offset: 0, 0
+  index: -1
+SmokePuff
+  rotate: false
+  xy: 288, 0
+  size: 224, 32
+  orig: 224, 32
+  offset: 0, 0
+  index: -1
+SnowballExplode
+  rotate: false
+  xy: 512, 0
+  size: 96, 32
+  orig: 96, 32
+  offset: 0, 0
+  index: -1

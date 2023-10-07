@@ -1,0 +1,47 @@
+RodentMan.png
+size: 1008, 48
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Jump
+  rotate: false
+  xy: 0, 0
+  size: 192, 48
+  orig: 192, 48
+  offset: 0, 0
+  index: -1
+Run
+  rotate: false
+  xy: 192, 0
+  size: 192, 48
+  orig: 192, 48
+  offset: 0, 0
+  index: -1
+Shoot
+  rotate: false
+  xy: 384, 0
+  size: 144, 48
+  orig: 144, 48
+  offset: 0, 0
+  index: -1
+Slash
+  rotate: false
+  xy: 528, 0
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+Stand
+  rotate: false
+  xy: 624, 0
+  size: 288, 48
+  orig: 288, 48
+  offset: 0, 0
+  index: -1
+WallSlide
+  rotate: false
+  xy: 912, 0
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,26 @@
+GutsTank.png
+size: 816, 192
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Fist
+  rotate: false
+  xy: 0, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+MouthClosed
+  rotate: false
+  xy: 48, 0
+  size: 384, 192
+  orig: 384, 192
+  offset: 0, 0
+  index: -1
+MouthOpen
+  rotate: false
+  xy: 432, 0
+  size: 384, 192
+  orig: 384, 192
+  offset: 0, 0
+  index: -1

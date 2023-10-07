@@ -1,0 +1,110 @@
+Projectiles1.png
+size: 512, 100
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Bullet
+  rotate: false
+  xy: 0, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Electric/BigElectric
+  rotate: false
+  xy: 32, 0
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+Electric/ElectricBallPulse
+  rotate: false
+  xy: 96, 0
+  size: 128, 32
+  orig: 128, 32
+  offset: 0, 0
+  index: -1
+Electric/PurpleShockBalls
+  rotate: false
+  xy: 224, 0
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+Electric/SmallElectric
+  rotate: false
+  xy: 288, 0
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+Electric/Zap
+  rotate: false
+  xy: 352, 0
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+Fire/Fireball
+  rotate: false
+  xy: 416, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+HalfChargedShot
+  rotate: false
+  xy: 448, 0
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+Joeball
+  rotate: false
+  xy: 0, 32
+  size: 128, 32
+  orig: 128, 32
+  offset: 0, 0
+  index: -1
+Picket
+  rotate: false
+  xy: 128, 32
+  size: 128, 32
+  orig: 128, 32
+  offset: 0, 0
+  index: -1
+PreciousShot/Form
+  rotate: false
+  xy: 0, 64
+  size: 324, 36
+  orig: 324, 36
+  offset: 0, 0
+  index: -1
+PreciousShot/Shoot
+  rotate: false
+  xy: 324, 64
+  size: 108, 36
+  orig: 108, 36
+  offset: 0, 0
+  index: -1
+Snowball
+  rotate: false
+  xy: 256, 32
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+SnowballForm
+  rotate: false
+  xy: 288, 32
+  size: 96, 32
+  orig: 96, 32
+  offset: 0, 0
+  index: -1
+SnowJoeball
+  rotate: false
+  xy: 384, 32
+  size: 128, 32
+  orig: 128, 32
+  offset: 0, 0
+  index: -1

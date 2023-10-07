@@ -1,0 +1,47 @@
+Gates.png
+size: 960, 64
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+blue_closed
+  rotate: false
+  xy: 0, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+blue_opening
+  rotate: false
+  xy: 64, 0
+  size: 256, 64
+  orig: 256, 64
+  offset: 0, 0
+  index: -1
+closed
+  rotate: false
+  xy: 320, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+opening
+  rotate: false
+  xy: 384, 0
+  size: 256, 64
+  orig: 256, 64
+  offset: 0, 0
+  index: -1
+red_closed
+  rotate: false
+  xy: 640, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+red_opening
+  rotate: false
+  xy: 704, 0
+  size: 256, 64
+  orig: 256, 64
+  offset: 0, 0
+  index: -1

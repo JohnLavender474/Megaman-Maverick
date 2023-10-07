@@ -1,0 +1,712 @@
+MegamanMaverick.png
+size: 1008, 432
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+AirDash
+  rotate: false
+  xy: 0, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+AirDash_Left
+  rotate: false
+  xy: 48, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+AirDashCharging
+  rotate: false
+  xy: 96, 0
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+AirDashCharging_Left
+  rotate: false
+  xy: 192, 0
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+AirDashHalfCharging
+  rotate: false
+  xy: 288, 0
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+AirDashHalfCharging_Left
+  rotate: false
+  xy: 384, 0
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+Beam
+  rotate: false
+  xy: 480, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Beam_Left
+  rotate: false
+  xy: 528, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+BeamLand
+  rotate: false
+  xy: 576, 0
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+BeamLand_Left
+  rotate: false
+  xy: 672, 0
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+Climb
+  rotate: false
+  xy: 768, 0
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+Climb_Left
+  rotate: false
+  xy: 864, 0
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+ClimbCharging
+  rotate: false
+  xy: 0, 48
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+ClimbCharging_Left
+  rotate: false
+  xy: 96, 48
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+ClimbHalfCharging
+  rotate: false
+  xy: 192, 48
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+ClimbHalfCharging_Left
+  rotate: false
+  xy: 288, 48
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+ClimbShoot
+  rotate: false
+  xy: 384, 48
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+ClimbShoot_Left
+  rotate: false
+  xy: 432, 48
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Damaged
+  rotate: false
+  xy: 480, 48
+  size: 240, 48
+  orig: 240, 48
+  offset: 0, 0
+  index: -1
+Damaged_Left
+  rotate: false
+  xy: 720, 48
+  size: 240, 48
+  orig: 240, 48
+  offset: 0, 0
+  index: -1
+FinishClimb
+  rotate: false
+  xy: 960, 48
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+FinishClimb_Left
+  rotate: false
+  xy: 0, 96
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+FinishClimbCharging
+  rotate: false
+  xy: 48, 96
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+FinishClimbCharging_Left
+  rotate: false
+  xy: 144, 96
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+FinishClimbHalfCharging
+  rotate: false
+  xy: 240, 96
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+FinishClimbHalfCharging_Left
+  rotate: false
+  xy: 336, 96
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+Frozen
+  rotate: false
+  xy: 432, 96
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Frozen_Left
+  rotate: false
+  xy: 480, 96
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+GroundSlide
+  rotate: false
+  xy: 528, 96
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+GroundSlide_Left
+  rotate: false
+  xy: 576, 96
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+GroundSlideCharging
+  rotate: false
+  xy: 624, 96
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+GroundSlideCharging_Left
+  rotate: false
+  xy: 720, 96
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+GroundSlideHalfCharging
+  rotate: false
+  xy: 816, 96
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+GroundSlideHalfCharging_Left
+  rotate: false
+  xy: 912, 96
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+GroundSlideShoot
+  rotate: false
+  xy: 0, 144
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+GroundSlideShoot_Left
+  rotate: false
+  xy: 48, 144
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+InitRun
+  rotate: false
+  xy: 96, 144
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+InitRun_Left
+  rotate: false
+  xy: 144, 144
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+InitRunCharging
+  rotate: false
+  xy: 192, 144
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+InitRunCharging_Left
+  rotate: false
+  xy: 240, 144
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+InitRunHalfCharging
+  rotate: false
+  xy: 288, 144
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+InitRunHalfCharging_Left
+  rotate: false
+  xy: 336, 144
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Jump
+  rotate: false
+  xy: 384, 144
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Jump_Left
+  rotate: false
+  xy: 432, 144
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+JumpCharging
+  rotate: false
+  xy: 480, 144
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+JumpCharging_Left
+  rotate: false
+  xy: 576, 144
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+JumpHalfCharging
+  rotate: false
+  xy: 672, 144
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+JumpHalfCharging_Left
+  rotate: false
+  xy: 768, 144
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+JumpShoot
+  rotate: false
+  xy: 864, 144
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+JumpShoot_Left
+  rotate: false
+  xy: 912, 144
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+OnFire
+  rotate: false
+  xy: 0, 192
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+OnFire_Left
+  rotate: false
+  xy: 96, 192
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+Run
+  rotate: false
+  xy: 192, 192
+  size: 192, 48
+  orig: 192, 48
+  offset: 0, 0
+  index: -1
+Run_Left
+  rotate: false
+  xy: 384, 192
+  size: 192, 48
+  orig: 192, 48
+  offset: 0, 0
+  index: -1
+RunCharging
+  rotate: false
+  xy: 576, 192
+  size: 192, 48
+  orig: 192, 48
+  offset: 0, 0
+  index: -1
+RunCharging_Left
+  rotate: false
+  xy: 768, 192
+  size: 192, 48
+  orig: 192, 48
+  offset: 0, 0
+  index: -1
+RunHalfCharging
+  rotate: false
+  xy: 0, 240
+  size: 192, 48
+  orig: 192, 48
+  offset: 0, 0
+  index: -1
+RunHalfCharging_Left
+  rotate: false
+  xy: 192, 240
+  size: 192, 48
+  orig: 192, 48
+  offset: 0, 0
+  index: -1
+RunShoot
+  rotate: false
+  xy: 384, 240
+  size: 192, 48
+  orig: 192, 48
+  offset: 0, 0
+  index: -1
+RunShoot_Left
+  rotate: false
+  xy: 576, 240
+  size: 192, 48
+  orig: 192, 48
+  offset: 0, 0
+  index: -1
+SlipSlide
+  rotate: false
+  xy: 768, 240
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+SlipSlide_Left
+  rotate: false
+  xy: 816, 240
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+SlipSlideCharging
+  rotate: false
+  xy: 864, 240
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+SlipSlideCharging_Left
+  rotate: false
+  xy: 0, 288
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+SlipSlideHalfCharging
+  rotate: false
+  xy: 96, 288
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+SlipSlideHalfCharging_Left
+  rotate: false
+  xy: 192, 288
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+SlipSlideShoot
+  rotate: false
+  xy: 288, 288
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+SlipSlideShoot_Left
+  rotate: false
+  xy: 336, 288
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Stand
+  rotate: false
+  xy: 384, 288
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+Stand_Left
+  rotate: false
+  xy: 480, 288
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+StandCharging
+  rotate: false
+  xy: 576, 288
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+StandCharging_Left
+  rotate: false
+  xy: 672, 288
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+StandHalfCharging
+  rotate: false
+  xy: 768, 288
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+StandHalfCharging_Left
+  rotate: false
+  xy: 864, 288
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+StandShoot
+  rotate: false
+  xy: 960, 288
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+StandShoot_Left
+  rotate: false
+  xy: 0, 336
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+StandThrow
+  rotate: false
+  xy: 48, 336
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+StillClimb
+  rotate: false
+  xy: 96, 336
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+StillClimb_Left
+  rotate: false
+  xy: 144, 336
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+StillClimbCharging
+  rotate: false
+  xy: 192, 336
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+StillClimbCharging_Left
+  rotate: false
+  xy: 288, 336
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+StillClimbHalfCharging
+  rotate: false
+  xy: 384, 336
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+StillClimbHalfCharging_Left
+  rotate: false
+  xy: 480, 336
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+Swim
+  rotate: false
+  xy: 576, 336
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Swim_Left
+  rotate: false
+  xy: 624, 336
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+SwimAttack
+  rotate: false
+  xy: 672, 336
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+SwimAttack_Left
+  rotate: false
+  xy: 720, 336
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+SwimCharging
+  rotate: false
+  xy: 768, 336
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+SwimCharging_Left
+  rotate: false
+  xy: 864, 336
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+SwimHalfCharging
+  rotate: false
+  xy: 0, 384
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+SwimHalfCharging_Left
+  rotate: false
+  xy: 96, 384
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+SwimShoot
+  rotate: false
+  xy: 192, 384
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+SwimShoot_Left
+  rotate: false
+  xy: 240, 384
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+WallSlide
+  rotate: false
+  xy: 288, 384
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+WallSlide_Left
+  rotate: false
+  xy: 336, 384
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+WallSlideCharging
+  rotate: false
+  xy: 384, 384
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+WallSlideCharging_Left
+  rotate: false
+  xy: 480, 384
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+WallSlideHalfCharging
+  rotate: false
+  xy: 576, 384
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+WallSlideHalfCharging_Left
+  rotate: false
+  xy: 672, 384
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+WallSlideShoot
+  rotate: false
+  xy: 768, 384
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+WallSlideShoot_Left
+  rotate: false
+  xy: 816, 384
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
