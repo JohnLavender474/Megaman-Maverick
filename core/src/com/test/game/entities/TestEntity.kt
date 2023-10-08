@@ -25,6 +25,7 @@ import com.engine.entities.GameEntity
 import com.engine.points.Points
 import com.engine.points.PointsComponent
 import com.engine.points.PointsHandle
+import com.engine.updatables.UpdatablesComponent
 import com.engine.world.Body
 import com.engine.world.BodyComponent
 import com.engine.world.BodyType
@@ -136,7 +137,6 @@ class TestEntity(game: IGame2D) : GameEntity(game) {
     body.setPosition(spawn)
 
     putProperty(Props.FACING, Facing.RIGHT)
-    putProperty(Props.UNDER_WATER, false)
     putProperty(Props.RUNNING, false)
     putProperty(Props.A_BUTTON_TASK, AButtonTask.JUMP)
     putProperty(Props.WEAPON, Weapon.BUSTER)
@@ -169,6 +169,11 @@ class TestEntity(game: IGame2D) : GameEntity(game) {
 
     return spriteComponent
   }
+
+  /* ---------------------------------------------------------------------- */
+  // Updatables Component
+
+  private fun updatablesComponent() = UpdatablesComponent(this, { delta -> })
 
   /* ---------------------------------------------------------------------- */
   // Damageable Component
@@ -217,7 +222,7 @@ class TestEntity(game: IGame2D) : GameEntity(game) {
               }
               */
 
-              val labels = body.userData["labels"] as ObjectSet<*>
+              val labels = body.getProperty("labels") as ObjectSet<*>
               /*
               if (labels.containsAny("head_touch_block")) {
                 return@Behavior false
@@ -246,6 +251,7 @@ class TestEntity(game: IGame2D) : GameEntity(game) {
             },
             init = {
               val v = Vector2()
+
               v.x =
                   if (behaviorsComponent.isBehaviorActive("wall_sliding")) {
                     var x = WALL_JUMP_HORIZONTAL * ConstantVals.PPM
@@ -254,6 +260,7 @@ class TestEntity(game: IGame2D) : GameEntity(game) {
                   } else {
                     body.physics.velocity.x
                   }
+
               v.y =
                   if (getProperty("under_water") == true) {
                     if (behaviorsComponent.isBehaviorActive("wall_sliding"))
@@ -264,7 +271,9 @@ class TestEntity(game: IGame2D) : GameEntity(game) {
                         WALL_JUMP_VEL * ConstantVals.PPM
                     else JUMP_VEL * ConstantVals.PPM
                   }
+
               body.physics.velocity.set(v)
+
               if (behaviorsComponent.isBehaviorActive("wall_sliding")) {
                 getComponent(SoundComponent::class)?.requestToPlaySound("wall_jump", false)
               }
