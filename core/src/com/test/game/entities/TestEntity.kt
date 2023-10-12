@@ -30,7 +30,7 @@ import com.engine.world.Body
 import com.engine.world.BodyComponent
 import com.engine.world.BodyType
 import com.engine.world.Fixture
-import com.test.game.ConstantVals
+import com.test.game.ConstVals
 
 class TestEntity(game: IGame2D) : GameEntity(game) {
 
@@ -132,7 +132,7 @@ class TestEntity(game: IGame2D) : GameEntity(game) {
   }
 
   override fun spawn(spawnProps: Properties) {
-    val spawn = spawnProps["spawn"] as Vector2
+    val spawn = spawnProps.get("spawn", Vector2::class)!!
     val body = getComponent(BodyComponent::class)!!.body
     body.setPosition(spawn)
 
@@ -154,7 +154,7 @@ class TestEntity(game: IGame2D) : GameEntity(game) {
 
   private fun spriteComponent(): SpriteComponent {
     val sprite = GameSprite(4)
-    sprite.setSize(2.475f * ConstantVals.PPM, 1.875f * ConstantVals.PPM)
+    sprite.setSize(2.475f * ConstVals.PPM, 1.875f * ConstVals.PPM)
     sprite.setOriginCenter()
 
     val spriteComponent = SpriteComponent(this, "player" to sprite)
@@ -254,7 +254,7 @@ class TestEntity(game: IGame2D) : GameEntity(game) {
 
               v.x =
                   if (behaviorsComponent.isBehaviorActive("wall_sliding")) {
-                    var x = WALL_JUMP_HORIZONTAL * ConstantVals.PPM
+                    var x = WALL_JUMP_HORIZONTAL * ConstVals.PPM
                     if (getProperty("facing") == "left") x *= -1
                     x
                   } else {
@@ -264,12 +264,12 @@ class TestEntity(game: IGame2D) : GameEntity(game) {
               v.y =
                   if (getProperty("under_water") == true) {
                     if (behaviorsComponent.isBehaviorActive("wall_sliding"))
-                        WATER_WALL_JUMP_VEL * ConstantVals.PPM
-                    else WATER_JUMP_VEL * ConstantVals.PPM
+                        WATER_WALL_JUMP_VEL * ConstVals.PPM
+                    else WATER_JUMP_VEL * ConstVals.PPM
                   } else {
                     if (behaviorsComponent.isBehaviorActive("wall_sliding"))
-                        WALL_JUMP_VEL * ConstantVals.PPM
-                    else JUMP_VEL * ConstantVals.PPM
+                        WALL_JUMP_VEL * ConstVals.PPM
+                    else JUMP_VEL * ConstVals.PPM
                   }
 
               body.physics.velocity.set(v)
@@ -297,9 +297,9 @@ class TestEntity(game: IGame2D) : GameEntity(game) {
 
               putProperty("running", true)
 
-              val threshold = RUN_SPEED * ConstantVals.PPM
+              val threshold = RUN_SPEED * ConstVals.PPM
               if (body.physics.velocity.x > -threshold) {
-                body.physics.velocity.x -= RUN_IMPULSE * delta * ConstantVals.PPM
+                body.physics.velocity.x -= RUN_IMPULSE * delta * ConstVals.PPM
               }
             },
             onJustReleased = { poller ->
@@ -317,9 +317,9 @@ class TestEntity(game: IGame2D) : GameEntity(game) {
 
               putProperty("running", true)
 
-              val threshold = RUN_SPEED * ConstantVals.PPM
+              val threshold = RUN_SPEED * ConstVals.PPM
               if (body.physics.velocity.x < threshold) {
-                body.physics.velocity.x += RUN_IMPULSE * delta * ConstantVals.PPM
+                body.physics.velocity.x += RUN_IMPULSE * delta * ConstVals.PPM
               }
             },
             onJustReleased = { poller ->
@@ -336,14 +336,14 @@ class TestEntity(game: IGame2D) : GameEntity(game) {
 
   private fun bodyComponent(): BodyComponent {
     val body = Body(BodyType.DYNAMIC)
-    body.width = .75f * ConstantVals.PPM
+    body.width = .75f * ConstVals.PPM
     body.physics.takeFrictionFromOthers = true
-    body.physics.velocityClamp.set(15f * ConstantVals.PPM, 25f * ConstantVals.PPM)
+    body.physics.velocityClamp.set(15f * ConstVals.PPM, 25f * ConstVals.PPM)
 
     val shapes = Array<DrawableShapeHandle>()
 
     // player fixture
-    val playerFixture = Fixture(GameRectangle().setWidth(.8f * ConstantVals.PPM), "player")
+    val playerFixture = Fixture(GameRectangle().setWidth(.8f * ConstVals.PPM), "player")
     body.fixtures.put("player", playerFixture)
     shapes.add(DrawableShapeHandle(playerFixture.shape, ShapeRenderer.ShapeType.Line))
 
