@@ -1,13 +1,20 @@
 package com.test.game
 
+import com.badlogic.gdx.math.Vector3
+
 object ConstVals {
   const val VIEW_WIDTH = 16f
   const val VIEW_HEIGHT = 14f
-  const val PPM = 32f
+  const val PPM = 32
   const val FIXED_TIME_STEP = 1 / 150f
+  const val QUAD_TREE_GRAPH_MAP_DEPTH = 10
 }
 
 object ConstKeys {
+  const val BODY_LABELS = "body_labels"
+  const val SPAWNS = "spawns"
+  const val ROOM = "room"
+  const val BOSS = "boss"
   const val WIDTH = "width"
   const val HEIGHT = "height"
   const val ROWS = "rows"
@@ -27,4 +34,33 @@ object ConstKeys {
   const val BACKGROUNDS = "backgrounds"
   const val LEVEL_MUSIC = "level_music"
   const val TMX_SRC = "tmx_src"
+  const val POSITION = "position"
+  const val CURRENT = "current"
+  const val PRIOR = "prior"
+  const val WORLD_GRAPH_MAP = "world_graph_map"
+  const val MUSIC = "music"
+  const val SOUNDS = "sounds"
+  const val SPRITES = "sprites"
+  const val SPRITE_SHEETS = "sprite_sheets"
+  const val PLAYER = "player"
+  const val ENEMIES = "enemies"
+  const val ITEMS = "items"
+  const val BLOCKS = "blocks"
+  const val TRIGGERS = "triggers"
+  const val FOREGROUNDS = "foregrounds"
+  const val BOUNDS = "bounds"
+  const val RESIST_ON = "resist_on"
+  const val GRAVITY_ON = "gravity_on"
+  const val FRICTION_X = "friction_x"
+  const val FRICTION_Y = "friction_y"
+}
+
+object ConstFuncs {
+
+  fun getCamInitPos(): Vector3 {
+    val v = Vector3()
+    v.x = ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f
+    v.y = ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f
+    return v
+  }
 }

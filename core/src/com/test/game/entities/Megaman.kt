@@ -22,6 +22,8 @@ import com.engine.drawables.shapes.DrawableShapeHandle
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpriteComponent
 import com.engine.entities.GameEntity
+import com.engine.entities.contracts.IBodyEntity
+import com.engine.entities.contracts.ISpriteEntity
 import com.engine.points.Points
 import com.engine.points.PointsComponent
 import com.engine.points.PointsHandle
@@ -30,9 +32,10 @@ import com.engine.world.Body
 import com.engine.world.BodyComponent
 import com.engine.world.BodyType
 import com.engine.world.Fixture
+import com.test.game.ConstKeys
 import com.test.game.ConstVals
 
-class TestEntity(game: IGame2D) : GameEntity(game) {
+class Megaman(game: IGame2D) : GameEntity(game), IBodyEntity, ISpriteEntity {
 
   companion object Values {
     const val START_MAX_HEALTH = 14
@@ -107,7 +110,7 @@ class TestEntity(game: IGame2D) : GameEntity(game) {
     TIMERS
   }
 
-  init {
+  override fun init() {
     // points
     val pointsComponent = pointsComponent()
     addComponent(pointsComponent)
@@ -121,20 +124,21 @@ class TestEntity(game: IGame2D) : GameEntity(game) {
     addComponent(bodyComponent)
 
     // behavior
-    val behaviorsComponent = behaviorsComponent(bodyComponent.body)
+    val behaviorsComponent = behaviorsComponent()
     addComponent(behaviorsComponent)
 
     // controller
-    addComponent(controllerComponent(bodyComponent.body))
+    addComponent(controllerComponent())
 
     // sprite
     addComponent(spriteComponent())
   }
 
   override fun spawn(spawnProps: Properties) {
-    val spawn = spawnProps.get("spawn", Vector2::class)!!
-    val body = getComponent(BodyComponent::class)!!.body
-    body.setPosition(spawn)
+    super.spawn(spawnProps)
+
+    val position = properties.get(ConstKeys.POSITION, Vector2::class)!!
+    body.setPosition(position)
 
     putProperty(Props.FACING, Facing.RIGHT)
     putProperty(Props.RUNNING, false)
@@ -146,7 +150,7 @@ class TestEntity(game: IGame2D) : GameEntity(game) {
 
   override fun onDestroy() {
     super.onDestroy()
-    getComponent(BodyComponent::class)!!.body.physics.velocity.setZero()
+    body.physics.velocity.setZero()
   }
 
   /* ---------------------------------------------------------------------- */
@@ -209,7 +213,7 @@ class TestEntity(game: IGame2D) : GameEntity(game) {
   /* ---------------------------------------------------------------------- */
   // Behaviors Component
 
-  private fun behaviorsComponent(body: Body): BehaviorsComponent {
+  private fun behaviorsComponent(): BehaviorsComponent {
     val behaviorsComponent = BehaviorsComponent(this)
 
     // jump
@@ -287,7 +291,7 @@ class TestEntity(game: IGame2D) : GameEntity(game) {
   /* ---------------------------------------------------------------------- */
   // Controller Component
 
-  private fun controllerComponent(body: Body): ControllerComponent {
+  private fun controllerComponent(): ControllerComponent {
     val left =
         ButtonActuator(
             onPressContinued = { poller, delta ->

@@ -5,6 +5,7 @@ import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
+import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.engine.Game2D
 import com.engine.GameEngine
@@ -22,11 +23,12 @@ import com.engine.drawables.sprites.SpriteSystem
 import com.engine.graph.IGraphMap
 import com.engine.motion.MotionSystem
 import com.engine.points.PointsSystem
+import com.engine.systems.IGameSystem
 import com.engine.updatables.UpdatablesSystem
 import com.engine.world.WorldSystem
 import com.test.game.world.ContactListener
 
-class Test2DGame : Game2D() {
+class MegamanMaverickGame : Game2D() {
 
   override fun createButtons(): Buttons {
     val buttons = Buttons()
@@ -58,7 +60,7 @@ class Test2DGame : Game2D() {
           WorldSystem(
               contactListener = ContactListener(),
               worldGraphSupplier = {
-                val graph = properties.get("world_graph_map", IGraphMap::class)
+                val graph = properties.get(ConstKeys.WORLD_GRAPH_MAP, IGraphMap::class)
                 graph ?: throw IllegalStateException("No world graph map found in game props")
               },
               fixedStep = ConstVals.FIXED_TIME_STEP),
@@ -72,9 +74,10 @@ class Test2DGame : Game2D() {
           AudioSystem(assMan))
 
   override fun loadAssets(assMan: AssetManager) {
-    assMan.loadAssetsInDirectory("music", Music::class.java)
-    assMan.loadAssetsInDirectory("sounds", Sound::class.java)
-    assMan.loadAssetsInDirectory("sprites/sprite_sheets", TextureAtlas::class.java)
+    assMan.loadAssetsInDirectory(ConstKeys.MUSIC, Music::class.java)
+    assMan.loadAssetsInDirectory(ConstKeys.SOUNDS, Sound::class.java)
+    assMan.loadAssetsInDirectory(
+        "${ConstKeys.SPRITES}/${ConstKeys.SPRITE_SHEETS}", TextureAtlas::class.java)
   }
 
   override fun create() {
@@ -84,6 +87,11 @@ class Test2DGame : Game2D() {
     viewports.put(ConstKeys.GAME, gameViewport)
     val uiViewport = FitViewport(screenWidth, screenHeight)
     viewports.put(ConstKeys.UI, uiViewport)
+
     super.create()
+
+    val systems = ObjectMap<String, IGameSystem>()
+    gameEngine.systems.forEach { systems.put(it::class.simpleName, it) }
+    properties.put(ConstKeys.SYSTEMS, systems)
   }
 }
