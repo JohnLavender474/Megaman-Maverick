@@ -8,6 +8,6 @@ import com.engine.screens.levels.tiledmap.ITiledMapLayerBuilder
 class TriggersLayerBuilder(private val game: IGame2D) : ITiledMapLayerBuilder {
 
   override fun build(layer: MapLayer, returnProps: Properties) {
-    TODO("Not yet implemented")
+
   }
 }

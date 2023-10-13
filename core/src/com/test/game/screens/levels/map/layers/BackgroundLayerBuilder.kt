@@ -32,6 +32,6 @@ class BackgroundLayerBuilder(private val game: IGame2D) : ITiledMapLayerBuilder 
       backgrounds.add(Background(bkgReg, o))
     }
 
-    returnProps.put("backgrounds", backgrounds)
+    returnProps.put(ConstKeys.BACKGROUNDS, backgrounds)
   }
 }

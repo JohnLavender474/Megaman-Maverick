@@ -30,21 +30,21 @@ class Test2DGame : Game2D() {
 
   override fun createButtons(): Buttons {
     val buttons = Buttons()
-    buttons.put("left", Button(Input.Keys.A))
-    buttons.put("right", Button(Input.Keys.D))
-    buttons.put("up", Button(Input.Keys.W))
-    buttons.put("down", Button(Input.Keys.S))
-    buttons.put("jump", Button(Input.Keys.J))
-    buttons.put("attack", Button(Input.Keys.K))
+    buttons.put(ConstKeys.LEFT, Button(Input.Keys.A))
+    buttons.put(ConstKeys.RIGHT, Button(Input.Keys.D))
+    buttons.put(ConstKeys.UP, Button(Input.Keys.W))
+    buttons.put(ConstKeys.DOWN, Button(Input.Keys.S))
+    buttons.put(ConstKeys.JUMP, Button(Input.Keys.J))
+    buttons.put(ConstKeys.ATTACK, Button(Input.Keys.K))
     if (ControllerUtils.isControllerConnected()) {
       val mapping = ControllerUtils.getController()?.mapping
       if (mapping != null) {
-        buttons.get("left")?.controllerCode = mapping.buttonDpadLeft
-        buttons.get("right")?.controllerCode = mapping.buttonDpadRight
-        buttons.get("up")?.controllerCode = mapping.buttonDpadUp
-        buttons.get("down")?.controllerCode = mapping.buttonDpadDown
-        buttons.get("jump")?.controllerCode = mapping.buttonA
-        buttons.get("attack")?.controllerCode = mapping.buttonX
+        buttons.get(ConstKeys.LEFT)?.controllerCode = mapping.buttonDpadLeft
+        buttons.get(ConstKeys.RIGHT)?.controllerCode = mapping.buttonDpadRight
+        buttons.get(ConstKeys.UP)?.controllerCode = mapping.buttonDpadUp
+        buttons.get(ConstKeys.DOWN)?.controllerCode = mapping.buttonDpadDown
+        buttons.get(ConstKeys.JUMP)?.controllerCode = mapping.buttonA
+        buttons.get(ConstKeys.ATTACK)?.controllerCode = mapping.buttonX
       }
     }
     return buttons
@@ -67,7 +67,7 @@ class Test2DGame : Game2D() {
           // TODO: pathfinding system,
           PointsSystem(),
           UpdatablesSystem(),
-          SpriteSystem(viewports.get("game").camera, batch),
+          SpriteSystem(viewports.get(ConstKeys.GAME).camera, batch),
           DrawableShapeSystem(shapeRenderer),
           AudioSystem(assMan))
 
@@ -81,9 +81,9 @@ class Test2DGame : Game2D() {
     val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
     val screenHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
     val gameViewport = FitViewport(screenWidth, screenHeight)
-    viewports.put("game", gameViewport)
+    viewports.put(ConstKeys.GAME, gameViewport)
     val uiViewport = FitViewport(screenWidth, screenHeight)
-    viewports.put("ui", uiViewport)
+    viewports.put(ConstKeys.UI, uiViewport)
     super.create()
   }
 }
