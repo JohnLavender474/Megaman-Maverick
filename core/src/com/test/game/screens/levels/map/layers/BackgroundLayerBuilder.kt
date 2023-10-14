@@ -3,15 +3,15 @@ package com.test.game.screens.levels.map.layers
 import com.badlogic.gdx.maps.MapLayer
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.utils.Array
-import com.engine.IGame2D
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.objects.Properties
 import com.engine.screens.levels.tiledmap.ITiledMapLayerBuilder
 import com.test.game.ConstKeys
 import com.test.game.assets.TEXTURE_ASSET_PREFIX
 import com.test.game.drawables.sprites.Background
+import com.test.game.screens.levels.map.MapLayerBuildersParams
 
-class BackgroundLayerBuilder(private val game: IGame2D) : ITiledMapLayerBuilder {
+class BackgroundLayerBuilder(private val params: MapLayerBuildersParams) : ITiledMapLayerBuilder {
 
   override fun build(layer: MapLayer, returnProps: Properties) {
     val backgrounds = Array<Background>()
@@ -25,7 +25,7 @@ class BackgroundLayerBuilder(private val game: IGame2D) : ITiledMapLayerBuilder 
       }
 
       val bkgReg =
-          game.assMan.getTextureRegion(
+          params.game.assMan.getTextureRegion(
               TEXTURE_ASSET_PREFIX + o.properties.get(ConstKeys.ATLAS) as String,
               o.properties.get(ConstKeys.REGION) as String)
 

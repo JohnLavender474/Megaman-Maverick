@@ -5,7 +5,10 @@ import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
+import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.engine.Game2D
 import com.engine.GameEngine
@@ -19,6 +22,8 @@ import com.engine.controller.buttons.Button
 import com.engine.controller.buttons.Buttons
 import com.engine.cullables.CullablesSystem
 import com.engine.drawables.shapes.DrawableShapeSystem
+import com.engine.drawables.shapes.IDrawableShape
+import com.engine.drawables.sprites.ISprite
 import com.engine.drawables.sprites.SpriteSystem
 import com.engine.graph.IGraphMap
 import com.engine.motion.MotionSystem
@@ -27,6 +32,7 @@ import com.engine.systems.IGameSystem
 import com.engine.updatables.UpdatablesSystem
 import com.engine.world.WorldSystem
 import com.test.game.world.ContactListener
+import java.util.*
 
 class MegamanMaverickGame : Game2D() {
 
@@ -36,8 +42,9 @@ class MegamanMaverickGame : Game2D() {
     buttons.put(ConstKeys.RIGHT, Button(Input.Keys.D))
     buttons.put(ConstKeys.UP, Button(Input.Keys.W))
     buttons.put(ConstKeys.DOWN, Button(Input.Keys.S))
-    buttons.put(ConstKeys.JUMP, Button(Input.Keys.J))
-    buttons.put(ConstKeys.ATTACK, Button(Input.Keys.K))
+    buttons.put(ConstKeys.A, Button(Input.Keys.J))
+    buttons.put(ConstKeys.B, Button(Input.Keys.K))
+    buttons.put(ConstKeys.START, Button(Input.Keys.ENTER))
     if (ControllerUtils.isControllerConnected()) {
       val mapping = ControllerUtils.getController()?.mapping
       if (mapping != null) {
@@ -45,13 +52,15 @@ class MegamanMaverickGame : Game2D() {
         buttons.get(ConstKeys.RIGHT)?.controllerCode = mapping.buttonDpadRight
         buttons.get(ConstKeys.UP)?.controllerCode = mapping.buttonDpadUp
         buttons.get(ConstKeys.DOWN)?.controllerCode = mapping.buttonDpadDown
-        buttons.get(ConstKeys.JUMP)?.controllerCode = mapping.buttonA
-        buttons.get(ConstKeys.ATTACK)?.controllerCode = mapping.buttonX
+        buttons.get(ConstKeys.A)?.controllerCode = mapping.buttonA
+        buttons.get(ConstKeys.B)?.controllerCode = mapping.buttonX
+        buttons.get(ConstKeys.START).controllerCode = mapping.buttonStart
       }
     }
     return buttons
   }
 
+  @Suppress("UNCHECKED_CAST")
   override fun createGameEngine() =
       GameEngine(
           ControllerSystem(controllerPoller),
@@ -69,8 +78,10 @@ class MegamanMaverickGame : Game2D() {
           // TODO: pathfinding system,
           PointsSystem(),
           UpdatablesSystem(),
-          SpriteSystem(viewports.get(ConstKeys.GAME).camera, batch),
-          DrawableShapeSystem(shapeRenderer),
+          SpriteSystem(properties.get(ConstKeys.SPRITES) as TreeSet<ISprite>),
+          DrawableShapeSystem(
+              properties.get(ConstKeys.SHAPES)
+                  as OrderedMap<ShapeRenderer.ShapeType, Array<IDrawableShape>>),
           AudioSystem(assMan))
 
   override fun loadAssets(assMan: AssetManager) {
@@ -81,12 +92,21 @@ class MegamanMaverickGame : Game2D() {
   }
 
   override fun create() {
+    // put drawawble queues into props
+    val sprites = TreeSet<ISprite>()
+    properties.put(ConstKeys.SPRITES, sprites)
+    val shapes = OrderedMap<ShapeRenderer.ShapeType, Array<IDrawableShape>>()
+    properties.put(ConstKeys.SHAPES, shapes)
+
+    // set viewports
     val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
     val screenHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
     val gameViewport = FitViewport(screenWidth, screenHeight)
     viewports.put(ConstKeys.GAME, gameViewport)
     val uiViewport = FitViewport(screenWidth, screenHeight)
     viewports.put(ConstKeys.UI, uiViewport)
+
+    // TODO: set screens
 
     super.create()
 

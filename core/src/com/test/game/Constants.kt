@@ -7,7 +7,6 @@ object ConstVals {
   const val VIEW_HEIGHT = 14f
   const val PPM = 32
   const val FIXED_TIME_STEP = 1 / 150f
-  const val QUAD_TREE_GRAPH_MAP_DEPTH = 10
 }
 
 object ConstKeys {
@@ -29,8 +28,9 @@ object ConstKeys {
   const val DOWN = "down"
   const val LEFT = "left"
   const val RIGHT = "right"
-  const val JUMP = "jump"
-  const val ATTACK = "attack"
+  const val A = "a"
+  const val B = "b"
+  const val START = "start"
   const val BACKGROUNDS = "backgrounds"
   const val LEVEL_MUSIC = "level_music"
   const val TMX_SRC = "tmx_src"
@@ -41,6 +41,7 @@ object ConstKeys {
   const val MUSIC = "music"
   const val SOUNDS = "sounds"
   const val SPRITES = "sprites"
+  const val SHAPES = "shapes"
   const val SPRITE_SHEETS = "sprite_sheets"
   const val PLAYER = "player"
   const val ENEMIES = "enemies"
