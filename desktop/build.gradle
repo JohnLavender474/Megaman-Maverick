@@ -1,8 +1,8 @@
-sourceCompatibility = 1.8
+sourceCompatibility = 17
 sourceSets.main.java.srcDirs = [ "src/" ]
 sourceSets.main.resources.srcDirs = ["../assets"]
 
-project.ext.mainClassName = "com.test.game.DesktopLauncher"
+project.ext.mainClassName = "com.megaman.maverick.game.DesktopLauncher"
 project.ext.assetsDir = new File("../assets")
 
 import org.gradle.internal.os.OperatingSystem
