@@ -3,9 +3,11 @@ package com.megaman.maverick.game.entities.megaman
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectMap
 import com.engine.IGame2D
+import com.engine.audio.AudioComponent
 import com.engine.common.enums.Facing
 import com.engine.common.interfaces.Faceable
 import com.engine.common.objects.Properties
+import com.engine.common.time.TimeMarkedRunnable
 import com.engine.common.time.Timer
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBehaviorsEntity
@@ -13,6 +15,7 @@ import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.ISpriteEntity
 import com.engine.world.Body
 import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegamanProps
@@ -22,14 +25,32 @@ import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 class Megaman(game: IGame2D) :
     GameEntity(game), Faceable, IBodyEntity, ISpriteEntity, IBehaviorsEntity {
 
+  // TODO: move air dash timer to behavior
+  // private val airDashTimer = Timer(MegamanValues.MAX_AIR_DASH_TIME)
+
+  // TODO: move wall jump timer to behavior
+  // private val wallJumpTimer = Timer(MegamanValues.WALL_JUMP_IMPETUS_TIME).setToEnd()
+
+  // TODO: move ground slide timer to behavior
+  // private val groundSlideTimer = Timer(MegamanValues.MAX_GROUND_SLIDE_TIME)
+
+  internal val shootAnimTimer = Timer(MegamanValues.SHOOT_ANIM_TIME)
+  internal val chargingTimer =
+      Timer(
+          MegamanValues.TIME_TO_FULLY_CHARGED,
+          TimeMarkedRunnable(MegamanValues.TIME_TO_HALFWAY_CHARGED) {
+            getComponent(AudioComponent::class)!!.requestToPlaySound(
+                SoundAsset.MEGA_BUSTER_CHARGING_SOUND.source, true)
+          })
+
   val charging: Boolean
-    get() = TODO("Return if megaman is charging")
+    get() = !chargingTimer.isFinished()
 
   val chargingFully: Boolean
-    get() = TODO("Return if megaman is fully charging")
+    get() = charging && chargingTimer.time >= MegamanValues.TIME_TO_HALFWAY_CHARGED
 
   val shooting: Boolean
-    get() = TODO("Return if shooting anim timer is finished")
+    get() = !shootAnimTimer.isFinished()
 
   // if Megaman is upside down
   var upsideDown: Boolean

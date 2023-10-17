@@ -1,7 +1,7 @@
 package com.megaman.maverick.game.entities.megaman.components
 
 import com.badlogic.gdx.math.Vector2
-import com.engine.audio.SoundComponent
+import com.engine.audio.AudioComponent
 import com.engine.behaviors.Behavior
 import com.engine.behaviors.BehaviorsComponent
 import com.engine.common.enums.Facing
@@ -14,35 +14,26 @@ import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.isSensing
 import com.megaman.maverick.game.world.isSensingAny
 
-/**
- * Returns the [BehaviorsComponent] of this [Megaman], or creates a new one if it doesn't have one.
- */
 internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
   val behaviorsComponent = BehaviorsComponent(this)
 
   // jump
   val jump =
       Behavior(
+          // evaluate
           evaluate = { _ ->
-            /*
-            if (defineBehaviorsComponent.isAnyBehaviorActive("swim", "climb")) {
+            if (isAnyBehaviorActive(BehaviorType.SWIMMING, BehaviorType.CLIMBING)) {
               return@Behavior false
             }
-            */
-
-            /*
-            if (labels.containsAny("head_touch_block")) {
+            if (body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)) {
               return@Behavior false
             }
-             */
 
             val controllerPoller = game.controllerPoller
-
-            /*
-            if (controllerPoller.isButtonPressed(if (upsideDown) "up" else "down")) {
+            if (controllerPoller.isButtonPressed(
+                if (upsideDown) ConstKeys.UP else ConstKeys.DOWN)) {
               return@Behavior false
             }
-             */
 
             if (isBehaviorActive(BehaviorType.JUMPING)) {
               val velocity = body.physics.velocity
@@ -53,6 +44,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 controllerPoller.isButtonPressed(ConstKeys.A) &&
                 body.isSensingAny(BodySense.FEET_ON_GROUND, BodySense.FEET_ON_GROUND)
           },
+          // init
           init = {
             val v = Vector2()
 
@@ -77,9 +69,10 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             body.physics.velocity.set(v)
 
             if (isBehaviorActive(BehaviorType.WALL_SLIDING)) {
-              getComponent(SoundComponent::class)?.requestToPlaySound("wall_jump", false)
+              getComponent(AudioComponent::class)?.requestToPlaySound("wall_jump", false)
             }
           },
+          // end
           end = { body.physics.velocity.y = 0f })
 
   behaviorsComponent.addBehavior(BehaviorType.JUMPING, jump)
