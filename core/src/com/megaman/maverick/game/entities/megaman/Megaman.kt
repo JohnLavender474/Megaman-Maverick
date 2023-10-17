@@ -10,9 +10,7 @@ import com.engine.common.objects.Properties
 import com.engine.common.time.TimeMarkedRunnable
 import com.engine.common.time.Timer
 import com.engine.entities.GameEntity
-import com.engine.entities.contracts.IBehaviorsEntity
-import com.engine.entities.contracts.IBodyEntity
-import com.engine.entities.contracts.ISpriteEntity
+import com.engine.entities.contracts.*
 import com.engine.world.Body
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.assets.SoundAsset
@@ -23,7 +21,13 @@ import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 
 class Megaman(game: IGame2D) :
-    GameEntity(game), Faceable, IBodyEntity, ISpriteEntity, IBehaviorsEntity {
+    GameEntity(game),
+    Faceable,
+    IBodyEntity,
+    ISpriteEntity,
+    IBehaviorsEntity,
+    IPointsEntity,
+    IDamageableEntity {
 
   // TODO: move air dash timer to behavior
   // private val airDashTimer = Timer(MegamanValues.MAX_AIR_DASH_TIME)
@@ -120,16 +124,16 @@ class Megaman(game: IGame2D) :
       putProperty(ConstKeys.RUNNING, value)
     }
 
-  var jumpVel = 0f
-  var wallJumpVel = 0f
-  var waterJumpVel = 0f
-  var waterWallJumpVel = 0f
-  var gravity = 0f
-  var groundGravity = 0f
-  var iceGravity = 0f
-  var waterGravity = 0f
-  var waterIceGravity = 0f
-  var swimVelY = 0f
+  internal var jumpVel = 0f
+  internal var wallJumpVel = 0f
+  internal var waterJumpVel = 0f
+  internal var waterWallJumpVel = 0f
+  internal var gravity = 0f
+  internal var groundGravity = 0f
+  internal var iceGravity = 0f
+  internal var waterGravity = 0f
+  internal var waterIceGravity = 0f
+  internal var swimVelY = 0f
 
   /**
    * Initializes Megaman's components and properties. Called by the super [spawn] method if

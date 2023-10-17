@@ -17,7 +17,6 @@ import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.isSensing
 
-/** Returns the [BodyComponent] of this [Megaman], or creates a new one if it doesn't have one. */
 internal fun Megaman.defineBodyComponent(): BodyComponent {
   val body = Body(BodyType.DYNAMIC)
   body.width = .75f * ConstVals.PPM

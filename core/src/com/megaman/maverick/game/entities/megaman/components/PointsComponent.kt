@@ -5,7 +5,6 @@ import com.engine.points.PointsComponent
 import com.engine.points.PointsHandle
 import com.megaman.maverick.game.entities.megaman.Megaman
 
-/** Returns the [PointsComponent] of this [Megaman], or creates a new one if it doesn't have one. */
 internal fun Megaman.definePointsComponent(): PointsComponent {
   // health
   val health =

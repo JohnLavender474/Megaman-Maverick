@@ -1,5 +1,6 @@
 package com.megaman.maverick.game
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.audio.Music
@@ -16,6 +17,8 @@ import com.engine.animations.AnimationsSystem
 import com.engine.audio.AudioSystem
 import com.engine.behaviors.BehaviorsSystem
 import com.engine.common.extensions.loadAssetsInDirectory
+import com.engine.common.extensions.objectMapOf
+import com.engine.common.extensions.objectSetOf
 import com.engine.controller.ControllerSystem
 import com.engine.controller.ControllerUtils
 import com.engine.controller.buttons.Button
@@ -27,12 +30,15 @@ import com.engine.drawables.sprites.ISprite
 import com.engine.drawables.sprites.SpriteSystem
 import com.engine.graph.IGraphMap
 import com.engine.motion.MotionSystem
+import com.engine.pathfinding.Pathfinder
+import com.engine.pathfinding.PathfindingSystem
 import com.engine.points.PointsSystem
 import com.engine.systems.IGameSystem
 import com.engine.updatables.UpdatablesSystem
 import com.engine.world.WorldSystem
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.world.ContactListener
+import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.MegaCollisionHandler
 import java.util.*
 
@@ -54,6 +60,7 @@ class MegamanMaverickGame : Game2D() {
     viewports.put(ConstKeys.UI, uiViewport)
 
     // TODO: set screens
+
     super.create()
 
     val systems = ObjectMap<String, IGameSystem>()
@@ -95,17 +102,44 @@ class MegamanMaverickGame : Game2D() {
           BehaviorsSystem(),
           WorldSystem(
               contactListener = ContactListener(),
-              worldGraphSupplier = {
-                val graph = properties.get(ConstKeys.WORLD_GRAPH_MAP) as IGraphMap?
-                graph ?: throw IllegalStateException("No world graph map found in game props")
-              },
+              worldGraphSupplier = { properties.get(ConstKeys.WORLD_GRAPH_MAP) as IGraphMap },
               fixedStep = ConstVals.FIXED_TIME_STEP,
-              collisionHandler = MegaCollisionHandler()
-              // TODO: set contact filter map
-              ),
+              collisionHandler = MegaCollisionHandler(),
+              contactFilterMap =
+                  objectMapOf(
+                      FixtureType.CONSUMER to objectSetOf(*FixtureType.values()),
+                      FixtureType.PLAYER to objectSetOf(FixtureType.ITEM),
+                      FixtureType.DAMAGEABLE to objectSetOf(FixtureType.DEATH, FixtureType.DAMAGER),
+                      FixtureType.BODY to objectSetOf(FixtureType.FORCE, FixtureType.UPSIDE_DOWN),
+                      FixtureType.WATER_LISTENER to objectSetOf(FixtureType.WATER),
+                      FixtureType.LADDER to objectSetOf(FixtureType.HEAD, FixtureType.FEET),
+                      FixtureType.SIDE to
+                          objectSetOf(
+                              FixtureType.ICE,
+                              FixtureType.GATE,
+                              FixtureType.BLOCK,
+                              FixtureType.BOUNCER),
+                      FixtureType.FEET to
+                          objectSetOf(FixtureType.ICE, FixtureType.BLOCK, FixtureType.BOUNCER),
+                      FixtureType.HEAD to objectSetOf(FixtureType.BLOCK, FixtureType.BOUNCER),
+                      FixtureType.PROJECTILE to
+                          objectSetOf(
+                              FixtureType.BODY,
+                              FixtureType.BLOCK,
+                              FixtureType.SHIELD,
+                              FixtureType.WATER),
+                      FixtureType.LASER to objectSetOf(FixtureType.BLOCK))),
           CullablesSystem(),
           MotionSystem(),
-          // TODO: pathfinding system,
+          PathfindingSystem(
+              pathfinderFactory = { pathfindingComponent ->
+                val graph = properties.get(ConstKeys.WORLD_GRAPH_MAP) as IGraphMap
+                Pathfinder(graph, pathfindingComponent.params)
+              },
+              executionExceptionHandler = {
+                it.printStackTrace()
+                Gdx.app.error("PathfindingSystem", "Pathfinder system threw an exception", it)
+              }),
           PointsSystem(),
           UpdatablesSystem(),
           SpriteSystem(properties.get(ConstKeys.SPRITES) as TreeSet<ISprite>),

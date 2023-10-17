@@ -6,9 +6,6 @@ import com.engine.damage.DamageableComponent
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 
-/**
- * Returns the [DamageableComponent] of this [Megaman], or creates a new one if it doesn't have one.
- */
 internal fun Megaman.defineDamageableComponent(): DamageableComponent {
   val damageable = Damageable { damager ->
     // TODO: take damage
