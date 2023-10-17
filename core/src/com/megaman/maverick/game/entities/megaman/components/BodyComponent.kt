@@ -1,4 +1,4 @@
-package com.megaman.maverick.game.entities.megaman
+package com.megaman.maverick.game.entities.megaman.components
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.utils.Array
@@ -11,15 +11,14 @@ import com.engine.world.BodyType
 import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
+import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.isSensing
 
 /** Returns the [BodyComponent] of this [Megaman], or creates a new one if it doesn't have one. */
-fun Megaman.bodyComponent(): BodyComponent {
-  if (hasComponent(BodyComponent::class)) return getComponent(BodyComponent::class)!!
-
+internal fun Megaman.defineBodyComponent(): BodyComponent {
   val body = Body(BodyType.DYNAMIC)
   body.width = .75f * ConstVals.PPM
   body.physics.takeFrictionFromOthers = true

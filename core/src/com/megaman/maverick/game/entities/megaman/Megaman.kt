@@ -13,6 +13,7 @@ import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.ISpriteEntity
 import com.engine.world.Body
 import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegamanProps
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
@@ -20,6 +21,15 @@ import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 
 class Megaman(game: IGame2D) :
     GameEntity(game), Faceable, IBodyEntity, ISpriteEntity, IBehaviorsEntity {
+
+  val charging: Boolean
+    get() = TODO("Return if megaman is charging")
+
+  val chargingFully: Boolean
+    get() = TODO("Return if megaman is fully charging")
+
+  val shooting: Boolean
+    get() = TODO("Return if shooting anim timer is finished")
 
   // if Megaman is upside down
   var upsideDown: Boolean
@@ -75,8 +85,8 @@ class Megaman(game: IGame2D) :
       putProperty(MegamanProps.A_BUTTON_TASK, value)
     }
 
-  // Megaman's current weapon
-  var weapon: MegamanWeapon
+  // Megaman's current currentWeapon
+  var currentWeapon: MegamanWeapon
     get() = getProperty(MegamanProps.WEAPON) as MegamanWeapon
     set(value) {
       putProperty(MegamanProps.WEAPON, value)
@@ -89,29 +99,30 @@ class Megaman(game: IGame2D) :
       putProperty(ConstKeys.RUNNING, value)
     }
 
-  internal var jumpVel = 0f
-  internal var wallJumpVel = 0f
-  internal var waterJumpVel = 0f
-  internal var waterWallJumpVel = 0f
-  internal var gravity = 0f
-  internal var groundGravity = 0f
-  internal var iceGravity = 0f
-  internal var waterGravity = 0f
-  internal var waterIceGravity = 0f
-  internal var swimVelY = 0f
+  var jumpVel = 0f
+  var wallJumpVel = 0f
+  var waterJumpVel = 0f
+  var waterWallJumpVel = 0f
+  var gravity = 0f
+  var groundGravity = 0f
+  var iceGravity = 0f
+  var waterGravity = 0f
+  var waterIceGravity = 0f
+  var swimVelY = 0f
 
   /**
    * Initializes Megaman's components and properties. Called by the super [spawn] method if
    * [initialized] is false and this [init] has been called.
    */
   override fun init() {
-    addComponent(updatablesComponent())
-    addComponent(pointsComponent())
-    addComponent(damageableComponent())
-    addComponent(bodyComponent())
-    addComponent(behaviorsComponent())
-    addComponent(controllerComponent())
-    addComponent(spriteComponent())
+    addComponent(defineUpdatablesComponent())
+    addComponent(definePointsComponent())
+    addComponent(defineDamageableComponent())
+    addComponent(defineBodyComponent())
+    addComponent(defineBehaviorsComponent())
+    addComponent(defineControllerComponent())
+    addComponent(defineSpriteComponent())
+    addComponent(defineAnimationsComponent())
   }
 
   /**
@@ -129,7 +140,7 @@ class Megaman(game: IGame2D) :
     // initialize Megaman's MegamanProps
     facing = Facing.RIGHT
     aButtonTask = AButtonTask.JUMP
-    weapon = MegamanWeapon.BUSTER
+    currentWeapon = MegamanWeapon.BUSTER
     upsideDown = false
     running = false
 

@@ -1,4 +1,4 @@
-package com.megaman.maverick.game.entities.megaman
+package com.megaman.maverick.game.entities.megaman.components
 
 import com.badlogic.gdx.math.Vector2
 import com.engine.audio.SoundComponent
@@ -8,6 +8,7 @@ import com.engine.common.enums.Facing
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.behaviors.BehaviorType
+import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.isSensing
@@ -16,9 +17,7 @@ import com.megaman.maverick.game.world.isSensingAny
 /**
  * Returns the [BehaviorsComponent] of this [Megaman], or creates a new one if it doesn't have one.
  */
-fun Megaman.behaviorsComponent(): BehaviorsComponent {
-  if (hasComponent(BehaviorsComponent::class)) return getComponent(BehaviorsComponent::class)!!
-
+internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
   val behaviorsComponent = BehaviorsComponent(this)
 
   // jump
@@ -26,7 +25,7 @@ fun Megaman.behaviorsComponent(): BehaviorsComponent {
       Behavior(
           evaluate = { _ ->
             /*
-            if (behaviorsComponent.isAnyBehaviorActive("swim", "climb")) {
+            if (defineBehaviorsComponent.isAnyBehaviorActive("swim", "climb")) {
               return@Behavior false
             }
             */

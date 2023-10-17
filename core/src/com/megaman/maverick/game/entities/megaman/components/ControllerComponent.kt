@@ -1,17 +1,16 @@
-package com.megaman.maverick.game.entities.megaman
+package com.megaman.maverick.game.entities.megaman.components
 
 import com.engine.controller.ControllerComponent
 import com.engine.controller.buttons.ButtonActuator
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
+import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 
 /**
  * Returns the [ControllerComponent] of this [Megaman], or creates a new one if it doesn't have one.
  */
-fun Megaman.controllerComponent(): ControllerComponent {
-  if (hasComponent(ControllerComponent::class)) return getComponent(ControllerComponent::class)!!
-
+internal fun Megaman.defineControllerComponent(): ControllerComponent {
   val left =
       ButtonActuator(
           onPressContinued = { poller, delta ->
