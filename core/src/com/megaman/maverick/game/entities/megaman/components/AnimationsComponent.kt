@@ -33,7 +33,7 @@ private fun getKey(megaman: Megaman): String {
         if (!megaman.body.isSensing(BodySense.HEAD_TOUCHING_LADDER)) {
           if (megaman.shooting) {
             "ClimbShoot"
-          } else if (megaman.chargingFully) {
+          } else if (megaman.fullyCharged) {
             "FinishClimbCharging"
           } else if (megaman.charging) {
             "FinishClimbHalfCharging"
@@ -43,7 +43,7 @@ private fun getKey(megaman: Megaman): String {
         } else if (megaman.body.physics.velocity.y != 0f) {
           if (megaman.shooting) {
             "ClimbShoot"
-          } else if (megaman.chargingFully) {
+          } else if (megaman.fullyCharged) {
             "ClimbCharging"
           } else if (megaman.charging) {
             "ClimbHalfCharging"
@@ -53,7 +53,7 @@ private fun getKey(megaman: Megaman): String {
         } else {
           if (megaman.shooting) {
             "ClimbShoot"
-          } else if (megaman.chargingFully) {
+          } else if (megaman.fullyCharged) {
             "StillClimbCharging"
           } else if (megaman.charging) {
             "StillClimbHalfCharging"
@@ -62,7 +62,7 @@ private fun getKey(megaman: Megaman): String {
           }
         }
       } else if (megaman.isBehaviorActive(BehaviorType.AIR_DASHING)) {
-        if (megaman.chargingFully) {
+        if (megaman.fullyCharged) {
           "AirDashCharging"
         } else if (megaman.charging) {
           "AirDashHalfCharging"
@@ -72,7 +72,7 @@ private fun getKey(megaman: Megaman): String {
       } else if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING)) {
         if (megaman.shooting) {
           "GroundSlideShoot"
-        } else if (megaman.chargingFully) {
+        } else if (megaman.fullyCharged) {
           "GroundSlideCharging"
         } else if (megaman.charging) {
           "GroundSlideHalfCharging"
@@ -82,7 +82,7 @@ private fun getKey(megaman: Megaman): String {
       } else if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) {
         if (megaman.shooting) {
           "WallSlideShoot"
-        } else if (megaman.chargingFully) {
+        } else if (megaman.fullyCharged) {
           "WallSlideCharging"
         } else if (megaman.charging) {
           "WallSlideHalfCharging"
@@ -92,7 +92,7 @@ private fun getKey(megaman: Megaman): String {
       } else if (megaman.isBehaviorActive(BehaviorType.SWIMMING)) {
         if (megaman.shooting) {
           "SwimShoot"
-        } else if (megaman.chargingFully) {
+        } else if (megaman.fullyCharged) {
           "SwimCharging"
         } else if (megaman.charging) {
           "SwimHalfCharging"
@@ -103,7 +103,7 @@ private fun getKey(megaman: Megaman): String {
           !megaman.body.isSensing(BodySense.FEET_ON_GROUND)) {
         if (megaman.shooting) {
           "JumpShoot"
-        } else if (megaman.chargingFully) {
+        } else if (megaman.fullyCharged) {
           "JumpCharging"
         } else if (megaman.charging) {
           "JumpHalfCharging"
@@ -113,7 +113,7 @@ private fun getKey(megaman: Megaman): String {
       } else if (megaman.body.isSensing(BodySense.FEET_ON_GROUND) && megaman.running) {
         if (megaman.shooting) {
           "RunShoot"
-        } else if (megaman.chargingFully) {
+        } else if (megaman.fullyCharged) {
           "RunCharging"
         } else if (megaman.charging) {
           "RunHalfCharging"
@@ -124,7 +124,7 @@ private fun getKey(megaman: Megaman): String {
           abs(megaman.body.physics.velocity.x) > ConstVals.PPM / 16f) {
         if (megaman.shooting) {
           "SlipSlideShoot"
-        } else if (megaman.chargingFully) {
+        } else if (megaman.fullyCharged) {
           "SlipSlideCharging"
         } else if (megaman.charging) {
           "SlipSlideHalfCharging"
@@ -134,7 +134,7 @@ private fun getKey(megaman: Megaman): String {
       } else {
         if (megaman.shooting) {
           "StandShoot"
-        } else if (megaman.chargingFully) {
+        } else if (megaman.fullyCharged) {
           "StandCharging"
         } else if (megaman.charging) {
           "StandHalfCharging"

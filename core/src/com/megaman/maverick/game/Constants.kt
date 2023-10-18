@@ -10,6 +10,9 @@ object ConstVals {
 }
 
 object ConstKeys {
+  const val OWNER = "owner"
+  const val TRAJECTORY = "trajectory"
+  const val BOOLEAN = "boolean"
   const val BODY_LABELS = "body_labels"
   const val SPAWNS = "spawns"
   const val ROOM = "room"
@@ -31,9 +34,9 @@ object ConstKeys {
   const val A = "a"
   const val B = "b"
   const val START = "start"
+  const val SELECT = "select"
   const val BACKGROUNDS = "backgrounds"
   const val LEVEL_MUSIC = "level_music"
-  const val TMX_SRC = "tmx_src"
   const val POSITION = "position"
   const val CURRENT = "current"
   const val PRIOR = "prior"

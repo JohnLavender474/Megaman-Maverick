@@ -1,7 +1,6 @@
 package com.megaman.maverick.game.entities.megaman
 
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.utils.ObjectMap
 import com.engine.IGame2D
 import com.engine.audio.AudioComponent
 import com.engine.common.enums.Facing
@@ -15,10 +14,7 @@ import com.engine.world.Body
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.megaman.components.*
-import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
-import com.megaman.maverick.game.entities.megaman.constants.MegamanProps
-import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.constants.*
 
 class Megaman(game: IGame2D) :
     GameEntity(game),
@@ -27,17 +23,10 @@ class Megaman(game: IGame2D) :
     ISpriteEntity,
     IBehaviorsEntity,
     IPointsEntity,
-    IDamageableEntity {
+    IDamageableEntity,
+    IAudioEntity {
 
-  // TODO: move air dash timer to behavior
-  // private val airDashTimer = Timer(MegamanValues.MAX_AIR_DASH_TIME)
-
-  // TODO: move wall jump timer to behavior
-  // private val wallJumpTimer = Timer(MegamanValues.WALL_JUMP_IMPETUS_TIME).setToEnd()
-
-  // TODO: move ground slide timer to behavior
-  // private val groundSlideTimer = Timer(MegamanValues.MAX_GROUND_SLIDE_TIME)
-
+  // Megaman's timers
   internal val shootAnimTimer = Timer(MegamanValues.SHOOT_ANIM_TIME)
   internal val chargingTimer =
       Timer(
@@ -46,15 +35,40 @@ class Megaman(game: IGame2D) :
             getComponent(AudioComponent::class)!!.requestToPlaySound(
                 SoundAsset.MEGA_BUSTER_CHARGING_SOUND.source, true)
           })
+  internal val damageFlashTimer = Timer(MegamanValues.DAMAGE_FLASH_DURATION)
+  internal val airDashTimer = Timer(MegamanValues.MAX_AIR_DASH_TIME)
+  internal val wallJumpTimer = Timer(MegamanValues.WALL_JUMP_IMPETUS_TIME).setToEnd()
+  internal val groundSlideTimer = Timer(MegamanValues.MAX_GROUND_SLIDE_TIME)
 
+  // the handler for Megaman's weapons
+  val weaponHandler = MegamanWeaponHandler(this)
+
+  // the charge status for the current weapon
+  val chargeStatus: MegaChargeStatus
+    get() =
+        if (fullyCharged) MegaChargeStatus.FULLY_CHARGED
+        else if (charging) MegaChargeStatus.HALF_CHARGED else MegaChargeStatus.NOT_CHARGED
+
+  // if Megaman's current weapon is charging
   val charging: Boolean
     get() = !chargingTimer.isFinished()
 
-  val chargingFully: Boolean
+  // if Megaman's current weapon is fully charged
+  val fullyCharged: Boolean
     get() = charging && chargingTimer.time >= MegamanValues.TIME_TO_HALFWAY_CHARGED
 
+  // if Megaman is shooting or in the shooting animation
   val shooting: Boolean
     get() = !shootAnimTimer.isFinished()
+
+  // the amount of ammo for the current weapon
+  val ammo: Int
+    get() =
+        if (currentWeapon === MegamanWeapon.BUSTER) Int.MAX_VALUE
+        else weaponHandler.getAmmo(currentWeapon)
+
+  // if Megaman should flash due to damage
+  var damageFlash = false
 
   // if Megaman is upside down
   var upsideDown: Boolean
@@ -162,15 +176,12 @@ class Megaman(game: IGame2D) :
     val position = properties.get(ConstKeys.POSITION, Vector2::class)!!
     body.setPosition(position)
 
-    // initialize Megaman's MegamanProps
+    // initialize Megaman's props
     facing = Facing.RIGHT
     aButtonTask = AButtonTask.JUMP
     currentWeapon = MegamanWeapon.BUSTER
     upsideDown = false
     running = false
-
-    // TODO: create and set timers
-    putProperty(MegamanProps.TIMERS, ObjectMap<String, Timer>())
   }
 
   /**

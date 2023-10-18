@@ -2,7 +2,10 @@ package com.megaman.maverick.game.entities.megaman.constants
 
 /** Constant values for Megaman. */
 object MegamanValues {
-  const val START_MAX_HEALTH = 14
+  const val MAX_HEALTH_TANKS = 4
+  const val MAX_WEAPON_AMMO = 30
+  const val START_HEALTH = 14
+  const val MAX_HELTH = 30
 
   const val CLAMP_X = 15f
   const val CLAMP_Y = 25f
@@ -42,7 +45,7 @@ object MegamanValues {
 
   const val DAMAGE_DURATION = .75f
   const val DAMAGE_RECOVERY_TIME = 1.5f
-  const val DAMAGE_RECOVERY_FLASH_DURATION = .05f
+  const val DAMAGE_FLASH_DURATION = .05f
 
   const val TIME_TO_HALFWAY_CHARGED = .5f
   const val TIME_TO_FULLY_CHARGED = 1.25f
