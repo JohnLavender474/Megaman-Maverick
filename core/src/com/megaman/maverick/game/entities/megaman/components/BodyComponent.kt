@@ -16,6 +16,7 @@ import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.isSensing
+import com.megaman.maverick.game.world.setEntity
 
 internal fun Megaman.defineBodyComponent(): BodyComponent {
   val body = Body(BodyType.DYNAMIC)
@@ -93,6 +94,9 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
   body.preProcess = Updatable {
     headFixture.offsetFromBodyCenter.y = (if (upsideDown) -.4f else .4f) * ConstVals.PPM
   }
+
+  // setBodySense entity for fixtures
+  body.fixtures.values().forEach { it.setEntity(this) }
 
   return BodyComponent(this, body)
 }

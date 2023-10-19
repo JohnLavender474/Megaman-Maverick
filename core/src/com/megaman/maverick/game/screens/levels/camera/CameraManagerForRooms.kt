@@ -153,7 +153,7 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
         currentGameRoom = nextGameRoom
       }
 
-      // set the camera's x to the focusable's x
+      // setBodySense the camera's x to the focusable's x
       focus?.getPosition()?.let { camera.position.x = it.x }
 
       // return and wait until next frame to do anything else
@@ -165,7 +165,7 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
 
     val currentRoomBounds = currentGameRoom?.rectangle ?: return
 
-    // if the current room's bounds contains the focus, then set the camera
+    // if the current room's bounds contains the focus, then setBodySense the camera
     // to the focus and then adjust to constrain the camera to the room
     if (currentRoomBounds.contains(focus!!.getPosition())) {
       setCameraToFocusable()
@@ -198,7 +198,7 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
     // game room if there is one
     val nextGameRoom = nextGameRoom()
 
-    // if there is no game room containing the focus, then we need to set the
+    // if there is no game room containing the focus, then we need to setBodySense the
     // camera's x to the focus's x and return
     if (nextGameRoom == null) {
       camera.position.x = UtilMethods.roundedFloat(focus!!.getPosition().x, 3)
@@ -206,7 +206,7 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
     }
 
     // if there is a next game room, then we need to trigger the transition phase
-    // and set the transition direction
+    // and setBodySense the transition direction
 
     val overlap = Rectangle()
 

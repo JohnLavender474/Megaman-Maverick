@@ -100,7 +100,7 @@ class MegaLevelScreen(game: IGame2D, properties: Properties) :
 
     cameraManagerForRooms = CameraManagerForRooms(gameCamera)
 
-    // set begin transition logic for camera manager
+    // setBodySense begin transition logic for camera manager
     cameraManagerForRooms.beginTransition = {
       systemsToSwitch.forEach { systems.get(it.simpleName)?.let { system -> system.on = false } }
 
@@ -115,10 +115,10 @@ class MegaLevelScreen(game: IGame2D, properties: Properties) :
                   com.megaman.maverick.game.ConstKeys.PRIOR to
                       cameraManagerForRooms.priorGameRoom)))
 
-      // TODO: set megaman's body to transition interpolation, either here or in player class
+      // TODO: setBodySense megaman's body to transition interpolation, either here or in player class
     }
 
-    // set continue transition logic for camera manager
+    // setBodySense continue transition logic for camera manager
     cameraManagerForRooms.continueTransition = { _ ->
       if (cameraManagerForRooms.delayJustFinished) {
         systems.get(AnimationsSystem::class.simpleName)?.on = true
@@ -131,10 +131,10 @@ class MegaLevelScreen(game: IGame2D, properties: Properties) :
                   com.megaman.maverick.game.ConstKeys.POSITION to
                       cameraManagerForRooms.transitionInterpolation)))
 
-      // TODO: set megaman's body to transition interpolation, either here or in player class
+      // TODO: setBodySense megaman's body to transition interpolation, either here or in player class
     }
 
-    // set end transition logic for camera manager
+    // setBodySense end transition logic for camera manager
     cameraManagerForRooms.endTransition = {
       systemsToSwitch.forEach { systems.get(it.simpleName)?.let { system -> system.on = true } }
 
@@ -180,10 +180,10 @@ class MegaLevelScreen(game: IGame2D, properties: Properties) :
     uiCamera.position.set(com.megaman.maverick.game.ConstFuncs.getCamInitPos())
     gameCamera.position.set(com.megaman.maverick.game.ConstFuncs.getCamInitPos())
 
-    // set all systems to on
+    // setBodySense all systems to on
     game.gameEngine.systems.forEach { it.on = true }
 
-    // set the world graph map using the tiled map load result
+    // setBodySense the world graph map using the tiled map load result
     tiledMapLoadResult?.let {
       val depth =
           (it.worldWidth / com.megaman.maverick.game.ConstVals.VIEW_WIDTH)
@@ -203,17 +203,17 @@ class MegaLevelScreen(game: IGame2D, properties: Properties) :
 
   @Suppress("UNCHECKED_CAST")
   override fun buildLevel(result: Properties) {
-    // set the backgrounds array
+    // setBodySense the backgrounds array
     backgrounds = result.get(com.megaman.maverick.game.ConstKeys.BACKGROUNDS) as Array<Background>
 
-    // set the player spawns
+    // setBodySense the player spawns
     val playerSpawns =
         result.get(
             "${com.megaman.maverick.game.ConstKeys.PLAYER}_${com.megaman.maverick.game.ConstKeys.SPAWNS}")
             as Array<RectangleMapObject>
     playerSpawnsMan.set(playerSpawns)
 
-    // set the game rooms for the camera manager
+    // setBodySense the game rooms for the camera manager
     cameraManagerForRooms.gameRooms =
         result.get(com.megaman.maverick.game.ConstKeys.GAME_ROOMS) as Array<RectangleMapObject>
   }

@@ -13,12 +13,14 @@ import com.engine.entities.contracts.*
 import com.engine.world.Body
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.entities.contracts.IUpsideDownable
 import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.entities.megaman.constants.*
 
 class Megaman(game: IGame2D) :
     GameEntity(game),
     Faceable,
+    IUpsideDownable,
     IBodyEntity,
     ISpriteEntity,
     IBehaviorsEntity,
@@ -71,7 +73,7 @@ class Megaman(game: IGame2D) :
   var damageFlash = false
 
   // if Megaman is upside down
-  var upsideDown: Boolean
+  override var upsideDown: Boolean
     get() = getProperty(MegamanProps.UPSIDE_DOWN) == true
     set(value) {
       putProperty(MegamanProps.UPSIDE_DOWN, value)
@@ -172,7 +174,7 @@ class Megaman(game: IGame2D) :
   override fun spawn(spawnProps: Properties) {
     super.spawn(spawnProps)
 
-    // set Megaman's position
+    // setBodySense Megaman's position
     val position = properties.get(ConstKeys.POSITION, Vector2::class)!!
     body.setPosition(position)
 

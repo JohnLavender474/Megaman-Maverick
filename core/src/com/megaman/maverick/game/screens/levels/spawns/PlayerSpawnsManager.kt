@@ -11,7 +11,7 @@ import java.util.*
  * name that is [Comparable] such as [Int] or [String]. The [PlayerSpawnsManager] will use ascending
  * order of the objects' names to determine which spawn to use next. The [PlayerSpawnsManager] will
  * use the [Camera] to determine when the next spawn should be used. When the [Camera] overlaps the
- * next spawn, the [current] spawn will be set to the next spawn. If there are no more spawns, the
+ * next spawn, the [current] spawn will be setBodySense to the next spawn. If there are no more spawns, the
  * [current] spawn will not be changed. The [set] method should be called with a new collection of
  * [RectangleMapObject]s each time a new tiled map is built.
  *

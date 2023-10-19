@@ -26,9 +26,11 @@ fun Body.isSensingAll(bodySenses: Iterable<BodySense>) = bodySenses.all { isSens
 
 fun Body.isSensingAll(vararg bodySenses: BodySense) = isSensingAll(bodySenses.asIterable())
 
-fun Body.set(bodySense: BodySense, value: Boolean) = putProperty(bodySense.toString(), value)
+fun Body.setBodySense(bodySense: BodySense, value: Boolean) =
+    putProperty(bodySense.toString(), value)
 
-fun Body.set(vararg bodySenses: BodySense, value: Boolean) = bodySenses.forEach { set(it, value) }
+fun Body.setBodySense(vararg bodySenses: BodySense, value: Boolean) =
+    bodySenses.forEach { setBodySense(it, value) }
 
-fun Body.set(vararg bodySenses: Pair<BodySense, Boolean>) =
-    bodySenses.forEach { set(it.first, it.second) }
+fun Body.setBodySense(vararg bodySenses: Pair<BodySense, Boolean>) =
+    bodySenses.forEach { setBodySense(it.first, it.second) }

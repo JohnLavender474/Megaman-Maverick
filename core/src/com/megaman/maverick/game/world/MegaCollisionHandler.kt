@@ -5,7 +5,7 @@ import com.engine.world.ICollisionHandler
 import com.engine.world.StandardCollisionHandler
 
 /**
- * Implementation of [ICollisionHandler] that calls a set of special collision rules if certain
+ * Implementation of [ICollisionHandler] that calls a setBodySense of special collision rules if certain
  * conditions are met and otherwise uses the default collision handling of
  * [StandardCollisionHandler].
  */

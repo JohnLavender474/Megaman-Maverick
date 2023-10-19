@@ -10,6 +10,9 @@ object ConstVals {
 }
 
 object ConstKeys {
+  const val RUNNABLE = "runnable"
+  const val ENTITY = "entity"
+  const val CONSUMER = "consumer"
   const val OWNER = "owner"
   const val TRAJECTORY = "trajectory"
   const val BOOLEAN = "boolean"
@@ -58,9 +61,11 @@ object ConstKeys {
   const val GRAVITY_ON = "gravity_on"
   const val FRICTION_X = "friction_x"
   const val FRICTION_Y = "friction_y"
-  const val BOUNCE = "bounce"
+  const val BOUNCE = "force"
   const val SIDE = "side"
   const val RUNNING = "running"
+  const val VELOCITY_ALTERATION = "velocity_alteration"
+  const val LADDER = "ladder"
 }
 
 object ConstFuncs {

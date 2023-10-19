@@ -1,6 +1,5 @@
 package com.megaman.maverick.game
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.audio.Music
@@ -51,7 +50,7 @@ class MegamanMaverickGame : Game2D() {
     val shapes = OrderedMap<ShapeRenderer.ShapeType, Array<IDrawableShape>>()
     properties.put(ConstKeys.SHAPES, shapes)
 
-    // set viewports
+    // setBodySense viewports
     val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
     val screenHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
     val gameViewport = FitViewport(screenWidth, screenHeight)
@@ -59,7 +58,7 @@ class MegamanMaverickGame : Game2D() {
     val uiViewport = FitViewport(screenWidth, screenHeight)
     viewports.put(ConstKeys.UI, uiViewport)
 
-    // TODO: set screens
+    // TODO: setBodySense screens
 
     super.create()
 
@@ -101,7 +100,7 @@ class MegamanMaverickGame : Game2D() {
           AnimationsSystem(),
           BehaviorsSystem(),
           WorldSystem(
-              contactListener = ContactListener(),
+              contactListener = ContactListener(this),
               worldGraphSupplier = { properties.get(ConstKeys.WORLD_GRAPH_MAP) as IGraphMap },
               fixedStep = ConstVals.FIXED_TIME_STEP,
               collisionHandler = MegaCollisionHandler(),
@@ -135,10 +134,6 @@ class MegamanMaverickGame : Game2D() {
               pathfinderFactory = { pathfindingComponent ->
                 val graph = properties.get(ConstKeys.WORLD_GRAPH_MAP) as IGraphMap
                 Pathfinder(graph, pathfindingComponent.params)
-              },
-              executionExceptionHandler = {
-                it.printStackTrace()
-                Gdx.app.error("PathfindingSystem", "Pathfinder system threw an exception", it)
               }),
           PointsSystem(),
           UpdatablesSystem(),
