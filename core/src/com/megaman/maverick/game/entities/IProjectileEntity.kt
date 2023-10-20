@@ -1,9 +1,11 @@
 package com.megaman.maverick.game.entities
 
 import com.badlogic.gdx.graphics.Camera
+import com.badlogic.gdx.utils.Array
 import com.engine.audio.AudioComponent
 import com.engine.common.extensions.objectSetOf
 import com.engine.common.extensions.overlaps
+import com.engine.components.IGameComponent
 import com.engine.cullables.CullableOnEvent
 import com.engine.cullables.CullableOnUncontained
 import com.engine.cullables.CullablesComponent
@@ -28,9 +30,11 @@ interface IProjectileEntity : IBodyEntity, ISpriteEntity, IDamagerEntity, IGameE
   fun hitWater(waterFixture: Fixture) {}
 }
 
-internal fun IProjectileEntity.defineProjectile() {
+internal fun IProjectileEntity.defineProjectileComponents(): Array<IGameComponent> {
+  val components = Array<IGameComponent>()
+
   // add audio component
-  addComponent(AudioComponent(this))
+  components.add(AudioComponent(this))
 
   // cull on events: player spawn, begin room transition, and gate init opening
   val cullEvents =
@@ -42,5 +46,7 @@ internal fun IProjectileEntity.defineProjectile() {
       CullableOnUncontained<Camera>(
           containerSupplier = { game.viewports.get(ConstKeys.GAME).camera },
           containable = { it.overlaps(body) })
-  addComponent(CullablesComponent(this, cullOnEvent, cullOnOutOfGameCam))
+  components.add(CullablesComponent(this, cullOnEvent, cullOnOutOfGameCam))
+
+  return components
 }

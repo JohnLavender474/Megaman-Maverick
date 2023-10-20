@@ -8,10 +8,12 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
+import com.badlogic.gdx.utils.ObjectSet
 import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.engine.Game2D
 import com.engine.GameEngine
+import com.engine.IGameEngine
 import com.engine.animations.AnimationsSystem
 import com.engine.audio.AudioSystem
 import com.engine.behaviors.BehaviorsSystem
@@ -36,21 +38,30 @@ import com.engine.systems.IGameSystem
 import com.engine.updatables.UpdatablesSystem
 import com.engine.world.WorldSystem
 import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.world.ContactListener
+import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.screens.ScreenEnum
+import com.megaman.maverick.game.screens.levels.MegaLevelScreen
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.MegaCollisionHandler
+import com.megaman.maverick.game.world.MegaContactListener
 import java.util.*
 
 class MegamanMaverickGame : Game2D() {
 
-  override fun create() {
-    // put drawawble collections into props
-    val sprites = TreeSet<ISprite>()
-    properties.put(ConstKeys.SPRITES, sprites)
-    val shapes = OrderedMap<ShapeRenderer.ShapeType, Array<IDrawableShape>>()
-    properties.put(ConstKeys.SHAPES, shapes)
+  lateinit var megaman: Megaman
 
-    // setBodySense viewports
+  fun startLevelScreen(tmxMapSource: String, music: String) {
+    val levelScreen = screens.get(ScreenEnum.LEVEL.name) as MegaLevelScreen
+    levelScreen.tmxMapSource = tmxMapSource
+    levelScreen.music = music
+    setScreen(levelScreen)
+  }
+
+  override fun create() {
+    // create Megaman
+    megaman = Megaman(this)
+
+    // set viewports
     val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
     val screenHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
     val gameViewport = FitViewport(screenWidth, screenHeight)
@@ -59,13 +70,15 @@ class MegamanMaverickGame : Game2D() {
     viewports.put(ConstKeys.UI, uiViewport)
 
     // TODO: set screens
+    /*
+    screens.put(ScreenEnum.LEVEL, new LevelScreen(this));
+    screens.put(ScreenEnum.MAIN, new MainScreen(this));
+    screens.put(ScreenEnum.BOSS_SELECT, new BSelectScreen(this));
+    screens.put(ScreenEnum.BOSS_INTRO, new BIntroScreen(this));
+    */
+    screens.put(ScreenEnum.LEVEL.name, MegaLevelScreen(this))
 
     super.create()
-
-    val systems = ObjectMap<String, IGameSystem>()
-    gameEngine.systems.forEach { systems.put(it::class.simpleName, it) }
-    properties.put(ConstKeys.SYSTEMS, systems)
-
     EntityFactories.initialize(this)
   }
 
@@ -93,55 +106,59 @@ class MegamanMaverickGame : Game2D() {
     return buttons
   }
 
-  @Suppress("UNCHECKED_CAST")
-  override fun createGameEngine() =
-      GameEngine(
-          ControllerSystem(controllerPoller),
-          AnimationsSystem(),
-          BehaviorsSystem(),
-          WorldSystem(
-              contactListener = ContactListener(this),
-              worldGraphSupplier = { properties.get(ConstKeys.WORLD_GRAPH_MAP) as IGraphMap },
-              fixedStep = ConstVals.FIXED_TIME_STEP,
-              collisionHandler = MegaCollisionHandler(),
-              contactFilterMap =
-                  objectMapOf(
-                      FixtureType.CONSUMER to objectSetOf(*FixtureType.values()),
-                      FixtureType.PLAYER to objectSetOf(FixtureType.ITEM),
-                      FixtureType.DAMAGEABLE to objectSetOf(FixtureType.DEATH, FixtureType.DAMAGER),
-                      FixtureType.BODY to objectSetOf(FixtureType.FORCE, FixtureType.UPSIDE_DOWN),
-                      FixtureType.WATER_LISTENER to objectSetOf(FixtureType.WATER),
-                      FixtureType.LADDER to objectSetOf(FixtureType.HEAD, FixtureType.FEET),
-                      FixtureType.SIDE to
-                          objectSetOf(
-                              FixtureType.ICE,
-                              FixtureType.GATE,
-                              FixtureType.BLOCK,
-                              FixtureType.BOUNCER),
-                      FixtureType.FEET to
-                          objectSetOf(FixtureType.ICE, FixtureType.BLOCK, FixtureType.BOUNCER),
-                      FixtureType.HEAD to objectSetOf(FixtureType.BLOCK, FixtureType.BOUNCER),
-                      FixtureType.PROJECTILE to
-                          objectSetOf(
-                              FixtureType.BODY,
-                              FixtureType.BLOCK,
-                              FixtureType.SHIELD,
-                              FixtureType.WATER),
-                      FixtureType.LASER to objectSetOf(FixtureType.BLOCK))),
-          CullablesSystem(),
-          MotionSystem(),
-          PathfindingSystem(
-              pathfinderFactory = { pathfindingComponent ->
-                val graph = properties.get(ConstKeys.WORLD_GRAPH_MAP) as IGraphMap
-                Pathfinder(graph, pathfindingComponent.params)
-              }),
-          PointsSystem(),
-          UpdatablesSystem(),
-          SpriteSystem(properties.get(ConstKeys.SPRITES) as TreeSet<ISprite>),
-          DrawableShapeSystem(
-              properties.get(ConstKeys.SHAPES)
-                  as OrderedMap<ShapeRenderer.ShapeType, Array<IDrawableShape>>),
-          AudioSystem(assMan))
+  override fun createGameEngine(): IGameEngine {
+    val sprites = TreeSet<ISprite>()
+    properties.put(ConstKeys.SPRITES, sprites)
+    val shapes = OrderedMap<ShapeRenderer.ShapeType, Array<IDrawableShape>>()
+    properties.put(ConstKeys.SHAPES, shapes)
+
+    val getGraphMap = { properties.get(ConstKeys.WORLD_GRAPH_MAP) as IGraphMap }
+
+    val contactFilterMap =
+        objectMapOf<Any, ObjectSet<Any>>(
+            FixtureType.CONSUMER to objectSetOf(*FixtureType.values()),
+            FixtureType.PLAYER to objectSetOf(FixtureType.ITEM),
+            FixtureType.DAMAGEABLE to objectSetOf(FixtureType.DEATH, FixtureType.DAMAGER),
+            FixtureType.BODY to objectSetOf(FixtureType.FORCE, FixtureType.UPSIDE_DOWN),
+            FixtureType.WATER_LISTENER to objectSetOf(FixtureType.WATER),
+            FixtureType.LADDER to objectSetOf(FixtureType.HEAD, FixtureType.FEET),
+            FixtureType.SIDE to
+                objectSetOf(
+                    FixtureType.ICE, FixtureType.GATE, FixtureType.BLOCK, FixtureType.BOUNCER),
+            FixtureType.FEET to
+                objectSetOf(FixtureType.ICE, FixtureType.BLOCK, FixtureType.BOUNCER),
+            FixtureType.HEAD to objectSetOf(FixtureType.BLOCK, FixtureType.BOUNCER),
+            FixtureType.PROJECTILE to
+                objectSetOf(
+                    FixtureType.BODY, FixtureType.BLOCK, FixtureType.SHIELD, FixtureType.WATER),
+            FixtureType.LASER to objectSetOf(FixtureType.BLOCK))
+
+    val engine =
+        GameEngine(
+            ControllerSystem(controllerPoller),
+            AnimationsSystem(),
+            BehaviorsSystem(),
+            WorldSystem(
+                MegaContactListener(this),
+                getGraphMap,
+                ConstVals.FIXED_TIME_STEP,
+                MegaCollisionHandler(),
+                contactFilterMap),
+            CullablesSystem(),
+            MotionSystem(),
+            PathfindingSystem { Pathfinder(getGraphMap(), it.params) },
+            PointsSystem(),
+            UpdatablesSystem(),
+            SpriteSystem { sprites },
+            DrawableShapeSystem { shapes },
+            AudioSystem(assMan))
+
+    val systems = ObjectMap<String, IGameSystem>()
+    engine.systems.forEach { systems.put(it::class.simpleName, it) }
+    properties.put(ConstKeys.SYSTEMS, systems)
+
+    return engine
+  }
 
   override fun loadAssets(assMan: AssetManager) {
     assMan.loadAssetsInDirectory(ConstKeys.MUSIC, Music::class.java)

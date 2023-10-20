@@ -5,7 +5,6 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.ObjectSet
-import com.engine.IGame2D
 import com.engine.animations.AnimationsSystem
 import com.engine.audio.AudioSystem
 import com.engine.behaviors.BehaviorsSystem
@@ -26,6 +25,9 @@ import com.engine.spawns.SpawnsManager
 import com.engine.systems.IGameSystem
 import com.engine.updatables.UpdatablesSystem
 import com.engine.world.WorldSystem
+import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.ConstVals
+import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.drawables.sprites.Background
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.camera.CameraManagerForRooms
@@ -36,15 +38,18 @@ import java.util.*
 
 /**
  * This class is a level screen that is used for the entire game. It is a tiled map level screen
- * that uses a tiled map to build the level.
+ * that uses a tiled map to build the level. The fields [tmxMapSource] and [music] should be set
+ * before [show] is called.
  *
  * @param game the game instance
- * @param properties the properties for this level screen
  */
-class MegaLevelScreen(game: IGame2D, properties: Properties) :
-    TiledMapLevelScreen(game, properties), Initializable {
+class MegaLevelScreen(game: MegamanMaverickGame) :
+    TiledMapLevelScreen(game, props()), Initializable {
 
+  // empty set means this class listens to all events
   override val eventKeyMask: ObjectSet<Any> = objectSetOf()
+
+  var music: String? = null
 
   private lateinit var spawnsMan: SpawnsManager
   private lateinit var playerSpawnsMan: PlayerSpawnsManager
@@ -58,7 +63,6 @@ class MegaLevelScreen(game: IGame2D, properties: Properties) :
   private lateinit var gameCamera: Camera
   private lateinit var uiCamera: Camera
 
-  private var music: String? = null
   private var initialized = false
 
   /**
@@ -74,20 +78,18 @@ class MegaLevelScreen(game: IGame2D, properties: Properties) :
     levelStateHandler = LevelStateHandler(game)
 
     @Suppress("UNCHECKED_CAST")
-    sprites = properties.get(com.megaman.maverick.game.ConstKeys.SPRITES) as TreeSet<ISprite>
+    sprites = game.properties.get(ConstKeys.SPRITES) as TreeSet<ISprite>
     @Suppress("UNCHECKED_CAST")
-    shapes = properties.get(com.megaman.maverick.game.ConstKeys.SHAPES) as Array<IDrawableShape>
+    shapes = game.properties.get(ConstKeys.SHAPES) as Array<IDrawableShape>
 
-    uiCamera = game.viewports.get(com.megaman.maverick.game.ConstKeys.UI).camera
-    gameCamera = game.viewports.get(com.megaman.maverick.game.ConstKeys.GAME).camera
+    uiCamera = game.viewports.get(ConstKeys.UI).camera
+    gameCamera = game.viewports.get(ConstKeys.GAME).camera
 
     playerSpawnsMan = PlayerSpawnsManager(gameCamera)
 
     // array of systems that should be switched off and back on during room transitions
     @Suppress("UNCHECKED_CAST")
-    val systems =
-        game.properties.get(com.megaman.maverick.game.ConstKeys.SYSTEMS)
-            as ObjectMap<String, IGameSystem>
+    val systems = game.properties.get(ConstKeys.SYSTEMS) as ObjectMap<String, IGameSystem>
     val systemsToSwitch =
         gdxArrayOf(
             AnimationsSystem::class,
@@ -100,7 +102,7 @@ class MegaLevelScreen(game: IGame2D, properties: Properties) :
 
     cameraManagerForRooms = CameraManagerForRooms(gameCamera)
 
-    // setBodySense begin transition logic for camera manager
+    // set begin transition logic for camera manager
     cameraManagerForRooms.beginTransition = {
       systemsToSwitch.forEach { systems.get(it.simpleName)?.let { system -> system.on = false } }
 
@@ -108,17 +110,14 @@ class MegaLevelScreen(game: IGame2D, properties: Properties) :
           Event(
               EventType.BEGIN_ROOM_TRANS,
               props(
-                  com.megaman.maverick.game.ConstKeys.POSITION to
-                      cameraManagerForRooms.transitionInterpolation,
-                  com.megaman.maverick.game.ConstKeys.CURRENT to
-                      cameraManagerForRooms.currentGameRoom,
-                  com.megaman.maverick.game.ConstKeys.PRIOR to
-                      cameraManagerForRooms.priorGameRoom)))
+                  ConstKeys.POSITION to cameraManagerForRooms.transitionInterpolation,
+                  ConstKeys.CURRENT to cameraManagerForRooms.currentGameRoom,
+                  ConstKeys.PRIOR to cameraManagerForRooms.priorGameRoom)))
 
-      // TODO: setBodySense megaman's body to transition interpolation, either here or in player class
+      // TODO: set megaman's body to transition interpolation, either here or in player
     }
 
-    // setBodySense continue transition logic for camera manager
+    // set continue transition logic for camera manager
     cameraManagerForRooms.continueTransition = { _ ->
       if (cameraManagerForRooms.delayJustFinished) {
         systems.get(AnimationsSystem::class.simpleName)?.on = true
@@ -127,33 +126,25 @@ class MegaLevelScreen(game: IGame2D, properties: Properties) :
       game.eventsMan.submitEvent(
           Event(
               EventType.CONTINUE_ROOM_TRANS,
-              props(
-                  com.megaman.maverick.game.ConstKeys.POSITION to
-                      cameraManagerForRooms.transitionInterpolation)))
+              props(ConstKeys.POSITION to cameraManagerForRooms.transitionInterpolation)))
 
-      // TODO: setBodySense megaman's body to transition interpolation, either here or in player class
+      // TODO: set megaman's body to transition interpolation, either here or in player
     }
 
-    // setBodySense end transition logic for camera manager
+    // set end transition logic for camera manager
     cameraManagerForRooms.endTransition = {
       systemsToSwitch.forEach { systems.get(it.simpleName)?.let { system -> system.on = true } }
 
       game.eventsMan.submitEvent(
           Event(
               EventType.END_ROOM_TRANS,
-              props(
-                  com.megaman.maverick.game.ConstKeys.ROOM to
-                      cameraManagerForRooms.currentGameRoom)))
+              props(ConstKeys.ROOM to cameraManagerForRooms.currentGameRoom)))
 
-      if (cameraManagerForRooms.currentGameRoom
-          ?.name
-          .equals(com.megaman.maverick.game.ConstKeys.BOSS)) {
+      if (cameraManagerForRooms.currentGameRoom?.name.equals(ConstKeys.BOSS)) {
         game.eventsMan.submitEvent(
             Event(
                 EventType.ENTER_BOSS_ROOM,
-                props(
-                    com.megaman.maverick.game.ConstKeys.ROOM to
-                        cameraManagerForRooms.currentGameRoom)))
+                props(ConstKeys.ROOM to cameraManagerForRooms.currentGameRoom)))
       }
     }
   }
@@ -173,28 +164,27 @@ class MegaLevelScreen(game: IGame2D, properties: Properties) :
     // add this screen as an event listener
     game.eventsMan.addListener(this)
     // start playing the level music
-    music = properties.get(com.megaman.maverick.game.ConstKeys.LEVEL_MUSIC, String::class)
     music?.let { game.audioMan.playMusic(it, true) }
 
     // reset positions of cameras
     uiCamera.position.set(com.megaman.maverick.game.ConstFuncs.getCamInitPos())
     gameCamera.position.set(com.megaman.maverick.game.ConstFuncs.getCamInitPos())
 
-    // setBodySense all systems to on
+    // set all systems to on
     game.gameEngine.systems.forEach { it.on = true }
 
-    // setBodySense the world graph map using the tiled map load result
+    // set the world graph map using the tiled map load result
     tiledMapLoadResult?.let {
       val depth =
-          (it.worldWidth / com.megaman.maverick.game.ConstVals.VIEW_WIDTH)
-              .coerceAtLeast(it.worldHeight / com.megaman.maverick.game.ConstVals.VIEW_HEIGHT)
+          (it.worldWidth / ConstVals.VIEW_WIDTH)
+              .coerceAtLeast(it.worldHeight / ConstVals.VIEW_HEIGHT)
               .toInt()
 
       val worldGraphMap =
           QuadTreeGraphMap(
-              0, 0, it.worldWidth, it.worldHeight, com.megaman.maverick.game.ConstVals.PPM, depth)
+              0, 0, it.worldWidth, it.worldHeight, ConstVals.PPM, depth)
 
-      properties.put(com.megaman.maverick.game.ConstKeys.WORLD_GRAPH_MAP, worldGraphMap)
+      properties.put(ConstKeys.WORLD_GRAPH_MAP, worldGraphMap)
     } ?: throw IllegalStateException("No tiled map load result found in game props")
   }
 
@@ -203,19 +193,16 @@ class MegaLevelScreen(game: IGame2D, properties: Properties) :
 
   @Suppress("UNCHECKED_CAST")
   override fun buildLevel(result: Properties) {
-    // setBodySense the backgrounds array
-    backgrounds = result.get(com.megaman.maverick.game.ConstKeys.BACKGROUNDS) as Array<Background>
+    // set the backgrounds array
+    backgrounds = result.get(ConstKeys.BACKGROUNDS) as Array<Background>
 
-    // setBodySense the player spawns
+    // set the player spawns
     val playerSpawns =
-        result.get(
-            "${com.megaman.maverick.game.ConstKeys.PLAYER}_${com.megaman.maverick.game.ConstKeys.SPAWNS}")
-            as Array<RectangleMapObject>
+        result.get("${ConstKeys.PLAYER}_${ConstKeys.SPAWNS}") as Array<RectangleMapObject>
     playerSpawnsMan.set(playerSpawns)
 
-    // setBodySense the game rooms for the camera manager
-    cameraManagerForRooms.gameRooms =
-        result.get(com.megaman.maverick.game.ConstKeys.GAME_ROOMS) as Array<RectangleMapObject>
+    // set the game rooms for the camera manager
+    cameraManagerForRooms.gameRooms = result.get(ConstKeys.GAME_ROOMS) as Array<RectangleMapObject>
   }
 
   override fun onEvent(event: Event) {
@@ -254,8 +241,7 @@ class MegaLevelScreen(game: IGame2D, properties: Properties) :
 
   override fun render(delta: Float) {
     // game can only be paused if neither spawn nor death event handlers are running
-    if (game.controllerPoller.getButtonStatus(com.megaman.maverick.game.ConstKeys.START) ==
-        ButtonStatus.JUST_PRESSED
+    if (game.controllerPoller.getButtonStatus(ConstKeys.START) == ButtonStatus.JUST_PRESSED
     /* && player spawn and death event handlers are finished */ ) {
       if (game.paused) {
         game.resume()

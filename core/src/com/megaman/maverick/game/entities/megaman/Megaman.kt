@@ -1,27 +1,35 @@
 package com.megaman.maverick.game.entities.megaman
 
 import com.badlogic.gdx.math.Vector2
-import com.engine.IGame2D
 import com.engine.audio.AudioComponent
 import com.engine.common.enums.Facing
+import com.engine.common.enums.Position
+import com.engine.common.extensions.objectSetOf
 import com.engine.common.interfaces.Faceable
 import com.engine.common.objects.Properties
 import com.engine.common.time.TimeMarkedRunnable
 import com.engine.common.time.Timer
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.*
+import com.engine.events.Event
+import com.engine.events.IEventListener
 import com.engine.world.Body
 import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.contracts.IUpsideDownable
 import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.entities.megaman.constants.*
+import com.megaman.maverick.game.events.EventType
 
-class Megaman(game: IGame2D) :
+class Megaman(game: MegamanMaverickGame) :
     GameEntity(game),
+    IEventListener,
     Faceable,
     IUpsideDownable,
     IBodyEntity,
+    IHealthEntity,
     ISpriteEntity,
     IBehaviorsEntity,
     IPointsEntity,
@@ -41,6 +49,11 @@ class Megaman(game: IGame2D) :
   internal val airDashTimer = Timer(MegamanValues.MAX_AIR_DASH_TIME)
   internal val wallJumpTimer = Timer(MegamanValues.WALL_JUMP_IMPETUS_TIME).setToEnd()
   internal val groundSlideTimer = Timer(MegamanValues.MAX_GROUND_SLIDE_TIME)
+
+  // events to listen for
+  override val eventKeyMask =
+      objectSetOf<Any>(
+          EventType.BEGIN_ROOM_TRANS, EventType.CONTINUE_ROOM_TRANS, EventType.GATE_INIT_OPENING)
 
   // the handler for Megaman's weapons
   val weaponHandler = MegamanWeaponHandler(this)
@@ -71,6 +84,9 @@ class Megaman(game: IGame2D) :
 
   // if Megaman should flash due to damage
   var damageFlash = false
+
+  // if Megaman is Maverick
+  var maverick = false
 
   // if Megaman is upside down
   override var upsideDown: Boolean
@@ -194,5 +210,25 @@ class Megaman(game: IGame2D) :
   override fun onDestroy() {
     super<GameEntity>.onDestroy()
     body.physics.velocity.setZero()
+  }
+
+  override fun onEvent(event: Event) {
+    when (event.key) {
+      EventType.BEGIN_ROOM_TRANS,
+      EventType.CONTINUE_ROOM_TRANS -> {
+        // TODO: set vel zero?
+        // body.velocity.set(Vector2.Zero);
+
+        // TODO: set vel zero?
+        // body.velocity.set(Vector2.Zero);
+        val position = event.properties.get(ConstKeys.POSITION) as Vector2
+        body.positionOnPoint(position, Position.BOTTOM_CENTER)
+        requestToPlaySound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND.source, false)
+      }
+      EventType.GATE_INIT_OPENING -> {
+        body.physics.velocity.setZero()
+        stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND.source)
+      }
+    }
   }
 }

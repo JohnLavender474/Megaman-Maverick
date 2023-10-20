@@ -10,6 +10,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+  const val TYPE = "type"
   const val ARRAY = "array"
   const val OBJECT_SET = "object_set"
   const val COLLECTION = "collection"
@@ -69,6 +70,8 @@ object ConstKeys {
   const val RUNNING = "running"
   const val VELOCITY_ALTERATION = "velocity_alteration"
   const val LADDER = "ladder"
+  const val BULLET = "bullet"
+  const val HEALTH = "health"
 }
 
 object ConstFuncs {

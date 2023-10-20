@@ -11,9 +11,9 @@ import java.util.*
  * name that is [Comparable] such as [Int] or [String]. The [PlayerSpawnsManager] will use ascending
  * order of the objects' names to determine which spawn to use next. The [PlayerSpawnsManager] will
  * use the [Camera] to determine when the next spawn should be used. When the [Camera] overlaps the
- * next spawn, the [current] spawn will be setBodySense to the next spawn. If there are no more spawns, the
- * [current] spawn will not be changed. The [set] method should be called with a new collection of
- * [RectangleMapObject]s each time a new tiled map is built.
+ * next spawn, the [current] spawn will be setBodySense to the next spawn. If there are no more
+ * spawns, the [current] spawn will not be changed. The [set] method should be called with a new
+ * collection of [RectangleMapObject]s each time a new tiled map is built.
  *
  * @param camera the [Camera] to use.
  */
@@ -41,11 +41,7 @@ class PlayerSpawnsManager(private val camera: Camera) : Runnable, Resettable {
   override fun run() {
     if (spawns.isEmpty()) return
 
-    spawns.peek()?.let {
-      if (camera.overlaps(it.rectangle)) {
-        current = spawns.poll()
-      }
-    }
+    spawns.peek()?.let { if (camera.overlaps(it.rectangle)) current = spawns.poll() }
   }
 
   /** Clears the [spawns] and sets the [current] to null. */

@@ -17,13 +17,13 @@ import com.megaman.maverick.game.entities.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.IEnemyEntity
 import com.megaman.maverick.game.entities.contracts.IUpsideDownable
 import com.megaman.maverick.game.entities.contracts.ItemEntity
-import com.megaman.maverick.game.utils.VelocityAlterator
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
+import com.megaman.maverick.game.utils.VelocityAlterator
 
 /** A contact listener for the game. */
 @Suppress("UNCHECKED_CAST")
-class ContactListener(private val game: IGame2D) : IContactListener {
+class MegaContactListener(private val game: IGame2D) : IContactListener {
 
   override fun beginContact(contact: Contact, delta: Float) {
     // consumer
@@ -48,10 +48,7 @@ class ContactListener(private val game: IGame2D) : IContactListener {
       if (block.bodyHasLabel(BodyLabel.NO_SIDE_TOUCHIE)) return
 
       val body = side.getBody()
-      val sideType =
-          side.getProperty(
-              ConstKeys.SIDE,
-          )
+      val sideType = side.getProperty(ConstKeys.SIDE)
 
       if (sideType == ConstKeys.LEFT) body.setBodySense(BodySense.SIDE_TOUCHING_BLOCK_LEFT, true)
       else body.setBodySense(BodySense.SIDE_TOUCHING_BLOCK_RIGHT, true)
