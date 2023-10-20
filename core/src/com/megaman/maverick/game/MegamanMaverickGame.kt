@@ -58,7 +58,7 @@ class MegamanMaverickGame : Game2D() {
     val uiViewport = FitViewport(screenWidth, screenHeight)
     viewports.put(ConstKeys.UI, uiViewport)
 
-    // TODO: setBodySense screens
+    // TODO: set screens
 
     super.create()
 

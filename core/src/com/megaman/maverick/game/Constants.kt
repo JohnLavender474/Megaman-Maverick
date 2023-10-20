@@ -10,6 +10,9 @@ object ConstVals {
 }
 
 object ConstKeys {
+  const val ARRAY = "array"
+  const val OBJECT_SET = "object_set"
+  const val COLLECTION = "collection"
   const val RUNNABLE = "runnable"
   const val ENTITY = "entity"
   const val CONSUMER = "consumer"

@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 
 const val TEXTURE_ASSET_PREFIX = "sprites/SpriteSheets/"
 
+/** An enum class for texture assets. */
 enum class TextureAsset(src: String) : IAsset {
   // Colors
   COLORS("Colors.txt"),

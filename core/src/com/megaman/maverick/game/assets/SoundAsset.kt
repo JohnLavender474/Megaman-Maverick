@@ -4,6 +4,7 @@ import com.badlogic.gdx.audio.Sound
 
 const val SOUND_ASSET_PREFIX = "sounds/"
 
+/** An enum class representing sound assets. */
 enum class SoundAsset(src: String, val seconds: Int) : IAsset {
   LIFE_SOUND("1up.mp3", 1),
   DINK_SOUND("Dink.mp3", 1),

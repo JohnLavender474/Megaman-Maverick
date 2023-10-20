@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.behaviors
 
+/** The type of behavior. */
 enum class BehaviorType {
   JUMPING,
   SWIMMING,

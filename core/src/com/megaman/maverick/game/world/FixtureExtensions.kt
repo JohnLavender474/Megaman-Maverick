@@ -8,7 +8,7 @@ import com.engine.entities.contracts.IDamagerEntity
 import com.engine.world.BodyType
 import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.entities.contracts.VelocityAlteration
+import com.megaman.maverick.game.utils.VelocityAlteration
 
 /**
  * Sets the [IBodyEntity] of this fixture. This method MUST be called for every fixture when it is

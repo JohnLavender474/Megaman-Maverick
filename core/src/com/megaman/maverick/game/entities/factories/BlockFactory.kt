@@ -9,6 +9,7 @@ import com.engine.entities.IGameEntity
 import com.engine.factories.IFactory
 import com.megaman.maverick.game.entities.blocks.Block
 
+/** A factory that creates blocks. */
 class BlockFactory(private val game: IGame2D) : IFactory<IGameEntity> {
 
   companion object {
@@ -35,12 +36,37 @@ class BlockFactory(private val game: IGame2D) : IFactory<IGameEntity> {
   override fun fetch(key: Any, props: Properties): Block? = pools.get(key)?.fetch()
 }
 
+/**
+ * Returns a standard [Block].
+ *
+ * @return A standard [Block].
+ */
 fun BlockFactory.standard() = fetch(BlockFactory.STANDARD, props())
 
+/**
+ * Returns an [IceBlock].
+ *
+ * @return An [IceBlock].
+ */
 fun BlockFactory.iceBlock() = fetch(BlockFactory.ICE_BLOCK, props())
 
+/**
+ * Returns a [GearTrolley].
+ *
+ * @return A [GearTrolley].
+ */
 fun BlockFactory.gearTrolley() = fetch(BlockFactory.GEAR_TROLLEY, props())
 
+/**
+ * Returns a [ConveyorBelt].
+ *
+ * @return A [ConveyorBelt].
+ */
 fun BlockFactory.conveyorBelt() = fetch(BlockFactory.CONVEYOR_BELT, props())
 
+/**
+ * Returns a [RocketPlatform].
+ *
+ * @return A [RocketPlatform].
+ */
 fun BlockFactory.rocketPlatform() = fetch(BlockFactory.ROCKET_PLATFORM, props())

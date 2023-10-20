@@ -1,4 +1,4 @@
-package com.megaman.maverick.game.entities.contracts
+package com.megaman.maverick.game.utils
 
 import com.badlogic.gdx.math.Vector2
 import com.engine.world.Body

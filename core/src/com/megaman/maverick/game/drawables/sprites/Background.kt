@@ -8,6 +8,7 @@ import com.engine.drawables.sprites.SpriteMatrix
 import com.engine.drawables.sprites.SpriteMatrixParams
 import com.megaman.maverick.game.ConstKeys
 
+/** A background object that is a sprite matrix. */
 open class Background(model: TextureRegion, obj: RectangleMapObject) : Updatable {
 
   val spriteMatrix = SpriteMatrix(getParams(model, obj))

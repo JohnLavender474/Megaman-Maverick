@@ -13,6 +13,7 @@ import com.engine.world.PhysicsData
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.utils.addLabel
 
+/** A block is a static entity that can be collided with. */
 open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
 
   companion object {

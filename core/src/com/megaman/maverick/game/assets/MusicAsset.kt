@@ -4,6 +4,7 @@ import com.badlogic.gdx.audio.Music
 
 const val MUSIC_ASSET_PREFIX = "music/"
 
+/** An enum class representing music assets. */
 enum class MusicAsset(src: String) : IAsset {
 
   DUEL_OF_THE_FATES_MUSIC("DuelOfTheFates.mp3"),
