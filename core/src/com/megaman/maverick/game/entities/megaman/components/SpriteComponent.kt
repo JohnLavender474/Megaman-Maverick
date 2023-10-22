@@ -16,11 +16,13 @@ internal fun Megaman.defineSpriteComponent(): SpriteComponent {
   val spriteComponent = SpriteComponent(this, "player" to sprite)
 
   spriteComponent.putUpdateFunction("player") { _, player ->
-    player.let {
-      val flipX = facing == Facing.LEFT
-      val flipY = upsideDown
-      it.setFlip(flipX, flipY)
-    }
+    player.hidden = !ready
+
+    val flipX = !maverick && facing == Facing.LEFT
+    val flipY = upsideDown
+    player.setFlip(flipX, flipY)
+
+    player.setPosition(body.x, body.y)
   }
 
   return spriteComponent

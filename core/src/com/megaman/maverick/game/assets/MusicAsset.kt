@@ -7,7 +7,9 @@ const val MUSIC_ASSET_PREFIX = "music/"
 /** An enum class representing music assets. */
 enum class MusicAsset(src: String) : IAsset {
 
-  DUEL_OF_THE_FATES_MUSIC("DuelOfTheFates.mp3"),
+  DUEL_OF_THE_FATES_MUSIC("duel_of_the_fates.mp3"),
+  XENOBLADE_GAUR_PLAINS_MUSIC("xenoblade_gaur_plains.ogg");
+  /*
   FF7_BOSS_MUSIC("FF7_LetTheBattlesBegin.mp3"),
   MM11_FUSE_MAN_MUSIC("Megaman11_FuseMan.mp3"),
   MM11_TORCH_MAN_MUSIC("Megaman11_TorchMan.mp3"),
@@ -24,9 +26,10 @@ enum class MusicAsset(src: String) : IAsset {
   MMX3_INTRO_STAGE_MUSIC("MMX3_IntroStage.ogg"),
   MM11_MAIN_MENU_MUSIC("MM11_Main_Menu.mp3"),
   MM11_WILY_STAGE_MUSIC("MM11_Wily_Stage.mp3"),
-  XENOBLADE_GAUR_PLAINS_MUSIC("Xenoblade_GaurPlains.ogg"),
+  XENOBLADE_GAUR_PLAINS_MUSIC("xenoblade_gaur_plains.ogg"),
   MMX_LEVEL_SELECT_SCREEN_MUSIC("MMX_LevelSelectScreen.ogg"),
   MM3_SNAKE_MAN_MUSIC("SnakeManMM3.mp3");
+   */
 
   override val source = MUSIC_ASSET_PREFIX + src
   override val assClass = Music::class.java

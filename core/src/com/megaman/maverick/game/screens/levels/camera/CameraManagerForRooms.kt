@@ -13,8 +13,8 @@ import com.engine.common.interfaces.PositionSupplier
 import com.engine.common.interfaces.Resettable
 import com.engine.common.interfaces.Updatable
 import com.engine.common.interpolate
-import com.engine.common.roundedFloat
 import com.engine.common.time.Timer
+import com.megaman.maverick.game.ConstVals
 import kotlin.math.min
 
 class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable {
@@ -41,7 +41,7 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
       field = value
       reset = true
       if (value == null) return
-      val pos: Vector2 = value.getPosition()
+      val pos = value.getPosition()
       camera.position.x = pos.x
       camera.position.y = pos.y
     }
@@ -89,16 +89,12 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
     if (reset) {
       reset = false
       priorGameRoom = null
-      currentGameRoom = priorGameRoom
+      currentGameRoom = null
       transitionDirection = null
       transitionState = null
       setCameraToFocusable()
       currentGameRoom = nextGameRoom()
-    } else if (transitioning) {
-      onTransition(delta)
-    } else {
-      onNoTransition()
-    }
+    } else if (transitioning) onTransition(delta) else onNoTransition()
   }
 
   override fun reset() {
@@ -120,28 +116,26 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
             (next.x + next.width -
                     min((next.width / 2f).toDouble(), (camera.viewportWidth / 2f).toDouble()))
                 .toFloat()
-        focusTarget.x =
-            next.x + next.width - DISTANCE_ON_TRANSITION * com.megaman.maverick.game.ConstVals.PPM
+        focusTarget.x = next.x + next.width - DISTANCE_ON_TRANSITION * ConstVals.PPM
       }
       Direction.RIGHT -> {
         transitionTarget.x =
             (next.x + min((next.width / 2f).toDouble(), (camera.viewportWidth / 2f).toDouble()))
                 .toFloat()
-        focusTarget.x = next.x + DISTANCE_ON_TRANSITION * com.megaman.maverick.game.ConstVals.PPM
+        focusTarget.x = next.x + DISTANCE_ON_TRANSITION * ConstVals.PPM
       }
       Direction.UP -> {
         transitionTarget.y =
             (next.y + min((next.height / 2f).toDouble(), (camera.viewportHeight / 2f).toDouble()))
                 .toFloat()
-        focusTarget.y = next.y + DISTANCE_ON_TRANSITION * com.megaman.maverick.game.ConstVals.PPM
+        focusTarget.y = next.y + DISTANCE_ON_TRANSITION * ConstVals.PPM
       }
       Direction.DOWN -> {
         transitionTarget.y =
             (next.y + next.height -
                     min((next.height / 2f).toDouble(), (camera.viewportHeight / 2f).toDouble()))
                 .toFloat()
-        focusTarget.y =
-            next.y + next.height - DISTANCE_ON_TRANSITION * com.megaman.maverick.game.ConstVals.PPM
+        focusTarget.y = next.y + next.height - DISTANCE_ON_TRANSITION * ConstVals.PPM
       }
       null -> {}
     }
@@ -175,9 +169,9 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
       setCameraToFocusable()
 
       if (camera.position.y >
-          currentRoomBounds.y + currentRoomBounds.height - camera.viewportHeight / 2f) {
+          (currentRoomBounds.y + currentRoomBounds.height) - camera.viewportHeight / 2f) {
         camera.position.y =
-            currentRoomBounds.y + currentRoomBounds.height - camera.viewportHeight / 2f
+            (currentRoomBounds.y + currentRoomBounds.height) - camera.viewportHeight / 2f
       }
 
       if (camera.position.y < currentRoomBounds.y + camera.viewportHeight / 2f) {
@@ -185,9 +179,9 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
       }
 
       if (camera.position.x >
-          currentRoomBounds.x + currentRoomBounds.width - camera.viewportWidth / 2f) {
+          (currentRoomBounds.x + currentRoomBounds.width) - camera.viewportWidth / 2f) {
         camera.position.x =
-            currentRoomBounds.x + currentRoomBounds.width - camera.viewportWidth / 2f
+            (currentRoomBounds.x + currentRoomBounds.width) - camera.viewportWidth / 2f
       }
 
       if (camera.position.x < currentRoomBounds.x + camera.viewportWidth / 2f) {
@@ -205,15 +199,15 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
     // if there is no game room containing the focus, then we need to setBodySense the
     // camera's x to the focus's x and return
     if (nextGameRoom == null) {
-      camera.position.x = roundedFloat(focus!!.getPosition().x, 3)
+      camera.position.x = focus!!.getPosition().x
       return
     }
 
     // if there is a next game room, then we need to trigger the transition phase
-    // and setBodySense the transition direction
+    // and set the transition direction
 
-    val width = 5f * com.megaman.maverick.game.ConstVals.PPM
-    val height = 5f * com.megaman.maverick.game.ConstVals.PPM
+    val width = 5f * ConstVals.PPM
+    val height = 5f * ConstVals.PPM
 
     val boundingBox = Rectangle().setSize(width, height).setCenter(focus!!.getPosition())
 
@@ -253,7 +247,7 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
 
         transTimer.update(delta)
 
-        val pos: Vector2 = interpolate(transitionStart, transitionTarget, transitionTimerRatio)
+        val pos = interpolate(transitionStart, transitionTarget, transitionTimerRatio)
         camera.position.x = pos.x
         camera.position.y = pos.y
 
@@ -267,7 +261,7 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
 
         transTimer.update(delta)
 
-        val pos: Vector2 = interpolate(transitionStart, transitionTarget, transitionTimerRatio)
+        val pos = interpolate(transitionStart, transitionTarget, transitionTimerRatio)
         camera.position.x = pos.x
         camera.position.y = pos.y
 
@@ -282,7 +276,7 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
 
     var nextGameRoom: RectangleMapObject? = null
 
-    for (room in gameRooms!!.iterator()) {
+    for (room in gameRooms!!) {
       if (room.rectangle.contains(focus!!.getPosition())) {
         nextGameRoom = room
         break

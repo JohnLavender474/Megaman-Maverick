@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.megaman
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector2
 import com.engine.audio.AudioComponent
 import com.engine.common.enums.Facing
@@ -36,6 +37,10 @@ class Megaman(game: MegamanMaverickGame) :
     IDamageableEntity,
     IAudioEntity {
 
+  companion object {
+    const val TAG = "Megaman"
+  }
+
   // Megaman's timers
   internal val shootAnimTimer = Timer(MegamanValues.SHOOT_ANIM_TIME)
   internal val chargingTimer =
@@ -43,7 +48,7 @@ class Megaman(game: MegamanMaverickGame) :
           MegamanValues.TIME_TO_FULLY_CHARGED,
           TimeMarkedRunnable(MegamanValues.TIME_TO_HALFWAY_CHARGED) {
             getComponent(AudioComponent::class)!!.requestToPlaySound(
-                SoundAsset.MEGA_BUSTER_CHARGING_SOUND.source, true)
+                SoundAsset.MEGA_BUSTER_CHARGING_SOUND, true)
           })
   internal val damageFlashTimer = Timer(MegamanValues.DAMAGE_FLASH_DURATION)
   internal val airDashTimer = Timer(MegamanValues.MAX_AIR_DASH_TIME)
@@ -79,7 +84,7 @@ class Megaman(game: MegamanMaverickGame) :
   // the amount of ammo for the current weapon
   val ammo: Int
     get() =
-        if (currentWeapon === MegamanWeapon.BUSTER) Int.MAX_VALUE
+        if (currentWeapon == MegamanWeapon.BUSTER) Int.MAX_VALUE
         else weaponHandler.getAmmo(currentWeapon)
 
   // if Megaman should flash due to damage
@@ -88,10 +93,15 @@ class Megaman(game: MegamanMaverickGame) :
   // if Megaman is Maverick
   var maverick = false
 
+  // if Megaman is ready
+  var ready = false
+
   // if Megaman is upside down
   override var upsideDown: Boolean
     get() = getProperty(MegamanProps.UPSIDE_DOWN) == true
     set(value) {
+      Gdx.app.debug(TAG, "set upside down = $value")
+
       putProperty(MegamanProps.UPSIDE_DOWN, value)
       if (upsideDown) {
         // jump
@@ -172,6 +182,7 @@ class Megaman(game: MegamanMaverickGame) :
    * [initialized] is false and this [init] has been called.
    */
   override fun init() {
+    addComponent(AudioComponent(this))
     addComponent(defineUpdatablesComponent())
     addComponent(definePointsComponent())
     addComponent(defineDamageableComponent())
@@ -180,6 +191,7 @@ class Megaman(game: MegamanMaverickGame) :
     addComponent(defineControllerComponent())
     addComponent(defineSpriteComponent())
     addComponent(defineAnimationsComponent())
+    weaponHandler.putWeapon(MegamanWeapon.BUSTER)
   }
 
   /**
@@ -188,11 +200,14 @@ class Megaman(game: MegamanMaverickGame) :
    * @param spawnProps the [Properties] to use to spawn Megaman.
    */
   override fun spawn(spawnProps: Properties) {
+    Gdx.app.debug(TAG, "spawn(): spawnProps = $spawnProps")
+
     super.spawn(spawnProps)
 
-    // setBodySense Megaman's position
-    val position = properties.get(ConstKeys.POSITION, Vector2::class)!!
-    body.setPosition(position)
+    // set Megaman's position
+    val x = properties.get(ConstKeys.X, Float::class)!!
+    val y = properties.get(ConstKeys.Y, Float::class)!!
+    body.setPosition(x, y)
 
     // initialize Megaman's props
     facing = Facing.RIGHT
@@ -216,18 +231,13 @@ class Megaman(game: MegamanMaverickGame) :
     when (event.key) {
       EventType.BEGIN_ROOM_TRANS,
       EventType.CONTINUE_ROOM_TRANS -> {
-        // TODO: set vel zero?
-        // body.velocity.set(Vector2.Zero);
-
-        // TODO: set vel zero?
-        // body.velocity.set(Vector2.Zero);
         val position = event.properties.get(ConstKeys.POSITION) as Vector2
         body.positionOnPoint(position, Position.BOTTOM_CENTER)
-        requestToPlaySound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND.source, false)
+        requestToPlaySound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND, false)
       }
       EventType.GATE_INIT_OPENING -> {
         body.physics.velocity.setZero()
-        stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND.source)
+        stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
       }
     }
   }

@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.factories
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.utils.ObjectMap
 import com.engine.IGame2D
 import com.engine.common.objects.Pool
@@ -13,6 +14,8 @@ import com.megaman.maverick.game.entities.blocks.Block
 class BlockFactory(private val game: IGame2D) : IFactory<IGameEntity> {
 
   companion object {
+    const val TAG = "BlockFactory"
+
     const val STANDARD = "Standard"
     const val ICE_BLOCK = "IceBlock"
     const val GEAR_TROLLEY = "GearTrolley"
@@ -33,7 +36,10 @@ class BlockFactory(private val game: IGame2D) : IFactory<IGameEntity> {
         })
   }
 
-  override fun fetch(key: Any, props: Properties): Block? = pools.get(key)?.fetch()
+  override fun fetch(key: Any, props: Properties): Block? {
+    Gdx.app.debug(TAG, "Spawning Block: key = $key, props = $props")
+    return pools.get(if ((key) == "") STANDARD else key)?.fetch()
+  }
 }
 
 /**

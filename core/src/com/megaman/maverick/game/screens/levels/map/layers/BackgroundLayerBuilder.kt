@@ -20,9 +20,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) :
     while (iter.hasNext()) {
       val o = iter.next()
 
-      if (o !is RectangleMapObject) {
-        continue
-      }
+      if (o !is RectangleMapObject) continue
 
       val bkgReg =
           params.game.assMan.getTextureRegion(

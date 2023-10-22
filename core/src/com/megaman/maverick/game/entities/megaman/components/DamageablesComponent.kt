@@ -65,8 +65,8 @@ internal fun Megaman.defineDamageableComponent(): DamageableComponent {
             body.physics.velocity.y = MegamanValues.DMG_Y * ConstVals.PPM
           }
 
-          requestToPlaySound(SoundAsset.MEGAMAN_DAMAGE_SOUND.source, false)
-          stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND.source)
+          requestToPlaySound(SoundAsset.MEGAMAN_DAMAGE_SOUND, false)
+          stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
 
           true
         } else false
@@ -75,6 +75,6 @@ internal fun Megaman.defineDamageableComponent(): DamageableComponent {
   return DamageableComponent(
       this,
       damageable,
-      Timer(MegamanValues.DAMAGE_DURATION),
-      Timer(MegamanValues.DAMAGE_RECOVERY_TIME))
+      Timer(MegamanValues.DAMAGE_DURATION).setToEnd(),
+      Timer(MegamanValues.DAMAGE_RECOVERY_TIME).setToEnd())
 }

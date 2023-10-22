@@ -1,11 +1,11 @@
 package com.megaman.maverick.game.entities.factories
 
-import com.engine.IGame2D
 import com.engine.common.objects.Properties
 import com.engine.entities.IGameEntity
 import com.engine.factories.IFactory
+import com.megaman.maverick.game.MegamanMaverickGame
 
-class ProjectileFactory(game: IGame2D) : IFactory<IGameEntity> {
+class ProjectileFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
 
   companion object {
     const val BULLET = "Bullet"

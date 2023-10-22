@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.megaman.components
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector2
 import com.engine.behaviors.Behavior
 import com.engine.behaviors.BehaviorsComponent
@@ -27,7 +28,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             if (isUnderDamage() ||
                 isAnyBehaviorActive(BehaviorType.JUMPING, BehaviorType.CLIMBING) ||
                 body.isSensing(BodySense.FEET_ON_GROUND) ||
-                !wallJumpTimer.isFinished())
+                !wallJumpTimer.isFinished() /* TODO: || !upgradeHandler.has(wall_slide) */)
                 return@Behavior false
 
             return@Behavior if (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) &&
@@ -38,11 +39,19 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     game.controllerPoller.isButtonPressed(ConstKeys.RIGHT)
           },
           // init
-          init = { aButtonTask = AButtonTask.JUMP },
+          init = {
+            aButtonTask = AButtonTask.JUMP
+            
+            Gdx.app.debug("Megaman: WallSlideBehavior", "Init method called")
+          },
           // act
           act = { body.physics.frictionOnSelf.y += 1.25f },
           // end
-          end = { if (!body.isSensing(BodySense.IN_WATER)) aButtonTask = AButtonTask.AIR_DASH })
+          end = {
+            if (!body.isSensing(BodySense.IN_WATER)) aButtonTask = AButtonTask.AIR_DASH
+            
+            Gdx.app.debug("Megaman: WallSlideBehavior", "End method called")
+          })
 
   // swim
   val swim =
@@ -68,7 +77,9 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             if (facing == Facing.LEFT) x *= -1f
             body.physics.velocity.x = x
 
-            requestToPlaySound(SoundAsset.SWIM_SOUND.source, false)
+            requestToPlaySound(SoundAsset.SWIM_SOUND, false)
+
+            Gdx.app.debug("Megaman: SwimBehavior", "Init method called")
           })
 
   // jump
@@ -91,7 +102,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 aButtonTask == AButtonTask.JUMP &&
                     game.controllerPoller.getButtonStatus(ConstKeys.A) ==
                         ButtonStatus.JUST_PRESSED &&
-                    body.isSensingAny(BodySense.FEET_ON_GROUND, BodySense.FEET_ON_GROUND)
+                    (body.isSensingAny(BodySense.FEET_ON_GROUND) ||
+                        isBehaviorActive(BehaviorType.WALL_SLIDING))
           },
           // init
           init = {
@@ -113,10 +125,16 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             body.physics.velocity.set(v)
 
-            requestToPlaySound(SoundAsset.WALL_JUMP.source, false)
+            requestToPlaySound(SoundAsset.WALL_JUMP, false)
+
+            Gdx.app.debug("Megaman: JumpBehavior", "Init method called")
           },
           // end
-          end = { body.physics.velocity.y = 0f })
+          end = {
+            body.physics.velocity.y = 0f
+
+            Gdx.app.debug("Megaman: JumpBehavior", "End method called")
+          })
 
   // air dash
   val airDash =
@@ -139,7 +157,10 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
           init = {
             body.physics.gravityOn = false
             aButtonTask = AButtonTask.JUMP
-            requestToPlaySound(SoundAsset.WHOOSH_SOUND.source, true)
+            requestToPlaySound(SoundAsset.WHOOSH_SOUND, true)
+
+            
+            Gdx.app.debug("Megaman: AirDashBehavior", "Init method called")
           },
           // act
           act = {
@@ -170,6 +191,9 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             if (facing == Facing.LEFT) x *= -1f
 
             body.physics.velocity.x += x
+
+            
+            Gdx.app.debug("Megaman: AirDashBehavior", "End method called")
           })
 
   // ground slide
@@ -194,9 +218,12 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
           },
           // init
           init = {
-            // in body pre-process, body height is reduced from .95f to .45f when ground sliding;
-            // when upside down, need to compensate, otherwise Megaman will be off ground
+            // In body pre-process, body height is reduced from .95f to .45f when ground sliding;
+            // when upside down, need to compensate, otherwise Megaman will be off the ground
             if (upsideDown) body.y += .5f * ConstVals.PPM
+
+            
+            Gdx.app.debug("Megaman: GroundSlideBehavior", "Init method called")
           },
           // act
           act = {
@@ -221,6 +248,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             if (facing == Facing.LEFT) endDash *= -1f
 
             body.physics.velocity.x += endDash
+            
+            Gdx.app.debug("Megaman: GroundSlideBehavior", "End method called")
           })
 
   // TODO: implement climb behavior

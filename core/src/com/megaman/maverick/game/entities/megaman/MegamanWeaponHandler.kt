@@ -51,7 +51,6 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
     private val FLAME_TOSS_TRAJECTORY = Vector2(35f, 10f)
   }
 
-  private val engine = megaman.game.gameEngine
   private val weapons = ObjectMap<MegamanWeapon, MegaWeaponEntry>()
   private val spawnCenter: Vector2
     get() {
@@ -146,11 +145,12 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
 
     val projectile =
         when (weapon) {
-          MegamanWeapon.BUSTER -> fireMegaBuster(_stat)
-          MegamanWeapon.FLAME_TOSS -> fireFlameToss(_stat)
+          // TODO: MegamanWeapon.BUSTER -> fireMegaBuster(_stat)
+          // TODO: MegamanWeapon.FLAME_TOSS -> fireFlameToss(_stat)
+          MegamanWeapon.BUSTER -> {}
         }
 
-    weaponEntry.spawned.add(projectile)
+    // TODO: weaponEntry.spawned.add(projectile)
     weaponEntry.cooldownTimer.reset()
 
     translateAmmo(weapon, -cost)
@@ -161,15 +161,17 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
   private fun getWeaponEntry(weapon: MegamanWeapon) =
       when (weapon) {
         MegamanWeapon.BUSTER -> MegaWeaponEntry(.01f)
-        MegamanWeapon.FLAME_TOSS -> {
-          val e = MegaWeaponEntry(.5f)
-          e.normalCost = { 3 }
-          e.halfChargedCost = { 5 }
-          e.fullyChargedCost = { 7 }
-          e.chargeable = { !megaman.body.isSensing(BodySense.IN_WATER) }
-          e.canFireWeapon = { !megaman.body.isSensing(BodySense.IN_WATER) && e.spawned.size == 0 }
-          e
-        }
+      /*
+      TODO: MegamanWeapon.FLAME_TOSS -> {
+        val e = MegaWeaponEntry(.5f)
+        e.normalCost = { 3 }
+        e.halfChargedCost = { 5 }
+        e.fullyChargedCost = { 7 }
+        e.chargeable = { !megaman.body.isSensing(BodySense.IN_WATER) }
+        e.canFireWeapon = { !megaman.body.isSensing(BodySense.IN_WATER) && e.spawned.size == 0 }
+        e
+      }
+      */
       }
 
   private fun fireMegaBuster(stat: MegaChargeStatus): IProjectileEntity {
@@ -197,10 +199,10 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
         }
 
     if (stat === MegaChargeStatus.NOT_CHARGED)
-        megaman.requestToPlaySound(SoundAsset.MEGA_BUSTER_BULLET_SHOT_SOUND.source, false)
+        megaman.requestToPlaySound(SoundAsset.MEGA_BUSTER_BULLET_SHOT_SOUND, false)
     else {
-      megaman.requestToPlaySound(SoundAsset.MEGA_BUSTER_CHARGED_SHOT_SOUND.source, false)
-      megaman.stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND.source)
+      megaman.requestToPlaySound(SoundAsset.MEGA_BUSTER_CHARGED_SHOT_SOUND, false)
+      megaman.stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
     }
 
     val s = spawnCenter
@@ -209,7 +211,7 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
         else s.y -= .05f * ConstVals.PPM
 
     props.put(ConstKeys.POSITION, s)
-    engine.spawn(megaBusterShot, props)
+    megaman.game.gameEngine.spawn(megaBusterShot, props)
 
     return megaBusterShot
   }
@@ -232,9 +234,9 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
     props.put(ConstKeys.POSITION, spawnCenter)
     // TODO: trajectory should be different depending on charge status
     props.put(ConstKeys.TRAJECTORY, FLAME_TOSS_TRAJECTORY)
-    engine.spawn(fireball, props)
+    megaman.game.gameEngine.spawn(fireball, props)
 
-    megaman.requestToPlaySound(SoundAsset.CRASH_BOMBER_SOUND.source, false)
+    megaman.requestToPlaySound(SoundAsset.CRASH_BOMBER_SOUND, false)
 
     return fireball
   }

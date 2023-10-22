@@ -7,9 +7,20 @@ object ConstVals {
   const val VIEW_HEIGHT = 14f
   const val PPM = 32
   const val FIXED_TIME_STEP = 1 / 150f
+  const val STANDARD_RESISTANCE_X = 1.035f
+  const val STANDARD_RESISTANCE_Y = 1.025f
 }
 
 object ConstKeys {
+  const val X = "x"
+  const val Y = "y"
+  const val DISPOSABLES = "disposables"
+  const val EVENTS = "events"
+  const val ENTITY_TYPE = "entity_type"
+  const val SPAWN_TYPE = "spawn_type"
+  const val SPAWNER = "spawner"
+  const val SPAWNERS = "spawners"
+  const val READY = "ready"
   const val TYPE = "type"
   const val ARRAY = "array"
   const val OBJECT_SET = "object_set"

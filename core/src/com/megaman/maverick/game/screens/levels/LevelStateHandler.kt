@@ -1,32 +1,33 @@
 package com.megaman.maverick.game.screens.levels
 
 import com.badlogic.gdx.utils.OrderedMap
-import com.engine.IGame2D
 import com.engine.drawables.sprites.SpriteSystem
 import com.engine.systems.IGameSystem
-import com.test.game.assets.SoundAsset
+import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 
-class LevelStateHandler(private val game: IGame2D) {
+class LevelStateHandler(private val game: MegamanMaverickGame) {
 
-  private var systemsOnPause: OrderedMap<IGameSystem, Boolean>? = null
+  private val systemsOnPause = OrderedMap<IGameSystem, Boolean>()
 
   fun pause() {
-    val pauseMap = OrderedMap<IGameSystem, Boolean>()
+    systemsOnPause.clear()
+
     game.gameEngine.systems.forEach {
-      pauseMap.put(it, it.on)
-      if (it !is SpriteSystem) {
-        it.on = false
-      }
+      systemsOnPause.put(it, it.on)
+      if (it !is SpriteSystem) it.on = false
     }
-    game.audioMan.pauseAllSounds()
-    game.audioMan.pauseAllMusic()
-    game.audioMan.playSound(SoundAsset.PAUSE_SOUND.source, false)
+
+    game.audioMan.pauseAllSound()
+    game.audioMan.pauseMusic()
+    game.audioMan.playSound(SoundAsset.PAUSE_SOUND, false)
   }
 
   fun resume() {
-    systemsOnPause?.forEach { it.key.on = it.value }
-    game.audioMan.resumeAllSounds()
-    game.audioMan.resumeAllMusic()
-    game.audioMan.playSound(SoundAsset.PAUSE_SOUND.source, false)
+    systemsOnPause.forEach { it.key.on = it.value }
+
+    game.audioMan.resumeAllSound()
+    game.audioMan.playMusic()
+    game.audioMan.playSound(SoundAsset.PAUSE_SOUND, false)
   }
 }

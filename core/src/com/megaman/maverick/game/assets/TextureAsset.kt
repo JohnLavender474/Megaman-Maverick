@@ -2,7 +2,7 @@ package com.megaman.maverick.game.assets
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 
-const val TEXTURE_ASSET_PREFIX = "sprites/SpriteSheets/"
+const val TEXTURE_ASSET_PREFIX = "sprites/sprite_sheets/"
 
 /** An enum class for texture assets. */
 enum class TextureAsset(src: String) : IAsset {
@@ -40,9 +40,9 @@ enum class TextureAsset(src: String) : IAsset {
   FACES_1("Faces1.txt"),
 
   // Megaman
-  MEGAMAN("Megaman.txt"),
-  MEGAMAN_MAVERICK("MegamanMaverick.txt"),
-  MEGAMAN_FIRE("MegamanFire.txt"),
+  MEGAMAN_BUSTER("Megaman_BUSTER.txt"),
+  MEGAMAN_MAVERICK_BUSTER("MegamanMaverick_BUSTER.txt"),
+  MEGAMAN_FLAME_TOSS("Megaman_FLAME_TOSS.txt"),
 
   // Platforms
   GATES("Gates.txt"),

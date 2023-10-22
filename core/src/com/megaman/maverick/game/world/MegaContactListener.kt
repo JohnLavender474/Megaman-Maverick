@@ -11,6 +11,7 @@ import com.engine.world.Contact
 import com.engine.world.Fixture
 import com.engine.world.IContactListener
 import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.IProjectileEntity
@@ -23,7 +24,7 @@ import com.megaman.maverick.game.utils.VelocityAlterator
 
 /** A contact listener for the game. */
 @Suppress("UNCHECKED_CAST")
-class MegaContactListener(private val game: IGame2D) : IContactListener {
+class MegaContactListener(private val game: MegamanMaverickGame) : IContactListener {
 
   override fun beginContact(contact: Contact, delta: Float) {
     // consumer
@@ -147,7 +148,7 @@ class MegaContactListener(private val game: IGame2D) : IContactListener {
       // TODO: Splash.generate
 
       if (entity is Megaman || entity is IEnemyEntity)
-          game.audioMan.playSound(SoundAsset.SPLASH_SOUND.source, false)
+          game.audioMan.playSound(SoundAsset.SPLASH_SOUND, false)
     }
 
     // head, ladder
@@ -427,7 +428,7 @@ class MegaContactListener(private val game: IGame2D) : IContactListener {
               if (entity.body.isSensing(BodySense.FEET_ON_GROUND)) AButtonTask.JUMP
               else AButtonTask.AIR_DASH
 
-      game.audioMan.playSound(SoundAsset.SPLASH_SOUND.source, false)
+      game.audioMan.playSound(SoundAsset.SPLASH_SOUND, false)
       // TODO: generate Splash
     }
 

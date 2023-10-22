@@ -12,10 +12,6 @@ buildscript {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         google()
     }
-    dependencies {
-        
-
-    }
 }
 
 allprojects {
@@ -23,7 +19,7 @@ allprojects {
 
     version = '1.0'
     ext {
-        appName = "Test 2D Game"
+        appName = "Megaman Maverick"
         gdxVersion = '1.11.0'
         roboVMVersion = '2.3.16'
         box2DLightsVersion = '1.5'
@@ -52,7 +48,6 @@ project(":desktop") {
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         api "com.badlogicgames.gdx-controllers:gdx-controllers-desktop:$gdxControllersVersion"
         api "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
-        
     }
 }
 
@@ -65,6 +60,6 @@ project(":core") {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx-controllers:gdx-controllers-core:$gdxControllersVersion"
         api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        implementation fileTree(dir: 'libs', include: '*.jar')
+        api fileTree(dir: 'libs', include: '*.jar')
     }
 }

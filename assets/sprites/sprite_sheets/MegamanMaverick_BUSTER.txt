@@ -1,4 +1,4 @@
-MegamanMaverick.png
+MegamanMaverick_BUSTER.png
 size: 1008, 432
 format: RGBA8888
 filter: Nearest,Nearest

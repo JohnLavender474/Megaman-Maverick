@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.0.0</string>
+        <string>7.0.3</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -124,7 +124,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>../SpriteSheets/MegamanFire.txt</filename>
+                <filename>../sprite_sheets/Megaman_FLAME_TOSS.txt</filename>
             </struct>
         </map>
         <key>multiPackMode</key>
@@ -187,6 +187,7 @@
             <key type="filename">../Frames/MegamanFire/SlipSlideShoot.png</key>
             <key type="filename">../Frames/MegamanFire/StandShoot.png</key>
             <key type="filename">../Frames/MegamanFire/StillClimb.png</key>
+            <key type="filename">../Frames/MegamanFire/SwimAttack.png</key>
             <key type="filename">../Frames/MegamanFire/WallSlide.png</key>
             <key type="filename">../Frames/MegamanFire/WallSlideShoot.png</key>
             <struct type="IndividualSpriteSettings">
@@ -222,6 +223,8 @@
             <key type="filename">../Frames/MegamanFire/StillClimbCharging.png</key>
             <key type="filename">../Frames/MegamanFire/StillClimbHalfCharging.png</key>
             <key type="filename">../Frames/MegamanFire/Swim.png</key>
+            <key type="filename">../Frames/MegamanFire/SwimCharging.png</key>
+            <key type="filename">../Frames/MegamanFire/SwimHalfCharging.png</key>
             <key type="filename">../Frames/MegamanFire/WallSlideCharging.png</key>
             <key type="filename">../Frames/MegamanFire/WallSlideHalfCharging.png</key>
             <struct type="IndividualSpriteSettings">

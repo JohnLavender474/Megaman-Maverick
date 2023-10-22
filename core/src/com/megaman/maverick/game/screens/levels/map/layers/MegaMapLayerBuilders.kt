@@ -10,6 +10,7 @@ import com.engine.screens.levels.tiledmap.builders.ITiledMapLayerBuilder
 import com.engine.screens.levels.tiledmap.builders.TiledMapLayerBuilders
 import com.engine.spawns.SpawnsManager
 import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.MegamanMaverickGame
 
 /**
  * The parameters used to initialize the [MegaMapLayerBuilders] class.
@@ -17,7 +18,10 @@ import com.megaman.maverick.game.ConstKeys
  * @param game the [IGame2D] instance.
  * @param spawnsManager the [SpawnsManager] instance.
  */
-data class MegaMapLayerBuildersParams(val game: IGame2D, val spawnsManager: SpawnsManager)
+data class MegaMapLayerBuildersParams(
+    val game: MegamanMaverickGame,
+    val spawnsManager: SpawnsManager
+)
 
 /**
  * Builds all layers of a [TiledMap] using the [ITiledMapLayerBuilder]s that are added to this.
@@ -41,17 +45,17 @@ class MegaMapLayerBuilders(private val params: MegaMapLayerBuildersParams) :
     if (initialized) return
     initialized = true
     layerBuilders.put(ConstKeys.PLAYER, PlayerLayerBuilder())
-    layerBuilders.put(ConstKeys.ENEMIES, EnemiesLayerBuilder(params))
-    layerBuilders.put(ConstKeys.BLOCKS, BlocksLayerBuilder(params))
-    layerBuilders.put(ConstKeys.ITEMS, ItemsLayerBuilder(params))
+    layerBuilders.put(ConstKeys.ENEMIES, SpawnersLayerBuilder(params))
+    layerBuilders.put(ConstKeys.BLOCKS, SpawnersLayerBuilder(params))
+    layerBuilders.put(ConstKeys.ITEMS, SpawnersLayerBuilder(params))
     layerBuilders.put(ConstKeys.TRIGGERS, TriggersLayerBuilder(params))
     layerBuilders.put(ConstKeys.BACKGROUNDS, BackgroundLayerBuilder(params))
     layerBuilders.put(ConstKeys.FOREGROUNDS, ForegroundLayerBuilder(params))
     layerBuilders.put(ConstKeys.GAME_ROOMS, GameRoomsLayerBuilder())
   }
 
-  override fun build(layers: MapLayers): Properties {
+  override fun build(layers: MapLayers, returnProps: Properties) {
     if (!initialized) init()
-    return super.build(layers)
+    super.build(layers, returnProps)
   }
 }

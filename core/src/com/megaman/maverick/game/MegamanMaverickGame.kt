@@ -1,9 +1,12 @@
 package com.megaman.maverick.game
 
+import com.badlogic.gdx.Application
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
+import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.utils.Array
@@ -17,7 +20,6 @@ import com.engine.IGameEngine
 import com.engine.animations.AnimationsSystem
 import com.engine.audio.AudioSystem
 import com.engine.behaviors.BehaviorsSystem
-import com.engine.common.extensions.loadAssetsInDirectory
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.extensions.objectSetOf
 import com.engine.controller.ControllerSystem
@@ -37,29 +39,106 @@ import com.engine.points.PointsSystem
 import com.engine.systems.IGameSystem
 import com.engine.updatables.UpdatablesSystem
 import com.engine.world.WorldSystem
+import com.megaman.maverick.game.assets.MusicAsset
+import com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.screens.ScreenEnum
+import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
+import com.megaman.maverick.game.utils.getMusics
+import com.megaman.maverick.game.utils.getSounds
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.MegaCollisionHandler
 import com.megaman.maverick.game.world.MegaContactListener
 import java.util.*
 
+/**
+ * Main class for the Megaman Maverick 2D game. It extends the [Game2D] class and provides the
+ * game's core functionality and initialization.
+ *
+ * @suppress("UNCHECKED_CAST") This annotation suppresses unchecked cast warnings as needed.
+ */
+@Suppress("UNCHECKED_CAST")
 class MegamanMaverickGame : Game2D() {
 
-  lateinit var megaman: Megaman
-
-  fun startLevelScreen(tmxMapSource: String, music: String) {
-    val levelScreen = screens.get(ScreenEnum.LEVEL.name) as MegaLevelScreen
-    levelScreen.tmxMapSource = tmxMapSource
-    levelScreen.music = music
-    setScreen(levelScreen)
+  companion object {
+    const val TAG = "MegamanMaverickGame"
   }
 
+  lateinit var megaman: Megaman
+  lateinit var audioMan: MegaAudioManager
+
+  /**
+   * Starts the level screen for the given level.
+   *
+   * @param level The level to start.
+   */
+  fun startLevelScreen(level: Level) {
+    val levelScreen = screens.get(ScreenEnum.LEVEL.name) as MegaLevelScreen
+    levelScreen.tmxMapSource = level.tmxSourceFile
+    levelScreen.music = level.musicAss
+    setCurrentScreen(ScreenEnum.LEVEL.name)
+  }
+
+  /**
+   * Get the game camera.
+   *
+   * @return The game camera.
+   */
+  fun getGameCamera(): Camera = viewports.get(ConstKeys.GAME).camera
+
+  /**
+   * Get the UI camera.
+   *
+   * @return The UI camera.
+   */
+  fun getUiCamera(): Camera = viewports.get(ConstKeys.UI).camera
+
+  /**
+   * Get the set of sprites.
+   *
+   * @return The set of sprites.
+   */
+  fun getSprites(): TreeSet<ISprite> = properties.get(ConstKeys.SPRITES) as TreeSet<ISprite>
+
+  /**
+   * Get the shapes to be drawn.
+   *
+   * @return The shapes to be drawn.
+   */
+  fun getShapes(): OrderedMap<ShapeRenderer.ShapeType, Array<IDrawableShape>> =
+      properties.get(ConstKeys.SHAPES) as OrderedMap<ShapeRenderer.ShapeType, Array<IDrawableShape>>
+
+  /**
+   * Get the game systems.
+   *
+   * @return The game systems.
+   */
+  fun getSystems(): ObjectMap<String, IGameSystem> =
+      properties.get(ConstKeys.SYSTEMS) as ObjectMap<String, IGameSystem>
+
+  /**
+   * Set the graph map.
+   *
+   * @param graphMap The graph map.
+   * @return The old graph map if any.
+   */
+  fun setGraphMap(graphMap: IGraphMap) = properties.put(ConstKeys.WORLD_GRAPH_MAP, graphMap)
+
+  /**
+   * Get the graph map.
+   *
+   * @return The graph map.
+   */
+  fun getGraphMap(): IGraphMap? = properties.get(ConstKeys.WORLD_GRAPH_MAP) as IGraphMap?
+
+  /** Create the game. */
   override fun create() {
-    // create Megaman
-    megaman = Megaman(this)
+    // set log level
+    Gdx.app.logLevel = Application.LOG_DEBUG
 
     // set viewports
     val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
@@ -78,8 +157,21 @@ class MegamanMaverickGame : Game2D() {
     */
     screens.put(ScreenEnum.LEVEL.name, MegaLevelScreen(this))
 
+    // call to super
     super.create()
+
+    // create Audio Manager
+    audioMan = MegaAudioManager(assMan.getSounds(), assMan.getMusics())
+
+    // initialize entity factories
     EntityFactories.initialize(this)
+
+    // create Megaman
+    megaman = Megaman(this)
+    megaman.init()
+
+    // TODO: test level screen
+    startLevelScreen(Level.TEST1)
   }
 
   override fun createButtons(): Buttons {
@@ -106,13 +198,26 @@ class MegamanMaverickGame : Game2D() {
     return buttons
   }
 
+  override fun loadAssets(assMan: AssetManager) {
+    MusicAsset.values().forEach {
+      Gdx.app.debug(TAG, "loadAssets(): Loading music asset: ${it.source}")
+      assMan.load(it.source, Music::class.java)
+    }
+    SoundAsset.values().forEach {
+      Gdx.app.debug(TAG, "loadAssets(): Loading sound asset: ${it.source}")
+      assMan.load(it.source, Sound::class.java)
+    }
+    TextureAsset.values().forEach {
+      Gdx.app.debug(TAG, "loadAssets(): Loading texture asset: ${it.source}")
+      assMan.load(it.source, TextureAtlas::class.java)
+    }
+  }
+
   override fun createGameEngine(): IGameEngine {
     val sprites = TreeSet<ISprite>()
     properties.put(ConstKeys.SPRITES, sprites)
     val shapes = OrderedMap<ShapeRenderer.ShapeType, Array<IDrawableShape>>()
     properties.put(ConstKeys.SHAPES, shapes)
-
-    val getGraphMap = { properties.get(ConstKeys.WORLD_GRAPH_MAP) as IGraphMap }
 
     val contactFilterMap =
         objectMapOf<Any, ObjectSet<Any>>(
@@ -140,30 +245,28 @@ class MegamanMaverickGame : Game2D() {
             BehaviorsSystem(),
             WorldSystem(
                 MegaContactListener(this),
-                getGraphMap,
+                { getGraphMap() },
                 ConstVals.FIXED_TIME_STEP,
                 MegaCollisionHandler(),
                 contactFilterMap),
             CullablesSystem(),
             MotionSystem(),
-            PathfindingSystem { Pathfinder(getGraphMap(), it.params) },
+            PathfindingSystem { Pathfinder(getGraphMap()!!, it.params) },
             PointsSystem(),
             UpdatablesSystem(),
             SpriteSystem { sprites },
             DrawableShapeSystem { shapes },
-            AudioSystem(assMan))
+            AudioSystem(
+                { audioMan.playSound(it.source, it.loop) },
+                { audioMan.playMusic(it.source, it.loop) },
+                { audioMan.stopSound(it) },
+                { audioMan.stopMusic(it) }
+            ))
 
     val systems = ObjectMap<String, IGameSystem>()
     engine.systems.forEach { systems.put(it::class.simpleName, it) }
     properties.put(ConstKeys.SYSTEMS, systems)
 
     return engine
-  }
-
-  override fun loadAssets(assMan: AssetManager) {
-    assMan.loadAssetsInDirectory(ConstKeys.MUSIC, Music::class.java)
-    assMan.loadAssetsInDirectory(ConstKeys.SOUNDS, Sound::class.java)
-    assMan.loadAssetsInDirectory(
-        "${ConstKeys.SPRITES}/${ConstKeys.SPRITE_SHEETS}", TextureAtlas::class.java)
   }
 }
