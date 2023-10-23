@@ -7,6 +7,7 @@ import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
+import com.engine.common.GameLogger
 import com.engine.common.enums.Facing
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.gdxFilledArrayOf
@@ -106,7 +107,7 @@ internal fun Megaman.defineAnimationsComponent(): AnimationsComponent {
         _animationKey += "_${megamanType}"
         _animationKey += "_${weapon.name}"
 
-        Gdx.app.debug(
+        GameLogger.debug(
             TAG,
             "defineAnimationsComponent(): Putting animation \'${animationKey}\' with key \'${_animationKey}\'")
 

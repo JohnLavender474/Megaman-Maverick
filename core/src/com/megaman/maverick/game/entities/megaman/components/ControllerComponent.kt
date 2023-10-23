@@ -1,11 +1,13 @@
 package com.megaman.maverick.game.entities.megaman.components
 
-import com.badlogic.gdx.Gdx
+import com.engine.common.GameLogger
+import com.engine.common.enums.Facing
 import com.engine.controller.ControllerComponent
 import com.engine.controller.buttons.ButtonActuator
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
@@ -19,12 +21,14 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
   val left =
       ButtonActuator(
           onJustPressed = { _ ->
-            Gdx.app.debug(Megaman.TAG, "left controller button just pressed")
+            GameLogger.debug(Megaman.TAG, "left controller button just pressed")
           },
           onPressContinued = { poller, delta ->
             if (poller.isButtonPressed(ConstKeys.RIGHT)) return@ButtonActuator
 
-            running = true
+            facing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) Facing.RIGHT else Facing.LEFT
+            running = !isBehaviorActive(BehaviorType.WALL_SLIDING)
+
             val threshold =
                 (if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_RUN_SPEED
                 else MegamanValues.RUN_SPEED) * ConstVals.PPM
@@ -37,7 +41,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
             }
           },
           onJustReleased = { poller ->
-            Gdx.app.debug(Megaman.TAG, "left controller button just released")
+            GameLogger.debug(Megaman.TAG, "left controller button just released")
             if (!poller.isButtonPressed(ConstKeys.RIGHT)) running = false
           },
           onReleaseContinued = { poller, _ ->
@@ -48,12 +52,14 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
   val right =
       ButtonActuator(
           onJustPressed = { _ ->
-            Gdx.app.debug(Megaman.TAG, "right controller button just pressed")
+            GameLogger.debug(Megaman.TAG, "right controller button just pressed")
           },
           onPressContinued = { poller, delta ->
             if (poller.isButtonPressed(ConstKeys.LEFT)) return@ButtonActuator
 
-            running = true
+            facing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) Facing.LEFT else Facing.RIGHT
+            running = !isBehaviorActive(BehaviorType.WALL_SLIDING)
+
             val threshold =
                 (if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_RUN_SPEED
                 else MegamanValues.RUN_SPEED) * ConstVals.PPM
@@ -66,7 +72,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
             }
           },
           onJustReleased = { poller ->
-            Gdx.app.debug(Megaman.TAG, "right controller button just released")
+            GameLogger.debug(Megaman.TAG, "right controller button just released")
             if (!poller.isButtonPressed(ConstKeys.LEFT)) running = false
           },
           onReleaseContinued = { poller, _ ->

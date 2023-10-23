@@ -5,6 +5,7 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
 import com.engine.common.enums.ProcessState
 import com.engine.common.extensions.toVector2
@@ -20,6 +21,7 @@ import kotlin.math.min
 class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable {
 
   companion object {
+    const val TAG = "CameraManagerForRooms"
     const val DELAY_DURATION = .35f
     const val TRANS_DURATION = 1f
     const val DISTANCE_ON_TRANSITION = 1.5f
@@ -38,6 +40,7 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
 
   var focus: PositionSupplier? = null
     set(value) {
+      GameLogger.debug(TAG, "set focus to $value")
       field = value
       reset = true
       if (value == null) return
@@ -87,6 +90,7 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
 
   override fun update(delta: Float) {
     if (reset) {
+      GameLogger.debug(TAG, "update(): reset")
       reset = false
       priorGameRoom = null
       currentGameRoom = null
@@ -225,6 +229,8 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
   private fun onTransition(delta: Float) {
     when (transitionState) {
       ProcessState.END -> {
+        GameLogger.debug(TAG, "onTransition(): transition target = $transitionTarget")
+
         transitionDirection = null
         transitionState = null
 
@@ -237,6 +243,8 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
         endTransition?.invoke()
       }
       ProcessState.BEGIN -> {
+        GameLogger.debug(TAG, "onTransition(): transition start = $transitionStart")
+
         transitionState = ProcessState.CONTINUE
 
         beginTransition?.invoke()
@@ -272,7 +280,10 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
   }
 
   private fun nextGameRoom(): RectangleMapObject? {
-    if (focus == null || gameRooms == null) return null
+    if (focus == null || gameRooms == null) {
+      GameLogger.debug(TAG, "nextGameRoom(): no focus, no game rooms, so no next room")
+      return null
+    }
 
     var nextGameRoom: RectangleMapObject? = null
 
@@ -283,6 +294,7 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
       }
     }
 
+    GameLogger.debug(TAG, "nextGameRoom(): next room = $nextGameRoom")
     return nextGameRoom
   }
 

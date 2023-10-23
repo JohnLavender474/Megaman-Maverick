@@ -1,18 +1,14 @@
 package com.megaman.maverick.game
 
-import com.badlogic.gdx.Application
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
-import com.badlogic.gdx.graphics.Camera
+import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.ObjectSet
-import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.engine.Game2D
 import com.engine.GameEngine
@@ -20,6 +16,8 @@ import com.engine.IGameEngine
 import com.engine.animations.AnimationsSystem
 import com.engine.audio.AudioSystem
 import com.engine.behaviors.BehaviorsSystem
+import com.engine.common.GameLogLevel
+import com.engine.common.GameLogger
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.extensions.objectSetOf
 import com.engine.controller.ControllerSystem
@@ -88,14 +86,15 @@ class MegamanMaverickGame : Game2D() {
    *
    * @return The game camera.
    */
-  fun getGameCamera(): Camera = viewports.get(ConstKeys.GAME).camera
+  fun getGameCamera(): OrthographicCamera =
+      viewports.get(ConstKeys.GAME).camera as OrthographicCamera
 
   /**
    * Get the UI camera.
    *
    * @return The UI camera.
    */
-  fun getUiCamera(): Camera = viewports.get(ConstKeys.UI).camera
+  fun getUiCamera(): OrthographicCamera = viewports.get(ConstKeys.UI).camera as OrthographicCamera
 
   /**
    * Get the set of sprites.
@@ -109,8 +108,7 @@ class MegamanMaverickGame : Game2D() {
    *
    * @return The shapes to be drawn.
    */
-  fun getShapes(): OrderedMap<ShapeRenderer.ShapeType, Array<IDrawableShape>> =
-      properties.get(ConstKeys.SHAPES) as OrderedMap<ShapeRenderer.ShapeType, Array<IDrawableShape>>
+  fun getShapes(): Array<IDrawableShape> = properties.get(ConstKeys.SHAPES) as Array<IDrawableShape>
 
   /**
    * Get the game systems.
@@ -138,7 +136,7 @@ class MegamanMaverickGame : Game2D() {
   /** Create the game. */
   override fun create() {
     // set log level
-    Gdx.app.logLevel = Application.LOG_DEBUG
+    GameLogger.set(GameLogLevel.ERROR)
 
     // set viewports
     val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
@@ -200,15 +198,15 @@ class MegamanMaverickGame : Game2D() {
 
   override fun loadAssets(assMan: AssetManager) {
     MusicAsset.values().forEach {
-      Gdx.app.debug(TAG, "loadAssets(): Loading music asset: ${it.source}")
+      GameLogger.debug(TAG, "loadAssets(): Loading music asset: ${it.source}")
       assMan.load(it.source, Music::class.java)
     }
     SoundAsset.values().forEach {
-      Gdx.app.debug(TAG, "loadAssets(): Loading sound asset: ${it.source}")
+      GameLogger.debug(TAG, "loadAssets(): Loading sound asset: ${it.source}")
       assMan.load(it.source, Sound::class.java)
     }
     TextureAsset.values().forEach {
-      Gdx.app.debug(TAG, "loadAssets(): Loading texture asset: ${it.source}")
+      GameLogger.debug(TAG, "loadAssets(): Loading texture asset: ${it.source}")
       assMan.load(it.source, TextureAtlas::class.java)
     }
   }
@@ -216,7 +214,7 @@ class MegamanMaverickGame : Game2D() {
   override fun createGameEngine(): IGameEngine {
     val sprites = TreeSet<ISprite>()
     properties.put(ConstKeys.SPRITES, sprites)
-    val shapes = OrderedMap<ShapeRenderer.ShapeType, Array<IDrawableShape>>()
+    val shapes = Array<IDrawableShape>()
     properties.put(ConstKeys.SHAPES, shapes)
 
     val contactFilterMap =
@@ -260,8 +258,7 @@ class MegamanMaverickGame : Game2D() {
                 { audioMan.playSound(it.source, it.loop) },
                 { audioMan.playMusic(it.source, it.loop) },
                 { audioMan.stopSound(it) },
-                { audioMan.stopMusic(it) }
-            ))
+                { audioMan.stopMusic(it) }))
 
     val systems = ObjectMap<String, IGameSystem>()
     engine.systems.forEach { systems.put(it::class.simpleName, it) }

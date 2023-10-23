@@ -3,6 +3,7 @@ package com.megaman.maverick.game.entities.factories
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.utils.ObjectMap
 import com.engine.IGame2D
+import com.engine.common.GameLogger
 import com.engine.common.objects.Pool
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
@@ -37,7 +38,7 @@ class BlockFactory(private val game: IGame2D) : IFactory<IGameEntity> {
   }
 
   override fun fetch(key: Any, props: Properties): Block? {
-    Gdx.app.debug(TAG, "Spawning Block: key = $key, props = $props")
+    GameLogger.debug(TAG, "Spawning Block: key = $key, props = $props")
     return pools.get(if ((key) == "") STANDARD else key)?.fetch()
   }
 }

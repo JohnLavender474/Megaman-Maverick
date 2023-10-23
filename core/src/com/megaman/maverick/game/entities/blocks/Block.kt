@@ -1,19 +1,21 @@
 package com.megaman.maverick.game.entities.blocks
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.engine.IGame2D
+import com.engine.common.GameLogger
 import com.engine.common.objects.Properties
+import com.engine.common.shapes.GameRectangle
+import com.engine.drawables.shapes.DrawableShapeComponent
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
-import com.engine.world.PhysicsData
+import com.engine.updatables.UpdatablesComponent
+import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.world.BodyLabel
+import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.addBodyLabel
+import com.megaman.maverick.game.world.setEntity
 
 /** A block is a static entity that can be collided with. */
 open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
@@ -25,16 +27,24 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
   }
 
   override fun init() {
-    Gdx.app.debug(TAG, "init(): Initializing Block entity.")
+    GameLogger.debug(TAG, "init(): Initializing Block entity.")
 
     val physicsData = PhysicsData()
-    physicsData.frictionToApply.x = STANDARD_FRIC_X
-    addComponent(BodyComponent(this, Body(BodyType.STATIC, physicsData)))
+    physicsData.frictionToApply = Vector2(STANDARD_FRIC_X, STANDARD_FRIC_Y)
+    val body = Body(BodyType.STATIC, physicsData)
+
+    val bodyFixture = Fixture(GameRectangle(), FixtureType.BLOCK)
+    body.addFixture(bodyFixture)
+
+    body.fixtures.forEach { (_, fixture) -> fixture.setEntity(this) }
+    addComponent(BodyComponent(this, body))
+
+    addComponent(UpdatablesComponent(this, { (bodyFixture.shape as GameRectangle).set(body) }))
+
+    addComponent(DrawableShapeComponent(this, body))
   }
 
   override fun spawn(spawnProps: Properties) {
-    Gdx.app.debug(TAG, "spawn(): Spawning Block entity with properties: $spawnProps")
-
     super.spawn(spawnProps)
 
     if (properties.containsKey(ConstKeys.FRICTION_X))
@@ -60,10 +70,7 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
     }
 
     val bounds = spawnProps.get(ConstKeys.BOUNDS, Rectangle::class)
-    if (bounds != null) {
-      body.set(bounds)
-      return
-    }
+    if (bounds != null) body.set(bounds)
 
     val position = spawnProps.get(ConstKeys.POSITION, Vector2::class)
     if (position != null) body.setPosition(position)

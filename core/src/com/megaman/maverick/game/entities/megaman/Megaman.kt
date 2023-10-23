@@ -1,13 +1,14 @@
 package com.megaman.maverick.game.entities.megaman
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector2
 import com.engine.audio.AudioComponent
+import com.engine.common.GameLogger
 import com.engine.common.enums.Facing
 import com.engine.common.enums.Position
 import com.engine.common.extensions.objectSetOf
 import com.engine.common.interfaces.Faceable
 import com.engine.common.objects.Properties
+import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.TimeMarkedRunnable
 import com.engine.common.time.Timer
 import com.engine.entities.GameEntity
@@ -42,15 +43,15 @@ class Megaman(game: MegamanMaverickGame) :
   }
 
   // Megaman's timers
-  internal val shootAnimTimer = Timer(MegamanValues.SHOOT_ANIM_TIME)
+  internal val shootAnimTimer = Timer(MegamanValues.SHOOT_ANIM_TIME).setToEnd()
   internal val chargingTimer =
       Timer(
-          MegamanValues.TIME_TO_FULLY_CHARGED,
-          TimeMarkedRunnable(MegamanValues.TIME_TO_HALFWAY_CHARGED) {
-            getComponent(AudioComponent::class)!!.requestToPlaySound(
-                SoundAsset.MEGA_BUSTER_CHARGING_SOUND, true)
-          })
-  internal val damageFlashTimer = Timer(MegamanValues.DAMAGE_FLASH_DURATION)
+              MegamanValues.TIME_TO_FULLY_CHARGED,
+              TimeMarkedRunnable(MegamanValues.TIME_TO_HALFWAY_CHARGED) {
+                requestToPlaySound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND, true)
+              })
+          .setToEnd()
+  internal val damageFlashTimer = Timer(MegamanValues.DAMAGE_FLASH_DURATION).setToEnd()
   internal val airDashTimer = Timer(MegamanValues.MAX_AIR_DASH_TIME)
   internal val wallJumpTimer = Timer(MegamanValues.WALL_JUMP_IMPETUS_TIME).setToEnd()
   internal val groundSlideTimer = Timer(MegamanValues.MAX_GROUND_SLIDE_TIME)
@@ -100,7 +101,7 @@ class Megaman(game: MegamanMaverickGame) :
   override var upsideDown: Boolean
     get() = getProperty(MegamanProps.UPSIDE_DOWN) == true
     set(value) {
-      Gdx.app.debug(TAG, "set upside down = $value")
+      GameLogger.debug(TAG, "set upside down = $value")
 
       putProperty(MegamanProps.UPSIDE_DOWN, value)
       if (upsideDown) {
@@ -200,14 +201,14 @@ class Megaman(game: MegamanMaverickGame) :
    * @param spawnProps the [Properties] to use to spawn Megaman.
    */
   override fun spawn(spawnProps: Properties) {
-    Gdx.app.debug(TAG, "spawn(): spawnProps = $spawnProps")
+    GameLogger.debug(TAG, "spawn(): spawnProps = $spawnProps")
 
     super.spawn(spawnProps)
 
     // set Megaman's position
-    val x = properties.get(ConstKeys.X, Float::class)!!
-    val y = properties.get(ConstKeys.Y, Float::class)!!
-    body.setPosition(x, y)
+    val bounds = properties.get(ConstKeys.BOUNDS) as GameRectangle
+    body.positionOnPoint(bounds.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+    GameLogger.debug(TAG, "spawn(): body = $body")
 
     // initialize Megaman's props
     facing = Facing.RIGHT

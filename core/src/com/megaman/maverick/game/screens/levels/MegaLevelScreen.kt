@@ -2,15 +2,18 @@
 
 package com.megaman.maverick.game.screens.levels
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Camera
+import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.maps.objects.RectangleMapObject
-import com.badlogic.gdx.utils.*
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.Disposable
+import com.badlogic.gdx.utils.ObjectMap
+import com.badlogic.gdx.utils.ObjectSet
 import com.engine.animations.AnimationsSystem
 import com.engine.audio.AudioSystem
 import com.engine.behaviors.BehaviorsSystem
+import com.engine.common.GameLogger
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.objectSetOf
 import com.engine.common.interfaces.Initializable
@@ -41,7 +44,6 @@ import com.megaman.maverick.game.screens.levels.events.PlayerSpawnEventHandler
 import com.megaman.maverick.game.screens.levels.map.layers.MegaMapLayerBuilders
 import com.megaman.maverick.game.screens.levels.map.layers.MegaMapLayerBuildersParams
 import com.megaman.maverick.game.screens.levels.spawns.PlayerSpawnsManager
-import com.megaman.maverick.game.utils.toProps
 import java.util.*
 
 /**
@@ -71,14 +73,14 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
   private lateinit var levelStateHandler: LevelStateHandler
   private lateinit var cameraManagerForRooms: CameraManagerForRooms
 
-  private lateinit var playerSpawnEventHandler: PlayerSpawnEventHandler
+  // TODO: private lateinit var playerSpawnEventHandler: PlayerSpawnEventHandler
 
   private lateinit var sprites: TreeSet<ISprite>
-  private lateinit var shapes: OrderedMap<ShapeRenderer.ShapeType, Array<IDrawableShape>>
+  private lateinit var shapes: Array<IDrawableShape>
   private lateinit var backgrounds: Array<Background>
 
-  private lateinit var gameCamera: Camera
-  private lateinit var uiCamera: Camera
+  private lateinit var gameCamera: OrthographicCamera
+  private lateinit var uiCamera: OrthographicCamera
 
   private lateinit var disposables: Array<Disposable>
 
@@ -104,7 +106,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
     uiCamera = megamanGame.getUiCamera()
 
     playerSpawnsMan = PlayerSpawnsManager(gameCamera)
-    playerSpawnEventHandler = PlayerSpawnEventHandler(megamanGame)
+    // TODO: playerSpawnEventHandler = PlayerSpawnEventHandler(megamanGame)
 
     // array of systems that should be switched off and back on during room transitions
     @Suppress("UNCHECKED_CAST")
@@ -201,10 +203,8 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
     // init player spawn event handler
     // TODO: playerSpawnEventHandler.init()
     // TODO: should spawn megaman in event listener, not here:
-    cameraManagerForRooms.reset()
-    Gdx.app.debug(TAG, "show(): spawn Megaman: ${playerSpawnsMan.current?.properties?.toProps()}")
-    megamanGame.gameEngine.spawn(
-        megamanGame.megaman, playerSpawnsMan.current!!.properties.toProps())
+    GameLogger.debug(TAG, "show(): spawn Megaman: ${playerSpawnsMan.currentSpawnProps}")
+    megamanGame.gameEngine.spawn(megamanGame.megaman, playerSpawnsMan.currentSpawnProps!!)
     megamanGame.megaman.ready = true
   }
 
@@ -212,7 +212,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
       MegaMapLayerBuilders(MegaMapLayerBuildersParams(game as MegamanMaverickGame, spawnsMan))
 
   override fun buildLevel(result: Properties) {
-    Gdx.app.debug(TAG, "buildLevel(): Properties = $result")
+    GameLogger.debug(TAG, "buildLevel(): Properties = $result")
 
     // set the backgrounds array
     backgrounds = result.get(ConstKeys.BACKGROUNDS) as Array<Background>? ?: Array()
@@ -243,9 +243,9 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
       EventType.PLAYER_SPAWN -> {
         // TODO:
         /*
-        Gdx.app.debug(TAG, "onEvent(): Player spawn --> reset camera manager for rooms")
+        GameLogger.debug(TAG, "onEvent(): Player spawn --> reset camera manager for rooms")
         cameraManagerForRooms.reset()
-        Gdx.app.debug(
+        GameLogger.debug(
             TAG,
             "onEvent(): Player spawn --> spawn Megaman: ${playerSpawnsMan.current?.properties?.toProps()}")
         megamanGame.gameEngine.spawn(
@@ -298,10 +298,10 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
       backgrounds.forEach { it.update(delta) }
 
       // update the camera manager for rooms
-      // TODO: cameraManagerForRooms.update(delta)
+      cameraManagerForRooms.update(delta)
       // TODO: should use cam manager instead of this:
-      gameCamera.position.x = megamanGame.megaman.body.x
-      gameCamera.position.y = megamanGame.megaman.body.y
+      // gameCamera.position.x = megamanGame.megaman.body.x
+      // gameCamera.position.y = megamanGame.megaman.body.y
 
       // spawns do not update when player is first spawning if there is a room transition underway
       if (/* TODO: playerSpawnEventHandler.finished && */ !cameraManagerForRooms.transitioning) {
@@ -329,7 +329,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
     batch.begin()
 
     backgrounds.forEach { it.spriteMatrix.draw(batch) }
-    tiledMapLevelRenderer?.render()
+    tiledMapLevelRenderer?.render(gameCamera)
 
     sprites.forEach { it.draw(batch) }
     sprites.clear()
@@ -349,7 +349,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
     shapeRenderer.projectionMatrix = gameCamera.combined
 
     shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
-    shapes.values().forEach { array -> array.forEach { it.draw(shapeRenderer) } }
+    shapes.forEach { it.draw(shapeRenderer) }
     shapes.clear()
     shapeRenderer.end()
   }
@@ -368,6 +368,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
 
     spawnsMan.reset()
     playerSpawnsMan.reset()
+    cameraManagerForRooms.reset()
   }
 
   override fun pause() = levelStateHandler.pause()

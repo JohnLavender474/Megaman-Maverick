@@ -4,6 +4,10 @@ import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.engine.common.extensions.overlaps
 import com.engine.common.interfaces.Resettable
+import com.engine.common.objects.Properties
+import com.engine.common.shapes.toGameRectangle
+import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.utils.toProps
 import java.util.*
 
 /**
@@ -19,9 +23,15 @@ import java.util.*
  */
 class PlayerSpawnsManager(private val camera: Camera) : Runnable, Resettable {
 
-  var current: RectangleMapObject? = null
-    private set
+  val currentSpawnProps: Properties?
+    get() =
+        current?.let {
+          val props = it.properties?.toProps()
+          props?.put(ConstKeys.BOUNDS, current?.rectangle?.toGameRectangle())
+          props
+        }
 
+  private var current: RectangleMapObject? = null
   private var spawns = PriorityQueue(Comparator.comparing { p: RectangleMapObject -> p.name })
 
   /**

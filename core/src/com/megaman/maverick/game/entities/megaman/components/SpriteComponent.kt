@@ -1,10 +1,12 @@
 package com.megaman.maverick.game.entities.megaman.components
 
 import com.engine.common.enums.Facing
+import com.engine.common.enums.Position
 import com.engine.drawables.sorting.DrawingPriority
 import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.setPosition
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.entities.megaman.Megaman
 
@@ -22,7 +24,7 @@ internal fun Megaman.defineSpriteComponent(): SpriteComponent {
     val flipY = upsideDown
     player.setFlip(flipX, flipY)
 
-    player.setPosition(body.x, body.y)
+    (player as GameSprite).setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
   }
 
   return spriteComponent

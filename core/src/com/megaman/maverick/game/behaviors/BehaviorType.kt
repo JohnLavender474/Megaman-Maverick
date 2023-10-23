@@ -8,5 +8,6 @@ enum class BehaviorType {
   ATTACKING,
   AIR_DASHING,
   WALL_SLIDING,
-  GROUND_SLIDING
+  GROUND_SLIDING,
+  TEST
 }
