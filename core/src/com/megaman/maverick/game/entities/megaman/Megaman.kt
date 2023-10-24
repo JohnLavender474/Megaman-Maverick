@@ -64,6 +64,10 @@ class Megaman(game: MegamanMaverickGame) :
   // the handler for Megaman's weapons
   val weaponHandler = MegamanWeaponHandler(this)
 
+  // if the current weapon can be charged
+  val canChargeCurrentWeapon: Boolean
+    get() = weaponHandler.isChargeable(currentWeapon)
+
   // the charge status for the current weapon
   val chargeStatus: MegaChargeStatus
     get() =
@@ -72,11 +76,15 @@ class Megaman(game: MegamanMaverickGame) :
 
   // if Megaman's current weapon is charging
   val charging: Boolean
-    get() = !chargingTimer.isFinished()
+    get() = canChargeCurrentWeapon && chargingTimer.time >= MegamanValues.TIME_TO_HALFWAY_CHARGED
+
+  // if Megaman's current weapon is half charged
+  val halfCharged: Boolean
+    get() = chargeStatus == MegaChargeStatus.HALF_CHARGED
 
   // if Megaman's current weapon is fully charged
   val fullyCharged: Boolean
-    get() = charging && chargingTimer.time >= MegamanValues.TIME_TO_HALFWAY_CHARGED
+    get() = canChargeCurrentWeapon && chargingTimer.isFinished()
 
   // if Megaman is shooting or in the shooting animation
   val shooting: Boolean
@@ -204,6 +212,7 @@ class Megaman(game: MegamanMaverickGame) :
     GameLogger.debug(TAG, "spawn(): spawnProps = $spawnProps")
 
     super.spawn(spawnProps)
+    game.eventsMan.addListener(this)
 
     // set Megaman's position
     val bounds = properties.get(ConstKeys.BOUNDS) as GameRectangle
@@ -216,6 +225,14 @@ class Megaman(game: MegamanMaverickGame) :
     currentWeapon = MegamanWeapon.BUSTER
     upsideDown = false
     running = false
+    damageFlash = false
+
+    damageFlashTimer.reset()
+    shootAnimTimer.reset()
+    groundSlideTimer.reset()
+    wallJumpTimer.reset()
+    chargingTimer.reset()
+    airDashTimer.reset()
   }
 
   /**
@@ -226,6 +243,7 @@ class Megaman(game: MegamanMaverickGame) :
   override fun onDestroy() {
     super<GameEntity>.onDestroy()
     body.physics.velocity.setZero()
+    game.eventsMan.removeListener(this)
   }
 
   override fun onEvent(event: Event) {

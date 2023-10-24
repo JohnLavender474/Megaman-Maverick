@@ -9,7 +9,7 @@ import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
 import com.engine.common.enums.ProcessState
 import com.engine.common.extensions.toVector2
-import com.engine.common.getSingleMostDirectionFromStartToTarget
+import com.engine.common.getOverlapPushDirection
 import com.engine.common.interfaces.PositionSupplier
 import com.engine.common.interfaces.Resettable
 import com.engine.common.interfaces.Updatable
@@ -116,30 +116,21 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
 
     when (transitionDirection) {
       Direction.LEFT -> {
-        transitionTarget.x =
-            (next.x + next.width -
-                    min((next.width / 2f).toDouble(), (camera.viewportWidth / 2f).toDouble()))
-                .toFloat()
-        focusTarget.x = next.x + next.width - DISTANCE_ON_TRANSITION * ConstVals.PPM
+        transitionTarget.x = (next.x + next.width) - min(next.width / 2f, camera.viewportWidth / 2f)
+        focusTarget.x = (next.x + next.width) - DISTANCE_ON_TRANSITION * ConstVals.PPM
       }
       Direction.RIGHT -> {
-        transitionTarget.x =
-            (next.x + min((next.width / 2f).toDouble(), (camera.viewportWidth / 2f).toDouble()))
-                .toFloat()
+        transitionTarget.x = next.x + min(next.width / 2f, camera.viewportWidth / 2f)
         focusTarget.x = next.x + DISTANCE_ON_TRANSITION * ConstVals.PPM
       }
       Direction.UP -> {
-        transitionTarget.y =
-            (next.y + min((next.height / 2f).toDouble(), (camera.viewportHeight / 2f).toDouble()))
-                .toFloat()
+        transitionTarget.y = next.y + min(next.height / 2f, camera.viewportHeight / 2f)
         focusTarget.y = next.y + DISTANCE_ON_TRANSITION * ConstVals.PPM
       }
       Direction.DOWN -> {
         transitionTarget.y =
-            (next.y + next.height -
-                    min((next.height / 2f).toDouble(), (camera.viewportHeight / 2f).toDouble()))
-                .toFloat()
-        focusTarget.y = next.y + next.height - DISTANCE_ON_TRANSITION * ConstVals.PPM
+            (next.y + next.height) - min(next.height / 2f, camera.viewportHeight / 2f)
+        focusTarget.y = (next.y + next.height) - DISTANCE_ON_TRANSITION * ConstVals.PPM
       }
       null -> {}
     }
@@ -164,7 +155,6 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
 
     // if focus is null, then nothing else should be done
     if (focus == null) return
-
     val currentRoomBounds = currentGameRoom?.rectangle ?: return
 
     // if the current room's bounds contains the focus, then setBodySense the camera
@@ -212,11 +202,9 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
 
     val width = 5f * ConstVals.PPM
     val height = 5f * ConstVals.PPM
-
     val boundingBox = Rectangle().setSize(width, height).setCenter(focus!!.getPosition())
-
     transitionDirection =
-        getSingleMostDirectionFromStartToTarget(boundingBox, currentGameRoom!!.rectangle)
+        getOverlapPushDirection(boundingBox, currentGameRoom!!.rectangle, Rectangle())
 
     priorGameRoom = currentGameRoom
     currentGameRoom = nextGameRoom
@@ -242,14 +230,15 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
 
         endTransition?.invoke()
       }
-      ProcessState.BEGIN -> {
+      ProcessState.BEGIN,
+      ProcessState.CONTINUE -> {
         GameLogger.debug(TAG, "onTransition(): transition start = $transitionStart")
+
+        if (transitionState == ProcessState.BEGIN) beginTransition?.invoke()
+        else continueTransition?.invoke(delta)
 
         transitionState = ProcessState.CONTINUE
 
-        beginTransition?.invoke()
-        continueTransition?.invoke(delta)
-
         delayTimer.update(delta)
         if (!delayTimer.isFinished()) return
 
@@ -258,21 +247,6 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
         val pos = interpolate(transitionStart, transitionTarget, transitionTimerRatio)
         camera.position.x = pos.x
         camera.position.y = pos.y
-
-        transitionState = if (transTimer.isFinished()) ProcessState.END else ProcessState.CONTINUE
-      }
-      ProcessState.CONTINUE -> {
-        continueTransition?.invoke(delta)
-
-        delayTimer.update(delta)
-        if (!delayTimer.isFinished()) return
-
-        transTimer.update(delta)
-
-        val pos = interpolate(transitionStart, transitionTarget, transitionTimerRatio)
-        camera.position.x = pos.x
-        camera.position.y = pos.y
-
         transitionState = if (transTimer.isFinished()) ProcessState.END else ProcessState.CONTINUE
       }
       null -> {}

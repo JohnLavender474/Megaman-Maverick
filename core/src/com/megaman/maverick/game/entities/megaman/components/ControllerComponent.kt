@@ -107,7 +107,8 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
                 requestToPlaySound(SoundAsset.ERROR_SOUND, false)
 
             stopCharging()
-          })
+          },
+          onReleaseContinued = { _, _ -> stopCharging() })
 
   // swap weapon
   val select =

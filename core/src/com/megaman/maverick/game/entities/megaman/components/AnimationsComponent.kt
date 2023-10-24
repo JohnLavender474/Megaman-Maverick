@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.megaman.components
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.engine.animations.Animation
@@ -32,45 +31,46 @@ internal fun Megaman.defineAnimationsComponent(): AnimationsComponent {
           if (!body.isSensing(BodySense.HEAD_TOUCHING_LADDER)) {
             if (shooting) "ClimbShoot"
             else if (fullyCharged) "FinishClimbCharging"
-            else if (charging) "FinishClimbHalfCharging" else "FinishClimb"
+            else if (halfCharged) "FinishClimbHalfCharging" else "FinishClimb"
           } else if (body.physics.velocity.y != 0f) {
             if (shooting) "ClimbShoot"
             else if (fullyCharged) "ClimbCharging"
-            else if (charging) "ClimbHalfCharging" else "Climb"
+            else if (halfCharged) "ClimbHalfCharging" else "Climb"
           } else {
             if (shooting) "ClimbShoot"
             else if (fullyCharged) "StillClimbCharging"
-            else if (charging) "StillClimbHalfCharging" else "StillClimb"
+            else if (halfCharged) "StillClimbHalfCharging" else "StillClimb"
           }
         } else if (isBehaviorActive(BehaviorType.AIR_DASHING)) {
           if (fullyCharged) "AirDashCharging"
-          else if (charging) "AirDashHalfCharging" else "AirDash"
+          else if (halfCharged) "AirDashHalfCharging" else "AirDash"
         } else if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) {
           if (shooting) "GroundSlideShoot"
           else if (fullyCharged) "GroundSlideCharging"
-          else if (charging) "GroundSlideHalfCharging" else "GroundSlide"
+          else if (halfCharged) "GroundSlideHalfCharging" else "GroundSlide"
         } else if (isBehaviorActive(BehaviorType.WALL_SLIDING)) {
           if (shooting) "WallSlideShoot"
           else if (fullyCharged) "WallSlideCharging"
-          else if (charging) "WallSlideHalfCharging" else "WallSlide"
+          else if (halfCharged) "WallSlideHalfCharging" else "WallSlide"
         } else if (isBehaviorActive(BehaviorType.SWIMMING)) {
           if (shooting) "SwimShoot"
-          else if (fullyCharged) "SwimCharging" else if (charging) "SwimHalfCharging" else "Swim"
+          else if (fullyCharged) "SwimCharging" else if (halfCharged) "SwimHalfCharging" else "Swim"
         } else if (isBehaviorActive(BehaviorType.JUMPING) ||
             !body.isSensing(BodySense.FEET_ON_GROUND)) {
           if (shooting) "JumpShoot"
-          else if (fullyCharged) "JumpCharging" else if (charging) "JumpHalfCharging" else "Jump"
+          else if (fullyCharged) "JumpCharging" else if (halfCharged) "JumpHalfCharging" else "Jump"
         } else if (body.isSensing(BodySense.FEET_ON_GROUND) && running) {
           if (shooting) "RunShoot"
-          else if (fullyCharged) "RunCharging" else if (charging) "RunHalfCharging" else "Run"
+          else if (fullyCharged) "RunCharging" else if (halfCharged) "RunHalfCharging" else "Run"
         } else if (body.isSensing(BodySense.FEET_ON_GROUND) &&
             abs(body.physics.velocity.x) > ConstVals.PPM / 16f) {
           if (shooting) "SlipSlideShoot"
           else if (fullyCharged) "SlipSlideCharging"
-          else if (charging) "SlipSlideHalfCharging" else "SlipSlide"
+          else if (halfCharged) "SlipSlideHalfCharging" else "SlipSlide"
         } else {
           if (shooting) "StandShoot"
-          else if (fullyCharged) "StandCharging" else if (charging) "StandHalfCharging" else "Stand"
+          else if (fullyCharged) "StandCharging"
+          else if (halfCharged) "StandHalfCharging" else "Stand"
         }
     if (maverick && facing == Facing.LEFT) key += "_Left"
     key += if (maverick) "_MegamanMaverick" else "_Megaman"
