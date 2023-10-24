@@ -119,7 +119,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             v.x =
                 if (isBehaviorActive(BehaviorType.WALL_SLIDING)) {
-                  var x = wallJumpVel * ConstVals.PPM
+                  var x = MegamanValues.WALL_JUMP_HORIZONTAL * ConstVals.PPM
                   if (facing == Facing.LEFT) x *= -1
                   x
                 } else body.physics.velocity.x

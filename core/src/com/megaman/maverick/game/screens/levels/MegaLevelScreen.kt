@@ -2,7 +2,6 @@
 
 package com.megaman.maverick.game.screens.levels
 
-import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.maps.objects.RectangleMapObject
@@ -40,10 +39,10 @@ import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.drawables.sprites.Background
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.camera.CameraManagerForRooms
-import com.megaman.maverick.game.screens.levels.events.PlayerSpawnEventHandler
 import com.megaman.maverick.game.screens.levels.map.layers.MegaMapLayerBuilders
 import com.megaman.maverick.game.screens.levels.map.layers.MegaMapLayerBuildersParams
 import com.megaman.maverick.game.screens.levels.spawns.PlayerSpawnsManager
+import com.megaman.maverick.game.utils.toGameRectangle
 import java.util.*
 
 /**

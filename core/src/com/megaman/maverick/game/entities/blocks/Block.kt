@@ -6,19 +6,21 @@ import com.engine.IGame2D
 import com.engine.common.GameLogger
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
+import com.engine.cullables.CullablesComponent
 import com.engine.drawables.shapes.DrawableShapeComponent
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.entities.contracts.IGameCameraCullableEntity
 import com.megaman.maverick.game.world.BodyLabel
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.addBodyLabel
 import com.megaman.maverick.game.world.setEntity
 
 /** A block is a static entity that can be collided with. */
-open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
+open class Block(game: IGame2D) : GameEntity(game), IBodyEntity, IGameCameraCullableEntity {
 
   companion object {
     const val TAG = "Block"
@@ -42,6 +44,8 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
     addComponent(UpdatablesComponent(this, { (bodyFixture.shape as GameRectangle).set(body) }))
 
     addComponent(DrawableShapeComponent(this, body))
+
+    addComponent(CullablesComponent(this, getGameCameraCulling()))
   }
 
   override fun spawn(spawnProps: Properties) {
