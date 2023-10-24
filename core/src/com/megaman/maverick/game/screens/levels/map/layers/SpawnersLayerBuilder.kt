@@ -7,6 +7,7 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.ObjectSet
+import com.engine.common.GameLogger
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.toGameRectangle
@@ -15,7 +16,6 @@ import com.engine.spawns.ISpawner
 import com.engine.spawns.Spawn
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.factories.BlockFactory
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
@@ -24,7 +24,12 @@ import com.megaman.maverick.game.utils.toProps
 
 class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITiledMapLayerBuilder {
 
+  companion object {
+    const val TAG = "SpawnersLayerBuilder"
+  }
+
   override fun build(layer: MapLayer, returnProps: Properties) {
+    GameLogger.debug(TAG, "build(): Building spawners for layer: ${layer.name}")
     val game = params.game
 
     // define disposables array if necessary and get it
@@ -47,6 +52,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
           // TODO: add other entity types
           else -> throw IllegalArgumentException("Unknown spawner type: ${layer.name}")
         }
+    GameLogger.debug(TAG, "build(): Entity type: $entityType")
 
     // cycle through each object in the layer to create a spawner for each object
     layer.objects.forEach {
@@ -58,9 +64,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
 
         // create spawner
         val spawnSupplier = {
-          Spawn(
-              EntityFactories.fetch(entityType, it.name ?: "", props())!!,
-              spawnProps)
+          Spawn(EntityFactories.fetch(entityType, it.name ?: "", props())!!, spawnProps)
         }
 
         // if there is a specified spawn type, then create that type of spawner
@@ -80,6 +84,9 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                   SpawnerFactory.spawnerForWhenEnteringCamera(
                       game.getGameCamera(), room.rectangle.toGameRectangle(), spawnSupplier)
               spawners.add(spawner)
+
+              GameLogger.debug(TAG, "build(): Adding spawner: $spawner")
+
               roomFound = true
               break
             }
@@ -100,6 +107,9 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
             // this spawn should be removed as an event listener when the level is disposed
             val spawner = SpawnerFactory.spawnerForWhenEventCalled(events, spawnSupplier)
             spawners.add(spawner)
+
+            GameLogger.debug(TAG, "build(): Adding spawner: $spawner")
+
             game.eventsMan.addListener(spawner)
             disposables.add { game.eventsMan.removeListener(spawner) }
           }
@@ -112,6 +122,8 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                     SpawnerFactory.spawnerForWhenEnteringCamera(
                         game.getGameCamera(), it.rectangle.toGameRectangle(), spawnSupplier)
                 spawners.add(spawner)
+
+                GameLogger.debug(TAG, "build(): Adding spawner: $spawner")
               }
             }
           }

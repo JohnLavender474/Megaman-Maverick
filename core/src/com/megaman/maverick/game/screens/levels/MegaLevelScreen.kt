@@ -23,7 +23,7 @@ import com.engine.controller.buttons.ButtonStatus
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.ISprite
 import com.engine.events.Event
-import com.engine.graph.QuadTreeGraphMap
+import com.engine.graph.SimpleNodeGraphMap
 import com.engine.motion.MotionSystem
 import com.engine.screens.levels.tiledmap.TiledMapLevelScreen
 import com.engine.spawns.ISpawner
@@ -42,7 +42,6 @@ import com.megaman.maverick.game.screens.levels.camera.CameraManagerForRooms
 import com.megaman.maverick.game.screens.levels.map.layers.MegaMapLayerBuilders
 import com.megaman.maverick.game.screens.levels.map.layers.MegaMapLayerBuildersParams
 import com.megaman.maverick.game.screens.levels.spawns.PlayerSpawnsManager
-import com.megaman.maverick.game.utils.toGameRectangle
 import java.util.*
 
 /**
@@ -195,8 +194,14 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
     if (tiledMapLoadResult == null)
         throw IllegalStateException("No tiled map load result found in level screen")
     val (_, _, worldWidth, worldHeight) = tiledMapLoadResult!!
+
+    // TODO: use quad tree graph map instead of simple node graph map
+    /*
     val depth = (worldWidth).coerceAtLeast(worldHeight) / ConstVals.PPM
     val worldGraphMap = QuadTreeGraphMap(0, 0, worldWidth, worldHeight, ConstVals.PPM, depth)
+     */
+    val worldGraphMap = SimpleNodeGraphMap(0, 0, worldWidth, worldHeight, ConstVals.PPM)
+    // val worldGraphMap = DummyGraphMap(0, 0, worldWidth, worldHeight, ConstVals.PPM)
     megamanGame.setGraphMap(worldGraphMap)
 
     // init player spawn event handler

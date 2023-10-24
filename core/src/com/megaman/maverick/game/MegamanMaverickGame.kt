@@ -48,7 +48,6 @@ import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
 import com.megaman.maverick.game.utils.getMusics
 import com.megaman.maverick.game.utils.getSounds
-import com.megaman.maverick.game.utils.toGameRectangle
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.MegaCollisionHandler
 import com.megaman.maverick.game.world.MegaContactListener

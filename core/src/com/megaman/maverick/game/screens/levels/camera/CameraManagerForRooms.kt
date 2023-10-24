@@ -232,10 +232,10 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
       }
       ProcessState.BEGIN,
       ProcessState.CONTINUE -> {
-        GameLogger.debug(TAG, "onTransition(): transition start = $transitionStart")
-
-        if (transitionState == ProcessState.BEGIN) beginTransition?.invoke()
-        else continueTransition?.invoke(delta)
+        if (transitionState == ProcessState.BEGIN) {
+          beginTransition?.invoke()
+          GameLogger.debug(TAG, "onTransition(): transition start = $transitionStart")
+        } else continueTransition?.invoke(delta)
 
         transitionState = ProcessState.CONTINUE
 

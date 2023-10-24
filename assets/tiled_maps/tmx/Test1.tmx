@@ -11,7 +11,7 @@
   <object id="9" x="0" y="416" width="96" height="32"/>
   <object id="10" x="1792" y="224" width="32" height="416"/>
  </objectgroup>
- <objectgroup id="3" name="game_rooms" visible="0">
+ <objectgroup id="3" name="game_rooms">
   <object id="5" name="room_1" x="0" y="224" width="960" height="416"/>
   <object id="11" name="room_2" x="960" y="224" width="864" height="416"/>
  </objectgroup>
