@@ -6,7 +6,7 @@ import com.engine.common.GameLogger
 import com.engine.common.enums.Facing
 import com.engine.common.enums.Position
 import com.engine.common.extensions.objectSetOf
-import com.engine.common.interfaces.Faceable
+import com.engine.common.interfaces.IFaceable
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.TimeMarkedRunnable
@@ -25,10 +25,11 @@ import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.events.EventType
 
+/** Megaman class represents the player in the game. It extends [GameEntity]. */
 class Megaman(game: MegamanMaverickGame) :
     GameEntity(game),
     IEventListener,
-    Faceable,
+    IFaceable,
     IUpsideDownable,
     IBodyEntity,
     IHealthEntity,
@@ -246,13 +247,14 @@ class Megaman(game: MegamanMaverickGame) :
     game.eventsMan.removeListener(this)
   }
 
+  /** On event, Megaman will handle the event based on the event's key. */
   override fun onEvent(event: Event) {
     when (event.key) {
       EventType.BEGIN_ROOM_TRANS,
       EventType.CONTINUE_ROOM_TRANS -> {
         val position = event.properties.get(ConstKeys.POSITION) as Vector2
         body.positionOnPoint(position, Position.BOTTOM_CENTER)
-        requestToPlaySound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND, false)
+        stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
       }
       EventType.GATE_INIT_OPENING -> {
         body.physics.velocity.setZero()

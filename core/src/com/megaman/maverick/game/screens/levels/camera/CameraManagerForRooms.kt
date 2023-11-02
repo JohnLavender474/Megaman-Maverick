@@ -10,7 +10,7 @@ import com.engine.common.enums.Direction
 import com.engine.common.enums.ProcessState
 import com.engine.common.extensions.toVector2
 import com.engine.common.getOverlapPushDirection
-import com.engine.common.interfaces.PositionSupplier
+import com.engine.common.interfaces.IPositionSupplier
 import com.engine.common.interfaces.Resettable
 import com.engine.common.interfaces.Updatable
 import com.engine.common.interpolate
@@ -38,7 +38,7 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
 
   var gameRooms: Array<RectangleMapObject>? = null
 
-  var focus: PositionSupplier? = null
+  var focus: IPositionSupplier? = null
     set(value) {
       GameLogger.debug(TAG, "set focus to $value")
       field = value

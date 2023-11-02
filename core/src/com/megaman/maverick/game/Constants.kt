@@ -14,6 +14,9 @@ object ConstVals {
 object ConstKeys {
   const val X = "x"
   const val Y = "y"
+  const val AXIS = "axis"
+  const val DIRECTION = "direction"
+  const val MASK = "mask"
   const val DISPOSABLES = "disposables"
   const val EVENTS = "events"
   const val ENTITY_TYPE = "entity_type"

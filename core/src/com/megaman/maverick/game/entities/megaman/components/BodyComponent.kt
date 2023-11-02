@@ -142,11 +142,8 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     body.physics.gravity.y = gravityY * ConstVals.PPM
   }
 
-  // set entity for all fixtures
-  body.fixtures.forEach { (_, fixture) -> fixture.setEntity(this) }
-
   // add drawable shape component
   addComponent(DrawableShapeComponent(this, shapes))
 
-  return BodyComponent(this, body)
+  return BodyComponentCreator.create(this, body)
 }

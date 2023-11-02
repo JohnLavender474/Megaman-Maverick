@@ -16,16 +16,28 @@ import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.IProjectileEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.ProjectileFactory
+import com.megaman.maverick.game.entities.factories.impl.ProjectileFactory
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
-import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.entities.projectiles.MegaChargedShot
 import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.isSensing
 
+/**
+ * The `MegaWeaponEntry` class represents a weapon entry for a weapon. It contains the weapon's
+ * cooldown timer, the projectiles it has spawned, and the amount of ammunition it has left.
+ *
+ * @param cooldownDur The duration of the cooldown timer for this weapon.
+ * @param chargeable A function that returns whether this weapon is chargeable.
+ * @param canFireWeapon A function that returns whether this weapon can be fired.
+ * @param normalCost A function that returns the normal cost of this weapon.
+ * @param halfChargedCost A function that returns the half-charged cost of this weapon.
+ * @param fullyChargedCost A function that returns the fully-charged cost of this weapon.
+ * @param cooldownTimer The cooldown timer for this weapon.
+ * @param spawned The projectiles that this weapon has spawned.
+ * @param ammo The amount of ammunition this weapon has left.
+ */
 class MegaWeaponEntry(
     cooldownDur: Float,
     var chargeable: () -> Boolean = { true },
@@ -44,6 +56,14 @@ class MegaWeaponEntry(
   }
 }
 
+/**
+ * The `MegamanWeaponHandler` class is responsible for managing Megaman's weapons and handling their
+ * usage, including ammunition, cooldown, and firing projectiles. It keeps track of the various
+ * weapons available to Megaman and facilitates the process of firing them. This class ensures that
+ * the ammunition, cooldown, and other restrictions for each weapon are enforced.
+ *
+ * @param megaman The Megaman character associated with this weapon handler.
+ */
 class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable {
 
   companion object {
@@ -51,6 +71,7 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
     private val FLAME_TOSS_TRAJECTORY = Vector2(35f, 10f)
   }
 
+  private val gameEngine = megaman.game.gameEngine
   private val weapons = ObjectMap<MegamanWeapon, MegaWeaponEntry>()
   private val spawnCenter: Vector2
     get() {
@@ -70,18 +91,50 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
       return spawnCenter
     }
 
+  /** Resets the weapon handler by resetting the cooldown timers for all weapons. */
   override fun reset() = weapons.values().forEach { it.cooldownTimer.setToEnd() }
 
+  /**
+   * Updates the weapon handler by updating the cooldown timers for all weapons.
+   *
+   * @param delta The time in seconds since the last update.
+   */
   override fun update(delta: Float) {
     weapons[megaman.currentWeapon]?.update(delta)
   }
 
+  /**
+   * Gets the projectiles spawned by the specified weapon.
+   *
+   * @param weapon The weapon to get the projectiles for.
+   * @return The projectiles spawned by the specified weapon.
+   */
   fun getSpawned(weapon: MegamanWeapon) = weapons[weapon]?.spawned
 
-  fun putWeapon(weapon: MegamanWeapon) = weapons.put(weapon, getWeaponEntry(weapon))
+  /**
+   * Puts the specified weapon into the weapon handler.
+   *
+   * @param weapon The weapon to put into the weapon handler.
+   * @return The weapon entry for the specified weapon.
+   */
+  fun putWeapon(weapon: MegamanWeapon): MegaWeaponEntry? =
+      weapons.put(weapon, getWeaponEntry(weapon))
 
+  /**
+   * Returns if the weapon handler contains the specified weapon.
+   *
+   * @param weapon The weapon to check for.
+   * @return if the weapon handler contains the specified weapon.
+   */
   fun hasWeapon(weapon: MegamanWeapon) = weapons.containsKey(weapon)
 
+  /**
+   * Returns if the specified weapon can be fired.
+   *
+   * @param weapon The weapon to check.
+   * @param stat The charge status of the weapon.
+   * @return if the specified weapon can be fired.
+   */
   fun canFireWeapon(weapon: MegamanWeapon, stat: MegaChargeStatus): Boolean {
     if (!hasWeapon(weapon)) return false
 
@@ -102,8 +155,20 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
     return cost <= e.ammo
   }
 
+  /**
+   * Returns if the specified weapon can be charged.
+   *
+   * @param weapon The weapon to check.
+   * @return if the specified weapon can be charged.
+   */
   fun isChargeable(weapon: MegamanWeapon) = hasWeapon(weapon) && weapons[weapon].chargeable()
 
+  /**
+   * Translates the ammunition for the specified weapon by the specified amount.
+   *
+   * @param weapon The weapon to translate the ammunition for.
+   * @param delta The amount to translate the ammunition by.
+   */
   fun translateAmmo(weapon: MegamanWeapon, delta: Int) {
     if (!hasWeapon(weapon)) return
 
@@ -115,18 +180,41 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
     else if (weaponEntry.ammo < 0) weaponEntry.ammo = 0
   }
 
+  /**
+   * Sets the ammunition for the specified weapon to the max amount.
+   *
+   * @param weapon The weapon to set the ammunition for.
+   */
   fun setToMaxAmmo(weapon: MegamanWeapon) {
     weapons[weapon]?.ammo = MegamanValues.MAX_WEAPON_AMMO
   }
 
+  /**
+   * Depletes the ammunition for the specified weapon.
+   *
+   * @param weapon The weapon to deplete the ammunition for.
+   */
   fun depleteAmmo(weapon: MegamanWeapon) {
     weapons[weapon]?.ammo = 0
   }
 
+  /**
+   * Returns the amount of ammunition for the specified weapon.
+   *
+   * @param weapon The weapon to get the ammunition for.
+   * @return The amount of ammunition for the specified weapon.
+   */
   fun getAmmo(weapon: MegamanWeapon) =
       if (!hasWeapon(weapon)) 0
       else if (weapon == MegamanWeapon.BUSTER) Int.MAX_VALUE else weapons[weapon].ammo
 
+  /**
+   * Fires the specified weapon with the specified charge status.
+   *
+   * @param weapon The weapon to fire.
+   * @param stat The charge status of the weapon.
+   * @return if the weapon was fired.
+   */
   fun fireWeapon(weapon: MegamanWeapon, stat: MegaChargeStatus): Boolean {
     var _stat: MegaChargeStatus = stat
     if (!canFireWeapon(weapon, _stat)) return false
@@ -143,16 +231,14 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
             }
     if (cost > getAmmo(weapon)) return false
 
-    val projectile =
-        when (weapon) {
-          // TODO: MegamanWeapon.BUSTER -> fireMegaBuster(_stat)
-          // TODO: MegamanWeapon.FLAME_TOSS -> fireFlameToss(_stat)
-          MegamanWeapon.BUSTER -> {}
-        }
+    when (weapon) {
+      // TODO: MegamanWeapon.BUSTER -> fireMegaBuster(_stat)
+      // TODO: MegamanWeapon.FLAME_TOSS -> fireFlameToss(_stat)
+      MegamanWeapon.BUSTER -> fireMegaBuster(_stat)
+    }
 
     // TODO: weaponEntry.spawned.add(projectile)
     weaponEntry.cooldownTimer.reset()
-
     translateAmmo(weapon, -cost)
 
     return true
@@ -174,7 +260,7 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
       */
       }
 
-  private fun fireMegaBuster(stat: MegaChargeStatus): IProjectileEntity {
+  private fun fireMegaBuster(stat: MegaChargeStatus) {
     var x = MEGA_BUSTER_BULLET_VEL
     if (megaman.facing == Facing.LEFT) x *= -1f
 
@@ -187,16 +273,13 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
     val megaBusterShot =
         when (stat) {
           MegaChargeStatus.NOT_CHARGED ->
-              EntityFactories.fetch(EntityType.PROJECTILE, ProjectileFactory.BULLET, props())
-                  as Bullet
+              EntityFactories.fetch(EntityType.PROJECTILE, ProjectileFactory.BULLET)
           MegaChargeStatus.HALF_CHARGED,
           MegaChargeStatus.FULLY_CHARGED -> {
             props.put(ConstKeys.BOOLEAN, stat == MegaChargeStatus.FULLY_CHARGED)
-
-            EntityFactories.fetch(EntityType.PROJECTILE, ProjectileFactory.CHARGED_SHOT, props())
-                as MegaChargedShot
+            EntityFactories.fetch(EntityType.PROJECTILE, ProjectileFactory.CHARGED_SHOT)
           }
-        }
+        } ?: throw IllegalStateException("MegaBusterShot is null")
 
     if (stat === MegaChargeStatus.NOT_CHARGED)
         megaman.requestToPlaySound(SoundAsset.MEGA_BUSTER_BULLET_SHOT_SOUND, false)
@@ -211,9 +294,7 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
         else s.y -= .05f * ConstVals.PPM
 
     props.put(ConstKeys.POSITION, s)
-    megaman.game.gameEngine.spawn(megaBusterShot, props)
-
-    return megaBusterShot
+    gameEngine.spawn(megaBusterShot, props)
   }
 
   private fun fireFlameToss(stat: MegaChargeStatus): IProjectileEntity {
@@ -226,7 +307,7 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
           MegaChargeStatus.HALF_CHARGED,
           MegaChargeStatus.FULLY_CHARGED -> {
             props.put(ConstKeys.LEFT, megaman.facing == Facing.LEFT)
-            EntityFactories.fetch(EntityType.PROJECTILE, ProjectileFactory.FIREBALL, props())
+            EntityFactories.fetch(EntityType.PROJECTILE, ProjectileFactory.FIREBALL)
                 as Fireball
           }
         }
@@ -234,7 +315,7 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
     props.put(ConstKeys.POSITION, spawnCenter)
     // TODO: trajectory should be different depending on charge status
     props.put(ConstKeys.TRAJECTORY, FLAME_TOSS_TRAJECTORY)
-    megaman.game.gameEngine.spawn(fireball, props)
+    gameEngine.spawn(fireball, props)
 
     megaman.requestToPlaySound(SoundAsset.CRASH_BOMBER_SOUND, false)
 

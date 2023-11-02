@@ -9,7 +9,9 @@ import com.engine.components.IGameComponent
 import com.engine.cullables.CullableOnEvent
 import com.engine.cullables.CullableOnUncontained
 import com.engine.cullables.CullablesComponent
+import com.engine.damage.IDamageable
 import com.engine.entities.IGameEntity
+import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.IDamagerEntity
 import com.engine.entities.contracts.ISpriteEntity
@@ -17,19 +19,49 @@ import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.events.EventType
 
-interface IProjectileEntity : IBodyEntity, ISpriteEntity, IDamagerEntity, IGameEntity {
+/**
+ * A projectile entity that can be fired by different entities. It extends [IGameEntity] and
+ * implements [IBodyEntity], [ISpriteEntity], [IAudioEntity], [IDamagerEntity], and [IGameEntity].
+ */
+interface IProjectileEntity :
+    IBodyEntity, ISpriteEntity, IAudioEntity, IDamagerEntity, IGameEntity {
 
+  /** The owner of the projectile (the entity that fired it). */
   var owner: IGameEntity?
 
+  override fun canDamage(damageable: IDamageable) =
+      damageable != owner && damageable !is IProjectileEntity
+
+  /**
+   * Called when the projectile hits a body fixture.
+   *
+   * @param bodyFixture The body fixture that was hit.
+   */
   fun hitBody(bodyFixture: Fixture) {}
 
+  /**
+   * Called when the projectile hits a block fixture.
+   *
+   * @param blockFixture The block fixture that was hit.
+   */
   fun hitBlock(blockFixture: Fixture) {}
 
+  /**
+   * Called when the projectile hits a shield fixture.
+   *
+   * @param shieldFixture The shield fixture that was hit.
+   */
   fun hitShield(shieldFixture: Fixture) {}
 
+  /**
+   * Called when the projectile hits a water fixture.
+   *
+   * @param waterFixture The water fixture that was hit.
+   */
   fun hitWater(waterFixture: Fixture) {}
 }
 
+/** Defines some common components for the [IProjectileEntity]. */
 internal fun IProjectileEntity.defineProjectileComponents(): Array<IGameComponent> {
   val components = Array<IGameComponent>()
 
@@ -41,6 +73,7 @@ internal fun IProjectileEntity.defineProjectileComponents(): Array<IGameComponen
       objectSetOf<Any>(
           EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING)
   val cullOnEvent = CullableOnEvent({ cullEvents.contains(it.key) }, cullEvents)
+
   // cull on out of game camera
   val cullOnOutOfGameCam =
       CullableOnUncontained<Camera>(

@@ -108,7 +108,8 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
 
             stopCharging()
           },
-          onReleaseContinued = { _, _ -> stopCharging() })
+          // TODO: onReleaseContinued = { _, _ -> stopCharging() }
+      )
 
   // swap weapon
   val select =

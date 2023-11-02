@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.0.0</string>
+        <string>7.0.3</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -124,7 +124,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>../SpriteSheets/Megaman.txt</filename>
+                <filename>../sprite_sheets/Megaman_BUSTER.txt</filename>
             </struct>
         </map>
         <key>multiPackMode</key>

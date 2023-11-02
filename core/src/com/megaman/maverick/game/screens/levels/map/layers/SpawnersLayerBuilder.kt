@@ -9,7 +9,6 @@ import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.ObjectSet
 import com.engine.common.GameLogger
 import com.engine.common.objects.Properties
-import com.engine.common.objects.props
 import com.engine.common.shapes.toGameRectangle
 import com.engine.screens.levels.tiledmap.builders.ITiledMapLayerBuilder
 import com.engine.spawns.ISpawner
@@ -64,7 +63,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
 
         // create spawner
         val spawnSupplier = {
-          Spawn(EntityFactories.fetch(entityType, it.name ?: "", props())!!, spawnProps)
+          Spawn(EntityFactories.fetch(entityType, it.name ?: "")!!, spawnProps)
         }
 
         // if there is a specified spawn type, then create that type of spawner
