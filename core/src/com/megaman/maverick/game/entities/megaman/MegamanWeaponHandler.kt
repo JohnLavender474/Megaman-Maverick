@@ -7,7 +7,6 @@ import com.engine.common.enums.Facing
 import com.engine.common.interfaces.Resettable
 import com.engine.common.interfaces.Updatable
 import com.engine.common.objects.Properties
-import com.engine.common.objects.props
 import com.engine.common.time.Timer
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -231,13 +230,13 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
             }
     if (cost > getAmmo(weapon)) return false
 
-    when (weapon) {
-      // TODO: MegamanWeapon.BUSTER -> fireMegaBuster(_stat)
-      // TODO: MegamanWeapon.FLAME_TOSS -> fireFlameToss(_stat)
-      MegamanWeapon.BUSTER -> fireMegaBuster(_stat)
-    }
+    val projectile =
+        when (weapon) {
+          MegamanWeapon.BUSTER -> fireMegaBuster(_stat)
+          MegamanWeapon.FLAME_TOSS -> fireFlameToss(_stat)
+        }
 
-    // TODO: weaponEntry.spawned.add(projectile)
+    weaponEntry.spawned.add(projectile)
     weaponEntry.cooldownTimer.reset()
     translateAmmo(weapon, -cost)
 
@@ -247,20 +246,18 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
   private fun getWeaponEntry(weapon: MegamanWeapon) =
       when (weapon) {
         MegamanWeapon.BUSTER -> MegaWeaponEntry(.01f)
-      /*
-      TODO: MegamanWeapon.FLAME_TOSS -> {
-        val e = MegaWeaponEntry(.5f)
-        e.normalCost = { 3 }
-        e.halfChargedCost = { 5 }
-        e.fullyChargedCost = { 7 }
-        e.chargeable = { !megaman.body.isSensing(BodySense.IN_WATER) }
-        e.canFireWeapon = { !megaman.body.isSensing(BodySense.IN_WATER) && e.spawned.size == 0 }
-        e
-      }
-      */
+        MegamanWeapon.FLAME_TOSS -> {
+          val e = MegaWeaponEntry(.5f)
+          e.normalCost = { 3 }
+          e.halfChargedCost = { 5 }
+          e.fullyChargedCost = { 7 }
+          e.chargeable = { !megaman.body.isSensing(BodySense.IN_WATER) }
+          e.canFireWeapon = { !megaman.body.isSensing(BodySense.IN_WATER) && e.spawned.size == 0 }
+          e
+        }
       }
 
-  private fun fireMegaBuster(stat: MegaChargeStatus) {
+  private fun fireMegaBuster(stat: MegaChargeStatus): IProjectileEntity {
     var x = MEGA_BUSTER_BULLET_VEL
     if (megaman.facing == Facing.LEFT) x *= -1f
 
@@ -295,6 +292,8 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
 
     props.put(ConstKeys.POSITION, s)
     gameEngine.spawn(megaBusterShot, props)
+
+    return megaBusterShot as IProjectileEntity
   }
 
   private fun fireFlameToss(stat: MegaChargeStatus): IProjectileEntity {
@@ -307,8 +306,7 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
           MegaChargeStatus.HALF_CHARGED,
           MegaChargeStatus.FULLY_CHARGED -> {
             props.put(ConstKeys.LEFT, megaman.facing == Facing.LEFT)
-            EntityFactories.fetch(EntityType.PROJECTILE, ProjectileFactory.FIREBALL)
-                as Fireball
+            EntityFactories.fetch(EntityType.PROJECTILE, ProjectileFactory.FIREBALL) as Fireball
           }
         }
 

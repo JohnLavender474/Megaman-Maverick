@@ -28,6 +28,7 @@ import com.megaman.maverick.game.events.EventType
 /** Megaman class represents the player in the game. It extends [GameEntity]. */
 class Megaman(game: MegamanMaverickGame) :
     GameEntity(game),
+    IMegaUpgradable,
     IEventListener,
     IFaceable,
     IUpsideDownable,
@@ -61,6 +62,9 @@ class Megaman(game: MegamanMaverickGame) :
   override val eventKeyMask =
       objectSetOf<Any>(
           EventType.BEGIN_ROOM_TRANS, EventType.CONTINUE_ROOM_TRANS, EventType.GATE_INIT_OPENING)
+
+  // the handler for Megaman's upgrades
+  override val upgradeHandler = MegamanUpgradeHandler(this)
 
   // the handler for Megaman's weapons
   val weaponHandler = MegamanWeaponHandler(this)

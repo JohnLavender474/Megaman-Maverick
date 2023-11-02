@@ -14,6 +14,7 @@ object ConstVals {
 object ConstKeys {
   const val X = "x"
   const val Y = "y"
+  const val VALUE = "value"
   const val AXIS = "axis"
   const val DIRECTION = "direction"
   const val MASK = "mask"

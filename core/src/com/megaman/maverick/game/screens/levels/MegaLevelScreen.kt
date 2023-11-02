@@ -9,8 +9,10 @@ import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.ObjectSet
+import com.engine.IGameEngine
 import com.engine.animations.AnimationsSystem
 import com.engine.audio.AudioSystem
+import com.engine.audio.IAudioManager
 import com.engine.behaviors.BehaviorsSystem
 import com.engine.common.GameLogger
 import com.engine.common.extensions.gdxArrayOf
@@ -20,9 +22,11 @@ import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.controller.ControllerSystem
 import com.engine.controller.buttons.ButtonStatus
+import com.engine.controller.polling.IControllerPoller
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.ISprite
 import com.engine.events.Event
+import com.engine.events.IEventsManager
 import com.engine.graph.SimpleNodeGraphMap
 import com.engine.motion.MotionSystem
 import com.engine.screens.levels.tiledmap.TiledMapLevelScreen
@@ -37,11 +41,14 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.drawables.sprites.Background
+import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.camera.CameraManagerForRooms
 import com.megaman.maverick.game.screens.levels.map.layers.MegaMapLayerBuilders
 import com.megaman.maverick.game.screens.levels.map.layers.MegaMapLayerBuildersParams
 import com.megaman.maverick.game.screens.levels.spawns.PlayerSpawnsManager
+import com.megaman.maverick.game.screens.levels.stats.PlayerStatsHandler
 import java.util.*
 
 /**
@@ -64,11 +71,27 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
   val megamanGame: MegamanMaverickGame
     get() = super.game as MegamanMaverickGame
 
+  val engine: IGameEngine
+    get() = game.gameEngine
+
+  val megaman: Megaman
+    get() = megamanGame.megaman
+
+  val eventsMan: IEventsManager
+    get() = megamanGame.eventsMan
+
+  val audioMan: IAudioManager
+    get() = megamanGame.audioMan
+
+  val controllerPoller: IControllerPoller
+    get() = megamanGame.controllerPoller
+
   var music: MusicAsset? = null
 
   private lateinit var spawnsMan: SpawnsManager
   private lateinit var playerSpawnsMan: PlayerSpawnsManager
   private lateinit var levelStateHandler: LevelStateHandler
+  private lateinit var playerStatsHandler: PlayerStatsHandler
   private lateinit var cameraManagerForRooms: CameraManagerForRooms
 
   // TODO: private lateinit var playerSpawnEventHandler: PlayerSpawnEventHandler
@@ -104,6 +127,8 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
     uiCamera = megamanGame.getUiCamera()
 
     playerSpawnsMan = PlayerSpawnsManager(gameCamera)
+    playerStatsHandler = PlayerStatsHandler(megaman)
+    playerStatsHandler.init()
     // TODO: playerSpawnEventHandler = PlayerSpawnEventHandler(megamanGame)
 
     // array of systems that should be switched off and back on during room transitions
@@ -150,13 +175,13 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
     cameraManagerForRooms.endTransition = {
       systemsToSwitch.forEach { systems.get(it.simpleName)?.let { system -> system.on = true } }
 
-      megamanGame.eventsMan.submitEvent(
+      eventsMan.submitEvent(
           Event(
               EventType.END_ROOM_TRANS,
               props(ConstKeys.ROOM to cameraManagerForRooms.currentGameRoom)))
 
       if (cameraManagerForRooms.currentGameRoom?.name.equals(ConstKeys.BOSS))
-          megamanGame.eventsMan.submitEvent(
+          eventsMan.submitEvent(
               Event(
                   EventType.ENTER_BOSS_ROOM,
                   props(ConstKeys.ROOM to cameraManagerForRooms.currentGameRoom)))
@@ -178,17 +203,17 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
     super.show()
 
     // add this screen as an event listener
-    megamanGame.eventsMan.addListener(this)
+    eventsMan.addListener(this)
 
     // reset positions of cameras
     uiCamera.position.set(ConstFuncs.getCamInitPos())
     gameCamera.position.set(ConstFuncs.getCamInitPos())
 
     // set all systems to on
-    megamanGame.gameEngine.systems.forEach { it.on = true }
+    engine.systems.forEach { it.on = true }
 
     // start playing the level music
-    music?.let { megamanGame.audioMan.playMusic(it, true) }
+    music?.let { audioMan.playMusic(it, true) }
 
     // set the world graph map using the tiled map load result
     if (tiledMapLoadResult == null)
@@ -208,8 +233,8 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
     // TODO: playerSpawnEventHandler.init()
     // TODO: should spawn megaman in event listener, not here:
     GameLogger.debug(TAG, "show(): spawn Megaman: ${playerSpawnsMan.currentSpawnProps}")
-    megamanGame.gameEngine.spawn(megamanGame.megaman, playerSpawnsMan.currentSpawnProps!!)
-    megamanGame.megaman.ready = true
+    engine.spawn(megaman, playerSpawnsMan.currentSpawnProps!!)
+    megaman.ready = true
   }
 
   override fun getLayerBuilders() =
@@ -257,63 +282,58 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
          */
       }
       EventType.PLAYER_JUST_DIED -> {
-        megamanGame.audioMan.stopMusic()
-        // TODO: init player death event handler
+        audioMan.stopMusic()
       }
       EventType.PLAYER_DONE_DYIN -> {
-        music?.let { megamanGame.audioMan.playMusic(it, true) }
-        // TODO: playerSpawnEventHandler.init()
+        music?.let { audioMan.playMusic(it, true) }
       }
-      // TODO: add health to megaman here?
-      // TODO: add heart tank to megaman here?
-      EventType.GATE_INIT_OPENING -> {
-        // TODO: init gate opening event handler
+      EventType.ADD_PLAYER_HEALTH -> {
+        val healthNeeded = megaman.getMaxHealth() - megaman.getCurrentHealth()
+        if (healthNeeded > 0) {
+          val health = event.properties.get(ConstKeys.VALUE) as Int
+          playerStatsHandler.addHealth(health)
+        }
       }
-      EventType.NEXT_ROOM_REQ -> {
-        // TODO: init next room request event handler
+      EventType.ADD_HEART_TANK -> {
+        val heartTank = event.properties.get(ConstKeys.VALUE) as MegaHeartTank
+        playerStatsHandler.attain(heartTank)
       }
-      EventType.GATE_INIT_CLOSING -> {
-        // TODO: init gate closing event handler
-      }
-      EventType.REQ_SHAKE_CAM -> {
-        // TODO: request camera shake
-      }
+      EventType.GATE_INIT_OPENING -> {}
+      EventType.NEXT_ROOM_REQ -> {}
+      EventType.GATE_INIT_CLOSING -> {}
+      EventType.REQ_SHAKE_CAM -> {}
       else -> {}
     }
   }
 
   override fun render(delta: Float) {
     // game can only be paused if neither spawn nor death event handlers are running
-    if (megamanGame.controllerPoller.getButtonStatus(ConstKeys.START) == ButtonStatus.JUST_PRESSED
+    if (controllerPoller.getButtonStatus(ConstKeys.START) == ButtonStatus.JUST_PRESSED &&
+        playerStatsHandler.finished
     /* TODO: && player spawn and death event handlers are finished */ )
         if (megamanGame.paused) megamanGame.resume() else megamanGame.pause()
 
     // illegal for game to be paused when spawn or death event handlers are running
     // force game resume
-    /*
-    if (game.paused /* && player spawn or death event handlers are running */) {
-      game.resume()
-    }
-    */
+    if (game.paused && playerStatsHandler.finished /* && handlers are running */) game.resume()
 
     // things to run only when game is NOT paused
-    if (!megamanGame.paused) {
+    if (!game.paused) {
       // update backgrounds
       backgrounds.forEach { it.update(delta) }
 
       // update the camera manager for rooms
       cameraManagerForRooms.update(delta)
-      // TODO: should use cam manager instead of this:
-      // gameCamera.position.x = megamanGame.megaman.body.x
-      // gameCamera.position.y = megamanGame.megaman.body.y
 
       // spawns do not update when player is first spawning if there is a room transition underway
       if (/* TODO: playerSpawnEventHandler.finished && */ !cameraManagerForRooms.transitioning) {
         playerSpawnsMan.run()
         spawnsMan.update(delta)
         val spawns = spawnsMan.getSpawnsAndClear()
-        spawns.forEach { spawn -> megamanGame.gameEngine.spawn(spawn.entity, spawn.properties) }
+        spawns.forEach { spawn -> engine.spawn(spawn.entity, spawn.properties) }
       }
+
+      if (!playerStatsHandler.finished) playerStatsHandler.update(delta)
 
       // only update one handler at a time
       // TODO: if (!playerSpawnEventHandler.finished) playerSpawnEventHandler.update(delta)
@@ -325,7 +345,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
     }
 
     // update the game engine
-    megamanGame.gameEngine.update(delta)
+    engine.update(delta)
 
     // render the level
     val batch = megamanGame.batch
@@ -343,6 +363,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
     // render the ui
     batch.projectionMatrix = uiCamera.combined
     batch.begin()
+    playerStatsHandler.draw(batch)
     // TODO: render ui
     // TODO: render player stats
     // TODO: if (!playerSpawnEventHandler.finished) playerSpawnEventHandler.draw(batch)
@@ -366,9 +387,9 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
     disposables.forEach { it.dispose() }
     disposables.clear()
 
-    megamanGame.gameEngine.reset()
-    megamanGame.audioMan.stopMusic()
-    megamanGame.eventsMan.removeListener(this)
+    engine.reset()
+    audioMan.stopMusic()
+    eventsMan.removeListener(this)
 
     spawnsMan.reset()
     playerSpawnsMan.reset()

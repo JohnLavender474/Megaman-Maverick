@@ -86,12 +86,12 @@ internal fun Megaman.defineAnimationsComponent(): AnimationsComponent {
           if (megamanType == "Megaman")
               when (weapon) {
                 MegamanWeapon.BUSTER -> TextureAsset.MEGAMAN_BUSTER.source
-              // TODO: MegamanWeapon.FLAME_TOSS -> TextureAsset.MEGAMAN_FLAME_TOSS.source
+                MegamanWeapon.FLAME_TOSS -> "" // TODO: TextureAsset.MEGAMAN_FLAME_TOSS.source
               }
           else
               when (weapon) {
                 MegamanWeapon.BUSTER -> TextureAsset.MEGAMAN_MAVERICK_BUSTER.source
-              // TODO: MegamanWeapon.FLAME_TOSS -> ""
+                MegamanWeapon.FLAME_TOSS -> "" // TODO: create texture atlas
               }
       if (assetSource == "") continue
       val atlas = game.assMan.getTextureAtlas(assetSource)
