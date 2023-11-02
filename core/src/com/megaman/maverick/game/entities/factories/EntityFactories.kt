@@ -5,6 +5,7 @@ import com.engine.factories.Factories
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.factories.impl.BlockFactory
+import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.entities.factories.impl.ExplosionFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectileFactory
 
@@ -20,5 +21,6 @@ object EntityFactories : Factories<IGameEntity>() {
     factories.put(EntityType.BLOCK, BlockFactory(game))
     factories.put(EntityType.PROJECTILE, ProjectileFactory(game))
     factories.put(EntityType.EXPLOSION, ExplosionFactory(game))
+    factories.put(EntityType.DECORATION, DecorationsFactory(game))
   }
 }
