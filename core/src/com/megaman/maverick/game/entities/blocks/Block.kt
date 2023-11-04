@@ -13,14 +13,14 @@ import com.engine.entities.contracts.IBodyEntity
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.entities.contracts.IGameCameraCullableEntity
+import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.BodyLabel
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.addBodyLabel
 import com.megaman.maverick.game.world.setEntity
 
 /** A block is a static entity that can be collided with. */
-open class Block(game: IGame2D) : GameEntity(game), IBodyEntity, IGameCameraCullableEntity {
+open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
 
   companion object {
     const val TAG = "Block"
@@ -42,14 +42,19 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity, IGameCameraCull
     addComponent(BodyComponent(this, body))
 
     addComponent(UpdatablesComponent(this, { (bodyFixture.shape as GameRectangle).set(body) }))
-
     addComponent(DrawableShapeComponent(this, body))
 
-    addComponent(CullablesComponent(this, getGameCameraCulling()))
+    // TODO: addComponent(CullablesComponent(this, getGameCameraCulling()))
   }
 
   override fun spawn(spawnProps: Properties) {
     super.spawn(spawnProps)
+
+    var persist = false
+    if (spawnProps.containsKey(ConstKeys.PERSIST))
+        persist = spawnProps.get(ConstKeys.PERSIST) as Boolean
+    if (persist) removeComponent(CullablesComponent::class)
+    else addComponent(CullablesComponent(this, getGameCameraCullingLogic(this)))
 
     if (properties.containsKey(ConstKeys.FRICTION_X))
         body.physics.frictionToApply.x = properties.get(ConstKeys.FRICTION_X) as Float

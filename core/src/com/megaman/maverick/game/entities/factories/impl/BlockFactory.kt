@@ -6,7 +6,7 @@ import com.engine.common.objects.Pool
 import com.engine.entities.IGameEntity
 import com.engine.factories.IFactory
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.entities.blocks.Block
+import com.megaman.maverick.game.entities.blocks.*
 import com.megaman.maverick.game.entities.factories.EntityPoolCreator
 
 /** A factory that creates blocks. */
@@ -27,6 +27,14 @@ class BlockFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntity
   init {
     // standard blocks
     pools.put(STANDARD, EntityPoolCreator.create(10) { Block(game) })
+    // ice blocks
+    pools.put(ICE_BLOCK, EntityPoolCreator.create(10) { IceBlock(game) })
+    // gear trolley
+    pools.put(GEAR_TROLLEY, EntityPoolCreator.create(10) { GearTrolley(game) })
+    // conveyor belt
+    pools.put(CONVEYOR_BELT, EntityPoolCreator.create(10) { ConveyorBelt(game) })
+    // rocket platform
+    pools.put(ROCKET_PLATFORM, EntityPoolCreator.create(10) { RocketPlatform(game) })
   }
 
   /**
