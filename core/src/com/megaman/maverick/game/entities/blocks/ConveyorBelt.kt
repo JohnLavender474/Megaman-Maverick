@@ -62,7 +62,7 @@ class ConveyorBelt(game: MegamanMaverickGame) : ISpriteEntity, Block(game) {
       forceFixture!!.offsetFromBodyCenter.y = ConstVals.PPM / 8f
       body.addFixture(forceFixture!!)
 
-      getComponent(DrawableShapeComponent::class)?.shapes?.add(forceFixture!!.shape)
+      getComponent(DrawableShapeComponent::class)?.shapeSuppliers?.add { forceFixture!!.shape }
     }
 
     val bounds = spawnProps.get(ConstKeys.BOUNDS) as Rectangle

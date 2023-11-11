@@ -36,7 +36,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.IProjectileEntity
 import com.megaman.maverick.game.entities.defineProjectileComponents
 import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ExplosionFactory
+import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.getEntity
@@ -152,7 +152,7 @@ class ChargedShot(game: MegamanMaverickGame) : GameEntity(game), IProjectileEnti
   /** Explodes the charged shot and marks it as dead, spawning an explosion entity. */
   private fun explodeAndDie() {
     dead = true
-    val e = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionFactory.CHARGED_SHOT_EXPLOSION)
+    val e = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.CHARGED_SHOT_EXPLOSION)
     val props =
         props(
             ConstKeys.POSITION to body.getCenter(),
@@ -188,7 +188,7 @@ class ChargedShot(game: MegamanMaverickGame) : GameEntity(game), IProjectileEnti
     body.addFixture(damagerFixture)
 
     // add drawable shape component for debugging
-    addComponent(DrawableShapeComponent(this, body))
+    addComponent(DrawableShapeComponent(this, { body }))
 
     return BodyComponentCreator.create(this, body)
   }

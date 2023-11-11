@@ -55,6 +55,9 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
   var currentGameRoom: RectangleMapObject? = null
     private set
 
+  val currentGameRoomKey: String?
+    get() = currentGameRoom?.name
+
   var transitionDirection: Direction? = null
     private set
 

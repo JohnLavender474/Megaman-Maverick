@@ -2,7 +2,11 @@ package com.megaman.maverick.game.entities.megaman
 
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.ObjectSet
-import com.megaman.maverick.game.entities.megaman.constants.*
+import com.megaman.maverick.game.ConstVals
+import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
+import com.megaman.maverick.game.entities.megaman.constants.MegaArmorPiece
+import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
+import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 
 /**
  * An interface representing Megaman's inventory, which includes heart tanks, abilities, armor
@@ -180,7 +184,7 @@ class MegamanUpgradeHandler(private val megaman: Megaman) {
     var _health = health
 
     healthTanks.entries().forEach { e ->
-      val t = MegamanValues.MAX_HEALTH - e.value
+      val t = ConstVals.MAX_HEALTH - e.value
       if (t >= _health) e.value += _health
       else {
         e.value += t
@@ -206,7 +210,7 @@ class MegamanUpgradeHandler(private val megaman: Megaman) {
    */
   fun put(healthTank: MegaHealthTank, health: Int) {
     var _health = health
-    if (_health > MegamanValues.MAX_HEALTH) _health = MegamanValues.MAX_HEALTH
+    if (_health > ConstVals.MAX_HEALTH) _health = ConstVals.MAX_HEALTH
     else if (health < 0) _health = 0
 
     healthTanks.put(healthTank, _health)

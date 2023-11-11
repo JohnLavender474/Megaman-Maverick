@@ -1,7 +1,6 @@
 package com.megaman.maverick.game.entities.factories.impl
 
 import com.badlogic.gdx.utils.ObjectMap
-import com.engine.common.GameLogger
 import com.engine.common.objects.Pool
 import com.engine.entities.IGameEntity
 import com.engine.factories.IFactory
@@ -10,7 +9,7 @@ import com.megaman.maverick.game.entities.blocks.*
 import com.megaman.maverick.game.entities.factories.EntityPoolCreator
 
 /** A factory that creates blocks. */
-class BlockFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntity> {
+class BlocksFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntity> {
 
   companion object {
     const val TAG = "BlockFactory"
@@ -43,8 +42,5 @@ class BlockFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntity
    * @param key The key of the block to fetch.
    * @return A block from the pool.
    */
-  override fun fetch(key: Any): IGameEntity? {
-    GameLogger.debug(TAG, "Spawning Block: key = $key")
-    return pools.get(if (key == "") STANDARD else key)?.fetch()
-  }
+  override fun fetch(key: Any) = pools.get(if (key == "") STANDARD else key)?.fetch()
 }

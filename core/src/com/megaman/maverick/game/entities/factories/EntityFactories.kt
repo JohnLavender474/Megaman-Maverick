@@ -4,10 +4,10 @@ import com.engine.entities.IGameEntity
 import com.engine.factories.Factories
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.factories.impl.BlockFactory
+import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
-import com.megaman.maverick.game.entities.factories.impl.ExplosionFactory
-import com.megaman.maverick.game.entities.factories.impl.ProjectileFactory
+import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 
 /** A collection of factories that fetch [IGameEntity]s from a key. */
 object EntityFactories : Factories<IGameEntity>() {
@@ -18,9 +18,9 @@ object EntityFactories : Factories<IGameEntity>() {
    * @param game the game
    */
   fun initialize(game: MegamanMaverickGame) {
-    factories.put(EntityType.BLOCK, BlockFactory(game))
-    factories.put(EntityType.PROJECTILE, ProjectileFactory(game))
-    factories.put(EntityType.EXPLOSION, ExplosionFactory(game))
+    factories.put(EntityType.BLOCK, BlocksFactory(game))
+    factories.put(EntityType.PROJECTILE, ProjectilesFactory(game))
+    factories.put(EntityType.EXPLOSION, ExplosionsFactory(game))
     factories.put(EntityType.DECORATION, DecorationsFactory(game))
   }
 }

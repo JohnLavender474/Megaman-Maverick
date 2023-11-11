@@ -11,6 +11,7 @@ import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.TimeMarkedRunnable
 import com.engine.common.time.Timer
+import com.engine.damage.IDamager
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.*
 import com.engine.events.Event
@@ -238,6 +239,28 @@ class Megaman(game: MegamanMaverickGame) :
     wallJumpTimer.reset()
     chargingTimer.reset()
     airDashTimer.reset()
+  }
+
+  // TODO:
+  /*
+  @Override
+    public void takeDamageFrom(Damager damager) {
+        if (!noDmgBounce.contains(damager.getClass()) && damager instanceof Entity e &&
+                e.hasComponent(BodyComponent.class)) {
+            Body enemyBody = e.getComponent(BodyComponent.class).body;
+            body.velocity.x = (enemyBody.isRightOf(body) ? -DMG_X : DMG_X) * WorldVals.PPM;
+            body.velocity.y = DMG_Y * WorldVals.PPM;
+        }
+        DamageNegotiation dmgNeg = MegamanDamageNegs.get(damager);
+        dmgTimer.reset();
+        dmgNeg.runOnDamage();
+        removeHealth(dmgNeg.getDamage(damager));
+        request(SoundAsset.MEGAMAN_DAMAGE_SOUND, true);
+        request(SoundAsset.MEGA_BUSTER_CHARGING_SOUND, false);
+    }
+   */
+  override fun takeDamageFrom(damager: IDamager): Boolean {
+    TODO("Not yet implemented")
   }
 
   /**

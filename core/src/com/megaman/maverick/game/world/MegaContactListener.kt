@@ -15,7 +15,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.IProjectileEntity
-import com.megaman.maverick.game.entities.contracts.IEnemyEntity
+import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IUpsideDownable
 import com.megaman.maverick.game.entities.contracts.ItemEntity
 import com.megaman.maverick.game.entities.megaman.Megaman
@@ -46,6 +46,14 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
           contact.getFixturesInOrder(FixtureType.DAMAGER, FixtureType.DAMAGEABLE)!!
 
       damageable.setDamagedBy(damager)
+    }
+
+    // death, damageable
+    else if (contact.fixturesMatch(FixtureType.DEATH, FixtureType.DAMAGEABLE)) {
+      GameLogger.debug(TAG, "beginContact(): Death-Damageable, contact = $contact")
+      val (_, damageable) = contact.getFixturesInOrder(FixtureType.DEATH, FixtureType.DAMAGEABLE)!!
+
+      damageable.depleteHealth()
     }
 
     // block, side
@@ -158,7 +166,7 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
 
       // TODO: Splash.generate
 
-      if (entity is Megaman || entity is IEnemyEntity)
+      if (entity is Megaman || entity is AbstractEnemy)
           game.audioMan.playSound(SoundAsset.SPLASH_SOUND, false)
     }
 

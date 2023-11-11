@@ -12,7 +12,7 @@ import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.factories.EntityPoolCreator
 
 /** A factory that creates explosions. */
-class ExplosionFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntity> {
+class ExplosionsFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntity> {
 
   companion object {
     const val TAG = "ExplosionFactory"

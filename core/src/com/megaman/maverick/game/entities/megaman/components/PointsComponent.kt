@@ -1,21 +1,12 @@
 package com.megaman.maverick.game.entities.megaman.components
 
-import com.engine.points.Points
 import com.engine.points.PointsComponent
-import com.engine.points.PointsHandle
+import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 
 internal fun Megaman.definePointsComponent(): PointsComponent {
-  // health
-  val health =
-      PointsHandle(
-          Points(0, 10, 10),
-          listener = { points ->
-            if (points.current == 0) {
-              dead = true
-            }
-          },
-          onReset = { handle -> handle.points.setToMax() })
-
-  return PointsComponent(this, "health" to health)
+  val pointsComponent = PointsComponent(this)
+  pointsComponent.putPoints(ConstKeys.HEALTH, MegamanValues.START_HEALTH)
+  return pointsComponent
 }

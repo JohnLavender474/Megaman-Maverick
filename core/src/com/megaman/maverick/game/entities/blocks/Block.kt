@@ -42,7 +42,7 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
     addComponent(BodyComponent(this, body))
 
     addComponent(UpdatablesComponent(this, { (bodyFixture.shape as GameRectangle).set(body) }))
-    addComponent(DrawableShapeComponent(this, body))
+    addComponent(DrawableShapeComponent(this, { body }))
 
     // TODO: addComponent(CullablesComponent(this, getGameCameraCulling()))
   }

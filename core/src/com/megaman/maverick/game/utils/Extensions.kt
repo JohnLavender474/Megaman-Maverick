@@ -10,8 +10,13 @@ import com.engine.common.extensions.getMusic
 import com.engine.common.extensions.getSound
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
+import com.engine.entities.IGameEntity
+import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
+
+/** Gets the [MegamanMaverickGame] from the [IGameEntity]. */
+fun IGameEntity.getMegamanMaverickGame() = game as MegamanMaverickGame
 
 /**
  * Converts a [MapProperties] to a [Properties].

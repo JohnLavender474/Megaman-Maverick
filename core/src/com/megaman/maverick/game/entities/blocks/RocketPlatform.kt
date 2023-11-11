@@ -84,7 +84,7 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), ISpriteEntity, IE
     sprite.setSize(4f * ConstVals.PPM, 4f * ConstVals.PPM)
 
     val spriteComponent = SpriteComponent(this, "rocket" to sprite)
-    spriteComponent.putUpdateFunction("rocket") { delta, _sprite ->
+    spriteComponent.putUpdateFunction("rocket") { _, _sprite ->
       _sprite as GameSprite
       _sprite.setPosition(body.getTopCenterPoint(), Position.TOP_CENTER)
       _sprite.translateY(ConstVals.PPM / 16f)

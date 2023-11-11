@@ -9,11 +9,14 @@ object ConstVals {
   const val FIXED_TIME_STEP = 1 / 150f
   const val STANDARD_RESISTANCE_X = 1.035f
   const val STANDARD_RESISTANCE_Y = 1.025f
+  const val MAX_HEALTH = 30
 }
 
 object ConstKeys {
   const val X = "x"
   const val Y = "y"
+  const val PENDULUM = "pendulum"
+  const val ROTATION = "rotation"
   const val PERSIST = "persist"
   const val VALUE = "value"
   const val AXIS = "axis"

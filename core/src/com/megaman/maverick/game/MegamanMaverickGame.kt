@@ -33,7 +33,6 @@ import com.engine.graph.IGraphMap
 import com.engine.motion.MotionSystem
 import com.engine.pathfinding.Pathfinder
 import com.engine.pathfinding.PathfindingSystem
-import com.engine.points.PointsSystem
 import com.engine.systems.IGameSystem
 import com.engine.updatables.UpdatablesSystem
 import com.engine.world.WorldSystem
@@ -250,7 +249,6 @@ class MegamanMaverickGame : Game2D() {
             CullablesSystem(),
             MotionSystem(),
             PathfindingSystem { Pathfinder(getGraphMap()!!, it.params) },
-            PointsSystem(),
             UpdatablesSystem(),
             SpriteSystem { sprites },
             DrawableShapeSystem { shapes },

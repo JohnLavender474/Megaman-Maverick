@@ -1,7 +1,6 @@
 package com.megaman.maverick.game.entities.factories.impl
 
 import com.badlogic.gdx.utils.ObjectMap
-import com.engine.common.GameLogger
 import com.engine.common.objects.Pool
 import com.engine.entities.IGameEntity
 import com.engine.factories.IFactory
@@ -12,7 +11,7 @@ import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 
 /** A factory that creates projectiles. */
-class ProjectileFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
+class ProjectilesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
 
   companion object {
     const val TAG = "ProjectileFactory"
@@ -41,8 +40,5 @@ class ProjectileFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
    * @param key The key of the projectile to fetch.
    * @return A projectile from the pool.
    */
-  override fun fetch(key: Any): IProjectileEntity? {
-    GameLogger.debug(TAG, "Spawning Projectile: key = $key")
-    return pools.get(if (key == "") BULLET else key)?.fetch()
-  }
+  override fun fetch(key: Any) = pools.get(if (key == "") BULLET else key)?.fetch()
 }

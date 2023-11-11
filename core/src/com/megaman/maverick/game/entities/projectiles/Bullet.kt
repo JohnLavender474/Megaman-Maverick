@@ -32,7 +32,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.IProjectileEntity
 import com.megaman.maverick.game.entities.defineProjectileComponents
 import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ExplosionFactory
+import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.getEntity
@@ -123,7 +123,7 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity {
     dead = true
 
     val disintegration =
-        EntityFactories.fetch(EntityType.EXPLOSION, ExplosionFactory.DISINTEGRATION)
+        EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)
     game.gameEngine.spawn(disintegration!!, props(ConstKeys.POSITION to body.getCenter()))
   }
 
@@ -137,23 +137,23 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity {
     body.setSize(.15f * ConstVals.PPM)
     body.physics.velocityClamp.set(CLAMP * ConstVals.PPM, CLAMP * ConstVals.PPM)
 
-    val shapes = Array<IDrawableShape>()
+    val shapes = Array<() -> IDrawableShape>()
 
     // Body fixture
     val bodyFixture = Fixture(body.copy(), FixtureType.BODY)
     body.addFixture(bodyFixture)
-    shapes.add(bodyFixture.shape)
+    shapes.add { bodyFixture.shape }
 
     // Hitbox fixture
     val projectileFixture =
         Fixture(GameRectangle().setSize(.2f * ConstVals.PPM), FixtureType.PROJECTILE)
     body.addFixture(projectileFixture)
-    shapes.add(projectileFixture.shape)
+    shapes.add { projectileFixture.shape }
 
     // Damager fixture
     val damagerFixture = Fixture(GameRectangle().setSize(.2f * ConstVals.PPM), FixtureType.DAMAGER)
     body.addFixture(damagerFixture)
-    shapes.add(damagerFixture.shape)
+    shapes.add { damagerFixture.shape }
 
     // Add shapes component
     addComponent(DrawableShapeComponent(this, shapes))

@@ -15,7 +15,7 @@ import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.IProjectileEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ProjectileFactory
+import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
@@ -270,11 +270,11 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
     val megaBusterShot =
         when (stat) {
           MegaChargeStatus.NOT_CHARGED ->
-              EntityFactories.fetch(EntityType.PROJECTILE, ProjectileFactory.BULLET)
+              EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)
           MegaChargeStatus.HALF_CHARGED,
           MegaChargeStatus.FULLY_CHARGED -> {
             props.put(ConstKeys.BOOLEAN, stat == MegaChargeStatus.FULLY_CHARGED)
-            EntityFactories.fetch(EntityType.PROJECTILE, ProjectileFactory.CHARGED_SHOT)
+            EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.CHARGED_SHOT)
           }
         } ?: throw IllegalStateException("MegaBusterShot is null")
 
@@ -306,7 +306,7 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
           MegaChargeStatus.HALF_CHARGED,
           MegaChargeStatus.FULLY_CHARGED -> {
             props.put(ConstKeys.LEFT, megaman.facing == Facing.LEFT)
-            EntityFactories.fetch(EntityType.PROJECTILE, ProjectileFactory.FIREBALL) as Fireball
+            EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.FIREBALL) as Fireball
           }
         }
 

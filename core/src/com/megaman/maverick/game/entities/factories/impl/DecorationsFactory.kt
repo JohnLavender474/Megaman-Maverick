@@ -13,8 +13,6 @@ import com.megaman.maverick.game.entities.factories.EntityPoolCreator
 class DecorationsFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntity> {
 
   companion object {
-    const val TAG = "DecorationsFactory"
-
     const val SPLASH = "Splash"
     const val SMOKE_PUFF = "SmokePuff"
   }
@@ -34,7 +32,5 @@ class DecorationsFactory(private val game: MegamanMaverickGame) : IFactory<IGame
    * @param key The key of the decoration to fetch.
    * @return A decoration from the pool.
    */
-  override fun fetch(key: Any): IGameEntity? {
-    TODO("Not yet implemented")
-  }
+  override fun fetch(key: Any) = pools.get(key)?.fetch()
 }

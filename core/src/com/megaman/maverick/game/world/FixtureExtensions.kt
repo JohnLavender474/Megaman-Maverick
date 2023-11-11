@@ -8,6 +8,7 @@ import com.engine.entities.contracts.IDamagerEntity
 import com.engine.world.BodyType
 import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.utils.VelocityAlteration
 
 /**
@@ -48,6 +49,15 @@ fun Fixture.setDamagedBy(damagerFixture: Fixture): Boolean {
   if (damager !is IDamagerEntity) return false
 
   damageable.addDamager(damager)
+  return true
+}
+
+/** Depletes the health of the entity that owns this fixture. */
+fun Fixture.depleteHealth(): Boolean {
+  val entity = getEntity()
+  if (entity !is IHealthEntity) return false
+
+  entity.getHealthPoints().setToMin()
   return true
 }
 
