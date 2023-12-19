@@ -8,6 +8,7 @@ import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.common.enums.Direction
 import com.engine.common.enums.Facing
+import com.engine.common.enums.Position
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.interfaces.IFaceable
@@ -22,6 +23,7 @@ import com.engine.drawables.sorting.DrawingPriority
 import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.Body
@@ -242,8 +244,9 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     val spriteComponent = SpriteComponent(this, "met" to sprite)
     spriteComponent.putUpdateFunction("met") { _, _sprite ->
       _sprite as GameSprite
+      _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
       _sprite.setFlip(facing == Facing.LEFT, false)
-      _sprite.hidden = damageBlink
+      // TODO: _sprite.hidden = damageBlink
     }
 
     return spriteComponent

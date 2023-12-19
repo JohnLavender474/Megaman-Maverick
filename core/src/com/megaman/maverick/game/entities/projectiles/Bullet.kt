@@ -43,27 +43,19 @@ import com.megaman.maverick.game.world.getEntity
  */
 class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity {
 
-  /** A companion object that contains shared properties and constants for Bullet instances. */
   companion object {
     private const val CLAMP = 10f
     private var bulletRegion: TextureRegion? = null
   }
 
-  /** The owner of the bullet (the entity that fired it). */
   override var owner: IGameEntity? = null
 
-  /** Initializes the Bullet by defining its components. */
   override fun init() {
     defineProjectileComponents().forEach { addComponent(it) }
     addComponent(defineBodyComponent())
     addComponent(defineSpriteComponent())
   }
 
-  /**
-   * Spawns the bullet with specified properties.
-   *
-   * @param spawnProps Properties for spawning the bullet, including position and trajectory.
-   */
   override fun spawn(spawnProps: Properties) {
     super.spawn(spawnProps)
 
@@ -76,25 +68,10 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity {
     body.physics.velocity.set(trajectory.scl(ConstVals.PPM.toFloat()))
   }
 
-  /**
-   * Handles damage inflicted to a [IDamageable] entity by disintegrating the bullet.
-   *
-   * @param damageable The entity taking the damage.
-   */
   override fun onDamageInflictedTo(damageable: IDamageable) = disintegrate()
 
-  /**
-   * Handles a collision with a block fixture by disintegrating the bullet.
-   *
-   * @param blockFixture The fixture representing the block collided with.
-   */
   override fun hitBlock(blockFixture: Fixture) = disintegrate()
 
-  /**
-   * Handles a collision with a shield fixture by deflecting the bullet.
-   *
-   * @param shieldFixture The fixture representing the shield collided with.
-   */
   override fun hitShield(shieldFixture: Fixture) {
     owner = shieldFixture.getEntity()
 

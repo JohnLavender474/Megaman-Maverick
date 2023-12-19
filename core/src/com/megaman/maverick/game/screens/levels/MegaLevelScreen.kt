@@ -49,7 +49,6 @@ import com.megaman.maverick.game.screens.levels.map.layers.MegaMapLayerBuilders
 import com.megaman.maverick.game.screens.levels.map.layers.MegaMapLayerBuildersParams
 import com.megaman.maverick.game.screens.levels.spawns.PlayerSpawnsManager
 import com.megaman.maverick.game.screens.levels.stats.PlayerStatsHandler
-import java.util.*
 
 /**
  * This class is a level screen that is used for the entire game. It is a tiled map level screen
@@ -96,7 +95,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
 
   // TODO: private lateinit var playerSpawnEventHandler: PlayerSpawnEventHandler
 
-  private lateinit var sprites: TreeSet<ISprite>
+  private lateinit var sprites: MutableCollection<ISprite>
   private lateinit var shapes: Array<IDrawableShape>
   private lateinit var backgrounds: Array<Background>
 

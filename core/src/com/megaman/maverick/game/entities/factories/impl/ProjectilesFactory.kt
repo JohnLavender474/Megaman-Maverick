@@ -29,7 +29,7 @@ class ProjectilesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
 
   init {
     // bullet
-    pools.put(BULLET, EntityPoolCreator.create(10) { Bullet(game) })
+    pools.put(BULLET, EntityPoolCreator.create(100) { Bullet(game) })
     // charged shot
     pools.put(CHARGED_SHOT, EntityPoolCreator.create(5) { ChargedShot(game) })
   }

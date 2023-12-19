@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.factories
 
+import com.engine.common.GameLogger
 import com.engine.common.objects.Pool
 import com.engine.entities.IGameEntity
 

@@ -20,6 +20,7 @@ import com.engine.common.GameLogLevel
 import com.engine.common.GameLogger
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.extensions.objectSetOf
+import com.engine.common.objects.Pool
 import com.engine.controller.ControllerSystem
 import com.engine.controller.ControllerUtils
 import com.engine.controller.buttons.Button
@@ -87,29 +88,28 @@ class MegamanMaverickGame : Game2D() {
    *
    * @return The game camera.
    */
-  fun getGameCamera(): OrthographicCamera =
-      viewports.get(ConstKeys.GAME).camera as OrthographicCamera
+  fun getGameCamera() = viewports.get(ConstKeys.GAME).camera as OrthographicCamera
 
   /**
    * Get the UI camera.
    *
    * @return The UI camera.
    */
-  fun getUiCamera(): OrthographicCamera = viewports.get(ConstKeys.UI).camera as OrthographicCamera
+  fun getUiCamera() = viewports.get(ConstKeys.UI).camera as OrthographicCamera
 
   /**
    * Get the set of sprites.
    *
    * @return The set of sprites.
    */
-  fun getSprites(): TreeSet<ISprite> = properties.get(ConstKeys.SPRITES) as TreeSet<ISprite>
+  fun getSprites() = properties.get(ConstKeys.SPRITES) as MutableCollection<ISprite>
 
   /**
    * Get the shapes to be drawn.
    *
    * @return The shapes to be drawn.
    */
-  fun getShapes(): Array<IDrawableShape> = properties.get(ConstKeys.SHAPES) as Array<IDrawableShape>
+  fun getShapes() = properties.get(ConstKeys.SHAPES) as Array<IDrawableShape>
 
   /**
    * Get the game systems.
@@ -140,7 +140,7 @@ class MegamanMaverickGame : Game2D() {
     GameLogger.set(GameLogLevel.ERROR)
     // filter by tags
     GameLogger.filterByTag = true
-    GameLogger.tagsToLog.addAll(CullableOnEvent.TAG, AbstractEnemy.TAG)
+    GameLogger.tagsToLog.addAll(Pool.TAG)
 
     // set viewports
     val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
@@ -216,7 +216,7 @@ class MegamanMaverickGame : Game2D() {
   }
 
   override fun createGameEngine(): IGameEngine {
-    val sprites = TreeSet<ISprite>()
+    val sprites = PriorityQueue<ISprite>()
     properties.put(ConstKeys.SPRITES, sprites)
     val shapes = Array<IDrawableShape>()
     properties.put(ConstKeys.SHAPES, shapes)
