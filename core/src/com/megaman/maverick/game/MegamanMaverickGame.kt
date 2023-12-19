@@ -24,6 +24,7 @@ import com.engine.controller.ControllerSystem
 import com.engine.controller.ControllerUtils
 import com.engine.controller.buttons.Button
 import com.engine.controller.buttons.Buttons
+import com.engine.cullables.CullableOnEvent
 import com.engine.cullables.CullablesSystem
 import com.engine.drawables.shapes.DrawableShapeSystem
 import com.engine.drawables.shapes.IDrawableShape
@@ -40,10 +41,9 @@ import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
+import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_UPDATE_COMPONENT_TAG
-import com.megaman.maverick.game.pathfinding.StandardPathfinderResultConsumer
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
@@ -140,8 +140,7 @@ class MegamanMaverickGame : Game2D() {
     GameLogger.set(GameLogLevel.ERROR)
     // filter by tags
     GameLogger.filterByTag = true
-    GameLogger.tagsToLog.addAll(
-        Pathfinder.TAG, MEGAMAN_UPDATE_COMPONENT_TAG, StandardPathfinderResultConsumer.TAG)
+    GameLogger.tagsToLog.addAll(CullableOnEvent.TAG, AbstractEnemy.TAG)
 
     // set viewports
     val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM

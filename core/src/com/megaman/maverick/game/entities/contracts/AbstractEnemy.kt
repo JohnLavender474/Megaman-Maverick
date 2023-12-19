@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.contracts
 
 import com.badlogic.gdx.utils.ObjectMap
 import com.engine.audio.AudioComponent
+import com.engine.common.GameLogger
 import com.engine.common.enums.Facing
 import com.engine.common.extensions.objectSetOf
 import com.engine.common.getRandom
@@ -41,6 +42,7 @@ abstract class AbstractEnemy(game: MegamanMaverickGame) :
     ICullableEntity {
 
   companion object {
+    const val TAG = "AbstractEnemy"
     private const val DEFAULT_DMG_DURATION = .15f
     private const val DEFAULT_DMG_BLINK_DUR = .025f
   }
@@ -126,7 +128,22 @@ abstract class AbstractEnemy(game: MegamanMaverickGame) :
             EventType.PLAYER_SPAWN,
             EventType.BEGIN_ROOM_TRANS,
             EventType.GATE_INIT_OPENING)
-    val cullOnEvents = CullableOnEvent({ eventsToCullOn.contains(it) }, eventsToCullOn)
+    val cullOnEvents =
+        CullableOnEvent(
+            {
+              GameLogger.debug(TAG, "Checking if event is to trigger cull = $it")
+              eventsToCullOn.contains(it.key)
+            },
+            eventsToCullOn)
+    runnablesOnSpawn.add {
+      game.eventsMan.addListener(cullOnEvents)
+      GameLogger.debug(TAG, "Added CullableOnEvent from EventsManager")
+    }
+    runnablesOnDestroy.add {
+      game.eventsMan.removeListener(cullOnEvents)
+      GameLogger.debug(TAG, "Removed CullableOnEvent from EventsManager")
+    }
+
     cullablesComponent.add(cullOnEvents)
   }
 

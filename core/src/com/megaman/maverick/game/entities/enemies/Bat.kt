@@ -122,7 +122,9 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
         BatStatus.FLYING_TO_RETREAT -> {
           if (body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)) status = BatStatus.HANGING
         }
-        else -> {}
+        BatStatus.FLYING_TO_ATTACK -> {
+          // TODO: add attack logic
+        }
       }
     }
   }
