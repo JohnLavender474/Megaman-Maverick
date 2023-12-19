@@ -1,14 +1,18 @@
 package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.utils.Array
 import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.common.enums.Position
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.objectMapOf
+import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
+import com.engine.drawables.shapes.DrawableShapeComponent
+import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpriteComponent
 import com.engine.drawables.sprites.setPosition
@@ -19,6 +23,7 @@ import com.engine.world.Body
 import com.engine.world.BodyComponent
 import com.engine.world.BodyType
 import com.engine.world.Fixture
+import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
@@ -52,6 +57,12 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
     addComponent(definePathfindingComponent())
   }
 
+  override fun spawn(spawnProps: Properties) {
+    super.spawn(spawnProps)
+    val spawn = (spawnProps.get(ConstKeys.BOUNDS) as GameRectangle).getCenter()
+    body.setCenter(spawn)
+  }
+
   override val damageNegotiations =
       objectMapOf(
           Bullet::class.hashCode() to 10,
@@ -63,6 +74,8 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
     val body = Body(BodyType.ABSTRACT)
     body.setSize(.75f * ConstVals.PPM)
 
+    val shapes = Array<() -> IDrawableShape>()
+
     // damageable fixture
     val damageableFixture =
         Fixture(GameRectangle().setSize(.75f * ConstVals.PPM), FixtureType.DAMAGEABLE)
@@ -71,6 +84,9 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
     // damager fixture
     val damagerFixture = Fixture(GameRectangle().setSize(.75f * ConstVals.PPM), FixtureType.DAMAGER)
     body.addFixture(damagerFixture)
+    shapes.add { damageableFixture.shape }
+
+    addComponent(DrawableShapeComponent(this, shapes))
 
     return BodyComponentCreator.create(this, body)
   }
@@ -101,7 +117,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
             // start at this bat's body center
             startSupplier = { body.getCenter() },
             // target the top center point of Megaman
-            targetSupplier = { getMegamanMaverickGame().megaman.body.getTopCenterPoint() },
+            targetSupplier = { getMegamanMaverickGame().megaman.body.getCenterPoint() },
             // don't travel diagonally
             allowDiagonal = { true },
             // try to avoid collision with blocks when pathfinding
@@ -119,7 +135,11 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
                   body,
                   body.getCenter(),
                   FLY_SPEED,
-                  if (DEBUG_PATHFINDING) getMegamanMaverickGame().getShapes() else null)
+                  body.fixtures.find { pair -> pair.first == FixtureType.DAMAGER }!!.second.shape
+                      as GameRectangle,
+                  stopOnTargetReached = false,
+                  stopOnTargetNull = false,
+                  shapes = if (DEBUG_PATHFINDING) getMegamanMaverickGame().getShapes() else null)
             },
             { true })
 

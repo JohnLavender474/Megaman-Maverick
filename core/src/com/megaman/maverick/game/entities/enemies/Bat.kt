@@ -188,7 +188,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
     spriteComponent.putUpdateFunction("bat") { _, _sprite ->
       _sprite as GameSprite
       _sprite.setPosition(body.getCenter(), Position.CENTER)
-      _sprite.hidden = damageBlink
+      // TODO: _sprite.hidden = damageBlink
     }
     return spriteComponent
   }
@@ -234,7 +234,10 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
                   body,
                   body.getCenter(),
                   FLY_TO_ATTACK_SPEED,
-                  if (DEBUG_PATHFINDING) getMegamanMaverickGame().getShapes() else null)
+                  body,
+                  stopOnTargetReached = true,
+                  stopOnTargetNull = true,
+                  shapes = if (DEBUG_PATHFINDING) getMegamanMaverickGame().getShapes() else null)
             },
             { status == BatStatus.FLYING_TO_ATTACK })
 

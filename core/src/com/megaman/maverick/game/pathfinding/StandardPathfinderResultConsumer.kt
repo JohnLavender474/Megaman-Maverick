@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.engine.common.GameLogger
 import com.engine.common.shapes.GameLine
+import com.engine.common.shapes.GameRectangle
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.pathfinding.PathfinderResult
 import com.engine.world.Body
@@ -32,12 +33,15 @@ object StandardPathfinderResultConsumer {
       body: Body,
       start: Vector2,
       speed: Float,
+      targetPursuer: GameRectangle = body,
+      stopOnTargetReached: Boolean = true,
+      stopOnTargetNull: Boolean = true,
       shapes: Array<IDrawableShape>? = null
   ): Boolean {
     val (_, worldPath, _) = result
     if (worldPath == null) {
       GameLogger.debug(TAG, "No path found for body $body")
-      body.physics.velocity.setZero()
+      if (stopOnTargetReached) body.physics.velocity.setZero()
       return false
     }
     GameLogger.debug(TAG, "World path found: $worldPath. Body: $body")
@@ -55,7 +59,7 @@ object StandardPathfinderResultConsumer {
     while (iter.hasNext()) {
       val _target = iter.next()
 
-      if (!body.overlaps(_target as Rectangle)) {
+      if (!targetPursuer.overlaps(_target as Rectangle)) {
         shapes?.let {
           _target.color = Color.PURPLE
           it.add(_target)
@@ -68,7 +72,7 @@ object StandardPathfinderResultConsumer {
 
     if (target == null) {
       GameLogger.debug(TAG, "No target found for body $body")
-      body.physics.velocity.setZero()
+      if (stopOnTargetNull) body.physics.velocity.setZero()
       return false
     }
     GameLogger.debug(TAG, "Target found for body: $target. Body: $body")
