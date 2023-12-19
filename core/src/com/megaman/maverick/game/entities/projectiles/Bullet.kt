@@ -2,7 +2,6 @@ package com.megaman.maverick.game.entities.projectiles
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.utils.Array
 import com.engine.common.enums.Direction
 import com.engine.common.enums.Position
 import com.engine.common.extensions.getTextureRegion
@@ -11,7 +10,6 @@ import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.damage.IDamageable
 import com.engine.drawables.shapes.DrawableShapeComponent
-import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sorting.DrawingPriority
 import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
@@ -137,26 +135,21 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity {
     body.setSize(.15f * ConstVals.PPM)
     body.physics.velocityClamp.set(CLAMP * ConstVals.PPM, CLAMP * ConstVals.PPM)
 
-    val shapes = Array<() -> IDrawableShape>()
-
     // Body fixture
     val bodyFixture = Fixture(body.copy(), FixtureType.BODY)
     body.addFixture(bodyFixture)
-    shapes.add { bodyFixture.shape }
 
     // Hitbox fixture
     val projectileFixture =
         Fixture(GameRectangle().setSize(.2f * ConstVals.PPM), FixtureType.PROJECTILE)
     body.addFixture(projectileFixture)
-    shapes.add { projectileFixture.shape }
 
     // Damager fixture
     val damagerFixture = Fixture(GameRectangle().setSize(.2f * ConstVals.PPM), FixtureType.DAMAGER)
     body.addFixture(damagerFixture)
-    shapes.add { damagerFixture.shape }
 
     // Add shapes component
-    addComponent(DrawableShapeComponent(this, shapes))
+    addComponent(DrawableShapeComponent(this, { body }))
 
     return BodyComponentCreator.create(this, body)
   }

@@ -27,7 +27,7 @@ import com.megaman.maverick.game.utils.VelocityAlterator
 class MegaContactListener(private val game: MegamanMaverickGame) : IContactListener {
 
   companion object {
-    private const val TAG = "MegaContactListener"
+    const val TAG = "MegaContactListener"
   }
 
   override fun beginContact(contact: Contact, delta: Float) {

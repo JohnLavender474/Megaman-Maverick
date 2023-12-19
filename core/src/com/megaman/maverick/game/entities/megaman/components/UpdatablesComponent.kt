@@ -1,9 +1,12 @@
 package com.megaman.maverick.game.entities.megaman.components
 
+import com.engine.common.GameLogger
 import com.engine.drawables.sprites.GameSprite
 import com.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.extensions.stopCharging
+
+const val MEGAMAN_UPDATE_COMPONENT_TAG = "MegamanUpdateComponentTag"
 
 internal fun Megaman.defineUpdatablesComponent() =
     UpdatablesComponent(
@@ -33,4 +36,6 @@ internal fun Megaman.defineUpdatablesComponent() =
           // update the timers
           shootAnimTimer.update(delta)
           wallJumpTimer.update(delta)
+
+          GameLogger.debug(MEGAMAN_UPDATE_COMPONENT_TAG, "Position: ${body.getPosition()}")
         })

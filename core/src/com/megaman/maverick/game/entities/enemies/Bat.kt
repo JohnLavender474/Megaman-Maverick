@@ -12,6 +12,7 @@ import com.engine.common.interfaces.Updatable
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
+import com.engine.drawables.shapes.DrawableShapeComponent
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpriteComponent
 import com.engine.drawables.sprites.setPosition
@@ -54,6 +55,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
   companion object {
     private var atlas: TextureAtlas? = null
 
+    private const val DEBUG_PATHFINDING = true
     private const val HANG_DURATION = 1.75f
     private const val RELEASE_FROM_PERCH_DURATION = .25f
     private const val FLY_TO_ATTACK_SPEED = 3f
@@ -171,6 +173,8 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
       else if (status != BatStatus.FLYING_TO_ATTACK) body.physics.velocity.setZero()
     }
 
+    addComponent(DrawableShapeComponent(this, { body }))
+
     return BodyComponentCreator.create(this, body)
   }
 
@@ -213,20 +217,27 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
             targetSupplier = { getMegamanMaverickGame().megaman.body.getTopCenterPoint() },
             // don't travel diagonally
             allowDiagonal = { false },
-            // try to avoid collision with blocks or other bats when pathfinding
+            // try to avoid collision with blocks when pathfinding
             filter = { _, objs ->
-              objs.none {
-                it is Fixture && (it.fixtureLabel == FixtureType.BLOCK || it.getEntity() is Bat)
-              }
+              objs.none { it is Fixture && it.fixtureLabel == FixtureType.BLOCK }
             })
 
-    return PathfindingComponent(
-        this,
-        params,
-        {
-          StandardPathfinderResultConsumer.consume(
-              it, body, body.getTopCenterPoint(), FLY_TO_ATTACK_SPEED)
-        },
-        { status == BatStatus.FLYING_TO_ATTACK })
+    val pathfindingComponent =
+        PathfindingComponent(
+            this,
+            params,
+            {
+              StandardPathfinderResultConsumer.consume(
+                  it,
+                  body,
+                  body.getCenter(),
+                  FLY_TO_ATTACK_SPEED,
+                  if (DEBUG_PATHFINDING) getMegamanMaverickGame().getShapes() else null)
+            },
+            { status == BatStatus.FLYING_TO_ATTACK })
+
+    pathfindingComponent.updateIntervalTimer = Timer(0.1f)
+
+    return pathfindingComponent
   }
 }

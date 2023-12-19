@@ -21,6 +21,11 @@ import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.spawns.SpawnerFactory
 import com.megaman.maverick.game.utils.toProps
 
+/**
+ * Builds spawners for a layer.
+ *
+ * @param params The [MegaMapLayerBuildersParams] to use.
+ */
 class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITiledMapLayerBuilder {
 
   companion object {
@@ -31,7 +36,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
     GameLogger.debug(TAG, "build(): Building spawners for layer: ${layer.name}")
     val game = params.game
 
-    // define disposables array if necessary and get it
+    // define disposables array if necessary and get itƒ
     // these disposables are run when the level is disposed
     if (!returnProps.containsKey(ConstKeys.DISPOSABLES))
         returnProps.put(ConstKeys.DISPOSABLES, Array<Disposable>())
@@ -59,7 +64,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
       if (it is RectangleMapObject) {
         // convert the MapProperties to a Properties instance
         val spawnProps = it.properties.toProps()
-        spawnProps.put(ConstKeys.BOUNDS, it.rectangle)
+        spawnProps.put(ConstKeys.BOUNDS, it.rectangle.toGameRectangle())
 
         // create spawner
         val spawnSupplier = {

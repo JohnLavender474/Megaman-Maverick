@@ -42,6 +42,8 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_UPDATE_COMPONENT_TAG
+import com.megaman.maverick.game.pathfinding.StandardPathfinderResultConsumer
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
@@ -136,6 +138,10 @@ class MegamanMaverickGame : Game2D() {
   override fun create() {
     // set log level
     GameLogger.set(GameLogLevel.ERROR)
+    // filter by tags
+    GameLogger.filterByTag = true
+    GameLogger.tagsToLog.addAll(
+        Pathfinder.TAG, MEGAMAN_UPDATE_COMPONENT_TAG, StandardPathfinderResultConsumer.TAG)
 
     // set viewports
     val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM

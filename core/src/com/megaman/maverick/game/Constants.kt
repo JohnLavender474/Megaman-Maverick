@@ -22,6 +22,7 @@ object ConstKeys {
   const val AXIS = "axis"
   const val DIRECTION = "direction"
   const val MASK = "mask"
+  const val FACING = "facing"
   const val DISPOSABLES = "disposables"
   const val EVENTS = "events"
   const val ENTITY_TYPE = "entity_type"
