@@ -8,6 +8,7 @@ import com.engine.factories.IFactory
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.enemies.Bat
+import com.megaman.maverick.game.entities.enemies.FloatingCan
 import com.megaman.maverick.game.entities.enemies.Met
 import com.megaman.maverick.game.entities.factories.EntityPoolCreator
 
@@ -44,6 +45,8 @@ class EnemiesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
     pools.put(BAT, EntityPoolCreator.create(5) { Bat(game) })
     // met
     pools.put(MET, EntityPoolCreator.create(5) { Met(game) })
+    // floating can
+    pools.put(FLOATING_CAN, EntityPoolCreator.create(5) { FloatingCan(game) })
   }
 
   /**

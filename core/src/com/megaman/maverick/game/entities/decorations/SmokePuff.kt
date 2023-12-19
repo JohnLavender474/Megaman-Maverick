@@ -6,9 +6,11 @@ import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
+import com.engine.common.CAUSE_OF_DEATH_MESSAGE
 import com.engine.common.enums.Position
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.objects.Properties
+import com.engine.common.objects.props
 import com.engine.drawables.sorting.DrawingPriority
 import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
@@ -59,5 +61,11 @@ class SmokePuff(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity {
   }
 
   private fun defineUpdatablesComponent() =
-      UpdatablesComponent(this, { if (animation.isFinished()) dead = true })
+      UpdatablesComponent(
+          this,
+          {
+            if (animation.isFinished()) {
+              kill(props(CAUSE_OF_DEATH_MESSAGE to "Smoke puff animation finished."))
+            }
+          })
 }

@@ -5,12 +5,14 @@ import com.badlogic.gdx.math.Vector2
 import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
+import com.engine.common.CAUSE_OF_DEATH_MESSAGE
 import com.engine.common.enums.Facing
 import com.engine.common.enums.Position
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.interfaces.IFaceable
 import com.engine.common.objects.Properties
+import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
 import com.engine.drawables.sprites.GameSprite
@@ -122,7 +124,9 @@ class ChargedShotExplosion(game: MegamanMaverickGame) :
           this,
           {
             durationTimer.update(it)
-            if (durationTimer.isFinished()) dead = true
+            if (durationTimer.isFinished()) {
+              kill(props(CAUSE_OF_DEATH_MESSAGE to "Duration timer finished"))
+            }
 
             soundTimer.update(it)
             if (soundTimer.isFinished()) {

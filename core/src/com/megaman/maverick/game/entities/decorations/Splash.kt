@@ -6,6 +6,7 @@ import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
+import com.engine.common.CAUSE_OF_DEATH_MESSAGE
 import com.engine.common.enums.Position
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.objects.Properties
@@ -68,7 +69,11 @@ class Splash(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity {
   }
 
   private fun defineUpdatablesComponent() =
-      UpdatablesComponent(this, { if (animation.isFinished()) dead = true })
+      UpdatablesComponent(
+          this,
+          {
+            if (animation.isFinished()) kill(props(CAUSE_OF_DEATH_MESSAGE to "Animation finished"))
+          })
 
   private fun defineAnimationsComponent(): AnimationsComponent {
     animation = Animation(splashRegion!!, 1, 5, 0.075f, false)

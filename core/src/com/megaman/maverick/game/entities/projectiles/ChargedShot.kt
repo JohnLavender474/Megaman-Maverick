@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2
 import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
+import com.engine.common.CAUSE_OF_DEATH_MESSAGE
 import com.engine.common.enums.Direction
 import com.engine.common.enums.Facing
 import com.engine.common.enums.Position
@@ -151,7 +152,7 @@ class ChargedShot(game: MegamanMaverickGame) : GameEntity(game), IProjectileEnti
 
   /** Explodes the charged shot and marks it as dead, spawning an explosion entity. */
   private fun explodeAndDie() {
-    dead = true
+    kill(props(CAUSE_OF_DEATH_MESSAGE to "Explode and die"))
     val e = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.CHARGED_SHOT_EXPLOSION)
     val props =
         props(

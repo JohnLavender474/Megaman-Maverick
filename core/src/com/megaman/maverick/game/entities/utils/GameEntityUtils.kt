@@ -7,7 +7,8 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.utils.toGameRectangle
 
 /** Get the logic to cull this entity by the game camera. */
-fun getGameCameraCullingLogic(entity: IBodyEntity) =
+fun getGameCameraCullingLogic(entity: IBodyEntity, timeToCull: Float = 1f) =
     CullableOnUncontained(
         { (entity.game as MegamanMaverickGame).getGameCamera().toGameRectangle() },
-        { it.overlaps(entity.body as Rectangle) })
+        { it.overlaps(entity.body as Rectangle) },
+        timeToCull)

@@ -6,9 +6,11 @@ import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.audio.AudioComponent
+import com.engine.common.CAUSE_OF_DEATH_MESSAGE
 import com.engine.common.enums.Position
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.objects.Properties
+import com.engine.common.objects.props
 import com.engine.common.time.Timer
 import com.engine.drawables.sorting.DrawingPriority
 import com.engine.drawables.sorting.DrawingSection
@@ -60,7 +62,9 @@ class Disintegration(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntit
           this,
           {
             durationTimer.update(it)
-            if (durationTimer.isFinished()) dead = true
+            if (durationTimer.isFinished()) {
+              kill(props(CAUSE_OF_DEATH_MESSAGE to "Duration timer finished"))
+            }
           })
 
   private fun defineSpriteComponent(): SpriteComponent {

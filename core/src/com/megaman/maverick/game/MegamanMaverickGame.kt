@@ -20,21 +20,21 @@ import com.engine.common.GameLogLevel
 import com.engine.common.GameLogger
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.extensions.objectSetOf
-import com.engine.common.objects.Pool
 import com.engine.controller.ControllerSystem
 import com.engine.controller.ControllerUtils
 import com.engine.controller.buttons.Button
 import com.engine.controller.buttons.Buttons
-import com.engine.cullables.CullableOnEvent
 import com.engine.cullables.CullablesSystem
 import com.engine.drawables.shapes.DrawableShapeSystem
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.ISprite
 import com.engine.drawables.sprites.SpriteSystem
+import com.engine.entities.GameEntity
 import com.engine.graph.IGraphMap
 import com.engine.motion.MotionSystem
 import com.engine.pathfinding.Pathfinder
 import com.engine.pathfinding.PathfindingSystem
+import com.engine.spawns.SpawnerForBoundsEntered
 import com.engine.systems.IGameSystem
 import com.engine.updatables.UpdatablesSystem
 import com.engine.world.WorldSystem
@@ -42,7 +42,6 @@ import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
-import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.screens.ScreenEnum
@@ -140,7 +139,7 @@ class MegamanMaverickGame : Game2D() {
     GameLogger.set(GameLogLevel.ERROR)
     // filter by tags
     GameLogger.filterByTag = true
-    GameLogger.tagsToLog.addAll(Pool.TAG)
+    GameLogger.tagsToLog.addAll(SpawnerForBoundsEntered.TAG, GameEntity.TAG)
 
     // set viewports
     val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM

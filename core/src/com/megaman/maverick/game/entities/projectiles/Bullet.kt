@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.projectiles
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
+import com.engine.common.CAUSE_OF_DEATH_MESSAGE
 import com.engine.common.enums.Direction
 import com.engine.common.enums.Position
 import com.engine.common.extensions.getTextureRegion
@@ -68,9 +69,9 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity {
     body.physics.velocity.set(trajectory.scl(ConstVals.PPM.toFloat()))
   }
 
-  override fun onDamageInflictedTo(damageable: IDamageable) = disintegrate()
+  override fun onDamageInflictedTo(damageable: IDamageable) = disintegrate("Damage inflicted")
 
-  override fun hitBlock(blockFixture: Fixture) = disintegrate()
+  override fun hitBlock(blockFixture: Fixture) = disintegrate("Hit block")
 
   override fun hitShield(shieldFixture: Fixture) {
     owner = shieldFixture.getEntity()
@@ -94,9 +95,8 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity {
   }
 
   /** Disintegrates the bullet, marking it as dead and spawning an explosion entity. */
-  fun disintegrate() {
-    dead = true
-
+  fun disintegrate(causeOfDeathMessage: String = "Disintegration") {
+    kill(props(CAUSE_OF_DEATH_MESSAGE to causeOfDeathMessage))
     val disintegration =
         EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)
     game.gameEngine.spawn(disintegration!!, props(ConstKeys.POSITION to body.getCenter()))

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="75" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="6" nextobjectid="14">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="75" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="6" nextobjectid="15">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <objectgroup id="2" name="blocks">
   <object id="1" x="0" y="224" width="32" height="416"/>
@@ -18,6 +18,7 @@
  <objectgroup id="5" name="enemies">
   <object id="12" name="Bat" x="608" y="320" width="32" height="32"/>
   <object id="13" name="Met" x="672" y="576" width="32" height="32"/>
+  <object id="14" name="FloatingCan" x="544" y="320" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="4" name="player">
   <object id="6" name="0" x="96" y="576" width="32" height="32"/>
