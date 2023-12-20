@@ -80,7 +80,7 @@ CloudedTorpedo/UncloudedTorpedo
   orig: 64, 32
   offset: 0, 0
   index: -1
-Dragonfly
+DragonFly
   rotate: false
   xy: 672, 0
   size: 64, 32

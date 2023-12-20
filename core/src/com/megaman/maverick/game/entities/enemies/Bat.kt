@@ -37,11 +37,6 @@ import com.megaman.maverick.game.pathfinding.StandardPathfinderResultConsumer
 import com.megaman.maverick.game.utils.getMegamanMaverickGame
 import com.megaman.maverick.game.world.*
 
-/**
- * A bat enemy.
- *
- * @param game The game instance.
- */
 class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
   enum class BatStatus(val region: String) {

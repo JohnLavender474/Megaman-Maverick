@@ -8,11 +8,11 @@ import com.engine.factories.IFactory
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.enemies.Bat
+import com.megaman.maverick.game.entities.enemies.DragonFly
 import com.megaman.maverick.game.entities.enemies.FloatingCan
 import com.megaman.maverick.game.entities.enemies.Met
 import com.megaman.maverick.game.entities.factories.EntityPoolCreator
 
-/** A factory that creates enemies. */
 class EnemiesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
 
   companion object {
@@ -28,7 +28,7 @@ class EnemiesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
     const val PICKET_JOE = "PicketJoe"
     const val SNIPER_JOE = "SniperJoe"
     const val PRECIOUS_JOE = "PreciousJoe"
-    const val DRAGON_FLY = "Dragonfly"
+    const val DRAGON_FLY = "DragonFly"
     const val MATASABURO = "Matasaburo"
     const val SPRING_HEAD = "SpringHead"
     const val SWINGIN_JOE = "SwinginJoe"
@@ -41,20 +41,12 @@ class EnemiesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
   private val pools = ObjectMap<Any, Pool<AbstractEnemy>>()
 
   init {
-    // bat
-    pools.put(BAT, EntityPoolCreator.create(5) { Bat(game) })
-    // met
-    pools.put(MET, EntityPoolCreator.create(5) { Met(game) })
-    // floating can
+    pools.put(BAT, EntityPoolCreator.create(3) { Bat(game) })
+    pools.put(MET, EntityPoolCreator.create(3) { Met(game) })
     pools.put(FLOATING_CAN, EntityPoolCreator.create(5) { FloatingCan(game) })
+    pools.put(DRAGON_FLY, EntityPoolCreator.create(2) { DragonFly(game) })
   }
 
-  /**
-   * Fetches an enemy from the pool.
-   *
-   * @param key The key of the enemy to fetch.
-   * @return An enemy from the pool.
-   */
   override fun fetch(key: Any): AbstractEnemy? {
     GameLogger.debug(ExplosionsFactory.TAG, "Spawning Explosion: key = $key")
     return pools.get(key)?.fetch()

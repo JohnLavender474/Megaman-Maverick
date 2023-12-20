@@ -30,8 +30,7 @@ import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.getMegamanMaverickGame
 
-/** An entity that is an enemy. */
-abstract class AbstractEnemy(game: MegamanMaverickGame) :
+abstract class AbstractEnemy(game: MegamanMaverickGame, private val cullTime: Float = 1f) :
     GameEntity(game),
     IBodyEntity,
     IAudioEntity,
@@ -119,7 +118,7 @@ abstract class AbstractEnemy(game: MegamanMaverickGame) :
   }
 
   protected open fun defineCullablesComponent(cullablesComponent: CullablesComponent) {
-    val cullOnOutOfBounds = getGameCameraCullingLogic(this)
+    val cullOnOutOfBounds = getGameCameraCullingLogic(this, cullTime)
     cullablesComponent.add(cullOnOutOfBounds)
 
     val eventsToCullOn =
@@ -147,7 +146,6 @@ abstract class AbstractEnemy(game: MegamanMaverickGame) :
     cullablesComponent.add(cullOnEvents)
   }
 
-  /** Spawns a disintegration explosion. */
   protected open fun disintegrate() {
     getMegamanMaverickGame().audioMan.playMusic(SoundAsset.ENEMY_DAMAGE_SOUND)
     val disintegration =
@@ -155,18 +153,12 @@ abstract class AbstractEnemy(game: MegamanMaverickGame) :
     game.gameEngine.spawn(disintegration!!, props(ConstKeys.POSITION to body.getCenter()))
   }
 
-  /** Spawns an explosion. */
   protected open fun explode() {
     getMegamanMaverickGame().audioMan.playMusic(SoundAsset.ENEMY_DAMAGE_SOUND)
     val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)
     game.gameEngine.spawn(explosion!!, props(ConstKeys.POSITION to body.getCenter()))
   }
 
-  /**
-   * Returns if Megaman is shooting at this enemy.
-   *
-   * @return True if Megaman is shooting at this enemy, false otherwise.
-   */
   fun isMegamanShootingAtMe(): Boolean {
     val megaman = getMegamanMaverickGame().megaman
     if (!megaman.shooting) return false
