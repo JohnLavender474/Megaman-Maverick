@@ -107,7 +107,7 @@ class ChargedShot(game: MegamanMaverickGame) : GameEntity(game), IProjectileEnti
     (firstSprite as GameSprite).setSize(spriteDimension)
 
     body.setSize(bodyDimension)
-    body.fixtures.forEach { (it.second.shape as GameRectangle).set(body) }
+    body.fixtures.forEach { (it.second.shape as GameRectangle).setSize(bodyDimension) }
 
     val _trajectory = spawnProps.get(ConstKeys.TRAJECTORY) as Vector2
     trajectory.set(_trajectory.scl(ConstVals.PPM.toFloat()))
@@ -186,7 +186,7 @@ class ChargedShot(game: MegamanMaverickGame) : GameEntity(game), IProjectileEnti
     body.addFixture(projectileFixture)
 
     // Damager fixture
-    val damagerFixture = Fixture(GameRectangle(), FixtureType.PROJECTILE)
+    val damagerFixture = Fixture(GameRectangle(), FixtureType.DAMAGER)
     body.addFixture(damagerFixture)
 
     // add drawable shape component for debugging

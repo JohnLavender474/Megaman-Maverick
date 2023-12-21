@@ -286,6 +286,9 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
     }
 
     val s = spawnCenter
+
+    if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING)) s.y += 0.1f * ConstVals.PPM
+
     if (megaman.upsideDown)
         if (megaman.isBehaviorActive(BehaviorType.CLIMBING)) s.y -= .45f * ConstVals.PPM
         else s.y -= .05f * ConstVals.PPM
