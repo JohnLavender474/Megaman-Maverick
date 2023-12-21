@@ -12,6 +12,7 @@ import com.engine.common.interfaces.Updatable
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
+import com.engine.damage.IDamager
 import com.engine.drawables.shapes.DrawableShapeComponent
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpriteComponent
@@ -36,6 +37,7 @@ import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.pathfinding.StandardPathfinderResultConsumer
 import com.megaman.maverick.game.utils.getMegamanMaverickGame
 import com.megaman.maverick.game.world.*
+import kotlin.reflect.KClass
 
 class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
@@ -58,11 +60,11 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
   }
 
   override val damageNegotiations =
-      objectMapOf(
-          Bullet::class.hashCode() to 10,
-          Fireball::class.hashCode() to ConstVals.MAX_HEALTH,
-          ChargedShot::class.hashCode() to ConstVals.MAX_HEALTH,
-          ChargedShotExplosion::class.hashCode() to ConstVals.MAX_HEALTH)
+      objectMapOf<KClass<out IDamager>, Int>(
+          Bullet::class to 10,
+          Fireball::class to ConstVals.MAX_HEALTH,
+          ChargedShot::class to ConstVals.MAX_HEALTH,
+          ChargedShotExplosion::class to ConstVals.MAX_HEALTH)
 
   private val hangTimer = Timer(HANG_DURATION)
   private val releasePerchTimer = Timer(RELEASE_FROM_PERCH_DURATION)

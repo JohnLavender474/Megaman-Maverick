@@ -3,13 +3,13 @@
 package com.megaman.maverick.game.world
 
 import com.engine.entities.contracts.IBodyEntity
-import com.engine.entities.contracts.IDamageableEntity
-import com.engine.entities.contracts.IDamagerEntity
 import com.engine.world.BodyType
 import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.utils.VelocityAlteration
+
+const val FIXTURE_EXTENSIONS_TAG = "FIXTURE_EXTENSIONS"
 
 /**
  * Sets the [IBodyEntity] of this fixture. This method MUST be called for every fixture when it is
@@ -29,28 +29,6 @@ fun Fixture.setEntity(entity: IBodyEntity): Fixture {
  * @return the entity of this fixture
  */
 fun Fixture.getEntity() = properties.get(ConstKeys.ENTITY) as IBodyEntity
-
-/**
- * Sets the entity of this fixture to be damaged by the damager that owns the provided fixture. If
- * this fixture's entity is not a [IDamageableEntity] and the entity of the provided fixture is not
- * a [IDamagerEntity], then nothing happens. Otherwise, the provided fixture's entity's damager is
- * added to this fixture's entity's damageable.
- *
- * @param damagerFixture the fixture whose entity's damager will be added to this fixture's entity's
- *   damageable
- * @return true if the entity of this fixture is a [IDamageableEntity] and the entity of the
- *   provided fixture is a [IDamagerEntity], otherwise false
- */
-fun Fixture.setDamagedBy(damagerFixture: Fixture): Boolean {
-  val damageable = getEntity()
-  if (damageable !is IDamageableEntity) return false
-
-  val damager = damagerFixture.getEntity()
-  if (damager !is IDamagerEntity) return false
-
-  damageable.addDamager(damager)
-  return true
-}
 
 /** Depletes the health of the entity that owns this fixture. */
 fun Fixture.depleteHealth(): Boolean {

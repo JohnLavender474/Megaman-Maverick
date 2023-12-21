@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.engine.animations.Animation
+import com.engine.common.GameLogger
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.interfaces.Initializable
 import com.engine.common.interfaces.Updatable
@@ -12,6 +13,7 @@ import com.engine.common.time.Timer
 import com.engine.controller.ControllerSystem
 import com.engine.drawables.IDrawable
 import com.engine.drawables.fonts.BitmapFontHandle
+import com.engine.drawables.sprites.setSize
 import com.engine.events.Event
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -21,15 +23,11 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.events.EventType
 import java.util.*
 
-/**
- * This class is responsible for handling the player spawn event.
- *
- * @param game the [MegamanMaverickGame] instance.
- */
 class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) :
     Initializable, Updatable, IDrawable<Batch> {
 
   companion object {
+    const val TAG = "PlayerSpawnEventHandler"
     private const val PRE_BEAM_DUR = 1f
     private const val BEAM_DOWN_DUR = .5f
     private const val BEAM_TRANS_DUR = .2f
@@ -45,22 +43,23 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) :
   private val beamDownTimer = Timer(BEAM_DOWN_DUR).setToEnd()
   private val beamTransitionTimer = Timer(BEAM_TRANS_DUR).setToEnd()
 
-  private var beamRegion: TextureRegion? = null
-  private var beamSprite: Sprite? = null
-  private var beamLandAnimation: Animation? = null
-
-  private var ready: BitmapFontHandle? = null
+  private lateinit var beamRegion: TextureRegion
+  private lateinit var beamSprite: Sprite
+  private lateinit var beamLandAnimation: Animation
+  private lateinit var ready: BitmapFontHandle
 
   private var initialized = false
   private var blinkReady = false
 
   override fun init() {
+    GameLogger.debug(TAG, "Initializing...")
     if (!initialized) {
+      GameLogger.debug(TAG, "First time initializing...")
       val atlas = game.assMan.getTextureAtlas(TextureAsset.MEGAMAN_BUSTER.source)
 
       beamRegion = atlas.findRegion("Beam")
       beamSprite = Sprite(beamRegion)
-      beamSprite?.setSize(1.5f * ConstVals.PPM, 1.5f * ConstVals.PPM)
+      beamSprite.setSize(1.5f * ConstVals.PPM)
 
       beamLandAnimation = Animation(atlas.findRegion("BeamLand"), 1, 2, .1f, false)
 
@@ -72,7 +71,7 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) :
                   ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f,
                   ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f),
               fontSource = "Megaman10Font.ttf")
-      ready!!.init()
+      ready.init()
 
       initialized = true
     }
@@ -83,24 +82,26 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) :
     preBeamTimer.reset()
     beamDownTimer.reset()
     beamTransitionTimer.reset()
-    beamLandAnimation!!.reset()
-    beamSprite?.setPosition(-ConstVals.PPM.toFloat(), -ConstVals.PPM.toFloat())
+    beamLandAnimation.reset()
+    beamSprite.setPosition(-ConstVals.PPM.toFloat(), -ConstVals.PPM.toFloat())
 
     game.megaman.body.physics.gravityOn = false
     game.getSystems().get(ControllerSystem::class.simpleName).on = false
+
+    GameLogger.debug(TAG, "Submitted PLAYER_SPAWN event")
     game.eventsMan.submitEvent(Event(EventType.PLAYER_SPAWN))
   }
 
   override fun draw(drawer: Batch) {
     if (blinkReady) {
       drawer.projectionMatrix = game.getUiCamera().combined
-      ready!!.draw(drawer)
+      ready.draw(drawer)
     }
 
     if (preBeamTimer.isFinished() &&
         (!beamDownTimer.isFinished() || !beamTransitionTimer.isFinished())) {
       drawer.projectionMatrix = game.getGameCamera().combined
-      beamSprite!!.draw(drawer)
+      beamSprite.draw(drawer)
     }
   }
 
@@ -119,25 +120,29 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) :
 
   private fun preBeam(delta: Float) {
     preBeamTimer.update(delta)
-    if (preBeamTimer.isJustFinished()) beamSprite?.setRegion(beamRegion)
+    if (preBeamTimer.isJustFinished()) {
+      GameLogger.debug(TAG, "Pre-beam timer just finished")
+      beamSprite.setRegion(beamRegion)
+    }
   }
 
   private fun beamDown(delta: Float) {
     beamDownTimer.update(delta)
 
-    val startY: Float = game.megaman.body.y + ConstVals.VIEW_HEIGHT * ConstVals.PPM
-    val offsetY: Float = ConstVals.VIEW_HEIGHT * ConstVals.PPM * beamDownTimer.getRatio()
+    val startY: Float = game.megaman.body.y + (ConstVals.VIEW_HEIGHT * ConstVals.PPM)
+    val offsetY: Float = (ConstVals.VIEW_HEIGHT * ConstVals.PPM) * beamDownTimer.getRatio()
 
-    beamSprite?.setCenterX(game.megaman.body.getCenter().x)
-    beamSprite?.setY(startY - offsetY)
+    beamSprite.setCenterX(game.megaman.body.getCenter().x)
+    beamSprite.y = startY - offsetY
   }
 
   private fun beamTrans(delta: Float) {
     beamTransitionTimer.update(delta)
-    beamLandAnimation?.update(delta)
-    beamSprite?.setRegion(beamLandAnimation!!.getCurrentRegion())
+    beamLandAnimation.update(delta)
+    beamSprite.setRegion(beamLandAnimation.getCurrentRegion())
 
     if (beamTransitionTimer.isJustFinished()) {
+      GameLogger.debug(TAG, "Beam transition timer just finished")
       game.getSystems().get(ControllerSystem::class.simpleName).on = true
 
       game.megaman.body.physics.gravityOn = true

@@ -17,6 +17,7 @@ import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
+import com.engine.damage.IDamager
 import com.engine.drawables.shapes.DrawableShapeComponent
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sorting.DrawingPriority
@@ -47,6 +48,7 @@ import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.isSensing
+import kotlin.reflect.KClass
 
 /**
  * A met enemy.
@@ -86,11 +88,11 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
           MetBehavior.RUNNING to Timer(RUNNING_DURATION))
 
   override val damageNegotiations =
-      objectMapOf(
-          Bullet::class.hashCode() to 10,
-          Fireball::class.hashCode() to ConstVals.MAX_HEALTH,
-          ChargedShot::class.hashCode() to ConstVals.MAX_HEALTH,
-          ChargedShotExplosion::class.hashCode() to ConstVals.MAX_HEALTH)
+      objectMapOf<KClass<out IDamager>, Int>(
+          Bullet::class to 10,
+          Fireball::class to ConstVals.MAX_HEALTH,
+          ChargedShot::class to ConstVals.MAX_HEALTH,
+          ChargedShotExplosion::class to ConstVals.MAX_HEALTH)
 
   override lateinit var facing: Facing
 

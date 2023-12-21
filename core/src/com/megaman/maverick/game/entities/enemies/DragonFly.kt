@@ -15,6 +15,7 @@ import com.engine.common.interfaces.Updatable
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
+import com.engine.damage.IDamager
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpriteComponent
 import com.engine.drawables.sprites.setPosition
@@ -35,6 +36,7 @@ import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.getMegamanMaverickGame
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
+import kotlin.reflect.KClass
 
 class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game, CULL_TIME), IFaceable {
 
@@ -55,11 +57,11 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game, CULL_TIME), IFa
   }
 
   override val damageNegotiations =
-      objectMapOf(
-          Bullet::class.hashCode() to 5,
-          Fireball::class.hashCode() to ConstVals.MAX_HEALTH,
-          ChargedShot::class.hashCode() to ConstVals.MAX_HEALTH,
-          ChargedShotExplosion::class.hashCode() to 15)
+      objectMapOf<KClass<out IDamager>, Int>(
+          Bullet::class to 5,
+          Fireball::class to ConstVals.MAX_HEALTH,
+          ChargedShot::class to ConstVals.MAX_HEALTH,
+          ChargedShotExplosion::class to 15)
 
   override var facing = Facing.RIGHT
 

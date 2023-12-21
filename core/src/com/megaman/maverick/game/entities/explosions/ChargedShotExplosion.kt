@@ -18,6 +18,7 @@ import com.engine.common.time.Timer
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpriteComponent
 import com.engine.drawables.sprites.setPosition
+import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
 import com.engine.updatables.UpdatablesComponent
@@ -111,7 +112,7 @@ class ChargedShotExplosion(game: MegamanMaverickGame) :
     body.setCenter(spawn)
 
     val spriteDimension = (if (fullyCharged) 1.75f else 1.25f) * ConstVals.PPM
-    firstSprite!!.setSize(spriteDimension, spriteDimension)
+    (firstSprite as GameSprite).setSize(spriteDimension)
   }
 
   /**

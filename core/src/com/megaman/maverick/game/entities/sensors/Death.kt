@@ -4,7 +4,6 @@ import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
-import com.engine.entities.contracts.IDamageableEntity
 import com.engine.world.Body
 import com.engine.world.BodyComponent
 import com.engine.world.BodyType
@@ -14,8 +13,8 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.world.FixtureType
 
 /**
- * A death sensor that kills every [IDamageableEntity] whose damageable fixture comes into contact
- * with it.
+ * A death sensor that kills every entity whose damageable fixture comes into contact with
+ * it.
  */
 class Death(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity {
 

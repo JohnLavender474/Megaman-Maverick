@@ -24,7 +24,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
             GameLogger.debug(Megaman.TAG, "left controller button just pressed")
           },
           onPressContinued = { poller, delta ->
-            if (poller.isButtonPressed(ConstKeys.RIGHT)) return@ButtonActuator
+            if (damaged || poller.isButtonPressed(ConstKeys.RIGHT)) return@ButtonActuator
 
             facing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) Facing.RIGHT else Facing.LEFT
             running = !isBehaviorActive(BehaviorType.WALL_SLIDING)
@@ -55,7 +55,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
             GameLogger.debug(Megaman.TAG, "right controller button just pressed")
           },
           onPressContinued = { poller, delta ->
-            if (poller.isButtonPressed(ConstKeys.LEFT)) return@ButtonActuator
+            if (damaged || poller.isButtonPressed(ConstKeys.LEFT)) return@ButtonActuator
 
             facing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) Facing.LEFT else Facing.RIGHT
             running = !isBehaviorActive(BehaviorType.WALL_SLIDING)
@@ -83,7 +83,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
   val attack =
       ButtonActuator(
           onPressContinued = { _, delta ->
-            if (isUnderDamage()) {
+            if (damaged) {
               stopCharging()
               return@ButtonActuator
             }
@@ -101,9 +101,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
             chargingTimer.update(delta)
           },
           onJustReleased = {
-            if (isUnderDamage() ||
-                !weaponHandler.canFireWeapon(currentWeapon, chargeStatus) ||
-                !shoot())
+            if (damaged || !weaponHandler.canFireWeapon(currentWeapon, chargeStatus) || !shoot())
                 requestToPlaySound(SoundAsset.ERROR_SOUND, false)
 
             stopCharging()

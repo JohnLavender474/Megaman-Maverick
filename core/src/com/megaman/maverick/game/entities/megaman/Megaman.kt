@@ -5,47 +5,91 @@ import com.engine.audio.AudioComponent
 import com.engine.common.GameLogger
 import com.engine.common.enums.Facing
 import com.engine.common.enums.Position
+import com.engine.common.extensions.gdxArrayOf
+import com.engine.common.extensions.objectMapOf
 import com.engine.common.extensions.objectSetOf
 import com.engine.common.interfaces.IFaceable
 import com.engine.common.objects.Properties
+import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.TimeMarkedRunnable
 import com.engine.common.time.Timer
+import com.engine.damage.IDamageable
 import com.engine.damage.IDamager
 import com.engine.entities.GameEntity
+import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.*
 import com.engine.events.Event
 import com.engine.events.IEventListener
-import com.engine.world.Body
+import com.engine.world.BodyComponent
 import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.IProjectileEntity
+import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.contracts.IUpsideDownable
+import com.megaman.maverick.game.entities.enemies.Bat
+import com.megaman.maverick.game.entities.enemies.DragonFly
+import com.megaman.maverick.game.entities.enemies.FloatingCan
+import com.megaman.maverick.game.entities.enemies.Met
+import com.megaman.maverick.game.entities.factories.EntityFactories
+import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.entities.megaman.constants.*
+import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOSION_ORB_SPEED
+import com.megaman.maverick.game.entities.projectiles.Bullet
+import com.megaman.maverick.game.entities.projectiles.ChargedShot
+import com.megaman.maverick.game.entities.stopSoundNow
 import com.megaman.maverick.game.events.EventType
+import kotlin.reflect.KClass
 
-/** Megaman class represents the player in the game. It extends [GameEntity]. */
 class Megaman(game: MegamanMaverickGame) :
     GameEntity(game),
     IMegaUpgradable,
     IEventListener,
     IFaceable,
+    IDamageable,
     IUpsideDownable,
     IBodyEntity,
     IHealthEntity,
     ISpriteEntity,
     IBehaviorsEntity,
     IPointsEntity,
-    IDamageableEntity,
     IAudioEntity {
 
   companion object {
     const val TAG = "Megaman"
   }
 
+  val damaged: Boolean
+    get() = !damageTimer.isFinished()
+
+  override val invincible: Boolean
+    get() = damaged || !damageRecoveryTimer.isFinished()
+
   // Megaman's timers
+
+  internal val damageTimer = Timer(MegamanValues.DAMAGE_DURATION).setToEnd()
+  internal val damageRecoveryTimer = Timer(MegamanValues.DAMAGE_RECOVERY_TIME).setToEnd()
+  internal val damageFlashTimer = Timer(MegamanValues.DAMAGE_FLASH_DURATION)
+
+  internal val dmgNegotations =
+      objectMapOf<KClass<out IDamager>, Int>(
+          Bullet::class to 2,
+          ChargedShot::class to 4,
+          Bat::class to 2,
+          Met::class to 2,
+          DragonFly::class to 3,
+          FloatingCan::class to 2)
+
+  internal val noDmgBounce =
+      objectSetOf<Any>(
+          // TODO: spring head enemy
+          )
+
   internal val shootAnimTimer = Timer(MegamanValues.SHOOT_ANIM_TIME).setToEnd()
   internal val chargingTimer =
       Timer(
@@ -54,7 +98,6 @@ class Megaman(game: MegamanMaverickGame) :
                 requestToPlaySound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND, true)
               })
           .setToEnd()
-  internal val damageFlashTimer = Timer(MegamanValues.DAMAGE_FLASH_DURATION).setToEnd()
   internal val airDashTimer = Timer(MegamanValues.MAX_AIR_DASH_TIME)
   internal val wallJumpTimer = Timer(MegamanValues.WALL_JUMP_IMPETUS_TIME).setToEnd()
   internal val groundSlideTimer = Timer(MegamanValues.MAX_GROUND_SLIDE_TIME)
@@ -192,15 +235,10 @@ class Megaman(game: MegamanMaverickGame) :
   internal var waterIceGravity = 0f
   internal var swimVelY = 0f
 
-  /**
-   * Initializes Megaman's components and properties. Called by the super [spawn] method if
-   * [initialized] is false and this [init] has been called.
-   */
   override fun init() {
     addComponent(AudioComponent(this))
     addComponent(defineUpdatablesComponent())
     addComponent(definePointsComponent())
-    addComponent(defineDamageableComponent())
     addComponent(defineBodyComponent())
     addComponent(defineBehaviorsComponent())
     addComponent(defineControllerComponent())
@@ -209,15 +247,11 @@ class Megaman(game: MegamanMaverickGame) :
     weaponHandler.putWeapon(MegamanWeapon.BUSTER)
   }
 
-  /**
-   * Spawns Megaman. The super method [spawn] calls [init] if [initialized] is false.
-   *
-   * @param spawnProps the [Properties] to use to spawn Megaman.
-   */
   override fun spawn(spawnProps: Properties) {
     GameLogger.debug(TAG, "spawn(): spawnProps = $spawnProps")
 
     super.spawn(spawnProps)
+    setHealth(getMaxHealth())
     game.eventsMan.addListener(this)
 
     // set Megaman's position
@@ -233,7 +267,10 @@ class Megaman(game: MegamanMaverickGame) :
     running = false
     damageFlash = false
 
+    damageTimer.setToEnd()
+    damageRecoveryTimer.setToEnd()
     damageFlashTimer.reset()
+
     shootAnimTimer.reset()
     groundSlideTimer.reset()
     wallJumpTimer.reset()
@@ -241,40 +278,40 @@ class Megaman(game: MegamanMaverickGame) :
     airDashTimer.reset()
   }
 
-  // TODO:
-  /*
-  @Override
-    public void takeDamageFrom(Damager damager) {
-        if (!noDmgBounce.contains(damager.getClass()) && damager instanceof Entity e &&
-                e.hasComponent(BodyComponent.class)) {
-            Body enemyBody = e.getComponent(BodyComponent.class).body;
-            body.velocity.x = (enemyBody.isRightOf(body) ? -DMG_X : DMG_X) * WorldVals.PPM;
-            body.velocity.y = DMG_Y * WorldVals.PPM;
-        }
-        DamageNegotiation dmgNeg = MegamanDamageNegs.get(damager);
-        dmgTimer.reset();
-        dmgNeg.runOnDamage();
-        removeHealth(dmgNeg.getDamage(damager));
-        request(SoundAsset.MEGAMAN_DAMAGE_SOUND, true);
-        request(SoundAsset.MEGA_BUSTER_CHARGING_SOUND, false);
-    }
-   */
-  override fun takeDamageFrom(damager: IDamager): Boolean {
-    TODO("Not yet implemented")
-  }
-
-  /**
-   * Destroys Megaman by setting the [Body]'s velocity to zero and calling the super method which
-   * sets [dead] to true, resets all the components, and calls anything contained in
-   * [runnablesOnDestroy].
-   */
   override fun onDestroy() {
+    GameLogger.debug(TAG, "onDestroy()")
+
     super<GameEntity>.onDestroy()
     body.physics.velocity.setZero()
-    game.eventsMan.removeListener(this)
+
+    val eventsMan = game.eventsMan
+    eventsMan.removeListener(this)
+    eventsMan.submitEvent(Event(EventType.PLAYER_JUST_DIED))
+    stopSoundNow(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
+
+    if (getCurrentHealth() > 0) return
+
+    val explosionOrbTrajectories =
+        gdxArrayOf(
+            Vector2(-EXPLOSION_ORB_SPEED, 0f),
+            Vector2(-EXPLOSION_ORB_SPEED, EXPLOSION_ORB_SPEED),
+            Vector2(0f, EXPLOSION_ORB_SPEED),
+            Vector2(EXPLOSION_ORB_SPEED, EXPLOSION_ORB_SPEED),
+            Vector2(EXPLOSION_ORB_SPEED, 0f),
+            Vector2(EXPLOSION_ORB_SPEED, -EXPLOSION_ORB_SPEED),
+            Vector2(0f, -EXPLOSION_ORB_SPEED),
+            Vector2(-EXPLOSION_ORB_SPEED, -EXPLOSION_ORB_SPEED))
+
+    explosionOrbTrajectories.forEach { trajectory ->
+      val explosionOrb =
+          EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION_ORB)
+      explosionOrb?.let { orb ->
+        game.gameEngine.spawn(
+            orb, props(ConstKeys.TRAJECTORY to trajectory, ConstKeys.POSITION to body.getCenter()))
+      }
+    }
   }
 
-  /** On event, Megaman will handle the event based on the event's key. */
   override fun onEvent(event: Event) {
     when (event.key) {
       EventType.BEGIN_ROOM_TRANS,
@@ -288,5 +325,28 @@ class Megaman(game: MegamanMaverickGame) :
         stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
       }
     }
+  }
+
+  override fun canBeDamagedBy(damager: IDamager) =
+      !invincible &&
+          dmgNegotations.containsKey(damager::class) &&
+          (damager is AbstractEnemy || (damager is IProjectileEntity && damager.owner != this))
+
+  override fun takeDamageFrom(damager: IDamager): Boolean {
+    if (!noDmgBounce.contains(damager::class) &&
+        damager is IGameEntity &&
+        damager.hasComponent(BodyComponent::class)) {
+      val enemyBody = damager.getComponent(BodyComponent::class)!!.body
+      body.physics.velocity.x =
+          (if (enemyBody.x > body.x) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
+      body.physics.velocity.y = MegamanValues.DMG_Y * ConstVals.PPM
+    }
+    // TODO: fix
+    val dmgNeg = dmgNegotations.get(damager::class) ?: -1
+    damageTimer.reset()
+    addHealth(-dmgNeg)
+    requestToPlaySound(SoundAsset.MEGAMAN_DAMAGE_SOUND, true)
+    stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
+    return true
   }
 }

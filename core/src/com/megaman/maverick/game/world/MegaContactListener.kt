@@ -7,6 +7,8 @@ import com.engine.common.extensions.objectSetOf
 import com.engine.common.shapes.GameLine
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.shapes.ShapeUtils
+import com.engine.damage.IDamageable
+import com.engine.damage.IDamager
 import com.engine.world.Contact
 import com.engine.world.Fixture
 import com.engine.world.IContactListener
@@ -42,10 +44,16 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
     // damager, damageable
     else if (contact.fixturesMatch(FixtureType.DAMAGER, FixtureType.DAMAGEABLE)) {
       GameLogger.debug(TAG, "beginContact(): Damager-Damageable, contact = $contact")
-      val (damager, damageable) =
+      val (damagerFixture, damageableFixture) =
           contact.getFixturesInOrder(FixtureType.DAMAGER, FixtureType.DAMAGEABLE)!!
 
-      damageable.setDamagedBy(damager)
+      val damager = damagerFixture.getEntity() as IDamager
+      val damageable = damageableFixture.getEntity() as IDamageable
+
+      if (damageable.canBeDamagedBy(damager) && damager.canDamage(damageable)) {
+        damageable.takeDamageFrom(damager)
+        damager.onDamageInflictedTo(damageable)
+      }
     }
 
     // death, damageable
@@ -272,10 +280,16 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
 
     // damager, damageable
     else if (contact.fixturesMatch(FixtureType.DAMAGER, FixtureType.DAMAGEABLE)) {
-      val (damager, damageable) =
+      val (damagerFixture, damageableFixture) =
           contact.getFixturesInOrder(FixtureType.DAMAGER, FixtureType.DAMAGEABLE)!!
 
-      damageable.setDamagedBy(damager)
+      val damager = damagerFixture.getEntity() as IDamager
+      val damageable = damageableFixture.getEntity() as IDamageable
+
+      if (damageable.canBeDamagedBy(damager) && damager.canDamage(damageable)) {
+        damageable.takeDamageFrom(damager)
+        damager.onDamageInflictedTo(damageable)
+      }
     }
 
     // feet, block

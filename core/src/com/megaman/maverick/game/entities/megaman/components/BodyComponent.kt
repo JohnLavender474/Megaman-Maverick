@@ -21,6 +21,8 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.world.*
 
+const val MEGAMAN_BODY_COMPONENT_TAG = "MegamanBodyComponentTag"
+
 internal fun Megaman.defineBodyComponent(): BodyComponent {
   val body = Body(BodyType.DYNAMIC)
   body.width = .75f * ConstVals.PPM
@@ -108,7 +110,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
   body.preProcess = Updatable {
     logPositionTimer.update(it)
     if (logPositionTimer.isFinished()) {
-      GameLogger.debug(Megaman.TAG, "body.preProcess(): body = $body")
+      GameLogger.debug(MEGAMAN_BODY_COMPONENT_TAG, "body.preProcess(): body = $body")
       logPositionTimer.reset()
     }
 

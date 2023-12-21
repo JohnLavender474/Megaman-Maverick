@@ -15,13 +15,13 @@ import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
 import com.engine.damage.IDamageable
+import com.engine.damage.IDamager
 import com.engine.drawables.sorting.DrawingPriority
 import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpriteComponent
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
-import com.engine.entities.contracts.IDamagerEntity
 import com.engine.entities.contracts.ISpriteEntity
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.Body
@@ -36,7 +36,7 @@ import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
 class Explosion(game: MegamanMaverickGame) :
-    GameEntity(game), IBodyEntity, ISpriteEntity, IDamagerEntity {
+    GameEntity(game), IBodyEntity, ISpriteEntity, IDamager {
 
   companion object {
     private var explosionRegion: TextureRegion? = null
@@ -71,6 +71,10 @@ class Explosion(game: MegamanMaverickGame) :
   }
 
   override fun canDamage(damageable: IDamageable) = damageMask.contains(damageable.javaClass)
+
+  override fun onDamageInflictedTo(damageable: IDamageable) {
+    // do nothing
+  }
 
   private fun defineUpdatablesComponent() =
       UpdatablesComponent(

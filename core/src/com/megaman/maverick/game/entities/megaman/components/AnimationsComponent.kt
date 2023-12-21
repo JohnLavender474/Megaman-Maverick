@@ -26,7 +26,7 @@ internal fun Megaman.defineAnimationsComponent(): AnimationsComponent {
   // define key supplier
   val keySupplier = {
     var key =
-        if (isUnderDamage()) "Damaged"
+        if (damaged) "Damaged"
         else if (isBehaviorActive(BehaviorType.CLIMBING)) {
           if (!body.isSensing(BodySense.HEAD_TOUCHING_LADDER)) {
             if (shooting) "ClimbShoot"

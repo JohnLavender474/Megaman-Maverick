@@ -21,6 +21,7 @@ import com.engine.drawables.shapes.DrawableShapeComponent
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpriteComponent
 import com.engine.drawables.sprites.setPosition
+import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
 import com.engine.updatables.UpdatablesComponent
@@ -103,7 +104,7 @@ class ChargedShot(game: MegamanMaverickGame) : GameEntity(game), IProjectileEnti
     var spriteDimension = ConstVals.PPM.toFloat()
 
     if (fullyCharged) spriteDimension *= 1.5f else bodyDimension /= 2f
-    firstSprite!!.setSize(spriteDimension, spriteDimension)
+    (firstSprite as GameSprite).setSize(spriteDimension)
 
     body.setSize(bodyDimension)
     body.fixtures.forEach { (it.second.shape as GameRectangle).set(body) }

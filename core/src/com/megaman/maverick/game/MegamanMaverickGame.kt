@@ -29,12 +29,12 @@ import com.engine.drawables.shapes.DrawableShapeSystem
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.ISprite
 import com.engine.drawables.sprites.SpriteSystem
-import com.engine.entities.GameEntity
+import com.engine.events.EventsManager
 import com.engine.graph.IGraphMap
 import com.engine.motion.MotionSystem
 import com.engine.pathfinding.Pathfinder
 import com.engine.pathfinding.PathfindingSystem
-import com.engine.spawns.SpawnerForBoundsEntered
+import com.engine.points.PointsSystem
 import com.engine.systems.IGameSystem
 import com.engine.updatables.UpdatablesSystem
 import com.engine.world.WorldSystem
@@ -47,6 +47,8 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
+import com.megaman.maverick.game.screens.levels.events.PlayerDeathEventHandler
+import com.megaman.maverick.game.screens.levels.events.PlayerSpawnEventHandler
 import com.megaman.maverick.game.utils.getMusics
 import com.megaman.maverick.game.utils.getSounds
 import com.megaman.maverick.game.world.FixtureType
@@ -54,12 +56,6 @@ import com.megaman.maverick.game.world.MegaCollisionHandler
 import com.megaman.maverick.game.world.MegaContactListener
 import java.util.*
 
-/**
- * Main class for the Megaman Maverick 2D game. It extends the [Game2D] class and provides the
- * game's core functionality and initialization.
- *
- * @suppress("UNCHECKED_CAST") This annotation suppresses unchecked cast warnings as needed.
- */
 @Suppress("UNCHECKED_CAST")
 class MegamanMaverickGame : Game2D() {
 
@@ -70,11 +66,6 @@ class MegamanMaverickGame : Game2D() {
   lateinit var megaman: Megaman
   lateinit var audioMan: MegaAudioManager
 
-  /**
-   * Starts the level screen for the given level.
-   *
-   * @param level The level to start.
-   */
   fun startLevelScreen(level: Level) {
     val levelScreen = screens.get(ScreenEnum.LEVEL.name) as MegaLevelScreen
     levelScreen.tmxMapSource = level.tmxSourceFile
@@ -82,64 +73,31 @@ class MegamanMaverickGame : Game2D() {
     setCurrentScreen(ScreenEnum.LEVEL.name)
   }
 
-  /**
-   * Get the game camera.
-   *
-   * @return The game camera.
-   */
   fun getGameCamera() = viewports.get(ConstKeys.GAME).camera as OrthographicCamera
 
-  /**
-   * Get the UI camera.
-   *
-   * @return The UI camera.
-   */
   fun getUiCamera() = viewports.get(ConstKeys.UI).camera as OrthographicCamera
 
-  /**
-   * Get the set of sprites.
-   *
-   * @return The set of sprites.
-   */
   fun getSprites() = properties.get(ConstKeys.SPRITES) as MutableCollection<ISprite>
 
-  /**
-   * Get the shapes to be drawn.
-   *
-   * @return The shapes to be drawn.
-   */
   fun getShapes() = properties.get(ConstKeys.SHAPES) as Array<IDrawableShape>
 
-  /**
-   * Get the game systems.
-   *
-   * @return The game systems.
-   */
   fun getSystems(): ObjectMap<String, IGameSystem> =
       properties.get(ConstKeys.SYSTEMS) as ObjectMap<String, IGameSystem>
 
-  /**
-   * Set the graph map.
-   *
-   * @param graphMap The graph map.
-   * @return The old graph map if any.
-   */
   fun setGraphMap(graphMap: IGraphMap) = properties.put(ConstKeys.WORLD_GRAPH_MAP, graphMap)
 
-  /**
-   * Get the graph map.
-   *
-   * @return The graph map.
-   */
   fun getGraphMap(): IGraphMap? = properties.get(ConstKeys.WORLD_GRAPH_MAP) as IGraphMap?
 
-  /** Create the game. */
   override fun create() {
     // set log level
     GameLogger.set(GameLogLevel.ERROR)
     // filter by tags
     GameLogger.filterByTag = true
-    GameLogger.tagsToLog.addAll(SpawnerForBoundsEntered.TAG, GameEntity.TAG)
+    GameLogger.tagsToLog.addAll(
+        PlayerSpawnEventHandler.TAG,
+        PlayerDeathEventHandler.TAG,
+        EventsManager.TAG,
+        MegaLevelScreen.TAG)
 
     // set viewports
     val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
@@ -170,6 +128,7 @@ class MegamanMaverickGame : Game2D() {
     // create Megaman
     megaman = Megaman(this)
     megaman.init()
+    megaman.initialized = true
 
     // TODO: test level screen
     startLevelScreen(Level.TEST1)
@@ -253,6 +212,7 @@ class MegamanMaverickGame : Game2D() {
             CullablesSystem(),
             MotionSystem(),
             PathfindingSystem { Pathfinder(getGraphMap()!!, it.params) },
+            PointsSystem(),
             UpdatablesSystem(),
             SpriteSystem { sprites },
             DrawableShapeSystem { shapes },

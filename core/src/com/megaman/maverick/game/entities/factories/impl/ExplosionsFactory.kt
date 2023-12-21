@@ -9,9 +9,9 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.explosions.Disintegration
 import com.megaman.maverick.game.entities.explosions.Explosion
+import com.megaman.maverick.game.entities.explosions.ExplosionOrb
 import com.megaman.maverick.game.entities.factories.EntityPoolCreator
 
-/** A factory that creates explosions. */
 class ExplosionsFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntity> {
 
   companion object {
@@ -28,20 +28,12 @@ class ExplosionsFactory(private val game: MegamanMaverickGame) : IFactory<IGameE
   private val pools = ObjectMap<Any, Pool<IGameEntity>>()
 
   init {
-    // standard explosion
     pools.put(EXPLOSION, EntityPoolCreator.create(5) { Explosion(game) })
-    // disintegration
-    pools.put(DISINTEGRATION, EntityPoolCreator.create(5) { Disintegration(game) })
-    // charged shot explosion
-    pools.put(CHARGED_SHOT_EXPLOSION, EntityPoolCreator.create(5) { ChargedShotExplosion(game) })
+    pools.put(DISINTEGRATION, EntityPoolCreator.create(10) { Disintegration(game) })
+    pools.put(CHARGED_SHOT_EXPLOSION, EntityPoolCreator.create(3) { ChargedShotExplosion(game) })
+    pools.put(EXPLOSION_ORB, EntityPoolCreator.create(8) { ExplosionOrb(game) })
   }
 
-  /**
-   * Fetches an explosion from the pool.
-   *
-   * @param key The key of the explosion to fetch.
-   * @return An explosion from the pool.
-   */
   override fun fetch(key: Any): IGameEntity? {
     GameLogger.debug(TAG, "Spawning Explosion: key = $key")
     return pools.get(if (key == "") EXPLOSION else key)?.fetch()

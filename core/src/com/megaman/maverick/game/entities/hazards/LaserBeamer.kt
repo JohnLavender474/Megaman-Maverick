@@ -14,6 +14,7 @@ import com.engine.common.shapes.GameLine
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
 import com.engine.damage.IDamageable
+import com.engine.damage.IDamager
 import com.engine.drawables.shapes.DrawableShapeComponent
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpriteComponent
@@ -21,7 +22,6 @@ import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
-import com.engine.entities.contracts.IDamagerEntity
 import com.engine.entities.contracts.ISpriteEntity
 import com.engine.motion.RotatingLine
 import com.engine.updatables.UpdatablesComponent
@@ -41,7 +41,7 @@ import java.util.*
  * LaserBeamer class represents a hazard in the game that shoots a laser beam in a swinging motion.
  */
 class LaserBeamer(game: MegamanMaverickGame) :
-    GameEntity(game), ISpriteEntity, IBodyEntity, IDamagerEntity {
+    GameEntity(game), ISpriteEntity, IBodyEntity, IDamager {
 
   companion object {
     private var region: TextureRegion? = null
@@ -113,7 +113,11 @@ class LaserBeamer(game: MegamanMaverickGame) :
   }
 
   override fun canDamage(damageable: IDamageable): Boolean {
-    TODO("Not yet implemented")
+    return true
+  }
+
+  override fun onDamageInflictedTo(damageable: IDamageable) {
+    // do thing
   }
 
   private fun defineBodyComponent(): BodyComponent {

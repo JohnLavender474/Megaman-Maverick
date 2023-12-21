@@ -11,6 +11,7 @@ import com.engine.common.extensions.objectMapOf
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
+import com.engine.damage.IDamager
 import com.engine.drawables.shapes.DrawableShapeComponent
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.GameSprite
@@ -36,6 +37,7 @@ import com.megaman.maverick.game.pathfinding.StandardPathfinderResultConsumer
 import com.megaman.maverick.game.utils.getMegamanMaverickGame
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
+import kotlin.reflect.KClass
 
 class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
@@ -64,11 +66,11 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
   }
 
   override val damageNegotiations =
-      objectMapOf(
-          Bullet::class.hashCode() to 10,
-          Fireball::class.hashCode() to ConstVals.MAX_HEALTH,
-          ChargedShot::class.hashCode() to ConstVals.MAX_HEALTH,
-          ChargedShotExplosion::class.hashCode() to 15)
+      objectMapOf<KClass<out IDamager>, Int>(
+          Bullet::class to 10,
+          Fireball::class to ConstVals.MAX_HEALTH,
+          ChargedShot::class to ConstVals.MAX_HEALTH,
+          ChargedShotExplosion::class to 15)
 
   override fun defineBodyComponent(): BodyComponent {
     val body = Body(BodyType.ABSTRACT)

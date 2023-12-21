@@ -10,10 +10,10 @@ import com.engine.cullables.CullableOnEvent
 import com.engine.cullables.CullableOnUncontained
 import com.engine.cullables.CullablesComponent
 import com.engine.damage.IDamageable
+import com.engine.damage.IDamager
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.IBodyEntity
-import com.engine.entities.contracts.IDamagerEntity
 import com.engine.entities.contracts.ISpriteEntity
 import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
@@ -21,16 +21,19 @@ import com.megaman.maverick.game.events.EventType
 
 /**
  * A projectile entity that can be fired by different entities. It extends [IGameEntity] and
- * implements [IBodyEntity], [ISpriteEntity], [IAudioEntity], [IDamagerEntity], and [IGameEntity].
+ * implements [IBodyEntity], [ISpriteEntity], [IAudioEntity], and [IGameEntity].
  */
-interface IProjectileEntity :
-    IBodyEntity, ISpriteEntity, IAudioEntity, IDamagerEntity, IGameEntity {
+interface IProjectileEntity : IDamager, IBodyEntity, ISpriteEntity, IAudioEntity, IGameEntity {
 
   /** The owner of the projectile (the entity that fired it). */
   var owner: IGameEntity?
 
   override fun canDamage(damageable: IDamageable) =
       damageable != owner && damageable !is IProjectileEntity
+
+  override fun onDamageInflictedTo(damageable: IDamageable) {
+    // do nothing
+  }
 
   /**
    * Called when the projectile hits a body fixture.

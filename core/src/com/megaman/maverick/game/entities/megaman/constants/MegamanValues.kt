@@ -53,4 +53,6 @@ object MegamanValues {
 
   const val DMG_X = 8f
   const val DMG_Y = 5f
+
+  const val EXPLOSION_ORB_SPEED = 3.5f
 }

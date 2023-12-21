@@ -33,7 +33,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
       Behavior(
           // evaluate
           evaluate = {
-            if (isUnderDamage() ||
+            if (damaged ||
                 isAnyBehaviorActive(BehaviorType.JUMPING, BehaviorType.CLIMBING) ||
                 body.isSensing(BodySense.FEET_ON_GROUND) ||
                 !wallJumpTimer.isFinished() /* TODO: || !upgradeHandler.has(wall_slide) */)
@@ -66,7 +66,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
       Behavior(
           // evaluate
           evaluate = {
-            if (isUnderDamage() ||
+            if (damaged ||
                 !body.isSensing(BodySense.IN_WATER) ||
                 body.isSensing(BodySense.HEAD_TOUCHING_BLOCK))
                 return@Behavior false
@@ -95,7 +95,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
       Behavior(
           // evaluate
           evaluate = {
-            if (isUnderDamage() ||
+            if (damaged ||
                 isAnyBehaviorActive(BehaviorType.SWIMMING, BehaviorType.CLIMBING) ||
                 body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) ||
                 !game.controllerPoller.isButtonPressed(ConstKeys.B) ||
@@ -148,7 +148,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
       Behavior(
           // evaluate
           evaluate = {
-            if (isUnderDamage() ||
+            if (damaged ||
                 airDashTimer.isFinished() ||
                 body.isSensing(BodySense.FEET_ON_GROUND) ||
                 isAnyBehaviorActive(BehaviorType.WALL_SLIDING, BehaviorType.CLIMBING))
@@ -210,7 +210,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 body.isSensing(BodySense.HEAD_TOUCHING_BLOCK))
                 return@Behavior true
 
-            if (isUnderDamage() ||
+            if (damaged ||
                 groundSlideTimer.isFinished() ||
                 !body.isSensing(BodySense.FEET_ON_GROUND) ||
                 !game.controllerPoller.isButtonPressed(
@@ -233,7 +233,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
           act = {
             groundSlideTimer.update(it)
 
-            if (isUnderDamage() ||
+            if (damaged ||
                 facing == Facing.LEFT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) ||
                 facing == Facing.RIGHT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
                 return@Behavior
