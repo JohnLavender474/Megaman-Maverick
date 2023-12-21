@@ -197,7 +197,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game, CULL_TIME), IFa
         facing = if (isMegamanLeft()) Facing.LEFT else Facing.RIGHT
       }
       _sprite.setFlip(facing == Facing.LEFT, false)
-      // TODO: _sprite.hidden = dmgBlink
+      // TODO: _sprite.hidden = damageBlink
     }
 
     return spriteComponent

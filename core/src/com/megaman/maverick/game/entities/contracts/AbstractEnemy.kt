@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.contracts
 
 import com.badlogic.gdx.utils.ObjectMap
 import com.engine.audio.AudioComponent
+import com.engine.common.CAUSE_OF_DEATH_MESSAGE
 import com.engine.common.GameLogger
 import com.engine.common.enums.Facing
 import com.engine.common.extensions.objectSetOf
@@ -51,13 +52,13 @@ abstract class AbstractEnemy(game: MegamanMaverickGame, private val cullTime: Fl
   }
 
   override val invincible: Boolean
-    get() = !dmgTimer.isFinished()
+    get() = !damageTimer.isFinished()
 
   protected abstract val damageNegotiations: ObjectMap<KClass<out IDamager>, Int>
 
-  protected val dmgTimer = Timer(DEFAULT_DMG_DURATION)
-  protected val dmgBlinkTimer = Timer(DEFAULT_DMG_BLINK_DUR)
-  protected var dmgBlink = false
+  protected val damageTimer = Timer(DEFAULT_DMG_DURATION)
+  protected val damageBlinkTimer = Timer(DEFAULT_DMG_BLINK_DUR)
+  protected var damageBlink = false
   protected var dropItemOnDeath = true
 
   override fun init() {
@@ -73,6 +74,8 @@ abstract class AbstractEnemy(game: MegamanMaverickGame, private val cullTime: Fl
     val updatablesComponent = UpdatablesComponent(this)
     defineUpdatablesComponent(updatablesComponent)
     addComponent(updatablesComponent)
+
+    runnablesOnSpawn.add { setHealth(getMaxHealth()) }
 
     runnablesOnDestroy.add {
       if (getCurrentHealth() == 0) {
@@ -94,6 +97,9 @@ abstract class AbstractEnemy(game: MegamanMaverickGame, private val cullTime: Fl
   protected open fun definePointsComponent(): PointsComponent {
     val pointsComponent = PointsComponent(this)
     pointsComponent.putPoints(ConstKeys.HEALTH, ConstVals.MAX_HEALTH)
+    pointsComponent.putListener(ConstKeys.HEALTH) {
+      if (it.current <= 0) kill(props(CAUSE_OF_DEATH_MESSAGE to "Health depleted"))
+    }
     return pointsComponent
   }
 
@@ -107,6 +113,8 @@ abstract class AbstractEnemy(game: MegamanMaverickGame, private val cullTime: Fl
   override fun takeDamageFrom(damager: IDamager): Boolean {
     val damagerKey = damager::class
     if (!damageNegotiations.containsKey(damagerKey)) return false
+
+    damageTimer.reset()
 
     val damage = damageNegotiations[damagerKey]
     getHealthPoints().translate(-damage)
@@ -122,15 +130,15 @@ abstract class AbstractEnemy(game: MegamanMaverickGame, private val cullTime: Fl
 
   protected open fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
     updatablesComponent.add {
-      dmgTimer.update(it)
-      if (!dmgTimer.isFinished()) {
-        dmgBlinkTimer.update(it)
-        if (dmgBlinkTimer.isFinished()) {
-          dmgBlinkTimer.reset()
-          dmgBlink = !dmgBlink
+      damageTimer.update(it)
+      if (!damageTimer.isFinished()) {
+        damageBlinkTimer.update(it)
+        if (damageBlinkTimer.isFinished()) {
+          damageBlinkTimer.reset()
+          damageBlink = !damageBlink
         }
       }
-      if (dmgTimer.isJustFinished()) dmgBlink = false
+      if (damageTimer.isJustFinished()) damageBlink = false
     }
   }
 
