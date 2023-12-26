@@ -25,6 +25,7 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
     const val DELAY_DURATION = .35f
     const val TRANS_DURATION = 1f
     const val DISTANCE_ON_TRANSITION = 1.5f
+    const val INTERPOLATION_SCALAR = 12.5f
   }
 
   private val delayTimer = Timer(DELAY_DURATION)
@@ -99,9 +100,9 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
       currentGameRoom = null
       transitionDirection = null
       transitionState = null
-      setCameraToFocusable()
+      setCameraToFocusable(delta)
       currentGameRoom = nextGameRoom()
-    } else if (transitioning) onTransition(delta) else onNoTransition()
+    } else if (transitioning) onTransition(delta) else onNoTransition(delta)
   }
 
   override fun reset() {
@@ -139,7 +140,7 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
     }
   }
 
-  private fun onNoTransition() {
+  private fun onNoTransition(delta: Float) {
     // if the current room is null, then we need to find the current room
     if (currentGameRoom == null) {
       val nextGameRoom = nextGameRoom()
@@ -163,7 +164,7 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
     // if the current room's bounds contains the focus, then setBodySense the camera
     // to the focus and then adjust to constrain the camera to the room
     if (currentRoomBounds.contains(focus!!.getPosition())) {
-      setCameraToFocusable()
+      setCameraToFocusable(delta)
 
       if (camera.position.y >
           (currentRoomBounds.y + currentRoomBounds.height) - camera.viewportHeight / 2f) {
@@ -275,11 +276,13 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
     return nextGameRoom
   }
 
-  private fun setCameraToFocusable() {
+  private fun setCameraToFocusable(delta: Float) {
     focus?.let {
       val pos = it.getPosition()
-      camera.position.x = pos.x
-      camera.position.y = pos.y
+      val interpolatedPos =
+          interpolate(camera.position.toVector2(), pos, delta * INTERPOLATION_SCALAR)
+      camera.position.x = interpolatedPos.x
+      camera.position.y = interpolatedPos.y
     }
   }
 }

@@ -10,7 +10,6 @@ import com.megaman.maverick.game.entities.factories.EntityPoolCreator
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 
-/** A factory that creates projectiles. */
 class ProjectilesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
 
   companion object {
@@ -28,17 +27,9 @@ class ProjectilesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
   private val pools = ObjectMap<Any, Pool<IProjectileEntity>>()
 
   init {
-    // bullet
     pools.put(BULLET, EntityPoolCreator.create(100) { Bullet(game) })
-    // charged shot
     pools.put(CHARGED_SHOT, EntityPoolCreator.create(5) { ChargedShot(game) })
   }
 
-  /**
-   * Fetches a projectile from the pool.
-   *
-   * @param key The key of the projectile to fetch.
-   * @return A projectile from the pool.
-   */
   override fun fetch(key: Any) = pools.get(if (key == "") BULLET else key)?.fetch()
 }

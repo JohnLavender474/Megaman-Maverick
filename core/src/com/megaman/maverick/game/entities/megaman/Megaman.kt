@@ -31,10 +31,7 @@ import com.megaman.maverick.game.entities.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.contracts.IUpsideDownable
-import com.megaman.maverick.game.entities.enemies.Bat
-import com.megaman.maverick.game.entities.enemies.DragonFly
-import com.megaman.maverick.game.entities.enemies.FloatingCan
-import com.megaman.maverick.game.entities.enemies.Met
+import com.megaman.maverick.game.entities.enemies.*
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.megaman.components.*
@@ -83,7 +80,8 @@ class Megaman(game: MegamanMaverickGame) :
           Bat::class to 2,
           Met::class to 2,
           DragonFly::class to 3,
-          FloatingCan::class to 2)
+          FloatingCan::class to 2,
+          FlyBoy::class to 3)
 
   internal val noDmgBounce =
       objectSetOf<Any>(
@@ -203,11 +201,11 @@ class Megaman(game: MegamanMaverickGame) :
       putProperty(MegamanProps.FACING, value)
     }
 
-  // Megaman's A button task
-  var aButtonTask: AButtonTask
-    get() = getProperty(MegamanProps.A_BUTTON_TASK) as AButtonTask
+  // Megaman's B button task
+  var bButtonTask: BButtonTask
+    get() = getProperty(MegamanProps.B_BUTTON_TASK) as BButtonTask
     set(value) {
-      putProperty(MegamanProps.A_BUTTON_TASK, value)
+      putProperty(MegamanProps.B_BUTTON_TASK, value)
     }
 
   // Megaman's current currentWeapon
@@ -261,7 +259,7 @@ class Megaman(game: MegamanMaverickGame) :
 
     // initialize Megaman's props
     facing = Facing.RIGHT
-    aButtonTask = AButtonTask.JUMP
+    bButtonTask = BButtonTask.JUMP
     currentWeapon = MegamanWeapon.BUSTER
     upsideDown = false
     running = false

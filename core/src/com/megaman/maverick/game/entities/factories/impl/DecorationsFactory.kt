@@ -9,7 +9,6 @@ import com.megaman.maverick.game.entities.decorations.SmokePuff
 import com.megaman.maverick.game.entities.decorations.Splash
 import com.megaman.maverick.game.entities.factories.EntityPoolCreator
 
-/** A factory that creates decorations. */
 class DecorationsFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntity> {
 
   companion object {
@@ -20,17 +19,9 @@ class DecorationsFactory(private val game: MegamanMaverickGame) : IFactory<IGame
   private val pools = ObjectMap<Any, Pool<IGameEntity>>()
 
   init {
-    // splash
     pools.put(SPLASH, EntityPoolCreator.create(5) { Splash(game) })
-    // smoke puff
     pools.put(SMOKE_PUFF, EntityPoolCreator.create(5) { SmokePuff(game) })
   }
 
-  /**
-   * Fetches a decoration from the pool.
-   *
-   * @param key The key of the decoration to fetch.
-   * @return A decoration from the pool.
-   */
   override fun fetch(key: Any) = pools.get(key)?.fetch()
 }

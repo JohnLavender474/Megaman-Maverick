@@ -18,7 +18,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
+import com.megaman.maverick.game.entities.megaman.constants.BButtonTask
 import com.megaman.maverick.game.world.*
 
 const val MEGAMAN_BODY_COMPONENT_TAG = "MegamanBodyComponentTag"
@@ -48,7 +48,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
 
   val onBounce = {
     if (!body.isSensing(BodySense.IN_WATER) /* TODO: && has(MegaAbility.AIR_DASH) */)
-        aButtonTask = AButtonTask.AIR_DASH
+        bButtonTask = BButtonTask.AIR_DASH
   }
 
   // feet fixture

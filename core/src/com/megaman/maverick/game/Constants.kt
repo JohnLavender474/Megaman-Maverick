@@ -62,6 +62,7 @@ object ConstKeys {
   const val B = "b"
   const val START = "start"
   const val SELECT = "select"
+  const val SPECIALS = "specials"
   const val BACKGROUNDS = "backgrounds"
   const val LEVEL_MUSIC = "level_music"
   const val POSITION = "position"

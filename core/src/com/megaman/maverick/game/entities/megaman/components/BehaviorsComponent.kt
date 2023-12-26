@@ -11,10 +11,17 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
+import com.megaman.maverick.game.entities.megaman.constants.BButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.isSensing
+
+const val MEGAMAN_TEST_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: TestBehavior"
+const val MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: WallSlideBehavior"
+const val MEGAMAN_SWIM_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: SwimBehavior"
+const val MEGAMAN_JUMP_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: JumpBehavior"
+const val MEGAMAN_AIR_DASH_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: AirDashBehavior"
+const val MEGAMAN_GROUND_SLIDE_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: GroundSlideBehavior"
 
 internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
   val behaviorsComponent = BehaviorsComponent(this)
@@ -25,8 +32,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
           evaluate = {
             return@Behavior game.controllerPoller.isButtonPressed(ConstKeys.B)
           },
-          init = { GameLogger.debug("Megaman: TestBehavior", "Init method called") },
-          end = { GameLogger.debug("Megaman: TestBehavior", "End method called") })
+          init = { GameLogger.debug(MEGAMAN_TEST_BEHAVIOR_TAG, "Init method called") },
+          end = { GameLogger.debug(MEGAMAN_TEST_BEHAVIOR_TAG, "End method called") })
 
   // wall slide
   val wallSlide =
@@ -48,17 +55,17 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
           },
           // init
           init = {
-            aButtonTask = AButtonTask.JUMP
+            bButtonTask = BButtonTask.JUMP
 
-            GameLogger.debug("Megaman: WallSlideBehavior", "Init method called")
+            GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "Init method called")
           },
           // act
           act = { body.physics.frictionOnSelf.y += 1.25f },
           // end
           end = {
-            if (!body.isSensing(BodySense.IN_WATER)) aButtonTask = AButtonTask.AIR_DASH
+            if (!body.isSensing(BodySense.IN_WATER)) bButtonTask = BButtonTask.AIR_DASH
 
-            GameLogger.debug("Megaman: WallSlideBehavior", "End method called")
+            GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "End method called")
           })
 
   // swim
@@ -73,21 +80,20 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             return@Behavior if (isBehaviorActive(BehaviorType.SWIMMING))
                 body.physics.velocity.y > 0f
-            else
-                game.controllerPoller.getButtonStatus(ConstKeys.A) == ButtonStatus.JUST_PRESSED &&
-                    aButtonTask == AButtonTask.SWIM
+            else {
+              val bButtonJustPressed = game.controllerPoller.isButtonJustPressed(ConstKeys.B)
+              val doSwim = bButtonJustPressed && bButtonTask == BButtonTask.SWIM
+              GameLogger.debug(
+                  MEGAMAN_SWIM_BEHAVIOR_TAG,
+                  "A button just pressed: $bButtonJustPressed. A button task: $bButtonTask. Evaluate method yielding $doSwim")
+              doSwim
+            }
           },
           // init
           init = {
             body.physics.velocity.y += swimVelY * ConstVals.PPM
-
-            var x = MegamanValues.WALL_JUMP_HORIZONTAL * ConstVals.PPM
-            if (facing == Facing.LEFT) x *= -1f
-            body.physics.velocity.x = x
-
             requestToPlaySound(SoundAsset.SWIM_SOUND, false)
-
-            GameLogger.debug("Megaman: SwimBehavior", "Init method called")
+            GameLogger.debug(MEGAMAN_SWIM_BEHAVIOR_TAG, "Init method called")
           })
 
   // jump
@@ -107,9 +113,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
               val velocity = body.physics.velocity
               if (upsideDown) velocity.y <= 0f else velocity.y >= 0f
             } else
-                aButtonTask == AButtonTask.JUMP &&
-                    game.controllerPoller.getButtonStatus(ConstKeys.B) ==
-                        ButtonStatus.JUST_PRESSED &&
+                bButtonTask == BButtonTask.JUMP &&
+                    game.controllerPoller.isButtonJustPressed(ConstKeys.B) &&
                     (body.isSensing(BodySense.FEET_ON_GROUND) ||
                         isBehaviorActive(BehaviorType.WALL_SLIDING))
           },
@@ -134,13 +139,13 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             requestToPlaySound(SoundAsset.WALL_JUMP, false)
 
-            GameLogger.debug("Megaman: JumpBehavior", "Init method called")
+            GameLogger.debug(MEGAMAN_JUMP_BEHAVIOR_TAG, "Init method called")
           },
           // end
           end = {
             body.physics.velocity.y = 0f
 
-            GameLogger.debug("Megaman: JumpBehavior", "End method called")
+            GameLogger.debug(MEGAMAN_JUMP_BEHAVIOR_TAG, "End method called")
           })
 
   // air dash
@@ -158,15 +163,15 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 game.controllerPoller.isButtonPressed(ConstKeys.B)
             else
                 game.controllerPoller.getButtonStatus(ConstKeys.B) == ButtonStatus.JUST_PRESSED &&
-                    aButtonTask == AButtonTask.AIR_DASH
+                    bButtonTask == BButtonTask.AIR_DASH
           },
           // init
           init = {
             body.physics.gravityOn = false
-            aButtonTask = AButtonTask.JUMP
+            bButtonTask = BButtonTask.JUMP
             requestToPlaySound(SoundAsset.WHOOSH_SOUND, true)
 
-            GameLogger.debug("Megaman: AirDashBehavior", "Init method called")
+            GameLogger.debug(MEGAMAN_AIR_DASH_BEHAVIOR_TAG, "Init method called")
           },
           // act
           act = {
@@ -198,7 +203,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             body.physics.velocity.x += x
 
-            GameLogger.debug("Megaman: AirDashBehavior", "End method called")
+            GameLogger.debug(MEGAMAN_AIR_DASH_BEHAVIOR_TAG, "End method called")
           })
 
   // ground slide
@@ -227,7 +232,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             // when upside down, need to compensate, otherwise Megaman will be off the ground
             if (upsideDown) body.y += .5f * ConstVals.PPM
 
-            GameLogger.debug("Megaman: GroundSlideBehavior", "Init method called")
+            GameLogger.debug(MEGAMAN_GROUND_SLIDE_BEHAVIOR_TAG, "Init method called")
           },
           // act
           act = {
@@ -253,7 +258,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             body.physics.velocity.x += endDash
 
-            GameLogger.debug("Megaman: GroundSlideBehavior", "End method called")
+            GameLogger.debug(MEGAMAN_GROUND_SLIDE_BEHAVIOR_TAG, "End method called")
           })
 
   // TODO: implement climb behavior

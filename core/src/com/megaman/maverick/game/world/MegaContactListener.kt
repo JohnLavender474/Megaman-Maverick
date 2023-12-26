@@ -20,8 +20,9 @@ import com.megaman.maverick.game.entities.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IUpsideDownable
 import com.megaman.maverick.game.entities.contracts.ItemEntity
+import com.megaman.maverick.game.entities.decorations.Splash
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
+import com.megaman.maverick.game.entities.megaman.constants.BButtonTask
 import com.megaman.maverick.game.utils.VelocityAlterator
 
 /** A contact listener for the game. */
@@ -112,7 +113,7 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
       body.y += posDelta.y
 
       val entity = feet.getEntity()
-      if (entity is Megaman) entity.aButtonTask = AButtonTask.JUMP
+      if (entity is Megaman) entity.bButtonTask = BButtonTask.JUMP
 
       body.setBodySense(BodySense.FEET_ON_GROUND, true)
     }
@@ -158,9 +159,9 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
     }
 
     // water listener, water
-    else if (contact.fixturesMatch(FixtureType.WATER_LISTENER, FixtureType.WATER_LISTENER)) {
+    else if (contact.fixturesMatch(FixtureType.WATER_LISTENER, FixtureType.WATER)) {
       GameLogger.debug(TAG, "beginContact(): WaterListener-Water, contact = $contact")
-      val (listener, _) =
+      val (listener, water) =
           contact.getFixturesInOrder(FixtureType.WATER_LISTENER, FixtureType.WATER)!!
 
       val body = listener.getBody()
@@ -170,9 +171,9 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
       if (entity is Megaman &&
           !entity.body.isSensing(BodySense.FEET_ON_GROUND) &&
           !entity.isBehaviorActive(BehaviorType.WALL_SLIDING))
-          entity.aButtonTask = AButtonTask.SWIM
+          entity.bButtonTask = BButtonTask.SWIM
 
-      // TODO: Splash.generate
+      Splash.generate(game, listener.getBody(), water.getBody())
 
       if (entity is Megaman || entity is AbstractEnemy)
           game.audioMan.playSound(SoundAsset.SPLASH_SOUND, false)
@@ -222,18 +223,14 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
     // projectile, block or body or shield or water
     else if (contact.fixturesMatch(
         objectSetOf(FixtureType.PROJECTILE),
-        objectSetOf(
-            FixtureType.BLOCK, FixtureType.BODY, FixtureType.SHIELD, FixtureType.WATER_LISTENER))) {
+        objectSetOf(FixtureType.BLOCK, FixtureType.BODY, FixtureType.SHIELD, FixtureType.WATER))) {
       GameLogger.debug(
           TAG, "beginContact(): Projectile-Block/Body/Shield/Water, contact = $contact")
       val (projectile, other) =
           contact.getFixturesInOrder(
               objectSetOf(FixtureType.PROJECTILE),
               objectSetOf(
-                  FixtureType.BLOCK,
-                  FixtureType.BODY,
-                  FixtureType.SHIELD,
-                  FixtureType.WATER_LISTENER))!!
+                  FixtureType.BLOCK, FixtureType.BODY, FixtureType.SHIELD, FixtureType.WATER))!!
 
       val projectileEntity = projectile.getEntity() as IProjectileEntity
 
@@ -250,8 +247,8 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
           GameLogger.debug(TAG, "beginContact(): Projectile-Shield, contact = $contact")
           projectileEntity.hitShield(other)
         }
-        FixtureType.WATER_LISTENER -> {
-          GameLogger.debug(TAG, "beginContact(): Projectile-WaterListener, contact = $contact")
+        FixtureType.WATER -> {
+          GameLogger.debug(TAG, "beginContact(): Projectile-Water, contact = $contact")
           projectileEntity.hitWater(other)
         }
       }
@@ -303,7 +300,7 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
       body.y += posDelta.y
 
       val entity = feet.getEntity()
-      if (entity is Megaman) entity.aButtonTask = AButtonTask.JUMP
+      if (entity is Megaman) entity.bButtonTask = BButtonTask.JUMP
 
       body.setBodySense(BodySense.FEET_ON_GROUND, true)
     }
@@ -349,7 +346,7 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
     }
 
     // water listener, water
-    else if (contact.fixturesMatch(FixtureType.WATER_LISTENER, FixtureType.WATER_LISTENER)) {
+    else if (contact.fixturesMatch(FixtureType.WATER_LISTENER, FixtureType.WATER)) {
       val (listener, _) =
           contact.getFixturesInOrder(FixtureType.WATER_LISTENER, FixtureType.WATER)!!
 
@@ -360,7 +357,7 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
       if (entity is Megaman &&
           !entity.body.isSensing(BodySense.FEET_ON_GROUND) &&
           !entity.isBehaviorActive(BehaviorType.WALL_SLIDING))
-          entity.aButtonTask = AButtonTask.SWIM
+          entity.bButtonTask = BButtonTask.SWIM
     }
 
     // body, force
@@ -448,9 +445,9 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
 
       val entity = feet.getEntity()
       if (entity is Megaman)
-          entity.aButtonTask =
-              if (entity.body.isSensing(BodySense.IN_WATER)) AButtonTask.SWIM
-              else AButtonTask.AIR_DASH
+          entity.bButtonTask =
+              if (entity.body.isSensing(BodySense.IN_WATER)) BButtonTask.SWIM
+              else BButtonTask.AIR_DASH
     }
 
     // feet, ice
@@ -508,6 +505,19 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
 
       val entity = body.getEntity()
       if (entity is IUpsideDownable) entity.upsideDown = false
+    }
+
+    // water-listener, water
+    else if (contact.fixturesMatch(FixtureType.WATER_LISTENER, FixtureType.WATER)) {
+      val (listener, water) =
+          contact.getFixturesInOrder(FixtureType.WATER_LISTENER, FixtureType.WATER)!!
+      listener.getBody().setBodySense(BodySense.IN_WATER, false)
+
+      val listenerEntity = listener.getEntity()
+      if (listenerEntity is Megaman) listenerEntity.bButtonTask = BButtonTask.AIR_DASH
+
+      game.audioMan.playSound(SoundAsset.SPLASH_SOUND, false)
+      Splash.generate(game, listener.getBody(), water.getBody())
     }
   }
 }

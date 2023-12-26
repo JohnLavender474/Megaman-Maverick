@@ -9,7 +9,6 @@ import com.megaman.maverick.game.entities.factories.EntityPoolCreator
 import com.megaman.maverick.game.entities.items.HealthBulb
 import com.megaman.maverick.game.entities.items.HeartTank
 
-/** A factory that creates items. */
 class ItemsFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntity> {
 
   companion object {
@@ -22,17 +21,9 @@ class ItemsFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntity
   private val pools = ObjectMap<Any, Pool<IGameEntity>>()
 
   init {
-    // health bulb
     pools.put(HEALTH_BULB, EntityPoolCreator.create(5) { HealthBulb(game) })
-    // heart tank
     pools.put(HEALTH_TANK, EntityPoolCreator.create(1) { HeartTank(game) })
   }
 
-  /**
-   * Fetches an item from the pool.
-   *
-   * @param key The key of the item to fetch.
-   * @return An item from the pool.
-   */
   override fun fetch(key: Any) = pools.get(key)?.fetch()
 }

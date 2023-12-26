@@ -29,7 +29,6 @@ import com.engine.drawables.shapes.DrawableShapeSystem
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.ISprite
 import com.engine.drawables.sprites.SpriteSystem
-import com.engine.events.EventsManager
 import com.engine.graph.IGraphMap
 import com.engine.motion.MotionSystem
 import com.engine.pathfinding.Pathfinder
@@ -44,11 +43,11 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_JUMP_BEHAVIOR_TAG
+import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_SWIM_BEHAVIOR_TAG
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
-import com.megaman.maverick.game.screens.levels.events.PlayerDeathEventHandler
-import com.megaman.maverick.game.screens.levels.events.PlayerSpawnEventHandler
 import com.megaman.maverick.game.utils.getMusics
 import com.megaman.maverick.game.utils.getSounds
 import com.megaman.maverick.game.world.FixtureType
@@ -94,10 +93,7 @@ class MegamanMaverickGame : Game2D() {
     // filter by tags
     GameLogger.filterByTag = true
     GameLogger.tagsToLog.addAll(
-        PlayerSpawnEventHandler.TAG,
-        PlayerDeathEventHandler.TAG,
-        EventsManager.TAG,
-        MegaLevelScreen.TAG)
+        MegaContactListener.TAG, MEGAMAN_JUMP_BEHAVIOR_TAG, MEGAMAN_SWIM_BEHAVIOR_TAG)
 
     // set viewports
     val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM

@@ -53,6 +53,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
           ConstKeys.ENEMIES -> EntityType.ENEMY
           ConstKeys.ITEMS -> EntityType.ITEM
           ConstKeys.BLOCKS -> EntityType.BLOCK
+          ConstKeys.SPECIALS -> EntityType.SPECIAL
           // TODO: add other entity types
           else -> throw IllegalArgumentException("Unknown spawner type: ${layer.name}")
         }

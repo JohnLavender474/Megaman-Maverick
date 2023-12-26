@@ -7,10 +7,7 @@ import com.engine.entities.IGameEntity
 import com.engine.factories.IFactory
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.enemies.Bat
-import com.megaman.maverick.game.entities.enemies.DragonFly
-import com.megaman.maverick.game.entities.enemies.FloatingCan
-import com.megaman.maverick.game.entities.enemies.Met
+import com.megaman.maverick.game.entities.enemies.*
 import com.megaman.maverick.game.entities.factories.EntityPoolCreator
 
 class EnemiesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
@@ -45,6 +42,7 @@ class EnemiesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
     pools.put(MET, EntityPoolCreator.create(3) { Met(game) })
     pools.put(FLOATING_CAN, EntityPoolCreator.create(5) { FloatingCan(game) })
     pools.put(DRAGON_FLY, EntityPoolCreator.create(2) { DragonFly(game) })
+    pools.put(FLY_BOY, EntityPoolCreator.create(2) { FlyBoy(game) })
   }
 
   override fun fetch(key: Any): AbstractEnemy? {

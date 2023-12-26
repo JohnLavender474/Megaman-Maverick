@@ -2,8 +2,7 @@ package com.megaman.maverick.game.entities.megaman.constants
 
 enum class MegamanProps {
   FACING,
-  A_BUTTON_TASK,
+  B_BUTTON_TASK,
   WEAPON,
-  UPSIDE_DOWN,
-  TIMERS
+  UPSIDE_DOWN
 }

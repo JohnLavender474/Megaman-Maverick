@@ -8,7 +8,6 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.blocks.*
 import com.megaman.maverick.game.entities.factories.EntityPoolCreator
 
-/** A factory that creates blocks. */
 class BlocksFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntity> {
 
   companion object {
@@ -24,23 +23,12 @@ class BlocksFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntit
   private val pools = ObjectMap<Any, Pool<Block>>()
 
   init {
-    // standard blocks
     pools.put(STANDARD, EntityPoolCreator.create(10) { Block(game) })
-    // ice blocks
     pools.put(ICE_BLOCK, EntityPoolCreator.create(10) { IceBlock(game) })
-    // gear trolley
     pools.put(GEAR_TROLLEY, EntityPoolCreator.create(10) { GearTrolley(game) })
-    // conveyor belt
     pools.put(CONVEYOR_BELT, EntityPoolCreator.create(10) { ConveyorBelt(game) })
-    // rocket platform
     pools.put(ROCKET_PLATFORM, EntityPoolCreator.create(10) { RocketPlatform(game) })
   }
 
-  /**
-   * Fetches a block from the pool.
-   *
-   * @param key The key of the block to fetch.
-   * @return A block from the pool.
-   */
   override fun fetch(key: Any) = pools.get(if (key == "") STANDARD else key)?.fetch()
 }
