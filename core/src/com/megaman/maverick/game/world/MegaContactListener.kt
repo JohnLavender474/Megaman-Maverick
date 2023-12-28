@@ -25,7 +25,6 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.BButtonTask
 import com.megaman.maverick.game.utils.VelocityAlterator
 
-/** A contact listener for the game. */
 @Suppress("UNCHECKED_CAST")
 class MegaContactListener(private val game: MegamanMaverickGame) : IContactListener {
 

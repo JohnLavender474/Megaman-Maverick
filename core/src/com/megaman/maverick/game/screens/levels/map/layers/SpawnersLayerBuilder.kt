@@ -90,7 +90,8 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                       game.getGameCamera(), room.rectangle.toGameRectangle(), spawnSupplier)
               spawners.add(spawner)
 
-              GameLogger.debug(TAG, "build(): Adding spawner: $spawner")
+              GameLogger.debug(
+                  TAG, "build(): Adding spawner $spawner for game rectangle object ${it.name}")
 
               roomFound = true
               break
@@ -113,7 +114,8 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
             val spawner = SpawnerFactory.spawnerForWhenEventCalled(events, spawnSupplier)
             spawners.add(spawner)
 
-            GameLogger.debug(TAG, "build(): Adding spawner: $spawner")
+            GameLogger.debug(
+                TAG, "build(): Adding spawner $spawner for game rectangle object ${it.name}")
 
             game.eventsMan.addListener(spawner)
             disposables.add { game.eventsMan.removeListener(spawner) }
@@ -128,7 +130,8 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                         game.getGameCamera(), it.rectangle.toGameRectangle(), spawnSupplier)
                 spawners.add(spawner)
 
-                GameLogger.debug(TAG, "build(): Adding spawner: $spawner")
+                GameLogger.debug(
+                    TAG, "build(): Adding spawner $spawner for game rectangle object ${it.name}")
               }
             }
           }

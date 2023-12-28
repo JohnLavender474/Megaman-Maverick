@@ -37,9 +37,6 @@ import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import java.util.*
 
-/**
- * LaserBeamer class represents a hazard in the game that shoots a laser beam in a swinging motion.
- */
 class LaserBeamer(game: MegamanMaverickGame) :
     GameEntity(game), ISpriteEntity, IBodyEntity, IDamager {
 

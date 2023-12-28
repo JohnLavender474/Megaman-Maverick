@@ -43,6 +43,7 @@ class EnemiesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
     pools.put(FLOATING_CAN, EntityPoolCreator.create(5) { FloatingCan(game) })
     pools.put(DRAGON_FLY, EntityPoolCreator.create(2) { DragonFly(game) })
     pools.put(FLY_BOY, EntityPoolCreator.create(2) { FlyBoy(game) })
+    pools.put(GAPING_FISH, EntityPoolCreator.create(3) { GapingFish(game) })
   }
 
   override fun fetch(key: Any): AbstractEnemy? {

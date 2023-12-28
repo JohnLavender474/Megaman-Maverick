@@ -41,13 +41,13 @@ import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
+import com.megaman.maverick.game.entities.enemies.GapingFish
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_JUMP_BEHAVIOR_TAG
-import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_SWIM_BEHAVIOR_TAG
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
+import com.megaman.maverick.game.screens.levels.map.layers.SpawnersLayerBuilder
 import com.megaman.maverick.game.utils.getMusics
 import com.megaman.maverick.game.utils.getSounds
 import com.megaman.maverick.game.world.FixtureType
@@ -92,8 +92,7 @@ class MegamanMaverickGame : Game2D() {
     GameLogger.set(GameLogLevel.ERROR)
     // filter by tags
     GameLogger.filterByTag = true
-    GameLogger.tagsToLog.addAll(
-        MegaContactListener.TAG, MEGAMAN_JUMP_BEHAVIOR_TAG, MEGAMAN_SWIM_BEHAVIOR_TAG)
+    GameLogger.tagsToLog.addAll(GapingFish.TAG)
 
     // set viewports
     val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM

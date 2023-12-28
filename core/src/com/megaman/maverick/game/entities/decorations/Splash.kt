@@ -7,6 +7,7 @@ import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
 import com.engine.common.CAUSE_OF_DEATH_MESSAGE
+import com.engine.common.GameLogger
 import com.engine.common.enums.Position
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.objects.Properties
@@ -29,17 +30,18 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import kotlin.math.ceil
 
-/** A splash decoration. */
 class Splash(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity {
 
   companion object {
+    const val TAG = "Splash"
+
     private const val SPLASH_REGION_KEY = "Water/Splash"
     private const val ALPHA = .5f
 
     private var splashRegion: TextureRegion? = null
 
-    /** Generates splash decorations based on the overlap between the splasher and water body. */
     fun generate(game: MegamanMaverickGame, splasher: Body, water: Body) {
+      GameLogger.debug(TAG, "Generating splash for splasher [$splasher] and water [$water]")
       val numSplashes = ceil(splasher.width / ConstVals.PPM).toInt()
       for (i in 0 until numSplashes) {
         val spawn =
@@ -82,9 +84,7 @@ class Splash(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity {
 
   private fun defineSpriteComponent(): SpriteComponent {
     val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -1))
-    sprite.setRegion(splashRegion!!)
     sprite.setAlpha(ALPHA)
-
     return SpriteComponent(this, "splash" to sprite)
   }
 }

@@ -81,7 +81,8 @@ class Megaman(game: MegamanMaverickGame) :
           Met::class to 2,
           DragonFly::class to 3,
           FloatingCan::class to 2,
-          FlyBoy::class to 3)
+          FlyBoy::class to 3,
+          GapingFish::class to 2)
 
   internal val noDmgBounce =
       objectSetOf<Any>(
