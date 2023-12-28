@@ -3,6 +3,7 @@
 package com.megaman.maverick.game.world
 
 import com.engine.entities.contracts.IBodyEntity
+import com.engine.world.Body
 import com.engine.world.BodyType
 import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
@@ -34,13 +35,14 @@ fun Fixture.bodyHasLabel(label: BodyLabel) = getBody().hasBodyLabel(label)
 
 fun Fixture.bodyIsSensing(sense: BodySense) = getBody().isSensing(sense)
 
-fun Fixture.setVelocityAlteration(alteration: VelocityAlteration): Fixture {
+fun Fixture.setVelocityAlteration(alteration: (Body) -> VelocityAlteration): Fixture {
   properties.put(ConstKeys.VELOCITY_ALTERATION, alteration)
   return this
 }
 
-fun Fixture.getVelocityAlteration() =
-    properties.get(ConstKeys.VELOCITY_ALTERATION) as VelocityAlteration
+fun Fixture.getVelocityAlteration(alterableBody: Body) =
+    (properties.get(ConstKeys.VELOCITY_ALTERATION) as (Body) -> VelocityAlteration).invoke(
+        alterableBody)
 
 fun Fixture.setRunnable(runnable: () -> Unit): Fixture {
   properties.put(ConstKeys.RUNNABLE, runnable)

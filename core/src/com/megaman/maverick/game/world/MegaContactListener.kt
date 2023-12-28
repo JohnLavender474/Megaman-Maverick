@@ -137,11 +137,10 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
               objectSetOf(FixtureType.FEET, FixtureType.HEAD, FixtureType.SIDE))!!
 
       val bounceableBody = bounceable.getBody()
-      val bounce = bouncer.getVelocityAlteration()
+      val bounce = bouncer.getVelocityAlteration(bounceableBody)
       VelocityAlterator.alterate(bounceableBody, bounce)
 
-      val onBounce = bouncer.getRunnable()
-      onBounce?.invoke()
+      bouncer.getRunnable()?.invoke()
     }
 
     // head, block
@@ -203,10 +202,10 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
     // body, force
     else if (contact.fixturesMatch(FixtureType.BODY, FixtureType.FORCE)) {
       GameLogger.debug(TAG, "beginContact(): Body-Force, contact = $contact")
-      val (body, force) = contact.getFixturesInOrder(FixtureType.BODY, FixtureType.FORCE)!!
+      val (bodyFixture, force) = contact.getFixturesInOrder(FixtureType.BODY, FixtureType.FORCE)!!
 
-      val alterableBody = body.getBody()
-      val forceAlteration = force.getVelocityAlteration()
+      val alterableBody = bodyFixture.getBody()
+      val forceAlteration = force.getVelocityAlteration(alterableBody)
       VelocityAlterator.alterate(alterableBody, forceAlteration, delta)
     }
 
@@ -364,8 +363,10 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
       val (body, force) = contact.getFixturesInOrder(FixtureType.BODY, FixtureType.FORCE)!!
 
       val alterableBody = body.getBody()
-      val forceAlteration = force.getVelocityAlteration()
+      val forceAlteration = force.getVelocityAlteration(alterableBody)
       VelocityAlterator.alterate(alterableBody, forceAlteration, delta)
+
+      force.getRunnable()?.invoke()
     }
 
     // laser, block
@@ -493,8 +494,10 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
       val (body, force) = contact.getFixturesInOrder(FixtureType.BODY, FixtureType.FORCE)!!
 
       val alterableBody = body.getBody()
-      val forceAlteration = force.getVelocityAlteration()
+      val forceAlteration = force.getVelocityAlteration(alterableBody)
       VelocityAlterator.alterate(alterableBody, forceAlteration, delta)
+
+      force.getRunnable()?.invoke()
     }
 
     // body, upside down
