@@ -11,10 +11,8 @@ import com.engine.animations.IAnimation
 import com.engine.common.CAUSE_OF_DEATH_MESSAGE
 import com.engine.common.GameLogger
 import com.engine.common.enums.Position
-import com.engine.common.extensions.gdxArrayOf
-import com.engine.common.extensions.getTextureAtlas
-import com.engine.common.extensions.objectMapOf
-import com.engine.common.extensions.objectSetOf
+import com.engine.common.extensions.*
+import com.engine.common.interfaces.Updatable
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
@@ -44,8 +42,11 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.ItemEntity
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.getMegamanMaverickGame
 import com.megaman.maverick.game.world.BodyComponentCreator
+import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.FixtureType
+import com.megaman.maverick.game.world.isSensing
 
 class HealthBulb(game: MegamanMaverickGame) :
     GameEntity(game), ItemEntity, ISpriteEntity, IBodyEntity {
@@ -61,17 +62,21 @@ class HealthBulb(game: MegamanMaverickGame) :
     private const val TIME_TO_BLINK = 2f
     private const val BLINK_DUR = .01f
     private const val CULL_DUR = 3.5f
+
+    private const val GRAVITY = -0.25f
   }
 
   private val blinkTimer = Timer(BLINK_DUR)
   private val cullTimer = Timer(CULL_DUR)
 
   private lateinit var itemFixture: Fixture
+  private lateinit var feetFixture: Fixture
 
   private var large = false
   private var timeCull = false
   private var blink = false
   private var warning = false
+  private var landed = false
 
   override fun init() {
     if (textureAtlas == null)
@@ -105,6 +110,7 @@ class HealthBulb(game: MegamanMaverickGame) :
 
     warning = false
     blink = false
+    landed = false
 
     blinkTimer.setToEnd()
     cullTimer.reset()
@@ -112,6 +118,7 @@ class HealthBulb(game: MegamanMaverickGame) :
     body.setSize((if (large) 0.5f else 0.25f) * ConstVals.PPM)
     body.setCenter(spawn)
     (itemFixture.shape as GameRectangle).set(body)
+    feetFixture.offsetFromBodyCenter.y = (if (large) -0.25f else -0.125f) * ConstVals.PPM
   }
 
   override fun contactWithPlayer(megaman: Megaman) {
@@ -125,7 +132,7 @@ class HealthBulb(game: MegamanMaverickGame) :
 
   private fun defineBodyComponent(): BodyComponent {
     val body = Body(BodyType.ABSTRACT)
-    body.physics.gravityOn = false
+    body.physics.gravity.y = GRAVITY * ConstVals.PPM
 
     val shapes = Array<() -> IDrawableShape>()
 
@@ -135,6 +142,25 @@ class HealthBulb(game: MegamanMaverickGame) :
 
     itemFixture.shape.color = Color.PURPLE
     shapes.add { itemFixture.shape }
+
+    // feet fixture
+    feetFixture = Fixture(GameRectangle().setSize(0.1f * ConstVals.PPM), FixtureType.FEET)
+    body.addFixture(feetFixture)
+
+    feetFixture.shape.color = Color.GREEN
+    shapes.add { feetFixture.shape }
+
+    body.preProcess = Updatable {
+      if (!landed) {
+        landed = body.isSensing(BodySense.FEET_ON_GROUND)
+        GameLogger.debug(TAG, "preProcess(): landed = $landed")
+      }
+
+      val gameCamera = getMegamanMaverickGame().getGameCamera()
+      body.physics.gravityOn = gameCamera.overlaps(body) && !landed
+
+      if (!body.physics.gravityOn) body.physics.velocity.y = 0f
+    }
 
     addComponent(DrawableShapeComponent(this, debugShapeSuppliers = shapes, debug = true))
 

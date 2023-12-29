@@ -22,7 +22,7 @@ class ItemsFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntity
 
   init {
     pools.put(HEALTH_BULB, EntityPoolCreator.create(5) { HealthBulb(game) })
-    pools.put(HEALTH_TANK, EntityPoolCreator.create(1) { HeartTank(game) })
+    pools.put(HEART_TANK, EntityPoolCreator.create(1) { HeartTank(game) })
   }
 
   override fun fetch(key: Any) = pools.get(key)?.fetch()

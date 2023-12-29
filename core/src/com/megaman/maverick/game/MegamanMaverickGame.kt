@@ -41,8 +41,8 @@ import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
-import com.megaman.maverick.game.entities.enemies.GapingFish
 import com.megaman.maverick.game.entities.factories.EntityFactories
+import com.megaman.maverick.game.entities.items.HealthBulb
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
@@ -92,7 +92,7 @@ class MegamanMaverickGame : Game2D() {
     GameLogger.set(GameLogLevel.ERROR)
     // filter by tags
     GameLogger.filterByTag = true
-    GameLogger.tagsToLog.addAll()
+    GameLogger.tagsToLog.addAll(HealthBulb.TAG)
 
     // set viewports
     val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM

@@ -103,7 +103,7 @@ class PlayerStatsHandler(private val megaman: Megaman) :
 
     if (megaman.has(heartTank)) return
 
-    audioMan.playMusic(SoundAsset.LIFE_SOUND)
+    audioMan.playSound(SoundAsset.LIFE_SOUND, false)
     timer = Timer(SPECIAL_ITEM_DUR)
     timer!!.runOnFinished = {
       megaman.add(heartTank)
