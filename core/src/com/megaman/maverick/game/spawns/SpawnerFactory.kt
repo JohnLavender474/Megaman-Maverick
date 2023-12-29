@@ -9,35 +9,31 @@ import com.engine.spawns.SpawnerForBoundsEntered
 import com.engine.spawns.SpawnerForEvent
 import com.megaman.maverick.game.utils.toGameRectangle
 
-/** A factory for creating spawners. */
 object SpawnerFactory {
 
   const val TAG = "SpawnerFactory"
 
-  /**
-   * Creates a spawner that spawns an entity when the camera enters the spawn bounds.
-   *
-   * @return a spawner that spawns an entity when the camera enters the spawn bounds
-   */
   fun spawnerForWhenEnteringCamera(
       camera: Camera,
       spawnBounds: GameRectangle,
-      spawnSupplier: () -> Spawn
+      spawnSupplier: () -> Spawn,
+      respawnable: Boolean = true
   ): SpawnerForBoundsEntered {
     GameLogger.debug(TAG, "spawnerForWhenEnteringCamera(): Creating spawner for camera: $camera")
-    return SpawnerForBoundsEntered(spawnSupplier, { spawnBounds }, { camera.toGameRectangle() })
+    return SpawnerForBoundsEntered(
+        spawnSupplier, { spawnBounds }, { camera.toGameRectangle() }, respawnable = respawnable)
   }
 
-  /**
-   * Creates a spawner that spawns an entity when an event is called.
-   *
-   * @return a spawner that spawns an entity when an event is called.
-   */
   fun spawnerForWhenEventCalled(
       events: ObjectSet<Any>,
-      spawnSupplier: () -> Spawn
+      spawnSupplier: () -> Spawn,
+      respawnable: Boolean = true
   ): SpawnerForEvent {
     GameLogger.debug(TAG, "spawnerForWhenEventCalled(): Creating spawner for events: $events")
-    return SpawnerForEvent({ events.contains(it.key) }, spawnSupplier, eventKeyMask = events)
+    return SpawnerForEvent(
+        { events.contains(it.key) },
+        spawnSupplier,
+        eventKeyMask = events,
+        respawnable = respawnable)
   }
 }

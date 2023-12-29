@@ -25,9 +25,9 @@ class BlocksFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntit
   init {
     pools.put(STANDARD, EntityPoolCreator.create(10) { Block(game) })
     pools.put(ICE_BLOCK, EntityPoolCreator.create(10) { IceBlock(game) })
-    pools.put(GEAR_TROLLEY, EntityPoolCreator.create(10) { GearTrolley(game) })
-    pools.put(CONVEYOR_BELT, EntityPoolCreator.create(10) { ConveyorBelt(game) })
-    pools.put(ROCKET_PLATFORM, EntityPoolCreator.create(10) { RocketPlatform(game) })
+    pools.put(GEAR_TROLLEY, EntityPoolCreator.create(5) { GearTrolley(game) })
+    pools.put(CONVEYOR_BELT, EntityPoolCreator.create(5) { ConveyorBelt(game) })
+    pools.put(ROCKET_PLATFORM, EntityPoolCreator.create(5) { RocketPlatform(game) })
   }
 
   override fun fetch(key: Any) = pools.get(if (key == "") STANDARD else key)?.fetch()

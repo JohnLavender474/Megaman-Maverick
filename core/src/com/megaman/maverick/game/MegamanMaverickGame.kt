@@ -47,7 +47,6 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
-import com.megaman.maverick.game.screens.levels.map.layers.SpawnersLayerBuilder
 import com.megaman.maverick.game.utils.getMusics
 import com.megaman.maverick.game.utils.getSounds
 import com.megaman.maverick.game.world.FixtureType
@@ -60,6 +59,7 @@ class MegamanMaverickGame : Game2D() {
 
   companion object {
     const val TAG = "MegamanMaverickGame"
+    const val DEBUG_SHAPES = true
   }
 
   lateinit var megaman: Megaman
@@ -92,7 +92,7 @@ class MegamanMaverickGame : Game2D() {
     GameLogger.set(GameLogLevel.ERROR)
     // filter by tags
     GameLogger.filterByTag = true
-    GameLogger.tagsToLog.addAll(GapingFish.TAG)
+    GameLogger.tagsToLog.addAll()
 
     // set viewports
     val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
@@ -210,7 +210,7 @@ class MegamanMaverickGame : Game2D() {
             PointsSystem(),
             UpdatablesSystem(),
             SpriteSystem { sprites },
-            DrawableShapeSystem { shapes },
+            DrawableShapeSystem({ shapes }, DEBUG_SHAPES),
             AudioSystem(
                 { audioMan.playSound(it.source, it.loop) },
                 { audioMan.playMusic(it.source, it.loop) },

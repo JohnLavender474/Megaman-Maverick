@@ -26,7 +26,6 @@ import com.megaman.maverick.game.utils.VelocityAlterationType
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.setVelocityAlteration
 
-/** A conveyor belt is a block that moves the player when stepped on. */
 class ConveyorBelt(game: MegamanMaverickGame) : ISpriteEntity, Block(game) {
 
   companion object {
@@ -62,7 +61,7 @@ class ConveyorBelt(game: MegamanMaverickGame) : ISpriteEntity, Block(game) {
       forceFixture!!.offsetFromBodyCenter.y = ConstVals.PPM / 8f
       body.addFixture(forceFixture!!)
 
-      getComponent(DrawableShapeComponent::class)?.shapeSuppliers?.add { forceFixture!!.shape }
+      getComponent(DrawableShapeComponent::class)?.debugShapeSuppliers?.add { forceFixture!!.shape }
     }
 
     val bounds = spawnProps.get(ConstKeys.BOUNDS) as Rectangle
@@ -85,8 +84,8 @@ class ConveyorBelt(game: MegamanMaverickGame) : ISpriteEntity, Block(game) {
       val part = if (i == 0) "left" else if (i == numParts - 1) "right" else "middle $i"
       val region =
           when (part) {
-            "left" -> if (left) lLeft else rLeft
-            "right" -> if (left) lRight else rRight
+            "left" -> if (left) lLeft else lRight
+            "right" -> if (left) rLeft else rRight
             else -> middle
           }
       val animation = Animation(region!!, 1, 2, 0.15f, true)

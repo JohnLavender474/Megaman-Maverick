@@ -145,7 +145,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
   }
 
   // add drawable shape component
-  addComponent(DrawableShapeComponent(this, shapes))
+  addComponent(DrawableShapeComponent(this, debugShapeSuppliers = shapes, debug = true))
 
   return BodyComponentCreator.create(this, body)
 }

@@ -72,6 +72,11 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
           Spawn(EntityFactories.fetch(entityType, it.name ?: "")!!, spawnProps)
         }
 
+        // if this spawner is respawnable
+        val respawnable =
+            !spawnProps.containsKey(ConstKeys.RESPAWNABLE) ||
+                spawnProps.get(ConstKeys.RESPAWNABLE) as Boolean
+
         // if there is a specified spawn type, then create that type of spawner
         val spawnType = spawnProps.get(ConstKeys.SPAWN_TYPE) as String?
         when (spawnType) {
@@ -87,7 +92,10 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
               spawnProps.put(ConstKeys.ROOM, room)
               val spawner =
                   SpawnerFactory.spawnerForWhenEnteringCamera(
-                      game.getGameCamera(), room.rectangle.toGameRectangle(), spawnSupplier)
+                      game.getGameCamera(),
+                      room.rectangle.toGameRectangle(),
+                      spawnSupplier,
+                      respawnable)
               spawners.add(spawner)
 
               GameLogger.debug(
@@ -111,7 +119,8 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
 
             // add spawner to spawners array and as an event listener to the game
             // this spawn should be removed as an event listener when the level is disposed
-            val spawner = SpawnerFactory.spawnerForWhenEventCalled(events, spawnSupplier)
+            val spawner =
+                SpawnerFactory.spawnerForWhenEventCalled(events, spawnSupplier, respawnable)
             spawners.add(spawner)
 
             GameLogger.debug(
@@ -127,7 +136,10 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
               else -> {
                 val spawner =
                     SpawnerFactory.spawnerForWhenEnteringCamera(
-                        game.getGameCamera(), it.rectangle.toGameRectangle(), spawnSupplier)
+                        game.getGameCamera(),
+                        it.rectangle.toGameRectangle(),
+                        spawnSupplier,
+                        respawnable)
                 spawners.add(spawner)
 
                 GameLogger.debug(

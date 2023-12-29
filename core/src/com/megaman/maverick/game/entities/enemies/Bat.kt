@@ -6,6 +6,7 @@ import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.common.enums.Direction
 import com.engine.common.enums.Position
+import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.interfaces.Updatable
@@ -172,7 +173,8 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
       else if (status != BatStatus.FLYING_TO_ATTACK) body.physics.velocity.setZero()
     }
 
-    addComponent(DrawableShapeComponent(this, { body }))
+    addComponent(
+        DrawableShapeComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
 
     return BodyComponentCreator.create(this, body)
   }

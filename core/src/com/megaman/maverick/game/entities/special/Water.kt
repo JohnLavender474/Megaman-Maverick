@@ -84,7 +84,7 @@ class Water(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteE
     body.addFixture(waterFixture)
     shapes.add { waterFixture.shape }
 
-    addComponent(DrawableShapeComponent(this, shapes))
+    addComponent(DrawableShapeComponent(this, debugShapeSuppliers = shapes, debug = true))
 
     return BodyComponentCreator.create(this, body)
   }

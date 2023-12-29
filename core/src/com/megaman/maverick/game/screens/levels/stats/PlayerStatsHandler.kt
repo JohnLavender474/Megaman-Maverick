@@ -21,10 +21,6 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.events.EventType
 
-/**
- * A class that handles the player's stats, such as health, weapon ammo, and so on. It implements
- * [Initializable], [Updatable], and [IDrawable].
- */
 class PlayerStatsHandler(private val megaman: Megaman) :
     Initializable, Updatable, IDrawable<Batch> {
 
@@ -48,9 +44,8 @@ class PlayerStatsHandler(private val megaman: Megaman) :
   private var systemStates: ObjectMap<IGameSystem, Boolean>? = null
 
   val finished: Boolean
-    get() = timer?.isFinished() ?: false
+    get() = timer?.isFinished() ?: true
 
-  /** Initializes this handler. Must be called before [update] and [draw]. */
   override fun init() {
     if (initialized) return
 
@@ -93,11 +88,6 @@ class PlayerStatsHandler(private val megaman: Megaman) :
     }
   }
 
-  /**
-   * Should be called when megaman attains the given armor piece.
-   *
-   * @param armorPiece the armor piece
-   */
   fun attain(armorPiece: MegaArmorPiece) {
     if (!finished) throw IllegalStateException("Cannot call attain if handler is not finished")
 
@@ -108,11 +98,6 @@ class PlayerStatsHandler(private val megaman: Megaman) :
     timer?.runOnFinished = { megaman.add(armorPiece) }
   }
 
-  /**
-   * Shuld be called when megaman attains the given heart tank.
-   *
-   * @param heartTank the heart tank
-   */
   fun attain(heartTank: MegaHeartTank) {
     check(finished) { "Cannot call attain if handler is not finished" }
 
@@ -131,11 +116,6 @@ class PlayerStatsHandler(private val megaman: Megaman) :
     engine.systems.forEach { if (it !is SpriteSystem) it.on = false }
   }
 
-  /**
-   * Should be called when megaman attains the given health tank.
-   *
-   * @param healthTank the health tank
-   */
   fun attain(healthTank: MegaHealthTank) {
     check(finished) { "Cannot call attain if handler is not finished" }
 
@@ -145,16 +125,10 @@ class PlayerStatsHandler(private val megaman: Megaman) :
     timer!!.runOnFinished = { megaman.put(healthTank) }
   }
 
-  /**
-   * Should be called when health is added to Megaman. This method begins by adding health to
-   * Megaman, and any leftover health is added to the health tanks.
-   *
-   * @param health the amount of health to add
-   */
   fun addHealth(health: Int) {
     check(finished) { "Cannot call add health if handler is not finished" }
 
-    val healthNeeded: Int = megaman.getHealthPoints().max - megaman.getHealthPoints().current
+    val healthNeeded = megaman.getHealthPoints().max - megaman.getHealthPoints().current
     if (healthNeeded <= 0) return
 
     val addToTanks: Boolean
@@ -164,7 +138,7 @@ class PlayerStatsHandler(private val megaman: Megaman) :
       addToTanks = false
     } else {
       healthToAdd = healthNeeded
-      addToTanks = megaman.addToHealthTank(health)
+      addToTanks = if (megaman.hasHealthTanks()) megaman.addToHealthTank(health) else false
     }
 
     var dur = healthToAdd * DUR_PER_BIT
@@ -187,11 +161,6 @@ class PlayerStatsHandler(private val megaman: Megaman) :
     engine.systems.forEach { if (it !is SpriteSystem) it.on = false }
   }
 
-  /**
-   * Updates the player stats handler.
-   *
-   * @param delta the time since the last update
-   */
   override fun update(delta: Float) {
     timer?.let {
       it.update(delta)
@@ -203,11 +172,6 @@ class PlayerStatsHandler(private val megaman: Megaman) :
     }
   }
 
-  /**
-   * Draws the player stats handler.
-   *
-   * @param drawer the batch to draw with
-   */
   override fun draw(drawer: Batch) {
     healthBar.draw(drawer)
     weaponBarSupplier()?.draw(drawer)

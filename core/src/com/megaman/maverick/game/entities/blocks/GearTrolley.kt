@@ -26,7 +26,6 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.events.EventType
 
-/** A gear trolley is a block that moves along a trajectory. */
 class GearTrolley(game: MegamanMaverickGame) : Block(game), ISpriteEntity, IEventListener {
 
   companion object {
