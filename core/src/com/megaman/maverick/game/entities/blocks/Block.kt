@@ -11,7 +11,10 @@ import com.engine.drawables.shapes.DrawableShapeComponent
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.updatables.UpdatablesComponent
-import com.engine.world.*
+import com.engine.world.Body
+import com.engine.world.BodyComponent
+import com.engine.world.BodyType
+import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.BodyLabel
@@ -19,7 +22,6 @@ import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.addBodyLabel
 import com.megaman.maverick.game.world.setEntity
 
-/** A block is a static entity that can be collided with. */
 open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
 
   companion object {
@@ -30,21 +32,13 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
 
   override fun init() {
     GameLogger.debug(TAG, "init(): Initializing Block entity.")
-
-    val physicsData = PhysicsData()
-    physicsData.frictionToApply = Vector2(STANDARD_FRIC_X, STANDARD_FRIC_Y)
-    val body = Body(BodyType.STATIC, physicsData)
-
+    val body = Body(BodyType.STATIC)
     val bodyFixture = Fixture(GameRectangle(), FixtureType.BLOCK)
     body.addFixture(bodyFixture)
-
     body.fixtures.forEach { (_, fixture) -> fixture.setEntity(this) }
     addComponent(BodyComponent(this, body))
-
     addComponent(UpdatablesComponent(this, { (bodyFixture.shape as GameRectangle).set(body) }))
     addComponent(DrawableShapeComponent(this, { body }))
-
-    // TODO: addComponent(CullablesComponent(this, getGameCameraCulling()))
   }
 
   override fun spawn(spawnProps: Properties) {

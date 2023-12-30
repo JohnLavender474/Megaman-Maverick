@@ -7,9 +7,7 @@ import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.common.CAUSE_OF_DEATH_MESSAGE
-import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.getTextureRegion
-import com.engine.common.extensions.objectMapOf
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
@@ -20,6 +18,7 @@ import com.engine.drawables.sorting.DrawingPriority
 import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.ISpriteEntity
@@ -47,9 +46,10 @@ class Explosion(game: MegamanMaverickGame) :
   private val damageMask = ObjectSet<Class<out IDamageable>>()
 
   override fun init() {
-    if (explosionRegion == null) {
-      explosionRegion = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "Explosion")
-    }
+    if (explosionRegion == null)
+        explosionRegion =
+            game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "Explosion")
+
     addComponent(defineSpriteComponent())
     addComponent(defineBodyComponent())
     addComponent(defineAnimationsComponent())
@@ -59,8 +59,10 @@ class Explosion(game: MegamanMaverickGame) :
   @Suppress("UNCHECKED_CAST")
   override fun spawn(spawnProps: Properties) {
     super.spawn(spawnProps)
+
     val spawn = spawnProps.get(ConstKeys.POSITION) as Vector2
     body.setCenter(spawn)
+
     durationTimer.reset()
 
     damageMask.clear()
@@ -81,26 +83,27 @@ class Explosion(game: MegamanMaverickGame) :
           this,
           {
             durationTimer.update(it)
-            if (durationTimer.isFinished()) {
-              kill(props(CAUSE_OF_DEATH_MESSAGE to "Duration timer finished"))
-            }
+            if (durationTimer.isFinished())
+                kill(props(CAUSE_OF_DEATH_MESSAGE to "Duration timer finished"))
           })
 
   private fun defineAnimationsComponent(): AnimationsComponent {
-    val spriteSupplier = { firstSprite!! }
     val animation = Animation(explosionRegion!!, 1, 11, .025f, false)
-    val animator = Animator({ "default" }, objectMapOf("default" to animation))
-    return AnimationsComponent(this, gdxArrayOf(spriteSupplier to animator))
+    val animator = Animator(animation)
+    return AnimationsComponent(this, animator)
   }
 
   private fun defineSpriteComponent(): SpriteComponent {
     val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 4))
+    sprite.setSize(2.5f * ConstVals.PPM)
+
     val spriteComponent = SpriteComponent(this, "explosion" to sprite)
     spriteComponent.putUpdateFunction("explosion") { _, _sprite ->
       _sprite as GameSprite
       val center = body.getCenter()
       _sprite.setCenter(center.x, center.y)
     }
+
     return spriteComponent
   }
 

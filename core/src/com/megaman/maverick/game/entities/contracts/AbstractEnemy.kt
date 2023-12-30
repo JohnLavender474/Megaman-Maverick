@@ -15,6 +15,7 @@ import com.engine.damage.IDamageable
 import com.engine.damage.IDamager
 import com.engine.drawables.sprites.SpriteComponent
 import com.engine.entities.GameEntity
+import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.ICullableEntity
@@ -82,13 +83,32 @@ abstract class AbstractEnemy(game: MegamanMaverickGame, private val cullTime: Fl
         disintegrate()
         if (dropItemOnDeath) {
           val randomInt = getRandom(0, 10)
-          val entity =
+          val props = props(ConstKeys.POSITION to body.getCenter())
+          val entity: IGameEntity? =
               when (randomInt) {
-                0 -> EntityFactories.fetch(EntityType.ITEM, ItemsFactory.HEALTH_BULB)
-                // TODO: add more items
+                0,
+                1,
+                2 -> {
+                  props.put(ConstKeys.LARGE, randomInt == 1)
+                  EntityFactories.fetch(EntityType.ITEM, ItemsFactory.HEALTH_BULB)
+                }
+                3,
+                4,
+                5 -> {
+                  // TODO: EntityFactories.fetch(EntityType.ITEM, ItemsFactory.WEAPON_ENERGY)
+                  null
+                }
+                6,
+                7,
+                8,
+                9,
+                10 -> {
+                  GameLogger.debug(TAG, "No item dropped")
+                  null
+                }
                 else -> null
               }
-          entity?.let { game.gameEngine.spawn(it, props(ConstKeys.POSITION to body.getCenter())) }
+          entity?.let { game.gameEngine.spawn(it, props) }
         }
       }
     }

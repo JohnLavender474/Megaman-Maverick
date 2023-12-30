@@ -74,7 +74,7 @@ class ConveyorBelt(game: MegamanMaverickGame) : ISpriteEntity, Block(game) {
     if (left) forceX = -forceX
     val velocityAlteration =
         VelocityAlteration(forceX = forceX, actionX = VelocityAlterationType.ADD)
-    forceFixture!!.setVelocityAlteration { velocityAlteration }
+    forceFixture!!.setVelocityAlteration { _, _ -> velocityAlteration }
 
     // sprite and animators
     val sprites = OrderedMap<String, ISprite>()

@@ -102,7 +102,7 @@ class HealthBulb(game: MegamanMaverickGame) :
             spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         else spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
 
-    large = spawnProps.get(ConstKeys.LARGE) as Boolean
+    large = spawnProps.getOrDefault(ConstKeys.LARGE, true) as Boolean
 
     timeCull =
         !spawnProps.containsKey(ConstKeys.TIMED) ||

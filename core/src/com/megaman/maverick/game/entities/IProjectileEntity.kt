@@ -19,13 +19,8 @@ import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.events.EventType
 
-/**
- * A projectile entity that can be fired by different entities. It extends [IGameEntity] and
- * implements [IBodyEntity], [ISpriteEntity], [IAudioEntity], and [IGameEntity].
- */
 interface IProjectileEntity : IDamager, IBodyEntity, ISpriteEntity, IAudioEntity, IGameEntity {
 
-  /** The owner of the projectile (the entity that fired it). */
   var owner: IGameEntity?
 
   override fun canDamage(damageable: IDamageable) =
@@ -35,36 +30,15 @@ interface IProjectileEntity : IDamager, IBodyEntity, ISpriteEntity, IAudioEntity
     // do nothing
   }
 
-  /**
-   * Called when the projectile hits a body fixture.
-   *
-   * @param bodyFixture The body fixture that was hit.
-   */
   fun hitBody(bodyFixture: Fixture) {}
 
-  /**
-   * Called when the projectile hits a block fixture.
-   *
-   * @param blockFixture The block fixture that was hit.
-   */
   fun hitBlock(blockFixture: Fixture) {}
 
-  /**
-   * Called when the projectile hits a shield fixture.
-   *
-   * @param shieldFixture The shield fixture that was hit.
-   */
   fun hitShield(shieldFixture: Fixture) {}
 
-  /**
-   * Called when the projectile hits a water fixture.
-   *
-   * @param waterFixture The water fixture that was hit.
-   */
   fun hitWater(waterFixture: Fixture) {}
 }
 
-/** Defines some common components for the [IProjectileEntity]. */
 internal fun IProjectileEntity.defineProjectileComponents(): Array<IGameComponent> {
   val components = Array<IGameComponent>()
 

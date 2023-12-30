@@ -6,19 +6,18 @@ import com.engine.world.Fixture
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.world.FixtureType
 
-/** An ice block is a block that has ice physics. */
 class IceBlock(game: MegamanMaverickGame) : Block(game) {
 
-  private var ice: Fixture? = null
+  private lateinit var ice: Fixture
 
   override fun init() {
     super.init()
     ice = Fixture(GameRectangle(), FixtureType.ICE)
-    body.addFixture(ice!!)
+    body.addFixture(ice)
   }
 
   override fun spawn(spawnProps: Properties) {
     super.spawn(spawnProps)
-    (ice!!.shape as GameRectangle).set(body)
+    (ice.shape as GameRectangle).set(body)
   }
 }

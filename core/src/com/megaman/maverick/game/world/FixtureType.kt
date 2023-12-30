@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.world
 
-/** The type of fixture. This is used to determine how to handle contacts between fixtures. */
 enum class FixtureType {
   BLOCK,
   PLAYER,

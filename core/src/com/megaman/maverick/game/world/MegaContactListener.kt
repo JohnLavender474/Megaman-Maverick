@@ -124,6 +124,7 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
 
       val body = feet.getBody()
       body.setBodySense(BodySense.FEET_ON_ICE, true)
+      body.physics.frictionOnSelf.x = 0.85f
     }
 
     // bouncer, feet or head or side
@@ -136,9 +137,8 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
               objectSetOf(FixtureType.BOUNCER),
               objectSetOf(FixtureType.FEET, FixtureType.HEAD, FixtureType.SIDE))!!
 
-      val bounceableBody = bounceable.getBody()
-      val bounce = bouncer.getVelocityAlteration(bounceableBody)
-      VelocityAlterator.alterate(bounceableBody, bounce)
+      val bounce = bouncer.getVelocityAlteration(bounceable, delta)
+      VelocityAlterator.alterate(bounceable.getBody(), bounce)
 
       bouncer.getRunnable()?.invoke()
     }
@@ -204,9 +204,8 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
       GameLogger.debug(TAG, "beginContact(): Body-Force, contact = $contact")
       val (bodyFixture, force) = contact.getFixturesInOrder(FixtureType.BODY, FixtureType.FORCE)!!
 
-      val alterableBody = bodyFixture.getBody()
-      val forceAlteration = force.getVelocityAlteration(alterableBody)
-      VelocityAlterator.alterate(alterableBody, forceAlteration, delta)
+      val forceAlteration = force.getVelocityAlteration(bodyFixture, delta)
+      VelocityAlterator.alterate(bodyFixture.getBody(), forceAlteration, delta)
     }
 
     // body, upside down
@@ -360,11 +359,10 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
 
     // body, force
     else if (contact.fixturesMatch(FixtureType.BODY, FixtureType.FORCE)) {
-      val (body, force) = contact.getFixturesInOrder(FixtureType.BODY, FixtureType.FORCE)!!
+      val (bodyFixture, force) = contact.getFixturesInOrder(FixtureType.BODY, FixtureType.FORCE)!!
 
-      val alterableBody = body.getBody()
-      val forceAlteration = force.getVelocityAlteration(alterableBody)
-      VelocityAlterator.alterate(alterableBody, forceAlteration, delta)
+      val forceAlteration = force.getVelocityAlteration(bodyFixture, delta)
+      VelocityAlterator.alterate(bodyFixture.getBody(), forceAlteration, delta)
 
       force.getRunnable()?.invoke()
     }
@@ -491,11 +489,10 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
     // body, force
     else if (contact.fixturesMatch(FixtureType.BODY, FixtureType.FORCE)) {
       GameLogger.debug(TAG, "End Contact: Body-Force, contact = $contact")
-      val (body, force) = contact.getFixturesInOrder(FixtureType.BODY, FixtureType.FORCE)!!
+      val (bodyFixture, force) = contact.getFixturesInOrder(FixtureType.BODY, FixtureType.FORCE)!!
 
-      val alterableBody = body.getBody()
-      val forceAlteration = force.getVelocityAlteration(alterableBody)
-      VelocityAlterator.alterate(alterableBody, forceAlteration, delta)
+      val forceAlteration = force.getVelocityAlteration(bodyFixture, delta)
+      VelocityAlterator.alterate(bodyFixture.getBody(), forceAlteration, delta)
 
       force.getRunnable()?.invoke()
     }

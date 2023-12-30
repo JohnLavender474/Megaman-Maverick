@@ -46,10 +46,13 @@ class EnemiesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
     pools.put(GAPING_FISH, EntityPoolCreator.create(3) { GapingFish(game) })
     pools.put(SPRING_HEAD, EntityPoolCreator.create(2) { SpringHead(game) })
     pools.put(SUCTION_ROLLER, EntityPoolCreator.create(2) { SuctionRoller(game) })
+    pools.put(MAG_FLY, EntityPoolCreator.create(2) { MagFly(game) })
+    pools.put(MATASABURO, EntityPoolCreator.create(2) { Matasaburo(game) })
+    pools.put(SWINGIN_JOE, EntityPoolCreator.create(2) { SwinginJoe(game) })
   }
 
   override fun fetch(key: Any): AbstractEnemy? {
-    GameLogger.debug(ExplosionsFactory.TAG, "Spawning Explosion: key = $key")
+    GameLogger.debug(TAG, "Spawning Enemy: key = $key")
     return pools.get(key)?.fetch()
   }
 }
