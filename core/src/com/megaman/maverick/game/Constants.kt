@@ -13,6 +13,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+  const val GRAVITY = "gravity"
   const val RESPAWNABLE = "respawnable"
   const val X = "x"
   const val Y = "y"

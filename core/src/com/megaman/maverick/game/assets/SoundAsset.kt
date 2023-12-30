@@ -11,6 +11,7 @@ enum class SoundAsset(src: String, val seconds: Int) : IAsset {
   ERROR_SOUND("error.mp3", 1),
   THUMP_SOUND("thump.mp3", 1),
   WALL_JUMP("wall_jump.mp3", 1),
+  CHILL_SHOOT("chill_shoot.mp3", 1),
   WHOOSH_SOUND("whoosh.mp3", 2),
   PAUSE_SOUND("pause_menu.mp3", 1),
   EXPLOSION_SOUND("explosion.mp3", 2),

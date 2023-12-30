@@ -90,7 +90,8 @@ class Megaman(game: MegamanMaverickGame) :
           MagFly::class to 3,
           Explosion::class to 2,
           JoeBall::class to 3,
-          SwinginJoe::class to 2)
+          SwinginJoe::class to 2,
+          SniperJoe::class to 3)
 
   internal val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 

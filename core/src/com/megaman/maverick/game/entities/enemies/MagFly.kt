@@ -30,7 +30,11 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.projectiles.Bullet
+import com.megaman.maverick.game.entities.projectiles.ChargedShot
+import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.getMegamanMaverickGame
 import com.megaman.maverick.game.world.*
@@ -48,7 +52,13 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     private var magFlyReg: TextureRegion? = null
   }
 
-  override val damageNegotiations = objectMapOf<KClass<out IDamager>, Int>()
+  override val damageNegotiations =
+      objectMapOf<KClass<out IDamager>, Int>(
+          Bullet::class to 5,
+          Fireball::class to 15,
+          ChargedShot::class to 15,
+          ChargedShotExplosion::class to 15)
+
   override var facing = Facing.RIGHT
 
   private val forceFlashTimer = Timer(FORCE_FLASH_DURATION)
