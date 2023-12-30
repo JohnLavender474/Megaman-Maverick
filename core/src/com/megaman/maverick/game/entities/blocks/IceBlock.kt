@@ -18,6 +18,7 @@ class IceBlock(game: MegamanMaverickGame) : Block(game) {
 
   override fun spawn(spawnProps: Properties) {
     super.spawn(spawnProps)
+    // body.physics.frictionToApply.x = 0f
     (ice.shape as GameRectangle).set(body)
   }
 }

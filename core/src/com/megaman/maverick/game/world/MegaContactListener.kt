@@ -124,7 +124,8 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
 
       val body = feet.getBody()
       body.setBodySense(BodySense.FEET_ON_ICE, true)
-      body.physics.frictionOnSelf.x = 0.85f
+
+      body.physics.frictionOnSelf.set(1.0175f, 1.0175f)
     }
 
     // bouncer, feet or head or side
@@ -340,6 +341,8 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
 
       val body = feet.getBody()
       body.setBodySense(BodySense.FEET_ON_ICE, true)
+
+      body.physics.frictionOnSelf.set(1.0175f, 1.0175f)
     }
 
     // water listener, water
