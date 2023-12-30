@@ -52,6 +52,7 @@ class EnemiesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
     pools.put(SNIPER_JOE, EntityPoolCreator.create(2) { SniperJoe(game) })
     pools.put(PENGUIN, EntityPoolCreator.create(2) { Penguin(game) })
     pools.put(SHIELD_ATTACKER, EntityPoolCreator.create(2) { ShieldAttacker(game) })
+    pools.put(SCREWIE, EntityPoolCreator.create(5) { Screwie(game) })
   }
 
   override fun fetch(key: Any): AbstractEnemy? {
