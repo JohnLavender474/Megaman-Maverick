@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="300" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="50">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="300" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="51">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <objectgroup id="2" name="blocks">
   <object id="1" x="0" y="224" width="32" height="416"/>
@@ -66,6 +66,11 @@
   <object id="43" name="SwinginJoe" x="4928" y="576" width="32" height="32"/>
   <object id="44" name="SniperJoe" x="3520" y="576" width="32" height="32"/>
   <object id="49" name="Penguin" x="5984" y="544" width="32" height="32"/>
+  <object id="50" name="ShieldAttacker" x="5280" y="448" width="32" height="32">
+   <properties>
+    <property name="x" type="float" value="5"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="6" name="specials">
   <object id="17" name="Water" x="1216" y="480" width="384" height="128"/>

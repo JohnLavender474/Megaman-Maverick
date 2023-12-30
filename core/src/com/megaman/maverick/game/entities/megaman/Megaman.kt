@@ -69,8 +69,6 @@ class Megaman(game: MegamanMaverickGame) :
   override val invincible: Boolean
     get() = damaged || !damageRecoveryTimer.isFinished()
 
-  // Megaman's timers
-
   internal val damageTimer = Timer(MegamanValues.DAMAGE_DURATION).setToEnd()
   internal val damageRecoveryTimer = Timer(MegamanValues.DAMAGE_RECOVERY_TIME).setToEnd()
   internal val damageFlashTimer = Timer(MegamanValues.DAMAGE_FLASH_DURATION)
@@ -91,7 +89,8 @@ class Megaman(game: MegamanMaverickGame) :
           Explosion::class to 2,
           JoeBall::class to 3,
           SwinginJoe::class to 2,
-          SniperJoe::class to 3)
+          SniperJoe::class to 3,
+          ShieldAttacker::class to 4)
 
   internal val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 
@@ -107,59 +106,45 @@ class Megaman(game: MegamanMaverickGame) :
   internal val wallJumpTimer = Timer(MegamanValues.WALL_JUMP_IMPETUS_TIME).setToEnd()
   internal val groundSlideTimer = Timer(MegamanValues.MAX_GROUND_SLIDE_TIME)
 
-  // events to listen for
   override val eventKeyMask =
       objectSetOf<Any>(
           EventType.BEGIN_ROOM_TRANS, EventType.CONTINUE_ROOM_TRANS, EventType.GATE_INIT_OPENING)
 
-  // the handler for Megaman's upgrades
   override val upgradeHandler = MegamanUpgradeHandler(this)
 
-  // the handler for Megaman's weapons
   val weaponHandler = MegamanWeaponHandler(this)
 
-  // if the current weapon can be charged
   val canChargeCurrentWeapon: Boolean
     get() = weaponHandler.isChargeable(currentWeapon)
 
-  // the charge status for the current weapon
   val chargeStatus: MegaChargeStatus
     get() =
         if (fullyCharged) MegaChargeStatus.FULLY_CHARGED
         else if (charging) MegaChargeStatus.HALF_CHARGED else MegaChargeStatus.NOT_CHARGED
 
-  // if Megaman's current weapon is charging
   val charging: Boolean
     get() = canChargeCurrentWeapon && chargingTimer.time >= MegamanValues.TIME_TO_HALFWAY_CHARGED
 
-  // if Megaman's current weapon is half charged
   val halfCharged: Boolean
     get() = chargeStatus == MegaChargeStatus.HALF_CHARGED
 
-  // if Megaman's current weapon is fully charged
   val fullyCharged: Boolean
     get() = canChargeCurrentWeapon && chargingTimer.isFinished()
 
-  // if Megaman is shooting or in the shooting animation
   val shooting: Boolean
     get() = !shootAnimTimer.isFinished()
 
-  // the amount of ammo for the current weapon
   val ammo: Int
     get() =
         if (currentWeapon == MegamanWeapon.BUSTER) Int.MAX_VALUE
         else weaponHandler.getAmmo(currentWeapon)
 
-  // if Megaman should flash due to damage
   var damageFlash = false
 
-  // if Megaman is Maverick
   var maverick = false
 
-  // if Megaman is ready
   var ready = false
 
-  // if Megaman is upside down
   override var upsideDown: Boolean
     get() = getProperty(MegamanProps.UPSIDE_DOWN) == true
     set(value) {
@@ -201,28 +186,24 @@ class Megaman(game: MegamanMaverickGame) :
       }
     }
 
-  // If Megaman is facing left or right
   override var facing: Facing
     get() = getProperty(MegamanProps.FACING) as Facing
     set(value) {
       putProperty(MegamanProps.FACING, value)
     }
 
-  // Megaman's B button task
   var bButtonTask: BButtonTask
     get() = getProperty(MegamanProps.B_BUTTON_TASK) as BButtonTask
     set(value) {
       putProperty(MegamanProps.B_BUTTON_TASK, value)
     }
 
-  // Megaman's current currentWeapon
   var currentWeapon: MegamanWeapon
     get() = getProperty(MegamanProps.WEAPON) as MegamanWeapon
     set(value) {
       putProperty(MegamanProps.WEAPON, value)
     }
 
-  // If Megaman is running
   var running: Boolean
     get() = getProperty(ConstKeys.RUNNING) as Boolean
     set(value) {
