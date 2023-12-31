@@ -14,7 +14,9 @@ object ConstVals {
 }
 
 object ConstKeys {
+  const val PPM = "ppm"
   const val GRAVITY = "gravity"
+  const val SENSORS = "sensors"
   const val RESPAWNABLE = "respawnable"
   const val X = "x"
   const val Y = "y"

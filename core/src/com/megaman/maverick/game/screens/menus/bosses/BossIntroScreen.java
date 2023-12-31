@@ -80,7 +80,7 @@ public class BossIntroScreen extends BaseScreen {
         bDropTimer = new Timer(B_DROP);
         bText = new BitmapFontHandle(() -> "", ExtensionsKt.getDefaultFontSize(), new Vector2(
                 (ConstVals.VIEW_WIDTH * ConstVals.PPM / 3f) - ConstVals.PPM,
-                ConstVals.VIEW_HEIGHT * ConstVals.PPM / 3f), true, true, "Megaman10Font.ttf");
+                ConstVals.VIEW_HEIGHT * ConstVals.PPM / 3f), false, false, "Megaman10Font.ttf");
     }
 
     public void set(BossType b) {
@@ -109,8 +109,8 @@ public class BossIntroScreen extends BaseScreen {
         bDropTimer.reset();
         bLettersTimer.reset();
         bLettersDelay.reset();
-        for (Stars s : stars) {
-            s.getSpriteMatrix().resetPositions();
+        for (int i = 0; i < stars.size; i++) {
+            stars.set(i, new Stars(game, 0f, i * ConstVals.PPM * ConstVals.VIEW_HEIGHT / 4f));
         }
         currBAnim.component1().setPosition(((ConstVals.VIEW_WIDTH / 2f) - 1.5f) * ConstVals.PPM,
                 ConstVals.VIEW_HEIGHT * ConstVals.PPM);

@@ -116,8 +116,8 @@ class MegamanMaverickGame : Game2D() {
     megaman.init()
     megaman.initialized = true
 
-    // startLevelScreen(Level.TEST1)
-    setCurrentScreen(ScreenEnum.MAIN.name)
+    startLevelScreen(Level.TEST5)
+    // setCurrentScreen(ScreenEnum.MAIN.name)
   }
 
   override fun createButtons(): Buttons {

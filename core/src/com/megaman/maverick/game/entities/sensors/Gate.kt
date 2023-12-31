@@ -36,11 +36,9 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.FixtureType
 
-/** A gate that opens when the player comes into contact with it. */
 class Gate(game: MegamanMaverickGame) :
     GameEntity(game), IBodyEntity, ISpriteEntity, IEventListener, Resettable {
 
-  /** The state of this gate. */
   enum class GateState {
     OPENABLE,
     OPENING,

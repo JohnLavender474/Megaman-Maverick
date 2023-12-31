@@ -28,7 +28,7 @@ class ScreenSlide(
   }
 
   override fun init() {
-    camera.position.scl(startPoint)
+    camera.position.set(startPoint)
     timer.reset()
   }
 

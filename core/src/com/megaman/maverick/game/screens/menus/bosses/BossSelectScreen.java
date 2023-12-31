@@ -108,9 +108,9 @@ public class BossSelectScreen extends AbstractMenuScreen {
             bp.add(new BossPane(getCastGame(), boss));
         }
         t.add(new BitmapFontHandle(() -> "PRESS START", ExtensionsKt.getDefaultFontSize(),
-                new Vector2(5.35f * ConstVals.PPM, 13.85f * ConstVals.PPM), true, true, "Megaman10Font.ttf"));
+                new Vector2(5.35f * ConstVals.PPM, 13.85f * ConstVals.PPM), false, false, "Megaman10Font.ttf"));
         t.add(new BitmapFontHandle(() -> BACK, ExtensionsKt.getDefaultFontSize(), new Vector2(12.35f * ConstVals.PPM,
-                ConstVals.PPM), true, true, "Megaman10Font.ttf"));
+                ConstVals.PPM), false, false, "Megaman10Font.ttf"));
         bArrs.put(BACK, new BlinkingArrow(getCastGame().assMan, new Vector2(12f * ConstVals.PPM,
                 .75f * ConstVals.PPM)));
         TextureAtlas stageSelectAtlas = getCastGame().assMan.get(TextureAsset.UI_1.getSource(), TextureAtlas.class);
@@ -149,7 +149,7 @@ public class BossSelectScreen extends AbstractMenuScreen {
             }
         }
         bName = new BitmapFontHandle(() -> "", ExtensionsKt.getDefaultFontSize(), new Vector2(ConstVals.PPM,
-                ConstVals.PPM), true, true, "Megaman10Font.ttf");
+                ConstVals.PPM), false, false, "Megaman10Font.ttf");
     }
 
     @Override

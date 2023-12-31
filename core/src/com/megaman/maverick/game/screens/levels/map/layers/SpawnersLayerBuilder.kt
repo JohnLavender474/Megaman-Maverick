@@ -21,11 +21,6 @@ import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.spawns.SpawnerFactory
 import com.megaman.maverick.game.utils.toProps
 
-/**
- * Builds spawners for a layer.
- *
- * @param params The [MegaMapLayerBuildersParams] to use.
- */
 class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITiledMapLayerBuilder {
 
   companion object {
@@ -36,18 +31,14 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
     GameLogger.debug(TAG, "build(): Building spawners for layer: ${layer.name}")
     val game = params.game
 
-    // define disposables array if necessary and get itƒ
-    // these disposables are run when the level is disposed
     if (!returnProps.containsKey(ConstKeys.DISPOSABLES))
         returnProps.put(ConstKeys.DISPOSABLES, Array<Disposable>())
     val disposables = returnProps.get(ConstKeys.DISPOSABLES) as Array<Disposable>
 
-    // define spawners array if necessary and get it
     if (!returnProps.containsKey(ConstKeys.SPAWNERS))
         returnProps.put(ConstKeys.SPAWNERS, Array<ISpawner>())
     val spawners = returnProps.get(ConstKeys.SPAWNERS) as Array<ISpawner>
 
-    // get the entity type from the layer name
     val entityType =
         when (layer.name) {
           ConstKeys.ENEMIES -> EntityType.ENEMY
@@ -59,31 +50,22 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
         }
     GameLogger.debug(TAG, "build(): Entity type: $entityType")
 
-    // cycle through each object in the layer to create a spawner for each object
     layer.objects.forEach {
-      // objects all MUST be rectangular
       if (it is RectangleMapObject) {
-        // convert the MapProperties to a Properties instance
         val spawnProps = it.properties.toProps()
         spawnProps.put(ConstKeys.BOUNDS, it.rectangle.toGameRectangle())
 
-        // create spawner
         val spawnSupplier = {
           Spawn(EntityFactories.fetch(entityType, it.name ?: "")!!, spawnProps)
         }
 
-        // if this spawner is respawnable
         val respawnable =
             !spawnProps.containsKey(ConstKeys.RESPAWNABLE) ||
                 spawnProps.get(ConstKeys.RESPAWNABLE) as Boolean
 
-        // if there is a specified spawn type, then create that type of spawner
         val spawnType = spawnProps.get(ConstKeys.SPAWN_TYPE) as String?
         when (spawnType) {
-          // spawn when a room is entered
           SpawnType.SPAWN_ROOM -> {
-            // if the spawn type is SPAWN_ROOM, then get the room name and find the room
-            // with that name
             val roomName = it.properties.get(SpawnType.SPAWN_ROOM) as String
             val gameRooms = returnProps.get(ConstKeys.GAME_ROOMS) as Array<RectangleMapObject>
 
@@ -107,9 +89,8 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
 
             check(roomFound) { "Room not found: $roomName" }
           }
-          // spawn when the specified event is called
+
           SpawnType.SPAWN_EVENT -> {
-            // collect events from the events prop
             val events = ObjectSet<Any>()
             val eventNames = (spawnProps.get(ConstKeys.EVENTS) as String).split(",")
             eventNames.forEach { eventName ->
@@ -117,8 +98,6 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
               events.add(eventType)
             }
 
-            // add spawner to spawners array and as an event listener to the game
-            // this spawn should be removed as an event listener when the level is disposed
             val spawner =
                 SpawnerFactory.spawnerForWhenEventCalled(events, spawnSupplier, respawnable)
             spawners.add(spawner)
@@ -129,7 +108,6 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
             game.eventsMan.addListener(spawner)
             disposables.add { game.eventsMan.removeListener(spawner) }
           }
-          // if spawn type is not specified, then create a spawner using the following logic
           else -> {
             when (it.name) {
               // TODO: add other spawn types

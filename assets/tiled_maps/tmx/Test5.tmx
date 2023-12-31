@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.0" orientation="orthogonal" renderorder="right-down" width="300" height="350" tilewidth="32" tileheight="32" infinite="0" nextlayerid="19" nextobjectid="280">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="300" height="350" tilewidth="32" tileheight="32" infinite="0" nextlayerid="19" nextobjectid="280">
  <tileset firstgid="1" source="../tsx/GearTrolley.tsx"/>
  <tileset firstgid="13" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1037" source="../tsx/Blizzardman.tsx"/>
  <tileset firstgid="1261" source="../tsx/ChillMan.tsx"/>
- <objectgroup id="8" name="EnemySpawns">
+ <objectgroup id="8" name="enemies">
   <object id="60" name="SniperJoe" x="2592" y="9440" width="32" height="32"/>
   <object id="123" name="SniperJoe" x="3904" y="9376" width="32" height="32"/>
   <object id="124" name="GapingFish" x="4080" y="9792" width="32" height="32"/>
@@ -22,13 +22,13 @@
   <object id="231" name="Bat" x="832" y="9280" width="32" height="32"/>
   <object id="232" name="Bat" x="1120" y="9248" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="9" name="PlayerSpawns">
+ <objectgroup id="9" name="player">
   <object id="91" name="0" x="64" y="9408" width="32" height="32"/>
   <object id="122" name="1" x="3232" y="9376" width="32" height="32"/>
   <object id="258" name="2" x="1280" y="9792" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="7" name="Backgrounds"/>
- <objectgroup id="6" name="GameRooms" visible="0">
+ <objectgroup id="7" name="backgrounds"/>
+ <objectgroup id="6" name="game_rooms">
   <object id="17" name="Room1" x="0" y="9152" width="1984" height="448"/>
   <object id="40" name="Room2" x="1984" y="9152" width="1216" height="448"/>
   <object id="74" name="Room3" x="3200" y="9152" width="1344" height="448"/>
@@ -36,7 +36,7 @@
   <object id="200" name="Room5" x="864" y="9600" width="512" height="992"/>
   <object id="218" name="Room6" x="1376" y="10144" width="2464" height="448"/>
  </objectgroup>
- <objectgroup id="16" name="Hazards">
+ <objectgroup id="16" name="hazards">
   <object id="196" name="Saw" x="2400" y="9312" width="32" height="32">
    <properties>
     <property name="SpawnRoom" value="Room2"/>
@@ -66,7 +66,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="18" name="Items">
+ <objectgroup id="18" name="items">
   <object id="271" name="HeartTank" x="3136" y="9280" width="32" height="32">
    <properties>
     <property name="Val" value="A"/>
@@ -78,7 +78,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="4" name="Special">
+ <objectgroup id="4" name="special">
   <object id="76" name="Water" x="3328" y="9440" width="320" height="160"/>
   <object id="81" name="Water" x="3936" y="9440" width="352" height="160"/>
   <object id="82" name="SpringBouncer" x="4136" y="9536" width="16" height="32">
@@ -90,7 +90,12 @@
   <object id="274" name="Ladder" x="3624" y="9280" width="16" height="288"/>
   <object id="276" name="Ladder" x="3496" y="9632" width="16" height="320"/>
  </objectgroup>
- <objectgroup id="5" name="Death">
+ <objectgroup id="17" name="sensors">
+  <object id="260" name="Gate" x="1344" y="10432" width="64" height="96">
+   <properties>
+    <property name="Room" value="Room6"/>
+   </properties>
+  </object>
   <object id="236" name="Death" x="480" y="9568" width="1312" height="32"/>
   <object id="237" name="Death" x="2176" y="9568" width="736" height="32"/>
   <object id="238" name="Death" x="3328" y="9568" width="320" height="32"/>
@@ -108,7 +113,7 @@
   <object id="255" name="Death" x="1440" y="10048" width="2400" height="96"/>
   <object id="261" name="Death" x="864" y="10624" width="2336" height="64"/>
  </objectgroup>
- <objectgroup id="12" name="Blocks">
+ <objectgroup id="12" name="blocks">
   <object id="5" x="0" y="9440" width="480" height="224"/>
   <object id="26" name="ConveyorBelt" x="608" y="9456" width="96" height="16">
    <properties>
@@ -181,14 +186,7 @@
   <object id="278" x="1472" y="9376" width="64" height="32"/>
   <object id="279" x="1632" y="9440" width="64" height="32"/>
  </objectgroup>
- <objectgroup id="17" name="Gates">
-  <object id="260" name="Gate" x="1344" y="10432" width="64" height="96">
-   <properties>
-    <property name="Room" value="Room6"/>
-   </properties>
-  </object>
- </objectgroup>
- <layer id="1" name="Tiles" width="300" height="350">
+ <layer id="1" name="tiles" width="300" height="350">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

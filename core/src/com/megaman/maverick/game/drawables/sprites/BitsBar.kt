@@ -11,10 +11,6 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.TextureAsset
 import kotlin.math.min
 
-/**
- * BitsBar class represents a UI bar of bits that can be used to represent the amount of bits that
- * Megaman has for health, weapons, and so on. It implements [Initializable] and [IDrawable].
- */
 class BitsBar(
     private val assMan: AssetManager,
     private val bitRegion: String,
@@ -35,7 +31,6 @@ class BitsBar(
 
   private var initialized = false
 
-  /** Initializes the sprites. Must be called before [draw]. */
   override fun init() {
     if (initialized) return
 
@@ -52,12 +47,6 @@ class BitsBar(
     initialized = true
   }
 
-  /**
-   * Draws a black background with height equal to the value returned by [maxSupplier] and draws a
-   * stack of bits that is equal to the value returned by [countSupplier()].
-   *
-   * @param drawer the batch
-   */
   override fun draw(drawer: Batch) {
     blackBackground.setSize(BIT_WIDTH, maxSupplier() * BIT_HEIGHT)
     blackBackground.draw(drawer)

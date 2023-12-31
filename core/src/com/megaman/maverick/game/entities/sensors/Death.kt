@@ -12,10 +12,6 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.world.FixtureType
 
-/**
- * A death sensor that kills every entity whose damageable fixture comes into contact with
- * it.
- */
 class Death(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity {
 
   override fun init() = addComponent(defineBodyComponent())

@@ -16,5 +16,6 @@ object EntityFactories : Factories<IGameEntity>() {
     factories.put(EntityType.ENEMY, EnemiesFactory(game))
     factories.put(EntityType.ITEM, ItemsFactory(game))
     factories.put(EntityType.SPECIAL, SpecialsFactory(game))
+    factories.put(EntityType.SENSOR, SensorsFactory(game))
   }
 }

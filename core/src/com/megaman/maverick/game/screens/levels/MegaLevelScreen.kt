@@ -346,7 +346,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
     batch.projectionMatrix = gameCamera.combined
     batch.begin()
 
-    backgrounds.forEach { it.spriteMatrix.draw(batch) }
+    backgrounds.forEach { it.draw(batch) }
     tiledMapLevelRenderer?.render(gameCamera)
 
     sprites.forEach { it.draw(batch) }
