@@ -379,16 +379,18 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
     GameLogger.debug(TAG, "dispose(): Disposing level screen")
     super.dispose()
 
-    disposables.forEach { it.dispose() }
-    disposables.clear()
+    if (initialized) {
+      disposables.forEach { it.dispose() }
+      disposables.clear()
 
-    engine.reset()
-    audioMan.stopMusic()
-    eventsMan.removeListener(this)
+      engine.reset()
+      audioMan.stopMusic()
+      eventsMan.removeListener(this)
 
-    spawnsMan.reset()
-    playerSpawnsMan.reset()
-    cameraManagerForRooms.reset()
+      spawnsMan.reset()
+      playerSpawnsMan.reset()
+      cameraManagerForRooms.reset()
+    }
   }
 
   override fun pause() = levelStateHandler.pause()

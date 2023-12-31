@@ -42,11 +42,13 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.items.HealthBulb
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
+import com.megaman.maverick.game.screens.menus.MainScreen
+import com.megaman.maverick.game.screens.menus.bosses.BossIntroScreen
+import com.megaman.maverick.game.screens.menus.bosses.BossSelectScreen
 import com.megaman.maverick.game.utils.getMusics
 import com.megaman.maverick.game.utils.getSounds
 import com.megaman.maverick.game.world.FixtureType
@@ -88,13 +90,12 @@ class MegamanMaverickGame : Game2D() {
   fun getGraphMap(): IGraphMap? = properties.get(ConstKeys.WORLD_GRAPH_MAP) as IGraphMap?
 
   override fun create() {
-    // set log level
-    GameLogger.set(GameLogLevel.ERROR)
-    // filter by tags
-    GameLogger.filterByTag = true
-    GameLogger.tagsToLog.addAll(HealthBulb.TAG)
+    super.create()
 
-    // set viewports
+    GameLogger.set(GameLogLevel.ERROR)
+    GameLogger.filterByTag = true
+    GameLogger.tagsToLog.addAll(MainScreen.TAG)
+
     val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
     val screenHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
     val gameViewport = FitViewport(screenWidth, screenHeight)
@@ -102,31 +103,21 @@ class MegamanMaverickGame : Game2D() {
     val uiViewport = FitViewport(screenWidth, screenHeight)
     viewports.put(ConstKeys.UI, uiViewport)
 
-    // TODO: set screens
-    /*
-    screens.put(ScreenEnum.LEVEL, new LevelScreen(this));
-    screens.put(ScreenEnum.MAIN, new MainScreen(this));
-    screens.put(ScreenEnum.BOSS_SELECT, new BSelectScreen(this));
-    screens.put(ScreenEnum.BOSS_INTRO, new BIntroScreen(this));
-    */
     screens.put(ScreenEnum.LEVEL.name, MegaLevelScreen(this))
+    screens.put(ScreenEnum.MAIN.name, MainScreen(this))
+    screens.put(ScreenEnum.BOSS_SELECT.name, BossSelectScreen(this))
+    screens.put(ScreenEnum.BOSS_INTRO.name, BossIntroScreen(this))
 
-    // call to super
-    super.create()
-
-    // create Audio Manager
     audioMan = MegaAudioManager(assMan.getSounds(), assMan.getMusics())
 
-    // initialize entity factories
     EntityFactories.initialize(this)
 
-    // create Megaman
     megaman = Megaman(this)
     megaman.init()
     megaman.initialized = true
 
-    // TODO: test level screen
-    startLevelScreen(Level.TEST1)
+    // startLevelScreen(Level.TEST1)
+    setCurrentScreen(ScreenEnum.MAIN.name)
   }
 
   override fun createButtons(): Buttons {

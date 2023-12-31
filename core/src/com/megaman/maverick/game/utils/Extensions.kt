@@ -5,35 +5,28 @@ import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.maps.MapProperties
+import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.OrderedMap
 import com.engine.common.extensions.getMusic
 import com.engine.common.extensions.getSound
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.entities.IGameEntity
+import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 
-/** Gets the [MegamanMaverickGame] from the [IGameEntity]. */
 fun IGameEntity.getMegamanMaverickGame() = game as MegamanMaverickGame
 
-/**
- * Converts a [MapProperties] to a [Properties].
- *
- * @return the [Properties] converted from the [MapProperties].
- */
 fun MapProperties.toProps(): Properties {
   val props = Properties()
   keys.forEach { key -> props.put(key, get(key)) }
   return props
 }
 
-/**
- * Converts a [Camera] to a [GameRectangle].
- *
- * @return the [GameRectangle] converted from the [Camera].
- */
+fun getDefaultFontSize() = Math.round(ConstVals.PPM / 2f)
+
 fun Camera.toGameRectangle(): GameRectangle {
   val rectangle = GameRectangle()
   rectangle.setSize(viewportWidth, viewportHeight)
@@ -41,22 +34,24 @@ fun Camera.toGameRectangle(): GameRectangle {
   return rectangle
 }
 
-/**
- * Gets all the [Sound]s from the [AssetManager].
- *
- * @return the [OrderedMap] of [SoundAsset]s to [Sound]s.
- */
+fun getDefaultCameraPosition(): Vector3 {
+  val v = Vector3()
+  v.x = ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f
+  v.y = ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f
+  return v
+}
+
+fun Camera.setToDefaultPosition() {
+  val v = getDefaultCameraPosition()
+  position.set(v)
+}
+
 fun AssetManager.getSounds(): OrderedMap<SoundAsset, Sound> {
   val sounds = OrderedMap<SoundAsset, Sound>()
   for (ass in SoundAsset.values()) sounds.put(ass, getSound(ass.source))
   return sounds
 }
 
-/**
- * Gets all the [Music]s from the [AssetManager].
- *
- * @return the [OrderedMap] of [MusicAsset]s to [Music]s.
- */
 fun AssetManager.getMusics(): OrderedMap<MusicAsset, Music> {
   val music = OrderedMap<MusicAsset, Music>()
   for (ass in MusicAsset.values()) music.put(ass, getMusic(ass.source))

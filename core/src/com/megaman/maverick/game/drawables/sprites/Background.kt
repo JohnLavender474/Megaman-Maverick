@@ -1,22 +1,29 @@
 package com.megaman.maverick.game.drawables.sprites
 
+import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
+import com.badlogic.gdx.math.Rectangle
 import com.engine.common.interfaces.Updatable
+import com.engine.common.objects.Properties
+import com.engine.drawables.IDrawable
 import com.engine.drawables.sorting.DrawingPriority
 import com.engine.drawables.sprites.SpriteMatrix
 import com.engine.drawables.sprites.SpriteMatrixParams
 import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.utils.toProps
 
-/** A background object that is a sprite matrix. */
-open class Background(model: TextureRegion, obj: RectangleMapObject) : Updatable {
+open class Background(model: TextureRegion, rectangle: Rectangle, props: Properties) :
+    Updatable, IDrawable<Batch> {
 
-  val spriteMatrix = SpriteMatrix(getParams(model, obj))
+  val spriteMatrix = SpriteMatrix(getParams(model, rectangle, props))
 
   companion object {
-    private fun getParams(model: TextureRegion, obj: RectangleMapObject): SpriteMatrixParams {
-      val props = obj.properties
-      val rect = obj.rectangle
+    private fun getParams(
+        model: TextureRegion,
+        rectangle: Rectangle,
+        props: Properties
+    ): SpriteMatrixParams {
       return SpriteMatrixParams(
           model,
           props.get(ConstKeys.PRIORITY) as DrawingPriority,
@@ -24,15 +31,17 @@ open class Background(model: TextureRegion, obj: RectangleMapObject) : Updatable
           props.get(ConstKeys.HEIGHT) as Float,
           props.get(ConstKeys.ROWS) as Int,
           props.get(ConstKeys.COLUMNS) as Int,
-          rect.x,
-          rect.y)
+          rectangle.x,
+          rectangle.y)
     }
   }
 
-  /**
-   * Optional method to update this background object.
-   *
-   * @param delta The time in seconds since the last update
-   */
+  constructor(
+      model: TextureRegion,
+      mapObject: RectangleMapObject
+  ) : this(model, mapObject.rectangle, mapObject.properties.toProps())
+
   override fun update(delta: Float) {}
+
+  override fun draw(drawer: Batch) = spriteMatrix.draw(drawer)
 }

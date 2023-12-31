@@ -10,6 +10,7 @@ object ConstVals {
   const val STANDARD_RESISTANCE_X = 1.035f
   const val STANDARD_RESISTANCE_Y = 1.025f
   const val MAX_HEALTH = 30
+  const val BOSS_DROP_DOWN_DURATION = 0.25f
 }
 
 object ConstKeys {
