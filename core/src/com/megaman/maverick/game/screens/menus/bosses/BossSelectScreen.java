@@ -176,7 +176,10 @@ public class BossSelectScreen extends AbstractMenuScreen {
                 outTimer.update(delta);
             }
             if (outTimer.isFinished()) {
-                getCastGame().startLevelScreen(bSelect.level);
+                BossIntroScreen bIntroScreen =
+                        (BossIntroScreen) getCastGame().getScreens().get(ScreenEnum.BOSS_INTRO.name());
+                bIntroScreen.set(bSelect);
+                getCastGame().setCurrentScreen(ScreenEnum.BOSS_INTRO.name());
                 return;
             }
             for (ObjectMap.Entry<Sprite, Animation> e : bars) {

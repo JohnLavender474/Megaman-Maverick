@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Queue;
 
 public enum BossType {
-    TIMBER_WOMAN("Timber Woman", Level.TEST5, Position.TOP_LEFT, TextureAsset.TIMBER_WOMAN) {
+    TIMBER_WOMAN("Timber Woman", Level.TEST1, Position.TOP_LEFT, TextureAsset.TIMBER_WOMAN) {
         @Override
         public Vector2 getSpriteSize() {
             return new Vector2(4.25f, 3.5f);
@@ -45,7 +45,7 @@ public enum BossType {
             }};
         }
     },
-    DISTRIBUTOR_MAN("Distributor Man", Level.TEST5, Position.TOP_CENTER, TextureAsset.DISTRIBUTOR_MAN) {
+    DISTRIBUTOR_MAN("Distributor Man", Level.TEST1, Position.TOP_CENTER, TextureAsset.DISTRIBUTOR_MAN) {
         @Override
         public Vector2 getSpriteSize() {
             return new Vector2(1.85f, 1.5f);
@@ -75,7 +75,7 @@ public enum BossType {
             }};
         }
     },
-    ROASTER_MAN("Roaster Man", Level.TEST5, Position.TOP_RIGHT, TextureAsset.ROASTER_MAN) {
+    ROASTER_MAN("Roaster Man", Level.TEST1, Position.TOP_RIGHT, TextureAsset.ROASTER_MAN) {
         @Override
         public Vector2 getSpriteSize() {
             return new Vector2(3f, 2.5f);
@@ -107,7 +107,7 @@ public enum BossType {
             }};
         }
     },
-    MISTER_MAN("Mister Man", Level.TEST5, Position.CENTER_LEFT, TextureAsset.MISTER_MAN) {
+    MISTER_MAN("Mister Man", Level.TEST1, Position.CENTER_LEFT, TextureAsset.MISTER_MAN) {
         @Override
         public Vector2 getSpriteSize() {
             return new Vector2(3.25f, 2.85f);
@@ -136,7 +136,7 @@ public enum BossType {
             }};
         }
     },
-    BLUNT_MAN("Blunt Man", Level.TEST5, Position.CENTER_RIGHT, TextureAsset.BLUNT_MAN) {
+    BLUNT_MAN("Blunt Man", Level.TEST1, Position.CENTER_RIGHT, TextureAsset.BLUNT_MAN) {
         @Override
         public Vector2 getSpriteSize() {
             return new Vector2(1.65f, 1.5f);
@@ -168,7 +168,7 @@ public enum BossType {
     },
 
     // TODO: change to precious man texture asset
-    PRECIOUS_MAN("Precious Man", Level.TEST5, Position.BOTTOM_LEFT, TextureAsset.PRECIOUS_MAN) {
+    PRECIOUS_MAN("Precious Man", Level.TEST1, Position.BOTTOM_LEFT, TextureAsset.PRECIOUS_MAN) {
         @Override
         public Vector2 getSpriteSize() {
             return new Vector2(2.85f, 2.5f);
@@ -229,7 +229,7 @@ public enum BossType {
             }};
         }
     },
-    MICROWAVE_MAN("Microwave Man", Level.TEST5, Position.BOTTOM_RIGHT, TextureAsset.MICROWAVE_MAN) {
+    MICROWAVE_MAN("Microwave Man", Level.TEST1, Position.BOTTOM_RIGHT, TextureAsset.MICROWAVE_MAN) {
         @Override
         public Vector2 getSpriteSize() {
             return new Vector2(2.85f, 2.5f);
