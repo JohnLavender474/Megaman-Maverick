@@ -18,12 +18,12 @@ import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
 import com.engine.damage.IDamager
-import com.engine.drawables.shapes.DrawableShapeComponent
+import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sorting.DrawingPriority
 import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
 import com.engine.updatables.UpdatablesComponent
@@ -234,24 +234,24 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
       damageableFixture.active = behavior != MetBehavior.SHIELDING
     }
 
-    addComponent(DrawableShapeComponent(this, shapes))
+    addComponent(DrawableShapesComponent(this, shapes))
 
     return BodyComponentCreator.create(this, body)
   }
 
-  override fun defineSpriteComponent(): SpriteComponent {
+  override fun defineSpritesComponent(): SpritesComponent {
     val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 4))
     sprite.setSize(1.5f * ConstVals.PPM)
 
-    val spriteComponent = SpriteComponent(this, "met" to sprite)
-    spriteComponent.putUpdateFunction("met") { _, _sprite ->
+    val SpritesComponent = SpritesComponent(this, "met" to sprite)
+    SpritesComponent.putUpdateFunction("met") { _, _sprite ->
       _sprite as GameSprite
       _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
       _sprite.setFlip(facing == Facing.LEFT, false)
       // TODO: _sprite.hidden = damageBlink
     }
 
-    return spriteComponent
+    return SpritesComponent
   }
 
   private fun defineAnimationsComponent(): AnimationsComponent {

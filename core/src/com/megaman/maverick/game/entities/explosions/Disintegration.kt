@@ -15,7 +15,7 @@ import com.engine.common.time.Timer
 import com.engine.drawables.sorting.DrawingPriority
 import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IAudioEntity
@@ -42,7 +42,7 @@ class Disintegration(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntit
             game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "Disintegration")
 
     addComponent(AudioComponent(this))
-    addComponent(defineSpriteComponent())
+    addComponent(defineSpritesCompoent())
     addComponent(defineAnimationsComponent())
     addComponent(defineUpdatablesComponent())
   }
@@ -67,10 +67,10 @@ class Disintegration(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntit
             }
           })
 
-  private fun defineSpriteComponent(): SpriteComponent {
+  private fun defineSpritesCompoent(): SpritesComponent {
     val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 4))
     sprite.setSize(ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
-    return SpriteComponent(this, "disintegration" to sprite)
+    return SpritesComponent(this, "disintegration" to sprite)
   }
 
   private fun defineAnimationsComponent(): AnimationsComponent {

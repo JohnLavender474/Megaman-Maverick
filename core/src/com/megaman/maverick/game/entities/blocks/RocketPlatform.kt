@@ -10,7 +10,7 @@ import com.engine.common.extensions.objectSetOf
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.entities.contracts.ISpriteEntity
 import com.engine.events.Event
@@ -43,7 +43,7 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), ISpriteEntity, IE
             game.assMan.getTextureRegion(
                 TextureAsset.PLATFORMS_1.source, "JeffBezosLittleDickRocket")
 
-    addComponent(defineSpriteComponent())
+    addComponent(defineSpritesCompoent())
     addComponent(defineAnimationsComponent())
     addComponent(MotionComponent(this))
 
@@ -79,18 +79,18 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), ISpriteEntity, IE
     }
   }
 
-  private fun defineSpriteComponent(): SpriteComponent {
+  private fun defineSpritesCompoent(): SpritesComponent {
     val sprite = GameSprite(region!!)
     sprite.setSize(4f * ConstVals.PPM, 4f * ConstVals.PPM)
 
-    val spriteComponent = SpriteComponent(this, "rocket" to sprite)
-    spriteComponent.putUpdateFunction("rocket") { _, _sprite ->
+    val SpritesComponent = SpritesComponent(this, "rocket" to sprite)
+    SpritesComponent.putUpdateFunction("rocket") { _, _sprite ->
       _sprite as GameSprite
       _sprite.setPosition(body.getTopCenterPoint(), Position.TOP_CENTER)
       _sprite.translateY(ConstVals.PPM / 16f)
     }
 
-    return spriteComponent
+    return SpritesComponent
   }
 
   private fun defineAnimationsComponent(): AnimationsComponent {

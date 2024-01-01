@@ -12,7 +12,7 @@ import com.engine.common.shapes.GameRectangle
 import com.engine.drawables.sorting.DrawingPriority
 import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.entities.contracts.ISpriteEntity
 import com.engine.events.Event
@@ -44,7 +44,7 @@ class GearTrolley(game: MegamanMaverickGame) : Block(game), ISpriteEntity, IEven
         region =
             game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "GearTrolleyPlatform")
 
-    addComponent(defineSpriteComponent())
+    addComponent(defineSpritesCompoent())
     addComponent(defineAnimationsComponent())
     addComponent(MotionComponent(this))
 
@@ -79,17 +79,17 @@ class GearTrolley(game: MegamanMaverickGame) : Block(game), ISpriteEntity, IEven
     }
   }
 
-  private fun defineSpriteComponent(): SpriteComponent {
+  private fun defineSpritesCompoent(): SpritesComponent {
     val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 2))
     sprite.setSize(1.5f * ConstVals.PPM, 1.5f * ConstVals.PPM)
 
-    val spriteComponent = SpriteComponent(this, "trolley" to sprite)
-    spriteComponent.putUpdateFunction("trolley") { _, _sprite ->
+    val SpritesComponent = SpritesComponent(this, "trolley" to sprite)
+    SpritesComponent.putUpdateFunction("trolley") { _, _sprite ->
       _sprite as GameSprite
       _sprite.setPosition(body.getCenter(), Position.CENTER)
       _sprite.translateY(-ConstVals.PPM / 16f)
     }
-    return spriteComponent
+    return SpritesComponent
   }
 
   private fun defineAnimationsComponent(): AnimationsComponent {

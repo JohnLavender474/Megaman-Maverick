@@ -8,7 +8,7 @@ import com.engine.common.GameLogger
 import com.engine.common.interfaces.Updatable
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
-import com.engine.drawables.shapes.DrawableShapeComponent
+import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.world.Body
 import com.engine.world.BodyComponent
@@ -145,7 +145,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
   }
 
   // add drawable shape component
-  addComponent(DrawableShapeComponent(this, debugShapeSuppliers = shapes, debug = true))
+  addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
 
   return BodyComponentCreator.create(this, body)
 }

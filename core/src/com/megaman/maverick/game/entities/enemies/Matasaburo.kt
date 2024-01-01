@@ -14,7 +14,7 @@ import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.damage.IDamager
 import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
 import com.engine.updatables.UpdatablesComponent
@@ -106,17 +106,17 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     return BodyComponentCreator.create(this, body)
   }
 
-  override fun defineSpriteComponent(): SpriteComponent {
+  override fun defineSpritesComponent(): SpritesComponent {
     val sprite = GameSprite()
     sprite.setSize(1.5f * ConstVals.PPM)
-    val spriteComponent = SpriteComponent(this, "matasaburo" to sprite)
-    spriteComponent.putUpdateFunction("matasaburo") { _, _sprite ->
+    val SpritesComponent = SpritesComponent(this, "matasaburo" to sprite)
+    SpritesComponent.putUpdateFunction("matasaburo") { _, _sprite ->
       _sprite as GameSprite
       val position = body.getBottomCenterPoint()
       _sprite.setPosition(position, Position.BOTTOM_CENTER)
       _sprite.setFlip(facing == Facing.LEFT, false)
     }
-    return spriteComponent
+    return SpritesComponent
   }
 
   override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {

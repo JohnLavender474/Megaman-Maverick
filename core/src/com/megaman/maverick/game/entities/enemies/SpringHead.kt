@@ -18,7 +18,7 @@ import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
 import com.engine.damage.IDamager
 import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
 import com.engine.updatables.UpdatablesComponent
@@ -164,16 +164,16 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     }
   }
 
-  override fun defineSpriteComponent(): SpriteComponent {
+  override fun defineSpritesComponent(): SpritesComponent {
     val sprite = GameSprite()
     sprite.setSize(1.5f * ConstVals.PPM)
-    val spriteComponent = SpriteComponent(this, "springHead" to sprite)
-    spriteComponent.putUpdateFunction("springHead") { _, _sprite ->
+    val SpritesComponent = SpritesComponent(this, "springHead" to sprite)
+    SpritesComponent.putUpdateFunction("springHead") { _, _sprite ->
       _sprite as GameSprite
       _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
       _sprite.setFlip(facing == Facing.LEFT, false)
     }
-    return spriteComponent
+    return SpritesComponent
   }
 
   private fun defineAnimationsComponent(): AnimationsComponent {

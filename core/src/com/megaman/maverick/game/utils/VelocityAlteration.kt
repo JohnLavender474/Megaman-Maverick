@@ -9,10 +9,10 @@ enum class VelocityAlterationType {
 }
 
 data class VelocityAlteration(
-    val forceX: Float = 0f,
-    val forceY: Float = 0f,
-    val actionX: VelocityAlterationType = VelocityAlterationType.ADD,
-    val actionY: VelocityAlterationType = VelocityAlterationType.ADD
+    var forceX: Float = 0f,
+    var forceY: Float = 0f,
+    var actionX: VelocityAlterationType = VelocityAlterationType.ADD,
+    var actionY: VelocityAlterationType = VelocityAlterationType.ADD
 ) {
 
   companion object {

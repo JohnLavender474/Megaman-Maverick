@@ -15,10 +15,10 @@ import com.engine.common.interfaces.Updatable
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.damage.IDamager
-import com.engine.drawables.shapes.DrawableShapeComponent
+import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
 import com.engine.updatables.UpdatablesComponent
@@ -176,18 +176,18 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
       }
     }
 
-    addComponent(DrawableShapeComponent(this, debugShapeSuppliers = shapes, debug = true))
+    addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
 
     return BodyComponentCreator.create(this, body)
   }
 
-  override fun defineSpriteComponent(): SpriteComponent {
+  override fun defineSpritesComponent(): SpritesComponent {
     val sprite = GameSprite()
     sprite.setSize(1.5f * ConstVals.PPM)
     sprite.setOriginCenter()
 
-    val spriteComponent = SpriteComponent(this, "suctionRoller" to sprite)
-    spriteComponent.putUpdateFunction("suctionRoller") { _, _sprite ->
+    val SpritesComponent = SpritesComponent(this, "suctionRoller" to sprite)
+    SpritesComponent.putUpdateFunction("suctionRoller") { _, _sprite ->
       _sprite as GameSprite
       _sprite.setFlip(facing == Facing.RIGHT, false)
 
@@ -209,7 +209,7 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
             if (facing == Facing.LEFT) -90f else 90f
           } else 0f
     }
-    return spriteComponent
+    return SpritesComponent
   }
 
   private fun defineAnimationsComponent(): AnimationsComponent {

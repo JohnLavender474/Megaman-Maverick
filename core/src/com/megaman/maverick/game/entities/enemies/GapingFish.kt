@@ -17,12 +17,12 @@ import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
 import com.engine.damage.IDamageable
 import com.engine.damage.IDamager
-import com.engine.drawables.shapes.DrawableShapeComponent
+import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sorting.DrawingPriority
 import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
 import com.engine.updatables.UpdatablesComponent
@@ -137,21 +137,21 @@ class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     body.addFixture(damagerFixture)
     shapes.add { damagerFixture.shape }
 
-    addComponent(DrawableShapeComponent(this, shapes))
+    addComponent(DrawableShapesComponent(this, shapes))
 
     return BodyComponentCreator.create(this, body)
   }
 
-  override fun defineSpriteComponent(): SpriteComponent {
+  override fun defineSpritesComponent(): SpritesComponent {
     val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
     sprite.setSize(1.5f * ConstVals.PPM)
-    val spriteComponent = SpriteComponent(this, "gapingFish" to sprite)
-    spriteComponent.putUpdateFunction("gapingFish") { _, _sprite ->
+    val SpritesComponent = SpritesComponent(this, "gapingFish" to sprite)
+    SpritesComponent.putUpdateFunction("gapingFish") { _, _sprite ->
       _sprite as GameSprite
       _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
       _sprite.setFlip(facing == Facing.LEFT, false)
     }
-    return spriteComponent
+    return SpritesComponent
   }
 
   override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {

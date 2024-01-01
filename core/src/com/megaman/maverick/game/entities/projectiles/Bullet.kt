@@ -10,11 +10,11 @@ import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.damage.IDamageable
-import com.engine.drawables.shapes.DrawableShapeComponent
+import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.sorting.DrawingPriority
 import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
@@ -54,7 +54,7 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity {
   override fun init() {
     defineProjectileComponents().forEach { addComponent(it) }
     addComponent(defineBodyComponent())
-    addComponent(defineSpriteComponent())
+    addComponent(defineSpritesCompoent())
   }
 
   override fun spawn(spawnProps: Properties) {
@@ -126,7 +126,7 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity {
     body.addFixture(damagerFixture)
 
     // Add shapes component
-    addComponent(DrawableShapeComponent(this, { body }))
+    addComponent(DrawableShapesComponent(this, { body }))
 
     return BodyComponentCreator.create(this, body)
   }
@@ -137,18 +137,18 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity {
    *
    * @return The configured sprite component.
    */
-  private fun defineSpriteComponent(): SpriteComponent {
+  private fun defineSpritesCompoent(): SpritesComponent {
     if (bulletRegion == null)
         bulletRegion = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Bullet")
 
     val sprite = GameSprite(bulletRegion!!, DrawingPriority(DrawingSection.PLAYGROUND, 4))
     sprite.setSize(1.25f * ConstVals.PPM, 1.25f * ConstVals.PPM)
 
-    val spriteComponent = SpriteComponent(this, "bullet" to sprite)
-    spriteComponent.putUpdateFunction("bullet") { _, _sprite ->
+    val SpritesComponent = SpritesComponent(this, "bullet" to sprite)
+    SpritesComponent.putUpdateFunction("bullet") { _, _sprite ->
       (_sprite as GameSprite).setPosition(body.getCenter(), Position.CENTER)
     }
 
-    return spriteComponent
+    return SpritesComponent
   }
 }

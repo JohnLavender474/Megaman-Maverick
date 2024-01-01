@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.utils.Array
 import com.engine.common.GameLogger
 import com.engine.common.shapes.GameLine
 import com.engine.common.shapes.GameRectangle
@@ -36,7 +35,7 @@ object StandardPathfinderResultConsumer {
       targetPursuer: GameRectangle = body,
       stopOnTargetReached: Boolean = true,
       stopOnTargetNull: Boolean = true,
-      shapes: Array<IDrawableShape>? = null
+      shapes: MutableCollection<IDrawableShape>? = null
   ): Boolean {
     val (_, worldPath, _) = result
     if (worldPath == null) {

@@ -12,7 +12,7 @@ import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
@@ -49,7 +49,7 @@ class HeartTank(game: MegamanMaverickGame) :
     if (textureRegion == null)
         textureRegion = game.assMan.getTextureRegion(TextureAsset.ITEMS_1.source, "HeartTank")
     addComponent(defineBodyComponent())
-    addComponent(defineSpriteComponent())
+    addComponent(defineSpritesCompoent())
     addComponent(defineAnimationsComponent())
   }
 
@@ -86,15 +86,15 @@ class HeartTank(game: MegamanMaverickGame) :
     return BodyComponentCreator.create(this, body)
   }
 
-  private fun defineSpriteComponent(): SpriteComponent {
+  private fun defineSpritesCompoent(): SpritesComponent {
     val sprite = GameSprite()
     sprite.setSize(1.5f * ConstVals.PPM)
-    val spriteComponent = SpriteComponent(this, "heart" to sprite)
-    spriteComponent.putUpdateFunction("heart") { _, _sprite ->
+    val SpritesComponent = SpritesComponent(this, "heart" to sprite)
+    SpritesComponent.putUpdateFunction("heart") { _, _sprite ->
       _sprite as GameSprite
       _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
     }
-    return spriteComponent
+    return SpritesComponent
   }
 
   private fun defineAnimationsComponent(): AnimationsComponent {

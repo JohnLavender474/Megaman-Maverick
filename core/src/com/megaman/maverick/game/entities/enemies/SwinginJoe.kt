@@ -22,10 +22,10 @@ import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
 import com.engine.damage.IDamageable
 import com.engine.damage.IDamager
-import com.engine.drawables.shapes.DrawableShapeComponent
+import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
 import com.engine.updatables.UpdatablesComponent
@@ -143,22 +143,22 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
       } else damageableFixture.offsetFromBodyCenter.x = 0f
     }
 
-    addComponent(DrawableShapeComponent(this, debugShapeSuppliers = shapes, debug = true))
+    addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
 
     return BodyComponentCreator.create(this, body)
   }
 
-  override fun defineSpriteComponent(): SpriteComponent {
+  override fun defineSpritesComponent(): SpritesComponent {
     val sprite = GameSprite()
     sprite.setSize(2.25f * ConstVals.PPM)
-    val spriteComponent = SpriteComponent(this, "swingin_joe" to sprite)
-    spriteComponent.putUpdateFunction("swingin_joe") { _, _sprite ->
+    val SpritesComponent = SpritesComponent(this, "swingin_joe" to sprite)
+    SpritesComponent.putUpdateFunction("swingin_joe") { _, _sprite ->
       _sprite as GameSprite
       _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
       _sprite.setFlip(facing == Facing.LEFT, false)
       if (facing == Facing.RIGHT) _sprite.translateX(-0.515f * ConstVals.PPM)
     }
-    return spriteComponent
+    return SpritesComponent
   }
 
   override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {

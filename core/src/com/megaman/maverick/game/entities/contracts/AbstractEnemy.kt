@@ -13,7 +13,7 @@ import com.engine.cullables.CullableOnEvent
 import com.engine.cullables.CullablesComponent
 import com.engine.damage.IDamageable
 import com.engine.damage.IDamager
-import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.SpritesComponent
 import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IAudioEntity
@@ -65,7 +65,7 @@ abstract class AbstractEnemy(game: MegamanMaverickGame, private val cullTime: Fl
   override fun init() {
     addComponent(definePointsComponent())
     addComponent(defineBodyComponent())
-    addComponent(defineSpriteComponent())
+    addComponent(defineSpritesComponent())
     addComponent(AudioComponent(this))
 
     val cullablesComponent = CullablesComponent(this)
@@ -125,7 +125,7 @@ abstract class AbstractEnemy(game: MegamanMaverickGame, private val cullTime: Fl
 
   protected abstract fun defineBodyComponent(): BodyComponent
 
-  protected abstract fun defineSpriteComponent(): SpriteComponent
+  protected abstract fun defineSpritesComponent(): SpritesComponent
 
   override fun canBeDamagedBy(damager: IDamager) =
       !invincible && damageNegotiations.containsKey(damager::class)

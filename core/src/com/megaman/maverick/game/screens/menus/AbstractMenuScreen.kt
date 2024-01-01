@@ -4,7 +4,7 @@ import com.badlogic.gdx.utils.ObjectMap
 import com.engine.common.enums.Direction
 import com.engine.screens.BaseScreen
 import com.engine.screens.menus.IMenuButton
-import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.ControllerButton
 import com.megaman.maverick.game.MegamanMaverickGame
 
 abstract class AbstractMenuScreen(game: MegamanMaverickGame, protected val firstButtonKey: String) :
@@ -36,10 +36,13 @@ abstract class AbstractMenuScreen(game: MegamanMaverickGame, protected val first
     val menuButton = menuButtons.get(currentButtonKey)
     menuButton?.let {
       val direction =
-          if (game.controllerPoller.isButtonJustPressed(ConstKeys.UP)) Direction.UP
-          else if (game.controllerPoller.isButtonJustPressed(ConstKeys.DOWN)) Direction.DOWN
-          else if (game.controllerPoller.isButtonJustPressed(ConstKeys.LEFT)) Direction.LEFT
-          else if (game.controllerPoller.isButtonJustPressed(ConstKeys.RIGHT)) Direction.RIGHT
+          if (game.controllerPoller.isButtonJustPressed(ControllerButton.UP.name)) Direction.UP
+          else if (game.controllerPoller.isButtonJustPressed(ControllerButton.DOWN.name))
+              Direction.DOWN
+          else if (game.controllerPoller.isButtonJustPressed(ControllerButton.LEFT.name))
+              Direction.LEFT
+          else if (game.controllerPoller.isButtonJustPressed(ControllerButton.RIGHT.name))
+              Direction.RIGHT
           else null
 
       direction?.let { d ->
@@ -47,8 +50,8 @@ abstract class AbstractMenuScreen(game: MegamanMaverickGame, protected val first
         menuButton.onNavigate(d, delta)?.let { currentButtonKey = it }
       }
 
-      if (game.controllerPoller.isButtonJustPressed(ConstKeys.START) ||
-          game.controllerPoller.isButtonJustPressed(ConstKeys.A))
+      if (game.controllerPoller.isButtonJustPressed(ControllerButton.START.name) ||
+          game.controllerPoller.isButtonJustPressed(ControllerButton.A.name))
           if (onAnySelection()) selectionMade = menuButton.onSelect(delta)
     }
   }

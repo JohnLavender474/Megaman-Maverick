@@ -16,7 +16,7 @@ import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.damage.IDamageable
 import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
@@ -65,7 +65,7 @@ class JoeBall(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity {
         snowJoeBallReg =
             game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "SnowJoeball")
     addComponent(defineBodyComponent())
-    addComponent(defineSpriteComponent())
+    addComponent(defineSpritesCompoent())
     addComponent(defineAnimationsComponent())
   }
 
@@ -132,17 +132,17 @@ class JoeBall(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity {
     return BodyComponentCreator.create(this, body)
   }
 
-  private fun defineSpriteComponent(): SpriteComponent {
+  private fun defineSpritesCompoent(): SpritesComponent {
     val sprite = GameSprite()
     sprite.setSize(1.25f * ConstVals.PPM)
-    val spriteComponent = SpriteComponent(this, "joeBall" to sprite)
-    spriteComponent.putUpdateFunction("joeBall") { _, _sprite ->
+    val SpritesComponent = SpritesComponent(this, "joeBall" to sprite)
+    SpritesComponent.putUpdateFunction("joeBall") { _, _sprite ->
       _sprite as GameSprite
       _sprite.setFlip(trajectory.x < 0f, false)
       val center = body.getCenter()
       _sprite.setCenter(center.x, center.y)
     }
-    return spriteComponent
+    return SpritesComponent
   }
 
   private fun defineAnimationsComponent(): AnimationsComponent {

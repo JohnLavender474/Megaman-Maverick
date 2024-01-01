@@ -14,7 +14,7 @@ import com.engine.common.objects.props
 import com.engine.drawables.sorting.DrawingPriority
 import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.ISpriteEntity
@@ -37,7 +37,7 @@ class SmokePuff(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity {
     if (smokePuffRegion == null)
         smokePuffRegion =
             game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "SmokePuff")
-    addComponent(defineSpriteComponent())
+    addComponent(defineSpritesCompoent())
     addComponent(defineAnimationsComponent())
     addComponent(defineUpdatablesComponent())
   }
@@ -54,10 +54,10 @@ class SmokePuff(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity {
     return AnimationsComponent(this, animator)
   }
 
-  private fun defineSpriteComponent(): SpriteComponent {
+  private fun defineSpritesCompoent(): SpritesComponent {
     val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 3))
     sprite.setSize(ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
-    return SpriteComponent(this, "smoke_puff" to sprite)
+    return SpritesComponent(this, "smoke_puff" to sprite)
   }
 
   private fun defineUpdatablesComponent() =

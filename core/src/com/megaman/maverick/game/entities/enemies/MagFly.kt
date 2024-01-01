@@ -14,10 +14,10 @@ import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
 import com.engine.damage.IDamager
-import com.engine.drawables.shapes.DrawableShapeComponent
+import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setSize
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.Body
@@ -148,22 +148,22 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     damagerFixture.shape.color = Color.RED
     shapes.add { damagerFixture.shape }
 
-    addComponent(DrawableShapeComponent(this, debugShapeSuppliers = shapes, debug = true))
+    addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
 
     return BodyComponentCreator.create(this, body)
   }
 
-  override fun defineSpriteComponent(): SpriteComponent {
+  override fun defineSpritesComponent(): SpritesComponent {
     val sprite = GameSprite()
     sprite.setSize(1.5f * ConstVals.PPM)
-    val spriteComponent = SpriteComponent(this, "magfly" to sprite)
-    spriteComponent.putUpdateFunction("magfly") { _, _sprite ->
+    val SpritesComponent = SpritesComponent(this, "magfly" to sprite)
+    SpritesComponent.putUpdateFunction("magfly") { _, _sprite ->
       _sprite as GameSprite
       val center = body.getCenter()
       _sprite.setCenter(center.x, center.y)
       _sprite.setFlip(facing == Facing.LEFT, false)
     }
-    return spriteComponent
+    return SpritesComponent
   }
 
   override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {

@@ -17,9 +17,9 @@ import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.damage.IDamageable
-import com.engine.drawables.shapes.DrawableShapeComponent
+import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
@@ -82,7 +82,7 @@ class ChargedShot(game: MegamanMaverickGame) : GameEntity(game), IProjectileEnti
 
     defineProjectileComponents().forEach { addComponent(it) }
     addComponent(defineBodyComponent())
-    addComponent(defineSpriteComponent())
+    addComponent(defineSpritesCompoent())
     addComponent(defineAnimationsComponent())
     addComponent(defineUpdatablesComponent())
   }
@@ -190,7 +190,7 @@ class ChargedShot(game: MegamanMaverickGame) : GameEntity(game), IProjectileEnti
     body.addFixture(damagerFixture)
 
     // add drawable shape component for debugging
-    addComponent(DrawableShapeComponent(this, { body }))
+    addComponent(DrawableShapesComponent(this, { body }))
 
     return BodyComponentCreator.create(this, body)
   }
@@ -217,13 +217,13 @@ class ChargedShot(game: MegamanMaverickGame) : GameEntity(game), IProjectileEnti
    *
    * @return The configured sprite component.
    */
-  private fun defineSpriteComponent(): SpriteComponent {
+  private fun defineSpritesCompoent(): SpritesComponent {
     val sprite = GameSprite()
-    val spriteComponent = SpriteComponent(this, "shot" to sprite)
-    spriteComponent.putUpdateFunction("shot") { _, _sprite ->
+    val SpritesComponent = SpritesComponent(this, "shot" to sprite)
+    SpritesComponent.putUpdateFunction("shot") { _, _sprite ->
       _sprite.setFlip(facing == Facing.LEFT, false)
       (_sprite as GameSprite).setPosition(body.getCenter(), Position.CENTER)
     }
-    return spriteComponent
+    return SpritesComponent
   }
 }

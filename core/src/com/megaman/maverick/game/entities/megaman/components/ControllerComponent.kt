@@ -6,6 +6,7 @@ import com.engine.controller.ControllerComponent
 import com.engine.controller.buttons.ButtonActuator
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
+import com.megaman.maverick.game.ControllerButton
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman
@@ -24,9 +25,11 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
             GameLogger.debug(Megaman.TAG, "left controller button just pressed")
           },
           onPressContinued = { poller, delta ->
-            if (damaged || poller.isButtonPressed(ConstKeys.RIGHT)) return@ButtonActuator
+            if (damaged || poller.isButtonPressed(ControllerButton.RIGHT.name))
+                return@ButtonActuator
 
             facing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) Facing.RIGHT else Facing.LEFT
+            if (isBehaviorActive(BehaviorType.CLIMBING)) return@ButtonActuator
             running = !isBehaviorActive(BehaviorType.WALL_SLIDING)
 
             val threshold =
@@ -42,10 +45,10 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
           },
           onJustReleased = { poller ->
             GameLogger.debug(Megaman.TAG, "left controller button just released")
-            if (!poller.isButtonPressed(ConstKeys.RIGHT)) running = false
+            if (!poller.isButtonPressed(ControllerButton.RIGHT.name)) running = false
           },
           onReleaseContinued = { poller, _ ->
-            if (!poller.isButtonPressed(ConstKeys.RIGHT)) running = false
+            if (!poller.isButtonPressed(ControllerButton.RIGHT.name)) running = false
           })
 
   // right
@@ -58,6 +61,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
             if (damaged || poller.isButtonPressed(ConstKeys.LEFT)) return@ButtonActuator
 
             facing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) Facing.LEFT else Facing.RIGHT
+            if (isBehaviorActive(BehaviorType.CLIMBING)) return@ButtonActuator
             running = !isBehaviorActive(BehaviorType.WALL_SLIDING)
 
             val threshold =
@@ -73,10 +77,10 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
           },
           onJustReleased = { poller ->
             GameLogger.debug(Megaman.TAG, "right controller button just released")
-            if (!poller.isButtonPressed(ConstKeys.LEFT)) running = false
+            if (!poller.isButtonPressed(ControllerButton.LEFT.name)) running = false
           },
           onReleaseContinued = { poller, _ ->
-            if (!poller.isButtonPressed(ConstKeys.LEFT)) running = false
+            if (!poller.isButtonPressed(ControllerButton.LEFT.name)) running = false
           })
 
   // attack
@@ -125,8 +129,8 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
 
   return ControllerComponent(
       this,
-      ConstKeys.LEFT to left,
-      ConstKeys.RIGHT to right,
-      ConstKeys.A to attack,
-      ConstKeys.SELECT to select)
+      ControllerButton.LEFT.name to left,
+      ControllerButton.RIGHT.name to right,
+      ControllerButton.A.name to attack,
+      ControllerButton.SELECT.name to select)
 }

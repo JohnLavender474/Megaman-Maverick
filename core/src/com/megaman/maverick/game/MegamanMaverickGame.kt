@@ -6,7 +6,7 @@ import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.ObjectSet
 import com.badlogic.gdx.utils.viewport.FitViewport
@@ -25,10 +25,10 @@ import com.engine.controller.ControllerUtils
 import com.engine.controller.buttons.Button
 import com.engine.controller.buttons.Buttons
 import com.engine.cullables.CullablesSystem
-import com.engine.drawables.shapes.DrawableShapeSystem
+import com.engine.drawables.shapes.DrawableShapesSystem
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.ISprite
-import com.engine.drawables.sprites.SpriteSystem
+import com.engine.drawables.sprites.SpritesSystem
 import com.engine.graph.IGraphMap
 import com.engine.motion.MotionSystem
 import com.engine.pathfinding.Pathfinder
@@ -43,6 +43,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.special.Water
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
@@ -67,6 +68,8 @@ class MegamanMaverickGame : Game2D() {
   lateinit var megaman: Megaman
   lateinit var audioMan: MegaAudioManager
 
+  override lateinit var shapeRenderer: ShapeRenderer
+
   fun startLevelScreen(level: Level) {
     val levelScreen = screens.get(ScreenEnum.LEVEL.name) as MegaLevelScreen
     levelScreen.tmxMapSource = level.tmxSourceFile
@@ -80,7 +83,7 @@ class MegamanMaverickGame : Game2D() {
 
   fun getSprites() = properties.get(ConstKeys.SPRITES) as MutableCollection<ISprite>
 
-  fun getShapes() = properties.get(ConstKeys.SHAPES) as Array<IDrawableShape>
+  fun getShapes() = properties.get(ConstKeys.SHAPES) as PriorityQueue<IDrawableShape>
 
   fun getSystems(): ObjectMap<String, IGameSystem> =
       properties.get(ConstKeys.SYSTEMS) as ObjectMap<String, IGameSystem>
@@ -94,7 +97,10 @@ class MegamanMaverickGame : Game2D() {
 
     GameLogger.set(GameLogLevel.ERROR)
     GameLogger.filterByTag = true
-    GameLogger.tagsToLog.addAll(MainScreen.TAG)
+    GameLogger.tagsToLog.addAll(Water.TAG)
+
+    shapeRenderer = ShapeRenderer()
+    shapeRenderer.setAutoShapeType(true)
 
     val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
     val screenHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
@@ -116,29 +122,30 @@ class MegamanMaverickGame : Game2D() {
     megaman.init()
     megaman.initialized = true
 
+    // startLevelScreen(Level.TEST1)
     startLevelScreen(Level.TEST5)
     // setCurrentScreen(ScreenEnum.MAIN.name)
   }
 
   override fun createButtons(): Buttons {
     val buttons = Buttons()
-    buttons.put(ConstKeys.LEFT, Button(Input.Keys.A))
-    buttons.put(ConstKeys.RIGHT, Button(Input.Keys.D))
-    buttons.put(ConstKeys.UP, Button(Input.Keys.W))
-    buttons.put(ConstKeys.DOWN, Button(Input.Keys.S))
-    buttons.put(ConstKeys.A, Button(Input.Keys.J))
-    buttons.put(ConstKeys.B, Button(Input.Keys.K))
-    buttons.put(ConstKeys.START, Button(Input.Keys.ENTER))
+    buttons.put(ControllerButton.LEFT.name, Button(Input.Keys.A))
+    buttons.put(ControllerButton.RIGHT.name, Button(Input.Keys.D))
+    buttons.put(ControllerButton.UP.name, Button(Input.Keys.W))
+    buttons.put(ControllerButton.DOWN.name, Button(Input.Keys.S))
+    buttons.put(ControllerButton.A.name, Button(Input.Keys.J))
+    buttons.put(ControllerButton.B.name, Button(Input.Keys.K))
+    buttons.put(ControllerButton.START.name, Button(Input.Keys.ENTER))
     if (ControllerUtils.isControllerConnected()) {
       val mapping = ControllerUtils.getController()?.mapping
       if (mapping != null) {
-        buttons.get(ConstKeys.LEFT)?.controllerCode = mapping.buttonDpadLeft
-        buttons.get(ConstKeys.RIGHT)?.controllerCode = mapping.buttonDpadRight
-        buttons.get(ConstKeys.UP)?.controllerCode = mapping.buttonDpadUp
-        buttons.get(ConstKeys.DOWN)?.controllerCode = mapping.buttonDpadDown
-        buttons.get(ConstKeys.A)?.controllerCode = mapping.buttonA
-        buttons.get(ConstKeys.B)?.controllerCode = mapping.buttonX
-        buttons.get(ConstKeys.START).controllerCode = mapping.buttonStart
+        buttons.get(ControllerButton.LEFT.name)?.controllerCode = mapping.buttonDpadLeft
+        buttons.get(ControllerButton.RIGHT.name)?.controllerCode = mapping.buttonDpadRight
+        buttons.get(ControllerButton.UP.name)?.controllerCode = mapping.buttonDpadUp
+        buttons.get(ControllerButton.DOWN.name)?.controllerCode = mapping.buttonDpadDown
+        buttons.get(ControllerButton.A.name)?.controllerCode = mapping.buttonA
+        buttons.get(ControllerButton.B.name)?.controllerCode = mapping.buttonX
+        buttons.get(ControllerButton.START.name).controllerCode = mapping.buttonStart
       }
     }
     return buttons
@@ -162,7 +169,8 @@ class MegamanMaverickGame : Game2D() {
   override fun createGameEngine(): IGameEngine {
     val sprites = PriorityQueue<ISprite>()
     properties.put(ConstKeys.SPRITES, sprites)
-    val shapes = Array<IDrawableShape>()
+    val shapes =
+        PriorityQueue<IDrawableShape> { s1, s2 -> s1.shapeType.ordinal - s2.shapeType.ordinal }
     properties.put(ConstKeys.SHAPES, shapes)
 
     val contactFilterMap =
@@ -193,15 +201,15 @@ class MegamanMaverickGame : Game2D() {
                 MegaContactListener(this),
                 { getGraphMap() },
                 ConstVals.FIXED_TIME_STEP,
-                MegaCollisionHandler(),
+                MegaCollisionHandler(this),
                 contactFilterMap),
             CullablesSystem(),
             MotionSystem(),
             PathfindingSystem { Pathfinder(getGraphMap()!!, it.params) },
             PointsSystem(),
             UpdatablesSystem(),
-            SpriteSystem { sprites },
-            DrawableShapeSystem({ shapes }, DEBUG_SHAPES),
+            SpritesSystem { sprites },
+            DrawableShapesSystem({ shapes }, DEBUG_SHAPES),
             AudioSystem(
                 { audioMan.playSound(it.source, it.loop) },
                 { audioMan.playMusic(it.source, it.loop) },

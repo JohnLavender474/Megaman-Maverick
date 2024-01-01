@@ -1,7 +1,7 @@
 package com.megaman.maverick.game.screens.levels
 
 import com.badlogic.gdx.utils.OrderedMap
-import com.engine.drawables.sprites.SpriteSystem
+import com.engine.drawables.sprites.SpritesSystem
 import com.engine.systems.IGameSystem
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
@@ -15,7 +15,7 @@ class LevelStateHandler(private val game: MegamanMaverickGame) {
 
     game.gameEngine.systems.forEach {
       systemsOnPause.put(it, it.on)
-      if (it !is SpriteSystem) it.on = false
+      if (it !is SpritesSystem) it.on = false
     }
 
     game.audioMan.pauseAllSound()

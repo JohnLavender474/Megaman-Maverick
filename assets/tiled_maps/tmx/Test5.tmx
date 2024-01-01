@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="300" height="350" tilewidth="32" tileheight="32" infinite="0" nextlayerid="19" nextobjectid="280">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="300" height="350" tilewidth="32" tileheight="32" infinite="0" nextlayerid="19" nextobjectid="284">
  <tileset firstgid="1" source="../tsx/GearTrolley.tsx"/>
  <tileset firstgid="13" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1037" source="../tsx/Blizzardman.tsx"/>
@@ -23,7 +23,7 @@
   <object id="232" name="Bat" x="1120" y="9248" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="9" name="player">
-  <object id="91" name="0" x="64" y="9408" width="32" height="32"/>
+  <object id="91" name="0" x="3224" y="9376" width="32" height="32"/>
   <object id="122" name="1" x="3232" y="9376" width="32" height="32"/>
   <object id="258" name="2" x="1280" y="9792" width="32" height="32"/>
  </objectgroup>
@@ -39,61 +39,68 @@
  <objectgroup id="16" name="hazards">
   <object id="196" name="Saw" x="2400" y="9312" width="32" height="32">
    <properties>
-    <property name="SpawnRoom" value="Room2"/>
-    <property name="SpawnType" value="SpawnRoom"/>
-    <property name="Type" value="P"/>
+    <property name="spawn_room" value="Room2"/>
+    <property name="spawn_type" value="SpawnRoom"/>
+    <property name="type" value="P"/>
+   </properties>
+  </object>
+  <object id="280" name="Saw" x="288" y="9280" width="32" height="32">
+   <properties>
+    <property name="spawn_room" value="Room2"/>
+    <property name="spawn_type" value="SpawnRoom"/>
+    <property name="type" value="P"/>
    </properties>
   </object>
   <object id="162" name="Saw" x="2496" y="9760" width="32" height="32">
    <properties>
-    <property name="SpawnRoom" value="Room4"/>
-    <property name="SpawnType" value="SpawnRoom"/>
-    <property name="Type" value="R"/>
+    <property name="spawn_room" value="Room4"/>
+    <property name="spawn_type" value="SpawnRoom"/>
+    <property name="type" value="R"/>
    </properties>
   </object>
   <object id="214" name="Saw" x="1152" y="9984" width="32" height="32">
    <properties>
-    <property name="SpawnRoom" value="Room5"/>
-    <property name="SpawnType" value="SpawnRoom"/>
-    <property name="Type" value="R"/>
+    <property name="spawn_room" value="Room5"/>
+    <property name="spawn_type" value="SpawnRoom"/>
+    <property name="type" value="R"/>
    </properties>
   </object>
   <object id="225" name="Saw" x="1872" y="10376" width="32" height="24">
    <properties>
-    <property name="SpawnRoom" value="Room6"/>
-    <property name="SpawnType" value="SpawnRoom"/>
-    <property name="Type" value="R"/>
+    <property name="spawn_room" value="Room6"/>
+    <property name="spawn_type" value="SpawnRoom"/>
+    <property name="type" value="R"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup id="18" name="items">
   <object id="271" name="HeartTank" x="3136" y="9280" width="32" height="32">
    <properties>
-    <property name="Val" value="A"/>
+    <property name="value" value="A"/>
    </properties>
   </object>
   <object id="272" name="HeartTank" x="1024" y="9792" width="32" height="32">
    <properties>
-    <property name="Val" value="B"/>
+    <property name="value" value="B"/>
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="4" name="special">
-  <object id="76" name="Water" x="3328" y="9440" width="320" height="160"/>
-  <object id="81" name="Water" x="3936" y="9440" width="352" height="160"/>
+ <objectgroup id="4" name="specials">
   <object id="82" name="SpringBouncer" x="4136" y="9536" width="16" height="32">
    <properties>
-    <property name="Dir" value="Up"/>
+    <property name="direction" value="up"/>
    </properties>
   </object>
   <object id="110" name="Water" x="3488" y="9792" width="1024" height="192"/>
   <object id="274" name="Ladder" x="3624" y="9280" width="16" height="288"/>
   <object id="276" name="Ladder" x="3496" y="9632" width="16" height="320"/>
+  <object id="282" name="Water" x="3328" y="9440" width="320" height="160"/>
+  <object id="283" name="Water" x="3936" y="9440" width="352" height="160"/>
  </objectgroup>
  <objectgroup id="17" name="sensors">
   <object id="260" name="Gate" x="1344" y="10432" width="64" height="96">
    <properties>
-    <property name="Room" value="Room6"/>
+    <property name="room" value="Room6"/>
    </properties>
   </object>
   <object id="236" name="Death" x="480" y="9568" width="1312" height="32"/>
@@ -117,12 +124,12 @@
   <object id="5" x="0" y="9440" width="480" height="224"/>
   <object id="26" name="ConveyorBelt" x="608" y="9456" width="96" height="16">
    <properties>
-    <property name="Left" type="bool" value="true"/>
+    <property name="left" type="bool" value="true"/>
    </properties>
   </object>
   <object id="27" name="ConveyorBelt" x="896" y="9392" width="128" height="16">
    <properties>
-    <property name="Left" type="bool" value="true"/>
+    <property name="left" type="bool" value="true"/>
    </properties>
   </object>
   <object id="28" x="544" y="9152" width="1280" height="96"/>
@@ -133,12 +140,12 @@
   <object id="44" x="736" y="9152" width="192" height="128"/>
   <object id="53" name="ConveyorBelt" x="768" y="9456" width="96" height="16">
    <properties>
-    <property name="Left" type="bool" value="false"/>
+    <property name="left" type="bool" value="false"/>
    </properties>
   </object>
   <object id="54" name="ConveyorBelt" x="1088" y="9408" width="64" height="16">
    <properties>
-    <property name="Left" type="bool" value="false"/>
+    <property name="left" type="bool" value="false"/>
    </properties>
   </object>
   <object id="55" name="IceBlock" x="2240" y="9472" width="384" height="64"/>

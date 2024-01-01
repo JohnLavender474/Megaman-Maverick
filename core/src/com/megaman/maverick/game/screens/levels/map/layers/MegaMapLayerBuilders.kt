@@ -32,7 +32,7 @@ class MegaMapLayerBuilders(private val params: MegaMapLayerBuildersParams) :
     layerBuilders.put(ConstKeys.BACKGROUNDS, BackgroundLayerBuilder(params))
     layerBuilders.put(ConstKeys.FOREGROUNDS, ForegroundLayerBuilder(params))
     layerBuilders.put(ConstKeys.GAME_ROOMS, GameRoomsLayerBuilder())
-    // TODO: layerBuilders.put(ConstKeys.HAZARDS, HazardsLayerBuilder(params))
+    layerBuilders.put(ConstKeys.HAZARDS, SpawnersLayerBuilder(params))
     layerBuilders.put(ConstKeys.SPECIALS, SpawnersLayerBuilder(params))
     layerBuilders.put(ConstKeys.SENSORS, SensorsLayerBuilder(params.game))
   }

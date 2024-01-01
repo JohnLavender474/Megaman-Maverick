@@ -11,10 +11,10 @@ import com.engine.animations.IAnimator
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
-import com.engine.drawables.shapes.DrawableShapeComponent
+import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.ISprite
-import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.SpritesComponent
 import com.engine.entities.contracts.ISpriteEntity
 import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
@@ -61,7 +61,7 @@ class ConveyorBelt(game: MegamanMaverickGame) : ISpriteEntity, Block(game) {
       forceFixture!!.offsetFromBodyCenter.y = ConstVals.PPM / 8f
       body.addFixture(forceFixture!!)
 
-      getComponent(DrawableShapeComponent::class)?.debugShapeSuppliers?.add { forceFixture!!.shape }
+      getComponent(DrawableShapesComponent::class)?.debugShapeSuppliers?.add { forceFixture!!.shape }
     }
 
     val bounds = spawnProps.get(ConstKeys.BOUNDS) as Rectangle
@@ -97,7 +97,7 @@ class ConveyorBelt(game: MegamanMaverickGame) : ISpriteEntity, Block(game) {
       animators.add({ sprite } to Animator(animation))
     }
 
-    addComponent(SpriteComponent(this, sprites))
+    addComponent(SpritesComponent(this, sprites))
     addComponent(AnimationsComponent(this, animators))
   }
 }

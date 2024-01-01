@@ -9,7 +9,7 @@ import com.engine.common.objects.props
 import com.engine.common.time.TimeMarkedRunnable
 import com.engine.common.time.Timer
 import com.engine.drawables.IDrawable
-import com.engine.drawables.sprites.SpriteSystem
+import com.engine.drawables.sprites.SpritesSystem
 import com.engine.events.Event
 import com.engine.systems.IGameSystem
 import com.megaman.maverick.game.ConstKeys
@@ -113,7 +113,7 @@ class PlayerStatsHandler(private val megaman: Megaman) :
 
     systemStates = ObjectMap()
     engine.systems.forEach { systemStates!!.put(it, it.on) }
-    engine.systems.forEach { if (it !is SpriteSystem) it.on = false }
+    engine.systems.forEach { if (it !is SpritesSystem) it.on = false }
   }
 
   fun attain(healthTank: MegaHealthTank) {
@@ -158,7 +158,7 @@ class PlayerStatsHandler(private val megaman: Megaman) :
 
     systemStates = ObjectMap()
     engine.systems.forEach { systemStates!!.put(it, it.on) }
-    engine.systems.forEach { if (it !is SpriteSystem) it.on = false }
+    engine.systems.forEach { if (it !is SpritesSystem) it.on = false }
   }
 
   override fun update(delta: Float) {

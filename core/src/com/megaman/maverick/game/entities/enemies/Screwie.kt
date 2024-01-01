@@ -19,10 +19,10 @@ import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.TimeMarkedRunnable
 import com.engine.common.time.Timer
 import com.engine.damage.IDamager
-import com.engine.drawables.shapes.DrawableShapeComponent
+import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
 import com.engine.updatables.UpdatablesComponent
@@ -146,7 +146,7 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
       }
     }
 
-    addComponent(DrawableShapeComponent(this, debugShapeSuppliers = shapes, debug = true))
+    addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
 
     return BodyComponentCreator.create(this, body)
   }
@@ -170,18 +170,18 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
     }
   }
 
-  override fun defineSpriteComponent(): SpriteComponent {
+  override fun defineSpritesComponent(): SpritesComponent {
     val sprite = GameSprite()
     sprite.setSize(1.35f * ConstVals.PPM)
-    val spriteComponent = SpriteComponent(this, "screwie" to sprite)
-    spriteComponent.putUpdateFunction("screwie") { _, _sprite ->
+    val SpritesComponent = SpritesComponent(this, "screwie" to sprite)
+    SpritesComponent.putUpdateFunction("screwie") { _, _sprite ->
       _sprite as GameSprite
       val position = if (upsideDown) Position.TOP_CENTER else Position.BOTTOM_CENTER
       val bodyPosition = body.getPositionPoint(position)
       _sprite.setPosition(bodyPosition, position)
       _sprite.setFlip(false, upsideDown)
     }
-    return spriteComponent
+    return SpritesComponent
   }
 
   private fun defineAnimationsComponent(): AnimationsComponent {

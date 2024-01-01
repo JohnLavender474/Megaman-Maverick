@@ -1,50 +1,64 @@
 package com.megaman.maverick.game.world
 
 import com.engine.world.Body
+import com.engine.world.BodyType
 import com.engine.world.ICollisionHandler
 import com.engine.world.StandardCollisionHandler
+import com.megaman.maverick.game.ControllerButton
+import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.behaviors.BehaviorType
 
-/**
- * Implementation of [ICollisionHandler] that calls a setBodySense of special collision rules if certain
- * conditions are met and otherwise uses the default collision handling of
- * [StandardCollisionHandler].
- */
-class MegaCollisionHandler : ICollisionHandler {
+class MegaCollisionHandler(private val game: MegamanMaverickGame) : ICollisionHandler {
 
-  override fun handleCollision(body1: Body, body2: Body): Boolean {
-    // handle special collection:
-    // check if body1 or body2 is megaman and the specific conditions are met, then handle the
-    // collision, otherwise use the default collision handler
-    return StandardCollisionHandler.handleCollision(body1, body2)
-    /*
-    Megaman megaman = game.getMegaman();
-    if (staticBody.labels.contains(BodyLabel.PRESS_UP_FALL_THRU) && dynamicBody == megaman.body &&
-            !megaman.is(BehaviorType.CLIMBING) && game.getCtrlMan().isJustPressed(CtrlBtn.DPAD_UP)) {
-        dynamicBody.setMaxY(staticBody.getMaxY());
-        return true;
+  private fun trySpecialCollission(body1: Body, body2: Body): Boolean {
+    val megaman = game.megaman
+
+    val staticBody: Body
+    val dynamicBody: Body
+
+    if (body1.bodyType == BodyType.STATIC && body2.bodyType == BodyType.DYNAMIC) {
+      staticBody = body1
+      dynamicBody = body2
+    } else if (body2.bodyType == BodyType.STATIC && body1.bodyType == BodyType.DYNAMIC) {
+      staticBody = body2
+      dynamicBody = body1
+    } else return false
+
+    if (staticBody.hasBodyLabel(BodyLabel.PRESS_UP_FALL_THRU) &&
+        dynamicBody == megaman.body &&
+        !megaman.isBehaviorActive(BehaviorType.CLIMBING) &&
+        game.controllerPoller.isButtonJustPressed(ControllerButton.UP.name)) {
+      dynamicBody.setMaxY(staticBody.getMaxY())
+      return true
     }
-    if (staticBody.labels.contains(BodyLabel.COLLIDE_DOWN_ONLY)) {
-        if (dynamicBody == megaman.body && megaman.is(BehaviorType.CLIMBING)) {
-            return true;
-        }
-        if (dynamicBody.is(BodySense.FEET_ON_GROUND)) {
-            dynamicBody.setY(staticBody.getMaxY());
-            dynamicBody.resistance.x += staticBody.friction.x;
-            return true;
-        }
-        return dynamicBody.getY() < staticBody.getMaxY();
-    } else if (staticBody.labels.contains(BodyLabel.COLLIDE_UP_ONLY)) {
-        if (dynamicBody == megaman.body && megaman.is(BehaviorType.CLIMBING)) {
-            return true;
-        }
-        if (dynamicBody.is(BodySense.FEET_ON_GROUND)) {
-            dynamicBody.setMaxY(staticBody.getY());
-            dynamicBody.resistance.x += staticBody.friction.x;
-            return true;
-        }
-        return dynamicBody.getMaxY() > staticBody.getY();
+
+    if (staticBody.hasBodyLabel(BodyLabel.COLLIDE_DOWN_ONLY)) {
+      if (dynamicBody == megaman.body && megaman.isBehaviorActive(BehaviorType.CLIMBING))
+          return true
+
+      if (dynamicBody.isSensing(BodySense.FEET_ON_GROUND)) {
+        dynamicBody.setY(staticBody.getMaxY())
+        dynamicBody.physics.frictionOnSelf.x += staticBody.physics.frictionToApply.x
+        return true
+      }
+
+      return dynamicBody.getY() < staticBody.getMaxY()
+    } else if (staticBody.hasBodyLabel(BodyLabel.COLLIDE_UP_ONLY)) {
+      if (dynamicBody == megaman.body && megaman.isBehaviorActive(BehaviorType.CLIMBING))
+          return true
+
+      if (dynamicBody.isSensing(BodySense.FEET_ON_GROUND)) {
+        dynamicBody.setMaxY(staticBody.getY())
+        dynamicBody.physics.frictionOnSelf.x += staticBody.physics.frictionToApply.x
+        return true
+      }
+
+      return dynamicBody.getMaxY() > staticBody.getY()
     }
-    return false;
-     */
+
+    return false
   }
+
+  override fun handleCollision(body1: Body, body2: Body) =
+      trySpecialCollission(body1, body2) || StandardCollisionHandler.handleCollision(body1, body2)
 }

@@ -14,9 +14,9 @@ import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
 import com.engine.damage.IDamager
-import com.engine.drawables.shapes.DrawableShapeComponent
+import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
 import com.engine.pathfinding.PathfinderParams
@@ -174,22 +174,22 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
     }
 
     addComponent(
-        DrawableShapeComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
+        DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
 
     return BodyComponentCreator.create(this, body)
   }
 
-  override fun defineSpriteComponent(): SpriteComponent {
+  override fun defineSpritesComponent(): SpritesComponent {
     val sprite = GameSprite()
     sprite.setSize(1.5f * ConstVals.PPM)
 
-    val spriteComponent = SpriteComponent(this, "bat" to sprite)
-    spriteComponent.putUpdateFunction("bat") { _, _sprite ->
+    val SpritesComponent = SpritesComponent(this, "bat" to sprite)
+    SpritesComponent.putUpdateFunction("bat") { _, _sprite ->
       _sprite as GameSprite
       _sprite.setPosition(body.getCenter(), Position.CENTER)
       // TODO: _sprite.hidden = damageBlink
     }
-    return spriteComponent
+    return SpritesComponent
   }
 
   private fun defineAnimationsComponent(): AnimationsComponent {

@@ -16,7 +16,7 @@ import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
 import com.engine.damage.IDamager
 import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setSize
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.Body
@@ -138,17 +138,17 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
     }
   }
 
-  override fun defineSpriteComponent(): SpriteComponent {
+  override fun defineSpritesComponent(): SpritesComponent {
     val sprite = GameSprite()
     sprite.setSize(1.5f * ConstVals.PPM)
-    val spriteComponent = SpriteComponent(this, "shieldattacker" to sprite)
-    spriteComponent.putUpdateFunction("shieldattacker") { _, _sprite ->
+    val SpritesComponent = SpritesComponent(this, "shieldattacker" to sprite)
+    SpritesComponent.putUpdateFunction("shieldattacker") { _, _sprite ->
       _sprite as GameSprite
       _sprite.setFlip(turningAround != left, false)
       val center = body.getCenter()
       _sprite.setCenter(center.x, center.y)
     }
-    return spriteComponent
+    return SpritesComponent
   }
 
   private fun defineAnimationsComponent(): AnimationsComponent {

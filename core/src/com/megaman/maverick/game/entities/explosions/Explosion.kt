@@ -17,7 +17,7 @@ import com.engine.damage.IDamager
 import com.engine.drawables.sorting.DrawingPriority
 import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
@@ -50,7 +50,7 @@ class Explosion(game: MegamanMaverickGame) :
         explosionRegion =
             game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "Explosion")
 
-    addComponent(defineSpriteComponent())
+    addComponent(defineSpritesCompoent())
     addComponent(defineBodyComponent())
     addComponent(defineAnimationsComponent())
     addComponent(defineUpdatablesComponent())
@@ -93,18 +93,18 @@ class Explosion(game: MegamanMaverickGame) :
     return AnimationsComponent(this, animator)
   }
 
-  private fun defineSpriteComponent(): SpriteComponent {
+  private fun defineSpritesCompoent(): SpritesComponent {
     val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 4))
     sprite.setSize(2.5f * ConstVals.PPM)
 
-    val spriteComponent = SpriteComponent(this, "explosion" to sprite)
-    spriteComponent.putUpdateFunction("explosion") { _, _sprite ->
+    val SpritesComponent = SpritesComponent(this, "explosion" to sprite)
+    SpritesComponent.putUpdateFunction("explosion") { _, _sprite ->
       _sprite as GameSprite
       val center = body.getCenter()
       _sprite.setCenter(center.x, center.y)
     }
 
-    return spriteComponent
+    return SpritesComponent
   }
 
   private fun defineBodyComponent(): BodyComponent {

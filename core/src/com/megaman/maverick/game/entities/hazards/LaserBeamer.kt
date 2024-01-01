@@ -15,9 +15,9 @@ import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
 import com.engine.damage.IDamageable
 import com.engine.damage.IDamager
-import com.engine.drawables.shapes.DrawableShapeComponent
+import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
@@ -75,7 +75,7 @@ class LaserBeamer(game: MegamanMaverickGame) :
         region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, "LaserBeamer")
 
     addComponent(defineBodyComponent())
-    addComponent(defineSpriteComponent())
+    addComponent(defineSpritesCompoent())
     addComponent(defineUpdatablesComponent())
   }
 
@@ -95,7 +95,7 @@ class LaserBeamer(game: MegamanMaverickGame) :
     line.shapeType = Filled
     line.color = RED
     contactGlow.color = WHITE
-    addComponent(DrawableShapeComponent(this, line, contactGlow))
+    addComponent(DrawableShapesComponent(this, line, contactGlow))
 
     contactTimer.reset()
     switchTimer.setToEnd()
@@ -142,18 +142,18 @@ class LaserBeamer(game: MegamanMaverickGame) :
     return BodyComponentCreator.create(this, body)
   }
 
-  private fun defineSpriteComponent(): SpriteComponent {
+  private fun defineSpritesCompoent(): SpritesComponent {
     val sprite = GameSprite()
     sprite.setSize(1.5f * ConstVals.PPM)
 
-    val spriteComponent = SpriteComponent(this, "laserBeamer" to sprite)
-    spriteComponent.putUpdateFunction("laserBeamer") { _, _sprite ->
+    val SpritesComponent = SpritesComponent(this, "laserBeamer" to sprite)
+    SpritesComponent.putUpdateFunction("laserBeamer") { _, _sprite ->
       _sprite as GameSprite
       _sprite.setPosition(rotatingLine.getMotionValue(), Position.BOTTOM_CENTER)
       _sprite.translateY(-.06f * ConstVals.PPM)
     }
 
-    return spriteComponent
+    return SpritesComponent
   }
 
   private fun defineUpdatablesComponent() =

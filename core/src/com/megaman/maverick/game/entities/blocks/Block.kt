@@ -7,7 +7,7 @@ import com.engine.common.GameLogger
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.cullables.CullablesComponent
-import com.engine.drawables.shapes.DrawableShapeComponent
+import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.updatables.UpdatablesComponent
@@ -38,7 +38,7 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
     body.fixtures.forEach { (_, fixture) -> fixture.setEntity(this) }
     addComponent(BodyComponent(this, body))
     addComponent(UpdatablesComponent(this, { (bodyFixture.shape as GameRectangle).set(body) }))
-    addComponent(DrawableShapeComponent(this, { body }))
+    addComponent(DrawableShapesComponent(this, { body }))
   }
 
   override fun spawn(spawnProps: Properties) {

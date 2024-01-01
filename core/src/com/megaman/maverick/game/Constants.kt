@@ -14,6 +14,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+  const val HAZARDS = "hazards"
   const val PPM = "ppm"
   const val GRAVITY = "gravity"
   const val SENSORS = "sensors"
@@ -65,10 +66,6 @@ object ConstKeys {
   const val DOWN = "down"
   const val LEFT = "left"
   const val RIGHT = "right"
-  const val A = "a"
-  const val B = "b"
-  const val START = "start"
-  const val SELECT = "select"
   const val SPECIALS = "specials"
   const val BACKGROUNDS = "backgrounds"
   const val LEVEL_MUSIC = "level_music"

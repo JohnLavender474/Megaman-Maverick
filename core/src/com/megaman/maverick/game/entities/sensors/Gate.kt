@@ -16,7 +16,7 @@ import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
 import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
@@ -34,6 +34,8 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.getMegamanMaverickGame
+import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
 class Gate(game: MegamanMaverickGame) :
@@ -58,7 +60,9 @@ class Gate(game: MegamanMaverickGame) :
 
   private val timer = Timer(DURATION)
 
-  private lateinit var gateState: GateState
+  lateinit var state: GateState
+    private set
+
   private lateinit var nextRoomKey: String
 
   private var transitionFinished = false
@@ -68,13 +72,15 @@ class Gate(game: MegamanMaverickGame) :
 
     addComponent(defineBodyComponent())
     addComponent(defineUpdatablesComponent())
-    addComponent(defineSpriteComponent())
+    addComponent(defineSpritesCompoent())
     addComponent(defineAnimationsComponent())
 
     runnablesOnDestroy.add { game.eventsMan.removeListener(this) }
   }
 
   override fun spawn(spawnProps: Properties) {
+    super.spawn(spawnProps)
+
     reset()
     game.eventsMan.addListener(this)
 
@@ -97,21 +103,27 @@ class Gate(game: MegamanMaverickGame) :
   override fun reset() {
     timer.reset()
     transitionFinished = false
-    gateState = GateState.OPENABLE
+    state = GateState.OPENABLE
+  }
+
+  fun trigger() {
+    state = GateState.OPENING
+    getMegamanMaverickGame().audioMan.playSound(SoundAsset.BOSS_DOOR, false)
+    game.eventsMan.submitEvent(Event(EventType.GATE_INIT_OPENING))
   }
 
   private fun defineUpdatablesComponent() =
       UpdatablesComponent(
           this,
           {
-            when (gateState) {
+            when (state) {
               // opening
               GateState.OPENING -> {
                 timer.update(it)
                 if (timer.isFinished()) {
                   GameLogger.debug(TAG, "Set gate to OPENED")
                   timer.reset()
-                  gateState = GateState.OPEN
+                  state = GateState.OPEN
                   game.eventsMan.submitEvent(Event(EventType.GATE_FINISH_OPENING))
                   game.eventsMan.submitEvent(
                       Event(EventType.NEXT_ROOM_REQ, props(ConstKeys.ROOM to nextRoomKey)))
@@ -123,7 +135,7 @@ class Gate(game: MegamanMaverickGame) :
                 if (transitionFinished) {
                   GameLogger.debug(TAG, "Set gate to CLOSING")
                   transitionFinished = false
-                  gateState = GateState.CLOSING
+                  state = GateState.CLOSING
                   (game as MegamanMaverickGame)
                       .audioMan
                       .playSound(SoundAsset.BOSS_DOOR.source, false)
@@ -137,7 +149,7 @@ class Gate(game: MegamanMaverickGame) :
                 if (timer.isFinished()) {
                   GameLogger.debug(TAG, "Set gate to CLOSED")
                   timer.reset()
-                  gateState = GateState.CLOSED
+                  state = GateState.CLOSED
                   game.eventsMan.submitEvent(Event(EventType.GATE_FINISH_CLOSING))
                 }
               }
@@ -153,34 +165,33 @@ class Gate(game: MegamanMaverickGame) :
     val gateFixture = Fixture(body.copy(), FixtureType.GATE)
     body.addFixture(gateFixture)
 
-    return BodyComponent(this, body)
+    return BodyComponentCreator.create(this, body)
   }
 
-  private fun defineSpriteComponent(): SpriteComponent {
+  private fun defineSpritesCompoent(): SpritesComponent {
     val sprite = GameSprite()
     sprite.setSize(4f * ConstVals.PPM, 3f * ConstVals.PPM)
 
-    val spriteComponent = SpriteComponent(this, "gate" to sprite)
-    spriteComponent.putUpdateFunction("gate") { _, _sprite ->
+    val SpritesComponent = SpritesComponent(this, "gate" to sprite)
+    SpritesComponent.putUpdateFunction("gate") { _, _sprite ->
       _sprite as GameSprite
 
-      when (gateState) {
+      when (state) {
         GateState.CLOSING,
         GateState.CLOSED -> _sprite.setPosition(body.getBottomRightPoint(), Position.BOTTOM_RIGHT)
         else -> _sprite.setPosition(body.getBottomLeftPoint(), Position.BOTTOM_LEFT)
       }
 
-      _sprite.hidden = gateState == GateState.OPEN
-
-      _sprite.setFlip(gateState == GateState.CLOSING || gateState == GateState.CLOSED, false)
+      _sprite.hidden = state == GateState.OPEN
+      _sprite.setFlip(state == GateState.CLOSING || state == GateState.CLOSED, false)
     }
 
-    return spriteComponent
+    return SpritesComponent
   }
 
   private fun defineAnimationsComponent(): AnimationsComponent {
     val keySupplier = {
-      when (gateState) {
+      when (state) {
         GateState.OPENABLE,
         GateState.CLOSED -> "closed"
         GateState.OPENING -> "opening"
@@ -191,7 +202,7 @@ class Gate(game: MegamanMaverickGame) :
 
     val closed = Animation(atlas!!.findRegion("closed"), 1, 1, 1f, true)
     val opening = Animation(atlas!!.findRegion("opening"), 1, 4, 0.125f, false)
-    val closing = Animation(atlas!!.findRegion("closing"), 1, 4, 1f, true)
+    val closing = Animation(opening, reverse = true)
 
     val animator =
         Animator(

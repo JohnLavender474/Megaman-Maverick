@@ -229,7 +229,7 @@ class Megaman(game: MegamanMaverickGame) :
     addComponent(defineBodyComponent())
     addComponent(defineBehaviorsComponent())
     addComponent(defineControllerComponent())
-    addComponent(defineSpriteComponent())
+    addComponent(defineSpritesComponent())
     addComponent(defineAnimationsComponent())
     weaponHandler.putWeapon(MegamanWeapon.BUSTER)
   }

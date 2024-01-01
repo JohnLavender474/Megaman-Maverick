@@ -8,19 +8,12 @@ import com.engine.common.objects.Properties
 import com.engine.screens.levels.tiledmap.builders.ITiledMapLayerBuilder
 import com.megaman.maverick.game.ConstKeys
 
-/** This class is responsible for building the game rooms layer. */
 class GameRoomsLayerBuilder : ITiledMapLayerBuilder {
 
   companion object {
     const val TAG = "GameRoomsLayerBuilder"
   }
 
-  /**
-   * Builds the game rooms layer.
-   *
-   * @param layer the [MapLayer] to build.
-   * @param returnProps the [Properties] to use as a return container.
-   */
   override fun build(layer: MapLayer, returnProps: Properties) {
     val gameRooms = Array<RectangleMapObject>()
     layer.objects.forEach { if (it is RectangleMapObject) gameRooms.add(it) }

@@ -16,7 +16,7 @@ import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
 import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
@@ -86,7 +86,7 @@ class ChargedShotExplosion(game: MegamanMaverickGame) :
 
     defineProjectileComponents().forEach { addComponent(it) }
     addComponent(defineBodyComponent())
-    addComponent(defineSpriteComponent())
+    addComponent(defineSpritesCompoent())
     addComponent(defineAnimationsComponent())
     addComponent(defineUpdatablesComponent())
   }
@@ -159,14 +159,14 @@ class ChargedShotExplosion(game: MegamanMaverickGame) :
    *
    * @return The configured sprite component.
    */
-  private fun defineSpriteComponent(): SpriteComponent {
+  private fun defineSpritesCompoent(): SpritesComponent {
     val sprite = GameSprite()
-    val spriteComponent = SpriteComponent(this, "explosion" to sprite)
-    spriteComponent.putUpdateFunction("explosion") { _, _sprite ->
+    val SpritesComponent = SpritesComponent(this, "explosion" to sprite)
+    SpritesComponent.putUpdateFunction("explosion") { _, _sprite ->
       (_sprite as GameSprite).setPosition(body.getCenter(), Position.CENTER)
       _sprite.setFlip(facing == Facing.LEFT, false)
     }
-    return spriteComponent
+    return SpritesComponent
   }
 
   /**

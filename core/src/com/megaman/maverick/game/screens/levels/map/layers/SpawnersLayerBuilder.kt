@@ -45,6 +45,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
           ConstKeys.ITEMS -> EntityType.ITEM
           ConstKeys.BLOCKS -> EntityType.BLOCK
           ConstKeys.SPECIALS -> EntityType.SPECIAL
+          ConstKeys.HAZARDS -> EntityType.HAZARD
           // TODO: add other entity types
           else -> throw IllegalArgumentException("Unknown spawner type: ${layer.name}")
         }
@@ -89,7 +90,6 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
 
             check(roomFound) { "Room not found: $roomName" }
           }
-
           SpawnType.SPAWN_EVENT -> {
             val events = ObjectSet<Any>()
             val eventNames = (spawnProps.get(ConstKeys.EVENTS) as String).split(",")

@@ -17,7 +17,7 @@ import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
 import com.engine.damage.IDamageable
 import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
@@ -69,7 +69,7 @@ class Fireball(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity 
     if (flameAtlas == null) flameAtlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
     defineProjectileComponents().forEach { addComponent(it) }
     addComponent(defineBodyComponent())
-    addComponent(defineSpriteComponent())
+    addComponent(defineSpritesCompoent())
     addComponent(defineAnimationsComponent())
     addComponent(defineUpdatablesComponent())
   }
@@ -138,17 +138,17 @@ class Fireball(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity 
     return BodyComponentCreator.create(this, body)
   }
 
-  private fun defineSpriteComponent(): SpriteComponent {
+  private fun defineSpritesCompoent(): SpritesComponent {
     val sprite = GameSprite()
     sprite.setSize(1.25f * ConstVals.PPM)
-    val spriteComponent = SpriteComponent(this, "fireball" to sprite)
-    spriteComponent.putUpdateFunction("fireball") { delta, _sprite ->
+    val SpritesComponent = SpritesComponent(this, "fireball" to sprite)
+    SpritesComponent.putUpdateFunction("fireball") { delta, _sprite ->
       _sprite as GameSprite
       val position = body.getBottomCenterPoint()
       _sprite.setPosition(position, Position.BOTTOM_CENTER)
       sprite.rotation = if (burst) 0f else ROTATION * delta
     }
-    return spriteComponent
+    return SpritesComponent
   }
 
   private fun defineAnimationsComponent(): AnimationsComponent {

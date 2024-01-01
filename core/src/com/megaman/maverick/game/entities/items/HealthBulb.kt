@@ -20,10 +20,10 @@ import com.engine.common.time.TimeMarkedRunnable
 import com.engine.common.time.Timer
 import com.engine.cullables.CullableOnEvent
 import com.engine.cullables.CullablesComponent
-import com.engine.drawables.shapes.DrawableShapeComponent
+import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
@@ -88,7 +88,7 @@ class HealthBulb(game: MegamanMaverickGame) :
         ))
 
     addComponent(defineBodyComponent())
-    addComponent(defineSpriteComponent())
+    addComponent(defineSpritesCompoent())
     addComponent(defineAnimationsComponent())
     addComponent(defineCullablesComponent())
     addComponent(defineUpdatablesComponent())
@@ -162,23 +162,23 @@ class HealthBulb(game: MegamanMaverickGame) :
       if (!body.physics.gravityOn) body.physics.velocity.y = 0f
     }
 
-    addComponent(DrawableShapeComponent(this, debugShapeSuppliers = shapes, debug = true))
+    addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
 
     return BodyComponentCreator.create(this, body)
   }
 
-  private fun defineSpriteComponent(): SpriteComponent {
+  private fun defineSpritesCompoent(): SpritesComponent {
     val sprite = GameSprite()
     sprite.setSize(1.5f * ConstVals.PPM)
 
-    val spriteComponent = SpriteComponent(this, "healthBulb" to sprite)
-    spriteComponent.putUpdateFunction("healthBulb") { _, _sprite ->
+    val SpritesComponent = SpritesComponent(this, "healthBulb" to sprite)
+    SpritesComponent.putUpdateFunction("healthBulb") { _, _sprite ->
       _sprite as GameSprite
       _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
       _sprite.hidden = blink
     }
 
-    return spriteComponent
+    return SpritesComponent
   }
 
   private fun defineAnimationsComponent(): AnimationsComponent {

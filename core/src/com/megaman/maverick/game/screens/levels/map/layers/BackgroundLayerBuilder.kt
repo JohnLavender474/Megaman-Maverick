@@ -27,7 +27,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) :
               TEXTURE_ASSET_PREFIX + o.properties.get(ConstKeys.ATLAS) as String,
               o.properties.get(ConstKeys.REGION) as String)
 
-      backgrounds.add(Background(bkgReg, o))
+      // TODO: backgrounds.add(Background(bkgReg, o))
     }
 
     returnProps.put(ConstKeys.BACKGROUNDS, backgrounds)

@@ -12,7 +12,7 @@ import com.engine.common.objects.Properties
 import com.engine.cullables.CullableOnEvent
 import com.engine.cullables.CullablesComponent
 import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.ISpriteEntity
@@ -39,7 +39,7 @@ class ExplosionOrb(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity 
         textureRegion =
             game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "ExplosionOrbs")
 
-    addComponent(defineSpriteComponent())
+    addComponent(defineSpritesCompoent())
     addComponent(defineAnimationsComponent())
     addComponent(defineUpdatablesComponent())
     addComponent(defineCullablesComponent())
@@ -54,10 +54,10 @@ class ExplosionOrb(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity 
     trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
   }
 
-  private fun defineSpriteComponent(): SpriteComponent {
+  private fun defineSpritesCompoent(): SpritesComponent {
     val sprite = GameSprite()
     sprite.setSize(3f * ConstVals.PPM)
-    return SpriteComponent(this, "orb" to sprite)
+    return SpritesComponent(this, "orb" to sprite)
   }
 
   private fun defineAnimationsComponent(): AnimationsComponent {

@@ -8,18 +8,19 @@ import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimator
+import com.engine.common.GameLogger
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.cullables.CullablesComponent
-import com.engine.drawables.shapes.DrawableShapeComponent
+import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sorting.DrawingPriority
 import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.ISprite
-import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.SpritesComponent
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.ISpriteEntity
@@ -38,6 +39,8 @@ import com.megaman.maverick.game.world.FixtureType
 class Water(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEntity {
 
   companion object {
+    const val TAG = "Water"
+
     private const val WATER_REG = "Water/Water"
     private const val SURFACE_REG = "Water/Surface"
     private const val UNDER_REG = "Water/Under"
@@ -52,6 +55,8 @@ class Water(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteE
   private lateinit var waterFixture: Fixture
 
   override fun init() {
+    GameLogger.debug(TAG, "Initializing...")
+
     val atlas = game.assMan.getTextureAtlas(TextureAsset.ENVIRONS_1.source)
     if (waterReg == null) waterReg = atlas.findRegion(WATER_REG)
     if (surfaceReg == null) surfaceReg = atlas.findRegion(SURFACE_REG)
@@ -62,6 +67,7 @@ class Water(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteE
   }
 
   override fun spawn(spawnProps: Properties) {
+    GameLogger.debug(TAG, "Spawning")
     super.spawn(spawnProps)
 
     val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
@@ -74,9 +80,13 @@ class Water(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteE
     defineDrawables(bounds)
   }
 
+  override fun onDestroy() {
+    super<GameEntity>.onDestroy()
+    GameLogger.debug(TAG, "Destroyed")
+  }
+
   private fun defineBodyComponent(): BodyComponent {
     val body = Body(BodyType.ABSTRACT)
-
     val shapes = Array<() -> IDrawableShape>()
 
     // water fixture
@@ -84,7 +94,7 @@ class Water(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteE
     body.addFixture(waterFixture)
     shapes.add { waterFixture.shape }
 
-    addComponent(DrawableShapeComponent(this, debugShapeSuppliers = shapes, debug = true))
+    addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
 
     return BodyComponentCreator.create(this, body)
   }
@@ -126,7 +136,7 @@ class Water(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteE
       }
     }
 
-    addComponent(SpriteComponent(this, sprites))
+    addComponent(SpritesComponent(this, sprites))
     addComponent(AnimationsComponent(this, animators))
   }
 }

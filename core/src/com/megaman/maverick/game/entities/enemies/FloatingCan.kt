@@ -12,10 +12,10 @@ import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
 import com.engine.damage.IDamager
-import com.engine.drawables.shapes.DrawableShapeComponent
+import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
 import com.engine.pathfinding.PathfinderParams
@@ -54,7 +54,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
     super.init()
 
     addComponent(defineBodyComponent())
-    addComponent(defineSpriteComponent())
+    addComponent(defineSpritesComponent())
     addComponent(defineAnimationsComponent())
     addComponent(definePathfindingComponent())
   }
@@ -88,23 +88,23 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
     body.addFixture(damagerFixture)
     shapes.add { damageableFixture.shape }
 
-    addComponent(DrawableShapeComponent(this, shapes))
+    addComponent(DrawableShapesComponent(this, shapes))
 
     return BodyComponentCreator.create(this, body)
   }
 
-  override fun defineSpriteComponent(): SpriteComponent {
+  override fun defineSpritesComponent(): SpritesComponent {
     val sprite = GameSprite()
     sprite.setSize(1.5f * ConstVals.PPM)
 
-    val spriteComponent = SpriteComponent(this, "can" to sprite)
-    spriteComponent.putUpdateFunction("can") { _, _sprite ->
+    val SpritesComponent = SpritesComponent(this, "can" to sprite)
+    SpritesComponent.putUpdateFunction("can") { _, _sprite ->
       _sprite as GameSprite
       _sprite.setPosition(body.getCenter(), Position.CENTER)
       // TODO: set flip
     }
 
-    return spriteComponent
+    return SpritesComponent
   }
 
   private fun defineAnimationsComponent(): AnimationsComponent {

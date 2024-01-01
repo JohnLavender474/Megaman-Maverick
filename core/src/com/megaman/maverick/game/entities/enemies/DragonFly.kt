@@ -17,7 +17,7 @@ import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
 import com.engine.damage.IDamager
 import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
 import com.engine.world.Body
@@ -184,12 +184,12 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game, CULL_TIME), IFa
     return BodyComponentCreator.create(this, body)
   }
 
-  override fun defineSpriteComponent(): SpriteComponent {
+  override fun defineSpritesComponent(): SpritesComponent {
     val sprite = GameSprite()
     sprite.setSize(1.5f * ConstVals.PPM)
 
-    val spriteComponent = SpriteComponent(this, "dragonfly" to sprite)
-    spriteComponent.putUpdateFunction("dragonfly") { _, _sprite ->
+    val SpritesComponent = SpritesComponent(this, "dragonfly" to sprite)
+    SpritesComponent.putUpdateFunction("dragonfly") { _, _sprite ->
       _sprite as GameSprite
       _sprite.setPosition(body.getCenter(), Position.CENTER)
       if (currentBehavior == DragonFlyBehavior.MOVE_UP ||
@@ -200,7 +200,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game, CULL_TIME), IFa
       // TODO: _sprite.hidden = damageBlink
     }
 
-    return spriteComponent
+    return SpritesComponent
   }
 
   fun defineAnimationsComponent(): AnimationsComponent {

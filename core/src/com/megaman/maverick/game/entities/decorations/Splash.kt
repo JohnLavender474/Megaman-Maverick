@@ -15,7 +15,7 @@ import com.engine.common.objects.props
 import com.engine.drawables.sorting.DrawingPriority
 import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.ISpriteEntity
@@ -59,7 +59,7 @@ class Splash(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity {
         splashRegion =
             game.assMan.getTextureRegion(TextureAsset.ENVIRONS_1.source, SPLASH_REGION_KEY)
 
-    addComponent(defineSpriteComponent())
+    addComponent(defineSpritesCompoent())
     addComponent(defineAnimationsComponent())
     addComponent(defineUpdatablesComponent())
   }
@@ -82,9 +82,9 @@ class Splash(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity {
     return AnimationsComponent(this, Animator(animation))
   }
 
-  private fun defineSpriteComponent(): SpriteComponent {
+  private fun defineSpritesCompoent(): SpritesComponent {
     val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -1))
     sprite.setAlpha(ALPHA)
-    return SpriteComponent(this, "splash" to sprite)
+    return SpritesComponent(this, "splash" to sprite)
   }
 }

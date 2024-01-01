@@ -19,7 +19,6 @@ import com.engine.common.interfaces.Initializable
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.controller.ControllerSystem
-import com.engine.controller.buttons.ButtonStatus
 import com.engine.controller.polling.IControllerPoller
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.ISprite
@@ -33,10 +32,7 @@ import com.engine.spawns.SpawnsManager
 import com.engine.systems.IGameSystem
 import com.engine.updatables.UpdatablesSystem
 import com.engine.world.WorldSystem
-import com.megaman.maverick.game.ConstFuncs
-import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.*
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.drawables.sprites.Background
 import com.megaman.maverick.game.entities.megaman.Megaman
@@ -49,6 +45,7 @@ import com.megaman.maverick.game.screens.levels.map.layers.MegaMapLayerBuilders
 import com.megaman.maverick.game.screens.levels.map.layers.MegaMapLayerBuildersParams
 import com.megaman.maverick.game.screens.levels.spawns.PlayerSpawnsManager
 import com.megaman.maverick.game.screens.levels.stats.PlayerStatsHandler
+import java.util.PriorityQueue
 
 class MegaLevelScreen(game: MegamanMaverickGame) :
     TiledMapLevelScreen(game, props()), Initializable {
@@ -87,7 +84,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
   private lateinit var playerDeathEventHandler: PlayerDeathEventHandler
 
   private lateinit var sprites: MutableCollection<ISprite>
-  private lateinit var shapes: Array<IDrawableShape>
+  private lateinit var shapes: PriorityQueue<IDrawableShape>
   private lateinit var backgrounds: Array<Background>
 
   private lateinit var gameCamera: OrthographicCamera
@@ -303,7 +300,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
 
   override fun render(delta: Float) {
     // game can only be paused if neither spawn nor death event handlers are running
-    if (controllerPoller.getButtonStatus(ConstKeys.START) == ButtonStatus.JUST_PRESSED &&
+    if (controllerPoller.isButtonJustPressed(ControllerButton.START.name) &&
         playerStatsHandler.finished &&
         playerSpawnEventHandler.finished &&
         playerDeathEventHandler.finished)
@@ -368,8 +365,10 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
     shapeRenderer.projectionMatrix = gameCamera.combined
 
     shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
-    shapes.forEach { it.draw(shapeRenderer) }
-    shapes.clear()
+    while (!shapes.isEmpty()) {
+      val shape = shapes.poll()
+      shape.draw(shapeRenderer)
+    }
     shapeRenderer.end()
   }
 

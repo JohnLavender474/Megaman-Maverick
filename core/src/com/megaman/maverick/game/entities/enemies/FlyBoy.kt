@@ -16,10 +16,10 @@ import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
 import com.engine.damage.IDamager
-import com.engine.drawables.shapes.DrawableShapeComponent
+import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.Body
@@ -137,21 +137,21 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
           (if (body.isSensing(BodySense.FEET_ON_GROUND)) G_GRAV else GRAV) * ConstVals.PPM
     }
 
-    addComponent(DrawableShapeComponent(this, shapes))
+    addComponent(DrawableShapesComponent(this, shapes))
 
     return BodyComponentCreator.create(this, body)
   }
 
-  override fun defineSpriteComponent(): SpriteComponent {
+  override fun defineSpritesComponent(): SpritesComponent {
     val sprite = GameSprite()
     sprite.setSize(ConstVals.PPM * 2.25f, ConstVals.PPM * 1.85f)
-    val spriteComponent = SpriteComponent(this, "flyboy" to sprite)
-    spriteComponent.putUpdateFunction("flyboy") { _, _sprite ->
+    val SpritesComponent = SpritesComponent(this, "flyboy" to sprite)
+    SpritesComponent.putUpdateFunction("flyboy") { _, _sprite ->
       _sprite as GameSprite
       _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
       _sprite.setFlip(facing == Facing.LEFT, false)
     }
-    return spriteComponent
+    return SpritesComponent
   }
 
   override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {

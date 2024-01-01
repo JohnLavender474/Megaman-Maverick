@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.hazards
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.utils.Array
 import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
@@ -13,10 +14,10 @@ import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameCircle
 import com.engine.common.shapes.GameLine
 import com.engine.common.shapes.GameRectangle
-import com.engine.drawables.shapes.DrawableShapeComponent
+import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpriteComponent
+import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
@@ -57,7 +58,7 @@ class Saw(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEnt
     if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, "Saw")
 
     addComponent(defineBodyComponent())
-    addComponent(defineSpriteComponent())
+    addComponent(defineSpritesCompoent())
     addComponent(defineAnimationsComponent())
     addComponent(MotionComponent(this))
   }
@@ -66,8 +67,10 @@ class Saw(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEnt
     super.spawn(spawnProps)
 
     getMotions().clear()
+
     val bounds = spawnProps.get(ConstKeys.BOUNDS) as GameRectangle
     val type = spawnProps.get(ConstKeys.TYPE) as String
+
     when (type) {
       PENDULUM_TYPE -> setToPendulum(bounds)
       ROTATION_TYPE -> setToRotation(bounds)
@@ -84,21 +87,28 @@ class Saw(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEnt
             LENGTH * ConstVals.PPM, PENDULUM_GRAVITY * ConstVals.PPM, bounds.getCenter(), 1 / 60f)
     putMotion(ConstKeys.PENDULUM, MotionDefinition(pendulum) { body.setCenter(it) })
 
-    val drawableShapes = Array<() -> IDrawableShape>()
+    val shapes = Array<() -> IDrawableShape>()
 
-    drawableShapes.add {
+    shapes.add {
       val line = GameLine(pendulum.anchor, pendulum.getMotionValue())
       line.color = Color.DARK_GRAY
+      line.shapeType = ShapeRenderer.ShapeType.Filled
+      line.thickness = ConstVals.PPM / 8f
       line
     }
 
     val circle1 = GameCircle(pendulum.anchor.x, pendulum.anchor.y, ConstVals.PPM / 4f)
+    circle1.shapeType = ShapeRenderer.ShapeType.Filled
+    circle1.color = Color.DARK_GRAY
+    shapes.add { circle1 }
+
     val circle2 = GameCircle()
     circle2.setRadius(ConstVals.PPM / 4f)
-    drawableShapes.add { circle1 }
-    drawableShapes.add { circle2.setPosition(pendulum.getMotionValue()) }
+    circle2.shapeType = ShapeRenderer.ShapeType.Filled
+    circle2.color = Color.DARK_GRAY
+    shapes.add { circle2.setCenter(pendulum.getMotionValue()) }
 
-    addComponent(DrawableShapeComponent(this, drawableShapes))
+    addComponent(DrawableShapesComponent(this, shapes))
   }
 
   private fun setToRotation(bounds: GameRectangle) {
@@ -106,25 +116,30 @@ class Saw(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEnt
         RotatingLine(bounds.getCenter(), LENGTH * ConstVals.PPM, ROTATION_SPEED * ConstVals.PPM)
     putMotion(ConstKeys.ROTATION, MotionDefinition(rotation) { body.setCenter(it) })
 
-    val drawableShapes = Array<() -> IDrawableShape>()
+    val shapes = Array<() -> IDrawableShape>()
 
-    drawableShapes.add {
+    shapes.add {
       val line = GameLine(rotation.getOrigin(), rotation.getMotionValue())
       line.color = Color.DARK_GRAY
+      line.shapeType = ShapeRenderer.ShapeType.Filled
+      line.thickness = ConstVals.PPM / 8f
       line
     }
 
     val circle1 = GameCircle()
     circle1.setRadius(ConstVals.PPM / 4f)
     circle1.color = Color.DARK_GRAY
+    circle1.shapeType = ShapeRenderer.ShapeType.Filled
+
     val circle2 = GameCircle()
     circle2.setRadius(ConstVals.PPM / 4f)
     circle2.color = Color.DARK_GRAY
+    circle2.shapeType = ShapeRenderer.ShapeType.Filled
 
-    drawableShapes.add { circle1.setPosition(rotation.getOrigin()) }
-    drawableShapes.add { circle2.setPosition(rotation.getMotionValue()) }
+    shapes.add { circle1.setPosition(rotation.getOrigin()) }
+    shapes.add { circle2.setCenter(rotation.getMotionValue()) }
 
-    addComponent(DrawableShapeComponent(this, drawableShapes))
+    addComponent(DrawableShapesComponent(this, shapes))
   }
 
   private fun setToTrajectory(trajectoryDefinition: String) {
@@ -152,15 +167,15 @@ class Saw(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEnt
     return BodyComponentCreator.create(this, body)
   }
 
-  private fun defineSpriteComponent(): SpriteComponent {
+  private fun defineSpritesCompoent(): SpritesComponent {
     val sprite = GameSprite()
     sprite.setSize(2f * ConstVals.PPM)
-    val spriteComponent = SpriteComponent(this, "saw" to sprite)
-    spriteComponent.putUpdateFunction("saw") { _, _sprite ->
+    val SpritesComponent = SpritesComponent(this, "saw" to sprite)
+    SpritesComponent.putUpdateFunction("saw") { _, _sprite ->
       _sprite as GameSprite
       _sprite.setPosition(body.getCenter(), Position.CENTER)
     }
-    return spriteComponent
+    return SpritesComponent
   }
 
   private fun defineAnimationsComponent(): AnimationsComponent {

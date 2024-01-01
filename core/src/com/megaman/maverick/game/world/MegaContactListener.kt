@@ -23,6 +23,7 @@ import com.megaman.maverick.game.entities.contracts.ItemEntity
 import com.megaman.maverick.game.entities.decorations.Splash
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.BButtonTask
+import com.megaman.maverick.game.entities.sensors.Gate
 import com.megaman.maverick.game.utils.VelocityAlterator
 
 @Suppress("UNCHECKED_CAST")
@@ -79,14 +80,14 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
     }
 
     // side, gate
-    // TODO: implement gate entity
-    /*
     else if (contact.fixturesMatch(FixtureType.SIDE, FixtureType.GATE)) {
-        GameLogger.debug(TAG, "beginContact(): Side-Gate")
-        val (side, gate) = contact.getFixturesInOrder(FixtureType.SIDE, FixtureType.GATE)!!
-        if (gate.isState(Gate.GateState.OPENABLE)) gate.trigger()
+      GameLogger.debug(TAG, "beginContact(): Side-Gate")
+      val (side, gateFixture) = contact.getFixturesInOrder(FixtureType.SIDE, FixtureType.GATE)!!
+      if (side.getEntity() is Megaman) {
+        val gate = gateFixture.getEntity() as Gate
+        if (gate.state == Gate.GateState.OPENABLE) gate.trigger()
+      }
     }
-     */
 
     // side, ice
     else if (contact.fixturesMatch(FixtureType.SIDE, FixtureType.ICE)) {
@@ -181,23 +182,23 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
     // head, ladder
     else if (contact.fixturesMatch(FixtureType.HEAD, FixtureType.LADDER)) {
       GameLogger.debug(TAG, "beginContact(): Head-Ladder, contact = $contact")
-      val (head, ladder) = contact.getFixturesInOrder(FixtureType.HEAD, FixtureType.LADDER)!!
+      val (head, ladderFixture) = contact.getFixturesInOrder(FixtureType.HEAD, FixtureType.LADDER)!!
 
       val body = head.getBody()
       body.setBodySense(BodySense.HEAD_TOUCHING_LADDER, true)
 
-      body.properties.put(ConstKeys.LADDER, ladder)
+      body.properties.put(ConstKeys.LADDER, ladderFixture.getEntity())
     }
 
     // feet, ladder
     else if (contact.fixturesMatch(FixtureType.FEET, FixtureType.LADDER)) {
       GameLogger.debug(TAG, "beginContact(): Feet-Ladder, contact = $contact")
-      val (feet, ladder) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.LADDER)!!
+      val (feet, ladderFixture) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.LADDER)!!
 
       val body = feet.getBody()
       body.setBodySense(BodySense.FEET_TOUCHING_LADDER, true)
 
-      body.properties.put(ConstKeys.LADDER, ladder)
+      body.properties.put(ConstKeys.LADDER, ladderFixture.getEntity())
     }
 
     // body, force
@@ -305,23 +306,23 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
 
     // feet, ladder
     else if (contact.fixturesMatch(FixtureType.FEET, FixtureType.LADDER)) {
-      val (feet, ladder) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.LADDER)!!
+      val (feet, ladderFixture) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.LADDER)!!
 
-      if (ladder.shape.contains(feet.shape.getBoundingRectangle().getBottomCenterPoint())) {
+      if (ladderFixture.shape.contains(feet.shape.getBoundingRectangle().getBottomCenterPoint())) {
         val body = feet.getBody()
         body.setBodySense(BodySense.FEET_TOUCHING_LADDER, true)
-        body.properties.put(ConstKeys.LADDER, ladder)
+        body.properties.put(ConstKeys.LADDER, ladderFixture.getEntity())
       }
     }
 
     // head, ladder
     else if (contact.fixturesMatch(FixtureType.HEAD, FixtureType.LADDER)) {
-      val (head, ladder) = contact.getFixturesInOrder(FixtureType.HEAD, FixtureType.LADDER)!!
+      val (head, ladderFixture) = contact.getFixturesInOrder(FixtureType.HEAD, FixtureType.LADDER)!!
 
-      if (ladder.shape.contains(head.shape.getBoundingRectangle().getTopCenterPoint())) {
+      if (ladderFixture.shape.contains(head.shape.getBoundingRectangle().getTopCenterPoint())) {
         val body = head.getBody()
         body.setBodySense(BodySense.HEAD_TOUCHING_LADDER, true)
-        body.properties.put(ConstKeys.LADDER, ladder)
+        body.properties.put(ConstKeys.LADDER, ladderFixture.getEntity())
       }
     }
 
