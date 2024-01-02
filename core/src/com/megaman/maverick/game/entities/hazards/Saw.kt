@@ -97,10 +97,11 @@ class Saw(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEnt
       line
     }
 
-    val circle1 = GameCircle(pendulum.anchor.x, pendulum.anchor.y, ConstVals.PPM / 4f)
+    val circle1 = GameCircle()
+    circle1.setRadius(ConstVals.PPM / 4f)
     circle1.shapeType = ShapeRenderer.ShapeType.Filled
     circle1.color = Color.DARK_GRAY
-    shapes.add { circle1 }
+    shapes.add { circle1.setCenter(pendulum.anchor) }
 
     val circle2 = GameCircle()
     circle2.setRadius(ConstVals.PPM / 4f)
@@ -130,13 +131,12 @@ class Saw(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEnt
     circle1.setRadius(ConstVals.PPM / 4f)
     circle1.color = Color.DARK_GRAY
     circle1.shapeType = ShapeRenderer.ShapeType.Filled
+    shapes.add { circle1.setCenter(rotation.getOrigin()) }
 
     val circle2 = GameCircle()
     circle2.setRadius(ConstVals.PPM / 4f)
     circle2.color = Color.DARK_GRAY
     circle2.shapeType = ShapeRenderer.ShapeType.Filled
-
-    shapes.add { circle1.setPosition(rotation.getOrigin()) }
     shapes.add { circle2.setCenter(rotation.getMotionValue()) }
 
     addComponent(DrawableShapesComponent(this, shapes))

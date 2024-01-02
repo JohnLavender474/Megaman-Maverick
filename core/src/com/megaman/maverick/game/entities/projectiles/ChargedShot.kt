@@ -9,6 +9,7 @@ import com.engine.common.CAUSE_OF_DEATH_MESSAGE
 import com.engine.common.enums.Direction
 import com.engine.common.enums.Facing
 import com.engine.common.enums.Position
+import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.interfaces.IFaceable
@@ -190,7 +191,8 @@ class ChargedShot(game: MegamanMaverickGame) : GameEntity(game), IProjectileEnti
     body.addFixture(damagerFixture)
 
     // add drawable shape component for debugging
-    addComponent(DrawableShapesComponent(this, { body }))
+    addComponent(
+        DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
 
     return BodyComponentCreator.create(this, body)
   }

@@ -19,10 +19,15 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
   SpritesComponent.putUpdateFunction("player") { _, player ->
     player as GameSprite
     player.hidden = !ready
+
     val flipX = !maverick && facing == Facing.LEFT
     val flipY = upsideDown
     player.setFlip(flipX, flipY)
-    player.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+
+    val position = if (upsideDown) Position.TOP_CENTER else Position.BOTTOM_CENTER
+    val bodyPosition = body.getPositionPoint(position)
+    player.setPosition(bodyPosition, position)
+
     player.setAlpha(if (damageFlash) 0f else 1f)
   }
 

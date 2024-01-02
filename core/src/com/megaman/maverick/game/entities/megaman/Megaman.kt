@@ -61,6 +61,7 @@ class Megaman(game: MegamanMaverickGame) :
 
   companion object {
     const val TAG = "Megaman"
+    const val MEGAMAN_EVENT_LISTENER_TAG = "MegamanEventListener"
   }
 
   val damaged: Boolean
@@ -304,10 +305,15 @@ class Megaman(game: MegamanMaverickGame) :
       EventType.BEGIN_ROOM_TRANS,
       EventType.CONTINUE_ROOM_TRANS -> {
         val position = event.properties.get(ConstKeys.POSITION) as Vector2
+        GameLogger.debug(
+            MEGAMAN_EVENT_LISTENER_TAG, "BEGIN/CONTINUE ROOM TRANS: position = $position")
+
         body.positionOnPoint(position, Position.BOTTOM_CENTER)
         stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
       }
       EventType.GATE_INIT_OPENING -> {
+        GameLogger.debug(MEGAMAN_EVENT_LISTENER_TAG, "GATE_INIT_OPENING")
+
         body.physics.velocity.setZero()
         stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
       }

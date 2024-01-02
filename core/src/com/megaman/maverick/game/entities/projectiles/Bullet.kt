@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2
 import com.engine.common.CAUSE_OF_DEATH_MESSAGE
 import com.engine.common.enums.Direction
 import com.engine.common.enums.Position
+import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
@@ -126,7 +127,8 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity {
     body.addFixture(damagerFixture)
 
     // Add shapes component
-    addComponent(DrawableShapesComponent(this, { body }))
+    addComponent(
+        DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
 
     return BodyComponentCreator.create(this, body)
   }

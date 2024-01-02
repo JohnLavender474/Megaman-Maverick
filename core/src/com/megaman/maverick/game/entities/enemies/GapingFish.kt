@@ -137,7 +137,7 @@ class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     body.addFixture(damagerFixture)
     shapes.add { damagerFixture.shape }
 
-    addComponent(DrawableShapesComponent(this, shapes))
+    addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
 
     return BodyComponentCreator.create(this, body)
   }

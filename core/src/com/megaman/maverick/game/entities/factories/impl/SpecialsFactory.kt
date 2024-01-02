@@ -8,6 +8,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.factories.EntityPoolCreator
 import com.megaman.maverick.game.entities.special.Ladder
 import com.megaman.maverick.game.entities.special.SpringBouncer
+import com.megaman.maverick.game.entities.special.UpsideDown
 import com.megaman.maverick.game.entities.special.Water
 
 class SpecialsFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntity> {
@@ -25,9 +26,7 @@ class SpecialsFactory(private val game: MegamanMaverickGame) : IFactory<IGameEnt
     pools.put(WATER, EntityPoolCreator.create(3) { Water(game) })
     pools.put(SPRING_BOUNCER, EntityPoolCreator.create(2) { SpringBouncer(game) })
     pools.put(LADDER, EntityPoolCreator.create(10) { Ladder(game) })
-    /*
     pools.put(UPSIDE_DOWN, EntityPoolCreator.create(10) { UpsideDown(game) })
-     */
   }
 
   override fun fetch(key: Any) = pools.get(key)?.fetch()

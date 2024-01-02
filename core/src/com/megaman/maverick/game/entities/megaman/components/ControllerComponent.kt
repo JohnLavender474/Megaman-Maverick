@@ -131,6 +131,6 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
       this,
       ControllerButton.LEFT.name to left,
       ControllerButton.RIGHT.name to right,
-      ControllerButton.A.name to attack,
+      ControllerButton.B.name to attack,
       ControllerButton.SELECT.name to select)
 }

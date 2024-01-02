@@ -45,13 +45,15 @@ import com.megaman.maverick.game.screens.levels.map.layers.MegaMapLayerBuilders
 import com.megaman.maverick.game.screens.levels.map.layers.MegaMapLayerBuildersParams
 import com.megaman.maverick.game.screens.levels.spawns.PlayerSpawnsManager
 import com.megaman.maverick.game.screens.levels.stats.PlayerStatsHandler
-import java.util.PriorityQueue
+import java.util.*
 
 class MegaLevelScreen(game: MegamanMaverickGame) :
     TiledMapLevelScreen(game, props()), Initializable {
 
   companion object {
     const val TAG = "MegaLevelScreen"
+    const val MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG = "MegaLevelScreenEventListener"
+    private const val INTERPOLATE_GAME_CAM = true
   }
 
   val megamanGame: MegamanMaverickGame
@@ -130,6 +132,8 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
             AudioSystem::class)
 
     cameraManagerForRooms = CameraManagerForRooms(gameCamera)
+    cameraManagerForRooms.interpolate = INTERPOLATE_GAME_CAM
+    cameraManagerForRooms.interpolationScalar = 5f
     cameraManagerForRooms.focus = megaman
 
     // set begin transition logic for camera manager
@@ -240,16 +244,19 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
   override fun onEvent(event: Event) {
     when (event.key) {
       EventType.GAME_PAUSE -> {
-        GameLogger.debug(TAG, "onEvent(): Game pause --> pause the game")
+        GameLogger.debug(
+            MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Game pause --> pause the game")
         megamanGame.pause()
       }
       EventType.GAME_RESUME -> {
-        GameLogger.debug(TAG, "onEvent(): Game resume --> resume the game")
+        GameLogger.debug(
+            MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Game resume --> resume the game")
         megamanGame.resume()
       }
       EventType.PLAYER_SPAWN -> {
         GameLogger.debug(
-            TAG, "onEvent(): Player spawn --> reset camera manager for rooms and spawn megaman")
+            MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG,
+            "onEvent(): Player spawn --> reset camera manager for rooms and spawn megaman")
         cameraManagerForRooms.reset()
         GameLogger.debug(
             TAG,
@@ -257,15 +264,18 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
         megamanGame.gameEngine.spawn(megaman, playerSpawnsMan.currentSpawnProps!!)
       }
       EventType.PLAYER_READY -> {
-        GameLogger.debug(TAG, "onEvent(): Player ready")
+        GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Player ready")
       }
       EventType.PLAYER_JUST_DIED -> {
-        GameLogger.debug(TAG, "onEvent(): Player just died --> init death handler")
+        GameLogger.debug(
+            MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG,
+            "onEvent(): Player just died --> init death handler")
         audioMan.stopMusic()
         playerDeathEventHandler.init()
       }
       EventType.PLAYER_DONE_DYIN -> {
-        GameLogger.debug(TAG, "onEvent(): Player done dying --> respawn player")
+        GameLogger.debug(
+            MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Player done dying --> respawn player")
         music?.let { audioMan.playMusic(it, true) }
         playerSpawnEventHandler.init()
       }
@@ -281,19 +291,50 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
         playerStatsHandler.attain(heartTank)
       }
       EventType.GATE_INIT_OPENING -> {
-        GameLogger.debug(TAG, "onEvent(): Gate init opening --> start room transition")
+        GameLogger.debug(
+            MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG,
+            "onEvent(): Gate init opening --> start room transition")
+        val systemsToTurnOff =
+            gdxArrayOf(
+                ControllerSystem::class.simpleName,
+                MotionSystem::class.simpleName,
+                BehaviorsSystem::class.simpleName,
+                WorldSystem::class.simpleName)
+        systemsToTurnOff.forEach { megamanGame.getSystems().get(it).on = false }
+        megamanGame.megaman.body.physics.velocity.setZero()
       }
       EventType.NEXT_ROOM_REQ -> {
-        GameLogger.debug(TAG, "onEvent(): Next room req --> start room transition")
+        GameLogger.debug(
+            MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG,
+            "onEvent(): Next room req --> start room transition")
+        val roomName = event.properties.get(ConstKeys.ROOM) as String
+
+        val isTrans = cameraManagerForRooms.transitionToRoom(roomName)
+        if (isTrans)
+            GameLogger.debug(
+                MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG,
+                "onEvent(): Next room req --> successfully starting transition to room: $roomName")
+        else
+            GameLogger.error(
+                MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG,
+                "onEvent(): Next room req --> could not start transition to room: $roomName")
       }
       EventType.GATE_INIT_CLOSING -> {
-        GameLogger.debug(TAG, "onEvent(): Gate init closing --> start room transition")
+        GameLogger.debug(
+            MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG,
+            "onEvent(): Gate init closing --> start room transition")
+        val systemsToTurnOff =
+            gdxArrayOf(
+                ControllerSystem::class.simpleName,
+                MotionSystem::class.simpleName,
+                BehaviorsSystem::class.simpleName,
+                WorldSystem::class.simpleName)
+        systemsToTurnOff.forEach { megamanGame.getSystems().get(it).on = true }
       }
       EventType.REQ_SHAKE_CAM -> {
-        GameLogger.debug(TAG, "onEvent(): Req shake cam --> shake the camera")
-      }
-      else -> {
-        GameLogger.debug(TAG, "onEvent(): Unhandled event: $event")
+        GameLogger.debug(
+            MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Req shake cam --> shake the camera")
+        // TODO: shake camera
       }
     }
   }

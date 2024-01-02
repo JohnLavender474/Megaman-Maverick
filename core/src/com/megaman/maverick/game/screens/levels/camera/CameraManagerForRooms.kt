@@ -10,6 +10,7 @@ import com.engine.common.enums.Direction
 import com.engine.common.enums.ProcessState
 import com.engine.common.extensions.toVector2
 import com.engine.common.getOverlapPushDirection
+import com.engine.common.getSingleMostDirectionFromStartToTarget
 import com.engine.common.interfaces.IPositionSupplier
 import com.engine.common.interfaces.Resettable
 import com.engine.common.interfaces.Updatable
@@ -25,7 +26,7 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
     const val DELAY_DURATION = .35f
     const val TRANS_DURATION = 1f
     const val DISTANCE_ON_TRANSITION = 1.5f
-    const val INTERPOLATION_SCALAR = 12.5f
+    const val DEFAULT_INTERPOLATION_SCALAR = 12.5f
   }
 
   private val delayTimer = Timer(DELAY_DURATION)
@@ -36,6 +37,9 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
 
   private val focusStart = Vector2()
   private val focusTarget = Vector2()
+
+  var interpolate = true
+  var interpolationScalar = DEFAULT_INTERPOLATION_SCALAR
 
   var gameRooms: Array<RectangleMapObject>? = null
 
@@ -90,7 +94,7 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
   var continueTransition: ((Float) -> Unit)? = null
   var endTransition: (() -> Unit)? = null
 
-  var reset = false
+  private var reset = false
 
   override fun update(delta: Float) {
     if (reset) {
@@ -107,6 +111,25 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
 
   override fun reset() {
     reset = true
+  }
+
+  fun transitionToRoom(roomName: String): Boolean {
+    if (currentGameRoom == null)
+        throw IllegalStateException(
+            "Cannot transition to room $roomName because the current game room is null")
+
+    val nextGameRoom = gameRooms?.first { it.name == roomName } ?: return false
+
+    transitionDirection =
+        getSingleMostDirectionFromStartToTarget(
+            currentGameRoom!!.rectangle.getCenter(Vector2()),
+            nextGameRoom.rectangle.getCenter(Vector2()))
+    setTransitionValues(nextGameRoom.rectangle)
+
+    priorGameRoom = currentGameRoom
+    currentGameRoom = nextGameRoom
+
+    return true
   }
 
   private fun setTransitionValues(next: Rectangle) {
@@ -278,11 +301,13 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
 
   private fun setCameraToFocusable(delta: Float) {
     focus?.let {
-      val pos = it.getPosition()
-      val interpolatedPos =
-          interpolate(camera.position.toVector2(), pos, delta * INTERPOLATION_SCALAR)
-      camera.position.x = interpolatedPos.x
-      camera.position.y = interpolatedPos.y
+      val focusPos = it.getPosition()
+      val cameraPos =
+          if (interpolate)
+              interpolate(camera.position.toVector2(), focusPos, delta * interpolationScalar)
+          else focusPos
+      camera.position.x = cameraPos.x
+      camera.position.y = cameraPos.y
     }
   }
 }

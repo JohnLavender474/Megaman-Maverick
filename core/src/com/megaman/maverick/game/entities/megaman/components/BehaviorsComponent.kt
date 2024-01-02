@@ -84,7 +84,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 body.physics.velocity.y > 0f
             else {
               val bButtonJustPressed =
-                  game.controllerPoller.isButtonJustPressed(ControllerButton.B.name)
+                  game.controllerPoller.isButtonJustPressed(ControllerButton.A.name)
               val doSwim = bButtonJustPressed && bButtonTask == BButtonTask.SWIM
               GameLogger.debug(
                   MEGAMAN_SWIM_BEHAVIOR_TAG,
@@ -107,7 +107,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             if (damaged ||
                 isAnyBehaviorActive(BehaviorType.SWIMMING, BehaviorType.CLIMBING) ||
                 body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) ||
-                !game.controllerPoller.isButtonPressed(ControllerButton.B.name) ||
+                !game.controllerPoller.isButtonPressed(ControllerButton.A.name) ||
                 game.controllerPoller.isButtonPressed(
                     if (upsideDown) ControllerButton.UP.name else ControllerButton.DOWN.name))
                 return@Behavior false
@@ -117,7 +117,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
               if (upsideDown) velocity.y <= 0f else velocity.y >= 0f
             } else
                 bButtonTask == BButtonTask.JUMP &&
-                    game.controllerPoller.isButtonJustPressed(ControllerButton.B.name) &&
+                    game.controllerPoller.isButtonJustPressed(ControllerButton.A.name) &&
                     (body.isSensing(BodySense.FEET_ON_GROUND) ||
                         isBehaviorActive(BehaviorType.WALL_SLIDING))
           },
@@ -163,9 +163,9 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 return@Behavior false
 
             return@Behavior if (isBehaviorActive(BehaviorType.AIR_DASHING))
-                game.controllerPoller.isButtonPressed(ControllerButton.B.name)
+                game.controllerPoller.isButtonPressed(ControllerButton.A.name)
             else
-                game.controllerPoller.isButtonJustPressed(ControllerButton.B.name) &&
+                game.controllerPoller.isButtonJustPressed(ControllerButton.A.name) &&
                     bButtonTask == BButtonTask.AIR_DASH
           },
           // init
@@ -226,8 +226,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 return@Behavior false
 
             return@Behavior if (isBehaviorActive(BehaviorType.GROUND_SLIDING))
-                game.controllerPoller.isButtonPressed(ControllerButton.B.name)
-            else game.controllerPoller.isButtonJustPressed(ControllerButton.B.name)
+                game.controllerPoller.isButtonPressed(ControllerButton.A.name)
+            else game.controllerPoller.isButtonJustPressed(ControllerButton.A.name)
           },
           // init
           init = {
@@ -293,7 +293,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
               else if (centerY + 0.15f * ConstVals.PPM < ladder.body.y) return false
             }
 
-            if (game.controllerPoller.isButtonJustPressed(ControllerButton.B.name)) return false
+            if (game.controllerPoller.isButtonJustPressed(ControllerButton.A.name)) return false
 
             return true
           }

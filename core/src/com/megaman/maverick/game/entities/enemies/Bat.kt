@@ -53,7 +53,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
   companion object {
     private var atlas: TextureAtlas? = null
 
-    private const val DEBUG_PATHFINDING = true
+    private const val DEBUG_PATHFINDING = false
     private const val HANG_DURATION = 1.75f
     private const val RELEASE_FROM_PERCH_DURATION = .25f
     private const val FLY_TO_ATTACK_SPEED = 3f
@@ -234,7 +234,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
                   body.getCenter(),
                   FLY_TO_ATTACK_SPEED,
                   body,
-                  stopOnTargetReached = true,
+                  stopOnTargetReached = false,
                   stopOnTargetNull = true,
                   shapes = if (DEBUG_PATHFINDING) getMegamanMaverickGame().getShapes() else null)
             },

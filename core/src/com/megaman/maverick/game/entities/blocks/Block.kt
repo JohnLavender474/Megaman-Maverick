@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.engine.IGame2D
 import com.engine.common.GameLogger
+import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.cullables.CullablesComponent
@@ -38,7 +39,8 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
     body.fixtures.forEach { (_, fixture) -> fixture.setEntity(this) }
     addComponent(BodyComponent(this, body))
     addComponent(UpdatablesComponent(this, { (bodyFixture.shape as GameRectangle).set(body) }))
-    addComponent(DrawableShapesComponent(this, { body }))
+    addComponent(
+        DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
   }
 
   override fun spawn(spawnProps: Properties) {

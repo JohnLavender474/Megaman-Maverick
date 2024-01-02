@@ -6,7 +6,6 @@ import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.ObjectSet
 import com.badlogic.gdx.utils.viewport.FitViewport
@@ -43,7 +42,6 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.special.Water
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
@@ -62,13 +60,11 @@ class MegamanMaverickGame : Game2D() {
 
   companion object {
     const val TAG = "MegamanMaverickGame"
-    const val DEBUG_SHAPES = true
+    const val DEBUG_SHAPES = false
   }
 
   lateinit var megaman: Megaman
   lateinit var audioMan: MegaAudioManager
-
-  override lateinit var shapeRenderer: ShapeRenderer
 
   fun startLevelScreen(level: Level) {
     val levelScreen = screens.get(ScreenEnum.LEVEL.name) as MegaLevelScreen
@@ -97,10 +93,8 @@ class MegamanMaverickGame : Game2D() {
 
     GameLogger.set(GameLogLevel.ERROR)
     GameLogger.filterByTag = true
-    GameLogger.tagsToLog.addAll(Water.TAG)
-
-    shapeRenderer = ShapeRenderer()
-    shapeRenderer.setAutoShapeType(true)
+    GameLogger.tagsToLog.addAll(
+        Megaman.MEGAMAN_EVENT_LISTENER_TAG, MegaLevelScreen.MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG)
 
     val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
     val screenHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
@@ -133,8 +127,8 @@ class MegamanMaverickGame : Game2D() {
     buttons.put(ControllerButton.RIGHT.name, Button(Input.Keys.D))
     buttons.put(ControllerButton.UP.name, Button(Input.Keys.W))
     buttons.put(ControllerButton.DOWN.name, Button(Input.Keys.S))
-    buttons.put(ControllerButton.A.name, Button(Input.Keys.J))
-    buttons.put(ControllerButton.B.name, Button(Input.Keys.K))
+    buttons.put(ControllerButton.B.name, Button(Input.Keys.J))
+    buttons.put(ControllerButton.A.name, Button(Input.Keys.K))
     buttons.put(ControllerButton.START.name, Button(Input.Keys.ENTER))
     if (ControllerUtils.isControllerConnected()) {
       val mapping = ControllerUtils.getController()?.mapping
@@ -143,8 +137,8 @@ class MegamanMaverickGame : Game2D() {
         buttons.get(ControllerButton.RIGHT.name)?.controllerCode = mapping.buttonDpadRight
         buttons.get(ControllerButton.UP.name)?.controllerCode = mapping.buttonDpadUp
         buttons.get(ControllerButton.DOWN.name)?.controllerCode = mapping.buttonDpadDown
-        buttons.get(ControllerButton.A.name)?.controllerCode = mapping.buttonA
-        buttons.get(ControllerButton.B.name)?.controllerCode = mapping.buttonX
+        buttons.get(ControllerButton.A.name)?.controllerCode = mapping.buttonB
+        buttons.get(ControllerButton.B.name)?.controllerCode = mapping.buttonY
         buttons.get(ControllerButton.START.name).controllerCode = mapping.buttonStart
       }
     }

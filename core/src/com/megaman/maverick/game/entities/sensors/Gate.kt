@@ -5,6 +5,7 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
+import com.engine.audio.AudioComponent
 import com.engine.common.GameLogger
 import com.engine.common.enums.Position
 import com.engine.common.extensions.getTextureAtlas
@@ -19,6 +20,7 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.entities.GameEntity
+import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.ISpriteEntity
 import com.engine.events.Event
@@ -39,7 +41,7 @@ import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
 class Gate(game: MegamanMaverickGame) :
-    GameEntity(game), IBodyEntity, ISpriteEntity, IEventListener, Resettable {
+    GameEntity(game), IBodyEntity, IAudioEntity, ISpriteEntity, IEventListener, Resettable {
 
   enum class GateState {
     OPENABLE,
@@ -74,6 +76,7 @@ class Gate(game: MegamanMaverickGame) :
     addComponent(defineUpdatablesComponent())
     addComponent(defineSpritesCompoent())
     addComponent(defineAnimationsComponent())
+    addComponent(AudioComponent(this))
 
     runnablesOnDestroy.add { game.eventsMan.removeListener(this) }
   }
@@ -116,44 +119,36 @@ class Gate(game: MegamanMaverickGame) :
       UpdatablesComponent(
           this,
           {
-            when (state) {
-              // opening
-              GateState.OPENING -> {
-                timer.update(it)
-                if (timer.isFinished()) {
-                  GameLogger.debug(TAG, "Set gate to OPENED")
-                  timer.reset()
-                  state = GateState.OPEN
-                  game.eventsMan.submitEvent(Event(EventType.GATE_FINISH_OPENING))
-                  game.eventsMan.submitEvent(
-                      Event(EventType.NEXT_ROOM_REQ, props(ConstKeys.ROOM to nextRoomKey)))
-                }
+            if (state == GateState.OPENING) {
+              timer.update(it)
+              if (timer.isFinished()) {
+                GameLogger.debug(TAG, "Set gate to OPENED")
+                timer.reset()
+                state = GateState.OPEN
+                game.eventsMan.submitEvent(Event(EventType.GATE_FINISH_OPENING))
+                game.eventsMan.submitEvent(
+                    Event(EventType.NEXT_ROOM_REQ, props(ConstKeys.ROOM to nextRoomKey)))
               }
+            }
 
-              // open
-              GateState.OPEN -> {
-                if (transitionFinished) {
-                  GameLogger.debug(TAG, "Set gate to CLOSING")
-                  transitionFinished = false
-                  state = GateState.CLOSING
-                  (game as MegamanMaverickGame)
-                      .audioMan
-                      .playSound(SoundAsset.BOSS_DOOR.source, false)
-                  game.eventsMan.submitEvent(Event(EventType.GATE_INIT_CLOSING))
-                }
+            if (state == GateState.OPEN) {
+              if (transitionFinished) {
+                GameLogger.debug(TAG, "Set gate to CLOSING")
+                transitionFinished = false
+                state = GateState.CLOSING
+                requestToPlaySound(SoundAsset.BOSS_DOOR, false)
+                game.eventsMan.submitEvent(Event(EventType.GATE_INIT_CLOSING))
               }
+            }
 
-              // closing
-              GateState.CLOSING -> {
-                timer.update(it)
-                if (timer.isFinished()) {
-                  GameLogger.debug(TAG, "Set gate to CLOSED")
-                  timer.reset()
-                  state = GateState.CLOSED
-                  game.eventsMan.submitEvent(Event(EventType.GATE_FINISH_CLOSING))
-                }
+            if (state == GateState.CLOSING) {
+              timer.update(it)
+              if (timer.isFinished()) {
+                GameLogger.debug(TAG, "Set gate to CLOSED")
+                timer.reset()
+                state = GateState.CLOSED
+                game.eventsMan.submitEvent(Event(EventType.GATE_FINISH_CLOSING))
               }
-              else -> {}
             }
           })
 
