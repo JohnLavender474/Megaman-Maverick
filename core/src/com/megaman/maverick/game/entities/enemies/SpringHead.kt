@@ -36,6 +36,7 @@ import com.megaman.maverick.game.utils.VelocityAlterationType
 import com.megaman.maverick.game.utils.getMegamanMaverickGame
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
+import com.megaman.maverick.game.world.getBody
 import kotlin.reflect.KClass
 
 class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
@@ -126,14 +127,18 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     // bouncer fixture
     val bouncerFixture = Fixture(GameCircle().setRadius(0.35f * ConstVals.PPM), FixtureType.BOUNCER)
-    bouncerFixture.putProperty(ConstKeys.VELOCITY_ALTERATION, this::velocityAlteration)
+    bouncerFixture.putProperty(
+        ConstKeys.VELOCITY_ALTERATION,
+        { bounceable: Fixture, _: Float -> velocityAlteration(bounceable) })
     body.addFixture(bouncerFixture)
 
     return BodyComponentCreator.create(this, body)
   }
 
-  private fun velocityAlteration(bounceableBody: Body): VelocityAlteration {
+  private fun velocityAlteration(bounceable: Fixture): VelocityAlteration {
     if (bouncing) return VelocityAlteration.addNone()
+
+    val bounceableBody = bounceable.getBody()
     bounceTimer.reset()
     val x = (if (body.x > bounceableBody.x) -X_BOUNCE else X_BOUNCE) * ConstVals.PPM
     return VelocityAlteration(

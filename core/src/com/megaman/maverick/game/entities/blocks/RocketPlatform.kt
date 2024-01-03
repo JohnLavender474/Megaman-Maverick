@@ -65,7 +65,9 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), ISpriteEntity, IE
     // define the trajectory
     val trajectory = Trajectory(spawnProps.get(ConstKeys.TRAJECTORY) as String, ConstVals.PPM)
     val motionDefinition =
-        MotionComponent.MotionDefinition(trajectory) { body.physics.velocity.set(it) }
+        MotionComponent.MotionDefinition(trajectory) { value, delta ->
+          body.physics.velocity.set(value.scl(delta))
+        }
     getComponent(MotionComponent::class)!!.put(ConstKeys.TRAJECTORY, motionDefinition)
   }
 

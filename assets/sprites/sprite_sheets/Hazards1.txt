@@ -1,75 +1,82 @@
 Hazards1.png
 size: 255, 272
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Linear,Linear
 repeat: none
 Flame
   rotate: false
-  xy: 0, 0
+  xy: 0, 32
   size: 64, 16
   orig: 64, 16
   offset: 0, 0
   index: -1
 FlameColumn
   rotate: false
-  xy: 64, 0
+  xy: 128, 32
   size: 120, 111
   orig: 120, 111
   offset: 0, 0
   index: -1
 FlameThrower
   rotate: false
-  xy: 184, 0
+  xy: 30, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 LaserBeamer
   rotate: false
-  xy: 216, 0
+  xy: 62, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Saw
   rotate: false
-  xy: 0, 111
+  xy: 0, 143
   size: 255, 129
   orig: 255, 129
   offset: 0, 0
   index: -1
 Spike1
   rotate: false
-  xy: 0, 240
+  xy: 158, 0
   size: 33, 31
   orig: 33, 31
   offset: 0, 0
   index: -1
 Spike2
   rotate: false
-  xy: 33, 240
+  xy: 0, 0
   size: 30, 32
   orig: 30, 32
   offset: 0, 0
   index: -1
 Spike3
   rotate: false
-  xy: 63, 240
+  xy: 191, 0
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: -1
 Spike4
   rotate: false
-  xy: 96, 240
+  xy: 94, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Spike5
   rotate: false
-  xy: 128, 240
+  xy: 126, 0
   size: 32, 32
   orig: 32, 32
+  offset: 0, 0
+  index: -1
+SwingingAxe
+  rotate: false
+  xy: 64, 32
+  size: 64, 64
+  orig: 64, 64
   offset: 0, 0
   index: -1

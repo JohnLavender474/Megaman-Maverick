@@ -93,7 +93,7 @@
   <object id="63" name="UpsideDown" x="6784" y="256" width="192" height="320"/>
  </objectgroup>
  <objectgroup id="4" name="player">
-  <object id="6" name="0" x="6400" y="352" width="32" height="32"/>
+  <object id="6" name="0" x="64" y="576" width="32" height="32"/>
  </objectgroup>
  <layer id="1" name="tiles" width="300" height="20">
   <data encoding="csv">

@@ -85,7 +85,7 @@ class Saw(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEnt
     val pendulum =
         Pendulum(
             LENGTH * ConstVals.PPM, PENDULUM_GRAVITY * ConstVals.PPM, bounds.getCenter(), 1 / 60f)
-    putMotion(ConstKeys.PENDULUM, MotionDefinition(pendulum) { body.setCenter(it) })
+    putMotion(ConstKeys.PENDULUM, MotionDefinition(pendulum) { value, _ -> body.setCenter(value) })
 
     val shapes = Array<() -> IDrawableShape>()
 
@@ -115,7 +115,9 @@ class Saw(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEnt
   private fun setToRotation(bounds: GameRectangle) {
     val rotation =
         RotatingLine(bounds.getCenter(), LENGTH * ConstVals.PPM, ROTATION_SPEED * ConstVals.PPM)
-    putMotion(ConstKeys.ROTATION, MotionDefinition(rotation) { body.setCenter(it) })
+    putMotion(
+        ConstKeys.ROTATION,
+        MotionDefinition(rotation) { value, delta -> body.setCenter(value.scl(delta)) })
 
     val shapes = Array<() -> IDrawableShape>()
 
@@ -144,7 +146,9 @@ class Saw(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEnt
 
   private fun setToTrajectory(trajectoryDefinition: String) {
     val trajectory = Trajectory(trajectoryDefinition, ConstVals.PPM)
-    putMotion(ConstKeys.TRAJECTORY, MotionDefinition(trajectory) { body.setCenter(it) })
+    putMotion(
+        ConstKeys.TRAJECTORY,
+        MotionDefinition(trajectory) { value, delta -> body.setCenter(value.scl(delta)) })
   }
 
   private fun defineBodyComponent(): BodyComponent {
@@ -170,12 +174,12 @@ class Saw(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEnt
   private fun defineSpritesCompoent(): SpritesComponent {
     val sprite = GameSprite()
     sprite.setSize(2f * ConstVals.PPM)
-    val SpritesComponent = SpritesComponent(this, "saw" to sprite)
-    SpritesComponent.putUpdateFunction("saw") { _, _sprite ->
+    val spritesComponent = SpritesComponent(this, "saw" to sprite)
+    spritesComponent.putUpdateFunction("saw") { _, _sprite ->
       _sprite as GameSprite
       _sprite.setPosition(body.getCenter(), Position.CENTER)
     }
-    return SpritesComponent
+    return spritesComponent
   }
 
   private fun defineAnimationsComponent(): AnimationsComponent {

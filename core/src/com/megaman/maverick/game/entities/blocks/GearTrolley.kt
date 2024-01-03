@@ -14,6 +14,7 @@ import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
+import com.engine.entities.contracts.IMotionEntity
 import com.engine.entities.contracts.ISpriteEntity
 import com.engine.events.Event
 import com.engine.events.IEventListener
@@ -26,7 +27,8 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.events.EventType
 
-class GearTrolley(game: MegamanMaverickGame) : Block(game), ISpriteEntity, IEventListener {
+class GearTrolley(game: MegamanMaverickGame) :
+    Block(game), IMotionEntity, ISpriteEntity, IEventListener {
 
   companion object {
     private var region: TextureRegion? = null
@@ -65,8 +67,9 @@ class GearTrolley(game: MegamanMaverickGame) : Block(game), ISpriteEntity, IEven
 
     // define the trajectory
     val trajectory = Trajectory(spawnProps.get(ConstKeys.TRAJECTORY) as String, ConstVals.PPM)
-    val motionDefinition = MotionDefinition(trajectory) { body.physics.velocity.set(it) }
-    getComponent(MotionComponent::class)!!.put(ConstKeys.TRAJECTORY, motionDefinition)
+    val motionDefinition =
+        MotionDefinition(trajectory) { value, delta -> body.physics.velocity.set(value.scl(delta)) }
+    putMotion(ConstKeys.TRAJECTORY, motionDefinition)
   }
 
   override fun onEvent(event: Event) {

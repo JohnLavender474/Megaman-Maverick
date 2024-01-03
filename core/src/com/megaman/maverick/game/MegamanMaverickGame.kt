@@ -116,8 +116,8 @@ class MegamanMaverickGame : Game2D() {
     megaman.init()
     megaman.initialized = true
 
-    // startLevelScreen(Level.TEST1)
-    startLevelScreen(Level.TEST5)
+    startLevelScreen(Level.TEST1)
+    // startLevelScreen(Level.TEST5)
     // setCurrentScreen(ScreenEnum.MAIN.name)
   }
 

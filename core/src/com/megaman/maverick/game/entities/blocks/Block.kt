@@ -46,9 +46,9 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
   override fun spawn(spawnProps: Properties) {
     super.spawn(spawnProps)
 
-    var persist = false
-    if (spawnProps.containsKey(ConstKeys.PERSIST))
-        persist = spawnProps.get(ConstKeys.PERSIST) as Boolean
+    val persist =
+        if (spawnProps.containsKey(ConstKeys.PERSIST)) spawnProps.get(ConstKeys.PERSIST) as Boolean
+        else false
     if (persist) removeComponent(CullablesComponent::class)
     else addComponent(CullablesComponent(this, getGameCameraCullingLogic(this)))
 
