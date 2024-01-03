@@ -117,7 +117,7 @@ class Saw(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEnt
         RotatingLine(bounds.getCenter(), LENGTH * ConstVals.PPM, ROTATION_SPEED * ConstVals.PPM)
     putMotion(
         ConstKeys.ROTATION,
-        MotionDefinition(rotation) { value, delta -> body.setCenter(value.scl(delta)) })
+        MotionDefinition(rotation) { value, _ -> body.setCenter(value) })
 
     val shapes = Array<() -> IDrawableShape>()
 

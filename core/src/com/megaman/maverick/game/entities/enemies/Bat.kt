@@ -212,13 +212,9 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
   private fun definePathfindingComponent(): PathfindingComponent {
     val params =
         PathfinderParams(
-            // start at this bat's body center
             startSupplier = { body.getCenter() },
-            // target the top center point of Megaman
             targetSupplier = { getMegamanMaverickGame().megaman.body.getTopCenterPoint() },
-            // don't travel diagonally
-            allowDiagonal = { false },
-            // try to avoid collision with blocks when pathfinding
+            allowDiagonal = { true },
             filter = { _, objs ->
               objs.none { it is Fixture && it.fixtureLabel == FixtureType.BLOCK }
             })
@@ -235,7 +231,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
                   FLY_TO_ATTACK_SPEED,
                   body,
                   stopOnTargetReached = false,
-                  stopOnTargetNull = true,
+                  stopOnTargetNull = false,
                   shapes = if (DEBUG_PATHFINDING) getMegamanMaverickGame().getShapes() else null)
             },
             { status == BatStatus.FLYING_TO_ATTACK })

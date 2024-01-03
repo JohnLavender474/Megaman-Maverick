@@ -21,9 +21,11 @@ enum class MusicAsset(src: String) : IAsset {
   MMX_SIGMA_1ST_MUSIC("MMX_Sigma1st.mp3"),
   MM2_BOSS_INTRO_MUSIC("MM2_Boss_Intro.mp3"),
   MMZ_NEO_ARCADIA_MUSIC("MMZ_NeoArcadia.mp3"),
+  MMZ_ENEMY_HALL_MUSIC("MMZ_EnemyHall.mp3"),
   STAGE_SELECT_MM3_MUSIC("StageSelectMM3.mp3"),
   MMX3_INTRO_STAGE_MUSIC("MMX3_IntroStage.ogg"),
   MM11_MAIN_MENU_MUSIC("MM11_Main_Menu.mp3"),
+  MM_OMEGA_TITLE_THEME_MUSIC("Megaman_Omega_TitleTheme.mp3"),
   MMX_LEVEL_SELECT_SCREEN_MUSIC("MMX_LevelSelectScreen.ogg"),
   MM3_SNAKE_MAN_MUSIC("SnakeManMM3.mp3");
 

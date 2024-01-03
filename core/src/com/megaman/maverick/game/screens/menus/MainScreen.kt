@@ -340,7 +340,7 @@ class MainScreen(game: MegamanMaverickGame) :
   override fun show() {
     super.show()
     castGame.getUiCamera().setToDefaultPosition()
-    castGame.audioMan.playMusic(MusicAsset.MM11_WILY_STAGE_MUSIC)
+    castGame.audioMan.playMusic(MusicAsset.MM_OMEGA_TITLE_THEME_MUSIC)
   }
 
   override fun render(delta: Float) {

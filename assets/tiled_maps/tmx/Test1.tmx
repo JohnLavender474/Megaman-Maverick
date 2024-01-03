@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="300" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="66">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="300" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="67">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <objectgroup id="2" name="blocks">
   <object id="1" x="0" y="224" width="32" height="416"/>
@@ -51,7 +51,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="3" name="game_rooms" visible="0">
+ <objectgroup id="3" name="game_rooms">
   <object id="5" name="room_1" x="0" y="224" width="960" height="416"/>
   <object id="11" name="room_2" x="960" y="224" width="1440" height="416"/>
   <object id="22" name="room_3" x="2400" y="224" width="928" height="416"/>

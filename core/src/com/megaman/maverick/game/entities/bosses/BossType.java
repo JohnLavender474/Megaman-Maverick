@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Queue;
 
 public enum BossType {
-    TIMBER_WOMAN("Timber Woman", Level.TEST1, Position.TOP_LEFT, TextureAsset.TIMBER_WOMAN) {
+    TIMBER_WOMAN("Timber Woman", Level.TIMBER_WOMAN, Position.TOP_LEFT, TextureAsset.TIMBER_WOMAN) {
         @Override
         public Vector2 getSpriteSize() {
             return new Vector2(4.25f, 3.5f);
