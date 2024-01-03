@@ -1,7 +1,7 @@
 Hazards1.png
-size: 255, 272
+size: 255, 353
 format: RGBA8888
-filter: Linear,Linear
+filter: Nearest,Nearest
 repeat: none
 Flame
   rotate: false
@@ -12,7 +12,7 @@ Flame
   index: -1
 FlameColumn
   rotate: false
-  xy: 128, 32
+  xy: 0, 96
   size: 120, 111
   orig: 120, 111
   offset: 0, 0
@@ -33,7 +33,7 @@ LaserBeamer
   index: -1
 Saw
   rotate: false
-  xy: 0, 143
+  xy: 0, 224
   size: 255, 129
   orig: 255, 129
   offset: 0, 0
@@ -76,6 +76,20 @@ Spike5
 SwingingAxe
   rotate: false
   xy: 64, 32
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+SwingingAxe_HandleEndCentered
+  rotate: false
+  xy: 120, 96
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+SwingingAxe_UpsideDown
+  rotate: false
+  xy: 128, 32
   size: 64, 64
   orig: 64, 64
   offset: 0, 0

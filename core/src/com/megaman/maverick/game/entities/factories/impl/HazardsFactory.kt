@@ -8,29 +8,23 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.factories.EntityPoolCreator
 import com.megaman.maverick.game.entities.hazards.LaserBeamer
 import com.megaman.maverick.game.entities.hazards.Saw
+import com.megaman.maverick.game.entities.hazards.SwinginAxe
 
-/** A factory that creates hazards. */
 class HazardsFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntity> {
 
   companion object {
     const val SAW = "Saw"
     const val LASER_BEAMER = "LaserBeamer"
+    const val SWINGIN_AXE = "SwinginAxe"
   }
 
   private val pools = ObjectMap<Any, Pool<IGameEntity>>()
 
   init {
-    // saws
-    pools.put(SAW, EntityPoolCreator.create(3) { Saw(game) })
-    // laser beamers
-    pools.put(LASER_BEAMER, EntityPoolCreator.create(3) { LaserBeamer(game) })
+    pools.put(SAW, EntityPoolCreator.create(2) { Saw(game) })
+    pools.put(LASER_BEAMER, EntityPoolCreator.create(2) { LaserBeamer(game) })
+    pools.put(SWINGIN_AXE, EntityPoolCreator.create(2) { SwinginAxe(game) })
   }
 
-  /**
-   * Fetches a hazard from the pool.
-   *
-   * @param key The key of the hazard to fetch.
-   * @return A hazard from the pool.
-   */
   override fun fetch(key: Any) = pools.get(key)?.fetch()
 }

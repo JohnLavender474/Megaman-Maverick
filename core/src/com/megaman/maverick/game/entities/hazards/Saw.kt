@@ -66,7 +66,7 @@ class Saw(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEnt
   override fun spawn(spawnProps: Properties) {
     super.spawn(spawnProps)
 
-    getMotions().clear()
+    clearMotions()
 
     val bounds = spawnProps.get(ConstKeys.BOUNDS) as GameRectangle
     val type = spawnProps.get(ConstKeys.TYPE) as String
