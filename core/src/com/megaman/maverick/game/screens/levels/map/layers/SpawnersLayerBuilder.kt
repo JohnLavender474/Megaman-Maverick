@@ -57,7 +57,10 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
         spawnProps.put(ConstKeys.BOUNDS, it.rectangle.toGameRectangle())
 
         val spawnSupplier = {
-          Spawn(EntityFactories.fetch(entityType, it.name ?: "")!!, spawnProps)
+          val entity =
+              EntityFactories.fetch(entityType, it.name ?: "")
+                  ?: throw IllegalStateException("Entity of type $entityType not found: ${it.name}")
+          Spawn(entity, spawnProps)
         }
 
         val respawnable =

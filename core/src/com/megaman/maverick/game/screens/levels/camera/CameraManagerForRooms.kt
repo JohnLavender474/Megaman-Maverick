@@ -303,7 +303,7 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
     focus?.let {
       val focusPos = it.getPosition()
       val cameraPos =
-          if (interpolate)
+          if (interpolate && !reset)
               interpolate(camera.position.toVector2(), focusPos, delta * interpolationScalar)
           else focusPos
       camera.position.x = cameraPos.x

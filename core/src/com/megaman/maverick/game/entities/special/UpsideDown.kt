@@ -31,7 +31,7 @@ class UpsideDown(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity {
     body.set(bounds)
     upsideDownBounds.set(bounds)
 
-    addComponent(createCullablesComponent(bounds))
+    addComponent(createCullablesComponent())
   }
 
   private fun defineBodyComponent(): BodyComponent {
@@ -45,7 +45,7 @@ class UpsideDown(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity {
     return BodyComponentCreator.create(this, body)
   }
 
-  private fun createCullablesComponent(bounds: GameRectangle): CullablesComponent {
+  private fun createCullablesComponent(): CullablesComponent {
     val cullOnOutOfBounds = getGameCameraCullingLogic(this)
     return CullablesComponent(this, gdxArrayOf(cullOnOutOfBounds))
   }

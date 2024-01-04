@@ -59,9 +59,9 @@ object StandardPathfinderResultConsumer {
       val _target = iter.next()
 
       if (!targetPursuer.overlaps(_target as Rectangle)) {
-        shapes?.let {
+        shapes?.let { _shapes ->
           _target.color = Color.PURPLE
-          it.add(_target)
+          _shapes.add(_target)
         }
 
         target = _target.getCenter()

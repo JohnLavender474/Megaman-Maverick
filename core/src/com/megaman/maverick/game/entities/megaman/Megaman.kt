@@ -142,17 +142,15 @@ class Megaman(game: MegamanMaverickGame) :
         else weaponHandler.getAmmo(currentWeapon)
 
   var damageFlash = false
-
   var maverick = false
-
   var ready = false
 
   override var upsideDown: Boolean
-    get() = getProperty(MegamanProps.UPSIDE_DOWN) == true
+    get() = getProperty(ConstKeys.UPSIDE_DOWN) == true
     set(value) {
       GameLogger.debug(TAG, "set upside down = $value")
 
-      putProperty(MegamanProps.UPSIDE_DOWN, value)
+      putProperty(ConstKeys.UPSIDE_DOWN, value)
       if (upsideDown) {
         // jump
         jumpVel = -MegamanValues.JUMP_VEL

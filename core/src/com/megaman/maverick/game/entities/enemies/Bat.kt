@@ -216,7 +216,9 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
             targetSupplier = { getMegamanMaverickGame().megaman.body.getTopCenterPoint() },
             allowDiagonal = { true },
             filter = { _, objs ->
-              objs.none { it is Fixture && it.fixtureLabel == FixtureType.BLOCK }
+              for (obj in objs) if (obj is Fixture && obj.fixtureLabel == FixtureType.BLOCK)
+                  return@PathfinderParams false
+              return@PathfinderParams true
             })
 
     val pathfindingComponent =

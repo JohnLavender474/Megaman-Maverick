@@ -126,10 +126,12 @@ class SwinginAxe(game: MegamanMaverickGame) :
             LENGTH * ConstVals.PPM, PENDULUM_GRAVITY * ConstVals.PPM, bounds.getCenter(), 1 / 60f)
     putMotion(
         ConstKeys.PENDULUM,
-        MotionComponent.MotionDefinition(pendulum) { value, _ ->
-          deathCircle.setCenter(value)
-          shieldCircle.setCenter(value)
-        })
+        MotionComponent.MotionDefinition(
+            motion = pendulum,
+            function = { value, _ ->
+              deathCircle.setCenter(value)
+              shieldCircle.setCenter(value)
+            }))
 
     val shapesComponent = getComponent(DrawableShapesComponent::class)!!
 

@@ -11,7 +11,7 @@ class Stars(game: MegamanMaverickGame, var startX: Float, var startY: Float) :
     Background(
         startX,
         startY,
-        game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_1.source, "StarFieldBG")!!,
+        game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_1.source, "StarFieldBG"),
         DrawingPriority(DrawingSection.FOREGROUND, 1),
         WIDTH * ConstVals.PPM,
         HEIGHT * ConstVals.PPM,

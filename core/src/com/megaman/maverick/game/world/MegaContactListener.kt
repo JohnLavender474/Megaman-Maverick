@@ -212,11 +212,15 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
 
     // body, upside down
     else if (contact.fixturesMatch(FixtureType.BODY, FixtureType.UPSIDE_DOWN)) {
-      GameLogger.debug(TAG, "beginContact(): Body-UpsideDown, contact = $contact")
       val (body, _) = contact.getFixturesInOrder(FixtureType.BODY, FixtureType.UPSIDE_DOWN)!!
 
       val entity = body.getEntity()
-      if (entity is IUpsideDownable) entity.upsideDown = true
+      if (entity is IUpsideDownable) {
+        GameLogger.debug(
+            TAG,
+            "beginContact(): Body-UpsideDown, setting upside-down to true for entity = $entity")
+        entity.upsideDown = true
+      }
     }
 
     // projectile, block or body or shield or water

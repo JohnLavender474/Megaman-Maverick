@@ -32,6 +32,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.defineProjectileComponents
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
@@ -64,6 +65,7 @@ class JoeBall(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity {
     if (snowJoeBallReg == null)
         snowJoeBallReg =
             game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "SnowJoeball")
+    defineProjectileComponents().forEach { addComponent(it) }
     addComponent(defineBodyComponent())
     addComponent(defineSpritesCompoent())
     addComponent(defineAnimationsComponent())

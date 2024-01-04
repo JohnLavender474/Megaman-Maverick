@@ -14,6 +14,7 @@ import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
+import com.engine.drawables.sprites.setSize
 import com.engine.entities.contracts.IMotionEntity
 import com.engine.entities.contracts.ISpriteEntity
 import com.engine.events.Event
@@ -34,7 +35,7 @@ class GearTrolley(game: MegamanMaverickGame) :
     private var region: TextureRegion? = null
 
     private const val WIDTH = 1.25f
-    private const val HEIGHT = .35f
+    private const val HEIGHT = 0.35f
   }
 
   override val eventKeyMask = objectSetOf<Any>(EventType.BEGIN_ROOM_TRANS, EventType.END_ROOM_TRANS)
@@ -68,7 +69,11 @@ class GearTrolley(game: MegamanMaverickGame) :
     // define the trajectory
     val trajectory = Trajectory(spawnProps.get(ConstKeys.TRAJECTORY) as String, ConstVals.PPM)
     val motionDefinition =
-        MotionDefinition(trajectory) { value, delta -> body.physics.velocity.set(value.scl(delta)) }
+        MotionDefinition(
+            motion = trajectory,
+            function = { value, _ -> body.physics.velocity.set(value) },
+            onReset = { body.set(bounds) })
+
     putMotion(ConstKeys.TRAJECTORY, motionDefinition)
   }
 
@@ -76,15 +81,16 @@ class GearTrolley(game: MegamanMaverickGame) :
     when (event.key) {
       EventType.BEGIN_ROOM_TRANS -> {
         firstSprite!!.hidden = true
-        getComponent(MotionComponent::class)!!.reset()
+        resetMotionComponent()
       }
       EventType.END_ROOM_TRANS -> firstSprite!!.hidden = false
+      EventType.PLAYER_SPAWN -> resetMotionComponent()
     }
   }
 
   private fun defineSpritesCompoent(): SpritesComponent {
     val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 2))
-    sprite.setSize(1.5f * ConstVals.PPM, 1.5f * ConstVals.PPM)
+    sprite.setSize(1.5f * ConstVals.PPM)
 
     val SpritesComponent = SpritesComponent(this, "trolley" to sprite)
     SpritesComponent.putUpdateFunction("trolley") { _, _sprite ->
@@ -92,11 +98,12 @@ class GearTrolley(game: MegamanMaverickGame) :
       _sprite.setPosition(body.getCenter(), Position.CENTER)
       _sprite.translateY(-ConstVals.PPM / 16f)
     }
+
     return SpritesComponent
   }
 
   private fun defineAnimationsComponent(): AnimationsComponent {
-    val animation = Animation(region!!, 1, 2, 0.15f)
+    val animation = Animation(region!!, 1, 2, 0.15f, true)
     val animator = Animator(animation)
     return AnimationsComponent(this, animator)
   }

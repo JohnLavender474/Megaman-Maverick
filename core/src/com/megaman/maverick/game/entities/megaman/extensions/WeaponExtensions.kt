@@ -16,6 +16,6 @@ fun Megaman.shoot(): Boolean {
 }
 
 fun Megaman.canFireWeapon(weapon: MegamanWeapon) =
-    weaponHandler.canFireWeapon(weapon!!, chargeStatus)
+    weaponHandler.canFireWeapon(weapon, chargeStatus)
 
 fun Megaman.canFireCurrentWeapon() = canFireWeapon(currentWeapon)

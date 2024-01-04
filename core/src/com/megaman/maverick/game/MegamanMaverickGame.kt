@@ -54,6 +54,7 @@ import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.MegaCollisionHandler
 import com.megaman.maverick.game.world.MegaContactListener
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 @Suppress("UNCHECKED_CAST")
 class MegamanMaverickGame : Game2D() {
@@ -93,8 +94,7 @@ class MegamanMaverickGame : Game2D() {
 
     GameLogger.set(GameLogLevel.ERROR)
     GameLogger.filterByTag = true
-    GameLogger.tagsToLog.addAll(
-        Megaman.MEGAMAN_EVENT_LISTENER_TAG, MegaLevelScreen.MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG)
+    GameLogger.tagsToLog.addAll()
 
     val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
     val screenHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
@@ -117,9 +117,9 @@ class MegamanMaverickGame : Game2D() {
     megaman.initialized = true
 
     // startLevelScreen(Level.TEST1)
-    // startLevelScreen(Level.TEST5)
+    startLevelScreen(Level.TEST5)
     // setCurrentScreen(ScreenEnum.MAIN.name)
-    startLevelScreen(Level.TIMBER_WOMAN)
+    // startLevelScreen(Level.TIMBER_WOMAN)
   }
 
   override fun createButtons(): Buttons {
@@ -200,7 +200,10 @@ class MegamanMaverickGame : Game2D() {
                 contactFilterMap),
             CullablesSystem(),
             MotionSystem(),
-            PathfindingSystem { Pathfinder(getGraphMap()!!, it.params) },
+            PathfindingSystem(
+                { Pathfinder(getGraphMap()!!, it.params) },
+                timeout = 10,
+                timeoutUnit = TimeUnit.MILLISECONDS),
             PointsSystem(),
             UpdatablesSystem(),
             SpritesSystem { sprites },

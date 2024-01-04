@@ -37,6 +37,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IUpsideDownable
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -55,7 +56,7 @@ import kotlin.reflect.KClass
  *
  * @param game The game instance.
  */
-class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
+class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IUpsideDownable {
 
   enum class MetBehavior {
     SHIELDING,
@@ -81,11 +82,9 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     private const val VELOCITY_CLAMP_Y = 1.5f
   }
 
-  private val metBehaviorTimers =
-      objectMapOf(
-          MetBehavior.SHIELDING to Timer(SHIELDING_DURATION),
-          MetBehavior.POP_UP to Timer(POP_UP_DURATION),
-          MetBehavior.RUNNING to Timer(RUNNING_DURATION))
+  override lateinit var facing: Facing
+
+  override var upsideDown = false
 
   override val damageNegotiations =
       objectMapOf<KClass<out IDamager>, Int>(
@@ -94,7 +93,11 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
           ChargedShot::class to ConstVals.MAX_HEALTH,
           ChargedShotExplosion::class to ConstVals.MAX_HEALTH)
 
-  override lateinit var facing: Facing
+  private val metBehaviorTimers =
+      objectMapOf(
+          MetBehavior.SHIELDING to Timer(SHIELDING_DURATION),
+          MetBehavior.POP_UP to Timer(POP_UP_DURATION),
+          MetBehavior.RUNNING to Timer(RUNNING_DURATION))
 
   private lateinit var type: String
 
@@ -126,14 +129,21 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     val right = spawnProps.getOrDefault(ConstKeys.RIGHT, false) as Boolean
     facing = if (right) Facing.RIGHT else Facing.LEFT
+
+    upsideDown = false
   }
 
   private fun shoot() {
-    val trajectory = Vector2(BULLET_TRAJECTORY_X, BULLET_TRAJECTORY_Y)
+    val trajectory =
+        Vector2(BULLET_TRAJECTORY_X, if (upsideDown) -BULLET_TRAJECTORY_Y else BULLET_TRAJECTORY_Y)
     if (facing == Facing.LEFT) trajectory.x *= -1
 
     val offset = ConstVals.PPM / 64f
-    val spawn = body.getCenter().add(if (facing == Facing.LEFT) -offset else offset, offset)
+    val spawn =
+        body
+            .getCenter()
+            .add(
+                if (facing == Facing.LEFT) -offset else offset, if (upsideDown) -offset else offset)
 
     val spawnProps =
         props(
@@ -213,7 +223,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         Fixture(
             GameRectangle().setSize(0.75f * ConstVals.PPM, 0.5f * ConstVals.PPM),
             FixtureType.SHIELD)
-    shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
+
     body.addFixture(shieldFixture)
 
     // damageable fixture
@@ -229,9 +239,14 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     // pre-process
     body.preProcess = Updatable {
       body.physics.gravity.y =
-          if (body.isSensing(BodySense.FEET_ON_GROUND)) 0f else -GRAVITY_Y * ConstVals.PPM
+          if (body.isSensing(BodySense.FEET_ON_GROUND)) 0f
+          else ((if (upsideDown) GRAVITY_Y else -GRAVITY_Y) * ConstVals.PPM)
+
       shieldFixture.active = behavior == MetBehavior.SHIELDING
       damageableFixture.active = behavior != MetBehavior.SHIELDING
+
+      val direction = if (upsideDown) Direction.DOWN else Direction.UP
+      shieldFixture.putProperty(ConstKeys.DIRECTION, direction)
     }
 
     addComponent(DrawableShapesComponent(this, shapes))
@@ -246,9 +261,10 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     val SpritesComponent = SpritesComponent(this, "met" to sprite)
     SpritesComponent.putUpdateFunction("met") { _, _sprite ->
       _sprite as GameSprite
-      _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
-      _sprite.setFlip(facing == Facing.LEFT, false)
-      // TODO: _sprite.hidden = damageBlink
+      val position = if (upsideDown) Position.TOP_CENTER else Position.BOTTOM_CENTER
+      val bodyPosition = body.getPositionPoint(position)
+      _sprite.setPosition(bodyPosition, position)
+      _sprite.setFlip(facing == Facing.LEFT, upsideDown)
     }
 
     return SpritesComponent

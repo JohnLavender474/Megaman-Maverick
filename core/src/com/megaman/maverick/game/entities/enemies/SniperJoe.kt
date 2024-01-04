@@ -8,6 +8,7 @@ import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
+import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
 import com.engine.common.enums.Facing
 import com.engine.common.enums.Position
@@ -40,6 +41,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IUpsideDownable
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -51,9 +53,10 @@ import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import kotlin.reflect.KClass
 
-class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
+class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IUpsideDownable {
 
   companion object {
+    const val TAG = "SniperJoe"
     const val SNOW_TYPE = "Snow"
 
     private val TIMES_TO_SHOOT = floatArrayOf(.15f, .75f, 1.35f)
@@ -66,6 +69,8 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     private const val SHIELD_DUR = 1.75f
     private const val SHOOT_DUR = 1.5f
 
+    private const val GRAVITY = .015f
+
     private var atlas: TextureAtlas? = null
   }
 
@@ -77,6 +82,12 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
           Fireball::class to 15,
           ChargedShot::class to 15,
           ChargedShotExplosion::class to 15)
+
+  override var upsideDown = false
+    set(value) {
+      field = value
+      GameLogger.debug(TAG, "Setting upside down: $value")
+    }
 
   private val shieldTimer = Timer(SHIELD_DUR)
   private val shootTimer = Timer(SHOOT_DUR)
@@ -109,6 +120,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     shieldTimer.setToEnd()
     shootTimer.setToEnd()
     shielded = true
+    upsideDown = false
   }
 
   override fun defineBodyComponent(): BodyComponent {
@@ -116,6 +128,10 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     body.setSize(ConstVals.PPM.toFloat(), 1.25f * ConstVals.PPM)
 
     val shapes = Array<() -> IDrawableShape>()
+
+    // body fixture
+    val bodyFixture = Fixture(GameRectangle().set(body), FixtureType.BODY)
+    body.addFixture(bodyFixture)
 
     // damager fixture
     val damagerFixture =
@@ -149,6 +165,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     // pre-process
     body.preProcess = Updatable {
+      body.physics.gravity.y = (if (upsideDown) GRAVITY else -GRAVITY) * ConstVals.PPM
       shieldFixture.active = shielded
       if (shielded) {
         damageableFixture.offsetFromBodyCenter.x = 0.25f * ConstVals.PPM * -facing.value
@@ -167,8 +184,10 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     val SpritesComponent = SpritesComponent(this, "sniperjoe" to sprite)
     SpritesComponent.putUpdateFunction("sniperjoe") { _, _sprite ->
       _sprite as GameSprite
-      _sprite.setFlip(facing == Facing.LEFT, false)
-      _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+      _sprite.setFlip(facing == Facing.LEFT, upsideDown)
+      val position = if (upsideDown) Position.TOP_CENTER else Position.BOTTOM_CENTER
+      val bodyPosition = body.getPositionPoint(position)
+      _sprite.setPosition(bodyPosition, position)
     }
     return SpritesComponent
   }
@@ -201,7 +220,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
   private fun shoot() {
     val spawn = body.getCenter()
     spawn.x += 0.25f * ConstVals.PPM * facing.value
-    spawn.y -= 0.15f * ConstVals.PPM
+    spawn.y += (if (upsideDown) 0.15f else -0.15f) * ConstVals.PPM
 
     val trajectory = Vector2()
 

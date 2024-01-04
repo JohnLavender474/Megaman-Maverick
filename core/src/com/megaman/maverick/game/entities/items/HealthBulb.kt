@@ -39,6 +39,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.contracts.IUpsideDownable
 import com.megaman.maverick.game.entities.contracts.ItemEntity
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.events.EventType
@@ -49,7 +50,7 @@ import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.isSensing
 
 class HealthBulb(game: MegamanMaverickGame) :
-    GameEntity(game), ItemEntity, ISpriteEntity, IBodyEntity {
+    GameEntity(game), ItemEntity, ISpriteEntity, IBodyEntity, IUpsideDownable {
 
   companion object {
     const val TAG = "HealthBulb"
@@ -63,8 +64,10 @@ class HealthBulb(game: MegamanMaverickGame) :
     private const val BLINK_DUR = .01f
     private const val CULL_DUR = 3.5f
 
-    private const val GRAVITY = -0.25f
+    private const val GRAVITY = .25f
   }
+
+  override var upsideDown = false
 
   private val blinkTimer = Timer(BLINK_DUR)
   private val cullTimer = Timer(CULL_DUR)
@@ -132,9 +135,12 @@ class HealthBulb(game: MegamanMaverickGame) :
 
   private fun defineBodyComponent(): BodyComponent {
     val body = Body(BodyType.ABSTRACT)
-    body.physics.gravity.y = GRAVITY * ConstVals.PPM
 
     val shapes = Array<() -> IDrawableShape>()
+
+    // body fixture
+    val bodyFixture = Fixture(GameRectangle().set(body), FixtureType.BODY)
+    body.addFixture(bodyFixture)
 
     // item fixture
     itemFixture = Fixture(GameRectangle(), FixtureType.ITEM)
@@ -160,6 +166,8 @@ class HealthBulb(game: MegamanMaverickGame) :
       body.physics.gravityOn = gameCamera.overlaps(body) && !landed
 
       if (!body.physics.gravityOn) body.physics.velocity.y = 0f
+
+      body.physics.gravity.y = (if (upsideDown) GRAVITY else -GRAVITY) * ConstVals.PPM
     }
 
     addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
@@ -174,7 +182,11 @@ class HealthBulb(game: MegamanMaverickGame) :
     val SpritesComponent = SpritesComponent(this, "healthBulb" to sprite)
     SpritesComponent.putUpdateFunction("healthBulb") { _, _sprite ->
       _sprite as GameSprite
-      _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+
+      val position = if (upsideDown) Position.TOP_CENTER else Position.BOTTOM_CENTER
+      val bodyPosition = body.getPositionPoint(position)
+      _sprite.setPosition(bodyPosition, position)
+
       _sprite.hidden = blink
     }
 

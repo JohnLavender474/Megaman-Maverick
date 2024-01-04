@@ -27,6 +27,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.contracts.IUpsideDownable
 import com.megaman.maverick.game.entities.contracts.ItemEntity
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
@@ -36,14 +37,17 @@ import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
 class HeartTank(game: MegamanMaverickGame) :
-    GameEntity(game), ItemEntity, IBodyEntity, ISpriteEntity {
+    GameEntity(game), ItemEntity, IBodyEntity, ISpriteEntity, IUpsideDownable {
 
   companion object {
     const val TAG = "HeartTank"
     private var textureRegion: TextureRegion? = null
   }
 
-  private lateinit var heartTank: MegaHeartTank
+  override var upsideDown: Boolean = false
+
+  lateinit var heartTank: MegaHeartTank
+    private set
 
   override fun init() {
     if (textureRegion == null)
@@ -57,6 +61,7 @@ class HeartTank(game: MegamanMaverickGame) :
     super.spawn(spawnProps)
 
     heartTank = MegaHeartTank.get(spawnProps.get(ConstKeys.VALUE, String::class)!!)
+    upsideDown = spawnProps.getOrDefault(ConstKeys.UPSIDE_DOWN, false) as Boolean
 
     val megaman = getMegamanMaverickGame().megaman
     if (megaman.has(heartTank))
@@ -92,7 +97,12 @@ class HeartTank(game: MegamanMaverickGame) :
     val SpritesComponent = SpritesComponent(this, "heart" to sprite)
     SpritesComponent.putUpdateFunction("heart") { _, _sprite ->
       _sprite as GameSprite
-      _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+
+      val position = if (upsideDown) Position.TOP_CENTER else Position.BOTTOM_CENTER
+      val bodyPosition = body.getPositionPoint(position)
+      _sprite.setPosition(bodyPosition, position)
+
+      _sprite.setFlip(false, upsideDown)
     }
     return SpritesComponent
   }

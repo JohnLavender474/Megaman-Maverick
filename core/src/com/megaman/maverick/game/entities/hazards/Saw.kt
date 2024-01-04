@@ -76,7 +76,7 @@ class Saw(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEnt
       ROTATION_TYPE -> setToRotation(bounds)
       TRAJECTORY_TYPE -> {
         val trajectory = spawnProps.get(ConstKeys.TRAJECTORY) as String
-        setToTrajectory(trajectory)
+        setToTrajectory(bounds, trajectory)
       }
     }
   }
@@ -85,7 +85,9 @@ class Saw(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEnt
     val pendulum =
         Pendulum(
             LENGTH * ConstVals.PPM, PENDULUM_GRAVITY * ConstVals.PPM, bounds.getCenter(), 1 / 60f)
-    putMotion(ConstKeys.PENDULUM, MotionDefinition(pendulum) { value, _ -> body.setCenter(value) })
+    putMotion(
+        ConstKeys.PENDULUM,
+        MotionDefinition(motion = pendulum, function = { value, _ -> body.setCenter(value) }))
 
     val shapes = Array<() -> IDrawableShape>()
 
@@ -117,7 +119,7 @@ class Saw(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEnt
         RotatingLine(bounds.getCenter(), LENGTH * ConstVals.PPM, ROTATION_SPEED * ConstVals.PPM)
     putMotion(
         ConstKeys.ROTATION,
-        MotionDefinition(rotation) { value, _ -> body.setCenter(value) })
+        MotionDefinition(motion = rotation, function = { value, _ -> body.setCenter(value) }))
 
     val shapes = Array<() -> IDrawableShape>()
 
@@ -144,11 +146,17 @@ class Saw(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEnt
     addComponent(DrawableShapesComponent(this, shapes))
   }
 
-  private fun setToTrajectory(trajectoryDefinition: String) {
+  private fun setToTrajectory(bounds: GameRectangle, trajectoryDefinition: String) {
+    val spawn = bounds.getCenter()
+    body.setCenter(spawn)
+
     val trajectory = Trajectory(trajectoryDefinition, ConstVals.PPM)
     putMotion(
         ConstKeys.TRAJECTORY,
-        MotionDefinition(trajectory) { value, delta -> body.setCenter(value.scl(delta)) })
+        MotionDefinition(
+            motion = trajectory,
+            function = { value, delta -> body.setCenter(value.scl(delta)) },
+            onReset = { body.setCenter(spawn) }))
   }
 
   private fun defineBodyComponent(): BodyComponent {

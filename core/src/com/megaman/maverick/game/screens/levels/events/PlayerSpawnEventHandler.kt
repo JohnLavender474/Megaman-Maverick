@@ -61,7 +61,7 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) :
       beamSprite = Sprite(beamRegion)
       beamSprite.setSize(1.5f * ConstVals.PPM)
 
-      beamLandAnimation = Animation(atlas.findRegion("BeamLand"), 1, 2, .1f, false)
+      beamLandAnimation = Animation(atlas.findRegion("BeamLand"), 1, 2, 0.1f, false)
 
       ready =
           BitmapFontHandle(
