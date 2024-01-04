@@ -58,7 +58,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
           // init
           init = {
             bButtonTask = BButtonTask.JUMP
-
             GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "Init method called")
           },
           // act

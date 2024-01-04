@@ -15,6 +15,7 @@ object ConstVals {
 
 object ConstKeys {
   const val UPSIDE_DOWN = "upside_down"
+  const val SIDEWAYS = "sideways"
   const val HAZARDS = "hazards"
   const val PPM = "ppm"
   const val GRAVITY = "gravity"

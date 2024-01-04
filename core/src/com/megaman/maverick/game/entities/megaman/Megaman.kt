@@ -28,9 +28,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.IProjectileEntity
-import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.IHealthEntity
-import com.megaman.maverick.game.entities.contracts.IUpsideDownable
+import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.enemies.*
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -52,6 +50,7 @@ class Megaman(game: MegamanMaverickGame) :
     IFaceable,
     IDamageable,
     IUpsideDownable,
+    ISidewaysable,
     IBodyEntity,
     IHealthEntity,
     ISpriteEntity,
@@ -145,12 +144,24 @@ class Megaman(game: MegamanMaverickGame) :
   var maverick = false
   var ready = false
 
+  override var sidewaysValue: SidewaysValue? = null
+    set(value) {
+      if (value == null) {
+        field = null
+        return
+      }
+      upsideDown = false
+      field = value
+    }
+
   override var upsideDown: Boolean
     get() = getProperty(ConstKeys.UPSIDE_DOWN) == true
     set(value) {
       GameLogger.debug(TAG, "set upside down = $value")
 
       putProperty(ConstKeys.UPSIDE_DOWN, value)
+      putProperty(ConstKeys.SIDEWAYS, false)
+
       if (upsideDown) {
         // jump
         jumpVel = -MegamanValues.JUMP_VEL
