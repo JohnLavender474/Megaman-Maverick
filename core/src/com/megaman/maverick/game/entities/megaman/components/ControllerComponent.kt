@@ -4,7 +4,6 @@ import com.engine.common.GameLogger
 import com.engine.common.enums.Facing
 import com.engine.controller.ControllerComponent
 import com.engine.controller.buttons.ButtonActuator
-import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.ControllerButton
 import com.megaman.maverick.game.assets.SoundAsset
@@ -21,66 +20,65 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
   // left
   val left =
       ButtonActuator(
-          onJustPressed = { _ ->
-            GameLogger.debug(Megaman.TAG, "left controller button just pressed")
-          },
+          onJustPressed = { _ -> GameLogger.debug(Megaman.TAG, "left actuator just pressed") },
           onPressContinued = { poller, delta ->
-            if (damaged || poller.isButtonPressed(ControllerButton.RIGHT.name))
-                return@ButtonActuator
+            if (damaged || poller.isPressed(ControllerButton.RIGHT)) return@ButtonActuator
 
             facing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) Facing.RIGHT else Facing.LEFT
+
             if (isBehaviorActive(BehaviorType.CLIMBING)) return@ButtonActuator
             running = !isBehaviorActive(BehaviorType.WALL_SLIDING)
 
             val threshold =
                 (if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_RUN_SPEED
                 else MegamanValues.RUN_SPEED) * ConstVals.PPM
+            val impulse =
+                if (body.isSensing(BodySense.FEET_ON_ICE)) MegamanValues.ICE_RUN_IMPULSE
+                else MegamanValues.RUN_IMPULSE
 
-            if (body.physics.velocity.x > -threshold) {
-              val impulseX =
-                  if (body.isSensing(BodySense.FEET_ON_ICE)) MegamanValues.ICE_RUN_IMPULSE
-                  else MegamanValues.RUN_IMPULSE
-              body.physics.velocity.x -= impulseX * delta * ConstVals.PPM
-            }
+            if (isDirectionRotatedVertically() && body.physics.velocity.x > -threshold)
+                body.physics.velocity.x -= impulse * delta * ConstVals.PPM
+            else if (isDirectionRotatedHorizontally() && body.physics.velocity.y > -threshold)
+                body.physics.velocity.y -= impulse * delta * ConstVals.PPM
           },
           onJustReleased = { poller ->
-            GameLogger.debug(Megaman.TAG, "left controller button just released")
-            if (!poller.isButtonPressed(ControllerButton.RIGHT.name)) running = false
+            GameLogger.debug(Megaman.TAG, "left actuator just released")
+            if (!poller.isPressed(ControllerButton.RIGHT)) running = false
           },
           onReleaseContinued = { poller, _ ->
-            if (!poller.isButtonPressed(ControllerButton.RIGHT.name)) running = false
+            if (!poller.isPressed(ControllerButton.RIGHT)) running = false
           })
 
   // right
   val right =
       ButtonActuator(
-          onJustPressed = { _ ->
-            GameLogger.debug(Megaman.TAG, "right controller button just pressed")
-          },
+          onJustPressed = { _ -> GameLogger.debug(Megaman.TAG, "right actuator just pressed") },
           onPressContinued = { poller, delta ->
-            if (damaged || poller.isButtonPressed(ConstKeys.LEFT)) return@ButtonActuator
+            if (damaged || poller.isPressed(ControllerButton.LEFT)) return@ButtonActuator
 
             facing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) Facing.LEFT else Facing.RIGHT
+
             if (isBehaviorActive(BehaviorType.CLIMBING)) return@ButtonActuator
             running = !isBehaviorActive(BehaviorType.WALL_SLIDING)
 
             val threshold =
                 (if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_RUN_SPEED
                 else MegamanValues.RUN_SPEED) * ConstVals.PPM
+            val impulse =
+                if (body.isSensing(BodySense.FEET_ON_ICE)) MegamanValues.ICE_RUN_IMPULSE
+                else MegamanValues.RUN_IMPULSE
 
-            if (body.physics.velocity.x < threshold) {
-              val impulseX =
-                  if (body.isSensing(BodySense.FEET_ON_ICE)) MegamanValues.ICE_RUN_IMPULSE
-                  else MegamanValues.RUN_IMPULSE
-              body.physics.velocity.x += impulseX * delta * ConstVals.PPM
-            }
+            if (isDirectionRotatedVertically() && body.physics.velocity.x < threshold)
+                body.physics.velocity.x += impulse * delta * ConstVals.PPM
+            else if (isDirectionRotatedHorizontally() && body.physics.velocity.y < threshold)
+                body.physics.velocity.y += impulse * delta * ConstVals.PPM
           },
           onJustReleased = { poller ->
-            GameLogger.debug(Megaman.TAG, "right controller button just released")
-            if (!poller.isButtonPressed(ControllerButton.LEFT.name)) running = false
+            GameLogger.debug(Megaman.TAG, "right actuator just released")
+            if (!poller.isPressed(ControllerButton.LEFT)) running = false
           },
           onReleaseContinued = { poller, _ ->
-            if (!poller.isButtonPressed(ControllerButton.LEFT.name)) running = false
+            if (!poller.isPressed(ControllerButton.LEFT)) running = false
           })
 
   // attack
@@ -129,8 +127,8 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
 
   return ControllerComponent(
       this,
-      ControllerButton.LEFT.name to left,
-      ControllerButton.RIGHT.name to right,
-      ControllerButton.B.name to attack,
-      ControllerButton.SELECT.name to select)
+      ControllerButton.LEFT to { left },
+      ControllerButton.RIGHT to { right },
+      ControllerButton.B to { attack },
+      ControllerButton.SELECT to { select })
 }

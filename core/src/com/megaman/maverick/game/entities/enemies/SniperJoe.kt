@@ -127,7 +127,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IUp
     val body = Body(BodyType.DYNAMIC)
     body.setSize(ConstVals.PPM.toFloat(), 1.25f * ConstVals.PPM)
 
-    val shapes = Array<() -> IDrawableShape>()
+    val shapes = Array<() -> IDrawableShape?>()
 
     // body fixture
     val bodyFixture = Fixture(GameRectangle().set(body), FixtureType.BODY)

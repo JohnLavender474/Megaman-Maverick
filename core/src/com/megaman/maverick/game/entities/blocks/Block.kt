@@ -27,8 +27,7 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
 
   companion object {
     const val TAG = "Block"
-    const val STANDARD_FRIC_X = .035f
-    const val STANDARD_FRIC_Y = 0f
+    const val STANDARD_FRICTION = 0.035f
   }
 
   override fun init() {
@@ -54,11 +53,11 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
 
     if (properties.containsKey(ConstKeys.FRICTION_X))
         body.physics.frictionToApply.x = properties.get(ConstKeys.FRICTION_X) as Float
-    else body.physics.frictionToApply.x = STANDARD_FRIC_X
+    else body.physics.frictionToApply.x = STANDARD_FRICTION
 
     if (properties.containsKey(ConstKeys.FRICTION_Y))
         body.physics.frictionToApply.y = properties.get(ConstKeys.FRICTION_Y) as Float
-    else body.physics.frictionToApply.y = STANDARD_FRIC_Y
+    else body.physics.frictionToApply.y = STANDARD_FRICTION
 
     if (properties.containsKey(ConstKeys.GRAVITY_ON))
         body.physics.gravityOn = properties.get(ConstKeys.GRAVITY_ON) as Boolean

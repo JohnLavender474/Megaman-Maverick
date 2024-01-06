@@ -106,14 +106,15 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
 
     // pre-process
     body.preProcess = Updatable {
+      val damageableShape = damageableFixture.shape as GameRectangle
       if (turningAround) {
         shieldFixture.active = false
         damageableFixture.offsetFromBodyCenter.x = 0f
-        (damageableFixture.shape as GameRectangle).width = 0.5f * ConstVals.PPM
+        damageableShape.width = 0.5f * ConstVals.PPM
       } else {
         shieldFixture.active = true
         damageableFixture.offsetFromBodyCenter.x = (if (left) 0.5f else -0.5f) * ConstVals.PPM
-        (damageableFixture.shape as GameRectangle).width = 0.15f * ConstVals.PPM
+        damageableShape.width = 0.15f * ConstVals.PPM
       }
     }
 

@@ -36,12 +36,12 @@ abstract class AbstractMenuScreen(game: MegamanMaverickGame, protected val first
     val menuButton = menuButtons.get(currentButtonKey)
     menuButton?.let {
       val direction =
-          if (game.controllerPoller.isButtonJustPressed(ControllerButton.UP.name)) Direction.UP
-          else if (game.controllerPoller.isButtonJustPressed(ControllerButton.DOWN.name))
+          if (game.controllerPoller.isJustPressed(ControllerButton.UP)) Direction.UP
+          else if (game.controllerPoller.isJustPressed(ControllerButton.DOWN))
               Direction.DOWN
-          else if (game.controllerPoller.isButtonJustPressed(ControllerButton.LEFT.name))
+          else if (game.controllerPoller.isJustPressed(ControllerButton.LEFT))
               Direction.LEFT
-          else if (game.controllerPoller.isButtonJustPressed(ControllerButton.RIGHT.name))
+          else if (game.controllerPoller.isJustPressed(ControllerButton.RIGHT))
               Direction.RIGHT
           else null
 
@@ -50,8 +50,8 @@ abstract class AbstractMenuScreen(game: MegamanMaverickGame, protected val first
         menuButton.onNavigate(d, delta)?.let { currentButtonKey = it }
       }
 
-      if (game.controllerPoller.isButtonJustPressed(ControllerButton.START.name) ||
-          game.controllerPoller.isButtonJustPressed(ControllerButton.A.name))
+      if (game.controllerPoller.isJustPressed(ControllerButton.START) ||
+          game.controllerPoller.isJustPressed(ControllerButton.A))
           if (onAnySelection()) selectionMade = menuButton.onSelect(delta)
     }
   }

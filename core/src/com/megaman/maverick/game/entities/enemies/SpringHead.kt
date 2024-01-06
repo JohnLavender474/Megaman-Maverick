@@ -13,7 +13,6 @@ import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.interfaces.IFaceable
 import com.engine.common.objects.Properties
-import com.engine.common.shapes.GameCircle
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
 import com.engine.damage.IDamager
@@ -106,7 +105,7 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     rightFixture.offsetFromBodyCenter.set(0.4f * ConstVals.PPM, -ConstVals.PPM / 4f)
     body.addFixture(rightFixture)
 
-    val c1 = GameCircle().setRadius(0.5f * ConstVals.PPM)
+    val c1 = GameRectangle().setSize(ConstVals.PPM.toFloat())
 
     // damager fixture
     val damagerFixture = Fixture(c1.copy(), FixtureType.DAMAGER)
@@ -126,7 +125,7 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     body.addFixture(shieldFixture)
 
     // bouncer fixture
-    val bouncerFixture = Fixture(GameCircle().setRadius(0.35f * ConstVals.PPM), FixtureType.BOUNCER)
+    val bouncerFixture = Fixture(GameRectangle().setSize(0.7f * ConstVals.PPM), FixtureType.BOUNCER)
     bouncerFixture.putProperty(
         ConstKeys.VELOCITY_ALTERATION,
         { bounceable: Fixture, _: Float -> velocityAlteration(bounceable) })

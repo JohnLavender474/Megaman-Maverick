@@ -35,6 +35,8 @@ import com.engine.pathfinding.PathfindingSystem
 import com.engine.points.PointsSystem
 import com.engine.systems.IGameSystem
 import com.engine.updatables.UpdatablesSystem
+import com.engine.world.Body
+import com.engine.world.Fixture
 import com.engine.world.WorldSystem
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
@@ -61,7 +63,7 @@ class MegamanMaverickGame : Game2D() {
 
   companion object {
     const val TAG = "MegamanMaverickGame"
-    const val DEBUG_SHAPES = false
+    const val DEBUG_SHAPES = true
   }
 
   lateinit var megaman: Megaman
@@ -94,7 +96,7 @@ class MegamanMaverickGame : Game2D() {
 
     GameLogger.set(GameLogLevel.ERROR)
     GameLogger.filterByTag = true
-    GameLogger.tagsToLog.addAll()
+    GameLogger.tagsToLog.addAll(Megaman.TAG)
 
     val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
     val screenHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
@@ -124,23 +126,23 @@ class MegamanMaverickGame : Game2D() {
 
   override fun createButtons(): Buttons {
     val buttons = Buttons()
-    buttons.put(ControllerButton.LEFT.name, Button(Input.Keys.A))
-    buttons.put(ControllerButton.RIGHT.name, Button(Input.Keys.D))
-    buttons.put(ControllerButton.UP.name, Button(Input.Keys.W))
-    buttons.put(ControllerButton.DOWN.name, Button(Input.Keys.S))
-    buttons.put(ControllerButton.B.name, Button(Input.Keys.J))
-    buttons.put(ControllerButton.A.name, Button(Input.Keys.K))
-    buttons.put(ControllerButton.START.name, Button(Input.Keys.ENTER))
+    buttons.put(ControllerButton.LEFT, Button(Input.Keys.A))
+    buttons.put(ControllerButton.RIGHT, Button(Input.Keys.D))
+    buttons.put(ControllerButton.UP, Button(Input.Keys.W))
+    buttons.put(ControllerButton.DOWN, Button(Input.Keys.S))
+    buttons.put(ControllerButton.B, Button(Input.Keys.J))
+    buttons.put(ControllerButton.A, Button(Input.Keys.K))
+    buttons.put(ControllerButton.START, Button(Input.Keys.ENTER))
     if (ControllerUtils.isControllerConnected()) {
       val mapping = ControllerUtils.getController()?.mapping
       if (mapping != null) {
-        buttons.get(ControllerButton.LEFT.name)?.controllerCode = mapping.buttonDpadLeft
-        buttons.get(ControllerButton.RIGHT.name)?.controllerCode = mapping.buttonDpadRight
-        buttons.get(ControllerButton.UP.name)?.controllerCode = mapping.buttonDpadUp
-        buttons.get(ControllerButton.DOWN.name)?.controllerCode = mapping.buttonDpadDown
-        buttons.get(ControllerButton.A.name)?.controllerCode = mapping.buttonB
-        buttons.get(ControllerButton.B.name)?.controllerCode = mapping.buttonY
-        buttons.get(ControllerButton.START.name).controllerCode = mapping.buttonStart
+        buttons.get(ControllerButton.LEFT)?.controllerCode = mapping.buttonDpadLeft
+        buttons.get(ControllerButton.RIGHT)?.controllerCode = mapping.buttonDpadRight
+        buttons.get(ControllerButton.UP)?.controllerCode = mapping.buttonDpadUp
+        buttons.get(ControllerButton.DOWN)?.controllerCode = mapping.buttonDpadDown
+        buttons.get(ControllerButton.A)?.controllerCode = mapping.buttonB
+        buttons.get(ControllerButton.B)?.controllerCode = mapping.buttonY
+        buttons.get(ControllerButton.START).controllerCode = mapping.buttonStart
       }
     }
     return buttons
@@ -173,7 +175,7 @@ class MegamanMaverickGame : Game2D() {
             FixtureType.CONSUMER to objectSetOf(*FixtureType.values()),
             FixtureType.PLAYER to objectSetOf(FixtureType.ITEM),
             FixtureType.DAMAGEABLE to objectSetOf(FixtureType.DEATH, FixtureType.DAMAGER),
-            FixtureType.BODY to objectSetOf(FixtureType.FORCE, FixtureType.UPSIDE_DOWN),
+            FixtureType.BODY to objectSetOf(FixtureType.FORCE, FixtureType.GRAVITY_CHANGE),
             FixtureType.WATER_LISTENER to objectSetOf(FixtureType.WATER),
             FixtureType.LADDER to objectSetOf(FixtureType.HEAD, FixtureType.FEET),
             FixtureType.SIDE to

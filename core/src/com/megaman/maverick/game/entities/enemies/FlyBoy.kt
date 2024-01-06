@@ -93,7 +93,7 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     val body = Body(BodyType.DYNAMIC)
     body.setSize(ConstVals.PPM.toFloat(), ConstVals.PPM * 2f)
 
-    val shapes = Array<() -> IDrawableShape>()
+    val shapes = Array<() -> IDrawableShape?>()
 
     // body fixture
     val bodyFixture = Fixture(GameRectangle().set(body), FixtureType.BODY)

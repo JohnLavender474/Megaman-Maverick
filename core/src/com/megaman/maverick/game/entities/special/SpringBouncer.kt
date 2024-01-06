@@ -150,14 +150,14 @@ class SpringBouncer(game: MegamanMaverickGame) :
     if (fixture.getEntity() is Megaman) {
       val controllerPoller = game.controllerPoller
       if ((direction == Direction.UP &&
-          controllerPoller.isButtonPressed(ControllerButton.UP.name)) ||
+          controllerPoller.isPressed(ControllerButton.UP)) ||
           (direction == Direction.DOWN &&
-              controllerPoller.isButtonPressed(ControllerButton.DOWN.name))) {
+              controllerPoller.isPressed(ControllerButton.DOWN))) {
         bounce.forceY *= 2f
       } else if ((direction == Direction.LEFT &&
-          controllerPoller.isButtonPressed(ControllerButton.LEFT.name)) ||
+          controllerPoller.isPressed(ControllerButton.LEFT)) ||
           (direction == Direction.RIGHT &&
-              controllerPoller.isButtonPressed(ControllerButton.RIGHT.name))) {
+              controllerPoller.isPressed(ControllerButton.RIGHT))) {
         bounce.forceX *= 2f
       }
     }

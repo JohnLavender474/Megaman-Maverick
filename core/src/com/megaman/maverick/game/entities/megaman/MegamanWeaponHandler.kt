@@ -3,6 +3,7 @@ package com.megaman.maverick.game.entities.megaman
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
+import com.engine.common.enums.Direction
 import com.engine.common.enums.Facing
 import com.engine.common.interfaces.Resettable
 import com.engine.common.interfaces.Updatable
@@ -75,18 +76,31 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
   private val spawnCenter: Vector2
     get() {
       val spawnCenter = Vector2(megaman.body.getCenter())
-      var xOffset: Float = ConstVals.PPM * .85f
 
-      if (megaman.facing == Facing.LEFT) xOffset *= -1f
-      spawnCenter.x += xOffset
+      if (megaman.isDirectionRotatedVertically()) {
+        val xOffset: Float = ConstVals.PPM * .85f * megaman.facing.value
+        spawnCenter.x += xOffset
 
-      var yOffset: Float = ConstVals.PPM / 16f
-      if (megaman.isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.WALL_SLIDING))
-          yOffset += .15f * ConstVals.PPM
-      else if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) yOffset -= .05f * ConstVals.PPM
-      else yOffset += .25f * ConstVals.PPM
+        var yOffset: Float = ConstVals.PPM / 16f
+        if (megaman.isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.WALL_SLIDING))
+            yOffset += .15f * ConstVals.PPM
+        else if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) yOffset -= .05f * ConstVals.PPM
+        else yOffset += .25f * ConstVals.PPM
 
-      spawnCenter.y += yOffset
+        spawnCenter.y += if (megaman.isDirectionRotatedDown()) -yOffset else yOffset
+      } else {
+        var xOffset = ConstVals.PPM / 16f
+        xOffset +=
+            if (megaman.isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.WALL_SLIDING))
+                .15f * ConstVals.PPM
+            else if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) .075f * ConstVals.PPM
+            else .25f * ConstVals.PPM
+        spawnCenter.x += if (megaman.isDirectionRotatedLeft()) -xOffset else xOffset
+
+        val yOffset: Float = ConstVals.PPM * .85f * megaman.facing.value
+        spawnCenter.y += yOffset
+      }
+
       return spawnCenter
     }
 
@@ -258,14 +272,17 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
       }
 
   private fun fireMegaBuster(stat: MegaChargeStatus): IProjectileEntity {
-    var x = MEGA_BUSTER_BULLET_VEL
-    if (megaman.facing == Facing.LEFT) x *= -1f
-
-    val trajectory = Vector2(x, 0f)
+    val trajectory = Vector2()
+    if (megaman.isDirectionRotatedVertically())
+        trajectory.x = MEGA_BUSTER_BULLET_VEL * megaman.facing.value
+    else trajectory.y = MEGA_BUSTER_BULLET_VEL * megaman.facing.value
 
     val props = Properties()
     props.put(ConstKeys.OWNER, megaman)
     props.put(ConstKeys.TRAJECTORY, trajectory)
+    props.put(
+        ConstKeys.DIRECTION,
+        if (megaman.isDirectionRotatedVertically()) Direction.UP else Direction.LEFT)
 
     val megaBusterShot =
         when (stat) {
@@ -288,8 +305,7 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
     val s = spawnCenter
 
     if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING)) s.y += 0.1f * ConstVals.PPM
-
-    if (megaman.upsideDown)
+    if (megaman.isDirectionRotatedDown())
         if (megaman.isBehaviorActive(BehaviorType.CLIMBING)) s.y -= .45f * ConstVals.PPM
         else s.y -= .05f * ConstVals.PPM
 

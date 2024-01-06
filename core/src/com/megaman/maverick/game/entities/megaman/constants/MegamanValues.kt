@@ -21,7 +21,7 @@ object MegamanValues {
   const val WATER_WALL_JUMP_VEL = 38f
   const val WALL_JUMP_VEL = 42f
 
-  const val WALL_JUMP_HORIZONTAL = 10f
+  const val WALL_JUMP_HORIZONTAL = 8f
   const val WALL_JUMP_IMPETUS_TIME = .1f
 
   const val GROUND_GRAVITY = -.0015f

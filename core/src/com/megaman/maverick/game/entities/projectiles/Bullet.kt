@@ -17,6 +17,7 @@ import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
+import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
 import com.engine.world.Body
@@ -30,6 +31,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.IProjectileEntity
+import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.defineProjectileComponents
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
@@ -43,7 +45,7 @@ import com.megaman.maverick.game.world.getEntity
  *
  * @param game The game instance to which this bullet belongs.
  */
-class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity {
+class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity, IDirectionRotatable {
 
   companion object {
     private const val CLAMP = 10f
@@ -51,6 +53,7 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity {
   }
 
   override var owner: IGameEntity? = null
+  override lateinit var directionRotation: Direction
 
   override fun init() {
     defineProjectileComponents().forEach { addComponent(it) }
@@ -65,6 +68,8 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity {
 
     val spawn = spawnProps.get(ConstKeys.POSITION) as Vector2
     body.setCenter(spawn)
+
+    directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP) as Direction
 
     val trajectory = spawnProps.get(ConstKeys.TRAJECTORY) as Vector2
     body.physics.velocity.set(trajectory.scl(ConstVals.PPM.toFloat()))
@@ -103,30 +108,24 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity {
     game.gameEngine.spawn(disintegration!!, props(ConstKeys.POSITION to body.getCenter()))
   }
 
-  /**
-   * Defines the body component of the bullet, including fixtures and shapes.
-   *
-   * @return The configured body component.
-   */
   private fun defineBodyComponent(): BodyComponent {
     val body = Body(BodyType.ABSTRACT)
     body.setSize(.15f * ConstVals.PPM)
     body.physics.velocityClamp.set(CLAMP * ConstVals.PPM, CLAMP * ConstVals.PPM)
 
-    // Body fixture
-    val bodyFixture = Fixture(body.copy(), FixtureType.BODY)
+    // body fixture
+    val bodyFixture = Fixture(GameRectangle().set(body), FixtureType.BODY)
     body.addFixture(bodyFixture)
 
-    // Hitbox fixture
+    // projectile fixture
     val projectileFixture =
         Fixture(GameRectangle().setSize(.2f * ConstVals.PPM), FixtureType.PROJECTILE)
     body.addFixture(projectileFixture)
 
-    // Damager fixture
+    // damager fixture
     val damagerFixture = Fixture(GameRectangle().setSize(.2f * ConstVals.PPM), FixtureType.DAMAGER)
     body.addFixture(damagerFixture)
 
-    // Add shapes component
     addComponent(
         DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
 
@@ -144,11 +143,15 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity {
         bulletRegion = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Bullet")
 
     val sprite = GameSprite(bulletRegion!!, DrawingPriority(DrawingSection.PLAYGROUND, 4))
-    sprite.setSize(1.25f * ConstVals.PPM, 1.25f * ConstVals.PPM)
+    sprite.setSize(1.25f * ConstVals.PPM)
 
     val SpritesComponent = SpritesComponent(this, "bullet" to sprite)
     SpritesComponent.putUpdateFunction("bullet") { _, _sprite ->
       (_sprite as GameSprite).setPosition(body.getCenter(), Position.CENTER)
+      val rotation =
+          if (directionRotation == Direction.UP || directionRotation == Direction.DOWN) 0f else 90f
+      _sprite.setOriginCenter()
+      _sprite.rotation = rotation
     }
 
     return SpritesComponent

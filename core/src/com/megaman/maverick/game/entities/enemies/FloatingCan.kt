@@ -76,7 +76,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
     val body = Body(BodyType.ABSTRACT)
     body.setSize(.75f * ConstVals.PPM)
 
-    val shapes = Array<() -> IDrawableShape>()
+    val shapes = Array<() -> IDrawableShape?>()
 
     // damageable fixture
     val damageableFixture =

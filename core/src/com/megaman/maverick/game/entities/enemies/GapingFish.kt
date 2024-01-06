@@ -100,7 +100,7 @@ class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     val body = Body(BodyType.DYNAMIC)
     body.setSize(ConstVals.PPM.toFloat())
 
-    val shapes = Array<() -> IDrawableShape>()
+    val shapes = Array<() -> IDrawableShape?>()
 
     // water-listener fixture
     val waterListenerFixture =

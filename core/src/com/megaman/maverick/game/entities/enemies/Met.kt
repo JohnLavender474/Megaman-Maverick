@@ -206,7 +206,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IUpsideDo
     body.physics.velocityClamp.set(
         VELOCITY_CLAMP_X * ConstVals.PPM, VELOCITY_CLAMP_Y * ConstVals.PPM)
 
-    val shapes = Array<() -> IDrawableShape>()
+    val shapes = Array<() -> IDrawableShape?>()
 
     // body fixture
     val bodyFixture = Fixture(GameRectangle().setSize(0.75f * ConstVals.PPM), FixtureType.BODY)

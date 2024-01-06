@@ -136,7 +136,7 @@ class HealthBulb(game: MegamanMaverickGame) :
   private fun defineBodyComponent(): BodyComponent {
     val body = Body(BodyType.ABSTRACT)
 
-    val shapes = Array<() -> IDrawableShape>()
+    val shapes = Array<() -> IDrawableShape?>()
 
     // body fixture
     val bodyFixture = Fixture(GameRectangle().set(body), FixtureType.BODY)

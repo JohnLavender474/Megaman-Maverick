@@ -5,20 +5,21 @@ import com.engine.behaviors.AbstractBehavior
 import com.engine.behaviors.Behavior
 import com.engine.behaviors.BehaviorsComponent
 import com.engine.common.GameLogger
+import com.engine.common.enums.Direction
 import com.engine.common.enums.Facing
+import com.engine.common.interfaces.isFacing
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.ControllerButton
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.megaman.constants.BButtonTask
+import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.special.Ladder
 import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.isSensing
 
-const val MEGAMAN_TEST_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: TestBehavior"
 const val MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: WallSlideBehavior"
 const val MEGAMAN_SWIM_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: SwimBehavior"
 const val MEGAMAN_JUMP_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: JumpBehavior"
@@ -27,15 +28,6 @@ const val MEGAMAN_GROUND_SLIDE_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: Grou
 
 internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
   val behaviorsComponent = BehaviorsComponent(this)
-
-  // test
-  val test =
-      Behavior(
-          evaluate = {
-            return@Behavior game.controllerPoller.isButtonPressed(ControllerButton.B.name)
-          },
-          init = { GameLogger.debug(MEGAMAN_TEST_BEHAVIOR_TAG, "Init method called") },
-          end = { GameLogger.debug(MEGAMAN_TEST_BEHAVIOR_TAG, "End method called") })
 
   // wall slide
   val wallSlide =
@@ -49,23 +41,25 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 return@Behavior false
 
             return@Behavior if (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) &&
-                game.controllerPoller.isButtonPressed(ControllerButton.LEFT.name))
+                game.controllerPoller.isPressed(ControllerButton.LEFT))
                 true
             else
                 body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) &&
-                    game.controllerPoller.isButtonPressed(ControllerButton.RIGHT.name)
+                    game.controllerPoller.isPressed(ControllerButton.RIGHT)
           },
           // init
           init = {
-            bButtonTask = BButtonTask.JUMP
+            aButtonTask = AButtonTask.JUMP
             GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "Init method called")
           },
           // act
-          act = { body.physics.frictionOnSelf.y += 1.25f },
+          act = {
+            if (isDirectionRotatedVertically()) body.physics.frictionOnSelf.y += 1.2f
+            else body.physics.frictionOnSelf.x += 1.2f
+          },
           // end
           end = {
-            if (!body.isSensing(BodySense.IN_WATER)) bButtonTask = BButtonTask.AIR_DASH
-
+            if (!body.isSensing(BodySense.IN_WATER)) aButtonTask = AButtonTask.AIR_DASH
             GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "End method called")
           })
 
@@ -80,20 +74,30 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 return@Behavior false
 
             return@Behavior if (isBehaviorActive(BehaviorType.SWIMMING))
-                body.physics.velocity.y > 0f
+                when (directionRotation) {
+                  Direction.UP -> body.physics.velocity.y > 0f
+                  Direction.DOWN -> body.physics.velocity.y < 0f
+                  Direction.LEFT -> body.physics.velocity.x < 0f
+                  Direction.RIGHT -> body.physics.velocity.x > 0f
+                }
             else {
-              val bButtonJustPressed =
-                  game.controllerPoller.isButtonJustPressed(ControllerButton.A.name)
-              val doSwim = bButtonJustPressed && bButtonTask == BButtonTask.SWIM
+              val aButtonJustPressed = game.controllerPoller.isJustPressed(ControllerButton.A)
+              val doSwim = aButtonJustPressed && aButtonTask == AButtonTask.SWIM
               GameLogger.debug(
                   MEGAMAN_SWIM_BEHAVIOR_TAG,
-                  "A button just pressed: $bButtonJustPressed. A button task: $bButtonTask. Evaluate method yielding $doSwim")
+                  "A button just pressed: $aButtonJustPressed. A button task: $aButtonTask. Evaluate method yielding $doSwim")
               doSwim
             }
           },
           // init
           init = {
-            body.physics.velocity.y += swimVelY * ConstVals.PPM
+            body.physics.velocity.add(
+                when (directionRotation) {
+                  Direction.UP -> Vector2(0f, swimVel * ConstVals.PPM)
+                  Direction.DOWN -> Vector2(0f, -swimVel * ConstVals.PPM)
+                  Direction.LEFT -> Vector2(-swimVel * ConstVals.PPM, 0f)
+                  Direction.RIGHT -> Vector2(swimVel * ConstVals.PPM, 0f)
+                })
             requestToPlaySound(SoundAsset.SWIM_SOUND, false)
             GameLogger.debug(MEGAMAN_SWIM_BEHAVIOR_TAG, "Init method called")
           })
@@ -106,47 +110,73 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             if (damaged ||
                 isAnyBehaviorActive(BehaviorType.SWIMMING, BehaviorType.CLIMBING) ||
                 body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) ||
-                !game.controllerPoller.isButtonPressed(ControllerButton.A.name) ||
-                game.controllerPoller.isButtonPressed(
-                    if (upsideDown) ControllerButton.UP.name else ControllerButton.DOWN.name))
+                !game.controllerPoller.isPressed(ControllerButton.A) ||
+                game.controllerPoller.isPressed(ControllerButton.DOWN))
                 return@Behavior false
 
             return@Behavior if (isBehaviorActive(BehaviorType.JUMPING)) {
               val velocity = body.physics.velocity
-              if (upsideDown) velocity.y <= 0f else velocity.y >= 0f
+              when (directionRotation) {
+                Direction.UP -> velocity.y >= 0f
+                Direction.DOWN -> velocity.y <= 0f
+                Direction.LEFT -> velocity.x <= 0f
+                Direction.RIGHT -> velocity.x >= 0f
+              }
             } else
-                bButtonTask == BButtonTask.JUMP &&
-                    game.controllerPoller.isButtonJustPressed(ControllerButton.A.name) &&
+                aButtonTask == AButtonTask.JUMP &&
+                    game.controllerPoller.isJustPressed(ControllerButton.A) &&
                     (body.isSensing(BodySense.FEET_ON_GROUND) ||
                         isBehaviorActive(BehaviorType.WALL_SLIDING))
           },
           // init
           init = {
             val v = Vector2()
-
             v.x =
-                if (isBehaviorActive(BehaviorType.WALL_SLIDING)) {
-                  var x = MegamanValues.WALL_JUMP_HORIZONTAL * ConstVals.PPM
-                  if (facing == Facing.LEFT) x *= -1
-                  x
-                } else body.physics.velocity.x
-
+                when (directionRotation) {
+                  Direction.UP,
+                  Direction.DOWN -> {
+                    if (isBehaviorActive(BehaviorType.WALL_SLIDING))
+                        MegamanValues.WALL_JUMP_HORIZONTAL * ConstVals.PPM * facing.value
+                    else body.physics.velocity.x
+                  }
+                  Direction.LEFT,
+                  Direction.RIGHT -> {
+                    ConstVals.PPM *
+                        if (body.isSensing(BodySense.IN_WATER))
+                            (if (isBehaviorActive(BehaviorType.WALL_SLIDING)) waterWallJumpVel
+                            else waterJumpVel)
+                        else
+                            (if (isBehaviorActive(BehaviorType.WALL_SLIDING)) wallJumpVel
+                            else jumpVel)
+                  }
+                }
             v.y =
-                if (body.isSensing(BodySense.IN_WATER))
-                    (if (isBehaviorActive(BehaviorType.WALL_SLIDING)) waterWallJumpVel
-                    else waterJumpVel)
-                else (if (isBehaviorActive(BehaviorType.WALL_SLIDING)) wallJumpVel else jumpVel)
-            v.y *= ConstVals.PPM
+                when (directionRotation) {
+                  Direction.UP,
+                  Direction.DOWN -> {
+                    ConstVals.PPM *
+                        if (body.isSensing(BodySense.IN_WATER))
+                            (if (isBehaviorActive(BehaviorType.WALL_SLIDING)) waterWallJumpVel
+                            else waterJumpVel)
+                        else
+                            (if (isBehaviorActive(BehaviorType.WALL_SLIDING)) wallJumpVel
+                            else jumpVel)
+                  }
+                  Direction.LEFT,
+                  Direction.RIGHT -> {
+                    if (isBehaviorActive(BehaviorType.WALL_SLIDING))
+                        MegamanValues.WALL_JUMP_HORIZONTAL * ConstVals.PPM * facing.value
+                    else body.physics.velocity.y
+                  }
+                }
             body.physics.velocity.set(v)
-
             requestToPlaySound(SoundAsset.WALL_JUMP, false)
-
             GameLogger.debug(MEGAMAN_JUMP_BEHAVIOR_TAG, "Init method called")
           },
           // end
           end = {
-            body.physics.velocity.y = 0f
-
+            if (isDirectionRotatedVertically()) body.physics.velocity.y = 0f
+            else body.physics.velocity.x = 0f
             GameLogger.debug(MEGAMAN_JUMP_BEHAVIOR_TAG, "End method called")
           })
 
@@ -162,49 +192,57 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 return@Behavior false
 
             return@Behavior if (isBehaviorActive(BehaviorType.AIR_DASHING))
-                game.controllerPoller.isButtonPressed(ControllerButton.A.name)
+                game.controllerPoller.isPressed(ControllerButton.A)
             else
-                game.controllerPoller.isButtonJustPressed(ControllerButton.A.name) &&
-                    bButtonTask == BButtonTask.AIR_DASH
+                game.controllerPoller.isJustPressed(ControllerButton.A) &&
+                    aButtonTask == AButtonTask.AIR_DASH
           },
           // init
           init = {
             body.physics.gravityOn = false
-            bButtonTask = BButtonTask.JUMP
-            requestToPlaySound(SoundAsset.WHOOSH_SOUND, true)
-
+            aButtonTask = AButtonTask.JUMP
+            requestToPlaySound(SoundAsset.WHOOSH_SOUND, false)
             GameLogger.debug(MEGAMAN_AIR_DASH_BEHAVIOR_TAG, "Init method called")
           },
           // act
           act = {
             airDashTimer.update(it)
 
-            body.physics.velocity.y = 0f
+            if (isDirectionRotatedVertically()) body.physics.velocity.y = 0f
+            else body.physics.velocity.x = 0f
 
-            if (facing == Facing.LEFT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) ||
-                facing == Facing.RIGHT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
+            if (isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) ||
+                isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
                 return@Behavior
 
-            var x =
-                (if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_AIR_DASH_VEL
-                else MegamanValues.AIR_DASH_VEL) * ConstVals.PPM
-            if (facing == Facing.LEFT) x *= -1f
+            val impulse =
+                facing.value *
+                    ConstVals.PPM *
+                    if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_AIR_DASH_VEL
+                    else MegamanValues.AIR_DASH_VEL
 
-            body.physics.velocity.x = x
+            when (directionRotation) {
+              Direction.UP,
+              Direction.DOWN -> body.physics.velocity.x = impulse
+              Direction.LEFT,
+              Direction.RIGHT -> body.physics.velocity.y = impulse
+            }
           },
           // end
           end = {
             airDashTimer.reset()
-
             body.physics.gravityOn = true
-
-            var x =
-                (if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_AIR_DASH_END_BUMP
-                else MegamanValues.AIR_DASH_END_BUMP) * ConstVals.PPM
-            if (facing == Facing.LEFT) x *= -1f
-
-            body.physics.velocity.x += x
-
+            val impulse =
+                facing.value *
+                    ConstVals.PPM *
+                    if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_AIR_DASH_END_BUMP
+                    else MegamanValues.AIR_DASH_END_BUMP
+            when (directionRotation) {
+              Direction.UP -> body.physics.velocity.x += impulse
+              Direction.DOWN -> body.physics.velocity.x -= impulse
+              Direction.LEFT -> body.physics.velocity.y += impulse
+              Direction.RIGHT -> body.physics.velocity.y -= impulse
+            }
             GameLogger.debug(MEGAMAN_AIR_DASH_BEHAVIOR_TAG, "End method called")
           })
 
@@ -220,19 +258,23 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             if (damaged ||
                 groundSlideTimer.isFinished() ||
                 !body.isSensing(BodySense.FEET_ON_GROUND) ||
-                !game.controllerPoller.isButtonPressed(
-                    if (upsideDown) ControllerButton.UP.name else ControllerButton.DOWN.name))
+                !game.controllerPoller.isPressed(ControllerButton.DOWN))
                 return@Behavior false
 
             return@Behavior if (isBehaviorActive(BehaviorType.GROUND_SLIDING))
-                game.controllerPoller.isButtonPressed(ControllerButton.A.name)
-            else game.controllerPoller.isButtonJustPressed(ControllerButton.A.name)
+                game.controllerPoller.isPressed(ControllerButton.A)
+            else game.controllerPoller.isJustPressed(ControllerButton.A)
           },
           // init
           init = {
             // In body pre-process, body height is reduced from .95f to .45f when ground sliding;
             // when upside down, need to compensate, otherwise Megaman will be off the ground
-            if (upsideDown) body.y += .5f * ConstVals.PPM
+            when (directionRotation) {
+              Direction.UP -> {}
+              Direction.DOWN -> body.y += ConstVals.PPM / 2f
+              Direction.LEFT -> body.x -= ConstVals.PPM / 2f
+              Direction.RIGHT -> body.x += ConstVals.PPM / 2f
+            }
 
             GameLogger.debug(MEGAMAN_GROUND_SLIDE_BEHAVIOR_TAG, "Init method called")
           },
@@ -241,28 +283,38 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             groundSlideTimer.update(it)
 
             if (damaged ||
-                facing == Facing.LEFT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) ||
-                facing == Facing.RIGHT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
+                isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) ||
+                isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
                 return@Behavior
 
-            var x =
+            val impulse =
                 (if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_GROUND_SLIDE_VEL
-                else MegamanValues.GROUND_SLIDE_VEL) * ConstVals.PPM
-            if (facing == Facing.LEFT) x *= -1f
+                else MegamanValues.GROUND_SLIDE_VEL) * ConstVals.PPM * facing.value
 
-            body.physics.velocity.x = x
+            when (directionRotation) {
+              Direction.UP,
+              Direction.DOWN -> body.physics.velocity.x = impulse
+              Direction.LEFT,
+              Direction.RIGHT -> body.physics.velocity.y = impulse
+            }
           },
           // end
           end = {
             groundSlideTimer.reset()
-            var endDash = (if (body.isSensing(BodySense.IN_WATER)) 2f else 5f) * ConstVals.PPM
-            if (facing == Facing.LEFT) endDash *= -1f
+            val endDash =
+                (if (body.isSensing(BodySense.IN_WATER)) 2f else 5f) * ConstVals.PPM * facing.value
 
-            body.physics.velocity.x += endDash
+            when (directionRotation) {
+              Direction.UP,
+              Direction.DOWN -> body.physics.velocity.x += endDash
+              Direction.LEFT,
+              Direction.RIGHT -> body.physics.velocity.y += endDash
+            }
 
             GameLogger.debug(MEGAMAN_GROUND_SLIDE_BEHAVIOR_TAG, "End method called")
           })
 
+  // TODO: modify climb behavior for sideways Megaman
   // climb
   val climb =
       object : AbstractBehavior() {
@@ -282,37 +334,39 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
           if (isBehaviorActive(BehaviorType.CLIMBING)) {
             if (body.isSensing(BodySense.HEAD_TOUCHING_LADDER)) {
-              if (upsideDown && centerY + 0.15f * ConstVals.PPM < ladder.body.y) return false
+              if (isDirectionRotatedDown() && centerY + 0.15f * ConstVals.PPM < ladder.body.y)
+                  return false
               else if (centerY - 0.15f * ConstVals.PPM > ladder.body.getMaxY()) return false
             }
 
             if (!body.isSensing(BodySense.FEET_TOUCHING_LADDER)) {
-              if (upsideDown && centerY - 0.15f * ConstVals.PPM > ladder.body.getMaxY())
+              if (isDirectionRotatedDown() &&
+                  centerY - 0.15f * ConstVals.PPM > ladder.body.getMaxY())
                   return false
               else if (centerY + 0.15f * ConstVals.PPM < ladder.body.y) return false
             }
 
-            if (game.controllerPoller.isButtonJustPressed(ControllerButton.A.name)) return false
+            if (game.controllerPoller.isJustPressed(ControllerButton.A)) return false
 
             return true
           }
 
           if (body.isSensing(BodySense.FEET_TOUCHING_LADDER) &&
-              game.controllerPoller.isButtonPressed(
-                  if (upsideDown) ControllerButton.UP.name else ControllerButton.DOWN.name))
+              game.controllerPoller.isPressed(
+                  if (isDirectionRotatedDown()) ControllerButton.UP else ControllerButton.DOWN))
               return true
 
           if (body.isSensing(BodySense.HEAD_TOUCHING_LADDER) &&
-              game.controllerPoller.isButtonPressed(
-                  if (upsideDown) ControllerButton.DOWN.name else ControllerButton.UP.name))
+              game.controllerPoller.isPressed(
+                  if (isDirectionRotatedDown()) ControllerButton.DOWN else ControllerButton.UP))
               return true
 
           return false
         }
 
         override fun init() {
-          bButtonTask =
-              if (body.isSensing(BodySense.IN_WATER)) BButtonTask.SWIM else BButtonTask.AIR_DASH
+          aButtonTask =
+              if (body.isSensing(BodySense.IN_WATER)) AButtonTask.SWIM else AButtonTask.AIR_DASH
 
           body.physics.gravityOn = false
           // TODO: body.physics.collisionOn = false
@@ -332,9 +386,9 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             return
           }
 
-          if (game.controllerPoller.isButtonPressed(ControllerButton.UP.name))
+          if (game.controllerPoller.isPressed(ControllerButton.UP))
               body.physics.velocity.y = MegamanValues.CLIMB_VEL * ConstVals.PPM
-          else if (game.controllerPoller.isButtonPressed(ControllerButton.DOWN.name))
+          else if (game.controllerPoller.isPressed(ControllerButton.DOWN))
               body.physics.velocity.y = MegamanValues.CLIMB_VEL * ConstVals.PPM * -1f
           else body.physics.velocity.y = 0f
         }
@@ -343,12 +397,11 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
           body.physics.gravityOn = true
           // TODO: body.physics.collisionOn = true
           body.physics.velocity.setZero()
-          bButtonTask =
-              if (body.isSensing(BodySense.IN_WATER)) BButtonTask.SWIM else BButtonTask.AIR_DASH
+          aButtonTask =
+              if (body.isSensing(BodySense.IN_WATER)) AButtonTask.SWIM else AButtonTask.AIR_DASH
         }
       }
 
-  behaviorsComponent.addBehavior(BehaviorType.TEST, test)
   behaviorsComponent.addBehavior(BehaviorType.WALL_SLIDING, wallSlide)
   behaviorsComponent.addBehavior(BehaviorType.SWIMMING, swim)
   behaviorsComponent.addBehavior(BehaviorType.JUMPING, jump)

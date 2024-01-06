@@ -3,6 +3,7 @@ package com.megaman.maverick.game.entities.megaman
 import com.badlogic.gdx.math.Vector2
 import com.engine.audio.AudioComponent
 import com.engine.common.GameLogger
+import com.engine.common.enums.Direction
 import com.engine.common.enums.Facing
 import com.engine.common.enums.Position
 import com.engine.common.extensions.gdxArrayOf
@@ -28,7 +29,9 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.IProjectileEntity
-import com.megaman.maverick.game.entities.contracts.*
+import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
+import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.enemies.*
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -49,8 +52,7 @@ class Megaman(game: MegamanMaverickGame) :
     IEventListener,
     IFaceable,
     IDamageable,
-    IUpsideDownable,
-    ISidewaysable,
+    IDirectionRotatable,
     IBodyEntity,
     IHealthEntity,
     ISpriteEntity,
@@ -144,56 +146,48 @@ class Megaman(game: MegamanMaverickGame) :
   var maverick = false
   var ready = false
 
-  override var sidewaysValue: SidewaysValue? = null
+  override var directionRotation: Direction
+    get() = body.cardinalRotation
     set(value) {
-      if (value == null) {
-        field = null
-        return
-      }
-      upsideDown = false
-      field = value
-    }
+      GameLogger.debug(TAG, "directionRotation: value = $value")
+      body.cardinalRotation = value
+      when (value) {
+        Direction.UP,
+        Direction.RIGHT -> {
+          // jump
+          jumpVel = MegamanValues.JUMP_VEL
+          wallJumpVel = MegamanValues.WALL_JUMP_VEL
+          waterJumpVel = MegamanValues.WATER_JUMP_VEL
+          waterWallJumpVel = MegamanValues.WATER_WALL_JUMP_VEL
 
-  override var upsideDown: Boolean
-    get() = getProperty(ConstKeys.UPSIDE_DOWN) == true
-    set(value) {
-      GameLogger.debug(TAG, "set upside down = $value")
+          // gravity
+          gravity = MegamanValues.GRAVITY
+          groundGravity = MegamanValues.GROUND_GRAVITY
+          iceGravity = MegamanValues.ICE_GRAVITY
+          waterGravity = MegamanValues.WATER_GRAVITY
+          waterIceGravity = MegamanValues.WATER_ICE_GRAVITY
 
-      putProperty(ConstKeys.UPSIDE_DOWN, value)
-      putProperty(ConstKeys.SIDEWAYS, false)
+          // swim
+          swimVel = MegamanValues.SWIM_VEL_Y
+        }
+        Direction.DOWN,
+        Direction.LEFT -> {
+          // jump
+          jumpVel = -MegamanValues.JUMP_VEL
+          wallJumpVel = -MegamanValues.WALL_JUMP_VEL
+          waterJumpVel = -MegamanValues.WATER_JUMP_VEL
+          waterWallJumpVel = -MegamanValues.WATER_WALL_JUMP_VEL
 
-      if (upsideDown) {
-        // jump
-        jumpVel = -MegamanValues.JUMP_VEL
-        wallJumpVel = -MegamanValues.WALL_JUMP_VEL
-        waterJumpVel = -MegamanValues.WATER_JUMP_VEL
-        waterWallJumpVel = -MegamanValues.WATER_WALL_JUMP_VEL
+          // gravity
+          gravity = -MegamanValues.GRAVITY
+          groundGravity = -MegamanValues.GROUND_GRAVITY
+          iceGravity = -MegamanValues.ICE_GRAVITY
+          waterGravity = -MegamanValues.WATER_GRAVITY
+          waterIceGravity = -MegamanValues.WATER_ICE_GRAVITY
 
-        // gravity
-        gravity = -MegamanValues.GRAVITY
-        groundGravity = -MegamanValues.GROUND_GRAVITY
-        iceGravity = -MegamanValues.ICE_GRAVITY
-        waterGravity = -MegamanValues.WATER_GRAVITY
-        waterIceGravity = -MegamanValues.WATER_ICE_GRAVITY
-
-        // swim
-        swimVelY = -MegamanValues.SWIM_VEL_Y
-      } else {
-        // jump
-        jumpVel = MegamanValues.JUMP_VEL
-        wallJumpVel = MegamanValues.WALL_JUMP_VEL
-        waterJumpVel = MegamanValues.WATER_JUMP_VEL
-        waterWallJumpVel = MegamanValues.WATER_WALL_JUMP_VEL
-
-        // gravity
-        gravity = MegamanValues.GRAVITY
-        groundGravity = MegamanValues.GROUND_GRAVITY
-        iceGravity = MegamanValues.ICE_GRAVITY
-        waterGravity = MegamanValues.WATER_GRAVITY
-        waterIceGravity = MegamanValues.WATER_ICE_GRAVITY
-
-        // swim
-        swimVelY = MegamanValues.SWIM_VEL_Y
+          // swim
+          swimVel = -MegamanValues.SWIM_VEL_Y
+        }
       }
     }
 
@@ -203,10 +197,10 @@ class Megaman(game: MegamanMaverickGame) :
       putProperty(MegamanProps.FACING, value)
     }
 
-  var bButtonTask: BButtonTask
-    get() = getProperty(MegamanProps.B_BUTTON_TASK) as BButtonTask
+  var aButtonTask: AButtonTask
+    get() = getProperty(MegamanProps.A_BUTTON_TASK) as AButtonTask
     set(value) {
-      putProperty(MegamanProps.B_BUTTON_TASK, value)
+      putProperty(MegamanProps.A_BUTTON_TASK, value)
     }
 
   var currentWeapon: MegamanWeapon
@@ -230,7 +224,7 @@ class Megaman(game: MegamanMaverickGame) :
   internal var iceGravity = 0f
   internal var waterGravity = 0f
   internal var waterIceGravity = 0f
-  internal var swimVelY = 0f
+  internal var swimVel = 0f
 
   override fun init() {
     addComponent(AudioComponent(this))
@@ -258,9 +252,9 @@ class Megaman(game: MegamanMaverickGame) :
 
     // initialize Megaman's props
     facing = Facing.RIGHT
-    bButtonTask = BButtonTask.JUMP
+    aButtonTask = AButtonTask.JUMP
     currentWeapon = MegamanWeapon.BUSTER
-    upsideDown = false
+    directionRotation = Direction.UP
     running = false
     damageFlash = false
 

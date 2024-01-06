@@ -113,7 +113,7 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
     val body = Body(BodyType.ABSTRACT)
     body.setSize(0.65f * ConstVals.PPM, 0.5f * ConstVals.PPM)
 
-    val shapes = Array<() -> IDrawableShape>()
+    val shapes = Array<() -> IDrawableShape?>()
 
     // damager fixture
     val damagerFixture =

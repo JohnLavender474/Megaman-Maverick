@@ -14,6 +14,9 @@ object ConstVals {
 }
 
 object ConstKeys {
+  const val IN_GRAVITY_CHANGE_ZONE = "in_gravity_change_zone"
+  const val FLIPPED_X = "flipped_x"
+  const val FLIPPED_Y = "flipped_y"
   const val UPSIDE_DOWN = "upside_down"
   const val SIDEWAYS = "sideways"
   const val HAZARDS = "hazards"
@@ -26,7 +29,7 @@ object ConstKeys {
   const val LARGE = "large"
   const val TIMED = "timed"
   const val PENDULUM = "pendulum"
-  const val ROTATION = "rotation"
+  const val ROTATION = "directionRotation"
   const val PERSIST = "persist"
   const val VALUE = "value"
   const val AXIS = "axis"

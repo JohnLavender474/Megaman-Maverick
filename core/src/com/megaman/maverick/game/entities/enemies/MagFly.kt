@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Array
 import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
@@ -82,7 +83,7 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     val body = Body(BodyType.DYNAMIC)
     body.setSize(ConstVals.PPM.toFloat())
 
-    val shapes = Array<() -> IDrawableShape>()
+    val shapes = Array<() -> IDrawableShape?>()
 
     // body fixture
     val bodyFixture = Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat()), FixtureType.BODY)
@@ -176,7 +177,7 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
       }
 
       val megaman = getMegamanMaverickGame().megaman
-      val slow = megaman.body.overlaps(forceFixture.shape)
+      val slow = megaman.body.overlaps(forceFixture.shape as Rectangle)
 
       if (!slow && megaman.body.y < body.y && !facingAndMMDirMatch())
           facing = if (megaman.body.x > body.x) Facing.RIGHT else Facing.LEFT

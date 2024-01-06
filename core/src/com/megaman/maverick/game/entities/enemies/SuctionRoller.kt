@@ -101,7 +101,7 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
     val body = Body(BodyType.DYNAMIC)
     body.setSize(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat())
 
-    val shapes = Array<() -> IDrawableShape>()
+    val shapes = Array<() -> IDrawableShape?>()
 
     // body fixture
     val bodyFixture =

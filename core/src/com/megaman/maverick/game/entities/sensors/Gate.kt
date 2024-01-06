@@ -157,7 +157,7 @@ class Gate(game: MegamanMaverickGame) :
     body.setSize(2f * ConstVals.PPM, 3f * ConstVals.PPM)
 
     // gate fixture
-    val gateFixture = Fixture(body.copy(), FixtureType.GATE)
+    val gateFixture = Fixture(GameRectangle().set(body), FixtureType.GATE)
     body.addFixture(gateFixture)
 
     return BodyComponentCreator.create(this, body)

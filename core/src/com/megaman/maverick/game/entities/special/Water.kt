@@ -73,8 +73,8 @@ class Water(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteE
     val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
     body.set(bounds)
     body.fixtures.forEach { (_, fixture) ->
-      val shape = fixture.shape
-      if (shape is GameRectangle) shape.set(bounds)
+      val bounds = fixture.shape
+      if (bounds is GameRectangle) bounds.set(bounds)
     }
 
     defineDrawables(bounds)
@@ -87,7 +87,7 @@ class Water(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteE
 
   private fun defineBodyComponent(): BodyComponent {
     val body = Body(BodyType.ABSTRACT)
-    val shapes = Array<() -> IDrawableShape>()
+    val shapes = Array<() -> IDrawableShape?>()
 
     // water fixture
     waterFixture = Fixture(GameRectangle(), FixtureType.WATER)

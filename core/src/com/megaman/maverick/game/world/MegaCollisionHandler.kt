@@ -27,7 +27,7 @@ class MegaCollisionHandler(private val game: MegamanMaverickGame) : ICollisionHa
     if (staticBody.hasBodyLabel(BodyLabel.PRESS_UP_FALL_THRU) &&
         dynamicBody == megaman.body &&
         !megaman.isBehaviorActive(BehaviorType.CLIMBING) &&
-        game.controllerPoller.isButtonJustPressed(ControllerButton.UP.name)) {
+        game.controllerPoller.isJustPressed(ControllerButton.UP)) {
       dynamicBody.setMaxY(staticBody.getMaxY())
       return true
     }

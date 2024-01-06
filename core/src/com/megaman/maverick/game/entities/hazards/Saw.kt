@@ -89,7 +89,7 @@ class Saw(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEnt
         ConstKeys.PENDULUM,
         MotionDefinition(motion = pendulum, function = { value, _ -> body.setCenter(value) }))
 
-    val shapes = Array<() -> IDrawableShape>()
+    val shapes = Array<() -> IDrawableShape?>()
 
     shapes.add {
       val line = GameLine(pendulum.anchor, pendulum.getMotionValue())
@@ -121,7 +121,7 @@ class Saw(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEnt
         ConstKeys.ROTATION,
         MotionDefinition(motion = rotation, function = { value, _ -> body.setCenter(value) }))
 
-    val shapes = Array<() -> IDrawableShape>()
+    val shapes = Array<() -> IDrawableShape?>()
 
     shapes.add {
       val line = GameLine(rotation.getOrigin(), rotation.getMotionValue())

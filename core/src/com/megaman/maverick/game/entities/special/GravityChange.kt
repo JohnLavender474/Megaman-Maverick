@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.special
 
+import com.engine.common.enums.Direction
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
@@ -16,9 +17,9 @@ import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
-class UpsideDown(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity {
+class GravityChange(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity {
 
-  private lateinit var upsideDownBounds: GameRectangle
+  private lateinit var gravityChangeFixture: Fixture
 
   override fun init() {
     addComponent(defineBodyComponent())
@@ -29,7 +30,11 @@ class UpsideDown(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity {
 
     val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
     body.set(bounds)
-    upsideDownBounds.set(bounds)
+    (gravityChangeFixture.shape as GameRectangle).set(bounds)
+
+    val directionString = spawnProps.get(ConstKeys.DIRECTION, String::class)!!
+    val direction = Direction.valueOf(directionString.uppercase())
+    gravityChangeFixture.putProperty(ConstKeys.DIRECTION, direction)
 
     addComponent(createCullablesComponent())
   }
@@ -37,10 +42,9 @@ class UpsideDown(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity {
   private fun defineBodyComponent(): BodyComponent {
     val body = Body(BodyType.ABSTRACT)
 
-    // upside-down fixture
-    upsideDownBounds = GameRectangle()
-    val upsideDownFixture = Fixture(upsideDownBounds, FixtureType.UPSIDE_DOWN)
-    body.addFixture(upsideDownFixture)
+    // gravity-change fixture
+    gravityChangeFixture = Fixture(GameRectangle(), FixtureType.GRAVITY_CHANGE)
+    body.addFixture(gravityChangeFixture)
 
     return BodyComponentCreator.create(this, body)
   }

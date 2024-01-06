@@ -3,6 +3,7 @@ package com.megaman.maverick.game.world
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.engine.common.GameLogger
+import com.engine.common.enums.Direction
 import com.engine.common.extensions.objectSetOf
 import com.engine.common.shapes.GameLine
 import com.engine.common.shapes.GameRectangle
@@ -18,11 +19,11 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.IUpsideDownable
+import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.ItemEntity
 import com.megaman.maverick.game.entities.decorations.Splash
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.megaman.constants.BButtonTask
+import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.sensors.Gate
 import com.megaman.maverick.game.utils.VelocityAlterator
 
@@ -113,7 +114,7 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
       body.y += posDelta.y
 
       val entity = feet.getEntity()
-      if (entity is Megaman) entity.bButtonTask = BButtonTask.JUMP
+      if (entity is Megaman) entity.aButtonTask = AButtonTask.JUMP
 
       body.setBodySense(BodySense.FEET_ON_GROUND, true)
     }
@@ -171,7 +172,7 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
       if (entity is Megaman &&
           !entity.body.isSensing(BodySense.FEET_ON_GROUND) &&
           !entity.isBehaviorActive(BehaviorType.WALL_SLIDING))
-          entity.bButtonTask = BButtonTask.SWIM
+          entity.aButtonTask = AButtonTask.SWIM
 
       Splash.generate(game, listener.getBody(), water.getBody())
 
@@ -210,17 +211,35 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
       VelocityAlterator.alterate(bodyFixture.getBody(), forceAlteration, delta)
     }
 
-    // body, upside down
-    else if (contact.fixturesMatch(FixtureType.BODY, FixtureType.UPSIDE_DOWN)) {
-      val (body, _) = contact.getFixturesInOrder(FixtureType.BODY, FixtureType.UPSIDE_DOWN)!!
+    // body, gravity change
+    // body, gravity change
+    else if (contact.fixturesMatch(FixtureType.BODY, FixtureType.GRAVITY_CHANGE)) {
+      val (bodyFixture, gravityChangeFixture) =
+          contact.getFixturesInOrder(FixtureType.BODY, FixtureType.GRAVITY_CHANGE)!!
 
-      val entity = body.getEntity()
-      if (entity is IUpsideDownable) {
-        GameLogger.debug(
-            TAG,
-            "beginContact(): Body-UpsideDown, setting upside-down to true for entity = $entity")
-        entity.upsideDown = true
-      }
+      val body = bodyFixture.getBody()
+      val pd = body.positionDelta
+      val bodyPointToCheck =
+          if (pd.x > 0f) {
+            if (pd.y > 0f) body.getTopRightPoint()
+            else if (pd.y < 0f) body.getBottomRightPoint() else body.getCenterRightPoint()
+          } else if (pd.x < 0f) {
+            if (body.positionDelta.y > 0f) body.getTopLeftPoint()
+            else if (body.positionDelta.y < 0f) body.getBottomLeftPoint()
+            else body.getCenterLeftPoint()
+          } else {
+            if (pd.y > 0f) body.getTopCenterPoint()
+            else if (pd.y < 0f) body.getBottomCenterPoint() else body.getCenter()
+          }
+
+      if (!gravityChangeFixture.bodyRelativeShape!!.contains(bodyPointToCheck)) return
+
+      val direction =
+          gravityChangeFixture.getProperty(ConstKeys.DIRECTION, Direction::class) ?: return
+
+      val entity = bodyFixture.getEntity()
+      if (entity is IDirectionRotatable && entity.directionRotation != direction)
+          entity.directionRotation = direction
     }
 
     // projectile, block or body or shield or water
@@ -303,7 +322,7 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
       body.y += posDelta.y
 
       val entity = feet.getEntity()
-      if (entity is Megaman) entity.bButtonTask = BButtonTask.JUMP
+      if (entity is Megaman) entity.aButtonTask = AButtonTask.JUMP
 
       body.setBodySense(BodySense.FEET_ON_GROUND, true)
     }
@@ -362,7 +381,7 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
       if (entity is Megaman &&
           !entity.body.isSensing(BodySense.FEET_ON_GROUND) &&
           !entity.isBehaviorActive(BehaviorType.WALL_SLIDING))
-          entity.bButtonTask = BButtonTask.SWIM
+          entity.aButtonTask = AButtonTask.SWIM
     }
 
     // body, force
@@ -373,6 +392,37 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
       VelocityAlterator.alterate(bodyFixture.getBody(), forceAlteration, delta)
 
       force.getRunnable()?.invoke()
+    }
+
+    // TODO: should this be in the continue contact phase?
+    // body, gravity change
+    else if (contact.fixturesMatch(FixtureType.BODY, FixtureType.GRAVITY_CHANGE)) {
+      val (bodyFixture, gravityChangeFixture) =
+          contact.getFixturesInOrder(FixtureType.BODY, FixtureType.GRAVITY_CHANGE)!!
+
+      val body = bodyFixture.getBody()
+      val pd = body.positionDelta
+      val bodyPointToCheck =
+          if (pd.x > 0f) {
+            if (pd.y > 0f) body.getTopRightPoint()
+            else if (pd.y < 0f) body.getBottomRightPoint() else body.getCenterRightPoint()
+          } else if (pd.x < 0f) {
+            if (body.positionDelta.y > 0f) body.getTopLeftPoint()
+            else if (body.positionDelta.y < 0f) body.getBottomLeftPoint()
+            else body.getCenterLeftPoint()
+          } else {
+            if (pd.y > 0f) body.getTopCenterPoint()
+            else if (pd.y < 0f) body.getBottomCenterPoint() else body.getCenter()
+          }
+
+      if (!gravityChangeFixture.bodyRelativeShape!!.contains(bodyPointToCheck)) return
+
+      val direction =
+          gravityChangeFixture.getProperty(ConstKeys.DIRECTION, Direction::class) ?: return
+
+      val entity = bodyFixture.getEntity()
+      if (entity is IDirectionRotatable && entity.directionRotation != direction)
+          entity.directionRotation = direction
     }
 
     // laser, block
@@ -451,9 +501,9 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
 
       val entity = feet.getEntity()
       if (entity is Megaman)
-          entity.bButtonTask =
-              if (entity.body.isSensing(BodySense.IN_WATER)) BButtonTask.SWIM
-              else BButtonTask.AIR_DASH
+          entity.aButtonTask =
+              if (entity.body.isSensing(BodySense.IN_WATER)) AButtonTask.SWIM
+              else AButtonTask.AIR_DASH
     }
 
     // feet, ice
@@ -505,14 +555,23 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
       force.getRunnable()?.invoke()
     }
 
-    // body, upside down
-    else if (contact.fixturesMatch(FixtureType.BODY, FixtureType.UPSIDE_DOWN)) {
-      GameLogger.debug(TAG, "End Contact: Body-UpsideDown, contact = $contact")
-      val (body, _) = contact.getFixturesInOrder(FixtureType.BODY, FixtureType.UPSIDE_DOWN)!!
-
-      val entity = body.getEntity()
+    // TODO:
+    //   nothing should be done on end contact for gravity change, and instead there should
+    //   be a gravity change object the player enters to set the direction back to UP
+    // body, gravity change
+    /*
+    else if (contact.fixturesMatch(FixtureType.BODY, FixtureType.GRAVITY_CHANGE)) {
+      GameLogger.debug(TAG, "End Contact: Body-GravityChange, contact = $contact")
+      val (bodyFixture, _) =
+          contact.getFixturesInOrder(FixtureType.BODY, FixtureType.GRAVITY_CHANGE)!!
+      val entity = bodyFixture.getEntity()
+      if (entity is IDirectionRotatable && entity.isDirectionRotated(Direction.DOWN))
+          entity.directionRotation = Direction.UP
+      /*
       if (entity is IUpsideDownable) entity.upsideDown = false
+       */
     }
+     */
 
     // water-listener, water
     else if (contact.fixturesMatch(FixtureType.WATER_LISTENER, FixtureType.WATER)) {
@@ -521,7 +580,7 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
       listener.getBody().setBodySense(BodySense.IN_WATER, false)
 
       val listenerEntity = listener.getEntity()
-      if (listenerEntity is Megaman) listenerEntity.bButtonTask = BButtonTask.AIR_DASH
+      if (listenerEntity is Megaman) listenerEntity.aButtonTask = AButtonTask.AIR_DASH
 
       game.audioMan.playSound(SoundAsset.SPLASH_SOUND, false)
       Splash.generate(game, listener.getBody(), water.getBody())

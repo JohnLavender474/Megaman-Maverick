@@ -102,7 +102,7 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     val body = Body(BodyType.DYNAMIC)
     body.setSize(ConstVals.PPM.toFloat(), 1.25f * ConstVals.PPM)
 
-    val shapes = Array<() -> IDrawableShape>()
+    val shapes = Array<() -> IDrawableShape?>()
 
     // damager fixture
     val damagerFixture =

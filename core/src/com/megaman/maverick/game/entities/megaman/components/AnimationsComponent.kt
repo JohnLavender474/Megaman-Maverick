@@ -63,7 +63,9 @@ internal fun Megaman.defineAnimationsComponent(): AnimationsComponent {
           if (shooting) "RunShoot"
           else if (fullyCharged) "RunCharging" else if (halfCharged) "RunHalfCharging" else "Run"
         } else if (body.isSensing(BodySense.FEET_ON_GROUND) &&
-            abs(body.physics.velocity.x) > ConstVals.PPM / 16f) {
+            abs(
+                if (isDirectionRotatedVertically()) body.physics.velocity.x
+                else body.physics.velocity.y) > ConstVals.PPM / 16f) {
           if (shooting) "SlipSlideShoot"
           else if (fullyCharged) "SlipSlideCharging"
           else if (halfCharged) "SlipSlideHalfCharging" else "SlipSlide"

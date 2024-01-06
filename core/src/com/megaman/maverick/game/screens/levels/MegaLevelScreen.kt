@@ -341,7 +341,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
 
   override fun render(delta: Float) {
     // game can only be paused if neither spawn nor death event handlers are running
-    if (controllerPoller.isButtonJustPressed(ControllerButton.START.name) &&
+    if (controllerPoller.isJustPressed(ControllerButton.START) &&
         playerStatsHandler.finished &&
         playerSpawnEventHandler.finished &&
         playerDeathEventHandler.finished)
