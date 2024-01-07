@@ -93,8 +93,9 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
         xOffset +=
             if (megaman.isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.WALL_SLIDING))
                 .15f * ConstVals.PPM
-            else if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) .075f * ConstVals.PPM
-            else .25f * ConstVals.PPM
+            else if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) -.05f * ConstVals.PPM
+            else .05f * ConstVals.PPM
+        // else .25f * ConstVals.PPM
         spawnCenter.x += if (megaman.isDirectionRotatedLeft()) -xOffset else xOffset
 
         val yOffset: Float = ConstVals.PPM * .85f * megaman.facing.value
