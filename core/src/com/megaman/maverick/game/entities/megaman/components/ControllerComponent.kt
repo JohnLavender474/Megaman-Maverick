@@ -16,11 +16,15 @@ import com.megaman.maverick.game.entities.megaman.extensions.stopCharging
 import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.isSensing
 
+const val MEGAMAN_CONTROLLER_COMPONENT_TAG = "MegamanControllerComponent"
+
 internal fun Megaman.defineControllerComponent(): ControllerComponent {
   // left
   val left =
       ButtonActuator(
-          onJustPressed = { _ -> GameLogger.debug(Megaman.TAG, "left actuator just pressed") },
+          onJustPressed = { _ ->
+            GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "left actuator just pressed")
+          },
           onPressContinued = { poller, delta ->
             if (damaged || poller.isPressed(ControllerButton.RIGHT)) return@ButtonActuator
 
@@ -42,7 +46,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
                 body.physics.velocity.y -= impulse * delta * ConstVals.PPM
           },
           onJustReleased = { poller ->
-            GameLogger.debug(Megaman.TAG, "left actuator just released")
+            GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "left actuator just released")
             if (!poller.isPressed(ControllerButton.RIGHT)) running = false
           },
           onReleaseContinued = { poller, _ ->
@@ -52,7 +56,9 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
   // right
   val right =
       ButtonActuator(
-          onJustPressed = { _ -> GameLogger.debug(Megaman.TAG, "right actuator just pressed") },
+          onJustPressed = { _ ->
+            GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "right actuator just pressed")
+          },
           onPressContinued = { poller, delta ->
             if (damaged || poller.isPressed(ControllerButton.LEFT)) return@ButtonActuator
 
@@ -74,7 +80,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
                 body.physics.velocity.y += impulse * delta * ConstVals.PPM
           },
           onJustReleased = { poller ->
-            GameLogger.debug(Megaman.TAG, "right actuator just released")
+            GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "right actuator just released")
             if (!poller.isPressed(ControllerButton.LEFT)) running = false
           },
           onReleaseContinued = { poller, _ ->

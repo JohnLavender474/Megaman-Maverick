@@ -42,11 +42,17 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 return@Behavior false
 
             return@Behavior if (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) &&
-                game.controllerPoller.isPressed(ControllerButton.LEFT))
+                game.controllerPoller.isPressed(
+                    if (isDirectionRotatedDown() || isDirectionRotatedRight())
+                        ControllerButton.RIGHT
+                    else ControllerButton.LEFT))
                 true
             else
                 body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) &&
-                    game.controllerPoller.isPressed(ControllerButton.RIGHT)
+                    game.controllerPoller.isPressed(
+                        if (isDirectionRotatedDown() || isDirectionRotatedRight())
+                            ControllerButton.LEFT
+                        else ControllerButton.RIGHT)
           },
           // init
           init = {

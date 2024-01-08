@@ -16,11 +16,12 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.megaman.Megaman.Companion.TAG
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.isSensing
 import kotlin.math.abs
+
+const val MEGAMAN_ANIMATIONS_COMPONENT_TAG = "MegamanAnimationsComponent"
 
 internal fun Megaman.defineAnimationsComponent(): AnimationsComponent {
   // define key supplier
@@ -110,7 +111,7 @@ internal fun Megaman.defineAnimationsComponent(): AnimationsComponent {
         _animationKey += "_${weapon.name}"
 
         GameLogger.debug(
-            TAG,
+            MEGAMAN_ANIMATIONS_COMPONENT_TAG,
             "defineAnimationsComponent(): Putting animation \'${animationKey}\' with key \'${_animationKey}\'")
 
         // put the key animation pair into the map

@@ -194,6 +194,7 @@ class Megaman(game: MegamanMaverickGame) :
   override var facing: Facing
     get() = getProperty(MegamanProps.FACING) as Facing
     set(value) {
+      GameLogger.debug(TAG, "facing: value = $value")
       putProperty(MegamanProps.FACING, value)
     }
 
@@ -311,7 +312,14 @@ class Megaman(game: MegamanMaverickGame) :
         GameLogger.debug(
             MEGAMAN_EVENT_LISTENER_TAG, "BEGIN/CONTINUE ROOM TRANS: position = $position")
 
-        body.positionOnPoint(position, Position.BOTTOM_CENTER)
+        body.positionOnPoint(
+            position,
+            when (directionRotation) {
+              Direction.UP -> Position.BOTTOM_CENTER
+              Direction.DOWN -> Position.TOP_CENTER
+              Direction.LEFT -> Position.CENTER_RIGHT
+              Direction.RIGHT -> Position.CENTER_LEFT
+            })
         stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
       }
       EventType.GATE_INIT_OPENING -> {
@@ -344,4 +352,12 @@ class Megaman(game: MegamanMaverickGame) :
     stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
     return true
   }
+
+  override fun getPosition() =
+      when (directionRotation) {
+        Direction.UP -> body.getBottomCenterPoint()
+        Direction.DOWN -> body.getTopCenterPoint()
+        Direction.LEFT -> body.getCenterRightPoint()
+        Direction.RIGHT -> body.getCenterLeftPoint()
+      }
 }

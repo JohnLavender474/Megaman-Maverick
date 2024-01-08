@@ -35,8 +35,6 @@ import com.engine.pathfinding.PathfindingSystem
 import com.engine.points.PointsSystem
 import com.engine.systems.IGameSystem
 import com.engine.updatables.UpdatablesSystem
-import com.engine.world.Body
-import com.engine.world.Fixture
 import com.engine.world.WorldSystem
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
@@ -96,7 +94,7 @@ class MegamanMaverickGame : Game2D() {
 
     GameLogger.set(GameLogLevel.ERROR)
     GameLogger.filterByTag = true
-    GameLogger.tagsToLog.addAll(Megaman.TAG)
+    GameLogger.tagsToLog.addAll()
 
     val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
     val screenHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
