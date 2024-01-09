@@ -31,6 +31,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.factories.impl.ItemsFactory
+import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.getMegamanMaverickGame
@@ -54,6 +55,9 @@ abstract class AbstractEnemy(game: MegamanMaverickGame, private val cullTime: Fl
 
   override val invincible: Boolean
     get() = !damageTimer.isFinished()
+
+  protected val megaman: Megaman
+    get() = getMegamanMaverickGame().megaman
 
   protected abstract val damageNegotiations: ObjectMap<KClass<out IDamager>, Int>
 

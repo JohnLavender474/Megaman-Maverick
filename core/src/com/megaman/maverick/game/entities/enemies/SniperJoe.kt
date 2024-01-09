@@ -8,7 +8,6 @@ import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
-import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
 import com.engine.common.enums.Facing
 import com.engine.common.enums.Position
@@ -41,7 +40,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.IUpsideDownable
+import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -53,7 +52,7 @@ import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import kotlin.reflect.KClass
 
-class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IUpsideDownable {
+class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectionRotatable {
 
   companion object {
     const val TAG = "SniperJoe"
@@ -83,10 +82,10 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IUp
           ChargedShot::class to 15,
           ChargedShotExplosion::class to 15)
 
-  override var upsideDown = false
+  override var directionRotation: Direction
+    get() = body.cardinalRotation
     set(value) {
-      field = value
-      GameLogger.debug(TAG, "Setting upside down: $value")
+      body.cardinalRotation = value
     }
 
   private val shieldTimer = Timer(SHIELD_DUR)
@@ -120,7 +119,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IUp
     shieldTimer.setToEnd()
     shootTimer.setToEnd()
     shielded = true
-    upsideDown = false
+    directionRotation = Direction.UP
   }
 
   override fun defineBodyComponent(): BodyComponent {
@@ -141,7 +140,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IUp
     body.addFixture(damagerFixture)
 
     damagerFixture.shape.color = Color.RED
-    shapes.add { damagerFixture.shape }
+    shapes.add { damagerFixture.bodyRelativeShape }
 
     // damageable fixture
     val damageableFixture =
@@ -151,26 +150,43 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IUp
     body.addFixture(damageableFixture)
 
     damageableFixture.shape.color = Color.PURPLE
-    shapes.add { damageableFixture.shape }
+    shapes.add { damageableFixture.bodyRelativeShape }
 
     // shield fixture
     val shieldFixture =
         Fixture(
             GameRectangle().setSize(0.4f * ConstVals.PPM, 0.9f * ConstVals.PPM), FixtureType.SHIELD)
-    shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
     body.addFixture(shieldFixture)
 
     shieldFixture.shape.color = Color.BLUE
-    shapes.add { shieldFixture.shape }
+    shapes.add { shieldFixture.bodyRelativeShape }
 
     // pre-process
     body.preProcess = Updatable {
-      body.physics.gravity.y = (if (upsideDown) GRAVITY else -GRAVITY) * ConstVals.PPM
+      body.physics.gravity =
+          (when (directionRotation) {
+                Direction.UP -> Vector2(0f, -GRAVITY)
+                Direction.DOWN -> Vector2(0f, GRAVITY)
+                Direction.LEFT -> Vector2(GRAVITY, 0f)
+                Direction.RIGHT -> Vector2(-GRAVITY, 0f)
+              })
+              .scl(ConstVals.PPM.toFloat())
+
       shieldFixture.active = shielded
-      if (shielded) {
-        damageableFixture.offsetFromBodyCenter.x = 0.25f * ConstVals.PPM * -facing.value
-        shieldFixture.offsetFromBodyCenter.x = 0.35f * ConstVals.PPM * facing.value
-      } else damageableFixture.offsetFromBodyCenter.x = 0f
+      shieldFixture.offsetFromBodyCenter.x =
+          0.35f *
+              ConstVals.PPM *
+              if (isDirectionRotatedUp() || isDirectionRotatedLeft()) facing.value
+              else -facing.value
+      shieldFixture.putProperty(ConstKeys.DIRECTION, directionRotation)
+
+      if (shielded)
+          damageableFixture.offsetFromBodyCenter.x =
+              0.25f *
+                  ConstVals.PPM *
+                  if (isDirectionRotatedUp() || isDirectionRotatedLeft()) -facing.value
+                  else facing.value
+      else damageableFixture.offsetFromBodyCenter.x = 0f
     }
 
     addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
@@ -181,22 +197,52 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IUp
   override fun defineSpritesComponent(): SpritesComponent {
     val sprite = GameSprite()
     sprite.setSize(1.35f * ConstVals.PPM)
-    val SpritesComponent = SpritesComponent(this, "sniperjoe" to sprite)
-    SpritesComponent.putUpdateFunction("sniperjoe") { _, _sprite ->
+
+    val spritesComponent = SpritesComponent(this, "sniperjoe" to sprite)
+    spritesComponent.putUpdateFunction("sniperjoe") { _, _sprite ->
       _sprite as GameSprite
-      _sprite.setFlip(facing == Facing.LEFT, upsideDown)
-      val position = if (upsideDown) Position.TOP_CENTER else Position.BOTTOM_CENTER
+
+      val flipX = facing == Facing.LEFT
+      val flipY = directionRotation == Direction.DOWN
+      _sprite.setFlip(flipX, flipY)
+
+      val rotation =
+          when (directionRotation) {
+            Direction.UP,
+            Direction.DOWN -> 0f
+            Direction.LEFT -> 90f
+            Direction.RIGHT -> 270f
+          }
+      sprite.setOriginCenter()
+      _sprite.setRotation(rotation)
+
+      val position =
+          when (directionRotation) {
+            Direction.UP -> Position.BOTTOM_CENTER
+            Direction.DOWN -> Position.TOP_CENTER
+            Direction.LEFT -> Position.CENTER_RIGHT
+            Direction.RIGHT -> Position.CENTER_LEFT
+          }
       val bodyPosition = body.getPositionPoint(position)
       _sprite.setPosition(bodyPosition, position)
+
+      if (directionRotation == Direction.LEFT) _sprite.translateX(0.15f * ConstVals.PPM)
+      else if (directionRotation == Direction.RIGHT) _sprite.translateX(-0.15f * ConstVals.PPM)
     }
-    return SpritesComponent
+    return spritesComponent
   }
 
   override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
     super.defineUpdatablesComponent(updatablesComponent)
     updatablesComponent.add {
       val megaman = getMegamanMaverickGame().megaman
-      facing = if (megaman.body.x > body.x) Facing.RIGHT else Facing.LEFT
+      facing =
+          when (directionRotation) {
+            Direction.UP,
+            Direction.DOWN -> if (megaman.body.x > body.x) Facing.RIGHT else Facing.LEFT
+            Direction.LEFT,
+            Direction.RIGHT -> if (megaman.body.y > body.y) Facing.RIGHT else Facing.LEFT
+          }
 
       val timer = if (shielded) shieldTimer else shootTimer
       timer.update(it)
@@ -218,9 +264,15 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IUp
   }
 
   private fun shoot() {
-    val spawn = body.getCenter()
-    spawn.x += 0.25f * ConstVals.PPM * facing.value
-    spawn.y += (if (upsideDown) 0.15f else -0.15f) * ConstVals.PPM
+    val spawn =
+        (when (directionRotation) {
+              Direction.UP -> Vector2(0.25f * facing.value, -0.15f)
+              Direction.DOWN -> Vector2(0.25f * facing.value, 0.15f)
+              Direction.LEFT -> Vector2(0.2f, 0.25f * facing.value)
+              Direction.RIGHT -> Vector2(-0.2f, 0.25f * facing.value)
+            })
+            .scl(ConstVals.PPM.toFloat())
+            .add(body.getCenter())
 
     val trajectory = Vector2()
 
@@ -228,10 +280,13 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IUp
         props(
             ConstKeys.OWNER to this,
             ConstKeys.POSITION to spawn,
-            ConstKeys.TRAJECTORY to trajectory)
+            ConstKeys.TRAJECTORY to trajectory,
+            ConstKeys.DIRECTION to directionRotation)
 
     val entity: IGameEntity =
         if (type == SNOW_TYPE) {
+          // TODO: fix trajectory to align with body rotation
+
           trajectory.x = SNOWBALL_X * ConstVals.PPM * facing.value
           trajectory.y = SNOWBALL_Y * ConstVals.PPM
 
@@ -242,8 +297,9 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IUp
 
           EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SNOWBALL)!!
         } else {
-          trajectory.x = BULLET_SPEED * ConstVals.PPM * facing.value
-          trajectory.y = 0f
+          if (isDirectionRotatedVertically())
+              trajectory.set(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
+          else trajectory.set(0f, BULLET_SPEED * ConstVals.PPM * facing.value)
 
           requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
 

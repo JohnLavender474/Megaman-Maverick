@@ -212,10 +212,13 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
     }
 
     // body, gravity change
-    // body, gravity change
     else if (contact.fixturesMatch(FixtureType.BODY, FixtureType.GRAVITY_CHANGE)) {
       val (bodyFixture, gravityChangeFixture) =
           contact.getFixturesInOrder(FixtureType.BODY, FixtureType.GRAVITY_CHANGE)!!
+
+      val canChangeGravity =
+          bodyFixture.properties.getOrDefault(ConstKeys.GRAVITY_ROTATABLE, true) as Boolean
+      if (!canChangeGravity) return
 
       val body = bodyFixture.getBody()
       val pd = body.positionDelta
@@ -399,6 +402,10 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
     else if (contact.fixturesMatch(FixtureType.BODY, FixtureType.GRAVITY_CHANGE)) {
       val (bodyFixture, gravityChangeFixture) =
           contact.getFixturesInOrder(FixtureType.BODY, FixtureType.GRAVITY_CHANGE)!!
+
+      val canChangeGravity =
+          bodyFixture.properties.getOrDefault(ConstKeys.GRAVITY_ROTATABLE, true) as Boolean
+      if (!canChangeGravity) return
 
       val body = bodyFixture.getBody()
       val pd = body.positionDelta

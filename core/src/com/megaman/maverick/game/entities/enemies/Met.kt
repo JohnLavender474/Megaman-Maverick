@@ -37,14 +37,13 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.IUpsideDownable
+import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.utils.getMegamanMaverickGame
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.FixtureType
@@ -56,7 +55,7 @@ import kotlin.reflect.KClass
  *
  * @param game The game instance.
  */
-class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IUpsideDownable {
+class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectionRotatable {
 
   enum class MetBehavior {
     SHIELDING,
@@ -75,7 +74,8 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IUpsideDo
     private const val POP_UP_DURATION = .5f
     private const val RUN_VELOCITY = 8f
     private const val RUN_IN_WATER_VELOCITY = 3f
-    private const val GRAVITY_Y = .15f
+    private const val GRAVITY_IN_AIR = 8f
+    private const val GRAVITY_ON_GROUND = .15f
     private const val BULLET_TRAJECTORY_X = 15f
     private const val BULLET_TRAJECTORY_Y = .25f
     private const val VELOCITY_CLAMP_X = 8f
@@ -84,7 +84,11 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IUpsideDo
 
   override lateinit var facing: Facing
 
-  override var upsideDown = false
+  override var directionRotation: Direction
+    get() = body.cardinalRotation
+    set(value) {
+      body.cardinalRotation = value
+    }
 
   override val damageNegotiations =
       objectMapOf<KClass<out IDamager>, Int>(
@@ -130,20 +134,25 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IUpsideDo
     val right = spawnProps.getOrDefault(ConstKeys.RIGHT, false) as Boolean
     facing = if (right) Facing.RIGHT else Facing.LEFT
 
-    upsideDown = false
+    directionRotation = Direction.UP
   }
 
   private fun shoot() {
     val trajectory =
-        Vector2(BULLET_TRAJECTORY_X, if (upsideDown) -BULLET_TRAJECTORY_Y else BULLET_TRAJECTORY_Y)
-    if (facing == Facing.LEFT) trajectory.x *= -1
+        when (directionRotation) {
+          Direction.UP -> Vector2(BULLET_TRAJECTORY_X * facing.value, BULLET_TRAJECTORY_Y)
+          Direction.DOWN -> Vector2(BULLET_TRAJECTORY_X * facing.value, -BULLET_TRAJECTORY_Y)
+          Direction.LEFT -> Vector2(BULLET_TRAJECTORY_Y, BULLET_TRAJECTORY_X * facing.value)
+          Direction.RIGHT -> Vector2(BULLET_TRAJECTORY_Y, -BULLET_TRAJECTORY_X * facing.value)
+        }
 
     val offset = ConstVals.PPM / 64f
     val spawn =
         body
             .getCenter()
             .add(
-                if (facing == Facing.LEFT) -offset else offset, if (upsideDown) -offset else offset)
+                if (facing == Facing.LEFT) -offset else offset,
+                if (isDirectionRotatedDown()) -offset else offset)
 
     val spawnProps =
         props(
@@ -158,41 +167,61 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IUpsideDo
     super.defineUpdatablesComponent(updatablesComponent)
 
     updatablesComponent.add {
-      if (getMegamanMaverickGame().megaman.dead) return@add
+      if (megaman.dead) return@add
 
       if (runOnly) behavior = MetBehavior.RUNNING
 
       when (behavior) {
         MetBehavior.SHIELDING -> {
           val shieldTimer = metBehaviorTimers.get(MetBehavior.SHIELDING)
-
-          if (!isMegamanShootingAtMe()) shieldTimer.update(it)
+          if (!isMegamanShootingAtMe() && body.isSensing(BodySense.FEET_ON_GROUND))
+              shieldTimer.update(it)
           if (shieldTimer.isFinished()) behavior = MetBehavior.POP_UP
         }
         MetBehavior.POP_UP -> {
+          if (!body.isSensing(BodySense.FEET_ON_GROUND)) {
+            behavior = MetBehavior.SHIELDING
+            return@add
+          }
+
           facing =
-              if (getMegamanMaverickGame().megaman.body.x > body.x) Facing.RIGHT else Facing.LEFT
+              when (directionRotation) {
+                Direction.UP,
+                Direction.DOWN -> if (megaman.body.x > body.x) Facing.RIGHT else Facing.LEFT
+                Direction.LEFT,
+                Direction.RIGHT -> if (megaman.body.y > body.y) Facing.RIGHT else Facing.LEFT
+              }
 
           val popUpTimer = metBehaviorTimers.get(MetBehavior.POP_UP)
           if (popUpTimer.isAtBeginning()) shoot()
-
           popUpTimer.update(it)
 
           if (popUpTimer.isFinished())
               behavior = if (runningAllowed) MetBehavior.RUNNING else MetBehavior.SHIELDING
         }
         MetBehavior.RUNNING -> {
+          if (!body.isSensing(BodySense.FEET_ON_GROUND)) {
+            behavior = MetBehavior.SHIELDING
+            return@add
+          }
+
           val runningTimer = metBehaviorTimers.get(MetBehavior.RUNNING)
 
-          body.physics.velocity.x =
-              ConstVals.PPM *
-                  (if (body.isSensing(BodySense.IN_WATER)) RUN_IN_WATER_VELOCITY else RUN_VELOCITY)
-          if (facing == Facing.LEFT) body.physics.velocity.x *= -1
+          val runImpulse =
+              if (body.isSensing(BodySense.IN_WATER)) RUN_IN_WATER_VELOCITY else RUN_VELOCITY
+          body.physics.velocity =
+              (when (directionRotation) {
+                    Direction.UP,
+                    Direction.DOWN -> Vector2(runImpulse, 0f)
+                    Direction.LEFT,
+                    Direction.RIGHT -> Vector2(0f, runImpulse)
+                  })
+                  .scl(ConstVals.PPM.toFloat() * facing.value)
 
           if (!runOnly) runningTimer.update(it)
 
           if (runningTimer.isFinished()) {
-            if (body.isSensing(BodySense.FEET_ON_GROUND)) body.physics.velocity.x = 0f
+            if (body.isSensing(BodySense.FEET_ON_GROUND)) body.physics.velocity.setZero()
             behavior = MetBehavior.SHIELDING
           }
         }
@@ -203,8 +232,6 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IUpsideDo
   override fun defineBodyComponent(): BodyComponent {
     val body = Body(BodyType.DYNAMIC)
     body.setSize(0.75f * ConstVals.PPM)
-    body.physics.velocityClamp.set(
-        VELOCITY_CLAMP_X * ConstVals.PPM, VELOCITY_CLAMP_Y * ConstVals.PPM)
 
     val shapes = Array<() -> IDrawableShape?>()
 
@@ -215,7 +242,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IUpsideDo
 
     // feet fixture
     val feetFixture = Fixture(GameRectangle().setSize(0.15f * ConstVals.PPM), FixtureType.FEET)
-    feetFixture.offsetFromBodyCenter.y = -.375f * ConstVals.PPM
+    feetFixture.offsetFromBodyCenter.y = -0.375f * ConstVals.PPM
     body.addFixture(feetFixture)
 
     // shield fixture
@@ -223,7 +250,6 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IUpsideDo
         Fixture(
             GameRectangle().setSize(0.75f * ConstVals.PPM, 0.5f * ConstVals.PPM),
             FixtureType.SHIELD)
-
     body.addFixture(shieldFixture)
 
     // damageable fixture
@@ -238,15 +264,26 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IUpsideDo
 
     // pre-process
     body.preProcess = Updatable {
-      body.physics.gravity.y =
-          if (body.isSensing(BodySense.FEET_ON_GROUND)) 0f
-          else ((if (upsideDown) GRAVITY_Y else -GRAVITY_Y) * ConstVals.PPM)
+      body.physics.velocityClamp =
+          (if (isDirectionRotatedVertically()) Vector2(VELOCITY_CLAMP_X, VELOCITY_CLAMP_Y)
+              else Vector2(VELOCITY_CLAMP_Y, VELOCITY_CLAMP_X))
+              .scl(ConstVals.PPM.toFloat())
+
+      val gravity =
+          if (body.isSensing(BodySense.FEET_ON_GROUND)) GRAVITY_ON_GROUND else GRAVITY_IN_AIR
+      body.physics.gravity =
+          (when (directionRotation) {
+                Direction.UP -> Vector2(0f, -gravity)
+                Direction.DOWN -> Vector2(0f, gravity)
+                Direction.LEFT -> Vector2(gravity, 0f)
+                Direction.RIGHT -> Vector2(-gravity, 0f)
+              })
+              .scl(ConstVals.PPM.toFloat())
 
       shieldFixture.active = behavior == MetBehavior.SHIELDING
       damageableFixture.active = behavior != MetBehavior.SHIELDING
 
-      val direction = if (upsideDown) Direction.DOWN else Direction.UP
-      shieldFixture.putProperty(ConstKeys.DIRECTION, direction)
+      shieldFixture.putProperty(ConstKeys.DIRECTION, directionRotation)
     }
 
     addComponent(DrawableShapesComponent(this, shapes))
@@ -261,10 +298,30 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IUpsideDo
     val SpritesComponent = SpritesComponent(this, "met" to sprite)
     SpritesComponent.putUpdateFunction("met") { _, _sprite ->
       _sprite as GameSprite
-      val position = if (upsideDown) Position.TOP_CENTER else Position.BOTTOM_CENTER
+
+      val flipX = facing == Facing.LEFT
+      val flipY = directionRotation == Direction.DOWN
+      _sprite.setFlip(flipX, flipY)
+
+      val rotation =
+          when (directionRotation) {
+            Direction.UP,
+            Direction.DOWN -> 0f
+            Direction.LEFT -> 90f
+            Direction.RIGHT -> 270f
+          }
+      sprite.setOriginCenter()
+      _sprite.setRotation(rotation)
+
+      val position =
+          when (directionRotation) {
+            Direction.UP -> Position.BOTTOM_CENTER
+            Direction.DOWN -> Position.TOP_CENTER
+            Direction.LEFT -> Position.CENTER_RIGHT
+            Direction.RIGHT -> Position.CENTER_LEFT
+          }
       val bodyPosition = body.getPositionPoint(position)
       _sprite.setPosition(bodyPosition, position)
-      _sprite.setFlip(facing == Facing.LEFT, upsideDown)
     }
 
     return SpritesComponent

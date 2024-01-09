@@ -83,7 +83,7 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity, I
     owner = shieldFixture.getEntity()
 
     val trajectory = body.physics.velocity.cpy()
-    trajectory.x *= -1f
+    if (isDirectionRotatedVertically()) trajectory.x *= -1f else trajectory.y *= -1f
 
     val deflection =
         if (shieldFixture.properties.containsKey(ConstKeys.DIRECTION))
@@ -93,7 +93,8 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity, I
     when (deflection) {
       Direction.UP -> trajectory.y = 5f * ConstVals.PPM
       Direction.DOWN -> trajectory.y = -5f * ConstVals.PPM
-      else -> trajectory.y = 0f
+      Direction.LEFT -> trajectory.x = -5f * ConstVals.PPM
+      Direction.RIGHT -> trajectory.x = 5f * ConstVals.PPM
     }
 
     body.physics.velocity.set(trajectory)
@@ -115,6 +116,7 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity, I
 
     // body fixture
     val bodyFixture = Fixture(GameRectangle().set(body), FixtureType.BODY)
+    bodyFixture.putProperty(ConstKeys.GRAVITY_ROTATABLE, false)
     body.addFixture(bodyFixture)
 
     // projectile fixture

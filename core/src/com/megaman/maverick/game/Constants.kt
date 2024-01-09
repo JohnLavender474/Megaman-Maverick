@@ -18,6 +18,7 @@ object ConstKeys {
   const val FLIPPED_X = "flipped_x"
   const val FLIPPED_Y = "flipped_y"
   const val UPSIDE_DOWN = "upside_down"
+  const val GRAVITY_ROTATABLE = "gravity_rotatable"
   const val SIDEWAYS = "sideways"
   const val HAZARDS = "hazards"
   const val PPM = "ppm"
