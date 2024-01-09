@@ -50,11 +50,6 @@ import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.isSensing
 import kotlin.reflect.KClass
 
-/**
- * A met enemy.
- *
- * @param game The game instance.
- */
 class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectionRotatable {
 
   enum class MetBehavior {
@@ -74,7 +69,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
     private const val POP_UP_DURATION = .5f
     private const val RUN_VELOCITY = 8f
     private const val RUN_IN_WATER_VELOCITY = 3f
-    private const val GRAVITY_IN_AIR = 8f
+    private const val GRAVITY_IN_AIR = 18f
     private const val GRAVITY_ON_GROUND = .15f
     private const val BULLET_TRAJECTORY_X = 15f
     private const val BULLET_TRAJECTORY_Y = .25f
@@ -208,15 +203,15 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
           val runningTimer = metBehaviorTimers.get(MetBehavior.RUNNING)
 
           val runImpulse =
-              if (body.isSensing(BodySense.IN_WATER)) RUN_IN_WATER_VELOCITY else RUN_VELOCITY
-          body.physics.velocity =
-              (when (directionRotation) {
-                    Direction.UP,
-                    Direction.DOWN -> Vector2(runImpulse, 0f)
-                    Direction.LEFT,
-                    Direction.RIGHT -> Vector2(0f, runImpulse)
-                  })
-                  .scl(ConstVals.PPM.toFloat() * facing.value)
+              ConstVals.PPM *
+                  facing.value *
+                  if (body.isSensing(BodySense.IN_WATER)) RUN_IN_WATER_VELOCITY else RUN_VELOCITY
+          when (directionRotation) {
+            Direction.UP,
+            Direction.DOWN -> body.physics.velocity.x = runImpulse
+            Direction.LEFT,
+            Direction.RIGHT -> body.physics.velocity.y = runImpulse
+          }
 
           if (!runOnly) runningTimer.update(it)
 

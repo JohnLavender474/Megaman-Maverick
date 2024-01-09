@@ -42,6 +42,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_SWIM_BEHAVIOR_TAG
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
@@ -94,7 +95,7 @@ class MegamanMaverickGame : Game2D() {
 
     GameLogger.set(GameLogLevel.ERROR)
     GameLogger.filterByTag = true
-    GameLogger.tagsToLog.addAll()
+    GameLogger.tagsToLog.addAll(MegaContactListener.TAG, MEGAMAN_SWIM_BEHAVIOR_TAG)
 
     val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
     val screenHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM

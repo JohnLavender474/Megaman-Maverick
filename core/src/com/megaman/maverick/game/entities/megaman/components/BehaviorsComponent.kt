@@ -90,21 +90,19 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             else {
               val aButtonJustPressed = game.controllerPoller.isJustPressed(ControllerButton.A)
               val doSwim = aButtonJustPressed && aButtonTask == AButtonTask.SWIM
-              GameLogger.debug(
-                  MEGAMAN_SWIM_BEHAVIOR_TAG,
-                  "A button just pressed: $aButtonJustPressed. A button task: $aButtonTask. Evaluate method yielding $doSwim")
               doSwim
             }
           },
           // init
           init = {
             body.physics.velocity.add(
-                when (directionRotation) {
-                  Direction.UP -> Vector2(0f, swimVel * ConstVals.PPM)
-                  Direction.DOWN -> Vector2(0f, -swimVel * ConstVals.PPM)
-                  Direction.LEFT -> Vector2(-swimVel * ConstVals.PPM, 0f)
-                  Direction.RIGHT -> Vector2(swimVel * ConstVals.PPM, 0f)
-                })
+                (when (directionRotation) {
+                      Direction.UP -> Vector2(0f, swimVel)
+                      Direction.DOWN -> Vector2(0f, -swimVel)
+                      Direction.LEFT -> Vector2(swimVel, 0f)
+                      Direction.RIGHT -> Vector2(-swimVel, 0f)
+                    })
+                    .scl(ConstVals.PPM.toFloat()))
             requestToPlaySound(SoundAsset.SWIM_SOUND, false)
             GameLogger.debug(MEGAMAN_SWIM_BEHAVIOR_TAG, "Init method called")
           })
