@@ -27,6 +27,7 @@ import com.megaman.maverick.game.screens.menus.AbstractMenuScreen;
 import com.megaman.maverick.game.screens.utils.BlinkingArrow;
 import com.megaman.maverick.game.screens.utils.ScreenSlide;
 import com.megaman.maverick.game.utils.ExtensionsKt;
+import com.megaman.maverick.game.utils.MegaUtilMethods;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumMap;
@@ -107,9 +108,10 @@ public class BossSelectScreen extends AbstractMenuScreen {
         for (BossType boss : BossType.values()) {
             bp.add(new BossPane(getCastGame(), boss));
         }
-        t.add(new BitmapFontHandle(() -> "PRESS START", ExtensionsKt.getDefaultFontSize(),
+        t.add(new BitmapFontHandle(() -> "PRESS START", MegaUtilMethods.INSTANCE.getDefaultFontSize(),
                 new Vector2(5.35f * ConstVals.PPM, 13.85f * ConstVals.PPM), false, false, "Megaman10Font.ttf"));
-        t.add(new BitmapFontHandle(() -> BACK, ExtensionsKt.getDefaultFontSize(), new Vector2(12.35f * ConstVals.PPM,
+        t.add(new BitmapFontHandle(() -> BACK, MegaUtilMethods.INSTANCE.getDefaultFontSize(),
+                new Vector2(12.35f * ConstVals.PPM,
                 ConstVals.PPM), false, false, "Megaman10Font.ttf"));
         bArrs.put(BACK, new BlinkingArrow(getCastGame().assMan, new Vector2(12f * ConstVals.PPM,
                 .75f * ConstVals.PPM)));
@@ -148,7 +150,7 @@ public class BossSelectScreen extends AbstractMenuScreen {
                 }
             }
         }
-        bName = new BitmapFontHandle(() -> "", ExtensionsKt.getDefaultFontSize(), new Vector2(ConstVals.PPM,
+        bName = new BitmapFontHandle(() -> "", MegaUtilMethods.INSTANCE.getDefaultFontSize(), new Vector2(ConstVals.PPM,
                 ConstVals.PPM), false, false, "Megaman10Font.ttf");
     }
 

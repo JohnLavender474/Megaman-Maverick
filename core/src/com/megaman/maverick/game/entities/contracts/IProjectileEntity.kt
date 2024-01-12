@@ -1,4 +1,4 @@
-package com.megaman.maverick.game.entities
+package com.megaman.maverick.game.entities.contracts
 
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.utils.Array

@@ -22,8 +22,8 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.utils.BlinkingArrow
 import com.megaman.maverick.game.screens.utils.ScreenSlide
+import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
 import com.megaman.maverick.game.utils.getDefaultCameraPosition
-import com.megaman.maverick.game.utils.getDefaultFontSize
 import com.megaman.maverick.game.utils.setToDefaultPosition
 
 class MainScreen(game: MegamanMaverickGame) :

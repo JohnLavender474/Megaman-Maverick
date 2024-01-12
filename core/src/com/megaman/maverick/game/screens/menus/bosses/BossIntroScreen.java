@@ -19,13 +19,14 @@ import com.megaman.maverick.game.assets.SoundAsset;
 import com.megaman.maverick.game.assets.TextureAsset;
 import com.megaman.maverick.game.drawables.sprites.Stars;
 import com.megaman.maverick.game.entities.bosses.BossType;
-import com.megaman.maverick.game.utils.ExtensionsKt;
+import com.megaman.maverick.game.utils.MegaUtilMethods;
 import kotlin.Pair;
 
 import java.util.LinkedList;
 import java.util.Queue;
 
 import static com.engine.common.objects.PropertiesKt.props;
+import static com.megaman.maverick.game.utils.ExtensionsKt.getDefaultCameraPosition;
 
 @SuppressWarnings("ALL")
 public class BossIntroScreen extends BaseScreen {
@@ -78,7 +79,7 @@ public class BossIntroScreen extends BaseScreen {
         }};
         durTimer = new Timer(DUR);
         bDropTimer = new Timer(B_DROP);
-        bText = new BitmapFontHandle(() -> "", ExtensionsKt.getDefaultFontSize(), new Vector2(
+        bText = new BitmapFontHandle(() -> "", MegaUtilMethods.INSTANCE.getDefaultFontSize(), new Vector2(
                 (ConstVals.VIEW_WIDTH * ConstVals.PPM / 3f) - ConstVals.PPM,
                 ConstVals.VIEW_HEIGHT * ConstVals.PPM / 3f), false, false, "Megaman10Font.ttf");
     }
@@ -118,7 +119,7 @@ public class BossIntroScreen extends BaseScreen {
             e.component1().reset();
             e.component2().reset();
         }
-        uiCam.position.set(ExtensionsKt.getDefaultCameraPosition());
+        uiCam.position.set(getDefaultCameraPosition());
         game.getAudioMan().playMusic(MusicAsset.MM2_BOSS_INTRO_MUSIC, false);
     }
 

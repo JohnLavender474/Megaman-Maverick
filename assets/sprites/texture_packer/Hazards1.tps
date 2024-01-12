@@ -207,6 +207,7 @@
             <key type="filename">../Frames/Hazards1/LaserBeamer.png</key>
             <key type="filename">../Frames/Hazards1/Spike4.png</key>
             <key type="filename">../Frames/Hazards1/Spike5.png</key>
+            <key type="filename">../Frames/Hazards1/Spike6.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

@@ -7,11 +7,17 @@ import com.engine.animations.Animator
 import com.engine.common.enums.Position
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.extensions.objectSetOf
+import com.engine.common.objects.MutableOrderedSet
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
+import com.engine.drawables.sorting.DrawingPriority
+import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
+import com.engine.entities.IGameEntity
+import com.engine.entities.contracts.IChildEntity
+import com.engine.entities.contracts.IParentEntity
 import com.engine.entities.contracts.ISpriteEntity
 import com.engine.events.Event
 import com.engine.events.IEventListener
@@ -21,10 +27,11 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntities
 import com.megaman.maverick.game.events.EventType
 
-/** A rocket platform is a block that moves along a trajectory. */
-class RocketPlatform(game: MegamanMaverickGame) : Block(game), ISpriteEntity, IEventListener {
+class RocketPlatform(game: MegamanMaverickGame) :
+    Block(game), IParentEntity, ISpriteEntity, IEventListener {
 
   companion object {
     private var region: TextureRegion? = null
@@ -33,6 +40,7 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), ISpriteEntity, IE
     private const val HEIGHT = 3f
   }
 
+  override val children = MutableOrderedSet<IGameEntity>()
   override val eventKeyMask = objectSetOf<Any>(EventType.BEGIN_ROOM_TRANS, EventType.END_ROOM_TRANS)
 
   override fun init() {
@@ -46,8 +54,6 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), ISpriteEntity, IE
     addComponent(defineSpritesCompoent())
     addComponent(defineAnimationsComponent())
     addComponent(MotionComponent(this))
-
-    runnablesOnDestroy.add { game.eventsMan.removeListener(this) }
   }
 
   override fun spawn(spawnProps: Properties) {
@@ -57,9 +63,11 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), ISpriteEntity, IE
     game.eventsMan.addListener(this)
 
     // define the spawn and bounds
-    val spawn = (spawnProps.get(ConstKeys.BOUNDS) as GameRectangle).getCenter()
-    val bounds = GameRectangle().setSize(WIDTH * ConstVals.PPM, HEIGHT * ConstVals.PPM)
-    bounds.setBottomCenterToPoint(spawn)
+    val spawn = (spawnProps.get(ConstKeys.BOUNDS) as GameRectangle).getBottomCenterPoint()
+    val bounds =
+        GameRectangle()
+            .setSize(WIDTH * ConstVals.PPM, HEIGHT * ConstVals.PPM)
+            .setBottomCenterToPoint(spawn)
     body.set(bounds)
 
     // define the trajectory
@@ -67,9 +75,30 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), ISpriteEntity, IE
     val motionDefinition =
         MotionComponent.MotionDefinition(
             motion = trajectory,
-            function = { value, delta -> body.physics.velocity.set(value.scl(delta)) },
+            function = { value, _ -> body.physics.velocity.set(value) },
             onReset = { body.set(bounds) })
     getComponent(MotionComponent::class)!!.put(ConstKeys.TRAJECTORY, motionDefinition)
+
+    // spawn the entities triggered by this entity's spawning, collecting any subsequent entities
+    // that implement IChildEntity into the children collection
+    val subsequentEntities = convertObjectPropsToEntities(spawnProps)
+    subsequentEntities.forEach { entry ->
+      val (subsequentEntity, subsequentEntityProps) = entry
+
+      if (subsequentEntity is IChildEntity) {
+        subsequentEntity.parent = this
+        children.add(subsequentEntity)
+      }
+
+      game.gameEngine.spawn(subsequentEntity, subsequentEntityProps)
+    }
+  }
+
+  override fun onDestroy() {
+    super<Block>.onDestroy()
+    game.eventsMan.removeListener(this)
+    children.forEach { it.kill() }
+    children.clear()
   }
 
   override fun onEvent(event: Event) {
@@ -83,7 +112,7 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), ISpriteEntity, IE
   }
 
   private fun defineSpritesCompoent(): SpritesComponent {
-    val sprite = GameSprite(region!!)
+    val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.PLAYGROUND, 2))
     sprite.setSize(4f * ConstVals.PPM, 4f * ConstVals.PPM)
 
     val SpritesComponent = SpritesComponent(this, "rocket" to sprite)

@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.maps.MapProperties
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.OrderedMap
 import com.engine.common.extensions.getMusic
@@ -24,8 +25,6 @@ fun MapProperties.toProps(): Properties {
   keys.forEach { key -> props.put(key, get(key)) }
   return props
 }
-
-fun getDefaultFontSize() = Math.round(ConstVals.PPM / 2f)
 
 fun Camera.toGameRectangle(): GameRectangle {
   val rectangle = GameRectangle()
