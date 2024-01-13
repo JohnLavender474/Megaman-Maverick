@@ -81,7 +81,7 @@ public class BossIntroScreen extends BaseScreen {
         bDropTimer = new Timer(B_DROP);
         bText = new BitmapFontHandle(() -> "", MegaUtilMethods.INSTANCE.getDefaultFontSize(), new Vector2(
                 (ConstVals.VIEW_WIDTH * ConstVals.PPM / 3f) - ConstVals.PPM,
-                ConstVals.VIEW_HEIGHT * ConstVals.PPM / 3f), false, false, "Megaman10Font.ttf");
+                ConstVals.VIEW_HEIGHT * ConstVals.PPM / 3f), false, false, ConstVals.MEGAMAN_MAVERICK_FONT);
     }
 
     public void set(BossType b) {

@@ -48,6 +48,7 @@ import com.megaman.maverick.game.screens.levels.MegaLevelScreen
 import com.megaman.maverick.game.screens.menus.MainScreen
 import com.megaman.maverick.game.screens.menus.bosses.BossIntroScreen
 import com.megaman.maverick.game.screens.menus.bosses.BossSelectScreen
+import com.megaman.maverick.game.screens.other.SimpleEndLevelScreen
 import com.megaman.maverick.game.utils.getMusics
 import com.megaman.maverick.game.utils.getSounds
 import com.megaman.maverick.game.world.FixtureType
@@ -108,6 +109,7 @@ class MegamanMaverickGame : Game2D() {
     screens.put(ScreenEnum.MAIN.name, MainScreen(this))
     screens.put(ScreenEnum.BOSS_SELECT.name, BossSelectScreen(this))
     screens.put(ScreenEnum.BOSS_INTRO.name, BossIntroScreen(this))
+    screens.put(ScreenEnum.SIMPLE_END_LEVEL_SUCCESSFULLY.name, SimpleEndLevelScreen(this))
 
     audioMan = MegaAudioManager(assMan.getSounds(), assMan.getMusics())
     audioMan.musicVolume = DEFAULT_VOLUME

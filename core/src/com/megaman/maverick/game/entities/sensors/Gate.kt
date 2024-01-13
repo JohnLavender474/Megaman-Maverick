@@ -61,15 +61,12 @@ class Gate(game: MegamanMaverickGame) :
 
   companion object {
     const val TAG = "Gate"
-
     private var atlas: TextureAtlas? = null
     private const val DURATION = .5f
   }
 
   override val eventKeyMask = objectSetOf<Any>(EventType.PLAYER_SPAWN, EventType.END_ROOM_TRANS)
-
   private val timer = Timer(DURATION)
-
   val center = Vector2()
 
   lateinit var state: GateState
@@ -78,8 +75,9 @@ class Gate(game: MegamanMaverickGame) :
   lateinit var orientation: GateOrientation
     private set
 
-  private lateinit var nextRoomKey: String
+  var resettable = false
 
+  private lateinit var nextRoomKey: String
   private var transitionFinished = false
 
   override fun init() {
@@ -103,10 +101,12 @@ class Gate(game: MegamanMaverickGame) :
     orientation =
         GateOrientation.valueOf(
             spawnProps.getOrDefault(ConstKeys.ORIENTATION, "HORIZONTAL") as String)
+    resettable = spawnProps.getOrDefault(ConstKeys.RESET, false, Boolean::class)
   }
 
   override fun onEvent(event: Event) {
     when (event.key) {
+      EventType.PLAYER_SPAWN -> if (resettable) reset()
       EventType.GAME_OVER -> reset()
       EventType.END_ROOM_TRANS -> {
         val room = event.getProperty(ConstKeys.ROOM) as RectangleMapObject

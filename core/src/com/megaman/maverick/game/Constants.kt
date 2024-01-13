@@ -11,9 +11,13 @@ object ConstVals {
   const val STANDARD_RESISTANCE_Y = 1.025f
   const val MAX_HEALTH = 30
   const val BOSS_DROP_DOWN_DURATION = 0.25f
+  const val MEGAMAN_MAVERICK_FONT = "Megaman10Font.ttf"
 }
 
 object ConstKeys {
+  const val RESET = "reset"
+  const val SUCCESS = "success"
+  const val END = "end"
   const val SPLASH = "splash"
   const val BLOCK_ON = "block_on"
   const val ORIENTATION = "orientation"
@@ -41,6 +45,7 @@ object ConstKeys {
   const val MASK = "mask"
   const val DISPOSABLES = "disposables"
   const val EVENTS = "events"
+  const val EVENT = "event"
   const val SPAWN_TYPE = "spawn_type"
   const val SPAWNERS = "spawners"
   const val READY = "ready"

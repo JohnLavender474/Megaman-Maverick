@@ -52,7 +52,7 @@
   <object id="435" name="Met" x="6832" y="11424" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="9" name="player">
-  <object id="91" name="0" x="4688" y="11328" width="32" height="32"/>
+  <object id="91" name="0" x="7328" y="11424" width="32" height="32"/>
   <object id="122" name="1" x="3240" y="9376" width="32" height="32"/>
   <object id="258" name="2" x="1280" y="9792" width="32" height="32"/>
   <object id="400" name="3" x="1464" y="10496" width="32" height="32"/>
@@ -73,7 +73,11 @@
   <object id="346" name="Room8" x="2528" y="11040" width="1824" height="448"/>
   <object id="412" name="Room9" x="4352" y="11040" width="2720" height="448"/>
   <object id="437" name="Room10" x="7072" y="11040" width="512" height="448"/>
-  <object id="443" name="Room11" x="7584" y="11040" width="512" height="448"/>
+  <object id="443" name="Room11" x="7584" y="11040" width="512" height="448">
+   <properties>
+    <property name="event" value="success"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="16" name="hazards">
   <object id="196" name="Saw" x="2400" y="9312" width="32" height="32">
@@ -379,6 +383,7 @@
   </object>
   <object id="442" name="Gate" x="7552" y="11360" width="64" height="96">
    <properties>
+    <property name="reset" type="bool" value="true"/>
     <property name="room" value="Room11"/>
    </properties>
   </object>

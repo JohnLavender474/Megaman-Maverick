@@ -39,6 +39,7 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.camera.CameraManagerForRooms
+import com.megaman.maverick.game.screens.levels.events.EndLevelEventHandler
 import com.megaman.maverick.game.screens.levels.events.PlayerDeathEventHandler
 import com.megaman.maverick.game.screens.levels.events.PlayerSpawnEventHandler
 import com.megaman.maverick.game.screens.levels.map.layers.MegaMapLayerBuilders
@@ -78,8 +79,10 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
 
   private lateinit var spawnsMan: SpawnsManager
   private lateinit var playerSpawnsMan: PlayerSpawnsManager
-  private lateinit var levelStateHandler: LevelStateHandler
   private lateinit var playerStatsHandler: PlayerStatsHandler
+
+  private lateinit var levelStateHandler: LevelStateHandler
+  private lateinit var endLevelEventHandler: EndLevelEventHandler
   private lateinit var cameraManagerForRooms: CameraManagerForRooms
 
   private lateinit var playerSpawnEventHandler: PlayerSpawnEventHandler
@@ -104,6 +107,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
 
     spawnsMan = SpawnsManager()
     levelStateHandler = LevelStateHandler(megamanGame)
+    endLevelEventHandler = EndLevelEventHandler(megamanGame)
 
     sprites = megamanGame.getSprites()
     shapes = megamanGame.getShapes()
@@ -169,11 +173,20 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
               EventType.END_ROOM_TRANS,
               props(ConstKeys.ROOM to cameraManagerForRooms.currentGameRoom)))
 
-      if (cameraManagerForRooms.currentGameRoom?.name.equals(ConstKeys.BOSS))
-          eventsMan.submitEvent(
-              Event(
-                  EventType.ENTER_BOSS_ROOM,
-                  props(ConstKeys.ROOM to cameraManagerForRooms.currentGameRoom)))
+      val currentRoom = cameraManagerForRooms.currentGameRoom
+      if (currentRoom?.properties?.containsKey(ConstKeys.EVENT) == true) {
+        val props = props(ConstKeys.ROOM to currentRoom)
+
+        val roomEvent =
+            when (val roomEventString =
+                currentRoom.properties.get(ConstKeys.EVENT, String::class.java)) {
+              ConstKeys.BOSS -> EventType.ENTER_BOSS_ROOM
+              ConstKeys.SUCCESS -> EventType.END_LEVEL_SUCCESSFULLY
+              else -> throw IllegalStateException("Unknown room event: $roomEventString")
+            }
+
+        eventsMan.submitEvent(Event(roomEvent, props))
+      }
     }
   }
 
@@ -335,6 +348,11 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
         GameLogger.debug(
             MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Req shake cam --> shake the camera")
         // TODO: shake camera
+      }
+      EventType.END_LEVEL_SUCCESSFULLY -> {
+        GameLogger.debug(
+            MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): End level successfully --> end level")
+        endLevelEventHandler.endLevelSuccessfully()
       }
     }
   }
