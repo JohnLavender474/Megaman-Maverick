@@ -17,9 +17,9 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
-import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
+import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.ItemEntity
 import com.megaman.maverick.game.entities.decorations.Splash
 import com.megaman.maverick.game.entities.megaman.Megaman
@@ -81,10 +81,16 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
     }
 
     // side, gate
-    else if (contact.fixturesMatch(FixtureType.SIDE, FixtureType.GATE)) {
-      GameLogger.debug(TAG, "beginContact(): Side-Gate")
-      val (side, gateFixture) = contact.getFixturesInOrder(FixtureType.SIDE, FixtureType.GATE)!!
-      if (side.getEntity() is Megaman) {
+    else if (contact.fixtureSetsMatch(
+        objectSetOf(FixtureType.SIDE, FixtureType.FEET, FixtureType.HEAD),
+        objectSetOf(FixtureType.GATE))) {
+      GameLogger.debug(TAG, "beginContact(): Side/Feet/Head-Gate")
+      val (other, gateFixture) =
+          contact.getFixtureSetsInOrder(
+              objectSetOf(FixtureType.SIDE, FixtureType.FEET, FixtureType.HEAD),
+              objectSetOf(FixtureType.GATE))!!
+      val entity = other.getEntity()
+      if (entity is Megaman) {
         val gate = gateFixture.getEntity() as Gate
         if (gate.state == Gate.GateState.OPENABLE) gate.trigger()
       }
@@ -131,12 +137,12 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
     }
 
     // bouncer, feet or head or side
-    else if (contact.fixturesMatch(
+    else if (contact.fixtureSetsMatch(
         objectSetOf(FixtureType.BOUNCER),
         objectSetOf(FixtureType.FEET, FixtureType.HEAD, FixtureType.SIDE))) {
       GameLogger.debug(TAG, "beginContact(): Bouncer-Feet/Head/Side, contact = $contact")
       val (bouncer, bounceable) =
-          contact.getFixturesInOrder(
+          contact.getFixtureSetsInOrder(
               objectSetOf(FixtureType.BOUNCER),
               objectSetOf(FixtureType.FEET, FixtureType.HEAD, FixtureType.SIDE))!!
 
@@ -246,13 +252,13 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
     }
 
     // projectile, block or body or shield or water
-    else if (contact.fixturesMatch(
+    else if (contact.fixtureSetsMatch(
         objectSetOf(FixtureType.PROJECTILE),
         objectSetOf(FixtureType.BLOCK, FixtureType.BODY, FixtureType.SHIELD, FixtureType.WATER))) {
       GameLogger.debug(
           TAG, "beginContact(): Projectile-Block/Body/Shield/Water, contact = $contact")
       val (projectile, other) =
-          contact.getFixturesInOrder(
+          contact.getFixtureSetsInOrder(
               objectSetOf(FixtureType.PROJECTILE),
               objectSetOf(
                   FixtureType.BLOCK, FixtureType.BODY, FixtureType.SHIELD, FixtureType.WATER))!!

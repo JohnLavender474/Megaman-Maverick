@@ -30,6 +30,9 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
     const val STANDARD_FRICTION = 0.035f
   }
 
+  protected lateinit var blockFixture: Fixture
+    private set
+
   override fun init() {
     GameLogger.debug(TAG, "init(): Initializing Block entity.")
     addComponent(defineBodyComponent())
@@ -39,10 +42,11 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
 
   protected open fun defineBodyComponent(): BodyComponent {
     val body = Body(BodyType.STATIC)
-    val bodyFixture = Fixture(GameRectangle(), FixtureType.BLOCK)
-    body.addFixture(bodyFixture)
 
-    body.preProcess = Updatable { (bodyFixture.shape as GameRectangle).set(body) }
+    blockFixture = Fixture(GameRectangle(), FixtureType.BLOCK)
+    body.addFixture(blockFixture)
+
+    body.preProcess = Updatable { (blockFixture.shape as GameRectangle).set(body) }
 
     return BodyComponentCreator.create(this, body)
   }
@@ -83,5 +87,8 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
 
     val position = spawnProps.get(ConstKeys.POSITION, Vector2::class)
     if (position != null) body.setPosition(position)
+
+    val blockFixtureOn = spawnProps.getOrDefault(ConstKeys.BLOCK_ON, true) as Boolean
+    blockFixture.active = blockFixtureOn
   }
 }

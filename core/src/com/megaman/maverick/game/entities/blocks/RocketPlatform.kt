@@ -15,6 +15,7 @@ import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
+import com.engine.drawables.sprites.setSize
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IChildEntity
 import com.engine.entities.contracts.IParentEntity
@@ -105,15 +106,23 @@ class RocketPlatform(game: MegamanMaverickGame) :
     when (event.key) {
       EventType.BEGIN_ROOM_TRANS -> {
         firstSprite!!.hidden = true
+        children.forEach { child ->
+          if (child is ISpriteEntity) child.sprites.values().forEach { it.hidden = true }
+        }
         getComponent(MotionComponent::class)?.reset()
       }
-      EventType.END_ROOM_TRANS -> firstSprite!!.hidden = false
+      EventType.END_ROOM_TRANS -> {
+        firstSprite!!.hidden = false
+        children.forEach { child ->
+          if (child is ISpriteEntity) child.sprites.values().forEach { it.hidden = false }
+        }
+      }
     }
   }
 
   private fun defineSpritesCompoent(): SpritesComponent {
     val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.PLAYGROUND, 2))
-    sprite.setSize(4f * ConstVals.PPM, 4f * ConstVals.PPM)
+    sprite.setSize(4f * ConstVals.PPM)
 
     val SpritesComponent = SpritesComponent(this, "rocket" to sprite)
     SpritesComponent.putUpdateFunction("rocket") { _, _sprite ->

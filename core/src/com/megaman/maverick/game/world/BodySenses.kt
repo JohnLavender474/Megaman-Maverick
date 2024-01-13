@@ -4,7 +4,6 @@ import com.engine.world.Body
 
 enum class BodySense {
   IN_WATER,
-  HIT_BY_HEAD,
   FEET_ON_GROUND,
   FEET_ON_ICE,
   HEAD_TOUCHING_BLOCK,

@@ -14,6 +14,8 @@ object ConstVals {
 }
 
 object ConstKeys {
+  const val BLOCK_ON = "block_on"
+  const val ORIENTATION = "orientation"
   const val OFFSET_X = "offset_x"
   const val OFFSET_Y = "offset_y"
   const val WIDTH = "width"

@@ -126,8 +126,7 @@ class Water(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteE
         val region = if (y == rows - 1) surfaceReg!! else underReg!!
         val animation = Animation(region, 1, 2, 0.15f, true)
 
-        val sprite = GameSprite()
-        sprite.priority.section = DrawingSection.FOREGROUND
+        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
         sprite.setBounds(pos.x, pos.y, ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
         sprite.setAlpha(WATER_ALPHA)
 
