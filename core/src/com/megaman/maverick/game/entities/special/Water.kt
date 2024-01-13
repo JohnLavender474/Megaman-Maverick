@@ -55,6 +55,8 @@ class Water(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteE
 
   private lateinit var waterFixture: Fixture
 
+  var splashSound = true
+
   override fun init() {
     GameLogger.debug(TAG, "Initializing...")
 
@@ -79,6 +81,8 @@ class Water(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteE
     }
 
     defineDrawables(bounds)
+
+    splashSound = spawnProps.getOrDefault(ConstKeys.SPLASH, true, Boolean::class)
   }
 
   override fun onDestroy() {

@@ -13,6 +13,7 @@ import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.interfaces.IFaceable
+import com.engine.common.interfaces.isFacing
 import com.engine.common.interfaces.swapFacing
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
@@ -36,6 +37,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.defineProjectileComponents
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -43,35 +45,26 @@ import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.getEntity
+import kotlin.math.abs
 
-/**
- * ChargedShot class represents a projectile, which can be fully or half charged, in the game. It
- * extends [GameEntity] and implements [IProjectileEntity] and [IFaceable].
- *
- * @param game The game instance to which this charged shot belongs.
- */
-class ChargedShot(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity, IFaceable {
+class ChargedShot(game: MegamanMaverickGame) :
+    GameEntity(game), IProjectileEntity, IFaceable, IDirectionRotatable {
 
-  /** A companion object that contains shared properties and textures for ChargedShot instances. */
   companion object {
     private var fullyChargedRegion: TextureRegion? = null
     private var halfChargedRegion: TextureRegion? = null
   }
 
-  /** The owner of the charged shot (the entity that fired it). */
   override var owner: IGameEntity? = null
-
-  /** The facing direction of the charged shot (either [Facing.RIGHT] or [Facing.LEFT]). */
   override var facing = Facing.RIGHT
 
-  /** The trajectory of the charged shot. */
+  override lateinit var directionRotation: Direction
+
   private val trajectory = Vector2()
 
-  /** Whether the charged shot is fully charged or not. */
   var fullyCharged = false
     private set
 
-  /** Initializes the ChargedShot by defining its components and animations. */
   override fun init() {
     if (fullyChargedRegion == null)
         fullyChargedRegion =
@@ -88,18 +81,12 @@ class ChargedShot(game: MegamanMaverickGame) : GameEntity(game), IProjectileEnti
     addComponent(defineUpdatablesComponent())
   }
 
-  /**
-   * Spawns the charged shot with specified properties.
-   *
-   * @param spawnProps Properties for spawning the charged shot, including position and charge
-   *   level.
-   */
   override fun spawn(spawnProps: Properties) {
     super.spawn(spawnProps)
 
     owner = spawnProps.get(ConstKeys.OWNER) as IGameEntity?
-
     fullyCharged = spawnProps.get(ConstKeys.BOOLEAN) as Boolean
+    directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
 
     var bodyDimension = .75f * ConstVals.PPM
     var spriteDimension = ConstVals.PPM.toFloat()
@@ -113,72 +100,86 @@ class ChargedShot(game: MegamanMaverickGame) : GameEntity(game), IProjectileEnti
     val _trajectory = spawnProps.get(ConstKeys.TRAJECTORY) as Vector2
     trajectory.set(_trajectory.scl(ConstVals.PPM.toFloat()))
 
-    facing = if (trajectory.x > 0f) Facing.RIGHT else Facing.LEFT
+    facing =
+        if (directionRotation.isVertical()) if (trajectory.x > 0f) Facing.RIGHT else Facing.LEFT
+        else if (trajectory.y > 0f) Facing.RIGHT else Facing.LEFT
 
     val spawn = spawnProps.get(ConstKeys.POSITION) as Vector2
     body.setCenter(spawn)
   }
 
-  /** Handles damage inflicted to the charged shot by exploding and marking it as dead. */
   override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
-  /**
-   * Handles a collision with a block fixture by exploding and marking the charged shot as dead.
-   *
-   * @param blockFixture The fixture representing the block collided with.
-   */
   override fun hitBlock(blockFixture: Fixture) = explodeAndDie()
 
-  /**
-   * Handles a collision with a shield fixture by deflecting the charged shot.
-   *
-   * @param shieldFixture The fixture representing the shield collided with.
-   */
   override fun hitShield(shieldFixture: Fixture) {
     owner = shieldFixture.getEntity()
     swapFacing()
-    trajectory.x *= -1f
+    if (directionRotation.isVertical()) trajectory.x *= -1f else trajectory.y *= -1f
 
     val deflection =
         if (shieldFixture.properties.containsKey(ConstKeys.DIRECTION))
             shieldFixture.properties.get(ConstKeys.DIRECTION) as Direction
         else Direction.UP
 
-    when (deflection) {
-      Direction.UP -> trajectory.y = 5f * ConstVals.PPM
-      Direction.DOWN -> trajectory.y = -5f * ConstVals.PPM
-      else -> trajectory.y = 0f
-    }
+    val newTrajectory =
+        when (directionRotation) {
+          Direction.UP -> {
+            when (deflection) {
+              Direction.UP -> Vector2(trajectory.x, 5f * ConstVals.PPM)
+              Direction.DOWN -> Vector2(trajectory.x, -5f * ConstVals.PPM)
+              else -> Vector2(trajectory.x, 0f)
+            }
+          }
+          Direction.DOWN -> {
+            when (deflection) {
+              Direction.UP -> Vector2(trajectory.x, -5f * ConstVals.PPM)
+              Direction.DOWN -> Vector2(trajectory.x, 5f * ConstVals.PPM)
+              else -> Vector2(trajectory.x, 0f)
+            }
+          }
+          Direction.LEFT -> {
+            when (deflection) {
+              Direction.UP -> Vector2(-5f * ConstVals.PPM, trajectory.y)
+              Direction.DOWN -> Vector2(5f * ConstVals.PPM, trajectory.y)
+              else -> Vector2(0f, trajectory.y)
+            }
+          }
+          Direction.RIGHT -> {
+            when (deflection) {
+              Direction.UP -> Vector2(5f * ConstVals.PPM, trajectory.y)
+              Direction.DOWN -> Vector2(-5f * ConstVals.PPM, trajectory.y)
+              else -> Vector2(0f, trajectory.y)
+            }
+          }
+        }
+    trajectory.set(newTrajectory)
+
     requestToPlaySound(SoundAsset.DINK_SOUND, false)
   }
 
-  /** Explodes the charged shot and marks it as dead, spawning an explosion entity. */
   private fun explodeAndDie() {
     kill(props(CAUSE_OF_DEATH_MESSAGE to "Explode and die"))
     val e = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.CHARGED_SHOT_EXPLOSION)
+
+    val direction =
+        if (abs(trajectory.y) > abs(trajectory.x))
+            (if (trajectory.y > 0f) Direction.UP else Direction.DOWN)
+        else if (trajectory.x > 0f) Direction.RIGHT else Direction.LEFT
+
     val props =
         props(
             ConstKeys.POSITION to body.getCenter(),
             ConstKeys.OWNER to owner,
-            ConstKeys.DIRECTION to facing,
+            ConstKeys.DIRECTION to direction,
             ConstKeys.BOOLEAN to fullyCharged,
         )
     game.gameEngine.spawn(e!!, props)
   }
 
-  /**
-   * Defines the updatables component which sets the trajectory every frame.
-   *
-   * @return The configured updatables component
-   */
   private fun defineUpdatablesComponent() =
       UpdatablesComponent(this, { body.physics.velocity.set(trajectory) })
 
-  /**
-   * Defines the body component of the charged shot, including fixtures.
-   *
-   * @return The configured body component.
-   */
   private fun defineBodyComponent(): BodyComponent {
     val body = Body(BodyType.ABSTRACT)
 
@@ -197,12 +198,6 @@ class ChargedShot(game: MegamanMaverickGame) : GameEntity(game), IProjectileEnti
     return BodyComponentCreator.create(this, body)
   }
 
-  /**
-   * Defines the animations component for the charged shot, including animations for fully charged
-   * and half charged states.
-   *
-   * @return The configured animations component.
-   */
   private fun defineAnimationsComponent(): AnimationsComponent {
     val chargedAnimation = Animation(fullyChargedRegion!!, 1, 2, 0.05f, true)
     val halfChargedAnimation = Animation(halfChargedRegion!!, 1, 2, 0.05f, true)
@@ -213,19 +208,24 @@ class ChargedShot(game: MegamanMaverickGame) : GameEntity(game), IProjectileEnti
     return AnimationsComponent(this, animator)
   }
 
-  /**
-   * Defines the sprite component of the charged shot, which includes the shot's graphical
-   * representation.
-   *
-   * @return The configured sprite component.
-   */
   private fun defineSpritesCompoent(): SpritesComponent {
     val sprite = GameSprite()
-    val SpritesComponent = SpritesComponent(this, "shot" to sprite)
-    SpritesComponent.putUpdateFunction("shot") { _, _sprite ->
-      _sprite.setFlip(facing == Facing.LEFT, false)
+    val spritesComponent = SpritesComponent(this, "shot" to sprite)
+    spritesComponent.putUpdateFunction("shot") { _, _sprite ->
+      _sprite.setFlip(isFacing(Facing.LEFT), false)
+
       (_sprite as GameSprite).setPosition(body.getCenter(), Position.CENTER)
+
+      val rotation =
+          when (directionRotation) {
+            Direction.UP,
+            Direction.DOWN -> 0f
+            Direction.LEFT -> 90f
+            Direction.RIGHT -> 270f
+          }
+      _sprite.setOriginCenter()
+      _sprite.rotation = rotation
     }
-    return SpritesComponent
+    return spritesComponent
   }
 }

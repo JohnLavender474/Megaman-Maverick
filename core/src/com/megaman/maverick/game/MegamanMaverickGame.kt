@@ -61,7 +61,8 @@ class MegamanMaverickGame : Game2D() {
 
   companion object {
     const val TAG = "MegamanMaverickGame"
-    const val DEBUG_SHAPES = true
+    const val DEBUG_SHAPES = false
+    const val DEFAULT_VOLUME = 0.5f
   }
 
   lateinit var megaman: Megaman
@@ -109,6 +110,8 @@ class MegamanMaverickGame : Game2D() {
     screens.put(ScreenEnum.BOSS_INTRO.name, BossIntroScreen(this))
 
     audioMan = MegaAudioManager(assMan.getSounds(), assMan.getMusics())
+    audioMan.musicVolume = DEFAULT_VOLUME
+    audioMan.soundVolume = DEFAULT_VOLUME
 
     EntityFactories.initialize(this)
 

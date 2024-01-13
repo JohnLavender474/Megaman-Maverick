@@ -6,11 +6,10 @@ import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.common.CAUSE_OF_DEATH_MESSAGE
-import com.engine.common.enums.Facing
+import com.engine.common.enums.Direction
 import com.engine.common.enums.Position
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.extensions.objectMapOf
-import com.engine.common.interfaces.IFaceable
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
@@ -36,19 +35,8 @@ import com.megaman.maverick.game.entities.contracts.defineProjectileComponents
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
-/**
- * ChargedShotExplosion class represents an explosion caused by a charged shot in the game. It
- * extends [GameEntity] and implements [IProjectileEntity] and [IFaceable].
- *
- * @param game The game instance to which this explosion belongs.
- */
-class ChargedShotExplosion(game: MegamanMaverickGame) :
-    GameEntity(game), IProjectileEntity, IFaceable {
+class ChargedShotExplosion(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity {
 
-  /**
-   * A companion object that contains shared properties and textures for ChargedShotExplosion
-   * instances.
-   */
   companion object {
     private const val FULLY_CHARGED_DURATION = .6f
     private const val HALF_CHARGED_DURATION = .3f
@@ -58,23 +46,14 @@ class ChargedShotExplosion(game: MegamanMaverickGame) :
     private var halfChargedRegion: TextureRegion? = null
   }
 
-  /** The owner of the charged shot that caused this explosion. */
   override var owner: IGameEntity? = null
-
-  /** The facing direction of the explosion (either [Facing.RIGHT] or [Facing.LEFT]). */
-  override var facing = Facing.RIGHT
-
-  /** Whether the explosion was caused by a fully charged shot or not. */
   var fullyCharged = false
     private set
 
-  /** Timer for the duration of the explosion. */
   private var durationTimer = Timer(FULLY_CHARGED_DURATION)
-
-  /** Timer for controlling the sound effect interval during the explosion. */
   private val soundTimer = Timer(SOUND_INTERVAL)
+  private lateinit var direction: Direction
 
-  /** Initializes the ChargedShotExplosion by defining its components and animations. */
   override fun init() {
     if (fullyChargedRegion == null)
         fullyChargedRegion =
@@ -91,19 +70,12 @@ class ChargedShotExplosion(game: MegamanMaverickGame) :
     addComponent(defineUpdatablesComponent())
   }
 
-  /**
-   * Spawns the explosion with specified properties, including the owner, direction, and charge
-   * level.
-   *
-   * @param spawnProps Properties for spawning the explosion, including owner, direction, and charge
-   *   level.
-   */
   override fun spawn(spawnProps: Properties) {
     super.spawn(spawnProps)
     soundTimer.reset()
 
     owner = spawnProps.get(ConstKeys.OWNER) as IGameEntity
-    facing = spawnProps.get(ConstKeys.DIRECTION) as Facing
+    direction = spawnProps.get(ConstKeys.DIRECTION, Direction::class)!!
     fullyCharged = spawnProps.get(ConstKeys.BOOLEAN) as Boolean
 
     durationTimer = Timer(if (fullyCharged) FULLY_CHARGED_DURATION else HALF_CHARGED_DURATION)
@@ -115,11 +87,6 @@ class ChargedShotExplosion(game: MegamanMaverickGame) :
     (firstSprite as GameSprite).setSize(spriteDimension)
   }
 
-  /**
-   * Defines the updatables component for the explosion, including the duration and sound timers.
-   *
-   * @return The configured updatables component.
-   */
   private fun defineUpdatablesComponent() =
       UpdatablesComponent(
           this,
@@ -136,11 +103,6 @@ class ChargedShotExplosion(game: MegamanMaverickGame) :
             }
           })
 
-  /**
-   * Defines the body component of the explosion, including a damager fixture.
-   *
-   * @return The configured body component.
-   */
   private fun defineBodyComponent(): BodyComponent {
     val body = Body(BodyType.ABSTRACT)
     body.setSize(ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
@@ -153,28 +115,25 @@ class ChargedShotExplosion(game: MegamanMaverickGame) :
     return BodyComponentCreator.create(this, body)
   }
 
-  /**
-   * Defines the sprite component of the explosion, which includes the graphical representation of
-   * the explosion.
-   *
-   * @return The configured sprite component.
-   */
   private fun defineSpritesCompoent(): SpritesComponent {
     val sprite = GameSprite()
-    val SpritesComponent = SpritesComponent(this, "explosion" to sprite)
-    SpritesComponent.putUpdateFunction("explosion") { _, _sprite ->
+    val spritesComponent = SpritesComponent(this, "explosion" to sprite)
+    spritesComponent.putUpdateFunction("explosion") { _, _sprite ->
       (_sprite as GameSprite).setPosition(body.getCenter(), Position.CENTER)
-      _sprite.setFlip(facing == Facing.LEFT, false)
+
+      val rotation =
+          when (direction) {
+            Direction.RIGHT -> 0f
+            Direction.UP -> 90f
+            Direction.LEFT -> 180f
+            Direction.DOWN -> 270f
+          }
+      _sprite.setOriginCenter()
+      _sprite.rotation = rotation
     }
-    return SpritesComponent
+    return spritesComponent
   }
 
-  /**
-   * Defines the animations component for the explosion, including animations for fully charged and
-   * half charged states.
-   *
-   * @return The configured animations component.
-   */
   private fun defineAnimationsComponent(): AnimationsComponent {
     val chargedAnimation = Animation(fullyChargedRegion!!, 1, 3, .05f, true)
     val halfChargedAnimation = Animation(halfChargedRegion!!, 1, 3, .05f, true)

@@ -17,7 +17,7 @@ class MegaAudioManager(
   companion object {
     const val MIN_VOLUME = 0f
     const val MAX_VOLUME = 1f
-    const val DEFAULT_VOLUME = .5f
+    const val DEFAULT_VOLUME = 0.5f
   }
 
   private data class SoundEntry(val id: Long, val ass: SoundAsset, var time: Float = 0f)

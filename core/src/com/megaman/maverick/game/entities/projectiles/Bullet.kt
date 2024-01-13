@@ -30,8 +30,8 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
+import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.defineProjectileComponents
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
@@ -39,12 +39,6 @@ import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.getEntity
 
-/**
- * Bullet class represents a projectile in the game that can be fired by different entities. It
- * extends [GameEntity] and implements [IProjectileEntity].
- *
- * @param game The game instance to which this bullet belongs.
- */
 class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity, IDirectionRotatable {
 
   companion object {
@@ -69,7 +63,7 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity, I
     val spawn = spawnProps.get(ConstKeys.POSITION) as Vector2
     body.setCenter(spawn)
 
-    directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP) as Direction
+    directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
 
     val trajectory = spawnProps.get(ConstKeys.TRAJECTORY) as Vector2
     body.physics.velocity.set(trajectory.scl(ConstVals.PPM.toFloat()))
@@ -101,7 +95,6 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity, I
     requestToPlaySound(SoundAsset.DINK_SOUND, false)
   }
 
-  /** Disintegrates the bullet, marking it as dead and spawning an explosion entity. */
   fun disintegrate(causeOfDeathMessage: String = "Disintegration") {
     kill(props(CAUSE_OF_DEATH_MESSAGE to causeOfDeathMessage))
     val disintegration =
@@ -134,12 +127,6 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity, I
     return BodyComponentCreator.create(this, body)
   }
 
-  /**
-   * Defines the sprite component of the bullet, which includes the bullet's graphical
-   * representation.
-   *
-   * @return The configured sprite component.
-   */
   private fun defineSpritesCompoent(): SpritesComponent {
     if (bulletRegion == null)
         bulletRegion = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Bullet")
@@ -150,8 +137,8 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity, I
     val SpritesComponent = SpritesComponent(this, "bullet" to sprite)
     SpritesComponent.putUpdateFunction("bullet") { _, _sprite ->
       (_sprite as GameSprite).setPosition(body.getCenter(), Position.CENTER)
-      val rotation =
-          if (directionRotation == Direction.UP || directionRotation == Direction.DOWN) 0f else 90f
+
+      val rotation = if (directionRotation.isVertical()) 0f else 90f
       _sprite.setOriginCenter()
       _sprite.rotation = rotation
     }

@@ -4,7 +4,7 @@ import com.megaman.maverick.game.assets.MusicAsset
 
 enum class Level(tmxSourceFile: String, val musicAss: MusicAsset) {
   TEST1("Test1.tmx", MusicAsset.MMX2_X_HUNTER_MUSIC),
-  TEST5("Test5.tmx", MusicAsset.MMZ_ENEMY_HALL_MUSIC),
+  TEST5("Test5.tmx", MusicAsset.MMX2_X_HUNTER_MUSIC),
   TIMBER_WOMAN("TimberWoman.tmx", MusicAsset.XENOBLADE_GAUR_PLAINS_MUSIC),
   DISTRIBUTOR_MAN("Test1.tmx", MusicAsset.XENOBLADE_GAUR_PLAINS_MUSIC),
   ROASTER_MAN("Test1.tmx", MusicAsset.XENOBLADE_GAUR_PLAINS_MUSIC),

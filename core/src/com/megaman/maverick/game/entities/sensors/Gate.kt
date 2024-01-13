@@ -107,7 +107,7 @@ class Gate(game: MegamanMaverickGame) :
 
   override fun onEvent(event: Event) {
     when (event.key) {
-      EventType.PLAYER_SPAWN -> reset()
+      EventType.GAME_OVER -> reset()
       EventType.END_ROOM_TRANS -> {
         val room = event.getProperty(ConstKeys.ROOM) as RectangleMapObject
         if (nextRoomKey == room.name) transitionFinished = true

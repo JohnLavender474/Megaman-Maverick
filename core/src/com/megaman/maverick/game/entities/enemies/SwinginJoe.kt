@@ -69,10 +69,10 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
   override val damageNegotiations =
       objectMapOf<KClass<out IDamager>, Int>(
-          Bullet::class to 2,
-          ChargedShot::class to 4,
-          ChargedShotExplosion::class to 1,
-          Fireball::class to 4)
+          Bullet::class to 5,
+          ChargedShot::class to 15,
+          ChargedShotExplosion::class to 5,
+          Fireball::class to ConstVals.MAX_HEALTH)
 
   private lateinit var setting: SwinginJoeSetting
   private val settingTimer = Timer(SETTING_DUR)

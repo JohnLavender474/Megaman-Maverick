@@ -25,6 +25,7 @@ import com.megaman.maverick.game.entities.decorations.Splash
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.sensors.Gate
+import com.megaman.maverick.game.entities.special.Water
 import com.megaman.maverick.game.utils.VelocityAlterator
 
 @Suppress("UNCHECKED_CAST")
@@ -182,7 +183,8 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
 
       Splash.generate(game, listener.getBody(), water.getBody())
 
-      if (entity is Megaman || entity is AbstractEnemy)
+      val waterEntity = water.getEntity() as Water
+      if ((entity is Megaman || entity is AbstractEnemy) && waterEntity.splashSound)
           game.audioMan.playSound(SoundAsset.SPLASH_SOUND, false)
     }
 

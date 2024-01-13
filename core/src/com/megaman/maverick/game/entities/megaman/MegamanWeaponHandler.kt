@@ -3,7 +3,6 @@ package com.megaman.maverick.game.entities.megaman
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
-import com.engine.common.enums.Direction
 import com.engine.common.enums.Facing
 import com.engine.common.interfaces.Resettable
 import com.engine.common.interfaces.Updatable
@@ -24,20 +23,6 @@ import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.isSensing
 
-/**
- * The `MegaWeaponEntry` class represents a weapon entry for a weapon. It contains the weapon's
- * cooldown timer, the projectiles it has spawned, and the amount of ammunition it has left.
- *
- * @param cooldownDur The duration of the cooldown timer for this weapon.
- * @param chargeable A function that returns whether this weapon is chargeable.
- * @param canFireWeapon A function that returns whether this weapon can be fired.
- * @param normalCost A function that returns the normal cost of this weapon.
- * @param halfChargedCost A function that returns the half-charged cost of this weapon.
- * @param fullyChargedCost A function that returns the fully-charged cost of this weapon.
- * @param cooldownTimer The cooldown timer for this weapon.
- * @param spawned The projectiles that this weapon has spawned.
- * @param ammo The amount of ammunition this weapon has left.
- */
 class MegaWeaponEntry(
     cooldownDur: Float,
     var chargeable: () -> Boolean = { true },
@@ -56,14 +41,6 @@ class MegaWeaponEntry(
   }
 }
 
-/**
- * The `MegamanWeaponHandler` class is responsible for managing Megaman's weapons and handling their
- * usage, including ammunition, cooldown, and firing projectiles. It keeps track of the various
- * weapons available to Megaman and facilitates the process of firing them. This class ensures that
- * the ammunition, cooldown, and other restrictions for each weapon are enforced.
- *
- * @param megaman The Megaman character associated with this weapon handler.
- */
 class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable {
 
   companion object {
@@ -105,50 +82,19 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
       return spawnCenter
     }
 
-  /** Resets the weapon handler by resetting the cooldown timers for all weapons. */
   override fun reset() = weapons.values().forEach { it.cooldownTimer.setToEnd() }
 
-  /**
-   * Updates the weapon handler by updating the cooldown timers for all weapons.
-   *
-   * @param delta The time in seconds since the last update.
-   */
   override fun update(delta: Float) {
     weapons[megaman.currentWeapon]?.update(delta)
   }
 
-  /**
-   * Gets the projectiles spawned by the specified weapon.
-   *
-   * @param weapon The weapon to get the projectiles for.
-   * @return The projectiles spawned by the specified weapon.
-   */
   fun getSpawned(weapon: MegamanWeapon) = weapons[weapon]?.spawned
 
-  /**
-   * Puts the specified weapon into the weapon handler.
-   *
-   * @param weapon The weapon to put into the weapon handler.
-   * @return The weapon entry for the specified weapon.
-   */
   fun putWeapon(weapon: MegamanWeapon): MegaWeaponEntry? =
       weapons.put(weapon, getWeaponEntry(weapon))
 
-  /**
-   * Returns if the weapon handler contains the specified weapon.
-   *
-   * @param weapon The weapon to check for.
-   * @return if the weapon handler contains the specified weapon.
-   */
   fun hasWeapon(weapon: MegamanWeapon) = weapons.containsKey(weapon)
 
-  /**
-   * Returns if the specified weapon can be fired.
-   *
-   * @param weapon The weapon to check.
-   * @param stat The charge status of the weapon.
-   * @return if the specified weapon can be fired.
-   */
   fun canFireWeapon(weapon: MegamanWeapon, stat: MegaChargeStatus): Boolean {
     if (!hasWeapon(weapon)) return false
 
@@ -169,20 +115,8 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
     return cost <= e.ammo
   }
 
-  /**
-   * Returns if the specified weapon can be charged.
-   *
-   * @param weapon The weapon to check.
-   * @return if the specified weapon can be charged.
-   */
   fun isChargeable(weapon: MegamanWeapon) = hasWeapon(weapon) && weapons[weapon].chargeable()
 
-  /**
-   * Translates the ammunition for the specified weapon by the specified amount.
-   *
-   * @param weapon The weapon to translate the ammunition for.
-   * @param delta The amount to translate the ammunition by.
-   */
   fun translateAmmo(weapon: MegamanWeapon, delta: Int) {
     if (!hasWeapon(weapon)) return
 
@@ -194,41 +128,18 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
     else if (weaponEntry.ammo < 0) weaponEntry.ammo = 0
   }
 
-  /**
-   * Sets the ammunition for the specified weapon to the max amount.
-   *
-   * @param weapon The weapon to set the ammunition for.
-   */
   fun setToMaxAmmo(weapon: MegamanWeapon) {
     weapons[weapon]?.ammo = MegamanValues.MAX_WEAPON_AMMO
   }
 
-  /**
-   * Depletes the ammunition for the specified weapon.
-   *
-   * @param weapon The weapon to deplete the ammunition for.
-   */
   fun depleteAmmo(weapon: MegamanWeapon) {
     weapons[weapon]?.ammo = 0
   }
 
-  /**
-   * Returns the amount of ammunition for the specified weapon.
-   *
-   * @param weapon The weapon to get the ammunition for.
-   * @return The amount of ammunition for the specified weapon.
-   */
   fun getAmmo(weapon: MegamanWeapon) =
       if (!hasWeapon(weapon)) 0
       else if (weapon == MegamanWeapon.BUSTER) Int.MAX_VALUE else weapons[weapon].ammo
 
-  /**
-   * Fires the specified weapon with the specified charge status.
-   *
-   * @param weapon The weapon to fire.
-   * @param stat The charge status of the weapon.
-   * @return if the weapon was fired.
-   */
   fun fireWeapon(weapon: MegamanWeapon, stat: MegaChargeStatus): Boolean {
     var _stat: MegaChargeStatus = stat
     if (!canFireWeapon(weapon, _stat)) return false
@@ -281,9 +192,7 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
     val props = Properties()
     props.put(ConstKeys.OWNER, megaman)
     props.put(ConstKeys.TRAJECTORY, trajectory)
-    props.put(
-        ConstKeys.DIRECTION,
-        if (megaman.isDirectionRotatedVertically()) Direction.UP else Direction.LEFT)
+    props.put(ConstKeys.DIRECTION, megaman.directionRotation)
 
     val megaBusterShot =
         when (stat) {

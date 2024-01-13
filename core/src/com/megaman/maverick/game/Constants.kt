@@ -14,6 +14,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+  const val SPLASH = "splash"
   const val BLOCK_ON = "block_on"
   const val ORIENTATION = "orientation"
   const val OFFSET_X = "offset_x"
@@ -33,7 +34,7 @@ object ConstKeys {
   const val LARGE = "large"
   const val TIMED = "timed"
   const val PENDULUM = "pendulum"
-  const val ROTATION = "directionRotation"
+  const val ROTATION = "rotation"
   const val PERSIST = "persist"
   const val VALUE = "value"
   const val DIRECTION = "direction"
