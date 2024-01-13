@@ -52,7 +52,7 @@
   <object id="435" name="Met" x="6832" y="11424" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="9" name="player">
-  <object id="91" name="0" x="7328" y="11424" width="32" height="32"/>
+  <object id="91" name="0" x="64" y="9408" width="32" height="32"/>
   <object id="122" name="1" x="3240" y="9376" width="32" height="32"/>
   <object id="258" name="2" x="1280" y="9792" width="32" height="32"/>
   <object id="400" name="3" x="1464" y="10496" width="32" height="32"/>
@@ -335,7 +335,7 @@
   <object id="248" name="Death" x="2752" y="9632" width="32" height="32"/>
   <object id="250" name="Death" x="2528" y="9760" width="160" height="32"/>
   <object id="249" name="Death" x="2816" y="9760" width="32" height="96"/>
-  <object id="255" name="Death" x="1440" y="10048" width="2400" height="96"/>
+  <object id="255" name="Death" x="1408" y="10048" width="2400" height="96"/>
   <object id="261" name="Death" x="864" y="10624" width="1664" height="352"/>
   <object id="303" name="Death" x="2624" y="10208" width="96" height="32"/>
   <object id="304" name="Death" x="2784" y="10208" width="96" height="32"/>

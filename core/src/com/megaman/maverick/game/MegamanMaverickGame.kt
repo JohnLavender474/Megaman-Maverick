@@ -28,6 +28,7 @@ import com.engine.drawables.shapes.DrawableShapesSystem
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.ISprite
 import com.engine.drawables.sprites.SpritesSystem
+import com.engine.events.EventsManager
 import com.engine.graph.IGraphMap
 import com.engine.motion.MotionSystem
 import com.engine.pathfinding.Pathfinder
@@ -96,7 +97,7 @@ class MegamanMaverickGame : Game2D() {
 
     GameLogger.set(GameLogLevel.ERROR)
     GameLogger.filterByTag = true
-    GameLogger.tagsToLog.addAll("convertObjectPropsToEntities()")
+    GameLogger.tagsToLog.addAll()
 
     val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
     val screenHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
