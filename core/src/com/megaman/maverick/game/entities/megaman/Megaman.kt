@@ -28,10 +28,10 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
+import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.enemies.*
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -42,6 +42,7 @@ import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOS
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.JoeBall
+import com.megaman.maverick.game.entities.projectiles.Petal
 import com.megaman.maverick.game.entities.stopSoundNow
 import com.megaman.maverick.game.events.EventType
 import kotlin.reflect.KClass
@@ -93,7 +94,9 @@ class Megaman(game: MegamanMaverickGame) :
           SwinginJoe::class to 2,
           SniperJoe::class to 3,
           ShieldAttacker::class to 4,
-          Penguin::class to 3)
+          Penguin::class to 3,
+          Hanabiran::class to 3,
+          Petal::class to 3)
 
   internal val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 

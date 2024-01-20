@@ -124,7 +124,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>../sprite_sheets/Projectiles1.txt</filename>
+                <filename>../sprite_sheets/Enemies2.txt</filename>
             </struct>
         </map>
         <key>multiPackMode</key>
@@ -173,61 +173,9 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">../Frames/Projectiles1/Bullet.png</key>
-            <key type="filename">../Frames/Projectiles1/Fire/Fireball.png</key>
-            <key type="filename">../Frames/Projectiles1/Snowball.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>8,8,16,16</rect>
-                <key>scale9Paddings</key>
-                <rect>8,8,16,16</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../Frames/Projectiles1/Electric/BigElectric.png</key>
-            <key type="filename">../Frames/Projectiles1/Electric/PurpleShockBalls.png</key>
-            <key type="filename">../Frames/Projectiles1/Electric/SmallElectric.png</key>
-            <key type="filename">../Frames/Projectiles1/Electric/Zap.png</key>
-            <key type="filename">../Frames/Projectiles1/HalfChargedShot.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>16,8,32,16</rect>
-                <key>scale9Paddings</key>
-                <rect>16,8,32,16</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../Frames/Projectiles1/Electric/ElectricBallPulse.png</key>
-            <key type="filename">../Frames/Projectiles1/Joeball.png</key>
-            <key type="filename">../Frames/Projectiles1/Picket.png</key>
-            <key type="filename">../Frames/Projectiles1/SnowJoeball.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>32,8,64,16</rect>
-                <key>scale9Paddings</key>
-                <rect>32,8,64,16</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../Frames/Projectiles1/Petal.png</key>
+            <key type="filename">../frames/Enemies2/Hanabiran/1PetalSpin.png</key>
+            <key type="filename">../frames/Enemies2/Hanabiran/2PetalsSpin.png</key>
+            <key type="filename">../frames/Enemies2/Hanabiran/3PetalsSpin.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -242,7 +190,10 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Projectiles1/PreciousShot/Form.png</key>
+            <key type="filename">../frames/Enemies2/Hanabiran/1PetalStand.png</key>
+            <key type="filename">../frames/Enemies2/Hanabiran/2PetalsStand.png</key>
+            <key type="filename">../frames/Enemies2/Hanabiran/3PetalsStand.png</key>
+            <key type="filename">../frames/Enemies2/Hanabiran/4PetalsStand.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -251,13 +202,15 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>81,9,162,18</rect>
+                <rect>16,16,32,32</rect>
                 <key>scale9Paddings</key>
-                <rect>81,9,162,18</rect>
+                <rect>16,16,32,32</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Projectiles1/PreciousShot/Shoot.png</key>
+            <key type="filename">../frames/Enemies2/Hanabiran/4PetalsSpin.png</key>
+            <key type="filename">../frames/Enemies2/Hanabiran/Drop.png</key>
+            <key type="filename">../frames/Enemies2/Hanabiran/NoPetalsSpin.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -266,13 +219,13 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>27,9,54,18</rect>
+                <rect>32,16,64,32</rect>
                 <key>scale9Paddings</key>
-                <rect>27,9,54,18</rect>
+                <rect>32,16,64,32</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Projectiles1/SnowballForm.png</key>
+            <key type="filename">../frames/Enemies2/Hanabiran/Rise.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -281,9 +234,9 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>24,8,48,16</rect>
+                <rect>48,16,96,32</rect>
                 <key>scale9Paddings</key>
-                <rect>24,8,48,16</rect>
+                <rect>48,16,96,32</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -294,7 +247,7 @@
             <struct type="SpriteSheet">
                 <key>files</key>
                 <array>
-                    <filename>../Frames/Projectiles1</filename>
+                    <filename>../frames/Enemies2/Hanabiran</filename>
                 </array>
             </struct>
         </map>

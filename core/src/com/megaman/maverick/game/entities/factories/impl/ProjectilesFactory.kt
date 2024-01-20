@@ -7,10 +7,7 @@ import com.engine.factories.IFactory
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.factories.EntityPoolCreator
-import com.megaman.maverick.game.entities.projectiles.Bullet
-import com.megaman.maverick.game.entities.projectiles.ChargedShot
-import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.entities.projectiles.JoeBall
+import com.megaman.maverick.game.entities.projectiles.*
 
 class ProjectilesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
 
@@ -24,6 +21,7 @@ class ProjectilesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
     const val SNOWBALL = "Snowball"
     const val CHARGED_SHOT = "ChargedShot"
     const val PRECIOUS_SHOT = "PreciousShot"
+    const val PETAL = "Petal"
   }
 
   private val pools = ObjectMap<Any, Pool<IProjectileEntity>>()
@@ -33,6 +31,7 @@ class ProjectilesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
     pools.put(CHARGED_SHOT, EntityPoolCreator.create(5) { ChargedShot(game) })
     pools.put(FIREBALL, EntityPoolCreator.create(3) { Fireball(game) })
     pools.put(JOEBALL, EntityPoolCreator.create(3) { JoeBall(game) })
+    pools.put(PETAL, EntityPoolCreator.create(4) { Petal(game) })
   }
 
   override fun fetch(key: Any) = pools.get(if (key == "") BULLET else key)?.fetch()

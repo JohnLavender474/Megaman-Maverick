@@ -26,7 +26,7 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
     const val DELAY_DURATION = .35f
     const val TRANS_DURATION = 1f
     const val DISTANCE_ON_TRANSITION = 1.5f
-    const val DEFAULT_INTERPOLATION_SCALAR = 12.5f
+    const val DEFAULT_INTERPOLATION_SCALAR = 10f
   }
 
   private val delayTimer = Timer(DELAY_DURATION)

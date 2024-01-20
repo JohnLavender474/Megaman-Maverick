@@ -1,11 +1,13 @@
 package com.megaman.maverick.game
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.ObjectSet
 import com.badlogic.gdx.utils.viewport.FitViewport
@@ -24,11 +26,11 @@ import com.engine.controller.ControllerUtils
 import com.engine.controller.buttons.Button
 import com.engine.controller.buttons.Buttons
 import com.engine.cullables.CullablesSystem
+import com.engine.drawables.fonts.BitmapFontHandle
 import com.engine.drawables.shapes.DrawableShapesSystem
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.ISprite
 import com.engine.drawables.sprites.SpritesSystem
-import com.engine.events.EventsManager
 import com.engine.graph.IGraphMap
 import com.engine.motion.MotionSystem
 import com.engine.pathfinding.Pathfinder
@@ -41,8 +43,10 @@ import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
+import com.megaman.maverick.game.entities.enemies.Hanabiran
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.projectiles.Petal
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
@@ -50,6 +54,7 @@ import com.megaman.maverick.game.screens.menus.MainScreen
 import com.megaman.maverick.game.screens.menus.bosses.BossIntroScreen
 import com.megaman.maverick.game.screens.menus.bosses.BossSelectScreen
 import com.megaman.maverick.game.screens.other.SimpleEndLevelScreen
+import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
 import com.megaman.maverick.game.utils.getMusics
 import com.megaman.maverick.game.utils.getSounds
 import com.megaman.maverick.game.world.FixtureType
@@ -63,12 +68,16 @@ class MegamanMaverickGame : Game2D() {
 
   companion object {
     const val TAG = "MegamanMaverickGame"
-    const val DEBUG_SHAPES = false
+    const val DEBUG_FPS = true
+    const val DEBUG_SHAPES = true
     const val DEFAULT_VOLUME = 0.5f
+    val TAGS_TO_LOG = objectSetOf(Hanabiran.TAG, Petal.TAG)
   }
 
   lateinit var megaman: Megaman
   lateinit var audioMan: MegaAudioManager
+
+  private lateinit var fpsText: BitmapFontHandle
 
   fun startLevelScreen(level: Level) {
     val levelScreen = screens.get(ScreenEnum.LEVEL.name) as MegaLevelScreen
@@ -97,7 +106,7 @@ class MegamanMaverickGame : Game2D() {
 
     GameLogger.set(GameLogLevel.ERROR)
     GameLogger.filterByTag = true
-    GameLogger.tagsToLog.addAll()
+    GameLogger.tagsToLog.addAll(TAGS_TO_LOG)
 
     val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
     val screenHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
@@ -105,6 +114,17 @@ class MegamanMaverickGame : Game2D() {
     viewports.put(ConstKeys.GAME, gameViewport)
     val uiViewport = FitViewport(screenWidth, screenHeight)
     viewports.put(ConstKeys.UI, uiViewport)
+
+    fpsText =
+        BitmapFontHandle(
+            { "FPS: ${Gdx.graphics.framesPerSecond}" },
+            getDefaultFontSize(),
+            Vector2(
+                (ConstVals.VIEW_WIDTH - 2) * ConstVals.PPM,
+                (ConstVals.VIEW_HEIGHT - 1) * ConstVals.PPM),
+            centerX = true,
+            centerY = true,
+            fontSource = ConstVals.MEGAMAN_MAVERICK_FONT)
 
     screens.put(ScreenEnum.LEVEL.name, MegaLevelScreen(this))
     screens.put(ScreenEnum.MAIN.name, MainScreen(this))
@@ -123,9 +143,19 @@ class MegamanMaverickGame : Game2D() {
     megaman.initialized = true
 
     // startLevelScreen(Level.TEST1)
-    startLevelScreen(Level.TEST5)
+    // startLevelScreen(Level.TEST5)
     // setCurrentScreen(ScreenEnum.MAIN.name)
-    // startLevelScreen(Level.TIMBER_WOMAN)
+    startLevelScreen(Level.TIMBER_WOMAN)
+  }
+
+  override fun render() {
+    super.render()
+    if (DEBUG_FPS) {
+      batch.projectionMatrix = getUiCamera().combined
+      batch.begin()
+      fpsText.draw(batch)
+      batch.end()
+    }
   }
 
   override fun createButtons(): Buttons {

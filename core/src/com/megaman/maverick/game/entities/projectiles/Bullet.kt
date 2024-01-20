@@ -134,8 +134,8 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity, I
     val sprite = GameSprite(bulletRegion!!, DrawingPriority(DrawingSection.PLAYGROUND, 4))
     sprite.setSize(1.25f * ConstVals.PPM)
 
-    val SpritesComponent = SpritesComponent(this, "bullet" to sprite)
-    SpritesComponent.putUpdateFunction("bullet") { _, _sprite ->
+    val spritesComponent = SpritesComponent(this, "bullet" to sprite)
+    spritesComponent.putUpdateFunction("bullet") { _, _sprite ->
       (_sprite as GameSprite).setPosition(body.getCenter(), Position.CENTER)
 
       val rotation = if (directionRotation.isVertical()) 0f else 90f
@@ -143,6 +143,6 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity, I
       _sprite.rotation = rotation
     }
 
-    return SpritesComponent
+    return spritesComponent
   }
 }
