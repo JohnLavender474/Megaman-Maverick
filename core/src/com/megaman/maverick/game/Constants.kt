@@ -15,6 +15,9 @@ object ConstVals {
 }
 
 object ConstKeys {
+  const val FORM = "form"
+  const val ROWS = "rows"
+  const val COLUMNS = "columns"
   const val RESET = "reset"
   const val SUCCESS = "success"
   const val END = "end"

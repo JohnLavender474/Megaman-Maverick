@@ -32,6 +32,7 @@ class ProjectilesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
     pools.put(FIREBALL, EntityPoolCreator.create(3) { Fireball(game) })
     pools.put(JOEBALL, EntityPoolCreator.create(3) { JoeBall(game) })
     pools.put(PETAL, EntityPoolCreator.create(4) { Petal(game) })
+    pools.put(SNOWBALL, EntityPoolCreator.create(3) { Snowball(game) })
   }
 
   override fun fetch(key: Any) = pools.get(if (key == "") BULLET else key)?.fetch()

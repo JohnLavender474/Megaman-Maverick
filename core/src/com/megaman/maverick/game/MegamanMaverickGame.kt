@@ -47,6 +47,7 @@ import com.megaman.maverick.game.entities.enemies.Hanabiran
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.Petal
+import com.megaman.maverick.game.entities.projectiles.Snowball
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
@@ -71,7 +72,7 @@ class MegamanMaverickGame : Game2D() {
     const val DEBUG_FPS = true
     const val DEBUG_SHAPES = true
     const val DEFAULT_VOLUME = 0.5f
-    val TAGS_TO_LOG = objectSetOf(Hanabiran.TAG, Petal.TAG)
+    val TAGS_TO_LOG = objectSetOf(Snowball.TAG)
   }
 
   lateinit var megaman: Megaman
@@ -145,7 +146,9 @@ class MegamanMaverickGame : Game2D() {
     // startLevelScreen(Level.TEST1)
     // startLevelScreen(Level.TEST5)
     // setCurrentScreen(ScreenEnum.MAIN.name)
-    startLevelScreen(Level.TIMBER_WOMAN)
+    // startLevelScreen(Level.TIMBER_WOMAN)
+    // startLevelScreen(Level.RODENT_MAN)
+    startLevelScreen(Level.FREEZER_MAN)
   }
 
   override fun render() {

@@ -506,17 +506,17 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
           val centerY = body.getCenter().y
 
           if (isBehaviorActive(BehaviorType.CLIMBING)) {
-            if (body.isSensing(BodySense.HEAD_TOUCHING_LADDER)) {
-              if (isDirectionRotatedDown() && centerY + 0.15f * ConstVals.PPM < ladder.body.y)
+            if (!body.isSensing(BodySense.HEAD_TOUCHING_LADDER)) {
+              if (isDirectionRotatedDown() && centerY + 0.25f * ConstVals.PPM < ladder.body.y)
                   return false
-              else if (centerY - 0.15f * ConstVals.PPM > ladder.body.getMaxY()) return false
+              else if (centerY - 0.25f * ConstVals.PPM > ladder.body.getMaxY()) return false
             }
 
             if (!body.isSensing(BodySense.FEET_TOUCHING_LADDER)) {
               if (isDirectionRotatedDown() &&
-                  centerY - 0.15f * ConstVals.PPM > ladder.body.getMaxY())
+                  centerY - 0.25f * ConstVals.PPM > ladder.body.getMaxY())
                   return false
-              else if (centerY + 0.15f * ConstVals.PPM < ladder.body.y) return false
+              else if (centerY + 0.25f * ConstVals.PPM < ladder.body.y) return false
             }
 
             if (game.controllerPoller.isJustPressed(ControllerButton.A)) return false
@@ -542,9 +542,9 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
               if (body.isSensing(BodySense.IN_WATER)) AButtonTask.SWIM else AButtonTask.AIR_DASH
 
           body.physics.gravityOn = false
-          // TODO: body.physics.collisionOn = false
-          body.setCenterX(ladder.body.getCenter().x)
+          body.physics.collisionOn = false
 
+          body.setCenterX(ladder.body.getCenter().x)
           if (body.getMaxY() <= ladder.body.y) body.setY(ladder.body.y)
           else if (body.y >= ladder.body.getMaxY()) body.setMaxY(ladder.body.getMaxY())
 
@@ -568,7 +568,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
         override fun end() {
           body.physics.gravityOn = true
-          // TODO: body.physics.collisionOn = true
+          body.physics.collisionOn = true
           body.physics.velocity.setZero()
           aButtonTask =
               if (body.isSensing(BodySense.IN_WATER)) AButtonTask.SWIM else AButtonTask.AIR_DASH

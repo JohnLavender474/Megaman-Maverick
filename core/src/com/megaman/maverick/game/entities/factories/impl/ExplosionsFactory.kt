@@ -6,10 +6,7 @@ import com.engine.common.objects.Pool
 import com.engine.entities.IGameEntity
 import com.engine.factories.IFactory
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
-import com.megaman.maverick.game.entities.explosions.Disintegration
-import com.megaman.maverick.game.entities.explosions.Explosion
-import com.megaman.maverick.game.entities.explosions.ExplosionOrb
+import com.megaman.maverick.game.entities.explosions.*
 import com.megaman.maverick.game.entities.factories.EntityPoolCreator
 
 class ExplosionsFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntity> {
@@ -29,6 +26,7 @@ class ExplosionsFactory(private val game: MegamanMaverickGame) : IFactory<IGameE
 
   init {
     pools.put(EXPLOSION, EntityPoolCreator.create(5) { Explosion(game) })
+    pools.put(SNOWBALL_EXPLOSION, EntityPoolCreator.create(3) { SnowballExplosion(game) })
     pools.put(DISINTEGRATION, EntityPoolCreator.create(10) { Disintegration(game) })
     pools.put(CHARGED_SHOT_EXPLOSION, EntityPoolCreator.create(3) { ChargedShotExplosion(game) })
     pools.put(EXPLOSION_ORB, EntityPoolCreator.create(8) { ExplosionOrb(game) })

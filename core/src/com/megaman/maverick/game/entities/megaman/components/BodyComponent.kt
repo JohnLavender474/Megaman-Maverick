@@ -40,7 +40,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
   val bodyFixture = Fixture(GameRectangle().setWidth(.8f * ConstVals.PPM), FixtureType.BODY)
   body.addFixture(bodyFixture)
   bodyFixture.shape.color = Color.BLUE
-  // shapes.add { bodyFixture.shape }
+  shapes.add { bodyFixture.shape }
 
   val onBounce = {
     if (!body.isSensing(BodySense.IN_WATER) /* TODO: && has(MegaAbility.AIR_DASH) */)
@@ -55,7 +55,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
   feetFixture.properties.put(ConstKeys.BOUNCE, onBounce)
   body.addFixture(feetFixture)
   feetFixture.shape.color = Color.GREEN
-  // shapes.add { feetFixture.bodyRelativeShape }
+  shapes.add { feetFixture.bodyRelativeShape }
 
   // head fixture
   val headFixture =
@@ -65,7 +65,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
   headFixture.properties.put(ConstKeys.BOUNCE, onBounce)
   body.addFixture(headFixture)
   headFixture.shape.color = Color.RED
-  // shapes.add { headFixture.bodyRelativeShape }
+  shapes.add { headFixture.bodyRelativeShape }
 
   // left fixture
   val leftFixture = Fixture(GameRectangle().setWidth(.2f * ConstVals.PPM), FixtureType.SIDE)
@@ -73,7 +73,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
   leftFixture.properties.put(ConstKeys.SIDE, ConstKeys.LEFT)
   body.addFixture(leftFixture)
   leftFixture.shape.color = Color.YELLOW
-  // shapes.add { leftFixture.bodyRelativeShape }
+  shapes.add { leftFixture.bodyRelativeShape }
 
   // right fixture
   val rightFixture = Fixture(GameRectangle().setWidth(.2f * ConstVals.PPM), FixtureType.SIDE)
@@ -81,14 +81,14 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
   rightFixture.properties.put(ConstKeys.SIDE, ConstKeys.RIGHT)
   body.addFixture(rightFixture)
   rightFixture.shape.color = Color.BLUE
-  // shapes.add { rightFixture.bodyRelativeShape }
+  shapes.add { rightFixture.bodyRelativeShape }
 
   // damageable fixture
   val damageableFixture =
       Fixture(GameRectangle().setSize(.8f * ConstVals.PPM), FixtureType.DAMAGEABLE)
   body.addFixture(damageableFixture)
   damageableFixture.shape.color = Color.RED
-  // shapes.add { damageableFixture.bodyRelativeShape }
+  shapes.add { damageableFixture.bodyRelativeShape }
 
   // water listener fixture
   val waterListenerFixture =

@@ -58,17 +58,17 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
     const val TAG = "SniperJoe"
     const val SNOW_TYPE = "Snow"
 
-    private val TIMES_TO_SHOOT = floatArrayOf(.15f, .75f, 1.35f)
+    private val TIMES_TO_SHOOT = floatArrayOf(0.15f, 0.75f, 1.35f)
 
     private const val BULLET_SPEED = 7.5f
     private const val SNOWBALL_X = 10f
     private const val SNOWBALL_Y = 5f
-    private const val SNOWBALL_GRAV = -.15f
+    private const val SNOWBALL_GRAV = 0.15f
 
     private const val SHIELD_DUR = 1.75f
     private const val SHOOT_DUR = 1.5f
 
-    private const val GRAVITY = .015f
+    private const val GRAVITY = 0.015f
 
     private var atlas: TextureAtlas? = null
   }
@@ -291,7 +291,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
           trajectory.y = SNOWBALL_Y * ConstVals.PPM
 
           props.put(ConstKeys.GRAVITY_ON, true)
-          props.put(ConstKeys.GRAVITY, SNOWBALL_GRAV * ConstVals.PPM)
+          props.put(ConstKeys.GRAVITY, Vector2(0f, -SNOWBALL_GRAV * ConstVals.PPM))
 
           requestToPlaySound(SoundAsset.CHILL_SHOOT, false)
 
