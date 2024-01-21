@@ -5,6 +5,7 @@ import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
+import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
 import com.engine.common.enums.Facing
 import com.engine.common.extensions.getTextureAtlas
@@ -39,8 +40,9 @@ import kotlin.reflect.KClass
 class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
   companion object {
+    const val TAG = "ShieldAttacker"
     private var atlas: TextureAtlas? = null
-    private const val TURN_AROUND_DUR = .5f
+    private const val TURN_AROUND_DUR = 0.5f
     private const val X_VEL = 6f
   }
 
@@ -69,10 +71,13 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
   }
 
   override fun spawn(spawnProps: Properties) {
+    GameLogger.debug(TAG, "Spawn props: $spawnProps")
     super.spawn(spawnProps)
+
     val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
     body.setCenter(spawn)
-    val targetX = spawn.x + spawnProps.get(ConstKeys.X, Float::class)!! * ConstVals.PPM
+
+    val targetX = spawn.x + spawnProps.get(ConstKeys.VALUE, Float::class)!! * ConstVals.PPM
     if (spawn.x < targetX) {
       minX = spawn.x
       maxX = targetX
@@ -82,6 +87,10 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
       maxX = spawn.x
       left = true
     }
+
+    turnAroundTimer.reset()
+
+    GameLogger.debug(TAG, "Start X: ${spawn.x}. Target X: $targetX. Left: $left")
   }
 
   override fun defineBodyComponent(): BodyComponent {
@@ -131,10 +140,12 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
         body.physics.velocity.setZero()
         left = centerX >= maxX
       }
+
       turnAroundTimer.update(it)
       if (turnAroundTimer.isJustFinished()) {
         val x = X_VEL * ConstVals.PPM * (if (left) -1 else 1)
         body.physics.velocity.x = x
+        GameLogger.debug(TAG, "Turning around. New x vel: $x")
       }
     }
   }

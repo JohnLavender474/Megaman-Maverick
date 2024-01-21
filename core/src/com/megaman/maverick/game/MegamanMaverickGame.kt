@@ -44,6 +44,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.entities.enemies.Hanabiran
+import com.megaman.maverick.game.entities.enemies.ShieldAttacker
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.Petal
@@ -72,7 +73,7 @@ class MegamanMaverickGame : Game2D() {
     const val DEBUG_FPS = true
     const val DEBUG_SHAPES = true
     const val DEFAULT_VOLUME = 0.5f
-    val TAGS_TO_LOG = objectSetOf(Snowball.TAG)
+    val TAGS_TO_LOG = objectSetOf(ShieldAttacker.TAG)
   }
 
   lateinit var megaman: Megaman

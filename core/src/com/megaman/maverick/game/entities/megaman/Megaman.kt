@@ -34,15 +34,13 @@ import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.enemies.*
 import com.megaman.maverick.game.entities.explosions.Explosion
+import com.megaman.maverick.game.entities.explosions.SnowballExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOSION_ORB_SPEED
-import com.megaman.maverick.game.entities.projectiles.Bullet
-import com.megaman.maverick.game.entities.projectiles.ChargedShot
-import com.megaman.maverick.game.entities.projectiles.JoeBall
-import com.megaman.maverick.game.entities.projectiles.Petal
+import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.entities.stopSoundNow
 import com.megaman.maverick.game.events.EventType
 import kotlin.reflect.KClass
@@ -91,6 +89,8 @@ class Megaman(game: MegamanMaverickGame) :
           MagFly::class to 3,
           Explosion::class to 2,
           JoeBall::class to 3,
+          Snowball::class to 3,
+          SnowballExplosion::class to 1,
           SwinginJoe::class to 2,
           SniperJoe::class to 3,
           ShieldAttacker::class to 4,
