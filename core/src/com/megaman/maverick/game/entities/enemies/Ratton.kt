@@ -29,6 +29,7 @@ import com.engine.world.Body
 import com.engine.world.BodyComponent
 import com.engine.world.BodyType
 import com.engine.world.Fixture
+import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
@@ -42,11 +43,11 @@ import kotlin.reflect.KClass
 class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
   companion object {
-    private const val STAND_DUR = 0.75f
+    private const val STAND_DUR = 1f
     private const val G_GRAV = -0.0015f
     private const val GRAV = -0.375f
-    private const val JUMP_X = 15f
-    private const val JUMP_Y = 18f
+    private const val JUMP_X = 5f
+    private const val JUMP_Y = 12f
     private var atlas: TextureAtlas? = null
   }
 
@@ -62,6 +63,9 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
   override fun spawn(spawnProps: Properties) {
     super.spawn(spawnProps)
+    val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+    body.setBottomCenterToPoint(spawn)
+    standTimer.reset()
   }
 
   override val damageNegotiations = objectMapOf<KClass<out IDamager>, Int>()
@@ -81,7 +85,7 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     // feet fixture
     val feetFixture =
         Fixture(
-            GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.2f * ConstVals.PPM),
+            GameRectangle().setSize(ConstVals.PPM / 4f, 0.2f * ConstVals.PPM),
             FixtureType.FEET)
     feetFixture.offsetFromBodyCenter.y = -0.5f * ConstVals.PPM
     body.addFixture(feetFixture)
@@ -120,8 +124,8 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
       if (standTimer.isFinished()) {
         standTimer.reset()
-        body.physics.velocity.x += JUMP_X * facing.value * ConstVals.PPM
-        body.physics.velocity.y += JUMP_Y * ConstVals.PPM
+        body.physics.velocity.x = JUMP_X * facing.value * ConstVals.PPM
+        body.physics.velocity.y = JUMP_Y * ConstVals.PPM
       }
     }
   }
@@ -147,8 +151,8 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     val animations =
         objectMapOf<String, IAnimation>(
             "Stand" to
-                Animation(atlas!!.findRegion("Ratton/Stand"), 1, 2, gdxArrayOf(1.5f, 0.15f), true),
-            "Jump" to Animation(atlas!!.findRegion("Ratton/Jump"), 1, 2, 0.1f, true))
+                Animation(atlas!!.findRegion("Ratton/Stand"), 1, 2, gdxArrayOf(0.5f, 0.15f), true),
+            "Jump" to Animation(atlas!!.findRegion("Ratton/Jump"), 1, 2, 0.1f, false))
     val animator = Animator(keySupplier, animations)
     return AnimationsComponent(this, animator)
   }
