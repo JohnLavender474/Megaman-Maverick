@@ -240,7 +240,6 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Enemies2/Hanabiran/4PetalsSpin.png</key>
-            <key type="filename">../frames/Enemies2/Hanabiran/Drop.png</key>
             <key type="filename">../frames/Enemies2/Hanabiran/NoPetalsSpin.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -256,6 +255,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Enemies2/Hanabiran/Drop.png</key>
             <key type="filename">../frames/Enemies2/Hanabiran/Rise.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -271,6 +271,37 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Enemies2/Robbit/Crouch.png</key>
+            <key type="filename">../frames/Enemies2/Robbit/Stand.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>32,32,64,64</rect>
+                <key>scale9Paddings</key>
+                <rect>32,32,64,64</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies2/Robbit/Jump.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>64,32,128,64</rect>
+                <key>scale9Paddings</key>
+                <rect>64,32,128,64</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
         </map>
         <key>fileLists</key>
         <map type="SpriteSheetMap">
@@ -278,8 +309,7 @@
             <struct type="SpriteSheet">
                 <key>files</key>
                 <array>
-                    <filename>../frames/Enemies2/Hanabiran</filename>
-                    <filename>../frames/Enemies2/Elecn</filename>
+                    <filename>../frames/Enemies2</filename>
                 </array>
             </struct>
         </map>

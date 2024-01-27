@@ -70,7 +70,7 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
   override val damageNegotiations = objectMapOf<KClass<out IDamager>, Int>()
 
-  private val elecnLoop = Loop(ElecnState.MOVING, ElecnState.CHARGING, ElecnState.SHOCKING)
+  private val elecnLoop = Loop(ElecnState.values().toList())
   private val elecnTimers =
       objectMapOf(
           ElecnState.MOVING to Timer(MOVING_DURATION),
@@ -202,9 +202,9 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     }
     val animations =
         objectMapOf<String, IAnimation>(
-            "moving" to Animation(atlas!!.findRegion("Elecn1")),
-            "charging" to Animation(atlas!!.findRegion("Elecn2"), 1, 2, 0.15f, true),
-            "shocking" to Animation(atlas!!.findRegion("Elecn3")))
+            "moving" to Animation(atlas!!.findRegion("Elecn/Elecn1")),
+            "charging" to Animation(atlas!!.findRegion("Elecn/Elecn2"), 1, 2, 0.15f, true),
+            "shocking" to Animation(atlas!!.findRegion("Elecn/Elecn3")))
     val animator = Animator(keySupplier, animations)
     return AnimationsComponent(this, animator)
   }

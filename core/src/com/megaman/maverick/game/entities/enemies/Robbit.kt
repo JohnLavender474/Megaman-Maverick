@@ -7,14 +7,15 @@ import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
+import com.engine.common.GameLogger
 import com.engine.common.enums.Facing
 import com.engine.common.enums.Position
-import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.interfaces.IFaceable
 import com.engine.common.interfaces.Updatable
 import com.engine.common.interfaces.isFacing
+import com.engine.common.objects.Loop
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
@@ -40,26 +41,42 @@ import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.isSensing
 import kotlin.reflect.KClass
 
-class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
+class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
   companion object {
+    const val TAG = "Robbit"
+    private var atlas: TextureAtlas? = null
     private const val STAND_DUR = 1f
+    private const val CROUCH_DUR = 0.2f
+    private const val JUMP_DUR = 0.25f
     private const val G_GRAV = -0.0015f
     private const val GRAV = -0.375f
-    private const val JUMP_X = 5f
+    private const val JUMP_X = 6f
     private const val JUMP_Y = 12f
-    private var atlas: TextureAtlas? = null
   }
 
-  override val damageNegotiations = objectMapOf<KClass<out IDamager>, Int>()
+  enum class RobbitState {
+    STANDING,
+    CROUCHING,
+    JUMPING
+  }
 
   override var facing = Facing.RIGHT
 
-  private val standTimer = Timer(STAND_DUR)
+  override val damageNegotiations = objectMapOf<KClass<out IDamager>, Int>()
+
+  private val robbitLoop = Loop(RobbitState.STANDING, RobbitState.CROUCHING, RobbitState.JUMPING)
+  private val robbitTimers =
+      objectMapOf(
+          RobbitState.STANDING to Timer(STAND_DUR),
+          RobbitState.CROUCHING to Timer(CROUCH_DUR),
+          RobbitState.JUMPING to Timer(JUMP_DUR))
+  private val robbitTimer: Timer
+    get() = robbitTimers[robbitLoop.getCurrent()]!!
 
   override fun init() {
     super.init()
-    if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+    if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
     addComponent(defineAnimationsComponent())
   }
 
@@ -67,17 +84,18 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     super.spawn(spawnProps)
     val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
     body.setBottomCenterToPoint(spawn)
-    standTimer.reset()
+    robbitLoop.reset()
+    robbitTimer.reset()
   }
 
   override fun defineBodyComponent(): BodyComponent {
     val body = Body(BodyType.DYNAMIC)
-    body.setSize(ConstVals.PPM.toFloat())
+    body.setSize(1.5f * ConstVals.PPM)
 
     val debugShapes = Array<() -> IDrawableShape?>()
 
     // body fixture
-    val bodyFixture = Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat()), FixtureType.BODY)
+    val bodyFixture = Fixture(GameRectangle().setSize(1.5f * ConstVals.PPM), FixtureType.BODY)
     body.addFixture(bodyFixture)
     bodyFixture.shape.color = Color.BLUE
     debugShapes.add { bodyFixture.shape }
@@ -85,21 +103,18 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     // feet fixture
     val feetFixture =
         Fixture(GameRectangle().setSize(ConstVals.PPM / 4f, 0.2f * ConstVals.PPM), FixtureType.FEET)
-    feetFixture.offsetFromBodyCenter.y = -0.5f * ConstVals.PPM
+    feetFixture.offsetFromBodyCenter.y = -0.75f * ConstVals.PPM
     body.addFixture(feetFixture)
     feetFixture.shape.color = Color.GREEN
     debugShapes.add { feetFixture.shape }
 
-    // TODO: create head fixture, bounce megaman as reference to DK Country rat boss!
-
     // damageable fixture
     val damageableFixture =
-        Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat()), FixtureType.DAMAGEABLE)
+        Fixture(GameRectangle().setSize(1.5f * ConstVals.PPM), FixtureType.DAMAGEABLE)
     body.addFixture(damageableFixture)
 
     // damager fixture
-    val damagerFixture =
-        Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat()), FixtureType.DAMAGER)
+    val damagerFixture = Fixture(GameRectangle().setSize(1.5f * ConstVals.PPM), FixtureType.DAMAGER)
     body.addFixture(damagerFixture)
 
     addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
@@ -115,25 +130,33 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
   override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
     super.defineUpdatablesComponent(updatablesComponent)
     updatablesComponent.add {
-      if (body.isSensing(BodySense.FEET_ON_GROUND)) {
-        standTimer.update(it)
-        facing = if (megaman.body.x > body.x) Facing.RIGHT else Facing.LEFT
-      }
+      if (robbitLoop.getCurrent() != RobbitState.JUMPING)
+          facing = if (megaman.body.x >= body.x) Facing.RIGHT else Facing.LEFT
 
-      if (standTimer.isFinished()) {
-        standTimer.reset()
-        body.physics.velocity.x = JUMP_X * facing.value * ConstVals.PPM
-        body.physics.velocity.y = JUMP_Y * ConstVals.PPM
+      robbitTimer.update(it)
+      if (robbitTimer.isJustFinished()) {
+        val currentState = robbitLoop.getCurrent()
+        GameLogger.debug(TAG, "Current state: $currentState")
+
+        val nextState = robbitLoop.next()
+        GameLogger.debug(TAG, "Transitioning to state: $nextState")
+
+        if (nextState == RobbitState.JUMPING) {
+          body.physics.velocity.x = JUMP_X * ConstVals.PPM * facing.value
+          body.physics.velocity.y = JUMP_Y * ConstVals.PPM
+        }
+
+        robbitTimer.reset()
       }
     }
   }
 
   override fun defineSpritesComponent(): SpritesComponent {
     val sprite = GameSprite()
-    sprite.setSize(2f * ConstVals.PPM, 1.75f * ConstVals.PPM)
+    sprite.setSize(4f * ConstVals.PPM, 3.5f * ConstVals.PPM)
 
-    val spritesComponent = SpritesComponent(this, "ratton" to sprite)
-    spritesComponent.putUpdateFunction("ratton") { _, _sprite ->
+    val spritesComponent = SpritesComponent(this, "robbit" to sprite)
+    spritesComponent.putUpdateFunction("robbit") { _, _sprite ->
       _sprite as GameSprite
       _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
       _sprite.setFlip(isFacing(Facing.LEFT), false)
@@ -144,13 +167,17 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
   private fun defineAnimationsComponent(): AnimationsComponent {
     val keySupplier: () -> String? = {
-      if (body.isSensing(BodySense.FEET_ON_GROUND)) "Stand" else "Jump"
+      when (robbitLoop.getCurrent()) {
+        RobbitState.STANDING -> "Stand"
+        RobbitState.CROUCHING -> "Crouch"
+        RobbitState.JUMPING -> "Jump"
+      }
     }
     val animations =
         objectMapOf<String, IAnimation>(
-            "Stand" to
-                Animation(atlas!!.findRegion("Ratton/Stand"), 1, 2, gdxArrayOf(0.5f, 0.15f), true),
-            "Jump" to Animation(atlas!!.findRegion("Ratton/Jump"), 1, 2, 0.1f, false))
+            "Stand" to Animation(atlas!!.findRegion("Robbit/Stand")),
+            "Crouch" to Animation(atlas!!.findRegion("Robbit/Crouch")),
+            "Jump" to Animation(atlas!!.findRegion("Robbit/Jump")))
     val animator = Animator(keySupplier, animations)
     return AnimationsComponent(this, animator)
   }

@@ -1,7 +1,7 @@
 Megaman_FLAME_TOSS.png
 size: 256, 352
 format: RGBA8888
-filter: Linear,Linear
+filter: Nearest,Nearest
 repeat: none
 AirDash
   rotate: false

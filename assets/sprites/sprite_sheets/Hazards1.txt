@@ -1,7 +1,7 @@
 Hazards1.png
 size: 255, 353
 format: RGBA8888
-filter: Linear,Linear
+filter: Nearest,Nearest
 repeat: none
 Flame
   rotate: false

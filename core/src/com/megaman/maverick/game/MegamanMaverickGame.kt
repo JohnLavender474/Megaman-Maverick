@@ -44,6 +44,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.entities.enemies.Elecn
+import com.megaman.maverick.game.entities.enemies.Robbit
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.screens.ScreenEnum
@@ -70,7 +71,7 @@ class MegamanMaverickGame : Game2D() {
     const val DEBUG_FPS = false
     const val DEBUG_SHAPES = true
     const val DEFAULT_VOLUME = 0.5f
-    val TAGS_TO_LOG = objectSetOf<String>(Elecn.TAG)
+    val TAGS_TO_LOG = objectSetOf<String>(Elecn.TAG, Robbit.TAG)
   }
 
   lateinit var megaman: Megaman
@@ -144,8 +145,8 @@ class MegamanMaverickGame : Game2D() {
     // startLevelScreen(Level.TEST1)
     // startLevelScreen(Level.TEST5)
     // setCurrentScreen(ScreenEnum.MAIN.name)
-    // startLevelScreen(Level.TIMBER_WOMAN)
-    startLevelScreen(Level.RODENT_MAN)
+    startLevelScreen(Level.TIMBER_WOMAN)
+    // startLevelScreen(Level.RODENT_MAN)
     // startLevelScreen(Level.FREEZER_MAN)
   }
 

@@ -257,17 +257,46 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game) {
     val animations =
         objectMapOf<String, IAnimation>(
             "1PetalSpin" to
-                Animation(atlas!!.findRegion("1PetalSpin"), 1, 4, ANIMATION_FRAME_DURATION, true),
+                Animation(
+                    atlas!!.findRegion("Hanabiran/1PetalSpin"),
+                    1,
+                    4,
+                    ANIMATION_FRAME_DURATION,
+                    true),
             "2PetalsSpin" to
-                Animation(atlas!!.findRegion("2PetalsSpin"), 1, 4, ANIMATION_FRAME_DURATION, true),
+                Animation(
+                    atlas!!.findRegion("Hanabiran/2PetalsSpin"),
+                    1,
+                    4,
+                    ANIMATION_FRAME_DURATION,
+                    true),
             "3PetalsSpin" to
-                Animation(atlas!!.findRegion("3PetalsSpin"), 1, 4, ANIMATION_FRAME_DURATION, true),
+                Animation(
+                    atlas!!.findRegion("Hanabiran/3PetalsSpin"),
+                    1,
+                    4,
+                    ANIMATION_FRAME_DURATION,
+                    true),
             "4PetalsSpin" to
-                Animation(atlas!!.findRegion("4PetalsSpin"), 1, 2, ANIMATION_FRAME_DURATION, true),
+                Animation(
+                    atlas!!.findRegion("Hanabiran/4PetalsSpin"),
+                    1,
+                    2,
+                    ANIMATION_FRAME_DURATION,
+                    true),
             "NoPetalsSpin" to
-                Animation(atlas!!.findRegion("NoPetalsSpin"), 1, 2, ANIMATION_FRAME_DURATION, true),
-            "Rise" to Animation(atlas!!.findRegion("Rise"), 1, 3, ANIMATION_FRAME_DURATION, false),
-            "Drop" to Animation(atlas!!.findRegion("Drop"), 1, 3, ANIMATION_FRAME_DURATION, false),
+                Animation(
+                    atlas!!.findRegion("Hanabiran/NoPetalsSpin"),
+                    1,
+                    2,
+                    ANIMATION_FRAME_DURATION,
+                    true),
+            "Rise" to
+                Animation(
+                    atlas!!.findRegion("Hanabiran/Rise"), 1, 3, ANIMATION_FRAME_DURATION, false),
+            "Drop" to
+                Animation(
+                    atlas!!.findRegion("Hanabiran/Drop"), 1, 3, ANIMATION_FRAME_DURATION, false),
         )
     val animator = Animator(keySupplier, animations)
     return AnimationsComponent(this, animator)

@@ -35,6 +35,7 @@ class EnemiesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
     const val SHIELD_ATTACKER = "ShieldAttacker"
     const val HANABIRAN = "Hanabiran"
     const val ELECN = "Elecn"
+    const val ROBBIT = "Robbit"
   }
 
   private val pools = ObjectMap<Any, Pool<AbstractEnemy>>()
@@ -59,6 +60,7 @@ class EnemiesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
     pools.put(RATTON, EntityPoolCreator.create(2) { Ratton(game) })
     pools.put(PICKET_JOE, EntityPoolCreator.create(2) { PicketJoe(game) })
     pools.put(ELECN, EntityPoolCreator.create(2) { Elecn(game) })
+    pools.put(ROBBIT, EntityPoolCreator.create(2) { Robbit(game) })
   }
 
   override fun fetch(key: Any): AbstractEnemy? {
