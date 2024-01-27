@@ -173,6 +173,37 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
+            <key type="filename">../frames/Enemies2/Elecn/Elecn1.png</key>
+            <key type="filename">../frames/Enemies2/Elecn/Elecn3.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>24,24,48,48</rect>
+                <key>scale9Paddings</key>
+                <rect>24,24,48,48</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies2/Elecn/Elecn2.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>48,24,96,48</rect>
+                <key>scale9Paddings</key>
+                <rect>48,24,96,48</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Enemies2/Hanabiran/1PetalSpin.png</key>
             <key type="filename">../frames/Enemies2/Hanabiran/2PetalsSpin.png</key>
             <key type="filename">../frames/Enemies2/Hanabiran/3PetalsSpin.png</key>
@@ -248,6 +279,7 @@
                 <key>files</key>
                 <array>
                     <filename>../frames/Enemies2/Hanabiran</filename>
+                    <filename>../frames/Enemies2/Elecn</filename>
                 </array>
             </struct>
         </map>

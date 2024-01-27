@@ -22,6 +22,7 @@ class ProjectilesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
     const val CHARGED_SHOT = "ChargedShot"
     const val PRECIOUS_SHOT = "PreciousShot"
     const val PETAL = "Petal"
+    const val ELECTRIC_BALL = "ElectricBall"
   }
 
   private val pools = ObjectMap<Any, Pool<IProjectileEntity>>()
@@ -33,6 +34,8 @@ class ProjectilesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
     pools.put(JOEBALL, EntityPoolCreator.create(3) { JoeBall(game) })
     pools.put(PETAL, EntityPoolCreator.create(4) { Petal(game) })
     pools.put(SNOWBALL, EntityPoolCreator.create(3) { Snowball(game) })
+    pools.put(PICKET, EntityPoolCreator.create(3) { Picket(game) })
+    pools.put(ELECTRIC_BALL, EntityPoolCreator.create(8) { ElectricBall(game) })
   }
 
   override fun fetch(key: Any) = pools.get(if (key == "") BULLET else key)?.fetch()

@@ -1,81 +1,102 @@
 Enemies2.png
-size: 1664, 64
+size: 256, 640
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Linear,Linear
 repeat: none
 1PetalSpin
   rotate: false
-  xy: 0, 0
+  xy: 0, 448
   size: 256, 64
   orig: 256, 64
   offset: 0, 0
   index: -1
 1PetalStand
   rotate: false
-  xy: 256, 0
+  xy: 0, 0
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 2PetalsSpin
   rotate: false
-  xy: 320, 0
+  xy: 0, 512
   size: 256, 64
   orig: 256, 64
   offset: 0, 0
   index: -1
 2PetalsStand
   rotate: false
-  xy: 576, 0
+  xy: 64, 0
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 3PetalsSpin
   rotate: false
-  xy: 640, 0
+  xy: 0, 576
   size: 256, 64
   orig: 256, 64
   offset: 0, 0
   index: -1
 3PetalsStand
   rotate: false
-  xy: 896, 0
+  xy: 128, 0
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 4PetalsSpin
   rotate: false
-  xy: 960, 0
+  xy: 0, 160
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
   index: -1
 4PetalsStand
   rotate: false
-  xy: 1088, 0
+  xy: 192, 0
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Drop
   rotate: false
-  xy: 1152, 0
+  xy: 0, 224
   size: 192, 64
   orig: 192, 64
   offset: 0, 0
   index: -1
+Elecn1
+  rotate: false
+  xy: 0, 64
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+Elecn2
+  rotate: false
+  xy: 0, 288
+  size: 192, 96
+  orig: 192, 96
+  offset: 0, 0
+  index: -1
+Elecn3
+  rotate: false
+  xy: 96, 64
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
 NoPetalsSpin
   rotate: false
-  xy: 1344, 0
+  xy: 128, 160
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
   index: -1
 Rise
   rotate: false
-  xy: 1472, 0
+  xy: 0, 384
   size: 192, 64
   orig: 192, 64
   offset: 0, 0

@@ -34,7 +34,9 @@ enum class SoundAsset(src: String, val seconds: Int) : IAsset {
   CRASH_BOMBER_SOUND("crash_bomber.wav", 1),
   MEGA_BUSTER_BULLET_SHOT_SOUND("buster_bullet_shot.mp3", 1),
   MEGA_BUSTER_CHARGED_SHOT_SOUND("buster_charged_shot.mp3", 1),
-  MM1_VICTORY_SOUND("mm1_victory.mp3", 8);
+  MM1_VICTORY_SOUND("mm1_victory.mp3", 8),
+  MM3_ELECTRIC_SHOCK_SOUND("electric_shock.wav", 1),
+  MM3_ELECTRIC_PULSE_SOUND("electric_pulse.wav", 1);
 
   override val source = SOUND_ASSET_PREFIX + src
   override val assClass = Sound::class.java

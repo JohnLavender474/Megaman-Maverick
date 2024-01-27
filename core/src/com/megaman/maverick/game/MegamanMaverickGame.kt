@@ -43,12 +43,9 @@ import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
-import com.megaman.maverick.game.entities.enemies.Hanabiran
-import com.megaman.maverick.game.entities.enemies.ShieldAttacker
+import com.megaman.maverick.game.entities.enemies.Elecn
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.projectiles.Petal
-import com.megaman.maverick.game.entities.projectiles.Snowball
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
@@ -71,9 +68,9 @@ class MegamanMaverickGame : Game2D() {
   companion object {
     const val TAG = "MegamanMaverickGame"
     const val DEBUG_FPS = false
-    const val DEBUG_SHAPES = false
+    const val DEBUG_SHAPES = true
     const val DEFAULT_VOLUME = 0.5f
-    val TAGS_TO_LOG = objectSetOf<String>()
+    val TAGS_TO_LOG = objectSetOf<String>(Elecn.TAG)
   }
 
   lateinit var megaman: Megaman
@@ -145,10 +142,10 @@ class MegamanMaverickGame : Game2D() {
     megaman.initialized = true
 
     // startLevelScreen(Level.TEST1)
-    startLevelScreen(Level.TEST5)
+    // startLevelScreen(Level.TEST5)
     // setCurrentScreen(ScreenEnum.MAIN.name)
     // startLevelScreen(Level.TIMBER_WOMAN)
-    // startLevelScreen(Level.RODENT_MAN)
+    startLevelScreen(Level.RODENT_MAN)
     // startLevelScreen(Level.FREEZER_MAN)
   }
 

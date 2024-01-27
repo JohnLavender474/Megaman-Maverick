@@ -15,6 +15,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+  const val FACING = "facing"
   const val FORM = "form"
   const val ROWS = "rows"
   const val COLUMNS = "columns"
