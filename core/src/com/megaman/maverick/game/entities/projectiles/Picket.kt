@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.projectiles
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
@@ -48,6 +49,8 @@ class Picket(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity {
 
   override fun spawn(spawnProps: Properties) {
     super.spawn(spawnProps)
+    val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+    body.setCenter(spawn)
     val impulseX = spawnProps.get(ConstKeys.X, Float::class)!!
     val impulseY = spawnProps.get(ConstKeys.Y, Float::class)!!
     body.physics.velocity.set(impulseX, impulseY)

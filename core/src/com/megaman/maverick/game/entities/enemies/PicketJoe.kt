@@ -14,6 +14,7 @@ import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.interfaces.IFaceable
 import com.engine.common.interfaces.Updatable
+import com.engine.common.interfaces.isFacing
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
@@ -78,6 +79,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     super.init()
     if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
     throwTimer.setRunnables(gdxArrayOf(TimeMarkedRunnable(0.2f) { throwPicket() }))
+    addComponent(defineAnimationsComponent())
   }
 
   override fun spawn(spawnProps: Properties) {
@@ -91,6 +93,8 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
   override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
     super.defineUpdatablesComponent(updatablesComponent)
     updatablesComponent.add {
+      facing = if (megaman.body.x >= body.x) Facing.RIGHT else Facing.LEFT
+
       if (standing) {
         standTimer.update(it)
         if (standTimer.isFinished()) setToThrowingPickets()
@@ -157,6 +161,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     val spritesComponent = SpritesComponent(this, "picket_joe" to sprite)
     spritesComponent.putUpdateFunction("picket_joe") { _, _sprite ->
       _sprite as GameSprite
+      _sprite.setFlip(isFacing(Facing.LEFT), false)
       val center = body.getCenter()
       _sprite.setCenter(center.x, center.y)
     }
@@ -190,7 +195,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     spawn.y += 0.25f * ConstVals.PPM
 
     val picket = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.PICKET)!!
-    val impulseX = 1.15f * (megaman.body.x - body.x)
+    val impulseX = (megaman.body.x - body.x) * 0.8f
 
     game.gameEngine.spawn(
         picket,

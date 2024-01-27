@@ -9,6 +9,7 @@ import com.engine.animations.Animator
 import com.engine.animations.IAnimation
 import com.engine.common.GameLogger
 import com.engine.common.enums.Facing
+import com.engine.common.enums.Position
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.interfaces.IFaceable
@@ -16,6 +17,7 @@ import com.engine.common.interfaces.Updatable
 import com.engine.common.interfaces.isFacing
 import com.engine.common.objects.Loop
 import com.engine.common.objects.Properties
+import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
 import com.engine.damage.IDamager
@@ -34,7 +36,10 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.factories.EntityFactories
+import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.FixtureType
@@ -54,10 +59,11 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     private var atlas: TextureAtlas? = null
     private const val MOVING_DURATION = 0.5f
     private const val CHARGING_DURATION = 1f
-    private const val SHOCKING_DURATION = 0.25f
+    private const val SHOCKING_DURATION = 0.15f
     private const val ZIG_ZAG_DURATION = 0.5f
     private const val X_VEL = 2f
     private const val Y_VEL = 0.2f
+    private const val SHOCK_VEL = 10f
   }
 
   override var facing = Facing.LEFT
@@ -204,6 +210,21 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
   }
 
   private fun shock() {
-    requestToPlaySound(SoundAsset.MM3_ELECTRIC_SHOCK_SOUND, false)
+    requestToPlaySound(SoundAsset.MM3_ELECTRIC_PULSE_SOUND, false)
+
+    Position.values().forEach {
+      if (it == Position.CENTER) return@forEach
+
+      val xVel = ConstVals.PPM * (if (it.x == 1) 0f else if (it.x > 1) SHOCK_VEL else -SHOCK_VEL)
+      val yVel = ConstVals.PPM * (if (it.y == 1) 0f else if (it.y > 1) SHOCK_VEL else -SHOCK_VEL)
+
+      val shock = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.ELECTRIC_BALL)!!
+      game.gameEngine.spawn(
+          shock,
+          props(
+              ConstKeys.POSITION to body.getTopCenterPoint(),
+              ConstKeys.X to xVel,
+              ConstKeys.Y to yVel))
+    }
   }
 }

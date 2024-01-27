@@ -46,9 +46,12 @@ class ElectricBall(game: MegamanMaverickGame) : GameEntity(game), IProjectileEnt
 
   override fun init() {
     if (smallRegion == null)
-        game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Electric/SmallElectric")
+        smallRegion =
+            game.assMan.getTextureRegion(
+                TextureAsset.PROJECTILES_1.source, "Electric/SmallElectric")
     if (largeRegion == null)
-        game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Electric/BigElectric")
+        largeRegion =
+            game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Electric/BigElectric")
     addComponent(defineBodyComponent())
     addComponent(defineSpritesComponent())
     addComponent(defineAnimationsComponent())
@@ -86,6 +89,7 @@ class ElectricBall(game: MegamanMaverickGame) : GameEntity(game), IProjectileEnt
       val size = if (large) ConstVals.PPM.toFloat() else ConstVals.PPM / 4f
       body.setSize(size)
       bounds.setSize(size)
+      body.physics.velocity = trajectory
     }
 
     return BodyComponentCreator.create(this, body)

@@ -167,7 +167,7 @@
 </data>
  </layer>
  <objectgroup id="11" name="enemies">
-  <object id="93" name="SniperJoe" x="968" y="376" width="32" height="40"/>
+  <object id="93" name="SniperJoe" x="1192" y="216" width="32" height="40"/>
   <object id="94" name="Bat" x="1440" y="160" width="32" height="32"/>
   <object id="95" name="Bat" x="1504" y="160" width="32" height="32"/>
   <object id="96" name="Bat" x="1632" y="160" width="32" height="32"/>
@@ -197,7 +197,7 @@
   </object>
  </objectgroup>
  <objectgroup id="6" name="player">
-  <object id="65" name="0" x="96" y="384" width="32" height="32"/>
+  <object id="65" name="0" x="768" y="384" width="32" height="32"/>
   <object id="66" name="1" x="2272" y="832" width="32" height="32"/>
   <object id="67" name="2" x="960" y="1376" width="32" height="32"/>
   <object id="68" name="3" x="3520" y="896" width="32" height="32"/>
