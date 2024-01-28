@@ -25,6 +25,7 @@ import com.engine.controller.ControllerSystem
 import com.engine.controller.ControllerUtils
 import com.engine.controller.buttons.Button
 import com.engine.controller.buttons.Buttons
+import com.engine.controller.polling.IControllerPoller
 import com.engine.cullables.CullablesSystem
 import com.engine.drawables.fonts.BitmapFontHandle
 import com.engine.drawables.shapes.DrawableShapesSystem
@@ -43,10 +44,9 @@ import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
-import com.megaman.maverick.game.entities.blocks.AnimatedBlock
+import com.megaman.maverick.game.controllers.MegaControllerPoller
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.special.DisappearingBlocks
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
@@ -71,7 +71,7 @@ class MegamanMaverickGame : Game2D() {
     const val DEBUG_FPS = false
     const val DEBUG_SHAPES = true
     const val DEFAULT_VOLUME = 0.5f
-    val TAGS_TO_LOG = objectSetOf(DisappearingBlocks.TAG, AnimatedBlock.TAG, "convertObjectPropsToEntities()")
+    val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
   }
 
   lateinit var megaman: Megaman
@@ -144,7 +144,7 @@ class MegamanMaverickGame : Game2D() {
 
     // startLevelScreen(Level.TEST1)
     // startLevelScreen(Level.TEST2)
-    // startLevelScreen(Level.TEST5)
+    startLevelScreen(Level.TEST5)
     // setCurrentScreen(ScreenEnum.MAIN.name)
     // startLevelScreen(Level.TIMBER_WOMAN)
     // startLevelScreen(Level.RODENT_MAN)
@@ -161,7 +161,7 @@ class MegamanMaverickGame : Game2D() {
     }
   }
 
-  override fun createButtons(): Buttons {
+  override fun defineControllerPoller(): IControllerPoller {
     val buttons = Buttons()
     buttons.put(ControllerButton.LEFT, Button(Input.Keys.A))
     buttons.put(ControllerButton.RIGHT, Button(Input.Keys.D))
@@ -179,10 +179,10 @@ class MegamanMaverickGame : Game2D() {
         buttons.get(ControllerButton.DOWN)?.controllerCode = mapping.buttonDpadDown
         buttons.get(ControllerButton.A)?.controllerCode = mapping.buttonB
         buttons.get(ControllerButton.B)?.controllerCode = mapping.buttonY
-        buttons.get(ControllerButton.START).controllerCode = mapping.buttonStart
+        buttons.get(ControllerButton.START)?.controllerCode = mapping.buttonStart
       }
     }
-    return buttons
+    return MegaControllerPoller(buttons)
   }
 
   override fun loadAssets(assMan: AssetManager) {
