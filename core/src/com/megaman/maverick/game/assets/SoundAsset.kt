@@ -4,7 +4,6 @@ import com.badlogic.gdx.audio.Sound
 
 const val SOUND_ASSET_PREFIX = "sounds/"
 
-/** An enum class representing sound assets. */
 enum class SoundAsset(src: String, val seconds: Int) : IAsset {
   LIFE_SOUND("1up.mp3", 1),
   DINK_SOUND("dink.mp3", 1),
@@ -37,7 +36,8 @@ enum class SoundAsset(src: String, val seconds: Int) : IAsset {
   MM1_VICTORY_SOUND("mm1_victory.mp3", 8),
   MM3_ELECTRIC_SAW_SOUND("electric_saw.wav", 1),
   MM3_ELECTRIC_SHOCK_SOUND("electric_shock.wav", 1),
-  MM3_ELECTRIC_PULSE_SOUND("electric_pulse.mp3", 1);
+  MM3_ELECTRIC_PULSE_SOUND("electric_pulse.mp3", 1),
+  DISAPPEARING_BLOCK_SOUND("disappearing_block.wav", 1);
 
   override val source = SOUND_ASSET_PREFIX + src
   override val assClass = Sound::class.java

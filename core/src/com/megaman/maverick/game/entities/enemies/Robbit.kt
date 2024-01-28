@@ -12,6 +12,7 @@ import com.engine.common.enums.Facing
 import com.engine.common.enums.Position
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.objectMapOf
+import com.engine.common.extensions.toGdxArray
 import com.engine.common.interfaces.IFaceable
 import com.engine.common.interfaces.Updatable
 import com.engine.common.interfaces.isFacing
@@ -65,7 +66,7 @@ class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
   override val damageNegotiations = objectMapOf<KClass<out IDamager>, Int>()
 
-  private val robbitLoop = Loop(RobbitState.STANDING, RobbitState.CROUCHING, RobbitState.JUMPING)
+  private val robbitLoop = Loop(RobbitState.values().toGdxArray())
   private val robbitTimers =
       objectMapOf(
           RobbitState.STANDING to Timer(STAND_DUR),

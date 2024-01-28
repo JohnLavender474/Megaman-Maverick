@@ -43,10 +43,10 @@ import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
-import com.megaman.maverick.game.entities.enemies.Elecn
-import com.megaman.maverick.game.entities.enemies.Robbit
+import com.megaman.maverick.game.entities.blocks.SpriteBlock
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.special.DisappearingBlocks
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
@@ -71,7 +71,7 @@ class MegamanMaverickGame : Game2D() {
     const val DEBUG_FPS = false
     const val DEBUG_SHAPES = true
     const val DEFAULT_VOLUME = 0.5f
-    val TAGS_TO_LOG = objectSetOf<String>(Elecn.TAG, Robbit.TAG)
+    val TAGS_TO_LOG = objectSetOf(DisappearingBlocks.TAG, SpriteBlock.TAG, "convertObjectPropsToEntities()")
   }
 
   lateinit var megaman: Megaman
@@ -102,11 +102,11 @@ class MegamanMaverickGame : Game2D() {
   fun getGraphMap(): IGraphMap? = properties.get(ConstKeys.WORLD_GRAPH_MAP) as IGraphMap?
 
   override fun create() {
-    super.create()
-
     GameLogger.set(GameLogLevel.ERROR)
     GameLogger.filterByTag = true
     GameLogger.tagsToLog.addAll(TAGS_TO_LOG)
+
+    super.create()
 
     val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
     val screenHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
@@ -143,9 +143,10 @@ class MegamanMaverickGame : Game2D() {
     megaman.initialized = true
 
     // startLevelScreen(Level.TEST1)
+    startLevelScreen(Level.TEST2)
     // startLevelScreen(Level.TEST5)
     // setCurrentScreen(ScreenEnum.MAIN.name)
-    startLevelScreen(Level.TIMBER_WOMAN)
+    // startLevelScreen(Level.TIMBER_WOMAN)
     // startLevelScreen(Level.RODENT_MAN)
     // startLevelScreen(Level.FREEZER_MAN)
   }

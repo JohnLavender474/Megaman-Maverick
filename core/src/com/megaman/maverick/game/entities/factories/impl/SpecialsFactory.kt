@@ -6,10 +6,7 @@ import com.engine.entities.IGameEntity
 import com.engine.factories.IFactory
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.factories.EntityPoolCreator
-import com.megaman.maverick.game.entities.special.Ladder
-import com.megaman.maverick.game.entities.special.SpringBouncer
-import com.megaman.maverick.game.entities.special.GravityChange
-import com.megaman.maverick.game.entities.special.Water
+import com.megaman.maverick.game.entities.special.*
 
 class SpecialsFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntity> {
 
@@ -18,6 +15,7 @@ class SpecialsFactory(private val game: MegamanMaverickGame) : IFactory<IGameEnt
     const val LADDER = "Ladder"
     const val GRAVITY_CHANGE = "GravityChange"
     const val SPRING_BOUNCER = "SpringBouncer"
+    const val DISAPPEARING_BLOCKS = "DisappearingBlocks"
   }
 
   private val pools = ObjectMap<Any, Pool<IGameEntity>>()
@@ -27,6 +25,7 @@ class SpecialsFactory(private val game: MegamanMaverickGame) : IFactory<IGameEnt
     pools.put(SPRING_BOUNCER, EntityPoolCreator.create(2) { SpringBouncer(game) })
     pools.put(LADDER, EntityPoolCreator.create(10) { Ladder(game) })
     pools.put(GRAVITY_CHANGE, EntityPoolCreator.create(10) { GravityChange(game) })
+    pools.put(DISAPPEARING_BLOCKS, EntityPoolCreator.create(2) { DisappearingBlocks(game) })
   }
 
   override fun fetch(key: Any) = pools.get(key)?.fetch()

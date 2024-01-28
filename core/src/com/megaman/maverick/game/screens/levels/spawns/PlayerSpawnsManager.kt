@@ -15,8 +15,8 @@ class PlayerSpawnsManager(private val camera: Camera) : Runnable, Resettable {
   val currentSpawnProps: Properties?
     get() =
         current?.let {
-          val props = it.properties?.toProps()
-          props?.put(ConstKeys.BOUNDS, current?.rectangle?.toGameRectangle())
+          val props = it.toProps()
+          props.put(ConstKeys.BOUNDS, current?.rectangle?.toGameRectangle())
           props
         }
 

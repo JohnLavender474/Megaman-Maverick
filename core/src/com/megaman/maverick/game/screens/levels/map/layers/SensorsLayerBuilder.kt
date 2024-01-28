@@ -18,7 +18,7 @@ class SensorsLayerBuilder(private val game: MegamanMaverickGame) : ITiledMapLaye
     layer.objects.forEach { mapObject ->
       if (mapObject is RectangleMapObject) {
         val name = mapObject.name
-        val props = mapObject.properties.toProps()
+        val props = mapObject.toProps()
         props.put(ConstKeys.BOUNDS, mapObject.rectangle.toGameRectangle())
 
         when (name) {

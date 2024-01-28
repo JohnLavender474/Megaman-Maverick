@@ -31,7 +31,7 @@ fun convertObjectPropsToEntities(props: Properties): Array<Pair<IGameEntity, Pro
 
   props.forEach { _, value ->
     if (value is RectangleMapObject) {
-      val childProps = value.properties.toProps()
+      val childProps = value.toProps()
       childProps.put(ConstKeys.BOUNDS, value.rectangle.toGameRectangle())
 
       val entityType = EntityType.valueOf(childProps.get(ConstKeys.TYPE) as String)

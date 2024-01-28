@@ -12,6 +12,7 @@ import com.engine.common.enums.Facing
 import com.engine.common.enums.Position
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.objectMapOf
+import com.engine.common.extensions.toGdxArray
 import com.engine.common.interfaces.IFaceable
 import com.engine.common.interfaces.Updatable
 import com.engine.common.interfaces.isFacing
@@ -70,7 +71,7 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
   override val damageNegotiations = objectMapOf<KClass<out IDamager>, Int>()
 
-  private val elecnLoop = Loop(ElecnState.values().toList())
+  private val elecnLoop = Loop(ElecnState.values().toGdxArray())
   private val elecnTimers =
       objectMapOf(
           ElecnState.MOVING to Timer(MOVING_DURATION),

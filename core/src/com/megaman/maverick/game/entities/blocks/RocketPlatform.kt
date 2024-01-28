@@ -1,13 +1,13 @@
 package com.megaman.maverick.game.entities.blocks
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.utils.Array
 import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.common.enums.Position
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.extensions.objectSetOf
-import com.engine.common.objects.MutableOrderedSet
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.drawables.sorting.DrawingPriority
@@ -41,7 +41,7 @@ class RocketPlatform(game: MegamanMaverickGame) :
     private const val HEIGHT = 3f
   }
 
-  override val children = MutableOrderedSet<IGameEntity>()
+  override val children = Array<IGameEntity>()
   override val eventKeyMask = objectSetOf<Any>(EventType.BEGIN_ROOM_TRANS, EventType.END_ROOM_TRANS)
 
   override fun init() {
@@ -124,14 +124,14 @@ class RocketPlatform(game: MegamanMaverickGame) :
     val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.PLAYGROUND, 2))
     sprite.setSize(4f * ConstVals.PPM)
 
-    val SpritesComponent = SpritesComponent(this, "rocket" to sprite)
-    SpritesComponent.putUpdateFunction("rocket") { _, _sprite ->
+    val spritesComponent = SpritesComponent(this, "rocket" to sprite)
+    spritesComponent.putUpdateFunction("rocket") { _, _sprite ->
       _sprite as GameSprite
       _sprite.setPosition(body.getTopCenterPoint(), Position.TOP_CENTER)
       _sprite.translateY(ConstVals.PPM / 16f)
     }
 
-    return SpritesComponent
+    return spritesComponent
   }
 
   private fun defineAnimationsComponent(): AnimationsComponent {

@@ -53,7 +53,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
 
     layer.objects.forEach {
       if (it is RectangleMapObject) {
-        val spawnProps = it.properties.toProps()
+        val spawnProps = it.toProps()
         spawnProps.put(ConstKeys.BOUNDS, it.rectangle.toGameRectangle())
 
         val spawnSupplier = {
