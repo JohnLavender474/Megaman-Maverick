@@ -4,10 +4,14 @@ import com.badlogic.gdx.utils.Array
 import com.engine.audio.AudioComponent
 import com.engine.common.CAUSE_OF_DEATH_MESSAGE
 import com.engine.common.GameLogger
+import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.objects.Loop
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
+import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
+import com.engine.cullables.CullablesComponent
+import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.IParentEntity
@@ -15,30 +19,40 @@ import com.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
-import com.megaman.maverick.game.entities.blocks.SpriteBlock
+import com.megaman.maverick.game.entities.blocks.AnimatedBlock
 import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntities
+import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 
 class DisappearingBlocks(game: MegamanMaverickGame) :
     GameEntity(game), IParentEntity, IAudioEntity {
 
   companion object {
     const val TAG = "DisappearingBlocks"
+    private const val DEFAULT_DURATION = 1.15f
   }
 
-  override val children = Array<SpriteBlock>()
+  override val children = Array<AnimatedBlock>()
 
+  private lateinit var bounds: GameRectangle
   private lateinit var loop: Loop<String>
   private lateinit var timer: Timer
+
+  private var resetChildren = true
 
   override fun init() {
     addComponent(defineUpdatablesComponent())
     addComponent(AudioComponent(this))
+    addComponent(defineCullablesComponent())
+    addComponent(
+        DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ bounds }), debug = true))
   }
 
   override fun spawn(spawnProps: Properties) {
     super.spawn(spawnProps)
 
-    val duration = spawnProps.getOrDefault(ConstKeys.DURATION, 1.5f, Float::class)
+    bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+
+    val duration = spawnProps.getOrDefault(ConstKeys.DURATION, DEFAULT_DURATION, Float::class)
     GameLogger.debug(TAG, "spawn(): duration = $duration")
     timer = Timer(duration)
 
@@ -52,8 +66,18 @@ class DisappearingBlocks(game: MegamanMaverickGame) :
 
     val keyArray = Array<String>()
     var currentKey: String? = null
+
     childrenPropsArray.forEach { (child, props) ->
-      children.add(child as SpriteBlock)
+      child as AnimatedBlock
+      children.add(child)
+
+      props.put(
+          ConstKeys.RUN_ON_SPAWN,
+          Runnable {
+            child.body.physics.collisionOn = false
+            child.body.fixtures.forEach { entry -> entry.second.active = false }
+            child.hidden = true
+          })
       game.gameEngine.spawn(child, props)
 
       val thisKey = props.get(ConstKeys.KEY, String::class)!!
@@ -66,7 +90,7 @@ class DisappearingBlocks(game: MegamanMaverickGame) :
       }
     }
 
-    loop = Loop(keyArray)
+    loop = Loop(keyArray, true)
   }
 
   override fun onDestroy() {
@@ -79,23 +103,37 @@ class DisappearingBlocks(game: MegamanMaverickGame) :
       UpdatablesComponent(
           this,
           {
-            val current = loop.getCurrent()
+            timer.update(it)
+            if (timer.isFinished()) {
+              val next = loop.next()
+              GameLogger.debug(TAG, "defineUpdatablesComponent(): next = $next")
+              requestToPlaySound(SoundAsset.DISAPPEARING_BLOCK_SOUND, false)
+              resetChildren = true
+              timer.reset()
+            }
 
+            if (loop.isBeforeFirst()) return@UpdatablesComponent
+
+            val current = loop.getCurrent()
             children.forEach { spriteBlock ->
               val blockKey = spriteBlock.properties.get(ConstKeys.KEY, String::class)!!
               val on = current == blockKey
+
+              if (on && resetChildren) spriteBlock.reset()
 
               spriteBlock.body.physics.collisionOn = on
               spriteBlock.body.fixtures.forEach { entry -> entry.second.active = on }
               spriteBlock.hidden = !on
             }
 
-            timer.update(it)
-            if (timer.isFinished()) {
-              val next = loop.next()
-              GameLogger.debug(TAG, "defineUpdatablesComponent(): next = $next")
-              timer.reset()
-              requestToPlaySound(SoundAsset.DISAPPEARING_BLOCK_SOUND, false)
-            }
+            if (resetChildren) resetChildren = false
           })
+
+  private fun defineCullablesComponent(): CullablesComponent {
+    val cullablesComponent = CullablesComponent(this)
+    val cullable =
+        getGameCameraCullingLogic((game as MegamanMaverickGame).getGameCamera(), { bounds })
+    cullablesComponent.add(cullable)
+    return cullablesComponent
+  }
 }

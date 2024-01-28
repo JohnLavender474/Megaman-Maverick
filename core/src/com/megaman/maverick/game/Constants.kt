@@ -15,6 +15,8 @@ object ConstVals {
 }
 
 object ConstKeys {
+  const val RUN_ON_SPAWN = "run_on_spawn"
+  const val ANIMATION = "animation"
   const val DURATION = "duration"
   const val NAME = "name"
   const val KEY = "key"

@@ -14,7 +14,7 @@ class BlocksFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntit
     const val TAG = "BlockFactory"
 
     const val STANDARD = "Standard"
-    const val SPRITE_BLOCK = "SpriteBlock"
+    const val ANIMATED_BLOCK = "AnimatedBlock"
     const val ICE_BLOCK = "IceBlock"
     const val GEAR_TROLLEY = "GearTrolley"
     const val CONVEYOR_BELT = "ConveyorBelt"
@@ -25,7 +25,7 @@ class BlocksFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntit
 
   init {
     pools.put(STANDARD, EntityPoolCreator.create(10) { Block(game) })
-    pools.put(SPRITE_BLOCK, EntityPoolCreator.create(10) { SpriteBlock(game) })
+    pools.put(ANIMATED_BLOCK, EntityPoolCreator.create(10) { AnimatedBlock(game) })
     pools.put(ICE_BLOCK, EntityPoolCreator.create(10) { IceBlock(game) })
     pools.put(GEAR_TROLLEY, EntityPoolCreator.create(5) { GearTrolley(game) })
     pools.put(CONVEYOR_BELT, EntityPoolCreator.create(5) { ConveyorBelt(game) })

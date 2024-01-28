@@ -43,7 +43,7 @@ import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
-import com.megaman.maverick.game.entities.blocks.SpriteBlock
+import com.megaman.maverick.game.entities.blocks.AnimatedBlock
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.special.DisappearingBlocks
@@ -71,7 +71,7 @@ class MegamanMaverickGame : Game2D() {
     const val DEBUG_FPS = false
     const val DEBUG_SHAPES = true
     const val DEFAULT_VOLUME = 0.5f
-    val TAGS_TO_LOG = objectSetOf(DisappearingBlocks.TAG, SpriteBlock.TAG, "convertObjectPropsToEntities()")
+    val TAGS_TO_LOG = objectSetOf(DisappearingBlocks.TAG, AnimatedBlock.TAG, "convertObjectPropsToEntities()")
   }
 
   lateinit var megaman: Megaman

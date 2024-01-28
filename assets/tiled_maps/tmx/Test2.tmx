@@ -112,11 +112,6 @@
     <property name="BodyLabel" value="CollideDownOnly,NoSideTouchie"/>
    </properties>
   </object>
-  <object id="154" x="2184" y="1848" width="16" height="8">
-   <properties>
-    <property name="BodyLabel" value="CollideUpOnly,NoSideTouchie"/>
-   </properties>
-  </object>
   <object id="144" x="0" y="1536" width="320" height="512"/>
   <object id="146" x="96" y="1984" width="2912" height="64"/>
   <object id="152" x="1728" y="1568" width="960" height="96"/>
@@ -186,11 +181,8 @@
    </properties>
   </object>
   <object id="102" name="Ladder" x="2440" y="1344" width="16" height="192"/>
-  <object id="153" name="Ladder" x="2184" y="1664" width="16" height="192"/>
   <object id="147" name="Ladder" x="360" y="1536" width="16" height="448"/>
-  <object id="150" name="UpsideDown" x="1792" y="1664" width="160" height="320"/>
-  <object id="156" name="UpsideDown" x="2048" y="1664" width="256" height="320"/>
-  <object id="173" name="DisappearingBlocks" x="320" y="1632" width="480" height="352">
+  <object id="173" name="DisappearingBlocks" x="320" y="1760" width="320" height="224">
    <properties>
     <property name="child1" type="object" value="168"/>
     <property name="child2" type="object" value="174"/>
@@ -200,39 +192,35 @@
   </object>
  </objectgroup>
  <objectgroup id="16" name="children">
-  <object id="168" name="SpriteBlock" x="448" y="1888" width="32" height="32">
+  <object id="168" name="AnimatedBlock" x="448" y="1888" width="32" height="32">
    <properties>
-    <property name="atlas" value="sprites/sprite_sheets/Platforms1.txt"/>
+    <property name="animation" value="Brick1"/>
     <property name="key" value="1"/>
     <property name="persist" type="bool" value="true"/>
-    <property name="region" value="Brick2"/>
     <property name="type" value="BLOCK"/>
    </properties>
   </object>
-  <object id="174" name="SpriteBlock" x="512" y="1888" width="32" height="32">
+  <object id="174" name="AnimatedBlock" x="512" y="1888" width="32" height="32">
    <properties>
-    <property name="atlas" value="sprites/sprite_sheets/Platforms1.txt"/>
+    <property name="animation" value="Brick1"/>
     <property name="key" value="2"/>
     <property name="persist" type="bool" value="true"/>
-    <property name="region" value="Brick2"/>
     <property name="type" value="BLOCK"/>
    </properties>
   </object>
-  <object id="175" name="SpriteBlock" x="576" y="1888" width="32" height="32">
+  <object id="175" name="AnimatedBlock" x="576" y="1888" width="32" height="32">
    <properties>
-    <property name="atlas" value="sprites/sprite_sheets/Platforms1.txt"/>
+    <property name="animation" value="Brick1"/>
     <property name="key" value="3"/>
     <property name="persist" type="bool" value="true"/>
-    <property name="region" value="Brick2"/>
     <property name="type" value="BLOCK"/>
    </properties>
   </object>
-  <object id="176" name="SpriteBlock" x="512" y="1824" width="32" height="32">
+  <object id="176" name="AnimatedBlock" x="512" y="1824" width="32" height="32">
    <properties>
-    <property name="atlas" value="sprites/sprite_sheets/Platforms1.txt"/>
+    <property name="animation" value="Brick1"/>
     <property name="key" value="1"/>
     <property name="persist" type="bool" value="true"/>
-    <property name="region" value="Brick2"/>
     <property name="type" value="BLOCK"/>
    </properties>
   </object>
@@ -246,8 +234,8 @@
   <object id="53" name="Room4" x="5376" y="1152" width="1120" height="448"/>
   <object id="78" name="Room5" x="6496" y="1152" width="1248" height="448"/>
   <object id="97" name="Room1" x="0" y="1152" width="1440" height="448"/>
-  <object id="145" name="Room6" x="0" y="1600" width="1440" height="448"/>
-  <object id="149" name="Room7" x="1440" y="1600" width="1568" height="448"/>
+  <object id="145" name="Room6" x="0" y="1600" width="1728" height="448"/>
+  <object id="149" name="Room7" x="1728" y="1600" width="1280" height="448"/>
  </objectgroup>
  <objectgroup id="8" name="enemies">
   <object id="22" name="Bat" x="5472" y="1216" width="32" height="32"/>
@@ -274,22 +262,8 @@
     <property name="Type" value="Red"/>
    </properties>
   </object>
-  <object id="148" name="Ratton" x="1760" y="1952" width="32" height="32"/>
-  <object id="155" name="PreciousJoe" x="1888" y="1952" width="32" height="32"/>
-  <object id="157" name="Met" x="1632" y="1952" width="32" height="32">
-   <properties>
-    <property name="RunOnly" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="158" name="Met" x="1696" y="1952" width="32" height="32">
-   <properties>
-    <property name="RunningAllowed" type="bool" value="false"/>
-   </properties>
-  </object>
  </objectgroup>
- <objectgroup id="14" name="boss">
-  <object id="160" name="GutsTank" x="1824" y="1952" width="32" height="32"/>
- </objectgroup>
+ <objectgroup id="14" name="boss"/>
  <layer id="13" name="BG" width="250" height="75">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
