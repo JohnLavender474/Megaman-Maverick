@@ -71,7 +71,7 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
   override val damageNegotiations = objectMapOf<KClass<out IDamager>, Int>()
 
-  private val elecnLoop = Loop(ElecnState.values().toGdxArray())
+  private val elecnLoop = Loop(ElecnState.values().toGdxArray(), false)
   private val elecnTimers =
       objectMapOf(
           ElecnState.MOVING to Timer(MOVING_DURATION),
