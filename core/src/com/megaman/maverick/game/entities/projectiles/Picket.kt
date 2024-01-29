@@ -62,29 +62,35 @@ class Picket(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity {
 
   private fun defineBodyComponent(): BodyComponent {
     val body = Body(BodyType.ABSTRACT)
-    body.setSize(0.85f * ConstVals.PPM)
+    body.setSize(0.5f * ConstVals.PPM)
     body.physics.gravity.y = GRAVITY * ConstVals.PPM
 
     val debugShapes = Array<() -> IDrawableShape?>()
 
     // body fixture
-    val bodyFixture = Fixture(GameRectangle().setSize(0.2f * ConstVals.PPM), FixtureType.BODY)
+    val bodyFixture = Fixture(GameRectangle().setSize(0.5f * ConstVals.PPM), FixtureType.BODY)
     body.addFixture(bodyFixture)
     bodyFixture.shape.color = Color.YELLOW
     debugShapes.add { bodyFixture.shape }
 
     // projectile fixture
     val projectileFixture =
-        Fixture(GameRectangle().setSize(0.2f * ConstVals.PPM), FixtureType.PROJECTILE)
+        Fixture(GameRectangle().setSize(0.5f * ConstVals.PPM), FixtureType.PROJECTILE)
     body.addFixture(projectileFixture)
     projectileFixture.shape.color = Color.GREEN
     debugShapes.add { projectileFixture.shape }
 
     // damager fixture
-    val damagerFixture = Fixture(GameRectangle().setSize(0.2f * ConstVals.PPM), FixtureType.DAMAGER)
+    val damagerFixture = Fixture(GameRectangle().setSize(0.4f * ConstVals.PPM), FixtureType.DAMAGER)
     body.addFixture(damagerFixture)
     damagerFixture.shape.color = Color.RED
     debugShapes.add { damagerFixture.shape }
+
+    // shield fixture
+    val shieldFixture = Fixture(GameRectangle().setSize(0.5f * ConstVals.PPM), FixtureType.SHIELD)
+    body.addFixture(shieldFixture)
+    shieldFixture.shape.color = Color.BLUE
+    debugShapes.add { shieldFixture.shape }
 
     addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
 

@@ -260,7 +260,7 @@
   <object id="53" x="2688" y="384" width="632" height="192"/>
   <object id="54" x="2368" y="384" width="352" height="704"/>
   <object id="55" x="3808" y="928" width="32" height="160"/>
-  <object id="56" x="3808" y="1056" width="512" height="128"/>
+  <object id="56" x="3808" y="1000" width="512" height="184"/>
   <object id="57" x="3800" y="544" width="704" height="128"/>
   <object id="58" x="4288" y="544" width="216" height="640"/>
   <object id="69" x="1640" y="352" width="48" height="104"/>
@@ -276,17 +276,7 @@
    <properties>
     <property name="SpawnRoom" value="Room2"/>
     <property name="SpawnType" value="SpawnRoom"/>
-    <property name="Trajectory" value="0,-1,1;-4,0,3;0,1,1;4,0,3"/>
-   </properties>
-  </object>
-  <object id="85" x="2528" y="112" width="64" height="8">
-   <properties>
-    <property name="body_labels" value="COLLIDE_DOWN_ONLY,NO_PROJECTILE_COLLISION"/>
-   </properties>
-  </object>
-  <object id="86" x="824" y="784" width="64" height="8">
-   <properties>
-    <property name="body_labels" value="CollideDownOnly,NoProjectileCollision"/>
+    <property name="trajectory" value="0,-1,1;-4,0,3;0,1,1;4,0,3"/>
    </properties>
   </object>
   <object id="87" x="1072" y="896" width="48" height="96"/>
@@ -322,8 +312,6 @@
  </objectgroup>
  <objectgroup id="8" name="specials">
   <object id="83" name="Ladder" x="2304" y="448" width="32" height="416"/>
-  <object id="111" name="Ladder" x="2640" y="-56" width="32" height="416"/>
-  <object id="84" name="Ladder" x="856" y="864" width="32" height="576"/>
   <object id="89" name="Ladder" x="2848" y="928" width="32" height="448"/>
  </objectgroup>
  <objectgroup id="5" name="game_rooms" visible="0">

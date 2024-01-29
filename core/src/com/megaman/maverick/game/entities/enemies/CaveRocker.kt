@@ -12,6 +12,7 @@ import com.engine.common.CAUSE_OF_DEATH_MESSAGE
 import com.engine.common.GameLogger
 import com.engine.common.enums.Facing
 import com.engine.common.enums.Position
+import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.interfaces.IFaceable
@@ -93,6 +94,15 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     body.setBottomCenterToPoint(spawn)
     newRockOffsetY = spawnProps.get(ConstKeys.OFFSET_Y, Float::class)!!
     waitTimer.reset()
+    throwing = false
+  }
+
+  override fun onDestroy() {
+    super<AbstractEnemy>.onDestroy()
+    if (newRock != null) {
+      newRock!!.kill(props(CAUSE_OF_DEATH_MESSAGE to "Parent entity CaveRocker is destroyed"))
+      newRock = null
+    }
   }
 
   override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -187,7 +197,7 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     val keySupplier: () -> String? = { if (throwing) "throw" else "stand" }
     val animations =
         objectMapOf<String, IAnimation>(
-            "stand" to Animation(standingRegion!!),
+            "stand" to Animation(standingRegion!!, 1, 2, gdxArrayOf(0.5f, 0.15f), true),
             "throw" to Animation(throwingRegion!!, 1, 3, 0.05f, false))
     val animator = Animator(keySupplier, animations)
     return AnimationsComponent(this, animator)
