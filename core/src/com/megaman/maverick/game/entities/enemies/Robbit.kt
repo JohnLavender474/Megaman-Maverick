@@ -36,6 +36,10 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
+import com.megaman.maverick.game.entities.projectiles.Bullet
+import com.megaman.maverick.game.entities.projectiles.ChargedShot
+import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.FixtureType
@@ -64,7 +68,12 @@ class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
   override var facing = Facing.RIGHT
 
-  override val damageNegotiations = objectMapOf<KClass<out IDamager>, Int>()
+  override val damageNegotiations = objectMapOf<KClass<out IDamager>, Int>(
+    Bullet::class to 5,
+    Fireball::class to ConstVals.MAX_HEALTH,
+    ChargedShot::class to 10,
+    ChargedShotExplosion::class to 5
+  )
 
   private val robbitLoop = Loop(RobbitState.values().toGdxArray())
   private val robbitTimers =

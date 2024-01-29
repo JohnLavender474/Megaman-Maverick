@@ -15,6 +15,11 @@ object ConstVals {
 }
 
 object ConstKeys {
+  const val PASS_THROUGH = "pass_through"
+  const val DELTA = "delta"
+  const val SIZE = "size"
+  const val DEATH = "death"
+  const val IMPULSE = "impulse"
   const val RUN_ON_SPAWN = "run_on_spawn"
   const val ANIMATION = "animation"
   const val DURATION = "duration"

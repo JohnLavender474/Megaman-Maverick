@@ -173,6 +173,39 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
+            <key type="filename">../frames/Enemies2/CaveRocker/Stand.png</key>
+            <key type="filename">../frames/Enemies2/Robbit/Crouch.png</key>
+            <key type="filename">../frames/Enemies2/Robbit/Stand.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>32,32,64,64</rect>
+                <key>scale9Paddings</key>
+                <rect>32,32,64,64</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies2/CaveRocker/Throw.png</key>
+            <key type="filename">../frames/Enemies2/Robbit/Jump.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>64,32,128,64</rect>
+                <key>scale9Paddings</key>
+                <rect>64,32,128,64</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Enemies2/Elecn/Elecn1.png</key>
             <key type="filename">../frames/Enemies2/Elecn/Elecn3.png</key>
             <struct type="IndividualSpriteSettings">
@@ -271,8 +304,8 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Enemies2/Robbit/Crouch.png</key>
-            <key type="filename">../frames/Enemies2/Robbit/Stand.png</key>
+            <key type="filename">../frames/Enemies2/RedTiggerSquirt.png</key>
+            <key type="filename">../frames/Enemies2/YellowTiggerSquirt.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -281,24 +314,9 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>32,32,64,64</rect>
+                <rect>36,18,72,36</rect>
                 <key>scale9Paddings</key>
-                <rect>32,32,64,64</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Enemies2/Robbit/Jump.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>64,32,128,64</rect>
-                <key>scale9Paddings</key>
-                <rect>64,32,128,64</rect>
+                <rect>36,18,72,36</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

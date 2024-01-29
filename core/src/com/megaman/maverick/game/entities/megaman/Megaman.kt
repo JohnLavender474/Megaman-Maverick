@@ -33,6 +33,7 @@ import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.enemies.*
+import com.megaman.maverick.game.entities.explosions.CaveRockExplosion
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.explosions.SnowballExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -96,7 +97,15 @@ class Megaman(game: MegamanMaverickGame) :
           ShieldAttacker::class to 4,
           Penguin::class to 3,
           Hanabiran::class to 3,
-          Petal::class to 3)
+          Petal::class to 3,
+          CaveRock::class to 3,
+          CaveRocker::class to 3,
+          CaveRockExplosion::class to 2,
+          Elecn::class to 3,
+          ElectricBall::class to 3,
+          Ratton::class to 2,
+          PicketJoe::class to 3,
+          Picket::class to 3)
 
   internal val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 

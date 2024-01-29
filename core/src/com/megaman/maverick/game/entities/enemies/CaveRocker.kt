@@ -1,0 +1,223 @@
+package com.megaman.maverick.game.entities.enemies
+
+import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.Array
+import com.engine.animations.Animation
+import com.engine.animations.AnimationsComponent
+import com.engine.animations.Animator
+import com.engine.animations.IAnimation
+import com.engine.common.CAUSE_OF_DEATH_MESSAGE
+import com.engine.common.GameLogger
+import com.engine.common.enums.Facing
+import com.engine.common.enums.Position
+import com.engine.common.extensions.getTextureAtlas
+import com.engine.common.extensions.objectMapOf
+import com.engine.common.interfaces.IFaceable
+import com.engine.common.interfaces.Updatable
+import com.engine.common.interfaces.isFacing
+import com.engine.common.objects.Properties
+import com.engine.common.objects.props
+import com.engine.common.shapes.GameRectangle
+import com.engine.common.time.Timer
+import com.engine.damage.IDamager
+import com.engine.drawables.shapes.DrawableShapesComponent
+import com.engine.drawables.shapes.IDrawableShape
+import com.engine.drawables.sprites.GameSprite
+import com.engine.drawables.sprites.SpritesComponent
+import com.engine.drawables.sprites.setPosition
+import com.engine.drawables.sprites.setSize
+import com.engine.entities.contracts.IAnimatedEntity
+import com.engine.updatables.UpdatablesComponent
+import com.engine.world.Body
+import com.engine.world.BodyComponent
+import com.engine.world.BodyType
+import com.engine.world.Fixture
+import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.ConstVals
+import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
+import com.megaman.maverick.game.entities.factories.EntityFactories
+import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.projectiles.Bullet
+import com.megaman.maverick.game.entities.projectiles.CaveRock
+import com.megaman.maverick.game.entities.projectiles.ChargedShot
+import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.world.BodyComponentCreator
+import com.megaman.maverick.game.world.FixtureType
+import kotlin.reflect.KClass
+
+class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
+
+  companion object {
+    const val TAG = "CaveRocker"
+    private var standingRegion: TextureRegion? = null
+    private var throwingRegion: TextureRegion? = null
+    private const val WAIT_DURATION = 1f
+    private const val ROCK_IMPULSE_X = 12f
+    private const val ROCK_IMPULSE_Y = 10f
+  }
+
+  override var facing = Facing.RIGHT
+
+  override val damageNegotiations =
+      objectMapOf<KClass<out IDamager>, Int>(
+          Bullet::class to 5,
+          Fireball::class to 10,
+          ChargedShot::class to 10,
+          ChargedShotExplosion::class to 5)
+
+  private val waitTimer = Timer(WAIT_DURATION)
+
+  private var throwing = false
+  private var newRock: CaveRock? = null
+  private var newRockOffsetY = 0f
+
+  override fun init() {
+    super<AbstractEnemy>.init()
+    if (standingRegion == null || throwingRegion == null) {
+      val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+      standingRegion = atlas.findRegion("CaveRocker/Stand")
+      throwingRegion = atlas.findRegion("CaveRocker/Throw")
+    }
+    addComponent(defineAnimationsComponent())
+  }
+
+  override fun spawn(spawnProps: Properties) {
+    super.spawn(spawnProps)
+    val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+    body.setBottomCenterToPoint(spawn)
+    newRockOffsetY = spawnProps.get(ConstKeys.OFFSET_Y, Float::class)!!
+    waitTimer.reset()
+  }
+
+  override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
+    super.defineUpdatablesComponent(updatablesComponent)
+    updatablesComponent.add {
+      facing = if (megaman.body.x >= body.x) Facing.RIGHT else Facing.LEFT
+      waitTimer.update(it)
+      if (waitTimer.isJustFinished()) {
+        throwRock()
+        spawnNewRock()
+      }
+    }
+  }
+
+  override fun defineBodyComponent(): BodyComponent {
+    val body = Body(BodyType.DYNAMIC)
+    body.setSize(1f * ConstVals.PPM)
+
+    val debugShapes = Array<() -> IDrawableShape?>()
+
+    // body fixture
+    val bodyFixture =
+        Fixture(
+            GameRectangle().setSize(1.25f * ConstVals.PPM, 1.5f * ConstVals.PPM), FixtureType.BODY)
+    body.addFixture(bodyFixture)
+    bodyFixture.shape.color = Color.YELLOW
+    debugShapes.add { bodyFixture.shape }
+
+    // damager fixture
+    val damagerFixture =
+        Fixture(
+            GameRectangle().setSize(1.25f * ConstVals.PPM, 1.5f * ConstVals.PPM),
+            FixtureType.DAMAGER)
+    body.addFixture(damagerFixture)
+    damagerFixture.shape.color = Color.RED
+    debugShapes.add { damagerFixture.shape }
+
+    // damageable fixture
+    val damageableFixture =
+        Fixture(GameRectangle().setSize(1.15f * ConstVals.PPM), FixtureType.DAMAGEABLE)
+    body.addFixture(damageableFixture)
+    damageableFixture.shape.color = Color.PURPLE
+    debugShapes.add { damageableFixture.shape }
+
+    // head fixture
+    val headFixture =
+        Fixture(
+            GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM), FixtureType.HEAD)
+    headFixture.offsetFromBodyCenter.y = 0.55f * ConstVals.PPM
+    body.addFixture(headFixture)
+    headFixture.shape.color = Color.BLUE
+    debugShapes.add { headFixture.shape }
+
+    body.preProcess = Updatable {
+      newRock?.let { _newRock ->
+        if (throwing && _newRock.dead) {
+          GameLogger.debug(TAG, "New rock died before reaching cave rocker, so spawning a new one")
+          spawnNewRock()
+        } else if (_newRock.body.overlaps(headFixture.shape) ||
+            _newRock.body.y < headFixture.shape.getY()) {
+          GameLogger.debug(
+              TAG,
+              "New rock landed on cave rocker's head. Setting [throwing] to false and resetting wait timer")
+          _newRock.kill(props(CAUSE_OF_DEATH_MESSAGE to "Landed on CaveRocker's head"))
+          throwing = false
+          newRock = null
+          waitTimer.reset()
+        }
+      }
+    }
+
+    addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+
+    return BodyComponentCreator.create(this, body)
+  }
+
+  override fun defineSpritesComponent(): SpritesComponent {
+    val sprite = GameSprite()
+    sprite.setSize(2.5f * ConstVals.PPM)
+
+    val spritesComponent = SpritesComponent(this, "cave_rocker" to sprite)
+    spritesComponent.putUpdateFunction("cave_rocker") { _, _sprite ->
+      _sprite as GameSprite
+      _sprite.setFlip(isFacing(Facing.LEFT), false)
+      _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+    }
+
+    return spritesComponent
+  }
+
+  private fun defineAnimationsComponent(): AnimationsComponent {
+    val keySupplier: () -> String? = { if (throwing) "throw" else "stand" }
+    val animations =
+        objectMapOf<String, IAnimation>(
+            "stand" to Animation(standingRegion!!),
+            "throw" to Animation(throwingRegion!!, 1, 3, 0.05f, false))
+    val animator = Animator(keySupplier, animations)
+    return AnimationsComponent(this, animator)
+  }
+
+  private fun throwRock() {
+    throwing = true
+    val caveRockToThrow =
+        EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.CAVE_ROCK)!!
+    game.gameEngine.spawn(
+        caveRockToThrow,
+        props(
+            ConstKeys.OWNER to this,
+            ConstKeys.POSITION to body.getTopCenterPoint(),
+            ConstKeys.IMPULSE to
+                Vector2(
+                    ROCK_IMPULSE_X * ConstVals.PPM * facing.value, ROCK_IMPULSE_Y * ConstVals.PPM)))
+  }
+
+  private fun spawnNewRock() {
+    val newRockSpawn = body.getCenter().add(0f, newRockOffsetY * ConstVals.PPM)
+    val newRockTrajectory = Vector2(0f, -newRockOffsetY * ConstVals.PPM)
+    newRock = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.CAVE_ROCK) as CaveRock
+    game.gameEngine.spawn(
+        newRock!!,
+        props(
+            ConstKeys.OWNER to this,
+            ConstKeys.POSITION to newRockSpawn,
+            ConstKeys.TRAJECTORY to newRockTrajectory,
+            ConstKeys.GRAVITY to 0f,
+            ConstKeys.PASS_THROUGH to true))
+  }
+}

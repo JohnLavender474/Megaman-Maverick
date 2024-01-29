@@ -47,6 +47,13 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
     private var DEBUG_PATHFINDING = false
   }
 
+  override val damageNegotiations =
+      objectMapOf<KClass<out IDamager>, Int>(
+          Bullet::class to 10,
+          Fireball::class to ConstVals.MAX_HEALTH,
+          ChargedShot::class to ConstVals.MAX_HEALTH,
+          ChargedShotExplosion::class to 15)
+
   override fun init() {
     if (textureRegion == null)
         textureRegion =
@@ -64,13 +71,6 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
     val spawn = (spawnProps.get(ConstKeys.BOUNDS) as GameRectangle).getCenter()
     body.setCenter(spawn)
   }
-
-  override val damageNegotiations =
-      objectMapOf<KClass<out IDamager>, Int>(
-          Bullet::class to 10,
-          Fireball::class to ConstVals.MAX_HEALTH,
-          ChargedShot::class to ConstVals.MAX_HEALTH,
-          ChargedShotExplosion::class to 15)
 
   override fun defineBodyComponent(): BodyComponent {
     val body = Body(BodyType.ABSTRACT)

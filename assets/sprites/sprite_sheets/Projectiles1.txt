@@ -1,5 +1,5 @@
 Projectiles1.png
-size: 452, 164
+size: 512, 292
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -8,6 +8,20 @@ Bullet
   xy: 0, 0
   size: 32, 32
   orig: 32, 32
+  offset: 0, 0
+  index: -1
+CaveRock/Burst
+  rotate: false
+  xy: 0, 164
+  size: 384, 128
+  orig: 384, 128
+  offset: 0, 0
+  index: -1
+CaveRock/Rock
+  rotate: false
+  xy: 384, 164
+  size: 128, 128
+  orig: 128, 128
   offset: 0, 0
   index: -1
 Electric/BigElectric
@@ -54,63 +68,63 @@ Fire/Fireball
   index: -1
 HalfChargedShot
   rotate: false
-  xy: 0, 32
+  xy: 448, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 Joeball
   rotate: false
-  xy: 64, 32
+  xy: 0, 32
   size: 128, 32
   orig: 128, 32
   offset: 0, 0
   index: -1
 Petal
   rotate: false
-  xy: 108, 100
+  xy: 0, 100
   size: 256, 64
   orig: 256, 64
   offset: 0, 0
   index: -1
 Picket
   rotate: false
-  xy: 192, 32
+  xy: 128, 32
   size: 128, 32
   orig: 128, 32
   offset: 0, 0
   index: -1
 PreciousShot/Form
   rotate: false
-  xy: 128, 64
+  xy: 0, 64
   size: 324, 36
   orig: 324, 36
   offset: 0, 0
   index: -1
 PreciousShot/Shoot
   rotate: false
-  xy: 0, 100
+  xy: 324, 64
   size: 108, 36
   orig: 108, 36
   offset: 0, 0
   index: -1
 Snowball
   rotate: false
-  xy: 320, 32
+  xy: 256, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SnowballForm
   rotate: false
-  xy: 352, 32
+  xy: 288, 32
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 SnowJoeball
   rotate: false
-  xy: 0, 64
+  xy: 384, 32
   size: 128, 32
   orig: 128, 32
   offset: 0, 0

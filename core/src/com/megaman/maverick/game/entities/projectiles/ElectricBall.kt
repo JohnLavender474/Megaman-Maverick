@@ -11,6 +11,7 @@ import com.engine.common.extensions.objectMapOf
 import com.engine.common.interfaces.Updatable
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
+import com.engine.damage.IDamageable
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setSize
@@ -67,8 +68,16 @@ class ElectricBall(game: MegamanMaverickGame) : GameEntity(game), IProjectileEnt
     large = spawnProps.getOrDefault(ConstKeys.LARGE, false, Boolean::class)
   }
 
+  override fun onDamageInflictedTo(damageable: IDamageable) {
+    zap()
+  }
+
   override fun hitBlock(blockFixture: Fixture) {
-    // shock explosion
+    zap()
+  }
+
+  private fun zap() {
+    // TODO: create zap explosion
     requestToPlaySound(SoundAsset.MM3_ELECTRIC_PULSE_SOUND, false)
   }
 

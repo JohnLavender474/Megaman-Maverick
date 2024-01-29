@@ -1,124 +1,152 @@
 Enemies2.png
-size: 256, 896
+size: 512, 736
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+CaveRocker/Stand
+  rotate: false
+  xy: 0, 0
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+CaveRocker/Throw
+  rotate: false
+  xy: 128, 0
+  size: 384, 128
+  orig: 384, 128
+  offset: 0, 0
+  index: -1
 Elecn/Elecn1
   rotate: false
-  xy: 0, 64
+  xy: 0, 128
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 Elecn/Elecn2
   rotate: false
-  xy: 0, 480
+  xy: 96, 128
   size: 192, 96
   orig: 192, 96
   offset: 0, 0
   index: -1
 Elecn/Elecn3
   rotate: false
-  xy: 96, 64
+  xy: 288, 128
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 Hanabiran/1PetalSpin
   rotate: false
-  xy: 0, 704
+  xy: 0, 224
   size: 256, 64
   orig: 256, 64
   offset: 0, 0
   index: -1
 Hanabiran/1PetalStand
   rotate: false
-  xy: 0, 0
+  xy: 256, 224
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Hanabiran/2PetalsSpin
   rotate: false
-  xy: 0, 768
+  xy: 0, 288
   size: 256, 64
   orig: 256, 64
   offset: 0, 0
   index: -1
 Hanabiran/2PetalsStand
   rotate: false
-  xy: 64, 0
+  xy: 256, 288
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Hanabiran/3PetalsSpin
   rotate: false
-  xy: 0, 832
+  xy: 0, 352
   size: 256, 64
   orig: 256, 64
   offset: 0, 0
   index: -1
 Hanabiran/3PetalsStand
   rotate: false
-  xy: 128, 0
+  xy: 256, 352
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Hanabiran/4PetalsSpin
   rotate: false
-  xy: 0, 160
+  xy: 320, 352
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
   index: -1
 Hanabiran/4PetalsStand
   rotate: false
-  xy: 192, 0
+  xy: 448, 352
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Hanabiran/Drop
   rotate: false
-  xy: 0, 576
+  xy: 0, 416
   size: 192, 64
   orig: 192, 64
   offset: 0, 0
   index: -1
 Hanabiran/NoPetalsSpin
   rotate: false
-  xy: 128, 160
+  xy: 192, 416
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
   index: -1
 Hanabiran/Rise
   rotate: false
-  xy: 0, 640
+  xy: 320, 416
   size: 192, 64
   orig: 192, 64
   offset: 0, 0
   index: -1
+RedTiggerSquirt
+  rotate: false
+  xy: 0, 480
+  size: 144, 72
+  orig: 144, 72
+  offset: 0, 0
+  index: -1
 Robbit/Crouch
   rotate: false
-  xy: 0, 224
+  xy: 144, 480
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 Robbit/Jump
   rotate: false
-  xy: 128, 224
+  xy: 272, 480
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 Robbit/Stand
   rotate: false
-  xy: 0, 352
+  xy: 0, 608
   size: 128, 128
   orig: 128, 128
+  offset: 0, 0
+  index: -1
+YellowTiggerSquirt
+  rotate: false
+  xy: 128, 608
+  size: 144, 72
+  orig: 144, 72
   offset: 0, 0
   index: -1

@@ -39,8 +39,12 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.projectiles.Bullet
+import com.megaman.maverick.game.entities.projectiles.ChargedShot
+import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.FixtureType
@@ -69,7 +73,12 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
   override var facing = Facing.LEFT
 
-  override val damageNegotiations = objectMapOf<KClass<out IDamager>, Int>()
+  override val damageNegotiations =
+      objectMapOf<KClass<out IDamager>, Int>(
+          Bullet::class to 5,
+          Fireball::class to 10,
+          ChargedShot::class to 10,
+          ChargedShotExplosion::class to 5)
 
   private val elecnLoop = Loop(ElecnState.values().toGdxArray(), false)
   private val elecnTimers =
