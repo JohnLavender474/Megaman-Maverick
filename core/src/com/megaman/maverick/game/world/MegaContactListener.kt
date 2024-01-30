@@ -448,7 +448,9 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
     }
 
     // laser, block
+    /*
     else if (contact.fixturesMatch(FixtureType.LASER, FixtureType.BLOCK)) {
+      GameLogger.debug(TAG, "continueContact(): Laser-Block, contact = $contact")
       val (laser, block) = contact.getFixturesInOrder(FixtureType.LASER, FixtureType.BLOCK)!!
 
       val laserEntity = laser.getEntity()
@@ -458,10 +460,21 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
         val blockRectangle = block.shape as GameRectangle
         val laserLine = laser.shape as GameLine
 
-        val intersections = laser.properties.get(ConstKeys.COLLECTION) as MutableCollection<Vector2>
-        ShapeUtils.intersectRectangleAndLine(blockRectangle, laserLine, intersections)
+        val intersections = laser.properties.get(ConstKeys.ARRAY) as Array<Vector2>?
+        GameLogger.debug(
+            TAG,
+            "continueContact(): Laser-Block, contact = $contact, current intersections = $intersections")
+        intersections?.let {
+          val temp = Array<Vector2>()
+          if (ShapeUtils.intersectRectangleAndLine(blockRectangle, laserLine, temp)) {
+            it.addAll(temp)
+            GameLogger.debug(
+                TAG, "continueContact(): Laser-Block, contact = $contact, new intersections = $it")
+          }
+        }
       }
     }
+     */
 
     // side, ice
     else if (contact.fixturesMatch(FixtureType.SIDE, FixtureType.ICE)) {

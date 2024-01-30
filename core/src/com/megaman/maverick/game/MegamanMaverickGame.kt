@@ -45,10 +45,9 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.MegaControllerPoller
-import com.megaman.maverick.game.entities.enemies.CaveRocker
 import com.megaman.maverick.game.entities.factories.EntityFactories
+import com.megaman.maverick.game.entities.hazards.LaserBeamer
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.projectiles.CaveRock
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
@@ -71,9 +70,9 @@ class MegamanMaverickGame : Game2D() {
   companion object {
     const val TAG = "MegamanMaverickGame"
     const val DEBUG_FPS = false
-    const val DEBUG_SHAPES = false
+    const val DEBUG_SHAPES = true
     const val DEFAULT_VOLUME = 0.5f
-    val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(MegaContactListener.TAG)
+    val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(MegaContactListener.TAG, LaserBeamer.TAG)
   }
 
   lateinit var megaman: Megaman

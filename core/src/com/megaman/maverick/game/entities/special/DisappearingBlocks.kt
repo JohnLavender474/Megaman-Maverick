@@ -22,6 +22,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.blocks.AnimatedBlock
 import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntities
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import java.util.*
 
 class DisappearingBlocks(game: MegamanMaverickGame) :
     GameEntity(game), IParentEntity, IAudioEntity {
@@ -32,6 +33,8 @@ class DisappearingBlocks(game: MegamanMaverickGame) :
   }
 
   override val children = Array<AnimatedBlock>()
+
+  private val keysToRender = LinkedList<String>()
 
   private lateinit var bounds: GameRectangle
   private lateinit var loop: Loop<String>
@@ -107,26 +110,25 @@ class DisappearingBlocks(game: MegamanMaverickGame) :
             if (timer.isFinished()) {
               val next = loop.next()
               GameLogger.debug(TAG, "defineUpdatablesComponent(): next = $next")
+
+              keysToRender.add(next)
+              if (keysToRender.size > 2) keysToRender.poll()
+              GameLogger.debug(TAG, "defineUpdatablesComponent(): keysToRender = $keysToRender")
+
+              children.forEach { spriteBlock ->
+                val blockKey = spriteBlock.properties.get(ConstKeys.KEY, String::class)!!
+                val on = keysToRender.contains(blockKey)
+
+                if (blockKey == next) spriteBlock.reset()
+
+                spriteBlock.body.physics.collisionOn = on
+                spriteBlock.body.fixtures.forEach { entry -> entry.second.active = on }
+                spriteBlock.hidden = !on
+              }
+
               requestToPlaySound(SoundAsset.DISAPPEARING_BLOCK_SOUND, false)
-              resetChildren = true
               timer.reset()
             }
-
-            if (loop.isBeforeFirst()) return@UpdatablesComponent
-
-            val current = loop.getCurrent()
-            children.forEach { spriteBlock ->
-              val blockKey = spriteBlock.properties.get(ConstKeys.KEY, String::class)!!
-              val on = current == blockKey
-
-              if (on && resetChildren) spriteBlock.reset()
-
-              spriteBlock.body.physics.collisionOn = on
-              spriteBlock.body.fixtures.forEach { entry -> entry.second.active = on }
-              spriteBlock.hidden = !on
-            }
-
-            if (resetChildren) resetChildren = false
           })
 
   private fun defineCullablesComponent(): CullablesComponent {
