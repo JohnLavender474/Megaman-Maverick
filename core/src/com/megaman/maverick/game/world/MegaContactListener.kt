@@ -36,6 +36,9 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
   }
 
   override fun beginContact(contact: Contact, delta: Float) {
+    // do not check for contacts within the same entity
+    if (contact.fixture1.getEntity() == contact.fixture2.getEntity()) return
+
     // consumer
     if (contact.oneFixtureMatches(FixtureType.CONSUMER)) {
       GameLogger.debug(TAG, "beginContact(): Consumer, contact = $contact")
@@ -302,6 +305,9 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
   }
 
   override fun continueContact(contact: Contact, delta: Float) {
+    // do not check for contacts within the same entity
+    if (contact.fixture1.getEntity() == contact.fixture2.getEntity()) return
+
     // consumer
     if (contact.oneFixtureMatches(FixtureType.CONSUMER)) {
       val (consumer, consumable) = contact.getFixturesIfOneMatches(FixtureType.CONSUMER)!!
@@ -452,7 +458,7 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
         val blockRectangle = block.shape as GameRectangle
         val laserLine = laser.shape as GameLine
 
-        val intersections = laser.properties.get(ConstKeys.ARRAY) as Array<Vector2>
+        val intersections = laser.properties.get(ConstKeys.COLLECTION) as MutableCollection<Vector2>
         ShapeUtils.intersectRectangleAndLine(blockRectangle, laserLine, intersections)
       }
     }
@@ -483,6 +489,9 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
   }
 
   override fun endContact(contact: Contact, delta: Float) {
+    // do not check for contacts within the same entity
+    if (contact.fixture1.getEntity() == contact.fixture2.getEntity()) return
+
     // side, block
     if (contact.fixturesMatch(FixtureType.SIDE, FixtureType.BLOCK)) {
       GameLogger.debug(TAG, "End Contact: Side-Block, contact = $contact")

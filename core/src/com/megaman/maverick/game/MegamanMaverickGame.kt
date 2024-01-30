@@ -71,9 +71,9 @@ class MegamanMaverickGame : Game2D() {
   companion object {
     const val TAG = "MegamanMaverickGame"
     const val DEBUG_FPS = false
-    const val DEBUG_SHAPES = true
+    const val DEBUG_SHAPES = false
     const val DEFAULT_VOLUME = 0.5f
-    val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(CaveRocker.TAG, CaveRock.TAG)
+    val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(MegaContactListener.TAG)
   }
 
   lateinit var megaman: Megaman
@@ -145,11 +145,11 @@ class MegamanMaverickGame : Game2D() {
     megaman.initialized = true
 
     // startLevelScreen(Level.TEST1)
-    // startLevelScreen(Level.TEST2)
+    startLevelScreen(Level.TEST2)
     // startLevelScreen(Level.TEST5)
     // setCurrentScreen(ScreenEnum.MAIN.name)
     // startLevelScreen(Level.TIMBER_WOMAN)
-    startLevelScreen(Level.RODENT_MAN)
+    // startLevelScreen(Level.RODENT_MAN)
     // startLevelScreen(Level.FREEZER_MAN)
   }
 

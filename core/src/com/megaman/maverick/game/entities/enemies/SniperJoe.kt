@@ -49,7 +49,9 @@ import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.getMegamanMaverickGame
 import com.megaman.maverick.game.world.BodyComponentCreator
+import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.FixtureType
+import com.megaman.maverick.game.world.isSensing
 import kotlin.reflect.KClass
 
 class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectionRotatable {
@@ -132,6 +134,13 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
     val bodyFixture = Fixture(GameRectangle().set(body), FixtureType.BODY)
     body.addFixture(bodyFixture)
 
+    // feet fixture
+    val feetFixture = Fixture(GameRectangle().setSize(0.1f * ConstVals.PPM), FixtureType.FEET)
+    feetFixture.offsetFromBodyCenter.y = -0.75f * ConstVals.PPM
+    body.addFixture(feetFixture)
+    feetFixture.shape.color = Color.GREEN
+    shapes.add { feetFixture.shape }
+
     // damager fixture
     val damagerFixture =
         Fixture(
@@ -164,13 +173,15 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
     // pre-process
     body.preProcess = Updatable {
       body.physics.gravity =
-          (when (directionRotation) {
-                Direction.UP -> Vector2(0f, -GRAVITY)
-                Direction.DOWN -> Vector2(0f, GRAVITY)
-                Direction.LEFT -> Vector2(GRAVITY, 0f)
-                Direction.RIGHT -> Vector2(-GRAVITY, 0f)
-              })
-              .scl(ConstVals.PPM.toFloat())
+          if (body.isSensing(BodySense.FEET_ON_GROUND)) Vector2()
+          else
+              (when (directionRotation) {
+                    Direction.UP -> Vector2(0f, -GRAVITY)
+                    Direction.DOWN -> Vector2(0f, GRAVITY)
+                    Direction.LEFT -> Vector2(GRAVITY, 0f)
+                    Direction.RIGHT -> Vector2(-GRAVITY, 0f)
+                  })
+                  .scl(ConstVals.PPM.toFloat())
 
       shieldFixture.active = shielded
       shieldFixture.offsetFromBodyCenter.x =

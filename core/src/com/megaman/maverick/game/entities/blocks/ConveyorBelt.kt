@@ -24,6 +24,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.VelocityAlterationType
 import com.megaman.maverick.game.world.FixtureType
+import com.megaman.maverick.game.world.setEntity
 import com.megaman.maverick.game.world.setVelocityAlteration
 
 class ConveyorBelt(game: MegamanMaverickGame) : ISpriteEntity, Block(game) {
@@ -59,6 +60,7 @@ class ConveyorBelt(game: MegamanMaverickGame) : ISpriteEntity, Block(game) {
     if (forceFixture == null) {
       forceFixture = Fixture(GameRectangle(), FixtureType.FORCE)
       forceFixture!!.offsetFromBodyCenter.y = ConstVals.PPM / 8f
+      forceFixture!!.setEntity(this)
       body.addFixture(forceFixture!!)
 
       getComponent(DrawableShapesComponent::class)?.debugShapeSuppliers?.add {

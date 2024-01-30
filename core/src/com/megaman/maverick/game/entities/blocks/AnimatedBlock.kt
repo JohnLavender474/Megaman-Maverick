@@ -52,7 +52,7 @@ open class AnimatedBlock(game: MegamanMaverickGame) :
     trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2(), Vector2::class)
 
     @Suppress("UNCHECKED_CAST")
-    deathPredicate = spawnProps.get(ConstKeys.DEATH) as ArgsPredicate<Properties>
+    deathPredicate = spawnProps.get(ConstKeys.DEATH) as ArgsPredicate<Properties>?
 
     val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
     body.set(bounds)

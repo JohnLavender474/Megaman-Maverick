@@ -5,6 +5,7 @@ import com.engine.common.shapes.GameRectangle
 import com.engine.world.Fixture
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.world.FixtureType
+import com.megaman.maverick.game.world.setEntity
 
 class IceBlock(game: MegamanMaverickGame) : Block(game) {
 
@@ -13,6 +14,7 @@ class IceBlock(game: MegamanMaverickGame) : Block(game) {
   override fun init() {
     super.init()
     ice = Fixture(GameRectangle(), FixtureType.ICE)
+    ice.setEntity(this)
     body.addFixture(ice)
   }
 

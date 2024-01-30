@@ -12,6 +12,7 @@ import com.engine.common.enums.Position
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.interfaces.IFaceable
+import com.engine.common.interfaces.isFacing
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
@@ -71,8 +72,8 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
   private val facingWrongDirection: Boolean
     get() {
       val megamanBody = getMegamanMaverickGame().megaman.body
-      return (body.x < megamanBody.x && facing == Facing.LEFT) ||
-          (body.x > megamanBody.x && facing == Facing.RIGHT)
+      return (body.x < megamanBody.x && isFacing(Facing.LEFT)) ||
+          (body.x > megamanBody.x && isFacing(Facing.RIGHT))
     }
 
   override fun init() {
@@ -87,6 +88,7 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     bounceTimer.setToEnd()
     val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
     body.setBottomCenterToPoint(spawn)
+    body.physics.velocity.setZero()
   }
 
   override fun defineBodyComponent(): BodyComponent {

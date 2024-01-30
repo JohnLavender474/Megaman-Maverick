@@ -73,7 +73,9 @@ class LaserBeamer(game: MegamanMaverickGame) :
   override fun init() {
     if (region == null)
         region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, "LaserBeamer")
-
+    laser = GameLine()
+    contactGlow = GameCircle()
+    contactGlow.color = WHITE
     addComponent(defineBodyComponent())
     addComponent(defineSpritesCompoent())
     addComponent(defineUpdatablesComponent())
@@ -82,20 +84,18 @@ class LaserBeamer(game: MegamanMaverickGame) :
   override fun spawn(spawnProps: Properties) {
     super.spawn(spawnProps)
 
-    val spawn = (spawnProps.get(ConstKeys.BOUNDS) as GameRectangle).getBottomCenterPoint()
-    body.setPosition(spawn)
+    val spawn = (spawnProps.get(ConstKeys.BOUNDS) as GameRectangle).getCenter()
+    body.setCenter(spawn)
+
     rotatingLine = RotatingLine(spawn, RADIUS * ConstVals.PPM, SPEED * ConstVals.PPM, INIT_DEGREES)
+    laser = rotatingLine.line.copy()
 
-    val line = rotatingLine.line
-
-    laserFixture.shape = line
-    damagerFixture.shape = line
-
-    line.thickness = THICKNESS
-    line.shapeType = Filled
-    line.color = RED
-    contactGlow.color = WHITE
-    addComponent(DrawableShapesComponent(this, line, contactGlow))
+    laserFixture.shape = laser
+    damagerFixture.shape = laser
+    laser.thickness = THICKNESS
+    laser.shapeType = Filled
+    laser.color = RED
+    addComponent(DrawableShapesComponent(this, laser, contactGlow))
 
     contactTimer.reset()
     switchTimer.setToEnd()
@@ -169,7 +169,6 @@ class LaserBeamer(game: MegamanMaverickGame) :
             if (contactIndex > 2) contactIndex = 0
 
             val end = rotatingLine.getEndPoint()
-            contactGlow = GameCircle()
             if (contacts.isNotEmpty()) {
               val closest = contacts.poll()
               end.set(closest)
