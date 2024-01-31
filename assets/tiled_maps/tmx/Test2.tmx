@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="250" height="75" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="183">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="250" height="75" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="184">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/Blizzardman.tsx"/>
  <objectgroup id="11" name="items">
@@ -237,7 +237,7 @@
   </object>
  </objectgroup>
  <objectgroup id="4" name="player">
-  <object id="182" name="0" x="416" y="1952" width="32" height="32"/>
+  <object id="183" name="0" x="6560" y="1504" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="5" name="game_rooms" visible="0">
   <object id="8" name="Room2" x="1440" y="1152" width="2208" height="448"/>
@@ -254,7 +254,7 @@
   <object id="25" name="FloatingCan" x="3232" y="1280" width="32" height="32"/>
   <object id="30" name="MagFly" x="3584" y="1344" width="32" height="32"/>
   <object id="42" name="Matasaburo" x="832" y="1504" width="32" height="32"/>
-  <object id="47" name="SpringHead" x="6688" y="1504" width="32" height="32"/>
+  <object id="47" name="SpringHead" x="6272" y="1504" width="32" height="32"/>
   <object id="49" name="SniperJoe" x="3488" y="1504" width="32" height="32"/>
   <object id="50" name="Met" x="3008" y="1504" width="32" height="32"/>
   <object id="57" name="SuctionRoller" x="6368" y="1504" width="32" height="32"/>

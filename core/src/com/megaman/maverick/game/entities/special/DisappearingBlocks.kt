@@ -40,8 +40,6 @@ class DisappearingBlocks(game: MegamanMaverickGame) :
   private lateinit var loop: Loop<String>
   private lateinit var timer: Timer
 
-  private var resetChildren = true
-
   override fun init() {
     addComponent(defineUpdatablesComponent())
     addComponent(AudioComponent(this))

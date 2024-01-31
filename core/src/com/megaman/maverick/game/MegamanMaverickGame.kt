@@ -21,6 +21,7 @@ import com.engine.common.GameLogLevel
 import com.engine.common.GameLogger
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.extensions.objectSetOf
+import com.engine.common.shapes.ShapeUtils
 import com.engine.controller.ControllerSystem
 import com.engine.controller.ControllerUtils
 import com.engine.controller.buttons.Button
@@ -72,7 +73,7 @@ class MegamanMaverickGame : Game2D() {
     const val DEBUG_FPS = false
     const val DEBUG_SHAPES = true
     const val DEFAULT_VOLUME = 0.5f
-    val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(MegaContactListener.TAG, LaserBeamer.TAG)
+    val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(MegaContactListener.TAG, LaserBeamer.TAG, ShapeUtils.TAG)
   }
 
   lateinit var megaman: Megaman

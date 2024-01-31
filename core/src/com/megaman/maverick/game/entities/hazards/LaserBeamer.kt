@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType.Filled
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.engine.common.GameLogger
+import com.engine.common.enums.Position
+import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.interfaces.Updatable
 import com.engine.common.objects.Properties
@@ -16,8 +18,10 @@ import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
 import com.engine.damage.IDamageable
 import com.engine.damage.IDamager
+import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
+import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
@@ -80,13 +84,12 @@ class LaserBeamer(game: MegamanMaverickGame) :
     laser.color = RED
     contactGlow = GameCircle()
     contactGlow.color = WHITE
+    contactGlow.shapeType = Filled
     addComponent(defineBodyComponent())
     addComponent(defineSpritesCompoent())
     addComponent(defineUpdatablesComponent())
-    /*
     addComponent(
         DrawableShapesComponent(this, prodShapeSuppliers = gdxArrayOf({ laser }, { contactGlow })))
-     */
   }
 
   override fun spawn(spawnProps: Properties) {
@@ -97,7 +100,6 @@ class LaserBeamer(game: MegamanMaverickGame) :
     this.spawn = spawn
 
     rotatingLine = RotatingLine(spawn, RADIUS * ConstVals.PPM, SPEED * ConstVals.PPM, INIT_DEGREES)
-    // getComponent(DrawableShapesComponent::class)!!.prodShapeSuppliers.add { rotatingLine.line }
 
     contactTimer.reset()
     switchTimer.setToEnd()
@@ -155,7 +157,7 @@ class LaserBeamer(game: MegamanMaverickGame) :
     val spritesComponent = SpritesComponent(this, "beamer" to sprite)
     spritesComponent.putUpdateFunction("beamer") { _, _sprite ->
       _sprite as GameSprite
-      // _sprite.setPosition(rotatingLine.getOrigin(), Position.BOTTOM_CENTER)
+      _sprite.setPosition(rotatingLine.getOrigin(), Position.BOTTOM_CENTER)
       _sprite.translateY(-0.06f * ConstVals.PPM)
     }
 
