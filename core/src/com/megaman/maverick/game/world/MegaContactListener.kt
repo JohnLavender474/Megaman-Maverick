@@ -459,7 +459,7 @@ class MegaContactListener(private val game: MegamanMaverickGame) : IContactListe
         val blockRectangle = block.shape as GameRectangle
         val laserLine = laser.shape as GameLine
 
-        val intersections = laser.properties.get(ConstKeys.ARRAY) as Array<Vector2>?
+        val intersections = laser.properties.get(ConstKeys.COLLECTION) as MutableCollection<Vector2>?
         GameLogger.debug(
             TAG,
             "continueContact(): Laser-Block, current intersections = $intersections")
