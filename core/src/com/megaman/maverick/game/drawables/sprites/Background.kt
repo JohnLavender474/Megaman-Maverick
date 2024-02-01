@@ -18,16 +18,16 @@ open class Background(
     columns: Int
 ) : Updatable, IDrawable<Batch> {
 
-  protected val backgroundSprites: SpriteMatrix
+    protected val backgroundSprites: SpriteMatrix
 
-  init {
-    backgroundSprites = SpriteMatrix(model, priority, modelWidth, modelHeight, rows, columns)
-    backgroundSprites.setPosition(startX, startY)
-  }
+    init {
+        backgroundSprites = SpriteMatrix(model, priority, modelWidth, modelHeight, rows, columns)
+        backgroundSprites.setPosition(startX, startY)
+    }
 
-  override fun update(delta: Float) {
-    // optional update method
-  }
+    override fun update(delta: Float) {
+        // optional update method
+    }
 
-  override fun draw(drawer: Batch) = backgroundSprites.draw(drawer)
+    override fun draw(drawer: Batch) = backgroundSprites.draw(drawer)
 }

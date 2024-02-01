@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType.Filled
 import com.badlogic.gdx.math.Vector2
 import com.engine.common.GameLogger
+import com.engine.common.enums.Direction
 import com.engine.common.enums.Position
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.getTextureRegion
@@ -24,6 +25,7 @@ import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
+import com.engine.entities.contracts.IDrawableShapesEntity
 import com.engine.entities.contracts.ISpriteEntity
 import com.engine.motion.MotionComponent
 import com.engine.motion.RotatingLine
@@ -36,12 +38,13 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import java.util.*
 
 class LaserBeamer(game: MegamanMaverickGame) :
-    GameEntity(game), ISpriteEntity, IBodyEntity, IDamager {
+    GameEntity(game), IHazard, ISpriteEntity, IBodyEntity, IDrawableShapesEntity, IDamager {
 
     companion object {
         const val TAG = "LaserBeamer"
@@ -82,13 +85,13 @@ class LaserBeamer(game: MegamanMaverickGame) :
         contactGlow.color = WHITE
         contactGlow.shapeType = Filled
 
+        addComponent(
+            DrawableShapesComponent(this, prodShapeSuppliers = gdxArrayOf({ contactGlow }))
+        )
         addComponent(defineBodyComponent())
         addComponent(defineSpritesCompoent())
         addComponent(defineUpdatablesComponent())
         addComponent(MotionComponent(this))
-        addComponent(
-            DrawableShapesComponent(this, prodShapeSuppliers = gdxArrayOf({ laser }, { contactGlow }))
-        )
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -117,6 +120,8 @@ class LaserBeamer(game: MegamanMaverickGame) :
         // do thing
     }
 
+    override fun getTag() = TAG
+
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(ConstVals.PPM.toFloat())
@@ -124,29 +129,43 @@ class LaserBeamer(game: MegamanMaverickGame) :
         // laser fixture
         laserFixture = Fixture(GameLine(), FixtureType.LASER)
         laserFixture.attachedToBody = false
-        // laserFixture.offsetFromBodyCenter.y = ConstVals.PPM / 16f
+        laserFixture.shape = laser
         body.addFixture(laserFixture)
 
-        /*
         // damager fixture
         val damagerFixture = Fixture(GameLine(), FixtureType.DAMAGER)
-        damagerFixture.offsetFromBodyCenter.y = ConstVals.PPM / 16f
+        damagerFixture.attachedToBody = false
         body.addFixture(damagerFixture)
+        addProdShapeSupplier { damagerFixture.shape }
 
         // shield fixture
         val shieldFixture =
             Fixture(
                 GameRectangle().setSize(ConstVals.PPM.toFloat(), ConstVals.PPM * 0.85f),
-                FixtureType.SHIELD)
+                FixtureType.SHIELD
+            )
         shieldFixture.offsetFromBodyCenter.y = ConstVals.PPM / 2f
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
         body.addFixture(shieldFixture)
-         */
+
+        body.preProcess = Updatable {
+            laserFixture.putProperty(ConstKeys.LINE, rotatingLine.line)
+            contacts.clear()
+        }
 
         body.postProcess = Updatable {
-            GameLogger.debug(TAG, "preProcess: laser = $laser")
-            laserFixture.shape = GameLine(rotatingLine.line)
-            // (damagerFixture.shape as GameLine).set(laser)
+            val end =
+                if (contacts.isEmpty()) rotatingLine.getEndPoint()
+                else contacts.first()
+            laser.setFirstLocalPoint(rotatingLine.getOrigin())
+            laser.setSecondLocalPoint(end)
+
+            GameLogger.debug(TAG, "[postProcess] Laser = $laser. End point = $end. Contacts = $contacts")
+
+            laserFixture.shape = laser
+            damagerFixture.shape = laser
+
+            contactGlow.setCenter(end.x, end.y)
         }
 
         return BodyComponentCreator.create(this, body)
@@ -178,16 +197,14 @@ class LaserBeamer(game: MegamanMaverickGame) :
                 if (contactIndex > 2) contactIndex = 0
                 contactGlow.setRadius(CONTACT_RADII[contactIndex])
 
-                // laser = GameLine(rotatingLine.line)
+                /*
                 val end =
                     if (contacts.isEmpty()) rotatingLine.getEndPoint()
                     else contacts.first()
                 contacts.clear()
                 laser.setFirstLocalPoint(rotatingLine.getOrigin())
                 laser.setSecondLocalPoint(end)
-
-                GameLogger.debug(TAG, "update: laser = $laser")
-                contactGlow.setCenter(end.x, end.y)
+                 */
 
                 switchTimer.update(it)
                 if (!switchTimer.isFinished()) return@UpdatablesComponent

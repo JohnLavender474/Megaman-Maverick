@@ -41,112 +41,114 @@ import kotlin.reflect.KClass
 
 class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
-  companion object {
-    private var textureRegion: TextureRegion? = null
-    private var FLY_SPEED = 1.5f
-    private var DEBUG_PATHFINDING = false
-  }
-
-  override val damageNegotiations =
-      objectMapOf<KClass<out IDamager>, Int>(
-          Bullet::class to 10,
-          Fireball::class to ConstVals.MAX_HEALTH,
-          ChargedShot::class to ConstVals.MAX_HEALTH,
-          ChargedShotExplosion::class to 15)
-
-  override fun init() {
-    if (textureRegion == null)
-        textureRegion =
-            game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source).findRegion("FloatingCan")
-    super.init()
-
-    addComponent(defineBodyComponent())
-    addComponent(defineSpritesComponent())
-    addComponent(defineAnimationsComponent())
-    addComponent(definePathfindingComponent())
-  }
-
-  override fun spawn(spawnProps: Properties) {
-    super.spawn(spawnProps)
-    val spawn = (spawnProps.get(ConstKeys.BOUNDS) as GameRectangle).getCenter()
-    body.setCenter(spawn)
-  }
-
-  override fun defineBodyComponent(): BodyComponent {
-    val body = Body(BodyType.ABSTRACT)
-    body.setSize(.75f * ConstVals.PPM)
-
-    val shapes = Array<() -> IDrawableShape?>()
-
-    // damageable fixture
-    val damageableFixture =
-        Fixture(GameRectangle().setSize(.75f * ConstVals.PPM), FixtureType.DAMAGEABLE)
-    body.addFixture(damageableFixture)
-
-    // damager fixture
-    val damagerFixture = Fixture(GameRectangle().setSize(.75f * ConstVals.PPM), FixtureType.DAMAGER)
-    body.addFixture(damagerFixture)
-    shapes.add { damageableFixture.shape }
-
-    addComponent(DrawableShapesComponent(this, shapes))
-
-    return BodyComponentCreator.create(this, body)
-  }
-
-  override fun defineSpritesComponent(): SpritesComponent {
-    val sprite = GameSprite()
-    sprite.setSize(1.5f * ConstVals.PPM)
-
-    val SpritesComponent = SpritesComponent(this, "can" to sprite)
-    SpritesComponent.putUpdateFunction("can") { _, _sprite ->
-      _sprite as GameSprite
-      _sprite.setPosition(body.getCenter(), Position.CENTER)
-      // TODO: set flip
+    companion object {
+        private var textureRegion: TextureRegion? = null
+        private var FLY_SPEED = 1.5f
+        private var DEBUG_PATHFINDING = false
     }
 
-    return SpritesComponent
-  }
+    override val damageNegotiations =
+        objectMapOf<KClass<out IDamager>, Int>(
+            Bullet::class to 10,
+            Fireball::class to ConstVals.MAX_HEALTH,
+            ChargedShot::class to ConstVals.MAX_HEALTH,
+            ChargedShotExplosion::class to 15
+        )
 
-  private fun defineAnimationsComponent(): AnimationsComponent {
-    val animation = Animation(textureRegion!!, 1, 4, 0.15f, true)
-    val animator = Animator(animation)
-    return AnimationsComponent(this, animator)
-  }
+    override fun init() {
+        if (textureRegion == null)
+            textureRegion =
+                game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source).findRegion("FloatingCan")
+        super.init()
 
-  private fun definePathfindingComponent(): PathfindingComponent {
-    val params =
-        PathfinderParams(
-            // start at this bat's body center
-            startSupplier = { body.getCenter() },
-            // target the top center point of Megaman
-            targetSupplier = { getMegamanMaverickGame().megaman.body.getCenterPoint() },
-            // don't travel diagonally
-            allowDiagonal = { true },
-            // try to avoid collision with blocks when pathfinding
-            filter = { _, objs ->
-              objs.none { it is Fixture && it.fixtureLabel == FixtureType.BLOCK }
-            })
+        addComponent(defineBodyComponent())
+        addComponent(defineSpritesComponent())
+        addComponent(defineAnimationsComponent())
+        addComponent(definePathfindingComponent())
+    }
 
-    val pathfindingComponent =
-        PathfindingComponent(
-            this,
-            params,
-            {
-              StandardPathfinderResultConsumer.consume(
-                  it,
-                  body,
-                  body.getCenter(),
-                  FLY_SPEED,
-                  body.fixtures.find { pair -> pair.first == FixtureType.DAMAGER }!!.second.shape
-                      as GameRectangle,
-                  stopOnTargetReached = false,
-                  stopOnTargetNull = false,
-                  shapes = if (DEBUG_PATHFINDING) getMegamanMaverickGame().getShapes() else null)
-            },
-            { true })
+    override fun spawn(spawnProps: Properties) {
+        super.spawn(spawnProps)
+        val spawn = (spawnProps.get(ConstKeys.BOUNDS) as GameRectangle).getCenter()
+        body.setCenter(spawn)
+    }
 
-    pathfindingComponent.updateIntervalTimer = Timer(0.1f)
+    override fun defineBodyComponent(): BodyComponent {
+        val body = Body(BodyType.ABSTRACT)
+        body.setSize(.75f * ConstVals.PPM)
 
-    return pathfindingComponent
-  }
+        val shapes = Array<() -> IDrawableShape?>()
+
+        // damageable fixture
+        val damageableFixture =
+            Fixture(GameRectangle().setSize(.75f * ConstVals.PPM), FixtureType.DAMAGEABLE)
+        body.addFixture(damageableFixture)
+
+        // damager fixture
+        val damagerFixture = Fixture(GameRectangle().setSize(.75f * ConstVals.PPM), FixtureType.DAMAGER)
+        body.addFixture(damagerFixture)
+        shapes.add { damageableFixture.shape }
+
+        addComponent(DrawableShapesComponent(this, shapes))
+
+        return BodyComponentCreator.create(this, body)
+    }
+
+    override fun defineSpritesComponent(): SpritesComponent {
+        val sprite = GameSprite()
+        sprite.setSize(1.5f * ConstVals.PPM)
+
+        val SpritesComponent = SpritesComponent(this, "can" to sprite)
+        SpritesComponent.putUpdateFunction("can") { _, _sprite ->
+            _sprite as GameSprite
+            _sprite.setPosition(body.getCenter(), Position.CENTER)
+            // TODO: set flip
+        }
+
+        return SpritesComponent
+    }
+
+    private fun defineAnimationsComponent(): AnimationsComponent {
+        val animation = Animation(textureRegion!!, 1, 4, 0.15f, true)
+        val animator = Animator(animation)
+        return AnimationsComponent(this, animator)
+    }
+
+    private fun definePathfindingComponent(): PathfindingComponent {
+        val params =
+            PathfinderParams(
+                // start at this bat's body center
+                startSupplier = { body.getCenter() },
+                // target the top center point of Megaman
+                targetSupplier = { getMegamanMaverickGame().megaman.body.getCenterPoint() },
+                // don't travel diagonally
+                allowDiagonal = { true },
+                // try to avoid collision with blocks when pathfinding
+                filter = { _, objs ->
+                    objs.none { it is Fixture && it.fixtureLabel == FixtureType.BLOCK }
+                })
+
+        val pathfindingComponent =
+            PathfindingComponent(
+                this,
+                params,
+                {
+                    StandardPathfinderResultConsumer.consume(
+                        it,
+                        body,
+                        body.getCenter(),
+                        FLY_SPEED,
+                        body.fixtures.find { pair -> pair.first == FixtureType.DAMAGER }!!.second.shape
+                                as GameRectangle,
+                        stopOnTargetReached = false,
+                        stopOnTargetNull = false,
+                        shapes = if (DEBUG_PATHFINDING) getMegamanMaverickGame().getShapes() else null
+                    )
+                },
+                { true })
+
+        pathfindingComponent.updateIntervalTimer = Timer(0.1f)
+
+        return pathfindingComponent
+    }
 }

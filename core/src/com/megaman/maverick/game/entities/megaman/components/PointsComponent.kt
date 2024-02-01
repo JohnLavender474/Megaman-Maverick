@@ -8,10 +8,10 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 
 internal fun Megaman.definePointsComponent(): PointsComponent {
-  val pointsComponent = PointsComponent(this)
-  pointsComponent.putPoints(ConstKeys.HEALTH, MegamanValues.START_HEALTH)
-  pointsComponent.putListener(ConstKeys.HEALTH) {
-    if (it.current <= 0) kill(props(CAUSE_OF_DEATH_MESSAGE to "Health depleted"))
-  }
-  return pointsComponent
+    val pointsComponent = PointsComponent(this)
+    pointsComponent.putPoints(ConstKeys.HEALTH, MegamanValues.START_HEALTH)
+    pointsComponent.putListener(ConstKeys.HEALTH) {
+        if (it.current <= 0) kill(props(CAUSE_OF_DEATH_MESSAGE to "Health depleted"))
+    }
+    return pointsComponent
 }

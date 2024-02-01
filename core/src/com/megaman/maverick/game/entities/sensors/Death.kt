@@ -15,22 +15,22 @@ import com.megaman.maverick.game.world.FixtureType
 
 class Death(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity {
 
-  override fun init() = addComponent(defineBodyComponent())
+    override fun init() = addComponent(defineBodyComponent())
 
-  override fun spawn(spawnProps: Properties) {
-    super.spawn(spawnProps)
-    val bounds = spawnProps.get(ConstKeys.BOUNDS) as GameRectangle
-    body.set(bounds)
-    body.forEachFixture { _, f -> (f.shape as GameRectangle).set(body) }
-  }
+    override fun spawn(spawnProps: Properties) {
+        super.spawn(spawnProps)
+        val bounds = spawnProps.get(ConstKeys.BOUNDS) as GameRectangle
+        body.set(bounds)
+        body.forEachFixture { _, f -> (f.shape as GameRectangle).set(body) }
+    }
 
-  private fun defineBodyComponent(): BodyComponent {
-    val body = Body(BodyType.ABSTRACT)
+    private fun defineBodyComponent(): BodyComponent {
+        val body = Body(BodyType.ABSTRACT)
 
-    // death fixture
-    val deathFixture = Fixture(GameRectangle(), FixtureType.DEATH)
-    body.addFixture(deathFixture)
+        // death fixture
+        val deathFixture = Fixture(GameRectangle(), FixtureType.DEATH)
+        body.addFixture(deathFixture)
 
-    return BodyComponentCreator.create(this, body)
-  }
+        return BodyComponentCreator.create(this, body)
+    }
 }

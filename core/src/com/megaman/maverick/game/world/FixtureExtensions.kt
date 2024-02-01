@@ -12,18 +12,18 @@ import com.megaman.maverick.game.utils.VelocityAlteration
 const val FIXTURE_EXTENSIONS_TAG = "FIXTURE_EXTENSIONS"
 
 fun Fixture.setEntity(entity: IBodyEntity): Fixture {
-  properties.put(ConstKeys.ENTITY, entity)
-  return this
+    properties.put(ConstKeys.ENTITY, entity)
+    return this
 }
 
 fun Fixture.getEntity() = properties.get(ConstKeys.ENTITY) as IBodyEntity
 
 fun Fixture.depleteHealth(): Boolean {
-  val entity = getEntity()
-  if (entity !is IHealthEntity) return false
+    val entity = getEntity()
+    if (entity !is IHealthEntity) return false
 
-  entity.getHealthPoints().setToMin()
-  return true
+    entity.getHealthPoints().setToMin()
+    return true
 }
 
 fun Fixture.getBody() = getEntity().body
@@ -35,8 +35,8 @@ fun Fixture.bodyHasLabel(label: BodyLabel) = getBody().hasBodyLabel(label)
 fun Fixture.bodyIsSensing(sense: BodySense) = getBody().isSensing(sense)
 
 fun Fixture.setVelocityAlteration(alteration: (Fixture, Float) -> VelocityAlteration): Fixture {
-  properties.put(ConstKeys.VELOCITY_ALTERATION, alteration)
-  return this
+    properties.put(ConstKeys.VELOCITY_ALTERATION, alteration)
+    return this
 }
 
 fun Fixture.getVelocityAlteration(alterableBodyFixture: Fixture, delta: Float) =
@@ -44,8 +44,8 @@ fun Fixture.getVelocityAlteration(alterableBodyFixture: Fixture, delta: Float) =
         .invoke(alterableBodyFixture, delta)
 
 fun Fixture.setRunnable(runnable: () -> Unit): Fixture {
-  properties.put(ConstKeys.RUNNABLE, runnable)
-  return this
+    properties.put(ConstKeys.RUNNABLE, runnable)
+    return this
 }
 
 fun Fixture.getRunnable() = properties.get(ConstKeys.RUNNABLE) as (() -> Unit)?

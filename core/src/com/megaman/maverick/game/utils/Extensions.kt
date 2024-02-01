@@ -22,46 +22,46 @@ import com.megaman.maverick.game.assets.SoundAsset
 fun IGameEntity.getMegamanMaverickGame() = game as MegamanMaverickGame
 
 fun MapObject.toProps(): Properties {
-  val props = Properties()
-  props.put(ConstKeys.NAME, name)
-  val objProps = properties.toProps()
-  props.putAll(objProps)
-  return props
+    val props = Properties()
+    props.put(ConstKeys.NAME, name)
+    val objProps = properties.toProps()
+    props.putAll(objProps)
+    return props
 }
 
 fun MapProperties.toProps(): Properties {
-  val props = Properties()
-  keys.forEach { key -> props.put(key, get(key)) }
-  return props
+    val props = Properties()
+    keys.forEach { key -> props.put(key, get(key)) }
+    return props
 }
 
 fun Camera.toGameRectangle(): GameRectangle {
-  val rectangle = GameRectangle()
-  rectangle.setSize(viewportWidth, viewportHeight)
-  rectangle.setCenter(position.x, position.y)
-  return rectangle
+    val rectangle = GameRectangle()
+    rectangle.setSize(viewportWidth, viewportHeight)
+    rectangle.setCenter(position.x, position.y)
+    return rectangle
 }
 
 fun getDefaultCameraPosition(): Vector3 {
-  val v = Vector3()
-  v.x = ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f
-  v.y = ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f
-  return v
+    val v = Vector3()
+    v.x = ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f
+    v.y = ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f
+    return v
 }
 
 fun Camera.setToDefaultPosition() {
-  val v = getDefaultCameraPosition()
-  position.set(v)
+    val v = getDefaultCameraPosition()
+    position.set(v)
 }
 
 fun AssetManager.getSounds(): OrderedMap<SoundAsset, Sound> {
-  val sounds = OrderedMap<SoundAsset, Sound>()
-  for (ass in SoundAsset.values()) sounds.put(ass, getSound(ass.source))
-  return sounds
+    val sounds = OrderedMap<SoundAsset, Sound>()
+    for (ass in SoundAsset.values()) sounds.put(ass, getSound(ass.source))
+    return sounds
 }
 
 fun AssetManager.getMusics(): OrderedMap<MusicAsset, Music> {
-  val music = OrderedMap<MusicAsset, Music>()
-  for (ass in MusicAsset.values()) music.put(ass, getMusic(ass.source))
-  return music
+    val music = OrderedMap<MusicAsset, Music>()
+    for (ass in MusicAsset.values()) music.put(ass, getMusic(ass.source))
+    return music
 }

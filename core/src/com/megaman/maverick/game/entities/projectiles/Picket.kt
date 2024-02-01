@@ -31,88 +31,88 @@ import com.megaman.maverick.game.world.FixtureType
 
 class Picket(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity {
 
-  companion object {
-    const val TAG = "Picket"
-    private var region: TextureRegion? = null
-    private const val GRAVITY = -0.15f
-  }
-
-  override var owner: IGameEntity? = null
-
-  override fun init() {
-    if (region == null)
-        region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Picket")
-    addComponent(defineBodyComponent())
-    addComponent(defineSpritesComponent())
-    addComponent(defineAnimationsComponent())
-  }
-
-  override fun spawn(spawnProps: Properties) {
-    super.spawn(spawnProps)
-    val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-    body.setCenter(spawn)
-    val impulseX = spawnProps.get(ConstKeys.X, Float::class)!!
-    val impulseY = spawnProps.get(ConstKeys.Y, Float::class)!!
-    body.physics.velocity.set(impulseX, impulseY)
-  }
-
-  override fun hitBlock(blockFixture: Fixture) {
-    // TODO: certain blocks breakable with picket
-  }
-
-  private fun defineBodyComponent(): BodyComponent {
-    val body = Body(BodyType.ABSTRACT)
-    body.setSize(0.5f * ConstVals.PPM)
-    body.physics.gravity.y = GRAVITY * ConstVals.PPM
-
-    val debugShapes = Array<() -> IDrawableShape?>()
-
-    // body fixture
-    val bodyFixture = Fixture(GameRectangle().setSize(0.5f * ConstVals.PPM), FixtureType.BODY)
-    body.addFixture(bodyFixture)
-    bodyFixture.shape.color = Color.YELLOW
-    debugShapes.add { bodyFixture.shape }
-
-    // projectile fixture
-    val projectileFixture =
-        Fixture(GameRectangle().setSize(0.5f * ConstVals.PPM), FixtureType.PROJECTILE)
-    body.addFixture(projectileFixture)
-    projectileFixture.shape.color = Color.GREEN
-    debugShapes.add { projectileFixture.shape }
-
-    // damager fixture
-    val damagerFixture = Fixture(GameRectangle().setSize(0.4f * ConstVals.PPM), FixtureType.DAMAGER)
-    body.addFixture(damagerFixture)
-    damagerFixture.shape.color = Color.RED
-    debugShapes.add { damagerFixture.shape }
-
-    // shield fixture
-    val shieldFixture = Fixture(GameRectangle().setSize(0.5f * ConstVals.PPM), FixtureType.SHIELD)
-    body.addFixture(shieldFixture)
-    shieldFixture.shape.color = Color.BLUE
-    debugShapes.add { shieldFixture.shape }
-
-    addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
-
-    return BodyComponentCreator.create(this, body)
-  }
-
-  private fun defineSpritesComponent(): SpritesComponent {
-    val sprite = GameSprite()
-    sprite.setSize(1.5f * ConstVals.PPM)
-
-    val spritesComponent = SpritesComponent(this, "picket" to sprite)
-    spritesComponent.putUpdateFunction("picket") { _, _sprite ->
-      _sprite as GameSprite
-      val center = body.getCenter()
-      _sprite.setCenter(center.x, center.y)
+    companion object {
+        const val TAG = "Picket"
+        private var region: TextureRegion? = null
+        private const val GRAVITY = -0.15f
     }
 
-    return spritesComponent
-  }
+    override var owner: IGameEntity? = null
 
-  private fun defineAnimationsComponent(): AnimationsComponent {
-    val animation = Animation(region!!, 1, 4, 0.1f)
-    return AnimationsComponent(this, Animator(animation))
-  }
+    override fun init() {
+        if (region == null)
+            region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Picket")
+        addComponent(defineBodyComponent())
+        addComponent(defineSpritesComponent())
+        addComponent(defineAnimationsComponent())
+    }
+
+    override fun spawn(spawnProps: Properties) {
+        super.spawn(spawnProps)
+        val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+        body.setCenter(spawn)
+        val impulseX = spawnProps.get(ConstKeys.X, Float::class)!!
+        val impulseY = spawnProps.get(ConstKeys.Y, Float::class)!!
+        body.physics.velocity.set(impulseX, impulseY)
+    }
+
+    override fun hitBlock(blockFixture: Fixture) {
+        // TODO: certain blocks breakable with picket
+    }
+
+    private fun defineBodyComponent(): BodyComponent {
+        val body = Body(BodyType.ABSTRACT)
+        body.setSize(0.5f * ConstVals.PPM)
+        body.physics.gravity.y = GRAVITY * ConstVals.PPM
+
+        val debugShapes = Array<() -> IDrawableShape?>()
+
+        // body fixture
+        val bodyFixture = Fixture(GameRectangle().setSize(0.5f * ConstVals.PPM), FixtureType.BODY)
+        body.addFixture(bodyFixture)
+        bodyFixture.shape.color = Color.YELLOW
+        debugShapes.add { bodyFixture.shape }
+
+        // projectile fixture
+        val projectileFixture =
+            Fixture(GameRectangle().setSize(0.5f * ConstVals.PPM), FixtureType.PROJECTILE)
+        body.addFixture(projectileFixture)
+        projectileFixture.shape.color = Color.GREEN
+        debugShapes.add { projectileFixture.shape }
+
+        // damager fixture
+        val damagerFixture = Fixture(GameRectangle().setSize(0.4f * ConstVals.PPM), FixtureType.DAMAGER)
+        body.addFixture(damagerFixture)
+        damagerFixture.shape.color = Color.RED
+        debugShapes.add { damagerFixture.shape }
+
+        // shield fixture
+        val shieldFixture = Fixture(GameRectangle().setSize(0.5f * ConstVals.PPM), FixtureType.SHIELD)
+        body.addFixture(shieldFixture)
+        shieldFixture.shape.color = Color.BLUE
+        debugShapes.add { shieldFixture.shape }
+
+        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+
+        return BodyComponentCreator.create(this, body)
+    }
+
+    private fun defineSpritesComponent(): SpritesComponent {
+        val sprite = GameSprite()
+        sprite.setSize(1.5f * ConstVals.PPM)
+
+        val spritesComponent = SpritesComponent(this, "picket" to sprite)
+        spritesComponent.putUpdateFunction("picket") { _, _sprite ->
+            _sprite as GameSprite
+            val center = body.getCenter()
+            _sprite.setCenter(center.x, center.y)
+        }
+
+        return spritesComponent
+    }
+
+    private fun defineAnimationsComponent(): AnimationsComponent {
+        val animation = Animation(region!!, 1, 4, 0.1f)
+        return AnimationsComponent(this, Animator(animation))
+    }
 }

@@ -39,109 +39,109 @@ import com.megaman.maverick.game.world.FixtureType
 
 class Water(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEntity {
 
-  companion object {
-    const val TAG = "Water"
+    companion object {
+        const val TAG = "Water"
 
-    private const val WATER_REG = "Water/Water"
-    private const val SURFACE_REG = "Water/Surface"
-    private const val UNDER_REG = "Water/Under"
+        private const val WATER_REG = "Water/Water"
+        private const val SURFACE_REG = "Water/Surface"
+        private const val UNDER_REG = "Water/Under"
 
-    private var waterReg: TextureRegion? = null
-    private var surfaceReg: TextureRegion? = null
-    private var underReg: TextureRegion? = null
+        private var waterReg: TextureRegion? = null
+        private var surfaceReg: TextureRegion? = null
+        private var underReg: TextureRegion? = null
 
-    private const val WATER_ALPHA = 0.35f
-  }
-
-  private lateinit var waterFixture: Fixture
-
-  var splashSound = true
-
-  override fun init() {
-    GameLogger.debug(TAG, "Initializing...")
-
-    val atlas = game.assMan.getTextureAtlas(TextureAsset.ENVIRONS_1.source)
-    if (waterReg == null) waterReg = atlas.findRegion(WATER_REG)
-    if (surfaceReg == null) surfaceReg = atlas.findRegion(SURFACE_REG)
-    if (underReg == null) underReg = atlas.findRegion(UNDER_REG)
-
-    addComponent(defineBodyComponent())
-    addComponent(defineCullablesComponent())
-  }
-
-  override fun spawn(spawnProps: Properties) {
-    GameLogger.debug(TAG, "Spawning")
-    super.spawn(spawnProps)
-
-    val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
-    body.set(bounds)
-    body.fixtures.forEach { (_, fixture) ->
-      val shape = fixture.shape
-      if (shape is GameRectangle) shape.set(bounds)
+        private const val WATER_ALPHA = 0.35f
     }
 
-    defineDrawables(bounds)
+    private lateinit var waterFixture: Fixture
 
-    splashSound = spawnProps.getOrDefault(ConstKeys.SPLASH, true, Boolean::class)
-  }
+    var splashSound = true
 
-  override fun onDestroy() {
-    super<GameEntity>.onDestroy()
-    GameLogger.debug(TAG, "Destroyed")
-  }
+    override fun init() {
+        GameLogger.debug(TAG, "Initializing...")
 
-  private fun defineBodyComponent(): BodyComponent {
-    val body = Body(BodyType.ABSTRACT)
-    val shapes = Array<() -> IDrawableShape?>()
+        val atlas = game.assMan.getTextureAtlas(TextureAsset.ENVIRONS_1.source)
+        if (waterReg == null) waterReg = atlas.findRegion(WATER_REG)
+        if (surfaceReg == null) surfaceReg = atlas.findRegion(SURFACE_REG)
+        if (underReg == null) underReg = atlas.findRegion(UNDER_REG)
 
-    // water fixture
-    waterFixture = Fixture(GameRectangle(), FixtureType.WATER)
-    body.addFixture(waterFixture)
-    waterFixture.shape.color = Color.BLUE
-    shapes.add { waterFixture.shape }
-
-    addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
-
-    return BodyComponentCreator.create(this, body)
-  }
-
-  private fun defineCullablesComponent(): CullablesComponent {
-    val cullable = getGameCameraCullingLogic(this)
-    return CullablesComponent(this, gdxArrayOf(cullable))
-  }
-
-  private fun defineDrawables(bounds: GameRectangle) {
-    val sprites = OrderedMap<String, ISprite>()
-
-    val waterSprite = GameSprite(waterReg!!, DrawingPriority(DrawingSection.FOREGROUND, 0))
-    waterSprite.setBounds(bounds.x, bounds.y, bounds.width, bounds.height)
-    waterSprite.setAlpha(WATER_ALPHA)
-    sprites.put("water", waterSprite)
-
-    val rows = (bounds.height / ConstVals.PPM).toInt()
-    val columns = (bounds.width / ConstVals.PPM).toInt()
-
-    val animators = Array<Pair<() -> ISprite, IAnimator>>()
-
-    for (x in 0 until columns) {
-      for (y in 0 until rows) {
-        val pos = Vector2(bounds.x + x * ConstVals.PPM, bounds.y + y * ConstVals.PPM)
-
-        val region = if (y == rows - 1) surfaceReg!! else underReg!!
-        val animation = Animation(region, 1, 2, 0.15f, true)
-
-        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
-        sprite.setBounds(pos.x, pos.y, ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
-        sprite.setAlpha(WATER_ALPHA)
-
-        sprites.put("animated_water_${x}_${y}", sprite)
-
-        val animator = Animator(animation)
-        animators.add({ sprite } to animator)
-      }
+        addComponent(defineBodyComponent())
+        addComponent(defineCullablesComponent())
     }
 
-    addComponent(SpritesComponent(this, sprites))
-    addComponent(AnimationsComponent(this, animators))
-  }
+    override fun spawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "Spawning")
+        super.spawn(spawnProps)
+
+        val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+        body.set(bounds)
+        body.fixtures.forEach { (_, fixture) ->
+            val shape = fixture.shape
+            if (shape is GameRectangle) shape.set(bounds)
+        }
+
+        defineDrawables(bounds)
+
+        splashSound = spawnProps.getOrDefault(ConstKeys.SPLASH, true, Boolean::class)
+    }
+
+    override fun onDestroy() {
+        super<GameEntity>.onDestroy()
+        GameLogger.debug(TAG, "Destroyed")
+    }
+
+    private fun defineBodyComponent(): BodyComponent {
+        val body = Body(BodyType.ABSTRACT)
+        val shapes = Array<() -> IDrawableShape?>()
+
+        // water fixture
+        waterFixture = Fixture(GameRectangle(), FixtureType.WATER)
+        body.addFixture(waterFixture)
+        waterFixture.shape.color = Color.BLUE
+        shapes.add { waterFixture.shape }
+
+        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
+
+        return BodyComponentCreator.create(this, body)
+    }
+
+    private fun defineCullablesComponent(): CullablesComponent {
+        val cullable = getGameCameraCullingLogic(this)
+        return CullablesComponent(this, gdxArrayOf(cullable))
+    }
+
+    private fun defineDrawables(bounds: GameRectangle) {
+        val sprites = OrderedMap<String, ISprite>()
+
+        val waterSprite = GameSprite(waterReg!!, DrawingPriority(DrawingSection.FOREGROUND, 0))
+        waterSprite.setBounds(bounds.x, bounds.y, bounds.width, bounds.height)
+        waterSprite.setAlpha(WATER_ALPHA)
+        sprites.put("water", waterSprite)
+
+        val rows = (bounds.height / ConstVals.PPM).toInt()
+        val columns = (bounds.width / ConstVals.PPM).toInt()
+
+        val animators = Array<Pair<() -> ISprite, IAnimator>>()
+
+        for (x in 0 until columns) {
+            for (y in 0 until rows) {
+                val pos = Vector2(bounds.x + x * ConstVals.PPM, bounds.y + y * ConstVals.PPM)
+
+                val region = if (y == rows - 1) surfaceReg!! else underReg!!
+                val animation = Animation(region, 1, 2, 0.15f, true)
+
+                val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
+                sprite.setBounds(pos.x, pos.y, ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
+                sprite.setAlpha(WATER_ALPHA)
+
+                sprites.put("animated_water_${x}_${y}", sprite)
+
+                val animator = Animator(animation)
+                animators.add({ sprite } to animator)
+            }
+        }
+
+        addComponent(SpritesComponent(this, sprites))
+        addComponent(AnimationsComponent(this, animators))
+    }
 }

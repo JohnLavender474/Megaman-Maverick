@@ -31,80 +31,81 @@ import com.megaman.maverick.game.events.EventType
 class GearTrolley(game: MegamanMaverickGame) :
     Block(game), IMotionEntity, ISpriteEntity, IEventListener {
 
-  companion object {
-    private var region: TextureRegion? = null
+    companion object {
+        private var region: TextureRegion? = null
 
-    private const val WIDTH = 1.25f
-    private const val HEIGHT = 0.35f
-  }
-
-  override val eventKeyMask = objectSetOf<Any>(EventType.BEGIN_ROOM_TRANS, EventType.END_ROOM_TRANS)
-
-  override fun init() {
-    super<Block>.init()
-
-    if (region == null)
-        region =
-            game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "GearTrolleyPlatform")
-
-    addComponent(defineSpritesCompoent())
-    addComponent(defineAnimationsComponent())
-    addComponent(MotionComponent(this))
-
-    runnablesOnDestroy.add { game.eventsMan.removeListener(this) }
-  }
-
-  override fun spawn(spawnProps: Properties) {
-    spawnProps.put(ConstKeys.PERSIST, true)
-    super.spawn(spawnProps)
-
-    game.eventsMan.addListener(this)
-
-    // define the spawn and bounds
-    val spawn = (spawnProps.get(ConstKeys.BOUNDS) as GameRectangle).getCenter()
-    val bounds = GameRectangle().setSize(WIDTH * ConstVals.PPM, HEIGHT * ConstVals.PPM)
-    bounds.setBottomCenterToPoint(spawn)
-    body.set(bounds)
-
-    // define the trajectory
-    val trajectory = Trajectory(spawnProps.get(ConstKeys.TRAJECTORY) as String, ConstVals.PPM)
-    val motionDefinition =
-        MotionDefinition(
-            motion = trajectory,
-            function = { value, _ -> body.physics.velocity.set(value) },
-            onReset = { body.set(bounds) })
-
-    putMotion(ConstKeys.TRAJECTORY, motionDefinition)
-  }
-
-  override fun onEvent(event: Event) {
-    when (event.key) {
-      EventType.BEGIN_ROOM_TRANS -> {
-        firstSprite!!.hidden = true
-        resetMotionComponent()
-      }
-      EventType.END_ROOM_TRANS -> firstSprite!!.hidden = false
-      EventType.PLAYER_SPAWN -> resetMotionComponent()
-    }
-  }
-
-  private fun defineSpritesCompoent(): SpritesComponent {
-    val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 2))
-    sprite.setSize(1.5f * ConstVals.PPM)
-
-    val SpritesComponent = SpritesComponent(this, "trolley" to sprite)
-    SpritesComponent.putUpdateFunction("trolley") { _, _sprite ->
-      _sprite as GameSprite
-      _sprite.setPosition(body.getCenter(), Position.CENTER)
-      _sprite.translateY(-ConstVals.PPM / 16f)
+        private const val WIDTH = 1.25f
+        private const val HEIGHT = 0.35f
     }
 
-    return SpritesComponent
-  }
+    override val eventKeyMask = objectSetOf<Any>(EventType.BEGIN_ROOM_TRANS, EventType.END_ROOM_TRANS)
 
-  private fun defineAnimationsComponent(): AnimationsComponent {
-    val animation = Animation(region!!, 1, 2, 0.15f, true)
-    val animator = Animator(animation)
-    return AnimationsComponent(this, animator)
-  }
+    override fun init() {
+        super<Block>.init()
+
+        if (region == null)
+            region =
+                game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "GearTrolleyPlatform")
+
+        addComponent(defineSpritesCompoent())
+        addComponent(defineAnimationsComponent())
+        addComponent(MotionComponent(this))
+
+        runnablesOnDestroy.add { game.eventsMan.removeListener(this) }
+    }
+
+    override fun spawn(spawnProps: Properties) {
+        spawnProps.put(ConstKeys.PERSIST, true)
+        super.spawn(spawnProps)
+
+        game.eventsMan.addListener(this)
+
+        // define the spawn and bounds
+        val spawn = (spawnProps.get(ConstKeys.BOUNDS) as GameRectangle).getCenter()
+        val bounds = GameRectangle().setSize(WIDTH * ConstVals.PPM, HEIGHT * ConstVals.PPM)
+        bounds.setBottomCenterToPoint(spawn)
+        body.set(bounds)
+
+        // define the trajectory
+        val trajectory = Trajectory(spawnProps.get(ConstKeys.TRAJECTORY) as String, ConstVals.PPM)
+        val motionDefinition =
+            MotionDefinition(
+                motion = trajectory,
+                function = { value, _ -> body.physics.velocity.set(value) },
+                onReset = { body.set(bounds) })
+
+        putMotion(ConstKeys.TRAJECTORY, motionDefinition)
+    }
+
+    override fun onEvent(event: Event) {
+        when (event.key) {
+            EventType.BEGIN_ROOM_TRANS -> {
+                firstSprite!!.hidden = true
+                resetMotionComponent()
+            }
+
+            EventType.END_ROOM_TRANS -> firstSprite!!.hidden = false
+            EventType.PLAYER_SPAWN -> resetMotionComponent()
+        }
+    }
+
+    private fun defineSpritesCompoent(): SpritesComponent {
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 2))
+        sprite.setSize(1.5f * ConstVals.PPM)
+
+        val SpritesComponent = SpritesComponent(this, "trolley" to sprite)
+        SpritesComponent.putUpdateFunction("trolley") { _, _sprite ->
+            _sprite as GameSprite
+            _sprite.setPosition(body.getCenter(), Position.CENTER)
+            _sprite.translateY(-ConstVals.PPM / 16f)
+        }
+
+        return SpritesComponent
+    }
+
+    private fun defineAnimationsComponent(): AnimationsComponent {
+        val animation = Animation(region!!, 1, 2, 0.15f, true)
+        val animator = Animator(animation)
+        return AnimationsComponent(this, animator)
+    }
 }

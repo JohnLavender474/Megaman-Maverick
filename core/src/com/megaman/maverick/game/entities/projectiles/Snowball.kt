@@ -37,100 +37,103 @@ import kotlin.reflect.KClass
 
 class Snowball(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity {
 
-  companion object {
-    const val TAG = "Snowball"
-    private const val CLAMP = 10f
-    private var region: TextureRegion? = null
-  }
-
-  override var owner: IGameEntity? = null
-
-  // TODO: private var formFirst = false
-
-  override fun init() {
-    if (region == null)
-        region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Snowball")
-    addComponent(defineBodyComponent())
-    addComponent(defineSpritesComponent())
-    defineProjectileComponents().forEach { addComponent(it) }
-  }
-
-  override fun spawn(spawnProps: Properties) {
-    super.spawn(spawnProps)
-
-    // TODO: formFirst = spawnProps.getOrDefault(ConstKeys.FORM, false, Boolean::class)
-
-    val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-    body.setCenter(spawn)
-
-    owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
-
-    body.physics.velocity = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2(), Vector2::class)
-    body.physics.gravityOn = spawnProps.getOrDefault(ConstKeys.GRAVITY_ON, false, Boolean::class)
-    body.physics.gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, Vector2(), Vector2::class)
-  }
-
-  override fun hitBody(bodyFixture: Fixture) {
-    if (bodyFixture.getEntity() !is AbstractEnemy && bodyFixture.getEntity() !is IProjectileEntity)
-        explode("Hit body: $bodyFixture")
-  }
-
-  override fun hitBlock(blockFixture: Fixture) = explode("Hit block: $blockFixture")
-
-  override fun hitShield(shieldFixture: Fixture) {
-    if (shieldFixture.getEntity() != owner) explode("Hit shield: $shieldFixture")
-  }
-
-  override fun hitWater(waterFixture: Fixture) = explode("Hit water: $waterFixture")
-
-  fun explode(causeOfDeath: String = "Explode") {
-    GameLogger.debug(TAG, "Exploding: $this. Cause of death: $causeOfDeath")
-
-    kill(props(CAUSE_OF_DEATH_MESSAGE to causeOfDeath))
-    val explosion =
-        EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SNOWBALL_EXPLOSION)!!
-    game.gameEngine.spawn(
-        explosion,
-        props(
-            ConstKeys.POSITION to body.getCenter(),
-            ConstKeys.MASK to
-                objectSetOf<KClass<out IDamageable>>(
-                    if (owner is Megaman) AbstractEnemy::class else Megaman::class)))
-  }
-
-  private fun defineBodyComponent(): BodyComponent {
-    val body = Body(BodyType.ABSTRACT)
-    body.setSize(0.15f * ConstVals.PPM)
-    body.physics.velocityClamp.set(CLAMP * ConstVals.PPM.toFloat(), CLAMP * ConstVals.PPM.toFloat())
-
-    // body fixture
-    val bodyFixture = Fixture(GameRectangle(body), FixtureType.BODY)
-    body.addFixture(bodyFixture)
-
-    // projectile fixture
-    val projectileFixture =
-        Fixture(GameRectangle().setSize(0.2f * ConstVals.PPM), FixtureType.PROJECTILE)
-    body.addFixture(projectileFixture)
-
-    // damager fixture
-    val damagerFixture = Fixture(GameRectangle().setSize(0.2f * ConstVals.PPM), FixtureType.DAMAGER)
-    body.addFixture(damagerFixture)
-
-    return BodyComponentCreator.create(this, body)
-  }
-
-  private fun defineSpritesComponent(): SpritesComponent {
-    val sprite = GameSprite()
-    sprite.setSize(0.85f * ConstVals.PPM)
-    sprite.setRegion(region!!)
-
-    val spritesComponent = SpritesComponent(this, "snowball" to sprite)
-    spritesComponent.putUpdateFunction("snowball") { _, _sprite ->
-      _sprite as GameSprite
-      val center = body.getCenter()
-      _sprite.setCenter(center.x, center.y)
+    companion object {
+        const val TAG = "Snowball"
+        private const val CLAMP = 10f
+        private var region: TextureRegion? = null
     }
 
-    return spritesComponent
-  }
+    override var owner: IGameEntity? = null
+
+    // TODO: private var formFirst = false
+
+    override fun init() {
+        if (region == null)
+            region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Snowball")
+        addComponent(defineBodyComponent())
+        addComponent(defineSpritesComponent())
+        defineProjectileComponents().forEach { addComponent(it) }
+    }
+
+    override fun spawn(spawnProps: Properties) {
+        super.spawn(spawnProps)
+
+        // TODO: formFirst = spawnProps.getOrDefault(ConstKeys.FORM, false, Boolean::class)
+
+        val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+        body.setCenter(spawn)
+
+        owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
+
+        body.physics.velocity = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2(), Vector2::class)
+        body.physics.gravityOn = spawnProps.getOrDefault(ConstKeys.GRAVITY_ON, false, Boolean::class)
+        body.physics.gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, Vector2(), Vector2::class)
+    }
+
+    override fun hitBody(bodyFixture: Fixture) {
+        if (bodyFixture.getEntity() !is AbstractEnemy && bodyFixture.getEntity() !is IProjectileEntity)
+            explode("Hit body: $bodyFixture")
+    }
+
+    override fun hitBlock(blockFixture: Fixture) = explode("Hit block: $blockFixture")
+
+    override fun hitShield(shieldFixture: Fixture) {
+        if (shieldFixture.getEntity() != owner) explode("Hit shield: $shieldFixture")
+    }
+
+    override fun hitWater(waterFixture: Fixture) = explode("Hit water: $waterFixture")
+
+    fun explode(causeOfDeath: String = "Explode") {
+        GameLogger.debug(TAG, "Exploding: $this. Cause of death: $causeOfDeath")
+
+        kill(props(CAUSE_OF_DEATH_MESSAGE to causeOfDeath))
+        val explosion =
+            EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SNOWBALL_EXPLOSION)!!
+        game.gameEngine.spawn(
+            explosion,
+            props(
+                ConstKeys.POSITION to body.getCenter(),
+                ConstKeys.MASK to
+                        objectSetOf<KClass<out IDamageable>>(
+                            if (owner is Megaman) AbstractEnemy::class else Megaman::class
+                        )
+            )
+        )
+    }
+
+    private fun defineBodyComponent(): BodyComponent {
+        val body = Body(BodyType.ABSTRACT)
+        body.setSize(0.15f * ConstVals.PPM)
+        body.physics.velocityClamp.set(CLAMP * ConstVals.PPM.toFloat(), CLAMP * ConstVals.PPM.toFloat())
+
+        // body fixture
+        val bodyFixture = Fixture(GameRectangle(body), FixtureType.BODY)
+        body.addFixture(bodyFixture)
+
+        // projectile fixture
+        val projectileFixture =
+            Fixture(GameRectangle().setSize(0.2f * ConstVals.PPM), FixtureType.PROJECTILE)
+        body.addFixture(projectileFixture)
+
+        // damager fixture
+        val damagerFixture = Fixture(GameRectangle().setSize(0.2f * ConstVals.PPM), FixtureType.DAMAGER)
+        body.addFixture(damagerFixture)
+
+        return BodyComponentCreator.create(this, body)
+    }
+
+    private fun defineSpritesComponent(): SpritesComponent {
+        val sprite = GameSprite()
+        sprite.setSize(0.85f * ConstVals.PPM)
+        sprite.setRegion(region!!)
+
+        val spritesComponent = SpritesComponent(this, "snowball" to sprite)
+        spritesComponent.putUpdateFunction("snowball") { _, _sprite ->
+            _sprite as GameSprite
+            val center = body.getCenter()
+            _sprite.setCenter(center.x, center.y)
+        }
+
+        return spritesComponent
+    }
 }

@@ -47,172 +47,177 @@ abstract class AbstractEnemy(game: MegamanMaverickGame, private val cullTime: Fl
     ISpriteEntity,
     ICullableEntity {
 
-  companion object {
-    const val TAG = "AbstractEnemy"
-    private const val DEFAULT_DMG_DURATION = .15f
-    private const val DEFAULT_DMG_BLINK_DUR = .025f
-  }
+    companion object {
+        const val TAG = "AbstractEnemy"
+        private const val DEFAULT_DMG_DURATION = .15f
+        private const val DEFAULT_DMG_BLINK_DUR = .025f
+    }
 
-  override val invincible: Boolean
-    get() = !damageTimer.isFinished()
+    override val invincible: Boolean
+        get() = !damageTimer.isFinished()
 
-  protected val megaman: Megaman
-    get() = getMegamanMaverickGame().megaman
+    protected val megaman: Megaman
+        get() = getMegamanMaverickGame().megaman
 
-  protected abstract val damageNegotiations: ObjectMap<KClass<out IDamager>, Int>
+    protected abstract val damageNegotiations: ObjectMap<KClass<out IDamager>, Int>
 
-  protected val damageTimer = Timer(DEFAULT_DMG_DURATION)
-  protected val damageBlinkTimer = Timer(DEFAULT_DMG_BLINK_DUR)
-  protected var damageBlink = false
-  protected var dropItemOnDeath = true
+    protected val damageTimer = Timer(DEFAULT_DMG_DURATION)
+    protected val damageBlinkTimer = Timer(DEFAULT_DMG_BLINK_DUR)
+    protected var damageBlink = false
+    protected var dropItemOnDeath = true
 
-  override fun init() {
-    addComponent(definePointsComponent())
-    addComponent(defineBodyComponent())
-    addComponent(defineSpritesComponent())
-    addComponent(AudioComponent(this))
+    override fun init() {
+        addComponent(definePointsComponent())
+        addComponent(defineBodyComponent())
+        addComponent(defineSpritesComponent())
+        addComponent(AudioComponent(this))
 
-    val cullablesComponent = CullablesComponent(this)
-    defineCullablesComponent(cullablesComponent)
-    addComponent(cullablesComponent)
+        val cullablesComponent = CullablesComponent(this)
+        defineCullablesComponent(cullablesComponent)
+        addComponent(cullablesComponent)
 
-    val updatablesComponent = UpdatablesComponent(this)
-    defineUpdatablesComponent(updatablesComponent)
-    addComponent(updatablesComponent)
+        val updatablesComponent = UpdatablesComponent(this)
+        defineUpdatablesComponent(updatablesComponent)
+        addComponent(updatablesComponent)
 
-    runnablesOnSpawn.add { setHealth(getMaxHealth()) }
+        runnablesOnSpawn.add { setHealth(getMaxHealth()) }
 
-    runnablesOnDestroy.add {
-      if (getCurrentHealth() == 0) {
-        disintegrate()
-        if (dropItemOnDeath) {
-          val randomInt = getRandom(0, 10)
-          val props = props(ConstKeys.POSITION to body.getCenter())
-          val entity: IGameEntity? =
-              when (randomInt) {
-                0,
-                1,
-                2 -> {
-                  props.put(ConstKeys.LARGE, randomInt == 1)
-                  EntityFactories.fetch(EntityType.ITEM, ItemsFactory.HEALTH_BULB)
+        runnablesOnDestroy.add {
+            if (getCurrentHealth() == 0) {
+                disintegrate()
+                if (dropItemOnDeath) {
+                    val randomInt = getRandom(0, 10)
+                    val props = props(ConstKeys.POSITION to body.getCenter())
+                    val entity: IGameEntity? =
+                        when (randomInt) {
+                            0,
+                            1,
+                            2 -> {
+                                props.put(ConstKeys.LARGE, randomInt == 1)
+                                EntityFactories.fetch(EntityType.ITEM, ItemsFactory.HEALTH_BULB)
+                            }
+
+                            3,
+                            4,
+                            5 -> {
+                                // TODO: EntityFactories.fetch(EntityType.ITEM, ItemsFactory.WEAPON_ENERGY)
+                                null
+                            }
+
+                            6,
+                            7,
+                            8,
+                            9,
+                            10 -> {
+                                GameLogger.debug(TAG, "No item dropped")
+                                null
+                            }
+
+                            else -> null
+                        }
+                    entity?.let { game.gameEngine.spawn(it, props) }
                 }
-                3,
-                4,
-                5 -> {
-                  // TODO: EntityFactories.fetch(EntityType.ITEM, ItemsFactory.WEAPON_ENERGY)
-                  null
-                }
-                6,
-                7,
-                8,
-                9,
-                10 -> {
-                  GameLogger.debug(TAG, "No item dropped")
-                  null
-                }
-                else -> null
-              }
-          entity?.let { game.gameEngine.spawn(it, props) }
+            }
         }
-      }
     }
-  }
 
-  protected open fun definePointsComponent(): PointsComponent {
-    val pointsComponent = PointsComponent(this)
-    pointsComponent.putPoints(ConstKeys.HEALTH, ConstVals.MAX_HEALTH)
-    pointsComponent.putListener(ConstKeys.HEALTH) {
-      if (it.current <= 0) kill(props(CAUSE_OF_DEATH_MESSAGE to "Health depleted"))
-    }
-    return pointsComponent
-  }
-
-  protected abstract fun defineBodyComponent(): BodyComponent
-
-  protected abstract fun defineSpritesComponent(): SpritesComponent
-
-  override fun canBeDamagedBy(damager: IDamager) =
-      !invincible && damageNegotiations.containsKey(damager::class)
-
-  override fun takeDamageFrom(damager: IDamager): Boolean {
-    val damagerKey = damager::class
-    if (!damageNegotiations.containsKey(damagerKey)) return false
-
-    damageTimer.reset()
-
-    val damage = damageNegotiations[damagerKey]
-    getHealthPoints().translate(-damage)
-    requestToPlaySound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
-    return true
-  }
-
-  override fun canDamage(damageable: IDamageable) = true
-
-  override fun onDamageInflictedTo(damageable: IDamageable) {
-    // do nothing
-  }
-
-  protected open fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
-    updatablesComponent.add {
-      damageTimer.update(it)
-      if (!damageTimer.isFinished()) {
-        damageBlinkTimer.update(it)
-        if (damageBlinkTimer.isFinished()) {
-          damageBlinkTimer.reset()
-          damageBlink = !damageBlink
+    protected open fun definePointsComponent(): PointsComponent {
+        val pointsComponent = PointsComponent(this)
+        pointsComponent.putPoints(ConstKeys.HEALTH, ConstVals.MAX_HEALTH)
+        pointsComponent.putListener(ConstKeys.HEALTH) {
+            if (it.current <= 0) kill(props(CAUSE_OF_DEATH_MESSAGE to "Health depleted"))
         }
-      }
-      if (damageTimer.isJustFinished()) damageBlink = false
-    }
-  }
-
-  protected open fun defineCullablesComponent(cullablesComponent: CullablesComponent) {
-    val cullOnOutOfBounds = getGameCameraCullingLogic(this, cullTime)
-    cullablesComponent.add(cullOnOutOfBounds)
-
-    val eventsToCullOn =
-        objectSetOf<Any>(
-            EventType.GAME_OVER,
-            EventType.PLAYER_SPAWN,
-            EventType.BEGIN_ROOM_TRANS,
-            EventType.GATE_INIT_OPENING)
-    val cullOnEvents =
-        CullableOnEvent(
-            {
-              GameLogger.debug(TAG, "Checking if event is to trigger cull = $it")
-              eventsToCullOn.contains(it.key)
-            },
-            eventsToCullOn)
-    runnablesOnSpawn.add {
-      game.eventsMan.addListener(cullOnEvents)
-      GameLogger.debug(TAG, "Added CullableOnEvent from EventsManager")
-    }
-    runnablesOnDestroy.add {
-      game.eventsMan.removeListener(cullOnEvents)
-      GameLogger.debug(TAG, "Removed CullableOnEvent from EventsManager")
+        return pointsComponent
     }
 
-    cullablesComponent.add(cullOnEvents)
-  }
+    protected abstract fun defineBodyComponent(): BodyComponent
 
-  protected open fun disintegrate() {
-    getMegamanMaverickGame().audioMan.playSound(SoundAsset.ENEMY_DAMAGE_SOUND)
-    val disintegration =
-        EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)
-    game.gameEngine.spawn(disintegration!!, props(ConstKeys.POSITION to body.getCenter()))
-  }
+    protected abstract fun defineSpritesComponent(): SpritesComponent
 
-  protected open fun explode() {
-    getMegamanMaverickGame().audioMan.playSound(SoundAsset.ENEMY_DAMAGE_SOUND)
-    val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)
-    game.gameEngine.spawn(explosion!!, props(ConstKeys.POSITION to body.getCenter()))
-  }
+    override fun canBeDamagedBy(damager: IDamager) =
+        !invincible && damageNegotiations.containsKey(damager::class)
 
-  fun isMegamanShootingAtMe(): Boolean {
-    val megaman = getMegamanMaverickGame().megaman
-    if (!megaman.shooting) return false
+    override fun takeDamageFrom(damager: IDamager): Boolean {
+        val damagerKey = damager::class
+        if (!damageNegotiations.containsKey(damagerKey)) return false
 
-    return body.x < megaman.body.x && megaman.facing == Facing.LEFT ||
-        body.x > megaman.body.x && megaman.facing == Facing.RIGHT
-  }
+        damageTimer.reset()
+
+        val damage = damageNegotiations[damagerKey]
+        getHealthPoints().translate(-damage)
+        requestToPlaySound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
+        return true
+    }
+
+    override fun canDamage(damageable: IDamageable) = true
+
+    override fun onDamageInflictedTo(damageable: IDamageable) {
+        // do nothing
+    }
+
+    protected open fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
+        updatablesComponent.add {
+            damageTimer.update(it)
+            if (!damageTimer.isFinished()) {
+                damageBlinkTimer.update(it)
+                if (damageBlinkTimer.isFinished()) {
+                    damageBlinkTimer.reset()
+                    damageBlink = !damageBlink
+                }
+            }
+            if (damageTimer.isJustFinished()) damageBlink = false
+        }
+    }
+
+    protected open fun defineCullablesComponent(cullablesComponent: CullablesComponent) {
+        val cullOnOutOfBounds = getGameCameraCullingLogic(this, cullTime)
+        cullablesComponent.add(cullOnOutOfBounds)
+
+        val eventsToCullOn =
+            objectSetOf<Any>(
+                EventType.GAME_OVER,
+                EventType.PLAYER_SPAWN,
+                EventType.BEGIN_ROOM_TRANS,
+                EventType.GATE_INIT_OPENING
+            )
+        val cullOnEvents =
+            CullableOnEvent(
+                {
+                    GameLogger.debug(TAG, "Checking if event is to trigger cull = $it")
+                    eventsToCullOn.contains(it.key)
+                },
+                eventsToCullOn
+            )
+        runnablesOnSpawn.add {
+            game.eventsMan.addListener(cullOnEvents)
+            GameLogger.debug(TAG, "Added CullableOnEvent from EventsManager")
+        }
+        runnablesOnDestroy.add {
+            game.eventsMan.removeListener(cullOnEvents)
+            GameLogger.debug(TAG, "Removed CullableOnEvent from EventsManager")
+        }
+
+        cullablesComponent.add(cullOnEvents)
+    }
+
+    protected open fun disintegrate() {
+        getMegamanMaverickGame().audioMan.playSound(SoundAsset.ENEMY_DAMAGE_SOUND)
+        val disintegration =
+            EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)
+        game.gameEngine.spawn(disintegration!!, props(ConstKeys.POSITION to body.getCenter()))
+    }
+
+    protected open fun explode() {
+        getMegamanMaverickGame().audioMan.playSound(SoundAsset.ENEMY_DAMAGE_SOUND)
+        val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)
+        game.gameEngine.spawn(explosion!!, props(ConstKeys.POSITION to body.getCenter()))
+    }
+
+    fun isMegamanShootingAtMe(): Boolean {
+        val megaman = getMegamanMaverickGame().megaman
+        if (!megaman.shooting) return false
+
+        return body.x < megaman.body.x && megaman.facing == Facing.LEFT ||
+                body.x > megaman.body.x && megaman.facing == Facing.RIGHT
+    }
 }

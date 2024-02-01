@@ -29,53 +29,53 @@ import com.megaman.maverick.game.assets.TextureAsset
 
 class Disintegration(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity, IAudioEntity {
 
-  companion object {
-    private const val DURATION = .275f
-    private var disintegrationRegion: TextureRegion? = null
-  }
+    companion object {
+        private const val DURATION = .275f
+        private var disintegrationRegion: TextureRegion? = null
+    }
 
-  private val durationTimer = Timer(DURATION)
+    private val durationTimer = Timer(DURATION)
 
-  override fun init() {
-    if (disintegrationRegion == null)
-        disintegrationRegion =
-            game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "Disintegration")
+    override fun init() {
+        if (disintegrationRegion == null)
+            disintegrationRegion =
+                game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "Disintegration")
 
-    addComponent(AudioComponent(this))
-    addComponent(defineSpritesCompoent())
-    addComponent(defineAnimationsComponent())
-    addComponent(defineUpdatablesComponent())
-  }
+        addComponent(AudioComponent(this))
+        addComponent(defineSpritesCompoent())
+        addComponent(defineAnimationsComponent())
+        addComponent(defineUpdatablesComponent())
+    }
 
-  override fun spawn(spawnProps: Properties) {
-    super.spawn(spawnProps)
-    durationTimer.reset()
+    override fun spawn(spawnProps: Properties) {
+        super.spawn(spawnProps)
+        durationTimer.reset()
 
-    val spawn = spawnProps.get(ConstKeys.POSITION) as Vector2
-    (firstSprite as GameSprite).setPosition(spawn, Position.CENTER)
+        val spawn = spawnProps.get(ConstKeys.POSITION) as Vector2
+        (firstSprite as GameSprite).setPosition(spawn, Position.CENTER)
 
-    requestToPlaySound(SoundAsset.THUMP_SOUND, false)
-  }
+        requestToPlaySound(SoundAsset.THUMP_SOUND, false)
+    }
 
-  private fun defineUpdatablesComponent() =
-      UpdatablesComponent(
-          this,
-          {
-            durationTimer.update(it)
-            if (durationTimer.isFinished()) {
-              kill(props(CAUSE_OF_DEATH_MESSAGE to "Duration timer finished"))
-            }
-          })
+    private fun defineUpdatablesComponent() =
+        UpdatablesComponent(
+            this,
+            {
+                durationTimer.update(it)
+                if (durationTimer.isFinished()) {
+                    kill(props(CAUSE_OF_DEATH_MESSAGE to "Duration timer finished"))
+                }
+            })
 
-  private fun defineSpritesCompoent(): SpritesComponent {
-    val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 4))
-    sprite.setSize(ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
-    return SpritesComponent(this, "disintegration" to sprite)
-  }
+    private fun defineSpritesCompoent(): SpritesComponent {
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 4))
+        sprite.setSize(ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
+        return SpritesComponent(this, "disintegration" to sprite)
+    }
 
-  private fun defineAnimationsComponent(): AnimationsComponent {
-    val animation = Animation(disintegrationRegion!!, 1, 3, 0.005f, true)
-    val animator = Animator(animation)
-    return AnimationsComponent(this, animator)
-  }
+    private fun defineAnimationsComponent(): AnimationsComponent {
+        val animation = Animation(disintegrationRegion!!, 1, 3, 0.005f, true)
+        val animator = Animator(animation)
+        return AnimationsComponent(this, animator)
+    }
 }

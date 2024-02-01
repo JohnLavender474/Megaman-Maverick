@@ -52,296 +52,308 @@ import kotlin.reflect.KClass
 
 class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectionRotatable {
 
-  enum class MetBehavior {
-    SHIELDING,
-    POP_UP,
-    RUNNING
-  }
-
-  companion object {
-    const val RUN_ONLY = "RunOnly"
-    const val RUNNING_ALLOWED = "RunningAllowed"
-
-    private var atlas: TextureAtlas? = null
-
-    private const val SHIELDING_DURATION = 1.15f
-    private const val RUNNING_DURATION = .5f
-    private const val POP_UP_DURATION = .5f
-    private const val RUN_VELOCITY = 8f
-    private const val RUN_IN_WATER_VELOCITY = 3f
-    private const val GRAVITY_IN_AIR = 18f
-    private const val GRAVITY_ON_GROUND = .15f
-    private const val BULLET_TRAJECTORY_X = 15f
-    private const val BULLET_TRAJECTORY_Y = .25f
-    private const val VELOCITY_CLAMP_X = 8f
-    private const val VELOCITY_CLAMP_Y = 1.5f
-  }
-
-  override lateinit var facing: Facing
-
-  override var directionRotation: Direction
-    get() = body.cardinalRotation
-    set(value) {
-      body.cardinalRotation = value
+    enum class MetBehavior {
+        SHIELDING,
+        POP_UP,
+        RUNNING
     }
 
-  override val damageNegotiations =
-      objectMapOf<KClass<out IDamager>, Int>(
-          Bullet::class to 10,
-          Fireball::class to ConstVals.MAX_HEALTH,
-          ChargedShot::class to ConstVals.MAX_HEALTH,
-          ChargedShotExplosion::class to ConstVals.MAX_HEALTH)
+    companion object {
+        const val RUN_ONLY = "RunOnly"
+        const val RUNNING_ALLOWED = "RunningAllowed"
 
-  private val metBehaviorTimers =
-      objectMapOf(
-          MetBehavior.SHIELDING to Timer(SHIELDING_DURATION),
-          MetBehavior.POP_UP to Timer(POP_UP_DURATION),
-          MetBehavior.RUNNING to Timer(RUNNING_DURATION))
+        private var atlas: TextureAtlas? = null
 
-  private lateinit var type: String
-
-  private var behavior: MetBehavior = MetBehavior.SHIELDING
-    set(value) {
-      field = value
-      metBehaviorTimers.values().forEach { it.reset() }
+        private const val SHIELDING_DURATION = 1.15f
+        private const val RUNNING_DURATION = .5f
+        private const val POP_UP_DURATION = .5f
+        private const val RUN_VELOCITY = 8f
+        private const val RUN_IN_WATER_VELOCITY = 3f
+        private const val GRAVITY_IN_AIR = 18f
+        private const val GRAVITY_ON_GROUND = .15f
+        private const val BULLET_TRAJECTORY_X = 15f
+        private const val BULLET_TRAJECTORY_Y = .25f
+        private const val VELOCITY_CLAMP_X = 8f
+        private const val VELOCITY_CLAMP_Y = 1.5f
     }
 
-  private var runOnly = false
-  private var runningAllowed = false
+    override lateinit var facing: Facing
 
-  override fun init() {
-    super.init()
-    if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
-    addComponent(defineAnimationsComponent())
-  }
-
-  override fun spawn(spawnProps: Properties) {
-    super.spawn(spawnProps)
-
-    behavior = MetBehavior.SHIELDING
-    val bounds = spawnProps.get(ConstKeys.BOUNDS) as GameRectangle
-    body.setBottomCenterToPoint(bounds.getBottomCenterPoint())
-
-    runningAllowed = spawnProps.getOrDefault(RUNNING_ALLOWED, true) as Boolean
-    runOnly = spawnProps.getOrDefault(RUN_ONLY, false) as Boolean
-    type = spawnProps.getOrDefault(ConstKeys.TYPE, "") as String
-
-    val right = spawnProps.getOrDefault(ConstKeys.RIGHT, false) as Boolean
-    facing = if (right) Facing.RIGHT else Facing.LEFT
-
-    directionRotation = Direction.UP
-  }
-
-  private fun shoot() {
-    val trajectory =
-        when (directionRotation) {
-          Direction.UP -> Vector2(BULLET_TRAJECTORY_X * facing.value, BULLET_TRAJECTORY_Y)
-          Direction.DOWN -> Vector2(BULLET_TRAJECTORY_X * facing.value, -BULLET_TRAJECTORY_Y)
-          Direction.LEFT -> Vector2(BULLET_TRAJECTORY_Y, BULLET_TRAJECTORY_X * facing.value)
-          Direction.RIGHT -> Vector2(BULLET_TRAJECTORY_Y, -BULLET_TRAJECTORY_X * facing.value)
+    override var directionRotation: Direction
+        get() = body.cardinalRotation
+        set(value) {
+            body.cardinalRotation = value
         }
 
-    val offset = ConstVals.PPM / 64f
-    val spawn =
-        body
-            .getCenter()
-            .add(
-                if (facing == Facing.LEFT) -offset else offset,
-                if (isDirectionRotatedDown()) -offset else offset)
+    override val damageNegotiations =
+        objectMapOf<KClass<out IDamager>, Int>(
+            Bullet::class to 10,
+            Fireball::class to ConstVals.MAX_HEALTH,
+            ChargedShot::class to ConstVals.MAX_HEALTH,
+            ChargedShotExplosion::class to ConstVals.MAX_HEALTH
+        )
 
-    val spawnProps =
-        props(
-            ConstKeys.OWNER to this,
-            ConstKeys.TRAJECTORY to trajectory,
-            ConstKeys.POSITION to spawn)
-    val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)
-    game.gameEngine.spawn(bullet!!, spawnProps)
-  }
+    private val metBehaviorTimers =
+        objectMapOf(
+            MetBehavior.SHIELDING to Timer(SHIELDING_DURATION),
+            MetBehavior.POP_UP to Timer(POP_UP_DURATION),
+            MetBehavior.RUNNING to Timer(RUNNING_DURATION)
+        )
 
-  override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
-    super.defineUpdatablesComponent(updatablesComponent)
+    private lateinit var type: String
 
-    updatablesComponent.add {
-      if (megaman.dead) return@add
-
-      if (runOnly) behavior = MetBehavior.RUNNING
-
-      when (behavior) {
-        MetBehavior.SHIELDING -> {
-          val shieldTimer = metBehaviorTimers.get(MetBehavior.SHIELDING)
-          if (!isMegamanShootingAtMe() && body.isSensing(BodySense.FEET_ON_GROUND))
-              shieldTimer.update(it)
-          if (shieldTimer.isFinished()) behavior = MetBehavior.POP_UP
+    private var behavior: MetBehavior = MetBehavior.SHIELDING
+        set(value) {
+            field = value
+            metBehaviorTimers.values().forEach { it.reset() }
         }
-        MetBehavior.POP_UP -> {
-          if (!body.isSensing(BodySense.FEET_ON_GROUND)) {
-            behavior = MetBehavior.SHIELDING
-            return@add
-          }
 
-          facing =
-              when (directionRotation) {
-                Direction.UP,
-                Direction.DOWN -> if (megaman.body.x > body.x) Facing.RIGHT else Facing.LEFT
-                Direction.LEFT,
-                Direction.RIGHT -> if (megaman.body.y > body.y) Facing.RIGHT else Facing.LEFT
-              }
+    private var runOnly = false
+    private var runningAllowed = false
 
-          val popUpTimer = metBehaviorTimers.get(MetBehavior.POP_UP)
-          if (popUpTimer.isAtBeginning()) shoot()
-          popUpTimer.update(it)
+    override fun init() {
+        super.init()
+        if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+        addComponent(defineAnimationsComponent())
+    }
 
-          if (popUpTimer.isFinished())
-              behavior = if (runningAllowed) MetBehavior.RUNNING else MetBehavior.SHIELDING
+    override fun spawn(spawnProps: Properties) {
+        super.spawn(spawnProps)
+
+        behavior = MetBehavior.SHIELDING
+        val bounds = spawnProps.get(ConstKeys.BOUNDS) as GameRectangle
+        body.setBottomCenterToPoint(bounds.getBottomCenterPoint())
+
+        runningAllowed = spawnProps.getOrDefault(RUNNING_ALLOWED, true) as Boolean
+        runOnly = spawnProps.getOrDefault(RUN_ONLY, false) as Boolean
+        type = spawnProps.getOrDefault(ConstKeys.TYPE, "") as String
+
+        val right = spawnProps.getOrDefault(ConstKeys.RIGHT, false) as Boolean
+        facing = if (right) Facing.RIGHT else Facing.LEFT
+
+        directionRotation = Direction.UP
+    }
+
+    private fun shoot() {
+        val trajectory =
+            when (directionRotation) {
+                Direction.UP -> Vector2(BULLET_TRAJECTORY_X * facing.value, BULLET_TRAJECTORY_Y)
+                Direction.DOWN -> Vector2(BULLET_TRAJECTORY_X * facing.value, -BULLET_TRAJECTORY_Y)
+                Direction.LEFT -> Vector2(BULLET_TRAJECTORY_Y, BULLET_TRAJECTORY_X * facing.value)
+                Direction.RIGHT -> Vector2(BULLET_TRAJECTORY_Y, -BULLET_TRAJECTORY_X * facing.value)
+            }
+
+        val offset = ConstVals.PPM / 64f
+        val spawn =
+            body
+                .getCenter()
+                .add(
+                    if (facing == Facing.LEFT) -offset else offset,
+                    if (isDirectionRotatedDown()) -offset else offset
+                )
+
+        val spawnProps =
+            props(
+                ConstKeys.OWNER to this,
+                ConstKeys.TRAJECTORY to trajectory,
+                ConstKeys.POSITION to spawn
+            )
+        val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)
+        game.gameEngine.spawn(bullet!!, spawnProps)
+    }
+
+    override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
+        super.defineUpdatablesComponent(updatablesComponent)
+
+        updatablesComponent.add {
+            if (megaman.dead) return@add
+
+            if (runOnly) behavior = MetBehavior.RUNNING
+
+            when (behavior) {
+                MetBehavior.SHIELDING -> {
+                    val shieldTimer = metBehaviorTimers.get(MetBehavior.SHIELDING)
+                    if (!isMegamanShootingAtMe() && body.isSensing(BodySense.FEET_ON_GROUND))
+                        shieldTimer.update(it)
+                    if (shieldTimer.isFinished()) behavior = MetBehavior.POP_UP
+                }
+
+                MetBehavior.POP_UP -> {
+                    if (!body.isSensing(BodySense.FEET_ON_GROUND)) {
+                        behavior = MetBehavior.SHIELDING
+                        return@add
+                    }
+
+                    facing =
+                        when (directionRotation) {
+                            Direction.UP,
+                            Direction.DOWN -> if (megaman.body.x > body.x) Facing.RIGHT else Facing.LEFT
+
+                            Direction.LEFT,
+                            Direction.RIGHT -> if (megaman.body.y > body.y) Facing.RIGHT else Facing.LEFT
+                        }
+
+                    val popUpTimer = metBehaviorTimers.get(MetBehavior.POP_UP)
+                    if (popUpTimer.isAtBeginning()) shoot()
+                    popUpTimer.update(it)
+
+                    if (popUpTimer.isFinished())
+                        behavior = if (runningAllowed) MetBehavior.RUNNING else MetBehavior.SHIELDING
+                }
+
+                MetBehavior.RUNNING -> {
+                    if (!body.isSensing(BodySense.FEET_ON_GROUND)) {
+                        behavior = MetBehavior.SHIELDING
+                        return@add
+                    }
+
+                    val runningTimer = metBehaviorTimers.get(MetBehavior.RUNNING)
+
+                    val runImpulse =
+                        ConstVals.PPM *
+                                facing.value *
+                                if (body.isSensing(BodySense.IN_WATER)) RUN_IN_WATER_VELOCITY else RUN_VELOCITY
+                    when (directionRotation) {
+                        Direction.UP,
+                        Direction.DOWN -> body.physics.velocity.x = runImpulse
+
+                        Direction.LEFT,
+                        Direction.RIGHT -> body.physics.velocity.y = runImpulse
+                    }
+
+                    if (!runOnly) runningTimer.update(it)
+
+                    if (runningTimer.isFinished()) {
+                        if (body.isSensing(BodySense.FEET_ON_GROUND)) body.physics.velocity.setZero()
+                        behavior = MetBehavior.SHIELDING
+                    }
+                }
+            }
         }
-        MetBehavior.RUNNING -> {
-          if (!body.isSensing(BodySense.FEET_ON_GROUND)) {
-            behavior = MetBehavior.SHIELDING
-            return@add
-          }
+    }
 
-          val runningTimer = metBehaviorTimers.get(MetBehavior.RUNNING)
+    override fun defineBodyComponent(): BodyComponent {
+        val body = Body(BodyType.DYNAMIC)
+        body.setSize(0.75f * ConstVals.PPM)
 
-          val runImpulse =
-              ConstVals.PPM *
-                  facing.value *
-                  if (body.isSensing(BodySense.IN_WATER)) RUN_IN_WATER_VELOCITY else RUN_VELOCITY
-          when (directionRotation) {
-            Direction.UP,
-            Direction.DOWN -> body.physics.velocity.x = runImpulse
-            Direction.LEFT,
-            Direction.RIGHT -> body.physics.velocity.y = runImpulse
-          }
+        val shapes = Array<() -> IDrawableShape?>()
 
-          if (!runOnly) runningTimer.update(it)
+        // body fixture
+        val bodyFixture = Fixture(GameRectangle().setSize(0.75f * ConstVals.PPM), FixtureType.BODY)
+        body.addFixture(bodyFixture)
+        shapes.add { bodyFixture.shape }
 
-          if (runningTimer.isFinished()) {
-            if (body.isSensing(BodySense.FEET_ON_GROUND)) body.physics.velocity.setZero()
-            behavior = MetBehavior.SHIELDING
-          }
+        // feet fixture
+        val feetFixture = Fixture(GameRectangle().setSize(0.15f * ConstVals.PPM), FixtureType.FEET)
+        feetFixture.offsetFromBodyCenter.y = -0.375f * ConstVals.PPM
+        body.addFixture(feetFixture)
+
+        // shield fixture
+        val shieldFixture =
+            Fixture(
+                GameRectangle().setSize(0.75f * ConstVals.PPM, 0.5f * ConstVals.PPM),
+                FixtureType.SHIELD
+            )
+        body.addFixture(shieldFixture)
+
+        // damageable fixture
+        val damageableFixture =
+            Fixture(GameRectangle().setSize(0.75f * ConstVals.PPM), FixtureType.DAMAGEABLE)
+        body.addFixture(damageableFixture)
+
+        // damager fixture
+        val damagerFixture =
+            Fixture(GameRectangle().setSize(0.75f * ConstVals.PPM), FixtureType.DAMAGER)
+        body.addFixture(damagerFixture)
+
+        // pre-process
+        body.preProcess = Updatable {
+            body.physics.velocityClamp =
+                (if (isDirectionRotatedVertically()) Vector2(VELOCITY_CLAMP_X, VELOCITY_CLAMP_Y)
+                else Vector2(VELOCITY_CLAMP_Y, VELOCITY_CLAMP_X))
+                    .scl(ConstVals.PPM.toFloat())
+
+            val gravity =
+                if (body.isSensing(BodySense.FEET_ON_GROUND)) GRAVITY_ON_GROUND else GRAVITY_IN_AIR
+            body.physics.gravity =
+                (when (directionRotation) {
+                    Direction.UP -> Vector2(0f, -gravity)
+                    Direction.DOWN -> Vector2(0f, gravity)
+                    Direction.LEFT -> Vector2(gravity, 0f)
+                    Direction.RIGHT -> Vector2(-gravity, 0f)
+                })
+                    .scl(ConstVals.PPM.toFloat())
+
+            shieldFixture.active = behavior == MetBehavior.SHIELDING
+            damageableFixture.active = behavior != MetBehavior.SHIELDING
+
+            shieldFixture.putProperty(ConstKeys.DIRECTION, directionRotation)
         }
-      }
-    }
-  }
 
-  override fun defineBodyComponent(): BodyComponent {
-    val body = Body(BodyType.DYNAMIC)
-    body.setSize(0.75f * ConstVals.PPM)
+        addComponent(DrawableShapesComponent(this, shapes))
 
-    val shapes = Array<() -> IDrawableShape?>()
-
-    // body fixture
-    val bodyFixture = Fixture(GameRectangle().setSize(0.75f * ConstVals.PPM), FixtureType.BODY)
-    body.addFixture(bodyFixture)
-    shapes.add { bodyFixture.shape }
-
-    // feet fixture
-    val feetFixture = Fixture(GameRectangle().setSize(0.15f * ConstVals.PPM), FixtureType.FEET)
-    feetFixture.offsetFromBodyCenter.y = -0.375f * ConstVals.PPM
-    body.addFixture(feetFixture)
-
-    // shield fixture
-    val shieldFixture =
-        Fixture(
-            GameRectangle().setSize(0.75f * ConstVals.PPM, 0.5f * ConstVals.PPM),
-            FixtureType.SHIELD)
-    body.addFixture(shieldFixture)
-
-    // damageable fixture
-    val damageableFixture =
-        Fixture(GameRectangle().setSize(0.75f * ConstVals.PPM), FixtureType.DAMAGEABLE)
-    body.addFixture(damageableFixture)
-
-    // damager fixture
-    val damagerFixture =
-        Fixture(GameRectangle().setSize(0.75f * ConstVals.PPM), FixtureType.DAMAGER)
-    body.addFixture(damagerFixture)
-
-    // pre-process
-    body.preProcess = Updatable {
-      body.physics.velocityClamp =
-          (if (isDirectionRotatedVertically()) Vector2(VELOCITY_CLAMP_X, VELOCITY_CLAMP_Y)
-              else Vector2(VELOCITY_CLAMP_Y, VELOCITY_CLAMP_X))
-              .scl(ConstVals.PPM.toFloat())
-
-      val gravity =
-          if (body.isSensing(BodySense.FEET_ON_GROUND)) GRAVITY_ON_GROUND else GRAVITY_IN_AIR
-      body.physics.gravity =
-          (when (directionRotation) {
-                Direction.UP -> Vector2(0f, -gravity)
-                Direction.DOWN -> Vector2(0f, gravity)
-                Direction.LEFT -> Vector2(gravity, 0f)
-                Direction.RIGHT -> Vector2(-gravity, 0f)
-              })
-              .scl(ConstVals.PPM.toFloat())
-
-      shieldFixture.active = behavior == MetBehavior.SHIELDING
-      damageableFixture.active = behavior != MetBehavior.SHIELDING
-
-      shieldFixture.putProperty(ConstKeys.DIRECTION, directionRotation)
+        return BodyComponentCreator.create(this, body)
     }
 
-    addComponent(DrawableShapesComponent(this, shapes))
+    override fun defineSpritesComponent(): SpritesComponent {
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 4))
+        sprite.setSize(1.5f * ConstVals.PPM)
 
-    return BodyComponentCreator.create(this, body)
-  }
+        val SpritesComponent = SpritesComponent(this, "met" to sprite)
+        SpritesComponent.putUpdateFunction("met") { _, _sprite ->
+            _sprite as GameSprite
 
-  override fun defineSpritesComponent(): SpritesComponent {
-    val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 4))
-    sprite.setSize(1.5f * ConstVals.PPM)
+            val flipX = facing == Facing.LEFT
+            val flipY = directionRotation == Direction.DOWN
+            _sprite.setFlip(flipX, flipY)
 
-    val SpritesComponent = SpritesComponent(this, "met" to sprite)
-    SpritesComponent.putUpdateFunction("met") { _, _sprite ->
-      _sprite as GameSprite
+            val rotation =
+                when (directionRotation) {
+                    Direction.UP,
+                    Direction.DOWN -> 0f
 
-      val flipX = facing == Facing.LEFT
-      val flipY = directionRotation == Direction.DOWN
-      _sprite.setFlip(flipX, flipY)
+                    Direction.LEFT -> 90f
+                    Direction.RIGHT -> 270f
+                }
+            sprite.setOriginCenter()
+            _sprite.setRotation(rotation)
 
-      val rotation =
-          when (directionRotation) {
-            Direction.UP,
-            Direction.DOWN -> 0f
-            Direction.LEFT -> 90f
-            Direction.RIGHT -> 270f
-          }
-      sprite.setOriginCenter()
-      _sprite.setRotation(rotation)
+            val position =
+                when (directionRotation) {
+                    Direction.UP -> Position.BOTTOM_CENTER
+                    Direction.DOWN -> Position.TOP_CENTER
+                    Direction.LEFT -> Position.CENTER_RIGHT
+                    Direction.RIGHT -> Position.CENTER_LEFT
+                }
+            val bodyPosition = body.getPositionPoint(position)
+            _sprite.setPosition(bodyPosition, position)
+        }
 
-      val position =
-          when (directionRotation) {
-            Direction.UP -> Position.BOTTOM_CENTER
-            Direction.DOWN -> Position.TOP_CENTER
-            Direction.LEFT -> Position.CENTER_RIGHT
-            Direction.RIGHT -> Position.CENTER_LEFT
-          }
-      val bodyPosition = body.getPositionPoint(position)
-      _sprite.setPosition(bodyPosition, position)
+        return SpritesComponent
     }
 
-    return SpritesComponent
-  }
+    private fun defineAnimationsComponent(): AnimationsComponent {
+        val keySupplier = {
+            when (behavior) {
+                MetBehavior.SHIELDING -> "LayDown"
+                MetBehavior.POP_UP -> "PopUp"
+                MetBehavior.RUNNING -> "Run"
+            }
+        }
 
-  private fun defineAnimationsComponent(): AnimationsComponent {
-    val keySupplier = {
-      when (behavior) {
-        MetBehavior.SHIELDING -> "LayDown"
-        MetBehavior.POP_UP -> "PopUp"
-        MetBehavior.RUNNING -> "Run"
-      }
+        val animator =
+            Animator(
+                keySupplier,
+                objectMapOf(
+                    "Run" to Animation(atlas!!.findRegion("Met/Run"), 1, 2, 0.125f, true),
+                    "PopUp" to Animation(atlas!!.findRegion("Met/PopUp"), false),
+                    "LayDown" to Animation(atlas!!.findRegion("Met/LayDown"), false),
+                    "SnowRun" to Animation(atlas!!.findRegion("SnowMet/Run"), 1, 2, 0.125f, true),
+                    "SnowMet" to Animation(atlas!!.findRegion("SnowMet/PopUp"), false),
+                    "SnowLayDown" to Animation(atlas!!.findRegion("SnowMet/LayDown"), false)
+                )
+            )
+
+        return AnimationsComponent(this, animator)
     }
-
-    val animator =
-        Animator(
-            keySupplier,
-            objectMapOf(
-                "Run" to Animation(atlas!!.findRegion("Met/Run"), 1, 2, 0.125f, true),
-                "PopUp" to Animation(atlas!!.findRegion("Met/PopUp"), false),
-                "LayDown" to Animation(atlas!!.findRegion("Met/LayDown"), false),
-                "SnowRun" to Animation(atlas!!.findRegion("SnowMet/Run"), 1, 2, 0.125f, true),
-                "SnowMet" to Animation(atlas!!.findRegion("SnowMet/PopUp"), false),
-                "SnowLayDown" to Animation(atlas!!.findRegion("SnowMet/LayDown"), false)))
-
-    return AnimationsComponent(this, animator)
-  }
 }

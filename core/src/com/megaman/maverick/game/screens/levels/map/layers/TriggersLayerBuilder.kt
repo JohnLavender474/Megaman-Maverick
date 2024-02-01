@@ -6,5 +6,5 @@ import com.engine.screens.levels.tiledmap.builders.ITiledMapLayerBuilder
 
 class TriggersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITiledMapLayerBuilder {
 
-  override fun build(layer: MapLayer, returnProps: Properties) {}
+    override fun build(layer: MapLayer, returnProps: Properties) {}
 }

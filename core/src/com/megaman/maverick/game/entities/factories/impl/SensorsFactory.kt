@@ -11,18 +11,18 @@ import com.megaman.maverick.game.entities.sensors.Gate
 
 class SensorsFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntity> {
 
-  companion object {
-    const val TAG = "SensorsFactory"
-    const val GATE = "Gate"
-    const val DEATH = "Death"
-  }
+    companion object {
+        const val TAG = "SensorsFactory"
+        const val GATE = "Gate"
+        const val DEATH = "Death"
+    }
 
-  private val pools = ObjectMap<Any, Pool<IGameEntity>>()
+    private val pools = ObjectMap<Any, Pool<IGameEntity>>()
 
-  init {
-    pools.put(GATE, EntityPoolCreator.create(10) { Gate(game) })
-    pools.put(DEATH, EntityPoolCreator.create(10) { Death(game) })
-  }
+    init {
+        pools.put(GATE, EntityPoolCreator.create(10) { Gate(game) })
+        pools.put(DEATH, EntityPoolCreator.create(10) { Death(game) })
+    }
 
-  override fun fetch(key: Any) = pools.get(key)?.fetch()
+    override fun fetch(key: Any) = pools.get(key)?.fetch()
 }

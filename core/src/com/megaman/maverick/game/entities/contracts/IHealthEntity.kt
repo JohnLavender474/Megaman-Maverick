@@ -5,27 +5,27 @@ import com.megaman.maverick.game.ConstKeys
 
 interface IHealthEntity : IPointsEntity {
 
-  fun getHealthPoints() = getPoints(ConstKeys.HEALTH)
+    fun getHealthPoints() = getPoints(ConstKeys.HEALTH)
 
-  fun getCurrentHealth() = getHealthPoints().current
+    fun getCurrentHealth() = getHealthPoints().current
 
-  fun setHealth(health: Int) = getHealthPoints().set(health)
+    fun setHealth(health: Int) = getHealthPoints().set(health)
 
-  fun addHealth(health: Int) = getHealthPoints().set(getCurrentHealth() + health)
+    fun addHealth(health: Int) = getHealthPoints().set(getCurrentHealth() + health)
 
-  fun getMinHealth() = getHealthPoints().min
+    fun getMinHealth() = getHealthPoints().min
 
-  fun setMinHealth(minHealth: Int) {
-    getHealthPoints().min = minHealth
-  }
+    fun setMinHealth(minHealth: Int) {
+        getHealthPoints().min = minHealth
+    }
 
-  fun getMaxHealth() = getHealthPoints().max
+    fun getMaxHealth() = getHealthPoints().max
 
-  fun setMaxHealth(maxHealth: Int) {
-    getHealthPoints().max = maxHealth
-  }
+    fun setMaxHealth(maxHealth: Int) {
+        getHealthPoints().max = maxHealth
+    }
 
-  fun hasMaxHealth() = getCurrentHealth() >= getMaxHealth()
+    fun hasMaxHealth() = getCurrentHealth() >= getMaxHealth()
 
-  fun hasDepletedHealth() = getCurrentHealth() <= getMinHealth()
+    fun hasDepletedHealth() = getCurrentHealth() <= getMinHealth()
 }

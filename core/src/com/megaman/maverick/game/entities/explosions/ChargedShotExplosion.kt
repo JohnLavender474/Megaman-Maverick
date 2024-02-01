@@ -37,110 +37,111 @@ import com.megaman.maverick.game.world.FixtureType
 
 class ChargedShotExplosion(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity {
 
-  companion object {
-    private const val FULLY_CHARGED_DURATION = .6f
-    private const val HALF_CHARGED_DURATION = .3f
-    private const val SOUND_INTERVAL = .15f
+    companion object {
+        private const val FULLY_CHARGED_DURATION = .6f
+        private const val HALF_CHARGED_DURATION = .3f
+        private const val SOUND_INTERVAL = .15f
 
-    private var fullyChargedRegion: TextureRegion? = null
-    private var halfChargedRegion: TextureRegion? = null
-  }
-
-  override var owner: IGameEntity? = null
-  var fullyCharged = false
-    private set
-
-  private var durationTimer = Timer(FULLY_CHARGED_DURATION)
-  private val soundTimer = Timer(SOUND_INTERVAL)
-  private lateinit var direction: Direction
-
-  override fun init() {
-    if (fullyChargedRegion == null)
-        fullyChargedRegion =
-            game.assMan.getTextureRegion(TextureAsset.MEGAMAN_CHARGED_SHOT.source, "Collide")
-
-    if (halfChargedRegion == null)
-        halfChargedRegion =
-            game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "HalfChargedShot")
-
-    defineProjectileComponents().forEach { addComponent(it) }
-    addComponent(defineBodyComponent())
-    addComponent(defineSpritesCompoent())
-    addComponent(defineAnimationsComponent())
-    addComponent(defineUpdatablesComponent())
-  }
-
-  override fun spawn(spawnProps: Properties) {
-    super.spawn(spawnProps)
-    soundTimer.reset()
-
-    owner = spawnProps.get(ConstKeys.OWNER) as IGameEntity
-    direction = spawnProps.get(ConstKeys.DIRECTION, Direction::class)!!
-    fullyCharged = spawnProps.get(ConstKeys.BOOLEAN) as Boolean
-
-    durationTimer = Timer(if (fullyCharged) FULLY_CHARGED_DURATION else HALF_CHARGED_DURATION)
-
-    val spawn = spawnProps.get(ConstKeys.POSITION) as Vector2
-    body.setCenter(spawn)
-
-    val spriteDimension = (if (fullyCharged) 1.75f else 1.25f) * ConstVals.PPM
-    (firstSprite as GameSprite).setSize(spriteDimension)
-  }
-
-  private fun defineUpdatablesComponent() =
-      UpdatablesComponent(
-          this,
-          {
-            durationTimer.update(it)
-            if (durationTimer.isFinished()) {
-              kill(props(CAUSE_OF_DEATH_MESSAGE to "Duration timer finished"))
-            }
-
-            soundTimer.update(it)
-            if (soundTimer.isFinished()) {
-              requestToPlaySound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
-              soundTimer.reset()
-            }
-          })
-
-  private fun defineBodyComponent(): BodyComponent {
-    val body = Body(BodyType.ABSTRACT)
-    body.setSize(ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
-
-    // Damager fixture
-    val damagerFixture =
-        Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat()), FixtureType.DAMAGER)
-    body.addFixture(damagerFixture)
-
-    return BodyComponentCreator.create(this, body)
-  }
-
-  private fun defineSpritesCompoent(): SpritesComponent {
-    val sprite = GameSprite()
-    val spritesComponent = SpritesComponent(this, "explosion" to sprite)
-    spritesComponent.putUpdateFunction("explosion") { _, _sprite ->
-      (_sprite as GameSprite).setPosition(body.getCenter(), Position.CENTER)
-
-      val rotation =
-          when (direction) {
-            Direction.RIGHT -> 0f
-            Direction.UP -> 90f
-            Direction.LEFT -> 180f
-            Direction.DOWN -> 270f
-          }
-      _sprite.setOriginCenter()
-      _sprite.rotation = rotation
+        private var fullyChargedRegion: TextureRegion? = null
+        private var halfChargedRegion: TextureRegion? = null
     }
-    return spritesComponent
-  }
 
-  private fun defineAnimationsComponent(): AnimationsComponent {
-    val chargedAnimation = Animation(fullyChargedRegion!!, 1, 3, .05f, true)
-    val halfChargedAnimation = Animation(halfChargedRegion!!, 1, 3, .05f, true)
-    val animator =
-        Animator(
-            { if (fullyCharged) "charged" else "halfCharged" },
-            objectMapOf("charged" to chargedAnimation, "halfCharged" to halfChargedAnimation))
-    return AnimationsComponent(this, animator)
-  }
+    override var owner: IGameEntity? = null
+    var fullyCharged = false
+        private set
+
+    private var durationTimer = Timer(FULLY_CHARGED_DURATION)
+    private val soundTimer = Timer(SOUND_INTERVAL)
+    private lateinit var direction: Direction
+
+    override fun init() {
+        if (fullyChargedRegion == null)
+            fullyChargedRegion =
+                game.assMan.getTextureRegion(TextureAsset.MEGAMAN_CHARGED_SHOT.source, "Collide")
+
+        if (halfChargedRegion == null)
+            halfChargedRegion =
+                game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "HalfChargedShot")
+
+        defineProjectileComponents().forEach { addComponent(it) }
+        addComponent(defineBodyComponent())
+        addComponent(defineSpritesCompoent())
+        addComponent(defineAnimationsComponent())
+        addComponent(defineUpdatablesComponent())
+    }
+
+    override fun spawn(spawnProps: Properties) {
+        super.spawn(spawnProps)
+        soundTimer.reset()
+
+        owner = spawnProps.get(ConstKeys.OWNER) as IGameEntity
+        direction = spawnProps.get(ConstKeys.DIRECTION, Direction::class)!!
+        fullyCharged = spawnProps.get(ConstKeys.BOOLEAN) as Boolean
+
+        durationTimer = Timer(if (fullyCharged) FULLY_CHARGED_DURATION else HALF_CHARGED_DURATION)
+
+        val spawn = spawnProps.get(ConstKeys.POSITION) as Vector2
+        body.setCenter(spawn)
+
+        val spriteDimension = (if (fullyCharged) 1.75f else 1.25f) * ConstVals.PPM
+        (firstSprite as GameSprite).setSize(spriteDimension)
+    }
+
+    private fun defineUpdatablesComponent() =
+        UpdatablesComponent(
+            this,
+            {
+                durationTimer.update(it)
+                if (durationTimer.isFinished()) {
+                    kill(props(CAUSE_OF_DEATH_MESSAGE to "Duration timer finished"))
+                }
+
+                soundTimer.update(it)
+                if (soundTimer.isFinished()) {
+                    requestToPlaySound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
+                    soundTimer.reset()
+                }
+            })
+
+    private fun defineBodyComponent(): BodyComponent {
+        val body = Body(BodyType.ABSTRACT)
+        body.setSize(ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
+
+        // Damager fixture
+        val damagerFixture =
+            Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat()), FixtureType.DAMAGER)
+        body.addFixture(damagerFixture)
+
+        return BodyComponentCreator.create(this, body)
+    }
+
+    private fun defineSpritesCompoent(): SpritesComponent {
+        val sprite = GameSprite()
+        val spritesComponent = SpritesComponent(this, "explosion" to sprite)
+        spritesComponent.putUpdateFunction("explosion") { _, _sprite ->
+            (_sprite as GameSprite).setPosition(body.getCenter(), Position.CENTER)
+
+            val rotation =
+                when (direction) {
+                    Direction.RIGHT -> 0f
+                    Direction.UP -> 90f
+                    Direction.LEFT -> 180f
+                    Direction.DOWN -> 270f
+                }
+            _sprite.setOriginCenter()
+            _sprite.rotation = rotation
+        }
+        return spritesComponent
+    }
+
+    private fun defineAnimationsComponent(): AnimationsComponent {
+        val chargedAnimation = Animation(fullyChargedRegion!!, 1, 3, .05f, true)
+        val halfChargedAnimation = Animation(halfChargedRegion!!, 1, 3, .05f, true)
+        val animator =
+            Animator(
+                { if (fullyCharged) "charged" else "halfCharged" },
+                objectMapOf("charged" to chargedAnimation, "halfCharged" to halfChargedAnimation)
+            )
+        return AnimationsComponent(this, animator)
+    }
 }

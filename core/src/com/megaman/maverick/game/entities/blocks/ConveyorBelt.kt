@@ -29,79 +29,81 @@ import com.megaman.maverick.game.world.setVelocityAlteration
 
 class ConveyorBelt(game: MegamanMaverickGame) : ISpriteEntity, Block(game) {
 
-  companion object {
-    private const val FORCE_AMOUNT = 45f
+    companion object {
+        private const val FORCE_AMOUNT = 45f
 
-    private var lLeft: TextureRegion? = null
-    private var lRight: TextureRegion? = null
-    private var rLeft: TextureRegion? = null
-    private var rRight: TextureRegion? = null
-    private var middle: TextureRegion? = null
-  }
-
-  private var forceFixture: Fixture? = null
-
-  override fun init() {
-    super<Block>.init()
-
-    val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
-
-    if (lLeft == null) lLeft = atlas.findRegion("ConveyorBelt/LeftPart-MoveLeft")
-    if (lRight == null) lRight = atlas.findRegion("ConveyorBelt/LeftPart-MoveRight")
-    if (rLeft == null) rLeft = atlas.findRegion("ConveyorBelt/RightPart-MoveLeft")
-    if (rRight == null) rRight = atlas.findRegion("ConveyorBelt/RightPart-MoveRight")
-    if (middle == null) middle = atlas.findRegion("ConveyorBelt/MiddlePart")
-  }
-
-  override fun spawn(spawnProps: Properties) {
-    super.spawn(spawnProps)
-
-    // initialize force fixture if not already present
-    if (forceFixture == null) {
-      forceFixture = Fixture(GameRectangle(), FixtureType.FORCE)
-      forceFixture!!.offsetFromBodyCenter.y = ConstVals.PPM / 8f
-      forceFixture!!.setEntity(this)
-      body.addFixture(forceFixture!!)
-
-      getComponent(DrawableShapesComponent::class)?.debugShapeSuppliers?.add {
-        forceFixture!!.shape
-      }
+        private var lLeft: TextureRegion? = null
+        private var lRight: TextureRegion? = null
+        private var rLeft: TextureRegion? = null
+        private var rRight: TextureRegion? = null
+        private var middle: TextureRegion? = null
     }
 
-    val bounds = spawnProps.get(ConstKeys.BOUNDS) as Rectangle
-    (forceFixture!!.shape as GameRectangle).setSize(
-        bounds.width - ConstVals.PPM / 4f, bounds.height)
+    private var forceFixture: Fixture? = null
 
-    // velocity alteration
-    val left = spawnProps.get(ConstKeys.LEFT) as Boolean
-    var forceX = FORCE_AMOUNT * ConstVals.PPM
-    if (left) forceX = -forceX
-    val velocityAlteration =
-        VelocityAlteration(forceX = forceX, actionX = VelocityAlterationType.ADD)
-    forceFixture!!.setVelocityAlteration { _, _ -> velocityAlteration }
+    override fun init() {
+        super<Block>.init()
 
-    // sprite and animators
-    val sprites = OrderedMap<String, ISprite>()
-    val animators = Array<Pair<() -> ISprite, IAnimator>>()
-    val numParts = (bounds.width / ConstVals.PPM).toInt()
-    for (i in 0 until numParts) {
-      val part = if (i == 0) "left" else if (i == numParts - 1) "right" else "middle $i"
-      val region =
-          when (part) {
-            "left" -> if (left) lLeft else lRight
-            "right" -> if (left) rLeft else rRight
-            else -> middle
-          }
-      val animation = Animation(region!!, 1, 2, 0.15f, true)
-      val sprite = GameSprite()
-      sprite.setBounds(
-          bounds.x + i * ConstVals.PPM, bounds.y, ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
+        val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
 
-      sprites.put(part, sprite)
-      animators.add({ sprite } to Animator(animation))
+        if (lLeft == null) lLeft = atlas.findRegion("ConveyorBelt/LeftPart-MoveLeft")
+        if (lRight == null) lRight = atlas.findRegion("ConveyorBelt/LeftPart-MoveRight")
+        if (rLeft == null) rLeft = atlas.findRegion("ConveyorBelt/RightPart-MoveLeft")
+        if (rRight == null) rRight = atlas.findRegion("ConveyorBelt/RightPart-MoveRight")
+        if (middle == null) middle = atlas.findRegion("ConveyorBelt/MiddlePart")
     }
 
-    addComponent(SpritesComponent(this, sprites))
-    addComponent(AnimationsComponent(this, animators))
-  }
+    override fun spawn(spawnProps: Properties) {
+        super.spawn(spawnProps)
+
+        // initialize force fixture if not already present
+        if (forceFixture == null) {
+            forceFixture = Fixture(GameRectangle(), FixtureType.FORCE)
+            forceFixture!!.offsetFromBodyCenter.y = ConstVals.PPM / 8f
+            forceFixture!!.setEntity(this)
+            body.addFixture(forceFixture!!)
+
+            getComponent(DrawableShapesComponent::class)?.debugShapeSuppliers?.add {
+                forceFixture!!.shape
+            }
+        }
+
+        val bounds = spawnProps.get(ConstKeys.BOUNDS) as Rectangle
+        (forceFixture!!.shape as GameRectangle).setSize(
+            bounds.width - ConstVals.PPM / 4f, bounds.height
+        )
+
+        // velocity alteration
+        val left = spawnProps.get(ConstKeys.LEFT) as Boolean
+        var forceX = FORCE_AMOUNT * ConstVals.PPM
+        if (left) forceX = -forceX
+        val velocityAlteration =
+            VelocityAlteration(forceX = forceX, actionX = VelocityAlterationType.ADD)
+        forceFixture!!.setVelocityAlteration { _, _ -> velocityAlteration }
+
+        // sprite and animators
+        val sprites = OrderedMap<String, ISprite>()
+        val animators = Array<Pair<() -> ISprite, IAnimator>>()
+        val numParts = (bounds.width / ConstVals.PPM).toInt()
+        for (i in 0 until numParts) {
+            val part = if (i == 0) "left" else if (i == numParts - 1) "right" else "middle $i"
+            val region =
+                when (part) {
+                    "left" -> if (left) lLeft else lRight
+                    "right" -> if (left) rLeft else rRight
+                    else -> middle
+                }
+            val animation = Animation(region!!, 1, 2, 0.15f, true)
+            val sprite = GameSprite()
+            sprite.setBounds(
+                bounds.x + i * ConstVals.PPM, bounds.y, ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat()
+            )
+
+            sprites.put(part, sprite)
+            animators.add({ sprite } to Animator(animation))
+        }
+
+        addComponent(SpritesComponent(this, sprites))
+        addComponent(AnimationsComponent(this, animators))
+    }
 }

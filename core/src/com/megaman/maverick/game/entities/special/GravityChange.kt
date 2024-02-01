@@ -19,38 +19,38 @@ import com.megaman.maverick.game.world.FixtureType
 
 class GravityChange(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity {
 
-  private lateinit var gravityChangeFixture: Fixture
+    private lateinit var gravityChangeFixture: Fixture
 
-  override fun init() {
-    addComponent(defineBodyComponent())
-  }
+    override fun init() {
+        addComponent(defineBodyComponent())
+    }
 
-  override fun spawn(spawnProps: Properties) {
-    super.spawn(spawnProps)
+    override fun spawn(spawnProps: Properties) {
+        super.spawn(spawnProps)
 
-    val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
-    body.set(bounds)
-    (gravityChangeFixture.shape as GameRectangle).set(bounds)
+        val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+        body.set(bounds)
+        (gravityChangeFixture.shape as GameRectangle).set(bounds)
 
-    val directionString = spawnProps.get(ConstKeys.DIRECTION, String::class)!!
-    val direction = Direction.valueOf(directionString.uppercase())
-    gravityChangeFixture.putProperty(ConstKeys.DIRECTION, direction)
+        val directionString = spawnProps.get(ConstKeys.DIRECTION, String::class)!!
+        val direction = Direction.valueOf(directionString.uppercase())
+        gravityChangeFixture.putProperty(ConstKeys.DIRECTION, direction)
 
-    addComponent(createCullablesComponent())
-  }
+        addComponent(createCullablesComponent())
+    }
 
-  private fun defineBodyComponent(): BodyComponent {
-    val body = Body(BodyType.ABSTRACT)
+    private fun defineBodyComponent(): BodyComponent {
+        val body = Body(BodyType.ABSTRACT)
 
-    // gravity-change fixture
-    gravityChangeFixture = Fixture(GameRectangle(), FixtureType.GRAVITY_CHANGE)
-    body.addFixture(gravityChangeFixture)
+        // gravity-change fixture
+        gravityChangeFixture = Fixture(GameRectangle(), FixtureType.GRAVITY_CHANGE)
+        body.addFixture(gravityChangeFixture)
 
-    return BodyComponentCreator.create(this, body)
-  }
+        return BodyComponentCreator.create(this, body)
+    }
 
-  private fun createCullablesComponent(): CullablesComponent {
-    val cullOnOutOfBounds = getGameCameraCullingLogic(this)
-    return CullablesComponent(this, gdxArrayOf(cullOnOutOfBounds))
-  }
+    private fun createCullablesComponent(): CullablesComponent {
+        val cullOnOutOfBounds = getGameCameraCullingLogic(this)
+        return CullablesComponent(this, gdxArrayOf(cullOnOutOfBounds))
+    }
 }

@@ -10,17 +10,17 @@ import com.megaman.maverick.game.ConstKeys
 
 class GameRoomsLayerBuilder : ITiledMapLayerBuilder {
 
-  companion object {
-    const val TAG = "GameRoomsLayerBuilder"
-  }
+    companion object {
+        const val TAG = "GameRoomsLayerBuilder"
+    }
 
-  override fun build(layer: MapLayer, returnProps: Properties) {
-    val gameRooms = Array<RectangleMapObject>()
-    layer.objects.forEach { if (it is RectangleMapObject) gameRooms.add(it) }
+    override fun build(layer: MapLayer, returnProps: Properties) {
+        val gameRooms = Array<RectangleMapObject>()
+        layer.objects.forEach { if (it is RectangleMapObject) gameRooms.add(it) }
 
-    val printedGameRooms = gameRooms.map { "[${it.name}, ${it.rectangle}]" }
-    GameLogger.debug(TAG, "build(): Game rooms: $printedGameRooms")
+        val printedGameRooms = gameRooms.map { "[${it.name}, ${it.rectangle}]" }
+        GameLogger.debug(TAG, "build(): Game rooms: $printedGameRooms")
 
-    returnProps.put(ConstKeys.GAME_ROOMS, gameRooms)
-  }
+        returnProps.put(ConstKeys.GAME_ROOMS, gameRooms)
+    }
 }

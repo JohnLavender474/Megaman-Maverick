@@ -47,258 +47,275 @@ import kotlin.reflect.KClass
 
 class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
-  enum class HanabiranState {
-    SLEEPING,
-    RISING,
-    DROPPING,
-    PETAL_4,
-    PETAL_3,
-    PETAL_2,
-    PETAL_1,
-    PETAL_0,
-  }
-
-  companion object {
-    const val TAG = "Hanabiran"
-    private var atlas: TextureAtlas? = null
-    private const val SLEEP_DURATION = 1f
-    private const val RISE_DROP_DURATION = 0.45f
-    private const val PETAL_DURATION = 0.5f
-    private const val ANIMATION_FRAME_DURATION = 0.15f
-  }
-
-  private val sleepTimer = Timer(SLEEP_DURATION)
-  private val riseDropTimer = Timer(RISE_DROP_DURATION)
-  private val petalTimer = Timer(PETAL_DURATION)
-
-  private var petalCount = 4
-  private lateinit var state: HanabiranState
-
-  override val damageNegotiations =
-      objectMapOf<KClass<out IDamager>, Int>(
-          Bullet::class to 10,
-          Fireball::class to ConstVals.MAX_HEALTH,
-          ChargedShot::class to ConstVals.MAX_HEALTH,
-          ChargedShotExplosion::class to ConstVals.MAX_HEALTH)
-
-  override fun init() {
-    super.init()
-    if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-    addComponent(defineAnimationsComponent())
-  }
-
-  override fun spawn(spawnProps: Properties) {
-    super.spawn(spawnProps)
-
-    val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
-    body.setBottomCenterToPoint(bounds.getBottomCenterPoint())
-
-    state = HanabiranState.SLEEPING
-  }
-
-  private fun shoot() {
-    val start = body.getCenter()
-    val target = megaman.body.getCenter()
-    val trajectory = target.sub(start).nor()
-
-    val petal = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.PETAL)!!
-    GameLogger.debug(
-        TAG,
-        "Shooting petal. Start: $start. Target: $target. Trajectory: $trajectory. Petal: $petal")
-
-    game.gameEngine.spawn(
-        petal,
-        props(
-            ConstKeys.POSITION to start,
-            ConstKeys.TRAJECTORY to trajectory,
-            ConstKeys.OWNER to this))
-  }
-
-  override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
-    super.defineUpdatablesComponent(updatablesComponent)
-    updatablesComponent.add {
-      when (state) {
-        HanabiranState.SLEEPING -> {
-          sleepTimer.update(it)
-          if (sleepTimer.isJustFinished()) {
-            sleepTimer.reset()
-            state = HanabiranState.RISING
-          }
-        }
-        HanabiranState.RISING -> {
-          riseDropTimer.update(it)
-          if (riseDropTimer.isJustFinished()) {
-            riseDropTimer.reset()
-            petalCount = 4
-            state = HanabiranState.PETAL_4
-          }
-        }
-        HanabiranState.PETAL_4,
-        HanabiranState.PETAL_3,
-        HanabiranState.PETAL_2,
-        HanabiranState.PETAL_1,
-        HanabiranState.PETAL_0 -> {
-          petalTimer.update(it)
-          if (petalTimer.isJustFinished()) {
-            petalCount--
-            state =
-                if (petalCount < 0) {
-                  HanabiranState.DROPPING
-                } else {
-                  shoot()
-                  HanabiranState.valueOf("PETAL_$petalCount")
-                }
-            petalTimer.reset()
-          }
-        }
-        HanabiranState.DROPPING -> {
-          riseDropTimer.update(it)
-          if (riseDropTimer.isJustFinished()) {
-            riseDropTimer.reset()
-            state = HanabiranState.SLEEPING
-          }
-        }
-      }
+    enum class HanabiranState {
+        SLEEPING,
+        RISING,
+        DROPPING,
+        PETAL_4,
+        PETAL_3,
+        PETAL_2,
+        PETAL_1,
+        PETAL_0,
     }
-  }
 
-  override fun defineBodyComponent(): BodyComponent {
-    val body = Body(BodyType.DYNAMIC)
-    body.setSize(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat())
+    companion object {
+        const val TAG = "Hanabiran"
+        private var atlas: TextureAtlas? = null
+        private const val SLEEP_DURATION = 1f
+        private const val RISE_DROP_DURATION = 0.45f
+        private const val PETAL_DURATION = 0.5f
+        private const val ANIMATION_FRAME_DURATION = 0.15f
+    }
 
-    val debugShapes = Array<() -> IDrawableShape?>()
+    private val sleepTimer = Timer(SLEEP_DURATION)
+    private val riseDropTimer = Timer(RISE_DROP_DURATION)
+    private val petalTimer = Timer(PETAL_DURATION)
 
-    val fixturesRectangle = GameRectangle()
+    private var petalCount = 4
+    private lateinit var state: HanabiranState
 
-    // body fixture
-    val bodyFixture = Fixture(fixturesRectangle, FixtureType.BODY)
-    bodyFixture.attachedToBody = false
-    body.addFixture(bodyFixture)
-    debugShapes.add { bodyFixture.shape }
+    override val damageNegotiations =
+        objectMapOf<KClass<out IDamager>, Int>(
+            Bullet::class to 10,
+            Fireball::class to ConstVals.MAX_HEALTH,
+            ChargedShot::class to ConstVals.MAX_HEALTH,
+            ChargedShotExplosion::class to ConstVals.MAX_HEALTH
+        )
 
-    // damager fixture
-    val damagerFixture = Fixture(fixturesRectangle, FixtureType.DAMAGER)
-    damagerFixture.attachedToBody = false
-    body.addFixture(damagerFixture)
-    debugShapes.add { if (damagerFixture.active) damagerFixture.shape else null }
+    override fun init() {
+        super.init()
+        if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+        addComponent(defineAnimationsComponent())
+    }
 
-    // damageable fixture
-    val damageableFixture = Fixture(fixturesRectangle, FixtureType.DAMAGEABLE)
-    damageableFixture.attachedToBody = false
-    body.addFixture(damageableFixture)
-    debugShapes.add { if (damageableFixture.active) damageableFixture.shape else null }
+    override fun spawn(spawnProps: Properties) {
+        super.spawn(spawnProps)
 
-    body.preProcess = Updatable {
-      fixturesRectangle.setSize(
-          (when (state) {
-                HanabiranState.SLEEPING -> Vector2.Zero
+        val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+        body.setBottomCenterToPoint(bounds.getBottomCenterPoint())
+
+        state = HanabiranState.SLEEPING
+    }
+
+    private fun shoot() {
+        val start = body.getCenter()
+        val target = megaman.body.getCenter()
+        val trajectory = target.sub(start).nor()
+
+        val petal = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.PETAL)!!
+        GameLogger.debug(
+            TAG,
+            "Shooting petal. Start: $start. Target: $target. Trajectory: $trajectory. Petal: $petal"
+        )
+
+        game.gameEngine.spawn(
+            petal,
+            props(
+                ConstKeys.POSITION to start,
+                ConstKeys.TRAJECTORY to trajectory,
+                ConstKeys.OWNER to this
+            )
+        )
+    }
+
+    override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
+        super.defineUpdatablesComponent(updatablesComponent)
+        updatablesComponent.add {
+            when (state) {
+                HanabiranState.SLEEPING -> {
+                    sleepTimer.update(it)
+                    if (sleepTimer.isJustFinished()) {
+                        sleepTimer.reset()
+                        state = HanabiranState.RISING
+                    }
+                }
+
                 HanabiranState.RISING -> {
-                  if (riseDropTimer.time >= 0.3f) Vector2(0.75f, 0.75f)
-                  else if (riseDropTimer.time >= 0.15f) Vector2(0.75f, 0.5f)
-                  else Vector2(0.75f, 0.25f)
+                    riseDropTimer.update(it)
+                    if (riseDropTimer.isJustFinished()) {
+                        riseDropTimer.reset()
+                        petalCount = 4
+                        state = HanabiranState.PETAL_4
+                    }
                 }
-                HanabiranState.DROPPING -> {
-                  if (riseDropTimer.time >= 0.3f) Vector2(0.75f, 0.25f)
-                  else if (riseDropTimer.time >= 0.15f) Vector2(0.75f, 0.5f)
-                  else Vector2(0.75f, 0.75f)
-                }
+
                 HanabiranState.PETAL_4,
                 HanabiranState.PETAL_3,
                 HanabiranState.PETAL_2,
                 HanabiranState.PETAL_1,
-                HanabiranState.PETAL_0 -> Vector2(0.75f, 0.85f)
-              })
-              .scl(ConstVals.PPM.toFloat()))
+                HanabiranState.PETAL_0 -> {
+                    petalTimer.update(it)
+                    if (petalTimer.isJustFinished()) {
+                        petalCount--
+                        state =
+                            if (petalCount < 0) {
+                                HanabiranState.DROPPING
+                            } else {
+                                shoot()
+                                HanabiranState.valueOf("PETAL_$petalCount")
+                            }
+                        petalTimer.reset()
+                    }
+                }
 
-      fixturesRectangle.positionOnPoint(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
-
-      val fixturesOn =
-          !state.equalsAny(HanabiranState.SLEEPING, HanabiranState.RISING, HanabiranState.DROPPING)
-      bodyFixture.active = fixturesOn
-      damagerFixture.active = fixturesOn
-      damageableFixture.active = fixturesOn
+                HanabiranState.DROPPING -> {
+                    riseDropTimer.update(it)
+                    if (riseDropTimer.isJustFinished()) {
+                        riseDropTimer.reset()
+                        state = HanabiranState.SLEEPING
+                    }
+                }
+            }
+        }
     }
 
-    addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+    override fun defineBodyComponent(): BodyComponent {
+        val body = Body(BodyType.DYNAMIC)
+        body.setSize(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat())
 
-    return BodyComponentCreator.create(this, body)
-  }
+        val debugShapes = Array<() -> IDrawableShape?>()
 
-  override fun defineSpritesComponent(): SpritesComponent {
-    val sprite = GameSprite()
-    sprite.setSize(1.25f * ConstVals.PPM)
+        val fixturesRectangle = GameRectangle()
 
-    val spritesComponent = SpritesComponent(this, "hanibiran" to sprite)
-    spritesComponent.putUpdateFunction("hanibiran") { _, _sprite ->
-      _sprite as GameSprite
+        // body fixture
+        val bodyFixture = Fixture(fixturesRectangle, FixtureType.BODY)
+        bodyFixture.attachedToBody = false
+        body.addFixture(bodyFixture)
+        debugShapes.add { bodyFixture.shape }
 
-      val position = body.getBottomCenterPoint()
-      _sprite.setPosition(position, Position.BOTTOM_CENTER)
+        // damager fixture
+        val damagerFixture = Fixture(fixturesRectangle, FixtureType.DAMAGER)
+        damagerFixture.attachedToBody = false
+        body.addFixture(damagerFixture)
+        debugShapes.add { if (damagerFixture.active) damagerFixture.shape else null }
 
-      _sprite.hidden = state == HanabiranState.SLEEPING
+        // damageable fixture
+        val damageableFixture = Fixture(fixturesRectangle, FixtureType.DAMAGEABLE)
+        damageableFixture.attachedToBody = false
+        body.addFixture(damageableFixture)
+        debugShapes.add { if (damageableFixture.active) damageableFixture.shape else null }
+
+        body.preProcess = Updatable {
+            fixturesRectangle.setSize(
+                (when (state) {
+                    HanabiranState.SLEEPING -> Vector2.Zero
+                    HanabiranState.RISING -> {
+                        if (riseDropTimer.time >= 0.3f) Vector2(0.75f, 0.75f)
+                        else if (riseDropTimer.time >= 0.15f) Vector2(0.75f, 0.5f)
+                        else Vector2(0.75f, 0.25f)
+                    }
+
+                    HanabiranState.DROPPING -> {
+                        if (riseDropTimer.time >= 0.3f) Vector2(0.75f, 0.25f)
+                        else if (riseDropTimer.time >= 0.15f) Vector2(0.75f, 0.5f)
+                        else Vector2(0.75f, 0.75f)
+                    }
+
+                    HanabiranState.PETAL_4,
+                    HanabiranState.PETAL_3,
+                    HanabiranState.PETAL_2,
+                    HanabiranState.PETAL_1,
+                    HanabiranState.PETAL_0 -> Vector2(0.75f, 0.85f)
+                })
+                    .scl(ConstVals.PPM.toFloat())
+            )
+
+            fixturesRectangle.positionOnPoint(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+
+            val fixturesOn =
+                !state.equalsAny(HanabiranState.SLEEPING, HanabiranState.RISING, HanabiranState.DROPPING)
+            bodyFixture.active = fixturesOn
+            damagerFixture.active = fixturesOn
+            damageableFixture.active = fixturesOn
+        }
+
+        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+
+        return BodyComponentCreator.create(this, body)
     }
 
-    return spritesComponent
-  }
+    override fun defineSpritesComponent(): SpritesComponent {
+        val sprite = GameSprite()
+        sprite.setSize(1.25f * ConstVals.PPM)
 
-  private fun defineAnimationsComponent(): AnimationsComponent {
-    val keySupplier: () -> String? = {
-      when (state) {
-        HanabiranState.RISING -> "Rise"
-        HanabiranState.DROPPING -> "Drop"
-        HanabiranState.PETAL_4 -> "4PetalsSpin"
-        HanabiranState.PETAL_3 -> "3PetalsSpin"
-        HanabiranState.PETAL_2 -> "2PetalsSpin"
-        HanabiranState.PETAL_1 -> "1PetalSpin"
-        HanabiranState.PETAL_0 -> "NoPetalsSpin"
-        HanabiranState.SLEEPING -> null
-      }
+        val spritesComponent = SpritesComponent(this, "hanibiran" to sprite)
+        spritesComponent.putUpdateFunction("hanibiran") { _, _sprite ->
+            _sprite as GameSprite
+
+            val position = body.getBottomCenterPoint()
+            _sprite.setPosition(position, Position.BOTTOM_CENTER)
+
+            _sprite.hidden = state == HanabiranState.SLEEPING
+        }
+
+        return spritesComponent
     }
-    val animations =
-        objectMapOf<String, IAnimation>(
-            "1PetalSpin" to
-                Animation(
-                    atlas!!.findRegion("Hanabiran/1PetalSpin"),
-                    1,
-                    4,
-                    ANIMATION_FRAME_DURATION,
-                    true),
-            "2PetalsSpin" to
-                Animation(
-                    atlas!!.findRegion("Hanabiran/2PetalsSpin"),
-                    1,
-                    4,
-                    ANIMATION_FRAME_DURATION,
-                    true),
-            "3PetalsSpin" to
-                Animation(
-                    atlas!!.findRegion("Hanabiran/3PetalsSpin"),
-                    1,
-                    4,
-                    ANIMATION_FRAME_DURATION,
-                    true),
-            "4PetalsSpin" to
-                Animation(
-                    atlas!!.findRegion("Hanabiran/4PetalsSpin"),
-                    1,
-                    2,
-                    ANIMATION_FRAME_DURATION,
-                    true),
-            "NoPetalsSpin" to
-                Animation(
-                    atlas!!.findRegion("Hanabiran/NoPetalsSpin"),
-                    1,
-                    2,
-                    ANIMATION_FRAME_DURATION,
-                    true),
-            "Rise" to
-                Animation(
-                    atlas!!.findRegion("Hanabiran/Rise"), 1, 3, ANIMATION_FRAME_DURATION, false),
-            "Drop" to
-                Animation(
-                    atlas!!.findRegion("Hanabiran/Drop"), 1, 3, ANIMATION_FRAME_DURATION, false),
-        )
-    val animator = Animator(keySupplier, animations)
-    return AnimationsComponent(this, animator)
-  }
+
+    private fun defineAnimationsComponent(): AnimationsComponent {
+        val keySupplier: () -> String? = {
+            when (state) {
+                HanabiranState.RISING -> "Rise"
+                HanabiranState.DROPPING -> "Drop"
+                HanabiranState.PETAL_4 -> "4PetalsSpin"
+                HanabiranState.PETAL_3 -> "3PetalsSpin"
+                HanabiranState.PETAL_2 -> "2PetalsSpin"
+                HanabiranState.PETAL_1 -> "1PetalSpin"
+                HanabiranState.PETAL_0 -> "NoPetalsSpin"
+                HanabiranState.SLEEPING -> null
+            }
+        }
+        val animations =
+            objectMapOf<String, IAnimation>(
+                "1PetalSpin" to
+                        Animation(
+                            atlas!!.findRegion("Hanabiran/1PetalSpin"),
+                            1,
+                            4,
+                            ANIMATION_FRAME_DURATION,
+                            true
+                        ),
+                "2PetalsSpin" to
+                        Animation(
+                            atlas!!.findRegion("Hanabiran/2PetalsSpin"),
+                            1,
+                            4,
+                            ANIMATION_FRAME_DURATION,
+                            true
+                        ),
+                "3PetalsSpin" to
+                        Animation(
+                            atlas!!.findRegion("Hanabiran/3PetalsSpin"),
+                            1,
+                            4,
+                            ANIMATION_FRAME_DURATION,
+                            true
+                        ),
+                "4PetalsSpin" to
+                        Animation(
+                            atlas!!.findRegion("Hanabiran/4PetalsSpin"),
+                            1,
+                            2,
+                            ANIMATION_FRAME_DURATION,
+                            true
+                        ),
+                "NoPetalsSpin" to
+                        Animation(
+                            atlas!!.findRegion("Hanabiran/NoPetalsSpin"),
+                            1,
+                            2,
+                            ANIMATION_FRAME_DURATION,
+                            true
+                        ),
+                "Rise" to
+                        Animation(
+                            atlas!!.findRegion("Hanabiran/Rise"), 1, 3, ANIMATION_FRAME_DURATION, false
+                        ),
+                "Drop" to
+                        Animation(
+                            atlas!!.findRegion("Hanabiran/Drop"), 1, 3, ANIMATION_FRAME_DURATION, false
+                        ),
+            )
+        val animator = Animator(keySupplier, animations)
+        return AnimationsComponent(this, animator)
+    }
 }

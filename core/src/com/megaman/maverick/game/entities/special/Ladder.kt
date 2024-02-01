@@ -17,31 +17,33 @@ import com.megaman.maverick.game.world.FixtureType
 
 class Ladder(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity {
 
-  private lateinit var ladderRectangle: GameRectangle
+    private lateinit var ladderRectangle: GameRectangle
 
-  override fun init() {
-    addComponent(defineBodyComponent())
-  }
+    override fun init() {
+        addComponent(defineBodyComponent())
+    }
 
-  override fun spawn(spawnProps: Properties) {
-    super.spawn(spawnProps)
-    val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
-    body.set(bounds)
-    ladderRectangle.set(bounds)
-  }
+    override fun spawn(spawnProps: Properties) {
+        super.spawn(spawnProps)
+        val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+        body.set(bounds)
+        ladderRectangle.set(bounds)
+    }
 
-  private fun defineBodyComponent(): BodyComponent {
-    val body = Body(BodyType.ABSTRACT)
+    private fun defineBodyComponent(): BodyComponent {
+        val body = Body(BodyType.ABSTRACT)
 
-    // ladder fixture
-    ladderRectangle = GameRectangle()
-    val ladderFixture = Fixture(ladderRectangle, FixtureType.LADDER)
-    body.addFixture(ladderFixture)
+        // ladder fixture
+        ladderRectangle = GameRectangle()
+        val ladderFixture = Fixture(ladderRectangle, FixtureType.LADDER)
+        body.addFixture(ladderFixture)
 
-    addComponent(
-        DrawableShapesComponent(
-            this, debugShapeSuppliers = gdxArrayOf({ ladderRectangle }), debug = true))
+        addComponent(
+            DrawableShapesComponent(
+                this, debugShapeSuppliers = gdxArrayOf({ ladderRectangle }), debug = true
+            )
+        )
 
-    return BodyComponentCreator.create(this, body)
-  }
+        return BodyComponentCreator.create(this, body)
+    }
 }

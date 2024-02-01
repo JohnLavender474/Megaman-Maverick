@@ -45,211 +45,217 @@ import com.megaman.maverick.game.world.FixtureType
 class Gate(game: MegamanMaverickGame) :
     GameEntity(game), IBodyEntity, IAudioEntity, ISpriteEntity, IEventListener, Resettable {
 
-  enum class GateOrientation {
-    UP,
-    DOWN,
-    HORIZONTAL
-  }
-
-  enum class GateState {
-    OPENABLE,
-    OPENING,
-    OPEN,
-    CLOSING,
-    CLOSED
-  }
-
-  companion object {
-    const val TAG = "Gate"
-    private var atlas: TextureAtlas? = null
-    private const val DURATION = .5f
-  }
-
-  override val eventKeyMask = objectSetOf<Any>(EventType.PLAYER_SPAWN, EventType.END_ROOM_TRANS)
-  private val timer = Timer(DURATION)
-  val center = Vector2()
-
-  lateinit var state: GateState
-    private set
-
-  lateinit var orientation: GateOrientation
-    private set
-
-  var resettable = false
-
-  private lateinit var nextRoomKey: String
-  private var transitionFinished = false
-
-  override fun init() {
-    if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.GATES.source)
-
-    addComponent(defineBodyComponent())
-    addComponent(defineUpdatablesComponent())
-    addComponent(defineSpritesCompoent())
-    addComponent(defineAnimationsComponent())
-    addComponent(AudioComponent(this))
-
-    runnablesOnDestroy.add { game.eventsMan.removeListener(this) }
-  }
-
-  override fun spawn(spawnProps: Properties) {
-    super.spawn(spawnProps)
-    reset()
-    game.eventsMan.addListener(this)
-    center.set((spawnProps.get(ConstKeys.BOUNDS) as GameRectangle).getCenter())
-    nextRoomKey = spawnProps.get(ConstKeys.ROOM) as String
-    orientation =
-        GateOrientation.valueOf(
-            spawnProps.getOrDefault(ConstKeys.ORIENTATION, "HORIZONTAL") as String)
-    resettable = spawnProps.getOrDefault(ConstKeys.RESET, false, Boolean::class)
-  }
-
-  override fun onEvent(event: Event) {
-    when (event.key) {
-      EventType.PLAYER_SPAWN -> if (resettable) reset()
-      EventType.GAME_OVER -> reset()
-      EventType.END_ROOM_TRANS -> {
-        val room = event.getProperty(ConstKeys.ROOM) as RectangleMapObject
-        if (nextRoomKey == room.name) transitionFinished = true
-      }
+    enum class GateOrientation {
+        UP,
+        DOWN,
+        HORIZONTAL
     }
-  }
 
-  override fun reset() {
-    timer.reset()
-    transitionFinished = false
-    state = GateState.OPENABLE
-  }
+    enum class GateState {
+        OPENABLE,
+        OPENING,
+        OPEN,
+        CLOSING,
+        CLOSED
+    }
 
-  fun trigger() {
-    state = GateState.OPENING
-    getMegamanMaverickGame().audioMan.playSound(SoundAsset.BOSS_DOOR, false)
-    game.eventsMan.submitEvent(Event(EventType.GATE_INIT_OPENING))
-  }
+    companion object {
+        const val TAG = "Gate"
+        private var atlas: TextureAtlas? = null
+        private const val DURATION = .5f
+    }
 
-  fun stateIsOfOpenType() =
-      state == GateState.OPENABLE || state == GateState.OPENING || state == GateState.OPEN
+    override val eventKeyMask = objectSetOf<Any>(EventType.PLAYER_SPAWN, EventType.END_ROOM_TRANS)
+    private val timer = Timer(DURATION)
+    val center = Vector2()
 
-  fun stateIsOfCloseType() = state == GateState.CLOSING || state == GateState.CLOSED
+    lateinit var state: GateState
+        private set
 
-  private fun defineUpdatablesComponent() =
-      UpdatablesComponent(
-          this,
-          {
-            if (state == GateState.OPENING) {
-              timer.update(it)
-              if (timer.isFinished()) {
-                GameLogger.debug(TAG, "Set gate to OPENED")
-                timer.reset()
-                state = GateState.OPEN
-                game.eventsMan.submitEvent(Event(EventType.GATE_FINISH_OPENING))
-                game.eventsMan.submitEvent(
-                    Event(EventType.NEXT_ROOM_REQ, props(ConstKeys.ROOM to nextRoomKey)))
-              }
+    lateinit var orientation: GateOrientation
+        private set
+
+    var resettable = false
+
+    private lateinit var nextRoomKey: String
+    private var transitionFinished = false
+
+    override fun init() {
+        if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.GATES.source)
+
+        addComponent(defineBodyComponent())
+        addComponent(defineUpdatablesComponent())
+        addComponent(defineSpritesCompoent())
+        addComponent(defineAnimationsComponent())
+        addComponent(AudioComponent(this))
+
+        runnablesOnDestroy.add { game.eventsMan.removeListener(this) }
+    }
+
+    override fun spawn(spawnProps: Properties) {
+        super.spawn(spawnProps)
+        reset()
+        game.eventsMan.addListener(this)
+        center.set((spawnProps.get(ConstKeys.BOUNDS) as GameRectangle).getCenter())
+        nextRoomKey = spawnProps.get(ConstKeys.ROOM) as String
+        orientation =
+            GateOrientation.valueOf(
+                spawnProps.getOrDefault(ConstKeys.ORIENTATION, "HORIZONTAL") as String
+            )
+        resettable = spawnProps.getOrDefault(ConstKeys.RESET, false, Boolean::class)
+    }
+
+    override fun onEvent(event: Event) {
+        when (event.key) {
+            EventType.PLAYER_SPAWN -> if (resettable) reset()
+            EventType.GAME_OVER -> reset()
+            EventType.END_ROOM_TRANS -> {
+                val room = event.getProperty(ConstKeys.ROOM) as RectangleMapObject
+                if (nextRoomKey == room.name) transitionFinished = true
             }
+        }
+    }
 
-            if (state == GateState.OPEN) {
-              if (transitionFinished) {
-                GameLogger.debug(TAG, "Set gate to CLOSING")
-                transitionFinished = false
-                state = GateState.CLOSING
-                requestToPlaySound(SoundAsset.BOSS_DOOR, false)
-                game.eventsMan.submitEvent(Event(EventType.GATE_INIT_CLOSING))
-              }
+    override fun reset() {
+        timer.reset()
+        transitionFinished = false
+        state = GateState.OPENABLE
+    }
+
+    fun trigger() {
+        state = GateState.OPENING
+        getMegamanMaverickGame().audioMan.playSound(SoundAsset.BOSS_DOOR, false)
+        game.eventsMan.submitEvent(Event(EventType.GATE_INIT_OPENING))
+    }
+
+    fun stateIsOfOpenType() =
+        state == GateState.OPENABLE || state == GateState.OPENING || state == GateState.OPEN
+
+    fun stateIsOfCloseType() = state == GateState.CLOSING || state == GateState.CLOSED
+
+    private fun defineUpdatablesComponent() =
+        UpdatablesComponent(
+            this,
+            {
+                if (state == GateState.OPENING) {
+                    timer.update(it)
+                    if (timer.isFinished()) {
+                        GameLogger.debug(TAG, "Set gate to OPENED")
+                        timer.reset()
+                        state = GateState.OPEN
+                        game.eventsMan.submitEvent(Event(EventType.GATE_FINISH_OPENING))
+                        game.eventsMan.submitEvent(
+                            Event(EventType.NEXT_ROOM_REQ, props(ConstKeys.ROOM to nextRoomKey))
+                        )
+                    }
+                }
+
+                if (state == GateState.OPEN) {
+                    if (transitionFinished) {
+                        GameLogger.debug(TAG, "Set gate to CLOSING")
+                        transitionFinished = false
+                        state = GateState.CLOSING
+                        requestToPlaySound(SoundAsset.BOSS_DOOR, false)
+                        game.eventsMan.submitEvent(Event(EventType.GATE_INIT_CLOSING))
+                    }
+                }
+
+                if (state == GateState.CLOSING) {
+                    timer.update(it)
+                    if (timer.isFinished()) {
+                        GameLogger.debug(TAG, "Set gate to CLOSED")
+                        timer.reset()
+                        state = GateState.CLOSED
+                        game.eventsMan.submitEvent(Event(EventType.GATE_FINISH_CLOSING))
+                    }
+                }
+            })
+
+    private fun defineBodyComponent(): BodyComponent {
+        val body = Body(BodyType.ABSTRACT)
+
+        // gate fixture
+        val gateFixture = Fixture(GameRectangle(), FixtureType.GATE)
+        body.addFixture(gateFixture)
+
+        body.preProcess = Updatable {
+            val bodySize =
+                if (orientation == GateOrientation.HORIZONTAL) Vector2(2f, 3f) else Vector2(3f, 2f)
+            body.setSize(bodySize.scl(ConstVals.PPM.toFloat()))
+            (gateFixture.shape as GameRectangle).set(body)
+            body.setCenter(center)
+        }
+
+        return BodyComponentCreator.create(this, body)
+    }
+
+    private fun defineSpritesCompoent(): SpritesComponent {
+        val sprite = GameSprite()
+
+        sprite.setSize(4f * ConstVals.PPM, 3f * ConstVals.PPM)
+
+        val spritesComponent = SpritesComponent(this, "gate" to sprite)
+        spritesComponent.putUpdateFunction("gate") { _, _sprite ->
+            _sprite as GameSprite
+
+            _sprite.hidden = state == GateState.OPEN
+            _sprite.setFlip(state == GateState.CLOSING || state == GateState.CLOSED, false)
+
+            _sprite.setOriginCenter()
+            _sprite.rotation =
+                when (orientation) {
+                    GateOrientation.UP,
+                    GateOrientation.DOWN -> 270f
+
+                    GateOrientation.HORIZONTAL -> 0f
+                }
+
+            val position =
+                if (orientation == GateOrientation.HORIZONTAL)
+                    when (state) {
+                        GateState.CLOSING,
+                        GateState.CLOSED -> Position.BOTTOM_RIGHT
+
+                        else -> Position.BOTTOM_LEFT
+                    }
+                else Position.CENTER
+            val bodyPosition = body.getPositionPoint(position)
+            _sprite.setPosition(bodyPosition, position)
+
+            val translateY =
+                when (orientation) {
+                    GateOrientation.UP -> if (stateIsOfOpenType()) -1f else 1f
+                    GateOrientation.DOWN -> if (stateIsOfOpenType()) 1f else -1f
+                    GateOrientation.HORIZONTAL -> 0f
+                }
+            _sprite.translateY(translateY * ConstVals.PPM)
+        }
+
+        return spritesComponent
+    }
+
+    private fun defineAnimationsComponent(): AnimationsComponent {
+        val keySupplier = {
+            when (state) {
+                GateState.OPENABLE,
+                GateState.CLOSED -> "closed"
+
+                GateState.OPENING -> "opening"
+                GateState.OPEN -> null
+                GateState.CLOSING -> "closing"
             }
+        }
 
-            if (state == GateState.CLOSING) {
-              timer.update(it)
-              if (timer.isFinished()) {
-                GameLogger.debug(TAG, "Set gate to CLOSED")
-                timer.reset()
-                state = GateState.CLOSED
-                game.eventsMan.submitEvent(Event(EventType.GATE_FINISH_CLOSING))
-              }
-            }
-          })
+        val closed = Animation(atlas!!.findRegion("closed"), 1, 1, 1f, true)
+        val opening = Animation(atlas!!.findRegion("opening"), 1, 4, 0.125f, false)
+        val closing = Animation(opening, reverse = true)
 
-  private fun defineBodyComponent(): BodyComponent {
-    val body = Body(BodyType.ABSTRACT)
+        val animator =
+            Animator(
+                keySupplier,
+                objectMapOf("closed" to closed, "opening" to opening, "closing" to closing)
+            )
 
-    // gate fixture
-    val gateFixture = Fixture(GameRectangle(), FixtureType.GATE)
-    body.addFixture(gateFixture)
-
-    body.preProcess = Updatable {
-      val bodySize =
-          if (orientation == GateOrientation.HORIZONTAL) Vector2(2f, 3f) else Vector2(3f, 2f)
-      body.setSize(bodySize.scl(ConstVals.PPM.toFloat()))
-      (gateFixture.shape as GameRectangle).set(body)
-      body.setCenter(center)
+        return AnimationsComponent(this, animator)
     }
-
-    return BodyComponentCreator.create(this, body)
-  }
-
-  private fun defineSpritesCompoent(): SpritesComponent {
-    val sprite = GameSprite()
-
-    sprite.setSize(4f * ConstVals.PPM, 3f * ConstVals.PPM)
-
-    val spritesComponent = SpritesComponent(this, "gate" to sprite)
-    spritesComponent.putUpdateFunction("gate") { _, _sprite ->
-      _sprite as GameSprite
-
-      _sprite.hidden = state == GateState.OPEN
-      _sprite.setFlip(state == GateState.CLOSING || state == GateState.CLOSED, false)
-
-      _sprite.setOriginCenter()
-      _sprite.rotation =
-          when (orientation) {
-            GateOrientation.UP,
-            GateOrientation.DOWN -> 270f
-            GateOrientation.HORIZONTAL -> 0f
-          }
-
-      val position =
-          if (orientation == GateOrientation.HORIZONTAL)
-              when (state) {
-                GateState.CLOSING,
-                GateState.CLOSED -> Position.BOTTOM_RIGHT
-                else -> Position.BOTTOM_LEFT
-              }
-          else Position.CENTER
-      val bodyPosition = body.getPositionPoint(position)
-      _sprite.setPosition(bodyPosition, position)
-
-      val translateY =
-          when (orientation) {
-            GateOrientation.UP -> if (stateIsOfOpenType()) -1f else 1f
-            GateOrientation.DOWN -> if (stateIsOfOpenType()) 1f else -1f
-            GateOrientation.HORIZONTAL -> 0f
-          }
-      _sprite.translateY(translateY * ConstVals.PPM)
-    }
-
-    return spritesComponent
-  }
-
-  private fun defineAnimationsComponent(): AnimationsComponent {
-    val keySupplier = {
-      when (state) {
-        GateState.OPENABLE,
-        GateState.CLOSED -> "closed"
-        GateState.OPENING -> "opening"
-        GateState.OPEN -> null
-        GateState.CLOSING -> "closing"
-      }
-    }
-
-    val closed = Animation(atlas!!.findRegion("closed"), 1, 1, 1f, true)
-    val opening = Animation(atlas!!.findRegion("opening"), 1, 4, 0.125f, false)
-    val closing = Animation(opening, reverse = true)
-
-    val animator =
-        Animator(
-            keySupplier,
-            objectMapOf("closed" to closed, "opening" to opening, "closing" to closing))
-
-    return AnimationsComponent(this, animator)
-  }
 }

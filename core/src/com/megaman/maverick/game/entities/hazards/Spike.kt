@@ -32,93 +32,93 @@ import com.megaman.maverick.game.world.FixtureType
 class Spike(game: MegamanMaverickGame) :
     GameEntity(game), IChildEntity, IBodyEntity, ISpriteEntity {
 
-  companion object {
-    const val TAG = "Spike"
-    private var atlas: TextureAtlas? = null
-  }
-
-  override var parent: IGameEntity? = null
-
-  private lateinit var bodyOffset: Vector2
-
-  private var spriteRotation = 0f
-  private var spriteRegion = ""
-  private lateinit var spritePosition: Position
-  private lateinit var spriteOffset: Vector2
-
-  override fun init() {
-    if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
-    addComponent(defineBodyComponent())
-    addComponent(defineSpriteComponent())
-  }
-
-  override fun spawn(spawnProps: Properties) {
-    super.spawn(spawnProps)
-
-    val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
-    body.set(bounds)
-    body.fixtures.forEach { entry ->
-      val shape = entry.second.shape
-      if (shape is GameRectangle) shape.set(bounds)
+    companion object {
+        const val TAG = "Spike"
+        private var atlas: TextureAtlas? = null
     }
 
-    bodyOffset = Vector2()
-    parent?.let { if (it is IBodyEntity) bodyOffset.set(body.getCenter().sub(it.body.getCenter())) }
+    override var parent: IGameEntity? = null
 
-    spriteRotation = spawnProps.getOrDefault(ConstKeys.ROTATION, 0f) as Float
+    private lateinit var bodyOffset: Vector2
 
-    spriteRegion = spawnProps.get(ConstKeys.REGION, String::class)!!
-    val textureRegion = atlas!!.findRegion(spriteRegion)
-    firstSprite!!.setRegion(textureRegion)
+    private var spriteRotation = 0f
+    private var spriteRegion = ""
+    private lateinit var spritePosition: Position
+    private lateinit var spriteOffset: Vector2
 
-    spritePosition =
-        Position.valueOf(spawnProps.getOrDefault(ConstKeys.POSITION, "BOTTOM_CENTER") as String)
+    override fun init() {
+        if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
+        addComponent(defineBodyComponent())
+        addComponent(defineSpriteComponent())
+    }
 
-    spriteOffset = Vector2()
-    spriteOffset.x = spawnProps.getOrDefault(ConstKeys.OFFSET_X, 0f) as Float
-    spriteOffset.y = spawnProps.getOrDefault(ConstKeys.OFFSET_Y, 0f) as Float
-  }
+    override fun spawn(spawnProps: Properties) {
+        super.spawn(spawnProps)
 
-  override fun onDestroy() {
-    super<GameEntity>.onDestroy()
-    parent = null
-  }
-
-  private fun defineBodyComponent(): BodyComponent {
-    val body = Body(BodyType.ABSTRACT)
-
-    val deathFixture = Fixture(GameRectangle(), FixtureType.DEATH)
-    body.addFixture(deathFixture)
-
-    body.preProcess = Updatable {
-      parent?.let {
-        if (it is IBodyEntity) {
-          val parentCenter = it.body.getCenter()
-          val newCenter = parentCenter.add(bodyOffset)
-          body.setCenter(newCenter)
+        val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+        body.set(bounds)
+        body.fixtures.forEach { entry ->
+            val shape = entry.second.shape
+            if (shape is GameRectangle) shape.set(bounds)
         }
-      }
+
+        bodyOffset = Vector2()
+        parent?.let { if (it is IBodyEntity) bodyOffset.set(body.getCenter().sub(it.body.getCenter())) }
+
+        spriteRotation = spawnProps.getOrDefault(ConstKeys.ROTATION, 0f) as Float
+
+        spriteRegion = spawnProps.get(ConstKeys.REGION, String::class)!!
+        val textureRegion = atlas!!.findRegion(spriteRegion)
+        firstSprite!!.setRegion(textureRegion)
+
+        spritePosition =
+            Position.valueOf(spawnProps.getOrDefault(ConstKeys.POSITION, "BOTTOM_CENTER") as String)
+
+        spriteOffset = Vector2()
+        spriteOffset.x = spawnProps.getOrDefault(ConstKeys.OFFSET_X, 0f) as Float
+        spriteOffset.y = spawnProps.getOrDefault(ConstKeys.OFFSET_Y, 0f) as Float
     }
 
-    return BodyComponentCreator.create(this, body)
-  }
-
-  private fun defineSpriteComponent(): SpritesComponent {
-    val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
-    sprite.setSize(ConstVals.PPM.toFloat())
-
-    val spriteComponent = SpritesComponent(this, "spike" to sprite)
-    spriteComponent.putUpdateFunction("spike") { _, _sprite ->
-      _sprite as GameSprite
-
-      _sprite.rotation = spriteRotation
-
-      val position = body.getPositionPoint(spritePosition)
-      _sprite.setPosition(position, spritePosition)
-
-      _sprite.translate(spriteOffset.x * ConstVals.PPM, spriteOffset.y * ConstVals.PPM)
+    override fun onDestroy() {
+        super<GameEntity>.onDestroy()
+        parent = null
     }
 
-    return spriteComponent
-  }
+    private fun defineBodyComponent(): BodyComponent {
+        val body = Body(BodyType.ABSTRACT)
+
+        val deathFixture = Fixture(GameRectangle(), FixtureType.DEATH)
+        body.addFixture(deathFixture)
+
+        body.preProcess = Updatable {
+            parent?.let {
+                if (it is IBodyEntity) {
+                    val parentCenter = it.body.getCenter()
+                    val newCenter = parentCenter.add(bodyOffset)
+                    body.setCenter(newCenter)
+                }
+            }
+        }
+
+        return BodyComponentCreator.create(this, body)
+    }
+
+    private fun defineSpriteComponent(): SpritesComponent {
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
+        sprite.setSize(ConstVals.PPM.toFloat())
+
+        val spriteComponent = SpritesComponent(this, "spike" to sprite)
+        spriteComponent.putUpdateFunction("spike") { _, _sprite ->
+            _sprite as GameSprite
+
+            _sprite.rotation = spriteRotation
+
+            val position = body.getPositionPoint(spritePosition)
+            _sprite.setPosition(position, spritePosition)
+
+            _sprite.translate(spriteOffset.x * ConstVals.PPM, spriteOffset.y * ConstVals.PPM)
+        }
+
+        return spriteComponent
+    }
 }

@@ -8,26 +8,26 @@ import com.megaman.maverick.game.assets.SoundAsset
 
 class LevelStateHandler(private val game: MegamanMaverickGame) {
 
-  private val systemsOnPause = OrderedMap<IGameSystem, Boolean>()
+    private val systemsOnPause = OrderedMap<IGameSystem, Boolean>()
 
-  fun pause() {
-    systemsOnPause.clear()
+    fun pause() {
+        systemsOnPause.clear()
 
-    game.gameEngine.systems.forEach {
-      systemsOnPause.put(it, it.on)
-      if (it !is SpritesSystem) it.on = false
+        game.gameEngine.systems.forEach {
+            systemsOnPause.put(it, it.on)
+            if (it !is SpritesSystem) it.on = false
+        }
+
+        game.audioMan.pauseAllSound()
+        game.audioMan.pauseMusic()
+        game.audioMan.playSound(SoundAsset.PAUSE_SOUND, false)
     }
 
-    game.audioMan.pauseAllSound()
-    game.audioMan.pauseMusic()
-    game.audioMan.playSound(SoundAsset.PAUSE_SOUND, false)
-  }
+    fun resume() {
+        systemsOnPause.forEach { it.key.on = it.value }
 
-  fun resume() {
-    systemsOnPause.forEach { it.key.on = it.value }
-
-    game.audioMan.resumeAllSound()
-    game.audioMan.playMusic()
-    game.audioMan.playSound(SoundAsset.PAUSE_SOUND, false)
-  }
+        game.audioMan.resumeAllSound()
+        game.audioMan.playMusic()
+        game.audioMan.playSound(SoundAsset.PAUSE_SOUND, false)
+    }
 }

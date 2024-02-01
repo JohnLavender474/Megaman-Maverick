@@ -14,29 +14,29 @@ import com.megaman.maverick.game.assets.TextureAsset
 
 class BlinkingArrow(assMan: AssetManager, val center: Vector2) : Updatable, IDrawable<Batch> {
 
-  companion object {
-    private const val BLINK_DUR = 0.2f
-  }
-
-  private val blinkTimer = Timer(BLINK_DUR)
-  private var arrowSprite: Sprite
-  private var arrowVisible = false
-
-  init {
-    arrowSprite = Sprite(assMan.getTextureRegion(TextureAsset.UI_1.source, "Arrow"))
-    arrowSprite.setSize(ConstVals.PPM / 2f)
-    arrowSprite.setCenter(center.x, center.y)
-  }
-
-  override fun update(delta: Float) {
-    blinkTimer.update(delta)
-    if (blinkTimer.isFinished()) {
-      arrowVisible = !arrowVisible
-      blinkTimer.reset()
+    companion object {
+        private const val BLINK_DUR = 0.2f
     }
-  }
 
-  override fun draw(drawer: Batch) {
-    if (arrowVisible) arrowSprite.draw(drawer)
-  }
+    private val blinkTimer = Timer(BLINK_DUR)
+    private var arrowSprite: Sprite
+    private var arrowVisible = false
+
+    init {
+        arrowSprite = Sprite(assMan.getTextureRegion(TextureAsset.UI_1.source, "Arrow"))
+        arrowSprite.setSize(ConstVals.PPM / 2f)
+        arrowSprite.setCenter(center.x, center.y)
+    }
+
+    override fun update(delta: Float) {
+        blinkTimer.update(delta)
+        if (blinkTimer.isFinished()) {
+            arrowVisible = !arrowVisible
+            blinkTimer.reset()
+        }
+    }
+
+    override fun draw(drawer: Batch) {
+        if (arrowVisible) arrowSprite.draw(drawer)
+    }
 }

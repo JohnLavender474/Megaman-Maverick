@@ -21,27 +21,29 @@ fun getGameCameraCullingLogic(entity: IBodyEntity, timeToCull: Float = 1f) =
     CullableOnUncontained(
         { (entity.game as MegamanMaverickGame).getGameCamera().toGameRectangle() },
         { it.overlaps(entity.body as Rectangle) },
-        timeToCull)
+        timeToCull
+    )
 
 fun getGameCameraCullingLogic(camera: Camera, bounds: () -> Rectangle, timeToCull: Float = 1f) =
     CullableOnUncontained({ camera.toGameRectangle() }, { it.overlaps(bounds()) }, timeToCull)
 
 fun convertObjectPropsToEntities(props: Properties): Array<Pair<IGameEntity, Properties>> {
-  val childEntities = Array<Pair<IGameEntity, Properties>>()
+    val childEntities = Array<Pair<IGameEntity, Properties>>()
 
-  props.forEach { _, value ->
-    if (value is RectangleMapObject) {
-      val childProps = value.toProps()
-      childProps.put(ConstKeys.BOUNDS, value.rectangle.toGameRectangle())
+    props.forEach { _, value ->
+        if (value is RectangleMapObject) {
+            val childProps = value.toProps()
+            childProps.put(ConstKeys.BOUNDS, value.rectangle.toGameRectangle())
 
-      val entityType = EntityType.valueOf(childProps.get(ConstKeys.TYPE) as String)
-      GameLogger.debug(
-          "convertObjectPropsToEntities()", "entityType=$entityType,name=${value.name}")
-      val childEntity = EntityFactories.fetch(entityType, value.name)!!
+            val entityType = EntityType.valueOf(childProps.get(ConstKeys.TYPE) as String)
+            GameLogger.debug(
+                "convertObjectPropsToEntities()", "entityType=$entityType,name=${value.name}"
+            )
+            val childEntity = EntityFactories.fetch(entityType, value.name)!!
 
-      childEntities.add(childEntity to childProps)
+            childEntities.add(childEntity to childProps)
+        }
     }
-  }
 
-  return childEntities
+    return childEntities
 }

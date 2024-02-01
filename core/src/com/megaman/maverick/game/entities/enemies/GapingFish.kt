@@ -49,149 +49,153 @@ import kotlin.reflect.KClass
 
 class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
-  companion object {
-    const val TAG = "GapingFish"
-    private var atlas: TextureAtlas? = null
-    private const val HORIZ_SPEED = 2f
-    private const val VERT_SPEED = 1.25f
-    private const val CHOMP_DUR = 1.25f
-  }
-
-  override var facing = Facing.RIGHT
-
-  override val damageNegotiations =
-      objectMapOf<KClass<out IDamager>, Int>(
-          Bullet::class to 10,
-          Fireball::class to 15,
-          ChargedShot::class to ConstVals.MAX_HEALTH,
-          ChargedShotExplosion::class to 15)
-
-  val chomping: Boolean
-    get() = !chompTimer.isFinished()
-
-  private val chompTimer = Timer(CHOMP_DUR)
-
-  override fun init() {
-    GameLogger.debug(TAG, "Initializing GapingFish")
-    if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
-    super.init()
-    addComponent(defineAnimationsComponent())
-  }
-
-  override fun spawn(spawnProps: Properties) {
-    GameLogger.debug(TAG, "Spawning GapingFish with props = $spawnProps")
-    super.spawn(spawnProps)
-    val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
-    body.setCenter(spawn)
-    chompTimer.setToEnd()
-  }
-
-  override fun onDestroy() {
-    GameLogger.debug(TAG, "GapingFish on destroy")
-    super.onDestroy()
-  }
-
-  override fun onDamageInflictedTo(damageable: IDamageable) {
-    super.onDamageInflictedTo(damageable)
-    if (damageable is Megaman) chompTimer.reset()
-  }
-
-  override fun defineBodyComponent(): BodyComponent {
-    val body = Body(BodyType.DYNAMIC)
-    body.setSize(ConstVals.PPM.toFloat())
-
-    val shapes = Array<() -> IDrawableShape?>()
-
-    // water-listener fixture
-    val waterListenerFixture =
-        Fixture(
-            GameRectangle().setSize(ConstVals.PPM.toFloat(), ConstVals.PPM / 2f),
-            FixtureType.WATER_LISTENER)
-    waterListenerFixture.offsetFromBodyCenter.y = ConstVals.PPM / 4f
-    body.addFixture(waterListenerFixture)
-    shapes.add { waterListenerFixture.shape }
-
-    val m1 = GameRectangle().setSize(0.75f * ConstVals.PPM, 0.2f * ConstVals.PPM)
-
-    // head fixture
-    val headFixture = Fixture(m1.copy(), FixtureType.HEAD)
-    headFixture.offsetFromBodyCenter.y = 0.375f * ConstVals.PPM
-    body.addFixture(headFixture)
-    shapes.add { headFixture.shape }
-
-    // feet fixture
-    val feetFixture = Fixture(m1.copy(), FixtureType.FEET)
-    feetFixture.offsetFromBodyCenter.y = -0.375f * ConstVals.PPM
-    body.addFixture(feetFixture)
-    shapes.add { feetFixture.shape }
-
-    val m2 = GameRectangle().setSize(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat())
-
-    // damageable fixture
-    val damageableFixture = Fixture(m2.copy(), FixtureType.DAMAGEABLE)
-    body.addFixture(damageableFixture)
-    shapes.add { damageableFixture.shape }
-
-    // damager fixture
-    val damagerFixture = Fixture(m2.copy(), FixtureType.DAMAGER)
-    body.addFixture(damagerFixture)
-    shapes.add { damagerFixture.shape }
-
-    addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
-
-    return BodyComponentCreator.create(this, body)
-  }
-
-  override fun defineSpritesComponent(): SpritesComponent {
-    val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
-    sprite.setSize(1.5f * ConstVals.PPM)
-    val SpritesComponent = SpritesComponent(this, "gapingFish" to sprite)
-    SpritesComponent.putUpdateFunction("gapingFish") { _, _sprite ->
-      _sprite as GameSprite
-      _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
-      _sprite.setFlip(facing == Facing.LEFT, false)
+    companion object {
+        const val TAG = "GapingFish"
+        private var atlas: TextureAtlas? = null
+        private const val HORIZ_SPEED = 2f
+        private const val VERT_SPEED = 1.25f
+        private const val CHOMP_DUR = 1.25f
     }
-    return SpritesComponent
-  }
 
-  override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
-    super.defineUpdatablesComponent(updatablesComponent)
-    updatablesComponent.add {
-      GameLogger.debug(
-          TAG,
-          "GapingFish update. In water = ${body.isSensing(BodySense.IN_WATER)}. " +
-              "Invincible = $invincible. " +
-              "Chomping = $chomping. " +
-              "Position = ${body.getPosition()}")
+    override var facing = Facing.RIGHT
 
-      chompTimer.update(it)
+    override val damageNegotiations =
+        objectMapOf<KClass<out IDamager>, Int>(
+            Bullet::class to 10,
+            Fireball::class to 15,
+            ChargedShot::class to ConstVals.MAX_HEALTH,
+            ChargedShotExplosion::class to 15
+        )
 
-      val megamanBody = getMegamanMaverickGame().megaman.body
-      if (body.x >= megamanBody.getMaxX()) facing = Facing.LEFT
-      else if (body.getMaxX() <= megamanBody.x) facing = Facing.RIGHT
+    val chomping: Boolean
+        get() = !chompTimer.isFinished()
 
-      if (invincible || chomping) body.physics.velocity.setZero()
-      else {
-        val vel = body.physics.velocity
-        vel.x = HORIZ_SPEED * ConstVals.PPM * if (facing == Facing.LEFT) -1 else 1
+    private val chompTimer = Timer(CHOMP_DUR)
 
-        if (body.isSensing(BodySense.IN_WATER) || megamanBody.y < body.y) {
-          if (megamanBody.y >= body.y && megamanBody.y <= body.getMaxY()) vel.y = 0f
-          else vel.y = VERT_SPEED * ConstVals.PPM * if (megamanBody.y >= body.y) 1 else -1
-        } else vel.y = 0f
-      }
+    override fun init() {
+        GameLogger.debug(TAG, "Initializing GapingFish")
+        if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+        super.init()
+        addComponent(defineAnimationsComponent())
     }
-  }
 
-  private fun defineAnimationsComponent(): AnimationsComponent {
-    val keySupplier: () -> String = {
-      if (chomping) "chomp" else if (invincible) "gaping" else "swimming"
+    override fun spawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "Spawning GapingFish with props = $spawnProps")
+        super.spawn(spawnProps)
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
+        body.setCenter(spawn)
+        chompTimer.setToEnd()
     }
-    val animations =
-        objectMapOf<String, IAnimation>(
-            "chomp" to Animation(atlas!!.findRegion("GapingFish/Chomping"), 1, 2, 0.1f),
-            "gaping" to Animation(atlas!!.findRegion("GapingFish/Gaping"), 1, 2, 0.15f),
-            "swimming" to Animation(atlas!!.findRegion("GapingFish/Swimming"), 1, 2, 0.15f))
-    return AnimationsComponent(this, Animator(keySupplier, animations))
-  }
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "GapingFish on destroy")
+        super.onDestroy()
+    }
+
+    override fun onDamageInflictedTo(damageable: IDamageable) {
+        super.onDamageInflictedTo(damageable)
+        if (damageable is Megaman) chompTimer.reset()
+    }
+
+    override fun defineBodyComponent(): BodyComponent {
+        val body = Body(BodyType.DYNAMIC)
+        body.setSize(ConstVals.PPM.toFloat())
+
+        val shapes = Array<() -> IDrawableShape?>()
+
+        // water-listener fixture
+        val waterListenerFixture =
+            Fixture(
+                GameRectangle().setSize(ConstVals.PPM.toFloat(), ConstVals.PPM / 2f),
+                FixtureType.WATER_LISTENER
+            )
+        waterListenerFixture.offsetFromBodyCenter.y = ConstVals.PPM / 4f
+        body.addFixture(waterListenerFixture)
+        shapes.add { waterListenerFixture.shape }
+
+        val m1 = GameRectangle().setSize(0.75f * ConstVals.PPM, 0.2f * ConstVals.PPM)
+
+        // head fixture
+        val headFixture = Fixture(m1.copy(), FixtureType.HEAD)
+        headFixture.offsetFromBodyCenter.y = 0.375f * ConstVals.PPM
+        body.addFixture(headFixture)
+        shapes.add { headFixture.shape }
+
+        // feet fixture
+        val feetFixture = Fixture(m1.copy(), FixtureType.FEET)
+        feetFixture.offsetFromBodyCenter.y = -0.375f * ConstVals.PPM
+        body.addFixture(feetFixture)
+        shapes.add { feetFixture.shape }
+
+        val m2 = GameRectangle().setSize(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat())
+
+        // damageable fixture
+        val damageableFixture = Fixture(m2.copy(), FixtureType.DAMAGEABLE)
+        body.addFixture(damageableFixture)
+        shapes.add { damageableFixture.shape }
+
+        // damager fixture
+        val damagerFixture = Fixture(m2.copy(), FixtureType.DAMAGER)
+        body.addFixture(damagerFixture)
+        shapes.add { damagerFixture.shape }
+
+        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
+
+        return BodyComponentCreator.create(this, body)
+    }
+
+    override fun defineSpritesComponent(): SpritesComponent {
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
+        sprite.setSize(1.5f * ConstVals.PPM)
+        val SpritesComponent = SpritesComponent(this, "gapingFish" to sprite)
+        SpritesComponent.putUpdateFunction("gapingFish") { _, _sprite ->
+            _sprite as GameSprite
+            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            _sprite.setFlip(facing == Facing.LEFT, false)
+        }
+        return SpritesComponent
+    }
+
+    override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
+        super.defineUpdatablesComponent(updatablesComponent)
+        updatablesComponent.add {
+            GameLogger.debug(
+                TAG,
+                "GapingFish update. In water = ${body.isSensing(BodySense.IN_WATER)}. " +
+                        "Invincible = $invincible. " +
+                        "Chomping = $chomping. " +
+                        "Position = ${body.getPosition()}"
+            )
+
+            chompTimer.update(it)
+
+            val megamanBody = getMegamanMaverickGame().megaman.body
+            if (body.x >= megamanBody.getMaxX()) facing = Facing.LEFT
+            else if (body.getMaxX() <= megamanBody.x) facing = Facing.RIGHT
+
+            if (invincible || chomping) body.physics.velocity.setZero()
+            else {
+                val vel = body.physics.velocity
+                vel.x = HORIZ_SPEED * ConstVals.PPM * if (facing == Facing.LEFT) -1 else 1
+
+                if (body.isSensing(BodySense.IN_WATER) || megamanBody.y < body.y) {
+                    if (megamanBody.y >= body.y && megamanBody.y <= body.getMaxY()) vel.y = 0f
+                    else vel.y = VERT_SPEED * ConstVals.PPM * if (megamanBody.y >= body.y) 1 else -1
+                } else vel.y = 0f
+            }
+        }
+    }
+
+    private fun defineAnimationsComponent(): AnimationsComponent {
+        val keySupplier: () -> String = {
+            if (chomping) "chomp" else if (invincible) "gaping" else "swimming"
+        }
+        val animations =
+            objectMapOf<String, IAnimation>(
+                "chomp" to Animation(atlas!!.findRegion("GapingFish/Chomping"), 1, 2, 0.1f),
+                "gaping" to Animation(atlas!!.findRegion("GapingFish/Gaping"), 1, 2, 0.15f),
+                "swimming" to Animation(atlas!!.findRegion("GapingFish/Swimming"), 1, 2, 0.15f)
+            )
+        return AnimationsComponent(this, Animator(keySupplier, animations))
+    }
 }

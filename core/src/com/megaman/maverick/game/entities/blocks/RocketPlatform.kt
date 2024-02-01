@@ -34,109 +34,111 @@ import com.megaman.maverick.game.events.EventType
 class RocketPlatform(game: MegamanMaverickGame) :
     Block(game), IParentEntity, ISpriteEntity, IEventListener {
 
-  companion object {
-    private var region: TextureRegion? = null
+    companion object {
+        private var region: TextureRegion? = null
 
-    private const val WIDTH = .85f
-    private const val HEIGHT = 3f
-  }
-
-  override val children = Array<IGameEntity>()
-  override val eventKeyMask = objectSetOf<Any>(EventType.BEGIN_ROOM_TRANS, EventType.END_ROOM_TRANS)
-
-  override fun init() {
-    super<Block>.init()
-
-    if (region == null)
-        region =
-            game.assMan.getTextureRegion(
-                TextureAsset.PLATFORMS_1.source, "JeffBezosLittleDickRocket")
-
-    addComponent(defineSpritesCompoent())
-    addComponent(defineAnimationsComponent())
-    addComponent(MotionComponent(this))
-  }
-
-  override fun spawn(spawnProps: Properties) {
-    spawnProps.put(ConstKeys.PERSIST, true)
-    super.spawn(spawnProps)
-
-    game.eventsMan.addListener(this)
-
-    // define the spawn and bounds
-    val spawn = (spawnProps.get(ConstKeys.BOUNDS) as GameRectangle).getBottomCenterPoint()
-    val bounds =
-        GameRectangle()
-            .setSize(WIDTH * ConstVals.PPM, HEIGHT * ConstVals.PPM)
-            .setBottomCenterToPoint(spawn)
-    body.set(bounds)
-
-    // define the trajectory
-    val trajectory = Trajectory(spawnProps.get(ConstKeys.TRAJECTORY) as String, ConstVals.PPM)
-    val motionDefinition =
-        MotionComponent.MotionDefinition(
-            motion = trajectory,
-            function = { value, _ -> body.physics.velocity.set(value) },
-            onReset = { body.set(bounds) })
-    getComponent(MotionComponent::class)!!.put(ConstKeys.TRAJECTORY, motionDefinition)
-
-    // spawn the entities triggered by this entity's spawning, collecting any subsequent entities
-    // that implement IChildEntity into the children collection
-    val subsequentEntities = convertObjectPropsToEntities(spawnProps)
-    subsequentEntities.forEach { entry ->
-      val (subsequentEntity, subsequentEntityProps) = entry
-
-      if (subsequentEntity is IChildEntity) {
-        subsequentEntity.parent = this
-        children.add(subsequentEntity)
-      }
-
-      game.gameEngine.spawn(subsequentEntity, subsequentEntityProps)
+        private const val WIDTH = .85f
+        private const val HEIGHT = 3f
     }
-  }
 
-  override fun onDestroy() {
-    super<Block>.onDestroy()
-    game.eventsMan.removeListener(this)
-    children.forEach { it.kill() }
-    children.clear()
-  }
+    override val children = Array<IGameEntity>()
+    override val eventKeyMask = objectSetOf<Any>(EventType.BEGIN_ROOM_TRANS, EventType.END_ROOM_TRANS)
 
-  override fun onEvent(event: Event) {
-    when (event.key) {
-      EventType.BEGIN_ROOM_TRANS -> {
-        firstSprite!!.hidden = true
-        children.forEach { child ->
-          if (child is ISpriteEntity) child.sprites.values().forEach { it.hidden = true }
+    override fun init() {
+        super<Block>.init()
+
+        if (region == null)
+            region =
+                game.assMan.getTextureRegion(
+                    TextureAsset.PLATFORMS_1.source, "JeffBezosLittleDickRocket"
+                )
+
+        addComponent(defineSpritesCompoent())
+        addComponent(defineAnimationsComponent())
+        addComponent(MotionComponent(this))
+    }
+
+    override fun spawn(spawnProps: Properties) {
+        spawnProps.put(ConstKeys.PERSIST, true)
+        super.spawn(spawnProps)
+
+        game.eventsMan.addListener(this)
+
+        // define the spawn and bounds
+        val spawn = (spawnProps.get(ConstKeys.BOUNDS) as GameRectangle).getBottomCenterPoint()
+        val bounds =
+            GameRectangle()
+                .setSize(WIDTH * ConstVals.PPM, HEIGHT * ConstVals.PPM)
+                .setBottomCenterToPoint(spawn)
+        body.set(bounds)
+
+        // define the trajectory
+        val trajectory = Trajectory(spawnProps.get(ConstKeys.TRAJECTORY) as String, ConstVals.PPM)
+        val motionDefinition =
+            MotionComponent.MotionDefinition(
+                motion = trajectory,
+                function = { value, _ -> body.physics.velocity.set(value) },
+                onReset = { body.set(bounds) })
+        getComponent(MotionComponent::class)!!.put(ConstKeys.TRAJECTORY, motionDefinition)
+
+        // spawn the entities triggered by this entity's spawning, collecting any subsequent entities
+        // that implement IChildEntity into the children collection
+        val subsequentEntities = convertObjectPropsToEntities(spawnProps)
+        subsequentEntities.forEach { entry ->
+            val (subsequentEntity, subsequentEntityProps) = entry
+
+            if (subsequentEntity is IChildEntity) {
+                subsequentEntity.parent = this
+                children.add(subsequentEntity)
+            }
+
+            game.gameEngine.spawn(subsequentEntity, subsequentEntityProps)
         }
-        getComponent(MotionComponent::class)?.reset()
-      }
-      EventType.END_ROOM_TRANS -> {
-        firstSprite!!.hidden = false
-        children.forEach { child ->
-          if (child is ISpriteEntity) child.sprites.values().forEach { it.hidden = false }
+    }
+
+    override fun onDestroy() {
+        super<Block>.onDestroy()
+        game.eventsMan.removeListener(this)
+        children.forEach { it.kill() }
+        children.clear()
+    }
+
+    override fun onEvent(event: Event) {
+        when (event.key) {
+            EventType.BEGIN_ROOM_TRANS -> {
+                firstSprite!!.hidden = true
+                children.forEach { child ->
+                    if (child is ISpriteEntity) child.sprites.values().forEach { it.hidden = true }
+                }
+                getComponent(MotionComponent::class)?.reset()
+            }
+
+            EventType.END_ROOM_TRANS -> {
+                firstSprite!!.hidden = false
+                children.forEach { child ->
+                    if (child is ISpriteEntity) child.sprites.values().forEach { it.hidden = false }
+                }
+            }
         }
-      }
-    }
-  }
-
-  private fun defineSpritesCompoent(): SpritesComponent {
-    val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.PLAYGROUND, 2))
-    sprite.setSize(4f * ConstVals.PPM)
-
-    val spritesComponent = SpritesComponent(this, "rocket" to sprite)
-    spritesComponent.putUpdateFunction("rocket") { _, _sprite ->
-      _sprite as GameSprite
-      _sprite.setPosition(body.getTopCenterPoint(), Position.TOP_CENTER)
-      _sprite.translateY(ConstVals.PPM / 16f)
     }
 
-    return spritesComponent
-  }
+    private fun defineSpritesCompoent(): SpritesComponent {
+        val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.PLAYGROUND, 2))
+        sprite.setSize(4f * ConstVals.PPM)
 
-  private fun defineAnimationsComponent(): AnimationsComponent {
-    val animation = Animation(region!!, 1, 7, 0.05f, true)
-    val animator = Animator(animation)
-    return AnimationsComponent(this, animator)
-  }
+        val spritesComponent = SpritesComponent(this, "rocket" to sprite)
+        spritesComponent.putUpdateFunction("rocket") { _, _sprite ->
+            _sprite as GameSprite
+            _sprite.setPosition(body.getTopCenterPoint(), Position.TOP_CENTER)
+            _sprite.translateY(ConstVals.PPM / 16f)
+        }
+
+        return spritesComponent
+    }
+
+    private fun defineAnimationsComponent(): AnimationsComponent {
+        val animation = Animation(region!!, 1, 7, 0.05f, true)
+        val animator = Animator(animation)
+        return AnimationsComponent(this, animator)
+    }
 }

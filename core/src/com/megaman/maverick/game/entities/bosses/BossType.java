@@ -267,12 +267,6 @@ public enum BossType {
     public final Position position;
     public final TextureAsset ass;
 
-    public abstract Vector2 getSpriteSize();
-
-    public abstract Map<String, Animation> getAnims(TextureAtlas textureAtlas);
-
-    public abstract Queue<Pair<Animation, Timer>> getIntroAnimsQ(TextureAtlas textureAtlas);
-
     BossType(String name, Level level, Position position, TextureAsset ass) {
         this.name = name;
         this.level = level;
@@ -301,5 +295,11 @@ public enum BossType {
         }
         return null;
     }
+
+    public abstract Vector2 getSpriteSize();
+
+    public abstract Map<String, Animation> getAnims(TextureAtlas textureAtlas);
+
+    public abstract Queue<Pair<Animation, Timer>> getIntroAnimsQ(TextureAtlas textureAtlas);
 
 }

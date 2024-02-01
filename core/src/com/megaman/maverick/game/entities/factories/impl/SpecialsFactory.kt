@@ -10,23 +10,23 @@ import com.megaman.maverick.game.entities.special.*
 
 class SpecialsFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntity> {
 
-  companion object {
-    const val WATER = "Water"
-    const val LADDER = "Ladder"
-    const val GRAVITY_CHANGE = "GravityChange"
-    const val SPRING_BOUNCER = "SpringBouncer"
-    const val DISAPPEARING_BLOCKS = "DisappearingBlocks"
-  }
+    companion object {
+        const val WATER = "Water"
+        const val LADDER = "Ladder"
+        const val GRAVITY_CHANGE = "GravityChange"
+        const val SPRING_BOUNCER = "SpringBouncer"
+        const val DISAPPEARING_BLOCKS = "DisappearingBlocks"
+    }
 
-  private val pools = ObjectMap<Any, Pool<IGameEntity>>()
+    private val pools = ObjectMap<Any, Pool<IGameEntity>>()
 
-  init {
-    pools.put(WATER, EntityPoolCreator.create(3) { Water(game) })
-    pools.put(SPRING_BOUNCER, EntityPoolCreator.create(2) { SpringBouncer(game) })
-    pools.put(LADDER, EntityPoolCreator.create(10) { Ladder(game) })
-    pools.put(GRAVITY_CHANGE, EntityPoolCreator.create(10) { GravityChange(game) })
-    pools.put(DISAPPEARING_BLOCKS, EntityPoolCreator.create(2) { DisappearingBlocks(game) })
-  }
+    init {
+        pools.put(WATER, EntityPoolCreator.create(3) { Water(game) })
+        pools.put(SPRING_BOUNCER, EntityPoolCreator.create(2) { SpringBouncer(game) })
+        pools.put(LADDER, EntityPoolCreator.create(10) { Ladder(game) })
+        pools.put(GRAVITY_CHANGE, EntityPoolCreator.create(10) { GravityChange(game) })
+        pools.put(DISAPPEARING_BLOCKS, EntityPoolCreator.create(2) { DisappearingBlocks(game) })
+    }
 
-  override fun fetch(key: Any) = pools.get(key)?.fetch()
+    override fun fetch(key: Any) = pools.get(key)?.fetch()
 }

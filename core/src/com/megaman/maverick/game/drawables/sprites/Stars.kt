@@ -16,26 +16,27 @@ class Stars(game: MegamanMaverickGame, var startX: Float, var startY: Float) :
         WIDTH * ConstVals.PPM,
         HEIGHT * ConstVals.PPM,
         ROWS,
-        COLS) {
+        COLS
+    ) {
 
-  companion object {
-    private const val ROWS = 1
-    private const val COLS = 6
-    private const val DUR = 10f
-    private const val WIDTH = ConstVals.VIEW_WIDTH / 3f
-    private const val HEIGHT = ConstVals.VIEW_HEIGHT / 4f
-  }
-
-  private var dist = 0f
-
-  override fun update(delta: Float) {
-    super.update(delta)
-    val trans = WIDTH * ConstVals.PPM * delta / DUR
-    backgroundSprites.translate(-trans, 0f)
-    dist += trans
-    if (dist >= WIDTH * ConstVals.PPM) {
-      backgroundSprites.setPosition(startX, startY)
-      dist = 0f
+    companion object {
+        private const val ROWS = 1
+        private const val COLS = 6
+        private const val DUR = 10f
+        private const val WIDTH = ConstVals.VIEW_WIDTH / 3f
+        private const val HEIGHT = ConstVals.VIEW_HEIGHT / 4f
     }
-  }
+
+    private var dist = 0f
+
+    override fun update(delta: Float) {
+        super.update(delta)
+        val trans = WIDTH * ConstVals.PPM * delta / DUR
+        backgroundSprites.translate(-trans, 0f)
+        dist += trans
+        if (dist >= WIDTH * ConstVals.PPM) {
+            backgroundSprites.setPosition(startX, startY)
+            dist = 0f
+        }
+    }
 }

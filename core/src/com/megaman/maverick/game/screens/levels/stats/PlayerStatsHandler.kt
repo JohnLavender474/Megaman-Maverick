@@ -24,156 +24,157 @@ import com.megaman.maverick.game.events.EventType
 class PlayerStatsHandler(private val megaman: Megaman) :
     Initializable, Updatable, IDrawable<Batch> {
 
-  companion object {
-    private const val BAR_X: Float = .4f * ConstVals.PPM
-    private const val BAR_Y: Float = 9f * ConstVals.PPM
-    private const val SPECIAL_ITEM_DUR = .35f
-    private const val DUR_PER_BIT = .1f
-  }
-
-  private val engine = megaman.game.gameEngine
-  private val assMan = megaman.game.assMan
-  private val eventsMan = megaman.game.eventsMan
-  private val audioMan = (megaman.game as MegamanMaverickGame).audioMan
-
-  private lateinit var healthBar: BitsBar
-  private lateinit var weaponBarSupplier: () -> BitsBar?
-
-  private var timer: Timer? = null
-  private var initialized = false
-  private var systemStates: ObjectMap<IGameSystem, Boolean>? = null
-
-  val finished: Boolean
-    get() = timer?.isFinished() ?: true
-
-  override fun init() {
-    if (initialized) return
-
-    healthBar =
-        BitsBar(
-            assMan,
-            "Bit",
-            BAR_X,
-            BAR_Y,
-            { megaman.getHealthPoints().current },
-            { megaman.getHealthPoints().max })
-    healthBar.init()
-
-    val weaponBars = ObjectMap<MegamanWeapon, BitsBar>()
-    MegamanWeapon.values().forEach {
-      if (it == MegamanWeapon.BUSTER) return@forEach
-
-      val bitSource =
-          when (it) {
-            MegamanWeapon.FLAME_TOSS -> "RedBit"
-            else -> throw IllegalStateException("No bit source for weapon $it")
-          }
-
-      val weaponBar =
-          BitsBar(
-              assMan,
-              bitSource,
-              BAR_X + ConstVals.PPM,
-              BAR_Y,
-              { megaman.ammo },
-              { MegamanValues.MAX_WEAPON_AMMO })
-
-      weaponBar.init()
-      weaponBars.put(it, weaponBar)
+    companion object {
+        private const val BAR_X: Float = .4f * ConstVals.PPM
+        private const val BAR_Y: Float = 9f * ConstVals.PPM
+        private const val SPECIAL_ITEM_DUR = .35f
+        private const val DUR_PER_BIT = .1f
     }
 
-    weaponBarSupplier = {
-      val current = megaman.currentWeapon
-      if (current == MegamanWeapon.BUSTER) null else weaponBars.get(current)
-    }
-  }
+    private val engine = megaman.game.gameEngine
+    private val assMan = megaman.game.assMan
+    private val eventsMan = megaman.game.eventsMan
+    private val audioMan = (megaman.game as MegamanMaverickGame).audioMan
 
-  fun attain(armorPiece: MegaArmorPiece) {
-    if (!finished) throw IllegalStateException("Cannot call attain if handler is not finished")
+    private lateinit var healthBar: BitsBar
+    private lateinit var weaponBarSupplier: () -> BitsBar?
 
-    if (megaman.has(armorPiece)) return
+    private var timer: Timer? = null
+    private var initialized = false
+    private var systemStates: ObjectMap<IGameSystem, Boolean>? = null
 
-    audioMan.playMusic(SoundAsset.LIFE_SOUND, false)
-    timer = Timer(SPECIAL_ITEM_DUR)
-    timer?.runOnFinished = { megaman.add(armorPiece) }
-  }
+    val finished: Boolean
+        get() = timer?.isFinished() ?: true
 
-  fun attain(heartTank: MegaHeartTank) {
-    check(finished) { "Cannot call attain if handler is not finished" }
+    override fun init() {
+        if (initialized) return
 
-    if (megaman.has(heartTank)) return
+        healthBar =
+            BitsBar(
+                assMan,
+                "Bit",
+                BAR_X,
+                BAR_Y,
+                { megaman.getHealthPoints().current },
+                { megaman.getHealthPoints().max })
+        healthBar.init()
 
-    audioMan.playSound(SoundAsset.LIFE_SOUND, false)
-    timer = Timer(SPECIAL_ITEM_DUR)
-    timer!!.runOnFinished = {
-      megaman.add(heartTank)
-      eventsMan.submitEvent(
-          Event(EventType.ADD_PLAYER_HEALTH, props(ConstKeys.VALUE to MegaHeartTank.HEALTH_BUMP)))
-    }
+        val weaponBars = ObjectMap<MegamanWeapon, BitsBar>()
+        MegamanWeapon.values().forEach {
+            if (it == MegamanWeapon.BUSTER) return@forEach
 
-    systemStates = ObjectMap()
-    engine.systems.forEach { systemStates!!.put(it, it.on) }
-    engine.systems.forEach { if (it !is SpritesSystem) it.on = false }
-  }
+            val bitSource =
+                when (it) {
+                    MegamanWeapon.FLAME_TOSS -> "RedBit"
+                    else -> throw IllegalStateException("No bit source for weapon $it")
+                }
 
-  fun attain(healthTank: MegaHealthTank) {
-    check(finished) { "Cannot call attain if handler is not finished" }
+            val weaponBar =
+                BitsBar(
+                    assMan,
+                    bitSource,
+                    BAR_X + ConstVals.PPM,
+                    BAR_Y,
+                    { megaman.ammo },
+                    { MegamanValues.MAX_WEAPON_AMMO })
 
-    if (megaman.has(healthTank)) return
+            weaponBar.init()
+            weaponBars.put(it, weaponBar)
+        }
 
-    timer = Timer(SPECIAL_ITEM_DUR)
-    timer!!.runOnFinished = { megaman.put(healthTank) }
-  }
-
-  fun addHealth(health: Int) {
-    check(finished) { "Cannot call add health if handler is not finished" }
-
-    val healthNeeded = megaman.getHealthPoints().max - megaman.getHealthPoints().current
-    if (healthNeeded <= 0) return
-
-    val addToTanks: Boolean
-    val healthToAdd: Int
-    if (healthNeeded >= health) {
-      healthToAdd = health
-      addToTanks = false
-    } else {
-      healthToAdd = healthNeeded
-      addToTanks = if (megaman.hasHealthTanks()) megaman.addToHealthTank(health) else false
+        weaponBarSupplier = {
+            val current = megaman.currentWeapon
+            if (current == MegamanWeapon.BUSTER) null else weaponBars.get(current)
+        }
     }
 
-    var dur = healthToAdd * DUR_PER_BIT
-    if (addToTanks) dur += DUR_PER_BIT
+    fun attain(armorPiece: MegaArmorPiece) {
+        if (!finished) throw IllegalStateException("Cannot call attain if handler is not finished")
 
-    val timeMarkedRunnables = Array<TimeMarkedRunnable>()
-    for (i in 0 until healthToAdd) {
-      val time = i * DUR_PER_BIT
-      timeMarkedRunnables.add(
-          TimeMarkedRunnable(time) {
-            megaman.addHealth(1)
-            audioMan.playSound(SoundAsset.ENERGY_FILL_SOUND)
-          })
+        if (megaman.has(armorPiece)) return
+
+        audioMan.playMusic(SoundAsset.LIFE_SOUND, false)
+        timer = Timer(SPECIAL_ITEM_DUR)
+        timer?.runOnFinished = { megaman.add(armorPiece) }
     }
-    timer = Timer(dur, timeMarkedRunnables)
-    if (addToTanks) timer?.runOnFinished = { audioMan.playSound(SoundAsset.LIFE_SOUND) }
 
-    systemStates = ObjectMap()
-    engine.systems.forEach { systemStates!!.put(it, it.on) }
-    engine.systems.forEach { if (it !is SpritesSystem) it.on = false }
-  }
+    fun attain(heartTank: MegaHeartTank) {
+        check(finished) { "Cannot call attain if handler is not finished" }
 
-  override fun update(delta: Float) {
-    timer?.let {
-      it.update(delta)
-      if (it.justFinished) {
-        timer = null
-        systemStates?.forEach { e -> e.key.on = e.value }
-        systemStates = null
-      }
+        if (megaman.has(heartTank)) return
+
+        audioMan.playSound(SoundAsset.LIFE_SOUND, false)
+        timer = Timer(SPECIAL_ITEM_DUR)
+        timer!!.runOnFinished = {
+            megaman.add(heartTank)
+            eventsMan.submitEvent(
+                Event(EventType.ADD_PLAYER_HEALTH, props(ConstKeys.VALUE to MegaHeartTank.HEALTH_BUMP))
+            )
+        }
+
+        systemStates = ObjectMap()
+        engine.systems.forEach { systemStates!!.put(it, it.on) }
+        engine.systems.forEach { if (it !is SpritesSystem) it.on = false }
     }
-  }
 
-  override fun draw(drawer: Batch) {
-    healthBar.draw(drawer)
-    weaponBarSupplier()?.draw(drawer)
-  }
+    fun attain(healthTank: MegaHealthTank) {
+        check(finished) { "Cannot call attain if handler is not finished" }
+
+        if (megaman.has(healthTank)) return
+
+        timer = Timer(SPECIAL_ITEM_DUR)
+        timer!!.runOnFinished = { megaman.put(healthTank) }
+    }
+
+    fun addHealth(health: Int) {
+        check(finished) { "Cannot call add health if handler is not finished" }
+
+        val healthNeeded = megaman.getHealthPoints().max - megaman.getHealthPoints().current
+        if (healthNeeded <= 0) return
+
+        val addToTanks: Boolean
+        val healthToAdd: Int
+        if (healthNeeded >= health) {
+            healthToAdd = health
+            addToTanks = false
+        } else {
+            healthToAdd = healthNeeded
+            addToTanks = if (megaman.hasHealthTanks()) megaman.addToHealthTank(health) else false
+        }
+
+        var dur = healthToAdd * DUR_PER_BIT
+        if (addToTanks) dur += DUR_PER_BIT
+
+        val timeMarkedRunnables = Array<TimeMarkedRunnable>()
+        for (i in 0 until healthToAdd) {
+            val time = i * DUR_PER_BIT
+            timeMarkedRunnables.add(
+                TimeMarkedRunnable(time) {
+                    megaman.addHealth(1)
+                    audioMan.playSound(SoundAsset.ENERGY_FILL_SOUND)
+                })
+        }
+        timer = Timer(dur, timeMarkedRunnables)
+        if (addToTanks) timer?.runOnFinished = { audioMan.playSound(SoundAsset.LIFE_SOUND) }
+
+        systemStates = ObjectMap()
+        engine.systems.forEach { systemStates!!.put(it, it.on) }
+        engine.systems.forEach { if (it !is SpritesSystem) it.on = false }
+    }
+
+    override fun update(delta: Float) {
+        timer?.let {
+            it.update(delta)
+            if (it.justFinished) {
+                timer = null
+                systemStates?.forEach { e -> e.key.on = e.value }
+                systemStates = null
+            }
+        }
+    }
+
+    override fun draw(drawer: Batch) {
+        healthBar.draw(drawer)
+        weaponBarSupplier()?.draw(drawer)
+    }
 }

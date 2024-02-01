@@ -27,45 +27,45 @@ import com.megaman.maverick.game.assets.TextureAsset
 /** A smoke puff decoration. */
 class SmokePuff(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity {
 
-  companion object {
-    private var smokePuffRegion: TextureRegion? = null
-  }
+    companion object {
+        private var smokePuffRegion: TextureRegion? = null
+    }
 
-  private lateinit var animation: IAnimation
+    private lateinit var animation: IAnimation
 
-  override fun init() {
-    if (smokePuffRegion == null)
-        smokePuffRegion =
-            game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "SmokePuff")
-    addComponent(defineSpritesCompoent())
-    addComponent(defineAnimationsComponent())
-    addComponent(defineUpdatablesComponent())
-  }
+    override fun init() {
+        if (smokePuffRegion == null)
+            smokePuffRegion =
+                game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "SmokePuff")
+        addComponent(defineSpritesCompoent())
+        addComponent(defineAnimationsComponent())
+        addComponent(defineUpdatablesComponent())
+    }
 
-  override fun spawn(spawnProps: Properties) {
-    super.spawn(spawnProps)
-    val spawn = spawnProps.get(ConstKeys.POSITION) as Vector2
-    (firstSprite as GameSprite).setPosition(spawn, Position.BOTTOM_CENTER)
-  }
+    override fun spawn(spawnProps: Properties) {
+        super.spawn(spawnProps)
+        val spawn = spawnProps.get(ConstKeys.POSITION) as Vector2
+        (firstSprite as GameSprite).setPosition(spawn, Position.BOTTOM_CENTER)
+    }
 
-  private fun defineAnimationsComponent(): AnimationsComponent {
-    val animation = Animation(smokePuffRegion!!, 1, 7, 0.025f, false)
-    val animator = Animator(animation)
-    return AnimationsComponent(this, animator)
-  }
+    private fun defineAnimationsComponent(): AnimationsComponent {
+        val animation = Animation(smokePuffRegion!!, 1, 7, 0.025f, false)
+        val animator = Animator(animation)
+        return AnimationsComponent(this, animator)
+    }
 
-  private fun defineSpritesCompoent(): SpritesComponent {
-    val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 3))
-    sprite.setSize(ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
-    return SpritesComponent(this, "smoke_puff" to sprite)
-  }
+    private fun defineSpritesCompoent(): SpritesComponent {
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 3))
+        sprite.setSize(ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
+        return SpritesComponent(this, "smoke_puff" to sprite)
+    }
 
-  private fun defineUpdatablesComponent() =
-      UpdatablesComponent(
-          this,
-          {
-            if (animation.isFinished()) {
-              kill(props(CAUSE_OF_DEATH_MESSAGE to "Smoke puff animation finished."))
-            }
-          })
+    private fun defineUpdatablesComponent() =
+        UpdatablesComponent(
+            this,
+            {
+                if (animation.isFinished()) {
+                    kill(props(CAUSE_OF_DEATH_MESSAGE to "Smoke puff animation finished."))
+                }
+            })
 }

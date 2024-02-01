@@ -4,49 +4,49 @@ import com.engine.common.enums.Direction
 
 interface IDirectionRotatable {
 
-  var directionRotation: Direction
+    var directionRotation: Direction
 
-  fun isDirectionRotatedVertically() = isDirectionRotatedUp() || isDirectionRotatedDown()
+    fun isDirectionRotatedVertically() = isDirectionRotatedUp() || isDirectionRotatedDown()
 
-  fun isDirectionRotatedHorizontally() = isDirectionRotatedLeft() || isDirectionRotatedRight()
+    fun isDirectionRotatedHorizontally() = isDirectionRotatedLeft() || isDirectionRotatedRight()
 
-  fun isDirectionRotated(direction: Direction): Boolean = directionRotation == direction
+    fun isDirectionRotated(direction: Direction): Boolean = directionRotation == direction
 
-  fun isDirectionRotatedDown(): Boolean = isDirectionRotated(Direction.DOWN)
+    fun isDirectionRotatedDown(): Boolean = isDirectionRotated(Direction.DOWN)
 
-  fun isDirectionRotatedLeft(): Boolean = isDirectionRotated(Direction.LEFT)
+    fun isDirectionRotatedLeft(): Boolean = isDirectionRotated(Direction.LEFT)
 
-  fun isDirectionRotatedRight(): Boolean = isDirectionRotated(Direction.RIGHT)
+    fun isDirectionRotatedRight(): Boolean = isDirectionRotated(Direction.RIGHT)
 
-  fun isDirectionRotatedUp(): Boolean = isDirectionRotated(Direction.UP)
+    fun isDirectionRotatedUp(): Boolean = isDirectionRotated(Direction.UP)
 
-  fun rotateLeft() {
-    directionRotation =
-        when (directionRotation) {
-          Direction.UP -> Direction.LEFT
-          Direction.LEFT -> Direction.DOWN
-          Direction.DOWN -> Direction.RIGHT
-          Direction.RIGHT -> Direction.UP
-        }
-  }
+    fun rotateLeft() {
+        directionRotation =
+            when (directionRotation) {
+                Direction.UP -> Direction.LEFT
+                Direction.LEFT -> Direction.DOWN
+                Direction.DOWN -> Direction.RIGHT
+                Direction.RIGHT -> Direction.UP
+            }
+    }
 
-  fun rotateRight() {
-    directionRotation =
-        when (directionRotation) {
-          Direction.UP -> Direction.RIGHT
-          Direction.RIGHT -> Direction.DOWN
-          Direction.DOWN -> Direction.LEFT
-          Direction.LEFT -> Direction.UP
-        }
-  }
+    fun rotateRight() {
+        directionRotation =
+            when (directionRotation) {
+                Direction.UP -> Direction.RIGHT
+                Direction.RIGHT -> Direction.DOWN
+                Direction.DOWN -> Direction.LEFT
+                Direction.LEFT -> Direction.UP
+            }
+    }
 
-  fun rotate180() {
-    directionRotation =
-        when (directionRotation) {
-          Direction.UP -> Direction.DOWN
-          Direction.RIGHT -> Direction.LEFT
-          Direction.DOWN -> Direction.UP
-          Direction.LEFT -> Direction.RIGHT
-        }
-  }
+    fun rotate180() {
+        directionRotation =
+            when (directionRotation) {
+                Direction.UP -> Direction.DOWN
+                Direction.RIGHT -> Direction.LEFT
+                Direction.DOWN -> Direction.UP
+                Direction.LEFT -> Direction.RIGHT
+            }
+    }
 }

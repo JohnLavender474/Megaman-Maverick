@@ -39,77 +39,77 @@ import com.megaman.maverick.game.world.FixtureType
 class HeartTank(game: MegamanMaverickGame) :
     GameEntity(game), ItemEntity, IBodyEntity, ISpriteEntity, IUpsideDownable {
 
-  companion object {
-    const val TAG = "HeartTank"
-    private var textureRegion: TextureRegion? = null
-  }
-
-  override var upsideDown: Boolean = false
-
-  lateinit var heartTank: MegaHeartTank
-    private set
-
-  override fun init() {
-    if (textureRegion == null)
-        textureRegion = game.assMan.getTextureRegion(TextureAsset.ITEMS_1.source, "HeartTank")
-    addComponent(defineBodyComponent())
-    addComponent(defineSpritesCompoent())
-    addComponent(defineAnimationsComponent())
-  }
-
-  override fun spawn(spawnProps: Properties) {
-    super.spawn(spawnProps)
-
-    heartTank = MegaHeartTank.get(spawnProps.get(ConstKeys.VALUE, String::class)!!)
-    upsideDown = spawnProps.getOrDefault(ConstKeys.UPSIDE_DOWN, false) as Boolean
-
-    val megaman = getMegamanMaverickGame().megaman
-    if (megaman.has(heartTank))
-        kill(props(CAUSE_OF_DEATH_MESSAGE to "Already have this heart tank."))
-
-    val spawn =
-        if (spawnProps.containsKey(ConstKeys.BOUNDS))
-            spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
-        else spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-
-    body.setBottomCenterToPoint(spawn)
-  }
-
-  override fun contactWithPlayer(megaman: Megaman) {
-    kill(props(CAUSE_OF_DEATH_MESSAGE to "Contact with Megaman."))
-    game.eventsMan.submitEvent(Event(EventType.ADD_HEART_TANK, props(ConstKeys.VALUE to heartTank)))
-  }
-
-  private fun defineBodyComponent(): BodyComponent {
-    val body = Body(BodyType.ABSTRACT)
-    body.setSize(ConstVals.PPM.toFloat())
-
-    // item fixture
-    val itemFixture = Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat()), FixtureType.ITEM)
-    body.addFixture(itemFixture)
-
-    return BodyComponentCreator.create(this, body)
-  }
-
-  private fun defineSpritesCompoent(): SpritesComponent {
-    val sprite = GameSprite()
-    sprite.setSize(1.5f * ConstVals.PPM)
-    val SpritesComponent = SpritesComponent(this, "heart" to sprite)
-    SpritesComponent.putUpdateFunction("heart") { _, _sprite ->
-      _sprite as GameSprite
-
-      val position = if (upsideDown) Position.TOP_CENTER else Position.BOTTOM_CENTER
-      val bodyPosition = body.getPositionPoint(position)
-      _sprite.setPosition(bodyPosition, position)
-
-      _sprite.setFlip(false, upsideDown)
+    companion object {
+        const val TAG = "HeartTank"
+        private var textureRegion: TextureRegion? = null
     }
-    return SpritesComponent
-  }
 
-  private fun defineAnimationsComponent(): AnimationsComponent {
-    val animation = Animation(textureRegion!!, 1, 2, 0.15f, true)
-    val animator = Animator(animation)
-    return AnimationsComponent(this, animator)
-  }
+    override var upsideDown: Boolean = false
+
+    lateinit var heartTank: MegaHeartTank
+        private set
+
+    override fun init() {
+        if (textureRegion == null)
+            textureRegion = game.assMan.getTextureRegion(TextureAsset.ITEMS_1.source, "HeartTank")
+        addComponent(defineBodyComponent())
+        addComponent(defineSpritesCompoent())
+        addComponent(defineAnimationsComponent())
+    }
+
+    override fun spawn(spawnProps: Properties) {
+        super.spawn(spawnProps)
+
+        heartTank = MegaHeartTank.get(spawnProps.get(ConstKeys.VALUE, String::class)!!)
+        upsideDown = spawnProps.getOrDefault(ConstKeys.UPSIDE_DOWN, false) as Boolean
+
+        val megaman = getMegamanMaverickGame().megaman
+        if (megaman.has(heartTank))
+            kill(props(CAUSE_OF_DEATH_MESSAGE to "Already have this heart tank."))
+
+        val spawn =
+            if (spawnProps.containsKey(ConstKeys.BOUNDS))
+                spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+            else spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+
+        body.setBottomCenterToPoint(spawn)
+    }
+
+    override fun contactWithPlayer(megaman: Megaman) {
+        kill(props(CAUSE_OF_DEATH_MESSAGE to "Contact with Megaman."))
+        game.eventsMan.submitEvent(Event(EventType.ADD_HEART_TANK, props(ConstKeys.VALUE to heartTank)))
+    }
+
+    private fun defineBodyComponent(): BodyComponent {
+        val body = Body(BodyType.ABSTRACT)
+        body.setSize(ConstVals.PPM.toFloat())
+
+        // item fixture
+        val itemFixture = Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat()), FixtureType.ITEM)
+        body.addFixture(itemFixture)
+
+        return BodyComponentCreator.create(this, body)
+    }
+
+    private fun defineSpritesCompoent(): SpritesComponent {
+        val sprite = GameSprite()
+        sprite.setSize(1.5f * ConstVals.PPM)
+        val SpritesComponent = SpritesComponent(this, "heart" to sprite)
+        SpritesComponent.putUpdateFunction("heart") { _, _sprite ->
+            _sprite as GameSprite
+
+            val position = if (upsideDown) Position.TOP_CENTER else Position.BOTTOM_CENTER
+            val bodyPosition = body.getPositionPoint(position)
+            _sprite.setPosition(bodyPosition, position)
+
+            _sprite.setFlip(false, upsideDown)
+        }
+        return SpritesComponent
+    }
+
+    private fun defineAnimationsComponent(): AnimationsComponent {
+        val animation = Animation(textureRegion!!, 1, 2, 0.15f, true)
+        val animator = Animator(animation)
+        return AnimationsComponent(this, animator)
+    }
 }

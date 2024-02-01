@@ -44,177 +44,183 @@ import kotlin.reflect.KClass
 
 class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
-  companion object {
-    private var textureRegion: TextureRegion? = null
-    private const val GRAVITY = -.15f
-    private const val VEL_X = 2.5f
-    private const val VEL_Y = 2.5f
-  }
-
-  override val damageNegotiations =
-      objectMapOf<KClass<out IDamager>, Int>(
-          Bullet::class to 5,
-          Fireball::class to ConstVals.MAX_HEALTH,
-          ChargedShot::class to ConstVals.MAX_HEALTH,
-          ChargedShotExplosion::class to 15)
-
-  override lateinit var facing: Facing
-
-  private var onWall = false
-  private var wasOnWall = false
-
-  override fun init() {
-    if (textureRegion == null)
-        textureRegion = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, "SuctionRoller")
-    super.init()
-    addComponent(defineAnimationsComponent())
-  }
-
-  override fun spawn(spawnProps: Properties) {
-    super.spawn(spawnProps)
-    onWall = false
-    wasOnWall = false
-    facing = if (getMegamanMaverickGame().megaman.body.x > body.x) Facing.RIGHT else Facing.LEFT
-    val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
-    body.positionOnPoint(spawn, Position.BOTTOM_CENTER)
-  }
-
-  override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
-    super.defineUpdatablesComponent(updatablesComponent)
-    updatablesComponent.add {
-      val megaman = getMegamanMaverickGame().megaman
-      if (megaman.dead) return@add
-
-      wasOnWall = onWall
-      onWall =
-          (facing == Facing.LEFT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
-              (facing == Facing.RIGHT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
-
-      if (body.isSensing(BodySense.FEET_ON_GROUND)) {
-        if (megaman.body.getBottomRightPoint().x < body.x) facing = Facing.LEFT
-        else if (megaman.body.x > body.getBottomRightPoint().x) facing = Facing.RIGHT
-      }
-    }
-  }
-
-  override fun defineBodyComponent(): BodyComponent {
-    val body = Body(BodyType.DYNAMIC)
-    body.setSize(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat())
-
-    val shapes = Array<() -> IDrawableShape?>()
-
-    // body fixture
-    val bodyFixture =
-        Fixture(
-            GameRectangle().setSize(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat()),
-            FixtureType.BODY)
-    body.addFixture(bodyFixture)
-
-    bodyFixture.shape.color = Color.BLUE
-    shapes.add { bodyFixture.shape }
-
-    // feet fixture
-    val feetFixture =
-        Fixture(GameRectangle().setSize(ConstVals.PPM / 4f, ConstVals.PPM / 32f), FixtureType.FEET)
-    feetFixture.offsetFromBodyCenter.y = -0.6f * ConstVals.PPM
-    body.addFixture(feetFixture)
-
-    feetFixture.shape.color = Color.GREEN
-    shapes.add { feetFixture.shape }
-
-    // left fixture
-    val leftFixture =
-        Fixture(
-            GameRectangle().setSize(ConstVals.PPM / 32f, ConstVals.PPM.toFloat()), FixtureType.SIDE)
-    leftFixture.offsetFromBodyCenter.x = -0.375f * ConstVals.PPM
-    leftFixture.offsetFromBodyCenter.y = ConstVals.PPM / 5f
-    leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
-    body.addFixture(leftFixture)
-
-    leftFixture.shape.color = Color.ORANGE
-    shapes.add { leftFixture.shape }
-
-    // right fixture
-    val rightFixture =
-        Fixture(
-            GameRectangle().setSize(ConstVals.PPM / 32f, ConstVals.PPM.toFloat()), FixtureType.SIDE)
-    rightFixture.offsetFromBodyCenter.x = 0.375f * ConstVals.PPM
-    rightFixture.offsetFromBodyCenter.y = ConstVals.PPM / 5f
-    rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
-    body.addFixture(rightFixture)
-
-    rightFixture.shape.color = Color.ORANGE
-    shapes.add { rightFixture.shape }
-
-    // damageable fixture
-    val damageableFixture =
-        Fixture(
-            GameRectangle().setSize(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat()),
-            FixtureType.DAMAGEABLE)
-    body.addFixture(damageableFixture)
-
-    // damager fixture
-    val damagerFixture =
-        Fixture(
-            GameRectangle().setSize(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat()),
-            FixtureType.DAMAGER)
-    body.addFixture(damagerFixture)
-
-    shapes.add { damagerFixture.shape }
-
-    // pre-process
-    body.preProcess = Updatable {
-      body.physics.gravity.y =
-          if (body.isSensing(BodySense.FEET_ON_GROUND)) 0f else GRAVITY * ConstVals.PPM
-
-      if (onWall) {
-        if (!wasOnWall) body.physics.velocity.x = 0f
-        body.physics.velocity.y = VEL_Y * ConstVals.PPM
-      } else {
-        if (wasOnWall) body.y += ConstVals.PPM / 10f
-        body.physics.velocity.x = VEL_X * ConstVals.PPM * facing.value
-      }
+    companion object {
+        private var textureRegion: TextureRegion? = null
+        private const val GRAVITY = -.15f
+        private const val VEL_X = 2.5f
+        private const val VEL_Y = 2.5f
     }
 
-    addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
+    override val damageNegotiations =
+        objectMapOf<KClass<out IDamager>, Int>(
+            Bullet::class to 5,
+            Fireball::class to ConstVals.MAX_HEALTH,
+            ChargedShot::class to ConstVals.MAX_HEALTH,
+            ChargedShotExplosion::class to 15
+        )
 
-    return BodyComponentCreator.create(this, body)
-  }
+    override lateinit var facing: Facing
 
-  override fun defineSpritesComponent(): SpritesComponent {
-    val sprite = GameSprite()
-    sprite.setSize(1.5f * ConstVals.PPM)
-    sprite.setOriginCenter()
+    private var onWall = false
+    private var wasOnWall = false
 
-    val SpritesComponent = SpritesComponent(this, "suctionRoller" to sprite)
-    SpritesComponent.putUpdateFunction("suctionRoller") { _, _sprite ->
-      _sprite as GameSprite
-      _sprite.setFlip(facing == Facing.RIGHT, false)
-
-      val position =
-          if (onWall) {
-            if (facing == Facing.LEFT) Position.CENTER_LEFT else Position.CENTER_RIGHT
-          } else Position.BOTTOM_CENTER
-
-      val bodyPosition =
-          if (onWall) {
-            if (position == Position.CENTER_LEFT) body.getCenterLeftPoint()
-            else body.getCenterRightPoint()
-          } else body.getBottomCenterPoint()
-
-      _sprite.setPosition(bodyPosition, position)
-
-      _sprite.rotation =
-          if (onWall) {
-            if (facing == Facing.LEFT) -90f else 90f
-          } else 0f
+    override fun init() {
+        if (textureRegion == null)
+            textureRegion = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, "SuctionRoller")
+        super.init()
+        addComponent(defineAnimationsComponent())
     }
-    return SpritesComponent
-  }
 
-  private fun defineAnimationsComponent(): AnimationsComponent {
-    val animation = Animation(textureRegion!!, 1, 5, 0.1f, true)
-    val animator = Animator(animation)
-    return AnimationsComponent(this, animator)
-  }
+    override fun spawn(spawnProps: Properties) {
+        super.spawn(spawnProps)
+        onWall = false
+        wasOnWall = false
+        facing = if (getMegamanMaverickGame().megaman.body.x > body.x) Facing.RIGHT else Facing.LEFT
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        body.positionOnPoint(spawn, Position.BOTTOM_CENTER)
+    }
+
+    override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
+        super.defineUpdatablesComponent(updatablesComponent)
+        updatablesComponent.add {
+            val megaman = getMegamanMaverickGame().megaman
+            if (megaman.dead) return@add
+
+            wasOnWall = onWall
+            onWall =
+                (facing == Facing.LEFT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
+                        (facing == Facing.RIGHT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
+
+            if (body.isSensing(BodySense.FEET_ON_GROUND)) {
+                if (megaman.body.getBottomRightPoint().x < body.x) facing = Facing.LEFT
+                else if (megaman.body.x > body.getBottomRightPoint().x) facing = Facing.RIGHT
+            }
+        }
+    }
+
+    override fun defineBodyComponent(): BodyComponent {
+        val body = Body(BodyType.DYNAMIC)
+        body.setSize(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat())
+
+        val shapes = Array<() -> IDrawableShape?>()
+
+        // body fixture
+        val bodyFixture =
+            Fixture(
+                GameRectangle().setSize(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat()),
+                FixtureType.BODY
+            )
+        body.addFixture(bodyFixture)
+
+        bodyFixture.shape.color = Color.BLUE
+        shapes.add { bodyFixture.shape }
+
+        // feet fixture
+        val feetFixture =
+            Fixture(GameRectangle().setSize(ConstVals.PPM / 4f, ConstVals.PPM / 32f), FixtureType.FEET)
+        feetFixture.offsetFromBodyCenter.y = -0.6f * ConstVals.PPM
+        body.addFixture(feetFixture)
+
+        feetFixture.shape.color = Color.GREEN
+        shapes.add { feetFixture.shape }
+
+        // left fixture
+        val leftFixture =
+            Fixture(
+                GameRectangle().setSize(ConstVals.PPM / 32f, ConstVals.PPM.toFloat()), FixtureType.SIDE
+            )
+        leftFixture.offsetFromBodyCenter.x = -0.375f * ConstVals.PPM
+        leftFixture.offsetFromBodyCenter.y = ConstVals.PPM / 5f
+        leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
+        body.addFixture(leftFixture)
+
+        leftFixture.shape.color = Color.ORANGE
+        shapes.add { leftFixture.shape }
+
+        // right fixture
+        val rightFixture =
+            Fixture(
+                GameRectangle().setSize(ConstVals.PPM / 32f, ConstVals.PPM.toFloat()), FixtureType.SIDE
+            )
+        rightFixture.offsetFromBodyCenter.x = 0.375f * ConstVals.PPM
+        rightFixture.offsetFromBodyCenter.y = ConstVals.PPM / 5f
+        rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
+        body.addFixture(rightFixture)
+
+        rightFixture.shape.color = Color.ORANGE
+        shapes.add { rightFixture.shape }
+
+        // damageable fixture
+        val damageableFixture =
+            Fixture(
+                GameRectangle().setSize(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat()),
+                FixtureType.DAMAGEABLE
+            )
+        body.addFixture(damageableFixture)
+
+        // damager fixture
+        val damagerFixture =
+            Fixture(
+                GameRectangle().setSize(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat()),
+                FixtureType.DAMAGER
+            )
+        body.addFixture(damagerFixture)
+
+        shapes.add { damagerFixture.shape }
+
+        // pre-process
+        body.preProcess = Updatable {
+            body.physics.gravity.y =
+                if (body.isSensing(BodySense.FEET_ON_GROUND)) 0f else GRAVITY * ConstVals.PPM
+
+            if (onWall) {
+                if (!wasOnWall) body.physics.velocity.x = 0f
+                body.physics.velocity.y = VEL_Y * ConstVals.PPM
+            } else {
+                if (wasOnWall) body.y += ConstVals.PPM / 10f
+                body.physics.velocity.x = VEL_X * ConstVals.PPM * facing.value
+            }
+        }
+
+        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
+
+        return BodyComponentCreator.create(this, body)
+    }
+
+    override fun defineSpritesComponent(): SpritesComponent {
+        val sprite = GameSprite()
+        sprite.setSize(1.5f * ConstVals.PPM)
+        sprite.setOriginCenter()
+
+        val SpritesComponent = SpritesComponent(this, "suctionRoller" to sprite)
+        SpritesComponent.putUpdateFunction("suctionRoller") { _, _sprite ->
+            _sprite as GameSprite
+            _sprite.setFlip(facing == Facing.RIGHT, false)
+
+            val position =
+                if (onWall) {
+                    if (facing == Facing.LEFT) Position.CENTER_LEFT else Position.CENTER_RIGHT
+                } else Position.BOTTOM_CENTER
+
+            val bodyPosition =
+                if (onWall) {
+                    if (position == Position.CENTER_LEFT) body.getCenterLeftPoint()
+                    else body.getCenterRightPoint()
+                } else body.getBottomCenterPoint()
+
+            _sprite.setPosition(bodyPosition, position)
+
+            _sprite.rotation =
+                if (onWall) {
+                    if (facing == Facing.LEFT) -90f else 90f
+                } else 0f
+        }
+        return SpritesComponent
+    }
+
+    private fun defineAnimationsComponent(): AnimationsComponent {
+        val animation = Animation(textureRegion!!, 1, 5, 0.1f, true)
+        val animator = Animator(animation)
+        return AnimationsComponent(this, animator)
+    }
 }

@@ -32,59 +32,59 @@ import kotlin.math.ceil
 
 class Splash(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity {
 
-  companion object {
-    const val TAG = "Splash"
+    companion object {
+        const val TAG = "Splash"
 
-    private const val SPLASH_REGION_KEY = "Water/Splash"
-    private const val ALPHA = .5f
+        private const val SPLASH_REGION_KEY = "Water/Splash"
+        private const val ALPHA = .5f
 
-    private var splashRegion: TextureRegion? = null
+        private var splashRegion: TextureRegion? = null
 
-    fun generate(game: MegamanMaverickGame, splasher: Body, water: Body) {
-      GameLogger.debug(TAG, "Generating splash for splasher [$splasher] and water [$water]")
-      val numSplashes = ceil(splasher.width / ConstVals.PPM).toInt()
-      for (i in 0 until numSplashes) {
-        val spawn =
-            Vector2(splasher.x + ConstVals.PPM / 2f + i * ConstVals.PPM, water.y + water.height)
-        val s = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SPLASH)
-        game.gameEngine.spawn(s!!, props(ConstKeys.POSITION to spawn))
-      }
+        fun generate(game: MegamanMaverickGame, splasher: Body, water: Body) {
+            GameLogger.debug(TAG, "Generating splash for splasher [$splasher] and water [$water]")
+            val numSplashes = ceil(splasher.width / ConstVals.PPM).toInt()
+            for (i in 0 until numSplashes) {
+                val spawn =
+                    Vector2(splasher.x + ConstVals.PPM / 2f + i * ConstVals.PPM, water.y + water.height)
+                val s = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SPLASH)
+                game.gameEngine.spawn(s!!, props(ConstKeys.POSITION to spawn))
+            }
+        }
     }
-  }
 
-  private lateinit var animation: IAnimation
+    private lateinit var animation: IAnimation
 
-  override fun init() {
-    if (splashRegion == null)
-        splashRegion =
-            game.assMan.getTextureRegion(TextureAsset.ENVIRONS_1.source, SPLASH_REGION_KEY)
+    override fun init() {
+        if (splashRegion == null)
+            splashRegion =
+                game.assMan.getTextureRegion(TextureAsset.ENVIRONS_1.source, SPLASH_REGION_KEY)
 
-    addComponent(defineSpritesCompoent())
-    addComponent(defineAnimationsComponent())
-    addComponent(defineUpdatablesComponent())
-  }
+        addComponent(defineSpritesCompoent())
+        addComponent(defineAnimationsComponent())
+        addComponent(defineUpdatablesComponent())
+    }
 
-  override fun spawn(spawnProps: Properties) {
-    super.spawn(spawnProps)
-    val spawn = spawnProps.get(ConstKeys.POSITION) as Vector2
-    (firstSprite as GameSprite).setPosition(spawn, Position.BOTTOM_CENTER)
-  }
+    override fun spawn(spawnProps: Properties) {
+        super.spawn(spawnProps)
+        val spawn = spawnProps.get(ConstKeys.POSITION) as Vector2
+        (firstSprite as GameSprite).setPosition(spawn, Position.BOTTOM_CENTER)
+    }
 
-  private fun defineUpdatablesComponent() =
-      UpdatablesComponent(
-          this,
-          {
-            if (animation.isFinished()) kill(props(CAUSE_OF_DEATH_MESSAGE to "Animation finished"))
-          })
+    private fun defineUpdatablesComponent() =
+        UpdatablesComponent(
+            this,
+            {
+                if (animation.isFinished()) kill(props(CAUSE_OF_DEATH_MESSAGE to "Animation finished"))
+            })
 
-  private fun defineAnimationsComponent(): AnimationsComponent {
-    animation = Animation(splashRegion!!, 1, 5, 0.075f, false)
-    return AnimationsComponent(this, Animator(animation))
-  }
+    private fun defineAnimationsComponent(): AnimationsComponent {
+        animation = Animation(splashRegion!!, 1, 5, 0.075f, false)
+        return AnimationsComponent(this, Animator(animation))
+    }
 
-  private fun defineSpritesCompoent(): SpritesComponent {
-    val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -1))
-    sprite.setAlpha(ALPHA)
-    return SpritesComponent(this, "splash" to sprite)
-  }
+    private fun defineSpritesCompoent(): SpritesComponent {
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -1))
+        sprite.setAlpha(ALPHA)
+        return SpritesComponent(this, "splash" to sprite)
+    }
 }

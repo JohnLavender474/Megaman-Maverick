@@ -38,123 +38,123 @@ import com.megaman.maverick.game.world.getEntity
 
 class CaveRock(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity {
 
-  companion object {
-    const val TAG = "CaveRock"
-    private var rockRegion: TextureRegion? = null
-    private const val STANDARD_GRAVITY = -0.5f
-  }
-
-  override var owner: IGameEntity? = null
-
-  var trajectory: Vector2? = null
-  var passThroughBlocks = false
-  var gravity = STANDARD_GRAVITY * ConstVals.PPM
-
-  override fun init() {
-    if (rockRegion == null)
-        rockRegion =
-            game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "CaveRock/Rock")
-    defineProjectileComponents().forEach { addComponent(it) }
-    addComponent(defineBodyComponent())
-    addComponent(defineSpritesComponent())
-  }
-
-  override fun spawn(spawnProps: Properties) {
-    GameLogger.debug(TAG, "Spawn with props = $spawnProps")
-    super.spawn(spawnProps)
-
-    val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-    body.setCenter(spawn)
-
-    owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
-    passThroughBlocks = spawnProps.getOrDefault(ConstKeys.PASS_THROUGH, false, Boolean::class)
-
-    if (spawnProps.containsKey(ConstKeys.IMPULSE)) {
-      val impulse = spawnProps.get(ConstKeys.IMPULSE, Vector2::class)!!
-      body.physics.velocity = impulse
+    companion object {
+        const val TAG = "CaveRock"
+        private var rockRegion: TextureRegion? = null
+        private const val STANDARD_GRAVITY = -0.5f
     }
 
-    trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)
-    gravity =
-        spawnProps.getOrDefault(ConstKeys.GRAVITY, STANDARD_GRAVITY * ConstVals.PPM, Float::class)
-  }
+    override var owner: IGameEntity? = null
 
-  override fun onDamageInflictedTo(damageable: IDamageable) {
-    GameLogger.debug(TAG, "onDamageInflictedTo(): damageable = $damageable")
-    burst()
-  }
+    var trajectory: Vector2? = null
+    var passThroughBlocks = false
+    var gravity = STANDARD_GRAVITY * ConstVals.PPM
 
-  override fun hitBlock(blockFixture: Fixture) {
-    if (passThroughBlocks) return
-    GameLogger.debug(TAG, "Hit block: $blockFixture")
-    burst()
-  }
-
-  override fun hitWater(waterFixture: Fixture) {
-    // set x vel to zero and sink slowly
-  }
-
-  override fun hitShield(shieldFixture: Fixture) {
-    // bounce
-  }
-
-  private fun defineBodyComponent(): BodyComponent {
-    val body = Body(BodyType.ABSTRACT)
-    body.setSize(0.75f * ConstVals.PPM)
-
-    val debugShapes = Array<() -> IDrawableShape?>()
-
-    // projectile fixture
-    val projectileFixture =
-        Fixture(GameRectangle().setSize(0.75f * ConstVals.PPM), FixtureType.PROJECTILE)
-    body.addFixture(projectileFixture)
-    projectileFixture.shape.color = Color.YELLOW
-    debugShapes.add { projectileFixture.shape }
-
-    // damager fixture
-    val damagerFixture =
-        Fixture(GameRectangle().setSize(0.65f * ConstVals.PPM), FixtureType.DAMAGER)
-    body.addFixture(damagerFixture)
-    damagerFixture.shape.color = Color.RED
-    debugShapes.add { damagerFixture.shape }
-
-    // shieldFixture
-    val shieldFixture = Fixture(GameRectangle().setSize(0.75f * ConstVals.PPM), FixtureType.SHIELD)
-    body.addFixture(shieldFixture)
-    shieldFixture.shape.color = Color.BLUE
-    debugShapes.add { shieldFixture.shape }
-
-    body.preProcess = Updatable {
-      body.physics.gravity.y = gravity
-      trajectory?.let { body.physics.velocity = it }
+    override fun init() {
+        if (rockRegion == null)
+            rockRegion =
+                game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "CaveRock/Rock")
+        defineProjectileComponents().forEach { addComponent(it) }
+        addComponent(defineBodyComponent())
+        addComponent(defineSpritesComponent())
     }
 
-    addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+    override fun spawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "Spawn with props = $spawnProps")
+        super.spawn(spawnProps)
 
-    return BodyComponentCreator.create(this, body)
-  }
+        val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+        body.setCenter(spawn)
 
-  private fun defineSpritesComponent(): SpritesComponent {
-    val sprite = GameSprite()
-    sprite.setSize(2.5f * ConstVals.PPM)
-    sprite.setRegion(rockRegion!!)
+        owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
+        passThroughBlocks = spawnProps.getOrDefault(ConstKeys.PASS_THROUGH, false, Boolean::class)
 
-    val spritesComponent = SpritesComponent(this, "rock" to sprite)
-    spritesComponent.putUpdateFunction("rock") { _, _sprite ->
-      _sprite as GameSprite
-      val center = body.getCenter()
-      _sprite.setCenter(center.x, center.y)
+        if (spawnProps.containsKey(ConstKeys.IMPULSE)) {
+            val impulse = spawnProps.get(ConstKeys.IMPULSE, Vector2::class)!!
+            body.physics.velocity = impulse
+        }
+
+        trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)
+        gravity =
+            spawnProps.getOrDefault(ConstKeys.GRAVITY, STANDARD_GRAVITY * ConstVals.PPM, Float::class)
     }
 
-    return spritesComponent
-  }
+    override fun onDamageInflictedTo(damageable: IDamageable) {
+        GameLogger.debug(TAG, "onDamageInflictedTo(): damageable = $damageable")
+        burst()
+    }
 
-  fun burst() {
-    GameLogger.debug(TAG, "burst()")
-    kill(props(CAUSE_OF_DEATH_MESSAGE to "Burst"))
+    override fun hitBlock(blockFixture: Fixture) {
+        if (passThroughBlocks) return
+        GameLogger.debug(TAG, "Hit block: $blockFixture")
+        burst()
+    }
 
-    val caveRockExplosion =
-        EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.CAVE_ROCK_EXPLOSION)!!
-    game.gameEngine.spawn(caveRockExplosion, props(ConstKeys.POSITION to body.getCenter()))
-  }
+    override fun hitWater(waterFixture: Fixture) {
+        // set x vel to zero and sink slowly
+    }
+
+    override fun hitShield(shieldFixture: Fixture) {
+        // bounce
+    }
+
+    private fun defineBodyComponent(): BodyComponent {
+        val body = Body(BodyType.ABSTRACT)
+        body.setSize(0.75f * ConstVals.PPM)
+
+        val debugShapes = Array<() -> IDrawableShape?>()
+
+        // projectile fixture
+        val projectileFixture =
+            Fixture(GameRectangle().setSize(0.75f * ConstVals.PPM), FixtureType.PROJECTILE)
+        body.addFixture(projectileFixture)
+        projectileFixture.shape.color = Color.YELLOW
+        debugShapes.add { projectileFixture.shape }
+
+        // damager fixture
+        val damagerFixture =
+            Fixture(GameRectangle().setSize(0.65f * ConstVals.PPM), FixtureType.DAMAGER)
+        body.addFixture(damagerFixture)
+        damagerFixture.shape.color = Color.RED
+        debugShapes.add { damagerFixture.shape }
+
+        // shieldFixture
+        val shieldFixture = Fixture(GameRectangle().setSize(0.75f * ConstVals.PPM), FixtureType.SHIELD)
+        body.addFixture(shieldFixture)
+        shieldFixture.shape.color = Color.BLUE
+        debugShapes.add { shieldFixture.shape }
+
+        body.preProcess = Updatable {
+            body.physics.gravity.y = gravity
+            trajectory?.let { body.physics.velocity = it }
+        }
+
+        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+
+        return BodyComponentCreator.create(this, body)
+    }
+
+    private fun defineSpritesComponent(): SpritesComponent {
+        val sprite = GameSprite()
+        sprite.setSize(2.5f * ConstVals.PPM)
+        sprite.setRegion(rockRegion!!)
+
+        val spritesComponent = SpritesComponent(this, "rock" to sprite)
+        spritesComponent.putUpdateFunction("rock") { _, _sprite ->
+            _sprite as GameSprite
+            val center = body.getCenter()
+            _sprite.setCenter(center.x, center.y)
+        }
+
+        return spritesComponent
+    }
+
+    fun burst() {
+        GameLogger.debug(TAG, "burst()")
+        kill(props(CAUSE_OF_DEATH_MESSAGE to "Burst"))
+
+        val caveRockExplosion =
+            EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.CAVE_ROCK_EXPLOSION)!!
+        game.gameEngine.spawn(caveRockExplosion, props(ConstKeys.POSITION to body.getCenter()))
+    }
 }

@@ -112,7 +112,7 @@ public class BossSelectScreen extends AbstractMenuScreen {
                 new Vector2(5.35f * ConstVals.PPM, 13.85f * ConstVals.PPM), false, false, "Megaman10Font.ttf"));
         t.add(new BitmapFontHandle(() -> BACK, MegaUtilMethods.INSTANCE.getDefaultFontSize(),
                 new Vector2(12.35f * ConstVals.PPM,
-                ConstVals.PPM), false, false, "Megaman10Font.ttf"));
+                        ConstVals.PPM), false, false, "Megaman10Font.ttf"));
         bArrs.put(BACK, new BlinkingArrow(getCastGame().assMan, new Vector2(12f * ConstVals.PPM,
                 .75f * ConstVals.PPM)));
         TextureAtlas stageSelectAtlas = getCastGame().assMan.get(TextureAsset.UI_1.getSource(), TextureAtlas.class);

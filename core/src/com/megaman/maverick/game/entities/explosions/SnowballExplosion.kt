@@ -36,76 +36,76 @@ import kotlin.reflect.KClass
 class SnowballExplosion(game: MegamanMaverickGame) :
     GameEntity(game), IBodyEntity, ISpriteEntity, IDamager {
 
-  companion object {
-    const val DURATION = 0.075f
-    private var region: TextureRegion? = null
-  }
-
-  private lateinit var damageMask: ObjectSet<KClass<out IDamageable>>
-  private val timer = Timer(DURATION)
-
-  override fun init() {
-    if (region == null)
-        region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "SnowballExplode")
-    addComponent(defineAnimationsComponent())
-    addComponent(defineBodyComponent())
-    addComponent(defineSpritesComponent())
-    addComponent(defineUpdatablesComponent())
-  }
-
-  @Suppress("UNCHECKED_CAST")
-  override fun spawn(spawnProps: Properties) {
-    super.spawn(spawnProps)
-    val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-    body.setCenter(spawn)
-    damageMask =
-        spawnProps.getOrDefault(ConstKeys.MASK, ObjectSet<KClass<out IDamageable>>())
-            as ObjectSet<KClass<out IDamageable>>
-    timer.reset()
-  }
-
-  override fun canDamage(damageable: IDamageable) = damageMask.contains(damageable::class)
-
-  override fun onDamageInflictedTo(damageable: IDamageable) {
-    TODO("Not yet implemented")
-  }
-
-  private fun defineBodyComponent(): BodyComponent {
-    val body = Body(BodyType.ABSTRACT)
-    body.setSize(ConstVals.PPM.toFloat())
-
-    // damager fixture
-    val damagerFixture = Fixture(GameRectangle(body), FixtureType.DAMAGER)
-    body.addFixture(damagerFixture)
-
-    return BodyComponentCreator.create(this, body)
-  }
-
-  private fun defineSpritesComponent(): SpritesComponent {
-    val sprite = GameSprite()
-    sprite.setSize(2.5f * ConstVals.PPM)
-
-    val spriteComponent = SpritesComponent(this, "snowballExplosion" to sprite)
-    spriteComponent.putUpdateFunction("snowballExplosion") { _, _sprite ->
-      _sprite as GameSprite
-      val center = body.getCenter()
-      _sprite.setCenter(center.x, center.y)
+    companion object {
+        const val DURATION = 0.075f
+        private var region: TextureRegion? = null
     }
 
-    return spriteComponent
-  }
+    private lateinit var damageMask: ObjectSet<KClass<out IDamageable>>
+    private val timer = Timer(DURATION)
 
-  private fun defineAnimationsComponent(): AnimationsComponent {
-    val animation = Animation(region!!, 1, 3, 0.025f, false)
-    val animator = Animator(animation)
-    return AnimationsComponent(this, animator)
-  }
+    override fun init() {
+        if (region == null)
+            region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "SnowballExplode")
+        addComponent(defineAnimationsComponent())
+        addComponent(defineBodyComponent())
+        addComponent(defineSpritesComponent())
+        addComponent(defineUpdatablesComponent())
+    }
 
-  private fun defineUpdatablesComponent() =
-      UpdatablesComponent(
-          this,
-          {
-            timer.update(it)
-            if (timer.isFinished()) kill(props(CAUSE_OF_DEATH_MESSAGE to "Timer finished"))
-          })
+    @Suppress("UNCHECKED_CAST")
+    override fun spawn(spawnProps: Properties) {
+        super.spawn(spawnProps)
+        val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+        body.setCenter(spawn)
+        damageMask =
+            spawnProps.getOrDefault(ConstKeys.MASK, ObjectSet<KClass<out IDamageable>>())
+                    as ObjectSet<KClass<out IDamageable>>
+        timer.reset()
+    }
+
+    override fun canDamage(damageable: IDamageable) = damageMask.contains(damageable::class)
+
+    override fun onDamageInflictedTo(damageable: IDamageable) {
+        TODO("Not yet implemented")
+    }
+
+    private fun defineBodyComponent(): BodyComponent {
+        val body = Body(BodyType.ABSTRACT)
+        body.setSize(ConstVals.PPM.toFloat())
+
+        // damager fixture
+        val damagerFixture = Fixture(GameRectangle(body), FixtureType.DAMAGER)
+        body.addFixture(damagerFixture)
+
+        return BodyComponentCreator.create(this, body)
+    }
+
+    private fun defineSpritesComponent(): SpritesComponent {
+        val sprite = GameSprite()
+        sprite.setSize(2.5f * ConstVals.PPM)
+
+        val spriteComponent = SpritesComponent(this, "snowballExplosion" to sprite)
+        spriteComponent.putUpdateFunction("snowballExplosion") { _, _sprite ->
+            _sprite as GameSprite
+            val center = body.getCenter()
+            _sprite.setCenter(center.x, center.y)
+        }
+
+        return spriteComponent
+    }
+
+    private fun defineAnimationsComponent(): AnimationsComponent {
+        val animation = Animation(region!!, 1, 3, 0.025f, false)
+        val animator = Animator(animation)
+        return AnimationsComponent(this, animator)
+    }
+
+    private fun defineUpdatablesComponent() =
+        UpdatablesComponent(
+            this,
+            {
+                timer.update(it)
+                if (timer.isFinished()) kill(props(CAUSE_OF_DEATH_MESSAGE to "Timer finished"))
+            })
 }

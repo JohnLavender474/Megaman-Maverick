@@ -37,84 +37,84 @@ import com.megaman.maverick.game.world.FixtureType
 class Explosion(game: MegamanMaverickGame) :
     GameEntity(game), IBodyEntity, ISpriteEntity, IDamager {
 
-  companion object {
-    private var explosionRegion: TextureRegion? = null
-    private const val DURATION = .275f
-  }
-
-  private val durationTimer = Timer(DURATION)
-  private val damageMask = ObjectSet<Class<out IDamageable>>()
-
-  override fun init() {
-    if (explosionRegion == null)
-        explosionRegion =
-            game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "Explosion")
-
-    addComponent(defineSpritesCompoent())
-    addComponent(defineBodyComponent())
-    addComponent(defineAnimationsComponent())
-    addComponent(defineUpdatablesComponent())
-  }
-
-  @Suppress("UNCHECKED_CAST")
-  override fun spawn(spawnProps: Properties) {
-    super.spawn(spawnProps)
-
-    val spawn = spawnProps.get(ConstKeys.POSITION) as Vector2
-    body.setCenter(spawn)
-
-    durationTimer.reset()
-
-    damageMask.clear()
-    if (spawnProps.containsKey(ConstKeys.MASK)) {
-      val _damageMask = spawnProps.get(ConstKeys.MASK) as ObjectSet<Class<out IDamageable>>
-      damageMask.addAll(_damageMask)
-    }
-  }
-
-  override fun canDamage(damageable: IDamageable) = damageMask.contains(damageable.javaClass)
-
-  override fun onDamageInflictedTo(damageable: IDamageable) {
-    // do nothing
-  }
-
-  private fun defineUpdatablesComponent() =
-      UpdatablesComponent(
-          this,
-          {
-            durationTimer.update(it)
-            if (durationTimer.isFinished())
-                kill(props(CAUSE_OF_DEATH_MESSAGE to "Duration timer finished"))
-          })
-
-  private fun defineAnimationsComponent(): AnimationsComponent {
-    val animation = Animation(explosionRegion!!, 1, 11, .025f, false)
-    val animator = Animator(animation)
-    return AnimationsComponent(this, animator)
-  }
-
-  private fun defineSpritesCompoent(): SpritesComponent {
-    val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 4))
-    sprite.setSize(2.5f * ConstVals.PPM)
-
-    val SpritesComponent = SpritesComponent(this, "explosion" to sprite)
-    SpritesComponent.putUpdateFunction("explosion") { _, _sprite ->
-      _sprite as GameSprite
-      val center = body.getCenter()
-      _sprite.setCenter(center.x, center.y)
+    companion object {
+        private var explosionRegion: TextureRegion? = null
+        private const val DURATION = .275f
     }
 
-    return SpritesComponent
-  }
+    private val durationTimer = Timer(DURATION)
+    private val damageMask = ObjectSet<Class<out IDamageable>>()
 
-  private fun defineBodyComponent(): BodyComponent {
-    val body = Body(BodyType.ABSTRACT)
-    body.setSize(ConstVals.PPM.toFloat())
+    override fun init() {
+        if (explosionRegion == null)
+            explosionRegion =
+                game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "Explosion")
 
-    // damager fixture
-    val damagerFixture = Fixture(GameRectangle(body), FixtureType.DAMAGER)
-    body.addFixture(damagerFixture)
+        addComponent(defineSpritesCompoent())
+        addComponent(defineBodyComponent())
+        addComponent(defineAnimationsComponent())
+        addComponent(defineUpdatablesComponent())
+    }
 
-    return BodyComponentCreator.create(this, body)
-  }
+    @Suppress("UNCHECKED_CAST")
+    override fun spawn(spawnProps: Properties) {
+        super.spawn(spawnProps)
+
+        val spawn = spawnProps.get(ConstKeys.POSITION) as Vector2
+        body.setCenter(spawn)
+
+        durationTimer.reset()
+
+        damageMask.clear()
+        if (spawnProps.containsKey(ConstKeys.MASK)) {
+            val _damageMask = spawnProps.get(ConstKeys.MASK) as ObjectSet<Class<out IDamageable>>
+            damageMask.addAll(_damageMask)
+        }
+    }
+
+    override fun canDamage(damageable: IDamageable) = damageMask.contains(damageable.javaClass)
+
+    override fun onDamageInflictedTo(damageable: IDamageable) {
+        // do nothing
+    }
+
+    private fun defineUpdatablesComponent() =
+        UpdatablesComponent(
+            this,
+            {
+                durationTimer.update(it)
+                if (durationTimer.isFinished())
+                    kill(props(CAUSE_OF_DEATH_MESSAGE to "Duration timer finished"))
+            })
+
+    private fun defineAnimationsComponent(): AnimationsComponent {
+        val animation = Animation(explosionRegion!!, 1, 11, .025f, false)
+        val animator = Animator(animation)
+        return AnimationsComponent(this, animator)
+    }
+
+    private fun defineSpritesCompoent(): SpritesComponent {
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 4))
+        sprite.setSize(2.5f * ConstVals.PPM)
+
+        val SpritesComponent = SpritesComponent(this, "explosion" to sprite)
+        SpritesComponent.putUpdateFunction("explosion") { _, _sprite ->
+            _sprite as GameSprite
+            val center = body.getCenter()
+            _sprite.setCenter(center.x, center.y)
+        }
+
+        return SpritesComponent
+    }
+
+    private fun defineBodyComponent(): BodyComponent {
+        val body = Body(BodyType.ABSTRACT)
+        body.setSize(ConstVals.PPM.toFloat())
+
+        // damager fixture
+        val damagerFixture = Fixture(GameRectangle(body), FixtureType.DAMAGER)
+        body.addFixture(damagerFixture)
+
+        return BodyComponentCreator.create(this, body)
+    }
 }

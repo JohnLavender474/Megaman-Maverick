@@ -27,69 +27,72 @@ import com.megaman.maverick.game.utils.getMegamanMaverickGame
 
 class ExplosionOrb(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity {
 
-  companion object {
-    const val TAG = "ExplosionOrb"
-    private var textureRegion: TextureRegion? = null
-  }
+    companion object {
+        const val TAG = "ExplosionOrb"
+        private var textureRegion: TextureRegion? = null
+    }
 
-  private lateinit var trajectory: Vector2
+    private lateinit var trajectory: Vector2
 
-  override fun init() {
-    if (textureRegion == null)
-        textureRegion =
-            game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "ExplosionOrbs")
+    override fun init() {
+        if (textureRegion == null)
+            textureRegion =
+                game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "ExplosionOrbs")
 
-    addComponent(defineSpritesCompoent())
-    addComponent(defineAnimationsComponent())
-    addComponent(defineUpdatablesComponent())
-    addComponent(defineCullablesComponent())
-  }
+        addComponent(defineSpritesCompoent())
+        addComponent(defineAnimationsComponent())
+        addComponent(defineUpdatablesComponent())
+        addComponent(defineCullablesComponent())
+    }
 
-  override fun spawn(spawnProps: Properties) {
-    super.spawn(spawnProps)
+    override fun spawn(spawnProps: Properties) {
+        super.spawn(spawnProps)
 
-    val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-    (firstSprite as GameSprite).setCenter(spawn.x, spawn.y)
+        val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+        (firstSprite as GameSprite).setCenter(spawn.x, spawn.y)
 
-    trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
-  }
+        trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
+    }
 
-  private fun defineSpritesCompoent(): SpritesComponent {
-    val sprite = GameSprite()
-    sprite.setSize(3f * ConstVals.PPM)
-    return SpritesComponent(this, "orb" to sprite)
-  }
+    private fun defineSpritesCompoent(): SpritesComponent {
+        val sprite = GameSprite()
+        sprite.setSize(3f * ConstVals.PPM)
+        return SpritesComponent(this, "orb" to sprite)
+    }
 
-  private fun defineAnimationsComponent(): AnimationsComponent {
-    val animation = Animation(textureRegion!!, 1, 2, 0.075f, true)
-    val animator = Animator(animation)
-    return AnimationsComponent(this, animator)
-  }
+    private fun defineAnimationsComponent(): AnimationsComponent {
+        val animation = Animation(textureRegion!!, 1, 2, 0.075f, true)
+        val animator = Animator(animation)
+        return AnimationsComponent(this, animator)
+    }
 
-  private fun defineUpdatablesComponent() =
-      UpdatablesComponent(
-          this,
-          {
-            (firstSprite as GameSprite).translate(
-                trajectory.x * ConstVals.PPM * it, trajectory.y * ConstVals.PPM * it)
-          })
+    private fun defineUpdatablesComponent() =
+        UpdatablesComponent(
+            this,
+            {
+                (firstSprite as GameSprite).translate(
+                    trajectory.x * ConstVals.PPM * it, trajectory.y * ConstVals.PPM * it
+                )
+            })
 
-  private fun defineCullablesComponent(): CullablesComponent {
-    val cullable = CullablesComponent(this)
+    private fun defineCullablesComponent(): CullablesComponent {
+        val cullable = CullablesComponent(this)
 
-    cullable.add(
-        getGameCameraCullingLogic(
-            getMegamanMaverickGame().getGameCamera(),
-            { (firstSprite as Sprite).boundingRectangle },
-            0.5f))
+        cullable.add(
+            getGameCameraCullingLogic(
+                getMegamanMaverickGame().getGameCamera(),
+                { (firstSprite as Sprite).boundingRectangle },
+                0.5f
+            )
+        )
 
-    val cullOnEvent =
-        CullableOnEvent({ it.key == EventType.PLAYER_SPAWN }, objectSetOf(EventType.PLAYER_SPAWN))
-    cullable.add(cullOnEvent)
+        val cullOnEvent =
+            CullableOnEvent({ it.key == EventType.PLAYER_SPAWN }, objectSetOf(EventType.PLAYER_SPAWN))
+        cullable.add(cullOnEvent)
 
-    runnablesOnSpawn.add { game.eventsMan.addListener(cullOnEvent) }
-    runnablesOnDestroy.add { game.eventsMan.removeListener(cullOnEvent) }
+        runnablesOnSpawn.add { game.eventsMan.addListener(cullOnEvent) }
+        runnablesOnDestroy.add { game.eventsMan.removeListener(cullOnEvent) }
 
-    return cullable
-  }
+        return cullable
+    }
 }

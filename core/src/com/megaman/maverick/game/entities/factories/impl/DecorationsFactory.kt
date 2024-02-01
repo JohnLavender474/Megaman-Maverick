@@ -11,17 +11,17 @@ import com.megaman.maverick.game.entities.factories.EntityPoolCreator
 
 class DecorationsFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntity> {
 
-  companion object {
-    const val SPLASH = "Splash"
-    const val SMOKE_PUFF = "SmokePuff"
-  }
+    companion object {
+        const val SPLASH = "Splash"
+        const val SMOKE_PUFF = "SmokePuff"
+    }
 
-  private val pools = ObjectMap<Any, Pool<IGameEntity>>()
+    private val pools = ObjectMap<Any, Pool<IGameEntity>>()
 
-  init {
-    pools.put(SPLASH, EntityPoolCreator.create(5) { Splash(game) })
-    pools.put(SMOKE_PUFF, EntityPoolCreator.create(5) { SmokePuff(game) })
-  }
+    init {
+        pools.put(SPLASH, EntityPoolCreator.create(5) { Splash(game) })
+        pools.put(SMOKE_PUFF, EntityPoolCreator.create(5) { SmokePuff(game) })
+    }
 
-  override fun fetch(key: Any) = pools.get(key)?.fetch()
+    override fun fetch(key: Any) = pools.get(key)?.fetch()
 }

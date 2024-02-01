@@ -49,160 +49,167 @@ import kotlin.reflect.KClass
 
 class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
-  companion object {
-    const val TAG = "PicketJoe"
-    private var atlas: TextureAtlas? = null
-    private const val STAND_DUR = .4f
-    private const val THROW_DUR = .5f
-    private const val PICKET_IMPULSE_Y = 10f
-  }
-
-  override val damageNegotiations =
-      objectMapOf<KClass<out IDamager>, Int>(
-          Bullet::class to 5,
-          Fireball::class to ConstVals.MAX_HEALTH,
-          ChargedShot::class to 20,
-          ChargedShotExplosion::class to 5)
-
-  override var facing = Facing.RIGHT
-
-  val standing: Boolean
-    get() = !standTimer.isFinished()
-
-  val throwingPickets: Boolean
-    get() = !throwTimer.isFinished()
-
-  private val standTimer = Timer(STAND_DUR)
-  private val throwTimer = Timer(THROW_DUR)
-
-  override fun init() {
-    super.init()
-    if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
-    throwTimer.setRunnables(gdxArrayOf(TimeMarkedRunnable(0.2f) { throwPicket() }))
-    addComponent(defineAnimationsComponent())
-  }
-
-  override fun spawn(spawnProps: Properties) {
-    super.spawn(spawnProps)
-    val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
-    body.setBottomCenterToPoint(spawn)
-    throwTimer.setToEnd()
-    standTimer.reset()
-  }
-
-  override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
-    super.defineUpdatablesComponent(updatablesComponent)
-    updatablesComponent.add {
-      facing = if (megaman.body.x >= body.x) Facing.RIGHT else Facing.LEFT
-
-      if (standing) {
-        standTimer.update(it)
-        if (standTimer.isFinished()) setToThrowingPickets()
-      } else if (throwingPickets) {
-        throwTimer.update(it)
-        if (throwTimer.isFinished()) setToStanding()
-      }
-      if (throwTimer.isFinished())
-          facing = if (megaman.body.x >= body.x) Facing.RIGHT else Facing.LEFT
-    }
-  }
-
-  override fun defineBodyComponent(): BodyComponent {
-    val body = Body(BodyType.DYNAMIC)
-    body.setSize(ConstVals.PPM.toFloat(), 1.25f * ConstVals.PPM)
-
-    val debugShapes = Array<() -> IDrawableShape?>()
-
-    // shield fixture
-    val shieldFixture =
-        Fixture(
-            GameRectangle().setSize(0.4f * ConstVals.PPM, 0.9f * ConstVals.PPM), FixtureType.SHIELD)
-    shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
-    body.addFixture(shieldFixture)
-    shieldFixture.shape.color = Color.BLUE
-    debugShapes.add { shieldFixture.shape }
-
-    // damager fixture
-    val damagerFixture =
-        Fixture(
-            GameRectangle().setSize(0.75f * ConstVals.PPM, 1.15f * ConstVals.PPM),
-            FixtureType.DAMAGER)
-    body.addFixture(damagerFixture)
-    damagerFixture.shape.color = Color.RED
-    debugShapes.add { damagerFixture.shape }
-
-    // damageable fixture
-    val damageableFixture =
-        Fixture(
-            GameRectangle().setSize(0.8f * ConstVals.PPM, 1.35f * ConstVals.PPM),
-            FixtureType.DAMAGEABLE)
-    body.addFixture(damageableFixture)
-    damageableFixture.shape.color = Color.PURPLE
-    debugShapes.add { damageableFixture.shape }
-
-    // pre-process
-    body.preProcess = Updatable {
-      shieldFixture.active = standing
-      if (standing) {
-        damageableFixture.offsetFromBodyCenter.x = 0.25f * ConstVals.PPM * -facing.value
-        shieldFixture.offsetFromBodyCenter.x = 0.35f * ConstVals.PPM * facing.value
-      } else damageableFixture.offsetFromBodyCenter.setZero()
+    companion object {
+        const val TAG = "PicketJoe"
+        private var atlas: TextureAtlas? = null
+        private const val STAND_DUR = .4f
+        private const val THROW_DUR = .5f
+        private const val PICKET_IMPULSE_Y = 10f
     }
 
-    addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+    override val damageNegotiations =
+        objectMapOf<KClass<out IDamager>, Int>(
+            Bullet::class to 5,
+            Fireball::class to ConstVals.MAX_HEALTH,
+            ChargedShot::class to 20,
+            ChargedShotExplosion::class to 5
+        )
 
-    return BodyComponentCreator.create(this, body)
-  }
+    override var facing = Facing.RIGHT
 
-  override fun defineSpritesComponent(): SpritesComponent {
-    val sprite = GameSprite()
-    sprite.setSize(1.35f * ConstVals.PPM)
+    val standing: Boolean
+        get() = !standTimer.isFinished()
 
-    val spritesComponent = SpritesComponent(this, "picket_joe" to sprite)
-    spritesComponent.putUpdateFunction("picket_joe") { _, _sprite ->
-      _sprite as GameSprite
-      _sprite.setFlip(isFacing(Facing.LEFT), false)
-      val center = body.getCenter()
-      _sprite.setCenter(center.x, center.y)
+    val throwingPickets: Boolean
+        get() = !throwTimer.isFinished()
+
+    private val standTimer = Timer(STAND_DUR)
+    private val throwTimer = Timer(THROW_DUR)
+
+    override fun init() {
+        super.init()
+        if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+        throwTimer.setRunnables(gdxArrayOf(TimeMarkedRunnable(0.2f) { throwPicket() }))
+        addComponent(defineAnimationsComponent())
     }
 
-    return spritesComponent
-  }
+    override fun spawn(spawnProps: Properties) {
+        super.spawn(spawnProps)
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        body.setBottomCenterToPoint(spawn)
+        throwTimer.setToEnd()
+        standTimer.reset()
+    }
 
-  private fun defineAnimationsComponent(): AnimationsComponent {
-    val keySupplier: () -> String? = { if (standing) "stand" else "throw" }
-    val animations =
-        objectMapOf<String, IAnimation>(
-            "stand" to Animation(atlas!!.findRegion("PicketJoe/Stand")),
-            "throw" to Animation(atlas!!.findRegion("PicketJoe/Throw"), 1, 3, 0.1f, false))
-    val animator = Animator(keySupplier, animations)
-    return AnimationsComponent(this, animator)
-  }
+    override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
+        super.defineUpdatablesComponent(updatablesComponent)
+        updatablesComponent.add {
+            facing = if (megaman.body.x >= body.x) Facing.RIGHT else Facing.LEFT
 
-  private fun setToStanding() {
-    standTimer.reset()
-    throwTimer.setToEnd()
-  }
+            if (standing) {
+                standTimer.update(it)
+                if (standTimer.isFinished()) setToThrowingPickets()
+            } else if (throwingPickets) {
+                throwTimer.update(it)
+                if (throwTimer.isFinished()) setToStanding()
+            }
+            if (throwTimer.isFinished())
+                facing = if (megaman.body.x >= body.x) Facing.RIGHT else Facing.LEFT
+        }
+    }
 
-  private fun setToThrowingPickets() {
-    standTimer.setToEnd()
-    throwTimer.reset()
-  }
+    override fun defineBodyComponent(): BodyComponent {
+        val body = Body(BodyType.DYNAMIC)
+        body.setSize(ConstVals.PPM.toFloat(), 1.25f * ConstVals.PPM)
 
-  private fun throwPicket() {
-    val spawn = body.getCenter()
-    spawn.x += 0.1f * ConstVals.PPM * facing.value
-    spawn.y += 0.25f * ConstVals.PPM
+        val debugShapes = Array<() -> IDrawableShape?>()
 
-    val picket = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.PICKET)!!
-    val impulseX = (megaman.body.x - body.x) * 0.8f
+        // shield fixture
+        val shieldFixture =
+            Fixture(
+                GameRectangle().setSize(0.4f * ConstVals.PPM, 0.9f * ConstVals.PPM), FixtureType.SHIELD
+            )
+        shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
+        body.addFixture(shieldFixture)
+        shieldFixture.shape.color = Color.BLUE
+        debugShapes.add { shieldFixture.shape }
 
-    game.gameEngine.spawn(
-        picket,
-        props(
-            ConstKeys.OWNER to this,
-            ConstKeys.POSITION to spawn,
-            ConstKeys.X to impulseX,
-            ConstKeys.Y to PICKET_IMPULSE_Y * ConstVals.PPM))
-  }
+        // damager fixture
+        val damagerFixture =
+            Fixture(
+                GameRectangle().setSize(0.75f * ConstVals.PPM, 1.15f * ConstVals.PPM),
+                FixtureType.DAMAGER
+            )
+        body.addFixture(damagerFixture)
+        damagerFixture.shape.color = Color.RED
+        debugShapes.add { damagerFixture.shape }
+
+        // damageable fixture
+        val damageableFixture =
+            Fixture(
+                GameRectangle().setSize(0.8f * ConstVals.PPM, 1.35f * ConstVals.PPM),
+                FixtureType.DAMAGEABLE
+            )
+        body.addFixture(damageableFixture)
+        damageableFixture.shape.color = Color.PURPLE
+        debugShapes.add { damageableFixture.shape }
+
+        // pre-process
+        body.preProcess = Updatable {
+            shieldFixture.active = standing
+            if (standing) {
+                damageableFixture.offsetFromBodyCenter.x = 0.25f * ConstVals.PPM * -facing.value
+                shieldFixture.offsetFromBodyCenter.x = 0.35f * ConstVals.PPM * facing.value
+            } else damageableFixture.offsetFromBodyCenter.setZero()
+        }
+
+        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+
+        return BodyComponentCreator.create(this, body)
+    }
+
+    override fun defineSpritesComponent(): SpritesComponent {
+        val sprite = GameSprite()
+        sprite.setSize(1.35f * ConstVals.PPM)
+
+        val spritesComponent = SpritesComponent(this, "picket_joe" to sprite)
+        spritesComponent.putUpdateFunction("picket_joe") { _, _sprite ->
+            _sprite as GameSprite
+            _sprite.setFlip(isFacing(Facing.LEFT), false)
+            val center = body.getCenter()
+            _sprite.setCenter(center.x, center.y)
+        }
+
+        return spritesComponent
+    }
+
+    private fun defineAnimationsComponent(): AnimationsComponent {
+        val keySupplier: () -> String? = { if (standing) "stand" else "throw" }
+        val animations =
+            objectMapOf<String, IAnimation>(
+                "stand" to Animation(atlas!!.findRegion("PicketJoe/Stand")),
+                "throw" to Animation(atlas!!.findRegion("PicketJoe/Throw"), 1, 3, 0.1f, false)
+            )
+        val animator = Animator(keySupplier, animations)
+        return AnimationsComponent(this, animator)
+    }
+
+    private fun setToStanding() {
+        standTimer.reset()
+        throwTimer.setToEnd()
+    }
+
+    private fun setToThrowingPickets() {
+        standTimer.setToEnd()
+        throwTimer.reset()
+    }
+
+    private fun throwPicket() {
+        val spawn = body.getCenter()
+        spawn.x += 0.1f * ConstVals.PPM * facing.value
+        spawn.y += 0.25f * ConstVals.PPM
+
+        val picket = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.PICKET)!!
+        val impulseX = (megaman.body.x - body.x) * 0.8f
+
+        game.gameEngine.spawn(
+            picket,
+            props(
+                ConstKeys.OWNER to this,
+                ConstKeys.POSITION to spawn,
+                ConstKeys.X to impulseX,
+                ConstKeys.Y to PICKET_IMPULSE_Y * ConstVals.PPM
+            )
+        )
+    }
 }

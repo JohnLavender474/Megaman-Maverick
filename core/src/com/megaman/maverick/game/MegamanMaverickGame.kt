@@ -73,7 +73,8 @@ class MegamanMaverickGame : Game2D() {
         const val DEBUG_FPS = false
         const val DEBUG_SHAPES = false
         const val DEFAULT_VOLUME = 0.5f
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(LaserBeamer.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(MegaContactListener.TAG)
+        val CONTACT_LISTENER_TAGS: ObjectSet<String> = objectSetOf(LaserBeamer.TAG)
     }
 
     lateinit var megaman: Megaman
@@ -239,7 +240,7 @@ class MegamanMaverickGame : Game2D() {
                 AnimationsSystem(),
                 BehaviorsSystem(),
                 WorldSystem(
-                    MegaContactListener(this),
+                    MegaContactListener(this, CONTACT_LISTENER_TAGS),
                     { getGraphMap() },
                     ConstVals.FIXED_TIME_STEP,
                     MegaCollisionHandler(this),

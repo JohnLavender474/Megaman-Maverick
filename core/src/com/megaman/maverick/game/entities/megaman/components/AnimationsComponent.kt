@@ -24,106 +24,111 @@ import kotlin.math.abs
 const val MEGAMAN_ANIMATIONS_COMPONENT_TAG = "MegamanAnimationsComponent"
 
 internal fun Megaman.defineAnimationsComponent(): AnimationsComponent {
-  // define key supplier
-  val keySupplier = {
-    var key =
-        if (damaged) "Damaged"
-        else if (isBehaviorActive(BehaviorType.CLIMBING)) {
-          if (!body.isSensing(BodySense.HEAD_TOUCHING_LADDER)) {
-            if (shooting) "ClimbShoot"
-            else if (fullyCharged) "FinishClimbCharging"
-            else if (halfCharged) "FinishClimbHalfCharging" else "FinishClimb"
-          } else if (body.physics.velocity.y != 0f) {
-            if (shooting) "ClimbShoot"
-            else if (fullyCharged) "ClimbCharging"
-            else if (halfCharged) "ClimbHalfCharging" else "Climb"
-          } else {
-            if (shooting) "ClimbShoot"
-            else if (fullyCharged) "StillClimbCharging"
-            else if (halfCharged) "StillClimbHalfCharging" else "StillClimb"
-          }
-        } else if (isBehaviorActive(BehaviorType.AIR_DASHING)) {
-          if (fullyCharged) "AirDashCharging"
-          else if (halfCharged) "AirDashHalfCharging" else "AirDash"
-        } else if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) {
-          if (shooting) "GroundSlideShoot"
-          else if (fullyCharged) "GroundSlideCharging"
-          else if (halfCharged) "GroundSlideHalfCharging" else "GroundSlide"
-        } else if (isBehaviorActive(BehaviorType.WALL_SLIDING)) {
-          if (shooting) "WallSlideShoot"
-          else if (fullyCharged) "WallSlideCharging"
-          else if (halfCharged) "WallSlideHalfCharging" else "WallSlide"
-        } else if (isBehaviorActive(BehaviorType.SWIMMING)) {
-          if (shooting) "SwimShoot"
-          else if (fullyCharged) "SwimCharging" else if (halfCharged) "SwimHalfCharging" else "Swim"
-        } else if (isBehaviorActive(BehaviorType.JUMPING) ||
-            !body.isSensing(BodySense.FEET_ON_GROUND)) {
-          if (shooting) "JumpShoot"
-          else if (fullyCharged) "JumpCharging" else if (halfCharged) "JumpHalfCharging" else "Jump"
-        } else if (body.isSensing(BodySense.FEET_ON_GROUND) && running) {
-          if (shooting) "RunShoot"
-          else if (fullyCharged) "RunCharging" else if (halfCharged) "RunHalfCharging" else "Run"
-        } else if (body.isSensing(BodySense.FEET_ON_GROUND) &&
-            abs(
-                if (isDirectionRotatedVertically()) body.physics.velocity.x
-                else body.physics.velocity.y) > ConstVals.PPM / 16f) {
-          if (shooting) "SlipSlideShoot"
-          else if (fullyCharged) "SlipSlideCharging"
-          else if (halfCharged) "SlipSlideHalfCharging" else "SlipSlide"
-        } else {
-          if (shooting) "StandShoot"
-          else if (fullyCharged) "StandCharging"
-          else if (halfCharged) "StandHalfCharging" else "Stand"
-        }
-    if (maverick && facing == Facing.LEFT) key += "_Left"
-    key += if (maverick) "_MegamanMaverick" else "_Megaman"
-    key += "_${currentWeapon.name}"
-    key
-  }
-
-  // animations map
-  val animations = ObjectMap<String, IAnimation>()
-  gdxArrayOf("Megaman", "MegamanMaverick").forEach { megamanType ->
-    for (weapon in MegamanWeapon.values()) {
-      val assetSource =
-          if (megamanType == "Megaman")
-              when (weapon) {
-                MegamanWeapon.BUSTER -> TextureAsset.MEGAMAN_BUSTER.source
-                MegamanWeapon.FLAME_TOSS -> "" // TODO: TextureAsset.MEGAMAN_FLAME_TOSS.source
-              }
-          else
-              when (weapon) {
-                MegamanWeapon.BUSTER -> TextureAsset.MEGAMAN_MAVERICK_BUSTER.source
-                MegamanWeapon.FLAME_TOSS -> "" // TODO: create texture atlas
-              }
-      if (assetSource == "") continue
-      val atlas = game.assMan.getTextureAtlas(assetSource)
-
-      for (animationKey in animationKeys) {
-        if (megamanType == "Megaman" && animationKey.contains("Left")) continue
-
-        // get the animation definitio for the key
-        val def = animationDefMap[animationKey]
-
-        // create the modified key
-        var _animationKey = animationKey
-        _animationKey += "_${megamanType}"
-        _animationKey += "_${weapon.name}"
-
-        GameLogger.debug(
-            MEGAMAN_ANIMATIONS_COMPONENT_TAG,
-            "defineAnimationsComponent(): Putting animation \'${animationKey}\' with key \'${_animationKey}\'")
-
-        // put the key animation pair into the map
-        animations.put(
-            _animationKey,
-            Animation(atlas.findRegion(animationKey), def.rows, def.cols, def.durations))
-      }
+    // define key supplier
+    val keySupplier = {
+        var key =
+            if (damaged) "Damaged"
+            else if (isBehaviorActive(BehaviorType.CLIMBING)) {
+                if (!body.isSensing(BodySense.HEAD_TOUCHING_LADDER)) {
+                    if (shooting) "ClimbShoot"
+                    else if (fullyCharged) "FinishClimbCharging"
+                    else if (halfCharged) "FinishClimbHalfCharging" else "FinishClimb"
+                } else if (body.physics.velocity.y != 0f) {
+                    if (shooting) "ClimbShoot"
+                    else if (fullyCharged) "ClimbCharging"
+                    else if (halfCharged) "ClimbHalfCharging" else "Climb"
+                } else {
+                    if (shooting) "ClimbShoot"
+                    else if (fullyCharged) "StillClimbCharging"
+                    else if (halfCharged) "StillClimbHalfCharging" else "StillClimb"
+                }
+            } else if (isBehaviorActive(BehaviorType.AIR_DASHING)) {
+                if (fullyCharged) "AirDashCharging"
+                else if (halfCharged) "AirDashHalfCharging" else "AirDash"
+            } else if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) {
+                if (shooting) "GroundSlideShoot"
+                else if (fullyCharged) "GroundSlideCharging"
+                else if (halfCharged) "GroundSlideHalfCharging" else "GroundSlide"
+            } else if (isBehaviorActive(BehaviorType.WALL_SLIDING)) {
+                if (shooting) "WallSlideShoot"
+                else if (fullyCharged) "WallSlideCharging"
+                else if (halfCharged) "WallSlideHalfCharging" else "WallSlide"
+            } else if (isBehaviorActive(BehaviorType.SWIMMING)) {
+                if (shooting) "SwimShoot"
+                else if (fullyCharged) "SwimCharging" else if (halfCharged) "SwimHalfCharging" else "Swim"
+            } else if (isBehaviorActive(BehaviorType.JUMPING) ||
+                !body.isSensing(BodySense.FEET_ON_GROUND)
+            ) {
+                if (shooting) "JumpShoot"
+                else if (fullyCharged) "JumpCharging" else if (halfCharged) "JumpHalfCharging" else "Jump"
+            } else if (body.isSensing(BodySense.FEET_ON_GROUND) && running) {
+                if (shooting) "RunShoot"
+                else if (fullyCharged) "RunCharging" else if (halfCharged) "RunHalfCharging" else "Run"
+            } else if (body.isSensing(BodySense.FEET_ON_GROUND) &&
+                abs(
+                    if (isDirectionRotatedVertically()) body.physics.velocity.x
+                    else body.physics.velocity.y
+                ) > ConstVals.PPM / 16f
+            ) {
+                if (shooting) "SlipSlideShoot"
+                else if (fullyCharged) "SlipSlideCharging"
+                else if (halfCharged) "SlipSlideHalfCharging" else "SlipSlide"
+            } else {
+                if (shooting) "StandShoot"
+                else if (fullyCharged) "StandCharging"
+                else if (halfCharged) "StandHalfCharging" else "Stand"
+            }
+        if (maverick && facing == Facing.LEFT) key += "_Left"
+        key += if (maverick) "_MegamanMaverick" else "_Megaman"
+        key += "_${currentWeapon.name}"
+        key
     }
-  }
 
-  val animator = Animator(keySupplier, animations)
-  return AnimationsComponent(this, { sprites.get("player") }, animator)
+    // animations map
+    val animations = ObjectMap<String, IAnimation>()
+    gdxArrayOf("Megaman", "MegamanMaverick").forEach { megamanType ->
+        for (weapon in MegamanWeapon.values()) {
+            val assetSource =
+                if (megamanType == "Megaman")
+                    when (weapon) {
+                        MegamanWeapon.BUSTER -> TextureAsset.MEGAMAN_BUSTER.source
+                        MegamanWeapon.FLAME_TOSS -> "" // TODO: TextureAsset.MEGAMAN_FLAME_TOSS.source
+                    }
+                else
+                    when (weapon) {
+                        MegamanWeapon.BUSTER -> TextureAsset.MEGAMAN_MAVERICK_BUSTER.source
+                        MegamanWeapon.FLAME_TOSS -> "" // TODO: create texture atlas
+                    }
+            if (assetSource == "") continue
+            val atlas = game.assMan.getTextureAtlas(assetSource)
+
+            for (animationKey in animationKeys) {
+                if (megamanType == "Megaman" && animationKey.contains("Left")) continue
+
+                // get the animation definitio for the key
+                val def = animationDefMap[animationKey]
+
+                // create the modified key
+                var _animationKey = animationKey
+                _animationKey += "_${megamanType}"
+                _animationKey += "_${weapon.name}"
+
+                GameLogger.debug(
+                    MEGAMAN_ANIMATIONS_COMPONENT_TAG,
+                    "defineAnimationsComponent(): Putting animation \'${animationKey}\' with key \'${_animationKey}\'"
+                )
+
+                // put the key animation pair into the map
+                animations.put(
+                    _animationKey,
+                    Animation(atlas.findRegion(animationKey), def.rows, def.cols, def.durations)
+                )
+            }
+        }
+    }
+
+    val animator = Animator(keySupplier, animations)
+    return AnimationsComponent(this, { sprites.get("player") }, animator)
 }
 
 private val animationKeys =
@@ -222,11 +227,11 @@ internal data class AnimationDef(
     internal val durations: Array<Float>,
 ) {
 
-  internal constructor(
-      rows: Int = 1,
-      cols: Int = 1,
-      duration: Float = 1f,
-  ) : this(rows, cols, gdxFilledArrayOf(rows * cols, duration))
+    internal constructor(
+        rows: Int = 1,
+        cols: Int = 1,
+        duration: Float = 1f,
+    ) : this(rows, cols, gdxFilledArrayOf(rows * cols, duration))
 }
 
 private val animationDefMap =

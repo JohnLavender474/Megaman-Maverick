@@ -15,74 +15,74 @@ import com.megaman.maverick.game.ConstVals
 /** Standard implementation of a consumer for [PathfinderResult]. */
 object StandardPathfinderResultConsumer {
 
-  const val TAG = "StandardPathfinderResultConsumer"
+    const val TAG = "StandardPathfinderResultConsumer"
 
-  /**
-   * Accepts the [result] of a pathfinding operation and applies it to the [body] at the given
-   * [start] point with the given [speed].
-   *
-   * @param result The result of the pathfinding operation.
-   * @param body The body to apply the result to.
-   * @param start The start point of the pathfinding operation.
-   * @param speed The speed of the body.
-   * @return true if the pathfinding result was consumed, false otherwise.
-   */
-  fun consume(
-      result: PathfinderResult,
-      body: Body,
-      start: Vector2,
-      speed: Float,
-      targetPursuer: GameRectangle = body,
-      stopOnTargetReached: Boolean = true,
-      stopOnTargetNull: Boolean = true,
-      shapes: MutableCollection<IDrawableShape>? = null
-  ): Boolean {
-    val (_, worldPath, _) = result
-    if (worldPath == null) {
-      GameLogger.debug(TAG, "No path found for body $body")
-      if (stopOnTargetReached) body.physics.velocity.setZero()
-      return false
-    }
-    GameLogger.debug(TAG, "World path found: $worldPath. Body: $body")
+    /**
+     * Accepts the [result] of a pathfinding operation and applies it to the [body] at the given
+     * [start] point with the given [speed].
+     *
+     * @param result The result of the pathfinding operation.
+     * @param body The body to apply the result to.
+     * @param start The start point of the pathfinding operation.
+     * @param speed The speed of the body.
+     * @return true if the pathfinding result was consumed, false otherwise.
+     */
+    fun consume(
+        result: PathfinderResult,
+        body: Body,
+        start: Vector2,
+        speed: Float,
+        targetPursuer: GameRectangle = body,
+        stopOnTargetReached: Boolean = true,
+        stopOnTargetNull: Boolean = true,
+        shapes: MutableCollection<IDrawableShape>? = null
+    ): Boolean {
+        val (_, worldPath, _) = result
+        if (worldPath == null) {
+            GameLogger.debug(TAG, "No path found for body $body")
+            if (stopOnTargetReached) body.physics.velocity.setZero()
+            return false
+        }
+        GameLogger.debug(TAG, "World path found: $worldPath. Body: $body")
 
-    shapes?.let {
-      for (i in 0 until worldPath.size - 1) {
-        val node1 = worldPath[i]
-        val node2 = worldPath[i + 1]
-        it.add(GameLine(node1.getCenter(), node2.getCenter()))
-      }
-    }
-
-    val iter = worldPath.iterator()
-    var target: Vector2? = null
-    while (iter.hasNext()) {
-      val _target = iter.next()
-
-      if (!targetPursuer.overlaps(_target as Rectangle)) {
-        shapes?.let { _shapes ->
-          _target.color = Color.PURPLE
-          _shapes.add(_target)
+        shapes?.let {
+            for (i in 0 until worldPath.size - 1) {
+                val node1 = worldPath[i]
+                val node2 = worldPath[i + 1]
+                it.add(GameLine(node1.getCenter(), node2.getCenter()))
+            }
         }
 
-        target = _target.getCenter()
-        break
-      }
+        val iter = worldPath.iterator()
+        var target: Vector2? = null
+        while (iter.hasNext()) {
+            val _target = iter.next()
+
+            if (!targetPursuer.overlaps(_target as Rectangle)) {
+                shapes?.let { _shapes ->
+                    _target.color = Color.PURPLE
+                    _shapes.add(_target)
+                }
+
+                target = _target.getCenter()
+                break
+            }
+        }
+
+        if (target == null) {
+            GameLogger.debug(TAG, "No target found for body $body")
+            if (stopOnTargetNull) body.physics.velocity.setZero()
+            return false
+        }
+        GameLogger.debug(TAG, "Target found for body: $target. Body: $body")
+
+        val angle = MathUtils.atan2(target.y - start.y, target.x - start.x)
+        val trajectory = Vector2(MathUtils.cos(angle), MathUtils.sin(angle)).scl(speed)
+        val scaledTrajectory = trajectory.scl(ConstVals.PPM.toFloat())
+        body.physics.velocity.set(scaledTrajectory)
+
+        GameLogger.debug(TAG, "Body is moving with velocity ${body.physics.velocity}. Body: $body")
+
+        return true
     }
-
-    if (target == null) {
-      GameLogger.debug(TAG, "No target found for body $body")
-      if (stopOnTargetNull) body.physics.velocity.setZero()
-      return false
-    }
-    GameLogger.debug(TAG, "Target found for body: $target. Body: $body")
-
-    val angle = MathUtils.atan2(target.y - start.y, target.x - start.x)
-    val trajectory = Vector2(MathUtils.cos(angle), MathUtils.sin(angle)).scl(speed)
-    val scaledTrajectory = trajectory.scl(ConstVals.PPM.toFloat())
-    body.physics.velocity.set(scaledTrajectory)
-
-    GameLogger.debug(TAG, "Body is moving with velocity ${body.physics.velocity}. Body: $body")
-
-    return true
-  }
 }

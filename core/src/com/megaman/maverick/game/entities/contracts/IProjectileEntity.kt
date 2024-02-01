@@ -21,42 +21,43 @@ import com.megaman.maverick.game.events.EventType
 
 interface IProjectileEntity : IDamager, IBodyEntity, ISpriteEntity, IAudioEntity, IGameEntity {
 
-  var owner: IGameEntity?
+    var owner: IGameEntity?
 
-  override fun canDamage(damageable: IDamageable) =
-      damageable != owner && damageable !is IProjectileEntity
+    override fun canDamage(damageable: IDamageable) =
+        damageable != owner && damageable !is IProjectileEntity
 
-  override fun onDamageInflictedTo(damageable: IDamageable) {
-    // do nothing
-  }
+    override fun onDamageInflictedTo(damageable: IDamageable) {
+        // do nothing
+    }
 
-  fun hitBody(bodyFixture: Fixture) {}
+    fun hitBody(bodyFixture: Fixture) {}
 
-  fun hitBlock(blockFixture: Fixture) {}
+    fun hitBlock(blockFixture: Fixture) {}
 
-  fun hitShield(shieldFixture: Fixture) {}
+    fun hitShield(shieldFixture: Fixture) {}
 
-  fun hitWater(waterFixture: Fixture) {}
+    fun hitWater(waterFixture: Fixture) {}
 }
 
 internal fun IProjectileEntity.defineProjectileComponents(): Array<IGameComponent> {
-  val components = Array<IGameComponent>()
+    val components = Array<IGameComponent>()
 
-  // add audio component
-  components.add(AudioComponent(this))
+    // add audio component
+    components.add(AudioComponent(this))
 
-  // cull on events: player spawn, begin room transition, and gate init opening
-  val cullEvents =
-      objectSetOf<Any>(
-          EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING)
-  val cullOnEvent = CullableOnEvent({ cullEvents.contains(it.key) }, cullEvents)
+    // cull on events: player spawn, begin room transition, and gate init opening
+    val cullEvents =
+        objectSetOf<Any>(
+            EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING
+        )
+    val cullOnEvent = CullableOnEvent({ cullEvents.contains(it.key) }, cullEvents)
 
-  // cull on out of game camera
-  val cullOnOutOfGameCam =
-      CullableOnUncontained<Camera>(
-          containerSupplier = { game.viewports.get(ConstKeys.GAME).camera },
-          containable = { it.overlaps(body) })
-  components.add(CullablesComponent(this, cullOnEvent, cullOnOutOfGameCam))
+    // cull on out of game camera
+    val cullOnOutOfGameCam =
+        CullableOnUncontained<Camera>(
+            containerSupplier = { game.viewports.get(ConstKeys.GAME).camera },
+            containable = { it.overlaps(body) })
+    components.add(CullablesComponent(this, cullOnEvent, cullOnOutOfGameCam))
 
-  return components
+    return components
 }

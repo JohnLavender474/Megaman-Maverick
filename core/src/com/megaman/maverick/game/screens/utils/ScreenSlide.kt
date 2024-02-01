@@ -15,37 +15,37 @@ class ScreenSlide(
     setToEnd: Boolean
 ) : Initializable, Updatable {
 
-  private val timer = Timer(duration)
+    private val timer = Timer(duration)
 
-  val finished: Boolean
-    get() = timer.isFinished()
+    val finished: Boolean
+        get() = timer.isFinished()
 
-  val justFinished: Boolean
-    get() = timer.isJustFinished()
+    val justFinished: Boolean
+        get() = timer.isJustFinished()
 
-  init {
-    if (setToEnd) setToEnd()
-  }
+    init {
+        if (setToEnd) setToEnd()
+    }
 
-  override fun init() {
-    camera.position.set(startPoint)
-    timer.reset()
-  }
+    override fun init() {
+        camera.position.set(startPoint)
+        timer.reset()
+    }
 
-  override fun update(delta: Float) {
-    timer.update(delta)
-    if (timer.isJustFinished()) camera.position.set(endPoint)
-    if (timer.isFinished()) return
-    camera.position.x += trajectory.x * delta * (1f / timer.duration)
-    camera.position.y += trajectory.y * delta * (1f / timer.duration)
-  }
+    override fun update(delta: Float) {
+        timer.update(delta)
+        if (timer.isJustFinished()) camera.position.set(endPoint)
+        if (timer.isFinished()) return
+        camera.position.x += trajectory.x * delta * (1f / timer.duration)
+        camera.position.y += trajectory.y * delta * (1f / timer.duration)
+    }
 
-  fun setToEnd() = timer.setToEnd()
+    fun setToEnd() = timer.setToEnd()
 
-  fun reverse() {
-    val temp = endPoint
-    endPoint = startPoint
-    startPoint = temp
-    trajectory.scl(-1f)
-  }
+    fun reverse() {
+        val temp = endPoint
+        endPoint = startPoint
+        startPoint = temp
+        trajectory.scl(-1f)
+    }
 }

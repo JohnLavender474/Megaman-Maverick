@@ -50,182 +50,188 @@ import kotlin.math.abs
 class ChargedShot(game: MegamanMaverickGame) :
     GameEntity(game), IProjectileEntity, IFaceable, IDirectionRotatable {
 
-  companion object {
-    private var fullyChargedRegion: TextureRegion? = null
-    private var halfChargedRegion: TextureRegion? = null
-  }
-
-  override var owner: IGameEntity? = null
-  override var facing = Facing.RIGHT
-
-  override lateinit var directionRotation: Direction
-
-  private val trajectory = Vector2()
-
-  var fullyCharged = false
-    private set
-
-  override fun init() {
-    if (fullyChargedRegion == null)
-        fullyChargedRegion =
-            game.assMan.getTextureRegion(TextureAsset.MEGAMAN_CHARGED_SHOT.source, "Shoot")
-
-    if (halfChargedRegion == null)
-        halfChargedRegion =
-            game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "HalfChargedShot")
-
-    defineProjectileComponents().forEach { addComponent(it) }
-    addComponent(defineBodyComponent())
-    addComponent(defineSpritesCompoent())
-    addComponent(defineAnimationsComponent())
-    addComponent(defineUpdatablesComponent())
-  }
-
-  override fun spawn(spawnProps: Properties) {
-    super.spawn(spawnProps)
-
-    owner = spawnProps.get(ConstKeys.OWNER) as IGameEntity?
-    fullyCharged = spawnProps.get(ConstKeys.BOOLEAN) as Boolean
-    directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
-
-    var bodyDimension = .75f * ConstVals.PPM
-    var spriteDimension = ConstVals.PPM.toFloat()
-
-    if (fullyCharged) spriteDimension *= 1.5f else bodyDimension /= 2f
-    (firstSprite as GameSprite).setSize(spriteDimension)
-
-    body.setSize(bodyDimension)
-    body.fixtures.forEach { (it.second.shape as GameRectangle).setSize(bodyDimension) }
-
-    val _trajectory = spawnProps.get(ConstKeys.TRAJECTORY) as Vector2
-    trajectory.set(_trajectory.scl(ConstVals.PPM.toFloat()))
-
-    facing =
-        if (directionRotation.isVertical()) if (trajectory.x > 0f) Facing.RIGHT else Facing.LEFT
-        else if (trajectory.y > 0f) Facing.RIGHT else Facing.LEFT
-
-    val spawn = spawnProps.get(ConstKeys.POSITION) as Vector2
-    body.setCenter(spawn)
-  }
-
-  override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
-
-  override fun hitBlock(blockFixture: Fixture) = explodeAndDie()
-
-  override fun hitShield(shieldFixture: Fixture) {
-    owner = shieldFixture.getEntity()
-    swapFacing()
-    if (directionRotation.isVertical()) trajectory.x *= -1f else trajectory.y *= -1f
-
-    val deflection =
-        if (shieldFixture.properties.containsKey(ConstKeys.DIRECTION))
-            shieldFixture.properties.get(ConstKeys.DIRECTION) as Direction
-        else Direction.UP
-
-    val newTrajectory =
-        when (directionRotation) {
-          Direction.UP -> {
-            when (deflection) {
-              Direction.UP -> Vector2(trajectory.x, 5f * ConstVals.PPM)
-              Direction.DOWN -> Vector2(trajectory.x, -5f * ConstVals.PPM)
-              else -> Vector2(trajectory.x, 0f)
-            }
-          }
-          Direction.DOWN -> {
-            when (deflection) {
-              Direction.UP -> Vector2(trajectory.x, -5f * ConstVals.PPM)
-              Direction.DOWN -> Vector2(trajectory.x, 5f * ConstVals.PPM)
-              else -> Vector2(trajectory.x, 0f)
-            }
-          }
-          Direction.LEFT -> {
-            when (deflection) {
-              Direction.UP -> Vector2(-5f * ConstVals.PPM, trajectory.y)
-              Direction.DOWN -> Vector2(5f * ConstVals.PPM, trajectory.y)
-              else -> Vector2(0f, trajectory.y)
-            }
-          }
-          Direction.RIGHT -> {
-            when (deflection) {
-              Direction.UP -> Vector2(5f * ConstVals.PPM, trajectory.y)
-              Direction.DOWN -> Vector2(-5f * ConstVals.PPM, trajectory.y)
-              else -> Vector2(0f, trajectory.y)
-            }
-          }
-        }
-    trajectory.set(newTrajectory)
-
-    requestToPlaySound(SoundAsset.DINK_SOUND, false)
-  }
-
-  private fun explodeAndDie() {
-    kill(props(CAUSE_OF_DEATH_MESSAGE to "Explode and die"))
-    val e = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.CHARGED_SHOT_EXPLOSION)
-
-    val direction =
-        if (abs(trajectory.y) > abs(trajectory.x))
-            (if (trajectory.y > 0f) Direction.UP else Direction.DOWN)
-        else if (trajectory.x > 0f) Direction.RIGHT else Direction.LEFT
-
-    val props =
-        props(
-            ConstKeys.POSITION to body.getCenter(),
-            ConstKeys.OWNER to owner,
-            ConstKeys.DIRECTION to direction,
-            ConstKeys.BOOLEAN to fullyCharged,
-        )
-    game.gameEngine.spawn(e!!, props)
-  }
-
-  private fun defineUpdatablesComponent() =
-      UpdatablesComponent(this, { body.physics.velocity.set(trajectory) })
-
-  private fun defineBodyComponent(): BodyComponent {
-    val body = Body(BodyType.ABSTRACT)
-
-    // Projectile fixture
-    val projectileFixture = Fixture(GameRectangle(), FixtureType.PROJECTILE)
-    body.addFixture(projectileFixture)
-
-    // Damager fixture
-    val damagerFixture = Fixture(GameRectangle(), FixtureType.DAMAGER)
-    body.addFixture(damagerFixture)
-
-    // add drawable shape component for debugging
-    addComponent(
-        DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
-
-    return BodyComponentCreator.create(this, body)
-  }
-
-  private fun defineAnimationsComponent(): AnimationsComponent {
-    val chargedAnimation = Animation(fullyChargedRegion!!, 1, 2, 0.05f, true)
-    val halfChargedAnimation = Animation(halfChargedRegion!!, 1, 2, 0.05f, true)
-    val animator =
-        Animator(
-            { if (fullyCharged) "charged" else "half" },
-            objectMapOf("charged" to chargedAnimation, "half" to halfChargedAnimation))
-    return AnimationsComponent(this, animator)
-  }
-
-  private fun defineSpritesCompoent(): SpritesComponent {
-    val sprite = GameSprite()
-    val spritesComponent = SpritesComponent(this, "shot" to sprite)
-    spritesComponent.putUpdateFunction("shot") { _, _sprite ->
-      _sprite.setFlip(isFacing(Facing.LEFT), false)
-
-      (_sprite as GameSprite).setPosition(body.getCenter(), Position.CENTER)
-
-      val rotation =
-          when (directionRotation) {
-            Direction.UP,
-            Direction.DOWN -> 0f
-            Direction.LEFT -> 90f
-            Direction.RIGHT -> 270f
-          }
-      _sprite.setOriginCenter()
-      _sprite.rotation = rotation
+    companion object {
+        private var fullyChargedRegion: TextureRegion? = null
+        private var halfChargedRegion: TextureRegion? = null
     }
-    return spritesComponent
-  }
+
+    override var owner: IGameEntity? = null
+    override var facing = Facing.RIGHT
+
+    override lateinit var directionRotation: Direction
+
+    private val trajectory = Vector2()
+
+    var fullyCharged = false
+        private set
+
+    override fun init() {
+        if (fullyChargedRegion == null)
+            fullyChargedRegion =
+                game.assMan.getTextureRegion(TextureAsset.MEGAMAN_CHARGED_SHOT.source, "Shoot")
+
+        if (halfChargedRegion == null)
+            halfChargedRegion =
+                game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "HalfChargedShot")
+
+        defineProjectileComponents().forEach { addComponent(it) }
+        addComponent(defineBodyComponent())
+        addComponent(defineSpritesCompoent())
+        addComponent(defineAnimationsComponent())
+        addComponent(defineUpdatablesComponent())
+    }
+
+    override fun spawn(spawnProps: Properties) {
+        super.spawn(spawnProps)
+
+        owner = spawnProps.get(ConstKeys.OWNER) as IGameEntity?
+        fullyCharged = spawnProps.get(ConstKeys.BOOLEAN) as Boolean
+        directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
+
+        var bodyDimension = .75f * ConstVals.PPM
+        var spriteDimension = ConstVals.PPM.toFloat()
+
+        if (fullyCharged) spriteDimension *= 1.5f else bodyDimension /= 2f
+        (firstSprite as GameSprite).setSize(spriteDimension)
+
+        body.setSize(bodyDimension)
+        body.fixtures.forEach { (it.second.shape as GameRectangle).setSize(bodyDimension) }
+
+        val _trajectory = spawnProps.get(ConstKeys.TRAJECTORY) as Vector2
+        trajectory.set(_trajectory.scl(ConstVals.PPM.toFloat()))
+
+        facing =
+            if (directionRotation.isVertical()) if (trajectory.x > 0f) Facing.RIGHT else Facing.LEFT
+            else if (trajectory.y > 0f) Facing.RIGHT else Facing.LEFT
+
+        val spawn = spawnProps.get(ConstKeys.POSITION) as Vector2
+        body.setCenter(spawn)
+    }
+
+    override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
+
+    override fun hitBlock(blockFixture: Fixture) = explodeAndDie()
+
+    override fun hitShield(shieldFixture: Fixture) {
+        owner = shieldFixture.getEntity()
+        swapFacing()
+        if (directionRotation.isVertical()) trajectory.x *= -1f else trajectory.y *= -1f
+
+        val deflection =
+            if (shieldFixture.properties.containsKey(ConstKeys.DIRECTION))
+                shieldFixture.properties.get(ConstKeys.DIRECTION) as Direction
+            else Direction.UP
+
+        val newTrajectory =
+            when (directionRotation) {
+                Direction.UP -> {
+                    when (deflection) {
+                        Direction.UP -> Vector2(trajectory.x, 5f * ConstVals.PPM)
+                        Direction.DOWN -> Vector2(trajectory.x, -5f * ConstVals.PPM)
+                        else -> Vector2(trajectory.x, 0f)
+                    }
+                }
+
+                Direction.DOWN -> {
+                    when (deflection) {
+                        Direction.UP -> Vector2(trajectory.x, -5f * ConstVals.PPM)
+                        Direction.DOWN -> Vector2(trajectory.x, 5f * ConstVals.PPM)
+                        else -> Vector2(trajectory.x, 0f)
+                    }
+                }
+
+                Direction.LEFT -> {
+                    when (deflection) {
+                        Direction.UP -> Vector2(-5f * ConstVals.PPM, trajectory.y)
+                        Direction.DOWN -> Vector2(5f * ConstVals.PPM, trajectory.y)
+                        else -> Vector2(0f, trajectory.y)
+                    }
+                }
+
+                Direction.RIGHT -> {
+                    when (deflection) {
+                        Direction.UP -> Vector2(5f * ConstVals.PPM, trajectory.y)
+                        Direction.DOWN -> Vector2(-5f * ConstVals.PPM, trajectory.y)
+                        else -> Vector2(0f, trajectory.y)
+                    }
+                }
+            }
+        trajectory.set(newTrajectory)
+
+        requestToPlaySound(SoundAsset.DINK_SOUND, false)
+    }
+
+    private fun explodeAndDie() {
+        kill(props(CAUSE_OF_DEATH_MESSAGE to "Explode and die"))
+        val e = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.CHARGED_SHOT_EXPLOSION)
+
+        val direction =
+            if (abs(trajectory.y) > abs(trajectory.x))
+                (if (trajectory.y > 0f) Direction.UP else Direction.DOWN)
+            else if (trajectory.x > 0f) Direction.RIGHT else Direction.LEFT
+
+        val props =
+            props(
+                ConstKeys.POSITION to body.getCenter(),
+                ConstKeys.OWNER to owner,
+                ConstKeys.DIRECTION to direction,
+                ConstKeys.BOOLEAN to fullyCharged,
+            )
+        game.gameEngine.spawn(e!!, props)
+    }
+
+    private fun defineUpdatablesComponent() =
+        UpdatablesComponent(this, { body.physics.velocity.set(trajectory) })
+
+    private fun defineBodyComponent(): BodyComponent {
+        val body = Body(BodyType.ABSTRACT)
+
+        // Projectile fixture
+        val projectileFixture = Fixture(GameRectangle(), FixtureType.PROJECTILE)
+        body.addFixture(projectileFixture)
+
+        // Damager fixture
+        val damagerFixture = Fixture(GameRectangle(), FixtureType.DAMAGER)
+        body.addFixture(damagerFixture)
+
+        // add drawable shape component for debugging
+        addComponent(
+            DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true)
+        )
+
+        return BodyComponentCreator.create(this, body)
+    }
+
+    private fun defineAnimationsComponent(): AnimationsComponent {
+        val chargedAnimation = Animation(fullyChargedRegion!!, 1, 2, 0.05f, true)
+        val halfChargedAnimation = Animation(halfChargedRegion!!, 1, 2, 0.05f, true)
+        val animator =
+            Animator(
+                { if (fullyCharged) "charged" else "half" },
+                objectMapOf("charged" to chargedAnimation, "half" to halfChargedAnimation)
+            )
+        return AnimationsComponent(this, animator)
+    }
+
+    private fun defineSpritesCompoent(): SpritesComponent {
+        val sprite = GameSprite()
+        val spritesComponent = SpritesComponent(this, "shot" to sprite)
+        spritesComponent.putUpdateFunction("shot") { _, _sprite ->
+            _sprite.setFlip(isFacing(Facing.LEFT), false)
+
+            (_sprite as GameSprite).setPosition(body.getCenter(), Position.CENTER)
+
+            val rotation =
+                when (directionRotation) {
+                    Direction.UP,
+                    Direction.DOWN -> 0f
+
+                    Direction.LEFT -> 90f
+                    Direction.RIGHT -> 270f
+                }
+            _sprite.setOriginCenter()
+            _sprite.rotation = rotation
+        }
+        return spritesComponent
+    }
 }

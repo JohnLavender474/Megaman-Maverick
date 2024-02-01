@@ -14,25 +14,27 @@ import com.megaman.maverick.game.utils.toProps
 
 class SensorsLayerBuilder(private val game: MegamanMaverickGame) : ITiledMapLayerBuilder {
 
-  override fun build(layer: MapLayer, returnProps: Properties) {
-    layer.objects.forEach { mapObject ->
-      if (mapObject is RectangleMapObject) {
-        val name = mapObject.name
-        val props = mapObject.toProps()
-        props.put(ConstKeys.BOUNDS, mapObject.rectangle.toGameRectangle())
+    override fun build(layer: MapLayer, returnProps: Properties) {
+        layer.objects.forEach { mapObject ->
+            if (mapObject is RectangleMapObject) {
+                val name = mapObject.name
+                val props = mapObject.toProps()
+                props.put(ConstKeys.BOUNDS, mapObject.rectangle.toGameRectangle())
 
-        when (name) {
-          "Death" -> {
-            val death = EntityFactories.fetch(EntityType.SENSOR, SensorsFactory.DEATH)!!
-            game.gameEngine.spawn(death, props)
-          }
-          "Gate" -> {
-            val gate = EntityFactories.fetch(EntityType.SENSOR, SensorsFactory.GATE)!!
-            game.gameEngine.spawn(gate, props)
-          }
-          else -> throw IllegalArgumentException("Unknown sensor type: $name")
+                when (name) {
+                    "Death" -> {
+                        val death = EntityFactories.fetch(EntityType.SENSOR, SensorsFactory.DEATH)!!
+                        game.gameEngine.spawn(death, props)
+                    }
+
+                    "Gate" -> {
+                        val gate = EntityFactories.fetch(EntityType.SENSOR, SensorsFactory.GATE)!!
+                        game.gameEngine.spawn(gate, props)
+                    }
+
+                    else -> throw IllegalArgumentException("Unknown sensor type: $name")
+                }
+            }
         }
-      }
     }
-  }
 }
