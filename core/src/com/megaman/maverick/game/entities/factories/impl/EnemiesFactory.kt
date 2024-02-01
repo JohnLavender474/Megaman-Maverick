@@ -25,6 +25,7 @@ class EnemiesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
         const val PICKET_JOE = "PicketJoe"
         const val SNIPER_JOE = "SniperJoe"
         const val PRECIOUS_JOE = "PreciousJoe"
+        const val CARTIN_JOE = "CartinJoe"
         const val DRAGON_FLY = "DragonFly"
         const val MATASABURO = "Matasaburo"
         const val SPRING_HEAD = "SpringHead"
@@ -54,6 +55,7 @@ class EnemiesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
         pools.put(MATASABURO, EntityPoolCreator.create(2) { Matasaburo(game) })
         pools.put(SWINGIN_JOE, EntityPoolCreator.create(2) { SwinginJoe(game) })
         pools.put(SNIPER_JOE, EntityPoolCreator.create(2) { SniperJoe(game) })
+        pools.put(CARTIN_JOE, EntityPoolCreator.create(2) { CartinJoe(game) })
         pools.put(PENGUIN, EntityPoolCreator.create(2) { Penguin(game) })
         pools.put(SHIELD_ATTACKER, EntityPoolCreator.create(2) { ShieldAttacker(game) })
         pools.put(SCREWIE, EntityPoolCreator.create(5) { Screwie(game) })

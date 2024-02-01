@@ -168,6 +168,7 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             VelocityAlterator.alterate(bounceable.getBody(), bounce)
 
             bouncer.getRunnable()?.invoke()
+            bounceable.getRunnable()?.invoke()
         }
 
         // head, block

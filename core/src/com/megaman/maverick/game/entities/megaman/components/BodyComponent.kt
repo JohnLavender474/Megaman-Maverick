@@ -53,7 +53,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
             GameRectangle().setWidth(.6f * ConstVals.PPM).setHeight(.15f * ConstVals.PPM),
             FixtureType.FEET
         )
-    feetFixture.properties.put(ConstKeys.BOUNCE, onBounce)
+    feetFixture.setRunnable(onBounce)
     body.addFixture(feetFixture)
     feetFixture.shape.color = Color.GREEN
     shapes.add { feetFixture.bodyRelativeShape }
@@ -64,23 +64,23 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
             GameRectangle().setWidth(.6f * ConstVals.PPM).setHeight(.15f * ConstVals.PPM),
             FixtureType.HEAD
         )
-    headFixture.properties.put(ConstKeys.BOUNCE, onBounce)
+    headFixture.setRunnable(onBounce)
     body.addFixture(headFixture)
     headFixture.shape.color = Color.RED
     shapes.add { headFixture.bodyRelativeShape }
 
     // left fixture
     val leftFixture = Fixture(GameRectangle().setWidth(.2f * ConstVals.PPM), FixtureType.SIDE)
-    leftFixture.properties.put(ConstKeys.BOUNCE, onBounce)
-    leftFixture.properties.put(ConstKeys.SIDE, ConstKeys.LEFT)
+    leftFixture.setRunnable(onBounce)
+    leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
     body.addFixture(leftFixture)
     leftFixture.shape.color = Color.YELLOW
     shapes.add { leftFixture.bodyRelativeShape }
 
     // right fixture
     val rightFixture = Fixture(GameRectangle().setWidth(.2f * ConstVals.PPM), FixtureType.SIDE)
-    rightFixture.properties.put(ConstKeys.BOUNCE, onBounce)
-    rightFixture.properties.put(ConstKeys.SIDE, ConstKeys.RIGHT)
+    rightFixture.setRunnable(onBounce)
+    rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
     body.addFixture(rightFixture)
     rightFixture.shape.color = Color.BLUE
     shapes.add { rightFixture.bodyRelativeShape }
