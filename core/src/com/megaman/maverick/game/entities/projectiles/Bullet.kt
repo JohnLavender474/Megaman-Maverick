@@ -74,6 +74,7 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity, I
     override fun hitBlock(blockFixture: Fixture) = disintegrate("Hit block")
 
     override fun hitShield(shieldFixture: Fixture) {
+        if (owner == shieldFixture.getEntity()) return
         owner = shieldFixture.getEntity()
 
         val trajectory = body.physics.velocity.cpy()

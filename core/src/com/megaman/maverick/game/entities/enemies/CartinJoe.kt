@@ -2,12 +2,15 @@ package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
+import com.engine.common.CAUSE_OF_DEATH_MESSAGE
 import com.engine.common.GameLogger
+import com.engine.common.enums.Direction
 import com.engine.common.enums.Facing
 import com.engine.common.enums.Position
 import com.engine.common.extensions.getTextureAtlas
@@ -17,6 +20,7 @@ import com.engine.common.interfaces.Updatable
 import com.engine.common.interfaces.isFacing
 import com.engine.common.interfaces.swapFacing
 import com.engine.common.objects.Properties
+import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
 import com.engine.damage.IDamager
@@ -26,6 +30,7 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
+import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.entities.contracts.ISpriteEntity
 import com.engine.updatables.UpdatablesComponent
@@ -36,12 +41,18 @@ import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
+import com.megaman.maverick.game.entities.factories.EntityFactories
+import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.world.*
 import kotlin.reflect.KClass
 
-class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpriteEntity, IAnimatedEntity, IFaceable {
+class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpriteEntity, IAnimatedEntity, IFaceable,
+    IDirectionRotatable {
 
     companion object {
         const val TAG = "CartinJoe"
@@ -52,6 +63,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpriteEntity,
         private const val GRAVITY = -0.5f
         private const val WAIT_DURATION = 1f
         private const val SHOOT_DURATION = 0.25f
+        private const val BULLET_SPEED = 10f
     }
 
     override var facing = Facing.RIGHT
@@ -59,6 +71,8 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpriteEntity,
 
     val shooting: Boolean
         get() = !shootTimer.isFinished()
+
+    override var directionRotation = Direction.UP
 
     private val waitTimer = Timer(WAIT_DURATION)
     private val shootTimer = Timer(SHOOT_DURATION)
@@ -93,6 +107,11 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpriteEntity,
             if (waitTimer.isJustFinished()) {
                 shoot()
                 shootTimer.reset()
+            }
+
+            if (body.isSensingAny(BodySense.SIDE_TOUCHING_BLOCK_LEFT, BodySense.SIDE_TOUCHING_BLOCK_RIGHT)) {
+                kill(props(CAUSE_OF_DEATH_MESSAGE to "Side touching block"))
+                explode()
             }
         }
     }
@@ -197,13 +216,42 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpriteEntity,
             if (shooting) "shoot" else "move"
         }
         val animations = objectMapOf<String, IAnimation>(
-            "shoot" to Animation(shootRegion!!), "move" to Animation(moveRegion!!)
+            "shoot" to Animation(shootRegion!!, 1, 2, 0.1f, true),
+            "move" to Animation(moveRegion!!, 1, 2, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }
 
     private fun shoot() {
+        @Suppress("DuplicatedCode") val spawn =
+            (when (directionRotation) {
+                Direction.UP -> Vector2(0.25f * facing.value, 0.15f)
+                Direction.DOWN -> Vector2(0.25f * facing.value, -0.15f)
+                Direction.LEFT -> Vector2(-0.2f, 0.25f * facing.value)
+                Direction.RIGHT -> Vector2(0.2f, 0.25f * facing.value)
+            })
+                .scl(ConstVals.PPM.toFloat())
+                .add(body.getCenter())
 
+        val trajectory = Vector2()
+        if (isDirectionRotatedVertically())
+            trajectory.set(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
+        else trajectory.set(0f, BULLET_SPEED * ConstVals.PPM * facing.value)
+
+        val props =
+            props(
+                ConstKeys.OWNER to this,
+                ConstKeys.POSITION to spawn,
+                ConstKeys.TRAJECTORY to trajectory,
+                ConstKeys.DIRECTION to directionRotation
+            )
+
+        val entity: IGameEntity =
+            EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
+
+        requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
+
+        game.gameEngine.spawn(entity, props)
     }
 }

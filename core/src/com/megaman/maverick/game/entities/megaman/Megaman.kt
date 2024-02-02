@@ -104,7 +104,8 @@ class Megaman(game: MegamanMaverickGame) :
             Ratton::class to 2,
             PicketJoe::class to 3,
             Picket::class to 3,
-            LaserBeamer::class to 3
+            LaserBeamer::class to 3,
+            CartinJoe::class to 3
         )
 
     internal val noDmgBounce = objectSetOf<Any>(SpringHead::class)

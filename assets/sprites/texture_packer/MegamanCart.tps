@@ -124,7 +124,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>../SpriteSheets/Specials1.txt</filename>
+                <filename></filename>
             </struct>
         </map>
         <key>multiPackMode</key>
@@ -173,7 +173,9 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">../frames/Specials1/Cart.png</key>
+            <key type="filename">../frames/MegamanCart/Megaman_Cart.png</key>
+            <key type="filename">../frames/MegamanCart/Megaman_Cart_FullyCharged.png</key>
+            <key type="filename">../frames/MegamanCart/Megaman_Cart_HalfCharge.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -188,7 +190,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Specials1/SpringBounce.png</key>
+            <key type="filename">../frames/MegamanCart/Megaman_Cart_Damaged.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -197,13 +199,13 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>80,14,160,28</rect>
+                <rect>36,12,72,24</rect>
                 <key>scale9Paddings</key>
-                <rect>80,14,160,28</rect>
+                <rect>36,12,72,24</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Specials1/SpringBounceStill.png</key>
+            <key type="filename">../frames/MegamanCart/Megaman_Cart_Shoot.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -212,9 +214,9 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>16,14,32,28</rect>
+                <rect>12,12,24,24</rect>
                 <key>scale9Paddings</key>
-                <rect>16,14,32,28</rect>
+                <rect>12,12,24,24</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -225,9 +227,11 @@
             <struct type="SpriteSheet">
                 <key>files</key>
                 <array>
-                    <filename>../frames/Specials1/Cart.png</filename>
-                    <filename>../frames/Specials1/SpringBounce.png</filename>
-                    <filename>../frames/Specials1/SpringBounceStill.png</filename>
+                    <filename>../frames/MegamanCart/Megaman_Cart.png</filename>
+                    <filename>../frames/MegamanCart/Megaman_Cart_Damaged.png</filename>
+                    <filename>../frames/MegamanCart/Megaman_Cart_FullyCharged.png</filename>
+                    <filename>../frames/MegamanCart/Megaman_Cart_HalfCharge.png</filename>
+                    <filename>../frames/MegamanCart/Megaman_Cart_Shoot.png</filename>
                 </array>
             </struct>
         </map>
