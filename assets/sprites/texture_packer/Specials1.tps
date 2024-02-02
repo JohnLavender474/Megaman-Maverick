@@ -124,7 +124,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>../SpriteSheets/Specials1.txt</filename>
+                <filename>../sprite_sheets/Specials1.txt</filename>
             </struct>
         </map>
         <key>multiPackMode</key>

@@ -19,9 +19,7 @@ import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.events.EventType
 
-interface IProjectileEntity : IDamager, IBodyEntity, ISpriteEntity, IAudioEntity, IGameEntity {
-
-    var owner: IGameEntity?
+interface IProjectileEntity : IOwnable, IDamager, IBodyEntity, ISpriteEntity, IAudioEntity, IGameEntity {
 
     override fun canDamage(damageable: IDamageable) =
         damageable != owner && damageable !is IProjectileEntity

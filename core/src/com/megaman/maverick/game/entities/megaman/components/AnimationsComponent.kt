@@ -24,10 +24,22 @@ import kotlin.math.abs
 const val MEGAMAN_ANIMATIONS_COMPONENT_TAG = "MegamanAnimationsComponent"
 
 internal fun Megaman.defineAnimationsComponent(): AnimationsComponent {
-    // define key supplier
     val keySupplier = {
         var key =
-            if (damaged) "Damaged"
+            if (isBehaviorActive(BehaviorType.RIDING_CART)) {
+                if (damaged) "Cartin_Damaged"
+                else if (isBehaviorActive(BehaviorType.JUMPING) || !body.isSensing(BodySense.FEET_ON_GROUND)) {
+                    if (shooting) "Cartin_JumpShoot"
+                    else if (fullyCharged) "Cartin_JumpFullyCharged"
+                    else if (halfCharged) "Cartin_JumpHalfCharged"
+                    else "Cartin_Jump"
+                } else {
+                    if (shooting) "Cartin_Shoot"
+                    else if (fullyCharged) "Cartin_FullyCharged"
+                    else if (halfCharged) "Cartin_HalfCharged"
+                    else "Cartin"
+                }
+            } else if (damaged) "Damaged"
             else if (isBehaviorActive(BehaviorType.CLIMBING)) {
                 if (!body.isSensing(BodySense.HEAD_TOUCHING_LADDER)) {
                     if (shooting) "ClimbShoot"
@@ -84,9 +96,10 @@ internal fun Megaman.defineAnimationsComponent(): AnimationsComponent {
         key
     }
 
-    // animations map
     val animations = ObjectMap<String, IAnimation>()
-    gdxArrayOf("Megaman", "MegamanMaverick").forEach { megamanType ->
+
+    // TODO: create missing maverick animations
+    gdxArrayOf("Megaman" /*, "MegamanMaverick"*/).forEach { megamanType ->
         for (weapon in MegamanWeapon.values()) {
             val assetSource =
                 if (megamanType == "Megaman")
@@ -105,10 +118,8 @@ internal fun Megaman.defineAnimationsComponent(): AnimationsComponent {
             for (animationKey in animationKeys) {
                 if (megamanType == "Megaman" && animationKey.contains("Left")) continue
 
-                // get the animation definitio for the key
                 val def = animationDefMap[animationKey]
 
-                // create the modified key
                 var _animationKey = animationKey
                 _animationKey += "_${megamanType}"
                 _animationKey += "_${weapon.name}"
@@ -118,7 +129,6 @@ internal fun Megaman.defineAnimationsComponent(): AnimationsComponent {
                     "defineAnimationsComponent(): Putting animation \'${animationKey}\' with key \'${_animationKey}\'"
                 )
 
-                // put the key animation pair into the map
                 animations.put(
                     _animationKey,
                     Animation(atlas.findRegion(animationKey), def.rows, def.cols, def.durations)
@@ -133,6 +143,15 @@ internal fun Megaman.defineAnimationsComponent(): AnimationsComponent {
 
 private val animationKeys =
     gdxArrayOf(
+        "Cartin",
+        "Cartin_Shoot",
+        "Cartin_FullyCharged",
+        "Cartin_HalfCharged",
+        "Cartin_Damaged",
+        "Cartin_Jump",
+        "Cartin_JumpShoot",
+        "Cartin_JumpHalfCharged",
+        "Cartin_JumpFullyCharged",
         "Climb",
         "Climb_Left",
         "ClimbHalfCharging",
@@ -236,6 +255,15 @@ internal data class AnimationDef(
 
 private val animationDefMap =
     objectMapOf(
+        "Cartin" to AnimationDef(1, 2, gdxArrayOf(1.5f, .15f)),
+        "Cartin_Damaged" to AnimationDef(1, 3, .05f),
+        "Cartin_FullyCharged" to AnimationDef(1, 2, .125f),
+        "Cartin_HalfCharged" to AnimationDef(1, 2, .125f),
+        "Cartin_Shoot" to AnimationDef(),
+        "Cartin_Jump" to AnimationDef(),
+        "Cartin_JumpHalfCharged" to AnimationDef(1, 2, .125f),
+        "Cartin_JumpFullyCharged" to AnimationDef(1, 2, .125f),
+        "Cartin_JumpShoot" to AnimationDef(),
         "Climb" to AnimationDef(1, 2, .125f),
         "Climb_Left" to AnimationDef(1, 2, .125f),
         "ClimbShoot" to AnimationDef(1, 1, .125f),

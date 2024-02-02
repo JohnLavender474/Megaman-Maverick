@@ -27,6 +27,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.enemies.*
@@ -173,6 +174,7 @@ class Megaman(game: MegamanMaverickGame) :
                     wallJumpVel = MegamanValues.WALL_JUMP_VEL
                     waterJumpVel = MegamanValues.WATER_JUMP_VEL
                     waterWallJumpVel = MegamanValues.WATER_WALL_JUMP_VEL
+                    cartJumpVel = MegamanValues.CART_JUMP_VEL
 
                     // gravity
                     gravity = MegamanValues.GRAVITY
@@ -192,6 +194,7 @@ class Megaman(game: MegamanMaverickGame) :
                     wallJumpVel = -MegamanValues.WALL_JUMP_VEL
                     waterJumpVel = -MegamanValues.WATER_JUMP_VEL
                     waterWallJumpVel = -MegamanValues.WATER_WALL_JUMP_VEL
+                    cartJumpVel = -MegamanValues.CART_JUMP_VEL
 
                     // gravity
                     gravity = -MegamanValues.GRAVITY
@@ -234,6 +237,7 @@ class Megaman(game: MegamanMaverickGame) :
     internal var jumpVel = 0f
     internal var wallJumpVel = 0f
     internal var waterJumpVel = 0f
+    internal var cartJumpVel = 0f
     internal var waterWallJumpVel = 0f
     internal var gravity = 0f
     internal var groundGravity = 0f
@@ -357,7 +361,8 @@ class Megaman(game: MegamanMaverickGame) :
                 (damager is AbstractEnemy || damager is IHazard || (damager is IProjectileEntity && damager.owner != this))
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
-        if (!noDmgBounce.contains(damager::class) &&
+        if (!isBehaviorActive(BehaviorType.RIDING_CART) &&
+            !noDmgBounce.contains(damager::class) &&
             damager is IGameEntity &&
             damager.hasComponent(BodyComponent::class)
         ) {

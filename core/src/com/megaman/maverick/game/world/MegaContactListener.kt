@@ -18,14 +18,12 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
-import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
-import com.megaman.maverick.game.entities.contracts.IProjectileEntity
-import com.megaman.maverick.game.entities.contracts.ItemEntity
+import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.decorations.Splash
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.sensors.Gate
+import com.megaman.maverick.game.entities.special.Cart
 import com.megaman.maverick.game.entities.special.Water
 import com.megaman.maverick.game.utils.VelocityAlterator
 
@@ -326,6 +324,21 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             if (playerEntity is Megaman && itemEntity is ItemEntity)
                 itemEntity.contactWithPlayer(playerEntity)
         }
+
+        // player, cart
+        else if (contact.fixturesMatch(FixtureType.PLAYER, FixtureType.CART)) {
+            printDebugLog(contact, "beginContact(): Player-Cart, contact = $contact")
+            val (player, cart) = contact.getFixturesInOrder(FixtureType.PLAYER, FixtureType.CART)!!
+
+            val playerEntity = player.getEntity()
+            val cartEntity = cart.getEntity() as IOwnable
+            cartEntity.owner = playerEntity
+
+            if (playerEntity is Megaman && cartEntity is Cart) {
+                playerEntity.body.setBodySense(BodySense.TOUCHING_CART, true)
+                playerEntity.body.putProperty(ConstKeys.CART, cartEntity)
+            }
+        }
     }
 
     override fun continueContact(contact: Contact, delta: Float) {
@@ -376,7 +389,7 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             if (ladderFixture.shape.contains(feet.shape.getBoundingRectangle().getBottomCenterPoint())) {
                 val body = feet.getBody()
                 body.setBodySense(BodySense.FEET_TOUCHING_LADDER, true)
-                body.properties.put(ConstKeys.LADDER, ladderFixture.getEntity())
+                body.putProperty(ConstKeys.LADDER, ladderFixture.getEntity())
             }
         }
 
@@ -387,7 +400,7 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             if (ladderFixture.shape.contains(head.shape.getBoundingRectangle().getTopCenterPoint())) {
                 val body = head.getBody()
                 body.setBodySense(BodySense.HEAD_TOUCHING_LADDER, true)
-                body.properties.put(ConstKeys.LADDER, ladderFixture.getEntity())
+                body.putProperty(ConstKeys.LADDER, ladderFixture.getEntity())
             }
         }
 
@@ -641,6 +654,21 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
 
             game.audioMan.playSound(SoundAsset.SPLASH_SOUND, false)
             Splash.generate(game, listener.getBody(), water.getBody())
+        }
+
+        // player, cart
+        else if (contact.fixturesMatch(FixtureType.PLAYER, FixtureType.CART)) {
+            printDebugLog(contact, "beginContact(): Player-Cart, contact = $contact")
+            val (player, cart) = contact.getFixturesInOrder(FixtureType.PLAYER, FixtureType.CART)!!
+
+            val playerEntity = player.getEntity()
+            val cartEntity = cart.getEntity() as IOwnable
+            cartEntity.owner = null
+
+            if (playerEntity is Megaman && cartEntity is Cart) {
+                playerEntity.body.setBodySense(BodySense.TOUCHING_CART, false)
+                playerEntity.body.removeProperty(ConstKeys.CART)
+            }
         }
     }
 }

@@ -7,6 +7,7 @@ import com.engine.behaviors.BehaviorsComponent
 import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
 import com.engine.common.enums.Facing
+import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.interfaces.isFacing
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -17,6 +18,7 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegamanKeys
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
+import com.megaman.maverick.game.entities.special.Cart
 import com.megaman.maverick.game.entities.special.Ladder
 import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.isSensing
@@ -160,6 +162,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                                         else waterJumpVel)
                                     else
                                         (if (isBehaviorActive(BehaviorType.WALL_SLIDING)) wallJumpVel
+                                        else if (isBehaviorActive(BehaviorType.RIDING_CART)) cartJumpVel
                                         else jumpVel)
                         }
                     }
@@ -173,6 +176,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                                         else waterJumpVel)
                                     else
                                         (if (isBehaviorActive(BehaviorType.WALL_SLIDING)) wallJumpVel
+                                        else if (isBehaviorActive(BehaviorType.RIDING_CART)) cartJumpVel
                                         else jumpVel)
                         }
 
@@ -471,20 +475,54 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
     // cart ride
     val ridingCart = object : AbstractBehavior() {
 
-        override fun evaluate(delta: Float) = body.isSensing(BodySense.BODY_TOUCHING_CART) &&
-                !game.controllerPoller.isPressed(ControllerButton.A) &&
-                !game.controllerPoller.isPressed(ControllerButton.DOWN)
+        private lateinit var cart: Cart
+
+        override fun evaluate(delta: Float) = body.isSensing(BodySense.TOUCHING_CART) &&
+                !game.controllerPoller.areAllPressed(gdxArrayOf(ControllerButton.A, ControllerButton.UP))
 
         override fun init() {
+            body.physics.velocity.setZero()
+            aButtonTask = AButtonTask.JUMP
 
+            cart = body.getProperty(ConstKeys.CART, Cart::class)!!
+            cart.body.physics.gravityOn = false
+            cart.childBlock.body.physics.collisionOn = false
+            cart.childBlock.body.fixtures.forEach { it.second.active = false }
+
+            body.setBottomCenterToPoint(cart.body.getBottomCenterPoint())
         }
 
         override fun act(delta: Float) {
-            body.physics.velocity.x = MegamanValues.CART_RIDE_VEL_X * ConstVals.PPM * facing.value
+            val vel = body.physics.velocity
+            if ((body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) && isFacing(Facing.RIGHT)) ||
+                (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && isFacing(Facing.LEFT))
+            ) vel.x = 0f else {
+                val impulseX = MegamanValues.CART_RIDE_IMPULSE * ConstVals.PPM * facing.value * delta
+                if (isBehaviorActive(BehaviorType.JUMPING) || !body.isSensing(BodySense.FEET_ON_GROUND))
+                    impulseX / 2f
+
+                vel.x += impulseX
+
+                if (vel.x > MegamanValues.CART_RIDE_MAX_SPEED * ConstVals.PPM)
+                    vel.x = MegamanValues.CART_RIDE_MAX_SPEED * ConstVals.PPM
+                else if (vel.x < -MegamanValues.CART_RIDE_MAX_SPEED * ConstVals.PPM)
+                    vel.x = -MegamanValues.CART_RIDE_MAX_SPEED * ConstVals.PPM
+            }
+
+            cart.body.setCenter(body.getCenter())
+            cart.sprites.values().forEach { it.hidden = true }
         }
 
         override fun end() {
-            body.translation(0f, ConstVals.PPM / 2f)
+            cart.body.physics.gravityOn = true
+            cart.sprites.values().forEach { it.hidden = false }
+            cart.body.physics.velocity.x = body.physics.velocity.x
+            cart.body.physics.velocity.y = 0f
+
+            cart.childBlock.body.physics.collisionOn = true
+            cart.childBlock.body.fixtures.forEach { it.second.active = true }
+
+            body.translation(0f, ConstVals.PPM / 1.75f)
             body.physics.velocity.y = MegamanValues.JUMP_VEL * ConstVals.PPM
         }
 

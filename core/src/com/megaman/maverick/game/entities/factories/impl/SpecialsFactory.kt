@@ -16,6 +16,7 @@ class SpecialsFactory(private val game: MegamanMaverickGame) : IFactory<IGameEnt
         const val GRAVITY_CHANGE = "GravityChange"
         const val SPRING_BOUNCER = "SpringBouncer"
         const val DISAPPEARING_BLOCKS = "DisappearingBlocks"
+        const val CART = "Cart"
     }
 
     private val pools = ObjectMap<Any, Pool<IGameEntity>>()
@@ -26,6 +27,7 @@ class SpecialsFactory(private val game: MegamanMaverickGame) : IFactory<IGameEnt
         pools.put(LADDER, EntityPoolCreator.create(10) { Ladder(game) })
         pools.put(GRAVITY_CHANGE, EntityPoolCreator.create(10) { GravityChange(game) })
         pools.put(DISAPPEARING_BLOCKS, EntityPoolCreator.create(2) { DisappearingBlocks(game) })
+        pools.put(CART, EntityPoolCreator.create(2) { Cart(game) })
     }
 
     override fun fetch(key: Any) = pools.get(key)?.fetch()

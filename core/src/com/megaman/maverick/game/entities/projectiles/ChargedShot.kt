@@ -38,6 +38,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
+import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.defineProjectileComponents
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -113,7 +114,11 @@ class ChargedShot(game: MegamanMaverickGame) :
     override fun hitBlock(blockFixture: Fixture) = explodeAndDie()
 
     override fun hitShield(shieldFixture: Fixture) {
-        owner = shieldFixture.getEntity()
+        val shieldEntity = shieldFixture.getEntity()
+        if (shieldEntity == owner) return
+        if (shieldEntity is IOwnable && shieldEntity.owner == owner) return
+        owner = shieldEntity
+
         swapFacing()
         if (directionRotation.isVertical()) trajectory.x *= -1f else trajectory.y *= -1f
 

@@ -15,6 +15,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val CART = "cart"
     const val LINE = "line"
     const val PASS_THROUGH = "pass_through"
     const val DELTA = "delta"
@@ -41,6 +42,7 @@ object ConstKeys {
     const val WIDTH = "width"
     const val HEIGHT = "height"
     const val CHILD = "child"
+    const val PARENT = "parent"
     const val UPSIDE_DOWN = "upside_down"
     const val GRAVITY_ROTATABLE = "gravity_rotatable"
     const val HAZARDS = "hazards"

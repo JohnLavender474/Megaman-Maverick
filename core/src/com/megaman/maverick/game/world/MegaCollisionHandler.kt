@@ -4,6 +4,7 @@ import com.engine.world.Body
 import com.engine.world.BodyType
 import com.engine.world.ICollisionHandler
 import com.engine.world.StandardCollisionHandler
+import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ControllerButton
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.behaviors.BehaviorType
@@ -23,6 +24,8 @@ class MegaCollisionHandler(private val game: MegamanMaverickGame) : ICollisionHa
             staticBody = body2
             dynamicBody = body1
         } else return false
+
+        if (staticBody.getEntity().getProperty(ConstKeys.PARENT) == dynamicBody.getEntity()) return true
 
         if (staticBody.hasBodyLabel(BodyLabel.PRESS_UP_FALL_THRU) &&
             dynamicBody == megaman.body &&

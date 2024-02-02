@@ -59,7 +59,9 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
                 spawnCenter.x += xOffset
 
                 var yOffset: Float = ConstVals.PPM / 16f
-                if (megaman.isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.WALL_SLIDING))
+                if (megaman.isBehaviorActive(BehaviorType.RIDING_CART))
+                    yOffset += .35f * ConstVals.PPM
+                else if (megaman.isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.WALL_SLIDING))
                     yOffset += .15f * ConstVals.PPM
                 else if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) yOffset -= .05f * ConstVals.PPM
                 else yOffset += .25f * ConstVals.PPM
@@ -68,7 +70,9 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
             } else {
                 var xOffset = ConstVals.PPM / 16f
                 xOffset +=
-                    if (megaman.isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.WALL_SLIDING))
+                    if (megaman.isBehaviorActive(BehaviorType.RIDING_CART))
+                        .25f * ConstVals.PPM
+                    else if (megaman.isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.WALL_SLIDING))
                         .15f * ConstVals.PPM
                     else if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) -.05f * ConstVals.PPM
                     else .05f * ConstVals.PPM

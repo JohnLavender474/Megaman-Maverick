@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.0.3</string>
+        <string>7.1.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -173,80 +173,30 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">../Frames/Megaman/AirDash.png</key>
-            <key type="filename">../Frames/Megaman/Beam.png</key>
-            <key type="filename">../Frames/Megaman/ClimbShoot.png</key>
-            <key type="filename">../Frames/Megaman/FinishClimb.png</key>
-            <key type="filename">../Frames/Megaman/FinishClimbHalfCharging.png</key>
-            <key type="filename">../Frames/Megaman/GroundSlide.png</key>
-            <key type="filename">../Frames/Megaman/InitRun.png</key>
-            <key type="filename">../Frames/Megaman/InitRunCharging.png</key>
-            <key type="filename">../Frames/Megaman/InitRunHalfCharging.png</key>
-            <key type="filename">../Frames/Megaman/Jump.png</key>
-            <key type="filename">../Frames/Megaman/JumpShoot.png</key>
-            <key type="filename">../Frames/Megaman/SlipSlide.png</key>
-            <key type="filename">../Frames/Megaman/SlipSlideShoot.png</key>
-            <key type="filename">../Frames/Megaman/StandShoot.png</key>
-            <key type="filename">../Frames/Megaman/StillClimb.png</key>
-            <key type="filename">../Frames/Megaman/Swim.png</key>
-            <key type="filename">../Frames/Megaman/SwimAttack.png</key>
-            <key type="filename">../Frames/Megaman/SwimShoot.png</key>
-            <key type="filename">../Frames/Megaman/WallSlide.png</key>
-            <key type="filename">../Frames/Megaman/WallSlideShoot.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>8,8,16,16</rect>
-                <key>scale9Paddings</key>
-                <rect>8,8,16,16</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../Frames/Megaman/AirDashCharging.png</key>
-            <key type="filename">../Frames/Megaman/AirDashHalfCharging.png</key>
-            <key type="filename">../Frames/Megaman/BeamLand.png</key>
-            <key type="filename">../Frames/Megaman/Climb.png</key>
-            <key type="filename">../Frames/Megaman/ClimbCharging.png</key>
-            <key type="filename">../Frames/Megaman/ClimbHalfCharging.png</key>
-            <key type="filename">../Frames/Megaman/Damaged.png</key>
-            <key type="filename">../Frames/Megaman/FinishClimbCharging.png</key>
-            <key type="filename">../Frames/Megaman/GroundSlideCharging.png</key>
-            <key type="filename">../Frames/Megaman/GroundSlideHalfCharging.png</key>
-            <key type="filename">../Frames/Megaman/JumpCharging.png</key>
-            <key type="filename">../Frames/Megaman/JumpHalfCharging.png</key>
-            <key type="filename">../Frames/Megaman/SlipSlideCharging.png</key>
-            <key type="filename">../Frames/Megaman/SlipSlideHalfCharging.png</key>
-            <key type="filename">../Frames/Megaman/Stand.png</key>
-            <key type="filename">../Frames/Megaman/StandCharging.png</key>
-            <key type="filename">../Frames/Megaman/StandHalfCharging.png</key>
-            <key type="filename">../Frames/Megaman/StillClimbCharging.png</key>
-            <key type="filename">../Frames/Megaman/StillClimbHalfCharging.png</key>
-            <key type="filename">../Frames/Megaman/SwimCharging.png</key>
-            <key type="filename">../Frames/Megaman/SwimHalfCharging.png</key>
-            <key type="filename">../Frames/Megaman/WallSlideCharging.png</key>
-            <key type="filename">../Frames/Megaman/WallSlideHalfCharging.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>16,8,32,16</rect>
-                <key>scale9Paddings</key>
-                <rect>16,8,32,16</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../Frames/Megaman/Frozen.png</key>
-            <key type="filename">../Frames/Megaman/GroundSlideShoot.png</key>
-            <key type="filename">../Frames/Megaman/StandThrow.png</key>
+            <key type="filename">../frames/Megaman/AirDash.png</key>
+            <key type="filename">../frames/Megaman/Beam.png</key>
+            <key type="filename">../frames/Megaman/Cartin_Jump.png</key>
+            <key type="filename">../frames/Megaman/Cartin_JumpShoot.png</key>
+            <key type="filename">../frames/Megaman/Cartin_Shoot.png</key>
+            <key type="filename">../frames/Megaman/ClimbShoot.png</key>
+            <key type="filename">../frames/Megaman/FinishClimb.png</key>
+            <key type="filename">../frames/Megaman/Frozen.png</key>
+            <key type="filename">../frames/Megaman/GroundSlide.png</key>
+            <key type="filename">../frames/Megaman/GroundSlideShoot.png</key>
+            <key type="filename">../frames/Megaman/InitRun.png</key>
+            <key type="filename">../frames/Megaman/InitRunCharging.png</key>
+            <key type="filename">../frames/Megaman/InitRunHalfCharging.png</key>
+            <key type="filename">../frames/Megaman/Jump.png</key>
+            <key type="filename">../frames/Megaman/JumpShoot.png</key>
+            <key type="filename">../frames/Megaman/SlipSlide.png</key>
+            <key type="filename">../frames/Megaman/SlipSlideShoot.png</key>
+            <key type="filename">../frames/Megaman/StandShoot.png</key>
+            <key type="filename">../frames/Megaman/StandThrow.png</key>
+            <key type="filename">../frames/Megaman/StillClimb.png</key>
+            <key type="filename">../frames/Megaman/Swim.png</key>
+            <key type="filename">../frames/Megaman/SwimShoot.png</key>
+            <key type="filename">../frames/Megaman/WallSlide.png</key>
+            <key type="filename">../frames/Megaman/WallSlideShoot.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -261,7 +211,35 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Megaman/OnFire.png</key>
+            <key type="filename">../frames/Megaman/AirDashCharging.png</key>
+            <key type="filename">../frames/Megaman/AirDashHalfCharging.png</key>
+            <key type="filename">../frames/Megaman/BeamLand.png</key>
+            <key type="filename">../frames/Megaman/Cartin.png</key>
+            <key type="filename">../frames/Megaman/Cartin_FullyCharged.png</key>
+            <key type="filename">../frames/Megaman/Cartin_HalfCharged.png</key>
+            <key type="filename">../frames/Megaman/Cartin_JumpFullyCharged.png</key>
+            <key type="filename">../frames/Megaman/Cartin_JumpHalfCharged.png</key>
+            <key type="filename">../frames/Megaman/Climb.png</key>
+            <key type="filename">../frames/Megaman/ClimbCharging.png</key>
+            <key type="filename">../frames/Megaman/ClimbHalfCharging.png</key>
+            <key type="filename">../frames/Megaman/FinishClimbCharging.png</key>
+            <key type="filename">../frames/Megaman/FinishClimbHalfCharging.png</key>
+            <key type="filename">../frames/Megaman/GroundSlideCharging.png</key>
+            <key type="filename">../frames/Megaman/GroundSlideHalfCharging.png</key>
+            <key type="filename">../frames/Megaman/JumpCharging.png</key>
+            <key type="filename">../frames/Megaman/JumpHalfCharging.png</key>
+            <key type="filename">../frames/Megaman/OnFire.png</key>
+            <key type="filename">../frames/Megaman/SlipSlideCharging.png</key>
+            <key type="filename">../frames/Megaman/SlipSlideHalfCharging.png</key>
+            <key type="filename">../frames/Megaman/Stand.png</key>
+            <key type="filename">../frames/Megaman/StandCharging.png</key>
+            <key type="filename">../frames/Megaman/StandHalfCharging.png</key>
+            <key type="filename">../frames/Megaman/StillClimbCharging.png</key>
+            <key type="filename">../frames/Megaman/StillClimbHalfCharging.png</key>
+            <key type="filename">../frames/Megaman/SwimCharging.png</key>
+            <key type="filename">../frames/Megaman/SwimHalfCharging.png</key>
+            <key type="filename">../frames/Megaman/WallSlideCharging.png</key>
+            <key type="filename">../frames/Megaman/WallSlideHalfCharging.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -276,10 +254,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Megaman/Run.png</key>
-            <key type="filename">../Frames/Megaman/RunCharging.png</key>
-            <key type="filename">../Frames/Megaman/RunHalfCharging.png</key>
-            <key type="filename">../Frames/Megaman/RunShoot.png</key>
+            <key type="filename">../frames/Megaman/Cartin_Damaged.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -288,9 +263,57 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>32,8,64,16</rect>
+                <rect>36,12,72,24</rect>
                 <key>scale9Paddings</key>
-                <rect>32,8,64,16</rect>
+                <rect>36,12,72,24</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Megaman/Damaged.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>60,12,120,24</rect>
+                <key>scale9Paddings</key>
+                <rect>60,12,120,24</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Megaman/Run.png</key>
+            <key type="filename">../frames/Megaman/RunCharging.png</key>
+            <key type="filename">../frames/Megaman/RunHalfCharging.png</key>
+            <key type="filename">../frames/Megaman/RunShoot.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>48,12,96,24</rect>
+                <key>scale9Paddings</key>
+                <rect>48,12,96,24</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Megaman/SwimAttack.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>8,8,16,16</rect>
+                <key>scale9Paddings</key>
+                <rect>8,8,16,16</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -301,7 +324,7 @@
             <struct type="SpriteSheet">
                 <key>files</key>
                 <array>
-                    <filename>../Frames/Megaman</filename>
+                    <filename>../frames/Megaman</filename>
                 </array>
             </struct>
         </map>

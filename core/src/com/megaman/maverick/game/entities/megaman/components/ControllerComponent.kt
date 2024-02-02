@@ -30,7 +30,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
 
                 facing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) Facing.RIGHT else Facing.LEFT
 
-                if (isBehaviorActive(BehaviorType.CLIMBING)) return@ButtonActuator
+                if (isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.RIDING_CART)) return@ButtonActuator
                 running = !isBehaviorActive(BehaviorType.WALL_SLIDING)
 
                 val threshold =
@@ -64,7 +64,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
 
                 facing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) Facing.LEFT else Facing.RIGHT
 
-                if (isBehaviorActive(BehaviorType.CLIMBING)) return@ButtonActuator
+                if (isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.RIDING_CART)) return@ButtonActuator
                 running = !isBehaviorActive(BehaviorType.WALL_SLIDING)
 
                 val threshold =

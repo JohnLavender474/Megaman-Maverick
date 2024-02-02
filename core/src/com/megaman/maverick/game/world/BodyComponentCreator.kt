@@ -8,6 +8,7 @@ object BodyComponentCreator {
 
     fun create(entity: IBodyEntity, body: Body): BodyComponent {
         body.fixtures.forEach { (_, fixture) -> fixture.setEntity(entity) }
+        body.setEntity(entity)
         return BodyComponent(entity, body)
     }
 }
