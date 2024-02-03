@@ -55,8 +55,9 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
             val spawnCenter = Vector2(megaman.body.getCenter())
 
             if (megaman.isDirectionRotatedVertically()) {
-                val xOffset: Float = ConstVals.PPM * .85f * megaman.facing.value
-                spawnCenter.x += xOffset
+                spawnCenter.x +=
+                    ConstVals.PPM * megaman.facing.value *
+                            if (megaman.isBehaviorActive(BehaviorType.RIDING_CART)) 1.5f else 0.85f
 
                 var yOffset: Float = ConstVals.PPM / 16f
                 if (megaman.isBehaviorActive(BehaviorType.RIDING_CART))

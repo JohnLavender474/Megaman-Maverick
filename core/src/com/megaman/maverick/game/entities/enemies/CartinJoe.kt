@@ -46,8 +46,12 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
+import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.projectiles.Bullet
+import com.megaman.maverick.game.entities.projectiles.ChargedShot
+import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.world.*
 import kotlin.reflect.KClass
 
@@ -67,7 +71,12 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpriteEntity,
     }
 
     override var facing = Facing.RIGHT
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, Int>()
+    override val damageNegotiations = objectMapOf<KClass<out IDamager>, Int>(
+        Bullet::class to 5,
+        Fireball::class to 10,
+        ChargedShot::class to 10,
+        ChargedShotExplosion::class to 5
+    )
 
     val shooting: Boolean
         get() = !shootTimer.isFinished()
@@ -127,7 +136,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpriteEntity,
             Fixture(GameRectangle().setSize(1.25f * ConstVals.PPM, 1.85f * ConstVals.PPM), FixtureType.BODY)
         body.addFixture(bodyFixture)
         bodyFixture.shape.color = Color.GRAY
-        debugShapes.add { bodyFixture.shape }
+        // debugShapes.add { bodyFixture.shape }
 
         // shield fixture
         val shieldFixture =
@@ -142,7 +151,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpriteEntity,
             Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat(), 1.25f * ConstVals.PPM), FixtureType.DAMAGER)
         body.addFixture(damagerFixture)
         damagerFixture.shape.color = Color.RED
-        debugShapes.add { damagerFixture.shape }
+        // debugShapes.add { damagerFixture.shape }
 
         // damageable fixture
         val damageableFixture =
@@ -158,7 +167,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpriteEntity,
         feetFixture.offsetFromBodyCenter.y = -0.6f * ConstVals.PPM
         body.addFixture(feetFixture)
         feetFixture.shape.color = Color.GREEN
-        debugShapes.add { feetFixture.shape }
+        // debugShapes.add { feetFixture.shape }
 
         val onBounce: () -> Unit = {
             swapFacing()
