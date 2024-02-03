@@ -493,6 +493,12 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         }
 
         override fun act(delta: Float) {
+            body.physics.velocity.x =
+                if ((body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) && isFacing(Facing.RIGHT)) ||
+                    (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && isFacing(Facing.LEFT))
+                ) 0f else MegamanValues.CART_RIDE_MAX_SPEED * ConstVals.PPM * facing.value
+
+            /*
             val vel = body.physics.velocity
             if ((body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) && isFacing(Facing.RIGHT)) ||
                 (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && isFacing(Facing.LEFT))
@@ -503,11 +509,14 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
                 vel.x += impulseX
 
+                /*
                 if (vel.x > MegamanValues.CART_RIDE_MAX_SPEED * ConstVals.PPM)
                     vel.x = MegamanValues.CART_RIDE_MAX_SPEED * ConstVals.PPM
                 else if (vel.x < -MegamanValues.CART_RIDE_MAX_SPEED * ConstVals.PPM)
                     vel.x = -MegamanValues.CART_RIDE_MAX_SPEED * ConstVals.PPM
+                 */
             }
+             */
 
             cart.body.setCenter(body.getCenter())
             cart.sprites.values().forEach { it.hidden = true }

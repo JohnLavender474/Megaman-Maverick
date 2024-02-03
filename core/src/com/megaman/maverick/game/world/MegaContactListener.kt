@@ -326,17 +326,17 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
         }
 
         // player, cart
-        else if (contact.fixturesMatch(FixtureType.PLAYER, FixtureType.CART)) {
-            printDebugLog(contact, "beginContact(): Player-Cart, contact = $contact")
-            val (player, cart) = contact.getFixturesInOrder(FixtureType.PLAYER, FixtureType.CART)!!
+        else if (contact.fixturesMatch(FixtureType.FEET, FixtureType.CART)) {
+            printDebugLog(contact, "beginContact(): Feet-Cart, contact = $contact")
+            val (feet, cart) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.CART)!!
 
-            val playerEntity = player.getEntity()
+            val feetEntity = feet.getEntity()
             val cartEntity = cart.getEntity() as IOwnable
-            cartEntity.owner = playerEntity
+            cartEntity.owner = feetEntity
 
-            if (playerEntity is Megaman && cartEntity is Cart) {
-                playerEntity.body.setBodySense(BodySense.TOUCHING_CART, true)
-                playerEntity.body.putProperty(ConstKeys.CART, cartEntity)
+            if (feetEntity is Megaman && cartEntity is Cart) {
+                feetEntity.body.setBodySense(BodySense.TOUCHING_CART, true)
+                feetEntity.body.putProperty(ConstKeys.CART, cartEntity)
             }
         }
     }
@@ -657,17 +657,17 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
         }
 
         // player, cart
-        else if (contact.fixturesMatch(FixtureType.PLAYER, FixtureType.CART)) {
-            printDebugLog(contact, "beginContact(): Player-Cart, contact = $contact")
-            val (player, cart) = contact.getFixturesInOrder(FixtureType.PLAYER, FixtureType.CART)!!
+        else if (contact.fixturesMatch(FixtureType.FEET, FixtureType.CART)) {
+            printDebugLog(contact, "beginContact(): Feet-Cart, contact = $contact")
+            val (feet, cart) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.CART)!!
 
-            val playerEntity = player.getEntity()
+            val feetEntity = feet.getEntity()
             val cartEntity = cart.getEntity() as IOwnable
             cartEntity.owner = null
 
-            if (playerEntity is Megaman && cartEntity is Cart) {
-                playerEntity.body.setBodySense(BodySense.TOUCHING_CART, false)
-                playerEntity.body.removeProperty(ConstKeys.CART)
+            if (feetEntity is Megaman && cartEntity is Cart) {
+                feetEntity.body.setBodySense(BodySense.TOUCHING_CART, false)
+                feetEntity.body.removeProperty(ConstKeys.CART)
             }
         }
     }

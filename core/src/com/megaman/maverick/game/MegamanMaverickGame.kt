@@ -70,7 +70,7 @@ class MegamanMaverickGame : Game2D() {
 
     companion object {
         const val TAG = "MegamanMaverickGame"
-        const val DEBUG_FPS = false
+        const val DEBUG_TEXT = true
         const val DEBUG_SHAPES = true
         const val DEFAULT_VOLUME = 0.5f
         val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(MEGAMAN_ANIMATIONS_COMPONENT_TAG)
@@ -80,7 +80,7 @@ class MegamanMaverickGame : Game2D() {
     lateinit var megaman: Megaman
     lateinit var audioMan: MegaAudioManager
 
-    private lateinit var fpsText: BitmapFontHandle
+    private lateinit var debugText: BitmapFontHandle
 
     fun startLevelScreen(level: Level) {
         val levelScreen = screens.get(ScreenEnum.LEVEL.name) as MegaLevelScreen
@@ -118,9 +118,9 @@ class MegamanMaverickGame : Game2D() {
         val uiViewport = FitViewport(screenWidth, screenHeight)
         viewports.put(ConstKeys.UI, uiViewport)
 
-        fpsText =
+        debugText =
             BitmapFontHandle(
-                { "FPS: ${Gdx.graphics.framesPerSecond}" },
+                { "VEL_X: ${(megaman.body.physics.velocity.x / ConstVals.PPM).toInt()}" },
                 getDefaultFontSize(),
                 Vector2(
                     (ConstVals.VIEW_WIDTH - 2) * ConstVals.PPM,
@@ -158,10 +158,10 @@ class MegamanMaverickGame : Game2D() {
 
     override fun render() {
         super.render()
-        if (DEBUG_FPS) {
+        if (DEBUG_TEXT) {
             batch.projectionMatrix = getUiCamera().combined
             batch.begin()
-            fpsText.draw(batch)
+            debugText.draw(batch)
             batch.end()
         }
     }

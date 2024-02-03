@@ -90,8 +90,8 @@ class Cart(game: MegamanMaverickGame) : GameEntity(game), IOwnable, IBodyEntity,
 
         // cart fixture
         val cartFixture =
-            Fixture(GameRectangle().setSize(0.75f * ConstVals.PPM, 0.1f * ConstVals.PPM), FixtureType.CART)
-        cartFixture.offsetFromBodyCenter.y = 0.375f * ConstVals.PPM
+            Fixture(GameRectangle().setSize(0.75f * ConstVals.PPM, 1.5f * ConstVals.PPM), FixtureType.CART)
+        cartFixture.offsetFromBodyCenter.y = -0.25f * ConstVals.PPM
         cartFixture.putProperty(ConstKeys.ENTITY, this)
         body.addFixture(cartFixture)
         cartFixture.shape.color = Color.GOLD
