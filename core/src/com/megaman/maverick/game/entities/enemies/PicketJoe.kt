@@ -145,13 +145,13 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         debugShapes.add { damageableFixture.shape }
 
         // pre-process
-        body.preProcess = Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             shieldFixture.active = standing
             if (standing) {
                 damageableFixture.offsetFromBodyCenter.x = 0.25f * ConstVals.PPM * -facing.value
                 shieldFixture.offsetFromBodyCenter.x = 0.35f * ConstVals.PPM * facing.value
             } else damageableFixture.offsetFromBodyCenter.setZero()
-        }
+        })
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
 

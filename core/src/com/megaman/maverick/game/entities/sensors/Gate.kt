@@ -178,13 +178,13 @@ class Gate(game: MegamanMaverickGame) :
         val gateFixture = Fixture(GameRectangle(), FixtureType.GATE)
         body.addFixture(gateFixture)
 
-        body.preProcess = Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             val bodySize =
                 if (orientation == GateOrientation.HORIZONTAL) Vector2(2f, 3f) else Vector2(3f, 2f)
             body.setSize(bodySize.scl(ConstVals.PPM.toFloat()))
             (gateFixture.shape as GameRectangle).set(body)
             body.setCenter(center)
-        }
+        })
 
         return BodyComponentCreator.create(this, body)
     }

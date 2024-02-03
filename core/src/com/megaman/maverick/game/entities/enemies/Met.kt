@@ -267,7 +267,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
         body.addFixture(damagerFixture)
 
         // pre-process
-        body.preProcess = Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             body.physics.velocityClamp =
                 (if (isDirectionRotatedVertically()) Vector2(VELOCITY_CLAMP_X, VELOCITY_CLAMP_Y)
                 else Vector2(VELOCITY_CLAMP_Y, VELOCITY_CLAMP_X))
@@ -288,7 +288,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
             damageableFixture.active = behavior != MetBehavior.SHIELDING
 
             shieldFixture.putProperty(ConstKeys.DIRECTION, directionRotation)
-        }
+        })
 
         addComponent(DrawableShapesComponent(this, shapes))
 

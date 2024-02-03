@@ -169,7 +169,7 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
         shapes.add { damagerFixture.shape }
 
         // pre-process
-        body.preProcess = Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             body.physics.gravity.y =
                 if (body.isSensing(BodySense.FEET_ON_GROUND)) 0f else GRAVITY * ConstVals.PPM
 
@@ -180,7 +180,7 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
                 if (wasOnWall) body.y += ConstVals.PPM / 10f
                 body.physics.velocity.x = VEL_X * ConstVals.PPM * facing.value
             }
-        }
+        })
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
 

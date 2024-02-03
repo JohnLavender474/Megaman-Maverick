@@ -130,10 +130,10 @@ class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
 
-        body.preProcess = Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             body.physics.gravity.y =
                 ConstVals.PPM * (if (body.isSensing(BodySense.FEET_ON_GROUND)) G_GRAV else GRAV)
-        }
+        })
 
         return BodyComponentCreator.create(this, body)
     }

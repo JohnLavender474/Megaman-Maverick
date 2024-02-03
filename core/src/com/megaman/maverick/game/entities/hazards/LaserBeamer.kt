@@ -148,12 +148,12 @@ class LaserBeamer(game: MegamanMaverickGame) :
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
         body.addFixture(shieldFixture)
 
-        body.preProcess = Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             laserFixture.putProperty(ConstKeys.LINE, rotatingLine.line)
             contacts.clear()
-        }
+        })
 
-        body.postProcess = Updatable {
+        body.postProcess.put(ConstKeys.DEFAULT, Updatable {
             val end =
                 if (contacts.isEmpty()) rotatingLine.getEndPoint()
                 else contacts.first()
@@ -166,7 +166,7 @@ class LaserBeamer(game: MegamanMaverickGame) :
             damagerFixture.shape = laser
 
             contactGlow.setCenter(end.x, end.y)
-        }
+        })
 
         return BodyComponentCreator.create(this, body)
     }

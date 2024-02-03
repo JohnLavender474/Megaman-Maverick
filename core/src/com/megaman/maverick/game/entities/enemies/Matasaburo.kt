@@ -100,10 +100,10 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         body.addFixture(damageableFixture)
 
         // pre-process
-        body.preProcess = Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             val offsetX = 5f * ConstVals.PPM * facing.value
             blowFixture.offsetFromBodyCenter.x = offsetX
-        }
+        })
 
         return BodyComponentCreator.create(this, body)
     }

@@ -114,7 +114,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game, CULL_TIME), IFa
         body.addFixture(oobScannerFixture)
 
         // pre-process
-        body.preProcess = Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             behaviorTimer.update(it)
 
             if (!behaviorTimer.isFinished()) {
@@ -142,10 +142,10 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game, CULL_TIME), IFa
                     oobScannerFixture.offsetFromBodyCenter.set(xOffset, 0f)
                 }
             }
-        }
+        })
 
         // post-process
-        body.postProcess = Updatable {
+        body.postProcess.put(ConstKeys.DEFAULT, Updatable {
             if (!behaviorTimer.isFinished()) {
                 body.physics.velocity.setZero()
                 return@Updatable
@@ -190,7 +190,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game, CULL_TIME), IFa
                     }
                 }
             }
-        }
+        })
 
         return BodyComponentCreator.create(this, body)
     }

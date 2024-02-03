@@ -110,7 +110,7 @@ class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val damagerFixture = Fixture(GameRectangle(), FixtureType.DAMAGER)
         body.addFixture(damagerFixture)
 
-        body.preProcess = Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             val feetBounds = feetFixture.shape as GameRectangle
             if (standing || jumping) {
                 body.setSize(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat())
@@ -129,7 +129,7 @@ class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
                 (if (body.isSensing(BodySense.FEET_ON_GROUND)) G_GRAV else GRAV) * ConstVals.PPM
 
             if (sliding) body.physics.velocity.x = SLIDE_X * ConstVals.PPM * facing.value
-        }
+        })
 
         return BodyComponentCreator.create(this, body)
     }

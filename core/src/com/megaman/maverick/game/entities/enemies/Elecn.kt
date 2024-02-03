@@ -162,7 +162,7 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
 
-        body.preProcess = Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             if (isFacing(Facing.LEFT)) {
                 sideFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
                 sideFixture.offsetFromBodyCenter.x = -0.5f * ConstVals.PPM
@@ -178,14 +178,14 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
                     val y = Y_VEL * ConstVals.PPM * (if (zigzagUp) 1 else -1)
                     Vector2(x, y)
                 }
-        }
+        })
 
-        body.postProcess = Updatable {
+        body.postProcess.put(ConstKeys.DEFAULT, Updatable {
             if (isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT))
                 facing = Facing.RIGHT
             else if (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
                 facing = Facing.LEFT
-        }
+        })
 
         return BodyComponentCreator.create(this, body)
     }

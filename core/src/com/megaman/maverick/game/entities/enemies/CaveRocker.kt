@@ -160,7 +160,7 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         headFixture.shape.color = Color.BLUE
         debugShapes.add { headFixture.shape }
 
-        body.preProcess = Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             newRock?.let { _newRock ->
                 if (throwing && _newRock.dead) {
                     GameLogger.debug(TAG, "New rock died before reaching cave rocker, so spawning a new one")
@@ -178,7 +178,7 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
                     waitTimer.reset()
                 }
             }
-        }
+        })
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
 

@@ -8,6 +8,7 @@ import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
 import com.engine.common.enums.Facing
 import com.engine.common.extensions.gdxArrayOf
+import com.engine.common.interfaces.Updatable
 import com.engine.common.interfaces.isFacing
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -486,10 +487,16 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             cart = body.getProperty(ConstKeys.CART, Cart::class)!!
             cart.body.physics.gravityOn = false
+
             cart.childBlock.body.physics.collisionOn = false
             cart.childBlock.body.fixtures.forEach { it.second.active = false }
 
             body.setBottomCenterToPoint(cart.body.getBottomCenterPoint())
+            body.preProcess.put(ConstKeys.CART, Updatable {
+                cart.body.setCenter(body.getCenter())
+            })
+
+            cart.sprites.values().forEach { it.hidden = true }
         }
 
         override fun act(delta: Float) {
@@ -516,23 +523,22 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     vel.x = -MegamanValues.CART_RIDE_MAX_SPEED * ConstVals.PPM
                  */
             }
-             */
-
-            cart.body.setCenter(body.getCenter())
-            cart.sprites.values().forEach { it.hidden = true }
+            */
         }
 
         override fun end() {
             cart.body.physics.gravityOn = true
-            cart.sprites.values().forEach { it.hidden = false }
             cart.body.physics.velocity.x = body.physics.velocity.x
             cart.body.physics.velocity.y = 0f
+
+            cart.sprites.values().forEach { it.hidden = false }
 
             cart.childBlock.body.physics.collisionOn = true
             cart.childBlock.body.fixtures.forEach { it.second.active = true }
 
             body.translation(0f, ConstVals.PPM / 1.75f)
             body.physics.velocity.y = MegamanValues.JUMP_VEL * ConstVals.PPM
+            body.preProcess.remove(ConstKeys.CART)
         }
 
     }

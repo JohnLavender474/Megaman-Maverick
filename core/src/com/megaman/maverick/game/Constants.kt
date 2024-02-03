@@ -15,6 +15,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val DEFAULT = "default"
     const val CART = "cart"
     const val LINE = "line"
     const val PASS_THROUGH = "pass_through"

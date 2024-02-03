@@ -195,7 +195,7 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game) {
         body.addFixture(damageableFixture)
         debugShapes.add { if (damageableFixture.active) damageableFixture.shape else null }
 
-        body.preProcess = Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             fixturesRectangle.setSize(
                 (when (state) {
                     HanabiranState.SLEEPING -> Vector2.Zero
@@ -227,7 +227,7 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game) {
             bodyFixture.active = fixturesOn
             damagerFixture.active = fixturesOn
             damageableFixture.active = fixturesOn
-        }
+        })
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
 

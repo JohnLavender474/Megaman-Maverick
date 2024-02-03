@@ -95,12 +95,12 @@ class ElectricBall(game: MegamanMaverickGame) : GameEntity(game), IProjectileEnt
         val damagerFixture = Fixture(bounds, FixtureType.DAMAGER)
         body.addFixture(damagerFixture)
 
-        body.preProcess = Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             val size = if (large) ConstVals.PPM.toFloat() else ConstVals.PPM / 4f
             body.setSize(size)
             bounds.setSize(size)
             body.physics.velocity = trajectory
-        }
+        })
 
         return BodyComponentCreator.create(this, body)
     }

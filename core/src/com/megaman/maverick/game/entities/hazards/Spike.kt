@@ -90,7 +90,7 @@ class Spike(game: MegamanMaverickGame) :
         val deathFixture = Fixture(GameRectangle(), FixtureType.DEATH)
         body.addFixture(deathFixture)
 
-        body.preProcess = Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             parent?.let {
                 if (it is IBodyEntity) {
                     val parentCenter = it.body.getCenter()
@@ -98,7 +98,7 @@ class Spike(game: MegamanMaverickGame) :
                     body.setCenter(newCenter)
                 }
             }
-        }
+        })
 
         return BodyComponentCreator.create(this, body)
     }

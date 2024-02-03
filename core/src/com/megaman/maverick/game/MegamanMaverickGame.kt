@@ -1,6 +1,5 @@
 package com.megaman.maverick.game
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.audio.Music
@@ -45,10 +44,9 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.MegaControllerPoller
+import com.megaman.maverick.game.entities.enemies.CartinJoe
 import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.hazards.LaserBeamer
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_ANIMATIONS_COMPONENT_TAG
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
@@ -73,8 +71,8 @@ class MegamanMaverickGame : Game2D() {
         const val DEBUG_TEXT = true
         const val DEBUG_SHAPES = true
         const val DEFAULT_VOLUME = 0.5f
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(MEGAMAN_ANIMATIONS_COMPONENT_TAG)
-        val CONTACT_LISTENER_TAGS: ObjectSet<String> = objectSetOf(LaserBeamer.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(MegaContactListener.TAG)
+        val CONTACT_LISTENER_TAGS: ObjectSet<String> = objectSetOf(CartinJoe.TAG)
     }
 
     lateinit var megaman: Megaman

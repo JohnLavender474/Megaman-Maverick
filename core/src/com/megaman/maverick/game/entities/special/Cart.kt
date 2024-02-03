@@ -137,11 +137,11 @@ class Cart(game: MegamanMaverickGame) : GameEntity(game), IOwnable, IBodyEntity,
         feetFixture.shape.color = Color.GREEN
         // debugShapes.add { feetFixture.shape }
 
-        body.preProcess = Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             childBlock.body.setBottomCenterToPoint(body.getBottomCenterPoint())
             body.physics.gravity.y =
                 ConstVals.PPM * if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
-        }
+        })
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
 

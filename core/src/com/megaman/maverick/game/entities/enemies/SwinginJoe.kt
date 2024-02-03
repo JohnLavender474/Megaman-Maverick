@@ -139,13 +139,13 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         shapes.add { shieldFixture.shape }
 
         // pre-process
-        body.preProcess = Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             shieldFixture.active = setting == SwinginJoeSetting.SWING_EYES_CLOSED
             if (setting == SwinginJoeSetting.SWING_EYES_CLOSED) {
                 damageableFixture.offsetFromBodyCenter.x = 0.25f * ConstVals.PPM * -facing.value
                 shieldFixture.offsetFromBodyCenter.x = 0.35f * ConstVals.PPM * facing.value
             } else damageableFixture.offsetFromBodyCenter.x = 0f
-        }
+        })
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
 

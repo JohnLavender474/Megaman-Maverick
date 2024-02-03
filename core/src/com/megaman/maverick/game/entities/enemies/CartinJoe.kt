@@ -72,10 +72,10 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpriteEntity,
 
     override var facing = Facing.RIGHT
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, Int>(
-        Bullet::class to 5,
-        Fireball::class to 10,
-        ChargedShot::class to 10,
-        ChargedShotExplosion::class to 5
+        Bullet::class to 15,
+        Fireball::class to ConstVals.MAX_HEALTH,
+        ChargedShot::class to ConstVals.MAX_HEALTH,
+        ChargedShotExplosion::class to ConstVals.MAX_HEALTH
     )
 
     val shooting: Boolean
@@ -104,6 +104,11 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpriteEntity,
         facing = if (left) Facing.LEFT else Facing.RIGHT
         waitTimer.reset()
         shootTimer.setToEnd()
+    }
+
+    override fun onDestroy() {
+        super<AbstractEnemy>.onDestroy()
+        explode()
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -155,7 +160,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpriteEntity,
 
         // damageable fixture
         val damageableFixture =
-            Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.75f * ConstVals.PPM), FixtureType.DAMAGER)
+            Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.75f * ConstVals.PPM), FixtureType.DAMAGEABLE)
         damageableFixture.offsetFromBodyCenter.y = 0.45f * ConstVals.PPM
         body.addFixture(damageableFixture)
         damageableFixture.shape.color = Color.PURPLE
@@ -194,11 +199,11 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpriteEntity,
         rightFixture.shape.color = Color.YELLOW
         debugShapes.add { rightFixture.shape }
 
-        body.preProcess = Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             body.physics.gravity.y =
                 ConstVals.PPM * if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
             body.physics.velocity.x = VEL_X * ConstVals.PPM * facing.value
-        }
+        })
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
 

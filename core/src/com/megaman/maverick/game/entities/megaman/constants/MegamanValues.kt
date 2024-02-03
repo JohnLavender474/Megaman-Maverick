@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.megaman.constants
 
-/** Constant values for Megaman. */
 object MegamanValues {
     const val MAX_HEALTH_TANKS = 4
     const val MAX_WEAPON_AMMO = 30

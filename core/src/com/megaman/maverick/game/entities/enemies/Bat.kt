@@ -170,14 +170,14 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
         scannerFixture.putProperty(ConstKeys.CONSUMER, consumer)
         body.addFixture(scannerFixture)
 
-        body.preProcess = Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             shieldFixture.active = status == BatStatus.HANGING
             damageableFixture.active = status != BatStatus.HANGING
 
             if (status == BatStatus.FLYING_TO_RETREAT)
                 body.physics.velocity.set(0f, FLY_TO_RETREAT_SPEED * ConstVals.PPM)
             else if (status != BatStatus.FLYING_TO_ATTACK) body.physics.velocity.setZero()
-        }
+        })
 
         addComponent(
             DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true)

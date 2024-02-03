@@ -133,11 +133,11 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         shapes.add { damageableFixture.shape }
 
         // pre-process
-        body.preProcess = Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             body.physics.gravityOn = standing
             body.physics.gravity.y =
                 (if (body.isSensing(BodySense.FEET_ON_GROUND)) G_GRAV else GRAV) * ConstVals.PPM
-        }
+        })
 
         addComponent(DrawableShapesComponent(this, shapes))
 

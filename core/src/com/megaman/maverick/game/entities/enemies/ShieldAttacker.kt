@@ -116,7 +116,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
         body.addFixture(shieldFixture)
 
         // pre-process
-        body.preProcess = Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             val damageableShape = damageableFixture.shape as GameRectangle
             if (turningAround) {
                 shieldFixture.active = false
@@ -127,7 +127,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
                 damageableFixture.offsetFromBodyCenter.x = (if (left) 0.5f else -0.5f) * ConstVals.PPM
                 damageableShape.width = 0.15f * ConstVals.PPM
             }
-        }
+        })
 
         return BodyComponentCreator.create(this, body)
     }

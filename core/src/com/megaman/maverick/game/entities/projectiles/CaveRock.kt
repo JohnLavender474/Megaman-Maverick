@@ -124,10 +124,10 @@ class CaveRock(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity 
         shieldFixture.shape.color = Color.BLUE
         debugShapes.add { shieldFixture.shape }
 
-        body.preProcess = Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             body.physics.gravity.y = gravity
             trajectory?.let { body.physics.velocity = it }
-        }
+        })
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
 

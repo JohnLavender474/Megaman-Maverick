@@ -48,7 +48,7 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
         blockFixture = Fixture(GameRectangle(), FixtureType.BLOCK)
         body.addFixture(blockFixture)
 
-        body.preProcess = Updatable { (blockFixture.shape as GameRectangle).set(body) }
+        body.preProcess.put(ConstKeys.DEFAULT, Updatable { (blockFixture.shape as GameRectangle).set(body) })
 
         return BodyComponentCreator.create(this, body)
     }

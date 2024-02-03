@@ -175,7 +175,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
         shapes.add { shieldFixture.bodyRelativeShape }
 
         // pre-process
-        body.preProcess = Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             body.physics.gravity =
                 if (body.isSensing(BodySense.FEET_ON_GROUND)) Vector2()
                 else
@@ -202,7 +202,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
                             if (isDirectionRotatedUp() || isDirectionRotatedLeft()) -facing.value
                             else facing.value
             else damageableFixture.offsetFromBodyCenter.x = 0f
-        }
+        })
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
 

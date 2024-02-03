@@ -104,7 +104,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     // shapes.add { waterListenerFixture.bodyRelativeShape }
 
     // pre-process
-    body.preProcess = Updatable {
+    body.preProcess.put(ConstKeys.DEFAULT, Updatable {
         val wallSlidingOnIce =
             isBehaviorActive(BehaviorType.WALL_SLIDING) &&
                     (body.isSensingAny(BodySense.SIDE_TOUCHING_ICE_LEFT, BodySense.SIDE_TOUCHING_ICE_RIGHT))
@@ -169,7 +169,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
 
         (bodyFixture.shape as Rectangle).set(body)
         (playerFixture.shape as Rectangle).set(body)
-    }
+    })
 
     // add drawable bounds component
     addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))

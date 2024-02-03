@@ -137,7 +137,7 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
         shapes.add { damageableFixture.shape }
 
         // pre-process
-        body.preProcess = Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             val damageableBounds = damageableFixture.shape as GameRectangle
             if (down) {
                 damageableBounds.height = 0.2f * ConstVals.PPM
@@ -147,7 +147,7 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
                 damageableBounds.height = 0.65f * ConstVals.PPM
                 damageableFixture.offsetFromBodyCenter.y = 0f
             }
-        }
+        })
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
 

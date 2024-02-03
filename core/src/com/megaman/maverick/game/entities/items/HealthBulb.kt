@@ -159,7 +159,7 @@ class HealthBulb(game: MegamanMaverickGame) :
         feetFixture.shape.color = Color.GREEN
         shapes.add { feetFixture.shape }
 
-        body.preProcess = Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             if (!landed) {
                 landed = body.isSensing(BodySense.FEET_ON_GROUND)
                 GameLogger.debug(TAG, "preProcess(): landed = $landed")
@@ -171,7 +171,7 @@ class HealthBulb(game: MegamanMaverickGame) :
             if (!body.physics.gravityOn) body.physics.velocity.y = 0f
 
             body.physics.gravity.y = (if (upsideDown) GRAVITY else -GRAVITY) * ConstVals.PPM
-        }
+        })
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
 
