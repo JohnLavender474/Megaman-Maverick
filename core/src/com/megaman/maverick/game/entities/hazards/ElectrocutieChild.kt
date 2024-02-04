@@ -12,11 +12,10 @@ import com.engine.common.enums.Direction
 import com.engine.common.enums.Position
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.objectMapOf
-import com.engine.common.extensions.toGdxArray
-import com.engine.common.objects.Loop
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
-import com.engine.common.time.Timer
+import com.engine.damage.IDamageable
+import com.engine.damage.IDamager
 import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.GameSprite
@@ -40,7 +39,7 @@ import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
-class ElectrocutieChild(game: MegamanMaverickGame) : GameEntity(game), IHazard, IBodyEntity, ISpriteEntity,
+class ElectrocutieChild(game: MegamanMaverickGame) : GameEntity(game), IHazard, IDamager, IBodyEntity, ISpriteEntity,
     IAnimatedEntity, IChildEntity {
 
     enum class ElectrocutieState {
@@ -49,9 +48,6 @@ class ElectrocutieChild(game: MegamanMaverickGame) : GameEntity(game), IHazard, 
 
     companion object {
         const val TAG = "Electrocutie"
-        private const val MOVE_DURATION = 1f
-        private const val CHARGE_DURATION = 0.75f
-        private const val SHOCK_DURATION = 0.5f
         private var moveRegion: TextureRegion? = null
         private var chargeRegion: TextureRegion? = null
         private var shockRegion: TextureRegion? = null
@@ -59,14 +55,9 @@ class ElectrocutieChild(game: MegamanMaverickGame) : GameEntity(game), IHazard, 
 
     override var parent: IGameEntity? = null
 
-    private val loop = Loop(ElectrocutieState.values().toGdxArray())
-    private val timers = objectMapOf(
-        ElectrocutieState.MOVE to Timer(MOVE_DURATION),
-        ElectrocutieState.CHARGE to Timer(CHARGE_DURATION),
-        ElectrocutieState.SHOCK to Timer(SHOCK_DURATION)
-    )
-
     private lateinit var direction: Direction
+    private lateinit var spawn: Vector2
+    private var resetBodyPosition = true
 
     override fun init() {
         if (moveRegion == null || chargeRegion == null || shockRegion == null) {
@@ -82,42 +73,59 @@ class ElectrocutieChild(game: MegamanMaverickGame) : GameEntity(game), IHazard, 
 
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
-
-        loop.reset()
-        timers.values().forEach { it.reset() }
-
-        val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+        parent = spawnProps.get(ConstKeys.PARENT) as IGameEntity?
+        spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         direction = spawnProps.get(ConstKeys.DIRECTION, Direction::class)!!
-        when (direction) {
-            Direction.UP -> body.setBottomCenterToPoint(spawn)
-            Direction.DOWN -> body.setTopCenterToPoint(spawn)
-            Direction.LEFT -> body.setCenterRightToPoint(spawn)
-            Direction.RIGHT -> body.setCenterLeftToPoint(spawn)
-        }
+        resetBodyPosition = true
+    }
 
-        parent = spawnProps.get(ConstKeys.ENTITY) as IGameEntity?
+    override fun canDamage(damageable: IDamageable): Boolean {
+        return true
+    }
+
+    override fun onDamageInflictedTo(damageable: IDamageable) {
+        // do nothing
     }
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.85f * ConstVals.PPM, 0.35f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
         // body fixture
-        val bodyFixture = Fixture(GameRectangle().setSize(body.width, body.height), FixtureType.BODY)
+        val bodyFixture = Fixture(GameRectangle(), FixtureType.BODY)
         body.addFixture(bodyFixture)
         bodyFixture.shape.color = Color.GRAY
         debugShapes.add { bodyFixture.shape }
 
         // damager fixture
-        val damagerFixture = Fixture(GameRectangle().setSize(body.width, body.height), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(GameRectangle(), FixtureType.DAMAGER)
         body.addFixture(damagerFixture)
         damagerFixture.shape.color = Color.RED
         debugShapes.add { damagerFixture.shape }
 
-        body.preProcess.put(ConstKeys.DEFAULT) {
+        // shield fixture
+        val shieldFixture = Fixture(GameRectangle(), FixtureType.SHIELD)
+        body.addFixture(shieldFixture)
+        shieldFixture.shape.color = Color.BLUE
+        debugShapes.add { shieldFixture.shape }
 
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            val size = if (direction.isVertical()) Vector2(0.85f * ConstVals.PPM, 0.35f * ConstVals.PPM)
+            else Vector2(0.35f * ConstVals.PPM, 0.85f * ConstVals.PPM)
+
+            body.setSize(size)
+            body.fixtures.forEach { (it.second.shape as GameRectangle).setSize(size) }
+
+            if (resetBodyPosition) {
+                when (direction) {
+                    Direction.UP -> body.setBottomCenterToPoint(spawn)
+                    Direction.DOWN -> body.setTopCenterToPoint(spawn)
+                    Direction.LEFT -> body.setCenterRightToPoint(spawn)
+                    Direction.RIGHT -> body.setCenterLeftToPoint(spawn)
+                }
+                resetBodyPosition = false
+            }
         }
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
@@ -158,7 +166,7 @@ class ElectrocutieChild(game: MegamanMaverickGame) : GameEntity(game), IHazard, 
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { loop.getCurrent().name }
+        val keySupplier: () -> String? = { (parent as Electrocutie).currentState.name }
         val animations = objectMapOf<String, IAnimation>(
             ElectrocutieState.MOVE.name to Animation(moveRegion!!),
             ElectrocutieState.CHARGE.name to Animation(chargeRegion!!, 1, 2, 0.1f, true),

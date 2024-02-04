@@ -36,6 +36,8 @@ import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.explosions.SnowballExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.entities.hazards.Bolt
+import com.megaman.maverick.game.entities.hazards.ElectrocutieChild
 import com.megaman.maverick.game.entities.hazards.LaserBeamer
 import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.entities.megaman.constants.*
@@ -106,7 +108,9 @@ class Megaman(game: MegamanMaverickGame) :
             PicketJoe::class to 3,
             Picket::class to 3,
             LaserBeamer::class to 3,
-            CartinJoe::class to 3
+            CartinJoe::class to 3,
+            Bolt::class to 3,
+            ElectrocutieChild::class to 3
         )
 
     internal val noDmgBounce = objectSetOf<Any>(SpringHead::class)

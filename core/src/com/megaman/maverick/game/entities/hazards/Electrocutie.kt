@@ -1,11 +1,17 @@
 package com.megaman.maverick.game.entities.hazards
 
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
+import com.engine.common.extensions.objectMapOf
+import com.engine.common.extensions.toGdxArray
+import com.engine.common.objects.Loop
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
+import com.engine.common.time.Timer
 import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.entities.GameEntity
@@ -29,12 +35,29 @@ import kotlin.math.roundToInt
 
 class Electrocutie(game: MegamanMaverickGame) : GameEntity(game), IHazard, IBodyEntity, IParentEntity {
 
+    enum class ElectrocutieState {
+        MOVE, CHARGE, SHOCK
+    }
+
     companion object {
         const val TAG = "ElectrocutieParent"
         const val SPEED = 2f
+        const val MOVE_DURATION = 1f
+        const val CHARGE_DURATION = 0.75f
+        const val SHOCK_DURATION = 0.5f
     }
 
     override val children = Array<IGameEntity>()
+
+    val currentState: ElectrocutieState
+        get() = loop.getCurrent()
+
+    private val loop = Loop(ElectrocutieState.values().toGdxArray())
+    private val timers = objectMapOf(
+        ElectrocutieState.MOVE to Timer(MOVE_DURATION),
+        ElectrocutieState.CHARGE to Timer(CHARGE_DURATION),
+        ElectrocutieState.SHOCK to Timer(SHOCK_DURATION)
+    )
 
     private var vertical = true
     private var left = true
@@ -47,8 +70,12 @@ class Electrocutie(game: MegamanMaverickGame) : GameEntity(game), IHazard, IBody
     }
 
     override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
         if (!children.isEmpty) throw IllegalStateException("Children array should be empty when spawning ElectrocutieParent")
+        GameLogger.debug(TAG, "spawn(): spawnProps = $spawnProps")
+        super.spawn(spawnProps)
+
+        loop.reset()
+        timers.values().forEach { it.reset() }
 
         left = spawnProps.getOrDefault(ConstKeys.LEFT, true, Boolean::class)
 
@@ -65,7 +92,9 @@ class Electrocutie(game: MegamanMaverickGame) : GameEntity(game), IHazard, IBody
 
             // bottom electrocutie child
             val bottomElectrocutieChildProps = props(
-                ConstKeys.POSITION to bounds.getBottomCenterPoint(), ConstKeys.DIRECTION to Direction.UP
+                ConstKeys.POSITION to bounds.getBottomCenterPoint(),
+                ConstKeys.DIRECTION to Direction.UP,
+                ConstKeys.PARENT to this
             )
             val bottomElectrocutieChild =
                 EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.ELECTROCUTIE_CHILD)!! as ElectrocutieChild
@@ -74,7 +103,9 @@ class Electrocutie(game: MegamanMaverickGame) : GameEntity(game), IHazard, IBody
 
             // top electrocutie child
             val topElectrocutieProps = props(
-                ConstKeys.POSITION to bounds.getTopCenterPoint(), ConstKeys.DIRECTION to Direction.DOWN
+                ConstKeys.POSITION to bounds.getTopCenterPoint(),
+                ConstKeys.DIRECTION to Direction.DOWN,
+                ConstKeys.PARENT to this
             )
             val topElectrocutieChild =
                 EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.ELECTROCUTIE_CHILD)!! as ElectrocutieChild
@@ -89,7 +120,7 @@ class Electrocutie(game: MegamanMaverickGame) : GameEntity(game), IHazard, IBody
 
                 game.gameEngine.spawn(
                     bolt, props(
-                        ConstKeys.POSITION to position, ConstKeys.VERTICAL to true
+                        ConstKeys.POSITION to position, ConstKeys.VERTICAL to true, ConstKeys.PARENT to this
                     )
                 )
 
@@ -101,7 +132,9 @@ class Electrocutie(game: MegamanMaverickGame) : GameEntity(game), IHazard, IBody
 
             // bottom electrocutie child
             val bottomElectrocutieProps = props(
-                ConstKeys.POSITION to bounds.getCenterLeftPoint(), ConstKeys.DIRECTION to Direction.RIGHT
+                ConstKeys.POSITION to bounds.getCenterLeftPoint(),
+                ConstKeys.DIRECTION to Direction.RIGHT,
+                ConstKeys.PARENT to this
             )
             val bottomElectrocutieChild =
                 EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.ELECTROCUTIE_CHILD)!! as ElectrocutieChild
@@ -110,7 +143,9 @@ class Electrocutie(game: MegamanMaverickGame) : GameEntity(game), IHazard, IBody
 
             // top electrocutie child
             val topElectrocutieProps = props(
-                ConstKeys.POSITION to bounds.getCenterRightPoint(), ConstKeys.DIRECTION to Direction.LEFT
+                ConstKeys.POSITION to bounds.getCenterRightPoint(),
+                ConstKeys.DIRECTION to Direction.LEFT,
+                ConstKeys.PARENT to this
             )
             val topElectrocutieChild =
                 EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.ELECTROCUTIE_CHILD)!! as ElectrocutieChild
@@ -125,7 +160,7 @@ class Electrocutie(game: MegamanMaverickGame) : GameEntity(game), IHazard, IBody
 
                 game.gameEngine.spawn(
                     bolt, props(
-                        ConstKeys.POSITION to position, ConstKeys.VERTICAL to false
+                        ConstKeys.POSITION to position, ConstKeys.VERTICAL to false, ConstKeys.PARENT to this
                     )
                 )
 
@@ -140,13 +175,32 @@ class Electrocutie(game: MegamanMaverickGame) : GameEntity(game), IHazard, IBody
         children.clear()
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, {
+    private fun defineUpdatablesComponent() = UpdatablesComponent(this, { delta ->
         val currentPosition = if (vertical) body.getCenter().x else body.getCenter().y
 
         if (left && currentPosition <= minPosition) left = false
         else if (!left && currentPosition >= maxPosition) left = true
 
-        body.physics.velocity.x = (if (left) -SPEED else SPEED) * ConstVals.PPM
+        val speed = (if (left) -SPEED else SPEED) * ConstVals.PPM
+        body.physics.velocity = if (vertical) Vector2(speed, 0f)
+        else Vector2(0f, speed)
+
+        val currentState = loop.getCurrent()
+
+        val timer = timers.get(currentState)
+        timer.update(delta)
+        if (timer.isFinished()) {
+            timer.reset()
+            loop.next()
+        }
+
+        val shock = currentState == ElectrocutieState.SHOCK
+        children.forEach { child ->
+            if (child is Bolt) {
+                child.body.fixtures.forEach { childFixture -> childFixture.second.active = shock }
+                child.sprites.values().forEach { childSprite -> childSprite.hidden = !shock }
+            }
+        }
     })
 
     private fun defineBodyComponent(): BodyComponent {
@@ -158,7 +212,9 @@ class Electrocutie(game: MegamanMaverickGame) : GameEntity(game), IHazard, IBody
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             children.forEach {
-                if (it is IBodyEntity) it.body.setCenterX(body.getCenter().x)
+                if (it is IBodyEntity) {
+                    if (vertical) it.body.setCenterX(body.getCenter().x) else it.body.setCenterY(body.getCenter().y)
+                }
             }
         }
 

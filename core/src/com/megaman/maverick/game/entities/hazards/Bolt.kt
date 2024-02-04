@@ -58,7 +58,9 @@ class Bolt(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IHazard, 
 
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
+
         parent = spawnProps.get(ConstKeys.ENTITY) as IGameEntity?
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         vertical = spawnProps.getOrDefault(ConstKeys.VERTICAL, true, Boolean::class)
         if (vertical) body.setBottomCenterToPoint(spawn)
@@ -105,8 +107,9 @@ class Bolt(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IHazard, 
             _sprite.setOriginCenter()
             _sprite.rotation = if (vertical) 0f else 90f
 
-            val bodyPosition = body.getBottomCenterPoint()
-            _sprite.setPosition(bodyPosition, Position.BOTTOM_CENTER)
+            val position = if (vertical) Position.BOTTOM_CENTER else Position.CENTER_LEFT
+            val bodyPosition = body.getPositionPoint(position)
+            _sprite.setPosition(bodyPosition, position)
         }
 
         return spritesComponent
