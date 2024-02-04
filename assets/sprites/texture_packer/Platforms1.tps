@@ -173,9 +173,9 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">../Frames/Platforms1/8bitBlueBlock.png</key>
-            <key type="filename">../Frames/Platforms1/8bitBlueBlockNoBorder.png</key>
-            <key type="filename">../Frames/Platforms1/8bitBlueBlockTransBorder.png</key>
+            <key type="filename">../frames/Platforms1/8bitBlueBlock.png</key>
+            <key type="filename">../frames/Platforms1/8bitBlueBlockNoBorder.png</key>
+            <key type="filename">../frames/Platforms1/8bitBlueBlockTransBorder.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -190,7 +190,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Platforms1/Brick1.png</key>
+            <key type="filename">../frames/Platforms1/Brick1.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -199,13 +199,14 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>16,16,32,32</rect>
+                <rect>24,8,48,16</rect>
                 <key>scale9Paddings</key>
-                <rect>16,16,32,32</rect>
+                <rect>24,8,48,16</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Platforms1/Brick2.png</key>
+            <key type="filename">../frames/Platforms1/Brick2.png</key>
+            <key type="filename">../frames/Platforms1/TrackBlock.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -220,12 +221,12 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Platforms1/ConveyorBelt/LeftPart-MoveLeft.png</key>
-            <key type="filename">../Frames/Platforms1/ConveyorBelt/LeftPart-MoveRight.png</key>
-            <key type="filename">../Frames/Platforms1/ConveyorBelt/MiddlePart.png</key>
-            <key type="filename">../Frames/Platforms1/ConveyorBelt/RightPart-MoveLeft.png</key>
-            <key type="filename">../Frames/Platforms1/ConveyorBelt/RightPart-MoveRight.png</key>
-            <key type="filename">../Frames/Platforms1/GearTrolleyPlatform.png</key>
+            <key type="filename">../frames/Platforms1/ConveyorBelt/LeftPart-MoveLeft.png</key>
+            <key type="filename">../frames/Platforms1/ConveyorBelt/LeftPart-MoveRight.png</key>
+            <key type="filename">../frames/Platforms1/ConveyorBelt/MiddlePart.png</key>
+            <key type="filename">../frames/Platforms1/ConveyorBelt/RightPart-MoveLeft.png</key>
+            <key type="filename">../frames/Platforms1/ConveyorBelt/RightPart-MoveRight.png</key>
+            <key type="filename">../frames/Platforms1/GearTrolleyPlatform.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -240,7 +241,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Platforms1/DropperLift/Drop.png</key>
+            <key type="filename">../frames/Platforms1/DropperLift/Closed.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -249,13 +250,14 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>60,12,120,24</rect>
+                <rect>12,8,24,16</rect>
                 <key>scale9Paddings</key>
-                <rect>60,12,120,24</rect>
+                <rect>12,8,24,16</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Platforms1/DropperLift/Normal.png</key>
+            <key type="filename">../frames/Platforms1/DropperLift/Open.png</key>
+            <key type="filename">../frames/Platforms1/DropperLift/Opening.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -264,13 +266,13 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>12,12,24,24</rect>
+                <rect>24,16,48,32</rect>
                 <key>scale9Paddings</key>
-                <rect>12,12,24,24</rect>
+                <rect>24,16,48,32</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Platforms1/JeffBezosLittleDickRocket.png</key>
+            <key type="filename">../frames/Platforms1/JeffBezosLittleDickRocket.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -292,7 +294,7 @@
             <struct type="SpriteSheet">
                 <key>files</key>
                 <array>
-                    <filename>../Frames/Platforms1</filename>
+                    <filename>../frames/Platforms1</filename>
                 </array>
             </struct>
         </map>

@@ -45,6 +45,7 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
     protected open fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.STATIC)
 
+        // block fixture
         blockFixture = Fixture(GameRectangle(), FixtureType.BLOCK)
         body.addFixture(blockFixture)
 

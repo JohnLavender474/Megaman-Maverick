@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="400" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="88">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="400" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="89">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/Gravity Man Stage.tsx"/>
  <objectgroup id="2" name="blocks">
@@ -51,6 +51,7 @@
   <object id="81" x="10720" y="224" width="448" height="224"/>
   <object id="85" x="9952" y="448" width="64" height="192"/>
   <object id="86" x="10144" y="448" width="64" height="192"/>
+  <object id="88" name="DropperLift" x="10272" y="480" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="7" name="items">
   <object id="31" name="HealthBulb" x="1600" y="416" width="32" height="32">
