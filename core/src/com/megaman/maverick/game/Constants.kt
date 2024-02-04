@@ -15,6 +15,11 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val MIN = "min"
+    const val MAX = "max"
+    const val TOP = "top"
+    const val VERTICAL = "vertical"
+    const val LENGTH = "length"
     const val DEFAULT = "default"
     const val CART = "cart"
     const val LINE = "line"

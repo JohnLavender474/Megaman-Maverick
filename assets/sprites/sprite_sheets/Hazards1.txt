@@ -1,46 +1,74 @@
 Hazards1.png
-size: 255, 353
+size: 255, 385
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+Bolt
+  rotate: false
+  xy: 66, 32
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+Electrocutie/Charge
+  rotate: false
+  xy: 130, 32
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+Electrocutie/Move
+  rotate: false
+  xy: 30, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Electrocutie/Shock
+  rotate: false
+  xy: 62, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 Flame
   rotate: false
-  xy: 63, 0
+  xy: 0, 64
   size: 64, 16
   orig: 64, 16
   offset: 0, 0
   index: -1
 FlameColumn
   rotate: false
-  xy: 0, 96
+  xy: 0, 128
   size: 120, 111
   orig: 120, 111
   offset: 0, 0
   index: -1
 FlameThrower
   rotate: false
-  xy: 127, 0
+  xy: 94, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 LaserBeamer
   rotate: false
-  xy: 159, 0
+  xy: 126, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Saw
   rotate: false
-  xy: 0, 224
+  xy: 0, 256
   size: 255, 129
   orig: 255, 129
   offset: 0, 0
   index: -1
 Spike1
   rotate: false
-  xy: 30, 0
+  xy: 0, 32
   size: 33, 31
   orig: 33, 31
   offset: 0, 0
@@ -54,49 +82,49 @@ Spike2
   index: -1
 Spike3
   rotate: false
-  xy: 32, 32
+  xy: 33, 32
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: -1
 Spike4
   rotate: false
-  xy: 191, 0
+  xy: 158, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Spike5
   rotate: false
-  xy: 223, 0
+  xy: 190, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Spike6
   rotate: false
-  xy: 0, 32
+  xy: 222, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SwingingAxe
   rotate: false
-  xy: 65, 32
+  xy: 64, 64
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 SwingingAxe_HandleEndCentered
   rotate: false
-  xy: 120, 96
+  xy: 120, 128
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 SwingingAxe_UpsideDown
   rotate: false
-  xy: 129, 32
+  xy: 128, 64
   size: 64, 64
   orig: 64, 64
   offset: 0, 0

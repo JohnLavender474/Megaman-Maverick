@@ -173,41 +173,14 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">../Frames/Hazards1/Flame.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>16,4,32,8</rect>
-                <key>scale9Paddings</key>
-                <rect>16,4,32,8</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../Frames/Hazards1/FlameColumn.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>30,28,60,55</rect>
-                <key>scale9Paddings</key>
-                <rect>30,28,60,55</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../Frames/Hazards1/FlameThrower.png</key>
-            <key type="filename">../Frames/Hazards1/LaserBeamer.png</key>
-            <key type="filename">../Frames/Hazards1/Spike4.png</key>
-            <key type="filename">../Frames/Hazards1/Spike5.png</key>
-            <key type="filename">../Frames/Hazards1/Spike6.png</key>
+            <key type="filename">../frames/Hazards1/Bolt.png</key>
+            <key type="filename">../frames/Hazards1/Electrocutie/Move.png</key>
+            <key type="filename">../frames/Hazards1/Electrocutie/Shock.png</key>
+            <key type="filename">../frames/Hazards1/FlameThrower.png</key>
+            <key type="filename">../frames/Hazards1/LaserBeamer.png</key>
+            <key type="filename">../frames/Hazards1/Spike4.png</key>
+            <key type="filename">../frames/Hazards1/Spike5.png</key>
+            <key type="filename">../frames/Hazards1/Spike6.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -222,7 +195,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Hazards1/Saw.png</key>
+            <key type="filename">../frames/Hazards1/Electrocutie/Charge.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -231,13 +204,58 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>64,32,129,65</rect>
+                <rect>16,8,32,16</rect>
                 <key>scale9Paddings</key>
-                <rect>64,32,129,65</rect>
+                <rect>16,8,32,16</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Hazards1/Spike1.png</key>
+            <key type="filename">../frames/Hazards1/Flame.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,4,32,8</rect>
+                <key>scale9Paddings</key>
+                <rect>16,4,32,8</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Hazards1/FlameColumn.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>30,28,60,55</rect>
+                <key>scale9Paddings</key>
+                <rect>30,28,60,55</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Hazards1/Saw.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>64,32,127,65</rect>
+                <key>scale9Paddings</key>
+                <rect>64,32,127,65</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Hazards1/Spike1.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -252,7 +270,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Hazards1/Spike2.png</key>
+            <key type="filename">../frames/Hazards1/Spike2.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -267,7 +285,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Hazards1/Spike3.png</key>
+            <key type="filename">../frames/Hazards1/Spike3.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -282,8 +300,8 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Hazards1/SwingingAxe.png</key>
-            <key type="filename">../Frames/Hazards1/SwingingAxe_UpsideDown.png</key>
+            <key type="filename">../frames/Hazards1/SwingingAxe.png</key>
+            <key type="filename">../frames/Hazards1/SwingingAxe_UpsideDown.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -298,7 +316,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Hazards1/SwingingAxe_HandleEndCentered.png</key>
+            <key type="filename">../frames/Hazards1/SwingingAxe_HandleEndCentered.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -320,7 +338,7 @@
             <struct type="SpriteSheet">
                 <key>files</key>
                 <array>
-                    <filename>../Frames/Hazards1</filename>
+                    <filename>../frames/Hazards1</filename>
                 </array>
             </struct>
         </map>

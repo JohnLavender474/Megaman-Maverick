@@ -22,53 +22,46 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
         player as GameSprite
         player.hidden = !ready
 
-        val direction =
-            if (isBehaviorActive(BehaviorType.AIR_DASHING))
-                getProperty(MegamanKeys.DIRECTION_ON_AIR_DASH, Direction::class)!!
-            else directionRotation
+        val direction = if (isBehaviorActive(BehaviorType.AIR_DASHING)) getProperty(
+            MegamanKeys.DIRECTION_ON_AIR_DASH,
+            Direction::class
+        )!!
+        else directionRotation
 
         val flipX = !maverick && facing == Facing.LEFT
         val flipY = direction == Direction.DOWN
         player.setFlip(flipX, flipY)
 
-        val rotation =
-            when (direction) {
-                Direction.UP,
-                Direction.DOWN -> 0f
+        val rotation = when (direction) {
+            Direction.UP, Direction.DOWN -> 0f
 
-                Direction.LEFT -> 90f
-                Direction.RIGHT -> 270f
-            }
+            Direction.LEFT -> 90f
+            Direction.RIGHT -> 270f
+        }
         sprite.setOriginCenter()
         player.setRotation(rotation)
 
-        val position =
-            when (direction) {
-                Direction.UP -> Position.BOTTOM_CENTER
-                Direction.DOWN -> Position.TOP_CENTER
-                Direction.LEFT -> Position.CENTER_RIGHT
-                Direction.RIGHT -> Position.CENTER_LEFT
-            }
+        val position = when (direction) {
+            Direction.UP -> Position.BOTTOM_CENTER
+            Direction.DOWN -> Position.TOP_CENTER
+            Direction.LEFT -> Position.CENTER_RIGHT
+            Direction.RIGHT -> Position.CENTER_LEFT
+        }
         val bodyPosition = body.getPositionPoint(position)
         player.setPosition(bodyPosition, position)
 
-        val xTranslation =
-            if (isBehaviorActive(BehaviorType.GROUND_SLIDING))
-                when (direction) {
-                    Direction.UP,
-                    Direction.DOWN -> 0f
+        val xTranslation = if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) when (direction) {
+            Direction.UP, Direction.DOWN -> 0f
 
-                    Direction.LEFT -> 0.15f
-                    Direction.RIGHT -> -0.15f
-                }
-            else
-                when (direction) {
-                    Direction.UP,
-                    Direction.DOWN -> 0f
+            Direction.LEFT -> 0.15f
+            Direction.RIGHT -> -0.15f
+        }
+        else when (direction) {
+            Direction.UP, Direction.DOWN -> 0f
 
-                    Direction.LEFT -> 0.425f
-                    Direction.RIGHT -> -0.425f
-                }
+            Direction.LEFT -> 0.425f
+            Direction.RIGHT -> -0.425f
+        }
         player.translateX(xTranslation * ConstVals.PPM)
 
         player.setAlpha(if (damageFlash) 0f else 1f)
