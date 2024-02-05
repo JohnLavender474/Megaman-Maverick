@@ -1,7 +1,6 @@
-@file:Suppress("UNCHECKED_CAST")
-
 package com.megaman.maverick.game.world
 
+import com.engine.common.enums.ProcessState
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.world.BodyType
 import com.engine.world.Fixture
@@ -49,3 +48,10 @@ fun Fixture.setRunnable(runnable: () -> Unit): Fixture {
 }
 
 fun Fixture.getRunnable() = properties.get(ConstKeys.RUNNABLE) as (() -> Unit)?
+
+fun Fixture.setConsumer(consumer: (ProcessState, Fixture) -> Unit): Fixture {
+    properties.put(ConstKeys.CONSUMER, consumer)
+    return this
+}
+
+fun Fixture.getConsumer() = properties.get(ConstKeys.CONSUMER) as ((ProcessState, Fixture) -> Unit)?

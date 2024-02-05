@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
 import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
+import com.engine.common.enums.ProcessState
 import com.engine.common.extensions.objectSetOf
 import com.engine.common.shapes.GameLine
 import com.engine.common.shapes.GameRectangle
@@ -12,7 +13,6 @@ import com.engine.common.shapes.ShapeUtils
 import com.engine.damage.IDamageable
 import com.engine.damage.IDamager
 import com.engine.world.Contact
-import com.engine.world.Fixture
 import com.engine.world.IContactListener
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -49,8 +49,7 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
         if (contact.oneFixtureMatches(FixtureType.CONSUMER)) {
             printDebugLog(contact, "beginContact(): Consumer, contact = $contact")
             val (consumer, consumable) = contact.getFixturesIfOneMatches(FixtureType.CONSUMER)!!
-
-            (consumer.getProperty(ConstKeys.CONSUMER) as (Fixture) -> Unit)(consumable)
+            consumer.getConsumer()?.invoke(ProcessState.BEGIN, consumable)
         }
 
         // damager, damageable
@@ -348,8 +347,7 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
         // consumer
         if (contact.oneFixtureMatches(FixtureType.CONSUMER)) {
             val (consumer, consumable) = contact.getFixturesIfOneMatches(FixtureType.CONSUMER)!!
-
-            (consumer.getProperty(ConstKeys.CONSUMER) as (Fixture) -> Unit)(consumable)
+            consumer.getConsumer()?.invoke(ProcessState.CONTINUE, consumable)
         }
 
         // damager, damageable

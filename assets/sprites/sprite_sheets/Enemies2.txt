@@ -1,53 +1,53 @@
 Enemies2.png
-size: 1888, 192
+size: 1024, 352
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 CartinJoe/Move
   rotate: false
-  xy: 144, 0
+  xy: 464, 0
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 CartinJoe/Shoot
   rotate: false
-  xy: 240, 0
+  xy: 560, 0
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 CaveRocker/Stand
   rotate: false
-  xy: 864, 64
+  xy: 0, 224
   size: 256, 128
   orig: 256, 128
   offset: 0, 0
   index: -1
 CaveRocker/Throw
   rotate: false
-  xy: 1120, 64
+  xy: 256, 224
   size: 384, 128
   orig: 384, 128
   offset: 0, 0
   index: -1
 Elecn/Elecn1
   rotate: false
-  xy: 480, 64
+  xy: 608, 128
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 Elecn/Elecn2
   rotate: false
-  xy: 576, 64
+  xy: 704, 128
   size: 192, 96
   orig: 192, 96
   offset: 0, 0
   index: -1
 Elecn/Elecn3
   rotate: false
-  xy: 768, 64
+  xy: 896, 128
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
@@ -75,112 +75,140 @@ Eyee/OpeningEyes
   index: -1
 Hanabiran/1PetalSpin
   rotate: false
-  xy: 336, 0
+  xy: 656, 0
   size: 256, 64
   orig: 256, 64
   offset: 0, 0
   index: -1
 Hanabiran/1PetalStand
   rotate: false
-  xy: 592, 0
+  xy: 912, 0
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Hanabiran/2PetalsSpin
   rotate: false
-  xy: 656, 0
+  xy: 0, 64
   size: 256, 64
   orig: 256, 64
   offset: 0, 0
   index: -1
 Hanabiran/2PetalsStand
   rotate: false
-  xy: 912, 0
+  xy: 256, 64
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Hanabiran/3PetalsSpin
   rotate: false
-  xy: 976, 0
+  xy: 320, 64
   size: 256, 64
   orig: 256, 64
   offset: 0, 0
   index: -1
 Hanabiran/3PetalsStand
   rotate: false
-  xy: 1232, 0
+  xy: 576, 64
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Hanabiran/4PetalsSpin
   rotate: false
-  xy: 1296, 0
+  xy: 640, 64
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
   index: -1
 Hanabiran/4PetalsStand
   rotate: false
-  xy: 1424, 0
+  xy: 768, 64
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Hanabiran/Drop
   rotate: false
-  xy: 1488, 0
+  xy: 832, 64
   size: 192, 64
   orig: 192, 64
   offset: 0, 0
   index: -1
 Hanabiran/NoPetalsSpin
   rotate: false
-  xy: 1680, 0
+  xy: 0, 128
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
   index: -1
 Hanabiran/Rise
   rotate: false
-  xy: 0, 64
+  xy: 128, 128
   size: 192, 64
   orig: 192, 64
   offset: 0, 0
   index: -1
 RedTiggerSquirt
   rotate: false
-  xy: 192, 64
+  xy: 320, 128
   size: 144, 72
   orig: 144, 72
   offset: 0, 0
   index: -1
 Robbit/Crouch
   rotate: false
-  xy: 1504, 64
+  xy: 640, 224
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 Robbit/Jump
   rotate: false
-  xy: 1632, 64
+  xy: 768, 224
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 Robbit/Stand
   rotate: false
-  xy: 1760, 64
+  xy: 896, 224
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
+Togglee/Left
+  rotate: false
+  xy: 144, 0
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+Togglee/Right
+  rotate: false
+  xy: 208, 0
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+Togglee/SwitchToLeft
+  rotate: false
+  xy: 272, 0
+  size: 96, 32
+  orig: 96, 32
+  offset: 0, 0
+  index: -1
+Togglee/SwitchToRight
+  rotate: false
+  xy: 368, 0
+  size: 96, 32
+  orig: 96, 32
+  offset: 0, 0
+  index: -1
 YellowTiggerSquirt
   rotate: false
-  xy: 336, 64
+  xy: 464, 128
   size: 144, 72
   orig: 144, 72
   offset: 0, 0

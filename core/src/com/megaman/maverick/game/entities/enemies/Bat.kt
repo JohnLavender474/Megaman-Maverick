@@ -167,7 +167,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
             )
                 status = BatStatus.FLYING_TO_RETREAT
         }
-        scannerFixture.putProperty(ConstKeys.CONSUMER, consumer)
+        scannerFixture.setConsumer { _, it -> consumer(it) }
         body.addFixture(scannerFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
