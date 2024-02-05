@@ -6,6 +6,7 @@ import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
+import com.engine.common.enums.Position
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.map
 import com.engine.common.extensions.objectMapOf
@@ -15,6 +16,7 @@ import com.engine.common.objects.Properties
 import com.engine.common.time.Timer
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
+import com.engine.drawables.sprites.setPosition
 import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.entities.contracts.ISpriteEntity
 import com.engine.updatables.UpdatablesComponent
@@ -115,8 +117,7 @@ class DropperLift(game: MegamanMaverickGame) : Block(game), ISpriteEntity, IAnim
         val spritesComponent = SpritesComponent(this, "dropperLift" to sprite)
         spritesComponent.putUpdateFunction("dropperLift") { _, _sprite ->
             _sprite as GameSprite
-            val center = body.getCenter()
-            _sprite.setCenter(center.x, center.y)
+            _sprite.setPosition(body.getTopCenterPoint(), Position.TOP_CENTER)
         }
 
         return spritesComponent

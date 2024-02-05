@@ -2,14 +2,15 @@ package com.megaman.maverick.game.entities.blocks
 
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.Array
 import com.engine.IGame2D
 import com.engine.common.GameLogger
-import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.interfaces.Updatable
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.cullables.CullablesComponent
 import com.engine.drawables.shapes.DrawableShapesComponent
+import com.engine.drawables.shapes.IDrawableShape
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.world.Body
@@ -33,12 +34,14 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
 
     protected lateinit var blockFixture: Fixture
         private set
+    protected val debugShapeSuppliers = Array<() -> IDrawableShape?>()
 
     override fun init() {
         GameLogger.debug(TAG, "init(): Initializing Block entity.")
         addComponent(defineBodyComponent())
+        debugShapeSuppliers.add { body }
         addComponent(
-            DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true)
+            DrawableShapesComponent(this, debugShapeSuppliers = debugShapeSuppliers, debug = true)
         )
     }
 

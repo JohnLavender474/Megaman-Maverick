@@ -20,6 +20,7 @@ class BlocksFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntit
         const val CONVEYOR_BELT = "ConveyorBelt"
         const val ROCKET_PLATFORM = "RocketPlatform"
         const val DROPPER_LIFT = "DropperLift"
+        const val LIFT = "Lift"
     }
 
     private val pools = ObjectMap<Any, Pool<Block>>()
@@ -32,6 +33,7 @@ class BlocksFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntit
         pools.put(CONVEYOR_BELT, EntityPoolCreator.create(5) { ConveyorBelt(game) })
         pools.put(ROCKET_PLATFORM, EntityPoolCreator.create(5) { RocketPlatform(game) })
         pools.put(DROPPER_LIFT, EntityPoolCreator.create(2) { DropperLift(game) })
+        pools.put(LIFT, EntityPoolCreator.create(2) { Lift(game) })
     }
 
     override fun fetch(key: Any) = pools.get(if (key == "") STANDARD else key)?.fetch()
