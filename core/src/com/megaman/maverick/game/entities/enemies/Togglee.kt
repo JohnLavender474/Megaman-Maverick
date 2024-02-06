@@ -2,13 +2,11 @@ package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.utils.Array
 import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
-import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
 import com.engine.common.extensions.equalsAny
 import com.engine.common.extensions.gdxArrayOf
@@ -16,7 +14,6 @@ import com.engine.common.extensions.getTextureRegion
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
-import com.engine.common.shapes.toGameRectangle
 import com.engine.common.time.Timer
 import com.engine.damage.IDamager
 import com.engine.drawables.fonts.BitmapFontHandle
@@ -29,7 +26,6 @@ import com.engine.drawables.sprites.setSize
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.entities.contracts.IFontsEntity
-import com.engine.entities.contracts.IParentEntity
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.Body
 import com.engine.world.BodyComponent
@@ -39,28 +35,20 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.SpecialsFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.entities.special.GravityChange
+import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntities
 import com.megaman.maverick.game.utils.MegaUtilMethods
-import com.megaman.maverick.game.utils.toProps
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import kotlin.reflect.KClass
 
 class Togglee(game: MegamanMaverickGame) : AbstractEnemy(game, cullWhenOutOfCamBounds = false), IAnimatedEntity,
-    IDirectionRotatable, IFontsEntity, IParentEntity {
-
-    enum class ToggleeType {
-        GRAVITY_TOGGLE
-    }
+    IDirectionRotatable, IFontsEntity {
 
     enum class ToggleeState {
         TOGGLED_ON, TOGGLED_OFF, TOGGLING_TO_ON, TOGGLING_TO_OFF
@@ -68,6 +56,7 @@ class Togglee(game: MegamanMaverickGame) : AbstractEnemy(game, cullWhenOutOfCamB
 
     companion object {
         const val TAG = "Toggle"
+        const val TOGGLEE_ON_ENTITY = "togglee_on_entity"
         private var leftRegion: TextureRegion? = null
         private var rightRegion: TextureRegion? = null
         private var switchLeftRegion: TextureRegion? = null
@@ -81,7 +70,6 @@ class Togglee(game: MegamanMaverickGame) : AbstractEnemy(game, cullWhenOutOfCamB
         ChargedShot::class to 10,
         ChargedShotExplosion::class to 5
     )
-    override val children = Array<IGameEntity>()
     override val invincible: Boolean
         get() = super.invincible || moving
 
@@ -90,8 +78,6 @@ class Togglee(game: MegamanMaverickGame) : AbstractEnemy(game, cullWhenOutOfCamB
     val on: Boolean
         get() = toggleeState == ToggleeState.TOGGLED_ON
 
-    lateinit var toggleeType: ToggleeType
-        private set
     lateinit var toggleeState: ToggleeState
         private set
     lateinit var text: String
@@ -99,6 +85,8 @@ class Togglee(game: MegamanMaverickGame) : AbstractEnemy(game, cullWhenOutOfCamB
 
     override lateinit var directionRotation: Direction
 
+    private val offEntities = Array<Pair<IGameEntity, Properties>>()
+    private val onEntities = Array<Pair<IGameEntity, Properties>>()
     private val switchTimer = Timer(SWITCH_DURATION)
 
     override fun init() {
@@ -114,15 +102,10 @@ class Togglee(game: MegamanMaverickGame) : AbstractEnemy(game, cullWhenOutOfCamB
     }
 
     override fun spawn(spawnProps: Properties) {
-        if (!children.isEmpty) throw IllegalStateException("Children must be empty when spawning")
         super.spawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
-
-        val toggleTypeString = spawnProps.get(ConstKeys.TYPE, String::class)!!
-        toggleeType = ToggleeType.valueOf(toggleTypeString.uppercase())
-        setup(spawnProps)
 
         val directionString = spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class)
         directionRotation = Direction.valueOf(directionString.uppercase())
@@ -130,14 +113,25 @@ class Togglee(game: MegamanMaverickGame) : AbstractEnemy(game, cullWhenOutOfCamB
         text = spawnProps.get(ConstKeys.TEXT, String::class)!!
         getFont(ConstKeys.DEFAULT).position.set(body.getCenter().add(0f, 1.75f * ConstVals.PPM))
 
+        val childEntities = convertObjectPropsToEntities(spawnProps)
+        childEntities.forEach {
+            val childType = it.second.get(TOGGLEE_ON_ENTITY, Boolean::class)!!
+            if (childType) onEntities.add(it)
+            else offEntities.add(it)
+        }
+
         toggleeState = ToggleeState.TOGGLED_OFF
         switchTimer.setToEnd()
+
+        spawnEntities(false)
     }
 
     override fun onDestroy() {
         super<AbstractEnemy>.onDestroy()
-        children.forEach { it.kill() }
-        children.clear()
+        offEntities.forEach { it.first.kill() }
+        offEntities.clear()
+        onEntities.forEach { it.first.kill() }
+        onEntities.clear()
     }
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
@@ -146,46 +140,16 @@ class Togglee(game: MegamanMaverickGame) : AbstractEnemy(game, cullWhenOutOfCamB
         return takenDamage
     }
 
-    private fun setup(spawnProps: Properties) {
-        when (toggleeType) {
-            ToggleeType.GRAVITY_TOGGLE -> {
-                val onGravityString = spawnProps.get(ConstKeys.ON, String::class)!!
-                val onGravity = Direction.valueOf(onGravityString.uppercase())
-                val offGravityString = spawnProps.get(ConstKeys.OFF, String::class)!!
-                val offGravity = Direction.valueOf(offGravityString.uppercase())
-                putProperty(ConstKeys.PAIR, Pair(onGravity, offGravity))
-
-                val gravityChange = EntityFactories.fetch(EntityType.SPECIAL, SpecialsFactory.GRAVITY_CHANGE)!!
-                children.add(gravityChange)
-
-                val childRectObj = spawnProps.get(ConstKeys.CHILD, RectangleMapObject::class)!!
-                val childProps = childRectObj.toProps()
-                childProps.put(ConstKeys.DIRECTION, offGravity)
-                childProps.put(ConstKeys.BOUNDS, childRectObj.rectangle.toGameRectangle())
-                childProps.put(ConstKeys.CULL, false)
-
-                game.gameEngine.spawn(gravityChange, childProps)
-            }
-        }
+    private fun spawnEntities(on: Boolean) {
+        val entitiesToKill = if (on) offEntities else onEntities
+        val entitiesToSpawn = if (on) onEntities else offEntities
+        entitiesToKill.forEach { it.first.kill() }
+        entitiesToSpawn.forEach { game.gameEngine.spawn(it.first, it.second) }
     }
 
     private fun switchToggleeState() {
-        GameLogger.debug(TAG, "switchToggleState(): Switching togglee state from $toggleeState")
         toggleeState = if (on) ToggleeState.TOGGLING_TO_OFF else ToggleeState.TOGGLING_TO_ON
-        GameLogger.debug(TAG, "switchToggleState(): Switching togglee state to $toggleeState")
         switchTimer.reset()
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    private fun runToggleeAction() {
-        GameLogger.debug(TAG, "runToggleAction(): Running togglee action with toggle type = $toggleeType")
-        when (toggleeType) {
-            ToggleeType.GRAVITY_TOGGLE -> {
-                val (onGravity, offGravity) = getProperty(ConstKeys.PAIR) as Pair<Direction, Direction>
-                val gravityChange = children.first() as GravityChange
-                gravityChange.setGravityDirection(if (on) onGravity else offGravity)
-            }
-        }
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -194,10 +158,13 @@ class Togglee(game: MegamanMaverickGame) : AbstractEnemy(game, cullWhenOutOfCamB
             if (!switchTimer.isFinished()) {
                 switchTimer.update(it)
                 if (switchTimer.isJustFinished()) {
-                    toggleeState = if (toggleeState == ToggleeState.TOGGLING_TO_OFF) ToggleeState.TOGGLED_OFF
-                    else ToggleeState.TOGGLED_ON
-
-                    runToggleeAction()
+                    toggleeState = if (toggleeState == ToggleeState.TOGGLING_TO_OFF) {
+                        spawnEntities(false)
+                        ToggleeState.TOGGLED_OFF
+                    } else {
+                        spawnEntities(true)
+                        ToggleeState.TOGGLED_ON
+                    }
                 }
             }
         }

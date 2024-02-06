@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="400" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="100">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="400" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="101">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/Gravity Man Stage.tsx"/>
  <objectgroup id="2" name="blocks">
@@ -133,19 +133,25 @@
   </object>
   <object id="96" name="Togglee" x="12064" y="480" width="32" height="32">
    <properties>
-    <property name="child" type="object" value="97"/>
-    <property name="direction" value="up"/>
-    <property name="off" value="up"/>
-    <property name="on" value="down"/>
+    <property name="child1" type="object" value="97"/>
+    <property name="child2" type="object" value="100"/>
     <property name="text" value="GRAVITY"/>
-    <property name="type" value="gravity_toggle"/>
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="10" name="children" visible="0">
+ <objectgroup id="10" name="children">
   <object id="97" name="GravityChange" x="11936" y="256" width="448" height="320">
    <properties>
     <property name="direction" value="down"/>
+    <property name="entity_type" value="SPECIAL"/>
+    <property name="togglee_on_entity" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="100" name="GravityChange" x="11936" y="256" width="448" height="320">
+   <properties>
+    <property name="direction" value="up"/>
+    <property name="entity_type" value="SPECIAL"/>
+    <property name="togglee_on_entity" type="bool" value="false"/>
    </properties>
   </object>
  </objectgroup>

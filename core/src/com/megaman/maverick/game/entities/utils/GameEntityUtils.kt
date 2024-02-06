@@ -35,7 +35,7 @@ fun convertObjectPropsToEntities(props: Properties): Array<Pair<IGameEntity, Pro
             val childProps = value.toProps()
             childProps.put(ConstKeys.BOUNDS, value.rectangle.toGameRectangle())
 
-            val entityType = EntityType.valueOf(childProps.get(ConstKeys.TYPE) as String)
+            val entityType = EntityType.valueOf(childProps.get(ConstKeys.ENTITY_TYPE) as String)
             GameLogger.debug(
                 "convertObjectPropsToEntities()", "entityType=$entityType,name=${value.name}"
             )

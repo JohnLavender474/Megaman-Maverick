@@ -15,6 +15,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val ENTITY_TYPE = "entity_type"
     const val CULL = "cull"
     const val PAIR = "pair"
     const val ON = "on"
