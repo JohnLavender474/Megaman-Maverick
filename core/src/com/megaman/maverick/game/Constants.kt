@@ -15,6 +15,11 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val CULL = "cull"
+    const val PAIR = "pair"
+    const val ON = "on"
+    const val OFF = "off"
+    const val TEXT = "text"
     const val MIN = "min"
     const val MAX = "max"
     const val TOP = "top"
@@ -100,7 +105,7 @@ object ConstKeys {
     const val CURRENT = "current"
     const val PRIOR = "prior"
     const val WORLD_GRAPH_MAP = "world_graph_map"
-    const val SPRITES = "sprites"
+    const val DRAWABLES = "drawables"
     const val SHAPES = "shapes"
     const val PLAYER = "player"
     const val ENEMIES = "enemies"

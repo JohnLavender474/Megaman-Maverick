@@ -3,6 +3,7 @@
 package com.megaman.maverick.game.screens.levels
 
 import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.utils.Array
@@ -20,8 +21,8 @@ import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.controller.ControllerSystem
 import com.engine.controller.polling.IControllerPoller
+import com.engine.drawables.IDrawable
 import com.engine.drawables.shapes.IDrawableShape
-import com.engine.drawables.sprites.ISprite
 import com.engine.events.Event
 import com.engine.events.IEventsManager
 import com.engine.graph.SimpleNodeGraphMap
@@ -88,7 +89,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
     private lateinit var playerSpawnEventHandler: PlayerSpawnEventHandler
     private lateinit var playerDeathEventHandler: PlayerDeathEventHandler
 
-    private lateinit var sprites: MutableCollection<ISprite>
+    private lateinit var drawables: MutableCollection<IDrawable<Batch>>
     private lateinit var shapes: PriorityQueue<IDrawableShape>
     private lateinit var backgrounds: Array<Background>
 
@@ -109,7 +110,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
         levelStateHandler = LevelStateHandler(megamanGame)
         endLevelEventHandler = EndLevelEventHandler(megamanGame)
 
-        sprites = megamanGame.getSprites()
+        drawables = megamanGame.getDrawables()
         shapes = megamanGame.getShapes()
         gameCamera = megamanGame.getGameCamera()
         uiCamera = megamanGame.getUiCamera()
@@ -442,8 +443,8 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
         backgrounds.forEach { it.draw(batch) }
         tiledMapLevelRenderer?.render(gameCamera)
 
-        sprites.forEach { it.draw(batch) }
-        sprites.clear()
+        drawables.forEach { it.draw(batch) }
+        drawables.clear()
 
         batch.end()
 

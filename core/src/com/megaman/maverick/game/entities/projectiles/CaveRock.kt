@@ -34,7 +34,6 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
-import com.megaman.maverick.game.world.getEntity
 
 class CaveRock(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity {
 
@@ -81,13 +80,13 @@ class CaveRock(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity 
 
     override fun onDamageInflictedTo(damageable: IDamageable) {
         GameLogger.debug(TAG, "onDamageInflictedTo(): damageable = $damageable")
-        burst()
+        explodeAndDie()
     }
 
     override fun hitBlock(blockFixture: Fixture) {
         if (passThroughBlocks) return
         GameLogger.debug(TAG, "Hit block: $blockFixture")
-        burst()
+        explodeAndDie()
     }
 
     override fun hitWater(waterFixture: Fixture) {
@@ -149,7 +148,7 @@ class CaveRock(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity 
         return spritesComponent
     }
 
-    fun burst() {
+    override fun explodeAndDie() {
         GameLogger.debug(TAG, "burst()")
         kill(props(CAUSE_OF_DEATH_MESSAGE to "Burst"))
 

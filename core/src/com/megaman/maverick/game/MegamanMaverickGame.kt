@@ -5,6 +5,7 @@ import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectMap
@@ -26,10 +27,12 @@ import com.engine.controller.buttons.Button
 import com.engine.controller.buttons.Buttons
 import com.engine.controller.polling.IControllerPoller
 import com.engine.cullables.CullablesSystem
+import com.engine.drawables.IDrawable
 import com.engine.drawables.fonts.BitmapFontHandle
+import com.engine.drawables.fonts.FontsSystem
 import com.engine.drawables.shapes.DrawableShapesSystem
 import com.engine.drawables.shapes.IDrawableShape
-import com.engine.drawables.sprites.ISprite
+import com.engine.drawables.sorting.IComparableDrawable
 import com.engine.drawables.sprites.SpritesSystem
 import com.engine.graph.IGraphMap
 import com.engine.motion.MotionSystem
@@ -91,7 +94,7 @@ class MegamanMaverickGame : Game2D() {
 
     fun getUiCamera() = viewports.get(ConstKeys.UI).camera as OrthographicCamera
 
-    fun getSprites() = properties.get(ConstKeys.SPRITES) as MutableCollection<ISprite>
+    fun getDrawables() = properties.get(ConstKeys.DRAWABLES) as MutableCollection<IDrawable<Batch>>
 
     fun getShapes() = properties.get(ConstKeys.SHAPES) as PriorityQueue<IDrawableShape>
 
@@ -204,8 +207,12 @@ class MegamanMaverickGame : Game2D() {
     }
 
     override fun createGameEngine(): IGameEngine {
-        val sprites = PriorityQueue<ISprite>()
-        properties.put(ConstKeys.SPRITES, sprites)
+        val drawables = PriorityQueue<IDrawable<Batch>> { o1, o2 ->
+            if (o1 is IComparableDrawable<Batch> && o2 is IComparableDrawable<Batch>)
+                o1.priority.compareTo(o2.priority)
+            else 0
+        }
+        properties.put(ConstKeys.DRAWABLES, drawables)
         val shapes =
             PriorityQueue<IDrawableShape> { s1, s2 -> s1.shapeType.ordinal - s2.shapeType.ordinal }
         properties.put(ConstKeys.SHAPES, shapes)
@@ -253,7 +260,8 @@ class MegamanMaverickGame : Game2D() {
                 ),
                 PointsSystem(),
                 UpdatablesSystem(),
-                SpritesSystem { sprites },
+                FontsSystem { drawables },
+                SpritesSystem { drawables },
                 DrawableShapesSystem({ shapes }, DEBUG_SHAPES),
                 AudioSystem(
                     { audioMan.playSound(it.source, it.loop) },

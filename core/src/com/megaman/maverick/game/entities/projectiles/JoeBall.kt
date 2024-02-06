@@ -6,7 +6,6 @@ import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
-import com.engine.common.CAUSE_OF_DEATH_MESSAGE
 import com.engine.common.enums.Direction
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.extensions.objectMapOf
@@ -85,12 +84,12 @@ class JoeBall(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity {
 
     override fun onDamageInflictedTo(damageable: IDamageable) {
         super.onDamageInflictedTo(damageable)
-        explode()
+        explodeAndDie()
     }
 
     override fun hitBlock(blockFixture: Fixture) {
         super.hitBlock(blockFixture)
-        explode()
+        explodeAndDie()
     }
 
     override fun hitShield(shieldFixture: Fixture) {
@@ -158,8 +157,8 @@ class JoeBall(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity {
         return AnimationsComponent(this, animator)
     }
 
-    private fun explode() {
-        kill(props(CAUSE_OF_DEATH_MESSAGE to "Exploding"))
+    override fun explodeAndDie() {
+        kill()
 
         val explosionType: String
         val soundAsset: SoundAsset

@@ -1,10 +1,14 @@
 package com.megaman.maverick.game.entities.special
 
+import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.utils.Array
 import com.engine.common.enums.Direction
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.cullables.CullablesComponent
+import com.engine.drawables.shapes.DrawableShapesComponent
+import com.engine.drawables.shapes.IDrawableShape
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.world.Body
@@ -32,19 +36,34 @@ class GravityChange(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity {
         body.set(bounds)
         (gravityChangeFixture.shape as GameRectangle).set(bounds)
 
-        val directionString = spawnProps.get(ConstKeys.DIRECTION, String::class)!!
-        val direction = Direction.valueOf(directionString.uppercase())
-        gravityChangeFixture.putProperty(ConstKeys.DIRECTION, direction)
+        spawnProps.get(ConstKeys.DIRECTION).let { direction ->
+            if (direction is String)
+                setGravityDirection(Direction.valueOf(direction.uppercase()))
+            else if (direction is Direction)
+                setGravityDirection(direction)
+        }
 
-        addComponent(createCullablesComponent())
+        removeComponent(CullablesComponent::class)
+        val cull = spawnProps.getOrDefault(ConstKeys.CULL, true, Boolean::class)
+        if (cull) addComponent(createCullablesComponent())
+    }
+
+    fun setGravityDirection(direction: Direction) {
+        gravityChangeFixture.putProperty(ConstKeys.DIRECTION, direction)
     }
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
 
+        val debugShapes = Array<() -> IDrawableShape?>()
+
         // gravity-change fixture
         gravityChangeFixture = Fixture(GameRectangle(), FixtureType.GRAVITY_CHANGE)
         body.addFixture(gravityChangeFixture)
+        gravityChangeFixture.shape.color = Color.ORANGE
+        debugShapes.add { gravityChangeFixture.shape }
+
+        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }

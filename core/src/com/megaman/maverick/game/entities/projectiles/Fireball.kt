@@ -33,8 +33,8 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.defineProjectileComponents
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
@@ -92,17 +92,17 @@ class Fireball(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity 
 
     override fun onDamageInflictedTo(damageable: IDamageable) {
         super.onDamageInflictedTo(damageable)
-        burst()
+        explodeAndDie()
     }
 
     override fun hitBody(bodyFixture: Fixture) {
         super.hitBody(bodyFixture)
-        if (mask(owner, bodyFixture.getEntity(), { it is Megaman }, { it is AbstractEnemy })) burst()
+        if (mask(owner, bodyFixture.getEntity(), { it is Megaman }, { it is AbstractEnemy })) explodeAndDie()
     }
 
     override fun hitBlock(blockFixture: Fixture) {
         super.hitBlock(blockFixture)
-        burst()
+        explodeAndDie()
     }
 
     override fun hitShield(shieldFixture: Fixture) {
@@ -174,7 +174,7 @@ class Fireball(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity 
         return updatablesComponent
     }
 
-    private fun burst() {
+    override fun explodeAndDie() {
         burst = true
         requestToPlaySound(SoundAsset.ATOMIC_FIRE_SOUND, false)
     }

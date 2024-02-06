@@ -70,14 +70,14 @@ class ElectricBall(game: MegamanMaverickGame) : GameEntity(game), IProjectileEnt
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) {
-        zap()
+        explodeAndDie()
     }
 
     override fun hitBlock(blockFixture: Fixture) {
-        zap()
+        explodeAndDie()
     }
 
-    private fun zap() {
+    override fun explodeAndDie() {
         // TODO: create zap explosion
         requestToPlaySound(SoundAsset.MM3_ELECTRIC_PULSE_SOUND, false)
     }

@@ -37,7 +37,11 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.getMegamanMaverickGame
 import kotlin.reflect.KClass
 
-abstract class AbstractEnemy(game: MegamanMaverickGame, private val cullTime: Float = 1f) :
+abstract class AbstractEnemy(
+    game: MegamanMaverickGame,
+    private val cullTime: Float = 1f,
+    private val cullWhenOutOfCamBounds: Boolean = true
+) :
     GameEntity(game),
     IDamager,
     IDamageable,
@@ -170,8 +174,10 @@ abstract class AbstractEnemy(game: MegamanMaverickGame, private val cullTime: Fl
     }
 
     protected open fun defineCullablesComponent(cullablesComponent: CullablesComponent) {
-        val cullOnOutOfBounds = getGameCameraCullingLogic(this, cullTime)
-        cullablesComponent.add(cullOnOutOfBounds)
+        if (cullWhenOutOfCamBounds) {
+            val cullOnOutOfBounds = getGameCameraCullingLogic(this, cullTime)
+            cullablesComponent.add(cullOnOutOfBounds)
+        }
 
         val eventsToCullOn =
             objectSetOf<Any>(

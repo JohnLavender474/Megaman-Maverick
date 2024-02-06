@@ -28,6 +28,8 @@ interface IProjectileEntity : IOwnable, IDamager, IBodyEntity, ISpriteEntity, IA
         // do nothing
     }
 
+    fun explodeAndDie() {}
+
     fun hitBody(bodyFixture: Fixture) {}
 
     fun hitBlock(blockFixture: Fixture) {}

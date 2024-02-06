@@ -239,6 +239,9 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             val (bodyFixture, gravityChangeFixture) =
                 contact.getFixturesInOrder(FixtureType.BODY, FixtureType.GRAVITY_CHANGE)!!
 
+            val direction =
+                gravityChangeFixture.getProperty(ConstKeys.DIRECTION, Direction::class) ?: return
+
             val canChangeGravity =
                 bodyFixture.properties.getOrDefault(ConstKeys.GRAVITY_ROTATABLE, true) as Boolean
             if (!canChangeGravity) return
@@ -259,9 +262,6 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
                 }
 
             if (!gravityChangeFixture.bodyRelativeShape!!.contains(bodyPointToCheck)) return
-
-            val direction =
-                gravityChangeFixture.getProperty(ConstKeys.DIRECTION, Direction::class) ?: return
 
             val entity = bodyFixture.getEntity()
             if (entity is IDirectionRotatable && entity.directionRotation != direction)
@@ -454,6 +454,9 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             val (bodyFixture, gravityChangeFixture) =
                 contact.getFixturesInOrder(FixtureType.BODY, FixtureType.GRAVITY_CHANGE)!!
 
+            val direction =
+                gravityChangeFixture.getProperty(ConstKeys.DIRECTION, Direction::class) ?: return
+
             val canChangeGravity =
                 bodyFixture.properties.getOrDefault(ConstKeys.GRAVITY_ROTATABLE, true) as Boolean
             if (!canChangeGravity) return
@@ -474,9 +477,6 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
                 }
 
             if (!gravityChangeFixture.bodyRelativeShape!!.contains(bodyPointToCheck)) return
-
-            val direction =
-                gravityChangeFixture.getProperty(ConstKeys.DIRECTION, Direction::class) ?: return
 
             val entity = bodyFixture.getEntity()
             if (entity is IDirectionRotatable && entity.directionRotation != direction)
@@ -622,24 +622,6 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
 
             force.getRunnable()?.invoke()
         }
-
-        // TODO:
-        //   nothing should be done on end contact for gravity change, and instead there should
-        //   be a gravity change object the player enters to set the direction back to UP
-        // body, gravity change
-        /*
-        else if (contact.fixturesMatch(FixtureType.BODY, FixtureType.GRAVITY_CHANGE)) {
-          printDebugLog(contact, "End Contact: Body-GravityChange, contact = $contact")
-          val (bodyFixture, _) =
-              contact.getFixturesInOrder(FixtureType.BODY, FixtureType.GRAVITY_CHANGE)!!
-          val entity = bodyFixture.getEntity()
-          if (entity is IDirectionRotatable && entity.isDirectionRotated(Direction.DOWN))
-              entity.directionRotation = Direction.UP
-          /*
-          if (entity is IUpsideDownable) entity.upsideDown = false
-           */
-        }
-         */
 
         // water-listener, water
         else if (contact.fixturesMatch(FixtureType.WATER_LISTENER, FixtureType.WATER)) {

@@ -166,7 +166,7 @@ class ChargedShot(game: MegamanMaverickGame) :
         requestToPlaySound(SoundAsset.DINK_SOUND, false)
     }
 
-    private fun explodeAndDie() {
+    override fun explodeAndDie() {
         kill(props(CAUSE_OF_DEATH_MESSAGE to "Explode and die"))
         val e = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.CHARGED_SHOT_EXPLOSION)
 

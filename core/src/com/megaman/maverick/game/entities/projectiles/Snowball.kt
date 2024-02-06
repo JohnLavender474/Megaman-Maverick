@@ -72,21 +72,19 @@ class Snowball(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity 
 
     override fun hitBody(bodyFixture: Fixture) {
         if (bodyFixture.getEntity() !is AbstractEnemy && bodyFixture.getEntity() !is IProjectileEntity)
-            explode("Hit body: $bodyFixture")
+            explodeAndDie()
     }
 
-    override fun hitBlock(blockFixture: Fixture) = explode("Hit block: $blockFixture")
+    override fun hitBlock(blockFixture: Fixture) = explodeAndDie()
 
     override fun hitShield(shieldFixture: Fixture) {
-        if (shieldFixture.getEntity() != owner) explode("Hit shield: $shieldFixture")
+        if (shieldFixture.getEntity() != owner) explodeAndDie()
     }
 
-    override fun hitWater(waterFixture: Fixture) = explode("Hit water: $waterFixture")
+    override fun hitWater(waterFixture: Fixture) = explodeAndDie()
 
-    fun explode(causeOfDeath: String = "Explode") {
-        GameLogger.debug(TAG, "Exploding: $this. Cause of death: $causeOfDeath")
-
-        kill(props(CAUSE_OF_DEATH_MESSAGE to causeOfDeath))
+    override fun explodeAndDie() {
+        kill()
         val explosion =
             EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SNOWBALL_EXPLOSION)!!
         game.gameEngine.spawn(
