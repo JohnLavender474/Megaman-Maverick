@@ -10,7 +10,6 @@ import com.engine.animations.Animator
 import com.engine.animations.IAnimation
 import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
-import com.engine.common.enums.ProcessState
 import com.engine.common.extensions.equalsAny
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.getTextureRegion
@@ -43,16 +42,17 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
-import com.megaman.maverick.game.entities.contracts.IProjectileEntity
+import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.SpecialsFactory
+import com.megaman.maverick.game.entities.projectiles.Bullet
+import com.megaman.maverick.game.entities.projectiles.ChargedShot
+import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.special.GravityChange
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.toProps
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
-import com.megaman.maverick.game.world.getEntity
-import com.megaman.maverick.game.world.setConsumer
 import kotlin.reflect.KClass
 
 class Togglee(game: MegamanMaverickGame) : AbstractEnemy(game, cullWhenOutOfCamBounds = false), IAnimatedEntity,
@@ -75,8 +75,15 @@ class Togglee(game: MegamanMaverickGame) : AbstractEnemy(game, cullWhenOutOfCamB
         private const val SWITCH_DURATION = 0.45f
     }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, Int>()
+    override val damageNegotiations = objectMapOf<KClass<out IDamager>, Int>(
+        Bullet::class to 5,
+        Fireball::class to 10,
+        ChargedShot::class to 10,
+        ChargedShotExplosion::class to 5
+    )
     override val children = Array<IGameEntity>()
+    override val invincible: Boolean
+        get() = super.invincible || moving
 
     val moving: Boolean
         get() = toggleeState.equalsAny(ToggleeState.TOGGLING_TO_ON, ToggleeState.TOGGLING_TO_OFF)
@@ -133,6 +140,12 @@ class Togglee(game: MegamanMaverickGame) : AbstractEnemy(game, cullWhenOutOfCamB
         children.clear()
     }
 
+    override fun takeDamageFrom(damager: IDamager): Boolean {
+        val takenDamage = super.takeDamageFrom(damager)
+        if (takenDamage) switchToggleeState()
+        return takenDamage
+    }
+
     private fun setup(spawnProps: Properties) {
         when (toggleeType) {
             ToggleeType.GRAVITY_TOGGLE -> {
@@ -163,7 +176,8 @@ class Togglee(game: MegamanMaverickGame) : AbstractEnemy(game, cullWhenOutOfCamB
         switchTimer.reset()
     }
 
-    private fun runToggleeAction() { // TODO: Implement toggle action
+    @Suppress("UNCHECKED_CAST")
+    private fun runToggleeAction() {
         GameLogger.debug(TAG, "runToggleAction(): Running togglee action with toggle type = $toggleeType")
         when (toggleeType) {
             ToggleeType.GRAVITY_TOGGLE -> {
@@ -171,18 +185,6 @@ class Togglee(game: MegamanMaverickGame) : AbstractEnemy(game, cullWhenOutOfCamB
                 val gravityChange = children.first() as GravityChange
                 gravityChange.setGravityDirection(if (on) onGravity else offGravity)
             }
-        }
-    }
-
-    private fun consume(fixture: Fixture) {
-        if (moving) return
-
-        val fixtureEntity = fixture.getEntity()
-        if (fixture.fixtureLabel == FixtureType.PROJECTILE &&
-            fixtureEntity is IProjectileEntity
-        ) {
-            switchToggleeState()
-            fixtureEntity.explodeAndDie()
         }
     }
 
@@ -221,24 +223,20 @@ class Togglee(game: MegamanMaverickGame) : AbstractEnemy(game, cullWhenOutOfCamB
         damagerFixture.shape.color = Color.RED
         debugShapes.add { damagerFixture.shape }
 
-        // consumer fixture
-        val consumerFixture = Fixture(
-            GameRectangle().setSize(ConstVals.PPM.toFloat()), FixtureType.CONSUMER
+        // damageable fixture
+        val damageableFixture = Fixture(
+            GameRectangle().setSize(ConstVals.PPM.toFloat()), FixtureType.DAMAGEABLE
         )
-        consumerFixture.setConsumer { state, it ->
-            if (state == ProcessState.BEGIN) consume(it)
-        }
-        body.addFixture(consumerFixture)
-        consumerFixture.shape.color = Color.GREEN
-        debugShapes.add { consumerFixture.shape }
+        body.addFixture(damageableFixture)
+        damageableFixture.shape.color = Color.PURPLE
+        debugShapes.add { damageableFixture.shape }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             damagerFixture.active = !moving
-            consumerFixture.active = !moving
-
+            damageableFixture.active = !moving
             val fixtureOffsetX = if (on) 0.5f * ConstVals.PPM else -0.5f * ConstVals.PPM
             damagerFixture.offsetFromBodyCenter.x = fixtureOffsetX
-            consumerFixture.offsetFromBodyCenter.x = fixtureOffsetX
+            damageableFixture.offsetFromBodyCenter.x = fixtureOffsetX
         }
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
