@@ -13,7 +13,8 @@ enum class BodySense {
     SIDE_TOUCHING_ICE_RIGHT,
     HEAD_TOUCHING_LADDER,
     FEET_TOUCHING_LADDER,
-    TOUCHING_CART
+    TOUCHING_CART,
+    TELEPORTING
 }
 
 fun Body.isSensing(bodySense: BodySense) = getProperty(bodySense.toString()) == true

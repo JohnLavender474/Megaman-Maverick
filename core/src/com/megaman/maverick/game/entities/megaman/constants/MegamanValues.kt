@@ -10,7 +10,7 @@ object MegamanValues {
     const val CART_JUMP_VEL = 18f
 
     const val CLAMP_X = 15f
-    const val CLAMP_Y = 25f
+    const val CLAMP_Y = 50f // 25f
 
     const val RUN_SPEED = 5f
     const val RUN_IMPULSE = 50f

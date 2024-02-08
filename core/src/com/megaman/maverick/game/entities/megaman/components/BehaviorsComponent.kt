@@ -23,6 +23,7 @@ import com.megaman.maverick.game.entities.special.Cart
 import com.megaman.maverick.game.entities.special.Ladder
 import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.isSensing
+import com.megaman.maverick.game.world.isSensingAny
 
 const val MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: WallSlideBehavior"
 const val MEGAMAN_SWIM_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: SwimBehavior"
@@ -209,7 +210,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             override fun evaluate(delta: Float): Boolean {
                 if (damaged ||
                     airDashTimer.isFinished() ||
-                    body.isSensing(BodySense.FEET_ON_GROUND) ||
+                    body.isSensingAny(BodySense.FEET_ON_GROUND, BodySense.TELEPORTING) ||
                     isAnyBehaviorActive(BehaviorType.WALL_SLIDING, BehaviorType.CLIMBING, BehaviorType.RIDING_CART)
                 )
                     return false
@@ -266,17 +267,19 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 airDashTimer.reset()
                 body.physics.gravityOn = true
 
-                val impulseOnEnd =
-                    facing.value *
-                            ConstVals.PPM *
-                            if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_AIR_DASH_END_BUMP
-                            else MegamanValues.AIR_DASH_END_BUMP
+                if (!body.isSensing(BodySense.TELEPORTING)) {
+                    val impulseOnEnd =
+                        facing.value *
+                                ConstVals.PPM *
+                                if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_AIR_DASH_END_BUMP
+                                else MegamanValues.AIR_DASH_END_BUMP
 
-                when (directionRotation) {
-                    Direction.UP -> body.physics.velocity.x += impulseOnEnd
-                    Direction.DOWN -> body.physics.velocity.x -= impulseOnEnd
-                    Direction.LEFT -> body.physics.velocity.y += impulseOnEnd
-                    Direction.RIGHT -> body.physics.velocity.y -= impulseOnEnd
+                    when (directionRotation) {
+                        Direction.UP -> body.physics.velocity.x += impulseOnEnd
+                        Direction.DOWN -> body.physics.velocity.x -= impulseOnEnd
+                        Direction.LEFT -> body.physics.velocity.y += impulseOnEnd
+                        Direction.RIGHT -> body.physics.velocity.y -= impulseOnEnd
+                    }
                 }
             }
         }
@@ -540,7 +543,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             body.physics.velocity.y = MegamanValues.JUMP_VEL * ConstVals.PPM
             body.preProcess.remove(ConstKeys.CART)
         }
-
     }
 
     behaviorsComponent.addBehavior(BehaviorType.WALL_SLIDING, wallSlide)

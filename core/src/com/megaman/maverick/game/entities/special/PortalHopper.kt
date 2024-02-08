@@ -49,7 +49,7 @@ class PortalHopper(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, I
         const val TAG = "PortalHopper"
         private var launchRegion: TextureRegion? = null
         private var waitRegion: TextureRegion? = null
-        private const val PORTAL_HOP_IMPULSE = 25f
+        private const val PORTAL_HOP_IMPULSE = 35f // 25f
         private const val PORTAL_HOP_DELAY = 0.25f
     }
 

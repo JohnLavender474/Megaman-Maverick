@@ -347,6 +347,10 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
                 FixtureType.TELEPORTER
             )!!
             val playerEntity = playerFixture.getEntity()
+
+            val playerBody = playerEntity.body
+            playerBody.setBodySense(BodySense.TELEPORTING, true)
+
             val teleporterEntity = teleporterFixture.getEntity() as ITeleporterEntity
             teleporterEntity.teleportEntity(playerEntity)
         }
@@ -661,6 +665,17 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
                 feetEntity.body.setBodySense(BodySense.TOUCHING_CART, false)
                 feetEntity.body.removeProperty(ConstKeys.CART)
             }
+        }
+
+        // player, teleporter
+        else if (contact.fixturesMatch(FixtureType.PLAYER, FixtureType.TELEPORTER)) {
+            printDebugLog(contact, "beginContact(): Player-Teleporter, contact = $contact")
+            val (playerFixture, _) = contact.getFixturesInOrder(
+                FixtureType.PLAYER,
+                FixtureType.TELEPORTER
+            )!!
+            val playerBody = playerFixture.getBody()
+            playerBody.setBodySense(BodySense.TELEPORTING, false)
         }
     }
 }

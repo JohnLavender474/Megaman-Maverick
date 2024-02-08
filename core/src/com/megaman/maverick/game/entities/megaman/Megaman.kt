@@ -43,26 +43,12 @@ import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOSION_ORB_SPEED
 import com.megaman.maverick.game.entities.projectiles.*
-import com.megaman.maverick.game.entities.utils.setStandardOnPortalHopperContinueProp
-import com.megaman.maverick.game.entities.utils.setStandardOnPortalHopperEndProp
-import com.megaman.maverick.game.entities.utils.setStandardOnPortalHopperStartProp
-import com.megaman.maverick.game.entities.utils.stopSoundNow
+import com.megaman.maverick.game.entities.utils.*
 import com.megaman.maverick.game.events.EventType
 import kotlin.reflect.KClass
 
-class Megaman(game: MegamanMaverickGame) :
-    GameEntity(game),
-    IMegaUpgradable,
-    IEventListener,
-    IFaceable,
-    IDamageable,
-    IDirectionRotatable,
-    IBodyEntity,
-    IHealthEntity,
-    ISpriteEntity,
-    IBehaviorsEntity,
-    IPointsEntity,
-    IAudioEntity {
+class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IEventListener, IFaceable, IDamageable,
+    IDirectionRotatable, IBodyEntity, IHealthEntity, ISpriteEntity, IBehaviorsEntity, IPointsEntity, IAudioEntity {
 
     companion object {
         const val TAG = "Megaman"
@@ -79,63 +65,58 @@ class Megaman(game: MegamanMaverickGame) :
     internal val damageRecoveryTimer = Timer(MegamanValues.DAMAGE_RECOVERY_TIME).setToEnd()
     internal val damageFlashTimer = Timer(MegamanValues.DAMAGE_FLASH_DURATION)
 
-    internal val dmgNegotations =
-        objectMapOf<KClass<out IDamager>, Int>(
-            Bullet::class to 2,
-            ChargedShot::class to 4,
-            Bat::class to 2,
-            Met::class to 2,
-            DragonFly::class to 3,
-            FloatingCan::class to 2,
-            FlyBoy::class to 3,
-            GapingFish::class to 2,
-            SpringHead::class to 3,
-            SuctionRoller::class to 2,
-            MagFly::class to 3,
-            Explosion::class to 2,
-            JoeBall::class to 3,
-            Snowball::class to 3,
-            SnowballExplosion::class to 1,
-            SwinginJoe::class to 2,
-            SniperJoe::class to 3,
-            ShieldAttacker::class to 4,
-            Penguin::class to 3,
-            Hanabiran::class to 3,
-            Petal::class to 3,
-            CaveRock::class to 3,
-            CaveRocker::class to 3,
-            CaveRockExplosion::class to 2,
-            Elecn::class to 3,
-            ElectricBall::class to 3,
-            Ratton::class to 2,
-            PicketJoe::class to 3,
-            Picket::class to 3,
-            LaserBeamer::class to 3,
-            CartinJoe::class to 3,
-            Bolt::class to 3,
-            ElectrocutieChild::class to 3,
-            Togglee::class to 3,
-            Eyee::class to 3
-        )
+    internal val dmgNegotations = objectMapOf<KClass<out IDamager>, Int>(
+        Bullet::class to 2,
+        ChargedShot::class to 4,
+        Bat::class to 2,
+        Met::class to 2,
+        DragonFly::class to 3,
+        FloatingCan::class to 2,
+        FlyBoy::class to 3,
+        GapingFish::class to 2,
+        SpringHead::class to 3,
+        SuctionRoller::class to 2,
+        MagFly::class to 3,
+        Explosion::class to 2,
+        JoeBall::class to 3,
+        Snowball::class to 3,
+        SnowballExplosion::class to 1,
+        SwinginJoe::class to 2,
+        SniperJoe::class to 3,
+        ShieldAttacker::class to 4,
+        Penguin::class to 3,
+        Hanabiran::class to 3,
+        Petal::class to 3,
+        CaveRock::class to 3,
+        CaveRocker::class to 3,
+        CaveRockExplosion::class to 2,
+        Elecn::class to 3,
+        ElectricBall::class to 3,
+        Ratton::class to 2,
+        PicketJoe::class to 3,
+        Picket::class to 3,
+        LaserBeamer::class to 3,
+        CartinJoe::class to 3,
+        Bolt::class to 3,
+        ElectrocutieChild::class to 3,
+        Togglee::class to 3,
+        Eyee::class to 3
+    )
 
     internal val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 
     internal val shootAnimTimer = Timer(MegamanValues.SHOOT_ANIM_TIME).setToEnd()
     internal val chargingTimer =
-        Timer(
-            MegamanValues.TIME_TO_FULLY_CHARGED,
-            TimeMarkedRunnable(MegamanValues.TIME_TO_HALFWAY_CHARGED) {
-                requestToPlaySound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND, true)
-            })
-            .setToEnd()
+        Timer(MegamanValues.TIME_TO_FULLY_CHARGED, TimeMarkedRunnable(MegamanValues.TIME_TO_HALFWAY_CHARGED) {
+            requestToPlaySound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND, true)
+        }).setToEnd()
     internal val airDashTimer = Timer(MegamanValues.MAX_AIR_DASH_TIME)
     internal val wallJumpTimer = Timer(MegamanValues.WALL_JUMP_IMPETUS_TIME).setToEnd()
     internal val groundSlideTimer = Timer(MegamanValues.MAX_GROUND_SLIDE_TIME)
 
-    override val eventKeyMask =
-        objectSetOf<Any>(
-            EventType.BEGIN_ROOM_TRANS, EventType.CONTINUE_ROOM_TRANS, EventType.GATE_INIT_OPENING
-        )
+    override val eventKeyMask = objectSetOf<Any>(
+        EventType.BEGIN_ROOM_TRANS, EventType.CONTINUE_ROOM_TRANS, EventType.GATE_INIT_OPENING
+    )
 
     override val upgradeHandler = MegamanUpgradeHandler(this)
 
@@ -145,9 +126,8 @@ class Megaman(game: MegamanMaverickGame) :
         get() = weaponHandler.isChargeable(currentWeapon)
 
     val chargeStatus: MegaChargeStatus
-        get() =
-            if (fullyCharged) MegaChargeStatus.FULLY_CHARGED
-            else if (charging) MegaChargeStatus.HALF_CHARGED else MegaChargeStatus.NOT_CHARGED
+        get() = if (fullyCharged) MegaChargeStatus.FULLY_CHARGED
+        else if (charging) MegaChargeStatus.HALF_CHARGED else MegaChargeStatus.NOT_CHARGED
 
     val charging: Boolean
         get() = canChargeCurrentWeapon && chargingTimer.time >= MegamanValues.TIME_TO_HALFWAY_CHARGED
@@ -162,9 +142,8 @@ class Megaman(game: MegamanMaverickGame) :
         get() = !shootAnimTimer.isFinished()
 
     val ammo: Int
-        get() =
-            if (currentWeapon == MegamanWeapon.BUSTER) Int.MAX_VALUE
-            else weaponHandler.getAmmo(currentWeapon)
+        get() = if (currentWeapon == MegamanWeapon.BUSTER) Int.MAX_VALUE
+        else weaponHandler.getAmmo(currentWeapon)
 
     var damageFlash = false
     var maverick = false
@@ -180,9 +159,7 @@ class Megaman(game: MegamanMaverickGame) :
             GameLogger.debug(TAG, "directionRotation: value = $value")
             body.cardinalRotation = value
             when (value) {
-                Direction.UP,
-                Direction.RIGHT -> {
-                    // jump
+                Direction.UP, Direction.RIGHT -> { // jump
                     jumpVel = MegamanValues.JUMP_VEL
                     wallJumpVel = MegamanValues.WALL_JUMP_VEL
                     waterJumpVel = MegamanValues.WATER_JUMP_VEL
@@ -200,9 +177,7 @@ class Megaman(game: MegamanMaverickGame) :
                     swimVel = MegamanValues.SWIM_VEL_Y
                 }
 
-                Direction.DOWN,
-                Direction.LEFT -> {
-                    // jump
+                Direction.DOWN, Direction.LEFT -> { // jump
                     jumpVel = -MegamanValues.JUMP_VEL
                     wallJumpVel = -MegamanValues.WALL_JUMP_VEL
                     waterJumpVel = -MegamanValues.WATER_JUMP_VEL
@@ -301,9 +276,15 @@ class Megaman(game: MegamanMaverickGame) :
         chargingTimer.reset()
         airDashTimer.reset()
 
-        setStandardOnPortalHopperStartProp(this)
+        putProperty(ConstKeys.ON_PORTAL_HOPPER_START, {
+            standardOnPortalHopperStart(this)
+            if (isBehaviorActive(BehaviorType.AIR_DASHING)) forceQuitBehavior(BehaviorType.AIR_DASHING)
+        })
         setStandardOnPortalHopperContinueProp(this)
-        setStandardOnPortalHopperEndProp(this)
+        putProperty(ConstKeys.ON_PORTAL_HOPPER_END, {
+            standardOnPortalHopperEnd(this)
+            aButtonTask = AButtonTask.AIR_DASH
+        })
     }
 
     override fun onDestroy() {
@@ -319,21 +300,19 @@ class Megaman(game: MegamanMaverickGame) :
 
         if (getCurrentHealth() > 0) return
 
-        val explosionOrbTrajectories =
-            gdxArrayOf(
-                Vector2(-EXPLOSION_ORB_SPEED, 0f),
-                Vector2(-EXPLOSION_ORB_SPEED, EXPLOSION_ORB_SPEED),
-                Vector2(0f, EXPLOSION_ORB_SPEED),
-                Vector2(EXPLOSION_ORB_SPEED, EXPLOSION_ORB_SPEED),
-                Vector2(EXPLOSION_ORB_SPEED, 0f),
-                Vector2(EXPLOSION_ORB_SPEED, -EXPLOSION_ORB_SPEED),
-                Vector2(0f, -EXPLOSION_ORB_SPEED),
-                Vector2(-EXPLOSION_ORB_SPEED, -EXPLOSION_ORB_SPEED)
-            )
+        val explosionOrbTrajectories = gdxArrayOf(
+            Vector2(-EXPLOSION_ORB_SPEED, 0f),
+            Vector2(-EXPLOSION_ORB_SPEED, EXPLOSION_ORB_SPEED),
+            Vector2(0f, EXPLOSION_ORB_SPEED),
+            Vector2(EXPLOSION_ORB_SPEED, EXPLOSION_ORB_SPEED),
+            Vector2(EXPLOSION_ORB_SPEED, 0f),
+            Vector2(EXPLOSION_ORB_SPEED, -EXPLOSION_ORB_SPEED),
+            Vector2(0f, -EXPLOSION_ORB_SPEED),
+            Vector2(-EXPLOSION_ORB_SPEED, -EXPLOSION_ORB_SPEED)
+        )
 
         explosionOrbTrajectories.forEach { trajectory ->
-            val explosionOrb =
-                EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION_ORB)
+            val explosionOrb = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION_ORB)
             explosionOrb?.let { orb ->
                 game.gameEngine.spawn(
                     orb, props(ConstKeys.TRAJECTORY to trajectory, ConstKeys.POSITION to body.getCenter())
@@ -344,16 +323,14 @@ class Megaman(game: MegamanMaverickGame) :
 
     override fun onEvent(event: Event) {
         when (event.key) {
-            EventType.BEGIN_ROOM_TRANS,
-            EventType.CONTINUE_ROOM_TRANS -> {
+            EventType.BEGIN_ROOM_TRANS, EventType.CONTINUE_ROOM_TRANS -> {
                 val position = event.properties.get(ConstKeys.POSITION) as Vector2
                 GameLogger.debug(
                     MEGAMAN_EVENT_LISTENER_TAG, "BEGIN/CONTINUE ROOM TRANS: position = $position"
                 )
 
                 body.positionOnPoint(
-                    position,
-                    when (directionRotation) {
+                    position, when (directionRotation) {
                         Direction.UP -> Position.BOTTOM_CENTER
                         Direction.DOWN -> Position.TOP_CENTER
                         Direction.LEFT -> Position.CENTER_RIGHT
@@ -373,15 +350,12 @@ class Megaman(game: MegamanMaverickGame) :
     }
 
     override fun canBeDamagedBy(damager: IDamager) =
-        !invincible &&
-                dmgNegotations.containsKey(damager::class) &&
-                (damager is AbstractEnemy || damager is IHazard || (damager is IProjectileEntity && damager.owner != this))
+        !invincible && dmgNegotations.containsKey(damager::class) && (damager is AbstractEnemy || damager is IHazard || (damager is IProjectileEntity && damager.owner != this))
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
-        if (!isBehaviorActive(BehaviorType.RIDING_CART) &&
-            !noDmgBounce.contains(damager::class) &&
-            damager is IGameEntity &&
-            damager.hasComponent(BodyComponent::class)
+        if (!isBehaviorActive(BehaviorType.RIDING_CART) && !noDmgBounce.contains(damager::class) && damager is IGameEntity && damager.hasComponent(
+                BodyComponent::class
+            )
         ) {
             val enemyBody = damager.getComponent(BodyComponent::class)!!.body
             body.physics.velocity.x =
@@ -396,13 +370,12 @@ class Megaman(game: MegamanMaverickGame) :
         return true
     }
 
-    override fun getPosition() =
-        when (directionRotation) {
-            Direction.UP -> body.getBottomCenterPoint()
-            Direction.DOWN -> body.getTopCenterPoint()
-            Direction.LEFT -> body.getCenterRightPoint()
-            Direction.RIGHT -> body.getCenterLeftPoint()
-        }
+    override fun getPosition() = when (directionRotation) {
+        Direction.UP -> body.getBottomCenterPoint()
+        Direction.DOWN -> body.getTopCenterPoint()
+        Direction.LEFT -> body.getCenterRightPoint()
+        Direction.RIGHT -> body.getCenterLeftPoint()
+    }
 
     override fun getTag() = TAG
 }
