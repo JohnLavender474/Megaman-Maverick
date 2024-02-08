@@ -66,12 +66,12 @@ class Saw(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEnt
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
 
-        clearMotions()
+        clearMotionDefinitions()
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS) as GameRectangle
         val type = spawnProps.get(ConstKeys.TYPE) as String
 
-        when (type) {
+        when (type.uppercase()) {
             PENDULUM_TYPE -> setToPendulum(bounds)
             ROTATION_TYPE -> setToRotation(bounds, spawnProps)
             TRAJECTORY_TYPE -> {
@@ -86,7 +86,7 @@ class Saw(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEnt
             Pendulum(
                 LENGTH * ConstVals.PPM, PENDULUM_GRAVITY * ConstVals.PPM, bounds.getCenter(), 1 / 60f
             )
-        putMotion(
+        putMotionDefinition(
             ConstKeys.PENDULUM,
             MotionDefinition(motion = pendulum, function = { value, _ -> body.setCenter(value) })
         )
@@ -125,7 +125,7 @@ class Saw(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEnt
                 ROTATION_SPEED * ConstVals.PPM,
                 startRotation
             )
-        putMotion(
+        putMotionDefinition(
             ConstKeys.ROTATION,
             MotionDefinition(motion = rotation, function = { value, _ -> body.setCenter(value) })
         )
@@ -160,7 +160,7 @@ class Saw(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEnt
         body.setCenter(spawn)
 
         val trajectory = Trajectory(trajectoryDefinition, ConstVals.PPM)
-        putMotion(
+        putMotionDefinition(
             ConstKeys.TRAJECTORY,
             MotionDefinition(
                 motion = trajectory,

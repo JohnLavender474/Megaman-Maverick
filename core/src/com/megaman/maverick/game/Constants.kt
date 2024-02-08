@@ -15,6 +15,13 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val CHILD_KEY = "child_key"
+    const val SPEED = "speed"
+    const val DEFINITION = "definition"
+    const val BACKGROUND_PARALLAX_FACTOR = "background_parallax_factor"
+    const val FOREGROUND_PARALLAX_FACTOR = "foreground_parallax_factor"
+    const val FOREGROUND = "foreground"
+    const val BACKGROUND = "background"
     const val ENTITY_TYPE = "entity_type"
     const val CULL = "cull"
     const val PAIR = "pair"

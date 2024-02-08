@@ -65,7 +65,7 @@ class SwinginAxe(game: MegamanMaverickGame) :
 
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
-        clearMotions()
+        clearMotionDefinitions()
         val bounds = spawnProps.get(ConstKeys.BOUNDS) as GameRectangle
         body.setCenter(bounds.getCenter())
         setPendulum(bounds)
@@ -126,7 +126,7 @@ class SwinginAxe(game: MegamanMaverickGame) :
             Pendulum(
                 LENGTH * ConstVals.PPM, PENDULUM_GRAVITY * ConstVals.PPM, bounds.getCenter(), 1 / 60f
             )
-        putMotion(
+        putMotionDefinition(
             ConstKeys.PENDULUM,
             MotionComponent.MotionDefinition(
                 motion = pendulum,

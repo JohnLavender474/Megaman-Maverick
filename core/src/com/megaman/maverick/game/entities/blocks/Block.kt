@@ -83,7 +83,7 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
         if (properties.containsKey(ConstKeys.BODY_LABELS)) {
             val labels = (properties.get(ConstKeys.BODY_LABELS) as String).replace("\\s+", "").split(",")
             for (label in labels) {
-                val bodyLabel = BodyLabel.valueOf(label)
+                val bodyLabel = BodyLabel.valueOf(label.uppercase())
                 body.addBodyLabel(bodyLabel)
             }
         }

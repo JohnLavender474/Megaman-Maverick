@@ -43,7 +43,7 @@ import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOSION_ORB_SPEED
 import com.megaman.maverick.game.entities.projectiles.*
-import com.megaman.maverick.game.entities.stopSoundNow
+import com.megaman.maverick.game.entities.utils.stopSoundNow
 import com.megaman.maverick.game.events.EventType
 import kotlin.reflect.KClass
 

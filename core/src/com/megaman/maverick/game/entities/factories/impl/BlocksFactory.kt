@@ -36,5 +36,5 @@ class BlocksFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntit
         pools.put(LIFT, EntityPoolCreator.create(2) { Lift(game) })
     }
 
-    override fun fetch(key: Any) = pools.get(if (key == "") STANDARD else key)?.fetch()
+    override fun fetch(key: Any) = pools.get(if (key == "" || key == "Block") STANDARD else key)?.fetch()
 }

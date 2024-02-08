@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.maps.objects.RectangleMapObject
+import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.ObjectMap
@@ -47,6 +48,7 @@ import com.megaman.maverick.game.screens.levels.map.layers.MegaMapLayerBuilders
 import com.megaman.maverick.game.screens.levels.map.layers.MegaMapLayerBuildersParams
 import com.megaman.maverick.game.screens.levels.spawns.PlayerSpawnsManager
 import com.megaman.maverick.game.screens.levels.stats.PlayerStatsHandler
+import com.megaman.maverick.game.utils.toProps
 import java.util.*
 
 class MegaLevelScreen(game: MegamanMaverickGame) :
@@ -56,6 +58,8 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
         const val TAG = "MegaLevelScreen"
         const val MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG = "MegaLevelScreenEventListener"
         private const val INTERPOLATE_GAME_CAM = true
+        private const val DEFAULT_BACKGROUND_PARALLAX_FACTOR = 0.5f
+        private const val DEFAULT_FOREGROUND_PARALLAX_FACTOR = 2f
     }
 
     val megamanGame: MegamanMaverickGame
@@ -93,12 +97,19 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
     private lateinit var shapes: PriorityQueue<IDrawableShape>
     private lateinit var backgrounds: Array<Background>
 
+    private lateinit var backgroundCamera: OrthographicCamera
     private lateinit var gameCamera: OrthographicCamera
+    private lateinit var foregroundCamera: OrthographicCamera
     private lateinit var uiCamera: OrthographicCamera
 
     private lateinit var disposables: Array<Disposable>
 
     private var initialized = false
+
+    private val gameCameraPriorPosition = Vector3()
+    private var backgroundParallaxFactor = DEFAULT_BACKGROUND_PARALLAX_FACTOR
+    private var foregroundParallaxFactor = DEFAULT_FOREGROUND_PARALLAX_FACTOR
+    private var camerasSetToGameCamera = false
 
     override fun init() {
         if (initialized) return
@@ -112,7 +123,10 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
 
         drawables = megamanGame.getDrawables()
         shapes = megamanGame.getShapes()
+
+        backgroundCamera = megamanGame.getBackgroundCamera()
         gameCamera = megamanGame.getGameCamera()
+        foregroundCamera = megamanGame.getForegroundCamera()
         uiCamera = megamanGame.getUiCamera()
 
         playerSpawnsMan = PlayerSpawnsManager(gameCamera)
@@ -210,8 +224,10 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
         eventsMan.addListener(this)
 
         // reset positions of cameras
-        uiCamera.position.set(ConstFuncs.getCamInitPos())
+        backgroundCamera.position.set(ConstFuncs.getCamInitPos())
         gameCamera.position.set(ConstFuncs.getCamInitPos())
+        foregroundCamera.position.set(ConstFuncs.getCamInitPos())
+        uiCamera.position.set(ConstFuncs.getCamInitPos())
 
         // set all systems to on
         engine.systems.forEach { it.on = true }
@@ -222,7 +238,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
         // set the world graph map using the tiled map load result
         if (tiledMapLoadResult == null)
             throw IllegalStateException("No tiled map load result found in level screen")
-        val (_, _, worldWidth, worldHeight) = tiledMapLoadResult!!
+        val (map, _, worldWidth, worldHeight) = tiledMapLoadResult!!
 
         // TODO: should use quad tree graph map instead of simple node graph map
         /*
@@ -233,6 +249,18 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
         megamanGame.setGraphMap(worldGraphMap)
 
         playerSpawnEventHandler.init()
+
+        // set the parallax factor for background and foreground cameras
+        val mapProps = map.properties.toProps()
+        backgroundParallaxFactor = mapProps.getOrDefault(
+            ConstKeys.BACKGROUND_PARALLAX_FACTOR,
+            DEFAULT_BACKGROUND_PARALLAX_FACTOR, Float::class
+        )
+        foregroundParallaxFactor = mapProps.getOrDefault(
+            ConstKeys.FOREGROUND_PARALLAX_FACTOR,
+            DEFAULT_FOREGROUND_PARALLAX_FACTOR, Float::class
+        )
+        camerasSetToGameCamera = false
     }
 
     override fun getLayerBuilders() =
@@ -432,29 +460,44 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
             else if (!playerStatsHandler.finished) playerStatsHandler.update(delta)
         }
 
+        // update the background and foreground camera positions
+        if (camerasSetToGameCamera) {
+            val gameCameraMovement = gameCamera.position.cpy().sub(gameCameraPriorPosition)
+            val backgroundCameraMovement = gameCameraMovement.cpy().scl(backgroundParallaxFactor)
+            backgroundCamera.position.add(backgroundCameraMovement)
+            val foregroundCameraMovement = gameCameraMovement.cpy().scl(foregroundParallaxFactor)
+            foregroundCamera.position.add(foregroundCameraMovement)
+        } else {
+            backgroundCamera.position.set(gameCamera.position)
+            foregroundCamera.position.set(gameCamera.position)
+            camerasSetToGameCamera = true
+        }
+        gameCameraPriorPosition.set(gameCamera.position)
+
         // update the game engine
         engine.update(delta)
 
         // render the level
         val batch = megamanGame.batch
-        batch.projectionMatrix = gameCamera.combined
         batch.begin()
 
+        // render backgrounds
+        batch.projectionMatrix = backgroundCamera.combined
         backgrounds.forEach { it.draw(batch) }
-        tiledMapLevelRenderer?.render(gameCamera)
 
+        // render the game ground
+        batch.projectionMatrix = gameCamera.combined
+        tiledMapLevelRenderer?.render(gameCamera)
         drawables.forEach { it.draw(batch) }
         drawables.clear()
 
-        batch.end()
+        // TODO: render foreground
 
         // render the ui
         batch.projectionMatrix = uiCamera.combined
-        batch.begin()
         playerStatsHandler.draw(batch)
-        // TODO: render ui
-        // TODO: render player stats
         if (!playerSpawnEventHandler.finished) playerSpawnEventHandler.draw(batch)
+
         batch.end()
 
         // render the shapes

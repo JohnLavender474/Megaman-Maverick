@@ -41,7 +41,7 @@ class RocketPlatform(game: MegamanMaverickGame) :
         private const val HEIGHT = 3f
     }
 
-    override val children = Array<IGameEntity>()
+    override var children = Array<IGameEntity>()
     override val eventKeyMask = objectSetOf<Any>(EventType.BEGIN_ROOM_TRANS, EventType.END_ROOM_TRANS)
 
     override fun init() {

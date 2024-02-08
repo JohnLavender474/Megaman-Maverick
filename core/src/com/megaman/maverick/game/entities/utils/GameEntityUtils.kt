@@ -30,12 +30,14 @@ fun getGameCameraCullingLogic(camera: Camera, bounds: () -> Rectangle, timeToCul
 fun convertObjectPropsToEntities(props: Properties): Array<Pair<IGameEntity, Properties>> {
     val childEntities = Array<Pair<IGameEntity, Properties>>()
 
-    props.forEach { _, value ->
+    props.forEach { key, value ->
         if (value is RectangleMapObject) {
             val childProps = value.toProps()
+            childProps.put(ConstKeys.CHILD_KEY, key)
             childProps.put(ConstKeys.BOUNDS, value.rectangle.toGameRectangle())
 
-            val entityType = EntityType.valueOf(childProps.get(ConstKeys.ENTITY_TYPE) as String)
+            val entityTypeString = childProps.get(ConstKeys.ENTITY_TYPE) as String
+            val entityType = EntityType.valueOf(entityTypeString.uppercase())
             GameLogger.debug(
                 "convertObjectPropsToEntities()", "entityType=$entityType,name=${value.name}"
             )

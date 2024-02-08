@@ -13,6 +13,7 @@ import com.engine.common.time.Timer
 import com.engine.cullables.CullablesComponent
 import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.entities.GameEntity
+import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.IParentEntity
 import com.engine.updatables.UpdatablesComponent
@@ -32,7 +33,7 @@ class DisappearingBlocks(game: MegamanMaverickGame) :
         private const val DEFAULT_DURATION = 1.15f
     }
 
-    override val children = Array<AnimatedBlock>()
+    override var children = Array<IGameEntity>()
 
     private val keysToRender = LinkedList<String>()
 
@@ -115,11 +116,12 @@ class DisappearingBlocks(game: MegamanMaverickGame) :
                     GameLogger.debug(TAG, "defineUpdatablesComponent(): keysToRender = $keysToRender")
 
                     children.forEach { spriteBlock ->
+                        spriteBlock as AnimatedBlock
+
                         val blockKey = spriteBlock.properties.get(ConstKeys.KEY, String::class)!!
                         val on = keysToRender.contains(blockKey)
 
                         if (blockKey == next) spriteBlock.reset()
-
                         spriteBlock.body.physics.collisionOn = on
                         spriteBlock.body.fixtures.forEach { entry -> entry.second.active = on }
                         spriteBlock.hidden = !on

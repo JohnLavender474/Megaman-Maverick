@@ -18,10 +18,10 @@ open class Background(
     columns: Int
 ) : Updatable, IDrawable<Batch> {
 
-    protected val backgroundSprites: SpriteMatrix
+    protected val backgroundSprites: SpriteMatrix =
+        SpriteMatrix(model, priority, modelWidth, modelHeight, rows, columns)
 
     init {
-        backgroundSprites = SpriteMatrix(model, priority, modelWidth, modelHeight, rows, columns)
         backgroundSprites.setPosition(startX, startY)
     }
 

@@ -74,7 +74,7 @@ class GearTrolley(game: MegamanMaverickGame) :
                 function = { value, _ -> body.physics.velocity.set(value) },
                 onReset = { body.set(bounds) })
 
-        putMotion(ConstKeys.TRAJECTORY, motionDefinition)
+        putMotionDefinition(ConstKeys.TRAJECTORY, motionDefinition)
     }
 
     override fun onEvent(event: Event) {

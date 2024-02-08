@@ -21,7 +21,6 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) :
         val iter = layer.objects.iterator()
         while (iter.hasNext()) {
             val o = iter.next()
-
             if (o !is RectangleMapObject) continue
 
             val backgroundRegion =

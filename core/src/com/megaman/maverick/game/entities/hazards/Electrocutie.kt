@@ -47,7 +47,7 @@ class Electrocutie(game: MegamanMaverickGame) : GameEntity(game), IHazard, IBody
         const val SHOCK_DURATION = 0.5f
     }
 
-    override val children = Array<IGameEntity>()
+    override var children = Array<IGameEntity>()
 
     val currentState: ElectrocutieState
         get() = loop.getCurrent()

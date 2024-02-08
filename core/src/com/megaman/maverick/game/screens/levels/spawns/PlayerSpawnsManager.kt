@@ -30,7 +30,6 @@ class PlayerSpawnsManager(private val camera: Camera) : Runnable, Resettable {
 
     override fun run() {
         if (spawns.isEmpty()) return
-
         spawns.peek()?.let { if (camera.overlaps(it.rectangle)) current = spawns.poll() }
     }
 
