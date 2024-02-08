@@ -20,7 +20,6 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
     val SpritesComponent = SpritesComponent(this, "player" to sprite)
     SpritesComponent.putUpdateFunction("player") { _, player ->
         player as GameSprite
-        player.hidden = !ready
 
         val direction = if (isBehaviorActive(BehaviorType.AIR_DASHING)) getProperty(
             MegamanKeys.DIRECTION_ON_AIR_DASH,

@@ -58,6 +58,8 @@ open class AnimatedBlock(game: MegamanMaverickGame) :
         body.set(bounds)
 
         spriteSize = spawnProps.getOrDefault(ConstKeys.SIZE, bounds.getSize(), Vector2::class)
+        spriteSize.x = spawnProps.getOrDefault(ConstKeys.WIDTH, bounds.width, Float::class)
+        spriteSize.y = spawnProps.getOrDefault(ConstKeys.HEIGHT, bounds.height, Float::class)
 
         val animation = spawnProps.get(ConstKeys.ANIMATION, String::class)!!
         AnimatedBlockAnimators.createAndSetAnimations(animation, this)
@@ -114,6 +116,11 @@ object AnimatedBlockAnimators {
 
                 "CaveRock" -> {
                     val region = assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "CaveRock/Rock")
+                    Animation(region)
+                }
+
+                "Platform1_64x8" -> {
+                    val region = assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "Platform1_64x8")
                     Animation(region)
                 }
 

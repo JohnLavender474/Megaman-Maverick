@@ -26,7 +26,7 @@ repeat: none
   index: -1
 Brick1
   rotate: false
-  xy: 192, 32
+  xy: 256, 32
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
@@ -89,7 +89,7 @@ DropperLift/Open
   index: -1
 DropperLift/Opening
   rotate: false
-  xy: 288, 32
+  xy: 352, 32
   size: 96, 64
   orig: 96, 64
   offset: 0, 0
@@ -113,6 +113,13 @@ Lift
   xy: 24, 0
   size: 16, 16
   orig: 16, 16
+  offset: 0, 0
+  index: -1
+Platform1_64x8
+  rotate: false
+  xy: 192, 32
+  size: 64, 8
+  orig: 64, 8
   offset: 0, 0
   index: -1
 TrackBlock

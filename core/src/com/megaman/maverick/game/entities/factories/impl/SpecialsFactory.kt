@@ -18,6 +18,7 @@ class SpecialsFactory(private val game: MegamanMaverickGame) : IFactory<IGameEnt
         const val DISAPPEARING_BLOCKS = "DisappearingBlocks"
         const val CART = "Cart"
         const val ROTATION_ANCHOR = "RotationAnchor"
+        const val PORTAL_HOPPER = "PortalHopper"
     }
 
     private val pools = ObjectMap<Any, Pool<IGameEntity>>()
@@ -30,6 +31,7 @@ class SpecialsFactory(private val game: MegamanMaverickGame) : IFactory<IGameEnt
         pools.put(DISAPPEARING_BLOCKS, EntityPoolCreator.create(2) { DisappearingBlocks(game) })
         pools.put(CART, EntityPoolCreator.create(2) { Cart(game) })
         pools.put(ROTATION_ANCHOR, EntityPoolCreator.create(2) { RotationAnchor(game) })
+        pools.put(PORTAL_HOPPER, EntityPoolCreator.create(5) { PortalHopper(game) })
     }
 
     override fun fetch(key: Any) = pools.get(key)?.fetch()

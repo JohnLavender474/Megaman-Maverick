@@ -87,6 +87,7 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) :
         beamLandAnimation.reset()
         beamSprite.setPosition(-ConstVals.PPM.toFloat(), -ConstVals.PPM.toFloat())
 
+        game.megaman.ready = false
         game.megaman.body.physics.gravityOn = false
         game.getSystems().get(ControllerSystem::class.simpleName).on = false
 

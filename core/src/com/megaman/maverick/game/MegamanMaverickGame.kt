@@ -50,7 +50,7 @@ import com.megaman.maverick.game.controllers.MegaControllerPoller
 import com.megaman.maverick.game.entities.enemies.CartinJoe
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.special.RotationAnchor
+import com.megaman.maverick.game.entities.special.PortalHopper
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
@@ -75,7 +75,10 @@ class MegamanMaverickGame : Game2D() {
         const val DEBUG_TEXT = true
         const val DEBUG_SHAPES = true
         const val DEFAULT_VOLUME = 0.5f
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(RotationAnchor.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(
+            PortalHopper.TAG, "standardOnPortalHopperStart()",
+            "standardOnPortalHopperEnd()"
+        )
         val CONTACT_LISTENER_TAGS: ObjectSet<String> = objectSetOf(CartinJoe.TAG)
     }
 

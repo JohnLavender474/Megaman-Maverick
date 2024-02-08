@@ -338,6 +338,18 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
                 feetEntity.body.putProperty(ConstKeys.CART, cartEntity)
             }
         }
+
+        // player, teleporter
+        else if (contact.fixturesMatch(FixtureType.PLAYER, FixtureType.TELEPORTER)) {
+            printDebugLog(contact, "beginContact(): Player-Teleporter, contact = $contact")
+            val (playerFixture, teleporterFixture) = contact.getFixturesInOrder(
+                FixtureType.PLAYER,
+                FixtureType.TELEPORTER
+            )!!
+            val playerEntity = playerFixture.getEntity()
+            val teleporterEntity = teleporterFixture.getEntity() as ITeleporterEntity
+            teleporterEntity.teleportEntity(playerEntity)
+        }
     }
 
     override fun continueContact(contact: Contact, delta: Float) {

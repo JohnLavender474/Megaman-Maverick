@@ -43,6 +43,9 @@ import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOSION_ORB_SPEED
 import com.megaman.maverick.game.entities.projectiles.*
+import com.megaman.maverick.game.entities.utils.setStandardOnPortalHopperContinueProp
+import com.megaman.maverick.game.entities.utils.setStandardOnPortalHopperEndProp
+import com.megaman.maverick.game.entities.utils.setStandardOnPortalHopperStartProp
 import com.megaman.maverick.game.entities.utils.stopSoundNow
 import com.megaman.maverick.game.events.EventType
 import kotlin.reflect.KClass
@@ -165,7 +168,11 @@ class Megaman(game: MegamanMaverickGame) :
 
     var damageFlash = false
     var maverick = false
-    var ready = false
+    var ready: Boolean = false
+        set(value) {
+            field = value
+            firstSprite!!.hidden = !field
+        }
 
     override var directionRotation: Direction
         get() = body.cardinalRotation
@@ -261,12 +268,12 @@ class Megaman(game: MegamanMaverickGame) :
         addComponent(defineControllerComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
+
         weaponHandler.putWeapon(MegamanWeapon.BUSTER)
     }
 
     override fun spawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "spawn(): spawnProps = $spawnProps")
-
         super.spawn(spawnProps)
         setHealth(getMaxHealth())
         game.eventsMan.addListener(this)
@@ -293,6 +300,10 @@ class Megaman(game: MegamanMaverickGame) :
         wallJumpTimer.reset()
         chargingTimer.reset()
         airDashTimer.reset()
+
+        setStandardOnPortalHopperStartProp(this)
+        setStandardOnPortalHopperContinueProp(this)
+        setStandardOnPortalHopperEndProp(this)
     }
 
     override fun onDestroy() {

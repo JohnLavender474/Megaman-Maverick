@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.special
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
@@ -9,9 +10,11 @@ import com.engine.common.extensions.processAndFilter
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.cullables.CullablesComponent
+import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IBodyEntity
+import com.engine.entities.contracts.IDrawableShapesEntity
 import com.engine.entities.contracts.IMotionEntity
 import com.engine.entities.contracts.IParentEntity
 import com.engine.motion.MotionComponent
@@ -27,7 +30,8 @@ import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntities
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.BodyComponentCreator
 
-open class RotationAnchor(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IParentEntity, IMotionEntity {
+open class RotationAnchor(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IParentEntity, IMotionEntity,
+    IDrawableShapesEntity {
 
     companion object {
         const val TAG = "RotationAnchor"
@@ -43,6 +47,7 @@ open class RotationAnchor(game: MegamanMaverickGame) : GameEntity(game), IBodyEn
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
         addComponent(defineCullablesComponent())
+        addComponent(DrawableShapesComponent(this))
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -50,6 +55,8 @@ open class RotationAnchor(game: MegamanMaverickGame) : GameEntity(game), IBodyEn
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
+
+        clearProdShapeSuppliers()
 
         val spawn = bounds.getCenter()
         val childEntities = convertObjectPropsToEntities(spawnProps)
@@ -65,6 +72,11 @@ open class RotationAnchor(game: MegamanMaverickGame) : GameEntity(game), IBodyEn
                         "degreesOnReset=$degreesOnReset"
             )
             val rotation = RotatingLine(spawn, length, speed * ConstVals.PPM, degreesOnReset)
+            if (childProps.get(ConstKeys.DRAW_LINE) == true) {
+                val color = childProps.get(ConstKeys.COLOR, String::class)!!
+                rotation.line.color = Color.valueOf(color)
+                addProdShapeSupplier { rotation.line }
+            }
 
             val childKey = childProps.get(ConstKeys.CHILD_KEY)!!
             putMotionDefinition(

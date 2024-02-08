@@ -15,6 +15,12 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val STOP = "stop"
+    const val ON_PORTAL_HOPPER_START = "on_portal_start"
+    const val ON_PORTAL_HOPPER_CONTINUE = "on_portal_continue"
+    const val ON_PORTAL_HOPPER_END = "on_portal_end"
+    const val COLOR = "color"
+    const val DRAW_LINE = "draw_line"
     const val CHILD_KEY = "child_key"
     const val SPEED = "speed"
     const val DEFINITION = "definition"

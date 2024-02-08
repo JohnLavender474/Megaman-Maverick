@@ -24,5 +24,6 @@ enum class FixtureType {
     PROJECTILE,
     WATER_LISTENER,
     GRAVITY_CHANGE,
-    CART
+    CART,
+    TELEPORTER
 }

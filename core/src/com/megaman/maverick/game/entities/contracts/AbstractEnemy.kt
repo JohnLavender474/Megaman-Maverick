@@ -33,6 +33,8 @@ import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.factories.impl.ItemsFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.entities.utils.setStandardOnPortalHopperEndProp
+import com.megaman.maverick.game.entities.utils.setStandardOnPortalHopperStartProp
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.getMegamanMaverickGame
 import kotlin.reflect.KClass
@@ -123,6 +125,9 @@ abstract class AbstractEnemy(
                 }
             }
         }
+
+        setStandardOnPortalHopperStartProp(this)
+        setStandardOnPortalHopperEndProp(this)
     }
 
     protected open fun definePointsComponent(): PointsComponent {

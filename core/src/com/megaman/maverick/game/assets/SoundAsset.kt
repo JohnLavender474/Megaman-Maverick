@@ -38,7 +38,8 @@ enum class SoundAsset(src: String, val seconds: Int) : IAsset {
     MM3_ELECTRIC_SHOCK_SOUND("electric_shock.wav", 1),
     MM3_ELECTRIC_PULSE_SOUND("electric_pulse.mp3", 1),
     DISAPPEARING_BLOCK_SOUND("disappearing_block.wav", 1),
-    BURST_SOUND("burst.mp3", 1);
+    BURST_SOUND("burst.mp3", 1),
+    TELEPORT_SOUND("teleport.wav", 1);
 
     override val source = SOUND_ASSET_PREFIX + src
     override val assClass = Sound::class.java
