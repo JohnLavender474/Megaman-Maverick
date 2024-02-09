@@ -425,15 +425,13 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     game.controllerPoller.isPressed(
                         if (isDirectionRotatedDown()) ControllerButton.UP else ControllerButton.DOWN
                     )
-                )
-                    return true
+                ) return true
 
                 if (body.isSensing(BodySense.HEAD_TOUCHING_LADDER) &&
                     game.controllerPoller.isPressed(
                         if (isDirectionRotatedDown()) ControllerButton.DOWN else ControllerButton.UP
                     )
-                )
-                    return true
+                ) return true
 
                 return false
             }
@@ -443,7 +441,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     if (body.isSensing(BodySense.IN_WATER)) AButtonTask.SWIM else AButtonTask.AIR_DASH
 
                 body.physics.gravityOn = false
-                body.physics.collisionOn = false
+                // body.physics.collisionOn = false
 
                 body.setCenterX(ladder.body.getCenter().x)
                 if (body.getMaxY() <= ladder.body.y) body.setY(ladder.body.y)
@@ -469,7 +467,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             override fun end() {
                 body.physics.gravityOn = true
-                body.physics.collisionOn = true
+                // body.physics.collisionOn = true
                 body.physics.velocity.setZero()
                 aButtonTask =
                     if (body.isSensing(BodySense.IN_WATER)) AButtonTask.SWIM else AButtonTask.AIR_DASH

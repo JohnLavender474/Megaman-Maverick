@@ -29,7 +29,8 @@ enum class MusicAsset(src: String) : IAsset {
     MM_OMEGA_TITLE_THEME_MUSIC("Megaman_Omega_TitleTheme.mp3"),
     MMX_LEVEL_SELECT_SCREEN_MUSIC("MMX_LevelSelectScreen.ogg"),
     MM3_SNAKE_MAN_MUSIC("SnakeManMM3.mp3"),
-    MM10_WILY1_MUSIC("MM10_Wily1.mp3");
+    MM10_WILY1_MUSIC("MM10_Wily1.mp3"),
+    MM9_GALAXY_MAN_MUSIC("MM9_GalaxyMan.mp3");
 
     override val source = MUSIC_ASSET_PREFIX + src
     override val assClass = Music::class.java

@@ -164,12 +164,13 @@ class MegamanMaverickGame : Game2D() {
 
         // startLevelScreen(Level.TEST1)
         // startLevelScreen(Level.TEST2)
-        startLevelScreen(Level.TEST3)
+        // startLevelScreen(Level.TEST3)
         // startLevelScreen(Level.TEST5)
         // setCurrentScreen(ScreenEnum.MAIN.name)
         // startLevelScreen(Level.TIMBER_WOMAN)
         // startLevelScreen(Level.RODENT_MAN)
         // startLevelScreen(Level.FREEZER_MAN)
+        startLevelScreen(Level.GALAXY_MAN)
     }
 
     override fun render() {

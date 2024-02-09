@@ -15,7 +15,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="5" name="specials">
+ <objectgroup id="5" name="specials" visible="0">
   <object id="12" name="RotationAnchor" x="64" y="4416" width="672" height="288">
    <properties>
     <property name="child1" type="object" value="14"/>
@@ -90,7 +90,7 @@
   </object>
  </objectgroup>
  <objectgroup id="8" name="enemies"/>
- <objectgroup id="12" name="backgrounds">
+ <objectgroup id="12" name="backgrounds" visible="0">
   <object id="7" x="0" y="3488" width="512" height="1312">
    <properties>
     <property name="atlas" value="Backgrounds1.txt"/>

@@ -11,7 +11,7 @@ import com.engine.animations.IAnimation
 import com.engine.audio.AudioComponent
 import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
-import com.engine.common.extensions.getTextureRegion
+import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.extensions.objectSetOf
 import com.engine.common.objects.Properties
@@ -49,9 +49,10 @@ class PortalHopper(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, I
 
     companion object {
         const val TAG = "PortalHopper"
-        private var region: TextureRegion? = null
+        private var waitRegion: TextureRegion? = null
+        private var launchRegion: TextureRegion? = null
         private const val PORTAL_HOP_IMPULSE = 35f
-        private const val PORTAL_HOP_DELAY = 0.25f
+        private const val PORTAL_HOP_DELAY = 0.5f
     }
 
     override val eventKeyMask = objectSetOf<Any>(EventType.TELEPORT)
@@ -65,7 +66,11 @@ class PortalHopper(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, I
     private var launch = false
 
     override fun init() {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.SPECIALS_1.source, "PortalHopper")
+        if (waitRegion == null || launchRegion == null) {
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)
+            waitRegion = atlas.findRegion("PortalHopper/Wait")
+            launchRegion = atlas.findRegion("PortalHopper/Launch")
+        }
         addComponent(AudioComponent(this))
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
@@ -191,7 +196,8 @@ class PortalHopper(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, I
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { if (launch) "launch" else "wait" }
         val animations = objectMapOf<String, IAnimation>(
-            "launch" to Animation(region!!, 1, 3, 0.05f, true), "wait" to Animation(region!!, 1, 3, 0.1f, true)
+            "launch" to Animation(launchRegion!!, 1, 3, 0.05f, true),
+            "wait" to Animation(waitRegion!!, 1, 2, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
