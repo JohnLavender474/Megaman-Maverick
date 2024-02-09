@@ -22,5 +22,6 @@ enum class EventType {
     BOSS_SPAWN,
     BOSS_DEAD,
     REQ_SHAKE_CAM,
-    END_LEVEL_SUCCESSFULLY
+    END_LEVEL_SUCCESSFULLY,
+    TELEPORT
 }

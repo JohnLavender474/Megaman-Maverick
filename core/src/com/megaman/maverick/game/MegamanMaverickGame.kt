@@ -39,6 +39,7 @@ import com.engine.motion.MotionSystem
 import com.engine.pathfinding.Pathfinder
 import com.engine.pathfinding.PathfindingSystem
 import com.engine.points.PointsSystem
+import com.engine.screens.levels.tiledmap.builders.TiledMapLayerBuilders
 import com.engine.systems.IGameSystem
 import com.engine.updatables.UpdatablesSystem
 import com.engine.world.WorldSystem
@@ -75,11 +76,8 @@ class MegamanMaverickGame : Game2D() {
         const val DEBUG_TEXT = true
         const val DEBUG_SHAPES = true
         const val DEFAULT_VOLUME = 0.5f
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(
-            PortalHopper.TAG, "standardOnPortalHopperStart()",
-            "standardOnPortalHopperEnd()"
-        )
-        val CONTACT_LISTENER_TAGS: ObjectSet<String> = objectSetOf(CartinJoe.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(PortalHopper.TAG)
+        val CONTACT_LISTENER_TAGS: ObjectSet<String> = objectSetOf()
     }
 
     lateinit var megaman: Megaman

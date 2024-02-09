@@ -6,7 +6,6 @@ object MegamanValues {
     const val START_HEALTH = 14
 
     const val CART_RIDE_MAX_SPEED = 8f
-    const val CART_RIDE_IMPULSE = 50f
     const val CART_JUMP_VEL = 18f
 
     const val CLAMP_X = 15f

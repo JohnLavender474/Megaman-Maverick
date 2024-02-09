@@ -2,7 +2,6 @@ package com.megaman.maverick.game.entities.special
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.engine.animations.Animation
@@ -12,11 +11,12 @@ import com.engine.animations.IAnimation
 import com.engine.audio.AudioComponent
 import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
-import com.engine.common.extensions.getTextureAtlas
+import com.engine.common.extensions.getTextureRegion
 import com.engine.common.extensions.objectMapOf
+import com.engine.common.extensions.objectSetOf
 import com.engine.common.objects.Properties
+import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
-import com.engine.common.shapes.toGameRectangle
 import com.engine.common.time.Timer
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.GameSprite
@@ -27,6 +27,8 @@ import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.ISpriteEntity
+import com.engine.events.Event
+import com.engine.events.IEventListener
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.Body
 import com.engine.world.BodyComponent
@@ -38,34 +40,32 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.ITeleporterEntity
-import com.megaman.maverick.game.entities.utils.getObjectProps
+import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
 class PortalHopper(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEntity, IAnimatedEntity,
-    ITeleporterEntity, IAudioEntity {
+    ITeleporterEntity, IAudioEntity, IEventListener {
 
     companion object {
         const val TAG = "PortalHopper"
-        private var launchRegion: TextureRegion? = null
-        private var waitRegion: TextureRegion? = null
-        private const val PORTAL_HOP_IMPULSE = 35f // 25f
+        private var region: TextureRegion? = null
+        private const val PORTAL_HOP_IMPULSE = 35f
         private const val PORTAL_HOP_DELAY = 0.25f
     }
 
-    private lateinit var destination: RectangleMapObject
+    override val eventKeyMask = objectSetOf<Any>(EventType.TELEPORT)
+
     private lateinit var impulse: Vector2
 
     private val hopQueue = Array<Pair<IBodyEntity, Timer>>()
 
+    private var thisKey = -1
+    private var nextKey = -1
     private var launch = false
 
     override fun init() {
-        if (launchRegion == null || waitRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)
-            launchRegion = atlas.findRegion("PortalHopper/Launch")
-            waitRegion = atlas.findRegion("PortalHopper/Wait")
-        }
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.SPECIALS_1.source, "PortalHopper")
         addComponent(AudioComponent(this))
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
@@ -74,7 +74,10 @@ class PortalHopper(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, I
     }
 
     override fun spawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): props = $spawnProps")
         super.spawn(spawnProps)
+
+        game.eventsMan.addListener(this)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
@@ -88,14 +91,41 @@ class PortalHopper(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, I
             Direction.RIGHT -> Vector2(PORTAL_HOP_IMPULSE, 0f)
         }).scl(ConstVals.PPM.toFloat())
 
-        destination = getObjectProps(spawnProps)[0]
+        thisKey = spawnProps.get(ConstKeys.KEY, Int::class)!!
+        nextKey = spawnProps.get(ConstKeys.NEXT, Int::class)!!
         launch = false
     }
 
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super<GameEntity>.onDestroy()
+        game.eventsMan.removeListener(this)
+    }
+
+    override fun onEvent(event: Event) {
+        GameLogger.debug(TAG, "onEvent(): event=$event")
+        if (event.key == EventType.TELEPORT && event.isProperty(ConstKeys.KEY, thisKey)) {
+            val entity = event.getProperty(ConstKeys.ENTITY, IBodyEntity::class)!!
+            receiveEntity(entity)
+        }
+    }
+
     override fun teleportEntity(entity: IBodyEntity) {
+        GameLogger.debug(TAG, "teleportEntity(): entity=$entity")
+        game.eventsMan.submitEvent(
+            Event(
+                EventType.TELEPORT, props(
+                    ConstKeys.ENTITY to entity, ConstKeys.KEY to nextKey
+                )
+            )
+        )
+    }
+
+    private fun receiveEntity(entity: IBodyEntity) {
+        GameLogger.debug(TAG, "receiveEntity(): entity=$entity")
         launch = true
 
-        val hopPoint = destination.rectangle.toGameRectangle().getTopCenterPoint()
+        val hopPoint = body.getTopCenterPoint()
         entity.body.setBottomCenterToPoint(hopPoint)
 
         val onPortalStart = entity.getProperty(ConstKeys.ON_PORTAL_HOPPER_START) as? () -> Unit
@@ -159,10 +189,9 @@ class PortalHopper(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, I
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { "wait" /* TODO: if (launch) "launch" else "wait" */ }
+        val keySupplier: () -> String? = { if (launch) "launch" else "wait" }
         val animations = objectMapOf<String, IAnimation>(
-            "launch" to Animation(launchRegion!!),
-            "wait" to Animation(waitRegion!!, 1, 2, 0.1f, true)
+            "launch" to Animation(region!!, 1, 3, 0.05f, true), "wait" to Animation(region!!, 1, 3, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

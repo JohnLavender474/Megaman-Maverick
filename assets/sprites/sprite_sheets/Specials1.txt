@@ -1,5 +1,5 @@
 Specials1.png
-size: 576, 56
+size: 672, 56
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
@@ -10,30 +10,37 @@ Cart
   orig: 96, 48
   offset: 0, 0
   index: -1
-PortalHopper/Launch
+PortalHopper
   rotate: false
   xy: 96, 0
+  size: 96, 32
+  orig: 96, 32
+  offset: 0, 0
+  index: -1
+PortalHopper/Launch
+  rotate: false
+  xy: 192, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 PortalHopper/Wait
   rotate: false
-  xy: 128, 0
+  xy: 224, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 SpringBounce
   rotate: false
-  xy: 192, 0
+  xy: 288, 0
   size: 320, 56
   orig: 320, 56
   offset: 0, 0
   index: -1
 SpringBounceStill
   rotate: false
-  xy: 512, 0
+  xy: 608, 0
   size: 64, 56
   orig: 64, 56
   offset: 0, 0
