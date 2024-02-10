@@ -10,6 +10,7 @@ buildscript {
         mavenCentral()
         gradlePluginPortal()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url 'https://jitpack.io' }
         google()
     }
 }
@@ -37,6 +38,7 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
         maven { url "https://jitpack.io" }
     }
+
 }
 
 project(":desktop") {
@@ -44,6 +46,7 @@ project(":desktop") {
 
     dependencies {
         implementation project(":core")
+        implementation "com.github.JohnLavender474:2D-Game-Engine:1.0"
         api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         api "com.badlogicgames.gdx-controllers:gdx-controllers-desktop:$gdxControllersVersion"
@@ -61,7 +64,8 @@ project(":core") {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx-controllers:gdx-controllers-core:$gdxControllersVersion"
         api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        api fileTree(dir: 'libs', include: '*.jar')
+        /* api fileTree(dir: 'libs', include: '*.jar') */
+        implementation "com.github.JohnLavender474:2D-Game-Engine:1.0"
         testImplementation "com.badlogicgames.gdx:gdx:$gdxVersion"
         testImplementation "io.kotest:kotest-runner-junit5-jvm:4.6.0"
         testImplementation "io.kotest:kotest-runner-junit5:4.0.2"

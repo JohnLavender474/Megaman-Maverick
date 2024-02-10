@@ -42,7 +42,7 @@ class Adamski(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         const val TAG = "Adamski"
         private const val SPEED = 3f
         private const val FREQUENCY = 3f
-        private const val AMPLITUDE = 0.05f
+        private const val AMPLITUDE = 0.025f
         private var purpleRegion: TextureRegion? = null
         private var blueRegion: TextureRegion? = null
         private var orangeRegion: TextureRegion? = null
@@ -90,7 +90,7 @@ class Adamski(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.85f * ConstVals.PPM)
+        body.setSize(0.65f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
 

@@ -133,10 +133,10 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 return@Behavior if (isBehaviorActive(BehaviorType.JUMPING)) {
                     val velocity = body.physics.velocity
                     when (directionRotation) {
-                        Direction.UP -> velocity.y >= 0f
-                        Direction.DOWN -> velocity.y <= 0f
-                        Direction.LEFT -> velocity.x <= 0f
-                        Direction.RIGHT -> velocity.x >= 0f
+                        Direction.UP -> velocity.y > 0f
+                        Direction.DOWN -> velocity.y < 0f
+                        Direction.LEFT -> velocity.x < 0f
+                        Direction.RIGHT -> velocity.x > 0f
                     }
                 } else
                     aButtonTask == AButtonTask.JUMP &&
@@ -212,8 +212,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     airDashTimer.isFinished() ||
                     body.isSensingAny(BodySense.FEET_ON_GROUND, BodySense.TELEPORTING) ||
                     isAnyBehaviorActive(BehaviorType.WALL_SLIDING, BehaviorType.CLIMBING, BehaviorType.RIDING_CART)
-                )
-                    return false
+                ) return false
 
                 return if (isBehaviorActive(BehaviorType.AIR_DASHING))
                     game.controllerPoller.isPressed(ControllerButton.A)

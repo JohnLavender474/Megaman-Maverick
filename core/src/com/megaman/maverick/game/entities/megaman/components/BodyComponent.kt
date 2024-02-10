@@ -35,7 +35,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     val playerFixture = Fixture(GameRectangle().setWidth(0.8f * ConstVals.PPM), FixtureType.PLAYER)
     body.addFixture(playerFixture)
     playerFixture.shape.color = Color.WHITE
-    shapes.add { playerFixture.shape }
+    // shapes.add { playerFixture.shape }
 
     // body fixture
     val bodyFixture = Fixture(GameRectangle().setWidth(.8f * ConstVals.PPM), FixtureType.BODY)
@@ -76,7 +76,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
     body.addFixture(leftFixture)
     leftFixture.shape.color = Color.YELLOW
-    // shapes.add { leftFixture.bodyRelativeShape }
+    shapes.add { leftFixture.bodyRelativeShape }
 
     // right fixture
     val rightFixture = Fixture(GameRectangle().setWidth(.2f * ConstVals.PPM), FixtureType.SIDE)
@@ -84,7 +84,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
     body.addFixture(rightFixture)
     rightFixture.shape.color = Color.BLUE
-    // shapes.add { rightFixture.bodyRelativeShape }
+    shapes.add { rightFixture.bodyRelativeShape }
 
     // damageable fixture
     val damageableFixture =
@@ -171,7 +171,6 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
         (playerFixture.shape as Rectangle).set(body)
     })
 
-    // add drawable bounds component
     addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
 
     return BodyComponentCreator.create(this, body)
