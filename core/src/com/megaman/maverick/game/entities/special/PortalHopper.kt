@@ -57,13 +57,15 @@ class PortalHopper(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, I
 
     override val eventKeyMask = objectSetOf<Any>(EventType.TELEPORT)
 
-    private lateinit var impulse: Vector2
+    private lateinit var thisDirection: Direction
+    private lateinit var nextDirection: Direction
 
     private val hopQueue = Array<Pair<IBodyEntity, Timer>>()
 
     private var thisKey = -1
     private var nextKey = -1
     private var launch = false
+    private var rotation = 0f
 
     override fun init() {
         if (waitRegion == null || launchRegion == null) {
@@ -88,17 +90,12 @@ class PortalHopper(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, I
         body.setCenter(spawn)
 
         val directionString = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP.name, String::class)
-        val direction = Direction.valueOf(directionString.uppercase())
-        impulse = (when (direction) {
-            Direction.UP -> Vector2(0f, PORTAL_HOP_IMPULSE)
-            Direction.DOWN -> Vector2(0f, -PORTAL_HOP_IMPULSE)
-            Direction.LEFT -> Vector2(-PORTAL_HOP_IMPULSE, 0f)
-            Direction.RIGHT -> Vector2(PORTAL_HOP_IMPULSE, 0f)
-        }).scl(ConstVals.PPM.toFloat())
+        nextDirection = Direction.valueOf(directionString.uppercase())
 
         thisKey = spawnProps.get(ConstKeys.KEY, Int::class)!!
         nextKey = spawnProps.get(ConstKeys.NEXT, Int::class)!!
         launch = false
+        rotation = spawnProps.getOrDefault(ConstKeys.ROTATION, 0f, Float::class)
     }
 
     override fun onDestroy() {
@@ -111,7 +108,8 @@ class PortalHopper(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, I
         GameLogger.debug(TAG, "onEvent(): event=$event")
         if (event.key == EventType.TELEPORT && event.isProperty(ConstKeys.KEY, thisKey)) {
             val entity = event.getProperty(ConstKeys.ENTITY, IBodyEntity::class)!!
-            receiveEntity(entity)
+            val direction = event.getProperty(ConstKeys.DIRECTION, Direction::class)!!
+            receiveEntity(entity, direction)
         }
     }
 
@@ -120,18 +118,31 @@ class PortalHopper(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, I
         game.eventsMan.submitEvent(
             Event(
                 EventType.TELEPORT, props(
-                    ConstKeys.ENTITY to entity, ConstKeys.KEY to nextKey
+                    ConstKeys.ENTITY to entity, ConstKeys.KEY to nextKey,
+                    ConstKeys.DIRECTION to nextDirection
                 )
             )
         )
     }
 
-    private fun receiveEntity(entity: IBodyEntity) {
+    private fun receiveEntity(entity: IBodyEntity, direction: Direction) {
         GameLogger.debug(TAG, "receiveEntity(): entity=$entity")
+
+        thisDirection = direction
         launch = true
 
-        val hopPoint = body.getTopCenterPoint()
-        entity.body.setBottomCenterToPoint(hopPoint)
+        val hopPoint = when(thisDirection) {
+            Direction.UP -> body.getTopCenterPoint()
+            Direction.DOWN -> body.getBottomCenterPoint()
+            Direction.LEFT -> body.getCenterLeftPoint()
+            Direction.RIGHT -> body.getCenterRightPoint()
+        }
+        when (thisDirection) {
+            Direction.UP -> entity.body.setBottomCenterToPoint(hopPoint)
+            Direction.DOWN -> entity.body.setTopCenterToPoint(hopPoint)
+            Direction.LEFT -> entity.body.setCenterRightToPoint(hopPoint)
+            Direction.RIGHT -> entity.body.setCenterLeftToPoint(hopPoint)
+        }
 
         val onPortalStart = entity.getProperty(ConstKeys.ON_PORTAL_HOPPER_START) as? () -> Unit
         onPortalStart?.invoke()
@@ -156,10 +167,20 @@ class PortalHopper(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, I
 
             if (timer.isFinished()) {
                 GameLogger.debug(TAG, "Timer finished: entity=$entity, timer=$timer")
+
+                requestToPlaySound(SoundAsset.TELEPORT_SOUND, false)
+
                 val onPortalEnd = entity.getProperty(ConstKeys.ON_PORTAL_HOPPER_END) as? () -> Unit
                 onPortalEnd?.invoke()
+
+                val impulse = (when (thisDirection) {
+                    Direction.UP -> Vector2(0f, PORTAL_HOP_IMPULSE)
+                    Direction.DOWN -> Vector2(0f, -PORTAL_HOP_IMPULSE)
+                    Direction.LEFT -> Vector2(-PORTAL_HOP_IMPULSE, 0f)
+                    Direction.RIGHT -> Vector2(PORTAL_HOP_IMPULSE, 0f)
+                }).scl(ConstVals.PPM.toFloat())
                 entity.body.physics.velocity.set(impulse)
-                requestToPlaySound(SoundAsset.TELEPORT_SOUND, false)
+
                 iter.remove()
             }
         }
@@ -188,6 +209,8 @@ class PortalHopper(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, I
             _sprite as GameSprite
             val center = body.getCenter()
             _sprite.setCenter(center.x, center.y)
+            _sprite.setOriginCenter()
+            _sprite.rotation = rotation
         }
 
         return spritesComponent
