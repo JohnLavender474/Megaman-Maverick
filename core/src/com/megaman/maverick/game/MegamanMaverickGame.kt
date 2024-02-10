@@ -39,7 +39,6 @@ import com.engine.motion.MotionSystem
 import com.engine.pathfinding.Pathfinder
 import com.engine.pathfinding.PathfindingSystem
 import com.engine.points.PointsSystem
-import com.engine.screens.levels.tiledmap.builders.TiledMapLayerBuilders
 import com.engine.systems.IGameSystem
 import com.engine.updatables.UpdatablesSystem
 import com.engine.world.WorldSystem
@@ -48,10 +47,9 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.MegaControllerPoller
-import com.megaman.maverick.game.entities.enemies.CartinJoe
+import com.megaman.maverick.game.entities.enemies.Adamski
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.special.PortalHopper
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
@@ -76,7 +74,7 @@ class MegamanMaverickGame : Game2D() {
         const val DEBUG_TEXT = true
         const val DEBUG_SHAPES = true
         const val DEFAULT_VOLUME = 0.5f
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(PortalHopper.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(Adamski.TAG)
         val CONTACT_LISTENER_TAGS: ObjectSet<String> = objectSetOf()
     }
 

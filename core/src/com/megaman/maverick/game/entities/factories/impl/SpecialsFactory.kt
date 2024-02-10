@@ -6,6 +6,7 @@ import com.engine.entities.IGameEntity
 import com.engine.factories.IFactory
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.factories.EntityPoolCreator
+import com.megaman.maverick.game.entities.sensors.FixtureTypeOverlapSpawn
 import com.megaman.maverick.game.entities.special.*
 
 class SpecialsFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntity> {
@@ -19,6 +20,7 @@ class SpecialsFactory(private val game: MegamanMaverickGame) : IFactory<IGameEnt
         const val CART = "Cart"
         const val ROTATION_ANCHOR = "RotationAnchor"
         const val PORTAL_HOPPER = "PortalHopper"
+        const val FIXTURE_TYPE_OVERLAP_SPAWN = "FixtureTypeOverlapSpawn"
     }
 
     private val pools = ObjectMap<Any, Pool<IGameEntity>>()
@@ -32,6 +34,7 @@ class SpecialsFactory(private val game: MegamanMaverickGame) : IFactory<IGameEnt
         pools.put(CART, EntityPoolCreator.create(2) { Cart(game) })
         pools.put(ROTATION_ANCHOR, EntityPoolCreator.create(2) { RotationAnchor(game) })
         pools.put(PORTAL_HOPPER, EntityPoolCreator.create(5) { PortalHopper(game) })
+        pools.put(FIXTURE_TYPE_OVERLAP_SPAWN, EntityPoolCreator.create(5) { FixtureTypeOverlapSpawn(game) })
     }
 
     override fun fetch(key: Any) = pools.get(key)?.fetch()

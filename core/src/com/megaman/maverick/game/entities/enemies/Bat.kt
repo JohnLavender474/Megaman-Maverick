@@ -164,8 +164,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
         val consumer: (Fixture) -> Unit = {
             if (it.fixtureLabel == FixtureType.DAMAGEABLE &&
                 it.getEntity() == getMegamanMaverickGame().megaman
-            )
-                status = BatStatus.FLYING_TO_RETREAT
+            ) status = BatStatus.FLYING_TO_RETREAT
         }
         scannerFixture.setConsumer { _, it -> consumer(it) }
         body.addFixture(scannerFixture)
