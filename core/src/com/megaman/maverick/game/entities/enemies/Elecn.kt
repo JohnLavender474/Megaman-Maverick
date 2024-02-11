@@ -37,6 +37,8 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.damage.DamageNegotiation
+import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
@@ -54,9 +56,7 @@ import kotlin.reflect.KClass
 class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     enum class ElecnState {
-        MOVING,
-        CHARGING,
-        SHOCKING
+        MOVING, CHARGING, SHOCKING
     }
 
     companion object {
@@ -73,21 +73,19 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override var facing = Facing.LEFT
 
-    override val damageNegotiations =
-        objectMapOf<KClass<out IDamager>, Int>(
-            Bullet::class to 5,
-            Fireball::class to 10,
-            ChargedShot::class to 10,
-            ChargedShotExplosion::class to 5
-        )
+    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+        Bullet::class to dmgNeg(10), Fireball::class to dmgNeg(ConstVals.MAX_HEALTH), ChargedShot::class to dmgNeg {
+            it as ChargedShot
+            if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
+        }, ChargedShotExplosion::class to dmgNeg(15)
+    )
 
     private val elecnLoop = Loop(ElecnState.values().toGdxArray(), false)
-    private val elecnTimers =
-        objectMapOf(
-            ElecnState.MOVING to Timer(MOVING_DURATION),
-            ElecnState.CHARGING to Timer(CHARGING_DURATION),
-            ElecnState.SHOCKING to Timer(SHOCKING_DURATION)
-        )
+    private val elecnTimers = objectMapOf(
+        ElecnState.MOVING to Timer(MOVING_DURATION),
+        ElecnState.CHARGING to Timer(CHARGING_DURATION),
+        ElecnState.SHOCKING to Timer(SHOCKING_DURATION)
+    )
     private val elecnTimer: Timer
         get() = elecnTimers[elecnLoop.getCurrent()]!!
 
@@ -144,20 +142,17 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         body.addFixture(bodyFixture)
 
         // damager fixture
-        val damagerFixture =
-            Fixture(GameRectangle().setSize(0.85f * ConstVals.PPM), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(GameRectangle().setSize(0.85f * ConstVals.PPM), FixtureType.DAMAGER)
         body.addFixture(damagerFixture)
 
         // damageable fixture
-        val damageableFixture =
-            Fixture(GameRectangle().setSize(0.85f * ConstVals.PPM), FixtureType.DAMAGEABLE)
+        val damageableFixture = Fixture(GameRectangle().setSize(0.85f * ConstVals.PPM), FixtureType.DAMAGEABLE)
         body.addFixture(damageableFixture)
 
         // side fixture
-        val sideFixture =
-            Fixture(
-                GameRectangle().setSize(0.1f * ConstVals.PPM, 0.1f * ConstVals.PPM), FixtureType.SIDE
-            )
+        val sideFixture = Fixture(
+            GameRectangle().setSize(0.1f * ConstVals.PPM, 0.1f * ConstVals.PPM), FixtureType.SIDE
+        )
         body.addFixture(sideFixture)
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
@@ -171,20 +166,17 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
                 sideFixture.offsetFromBodyCenter.x = 0.5f * ConstVals.PPM
             }
 
-            body.physics.velocity =
-                if (elecnLoop.getCurrent() == ElecnState.SHOCKING) Vector2()
-                else {
-                    val x = X_VEL * ConstVals.PPM * facing.value
-                    val y = Y_VEL * ConstVals.PPM * (if (zigzagUp) 1 else -1)
-                    Vector2(x, y)
-                }
+            body.physics.velocity = if (elecnLoop.getCurrent() == ElecnState.SHOCKING) Vector2()
+            else {
+                val x = X_VEL * ConstVals.PPM * facing.value
+                val y = Y_VEL * ConstVals.PPM * (if (zigzagUp) 1 else -1)
+                Vector2(x, y)
+            }
         })
 
         body.postProcess.put(ConstKeys.DEFAULT, Updatable {
-            if (isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT))
-                facing = Facing.RIGHT
-            else if (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
-                facing = Facing.LEFT
+            if (isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) facing = Facing.RIGHT
+            else if (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)) facing = Facing.LEFT
         })
 
         return BodyComponentCreator.create(this, body)
@@ -213,12 +205,11 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
                 ElecnState.SHOCKING -> "shocking"
             }
         }
-        val animations =
-            objectMapOf<String, IAnimation>(
-                "moving" to Animation(atlas!!.findRegion("Elecn/Elecn1")),
-                "charging" to Animation(atlas!!.findRegion("Elecn/Elecn2"), 1, 2, 0.15f, true),
-                "shocking" to Animation(atlas!!.findRegion("Elecn/Elecn3"))
-            )
+        val animations = objectMapOf<String, IAnimation>(
+            "moving" to Animation(atlas!!.findRegion("Elecn/Elecn1")),
+            "charging" to Animation(atlas!!.findRegion("Elecn/Elecn2"), 1, 2, 0.15f, true),
+            "shocking" to Animation(atlas!!.findRegion("Elecn/Elecn3"))
+        )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }
@@ -234,11 +225,8 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
             val shock = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.ELECTRIC_BALL)!!
             game.gameEngine.spawn(
-                shock,
-                props(
-                    ConstKeys.POSITION to body.getTopCenterPoint(),
-                    ConstKeys.X to xVel,
-                    ConstKeys.Y to yVel
+                shock, props(
+                    ConstKeys.POSITION to body.getTopCenterPoint(), ConstKeys.X to xVel, ConstKeys.Y to yVel
                 )
             )
         }

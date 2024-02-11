@@ -2,7 +2,6 @@ package com.megaman.maverick.game.world
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
-import com.badlogic.gdx.utils.ObjectSet
 import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
 import com.engine.common.enums.ProcessState
@@ -28,7 +27,7 @@ import com.megaman.maverick.game.entities.special.Water
 import com.megaman.maverick.game.utils.VelocityAlterator
 
 @Suppress("UNCHECKED_CAST")
-class MegaContactListener(private val game: MegamanMaverickGame, private val contactTagFilter: ObjectSet<String>) :
+class MegaContactListener(private val game: MegamanMaverickGame, private val contactDebugFilter: (Contact) -> Boolean) :
     IContactListener {
 
     companion object {
@@ -36,9 +35,9 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
     }
 
     private fun printDebugLog(contact: Contact, log: String) {
-        if (contactTagFilter.contains(contact.fixture1.getEntity().getTag()) ||
-            contactTagFilter.contains(contact.fixture2.getEntity().getTag())
-        ) GameLogger.debug(TAG, log)
+        if (contactDebugFilter.invoke(contact)) {
+            GameLogger.debug(TAG, log)
+        }
     }
 
     override fun beginContact(contact: Contact, delta: Float) {

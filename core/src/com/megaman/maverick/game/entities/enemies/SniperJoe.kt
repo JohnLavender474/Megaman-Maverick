@@ -38,6 +38,8 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.damage.DamageNegotiation
+import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
@@ -77,13 +79,12 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
 
     override var facing = Facing.RIGHT
 
-    override val damageNegotiations =
-        objectMapOf<KClass<out IDamager>, Int>(
-            Bullet::class to 5,
-            Fireball::class to 15,
-            ChargedShot::class to 15,
-            ChargedShotExplosion::class to 15
-        )
+    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+        Bullet::class to dmgNeg(10), Fireball::class to dmgNeg(ConstVals.MAX_HEALTH), ChargedShot::class to dmgNeg {
+            it as ChargedShot
+            if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
+        }, ChargedShotExplosion::class to dmgNeg(15)
+    )
 
     override var directionRotation: Direction
         get() = body.cardinalRotation

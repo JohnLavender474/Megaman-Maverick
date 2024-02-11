@@ -30,6 +30,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.VelocityAlterationType
@@ -58,7 +59,7 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override var facing = Facing.RIGHT
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, Int>()
+    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>()
 
     val bouncing: Boolean
         get() = !bounceTimer.isFinished()

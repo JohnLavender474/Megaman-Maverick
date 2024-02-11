@@ -43,6 +43,8 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.damage.DamageNegotiation
+import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
@@ -71,15 +73,14 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpriteEntity,
     }
 
     override var facing = Facing.RIGHT
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, Int>(
-        Bullet::class to 15,
-        Fireball::class to ConstVals.MAX_HEALTH,
-        ChargedShot::class to ConstVals.MAX_HEALTH,
-        ChargedShotExplosion::class to ConstVals.MAX_HEALTH
+    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+        Bullet::class to dmgNeg(10), Fireball::class to dmgNeg(ConstVals.MAX_HEALTH), ChargedShot::class to dmgNeg {
+            it as ChargedShot
+            if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
+        }, ChargedShotExplosion::class to dmgNeg(ConstVals.MAX_HEALTH)
     )
 
-    val shooting: Boolean
-        get() = !shootTimer.isFinished()
+    val shooting: Boolean get() = !shootTimer.isFinished()
 
     override var directionRotation = Direction.UP
 
@@ -140,8 +141,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpriteEntity,
         val bodyFixture =
             Fixture(GameRectangle().setSize(1.25f * ConstVals.PPM, 1.85f * ConstVals.PPM), FixtureType.BODY)
         body.addFixture(bodyFixture)
-        bodyFixture.shape.color = Color.GRAY
-        // debugShapes.add { bodyFixture.shape }
+        bodyFixture.shape.color = Color.GRAY // debugShapes.add { bodyFixture.shape }
 
         // shield fixture
         val shieldFixture =
@@ -155,8 +155,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpriteEntity,
         val damagerFixture =
             Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat(), 1.25f * ConstVals.PPM), FixtureType.DAMAGER)
         body.addFixture(damagerFixture)
-        damagerFixture.shape.color = Color.RED
-        // debugShapes.add { damagerFixture.shape }
+        damagerFixture.shape.color = Color.RED // debugShapes.add { damagerFixture.shape }
 
         // damageable fixture
         val damageableFixture =
@@ -171,8 +170,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpriteEntity,
             Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM), FixtureType.FEET)
         feetFixture.offsetFromBodyCenter.y = -0.6f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.shape.color = Color.GREEN
-        // debugShapes.add { feetFixture.shape }
+        feetFixture.shape.color = Color.GREEN // debugShapes.add { feetFixture.shape }
 
         val onBounce: () -> Unit = {
             swapFacing()
@@ -180,8 +178,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpriteEntity,
         }
 
         // left fixture
-        val leftFixture =
-            Fixture(GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM), FixtureType.SIDE)
+        val leftFixture = Fixture(GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM), FixtureType.SIDE)
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         leftFixture.setRunnable(onBounce)
         leftFixture.offsetFromBodyCenter.x = -0.75f * ConstVals.PPM
@@ -230,39 +227,32 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpriteEntity,
             if (shooting) "shoot" else "move"
         }
         val animations = objectMapOf<String, IAnimation>(
-            "shoot" to Animation(shootRegion!!, 1, 2, 0.1f, true),
-            "move" to Animation(moveRegion!!, 1, 2, 0.1f, true)
+            "shoot" to Animation(shootRegion!!, 1, 2, 0.1f, true), "move" to Animation(moveRegion!!, 1, 2, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }
 
     private fun shoot() {
-        @Suppress("DuplicatedCode") val spawn =
-            (when (directionRotation) {
-                Direction.UP -> Vector2(0.25f * facing.value, 0.15f)
-                Direction.DOWN -> Vector2(0.25f * facing.value, -0.15f)
-                Direction.LEFT -> Vector2(-0.2f, 0.25f * facing.value)
-                Direction.RIGHT -> Vector2(0.2f, 0.25f * facing.value)
-            })
-                .scl(ConstVals.PPM.toFloat())
-                .add(body.getCenter())
+        @Suppress("DuplicatedCode") val spawn = (when (directionRotation) {
+            Direction.UP -> Vector2(0.25f * facing.value, 0.15f)
+            Direction.DOWN -> Vector2(0.25f * facing.value, -0.15f)
+            Direction.LEFT -> Vector2(-0.2f, 0.25f * facing.value)
+            Direction.RIGHT -> Vector2(0.2f, 0.25f * facing.value)
+        }).scl(ConstVals.PPM.toFloat()).add(body.getCenter())
 
         val trajectory = Vector2()
-        if (isDirectionRotatedVertically())
-            trajectory.set(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
+        if (isDirectionRotatedVertically()) trajectory.set(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
         else trajectory.set(0f, BULLET_SPEED * ConstVals.PPM * facing.value)
 
-        val props =
-            props(
-                ConstKeys.OWNER to this,
-                ConstKeys.POSITION to spawn,
-                ConstKeys.TRAJECTORY to trajectory,
-                ConstKeys.DIRECTION to directionRotation
-            )
+        val props = props(
+            ConstKeys.OWNER to this,
+            ConstKeys.POSITION to spawn,
+            ConstKeys.TRAJECTORY to trajectory,
+            ConstKeys.DIRECTION to directionRotation
+        )
 
-        val entity: IGameEntity =
-            EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
+        val entity: IGameEntity = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
 
         requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
 

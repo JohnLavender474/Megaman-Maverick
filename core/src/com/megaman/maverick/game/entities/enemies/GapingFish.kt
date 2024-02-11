@@ -34,6 +34,8 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.damage.DamageNegotiation
+import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.megaman.Megaman
@@ -59,13 +61,12 @@ class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override var facing = Facing.RIGHT
 
-    override val damageNegotiations =
-        objectMapOf<KClass<out IDamager>, Int>(
-            Bullet::class to 10,
-            Fireball::class to 15,
-            ChargedShot::class to ConstVals.MAX_HEALTH,
-            ChargedShotExplosion::class to 15
-        )
+    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+        Bullet::class to dmgNeg(10),
+        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class to dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShotExplosion::class to dmgNeg(15)
+    )
 
     val chomping: Boolean
         get() = !chompTimer.isFinished()
@@ -104,11 +105,9 @@ class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val shapes = Array<() -> IDrawableShape?>()
 
         // water-listener fixture
-        val waterListenerFixture =
-            Fixture(
-                GameRectangle().setSize(ConstVals.PPM.toFloat(), ConstVals.PPM / 2f),
-                FixtureType.WATER_LISTENER
-            )
+        val waterListenerFixture = Fixture(
+            GameRectangle().setSize(ConstVals.PPM.toFloat(), ConstVals.PPM / 2f), FixtureType.WATER_LISTENER
+        )
         waterListenerFixture.offsetFromBodyCenter.y = ConstVals.PPM / 4f
         body.addFixture(waterListenerFixture)
         shapes.add { waterListenerFixture.shape }
@@ -161,10 +160,7 @@ class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         updatablesComponent.add {
             GameLogger.debug(
                 TAG,
-                "GapingFish update. In water = ${body.isSensing(BodySense.IN_WATER)}. " +
-                        "Invincible = $invincible. " +
-                        "Chomping = $chomping. " +
-                        "Position = ${body.getPosition()}"
+                "GapingFish update. In water = ${body.isSensing(BodySense.IN_WATER)}. " + "Invincible = $invincible. " + "Chomping = $chomping. " + "Position = ${body.getPosition()}"
             )
 
             chompTimer.update(it)
@@ -190,12 +186,11 @@ class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val keySupplier: () -> String = {
             if (chomping) "chomp" else if (invincible) "gaping" else "swimming"
         }
-        val animations =
-            objectMapOf<String, IAnimation>(
-                "chomp" to Animation(atlas!!.findRegion("GapingFish/Chomping"), 1, 2, 0.1f),
-                "gaping" to Animation(atlas!!.findRegion("GapingFish/Gaping"), 1, 2, 0.15f),
-                "swimming" to Animation(atlas!!.findRegion("GapingFish/Swimming"), 1, 2, 0.15f)
-            )
+        val animations = objectMapOf<String, IAnimation>(
+            "chomp" to Animation(atlas!!.findRegion("GapingFish/Chomping"), 1, 2, 0.1f),
+            "gaping" to Animation(atlas!!.findRegion("GapingFish/Gaping"), 1, 2, 0.15f),
+            "swimming" to Animation(atlas!!.findRegion("GapingFish/Swimming"), 1, 2, 0.15f)
+        )
         return AnimationsComponent(this, Animator(keySupplier, animations))
     }
 }

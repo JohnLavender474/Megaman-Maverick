@@ -33,6 +33,8 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.damage.DamageNegotiation
+import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
@@ -55,13 +57,12 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         private var atlas: TextureAtlas? = null
     }
 
-    override val damageNegotiations =
-        objectMapOf<KClass<out IDamager>, Int>(
-            Bullet::class to 5,
-            Fireball::class to ConstVals.MAX_HEALTH,
-            ChargedShot::class to 10,
-            ChargedShotExplosion::class to 5
-        )
+    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+        Bullet::class to dmgNeg(5), Fireball::class to dmgNeg(ConstVals.MAX_HEALTH), ChargedShot::class to dmgNeg {
+            it as ChargedShot
+            if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
+        }, ChargedShotExplosion::class to dmgNeg(5)
+    )
 
     override var facing = Facing.RIGHT
 
@@ -93,8 +94,7 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         debugShapes.add { bodyFixture.shape }
 
         // feet fixture
-        val feetFixture =
-            Fixture(GameRectangle().setSize(ConstVals.PPM / 4f, 0.2f * ConstVals.PPM), FixtureType.FEET)
+        val feetFixture = Fixture(GameRectangle().setSize(ConstVals.PPM / 4f, 0.2f * ConstVals.PPM), FixtureType.FEET)
         feetFixture.offsetFromBodyCenter.y = -0.5f * ConstVals.PPM
         body.addFixture(feetFixture)
         feetFixture.shape.color = Color.GREEN
@@ -103,20 +103,17 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         // TODO: create head fixture, bounce megaman as reference to DK Country rat boss!
 
         // damageable fixture
-        val damageableFixture =
-            Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat()), FixtureType.DAMAGEABLE)
+        val damageableFixture = Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat()), FixtureType.DAMAGEABLE)
         body.addFixture(damageableFixture)
 
         // damager fixture
-        val damagerFixture =
-            Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat()), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat()), FixtureType.DAMAGER)
         body.addFixture(damagerFixture)
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
-            body.physics.gravity.y =
-                ConstVals.PPM * (if (body.isSensing(BodySense.FEET_ON_GROUND)) G_GRAV else GRAV)
+            body.physics.gravity.y = ConstVals.PPM * (if (body.isSensing(BodySense.FEET_ON_GROUND)) G_GRAV else GRAV)
         })
 
         return BodyComponentCreator.create(this, body)
@@ -156,12 +153,10 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val keySupplier: () -> String? = {
             if (body.isSensing(BodySense.FEET_ON_GROUND)) "Stand" else "Jump"
         }
-        val animations =
-            objectMapOf<String, IAnimation>(
-                "Stand" to
-                        Animation(atlas!!.findRegion("Ratton/Stand"), 1, 2, gdxArrayOf(0.5f, 0.15f), true),
-                "Jump" to Animation(atlas!!.findRegion("Ratton/Jump"), 1, 2, 0.1f, false)
-            )
+        val animations = objectMapOf<String, IAnimation>(
+            "Stand" to Animation(atlas!!.findRegion("Ratton/Stand"), 1, 2, gdxArrayOf(0.5f, 0.15f), true),
+            "Jump" to Animation(atlas!!.findRegion("Ratton/Jump"), 1, 2, 0.1f, false)
+        )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }

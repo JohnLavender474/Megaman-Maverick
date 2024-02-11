@@ -28,6 +28,8 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
+import com.megaman.maverick.game.damage.DamageNegotiation
+import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.enemies.*
@@ -65,42 +67,42 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
     internal val damageRecoveryTimer = Timer(MegamanValues.DAMAGE_RECOVERY_TIME).setToEnd()
     internal val damageFlashTimer = Timer(MegamanValues.DAMAGE_FLASH_DURATION)
 
-    internal val dmgNegotations = objectMapOf<KClass<out IDamager>, Int>(
-        Bullet::class to 2,
-        ChargedShot::class to 4,
-        Bat::class to 2,
-        Met::class to 2,
-        DragonFly::class to 3,
-        FloatingCan::class to 2,
-        FlyBoy::class to 3,
-        GapingFish::class to 2,
-        SpringHead::class to 3,
-        SuctionRoller::class to 2,
-        MagFly::class to 3,
-        Explosion::class to 2,
-        JoeBall::class to 3,
-        Snowball::class to 3,
-        SnowballExplosion::class to 1,
-        SwinginJoe::class to 2,
-        SniperJoe::class to 3,
-        ShieldAttacker::class to 4,
-        Penguin::class to 3,
-        Hanabiran::class to 3,
-        Petal::class to 3,
-        CaveRock::class to 3,
-        CaveRocker::class to 3,
-        CaveRockExplosion::class to 2,
-        Elecn::class to 3,
-        ElectricBall::class to 3,
-        Ratton::class to 2,
-        PicketJoe::class to 3,
-        Picket::class to 3,
-        LaserBeamer::class to 3,
-        CartinJoe::class to 3,
-        Bolt::class to 3,
-        ElectrocutieChild::class to 3,
-        Togglee::class to 3,
-        Eyee::class to 3
+    private val dmgNegotations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+        Bullet::class to dmgNeg(2),
+        ChargedShot::class to dmgNeg(4),
+        Bat::class to dmgNeg(2),
+        Met::class to dmgNeg(2),
+        DragonFly::class to dmgNeg(3),
+        FloatingCan::class to dmgNeg(2),
+        FlyBoy::class to dmgNeg(3),
+        GapingFish::class to dmgNeg(2),
+        SpringHead::class to dmgNeg(3),
+        SuctionRoller::class to dmgNeg(2),
+        MagFly::class to dmgNeg(3),
+        Explosion::class to dmgNeg(2),
+        JoeBall::class to dmgNeg(3),
+        Snowball::class to dmgNeg(3),
+        SnowballExplosion::class to dmgNeg(1),
+        SwinginJoe::class to dmgNeg(2),
+        SniperJoe::class to dmgNeg(3),
+        ShieldAttacker::class to dmgNeg(4),
+        Penguin::class to dmgNeg(3),
+        Hanabiran::class to dmgNeg(3),
+        Petal::class to dmgNeg(3),
+        CaveRock::class to dmgNeg(3),
+        CaveRocker::class to dmgNeg(3),
+        CaveRockExplosion::class to dmgNeg(2),
+        Elecn::class to dmgNeg(3),
+        ElectricBall::class to dmgNeg(3),
+        Ratton::class to dmgNeg(2),
+        PicketJoe::class to dmgNeg(3),
+        Picket::class to dmgNeg(3),
+        LaserBeamer::class to dmgNeg(3),
+        CartinJoe::class to dmgNeg(3),
+        Bolt::class to dmgNeg(3),
+        ElectrocutieChild::class to dmgNeg(3),
+        Togglee::class to dmgNeg(3),
+        Eyee::class to dmgNeg(3),
     )
 
     internal val noDmgBounce = objectSetOf<Any>(SpringHead::class)
@@ -362,9 +364,9 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
                 (if (enemyBody.x > body.x) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
             body.physics.velocity.y = MegamanValues.DMG_Y * ConstVals.PPM
         }
-        val dmgNeg = dmgNegotations.get(damager::class) ?: -1
+        val damage = dmgNegotations.get(damager::class).get(damager)
         damageTimer.reset()
-        addHealth(-dmgNeg)
+        addHealth(-damage)
         requestToPlaySound(SoundAsset.MEGAMAN_DAMAGE_SOUND, true)
         stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
         return true

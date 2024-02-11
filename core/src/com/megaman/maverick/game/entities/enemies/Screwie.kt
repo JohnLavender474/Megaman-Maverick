@@ -34,6 +34,8 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.damage.DamageNegotiation
+import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
@@ -56,13 +58,12 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
         private const val BULLET_VEL = 10f
     }
 
-    override val damageNegotiations =
-        objectMapOf<KClass<out IDamager>, Int>(
-            Bullet::class to 10,
-            Fireball::class to ConstVals.MAX_HEALTH,
-            ChargedShot::class to 10,
-            ChargedShotExplosion::class to 5
-        )
+    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+        Bullet::class to dmgNeg(10), Fireball::class to dmgNeg(ConstVals.MAX_HEALTH), ChargedShot::class to dmgNeg {
+            it as ChargedShot
+            if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
+        }, ChargedShotExplosion::class to dmgNeg(15)
+    )
 
     private val downTimer = Timer(DOWN_DUR)
     private val riseTimer = Timer(RISE_DROP_DUR)

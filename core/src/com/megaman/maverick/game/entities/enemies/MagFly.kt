@@ -29,6 +29,8 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.damage.DamageNegotiation
+import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
@@ -53,13 +55,12 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         private var magFlyReg: TextureRegion? = null
     }
 
-    override val damageNegotiations =
-        objectMapOf<KClass<out IDamager>, Int>(
-            Bullet::class to 5,
-            Fireball::class to 15,
-            ChargedShot::class to 15,
-            ChargedShotExplosion::class to 15
-        )
+    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+        Bullet::class to dmgNeg(15),
+        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class to dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShotExplosion::class to dmgNeg(ConstVals.MAX_HEALTH)
+    )
 
     override var facing = Facing.RIGHT
 
@@ -69,8 +70,7 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override fun init() {
         super.init()
-        if (magFlyReg == null)
-            magFlyReg = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, "MagFly")
+        if (magFlyReg == null) magFlyReg = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, "MagFly")
         addComponent(defineAnimationsComponent())
     }
 
@@ -111,17 +111,14 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         shapes.add { rightFixture.shape }
 
         // force fixture
-        forceFixture =
-            Fixture(
-                GameRectangle().setSize(ConstVals.PPM / 2f, ConstVals.VIEW_HEIGHT * ConstVals.PPM),
-                FixtureType.FORCE
-            )
+        forceFixture = Fixture(
+            GameRectangle().setSize(ConstVals.PPM / 2f, ConstVals.VIEW_HEIGHT * ConstVals.PPM), FixtureType.FORCE
+        )
         forceFixture.offsetFromBodyCenter.y = -ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f
         forceFixture.setVelocityAlteration { fixture, _ ->
             val entity = fixture.getEntity()
 
-            if (entity is AbstractEnemy || (entity is Megaman && entity.damaged))
-                return@setVelocityAlteration VelocityAlteration.addNone()
+            if (entity is AbstractEnemy || (entity is Megaman && entity.damaged)) return@setVelocityAlteration VelocityAlteration.addNone()
 
             if (entity is IProjectileEntity) entity.owner = null
 
@@ -136,16 +133,14 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         shapes.add { forceFixture.shape }
 
         // damageable fixture
-        val damageableFixture =
-            Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat()), FixtureType.DAMAGEABLE)
+        val damageableFixture = Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat()), FixtureType.DAMAGEABLE)
         body.addFixture(damageableFixture)
 
         damageableFixture.shape.color = Color.PURPLE
         shapes.add { damageableFixture.shape }
 
         // damager fixture
-        val damagerFixture =
-            Fixture(GameRectangle().setSize(0.85f * ConstVals.PPM), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(GameRectangle().setSize(0.85f * ConstVals.PPM), FixtureType.DAMAGER)
         body.addFixture(damagerFixture)
 
         damagerFixture.shape.color = Color.RED
@@ -181,16 +176,14 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             val megaman = getMegamanMaverickGame().megaman
             val slow = megaman.body.overlaps(forceFixture.shape as Rectangle)
 
-            if (!slow && megaman.body.y < body.y && !facingAndMMDirMatch())
-                facing = if (megaman.body.x > body.x) Facing.RIGHT else Facing.LEFT
+            if (!slow && megaman.body.y < body.y && !facingAndMMDirMatch()) facing =
+                if (megaman.body.x > body.x) Facing.RIGHT else Facing.LEFT
 
-            if ((facing == Facing.LEFT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
-                (facing == Facing.RIGHT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
-            )
-                body.physics.velocity.x = 0f
-            else
-                body.physics.velocity.x =
-                    (if (slow) X_VEL_SLOW else X_VEL_NORMAL) * ConstVals.PPM * facing.value
+            if ((facing == Facing.LEFT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) || (facing == Facing.RIGHT && body.isSensing(
+                    BodySense.SIDE_TOUCHING_BLOCK_RIGHT
+                ))
+            ) body.physics.velocity.x = 0f
+            else body.physics.velocity.x = (if (slow) X_VEL_SLOW else X_VEL_NORMAL) * ConstVals.PPM * facing.value
         }
     }
 
@@ -201,6 +194,5 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     }
 
     private fun facingAndMMDirMatch() =
-        (getMegamanMaverickGame().megaman.body.x > body.x && facing == Facing.RIGHT) ||
-                (getMegamanMaverickGame().megaman.body.x < body.x && facing == Facing.LEFT)
+        (getMegamanMaverickGame().megaman.body.x > body.x && facing == Facing.RIGHT) || (getMegamanMaverickGame().megaman.body.x < body.x && facing == Facing.LEFT)
 }

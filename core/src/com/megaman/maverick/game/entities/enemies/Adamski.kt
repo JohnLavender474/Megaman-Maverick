@@ -31,6 +31,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
@@ -42,13 +43,13 @@ class Adamski(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         const val TAG = "Adamski"
         private const val SPEED = 3f
         private const val FREQUENCY = 3f
-        private const val AMPLITUDE = 0.025f
+        private const val AMPLITUDE = -0.025f
         private var purpleRegion: TextureRegion? = null
         private var blueRegion: TextureRegion? = null
         private var orangeRegion: TextureRegion? = null
     }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, Int>(
+    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
 
     )
 
@@ -75,8 +76,12 @@ class Adamski(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         type = spawnProps.getOrDefault(ConstKeys.TYPE, 0, Int::class)
 
         val left = spawnProps.getOrDefault(ConstKeys.LEFT, megaman.body.x <= body.x, Boolean::class)
+        val flip = spawnProps.getOrDefault(ConstKeys.FLIP, false, Boolean::class)
         val motion = SineWave(
-            body.getCenter(), (if (left) -SPEED else SPEED) * ConstVals.PPM, AMPLITUDE * ConstVals.PPM, FREQUENCY
+            body.getCenter(),
+            (if (left) -SPEED else SPEED) * ConstVals.PPM,
+            AMPLITUDE * ConstVals.PPM * if (flip) -1f else 1f,
+            FREQUENCY
         )
         putMotionDefinition("sineWave", MotionDefinition(motion, { position, _ ->
             body.setCenter(position)

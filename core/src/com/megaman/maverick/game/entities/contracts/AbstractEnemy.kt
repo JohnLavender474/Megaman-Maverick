@@ -27,6 +27,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
@@ -65,7 +66,7 @@ abstract class AbstractEnemy(
     protected val megaman: Megaman
         get() = getMegamanMaverickGame().megaman
 
-    protected abstract val damageNegotiations: ObjectMap<KClass<out IDamager>, Int>
+    protected abstract val damageNegotiations: ObjectMap<KClass<out IDamager>, DamageNegotiation>
 
     protected val damageTimer = Timer(DEFAULT_DMG_DURATION)
     protected val damageBlinkTimer = Timer(DEFAULT_DMG_BLINK_DUR)
@@ -152,7 +153,7 @@ abstract class AbstractEnemy(
 
         damageTimer.reset()
 
-        val damage = damageNegotiations[damagerKey]
+        val damage = damageNegotiations[damagerKey].get(damager)
         getHealthPoints().translate(-damage)
         requestToPlaySound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
         return true

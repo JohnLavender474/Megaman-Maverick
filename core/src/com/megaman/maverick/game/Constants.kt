@@ -15,6 +15,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val FLIP = "flip"
     const val NEXT = "next"
     const val STOP = "stop"
     const val ON_PORTAL_HOPPER_START = "on_portal_start"

@@ -26,6 +26,8 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.damage.DamageNegotiation
+import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
@@ -50,18 +52,17 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override var facing = Facing.RIGHT
 
-    override val damageNegotiations =
-        objectMapOf<KClass<out IDamager>, Int>(
-            Bullet::class to 10,
-            Fireball::class to ConstVals.MAX_HEALTH,
-            ChargedShot::class to 10,
-            ChargedShotExplosion::class to 5
-        )
+    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+        Bullet::class to dmgNeg(10), Fireball::class to dmgNeg(ConstVals.MAX_HEALTH), ChargedShot::class to dmgNeg {
+            it as ChargedShot
+            if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
+        }, ChargedShotExplosion::class to dmgNeg(15)
+    )
 
     override fun init() {
         super.init()
-        if (matasaburoReg == null)
-            matasaburoReg = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, "Matasaburo")
+        if (matasaburoReg == null) matasaburoReg =
+            game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, "Matasaburo")
         addComponent(defineAnimationsComponent())
     }
 
@@ -76,10 +77,9 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         body.setSize(ConstVals.PPM.toFloat())
 
         // blow fixture
-        val blowFixture =
-            Fixture(
-                GameRectangle().setSize(10f * ConstVals.PPM, 1.15f * ConstVals.PPM), FixtureType.FORCE
-            )
+        val blowFixture = Fixture(
+            GameRectangle().setSize(10f * ConstVals.PPM, 1.15f * ConstVals.PPM), FixtureType.FORCE
+        )
         blowFixture.setVelocityAlteration { fixture, _ ->
             val entity = fixture.getEntity()
             if (entity is AbstractEnemy) return@setVelocityAlteration VelocityAlteration.addNone()
@@ -90,13 +90,11 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         body.addFixture(blowFixture)
 
         // damager fixture
-        val damagerFixture =
-            Fixture(GameRectangle().setSize(0.85f * ConstVals.PPM), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(GameRectangle().setSize(0.85f * ConstVals.PPM), FixtureType.DAMAGER)
         body.addFixture(damagerFixture)
 
         // damageable fixture
-        val damageableFixture =
-            Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat()), FixtureType.DAMAGEABLE)
+        val damageableFixture = Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat()), FixtureType.DAMAGEABLE)
         body.addFixture(damageableFixture)
 
         // pre-process

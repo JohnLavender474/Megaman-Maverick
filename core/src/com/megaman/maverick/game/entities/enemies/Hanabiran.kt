@@ -33,6 +33,8 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.damage.DamageNegotiation
+import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
@@ -75,11 +77,11 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game) {
     private lateinit var state: HanabiranState
 
     override val damageNegotiations =
-        objectMapOf<KClass<out IDamager>, Int>(
-            Bullet::class to 10,
-            Fireball::class to ConstVals.MAX_HEALTH,
-            ChargedShot::class to ConstVals.MAX_HEALTH,
-            ChargedShotExplosion::class to ConstVals.MAX_HEALTH
+        objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+            Bullet::class to dmgNeg(10),
+            Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
+            ChargedShot::class to dmgNeg(ConstVals.MAX_HEALTH),
+            ChargedShotExplosion::class to dmgNeg(ConstVals.MAX_HEALTH)
         )
 
     override fun init() {

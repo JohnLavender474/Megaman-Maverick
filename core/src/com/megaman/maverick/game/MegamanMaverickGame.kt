@@ -41,15 +41,16 @@ import com.engine.pathfinding.PathfindingSystem
 import com.engine.points.PointsSystem
 import com.engine.systems.IGameSystem
 import com.engine.updatables.UpdatablesSystem
+import com.engine.world.Contact
 import com.engine.world.WorldSystem
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.MegaControllerPoller
-import com.megaman.maverick.game.entities.enemies.Adamski
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
@@ -73,9 +74,11 @@ class MegamanMaverickGame : Game2D() {
         const val TAG = "MegamanMaverickGame"
         const val DEBUG_TEXT = true
         const val DEBUG_SHAPES = true
-        const val DEFAULT_VOLUME = 0.5f
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(Adamski.TAG)
-        val CONTACT_LISTENER_TAGS: ObjectSet<String> = objectSetOf()
+        const val DEFAULT_VOLUME = 0f
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(MegaContactListener.TAG, MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG)
+        val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
+            contact.fixturesMatch(FixtureType.SIDE, FixtureType.BLOCK)
+        }
     }
 
     lateinit var megaman: Megaman
@@ -166,9 +169,9 @@ class MegamanMaverickGame : Game2D() {
         // startLevelScreen(Level.TEST5)
         // setCurrentScreen(ScreenEnum.MAIN.name)
         // startLevelScreen(Level.TIMBER_WOMAN)
-        // startLevelScreen(Level.RODENT_MAN)
+        startLevelScreen(Level.RODENT_MAN)
         // startLevelScreen(Level.FREEZER_MAN)
-        startLevelScreen(Level.GALAXY_MAN)
+        // startLevelScreen(Level.GALAXY_MAN)
     }
 
     override fun render() {
@@ -259,7 +262,7 @@ class MegamanMaverickGame : Game2D() {
                 AnimationsSystem(),
                 BehaviorsSystem(),
                 WorldSystem(
-                    MegaContactListener(this, CONTACT_LISTENER_TAGS),
+                    MegaContactListener(this, CONTACT_LISTENER_DEBUG_FILTER),
                     { getGraphMap() },
                     ConstVals.FIXED_TIME_STEP,
                     MegaCollisionHandler(this),

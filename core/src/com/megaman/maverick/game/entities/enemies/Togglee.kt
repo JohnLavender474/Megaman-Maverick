@@ -35,6 +35,8 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.damage.DamageNegotiation
+import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
@@ -64,11 +66,11 @@ class Togglee(game: MegamanMaverickGame) : AbstractEnemy(game, cullWhenOutOfCamB
         private const val SWITCH_DURATION = 0.45f
     }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, Int>(
-        Bullet::class to 5,
-        Fireball::class to 10,
-        ChargedShot::class to 10,
-        ChargedShotExplosion::class to 5
+    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+        Bullet::class to dmgNeg(10), Fireball::class to dmgNeg(ConstVals.MAX_HEALTH), ChargedShot::class to dmgNeg {
+            it as ChargedShot
+            if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
+        }, ChargedShotExplosion::class to dmgNeg(15)
     )
     override val invincible: Boolean
         get() = super.invincible || moving

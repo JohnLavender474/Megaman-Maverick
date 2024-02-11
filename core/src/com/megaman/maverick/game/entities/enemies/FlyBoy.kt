@@ -30,6 +30,8 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.damage.DamageNegotiation
+import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
@@ -52,13 +54,12 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         const val G_GRAV = -.015f
     }
 
-    override val damageNegotiations =
-        objectMapOf<KClass<out IDamager>, Int>(
-            Bullet::class to 5,
-            Fireball::class to 10,
-            ChargedShot::class to 10,
-            ChargedShotExplosion::class to 5
-        )
+    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+        Bullet::class to dmgNeg(5), Fireball::class to dmgNeg(10), ChargedShot::class to dmgNeg {
+            it as ChargedShot
+            if (it.fullyCharged) 15 else 10
+        }, ChargedShotExplosion::class to dmgNeg(5)
+    )
 
     override var facing = Facing.RIGHT
 
@@ -117,11 +118,9 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         shapes.add { headFixture.shape }
 
         // damager fixture
-        val damagerFixture =
-            Fixture(
-                GameRectangle().setSize(0.8f * ConstVals.PPM, 1.5f * ConstVals.PPM),
-                FixtureType.DAMAGER
-            )
+        val damagerFixture = Fixture(
+            GameRectangle().setSize(0.8f * ConstVals.PPM, 1.5f * ConstVals.PPM), FixtureType.DAMAGER
+        )
         body.addFixture(damagerFixture)
         damagerFixture.shape.color = Color.RED
         shapes.add { damagerFixture.shape }
@@ -135,8 +134,7 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         // pre-process
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             body.physics.gravityOn = standing
-            body.physics.gravity.y =
-                (if (body.isSensing(BodySense.FEET_ON_GROUND)) G_GRAV else GRAV) * ConstVals.PPM
+            body.physics.gravity.y = (if (body.isSensing(BodySense.FEET_ON_GROUND)) G_GRAV else GRAV) * ConstVals.PPM
         })
 
         addComponent(DrawableShapesComponent(this, shapes))
@@ -186,11 +184,10 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
-        val animations =
-            objectMapOf<String, IAnimation>(
-                "fly" to Animation(atlas.findRegion("FlyBoy/Fly"), 1, 4, 0.05f),
-                "stand" to Animation(atlas.findRegion("FlyBoy/Stand"))
-            )
+        val animations = objectMapOf<String, IAnimation>(
+            "fly" to Animation(atlas.findRegion("FlyBoy/Fly"), 1, 4, 0.05f),
+            "stand" to Animation(atlas.findRegion("FlyBoy/Stand"))
+        )
         val keySupplier = { if (flying) "fly" else "stand" }
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
