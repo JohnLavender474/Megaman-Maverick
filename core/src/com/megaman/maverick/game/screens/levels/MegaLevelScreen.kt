@@ -223,12 +223,6 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
         // add this screen as an event listener
         eventsMan.addListener(this)
 
-        // reset positions of cameras
-        backgroundCamera.position.set(ConstFuncs.getCamInitPos())
-        gameCamera.position.set(ConstFuncs.getCamInitPos())
-        foregroundCamera.position.set(ConstFuncs.getCamInitPos())
-        uiCamera.position.set(ConstFuncs.getCamInitPos())
-
         // set all systems to on
         engine.systems.forEach { it.on = true }
 
@@ -289,6 +283,12 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
         // add the level dispose logic to the disposables array
         val _disposables = result.get(ConstKeys.DISPOSABLES) as Array<Disposable>? ?: Array()
         disposables.addAll(_disposables)
+
+        // reset positions of cameras
+        backgroundCamera.position.set(ConstFuncs.getCamInitPos())
+        gameCamera.position.set(ConstFuncs.getCamInitPos())
+        foregroundCamera.position.set(ConstFuncs.getCamInitPos())
+        uiCamera.position.set(ConstFuncs.getCamInitPos())
     }
 
     override fun onEvent(event: Event) {

@@ -41,7 +41,7 @@ class MainScreen(game: MegamanMaverickGame) :
     enum class MainScreenSettingsButton(val text: String) {
         BACK("BACK"),
         MUSIC_VOLUME("MUSIC VOLUME"),
-        SOUND_EFFECTS_VOLUME("SOUND EFFECTS VOLUME"),
+        EFFECTS_VOLUME("SFX VOLUME"),
     }
 
     companion object {
@@ -76,7 +76,7 @@ class MainScreen(game: MegamanMaverickGame) :
     private var settingsArrowBlink = false
 
     init {
-        var row = 0.175f * ConstVals.PPM
+        var row = 5.35f
 
         MainScreenButton.values().forEach {
             val fontHandle =
@@ -90,12 +90,12 @@ class MainScreen(game: MegamanMaverickGame) :
                 )
             fontHandles.add(fontHandle)
             val arrowCenter =
-                Vector2(1.5f * ConstVals.PPM, (row - (.0075f * ConstVals.PPM)) * ConstVals.PPM)
+                Vector2(1.5f * ConstVals.PPM, (row - 0.25f) * ConstVals.PPM)
             blinkArrows.put(it.text, BlinkingArrow(game.assMan, arrowCenter))
             row -= ConstVals.PPM * .025f
         }
 
-        row = 0.4f * ConstVals.PPM
+        row = 12.5f
 
         MainScreenSettingsButton.values().forEach {
             val fontHandle =
@@ -109,8 +109,9 @@ class MainScreen(game: MegamanMaverickGame) :
                 )
             fontHandles.add(fontHandle)
             val arrowCenter =
-                Vector2(16.5f * ConstVals.PPM, (row - (.0075f * ConstVals.PPM)) * ConstVals.PPM)
+                Vector2(16.5f * ConstVals.PPM, (row - 0.25f) * ConstVals.PPM)
             blinkArrows.put(it.text, BlinkingArrow(game.assMan, arrowCenter))
+            row -= ConstVals.PPM * .025f
         }
 
         fontHandles.add(
@@ -126,33 +127,33 @@ class MainScreen(game: MegamanMaverickGame) :
 
         fontHandles.add(
             BitmapFontHandle(
-                { castGame.audioMan.musicVolume.toString() },
+                { (castGame.audioMan.musicVolume * 10f).toInt().toString() },
                 getDefaultFontSize(),
-                Vector2(21f * ConstVals.PPM, 12f * ConstVals.PPM),
-                centerX = false,
-                centerY = false,
+                Vector2(25.2f * ConstVals.PPM, 12f * ConstVals.PPM),
+                centerX = true,
+                centerY = true,
                 fontSource = "Megaman10Font.ttf"
             )
         )
 
         fontHandles.add(
             BitmapFontHandle(
-                { castGame.audioMan.soundVolume.toString() },
+                { (castGame.audioMan.soundVolume * 10f).toInt().toString() },
                 getDefaultFontSize(),
-                Vector2(21f * ConstVals.PPM, 11.2f * ConstVals.PPM),
-                centerX = false,
-                centerY = false,
+                Vector2(25.2f * ConstVals.PPM, 11.2f * ConstVals.PPM),
+                centerX = true,
+                centerY = true,
                 fontSource = "Megaman10Font.ttf"
             )
         )
 
         val arrowRegion = game.assMan.getTextureRegion(TextureAsset.UI_1.source, "Arrow")
-        var y = 11.55f
+        var y = 11.35f
         for (i in 0 until 4) {
             if (i != 0 && i % 2 == 0) y -= 0.85f
             val blinkArrow = Sprite(arrowRegion)
             blinkArrow.setBounds(
-                (if (i % 2 == 0) 20.25f else 22.5f) * ConstVals.PPM,
+                (if (i % 2 == 0) 24f else 26f) * ConstVals.PPM,
                 y * ConstVals.PPM,
                 ConstVals.PPM / 2f,
                 ConstVals.PPM / 2f
@@ -246,7 +247,7 @@ class MainScreen(game: MegamanMaverickGame) :
             MainScreenButton.EXTRAS.text,
             object : IMenuButton {
                 override fun onSelect(delta: Float): Boolean {
-                    game.setCurrentScreen(ScreenEnum.EXTRAS.name)
+                    // TODO: game.setCurrentScreen(ScreenEnum.EXTRAS.name)
                     return false
                 }
 
@@ -287,7 +288,7 @@ class MainScreen(game: MegamanMaverickGame) :
 
                 override fun onNavigate(direction: Direction, delta: Float): String? {
                     return when (direction) {
-                        Direction.UP -> MainScreenSettingsButton.SOUND_EFFECTS_VOLUME.text
+                        Direction.UP -> MainScreenSettingsButton.EFFECTS_VOLUME.text
                         Direction.DOWN -> MainScreenSettingsButton.MUSIC_VOLUME.text
                         else -> null
                     }
@@ -305,26 +306,26 @@ class MainScreen(game: MegamanMaverickGame) :
                     return when (direction) {
                         Direction.LEFT -> {
                             var volume = castGame.audioMan.musicVolume
-                            volume = if (volume == 0f) 10f else volume - 1f
+                            volume = if (volume <= 0f) 1f else volume - 0.1f
                             castGame.audioMan.musicVolume = volume
                             null
                         }
 
                         Direction.RIGHT -> {
                             var volume = castGame.audioMan.musicVolume
-                            volume = if (volume == 10f) 0f else volume + 1f
+                            volume = if (volume >= 1f) 0f else volume + 0.1f
                             castGame.audioMan.musicVolume = volume
                             null
                         }
 
                         Direction.UP -> MainScreenSettingsButton.BACK.text
-                        Direction.DOWN -> MainScreenSettingsButton.SOUND_EFFECTS_VOLUME.text
+                        Direction.DOWN -> MainScreenSettingsButton.EFFECTS_VOLUME.text
                     }
                 }
             })
 
         menuButtons.put(
-            MainScreenSettingsButton.SOUND_EFFECTS_VOLUME.text,
+            MainScreenSettingsButton.EFFECTS_VOLUME.text,
             object : IMenuButton {
                 override fun onSelect(delta: Float): Boolean {
                     return false
@@ -334,14 +335,14 @@ class MainScreen(game: MegamanMaverickGame) :
                     return when (direction) {
                         Direction.LEFT -> {
                             var volume = castGame.audioMan.soundVolume
-                            volume = if (volume == 0f) 10f else volume - 1f
+                            volume = if (volume <= 0f) 1f else volume - 0.1f
                             castGame.audioMan.soundVolume = volume
                             null
                         }
 
                         Direction.RIGHT -> {
                             var volume = castGame.audioMan.soundVolume
-                            volume = if (volume == 10f) 0f else volume + 1f
+                            volume = if (volume >= 1f) 0f else volume + 0.1f
                             castGame.audioMan.soundVolume = volume
                             null
                         }

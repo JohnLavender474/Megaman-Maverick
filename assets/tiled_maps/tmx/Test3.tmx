@@ -90,8 +90,8 @@
   </object>
  </objectgroup>
  <objectgroup id="8" name="enemies"/>
- <objectgroup id="12" name="backgrounds" visible="0">
-  <object id="7" x="0" y="3488" width="512" height="1312">
+ <objectgroup id="12" name="backgrounds">
+  <object id="7" name="BKG10" x="0" y="3488" width="512" height="1312">
    <properties>
     <property name="atlas" value="Backgrounds1.txt"/>
     <property name="columns" type="int" value="10"/>

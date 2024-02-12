@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="450" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="12" nextobjectid="105">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="450" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="12" nextobjectid="110">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/Gravity Man Stage.tsx"/>
  <objectgroup id="2" name="blocks">
@@ -97,7 +97,7 @@
   <object id="49" name="Penguin" x="5984" y="544" width="32" height="32"/>
   <object id="50" name="ShieldAttacker" x="5280" y="448" width="32" height="32">
    <properties>
-    <property name="x" type="float" value="5"/>
+    <property name="value" type="float" value="5"/>
    </properties>
   </object>
   <object id="51" name="Screwie" x="5664" y="544" width="32" height="32"/>
@@ -181,16 +181,30 @@
  </objectgroup>
  <objectgroup id="6" name="specials">
   <object id="17" name="Water" x="1216" y="480" width="384" height="128"/>
-  <object id="63" name="UpsideDown" x="6784" y="256" width="192" height="320"/>
+  <object id="63" name="GravityChange" x="6784" y="256" width="192" height="320">
+   <properties>
+    <property name="Direction" value="DOWN"/>
+   </properties>
+  </object>
   <object id="73" name="Cart" x="8320" y="544" width="32" height="32"/>
   <object id="77" name="SpringBouncer" x="8960" y="576" width="32" height="32">
    <properties>
     <property name="direction" value="up"/>
    </properties>
   </object>
+  <object id="106" name="GravityChange" x="6976" y="256" width="192" height="320">
+   <properties>
+    <property name="Direction" value="UP"/>
+   </properties>
+  </object>
+  <object id="107" name="GravityChange" x="6592" y="256" width="192" height="320">
+   <properties>
+    <property name="Direction" value="UP"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="4" name="player">
-  <object id="93" name="0" x="12448" y="544" width="32" height="32"/>
+  <object id="109" name="0" x="12352" y="544" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="8" name="hazards">
   <object id="65" name="SwinginAxe" x="256" y="320" width="32" height="32"/>

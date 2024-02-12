@@ -30,9 +30,15 @@ import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
+import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
+import com.megaman.maverick.game.entities.projectiles.Bullet
+import com.megaman.maverick.game.entities.projectiles.ChargedShot
+import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import kotlin.reflect.KClass
@@ -41,17 +47,24 @@ class Adamski(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
     companion object {
         const val TAG = "Adamski"
-        private const val SPEED = 3f
+        private const val SPEED = 4f
         private const val FREQUENCY = 3f
-        private const val AMPLITUDE = -0.025f
+        private const val AMPLITUDE = 0.025f
         private var purpleRegion: TextureRegion? = null
         private var blueRegion: TextureRegion? = null
         private var orangeRegion: TextureRegion? = null
     }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-
-    )
+    override val damageNegotiations =
+        objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+            Bullet::class to dmgNeg(10),
+            Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
+            ChargedShot::class to dmgNeg {
+                it as ChargedShot
+                if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
+            },
+            ChargedShotExplosion::class to dmgNeg(ConstVals.MAX_HEALTH)
+        )
 
     private var type = 0
 
@@ -86,6 +99,8 @@ class Adamski(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         putMotionDefinition("sineWave", MotionDefinition(motion, { position, _ ->
             body.setCenter(position)
         }))
+
+        requestToPlaySound(SoundAsset.ALARM, false)
     }
 
     override fun onDestroy() {

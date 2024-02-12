@@ -47,7 +47,7 @@ project(":desktop") {
 
     dependencies {
         implementation project(":core")
-        implementation "com.github.JohnLavender474:2D-Game-Engine:$gameEngineVersion"
+        /* implementation "com.github.JohnLavender474:2D-Game-Engine:$gameEngineVersion" */
         api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         api "com.badlogicgames.gdx-controllers:gdx-controllers-desktop:$gdxControllersVersion"
@@ -65,8 +65,8 @@ project(":core") {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx-controllers:gdx-controllers-core:$gdxControllersVersion"
         api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        /* api fileTree(dir: 'libs', include: '*.jar') */
-        implementation "com.github.JohnLavender474:2D-Game-Engine:$gameEngineVersion"
+        /* implementation "com.github.JohnLavender474:2D-Game-Engine:$gameEngineVersion" */
+        api fileTree(dir: 'libs', include: '*.jar')
         testImplementation "com.badlogicgames.gdx:gdx:$gdxVersion"
         testImplementation "io.kotest:kotest-runner-junit5-jvm:4.6.0"
         testImplementation "io.kotest:kotest-runner-junit5:4.0.2"

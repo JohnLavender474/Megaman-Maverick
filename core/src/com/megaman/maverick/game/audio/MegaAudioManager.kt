@@ -4,14 +4,15 @@ import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.OrderedMap
+import com.badlogic.gdx.utils.OrderedSet
 import com.engine.audio.IAudioManager
+import com.engine.audio.SoundRequest
 import com.engine.common.interfaces.Updatable
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 
 class MegaAudioManager(
-    private val sounds: OrderedMap<SoundAsset, Sound>,
-    private val music: OrderedMap<MusicAsset, Music>
+    private val sounds: OrderedMap<SoundAsset, Sound>, private val music: OrderedMap<MusicAsset, Music>
 ) : Updatable, IAudioManager {
 
     companion object {
@@ -20,7 +21,13 @@ class MegaAudioManager(
         const val DEFAULT_VOLUME = 0.5f
     }
 
-    private data class SoundEntry(val id: Long, val ass: SoundAsset, var time: Float = 0f)
+    private class SoundEntry(val id: Long, val ass: SoundAsset, var loop: Boolean = false, var time: Float = 0f) {
+
+        override fun hashCode() = ass.hashCode()
+
+        override fun equals(other: Any?) = other is SoundEntry && other.ass == ass
+
+    }
 
     override var soundVolume: Float = DEFAULT_VOLUME
         set(value) {
@@ -37,6 +44,7 @@ class MegaAudioManager(
             for (m in music.values()) m.volume = musicVolume
         }
 
+    private val soundQueue = OrderedSet<SoundRequest>()
     private val playingSounds = Array<SoundEntry>()
     private var currentMusic: Music? = null
 
@@ -45,10 +53,22 @@ class MegaAudioManager(
         soundVolume = DEFAULT_VOLUME
     }
 
+    fun isSoundPlaying(sound: SoundAsset) = playingSounds.any { it.ass == sound }
+
     override fun update(delta: Float) {
+        soundQueue.forEach {
+            val key = it.source as SoundAsset
+            val sound = sounds.get(key)
+            val id = if (it.loop) sound.loop(soundVolume) else sound.play(soundVolume)
+            playingSounds.add(SoundEntry(id, key, it.loop))
+        }
+        soundQueue.clear()
+
         val eIter = playingSounds.iterator()
         while (eIter.hasNext()) {
             val e = eIter.next()
+            if (e.loop) continue
+
             e.time += delta
             if (e.time > e.ass.seconds) eIter.remove()
         }
@@ -73,9 +93,17 @@ class MegaAudioManager(
     }
 
     override fun playSound(key: Any?, loop: Boolean) {
+        if (key == null) return
+        playSound(SoundRequest(key, loop))
+        /*
         val sound = sounds.get(key as SoundAsset)
         val id = sound.play(soundVolume)
         playingSounds.add(SoundEntry(id, key))
+         */
+    }
+
+    fun playSound(soundRequest: SoundRequest) {
+        soundQueue.add(soundRequest)
     }
 
     override fun stopSound(key: Any?) {

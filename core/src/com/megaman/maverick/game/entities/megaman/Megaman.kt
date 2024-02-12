@@ -103,9 +103,9 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         ElectrocutieChild::class to dmgNeg(3),
         Togglee::class to dmgNeg(3),
         Eyee::class to dmgNeg(3),
+        Adamski::class to dmgNeg(3),
     )
-
-    internal val noDmgBounce = objectSetOf<Any>(SpringHead::class)
+    private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 
     internal val shootAnimTimer = Timer(MegamanValues.SHOOT_ANIM_TIME).setToEnd()
     internal val chargingTimer =
@@ -367,7 +367,7 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         val damage = dmgNegotations.get(damager::class).get(damager)
         damageTimer.reset()
         addHealth(-damage)
-        requestToPlaySound(SoundAsset.MEGAMAN_DAMAGE_SOUND, true)
+        requestToPlaySound(SoundAsset.MEGAMAN_DAMAGE_SOUND, false)
         stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
         return true
     }

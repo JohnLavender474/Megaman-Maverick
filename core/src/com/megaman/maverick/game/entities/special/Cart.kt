@@ -17,6 +17,7 @@ import com.engine.common.interfaces.Updatable
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
+import com.engine.cullables.CullablesComponent
 import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.GameSprite
@@ -37,6 +38,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.IOwnable
+import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.FixtureType
@@ -63,6 +65,7 @@ class Cart(game: MegamanMaverickGame) : GameEntity(game), IOwnable, IBodyEntity,
         addComponent(defineBodyComponent())
         addComponent(defineSpriteComponent())
         addComponent(defineAnimationsComponent())
+        addComponent(defineCullablesComponent())
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -178,6 +181,11 @@ class Cart(game: MegamanMaverickGame) : GameEntity(game), IOwnable, IBodyEntity,
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
+    }
+
+    private fun defineCullablesComponent(): CullablesComponent {
+        val cullable = getGameCameraCullingLogic(this)
+        return CullablesComponent(this, cullable)
     }
 
 }

@@ -1,5 +1,6 @@
 package com.megaman.maverick.game
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.audio.Music
@@ -48,9 +49,10 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.MegaControllerPoller
+import com.megaman.maverick.game.entities.enemies.Togglee
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG
+import com.megaman.maverick.game.entities.special.PortalHopper
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
@@ -58,6 +60,7 @@ import com.megaman.maverick.game.screens.menus.MainScreen
 import com.megaman.maverick.game.screens.menus.bosses.BossIntroScreen
 import com.megaman.maverick.game.screens.menus.bosses.BossSelectScreen
 import com.megaman.maverick.game.screens.other.SimpleEndLevelScreen
+import com.megaman.maverick.game.screens.other.SimpleInitGameScreen
 import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
 import com.megaman.maverick.game.utils.getMusics
 import com.megaman.maverick.game.utils.getSounds
@@ -72,10 +75,10 @@ class MegamanMaverickGame : Game2D() {
 
     companion object {
         const val TAG = "MegamanMaverickGame"
-        const val DEBUG_TEXT = true
-        const val DEBUG_SHAPES = true
-        const val DEFAULT_VOLUME = 0f
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(MegaContactListener.TAG, MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG)
+        const val DEBUG_TEXT = false
+        const val DEBUG_SHAPES = false
+        const val DEFAULT_VOLUME = 0.5f
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(Togglee.TAG, PortalHopper.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.SIDE, FixtureType.BLOCK)
         }
@@ -134,24 +137,18 @@ class MegamanMaverickGame : Game2D() {
         val uiViewport = FitViewport(screenWidth, screenHeight)
         viewports.put(ConstKeys.UI, uiViewport)
 
-        debugText =
-            BitmapFontHandle(
-                { "VEL_X: ${(megaman.body.physics.velocity.x / ConstVals.PPM).toInt()}" },
-                getDefaultFontSize(),
-                Vector2(
-                    (ConstVals.VIEW_WIDTH - 2) * ConstVals.PPM,
-                    (ConstVals.VIEW_HEIGHT - 1) * ConstVals.PPM
-                ),
-                centerX = true,
-                centerY = true,
-                fontSource = ConstVals.MEGAMAN_MAVERICK_FONT
-            )
+        debugText = BitmapFontHandle(
+            { "VEL_X: ${(megaman.body.physics.velocity.x / ConstVals.PPM).toInt()}" }, getDefaultFontSize(), Vector2(
+                (ConstVals.VIEW_WIDTH - 2) * ConstVals.PPM, (ConstVals.VIEW_HEIGHT - 1) * ConstVals.PPM
+            ), centerX = true, centerY = true, fontSource = ConstVals.MEGAMAN_MAVERICK_FONT
+        )
 
         screens.put(ScreenEnum.LEVEL.name, MegaLevelScreen(this))
         screens.put(ScreenEnum.MAIN.name, MainScreen(this))
         screens.put(ScreenEnum.BOSS_SELECT.name, BossSelectScreen(this))
         screens.put(ScreenEnum.BOSS_INTRO.name, BossIntroScreen(this))
         screens.put(ScreenEnum.SIMPLE_END_LEVEL_SUCCESSFULLY.name, SimpleEndLevelScreen(this))
+        screens.put(ScreenEnum.SIMPLE_INIT_GAME.name, SimpleInitGameScreen(this))
 
         audioMan = MegaAudioManager(assMan.getSounds(), assMan.getMusics())
         audioMan.musicVolume = DEFAULT_VOLUME
@@ -169,13 +166,16 @@ class MegamanMaverickGame : Game2D() {
         // startLevelScreen(Level.TEST5)
         // setCurrentScreen(ScreenEnum.MAIN.name)
         // startLevelScreen(Level.TIMBER_WOMAN)
-        startLevelScreen(Level.RODENT_MAN)
+        // startLevelScreen(Level.RODENT_MAN)
         // startLevelScreen(Level.FREEZER_MAN)
-        // startLevelScreen(Level.GALAXY_MAN)
+        startLevelScreen(Level.GALAXY_MAN)
+        // setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME.name)
     }
 
     override fun render() {
         super.render()
+        val delta = Gdx.graphics.deltaTime
+        audioMan.update(delta)
         if (DEBUG_TEXT) {
             batch.projectionMatrix = getUiCamera().combined
             batch.begin()
@@ -225,67 +225,56 @@ class MegamanMaverickGame : Game2D() {
 
     override fun createGameEngine(): IGameEngine {
         val drawables = PriorityQueue<IDrawable<Batch>> { o1, o2 ->
-            if (o1 is IComparableDrawable<Batch> && o2 is IComparableDrawable<Batch>)
-                o1.priority.compareTo(o2.priority)
+            if (o1 is IComparableDrawable<Batch> && o2 is IComparableDrawable<Batch>) o1.priority.compareTo(o2.priority)
             else 0
         }
         properties.put(ConstKeys.DRAWABLES, drawables)
-        val shapes =
-            PriorityQueue<IDrawableShape> { s1, s2 -> s1.shapeType.ordinal - s2.shapeType.ordinal }
+        val shapes = PriorityQueue<IDrawableShape> { s1, s2 -> s1.shapeType.ordinal - s2.shapeType.ordinal }
         properties.put(ConstKeys.SHAPES, shapes)
 
-        val contactFilterMap =
-            objectMapOf<Any, ObjectSet<Any>>(
-                FixtureType.CONSUMER to objectSetOf(*FixtureType.values()),
-                FixtureType.PLAYER to objectSetOf(FixtureType.ITEM),
-                FixtureType.DAMAGEABLE to objectSetOf(FixtureType.DEATH, FixtureType.DAMAGER),
-                FixtureType.BODY to objectSetOf(FixtureType.FORCE, FixtureType.GRAVITY_CHANGE),
-                FixtureType.WATER_LISTENER to objectSetOf(FixtureType.WATER),
-                FixtureType.LADDER to objectSetOf(FixtureType.HEAD, FixtureType.FEET),
-                FixtureType.SIDE to
-                        objectSetOf(
-                            FixtureType.ICE, FixtureType.GATE, FixtureType.BLOCK, FixtureType.BOUNCER
-                        ),
-                FixtureType.FEET to
-                        objectSetOf(FixtureType.ICE, FixtureType.BLOCK, FixtureType.BOUNCER),
-                FixtureType.HEAD to objectSetOf(FixtureType.BLOCK, FixtureType.BOUNCER),
-                FixtureType.PROJECTILE to
-                        objectSetOf(
-                            FixtureType.BODY, FixtureType.BLOCK, FixtureType.SHIELD, FixtureType.WATER
-                        ),
-                FixtureType.LASER to objectSetOf(FixtureType.BLOCK)
-            )
+        val contactFilterMap = objectMapOf<Any, ObjectSet<Any>>(
+            FixtureType.CONSUMER to objectSetOf(*FixtureType.values()),
+            FixtureType.PLAYER to objectSetOf(FixtureType.ITEM),
+            FixtureType.DAMAGEABLE to objectSetOf(FixtureType.DEATH, FixtureType.DAMAGER),
+            FixtureType.BODY to objectSetOf(FixtureType.FORCE, FixtureType.GRAVITY_CHANGE),
+            FixtureType.WATER_LISTENER to objectSetOf(FixtureType.WATER),
+            FixtureType.LADDER to objectSetOf(FixtureType.HEAD, FixtureType.FEET),
+            FixtureType.SIDE to objectSetOf(
+                FixtureType.ICE, FixtureType.GATE, FixtureType.BLOCK, FixtureType.BOUNCER
+            ),
+            FixtureType.FEET to objectSetOf(FixtureType.ICE, FixtureType.BLOCK, FixtureType.BOUNCER),
+            FixtureType.HEAD to objectSetOf(FixtureType.BLOCK, FixtureType.BOUNCER),
+            FixtureType.PROJECTILE to objectSetOf(
+                FixtureType.BODY, FixtureType.BLOCK, FixtureType.SHIELD, FixtureType.WATER
+            ),
+            FixtureType.LASER to objectSetOf(FixtureType.BLOCK)
+        )
 
-        val engine =
-            GameEngine(
-                ControllerSystem(controllerPoller),
-                AnimationsSystem(),
-                BehaviorsSystem(),
-                WorldSystem(
-                    MegaContactListener(this, CONTACT_LISTENER_DEBUG_FILTER),
-                    { getGraphMap() },
-                    ConstVals.FIXED_TIME_STEP,
-                    MegaCollisionHandler(this),
-                    contactFilterMap
-                ),
-                CullablesSystem(),
-                MotionSystem(),
-                PathfindingSystem(
-                    { Pathfinder(getGraphMap()!!, it.params) },
-                    timeout = 10,
-                    timeoutUnit = TimeUnit.MILLISECONDS
-                ),
-                PointsSystem(),
-                UpdatablesSystem(),
-                FontsSystem { drawables },
-                SpritesSystem { drawables },
-                DrawableShapesSystem({ shapes }, DEBUG_SHAPES),
-                AudioSystem(
-                    { audioMan.playSound(it.source, it.loop) },
-                    { audioMan.playMusic(it.source, it.loop) },
-                    { audioMan.stopSound(it) },
-                    { audioMan.stopMusic(it) })
-            )
+        val engine = GameEngine(ControllerSystem(controllerPoller),
+            AnimationsSystem(),
+            BehaviorsSystem(),
+            WorldSystem(
+                MegaContactListener(this, CONTACT_LISTENER_DEBUG_FILTER),
+                { getGraphMap() },
+                ConstVals.FIXED_TIME_STEP,
+                MegaCollisionHandler(this),
+                contactFilterMap
+            ),
+            CullablesSystem(),
+            MotionSystem(),
+            PathfindingSystem(
+                { Pathfinder(getGraphMap()!!, it.params) }, timeout = 10, timeoutUnit = TimeUnit.MILLISECONDS
+            ),
+            PointsSystem(),
+            UpdatablesSystem(),
+            FontsSystem { drawables },
+            SpritesSystem { drawables },
+            DrawableShapesSystem({ shapes }, DEBUG_SHAPES),
+            AudioSystem({ audioMan.playSound(it.source, it.loop) },
+                { audioMan.playMusic(it.source, it.loop) },
+                { audioMan.stopSound(it) },
+                { audioMan.stopMusic(it) })
+        )
 
         val systems = ObjectMap<String, IGameSystem>()
         engine.systems.forEach { systems.put(it::class.simpleName, it) }

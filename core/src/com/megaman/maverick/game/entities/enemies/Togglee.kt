@@ -7,6 +7,7 @@ import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
+import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
 import com.engine.common.extensions.equalsAny
 import com.engine.common.extensions.gdxArrayOf
@@ -116,6 +117,7 @@ class Togglee(game: MegamanMaverickGame) : AbstractEnemy(game, cullWhenOutOfCamB
         getFont(ConstKeys.DEFAULT).position.set(body.getCenter().add(0f, 1.75f * ConstVals.PPM))
 
         val childEntities = convertObjectPropsToEntities(spawnProps)
+        GameLogger.debug(TAG, "Child entities: ${childEntities.map { "${it.first}:${it.second} " }}")
         childEntities.forEach {
             val childType = it.second.get(TOGGLEE_ON_ENTITY, Boolean::class)!!
             if (childType) onEntities.add(it)
@@ -137,9 +139,13 @@ class Togglee(game: MegamanMaverickGame) : AbstractEnemy(game, cullWhenOutOfCamB
     }
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
+        /*
         val takenDamage = super.takeDamageFrom(damager)
         if (takenDamage) switchToggleeState()
         return takenDamage
+         */
+        switchToggleeState()
+        return false
     }
 
     private fun spawnEntities(on: Boolean) {

@@ -94,8 +94,9 @@ class PortalHopper(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, I
 
         thisKey = spawnProps.get(ConstKeys.KEY, Int::class)!!
         nextKey = spawnProps.get(ConstKeys.NEXT, Int::class)!!
-        launch = false
         rotation = spawnProps.getOrDefault(ConstKeys.ROTATION, 0f, Float::class)
+
+        launch = false
     }
 
     override fun onDestroy() {

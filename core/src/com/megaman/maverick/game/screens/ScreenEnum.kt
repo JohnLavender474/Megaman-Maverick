@@ -8,5 +8,6 @@ enum class ScreenEnum {
     CONTROLLER,
     BOSS_INTRO,
     BOSS_SELECT,
+    SIMPLE_INIT_GAME,
     SIMPLE_END_LEVEL_SUCCESSFULLY
 }

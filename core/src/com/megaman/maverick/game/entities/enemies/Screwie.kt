@@ -33,6 +33,7 @@ import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
@@ -56,6 +57,13 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
         private const val DOWN_DUR = 1f
         private const val RISE_DROP_DUR = .3f
         private const val BULLET_VEL = 10f
+        private val BULLET_TRAJECTORIES = gdxArrayOf(
+            Vector2(-BULLET_VEL, 0f),
+            Vector2(-BULLET_VEL, BULLET_VEL),
+            Vector2(0f, BULLET_VEL),
+            Vector2(BULLET_VEL, BULLET_VEL),
+            Vector2(BULLET_VEL, 0f),
+        )
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -70,9 +78,7 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
     private val shootTimer = Timer(SHOOT_DUR)
     private val dropTimer = Timer(RISE_DROP_DUR)
 
-    var upsideDown = false
-        private set
-
+    private var upsideDown = false
     private var type = ""
 
     private val down: Boolean
@@ -88,8 +94,7 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
         super.init()
         if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
         shootTimer.setRunnables(
-            gdxArrayOf(
-                TimeMarkedRunnable(0.5f) { shoot() },
+            gdxArrayOf(TimeMarkedRunnable(0.5f) { shoot() },
                 TimeMarkedRunnable(1.0f) { shoot() },
                 TimeMarkedRunnable(1.5f) { shoot() })
         )
@@ -119,19 +124,16 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
         val shapes = Array<() -> IDrawableShape?>()
 
         // damager fixture
-        val damagerFixture =
-            Fixture(GameRectangle().setSize(0.15f * ConstVals.PPM), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(GameRectangle().setSize(0.15f * ConstVals.PPM), FixtureType.DAMAGER)
         body.addFixture(damagerFixture)
 
         damagerFixture.shape.color = Color.RED
         shapes.add { damagerFixture.shape }
 
         // damageable fixture
-        val damageableFixture =
-            Fixture(
-                GameRectangle().setSize(0.65f * ConstVals.PPM, 0.5f * ConstVals.PPM),
-                FixtureType.DAMAGEABLE
-            )
+        val damageableFixture = Fixture(
+            GameRectangle().setSize(0.65f * ConstVals.PPM, 0.5f * ConstVals.PPM), FixtureType.DAMAGEABLE
+        )
         body.addFixture(damageableFixture)
 
         damageableFixture.shape.color = Color.PURPLE
@@ -142,8 +144,7 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
             val damageableBounds = damageableFixture.shape as GameRectangle
             if (down) {
                 damageableBounds.height = 0.2f * ConstVals.PPM
-                damageableFixture.offsetFromBodyCenter.y =
-                    (if (upsideDown) 0.15f else -0.15f) * ConstVals.PPM
+                damageableFixture.offsetFromBodyCenter.y = (if (upsideDown) 0.15f else -0.15f) * ConstVals.PPM
             } else {
                 damageableBounds.height = 0.65f * ConstVals.PPM
                 damageableFixture.offsetFromBodyCenter.y = 0f
@@ -193,38 +194,32 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
             val key = if (down) "down" else if (shooting) "shoot" else if (rising) "rise" else "drop"
             "$type-$key"
         }
-        val animations =
-            objectMapOf<String, IAnimation>(
-                "red-down" to Animation(atlas!!.findRegion("RedScrewie/Down")),
-                "red-rise" to Animation(atlas!!.findRegion("RedScrewie/Rise"), 1, 3, 0.1f, false),
-                "red-drop" to Animation(atlas!!.findRegion("RedScrewie/Drop"), 1, 3, 0.1f, false),
-                "red-shoot" to Animation(atlas!!.findRegion("RedScrewie/Shoot"), 1, 3, 0.1f, true),
-                "blue-down" to Animation(atlas!!.findRegion("BlueScrewie/Down")),
-                "blue-rise" to Animation(atlas!!.findRegion("BlueScrewie/Rise"), 1, 3, 0.1f, false),
-                "blue-drop" to Animation(atlas!!.findRegion("BlueScrewie/Drop"), 1, 3, 0.1f, false),
-                "blue-shoot" to Animation(atlas!!.findRegion("BlueScrewie/Shoot"), 1, 3, 0.1f, true),
-            )
+        val animations = objectMapOf<String, IAnimation>(
+            "red-down" to Animation(atlas!!.findRegion("RedScrewie/Down")),
+            "red-rise" to Animation(atlas!!.findRegion("RedScrewie/Rise"), 1, 3, 0.1f, false),
+            "red-drop" to Animation(atlas!!.findRegion("RedScrewie/Drop"), 1, 3, 0.1f, false),
+            "red-shoot" to Animation(atlas!!.findRegion("RedScrewie/Shoot"), 1, 3, 0.1f, true),
+            "blue-down" to Animation(atlas!!.findRegion("BlueScrewie/Down")),
+            "blue-rise" to Animation(atlas!!.findRegion("BlueScrewie/Rise"), 1, 3, 0.1f, false),
+            "blue-drop" to Animation(atlas!!.findRegion("BlueScrewie/Drop"), 1, 3, 0.1f, false),
+            "blue-shoot" to Animation(atlas!!.findRegion("BlueScrewie/Shoot"), 1, 3, 0.1f, true),
+        )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }
 
     private fun shoot() {
-        for (i in 0 until 3) {
+        requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
+        BULLET_TRAJECTORIES.forEach {
             val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
-
             val spawn = Vector2(body.getCenter())
-            spawn.x += (if (i == 0) -0.2f else 0.2f) * ConstVals.PPM
+            if (it.x > 0) spawn.x += 0.2f * ConstVals.PPM else if (it.x < 0) spawn.x -= 0.2f * ConstVals.PPM
             spawn.y += (if (upsideDown) -0.215f else 0.215f) * ConstVals.PPM
-
-            val trajectory = Vector2()
-            trajectory.x = if (i == 0) -BULLET_VEL else BULLET_VEL
-
+            val trajectory = Vector2(it)
+            if (upsideDown) trajectory.y *= -1f
             game.gameEngine.spawn(
-                bullet,
-                props(
-                    ConstKeys.TRAJECTORY to trajectory,
-                    ConstKeys.POSITION to spawn,
-                    ConstKeys.OWNER to this
+                bullet, props(
+                    ConstKeys.TRAJECTORY to trajectory, ConstKeys.POSITION to spawn, ConstKeys.OWNER to this
                 )
             )
         }
