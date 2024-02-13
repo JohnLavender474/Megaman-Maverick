@@ -121,7 +121,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
     // jump
     val jump = Behavior( // evaluate
         evaluate = {
-            if (damaged || isAnyBehaviorActive(
+            if (damaged || teleporting || isAnyBehaviorActive(
                     BehaviorType.SWIMMING, BehaviorType.CLIMBING
                 ) || body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) || !game.controllerPoller.isPressed(ControllerButton.A) || game.controllerPoller.isPressed(
                     ControllerButton.DOWN
@@ -187,7 +187,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         private val impulse = Vector2()
 
         override fun evaluate(delta: Float): Boolean {
-            if (damaged || airDashTimer.isFinished() || body.isSensingAny(
+            if (damaged || teleporting || airDashTimer.isFinished() || body.isSensingAny(
                     BodySense.FEET_ON_GROUND, BodySense.TELEPORTING
                 ) || isAnyBehaviorActive(BehaviorType.WALL_SLIDING, BehaviorType.CLIMBING, BehaviorType.RIDING_CART)
             ) return false
@@ -237,7 +237,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             airDashTimer.reset()
             body.physics.gravityOn = true
 
-            if (!body.isSensing(BodySense.TELEPORTING)) {
+            if (!body.isSensing(BodySense.TELEPORTING) && !teleporting) {
                 val impulseOnEnd =
                     facing.value * ConstVals.PPM * if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_AIR_DASH_END_BUMP
                     else MegamanValues.AIR_DASH_END_BUMP

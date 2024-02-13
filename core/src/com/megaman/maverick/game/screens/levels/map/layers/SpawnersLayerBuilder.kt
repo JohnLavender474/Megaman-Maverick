@@ -31,24 +31,20 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
         GameLogger.debug(TAG, "build(): Building spawners for layer: ${layer.name}")
         val game = params.game
 
-        if (!returnProps.containsKey(ConstKeys.DISPOSABLES))
-            returnProps.put(ConstKeys.DISPOSABLES, Array<Disposable>())
+        if (!returnProps.containsKey(ConstKeys.DISPOSABLES)) returnProps.put(ConstKeys.DISPOSABLES, Array<Disposable>())
         val disposables = returnProps.get(ConstKeys.DISPOSABLES) as Array<Disposable>
 
-        if (!returnProps.containsKey(ConstKeys.SPAWNERS))
-            returnProps.put(ConstKeys.SPAWNERS, Array<ISpawner>())
+        if (!returnProps.containsKey(ConstKeys.SPAWNERS)) returnProps.put(ConstKeys.SPAWNERS, Array<ISpawner>())
         val spawners = returnProps.get(ConstKeys.SPAWNERS) as Array<ISpawner>
 
-        val entityType =
-            when (layer.name) {
-                ConstKeys.ENEMIES -> EntityType.ENEMY
-                ConstKeys.ITEMS -> EntityType.ITEM
-                ConstKeys.BLOCKS -> EntityType.BLOCK
-                ConstKeys.SPECIALS -> EntityType.SPECIAL
-                ConstKeys.HAZARDS -> EntityType.HAZARD
-                // TODO: add other entity types
-                else -> throw IllegalArgumentException("Unknown spawner type: ${layer.name}")
-            }
+        val entityType = when (layer.name) {
+            ConstKeys.ENEMIES -> EntityType.ENEMY
+            ConstKeys.ITEMS -> EntityType.ITEM
+            ConstKeys.BLOCKS -> EntityType.BLOCK
+            ConstKeys.SPECIALS -> EntityType.SPECIAL
+            ConstKeys.HAZARDS -> EntityType.HAZARD // TODO: add other entity types
+            else -> throw IllegalArgumentException("Unknown spawner type: ${layer.name}")
+        }
         GameLogger.debug(TAG, "build(): Entity type: $entityType")
 
         layer.objects.forEach {
@@ -56,18 +52,21 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                 val spawnProps = it.toProps()
                 spawnProps.put(ConstKeys.BOUNDS, it.rectangle.toGameRectangle())
 
-                val spawnSupplier = {
-                    val entity =
-                        EntityFactories.fetch(entityType, it.name ?: "")
-                            ?: throw IllegalStateException("Entity of type $entityType not found: ${it.name}")
-                    Spawn(entity, spawnProps)
+                val spawnType = spawnProps.get(ConstKeys.SPAWN_TYPE) as String?
+                if (spawnType == SpawnType.SPAWN_NOW) {
+                    val entity = EntityFactories.fetch(entityType, it.name)!!
+                    game.gameEngine.spawn(entity, spawnProps)
+                    return@forEach
                 }
 
+                val spawnSupplier = {
+                    val entity = EntityFactories.fetch(entityType, it.name ?: "")
+                        ?: throw IllegalStateException("Entity of type $entityType not found: ${it.name}")
+                    Spawn(entity, spawnProps)
+                }
                 val respawnable =
-                    !spawnProps.containsKey(ConstKeys.RESPAWNABLE) ||
-                            spawnProps.get(ConstKeys.RESPAWNABLE) as Boolean
+                    !spawnProps.containsKey(ConstKeys.RESPAWNABLE) || spawnProps.get(ConstKeys.RESPAWNABLE) as Boolean
 
-                val spawnType = spawnProps.get(ConstKeys.SPAWN_TYPE) as String?
                 when (spawnType) {
                     SpawnType.SPAWN_ROOM -> {
                         val roomName = it.properties.get(SpawnType.SPAWN_ROOM) as String
@@ -76,13 +75,9 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                         var roomFound = false
                         for (room in gameRooms) if (roomName == room.name) {
                             spawnProps.put(ConstKeys.ROOM, room)
-                            val spawner =
-                                SpawnerFactory.spawnerForWhenEnteringCamera(
-                                    game.getGameCamera(),
-                                    room.rectangle.toGameRectangle(),
-                                    spawnSupplier,
-                                    respawnable
-                                )
+                            val spawner = SpawnerFactory.spawnerForWhenEnteringCamera(
+                                game.getGameCamera(), room.rectangle.toGameRectangle(), spawnSupplier, respawnable
+                            )
                             spawners.add(spawner)
 
                             GameLogger.debug(
@@ -104,8 +99,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                             events.add(eventType)
                         }
 
-                        val spawner =
-                            SpawnerFactory.spawnerForWhenEventCalled(events, spawnSupplier, respawnable)
+                        val spawner = SpawnerFactory.spawnerForWhenEventCalled(events, spawnSupplier, respawnable)
                         spawners.add(spawner)
 
                         GameLogger.debug(
@@ -117,23 +111,14 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                     }
 
                     else -> {
-                        when (it.name) {
-                            // TODO: add other spawn types
-                            else -> {
-                                val spawner =
-                                    SpawnerFactory.spawnerForWhenEnteringCamera(
-                                        game.getGameCamera(),
-                                        it.rectangle.toGameRectangle(),
-                                        spawnSupplier,
-                                        respawnable
-                                    )
-                                spawners.add(spawner)
+                        val spawner = SpawnerFactory.spawnerForWhenEnteringCamera(
+                            game.getGameCamera(), it.rectangle.toGameRectangle(), spawnSupplier, respawnable
+                        )
+                        spawners.add(spawner)
 
-                                GameLogger.debug(
-                                    TAG, "build(): Adding spawner $spawner for game rectangle object ${it.name}"
-                                )
-                            }
-                        }
+                        GameLogger.debug(
+                            TAG, "build(): Adding spawner $spawner for game rectangle object ${it.name}"
+                        )
                     }
                 }
             }

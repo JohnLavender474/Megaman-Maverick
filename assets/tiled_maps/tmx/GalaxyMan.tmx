@@ -19,6 +19,7 @@
     <property name="key" type="int" value="8"/>
     <property name="next" type="int" value="7"/>
     <property name="rotation" type="float" value="180"/>
+    <property name="spawn_type" value="spawn_now"/>
     <property name="togglee_on_entity" type="bool" value="false"/>
    </properties>
   </object>
@@ -29,6 +30,7 @@
     <property name="key" type="int" value="9"/>
     <property name="next" type="int" value="10"/>
     <property name="rotation" type="float" value="180"/>
+    <property name="spawn_type" value="spawn_now"/>
     <property name="togglee_on_entity" type="bool" value="true"/>
    </properties>
   </object>
@@ -150,6 +152,7 @@
     <property name="key" type="int" value="7"/>
     <property name="next" type="int" value="8"/>
     <property name="rotation" type="float" value="90"/>
+    <property name="spawn_type" value="spawn_now"/>
    </properties>
   </object>
   <object id="102" name="PortalHopper" x="2720" y="4352" width="32" height="32">
@@ -158,6 +161,7 @@
     <property name="key" type="int" value="10"/>
     <property name="next" type="int" value="9"/>
     <property name="rotation" type="float" value="180"/>
+    <property name="spawn_type" value="spawn_now"/>
    </properties>
   </object>
  </objectgroup>

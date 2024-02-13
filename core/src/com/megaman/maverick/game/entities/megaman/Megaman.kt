@@ -236,6 +236,9 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
     internal var waterIceGravity = 0f
     internal var swimVel = 0f
 
+    var teleporting = false
+        private set
+
     override fun init() {
         addComponent(AudioComponent(this))
         addComponent(defineUpdatablesComponent())
@@ -281,12 +284,16 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         putProperty(ConstKeys.ON_PORTAL_HOPPER_START, {
             standardOnPortalHopperStart(this)
             if (isBehaviorActive(BehaviorType.AIR_DASHING)) forceQuitBehavior(BehaviorType.AIR_DASHING)
+            teleporting = true
         })
         setStandardOnPortalHopperContinueProp(this)
         putProperty(ConstKeys.ON_PORTAL_HOPPER_END, {
             standardOnPortalHopperEnd(this)
             aButtonTask = AButtonTask.AIR_DASH
+            teleporting = false
         })
+
+        teleporting = false
     }
 
     override fun onDestroy() {
