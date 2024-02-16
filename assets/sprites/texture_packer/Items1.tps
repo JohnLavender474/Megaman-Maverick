@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.0.0</string>
+        <string>7.1.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -124,7 +124,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>../SpriteSheets/Items1.txt</filename>
+                <filename>../sprite_sheets/Items1.txt</filename>
             </struct>
         </map>
         <key>multiPackMode</key>
@@ -173,10 +173,10 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">../Frames/Items1/EmptyHealthTank.png</key>
-            <key type="filename">../Frames/Items1/Key.png</key>
-            <key type="filename">../Frames/Items1/SmallHealthBulb.png</key>
-            <key type="filename">../Frames/Items1/SmallWeaponBulb.png</key>
+            <key type="filename">../frames/Items1/EmptyHealthTank.png</key>
+            <key type="filename">../frames/Items1/Key.png</key>
+            <key type="filename">../frames/Items1/SmallHealthBulb.png</key>
+            <key type="filename">../frames/Items1/SmallWeaponBulb.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -191,10 +191,10 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Items1/HealthBulb.png</key>
-            <key type="filename">../Frames/Items1/HealthTank.png</key>
-            <key type="filename">../Frames/Items1/HeartTank.png</key>
-            <key type="filename">../Frames/Items1/WeaponBulb.png</key>
+            <key type="filename">../frames/Items1/HealthBulb.png</key>
+            <key type="filename">../frames/Items1/HealthTank.png</key>
+            <key type="filename">../frames/Items1/HeartTank.png</key>
+            <key type="filename">../frames/Items1/WeaponBulb.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -206,6 +206,22 @@
                 <rect>16,8,32,16</rect>
                 <key>scale9Paddings</key>
                 <rect>16,8,32,16</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Items1/SniperJoeShield/Blue.png</key>
+            <key type="filename">../frames/Items1/SniperJoeShield/Orange.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>5,5,9,9</rect>
+                <key>scale9Paddings</key>
+                <rect>5,5,9,9</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -216,7 +232,7 @@
             <struct type="SpriteSheet">
                 <key>files</key>
                 <array>
-                    <filename>../Frames/Items1</filename>
+                    <filename>../frames/Items1</filename>
                 </array>
             </struct>
         </map>

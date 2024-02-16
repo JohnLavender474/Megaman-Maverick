@@ -100,7 +100,7 @@ class Adamski(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
             body.setCenter(position)
         }))
 
-        requestToPlaySound(SoundAsset.ALARM, false)
+        requestToPlaySound(SoundAsset.ALARM_SOUND, false)
     }
 
     override fun onDestroy() {

@@ -41,6 +41,7 @@ import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.hazards.Bolt
 import com.megaman.maverick.game.entities.hazards.ElectrocutieChild
 import com.megaman.maverick.game.entities.hazards.LaserBeamer
+import com.megaman.maverick.game.entities.projectiles.SniperJoeShield
 import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOSION_ORB_SPEED
@@ -104,6 +105,9 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         Togglee::class to dmgNeg(3),
         Eyee::class to dmgNeg(3),
         Adamski::class to dmgNeg(3),
+        UpNDown::class to dmgNeg(3),
+        BigJumpingJoe::class to dmgNeg(6),
+        SniperJoeShield::class to dmgNeg(2)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 

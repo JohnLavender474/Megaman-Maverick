@@ -15,6 +15,9 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val SOUND = "sound"
+    const val THROWN = "thrown"
+    const val TRIGGER = "trigger"
     const val FLIP = "flip"
     const val NEXT = "next"
     const val STOP = "stop"

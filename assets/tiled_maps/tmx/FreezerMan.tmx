@@ -63,7 +63,7 @@
   <object id="194" name="GapingFish" x="4072" y="376" width="32" height="32"/>
   <object id="196" name="GapingFish" x="4416" y="384" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="15" name="backgrounds" visible="0">
+ <objectgroup id="15" name="backgrounds">
   <object id="185" name="SnowMountains" x="0" y="0" width="848" height="480">
    <properties>
     <property name="atlas" value="Backgrounds2.txt"/>

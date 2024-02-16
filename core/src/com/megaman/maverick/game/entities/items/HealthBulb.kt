@@ -108,9 +108,7 @@ class HealthBulb(game: MegamanMaverickGame) :
 
         large = spawnProps.getOrDefault(ConstKeys.LARGE, true) as Boolean
 
-        timeCull =
-            !spawnProps.containsKey(ConstKeys.TIMED) ||
-                    spawnProps.get(ConstKeys.TIMED, Boolean::class)!!
+        timeCull = !spawnProps.containsKey(ConstKeys.TIMED) || spawnProps.get(ConstKeys.TIMED, Boolean::class)!!
 
         warning = false
         blink = false

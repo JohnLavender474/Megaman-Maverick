@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.ObjectSet
 import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
+import com.engine.audio.AudioComponent
 import com.engine.common.CAUSE_OF_DEATH_MESSAGE
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.objects.Properties
@@ -20,6 +21,7 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
+import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.ISpriteEntity
 import com.engine.updatables.UpdatablesComponent
@@ -30,12 +32,12 @@ import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
-class Explosion(game: MegamanMaverickGame) :
-    GameEntity(game), IBodyEntity, ISpriteEntity, IDamager {
+class Explosion(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEntity, IAudioEntity, IDamager {
 
     companion object {
         private var explosionRegion: TextureRegion? = null
@@ -46,14 +48,14 @@ class Explosion(game: MegamanMaverickGame) :
     private val damageMask = ObjectSet<Class<out IDamageable>>()
 
     override fun init() {
-        if (explosionRegion == null)
-            explosionRegion =
-                game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "Explosion")
+        if (explosionRegion == null) explosionRegion =
+            game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "Explosion")
 
         addComponent(defineSpritesCompoent())
         addComponent(defineBodyComponent())
         addComponent(defineAnimationsComponent())
         addComponent(defineUpdatablesComponent())
+        addComponent(AudioComponent(this))
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -70,22 +72,24 @@ class Explosion(game: MegamanMaverickGame) :
             val _damageMask = spawnProps.get(ConstKeys.MASK) as ObjectSet<Class<out IDamageable>>
             damageMask.addAll(_damageMask)
         }
+
+        if (spawnProps.getOrDefault(
+                ConstKeys.SOUND,
+                false,
+                Boolean::class
+            )
+        ) requestToPlaySound(SoundAsset.EXPLOSION_SOUND, false)
     }
 
     override fun canDamage(damageable: IDamageable) = damageMask.contains(damageable.javaClass)
 
-    override fun onDamageInflictedTo(damageable: IDamageable) {
-        // do nothing
+    override fun onDamageInflictedTo(damageable: IDamageable) { // do nothing
     }
 
-    private fun defineUpdatablesComponent() =
-        UpdatablesComponent(
-            this,
-            {
-                durationTimer.update(it)
-                if (durationTimer.isFinished())
-                    kill(props(CAUSE_OF_DEATH_MESSAGE to "Duration timer finished"))
-            })
+    private fun defineUpdatablesComponent() = UpdatablesComponent(this, {
+        durationTimer.update(it)
+        if (durationTimer.isFinished()) kill(props(CAUSE_OF_DEATH_MESSAGE to "Duration timer finished"))
+    })
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val animation = Animation(explosionRegion!!, 1, 11, .025f, false)

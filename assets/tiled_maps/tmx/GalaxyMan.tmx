@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="500" height="150" tilewidth="32" tileheight="32" infinite="0" nextlayerid="12" nextobjectid="105">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="500" height="150" tilewidth="32" tileheight="32" infinite="0" nextlayerid="12" nextobjectid="106">
  <tileset firstgid="1" source="../tsx/mm9galaxy.tsx"/>
  <objectgroup id="2" name="items"/>
  <objectgroup id="3" name="player">
   <object id="87" name="1" x="2432" y="4736" width="32" height="32"/>
-  <object id="104" name="0" x="2656" y="4032" width="32" height="32">
+  <object id="105" name="0" x="160" y="4736" width="32" height="32">
    <properties>
     <property name="cam_position" type="object" value="13"/>
    </properties>

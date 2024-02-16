@@ -40,7 +40,8 @@ enum class SoundAsset(src: String, val seconds: Int) : IAsset {
     DISAPPEARING_BLOCK_SOUND("disappearing_block.wav", 1),
     BURST_SOUND("burst.mp3", 1),
     TELEPORT_SOUND("teleport.wav", 1),
-    ALARM("alarm.wav", 1);
+    ALARM_SOUND("alarm.wav", 1),
+    TIME_STOPPER_SOUND("time_stopper.wav", 1);
 
     override val source = SOUND_ASSET_PREFIX + src
     override val assClass = Sound::class.java

@@ -457,7 +457,8 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
 
             if (!playerSpawnEventHandler.finished) playerSpawnEventHandler.update(delta)
             else if (!playerDeathEventHandler.finished) playerDeathEventHandler.update(delta)
-            else if (!playerStatsHandler.finished) playerStatsHandler.update(delta)
+
+            playerStatsHandler.update(delta)
         }
 
         // update the background and foreground camera positions

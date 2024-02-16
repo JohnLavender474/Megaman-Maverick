@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.0.0</string>
+        <string>7.1.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -124,7 +124,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>../SpriteSheets/Enemies1.txt</filename>
+                <filename>../sprite_sheets/Enemies1.txt</filename>
             </struct>
         </map>
         <key>multiPackMode</key>
@@ -173,23 +173,23 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">../Frames/Enemies1/Bat/Fly.png</key>
-            <key type="filename">../Frames/Enemies1/CloudedTorpedo/CloudyTorpedo.png</key>
-            <key type="filename">../Frames/Enemies1/CloudedTorpedo/TorpedoFire.png</key>
-            <key type="filename">../Frames/Enemies1/CloudedTorpedo/UncloudedTorpedo.png</key>
-            <key type="filename">../Frames/Enemies1/Dragonfly.png</key>
-            <key type="filename">../Frames/Enemies1/FlyPincher/Open.png</key>
-            <key type="filename">../Frames/Enemies1/FlyPincher/Pinch.png</key>
-            <key type="filename">../Frames/Enemies1/GapingFish/Chomping.png</key>
-            <key type="filename">../Frames/Enemies1/GapingFish/Gaping.png</key>
-            <key type="filename">../Frames/Enemies1/GapingFish/Swimming.png</key>
-            <key type="filename">../Frames/Enemies1/MagFly.png</key>
-            <key type="filename">../Frames/Enemies1/Met/Run.png</key>
-            <key type="filename">../Frames/Enemies1/Penguin/Stand.png</key>
-            <key type="filename">../Frames/Enemies1/ShieldAttacker/Attack.png</key>
-            <key type="filename">../Frames/Enemies1/SnowBat/Fly.png</key>
-            <key type="filename">../Frames/Enemies1/SnowMet/Run.png</key>
-            <key type="filename">../Frames/Enemies1/WispyWasp/BabyWasp.png</key>
+            <key type="filename">../frames/Enemies1/Bat/Fly.png</key>
+            <key type="filename">../frames/Enemies1/CloudedTorpedo/CloudyTorpedo.png</key>
+            <key type="filename">../frames/Enemies1/CloudedTorpedo/TorpedoFire.png</key>
+            <key type="filename">../frames/Enemies1/CloudedTorpedo/UncloudedTorpedo.png</key>
+            <key type="filename">../frames/Enemies1/DragonFly.png</key>
+            <key type="filename">../frames/Enemies1/FlyPincher/Open.png</key>
+            <key type="filename">../frames/Enemies1/FlyPincher/Pinch.png</key>
+            <key type="filename">../frames/Enemies1/GapingFish/Chomping.png</key>
+            <key type="filename">../frames/Enemies1/GapingFish/Gaping.png</key>
+            <key type="filename">../frames/Enemies1/GapingFish/Swimming.png</key>
+            <key type="filename">../frames/Enemies1/MagFly.png</key>
+            <key type="filename">../frames/Enemies1/Met/Run.png</key>
+            <key type="filename">../frames/Enemies1/Penguin/Stand.png</key>
+            <key type="filename">../frames/Enemies1/ShieldAttacker/Attack.png</key>
+            <key type="filename">../frames/Enemies1/SnowBat/Fly.png</key>
+            <key type="filename">../frames/Enemies1/SnowMet/Run.png</key>
+            <key type="filename">../frames/Enemies1/WispyWasp/BabyWasp.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -204,31 +204,41 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Enemies1/Bat/Hang.png</key>
-            <key type="filename">../Frames/Enemies1/Bat/OpenEyes.png</key>
-            <key type="filename">../Frames/Enemies1/Bat/OpenWings.png</key>
-            <key type="filename">../Frames/Enemies1/BlueScrewie/Down.png</key>
-            <key type="filename">../Frames/Enemies1/LaserBeamer.png</key>
-            <key type="filename">../Frames/Enemies1/Met/GetUp.png</key>
-            <key type="filename">../Frames/Enemies1/Met/LayDown.png</key>
-            <key type="filename">../Frames/Enemies1/Met/PopUp.png</key>
-            <key type="filename">../Frames/Enemies1/Penguin/Jump.png</key>
-            <key type="filename">../Frames/Enemies1/Penguin/Slide.png</key>
-            <key type="filename">../Frames/Enemies1/Penguin/Slippin.png</key>
-            <key type="filename">../Frames/Enemies1/PicketJoe/Stand.png</key>
-            <key type="filename">../Frames/Enemies1/RedScrewie/Down.png</key>
-            <key type="filename">../Frames/Enemies1/SniperJoe/Shielded.png</key>
-            <key type="filename">../Frames/Enemies1/SniperJoe/Shooting.png</key>
-            <key type="filename">../Frames/Enemies1/SnowBat/Hang.png</key>
-            <key type="filename">../Frames/Enemies1/SnowBat/OpenEyes.png</key>
-            <key type="filename">../Frames/Enemies1/SnowBat/OpenWings.png</key>
-            <key type="filename">../Frames/Enemies1/SnowMet/GetUp.png</key>
-            <key type="filename">../Frames/Enemies1/SnowMet/LayDown.png</key>
-            <key type="filename">../Frames/Enemies1/SnowMet/PopUp.png</key>
-            <key type="filename">../Frames/Enemies1/SnowSniperJoe/Shielded.png</key>
-            <key type="filename">../Frames/Enemies1/SnowSniperJoe/Shooting.png</key>
-            <key type="filename">../Frames/Enemies1/SpringHead/Compressed.png</key>
-            <key type="filename">../Frames/Enemies1/SwimmingMet/LayDown.png</key>
+            <key type="filename">../frames/Enemies1/Bat/Hang.png</key>
+            <key type="filename">../frames/Enemies1/Bat/OpenEyes.png</key>
+            <key type="filename">../frames/Enemies1/Bat/OpenWings.png</key>
+            <key type="filename">../frames/Enemies1/BlueScrewie/Down.png</key>
+            <key type="filename">../frames/Enemies1/LaserBeamer.png</key>
+            <key type="filename">../frames/Enemies1/Met/GetUp.png</key>
+            <key type="filename">../frames/Enemies1/Met/LayDown.png</key>
+            <key type="filename">../frames/Enemies1/Met/PopUp.png</key>
+            <key type="filename">../frames/Enemies1/Penguin/Jump.png</key>
+            <key type="filename">../frames/Enemies1/Penguin/Slide.png</key>
+            <key type="filename">../frames/Enemies1/Penguin/Slippin.png</key>
+            <key type="filename">../frames/Enemies1/PicketJoe/Stand.png</key>
+            <key type="filename">../frames/Enemies1/RedScrewie/Down.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/Orange/JumpNoShield.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/Orange/JumpWithShield.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/Orange/ShootingNoShield.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/Orange/ShootingWithShield.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/Orange/StandNoShield.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/Orange/StandShielded.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/Orange/ThrowShield.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/Snow/JumpNoShield.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/Snow/JumpWithShield.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/Snow/ShootingNoShield.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/Snow/ShootingWithShield.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/Snow/StandNoShield.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/Snow/StandShielded.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/Snow/ThrowShield.png</key>
+            <key type="filename">../frames/Enemies1/SnowBat/Hang.png</key>
+            <key type="filename">../frames/Enemies1/SnowBat/OpenEyes.png</key>
+            <key type="filename">../frames/Enemies1/SnowBat/OpenWings.png</key>
+            <key type="filename">../frames/Enemies1/SnowMet/GetUp.png</key>
+            <key type="filename">../frames/Enemies1/SnowMet/LayDown.png</key>
+            <key type="filename">../frames/Enemies1/SnowMet/PopUp.png</key>
+            <key type="filename">../frames/Enemies1/SpringHead/Compressed.png</key>
+            <key type="filename">../frames/Enemies1/SwimmingMet/LayDown.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -243,14 +253,13 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Enemies1/BlueScrewie/Drop.png</key>
-            <key type="filename">../Frames/Enemies1/BlueScrewie/Rise.png</key>
-            <key type="filename">../Frames/Enemies1/BlueScrewie/Shoot.png</key>
-            <key type="filename">../Frames/Enemies1/PicketJoe/Throw.png</key>
-            <key type="filename">../Frames/Enemies1/RedScrewie/Drop.png</key>
-            <key type="filename">../Frames/Enemies1/RedScrewie/Rise.png</key>
-            <key type="filename">../Frames/Enemies1/RedScrewie/Shoot.png</key>
-            <key type="filename">../Frames/Enemies1/ShieldAttacker/TurnAround.png</key>
+            <key type="filename">../frames/Enemies1/BlueScrewie/Drop.png</key>
+            <key type="filename">../frames/Enemies1/BlueScrewie/Rise.png</key>
+            <key type="filename">../frames/Enemies1/BlueScrewie/Shoot.png</key>
+            <key type="filename">../frames/Enemies1/PicketJoe/Throw.png</key>
+            <key type="filename">../frames/Enemies1/RedScrewie/Drop.png</key>
+            <key type="filename">../frames/Enemies1/RedScrewie/Rise.png</key>
+            <key type="filename">../frames/Enemies1/RedScrewie/Shoot.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -265,8 +274,8 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Enemies1/FloatingCan.png</key>
-            <key type="filename">../Frames/Enemies1/SuicideBummer.png</key>
+            <key type="filename">../frames/Enemies1/FloatingCan.png</key>
+            <key type="filename">../frames/Enemies1/SuicideBummer.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -281,7 +290,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Enemies1/FlyBoy/Fly.png</key>
+            <key type="filename">../frames/Enemies1/FlyBoy/Fly.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -290,13 +299,13 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>20,10,40,20</rect>
+                <rect>40,10,80,20</rect>
                 <key>scale9Paddings</key>
-                <rect>20,10,40,20</rect>
+                <rect>40,10,80,20</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Enemies1/FlyBoy/Stand.png</key>
+            <key type="filename">../frames/Enemies1/FlyBoy/Stand.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -311,7 +320,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Enemies1/Matasaburo.png</key>
+            <key type="filename">../frames/Enemies1/Matasaburo.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -320,19 +329,19 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>96,16,192,32</rect>
+                <rect>54,9,108,18</rect>
                 <key>scale9Paddings</key>
-                <rect>96,16,192,32</rect>
+                <rect>54,9,108,18</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Enemies1/PreciousJoe/Charge.png</key>
-            <key type="filename">../Frames/Enemies1/Ratton/Jump.png</key>
-            <key type="filename">../Frames/Enemies1/Ratton/Stand.png</key>
-            <key type="filename">../Frames/Enemies1/SnowSeal/FormSnowball.png</key>
-            <key type="filename">../Frames/Enemies1/SnowSeal/Stand.png</key>
-            <key type="filename">../Frames/Enemies1/WispyWasp/Fly.png</key>
-            <key type="filename">../Frames/Enemies1/WispyWasp/FlyWithNest.png</key>
+            <key type="filename">../frames/Enemies1/PreciousJoe/Charge.png</key>
+            <key type="filename">../frames/Enemies1/Ratton/Jump.png</key>
+            <key type="filename">../frames/Enemies1/Ratton/Stand.png</key>
+            <key type="filename">../frames/Enemies1/SnowSeal/FormSnowball.png</key>
+            <key type="filename">../frames/Enemies1/SnowSeal/Stand.png</key>
+            <key type="filename">../frames/Enemies1/WispyWasp/Fly.png</key>
+            <key type="filename">../frames/Enemies1/WispyWasp/FlyWithNest.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -347,11 +356,11 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Enemies1/PreciousJoe/Shoot.png</key>
-            <key type="filename">../Frames/Enemies1/PreciousJoe/Stand.png</key>
-            <key type="filename">../Frames/Enemies1/SwinginJoe/SnowThrowBall.png</key>
-            <key type="filename">../Frames/Enemies1/SwinginJoe/ThrowBall.png</key>
-            <key type="filename">../Frames/Enemies1/WispyWasp/Nest.png</key>
+            <key type="filename">../frames/Enemies1/PreciousJoe/Shoot.png</key>
+            <key type="filename">../frames/Enemies1/PreciousJoe/Stand.png</key>
+            <key type="filename">../frames/Enemies1/SwinginJoe/SnowThrowBall.png</key>
+            <key type="filename">../frames/Enemies1/SwinginJoe/ThrowBall.png</key>
+            <key type="filename">../frames/Enemies1/WispyWasp/Nest.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -366,38 +375,9 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Enemies1/SnowSeal/SlapTail.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>36,12,72,24</rect>
-                <key>scale9Paddings</key>
-                <rect>36,12,72,24</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../Frames/Enemies1/SpringHead/Unleashed.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>48,8,96,16</rect>
-                <key>scale9Paddings</key>
-                <rect>48,8,96,16</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../Frames/Enemies1/SuctionRoller.png</key>
-            <key type="filename">../Frames/Enemies1/SwimmingMet/Swim.png</key>
+            <key type="filename">../frames/Enemies1/ShieldAttacker/TurnAround.png</key>
+            <key type="filename">../frames/Enemies1/SuctionRoller.png</key>
+            <key type="filename">../frames/Enemies1/SwimmingMet/Swim.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -412,10 +392,40 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Enemies1/SwinginJoe/SnowSwingBall1.png</key>
-            <key type="filename">../Frames/Enemies1/SwinginJoe/SnowSwingBall2.png</key>
-            <key type="filename">../Frames/Enemies1/SwinginJoe/SwingBall1.png</key>
-            <key type="filename">../Frames/Enemies1/SwinginJoe/SwingBall2.png</key>
+            <key type="filename">../frames/Enemies1/SnowSeal/SlapTail.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>36,12,72,24</rect>
+                <key>scale9Paddings</key>
+                <rect>36,12,72,24</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies1/SpringHead/Unleashed.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>48,8,96,16</rect>
+                <key>scale9Paddings</key>
+                <rect>48,8,96,16</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies1/SwinginJoe/SnowSwingBall1.png</key>
+            <key type="filename">../frames/Enemies1/SwinginJoe/SnowSwingBall2.png</key>
+            <key type="filename">../frames/Enemies1/SwinginJoe/SwingBall1.png</key>
+            <key type="filename">../frames/Enemies1/SwinginJoe/SwingBall2.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -437,7 +447,7 @@
             <struct type="SpriteSheet">
                 <key>files</key>
                 <array>
-                    <filename>../Frames/Enemies1</filename>
+                    <filename>../frames/Enemies1</filename>
                 </array>
             </struct>
         </map>

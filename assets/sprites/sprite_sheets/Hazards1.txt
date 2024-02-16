@@ -1,18 +1,18 @@
 Hazards1.png
-size: 255, 385
+size: 256, 385
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 Bolt
   rotate: false
-  xy: 66, 32
+  xy: 98, 32
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 Electrocutie/Charge
   rotate: false
-  xy: 130, 32
+  xy: 162, 32
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
@@ -66,9 +66,23 @@ Saw
   orig: 255, 129
   offset: 0, 0
   index: -1
+Sea Mine/Blow
+  rotate: false
+  xy: 64, 64
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+Sea Mine/Wait
+  rotate: false
+  xy: 158, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 Spike1
   rotate: false
-  xy: 0, 32
+  xy: 32, 32
   size: 33, 31
   orig: 33, 31
   offset: 0, 0
@@ -82,35 +96,35 @@ Spike2
   index: -1
 Spike3
   rotate: false
-  xy: 33, 32
+  xy: 65, 32
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: -1
 Spike4
   rotate: false
-  xy: 158, 0
+  xy: 190, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Spike5
   rotate: false
-  xy: 190, 0
+  xy: 222, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Spike6
   rotate: false
-  xy: 222, 0
+  xy: 0, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SwingingAxe
   rotate: false
-  xy: 64, 64
+  xy: 128, 64
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -124,7 +138,7 @@ SwingingAxe_HandleEndCentered
   index: -1
 SwingingAxe_UpsideDown
   rotate: false
-  xy: 128, 64
+  xy: 192, 64
   size: 64, 64
   orig: 64, 64
   offset: 0, 0

@@ -90,7 +90,7 @@ abstract class AbstractEnemy(
         runnablesOnSpawn.add { setHealth(getMaxHealth()) }
 
         runnablesOnDestroy.add {
-            if (getCurrentHealth() == 0) {
+            if (hasDepletedHealth()) {
                 disintegrate()
                 if (dropItemOnDeath) {
                     val randomInt = getRandom(0, 10)

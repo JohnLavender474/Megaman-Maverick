@@ -1,7 +1,7 @@
 Items1.png
-size: 384, 32
+size: 420, 32
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Linear,Linear
 repeat: none
 EmptyHealthTank
   rotate: false
@@ -52,9 +52,23 @@ SmallWeaponBulb
   orig: 32, 32
   offset: 0, 0
   index: -1
-WeaponBulb
+SniperJoeShield/Blue
   rotate: false
   xy: 320, 0
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: -1
+SniperJoeShield/Orange
+  rotate: false
+  xy: 338, 0
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: -1
+WeaponBulb
+  rotate: false
+  xy: 356, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
