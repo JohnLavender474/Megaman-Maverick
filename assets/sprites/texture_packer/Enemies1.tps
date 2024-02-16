@@ -189,6 +189,7 @@
             <key type="filename">../frames/Enemies1/ShieldAttacker/Attack.png</key>
             <key type="filename">../frames/Enemies1/SnowBat/Fly.png</key>
             <key type="filename">../frames/Enemies1/SnowMet/Run.png</key>
+            <key type="filename">../frames/Enemies1/SuicideBummer/Jump.png</key>
             <key type="filename">../frames/Enemies1/WispyWasp/BabyWasp.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -275,7 +276,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Enemies1/FloatingCan.png</key>
-            <key type="filename">../frames/Enemies1/SuicideBummer.png</key>
+            <key type="filename">../frames/Enemies1/SuicideBummer/Run.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

@@ -45,10 +45,7 @@ import kotlin.reflect.KClass
 class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
     enum class BatStatus(val region: String) {
-        HANGING("Hang"),
-        OPEN_EYES("OpenEyes"),
-        OPEN_WINGS("OpenWings"),
-        FLYING_TO_ATTACK("Fly"),
+        HANGING("Hang"), OPEN_EYES("OpenEyes"), OPEN_WINGS("OpenWings"), FLYING_TO_ATTACK("Fly"),
         FLYING_TO_RETREAT("Fly")
     }
 
@@ -62,16 +59,12 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
         private const val FLY_TO_RETREAT_SPEED = 8f
     }
 
-    override val damageNegotiations =
-        objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-            Bullet::class to dmgNeg(10),
-            Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-            ChargedShot::class to dmgNeg {
-                it as ChargedShot
-                if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
-            },
-            ChargedShotExplosion::class to dmgNeg(ConstVals.MAX_HEALTH)
-        )
+    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+        Bullet::class to dmgNeg(10), Fireball::class to dmgNeg(ConstVals.MAX_HEALTH), ChargedShot::class to dmgNeg {
+            it as ChargedShot
+            if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
+        }, ChargedShotExplosion::class to dmgNeg(ConstVals.MAX_HEALTH)
+    )
 
     private val hangTimer = Timer(HANG_DURATION)
     private val releasePerchTimer = Timer(RELEASE_FROM_PERCH_DURATION)
@@ -97,8 +90,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
         val bounds = spawnProps.get(ConstKeys.BOUNDS) as GameRectangle
         body.setTopCenterToPoint(bounds.getTopCenterPoint())
 
-        type =
-            if (spawnProps.containsKey(ConstKeys.TYPE)) spawnProps.get(ConstKeys.TYPE) as String else ""
+        type = if (spawnProps.containsKey(ConstKeys.TYPE)) spawnProps.get(ConstKeys.TYPE) as String else ""
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -114,8 +106,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
                     }
                 }
 
-                BatStatus.OPEN_EYES,
-                BatStatus.OPEN_WINGS -> {
+                BatStatus.OPEN_EYES, BatStatus.OPEN_WINGS -> {
                     releasePerchTimer.update(it)
                     if (releasePerchTimer.isFinished()) {
                         if (status == BatStatus.OPEN_EYES) {
@@ -129,8 +120,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
                     if (body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)) status = BatStatus.HANGING
                 }
 
-                BatStatus.FLYING_TO_ATTACK -> {
-                    // TODO: add attack logic
+                BatStatus.FLYING_TO_ATTACK -> { // TODO: add attack logic
                 }
             }
         }
@@ -141,10 +131,9 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
         body.setSize(.5f * ConstVals.PPM, .25f * ConstVals.PPM)
 
         // head fixture
-        val headFixture =
-            Fixture(
-                GameRectangle().setSize(.5f * ConstVals.PPM, .175f * ConstVals.PPM), FixtureType.HEAD
-            )
+        val headFixture = Fixture(
+            GameRectangle().setSize(.5f * ConstVals.PPM, .175f * ConstVals.PPM), FixtureType.HEAD
+        )
         headFixture.offsetFromBodyCenter.y = 0.375f * ConstVals.PPM
         body.addFixture(headFixture)
 
@@ -167,9 +156,8 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
         // scanner fixture
         val scannerFixture = Fixture(model.copy(), FixtureType.CONSUMER)
         val consumer: (Fixture) -> Unit = {
-            if (it.fixtureLabel == FixtureType.DAMAGEABLE &&
-                it.getEntity() == getMegamanMaverickGame().megaman
-            ) status = BatStatus.FLYING_TO_RETREAT
+            if (it.fixtureLabel == FixtureType.DAMAGEABLE && it.getEntity() == getMegamanMaverickGame().megaman) status =
+                BatStatus.FLYING_TO_RETREAT
         }
         scannerFixture.setConsumer { _, it -> consumer(it) }
         body.addFixture(scannerFixture)
@@ -178,8 +166,10 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
             shieldFixture.active = status == BatStatus.HANGING
             damageableFixture.active = status != BatStatus.HANGING
 
-            if (status == BatStatus.FLYING_TO_RETREAT)
-                body.physics.velocity.set(0f, FLY_TO_RETREAT_SPEED * ConstVals.PPM)
+            if (status == BatStatus.FLYING_TO_RETREAT) body.physics.velocity.set(
+                0f,
+                FLY_TO_RETREAT_SPEED * ConstVals.PPM
+            )
             else if (status != BatStatus.FLYING_TO_ATTACK) body.physics.velocity.setZero()
         })
 
@@ -197,60 +187,49 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
         val SpritesComponent = SpritesComponent(this, "bat" to sprite)
         SpritesComponent.putUpdateFunction("bat") { _, _sprite ->
             _sprite as GameSprite
-            _sprite.setPosition(body.getCenter(), Position.CENTER)
-            // TODO: _sprite.hidden = damageBlink
+            _sprite.setPosition(body.getCenter(), Position.CENTER) // TODO: _sprite.hidden = damageBlink
         }
         return SpritesComponent
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier = { type + status.region }
-        val animator =
-            Animator(
-                keySupplier,
-                objectMapOf(
-                    "Hang" to Animation(atlas!!.findRegion("Bat/Hang"), true),
-                    "Fly" to Animation(atlas!!.findRegion("Bat/Fly"), 1, 2, 0.1f, true),
-                    "OpenEyes" to Animation(atlas!!.findRegion("Bat/OpenEyes"), true),
-                    "OpenWings" to Animation(atlas!!.findRegion("Bat/OpenWings"), true),
-                    "SnowHang" to Animation(atlas!!.findRegion("SnowBat/Hang"), true),
-                    "SnowFly" to Animation(atlas!!.findRegion("SnowBat/Fly"), 1, 2, 0.1f, true),
-                    "SnowOpenEyes" to Animation(atlas!!.findRegion("SnowBat/OpenEyes"), true),
-                    "SnowOpenWings" to Animation(atlas!!.findRegion("SnowBat/OpenWings"), true)
-                )
+        val animator = Animator(
+            keySupplier, objectMapOf(
+                "Hang" to Animation(atlas!!.findRegion("Bat/Hang"), true),
+                "Fly" to Animation(atlas!!.findRegion("Bat/Fly"), 1, 2, 0.1f, true),
+                "OpenEyes" to Animation(atlas!!.findRegion("Bat/OpenEyes"), true),
+                "OpenWings" to Animation(atlas!!.findRegion("Bat/OpenWings"), true),
+                "SnowHang" to Animation(atlas!!.findRegion("SnowBat/Hang"), true),
+                "SnowFly" to Animation(atlas!!.findRegion("SnowBat/Fly"), 1, 2, 0.1f, true),
+                "SnowOpenEyes" to Animation(atlas!!.findRegion("SnowBat/OpenEyes"), true),
+                "SnowOpenWings" to Animation(atlas!!.findRegion("SnowBat/OpenWings"), true)
             )
+        )
         return AnimationsComponent(this, animator)
     }
 
     private fun definePathfindingComponent(): PathfindingComponent {
-        val params =
-            PathfinderParams(
-                startSupplier = { body.getCenter() },
-                targetSupplier = { getMegamanMaverickGame().megaman.body.getTopCenterPoint() },
-                allowDiagonal = { true },
-                filter = { _, objs ->
-                    for (obj in objs) if (obj is Fixture && obj.fixtureLabel == FixtureType.BLOCK)
-                        return@PathfinderParams false
-                    return@PathfinderParams true
-                })
+        val params = PathfinderParams(startSupplier = { body.getCenter() },
+            targetSupplier = { getMegamanMaverickGame().megaman.body.getTopCenterPoint() },
+            allowDiagonal = { true },
+            filter = { _, objs ->
+                for (obj in objs) if (obj is Fixture && obj.fixtureLabel == FixtureType.BLOCK) return@PathfinderParams false
+                return@PathfinderParams true
+            })
 
-        val pathfindingComponent =
-            PathfindingComponent(
-                this,
-                params,
-                {
-                    StandardPathfinderResultConsumer.consume(
-                        it,
-                        body,
-                        body.getCenter(),
-                        FLY_TO_ATTACK_SPEED,
-                        body,
-                        stopOnTargetReached = false,
-                        stopOnTargetNull = false,
-                        shapes = if (DEBUG_PATHFINDING) getMegamanMaverickGame().getShapes() else null
-                    )
-                },
-                { status == BatStatus.FLYING_TO_ATTACK })
+        val pathfindingComponent = PathfindingComponent(this, params, {
+            StandardPathfinderResultConsumer.consume(
+                it,
+                body,
+                body.getCenter(),
+                FLY_TO_ATTACK_SPEED,
+                body,
+                stopOnTargetReached = false,
+                stopOnTargetNull = false,
+                shapes = if (DEBUG_PATHFINDING) getMegamanMaverickGame().getShapes() else null
+            )
+        }, { status == BatStatus.FLYING_TO_ATTACK })
 
         pathfindingComponent.updateIntervalTimer = Timer(0.1f)
 

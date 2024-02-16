@@ -87,7 +87,6 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override fun onDestroy() {
         super.onDestroy()
-
         if (hasDepletedHealth()) explode()
     }
 

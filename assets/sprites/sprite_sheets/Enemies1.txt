@@ -159,7 +159,7 @@ MagFly
   index: -1
 Matasaburo
   rotate: false
-  xy: 1760, 32
+  xy: 1824, 32
   size: 216, 36
   orig: 216, 36
   offset: 0, 0
@@ -507,23 +507,30 @@ SuctionRoller
   orig: 160, 32
   offset: 0, 0
   index: -1
-SuicideBummer
+SuicideBummer/Jump
   rotate: false
   xy: 1376, 32
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+SuicideBummer/Run
+  rotate: false
+  xy: 1440, 32
   size: 128, 32
   orig: 128, 32
   offset: 0, 0
   index: -1
 SwimmingMet/LayDown
   rotate: false
-  xy: 1504, 32
+  xy: 1568, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SwimmingMet/Swim
   rotate: false
-  xy: 1536, 32
+  xy: 1600, 32
   size: 160, 32
   orig: 160, 32
   offset: 0, 0
@@ -572,7 +579,7 @@ SwinginJoe/ThrowBall
   index: -1
 WispyWasp/BabyWasp
   rotate: false
-  xy: 1696, 32
+  xy: 1760, 32
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
