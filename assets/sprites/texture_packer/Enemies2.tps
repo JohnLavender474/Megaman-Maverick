@@ -372,22 +372,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Enemies2/Gachappan/Shoot.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>112,16,224,32</rect>
-                <key>scale9Paddings</key>
-                <rect>112,16,224,32</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Enemies2/Gachappan/Throw.png</key>
+            <key type="filename">../frames/Enemies2/Gachappan/Open.png</key>
             <key type="filename">../frames/Enemies2/Gachappan/Wait.png</key>
             <key type="filename">../frames/Enemies2/Hanabiran/Drop.png</key>
             <key type="filename">../frames/Enemies2/Hanabiran/Rise.png</key>
@@ -402,6 +387,21 @@
                 <rect>48,16,96,32</rect>
                 <key>scale9Paddings</key>
                 <rect>48,16,96,32</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies2/Gachappan/Shoot.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>112,16,224,32</rect>
+                <key>scale9Paddings</key>
+                <rect>112,16,224,32</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

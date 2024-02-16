@@ -41,12 +41,15 @@ import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.hazards.Bolt
 import com.megaman.maverick.game.entities.hazards.ElectrocutieChild
 import com.megaman.maverick.game.entities.hazards.LaserBeamer
-import com.megaman.maverick.game.entities.projectiles.SniperJoeShield
 import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOSION_ORB_SPEED
 import com.megaman.maverick.game.entities.projectiles.*
-import com.megaman.maverick.game.entities.utils.*
+import com.megaman.maverick.game.entities.projectiles.SniperJoeShield
+import com.megaman.maverick.game.entities.utils.setStandardOnPortalHopperContinueProp
+import com.megaman.maverick.game.entities.utils.standardOnPortalHopperEnd
+import com.megaman.maverick.game.entities.utils.standardOnPortalHopperStart
+import com.megaman.maverick.game.entities.utils.stopSoundNow
 import com.megaman.maverick.game.events.EventType
 import kotlin.reflect.KClass
 
@@ -108,7 +111,9 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         UpNDown::class to dmgNeg(3),
         BigJumpingJoe::class to dmgNeg(6),
         SniperJoeShield::class to dmgNeg(2),
-        SuicideBummer::class to dmgNeg(3)
+        SuicideBummer::class to dmgNeg(3),
+        Gachappan::class to dmgNeg(5),
+        GachappanBall::class to dmgNeg(3)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 

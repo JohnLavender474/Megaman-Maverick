@@ -173,9 +173,9 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">../Frames/Projectiles1/Bullet.png</key>
-            <key type="filename">../Frames/Projectiles1/Fire/Fireball.png</key>
-            <key type="filename">../Frames/Projectiles1/Snowball.png</key>
+            <key type="filename">../frames/Projectiles1/Bullet.png</key>
+            <key type="filename">../frames/Projectiles1/Fire/Fireball.png</key>
+            <key type="filename">../frames/Projectiles1/Snowball.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -190,7 +190,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Projectiles1/CaveRock/Burst.png</key>
+            <key type="filename">../frames/Projectiles1/CaveRock/Burst.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -205,7 +205,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Projectiles1/CaveRock/Rock.png</key>
+            <key type="filename">../frames/Projectiles1/CaveRock/Rock.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -220,11 +220,11 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Projectiles1/Electric/BigElectric.png</key>
-            <key type="filename">../Frames/Projectiles1/Electric/PurpleShockBalls.png</key>
-            <key type="filename">../Frames/Projectiles1/Electric/SmallElectric.png</key>
-            <key type="filename">../Frames/Projectiles1/Electric/Zap.png</key>
-            <key type="filename">../Frames/Projectiles1/HalfChargedShot.png</key>
+            <key type="filename">../frames/Projectiles1/Electric/BigElectric.png</key>
+            <key type="filename">../frames/Projectiles1/Electric/PurpleShockBalls.png</key>
+            <key type="filename">../frames/Projectiles1/Electric/SmallElectric.png</key>
+            <key type="filename">../frames/Projectiles1/Electric/Zap.png</key>
+            <key type="filename">../frames/Projectiles1/HalfChargedShot.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -239,10 +239,10 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Projectiles1/Electric/ElectricBallPulse.png</key>
-            <key type="filename">../Frames/Projectiles1/Joeball.png</key>
-            <key type="filename">../Frames/Projectiles1/Picket.png</key>
-            <key type="filename">../Frames/Projectiles1/SnowJoeball.png</key>
+            <key type="filename">../frames/Projectiles1/Electric/ElectricBallPulse.png</key>
+            <key type="filename">../frames/Projectiles1/Joeball.png</key>
+            <key type="filename">../frames/Projectiles1/Picket.png</key>
+            <key type="filename">../frames/Projectiles1/SnowJoeball.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -257,7 +257,22 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Projectiles1/Petal.png</key>
+            <key type="filename">../frames/Projectiles1/GachappanBall.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>8,4,16,8</rect>
+                <key>scale9Paddings</key>
+                <rect>8,4,16,8</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Projectiles1/Petal.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -272,7 +287,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Projectiles1/PreciousShot/Form.png</key>
+            <key type="filename">../frames/Projectiles1/PreciousShot/Form.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -287,7 +302,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Projectiles1/PreciousShot/Shoot.png</key>
+            <key type="filename">../frames/Projectiles1/PreciousShot/Shoot.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -302,7 +317,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Projectiles1/SnowballForm.png</key>
+            <key type="filename">../frames/Projectiles1/SnowballForm.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -324,7 +339,7 @@
             <struct type="SpriteSheet">
                 <key>files</key>
                 <array>
-                    <filename>../Frames/Projectiles1</filename>
+                    <filename>../frames/Projectiles1</filename>
                 </array>
             </struct>
         </map>

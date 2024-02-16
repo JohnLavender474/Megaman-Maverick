@@ -1,7 +1,7 @@
 Enemies1.png
 size: 2048, 116
 format: RGBA8888
-filter: Linear,Linear
+filter: Nearest,Nearest
 repeat: none
 Bat/Fly
   rotate: false

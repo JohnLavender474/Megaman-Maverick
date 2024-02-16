@@ -83,7 +83,7 @@ class Explosion(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpr
 
     override fun canDamage(damageable: IDamageable) = damageMask.contains(damageable.javaClass)
 
-    override fun onDamageInflictedTo(damageable: IDamageable) { // do nothing
+    override fun onDamageInflictedTo(damageable: IDamageable) {
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent(this, {

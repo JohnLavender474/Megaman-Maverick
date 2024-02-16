@@ -7,6 +7,7 @@ import com.engine.common.GameLogger
 import com.engine.common.enums.Facing
 import com.engine.common.extensions.objectSetOf
 import com.engine.common.getRandom
+import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.time.Timer
 import com.engine.cullables.CullableOnEvent
@@ -212,17 +213,19 @@ abstract class AbstractEnemy(
         cullablesComponent.add(cullOnEvents)
     }
 
-    protected open fun disintegrate() {
+    protected open fun disintegrate(disintegrationProps: Properties? = null) {
         getMegamanMaverickGame().audioMan.playSound(SoundAsset.ENEMY_DAMAGE_SOUND)
         val disintegration =
             EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)
-        game.gameEngine.spawn(disintegration!!, props(ConstKeys.POSITION to body.getCenter()))
+        val props = disintegrationProps ?: props(ConstKeys.POSITION to body.getCenter())
+        game.gameEngine.spawn(disintegration!!, props)
     }
 
-    protected open fun explode() {
+    protected open fun explode(explosionProps: Properties? = null) {
         getMegamanMaverickGame().audioMan.playSound(SoundAsset.ENEMY_DAMAGE_SOUND)
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)
-        game.gameEngine.spawn(explosion!!, props(ConstKeys.POSITION to body.getCenter()))
+        val props = explosionProps ?: props(ConstKeys.POSITION to body.getCenter())
+        game.gameEngine.spawn(explosion!!, props)
     }
 
     fun isMegamanShootingAtMe(): Boolean {

@@ -15,6 +15,7 @@ import com.engine.common.extensions.objectMapOf
 import com.engine.common.interfaces.IFaceable
 import com.engine.common.interfaces.isFacing
 import com.engine.common.objects.Properties
+import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.damage.IDamageable
 import com.engine.damage.IDamager
@@ -98,7 +99,12 @@ class SuicideBummer(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable,
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) {
-        explode()
+        explode(
+            props(
+                ConstKeys.POSITION to body.getCenter(),
+                ConstKeys.SOUND to true
+            )
+        )
         kill()
     }
 
