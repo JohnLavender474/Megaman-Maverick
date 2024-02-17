@@ -159,7 +159,6 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
         // set begin transition logic for camera manager
         cameraManagerForRooms.beginTransition = {
             systemsToSwitch.forEach { systems.get(it.simpleName)?.let { system -> system.on = false } }
-
             megamanGame.eventsMan.submitEvent(
                 Event(
                     EventType.BEGIN_ROOM_TRANS,

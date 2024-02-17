@@ -14,7 +14,7 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegamanKeys
 
 internal fun Megaman.defineSpritesComponent(): SpritesComponent {
-    val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 4))
+    val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
     sprite.setSize(2.475f * ConstVals.PPM, 1.875f * ConstVals.PPM)
 
     val SpritesComponent = SpritesComponent(this, "player" to sprite)

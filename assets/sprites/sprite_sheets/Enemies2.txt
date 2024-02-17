@@ -41,15 +41,15 @@ BigJumpingJoe/Stand
 BulbBlaster/Dark
   rotate: false
   xy: 400, 0
-  size: 96, 32
-  orig: 96, 32
+  size: 128, 32
+  orig: 128, 32
   offset: 0, 0
   index: -1
 BulbBlaster/Light
   rotate: false
-  xy: 496, 0
-  size: 96, 32
-  orig: 96, 32
+  xy: 528, 0
+  size: 128, 32
+  orig: 128, 32
   offset: 0, 0
   index: -1
 CartinJoe/Move
@@ -229,14 +229,14 @@ RedTiggerSquirt
   index: -1
 RingRing/Pink
   rotate: false
-  xy: 592, 0
+  xy: 656, 0
   size: 128, 32
   orig: 128, 32
   offset: 0, 0
   index: -1
 RingRing/Red
   rotate: false
-  xy: 720, 0
+  xy: 784, 0
   size: 128, 32
   orig: 128, 32
   offset: 0, 0
@@ -264,14 +264,14 @@ Robbit/Stand
   index: -1
 Taketenko/Fly
   rotate: false
-  xy: 848, 0
+  xy: 912, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Taketenko/Propeller
   rotate: false
-  xy: 880, 0
+  xy: 944, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0

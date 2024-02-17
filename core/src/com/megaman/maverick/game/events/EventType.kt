@@ -23,5 +23,6 @@ enum class EventType {
     BOSS_DEAD,
     REQ_SHAKE_CAM,
     END_LEVEL_SUCCESSFULLY,
-    TELEPORT
+    TELEPORT,
+    REQ_BLACK_BACKGROUND,
 }

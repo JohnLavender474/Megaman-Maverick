@@ -15,6 +15,11 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val CENTER = "center"
+    const val RADIUS = "radius"
+    const val LIGHT = "light"
+    const val KEYS = "keys"
+    const val HIDDEN = "hidden"
     const val SOUND = "sound"
     const val THROWN = "thrown"
     const val TRIGGER = "trigger"
