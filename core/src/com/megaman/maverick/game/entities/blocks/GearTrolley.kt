@@ -28,8 +28,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.events.EventType
 
-class GearTrolley(game: MegamanMaverickGame) :
-    Block(game), IMotionEntity, ISpriteEntity, IEventListener {
+class GearTrolley(game: MegamanMaverickGame) : Block(game), IMotionEntity, ISpriteEntity, IEventListener {
 
     companion object {
         private var region: TextureRegion? = null
@@ -43,9 +42,8 @@ class GearTrolley(game: MegamanMaverickGame) :
     override fun init() {
         super<Block>.init()
 
-        if (region == null)
-            region =
-                game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "GearTrolleyPlatform")
+        if (region == null) region =
+            game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "GearTrolleyPlatform")
 
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
@@ -68,11 +66,9 @@ class GearTrolley(game: MegamanMaverickGame) :
 
         // define the trajectory
         val trajectory = Trajectory(spawnProps.get(ConstKeys.TRAJECTORY) as String, ConstVals.PPM)
-        val motionDefinition =
-            MotionDefinition(
-                motion = trajectory,
-                function = { value, _ -> body.physics.velocity.set(value) },
-                onReset = { body.set(bounds) })
+        val motionDefinition = MotionDefinition(motion = trajectory,
+            function = { value, _ -> body.physics.velocity.set(value) },
+            onReset = { body.set(bounds) })
 
         putMotionDefinition(ConstKeys.TRAJECTORY, motionDefinition)
     }

@@ -22,8 +22,7 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
         player as GameSprite
 
         val direction = if (isBehaviorActive(BehaviorType.AIR_DASHING)) getProperty(
-            MegamanKeys.DIRECTION_ON_AIR_DASH,
-            Direction::class
+            MegamanKeys.DIRECTION_ON_AIR_DASH, Direction::class
         )!!
         else directionRotation
 
@@ -51,18 +50,15 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
 
         val xTranslation = if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) when (direction) {
             Direction.UP, Direction.DOWN -> 0f
-
             Direction.LEFT -> 0.15f
             Direction.RIGHT -> -0.15f
         }
         else when (direction) {
             Direction.UP, Direction.DOWN -> 0f
-
             Direction.LEFT -> 0.425f
             Direction.RIGHT -> -0.425f
         }
         player.translateX(xTranslation * ConstVals.PPM)
-
         player.setAlpha(if (damageFlash) 0f else 1f)
     }
 

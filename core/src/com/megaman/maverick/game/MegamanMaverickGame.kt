@@ -49,13 +49,9 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.MegaControllerPoller
-import com.megaman.maverick.game.entities.enemies.BulbBlaster
-import com.megaman.maverick.game.entities.enemies.Togglee
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.projectiles.SniperJoeShield
 import com.megaman.maverick.game.entities.special.BlackBackground
-import com.megaman.maverick.game.entities.special.PortalHopper
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
@@ -229,7 +225,9 @@ class MegamanMaverickGame : Game2D() {
 
     override fun createGameEngine(): IGameEngine {
         val drawables = PriorityQueue<IDrawable<Batch>> { o1, o2 ->
-            if (o1 is IComparableDrawable<Batch> && o2 is IComparableDrawable<Batch>) o1.priority.compareTo(o2.priority)
+            if (o1 is IComparableDrawable<Batch> && o2 is IComparableDrawable<Batch>) o1.compareTo(o2)
+            else if (o1 is IComparableDrawable<Batch>) 1
+            else if (o2 is IComparableDrawable<Batch>) -1
             else 0
         }
         properties.put(ConstKeys.DRAWABLES, drawables)
@@ -254,7 +252,8 @@ class MegamanMaverickGame : Game2D() {
             FixtureType.LASER to objectSetOf(FixtureType.BLOCK)
         )
 
-        val engine = GameEngine(ControllerSystem(controllerPoller),
+        val engine = GameEngine(
+            ControllerSystem(controllerPoller),
             AnimationsSystem(),
             BehaviorsSystem(),
             WorldSystem(

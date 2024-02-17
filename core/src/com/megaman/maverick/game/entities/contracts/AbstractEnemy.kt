@@ -42,18 +42,8 @@ import com.megaman.maverick.game.utils.getMegamanMaverickGame
 import kotlin.reflect.KClass
 
 abstract class AbstractEnemy(
-    game: MegamanMaverickGame,
-    private val cullTime: Float = 1f,
-    private val cullWhenOutOfCamBounds: Boolean = true
-) :
-    GameEntity(game),
-    IDamager,
-    IDamageable,
-    IBodyEntity,
-    IAudioEntity,
-    IHealthEntity,
-    ISpriteEntity,
-    ICullableEntity {
+    game: MegamanMaverickGame, private val cullTime: Float = 1f, private val cullWhenOutOfCamBounds: Boolean = true
+) : GameEntity(game), IDamager, IDamageable, IBodyEntity, IAudioEntity, IHealthEntity, ISpriteEntity, ICullableEntity {
 
     companion object {
         const val TAG = "AbstractEnemy"
@@ -96,33 +86,23 @@ abstract class AbstractEnemy(
                 if (dropItemOnDeath) {
                     val randomInt = getRandom(0, 10)
                     val props = props(ConstKeys.POSITION to body.getCenter())
-                    val entity: IGameEntity? =
-                        when (randomInt) {
-                            0,
-                            1,
-                            2 -> {
-                                props.put(ConstKeys.LARGE, randomInt == 1)
-                                EntityFactories.fetch(EntityType.ITEM, ItemsFactory.HEALTH_BULB)
-                            }
-
-                            3,
-                            4,
-                            5 -> {
-                                // TODO: EntityFactories.fetch(EntityType.ITEM, ItemsFactory.WEAPON_ENERGY)
-                                null
-                            }
-
-                            6,
-                            7,
-                            8,
-                            9,
-                            10 -> {
-                                GameLogger.debug(TAG, "No item dropped")
-                                null
-                            }
-
-                            else -> null
+                    val entity: IGameEntity? = when (randomInt) {
+                        0, 1, 2 -> {
+                            props.put(ConstKeys.LARGE, randomInt == 1)
+                            EntityFactories.fetch(EntityType.ITEM, ItemsFactory.HEALTH_BULB)
                         }
+
+                        3, 4, 5 -> { // TODO: EntityFactories.fetch(EntityType.ITEM, ItemsFactory.WEAPON_ENERGY)
+                            null
+                        }
+
+                        6, 7, 8, 9, 10 -> {
+                            GameLogger.debug(TAG, "No item dropped")
+                            null
+                        }
+
+                        else -> null
+                    }
                     entity?.let { game.gameEngine.spawn(it, props) }
                 }
             }
@@ -145,8 +125,7 @@ abstract class AbstractEnemy(
 
     protected abstract fun defineSpritesComponent(): SpritesComponent
 
-    override fun canBeDamagedBy(damager: IDamager) =
-        !invincible && damageNegotiations.containsKey(damager::class)
+    override fun canBeDamagedBy(damager: IDamager) = !invincible && damageNegotiations.containsKey(damager::class)
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
         val damagerKey = damager::class
@@ -162,8 +141,7 @@ abstract class AbstractEnemy(
 
     override fun canDamage(damageable: IDamageable) = true
 
-    override fun onDamageInflictedTo(damageable: IDamageable) {
-        // do nothing
+    override fun onDamageInflictedTo(damageable: IDamageable) { // do nothing
     }
 
     protected open fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -186,21 +164,10 @@ abstract class AbstractEnemy(
             cullablesComponent.add(cullOnOutOfBounds)
         }
 
-        val eventsToCullOn =
-            objectSetOf<Any>(
-                EventType.GAME_OVER,
-                EventType.PLAYER_SPAWN,
-                EventType.BEGIN_ROOM_TRANS,
-                EventType.GATE_INIT_OPENING
-            )
-        val cullOnEvents =
-            CullableOnEvent(
-                {
-                    GameLogger.debug(TAG, "Checking if event is to trigger cull = $it")
-                    eventsToCullOn.contains(it.key)
-                },
-                eventsToCullOn
-            )
+        val eventsToCullOn = objectSetOf<Any>(
+            EventType.GAME_OVER, EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING
+        )
+        val cullOnEvents = CullableOnEvent({ eventsToCullOn.contains(it.key) }, eventsToCullOn)
         runnablesOnSpawn.add {
             game.eventsMan.addListener(cullOnEvents)
             GameLogger.debug(TAG, "Added CullableOnEvent from EventsManager")
@@ -215,8 +182,7 @@ abstract class AbstractEnemy(
 
     protected open fun disintegrate(disintegrationProps: Properties? = null) {
         getMegamanMaverickGame().audioMan.playSound(SoundAsset.ENEMY_DAMAGE_SOUND)
-        val disintegration =
-            EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)
+        val disintegration = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)
         val props = disintegrationProps ?: props(ConstKeys.POSITION to body.getCenter())
         game.gameEngine.spawn(disintegration!!, props)
     }
@@ -232,7 +198,6 @@ abstract class AbstractEnemy(
         val megaman = getMegamanMaverickGame().megaman
         if (!megaman.shooting) return false
 
-        return body.x < megaman.body.x && megaman.facing == Facing.LEFT ||
-                body.x > megaman.body.x && megaman.facing == Facing.RIGHT
+        return body.x < megaman.body.x && megaman.facing == Facing.LEFT || body.x > megaman.body.x && megaman.facing == Facing.RIGHT
     }
 }

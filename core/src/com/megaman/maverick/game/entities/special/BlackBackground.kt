@@ -29,8 +29,6 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.getMegamanMaverickGame
-import kotlin.math.max
-import kotlin.math.min
 
 class BlackBackground(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity, IEventListener {
 
@@ -118,53 +116,41 @@ class BlackBackground(game: MegamanMaverickGame) : GameEntity(game), ISpriteEnti
     override fun onEvent(event: Event) {
         when (event.key) {
             EventType.REQ_BLACK_BACKGROUND -> {
-                GameLogger.debug(TAG, "REQ BLACK BACKGROUND event = $event")
+                // GameLogger.debug(TAG, "REQ BLACK BACKGROUND event = $event")
                 val keys = event.getProperty(ConstKeys.KEYS) as ObjectSet<Int>
                 if (keys.contains(key)) {
                     val light = event.getProperty(ConstKeys.LIGHT, Boolean::class)!!
                     val center = event.getProperty(ConstKeys.CENTER, Vector2::class)!!
-                    val radius = event.getProperty(
-                        ConstKeys.RADIUS, Int::class
-                    )!!
-
-                    val centerX = (center.x - bounds.x) / ConstVals.PPM
-                    val centerY = (center.y - bounds.y) / ConstVals.PPM
-
-                    val minXIndex = max(0, centerX.toInt() - radius)
-                    val maxXIndex = min(tiles.columns - 1, centerX.toInt() + radius)
-                    val minYIndex = max(0, centerY.toInt() - radius)
-                    val maxYIndex = min(tiles.rows - 1, centerY.toInt() + radius)
+                    val radius = event.getProperty(ConstKeys.RADIUS, Int::class)!!
 
                     val circle = GameCircle(center, radius * ConstVals.PPM.toFloat())
-                    for (x in minXIndex..maxXIndex) {
-                        for (y in minYIndex..maxYIndex) {
-                            val tile = tiles[x, y]!!
+                    tiles.forEach { tile ->
+                        if (tile.sprite.priority != DrawingPriority(DrawingSection.BACKGROUND, 0)) {
+                            GameLogger.debug(TAG, "Tile priority: ${tile.sprite.priority}")
+                        }
 
-                            val bounds = GameRectangle()
-                            val sprite = tile.sprite
-                            bounds.x = sprite.x
-                            bounds.y = sprite.y
-                            bounds.width = sprite.width
-                            bounds.height = sprite.height
+                        val bounds = GameRectangle()
+                        val sprite = tile.sprite
+                        bounds.x = sprite.x
+                        bounds.y = sprite.y
+                        bounds.width = sprite.width
+                        bounds.height = sprite.height
 
-                            if (circle.overlaps(bounds)) {
-                                tile.startAlpha = tile.targetAlpha
-
-                                tile.targetAlpha = if (light) {
-                                    var alpha = bounds.getCenter().dst(center) / (radius * ConstVals.PPM)
-                                    if (alpha < 0f) alpha = 0f else if (alpha > 1f) alpha = 1f
-                                    alpha
-                                } else 1f
-
-                                tile.timer.reset()
-                            }
+                        if (circle.overlaps(bounds)) {
+                            tile.startAlpha = tile.targetAlpha
+                            tile.targetAlpha = if (light) {
+                                var alpha = bounds.getCenter().dst(center) / (radius * ConstVals.PPM)
+                                if (alpha < 0f) alpha = 0f else if (alpha > 1f) alpha = 1f
+                                alpha
+                            } else 1f
+                            tile.timer.reset()
                         }
                     }
                 }
             }
 
             EventType.END_ROOM_TRANS -> {
-                GameLogger.debug(TAG, "END ROOM TRANS event: $event")
+                // GameLogger.debug(TAG, "END ROOM TRANS event: $event")
                 val newRoom = event.getProperty(
                     ConstKeys.ROOM, RectangleMapObject::class
                 )!!.name

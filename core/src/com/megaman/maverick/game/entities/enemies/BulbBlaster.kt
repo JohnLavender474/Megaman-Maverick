@@ -20,7 +20,11 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.contracts.IAnimatedEntity
+import com.engine.entities.contracts.IMotionEntity
 import com.engine.events.Event
+import com.engine.motion.MotionComponent
+import com.engine.motion.MotionComponent.MotionDefinition
+import com.engine.motion.Trajectory
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.Body
 import com.engine.world.BodyComponent
@@ -37,7 +41,8 @@ import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import kotlin.reflect.KClass
 
-class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
+class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game, cullWhenOutOfCamBounds = false), IAnimatedEntity,
+    IMotionEntity {
 
     companion object {
         const val TAG = "BulbBlaster"
@@ -61,6 +66,7 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
         }
         super<AbstractEnemy>.init()
         addComponent(defineAnimationsComponent())
+        addComponent(MotionComponent(this))
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -76,10 +82,19 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
         timer.reset()
 
         sendEvent()
+
+        if (spawnProps.containsKey(ConstKeys.TRAJECTORY)) {
+            val trajectory = Trajectory(spawnProps.get(ConstKeys.TRAJECTORY) as String, ConstVals.PPM)
+            val motionDefinition = MotionDefinition(motion = trajectory,
+                function = { value, _ -> body.physics.velocity.set(value) },
+                onReset = { body.setCenter(spawn) })
+            putMotionDefinition(ConstKeys.TRAJECTORY, motionDefinition)
+        }
     }
 
     override fun onDestroy() {
         super<AbstractEnemy>.onDestroy()
+        clearMotionDefinitions()
         light = false
         sendEvent()
     }
@@ -90,9 +105,9 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
             timer.update(it)
             if (timer.isFinished()) {
                 light = !light
-                sendEvent()
                 timer.reset()
             }
+            sendEvent()
         }
     }
 
@@ -130,8 +145,7 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String = { if (light) "light" else "dark" }
         val animations = objectMapOf<String, IAnimation>(
-            "light" to Animation(lightRegion!!, 1, 4, 0.1f, true),
-            "dark" to Animation(darkRegion!!, 1, 4, 0.1f, true)
+            "light" to Animation(lightRegion!!, 1, 4, 0.1f, true), "dark" to Animation(darkRegion!!, 1, 4, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
