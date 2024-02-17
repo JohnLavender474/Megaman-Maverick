@@ -41,7 +41,7 @@ class BlackBackground(game: MegamanMaverickGame) : GameEntity(game), ISpriteEnti
     private class BlackTile(val sprite: GameSprite, val timer: Timer, var startAlpha: Float, var targetAlpha: Float)
 
     override val eventKeyMask = objectSetOf<Any>(
-        EventType.REQ_BLACK_BACKGROUND, EventType.END_ROOM_TRANS
+        EventType.REQ_BLACK_BACKGROUND, EventType.BEGIN_ROOM_TRANS, EventType.END_ROOM_TRANS
     )
 
     private lateinit var tiles: Matrix<BlackTile>
@@ -116,7 +116,6 @@ class BlackBackground(game: MegamanMaverickGame) : GameEntity(game), ISpriteEnti
     override fun onEvent(event: Event) {
         when (event.key) {
             EventType.REQ_BLACK_BACKGROUND -> {
-                // GameLogger.debug(TAG, "REQ BLACK BACKGROUND event = $event")
                 val keys = event.getProperty(ConstKeys.KEYS) as ObjectSet<Int>
                 if (keys.contains(key)) {
                     val light = event.getProperty(ConstKeys.LIGHT, Boolean::class)!!
@@ -125,10 +124,6 @@ class BlackBackground(game: MegamanMaverickGame) : GameEntity(game), ISpriteEnti
 
                     val circle = GameCircle(center, radius * ConstVals.PPM.toFloat())
                     tiles.forEach { tile ->
-                        if (tile.sprite.priority != DrawingPriority(DrawingSection.BACKGROUND, 0)) {
-                            GameLogger.debug(TAG, "Tile priority: ${tile.sprite.priority}")
-                        }
-
                         val bounds = GameRectangle()
                         val sprite = tile.sprite
                         bounds.x = sprite.x
@@ -149,20 +144,31 @@ class BlackBackground(game: MegamanMaverickGame) : GameEntity(game), ISpriteEnti
                 }
             }
 
+            EventType.BEGIN_ROOM_TRANS -> {
+                val newRoom = event.getProperty(
+                    ConstKeys.CURRENT, RectangleMapObject::class
+                )!!.name
+                GameLogger.debug(TAG, "BEGIN_ROOM_TRANS: this room = $room, next room = $newRoom")
+                if (this.room != newRoom) {
+                    tiles.forEach {
+                        it.startAlpha = 1f
+                        it.targetAlpha = 0f
+                        it.timer.reset()
+                    }
+                }
+            }
+
             EventType.END_ROOM_TRANS -> {
-                // GameLogger.debug(TAG, "END ROOM TRANS event: $event")
                 val newRoom = event.getProperty(
                     ConstKeys.ROOM, RectangleMapObject::class
                 )!!.name
-                tiles.forEach {
-                    if (this.room == newRoom) {
+                GameLogger.debug(TAG, "END_ROOM_TRANS: this room = $room, next room = $newRoom")
+                if (this.room == newRoom) {
+                    tiles.forEach {
                         it.startAlpha = 0f
                         it.targetAlpha = 1f
-                    } else {
-                        it.startAlpha = 1f
-                        it.targetAlpha = 0f
+                        it.timer.reset()
                     }
-                    it.timer.reset()
                 }
             }
         }
