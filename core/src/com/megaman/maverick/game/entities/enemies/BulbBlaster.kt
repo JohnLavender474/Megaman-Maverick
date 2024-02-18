@@ -48,6 +48,7 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game, cullWhenOutOf
         const val TAG = "BulbBlaster"
         private const val STATE_DUR = 3f
         private const val LIGHT_RADIUS = 5
+        private const val RADIANCE_FACTOR = 2f
         private var lightRegion: TextureRegion? = null
         private var darkRegion: TextureRegion? = null
     }
@@ -158,7 +159,8 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game, cullWhenOutOf
                     ConstKeys.KEYS to keys,
                     ConstKeys.LIGHT to light,
                     ConstKeys.CENTER to body.getCenter(),
-                    ConstKeys.RADIUS to LIGHT_RADIUS
+                    ConstKeys.RADIUS to LIGHT_RADIUS,
+                    ConstKeys.RADIANCE to RADIANCE_FACTOR
                 )
             )
         )

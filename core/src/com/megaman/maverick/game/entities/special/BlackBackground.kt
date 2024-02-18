@@ -32,7 +32,6 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.utils.TestObject
 import com.megaman.maverick.game.utils.getMegamanMaverickGame
 import java.util.*
 
@@ -86,7 +85,6 @@ class BlackBackground(game: MegamanMaverickGame) : GameEntity(game), ISpriteEnti
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
         game.eventsMan.addListener(this)
-        game.eventsMan.addListener(TestObject)
 
         key = spawnProps.get(ConstKeys.KEY, Int::class)!!
         room = spawnProps.get(ConstKeys.ROOM, String::class)!!
@@ -141,7 +139,6 @@ class BlackBackground(game: MegamanMaverickGame) : GameEntity(game), ISpriteEnti
     override fun onDestroy() {
         super<GameEntity>.onDestroy()
         game.eventsMan.removeListener(this)
-        game.eventsMan.removeListener(TestObject)
         sprites.clear()
     }
 
@@ -154,10 +151,14 @@ class BlackBackground(game: MegamanMaverickGame) : GameEntity(game), ISpriteEnti
                     val light = event.getProperty(ConstKeys.LIGHT, Boolean::class)!!
                     val center = event.getProperty(ConstKeys.CENTER, Vector2::class)!!
                     val radius = event.getProperty(ConstKeys.RADIUS, Int::class)!!
+                    val radiance = event.getProperty(ConstKeys.RADIANCE, Float::class)!!
                     lightEventQueue.add(
                         LightEvent(
                             LightEventType.LIGHT_SOURCE, props(
-                                ConstKeys.LIGHT to light, ConstKeys.CENTER to center, ConstKeys.RADIUS to radius
+                                ConstKeys.LIGHT to light,
+                                ConstKeys.CENTER to center,
+                                ConstKeys.RADIUS to radius,
+                                ConstKeys.RADIANCE to radiance
                             )
                         )
                     )
@@ -228,19 +229,28 @@ class BlackBackground(game: MegamanMaverickGame) : GameEntity(game), ISpriteEnti
                 val center = properties.get(ConstKeys.CENTER, Vector2::class)!!
                 val radius = properties.get(ConstKeys.RADIUS, Int::class)!!.toFloat() * ConstVals.PPM
                 val light = properties.get(ConstKeys.LIGHT, Boolean::class)!!
+                val radiance = properties.get(ConstKeys.RADIANCE, Float::class)!!
 
                 val circle = GameCircle(center, radius)
                 tiles.forEach { _, _, tile ->
                     val bounds = tile!!.sprite.boundingRectangle.toGameRectangle()
                     if (circle.overlaps(bounds)) {
-                        tile.startAlpha = tile.currentAlpha
-                        tile.targetAlpha = if (light) {
-                            var alpha = bounds.getCenter().dst(center) / (radius * ConstVals.PPM)
+                        val tempTargetAlpha = if (light) {
+                            var alpha = (bounds.getCenter().dst(center) / radius) / radiance
                             if (alpha < 0f) alpha = 0f else if (alpha > 1f) alpha = 1f
                             alpha
                         } else 1f
-                        tile.timer.reset()
-                        tile.set = true
+
+                        if (tile.set && tempTargetAlpha < tile.targetAlpha) {
+                            tile.startAlpha = tile.currentAlpha
+                            tile.targetAlpha = tempTargetAlpha
+                            tile.timer.reset()
+                        } else if (!tile.set) {
+                            tile.startAlpha = tile.currentAlpha
+                            tile.targetAlpha = tempTargetAlpha
+                            tile.timer.reset()
+                            tile.set = true
+                        }
                     }
                 }
             }

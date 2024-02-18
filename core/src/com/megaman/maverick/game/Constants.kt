@@ -15,6 +15,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val RADIANCE = "radiance"
     const val CENTER = "center"
     const val RADIUS = "radius"
     const val LIGHT = "light"

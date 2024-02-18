@@ -22,7 +22,6 @@ import com.engine.audio.AudioSystem
 import com.engine.behaviors.BehaviorsSystem
 import com.engine.common.GameLogLevel
 import com.engine.common.GameLogger
-import com.engine.common.extensions.equalsAny
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.extensions.objectSetOf
 import com.engine.controller.ControllerSystem
@@ -56,7 +55,6 @@ import com.megaman.maverick.game.controllers.MegaControllerPoller
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.special.BlackBackground
-import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
@@ -66,7 +64,6 @@ import com.megaman.maverick.game.screens.menus.bosses.BossSelectScreen
 import com.megaman.maverick.game.screens.other.SimpleEndLevelScreen
 import com.megaman.maverick.game.screens.other.SimpleInitGameScreen
 import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
-import com.megaman.maverick.game.utils.TestObject
 import com.megaman.maverick.game.utils.getMusics
 import com.megaman.maverick.game.utils.getSounds
 import com.megaman.maverick.game.world.FixtureType
@@ -134,10 +131,7 @@ class MegamanMaverickGame : Game2D() {
         loadAssets(assMan)
         assMan.finishLoading()
         gameEngine = createGameEngine()
-        eventsMan = EventsManager(
-            debugEventFilter = { it.key.equalsAny(EventType.REQ_BLACK_BACKGROUND, EventType.END_ROOM_TRANS) },
-            debugListenerFilter = { it == TestObject }
-        )
+        eventsMan = EventsManager()
 
         val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
         val screenHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
