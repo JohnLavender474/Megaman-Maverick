@@ -158,6 +158,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
 
         // set begin transition logic for camera manager
         cameraManagerForRooms.beginTransition = {
+            GameLogger.debug(TAG, "Begin transition logic for camera manager")
             systemsToSwitch.forEach { systems.get(it.simpleName)?.let { system -> system.on = false } }
             megamanGame.eventsMan.submitEvent(
                 Event(
@@ -186,6 +187,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
 
         // set end transition logic for camera manager
         cameraManagerForRooms.endTransition = {
+            GameLogger.debug(TAG, "End transition logic for camera manager")
             systemsToSwitch.forEach { systems.get(it.simpleName)?.let { system -> system.on = true } }
 
             eventsMan.submitEvent(
@@ -260,8 +262,6 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
         MegaMapLayerBuilders(MegaMapLayerBuildersParams(game as MegamanMaverickGame, spawnsMan))
 
     override fun buildLevel(result: Properties) {
-        GameLogger.debug(TAG, "buildLevel(): Properties = $result")
-
         // set the backgrounds array
         backgrounds = result.get(ConstKeys.BACKGROUNDS) as Array<Background>? ?: Array()
 

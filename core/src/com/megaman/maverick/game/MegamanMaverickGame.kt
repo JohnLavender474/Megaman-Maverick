@@ -7,7 +7,9 @@ import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.Batch
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.ObjectSet
@@ -20,6 +22,7 @@ import com.engine.audio.AudioSystem
 import com.engine.behaviors.BehaviorsSystem
 import com.engine.common.GameLogLevel
 import com.engine.common.GameLogger
+import com.engine.common.extensions.equalsAny
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.extensions.objectSetOf
 import com.engine.controller.ControllerSystem
@@ -35,6 +38,7 @@ import com.engine.drawables.shapes.DrawableShapesSystem
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sorting.IComparableDrawable
 import com.engine.drawables.sprites.SpritesSystem
+import com.engine.events.EventsManager
 import com.engine.graph.IGraphMap
 import com.engine.motion.MotionSystem
 import com.engine.pathfinding.Pathfinder
@@ -52,6 +56,7 @@ import com.megaman.maverick.game.controllers.MegaControllerPoller
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.special.BlackBackground
+import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
@@ -61,6 +66,7 @@ import com.megaman.maverick.game.screens.menus.bosses.BossSelectScreen
 import com.megaman.maverick.game.screens.other.SimpleEndLevelScreen
 import com.megaman.maverick.game.screens.other.SimpleInitGameScreen
 import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
+import com.megaman.maverick.game.utils.TestObject
 import com.megaman.maverick.game.utils.getMusics
 import com.megaman.maverick.game.utils.getSounds
 import com.megaman.maverick.game.world.FixtureType
@@ -118,21 +124,29 @@ class MegamanMaverickGame : Game2D() {
         GameLogger.set(GameLogLevel.ERROR)
         GameLogger.filterByTag = true
         GameLogger.tagsToLog.addAll(TAGS_TO_LOG)
+        GameLogger.debug(Game2D.TAG, "create()")
 
-        super.create()
+        shapeRenderer = ShapeRenderer()
+        shapeRenderer.setAutoShapeType(true)
+        batch = SpriteBatch()
+        controllerPoller = defineControllerPoller()
+        assMan = AssetManager()
+        loadAssets(assMan)
+        assMan.finishLoading()
+        gameEngine = createGameEngine()
+        eventsMan = EventsManager(
+            debugEventFilter = { it.key.equalsAny(EventType.REQ_BLACK_BACKGROUND, EventType.END_ROOM_TRANS) },
+            debugListenerFilter = { it == TestObject }
+        )
 
         val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
         val screenHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
-
         val backgroundViewport = FitViewport(screenWidth, screenHeight)
         viewports.put(ConstKeys.BACKGROUND, backgroundViewport)
-
         val gameViewport = FitViewport(screenWidth, screenHeight)
         viewports.put(ConstKeys.GAME, gameViewport)
-
         val foregroundViewport = FitViewport(screenWidth, screenHeight)
         viewports.put(ConstKeys.FOREGROUND, foregroundViewport)
-
         val uiViewport = FitViewport(screenWidth, screenHeight)
         viewports.put(ConstKeys.UI, uiViewport)
 
@@ -184,7 +198,7 @@ class MegamanMaverickGame : Game2D() {
         }
     }
 
-    override fun defineControllerPoller(): IControllerPoller {
+    private fun defineControllerPoller(): IControllerPoller {
         val buttons = Buttons()
         buttons.put(ControllerButton.LEFT, Button(Input.Keys.A))
         buttons.put(ControllerButton.RIGHT, Button(Input.Keys.D))
@@ -208,7 +222,7 @@ class MegamanMaverickGame : Game2D() {
         return MegaControllerPoller(buttons)
     }
 
-    override fun loadAssets(assMan: AssetManager) {
+    private fun loadAssets(assMan: AssetManager) {
         MusicAsset.values().forEach {
             GameLogger.debug(TAG, "loadAssets(): Loading music asset: ${it.source}")
             assMan.load(it.source, Music::class.java)
@@ -223,7 +237,7 @@ class MegamanMaverickGame : Game2D() {
         }
     }
 
-    override fun createGameEngine(): IGameEngine {
+    private fun createGameEngine(): IGameEngine {
         val drawables = PriorityQueue<IDrawable<Batch>> { o1, o2 ->
             if (o1 is IComparableDrawable<Batch> && o2 is IComparableDrawable<Batch>) o1.compareTo(o2)
             else if (o1 is IComparableDrawable<Batch>) 1

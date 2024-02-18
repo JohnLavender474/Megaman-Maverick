@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="550" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="12" nextobjectid="130">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="550" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="12" nextobjectid="131">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/Gravity Man Stage.tsx"/>
  <tileset firstgid="4609" source="../tsx/MM3Wily1.tsx"/>
@@ -157,15 +157,19 @@
   </object>
   <object id="117" name="SuicideBummer" x="13312" y="480" width="32" height="32"/>
   <object id="119" name="Gachappan" x="13120" y="544" width="32" height="32"/>
-  <object id="124" name="BulbBlaster" x="14944" y="448" width="32" height="32">
+  <object id="124" name="BulbBlaster" x="15200" y="448" width="32" height="32">
    <properties>
     <property name="keys" value="1"/>
+    <property name="spawn_room" value="room10"/>
+    <property name="spawn_type" value="spawn_room"/>
     <property name="trajectory" value="0,0,1;1,0,5;0,0,1;-1,0,5"/>
    </properties>
   </object>
-  <object id="126" name="BulbBlaster" x="15328" y="416" width="32" height="32">
+  <object id="130" name="BulbBlaster" x="15008" y="320" width="32" height="32">
    <properties>
     <property name="keys" value="1"/>
+    <property name="spawn_room" value="room10"/>
+    <property name="spawn_type" value="spawn_room"/>
     <property name="trajectory" value="0,0,1;1,0,5;0,0,1;-1,0,5"/>
    </properties>
   </object>

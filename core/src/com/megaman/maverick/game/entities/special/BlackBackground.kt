@@ -7,11 +7,14 @@ import com.badlogic.gdx.utils.ObjectSet
 import com.engine.common.GameLogger
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.extensions.objectSetOf
+import com.engine.common.interfaces.IPropertizable
 import com.engine.common.interpolate
 import com.engine.common.objects.Matrix
 import com.engine.common.objects.Properties
+import com.engine.common.objects.props
 import com.engine.common.shapes.GameCircle
 import com.engine.common.shapes.GameRectangle
+import com.engine.common.shapes.toGameRectangle
 import com.engine.common.time.Timer
 import com.engine.cullables.CullablesComponent
 import com.engine.drawables.sorting.DrawingPriority
@@ -22,13 +25,16 @@ import com.engine.entities.GameEntity
 import com.engine.entities.contracts.ISpriteEntity
 import com.engine.events.Event
 import com.engine.events.IEventListener
+import com.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.TestObject
 import com.megaman.maverick.game.utils.getMegamanMaverickGame
+import java.util.*
 
 class BlackBackground(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity, IEventListener {
 
@@ -38,27 +44,49 @@ class BlackBackground(game: MegamanMaverickGame) : GameEntity(game), ISpriteEnti
         private var region: TextureRegion? = null
     }
 
-    private class BlackTile(val sprite: GameSprite, val timer: Timer, var startAlpha: Float, var targetAlpha: Float)
+    private class BlackTile(
+        val sprite: GameSprite,
+        val timer: Timer,
+        var startAlpha: Float,
+        var targetAlpha: Float,
+        var currentAlpha: Float = 0f,
+        var set: Boolean = false
+    )
+
+    private enum class LightEventType {
+        LIGHT_SOURCE, LIGHT_UP_ALL, DARKEN_ALL
+    }
+
+    private class LightEvent(
+        val lightEventType: LightEventType, override val properties: Properties = Properties()
+    ) : IPropertizable, Comparable<LightEvent> {
+        override fun compareTo(other: LightEvent) = lightEventType.compareTo(other.lightEventType)
+    }
 
     override val eventKeyMask = objectSetOf<Any>(
         EventType.REQ_BLACK_BACKGROUND, EventType.BEGIN_ROOM_TRANS, EventType.END_ROOM_TRANS
     )
+
+    private val lightEventQueue = PriorityQueue<LightEvent>()
 
     private lateinit var tiles: Matrix<BlackTile>
     private lateinit var bounds: GameRectangle
     private lateinit var room: String
 
     private var key = -1
+    private var darkMode = false
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.COLORS.source, "Black")
         addComponent(SpritesComponent(this))
         addComponent(defineCullablesComponent())
+        addComponent(defineUpdatablesComponent())
     }
 
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
         game.eventsMan.addListener(this)
+        game.eventsMan.addListener(TestObject)
 
         key = spawnProps.get(ConstKeys.KEY, Int::class)!!
         room = spawnProps.get(ConstKeys.ROOM, String::class)!!
@@ -71,20 +99,20 @@ class BlackBackground(game: MegamanMaverickGame) : GameEntity(game), ISpriteEnti
         for (x in 0 until columns) {
             for (y in 0 until rows) {
                 val sprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, 0))
+                sprite.setRegion(region!!)
+                val spriteX = bounds.x + (x * ConstVals.PPM)
+                val spriteY = bounds.y + (y * ConstVals.PPM)
+                sprite.setBounds(spriteX, spriteY, ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
+
                 val timer = Timer(TRANS_DUR).setToEnd()
+
                 val tile = BlackTile(sprite, timer, 0f, 0f)
                 tiles[x, y] = tile
 
                 val key = "[$x][$y]"
                 sprites.put(key, sprite)
-
-                val spriteX = bounds.x + (x * ConstVals.PPM)
-                val spriteY = bounds.y + (y * ConstVals.PPM)
-
                 putUpdateFunction(key) { delta, _sprite ->
                     _sprite as GameSprite
-                    _sprite.setRegion(region!!)
-                    _sprite.setBounds(spriteX, spriteY, ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
 
                     if (tile.startAlpha < 0f) tile.startAlpha = 0f
                     else if (tile.startAlpha > 1f) tile.startAlpha = 1f
@@ -100,15 +128,20 @@ class BlackBackground(game: MegamanMaverickGame) : GameEntity(game), ISpriteEnti
 
                     if (alpha < 0f) alpha = 0f
                     else if (alpha > 1f) alpha = 1f
+
+                    tile.currentAlpha = alpha
                     _sprite.setAlpha(alpha)
                 }
             }
         }
+
+        lightEventQueue.clear()
     }
 
     override fun onDestroy() {
         super<GameEntity>.onDestroy()
         game.eventsMan.removeListener(this)
+        game.eventsMan.removeListener(TestObject)
         sprites.clear()
     }
 
@@ -121,26 +154,13 @@ class BlackBackground(game: MegamanMaverickGame) : GameEntity(game), ISpriteEnti
                     val light = event.getProperty(ConstKeys.LIGHT, Boolean::class)!!
                     val center = event.getProperty(ConstKeys.CENTER, Vector2::class)!!
                     val radius = event.getProperty(ConstKeys.RADIUS, Int::class)!!
-
-                    val circle = GameCircle(center, radius * ConstVals.PPM.toFloat())
-                    tiles.forEach { tile ->
-                        val bounds = GameRectangle()
-                        val sprite = tile.sprite
-                        bounds.x = sprite.x
-                        bounds.y = sprite.y
-                        bounds.width = sprite.width
-                        bounds.height = sprite.height
-
-                        if (circle.overlaps(bounds)) {
-                            tile.startAlpha = tile.targetAlpha
-                            tile.targetAlpha = if (light) {
-                                var alpha = bounds.getCenter().dst(center) / (radius * ConstVals.PPM)
-                                if (alpha < 0f) alpha = 0f else if (alpha > 1f) alpha = 1f
-                                alpha
-                            } else 1f
-                            tile.timer.reset()
-                        }
-                    }
+                    lightEventQueue.add(
+                        LightEvent(
+                            LightEventType.LIGHT_SOURCE, props(
+                                ConstKeys.LIGHT to light, ConstKeys.CENTER to center, ConstKeys.RADIUS to radius
+                            )
+                        )
+                    )
                 }
             }
 
@@ -149,13 +169,7 @@ class BlackBackground(game: MegamanMaverickGame) : GameEntity(game), ISpriteEnti
                     ConstKeys.CURRENT, RectangleMapObject::class
                 )!!.name
                 GameLogger.debug(TAG, "BEGIN_ROOM_TRANS: this room = $room, next room = $newRoom")
-                if (this.room != newRoom) {
-                    tiles.forEach {
-                        it.startAlpha = 1f
-                        it.targetAlpha = 0f
-                        it.timer.reset()
-                    }
-                }
+                if (this.room != newRoom) lightEventQueue.add(LightEvent(LightEventType.LIGHT_UP_ALL))
             }
 
             EventType.END_ROOM_TRANS -> {
@@ -163,16 +177,76 @@ class BlackBackground(game: MegamanMaverickGame) : GameEntity(game), ISpriteEnti
                     ConstKeys.ROOM, RectangleMapObject::class
                 )!!.name
                 GameLogger.debug(TAG, "END_ROOM_TRANS: this room = $room, next room = $newRoom")
-                if (this.room == newRoom) {
-                    tiles.forEach {
-                        it.startAlpha = 0f
-                        it.targetAlpha = 1f
-                        it.timer.reset()
+                if (this.room == newRoom) lightEventQueue.add(LightEvent(LightEventType.DARKEN_ALL))
+            }
+        }
+    }
+
+    private fun defineUpdatablesComponent() = UpdatablesComponent(this, {
+        tiles.forEach {
+            it.set = false
+        }
+
+        while (!lightEventQueue.isEmpty()) {
+            val lightEvent = lightEventQueue.poll()
+            handleLightEvent(lightEvent.lightEventType, lightEvent.properties)
+        }
+
+        tiles.forEach {
+            if (!it.set) {
+                it.startAlpha = it.currentAlpha
+                it.targetAlpha = if (darkMode) 1f else 0f
+                it.timer.reset()
+                it.set = true
+            }
+        }
+    })
+
+    private fun handleLightEvent(lightEventType: LightEventType, properties: Properties) {
+        when (lightEventType) {
+            LightEventType.LIGHT_UP_ALL -> {
+                darkMode = false
+                tiles.forEach { tile ->
+                    tile.startAlpha = tile.currentAlpha
+                    tile.targetAlpha = 0f
+                    tile.timer.reset()
+                    tile.set = true
+                }
+            }
+
+            LightEventType.DARKEN_ALL -> {
+                darkMode = true
+                tiles.forEach { tile ->
+                    tile.startAlpha = tile.currentAlpha
+                    tile.targetAlpha = 1f
+                    tile.timer.reset()
+                    tile.set = true
+                }
+            }
+
+            LightEventType.LIGHT_SOURCE -> {
+                val center = properties.get(ConstKeys.CENTER, Vector2::class)!!
+                val radius = properties.get(ConstKeys.RADIUS, Int::class)!!.toFloat() * ConstVals.PPM
+                val light = properties.get(ConstKeys.LIGHT, Boolean::class)!!
+
+                val circle = GameCircle(center, radius)
+                tiles.forEach { _, _, tile ->
+                    val bounds = tile!!.sprite.boundingRectangle.toGameRectangle()
+                    if (circle.overlaps(bounds)) {
+                        tile.startAlpha = tile.currentAlpha
+                        tile.targetAlpha = if (light) {
+                            var alpha = bounds.getCenter().dst(center) / (radius * ConstVals.PPM)
+                            if (alpha < 0f) alpha = 0f else if (alpha > 1f) alpha = 1f
+                            alpha
+                        } else 1f
+                        tile.timer.reset()
+                        tile.set = true
                     }
                 }
             }
         }
     }
+
 
     private fun defineCullablesComponent(): CullablesComponent {
         val cullable = getGameCameraCullingLogic(getMegamanMaverickGame().getGameCamera(), { bounds })
