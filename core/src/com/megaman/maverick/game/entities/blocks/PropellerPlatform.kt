@@ -9,18 +9,16 @@ import com.engine.common.extensions.getTextureRegion
 import com.engine.common.extensions.objectSetOf
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
-import com.engine.drawables.sorting.DrawingPriority
-import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
+import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.entities.contracts.IMotionEntity
 import com.engine.entities.contracts.ISpriteEntity
 import com.engine.events.Event
 import com.engine.events.IEventListener
 import com.engine.motion.MotionComponent
-import com.engine.motion.MotionComponent.MotionDefinition
 import com.engine.motion.Trajectory
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -28,51 +26,43 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.events.EventType
 
-class GearTrolley(game: MegamanMaverickGame) : Block(game), IMotionEntity, ISpriteEntity, IEventListener {
+class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity, ISpriteEntity, IAnimatedEntity,
+    IEventListener {
 
     companion object {
+        const val TAG = "PropellerPlatform"
         private var region: TextureRegion? = null
-
-        private const val WIDTH = 1.25f
-        private const val HEIGHT = 0.35f
     }
 
     override val eventKeyMask = objectSetOf<Any>(
         EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.END_ROOM_TRANS
     )
 
+
     override fun init() {
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "PropellerPlatform")
         super<Block>.init()
-
-        if (region == null) region =
-            game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "GearTrolleyPlatform")
-
-        addComponent(defineSpritesCompoent())
+        addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
         addComponent(MotionComponent(this))
-
-        runnablesOnDestroy.add { game.eventsMan.removeListener(this) }
     }
 
     override fun spawn(spawnProps: Properties) {
+        game.eventsMan.addListener(this)
         spawnProps.put(ConstKeys.PERSIST, true)
         super.spawn(spawnProps)
-
-        game.eventsMan.addListener(this)
-
-        // define the spawn and bounds
-        val spawn = (spawnProps.get(ConstKeys.BOUNDS) as GameRectangle).getCenter()
-        val bounds = GameRectangle().setSize(WIDTH * ConstVals.PPM, HEIGHT * ConstVals.PPM)
-        bounds.setBottomCenterToPoint(spawn)
-        body.set(bounds)
-
-        // define the trajectory
+        val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         val trajectory = Trajectory(spawnProps.get(ConstKeys.TRAJECTORY) as String, ConstVals.PPM)
-        val motionDefinition = MotionDefinition(motion = trajectory,
+        val motionDefinition = MotionComponent.MotionDefinition(motion = trajectory,
             function = { value, _ -> body.physics.velocity.set(value) },
             onReset = { body.set(bounds) })
-
         putMotionDefinition(ConstKeys.TRAJECTORY, motionDefinition)
+    }
+
+    override fun onDestroy() {
+        super<Block>.onDestroy()
+        game.eventsMan.removeListener(this)
+        clearMotionDefinitions()
     }
 
     override fun onEvent(event: Event) {
@@ -87,23 +77,22 @@ class GearTrolley(game: MegamanMaverickGame) : Block(game), IMotionEntity, ISpri
         }
     }
 
-    private fun defineSpritesCompoent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 2))
-        sprite.setSize(1.5f * ConstVals.PPM)
-
-        val SpritesComponent = SpritesComponent(this, "trolley" to sprite)
-        SpritesComponent.putUpdateFunction("trolley") { _, _sprite ->
+    private fun defineSpritesComponent(): SpritesComponent {
+        val sprite = GameSprite()
+        sprite.setSize(1f * ConstVals.PPM)
+        val spritesComponent = SpritesComponent(this, TAG to sprite)
+        spritesComponent.putUpdateFunction(TAG) { _, _sprite ->
             _sprite as GameSprite
-            _sprite.setPosition(body.getCenter(), Position.CENTER)
-            _sprite.translateY(-ConstVals.PPM / 16f)
+            val position = body.getTopCenterPoint()
+            _sprite.setPosition(position, Position.TOP_CENTER)
         }
-
-        return SpritesComponent
+        return spritesComponent
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val animation = Animation(region!!, 1, 2, 0.15f, true)
+        val animation = Animation(region!!, 1, 8, 0.1f, true)
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }
+
 }

@@ -25,6 +25,7 @@ import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
@@ -70,7 +71,8 @@ class GachappanBall(game: MegamanMaverickGame) : GameEntity(game), IProjectileEn
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)
         val props = props(
             ConstKeys.POSITION to body.getCenter(),
-            ConstKeys.SOUND to true
+            ConstKeys.SOUND to SoundAsset.EXPLOSION_2_SOUND,
+            ConstKeys.OWNER to owner
         )
         game.gameEngine.spawn(explosion!!, props)
         kill()

@@ -169,7 +169,7 @@ class JoeBall(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity {
             }
 
             else -> {
-                soundAsset = SoundAsset.EXPLOSION_SOUND
+                soundAsset = SoundAsset.EXPLOSION_1_SOUND
                 explosionType = ExplosionsFactory.EXPLOSION
             }
         }

@@ -30,6 +30,7 @@ import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
@@ -91,7 +92,9 @@ class SniperJoeShield(game: MegamanMaverickGame) : GameEntity(game), IProjectile
     override fun explodeAndDie() {
         kill()
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
-        game.gameEngine.spawn(explosion, props(ConstKeys.POSITION to body.getCenter(), ConstKeys.SOUND to true))
+        game.gameEngine.spawn(
+            explosion, props(ConstKeys.POSITION to body.getCenter(), ConstKeys.SOUND to SoundAsset.EXPLOSION_2_SOUND)
+        )
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()

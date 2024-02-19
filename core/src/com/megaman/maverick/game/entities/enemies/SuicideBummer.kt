@@ -34,6 +34,7 @@ import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
@@ -102,7 +103,7 @@ class SuicideBummer(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable,
         explode(
             props(
                 ConstKeys.POSITION to body.getCenter(),
-                ConstKeys.SOUND to true
+                ConstKeys.SOUND to SoundAsset.EXPLOSION_2_SOUND
             )
         )
         kill()

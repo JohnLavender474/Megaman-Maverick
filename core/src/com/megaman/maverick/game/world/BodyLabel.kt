@@ -21,6 +21,13 @@ fun Body.addBodyLabel(bodyLabel: BodyLabel) {
     } ?: putProperty(ConstKeys.BODY_LABELS, objectSetOf(bodyLabel))
 }
 
+fun Body.clearBodyLabels() {
+    getProperty(ConstKeys.BODY_LABELS)?.let {
+        @Suppress("UNCHECKED_CAST") val labels = it as ObjectSet<BodyLabel>
+        labels.clear()
+    }
+}
+
 fun Body.removeBodyLabel(bodyLabel: BodyLabel) {
     getProperty(ConstKeys.BODY_LABELS)?.let {
         @Suppress("UNCHECKED_CAST") val labels = it as ObjectSet<BodyLabel>

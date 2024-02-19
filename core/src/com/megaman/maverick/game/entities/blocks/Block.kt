@@ -19,10 +19,7 @@ import com.engine.world.BodyType
 import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
-import com.megaman.maverick.game.world.BodyComponentCreator
-import com.megaman.maverick.game.world.BodyLabel
-import com.megaman.maverick.game.world.FixtureType
-import com.megaman.maverick.game.world.addBodyLabel
+import com.megaman.maverick.game.world.*
 
 open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
 
@@ -80,6 +77,7 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
         if (properties.containsKey(ConstKeys.RESIST_ON))
             body.physics.takeFrictionFromOthers = properties.get(ConstKeys.RESIST_ON) as Boolean
 
+        body.clearBodyLabels()
         if (properties.containsKey(ConstKeys.BODY_LABELS)) {
             val labels = (properties.get(ConstKeys.BODY_LABELS) as String).replace("\\s+", "").split(",")
             for (label in labels) {

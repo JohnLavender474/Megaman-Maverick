@@ -39,7 +39,7 @@ class BlackBackground(game: MegamanMaverickGame) : GameEntity(game), ISpriteEnti
 
     companion object {
         const val TAG = "BlackBackground"
-        private const val TRANS_DUR = 0.5f
+        private const val TRANS_DUR = 0.25f
         private var region: TextureRegion? = null
     }
 
