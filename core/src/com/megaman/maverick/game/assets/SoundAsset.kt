@@ -28,7 +28,7 @@ enum class SoundAsset(src: String, val seconds: Int) : IAsset {
     CURSOR_MOVE_BLOOP_SOUND("cursor_move_bloop.mp3", 1),
     SPLASH_SOUND("water_splash.wav", 1),
     BEAM_IN_SOUND("beam_in.wav", 1),
-    MEGA_BUSTER_CHARGING_SOUND("buster_charging.mp3", 12),
+    MEGA_BUSTER_CHARGING_SOUND("buster_charging_fadeout.wav", 4),
     AIR_SHOOTER_SOUND("air_shooter.wav", 1),
     ATOMIC_FIRE_SOUND("atomic_fire.wav", 1),
     CRASH_BOMBER_SOUND("crash_bomber.wav", 1),

@@ -14,6 +14,8 @@ import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
+import com.engine.drawables.sorting.DrawingPriority
+import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
@@ -116,7 +118,7 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : GameEntity(game), IProje
     }
 
     private fun defineSpritesCompoent(): SpritesComponent {
-        val sprite = GameSprite()
+        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
         val spritesComponent = SpritesComponent(this, "explosion" to sprite)
         spritesComponent.putUpdateFunction("explosion") { _, _sprite ->
             (_sprite as GameSprite).setPosition(body.getCenter(), Position.CENTER)

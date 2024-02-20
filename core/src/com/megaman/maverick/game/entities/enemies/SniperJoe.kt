@@ -116,7 +116,8 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
 
     private lateinit var type: String
     private lateinit var state: SniperJoeState
-    private lateinit var throwShieldTrigger: GameRectangle
+
+    private var throwShieldTrigger: GameRectangle? = null
 
     private val shielded: Boolean
         get() = state == SniperJoeState.WAITING_SHIELDED
@@ -127,6 +128,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
     private val shootTimer = Timer(SHOOT_DUR)
     private val throwShieldTimer = Timer(THROW_SHIELD_DUR)
 
+    private var canThrowShield = false
     private var setToThrowShield = false
 
     override fun init() {
@@ -158,7 +160,15 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
             else spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.positionOnPoint(spawn, Position.BOTTOM_CENTER)
 
-        throwShieldTrigger = spawnProps.get(ConstKeys.TRIGGER, RectangleMapObject::class)!!.rectangle.toGameRectangle()
+        if (spawnProps.containsKey(ConstKeys.TRIGGER)) {
+            canThrowShield = true
+            throwShieldTrigger =
+                spawnProps.get(ConstKeys.TRIGGER, RectangleMapObject::class)!!.rectangle.toGameRectangle()
+        } else {
+            canThrowShield = false
+            throwShieldTrigger = null
+        }
+
         type = spawnProps.getOrDefault(ConstKeys.TYPE, DEFAULT_TYPE) as String
         state = SniperJoeState.WAITING_SHIELDED
         directionRotation = Direction.UP
@@ -222,7 +232,10 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
 
         // pre-process
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
-            triggerFixture.shape = throwShieldTrigger
+            if (canThrowShield && throwShieldTrigger != null) {
+                triggerFixture.active = true
+                triggerFixture.shape = throwShieldTrigger!!
+            } else triggerFixture.active = false
 
             val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) -GROUND_GRAVITY else -GRAVITY
             body.physics.gravity = (when (directionRotation) {

@@ -34,7 +34,6 @@ class MainScreen(game: MegamanMaverickGame) :
         PASSWORD("PASSWORD"),
         SETTINGS("SETTINGS"),
         CREDITS("CREDITS"),
-        EXTRAS("EXTRA"),
         EXIT("EXIT")
     }
 
@@ -76,7 +75,7 @@ class MainScreen(game: MegamanMaverickGame) :
     private var settingsArrowBlink = false
 
     init {
-        var row = 5.35f
+        var row = 4.75f
 
         MainScreenButton.values().forEach {
             val fontHandle =
@@ -92,7 +91,7 @@ class MainScreen(game: MegamanMaverickGame) :
             val arrowCenter =
                 Vector2(1.5f * ConstVals.PPM, (row - 0.25f) * ConstVals.PPM)
             blinkArrows.put(it.text, BlinkingArrow(game.assMan, arrowCenter))
-            row -= ConstVals.PPM * .025f
+            row -= 0.025f * ConstVals.PPM
         }
 
         row = 12.5f
@@ -165,15 +164,15 @@ class MainScreen(game: MegamanMaverickGame) :
         val atlas = game.assMan.getTextureAtlas(TextureAsset.UI_1.source)
         title.setRegion(atlas.findRegion("MegamanTitle"))
         title.setBounds(
-            ConstVals.PPM.toFloat(), 8.25f * ConstVals.PPM, 13.25f * ConstVals.PPM, 5f * ConstVals.PPM
+            ConstVals.PPM.toFloat(), 6.25f * ConstVals.PPM, 13.25f * ConstVals.PPM, 5f * ConstVals.PPM
         )
         subtitle.setRegion(atlas.findRegion("Subtitle8bit"))
         subtitle.setSize(8f * ConstVals.PPM, 8f * ConstVals.PPM)
         subtitle.setCenter(
-            ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f, (ConstVals.VIEW_HEIGHT + 1) * ConstVals.PPM / 2f
+            ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f, (ConstVals.VIEW_HEIGHT - 0.5f) * ConstVals.PPM / 2f
         )
         pose.setRegion(atlas.findRegion("MegamanMaverick"))
-        pose.setBounds(8f * ConstVals.PPM, 0f, 8f * ConstVals.PPM, 8f * ConstVals.PPM)
+        pose.setBounds(8f * ConstVals.PPM, -ConstVals.PPM / 12f, 6f * ConstVals.PPM, 6f * ConstVals.PPM)
 
         menuButtons.put(
             MainScreenButton.GAME_START.text,
@@ -237,23 +236,6 @@ class MainScreen(game: MegamanMaverickGame) :
                 override fun onNavigate(direction: Direction, delta: Float): String? {
                     return when (direction) {
                         Direction.UP -> MainScreenButton.SETTINGS.text
-                        Direction.DOWN -> MainScreenButton.EXTRAS.text
-                        else -> null
-                    }
-                }
-            })
-
-        menuButtons.put(
-            MainScreenButton.EXTRAS.text,
-            object : IMenuButton {
-                override fun onSelect(delta: Float): Boolean {
-                    // TODO: game.setCurrentScreen(ScreenEnum.EXTRAS.name)
-                    return false
-                }
-
-                override fun onNavigate(direction: Direction, delta: Float): String? {
-                    return when (direction) {
-                        Direction.UP -> MainScreenButton.CREDITS.text
                         Direction.DOWN -> MainScreenButton.EXIT.text
                         else -> null
                     }
@@ -270,7 +252,7 @@ class MainScreen(game: MegamanMaverickGame) :
 
                 override fun onNavigate(direction: Direction, delta: Float): String? {
                     return when (direction) {
-                        Direction.UP -> MainScreenButton.EXTRAS.text
+                        Direction.UP -> MainScreenButton.CREDITS.text
                         Direction.DOWN -> MainScreenButton.GAME_START.text
                         else -> null
                     }

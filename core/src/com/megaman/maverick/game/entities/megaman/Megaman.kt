@@ -120,7 +120,7 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
     internal val shootAnimTimer = Timer(MegamanValues.SHOOT_ANIM_TIME).setToEnd()
     internal val chargingTimer =
         Timer(MegamanValues.TIME_TO_FULLY_CHARGED, TimeMarkedRunnable(MegamanValues.TIME_TO_HALFWAY_CHARGED) {
-            requestToPlaySound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND, true)
+            requestToPlaySound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND, false)
         }).setToEnd()
     internal val airDashTimer = Timer(MegamanValues.MAX_AIR_DASH_TIME)
     internal val wallJumpTimer = Timer(MegamanValues.WALL_JUMP_IMPETUS_TIME).setToEnd()

@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector3
 
 object ConstVals {
     const val VIEW_WIDTH = 16f
-    const val VIEW_HEIGHT = 14f
+    const val VIEW_HEIGHT = 12f
     const val PPM = 32
     const val FIXED_TIME_STEP = 1 / 150f
     const val STANDARD_RESISTANCE_X = 1.035f

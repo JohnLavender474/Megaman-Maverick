@@ -132,7 +132,7 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity, I
         if (bulletRegion == null)
             bulletRegion = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Bullet")
 
-        val sprite = GameSprite(bulletRegion!!, DrawingPriority(DrawingSection.PLAYGROUND, 4))
+        val sprite = GameSprite(bulletRegion!!, DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(1.25f * ConstVals.PPM)
 
         val spritesComponent = SpritesComponent(this, "bullet" to sprite)

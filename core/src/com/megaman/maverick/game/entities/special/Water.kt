@@ -113,7 +113,7 @@ class Water(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteE
     private fun defineDrawables(bounds: GameRectangle) {
         val sprites = OrderedMap<String, ISprite>()
 
-        val waterSprite = GameSprite(waterReg!!, DrawingPriority(DrawingSection.FOREGROUND, 0))
+        val waterSprite = GameSprite(waterReg!!, DrawingPriority(DrawingSection.FOREGROUND, 10))
         waterSprite.setBounds(bounds.x, bounds.y, bounds.width, bounds.height)
         waterSprite.setAlpha(WATER_ALPHA)
         sprites.put("water", waterSprite)
@@ -130,7 +130,7 @@ class Water(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteE
                 val region = if (y == rows - 1) surfaceReg!! else underReg!!
                 val animation = Animation(region, 1, 2, 0.15f, true)
 
-                val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
+                val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
                 sprite.setBounds(pos.x, pos.y, ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
                 sprite.setAlpha(WATER_ALPHA)
 

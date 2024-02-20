@@ -6,7 +6,6 @@ import com.engine.controller.ControllerComponent
 import com.engine.controller.buttons.ButtonActuator
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.ControllerButton
-import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
@@ -111,12 +110,19 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
                 chargingTimer.update(delta)
             },
             onJustReleased = {
-                if (damaged || !weaponHandler.canFireWeapon(currentWeapon, chargeStatus) || !shoot())
-                    requestToPlaySound(SoundAsset.ERROR_SOUND, false)
+                if (damaged) {
+                    stopCharging()
+                    return@ButtonActuator
+                }
 
+                if (!weaponHandler.canFireWeapon(currentWeapon, chargeStatus)) {
+                    stopCharging()
+                    return@ButtonActuator
+                }
+
+                shoot()
                 stopCharging()
             },
-            // TODO: onReleaseContinued = { _, _ -> stopCharging() }
         )
 
     // swap weapon

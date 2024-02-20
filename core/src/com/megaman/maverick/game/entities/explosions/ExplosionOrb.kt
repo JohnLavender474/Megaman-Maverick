@@ -11,6 +11,8 @@ import com.engine.common.extensions.objectSetOf
 import com.engine.common.objects.Properties
 import com.engine.cullables.CullableOnEvent
 import com.engine.cullables.CullablesComponent
+import com.engine.drawables.sorting.DrawingPriority
+import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setSize
@@ -55,7 +57,7 @@ class ExplosionOrb(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity 
     }
 
     private fun defineSpritesCompoent(): SpritesComponent {
-        val sprite = GameSprite()
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(3f * ConstVals.PPM)
         return SpritesComponent(this, "orb" to sprite)
     }

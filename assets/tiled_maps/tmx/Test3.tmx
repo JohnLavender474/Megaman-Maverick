@@ -90,7 +90,7 @@
   </object>
  </objectgroup>
  <objectgroup id="8" name="enemies"/>
- <objectgroup id="12" name="backgrounds">
+ <objectgroup id="12" name="backgrounds" visible="0">
   <object id="7" name="BKG10" x="0" y="3488" width="512" height="1312">
    <properties>
     <property name="atlas" value="Backgrounds1.txt"/>

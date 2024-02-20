@@ -156,14 +156,14 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
-        val SpritesComponent = SpritesComponent(this, "shieldattacker" to sprite)
-        SpritesComponent.putUpdateFunction("shieldattacker") { _, _sprite ->
+        val spritesComponent = SpritesComponent(this, "shieldattacker" to sprite)
+        spritesComponent.putUpdateFunction("shieldattacker") { _, _sprite ->
             _sprite as GameSprite
             _sprite.setFlip(turningAround != left, false)
             val center = body.getCenter()
             _sprite.setCenter(center.x, center.y)
         }
-        return SpritesComponent
+        return spritesComponent
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

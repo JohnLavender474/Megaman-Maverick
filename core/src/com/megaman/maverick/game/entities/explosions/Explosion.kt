@@ -92,7 +92,7 @@ class Explosion(game: MegamanMaverickGame) : GameEntity(game), IHazard, IOwnable
     }
 
     private fun defineSpritesCompoent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 4))
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(2.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, "explosion" to sprite)
         spritesComponent.putUpdateFunction("explosion") { _, _sprite ->

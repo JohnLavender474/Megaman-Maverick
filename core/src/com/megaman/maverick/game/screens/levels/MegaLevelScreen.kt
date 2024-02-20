@@ -462,11 +462,8 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
 
         // update the background and foreground camera positions
         if (camerasSetToGameCamera) {
-            val gameCameraMovement = gameCamera.position.cpy().sub(gameCameraPriorPosition)
-            val backgroundCameraMovement = gameCameraMovement.cpy().scl(backgroundParallaxFactor)
-            backgroundCamera.position.add(backgroundCameraMovement)
-            val foregroundCameraMovement = gameCameraMovement.cpy().scl(foregroundParallaxFactor)
-            foregroundCamera.position.add(foregroundCameraMovement)
+            val gameCamDeltaX = gameCamera.position.x - gameCameraPriorPosition.x
+            backgroundCamera.position.x += gameCamDeltaX * backgroundParallaxFactor
         } else {
             backgroundCamera.position.set(gameCamera.position)
             foregroundCamera.position.set(gameCamera.position)

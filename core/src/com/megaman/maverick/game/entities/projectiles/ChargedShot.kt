@@ -20,6 +20,8 @@ import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.damage.IDamageable
 import com.engine.drawables.shapes.DrawableShapesComponent
+import com.engine.drawables.sorting.DrawingPriority
+import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
@@ -219,7 +221,7 @@ class ChargedShot(game: MegamanMaverickGame) :
     }
 
     private fun defineSpritesCompoent(): SpritesComponent {
-        val sprite = GameSprite()
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         val spritesComponent = SpritesComponent(this, "shot" to sprite)
         spritesComponent.putUpdateFunction("shot") { _, _sprite ->
             _sprite.setFlip(isFacing(Facing.LEFT), false)

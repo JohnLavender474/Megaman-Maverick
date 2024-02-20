@@ -68,7 +68,7 @@ class Disintegration(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntit
             })
 
     private fun defineSpritesCompoent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 4))
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
         return SpritesComponent(this, "disintegration" to sprite)
     }
