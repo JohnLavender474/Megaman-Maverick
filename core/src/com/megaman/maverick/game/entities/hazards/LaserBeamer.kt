@@ -117,7 +117,7 @@ class LaserBeamer(game: MegamanMaverickGame) :
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) {
-        // do thing
+        // do nothing
     }
 
     override fun getTag() = TAG
@@ -174,6 +174,7 @@ class LaserBeamer(game: MegamanMaverickGame) :
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
+        sprite.setRegion(region!!)
 
         val spritesComponent = SpritesComponent(this, "beamer" to sprite)
         spritesComponent.putUpdateFunction("beamer") { _, _sprite ->

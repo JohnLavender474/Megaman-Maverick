@@ -301,8 +301,8 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 4))
         sprite.setSize(1.5f * ConstVals.PPM)
 
-        val SpritesComponent = SpritesComponent(this, "met" to sprite)
-        SpritesComponent.putUpdateFunction("met") { _, _sprite ->
+        val spritesComponent = SpritesComponent(this, "met" to sprite)
+        spritesComponent.putUpdateFunction("met") { _, _sprite ->
             _sprite as GameSprite
 
             val flipX = facing == Facing.LEFT
@@ -331,7 +331,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
             _sprite.setPosition(bodyPosition, position)
         }
 
-        return SpritesComponent
+        return spritesComponent
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

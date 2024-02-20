@@ -250,7 +250,7 @@
     <property name="max" type="float" value="7"/>
     <property name="min" type="float" value="6"/>
     <property name="spawn_room" value="room9"/>
-    <property name="spawn_type" value="SpawnRoom"/>
+    <property name="spawn_type" value="spawn_room"/>
     <property name="vertical" type="bool" value="true"/>
    </properties>
   </object>
@@ -260,7 +260,7 @@
     <property name="max" type="float" value="1"/>
     <property name="min" type="float" value="2"/>
     <property name="spawn_room" value="room9"/>
-    <property name="spawn_type" value="SpawnRoom"/>
+    <property name="spawn_type" value="spawn_room"/>
     <property name="vertical" type="bool" value="false"/>
    </properties>
   </object>
