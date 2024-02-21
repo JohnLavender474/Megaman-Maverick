@@ -3,7 +3,7 @@ package com.megaman.maverick.game.entities.special
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.utils.Array
 import com.engine.common.enums.Direction
-import com.engine.common.extensions.gdxArrayOf
+import com.engine.common.extensions.objectMapOf
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.cullables.CullablesComponent
@@ -70,6 +70,6 @@ class GravityChange(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity {
 
     private fun createCullablesComponent(): CullablesComponent {
         val cullOnOutOfBounds = getGameCameraCullingLogic(this)
-        return CullablesComponent(this, gdxArrayOf(cullOnOutOfBounds))
+        return CullablesComponent(this, objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullOnOutOfBounds))
     }
 }

@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.contracts
 
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.ObjectMap
 import com.engine.audio.AudioComponent
 import com.engine.common.CAUSE_OF_DEATH_MESSAGE
@@ -39,14 +40,15 @@ import com.megaman.maverick.game.entities.utils.setStandardOnPortalHopperEndProp
 import com.megaman.maverick.game.entities.utils.setStandardOnPortalHopperStartProp
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.getMegamanMaverickGame
+import com.megaman.maverick.game.utils.toGameRectangle
 import kotlin.reflect.KClass
 
-abstract class AbstractEnemy(
-    game: MegamanMaverickGame, private val cullTime: Float = 1f, private val cullWhenOutOfCamBounds: Boolean = true
-) : GameEntity(game), IDamager, IDamageable, IBodyEntity, IAudioEntity, IHealthEntity, ISpriteEntity, ICullableEntity {
+abstract class AbstractEnemy(game: MegamanMaverickGame) : GameEntity(game), IDamager, IDamageable, IBodyEntity,
+    IAudioEntity, IHealthEntity, ISpriteEntity, ICullableEntity {
 
     companion object {
         const val TAG = "AbstractEnemy"
+        const val DEFAULT_CULL_TIME = 1f
         private const val DEFAULT_DMG_DURATION = .15f
         private const val DEFAULT_DMG_BLINK_DUR = .025f
     }
@@ -112,6 +114,16 @@ abstract class AbstractEnemy(
         setStandardOnPortalHopperEndProp(this)
     }
 
+    override fun spawn(spawnProps: Properties) {
+        super.spawn(spawnProps)
+        val cullWhenOutOfCamBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
+        if (cullWhenOutOfCamBounds) {
+            val cullTime = spawnProps.getOrDefault(ConstKeys.CULL_TIME, DEFAULT_CULL_TIME, Float::class)
+            val cullOnOutOfBounds = getGameCameraCullingLogic(this, cullTime)
+            putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, cullOnOutOfBounds)
+        } else removeCullable(ConstKeys.CULL_OUT_OF_BOUNDS)
+    }
+
     protected open fun definePointsComponent(): PointsComponent {
         val pointsComponent = PointsComponent(this)
         pointsComponent.putPoints(ConstKeys.HEALTH, ConstVals.MAX_HEALTH)
@@ -159,11 +171,6 @@ abstract class AbstractEnemy(
     }
 
     protected open fun defineCullablesComponent(cullablesComponent: CullablesComponent) {
-        if (cullWhenOutOfCamBounds) {
-            val cullOnOutOfBounds = getGameCameraCullingLogic(this, cullTime)
-            cullablesComponent.add(cullOnOutOfBounds)
-        }
-
         val eventsToCullOn = objectSetOf<Any>(
             EventType.GAME_OVER, EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING
         )
@@ -176,8 +183,7 @@ abstract class AbstractEnemy(
             game.eventsMan.removeListener(cullOnEvents)
             GameLogger.debug(TAG, "Removed CullableOnEvent from EventsManager")
         }
-
-        cullablesComponent.add(cullOnEvents)
+        cullablesComponent.put(ConstKeys.CULL_EVENTS, cullOnEvents)
     }
 
     protected open fun disintegrate(disintegrationProps: Properties? = null) {
@@ -200,4 +206,6 @@ abstract class AbstractEnemy(
 
         return body.x < megaman.body.x && megaman.facing == Facing.LEFT || body.x > megaman.body.x && megaman.facing == Facing.RIGHT
     }
+
+    fun isInGameCamBounds() = getMegamanMaverickGame().getGameCamera().toGameRectangle().overlaps(body as Rectangle)
 }

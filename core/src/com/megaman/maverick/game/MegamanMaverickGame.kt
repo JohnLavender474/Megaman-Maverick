@@ -52,9 +52,10 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.MegaControllerPoller
+import com.megaman.maverick.game.entities.blocks.SwinginPlatform
+import com.megaman.maverick.game.entities.enemies.PicketJoe
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.special.BlackBackground
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
@@ -80,7 +81,7 @@ class MegamanMaverickGame : Game2D() {
         const val DEBUG_TEXT = false
         const val DEBUG_SHAPES = true
         const val DEFAULT_VOLUME = 0.5f
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(BlackBackground.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(PicketJoe.TAG, SwinginPlatform.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.SIDE, FixtureType.BLOCK)
         }
@@ -150,13 +151,6 @@ class MegamanMaverickGame : Game2D() {
             ), centerX = true, centerY = true, fontSource = ConstVals.MEGAMAN_MAVERICK_FONT
         )
 
-        screens.put(ScreenEnum.LEVEL.name, MegaLevelScreen(this))
-        screens.put(ScreenEnum.MAIN.name, MainScreen(this))
-        screens.put(ScreenEnum.BOSS_SELECT.name, BossSelectScreen(this))
-        screens.put(ScreenEnum.BOSS_INTRO.name, BossIntroScreen(this))
-        screens.put(ScreenEnum.SIMPLE_END_LEVEL_SUCCESSFULLY.name, SimpleEndLevelScreen(this))
-        screens.put(ScreenEnum.SIMPLE_INIT_GAME.name, SimpleInitGameScreen(this))
-
         audioMan = MegaAudioManager(assMan.getSounds(), assMan.getMusics())
         audioMan.musicVolume = DEFAULT_VOLUME
         audioMan.soundVolume = DEFAULT_VOLUME
@@ -167,16 +161,23 @@ class MegamanMaverickGame : Game2D() {
         megaman.init()
         megaman.initialized = true
 
+        screens.put(ScreenEnum.LEVEL.name, MegaLevelScreen(this))
+        screens.put(ScreenEnum.MAIN.name, MainScreen(this))
+        screens.put(ScreenEnum.BOSS_SELECT.name, BossSelectScreen(this))
+        screens.put(ScreenEnum.BOSS_INTRO.name, BossIntroScreen(this))
+        screens.put(ScreenEnum.SIMPLE_END_LEVEL_SUCCESSFULLY.name, SimpleEndLevelScreen(this))
+        screens.put(ScreenEnum.SIMPLE_INIT_GAME.name, SimpleInitGameScreen(this))
+
         // startLevelScreen(Level.TEST1)
         // startLevelScreen(Level.TEST2)
         // startLevelScreen(Level.TEST3)
         // startLevelScreen(Level.TEST4)
         // startLevelScreen(Level.TEST5)
-        setCurrentScreen(ScreenEnum.MAIN.name)
+        // setCurrentScreen(ScreenEnum.MAIN.name)
         // startLevelScreen(Level.TIMBER_WOMAN)
         // startLevelScreen(Level.RODENT_MAN)
         // startLevelScreen(Level.FREEZER_MAN)
-        // startLevelScreen(Level.GALAXY_MAN)
+        startLevelScreen(Level.GALAXY_MAN)
         // setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME.name)
     }
 

@@ -88,13 +88,15 @@ class Saw(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEnt
             )
         putMotionDefinition(
             ConstKeys.PENDULUM,
-            MotionDefinition(motion = pendulum, function = { value, _ -> body.setCenter(value) })
+            MotionDefinition(motion = pendulum, function = { value, _ ->
+                body.setCenter(value)
+            })
         )
 
         val shapes = Array<() -> IDrawableShape?>()
 
         shapes.add {
-            val line = GameLine(pendulum.anchor, pendulum.getMotionValue())
+            val line = GameLine(pendulum.anchor, body.getCenter())
             line.color = Color.DARK_GRAY
             line.shapeType = ShapeRenderer.ShapeType.Filled
             line.thickness = ConstVals.PPM / 8f
@@ -111,7 +113,7 @@ class Saw(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEnt
         circle2.setRadius(ConstVals.PPM / 4f)
         circle2.shapeType = ShapeRenderer.ShapeType.Filled
         circle2.color = Color.DARK_GRAY
-        shapes.add { circle2.setCenter(pendulum.getMotionValue()) }
+        shapes.add { circle2.setCenter(body.getCenter()) }
 
         addComponent(DrawableShapesComponent(this, shapes))
     }
@@ -127,13 +129,15 @@ class Saw(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEnt
             )
         putMotionDefinition(
             ConstKeys.ROTATION,
-            MotionDefinition(motion = rotation, function = { value, _ -> body.setCenter(value) })
+            MotionDefinition(motion = rotation, function = { value, _ ->
+                body.setCenter(value)
+            })
         )
 
         val shapes = Array<() -> IDrawableShape?>()
 
         shapes.add {
-            val line = GameLine(rotation.getOrigin(), rotation.getMotionValue())
+            val line = GameLine(rotation.getOrigin(), body.getCenter())
             line.color = Color.DARK_GRAY
             line.shapeType = ShapeRenderer.ShapeType.Filled
             line.thickness = ConstVals.PPM / 8f
@@ -150,7 +154,7 @@ class Saw(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEnt
         circle2.setRadius(ConstVals.PPM / 4f)
         circle2.color = Color.DARK_GRAY
         circle2.shapeType = ShapeRenderer.ShapeType.Filled
-        shapes.add { circle2.setCenter(rotation.getMotionValue()) }
+        shapes.add { circle2.setCenter(body.getCenter()) }
 
         addComponent(DrawableShapesComponent(this, shapes))
     }
@@ -164,7 +168,7 @@ class Saw(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEnt
             ConstKeys.TRAJECTORY,
             MotionDefinition(
                 motion = trajectory,
-                function = { value, delta -> body.setCenter(value.scl(delta)) },
+                function = { value, _ -> body.setCenter(value) },
                 onReset = { body.setCenter(spawn) })
         )
     }

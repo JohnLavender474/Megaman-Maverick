@@ -307,6 +307,12 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
             }
             if (body.isSensing(BodySense.FEET_ON_GROUND) && megaman.body.x >= body.x && megaman.body.getMaxX() <= body.getMaxX()) jump()
 
+            if (!isInGameCamBounds()) {
+                state = if (hasShield) SniperJoeState.WAITING_SHIELDED else SniperJoeState.WAITING_NO_SHIELD
+                waitTimer.reset()
+                return@add
+            }
+
             when (state) {
                 SniperJoeState.WAITING_SHIELDED -> {
                     if (setToThrowShield) {

@@ -19,11 +19,11 @@ class BlinkingArrow(assMan: AssetManager, val center: Vector2) : Updatable, IDra
     }
 
     private val blinkTimer = Timer(BLINK_DUR)
-    private var arrowSprite: Sprite
+    private val arrowSprite = Sprite(assMan.getTextureRegion(TextureAsset.UI_1.source, "Arrow"))
+
     private var arrowVisible = false
 
     init {
-        arrowSprite = Sprite(assMan.getTextureRegion(TextureAsset.UI_1.source, "Arrow"))
         arrowSprite.setSize(ConstVals.PPM / 2f)
         arrowSprite.setCenter(center.x, center.y)
     }

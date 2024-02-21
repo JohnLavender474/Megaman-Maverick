@@ -3,6 +3,7 @@ package com.megaman.maverick.game.entities.contracts
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.utils.Array
 import com.engine.audio.AudioComponent
+import com.engine.common.extensions.objectMapOf
 import com.engine.common.extensions.objectSetOf
 import com.engine.common.extensions.overlaps
 import com.engine.components.IGameComponent
@@ -57,7 +58,10 @@ internal fun IProjectileEntity.defineProjectileComponents(): Array<IGameComponen
         CullableOnUncontained<Camera>(
             containerSupplier = { game.viewports.get(ConstKeys.GAME).camera },
             containable = { it.overlaps(body) })
-    components.add(CullablesComponent(this, cullOnEvent, cullOnOutOfGameCam))
+    components.add(CullablesComponent(this, objectMapOf(
+        ConstKeys.CULL_EVENTS to cullOnEvent,
+        ConstKeys.CULL_OUT_OF_BOUNDS to cullOnOutOfGameCam
+    )))
 
     return components
 }

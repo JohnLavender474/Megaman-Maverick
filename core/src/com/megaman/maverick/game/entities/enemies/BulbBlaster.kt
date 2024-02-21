@@ -41,7 +41,7 @@ import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import kotlin.reflect.KClass
 
-class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game, cullWhenOutOfCamBounds = false), IAnimatedEntity,
+class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     IMotionEntity {
 
     companion object {
@@ -71,6 +71,7 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game, cullWhenOutOf
     }
 
     override fun spawn(spawnProps: Properties) {
+        spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
         super.spawn(spawnProps)
 
         val spawn = if (spawnProps.containsKey(ConstKeys.POSITION)) spawnProps.get(ConstKeys.POSITION, Vector2::class)!!

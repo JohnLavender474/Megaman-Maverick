@@ -15,6 +15,13 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val BOUNDS_SUPPLIER = "bounds_supplier"
+    const val POSITION_SUPPLIER = "position_supplier"
+    const val CULL_TIME = "cull_time"
+    const val ENEMY_SPAWN = "enemy_spawn"
+    const val CULL_EVENTS = "cull_events"
+    const val CULL_OUT_OF_BOUNDS = "cull_out_of_bounds"
+    const val TARGET = "target"
     const val RADIANCE = "radiance"
     const val CENTER = "center"
     const val RADIUS = "radius"

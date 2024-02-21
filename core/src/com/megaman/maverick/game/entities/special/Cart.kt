@@ -185,7 +185,7 @@ class Cart(game: MegamanMaverickGame) : GameEntity(game), IOwnable, IBodyEntity,
 
     private fun defineCullablesComponent(): CullablesComponent {
         val cullable = getGameCameraCullingLogic(this)
-        return CullablesComponent(this, cullable)
+        return CullablesComponent(this, objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullable))
     }
 
 }

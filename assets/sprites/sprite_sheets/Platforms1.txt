@@ -1,7 +1,7 @@
 Platforms1.png
 size: 448, 192
 format: RGBA8888
-filter: Linear,Linear
+filter: Nearest,Nearest
 repeat: none
 8bitBlueBlock
   rotate: false
@@ -134,5 +134,12 @@ TrackBlock
   xy: 336, 160
   size: 32, 32
   orig: 32, 32
+  offset: 0, 0
+  index: -1
+WoodBlock1
+  rotate: false
+  xy: 368, 160
+  size: 64, 32
+  orig: 64, 32
   offset: 0, 0
   index: -1

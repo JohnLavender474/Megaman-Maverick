@@ -50,7 +50,7 @@ import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import kotlin.reflect.KClass
 
-class Togglee(game: MegamanMaverickGame) : AbstractEnemy(game, cullWhenOutOfCamBounds = false), IAnimatedEntity,
+class Togglee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     IDirectionRotatable, IFontsEntity {
 
     enum class ToggleeState {
@@ -105,6 +105,7 @@ class Togglee(game: MegamanMaverickGame) : AbstractEnemy(game, cullWhenOutOfCamB
     }
 
     override fun spawn(spawnProps: Properties) {
+        spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
         super.spawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()

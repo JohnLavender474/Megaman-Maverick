@@ -73,7 +73,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
     }
 
     override fun spawn(spawnProps: Properties) {
-        GameLogger.debug(TAG, "Spawn props: $spawnProps")
+        spawnProps.put(ConstKeys.CULL_TIME, 2f)
         super.spawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()

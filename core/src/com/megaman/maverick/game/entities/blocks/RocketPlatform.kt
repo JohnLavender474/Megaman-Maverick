@@ -59,7 +59,7 @@ class RocketPlatform(game: MegamanMaverickGame) :
     }
 
     override fun spawn(spawnProps: Properties) {
-        spawnProps.put(ConstKeys.PERSIST, true)
+        spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
         super.spawn(spawnProps)
 
         game.eventsMan.addListener(this)

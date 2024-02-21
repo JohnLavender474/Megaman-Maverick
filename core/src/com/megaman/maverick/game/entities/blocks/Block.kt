@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.engine.IGame2D
 import com.engine.common.GameLogger
+import com.engine.common.extensions.objectMapOf
 import com.engine.common.interfaces.Updatable
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
@@ -57,25 +58,31 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
 
-        val persist =
-            if (spawnProps.containsKey(ConstKeys.PERSIST)) spawnProps.get(ConstKeys.PERSIST) as Boolean
-            else false
-        if (persist) removeComponent(CullablesComponent::class)
-        else addComponent(CullablesComponent(this, getGameCameraCullingLogic(this)))
+        val cullOutOfBounds =
+            if (spawnProps.containsKey(ConstKeys.CULL_OUT_OF_BOUNDS)) spawnProps.get(ConstKeys.CULL_OUT_OF_BOUNDS) as Boolean
+            else true
+        if (cullOutOfBounds) addComponent(
+            CullablesComponent(
+                this, objectMapOf(
+                    ConstKeys.CULL_OUT_OF_BOUNDS to getGameCameraCullingLogic(this)
+                )
+            )
+        )
+        else removeComponent(CullablesComponent::class)
 
-        if (properties.containsKey(ConstKeys.FRICTION_X))
-            body.physics.frictionToApply.x = properties.get(ConstKeys.FRICTION_X) as Float
+        if (properties.containsKey(ConstKeys.FRICTION_X)) body.physics.frictionToApply.x =
+            properties.get(ConstKeys.FRICTION_X) as Float
         else body.physics.frictionToApply.x = STANDARD_FRICTION_X
 
-        if (properties.containsKey(ConstKeys.FRICTION_Y))
-            body.physics.frictionToApply.y = properties.get(ConstKeys.FRICTION_Y) as Float
+        if (properties.containsKey(ConstKeys.FRICTION_Y)) body.physics.frictionToApply.y =
+            properties.get(ConstKeys.FRICTION_Y) as Float
         else body.physics.frictionToApply.y = STANDARD_FRICTION_Y
 
-        if (properties.containsKey(ConstKeys.GRAVITY_ON))
-            body.physics.gravityOn = properties.get(ConstKeys.GRAVITY_ON) as Boolean
+        if (properties.containsKey(ConstKeys.GRAVITY_ON)) body.physics.gravityOn =
+            properties.get(ConstKeys.GRAVITY_ON) as Boolean
 
-        if (properties.containsKey(ConstKeys.RESIST_ON))
-            body.physics.takeFrictionFromOthers = properties.get(ConstKeys.RESIST_ON) as Boolean
+        if (properties.containsKey(ConstKeys.RESIST_ON)) body.physics.takeFrictionFromOthers =
+            properties.get(ConstKeys.RESIST_ON) as Boolean
 
         body.clearBodyLabels()
         if (properties.containsKey(ConstKeys.BODY_LABELS)) {

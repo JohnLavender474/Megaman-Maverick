@@ -15,7 +15,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="5" name="specials" visible="0">
+ <objectgroup id="5" name="specials">
   <object id="12" name="RotationAnchor" x="64" y="4416" width="672" height="288">
    <properties>
     <property name="child1" type="object" value="14"/>

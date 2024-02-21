@@ -136,7 +136,7 @@ class DisappearingBlocks(game: MegamanMaverickGame) :
         val cullablesComponent = CullablesComponent(this)
         val cullable =
             getGameCameraCullingLogic((game as MegamanMaverickGame).getGameCamera(), { bounds })
-        cullablesComponent.add(cullable)
+        cullablesComponent.put(ConstKeys.CULL_OUT_OF_BOUNDS, cullable)
         return cullablesComponent
     }
 }

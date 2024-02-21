@@ -208,7 +208,7 @@ class HealthBulb(game: MegamanMaverickGame) :
     private fun defineCullablesComponent(): CullablesComponent {
         val eventsToCullOn = objectSetOf<Any>(EventType.GAME_OVER)
         val cullOnEvent = CullableOnEvent({ eventsToCullOn.contains(it.key) }, eventsToCullOn)
-        return CullablesComponent(this, cullOnEvent)
+        return CullablesComponent(this, objectMapOf(ConstKeys.CULL_EVENTS to cullOnEvent))
     }
 
     private fun defineUpdatablesComponent() =

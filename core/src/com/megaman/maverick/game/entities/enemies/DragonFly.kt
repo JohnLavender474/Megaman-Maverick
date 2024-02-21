@@ -40,7 +40,7 @@ import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import kotlin.reflect.KClass
 
-class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game, CULL_TIME), IFaceable {
+class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     enum class DragonFlyBehavior {
         MOVE_UP,
@@ -81,6 +81,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game, CULL_TIME), IFa
     }
 
     override fun spawn(spawnProps: Properties) {
+        spawnProps.put(ConstKeys.CULL_TIME, CULL_TIME)
         super.spawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)

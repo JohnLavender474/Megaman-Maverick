@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectSet
 import com.engine.common.GameLogger
 import com.engine.common.extensions.getTextureRegion
+import com.engine.common.extensions.objectMapOf
 import com.engine.common.extensions.objectSetOf
 import com.engine.common.interfaces.IPropertizable
 import com.engine.common.interpolate
@@ -260,6 +261,6 @@ class BlackBackground(game: MegamanMaverickGame) : GameEntity(game), ISpriteEnti
 
     private fun defineCullablesComponent(): CullablesComponent {
         val cullable = getGameCameraCullingLogic(getMegamanMaverickGame().getGameCamera(), { bounds })
-        return CullablesComponent(this, cullable)
+        return CullablesComponent(this, objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullable))
     }
 }

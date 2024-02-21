@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.engine.common.GameLogger
 import com.engine.common.calculateAngleDegrees
+import com.engine.common.extensions.objectMapOf
 import com.engine.common.extensions.processAndFilter
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
@@ -123,7 +124,7 @@ open class RotationAnchor(game: MegamanMaverickGame) : GameEntity(game), IBodyEn
 
     protected open fun defineCullablesComponent(): CullablesComponent {
         val cullable = getGameCameraCullingLogic(this)
-        return CullablesComponent(this, cullable)
+        return CullablesComponent(this, objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullable))
     }
 
 }

@@ -2,11 +2,14 @@ package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
+import com.badlogic.gdx.math.MathUtils.*
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
+import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
 import com.engine.common.enums.Facing
 import com.engine.common.extensions.gdxArrayOf
@@ -46,7 +49,11 @@ import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.world.BodyComponentCreator
+import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.FixtureType
+import com.megaman.maverick.game.world.isSensing
+import kotlin.math.abs
+import kotlin.math.sqrt
 import kotlin.reflect.KClass
 
 class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
@@ -57,6 +64,8 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         private const val STAND_DUR = .4f
         private const val THROW_DUR = .5f
         private const val PICKET_IMPULSE_Y = 10f
+        private const val GROUND_GRAVITY = 0.0015f
+        private const val GRAVITY = 0.375f
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -84,9 +93,15 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         addComponent(defineAnimationsComponent())
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn =
+            if (spawnProps.containsKey(ConstKeys.POSITION))
+                spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+            else if (spawnProps.containsKey(ConstKeys.POSITION_SUPPLIER))
+                (spawnProps.get(ConstKeys.POSITION_SUPPLIER) as () -> Vector2).invoke()
+            else spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
         throwTimer.setToEnd()
         standTimer.reset()
@@ -104,8 +119,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
                 throwTimer.update(it)
                 if (throwTimer.isFinished()) setToStanding()
             }
-            if (throwTimer.isFinished())
-                facing = if (megaman.body.x >= body.x) Facing.RIGHT else Facing.LEFT
+            if (throwTimer.isFinished()) facing = if (megaman.body.x >= body.x) Facing.RIGHT else Facing.LEFT
         }
     }
 
@@ -115,38 +129,44 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
+        // feet fixture
+        val feetFixture = Fixture(
+            GameRectangle().setSize(0.8f * ConstVals.PPM, 0.1f * ConstVals.PPM), FixtureType.FEET
+        )
+        feetFixture.offsetFromBodyCenter.y = -0.5f * ConstVals.PPM
+        body.addFixture(feetFixture)
+        feetFixture.shape.color = Color.GREEN
+        debugShapes.add { feetFixture.shape }
+
         // shield fixture
-        val shieldFixture =
-            Fixture(
-                GameRectangle().setSize(0.4f * ConstVals.PPM, 0.9f * ConstVals.PPM), FixtureType.SHIELD
-            )
+        val shieldFixture = Fixture(
+            GameRectangle().setSize(0.4f * ConstVals.PPM, 0.9f * ConstVals.PPM), FixtureType.SHIELD
+        )
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
         body.addFixture(shieldFixture)
         shieldFixture.shape.color = Color.BLUE
         debugShapes.add { shieldFixture.shape }
 
         // damager fixture
-        val damagerFixture =
-            Fixture(
-                GameRectangle().setSize(0.75f * ConstVals.PPM, 1.15f * ConstVals.PPM),
-                FixtureType.DAMAGER
-            )
+        val damagerFixture = Fixture(
+            GameRectangle().setSize(0.75f * ConstVals.PPM, 1.15f * ConstVals.PPM), FixtureType.DAMAGER
+        )
         body.addFixture(damagerFixture)
         damagerFixture.shape.color = Color.RED
         debugShapes.add { damagerFixture.shape }
 
         // damageable fixture
-        val damageableFixture =
-            Fixture(
-                GameRectangle().setSize(0.8f * ConstVals.PPM, 1.35f * ConstVals.PPM),
-                FixtureType.DAMAGEABLE
-            )
+        val damageableFixture = Fixture(
+            GameRectangle().setSize(0.8f * ConstVals.PPM, 1.35f * ConstVals.PPM), FixtureType.DAMAGEABLE
+        )
         body.addFixture(damageableFixture)
         damageableFixture.shape.color = Color.PURPLE
         debugShapes.add { damageableFixture.shape }
 
         // pre-process
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
+            body.physics.gravity.y =
+                ConstVals.PPM * if (body.isSensing(BodySense.FEET_ON_GROUND)) -GROUND_GRAVITY else -GRAVITY
             shieldFixture.active = standing
             if (standing) {
                 damageableFixture.offsetFromBodyCenter.x = 0.25f * ConstVals.PPM * -facing.value
@@ -176,11 +196,10 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { if (standing) "stand" else "throw" }
-        val animations =
-            objectMapOf<String, IAnimation>(
-                "stand" to Animation(atlas!!.findRegion("PicketJoe/Stand")),
-                "throw" to Animation(atlas!!.findRegion("PicketJoe/Throw"), 1, 3, 0.1f, false)
-            )
+        val animations = objectMapOf<String, IAnimation>(
+            "stand" to Animation(atlas!!.findRegion("PicketJoe/Stand")),
+            "throw" to Animation(atlas!!.findRegion("PicketJoe/Throw"), 1, 3, 0.1f, false)
+        )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }
@@ -196,16 +215,19 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     }
 
     private fun throwPicket() {
+        if (!isInGameCamBounds()) return
+
         val spawn = body.getCenter()
         spawn.x += 0.1f * ConstVals.PPM * facing.value
         spawn.y += 0.25f * ConstVals.PPM
 
         val picket = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.PICKET)!!
-        val impulseX = (megaman.body.x - body.x) * 0.8f
+        val xFactor = 1f - ((abs(megaman.body.y - body.y) / ConstVals.PPM) / 10f) + 0.2f
+        GameLogger.debug(TAG, "throwPicket(): xFactor: $xFactor")
+        val impulseX = (megaman.body.x - body.x) * xFactor
 
         game.gameEngine.spawn(
-            picket,
-            props(
+            picket, props(
                 ConstKeys.OWNER to this,
                 ConstKeys.POSITION to spawn,
                 ConstKeys.X to impulseX,
@@ -213,4 +235,5 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             )
         )
     }
+
 }

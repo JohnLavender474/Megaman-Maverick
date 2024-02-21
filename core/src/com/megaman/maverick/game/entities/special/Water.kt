@@ -10,8 +10,8 @@ import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimator
 import com.engine.common.GameLogger
-import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.getTextureAtlas
+import com.engine.common.extensions.objectMapOf
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.cullables.CullablesComponent
@@ -107,7 +107,7 @@ class Water(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteE
 
     private fun defineCullablesComponent(): CullablesComponent {
         val cullable = getGameCameraCullingLogic(this)
-        return CullablesComponent(this, gdxArrayOf(cullable))
+        return CullablesComponent(this, objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullable))
     }
 
     private fun defineDrawables(bounds: GameRectangle) {

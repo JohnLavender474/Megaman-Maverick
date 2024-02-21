@@ -316,10 +316,10 @@
   <object id="89" name="Ladder" x="2848" y="928" width="32" height="448"/>
   <object id="130" name="Ladder" x="1024" y="864" width="32" height="544"/>
  </objectgroup>
- <objectgroup id="5" name="game_rooms" visible="0">
-  <object id="59" name="Room1" x="0" y="96" width="2368" height="448"/>
-  <object id="60" name="Room2" x="896" y="544" width="1472" height="448"/>
-  <object id="61" name="Room3" x="896" y="992" width="2080" height="448"/>
+ <objectgroup id="5" name="game_rooms">
+  <object id="59" name="Room1" x="0" y="96" width="2368" height="384"/>
+  <object id="60" name="Room2" x="896" y="480" width="1472" height="384"/>
+  <object id="61" name="Room3" x="896" y="864" width="2080" height="384"/>
   <object id="62" name="Room4" x="2464" y="544" width="512" height="480"/>
   <object id="63" name="Room5" x="2976" y="544" width="832" height="480"/>
   <object id="64" name="BossRoom" x="3808" y="544" width="512" height="480"/>

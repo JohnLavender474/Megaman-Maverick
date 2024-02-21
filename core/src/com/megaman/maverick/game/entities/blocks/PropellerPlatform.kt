@@ -49,7 +49,7 @@ class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity,
 
     override fun spawn(spawnProps: Properties) {
         game.eventsMan.addListener(this)
-        spawnProps.put(ConstKeys.PERSIST, true)
+        spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
         super.spawn(spawnProps)
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         val trajectory = Trajectory(spawnProps.get(ConstKeys.TRAJECTORY) as String, ConstVals.PPM)

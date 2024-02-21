@@ -80,7 +80,8 @@ class ExplosionOrb(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity 
     private fun defineCullablesComponent(): CullablesComponent {
         val cullable = CullablesComponent(this)
 
-        cullable.add(
+        cullable.put(
+            ConstKeys.CULL_OUT_OF_BOUNDS,
             getGameCameraCullingLogic(
                 getMegamanMaverickGame().getGameCamera(),
                 { (firstSprite as Sprite).boundingRectangle },
@@ -90,7 +91,7 @@ class ExplosionOrb(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity 
 
         val cullOnEvent =
             CullableOnEvent({ it.key == EventType.PLAYER_SPAWN }, objectSetOf(EventType.PLAYER_SPAWN))
-        cullable.add(cullOnEvent)
+        cullable.put(ConstKeys.CULL_EVENTS, cullOnEvent)
 
         runnablesOnSpawn.add { game.eventsMan.addListener(cullOnEvent) }
         runnablesOnDestroy.add { game.eventsMan.removeListener(cullOnEvent) }
