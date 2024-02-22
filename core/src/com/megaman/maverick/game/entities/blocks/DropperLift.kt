@@ -20,6 +20,7 @@ import com.engine.drawables.sprites.setPosition
 import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.entities.contracts.ISpriteEntity
 import com.engine.updatables.UpdatablesComponent
+import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
@@ -60,6 +61,7 @@ class DropperLift(game: MegamanMaverickGame) : Block(game), ISpriteEntity, IAnim
     }
 
     override fun spawn(spawnProps: Properties) {
+        spawnProps.put(ConstKeys.BODY_LABELS, "collide_down_only")
         super.spawn(spawnProps)
         loop.reset()
         timer.reset()

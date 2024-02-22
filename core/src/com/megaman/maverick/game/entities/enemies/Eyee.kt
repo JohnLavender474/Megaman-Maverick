@@ -86,6 +86,7 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
     }
 
     override fun spawn(spawnProps: Properties) {
+        spawnProps.put(ConstKeys.CULL_TIME, 2f)
         super.spawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()

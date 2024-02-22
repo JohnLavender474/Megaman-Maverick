@@ -52,7 +52,7 @@
   <object id="81" x="10720" y="224" width="448" height="224"/>
   <object id="85" x="9952" y="448" width="64" height="192"/>
   <object id="86" x="10144" y="448" width="64" height="192"/>
-  <object id="88" name="DropperLift" x="10280" y="480" width="16" height="8"/>
+  <object id="88" name="DropperLift" x="10272" y="480" width="32" height="8"/>
   <object id="89" name="Lift" x="10400" y="520" width="32" height="24"/>
   <object id="98" x="12192" y="224" width="64" height="256"/>
   <object id="99" x="12000" y="384" width="128" height="32"/>

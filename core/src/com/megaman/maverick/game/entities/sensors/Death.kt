@@ -26,11 +26,8 @@ class Death(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity {
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-
-        // death fixture
         val deathFixture = Fixture(GameRectangle(), FixtureType.DEATH)
         body.addFixture(deathFixture)
-
         return BodyComponentCreator.create(this, body)
     }
 }

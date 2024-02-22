@@ -61,19 +61,17 @@ class DisappearingBlocks(game: MegamanMaverickGame) :
 
         val childrenPropsArray = convertObjectPropsToEntities(spawnProps)
         childrenPropsArray.sort { o1, o2 ->
-            val name1 = o1.second.get(ConstKeys.KEY, String::class)!!
-            val name2 = o2.second.get(ConstKeys.KEY, String::class)!!
-            name1.compareTo(name2)
+            val key1 = o1.second.get(ConstKeys.KEY, String::class)!!
+            val key2 = o2.second.get(ConstKeys.KEY, String::class)!!
+            key1.compareTo(key2)
         }
         GameLogger.debug(TAG, "spawn(): sorted childrenPropsArray = $childrenPropsArray")
 
         val keyArray = Array<String>()
         var currentKey: String? = null
-
         childrenPropsArray.forEach { (child, props) ->
             child as AnimatedBlock
             children.add(child)
-
             props.put(
                 ConstKeys.RUN_ON_SPAWN,
                 Runnable {
@@ -85,7 +83,6 @@ class DisappearingBlocks(game: MegamanMaverickGame) :
 
             val thisKey = props.get(ConstKeys.KEY, String::class)!!
             GameLogger.debug(TAG, "spawn(): thisKey = $thisKey")
-
             if (currentKey == null || currentKey != thisKey) {
                 currentKey = thisKey
                 keyArray.add(currentKey)
