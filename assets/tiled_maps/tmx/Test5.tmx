@@ -511,7 +511,6 @@
     <property name="type" value="HAZARD"/>
    </properties>
   </object>
-  <object id="448" name="CameraPosition0" x="224" y="9392" width="32" height="32"/>
   <object id="449" name="CameraPosition1" x="3424" y="9392" width="32" height="32"/>
   <object id="450" name="CameraPosition2" x="1120" y="9776" width="32" height="32"/>
   <object id="451" name="CameraPosition3" x="1600" y="10384" width="32" height="32"/>

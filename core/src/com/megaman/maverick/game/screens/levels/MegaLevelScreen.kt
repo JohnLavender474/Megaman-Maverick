@@ -375,7 +375,6 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
                     "onEvent(): Next room req --> start room transition"
                 )
                 val roomName = event.properties.get(ConstKeys.ROOM) as String
-
                 val isTrans = cameraManagerForRooms.transitionToRoom(roomName)
                 if (isTrans)
                     GameLogger.debug(

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="450" height="51" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="299">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="450" height="51" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="300">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/Gravity Man Stage.tsx"/>
  <tileset firstgid="4609" source="../tsx/MM3Wily1.tsx"/>
@@ -142,12 +142,12 @@
   <object id="295" x="9088" y="928" width="256" height="64"/>
  </objectgroup>
  <objectgroup id="7" name="items"/>
- <objectgroup id="3" name="game_rooms" visible="0">
+ <objectgroup id="3" name="game_rooms">
   <object id="5" name="room1" x="0" y="992" width="3104" height="576"/>
   <object id="80" name="room9" x="9760" y="1024" width="4512" height="416"/>
   <object id="153" name="room2" x="3104" y="992" width="2016" height="384"/>
   <object id="180" name="room3" x="4608" y="608" width="512" height="384"/>
-  <object id="188" name="room4" x="5152" y="608" width="1344" height="384"/>
+  <object id="188" name="room4" x="5120" y="608" width="1376" height="384"/>
   <object id="255" x="6496" y="608" width="2944" height="384"/>
  </objectgroup>
  <objectgroup id="5" name="enemies">
@@ -377,7 +377,7 @@
  <objectgroup id="4" name="player">
   <object id="189" name="2" x="4864" y="768" width="32" height="32"/>
   <object id="190" name="1" x="3200" y="1152" width="32" height="32"/>
-  <object id="297" name="0" x="8128" y="800" width="32" height="32"/>
+  <object id="299" name="0" x="128" y="1472" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="8" name="hazards">
   <object id="82" name="Electrocutie" x="10912" y="1408" width="32" height="128">

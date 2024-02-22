@@ -9,6 +9,7 @@ import com.engine.common.enums.Position
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.extensions.objectSetOf
+import com.engine.common.interfaces.IBoundsSupplier
 import com.engine.common.interfaces.IFaceable
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
@@ -54,7 +55,8 @@ import com.megaman.maverick.game.events.EventType
 import kotlin.reflect.KClass
 
 class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IEventListener, IFaceable, IDamageable,
-    IDirectionRotatable, IBodyEntity, IHealthEntity, ISpriteEntity, IBehaviorsEntity, IPointsEntity, IAudioEntity {
+    IDirectionRotatable, IBodyEntity, IHealthEntity, ISpriteEntity, IBehaviorsEntity, IPointsEntity, IAudioEntity,
+    IBoundsSupplier {
 
     companion object {
         const val TAG = "Megaman"
@@ -347,7 +349,8 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
                 GameLogger.debug(
                     MEGAMAN_EVENT_LISTENER_TAG, "BEGIN/CONTINUE ROOM TRANS: position = $position"
                 )
-
+                body.setCenter(position)
+                /*
                 body.positionOnPoint(
                     position, when (directionRotation) {
                         Direction.UP -> Position.BOTTOM_CENTER
@@ -356,12 +359,12 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
                         Direction.RIGHT -> Position.CENTER_LEFT
                     }
                 )
+                 */
                 stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
             }
 
             EventType.GATE_INIT_OPENING -> {
                 GameLogger.debug(MEGAMAN_EVENT_LISTENER_TAG, "GATE_INIT_OPENING")
-
                 body.physics.velocity.setZero()
                 stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
             }
@@ -395,6 +398,8 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         Direction.LEFT -> body.getCenterRightPoint()
         Direction.RIGHT -> body.getCenterLeftPoint()
     }
+
+    override fun getBounds() = body
 
     override fun getTag() = TAG
 }
