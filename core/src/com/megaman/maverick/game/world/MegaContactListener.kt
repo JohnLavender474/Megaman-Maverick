@@ -66,13 +66,39 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             }
         }
 
+        // death, feet / side / head / body
+        else if (contact.fixturesMatch(
+                objectSetOf(FixtureType.DEATH),
+                objectSetOf(
+                    FixtureType.FEET,
+                    FixtureType.SIDE,
+                    FixtureType.HEAD,
+                    FixtureType.BODY
+                )
+            )
+        ) {
+            val (_, bodyFixture) = contact.getFixtureSetsInOrder(
+                objectSetOf(FixtureType.DEATH),
+                objectSetOf(
+                    FixtureType.FEET,
+                    FixtureType.SIDE,
+                    FixtureType.HEAD,
+                    FixtureType.BODY
+                )
+            )!!
+            val entity = bodyFixture.getEntity()
+            if (entity is IDamageable && !entity.invincible) bodyFixture.depleteHealth()
+        }
+
         // death, damageable
+        /*
         else if (contact.fixturesMatch(FixtureType.DEATH, FixtureType.DAMAGEABLE)) {
             printDebugLog(contact, "beginContact(): Death-Damageable, contact = $contact")
             val (_, damageable) = contact.getFixturesInOrder(FixtureType.DEATH, FixtureType.DAMAGEABLE)!!
 
             damageable.depleteHealth()
         }
+         */
 
         // block, side
         else if (contact.fixturesMatch(FixtureType.BLOCK, FixtureType.SIDE)) {
@@ -377,6 +403,30 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
                 damageable.takeDamageFrom(damager)
                 damager.onDamageInflictedTo(damageable)
             }
+        }
+
+        // death, feet / side / head / body
+        else if (contact.fixtureSetsMatch(
+                objectSetOf(FixtureType.DEATH),
+                objectSetOf(
+                    FixtureType.FEET,
+                    FixtureType.SIDE,
+                    FixtureType.HEAD,
+                    FixtureType.BODY
+                )
+            )
+        ) {
+            val (_, bodyFixture) = contact.getFixtureSetsInOrder(
+                objectSetOf(FixtureType.DEATH),
+                objectSetOf(
+                    FixtureType.FEET,
+                    FixtureType.SIDE,
+                    FixtureType.HEAD,
+                    FixtureType.BODY
+                )
+            )!!
+            val entity = bodyFixture.getEntity()
+            if (entity is IDamageable && !entity.invincible) bodyFixture.depleteHealth()
         }
 
         // feet, block

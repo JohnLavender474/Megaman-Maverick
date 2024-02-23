@@ -1,5 +1,3 @@
-@file:Suppress("UNCHECKED_CAST")
-
 package com.megaman.maverick.game.screens.levels
 
 import com.badlogic.gdx.graphics.OrthographicCamera

@@ -57,7 +57,6 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
-import com.megaman.maverick.game.screens.levels.camera.CameraManagerForRooms
 import com.megaman.maverick.game.screens.menus.MainScreen
 import com.megaman.maverick.game.screens.menus.bosses.BossIntroScreen
 import com.megaman.maverick.game.screens.menus.bosses.BossSelectScreen
@@ -78,9 +77,9 @@ class MegamanMaverickGame : Game2D() {
     companion object {
         const val TAG = "MegamanMaverickGame"
         const val DEBUG_TEXT = false
-        const val DEBUG_SHAPES = true
+        const val DEBUG_SHAPES = false
         const val DEFAULT_VOLUME = 0.5f
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(CameraManagerForRooms.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.SIDE, FixtureType.BLOCK)
         }
@@ -171,8 +170,7 @@ class MegamanMaverickGame : Game2D() {
         // startLevelScreen(Level.TEST2)
         // startLevelScreen(Level.TEST3)
         // startLevelScreen(Level.TEST4)
-        startLevelScreen(Level.TEST5)
-        // setCurrentScreen(ScreenEnum.MAIN.name)
+        startLevelScreen(Level.TEST5) // setCurrentScreen(ScreenEnum.MAIN.name)
         // startLevelScreen(Level.TIMBER_WOMAN)
         // startLevelScreen(Level.RODENT_MAN)
         // startLevelScreen(Level.FREEZER_MAN)
@@ -245,8 +243,11 @@ class MegamanMaverickGame : Game2D() {
         val contactFilterMap = objectMapOf<Any, ObjectSet<Any>>(
             FixtureType.CONSUMER to objectSetOf(*FixtureType.values()),
             FixtureType.PLAYER to objectSetOf(FixtureType.ITEM),
-            FixtureType.DAMAGEABLE to objectSetOf(FixtureType.DEATH, FixtureType.DAMAGER),
+            FixtureType.DAMAGEABLE to objectSetOf(FixtureType.DAMAGER),
             FixtureType.BODY to objectSetOf(FixtureType.FORCE, FixtureType.GRAVITY_CHANGE),
+            FixtureType.DEATH to objectSetOf(
+                FixtureType.FEET, FixtureType.SIDE, FixtureType.HEAD, FixtureType.BODY
+            ),
             FixtureType.WATER_LISTENER to objectSetOf(FixtureType.WATER),
             FixtureType.LADDER to objectSetOf(FixtureType.HEAD, FixtureType.FEET),
             FixtureType.SIDE to objectSetOf(
@@ -260,8 +261,7 @@ class MegamanMaverickGame : Game2D() {
             FixtureType.LASER to objectSetOf(FixtureType.BLOCK)
         )
 
-        val engine = GameEngine(
-            ControllerSystem(controllerPoller),
+        val engine = GameEngine(ControllerSystem(controllerPoller),
             AnimationsSystem(),
             BehaviorsSystem(),
             WorldSystem(

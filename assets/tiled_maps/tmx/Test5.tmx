@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="300" height="400" tilewidth="32" tileheight="32" infinite="0" nextlayerid="22" nextobjectid="453">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="300" height="400" tilewidth="32" tileheight="32" infinite="0" nextlayerid="22" nextobjectid="454">
  <tileset firstgid="1" source="../tsx/GearTrolley.tsx"/>
  <tileset firstgid="13" name="Tileset1" tilewidth="32" tileheight="32" tilecount="1024" columns="32">
   <image source="../png/Tileset1_Full_32x32.png" width="1024" height="1024"/>
@@ -461,6 +461,7 @@
   <object id="445" x="8064" y="11040" width="192" height="480"/>
   <object id="446" x="2624" y="11360" width="96" height="128"/>
   <object id="447" x="7072" y="11040" width="512" height="224"/>
+  <object id="453" x="480" y="9568" width="1312" height="32"/>
  </objectgroup>
  <objectgroup id="21" name="children">
   <object id="355" name="Spike" x="2904" y="10752" width="32" height="32">

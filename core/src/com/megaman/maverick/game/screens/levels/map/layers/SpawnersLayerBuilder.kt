@@ -1,5 +1,3 @@
-@file:Suppress("UNCHECKED_CAST")
-
 package com.megaman.maverick.game.screens.levels.map.layers
 
 import com.badlogic.gdx.maps.MapLayer
@@ -125,18 +123,3 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
         }
     }
 }
-
-/*
-else if (o.getName() != null) {
-                            switch (o.getName()) {
-                                case ItemFactory.HEART_TANK -> {
-                                    if (game.getMegaman().has(MegaHeartTank.get((String) data.get(ConstKeys.VAL)))) {
-                                        continue;
-                                    }
-                                    spawns.add(new SpawnWhenInBounds(engine, gameCam, o.getRectangle(), data,
-                                            () -> factories.fetch(entityType, o.getName()), false));
-                                }
-                                default -> spawns.add(new SpawnWhenInBounds(engine, gameCam, o.getRectangle(), data,
-                                        () -> factories.fetch(entityType, o.getName())));
-                            }
- */
