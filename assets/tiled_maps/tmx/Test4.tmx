@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="450" height="51" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="300">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="450" height="51" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="301">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/Gravity Man Stage.tsx"/>
  <tileset firstgid="4609" source="../tsx/MM3Wily1.tsx"/>
@@ -47,7 +47,7 @@
   <object id="146" x="2880" y="800" width="2048" height="224"/>
   <object id="147" x="2944" y="1184" width="544" height="152"/>
   <object id="150" x="3040" y="1312" width="288" height="320"/>
-  <object id="156" x="2976" y="1312" width="1200" height="96"/>
+  <object id="156" x="2976" y="1280" width="1200" height="128"/>
   <object id="162" x="3584" y="1152" width="64" height="32"/>
   <object id="163" x="3744" y="960" width="32" height="192">
    <properties>
@@ -90,7 +90,7 @@
     <property name="left" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="224" x="4064" y="1376" width="960" height="104"/>
+  <object id="224" x="4064" y="1344" width="960" height="136"/>
   <object id="225" x="3296" y="984" width="32" height="104"/>
   <object id="223" name="SwinginPlatform" x="6080" y="808" width="64" height="24">
    <properties>
@@ -130,18 +130,19 @@
   <object id="256" name="DropperLift" x="7440" y="920" width="32" height="8"/>
   <object id="257" name="DropperLift" x="7552" y="888" width="32" height="8"/>
   <object id="259" name="DropperLift" x="7568" y="808" width="32" height="8"/>
-  <object id="261" x="7648" y="752" width="32" height="272"/>
+  <object id="261" x="7616" y="736" width="96" height="288"/>
   <object id="263" x="7296" y="552" width="2176" height="88"/>
-  <object id="264" x="7616" y="736" width="96" height="32"/>
   <object id="269" x="7360" y="608" width="64" height="224"/>
-  <object id="270" x="7392" y="608" width="96" height="192"/>
+  <object id="270" x="7392" y="608" width="128" height="192"/>
   <object id="273" x="7456" y="768" width="64" height="32"/>
   <object id="275" name="DropperLift" x="7760" y="792" width="32" height="8"/>
   <object id="277" name="DropperLift" x="7936" y="792" width="32" height="8"/>
   <object id="281" x="8128" y="832" width="32" height="32"/>
   <object id="295" x="9088" y="928" width="256" height="64"/>
+  <object id="267" name="Death" x="9440" y="1440" width="2312" height="416" rotation="-180"/>
+  <object id="300" x="7288" y="960" width="1928" height="64"/>
  </objectgroup>
- <objectgroup id="7" name="items"/>
+ <objectgroup id="7" name="items" visible="0"/>
  <objectgroup id="3" name="game_rooms" visible="0">
   <object id="5" name="room1" x="0" y="992" width="3104" height="576"/>
   <object id="80" name="room9" x="9760" y="1024" width="4512" height="416"/>
@@ -150,7 +151,7 @@
   <object id="188" name="room4" x="5120" y="608" width="1376" height="384"/>
   <object id="255" x="6496" y="608" width="2944" height="384"/>
  </objectgroup>
- <objectgroup id="5" name="enemies">
+ <objectgroup id="5" name="enemies" visible="0">
   <object id="91" name="Eyee" x="11328" y="1376" width="32" height="32">
    <properties>
     <property name="x" type="float" value="4"/>
@@ -258,7 +259,7 @@
   <object id="279" name="Bat" x="8576" y="640" width="32" height="32"/>
   <object id="280" name="Bat" x="8928" y="640" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="10" name="children">
+ <objectgroup id="10" name="children" visible="0">
   <object id="97" name="GravityChange" x="11936" y="1216" width="384" height="320">
    <properties>
     <property name="direction" value="down"/>
@@ -347,14 +348,21 @@
   </object>
  </objectgroup>
  <objectgroup id="9" name="sensors">
-  <object id="157" name="Death" x="1664" y="1616" width="1664" height="16"/>
+  <object id="157" name="Death" x="1664" y="1616" width="1664" height="16">
+   <properties>
+    <property name="instant" type="bool" value="true"/>
+   </properties>
+  </object>
   <object id="171" name="Death" x="3488" y="1280" width="672" height="32"/>
   <object id="175" name="Death" x="3680" y="1152" width="32" height="32"/>
   <object id="176" name="Death" x="4192" y="1344" width="768" height="32"/>
-  <object id="196" name="Death" x="5120" y="1024" width="1504" height="216"/>
+  <object id="196" name="Death" x="5120" y="1024" width="1504" height="216">
+   <properties>
+    <property name="instant" type="bool" value="true"/>
+   </properties>
+  </object>
   <object id="265" name="Death" x="7616" y="768" width="32" height="256"/>
   <object id="266" name="Death" x="7680" y="768" width="32" height="256"/>
-  <object id="267" name="Death" x="9440" y="1440" width="2312" height="416" rotation="-180"/>
   <object id="274" name="Death" x="7488" y="640" width="32" height="128"/>
   <object id="298" name="Death" x="7232" y="960" width="1984" height="64"/>
  </objectgroup>
@@ -373,12 +381,12 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="4" name="player">
+ <objectgroup id="4" name="player" visible="0">
   <object id="189" name="2" x="4864" y="768" width="32" height="32"/>
   <object id="190" name="1" x="3200" y="1152" width="32" height="32"/>
   <object id="299" name="0" x="128" y="1472" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="8" name="hazards">
+ <objectgroup id="8" name="hazards" visible="0">
   <object id="82" name="Electrocutie" x="10912" y="1408" width="32" height="128">
    <properties>
     <property name="left" type="bool" value="true"/>

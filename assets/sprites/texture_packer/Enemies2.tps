@@ -179,6 +179,7 @@
             <key type="filename">../frames/Enemies2/Taketenko/Propeller.png</key>
             <key type="filename">../frames/Enemies2/Togglee/Left.png</key>
             <key type="filename">../frames/Enemies2/Togglee/Right.png</key>
+            <key type="filename">../frames/Enemies2/Wanaan.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

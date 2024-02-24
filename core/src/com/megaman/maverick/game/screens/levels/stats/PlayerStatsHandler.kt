@@ -25,7 +25,7 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
 
     companion object {
         private const val BAR_X: Float = .4f * ConstVals.PPM
-        private const val BAR_Y: Float = 9f * ConstVals.PPM
+        private const val BAR_Y: Float = 7f * ConstVals.PPM
         private const val SPECIAL_ITEM_DUR = .35f
         private const val DUR_PER_BIT = .1f
     }

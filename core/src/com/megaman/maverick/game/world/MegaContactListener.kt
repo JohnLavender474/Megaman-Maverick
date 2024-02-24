@@ -77,7 +77,7 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
                 )
             )
         ) {
-            val (_, bodyFixture) = contact.getFixtureSetsInOrder(
+            val (deathFixture, bodyFixture) = contact.getFixtureSetsInOrder(
                 objectSetOf(FixtureType.DEATH),
                 objectSetOf(
                     FixtureType.FEET,
@@ -87,7 +87,8 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
                 )
             )!!
             val entity = bodyFixture.getEntity()
-            if (entity is IDamageable && !entity.invincible) bodyFixture.depleteHealth()
+            val instant = deathFixture.getProperty(ConstKeys.INSTANT, Boolean::class)!!
+            if (entity is IDamageable && (instant || !entity.invincible)) bodyFixture.depleteHealth()
         }
 
         // death, damageable
@@ -416,7 +417,7 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
                 )
             )
         ) {
-            val (_, bodyFixture) = contact.getFixtureSetsInOrder(
+            val (deathFixture, bodyFixture) = contact.getFixtureSetsInOrder(
                 objectSetOf(FixtureType.DEATH),
                 objectSetOf(
                     FixtureType.FEET,
@@ -426,7 +427,8 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
                 )
             )!!
             val entity = bodyFixture.getEntity()
-            if (entity is IDamageable && !entity.invincible) bodyFixture.depleteHealth()
+            val instant = deathFixture.getProperty(ConstKeys.INSTANT, Boolean::class)!!
+            if (entity is IDamageable && (instant || !entity.invincible)) bodyFixture.depleteHealth()
         }
 
         // feet, block

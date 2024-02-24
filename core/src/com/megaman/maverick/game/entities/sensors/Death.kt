@@ -21,7 +21,10 @@ class Death(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity {
         super.spawn(spawnProps)
         val bounds = spawnProps.get(ConstKeys.BOUNDS) as GameRectangle
         body.set(bounds)
-        body.forEachFixture { _, f -> (f.shape as GameRectangle).set(body) }
+        val deathFixture = body.fixtures.first().second
+        (deathFixture.shape as GameRectangle).set(body)
+        val instant = spawnProps.getOrDefault(ConstKeys.INSTANT, false, Boolean::class)
+        deathFixture.putProperty(ConstKeys.INSTANT, instant)
     }
 
     private fun defineBodyComponent(): BodyComponent {

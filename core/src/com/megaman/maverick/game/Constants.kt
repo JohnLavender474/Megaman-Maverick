@@ -15,6 +15,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val INSTANT = "instant"
     const val BOUNDS_SUPPLIER = "bounds_supplier"
     const val POSITION_SUPPLIER = "position_supplier"
     const val CULL_TIME = "cull_time"

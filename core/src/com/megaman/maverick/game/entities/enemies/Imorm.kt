@@ -93,7 +93,6 @@ class Imorm(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
         updatablesComponent.add {
             slitherTimer.update(it)
             if (slitherTimer.isFinished()) {
-                // TODO: accomodate body rotation
                 val x = SLITHER_DISTANCE * facing.value
                 body.x += x
                 slitherTimer.reset()

@@ -121,11 +121,10 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
     // jump
     val jump = Behavior( // evaluate
         evaluate = {
-            if (damaged || teleporting || isAnyBehaviorActive(
-                    BehaviorType.SWIMMING, BehaviorType.CLIMBING
-                ) || body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) || !game.controllerPoller.isPressed(ControllerButton.A) || game.controllerPoller.isPressed(
-                    ControllerButton.DOWN
-                )
+            if (damaged || teleporting || isAnyBehaviorActive(BehaviorType.SWIMMING, BehaviorType.CLIMBING) ||
+                body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) ||
+                !game.controllerPoller.isPressed(ControllerButton.A) ||
+                game.controllerPoller.isPressed(ControllerButton.DOWN)
             ) return@Behavior false
 
             return@Behavior if (isBehaviorActive(BehaviorType.JUMPING)) {
@@ -136,9 +135,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     Direction.LEFT -> velocity.x < 0f
                     Direction.RIGHT -> velocity.x > 0f
                 }
-            } else aButtonTask == AButtonTask.JUMP && game.controllerPoller.isJustPressed(ControllerButton.A) && (body.isSensing(
-                BodySense.FEET_ON_GROUND
-            ) || isBehaviorActive(BehaviorType.WALL_SLIDING))
+            } else aButtonTask == AButtonTask.JUMP && game.controllerPoller.isJustPressed(ControllerButton.A) &&
+                    (body.isSensing(BodySense.FEET_ON_GROUND) || isBehaviorActive(BehaviorType.WALL_SLIDING))
         }, // init
         init = {
             val v = Vector2()
@@ -149,11 +147,12 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 }
 
                 Direction.LEFT, Direction.RIGHT -> {
-                    ConstVals.PPM * if (body.isSensing(BodySense.IN_WATER)) (if (isBehaviorActive(BehaviorType.WALL_SLIDING)) waterWallJumpVel
-                    else waterJumpVel)
-                    else (if (isBehaviorActive(BehaviorType.WALL_SLIDING)) wallJumpVel
-                    else if (isBehaviorActive(BehaviorType.RIDING_CART)) cartJumpVel
-                    else jumpVel)
+                    ConstVals.PPM * if (body.isSensing(BodySense.IN_WATER))
+                        (if (isBehaviorActive(BehaviorType.WALL_SLIDING)) waterWallJumpVel else waterJumpVel)
+                    else
+                        (if (isBehaviorActive(BehaviorType.WALL_SLIDING)) wallJumpVel
+                        else if (isBehaviorActive(BehaviorType.RIDING_CART)) cartJumpVel
+                        else jumpVel)
                 }
             }
             v.y = when (directionRotation) {
@@ -193,7 +192,9 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             ) return false
 
             return if (isBehaviorActive(BehaviorType.AIR_DASHING)) game.controllerPoller.isPressed(ControllerButton.A)
-            else game.controllerPoller.isJustPressed(ControllerButton.A) && aButtonTask == AButtonTask.AIR_DASH
+            else game.controllerPoller.isPressed(ControllerButton.UP) &&
+                    game.controllerPoller.isJustPressed(ControllerButton.A) &&
+                    aButtonTask == AButtonTask.AIR_DASH
         }
 
         override fun init() {

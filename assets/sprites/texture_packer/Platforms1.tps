@@ -272,6 +272,54 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Platforms1/FlipperPlatform/FlipToLeft.png</key>
+            <key type="filename">../frames/Platforms1/FlipperPlatform/FlipToRight.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>108,14,215,27</rect>
+                <key>scale9Paddings</key>
+                <rect>108,14,215,27</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Platforms1/FlipperPlatform/Left.png</key>
+            <key type="filename">../frames/Platforms1/FlipperPlatform/Right.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>22,14,43,27</rect>
+                <key>scale9Paddings</key>
+                <rect>22,14,43,27</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Platforms1/FlipperPlatform/LeftDelay.png</key>
+            <key type="filename">../frames/Platforms1/FlipperPlatform/RightDelay.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>86,15,172,30</rect>
+                <key>scale9Paddings</key>
+                <rect>86,15,172,30</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Platforms1/JeffBezosLittleDickRocket.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>

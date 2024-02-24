@@ -33,11 +33,12 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
 class SpikeBall(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEntity, IMotionEntity,
-    IDrawableShapesEntity, IDamager {
+    IDrawableShapesEntity, IDamager, IHazard {
 
     companion object {
         const val TAG = "SpikeBall"
@@ -114,7 +115,7 @@ class SpikeBall(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpr
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
-        val damagerFixture = Fixture(GameCircle().setRadius(0.5f * ConstVals.PPM), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(GameCircle().setRadius(0.75f * ConstVals.PPM), FixtureType.DAMAGER)
         body.addFixture(damagerFixture)
         damagerFixture.shape.color = Color.RED
         debugShapes.add { damagerFixture.shape }
