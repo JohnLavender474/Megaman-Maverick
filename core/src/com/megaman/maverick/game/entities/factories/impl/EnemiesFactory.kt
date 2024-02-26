@@ -6,7 +6,6 @@ import com.engine.common.objects.Pool
 import com.engine.entities.IGameEntity
 import com.engine.factories.IFactory
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.enemies.*
 import com.megaman.maverick.game.entities.factories.EntityPoolCreator
 
@@ -32,6 +31,7 @@ class EnemiesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
         const val SWINGIN_JOE = "SwinginJoe"
         const val GAPING_FISH = "GapingFish"
         const val FLOATING_CAN = "FloatingCan"
+        const val FLOATING_CAN_HOLE = "FloatingCanHole"
         const val SUCTION_ROLLER = "SuctionRoller"
         const val SHIELD_ATTACKER = "ShieldAttacker"
         const val HANABIRAN = "Hanabiran"
@@ -48,14 +48,16 @@ class EnemiesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
         const val BULB_BLASTER = "BulbBlaster"
         const val IMORM = "Imorm"
         const val WANAAN = "Wanaan"
+        const val PEAT = "Peat"
     }
 
-    private val pools = ObjectMap<Any, Pool<AbstractEnemy>>()
+    private val pools = ObjectMap<Any, Pool<IGameEntity>>()
 
     init {
         pools.put(BAT, EntityPoolCreator.create(3) { Bat(game) })
         pools.put(MET, EntityPoolCreator.create(3) { Met(game) })
         pools.put(FLOATING_CAN, EntityPoolCreator.create(5) { FloatingCan(game) })
+        pools.put(FLOATING_CAN_HOLE, EntityPoolCreator.create(2) { FloatingCanHole(game) })
         pools.put(DRAGON_FLY, EntityPoolCreator.create(2) { DragonFly(game) })
         pools.put(FLY_BOY, EntityPoolCreator.create(2) { FlyBoy(game) })
         pools.put(GAPING_FISH, EntityPoolCreator.create(3) { GapingFish(game) })
@@ -85,9 +87,10 @@ class EnemiesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
         pools.put(BULB_BLASTER, EntityPoolCreator.create(1) { BulbBlaster(game) })
         pools.put(IMORM, EntityPoolCreator.create(2) { Imorm(game) })
         pools.put(WANAAN, EntityPoolCreator.create(2) { Wanaan(game) })
+        pools.put(PEAT, EntityPoolCreator.create(2) { Peat(game) })
     }
 
-    override fun fetch(key: Any): AbstractEnemy? {
+    override fun fetch(key: Any): IGameEntity? {
         GameLogger.debug(TAG, "Spawning Enemy: key = $key")
         return pools.get(key)?.fetch()
     }

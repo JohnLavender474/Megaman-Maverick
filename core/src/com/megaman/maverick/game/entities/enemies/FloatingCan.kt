@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
@@ -11,6 +12,7 @@ import com.engine.common.extensions.objectMapOf
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
+import com.engine.damage.IDamageable
 import com.engine.damage.IDamager
 import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
@@ -20,6 +22,7 @@ import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
 import com.engine.pathfinding.PathfinderParams
 import com.engine.pathfinding.PathfindingComponent
+import com.engine.updatables.UpdatablesComponent
 import com.engine.world.Body
 import com.engine.world.BodyComponent
 import com.engine.world.BodyType
@@ -45,8 +48,10 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
     companion object {
         private var textureRegion: TextureRegion? = null
-        private var FLY_SPEED = 1.5f
-        private var DEBUG_PATHFINDING = false
+        private const val SPAWN_DELAY = 1f
+        private const val SPAWN_BLINK = 0.1f
+        private const val FLY_SPEED = 1.5f
+        private const val DEBUG_PATHFINDING = false
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -56,11 +61,15 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
         }, ChargedShotExplosion::class to dmgNeg(15)
     )
 
+    private val spawnDelayTimer = Timer(SPAWN_DELAY)
+    private val spawningBlinkTimer = Timer(SPAWN_BLINK)
+
+    private var spawnDelayBlink = false
+
     override fun init() {
         if (textureRegion == null) textureRegion =
             game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source).findRegion("FloatingCan")
         super.init()
-
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
@@ -69,8 +78,31 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
-        val spawn = (spawnProps.get(ConstKeys.BOUNDS) as GameRectangle).getCenter()
+        val spawn = if (spawnProps.containsKey(ConstKeys.BOUNDS)) (spawnProps.get(
+            ConstKeys.BOUNDS,
+            GameRectangle::class
+        ))!!.getCenter()
+        else spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
+        spawnDelayTimer.reset()
+        spawningBlinkTimer.reset()
+        spawnDelayBlink = false
+    }
+
+    override fun canDamage(damageable: IDamageable) = spawnDelayTimer.isFinished() && super.canDamage(damageable)
+
+    override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
+        super.defineUpdatablesComponent(updatablesComponent)
+        updatablesComponent.add { delta ->
+            spawnDelayTimer.update(delta)
+            if (!spawnDelayTimer.isFinished()) {
+                spawningBlinkTimer.update(delta)
+                if (spawningBlinkTimer.isFinished()) {
+                    spawnDelayBlink = !spawnDelayBlink
+                    spawningBlinkTimer.reset()
+                }
+            }
+        }
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -96,14 +128,16 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
-
-        val SpritesComponent = SpritesComponent(this, "can" to sprite)
-        SpritesComponent.putUpdateFunction("can") { _, _sprite ->
+        val spritesComponent = SpritesComponent(this, "can" to sprite)
+        spritesComponent.putUpdateFunction("can") { _, _sprite ->
             _sprite as GameSprite
-            _sprite.setPosition(body.getCenter(), Position.CENTER) // TODO: set flip
+            _sprite.setPosition(body.getCenter(), Position.CENTER)
+            if (!spawnDelayTimer.isFinished())
+                _sprite.hidden = spawnDelayBlink
+            else if (spawnDelayTimer.isJustFinished())
+                _sprite.hidden = false
         }
-
-        return SpritesComponent
+        return spritesComponent
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
@@ -113,14 +147,13 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
     }
 
     private fun definePathfindingComponent(): PathfindingComponent {
-        val params = PathfinderParams( // start at this bat's body center
-            startSupplier = { body.getCenter() }, // target the top center point of Megaman
-            targetSupplier = { getMegamanMaverickGame().megaman.body.getCenterPoint() }, // don't travel diagonally
-            allowDiagonal = { true }, // try to avoid collision with blocks when pathfinding
+        val params = PathfinderParams(
+            startSupplier = { body.getCenter() },
+            targetSupplier = { getMegamanMaverickGame().megaman.body.getCenterPoint() },
+            allowDiagonal = { true },
             filter = { _, objs ->
                 objs.none { it is Fixture && it.fixtureLabel == FixtureType.BLOCK }
             })
-
         val pathfindingComponent = PathfindingComponent(this, params, {
             StandardPathfinderResultConsumer.consume(
                 it,
@@ -130,12 +163,11 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
                 body.fixtures.find { pair -> pair.first == FixtureType.DAMAGER }!!.second.shape as GameRectangle,
                 stopOnTargetReached = false,
                 stopOnTargetNull = false,
+                postProcess = { if (!spawnDelayTimer.isFinished()) body.physics.velocity.setZero() },
                 shapes = if (DEBUG_PATHFINDING) getMegamanMaverickGame().getShapes() else null
             )
         }, { true })
-
         pathfindingComponent.updateIntervalTimer = Timer(0.1f)
-
         return pathfindingComponent
     }
 }

@@ -35,8 +35,12 @@ object StandardPathfinderResultConsumer {
         targetPursuer: GameRectangle = body,
         stopOnTargetReached: Boolean = true,
         stopOnTargetNull: Boolean = true,
+        preProcess: (() -> Unit)? = null,
+        postProcess: (() -> Unit)? = null,
         shapes: MutableCollection<IDrawableShape>? = null
     ): Boolean {
+        preProcess?.invoke()
+
         val (_, worldPath, _) = result
         if (worldPath == null) {
             GameLogger.debug(TAG, "No path found for body $body")
@@ -82,6 +86,8 @@ object StandardPathfinderResultConsumer {
         body.physics.velocity.set(scaledTrajectory)
 
         GameLogger.debug(TAG, "Body is moving with velocity ${body.physics.velocity}. Body: $body")
+
+        postProcess?.invoke()
 
         return true
     }

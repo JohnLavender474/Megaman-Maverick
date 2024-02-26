@@ -192,8 +192,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             ) return false
 
             return if (isBehaviorActive(BehaviorType.AIR_DASHING)) game.controllerPoller.isPressed(ControllerButton.A)
-            else game.controllerPoller.isPressed(ControllerButton.UP) &&
-                    game.controllerPoller.isJustPressed(ControllerButton.A) &&
+            else game.controllerPoller.isJustPressed(ControllerButton.A) &&
                     aButtonTask == AButtonTask.AIR_DASH
         }
 

@@ -153,7 +153,7 @@ abstract class AbstractEnemy(game: MegamanMaverickGame) : GameEntity(game), IDam
 
     override fun canDamage(damageable: IDamageable) = true
 
-    override fun onDamageInflictedTo(damageable: IDamageable) { // do nothing
+    override fun onDamageInflictedTo(damageable: IDamageable) {
     }
 
     protected open fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {

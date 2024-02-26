@@ -50,7 +50,7 @@
         <key>dxtCompressionMode</key>
         <enum type="SettingsBase::DxtCompressionMode">DXT_PERCEPTUAL</enum>
         <key>ditherType</key>
-        <enum type="SettingsBase::DitherType">PngQuantLow</enum>
+        <enum type="SettingsBase::DitherType">NearestNeighbour</enum>
         <key>backgroundColor</key>
         <uint>0</uint>
         <key>libGdx</key>
@@ -124,7 +124,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>../sprite_sheets/Enemies2.txt</filename>
+                <filename>../sprite_sheets/Bosses.txt</filename>
             </struct>
         </map>
         <key>multiPackMode</key>
@@ -173,14 +173,15 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">../frames/Enemies2/Adamski/Blue.png</key>
-            <key type="filename">../frames/Enemies2/Adamski/Orange.png</key>
-            <key type="filename">../frames/Enemies2/Adamski/Purple.png</key>
-            <key type="filename">../frames/Enemies2/Peat.png</key>
-            <key type="filename">../frames/Enemies2/Taketenko/Propeller.png</key>
-            <key type="filename">../frames/Enemies2/Togglee/Left.png</key>
-            <key type="filename">../frames/Enemies2/Togglee/Right.png</key>
-            <key type="filename">../frames/Enemies2/Wanaan.png</key>
+            <key type="filename">../frames/Bosses/Blunt Man/Damaged.png</key>
+            <key type="filename">../frames/Bosses/Blunt Man/Flaming.png</key>
+            <key type="filename">../frames/Bosses/Blunt Man/Flex.png</key>
+            <key type="filename">../frames/Bosses/Blunt Man/Stand.png</key>
+            <key type="filename">../frames/Bosses/Distributor Man/Damaged.png</key>
+            <key type="filename">../frames/Bosses/Distributor Man/JumpShock.png</key>
+            <key type="filename">../frames/Bosses/Distributor Man/JustLand.png</key>
+            <key type="filename">../frames/Bosses/Distributor Man/Shock.png</key>
+            <key type="filename">../frames/Bosses/Distributor Man/Stand.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -195,284 +196,9 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Enemies2/BigJumpingJoe/Jump.png</key>
-            <key type="filename">../frames/Enemies2/Hanabiran/4PetalsSpin.png</key>
-            <key type="filename">../frames/Enemies2/Hanabiran/NoPetalsSpin.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>32,16,64,32</rect>
-                <key>scale9Paddings</key>
-                <rect>32,16,64,32</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Enemies2/BigJumpingJoe/Stand.png</key>
-            <key type="filename">../frames/Enemies2/Hanabiran/1PetalStand.png</key>
-            <key type="filename">../frames/Enemies2/Hanabiran/2PetalsStand.png</key>
-            <key type="filename">../frames/Enemies2/Hanabiran/3PetalsStand.png</key>
-            <key type="filename">../frames/Enemies2/Hanabiran/4PetalsStand.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>16,16,32,32</rect>
-                <key>scale9Paddings</key>
-                <rect>16,16,32,32</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Enemies2/BulbBlaster/Dark.png</key>
-            <key type="filename">../frames/Enemies2/BulbBlaster/Light.png</key>
-            <key type="filename">../frames/Enemies2/Togglee/SwitchToLeft.png</key>
-            <key type="filename">../frames/Enemies2/Togglee/SwitchToRight.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>24,8,48,16</rect>
-                <key>scale9Paddings</key>
-                <rect>24,8,48,16</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Enemies2/CartinJoe/Move.png</key>
-            <key type="filename">../frames/Enemies2/CartinJoe/Shoot.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>12,12,24,24</rect>
-                <key>scale9Paddings</key>
-                <rect>12,12,24,24</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Enemies2/CaveRocker/Stand.png</key>
-            <key type="filename">../frames/Enemies2/Robbit/Crouch.png</key>
-            <key type="filename">../frames/Enemies2/Robbit/Stand.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>32,32,64,64</rect>
-                <key>scale9Paddings</key>
-                <rect>32,32,64,64</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Enemies2/CaveRocker/Throw.png</key>
-            <key type="filename">../frames/Enemies2/Robbit/Jump.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>64,32,128,64</rect>
-                <key>scale9Paddings</key>
-                <rect>64,32,128,64</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Enemies2/Elecn/Elecn1.png</key>
-            <key type="filename">../frames/Enemies2/Elecn/Elecn3.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>24,24,48,48</rect>
-                <key>scale9Paddings</key>
-                <rect>24,24,48,48</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Enemies2/Elecn/Elecn2.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>48,24,96,48</rect>
-                <key>scale9Paddings</key>
-                <rect>48,24,96,48</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Enemies2/Eyee/Blink.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>20,4,40,8</rect>
-                <key>scale9Paddings</key>
-                <rect>20,4,40,8</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Enemies2/Eyee/Open.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>4,4,8,8</rect>
-                <key>scale9Paddings</key>
-                <rect>4,4,8,8</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Enemies2/Eyee/OpeningEyes.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>12,4,24,8</rect>
-                <key>scale9Paddings</key>
-                <rect>12,4,24,8</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Enemies2/Gachappan/Open.png</key>
-            <key type="filename">../frames/Enemies2/Gachappan/Wait.png</key>
-            <key type="filename">../frames/Enemies2/Hanabiran/Drop.png</key>
-            <key type="filename">../frames/Enemies2/Hanabiran/Rise.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>48,16,96,32</rect>
-                <key>scale9Paddings</key>
-                <rect>48,16,96,32</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Enemies2/Gachappan/Shoot.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>112,16,224,32</rect>
-                <key>scale9Paddings</key>
-                <rect>112,16,224,32</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Enemies2/Hanabiran/1PetalSpin.png</key>
-            <key type="filename">../frames/Enemies2/Hanabiran/2PetalsSpin.png</key>
-            <key type="filename">../frames/Enemies2/Hanabiran/3PetalsSpin.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>64,16,128,32</rect>
-                <key>scale9Paddings</key>
-                <rect>64,16,128,32</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Enemies2/Imorm.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>48,12,96,24</rect>
-                <key>scale9Paddings</key>
-                <rect>48,12,96,24</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Enemies2/RedTiggerSquirt.png</key>
-            <key type="filename">../frames/Enemies2/YellowTiggerSquirt.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>36,18,72,36</rect>
-                <key>scale9Paddings</key>
-                <rect>36,18,72,36</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Enemies2/RingRing/Pink.png</key>
-            <key type="filename">../frames/Enemies2/RingRing/Red.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>32,8,64,16</rect>
-                <key>scale9Paddings</key>
-                <rect>32,8,64,16</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Enemies2/Taketenko/Fly.png</key>
-            <key type="filename">../frames/Enemies2/Taketenko/Spin.png</key>
+            <key type="filename">../frames/Bosses/Blunt Man/Jump.png</key>
+            <key type="filename">../frames/Bosses/Blunt Man/Slide.png</key>
+            <key type="filename">../frames/Bosses/Distributor Man/Jump.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -487,8 +213,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Enemies2/UpNDown/Blue.png</key>
-            <key type="filename">../frames/Enemies2/UpNDown/Red.png</key>
+            <key type="filename">../frames/Bosses/Bospider/Climb.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -497,9 +222,285 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>8,4,16,8</rect>
+                <rect>80,16,160,32</rect>
                 <key>scale9Paddings</key>
-                <rect>8,4,16,8</rect>
+                <rect>80,16,160,32</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses/Bospider/OpenEye.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>64,16,128,32</rect>
+                <key>scale9Paddings</key>
+                <rect>64,16,128,32</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses/Bospider/Still.png</key>
+            <key type="filename">../frames/Bosses/Freezer Man/GiveTheHand.png</key>
+            <key type="filename">../frames/Bosses/Freezer Man/Jump.png</key>
+            <key type="filename">../frames/Bosses/Freezer Man/StandOpenFridge.png</key>
+            <key type="filename">../frames/Bosses/Microwave Man/Head.png</key>
+            <key type="filename">../frames/Bosses/Microwave Man/HeadlessJump.png</key>
+            <key type="filename">../frames/Bosses/Microwave Man/HeadlessOpenDoor.png</key>
+            <key type="filename">../frames/Bosses/Microwave Man/HeadlessShoot.png</key>
+            <key type="filename">../frames/Bosses/Microwave Man/HeadlessStand.png</key>
+            <key type="filename">../frames/Bosses/Microwave Man/Jump.png</key>
+            <key type="filename">../frames/Bosses/Microwave Man/OpenDoor.png</key>
+            <key type="filename">../frames/Bosses/Microwave Man/Shoot.png</key>
+            <key type="filename">../frames/Bosses/Mister Man/Jump.png</key>
+            <key type="filename">../frames/Bosses/Nuke Man/Attack.png</key>
+            <key type="filename">../frames/Bosses/Nuke Man/BendKnees.png</key>
+            <key type="filename">../frames/Bosses/Nuke Man/Jump.png</key>
+            <key type="filename">../frames/Bosses/Roaster Man/Aim.png</key>
+            <key type="filename">../frames/Bosses/Roaster Man/RetractWings.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,16,32,32</rect>
+                <key>scale9Paddings</key>
+                <rect>16,16,32,32</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses/Freezer Man/JumpOpenFreezer.png</key>
+            <key type="filename">../frames/Bosses/Freezer Man/StandLookDown.png</key>
+            <key type="filename">../frames/Bosses/Freezer Man/StandLookUp.png</key>
+            <key type="filename">../frames/Bosses/Microwave Man/Stand.png</key>
+            <key type="filename">../frames/Bosses/Mister Man/Electrocuted.png</key>
+            <key type="filename">../frames/Bosses/Mister Man/Flex.png</key>
+            <key type="filename">../frames/Bosses/Mister Man/Squirt.png</key>
+            <key type="filename">../frames/Bosses/Mister Man/Stand.png</key>
+            <key type="filename">../frames/Bosses/Nuke Man/Charge.png</key>
+            <key type="filename">../frames/Bosses/Nuke Man/Stand.png</key>
+            <key type="filename">../frames/Bosses/Roaster Man/CoolPose.png</key>
+            <key type="filename">../frames/Bosses/Roaster Man/FallingWithStyle.png</key>
+            <key type="filename">../frames/Bosses/Roaster Man/FlyFlap.png</key>
+            <key type="filename">../frames/Bosses/Roaster Man/Stand.png</key>
+            <key type="filename">../frames/Bosses/Roaster Man/StandFlap.png</key>
+            <key type="filename">../frames/Bosses/Roaster Man/SuaveCombSweep.png</key>
+            <key type="filename">../frames/Bosses/Roaster Man/Wet.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>32,16,64,32</rect>
+                <key>scale9Paddings</key>
+                <rect>32,16,64,32</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses/Freezer Man/Opening.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>48,16,96,32</rect>
+                <key>scale9Paddings</key>
+                <rect>48,16,96,32</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses/GutsTank/Fist.png</key>
+            <key type="filename">../frames/Bosses/Precious Man/StandShoot.png</key>
+            <key type="filename">../frames/Bosses/Wintry Man/AboutToJump.png</key>
+            <key type="filename">../frames/Bosses/Wintry Man/Jump.png</key>
+            <key type="filename">../frames/Bosses/Wintry Man/StandShoot.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,12,24,24</rect>
+                <key>scale9Paddings</key>
+                <rect>12,12,24,24</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses/GutsTank/MouthClosed.png</key>
+            <key type="filename">../frames/Bosses/GutsTank/MouthOpen.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>96,48,192,96</rect>
+                <key>scale9Paddings</key>
+                <rect>96,48,192,96</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses/Microwave Man/HeadBounce.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>96,16,192,32</rect>
+                <key>scale9Paddings</key>
+                <rect>96,16,192,32</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses/Precious Man/Jump.png</key>
+            <key type="filename">../frames/Bosses/Precious Man/Stand.png</key>
+            <key type="filename">../frames/Bosses/Rodent Man/Slash.png</key>
+            <key type="filename">../frames/Bosses/Rodent Man/WallSlide.png</key>
+            <key type="filename">../frames/Bosses/Wintry Man/Stand.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>24,12,48,24</rect>
+                <key>scale9Paddings</key>
+                <rect>24,12,48,24</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses/Precious Man/JumpFreeze.png</key>
+            <key type="filename">../frames/Bosses/Precious Man/Run.png</key>
+            <key type="filename">../frames/Bosses/Rodent Man/Jump.png</key>
+            <key type="filename">../frames/Bosses/Rodent Man/Run.png</key>
+            <key type="filename">../frames/Bosses/Wintry Man/AirFreeze.png</key>
+            <key type="filename">../frames/Bosses/Wintry Man/Run.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>48,12,96,24</rect>
+                <key>scale9Paddings</key>
+                <rect>48,12,96,24</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses/Precious Man/StandFreeze.png</key>
+            <key type="filename">../frames/Bosses/Rodent Man/Shoot.png</key>
+            <key type="filename">../frames/Bosses/Wintry Man/StandFreeze.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>36,12,72,24</rect>
+                <key>scale9Paddings</key>
+                <rect>36,12,72,24</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses/Rodent Man/Stand.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>72,12,144,24</rect>
+                <key>scale9Paddings</key>
+                <rect>72,12,144,24</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses/Timber Woman/Damaged.png</key>
+            <key type="filename">../frames/Bosses/Timber Woman/OnFire.png</key>
+            <key type="filename">../frames/Bosses/Timber Woman/Stand.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>48,24,96,48</rect>
+                <key>scale9Paddings</key>
+                <rect>48,24,96,48</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses/Timber Woman/Jump.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>96,24,192,48</rect>
+                <key>scale9Paddings</key>
+                <rect>96,24,192,48</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses/Timber Woman/JustLand.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>120,24,240,48</rect>
+                <key>scale9Paddings</key>
+                <rect>120,24,240,48</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses/Timber Woman/Swing.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>144,24,288,48</rect>
+                <key>scale9Paddings</key>
+                <rect>144,24,288,48</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -510,7 +511,7 @@
             <struct type="SpriteSheet">
                 <key>files</key>
                 <array>
-                    <filename>../frames/Enemies2</filename>
+                    <filename>../frames/Bosses</filename>
                 </array>
             </struct>
         </map>

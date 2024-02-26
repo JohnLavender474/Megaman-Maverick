@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="550" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="12" nextobjectid="148">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="550" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="12" nextobjectid="152">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/Gravity Man Stage.tsx"/>
  <tileset firstgid="4609" source="../tsx/MM3Wily1.tsx"/>
@@ -168,6 +168,13 @@
    </properties>
   </object>
   <object id="136" name="Imorm" x="16416" y="448" width="32" height="32"/>
+  <object id="149" name="Peat" x="7680" y="416" width="32" height="32"/>
+  <object id="150" name="ShieldAttacker" x="7520" y="448" width="32" height="32">
+   <properties>
+    <property name="value" type="float" value="5"/>
+   </properties>
+  </object>
+  <object id="151" name="SniperJoe" x="7712" y="544" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="10" name="children">
   <object id="97" name="GravityChange" x="11936" y="256" width="384" height="320">
@@ -204,7 +211,7 @@
  <objectgroup id="9" name="sensors">
   <object id="90" name="Death" x="10144" y="256" width="576" height="32"/>
  </objectgroup>
- <objectgroup id="3" name="game_rooms" visible="0">
+ <objectgroup id="3" name="game_rooms">
   <object id="5" name="room_1" x="0" y="288" width="960" height="352"/>
   <object id="11" name="room_2" x="960" y="288" width="1440" height="352"/>
   <object id="22" name="room_3" x="2400" y="288" width="928" height="352"/>
@@ -250,7 +257,7 @@
   <object id="146" name="FlipperPlatform" x="16832" y="512" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="4" name="player">
-  <object id="147" name="0" x="16736" y="544" width="32" height="32"/>
+  <object id="148" name="0" x="7552" y="544" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="8" name="hazards">
   <object id="65" name="SwinginAxe" x="256" y="320" width="32" height="32"/>
