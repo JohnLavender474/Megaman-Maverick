@@ -135,7 +135,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
             if (!spawnDelayTimer.isFinished())
                 _sprite.hidden = spawnDelayBlink
             else if (spawnDelayTimer.isJustFinished())
-                _sprite.hidden = false
+                _sprite.hidden = if (invincible) damageBlink else false
         }
         return spritesComponent
     }

@@ -22,7 +22,7 @@ class Death(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity {
         val bounds = spawnProps.get(ConstKeys.BOUNDS) as GameRectangle
         body.set(bounds)
         val deathFixture = body.fixtures.first().second
-        (deathFixture.shape as GameRectangle).set(body)
+        (deathFixture.shape as GameRectangle).set(bounds)
         val instant = spawnProps.getOrDefault(ConstKeys.INSTANT, false, Boolean::class)
         deathFixture.putProperty(ConstKeys.INSTANT, instant)
     }

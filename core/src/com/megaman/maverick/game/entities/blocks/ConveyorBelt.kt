@@ -11,6 +11,8 @@ import com.engine.animations.IAnimator
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
+import com.engine.drawables.sorting.DrawingPriority
+import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.ISprite
 import com.engine.drawables.sprites.SpritesComponent
@@ -91,7 +93,7 @@ class ConveyorBelt(game: MegamanMaverickGame) : ISpriteEntity, IDrawableShapesEn
                     else -> middle
                 }
             val animation = Animation(region!!, 1, 2, 0.15f, true)
-            val sprite = GameSprite()
+            val sprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, -1))
             sprite.setBounds(
                 bounds.x + i * ConstVals.PPM, bounds.y, ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat()
             )

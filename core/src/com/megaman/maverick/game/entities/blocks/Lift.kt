@@ -7,6 +7,8 @@ import com.engine.common.extensions.equalsAny
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
+import com.engine.drawables.sorting.DrawingPriority
+import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setSize
@@ -94,7 +96,7 @@ class Lift(game: MegamanMaverickGame) : Block(game), ISpriteEntity {
     })
 
     private fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite()
+        val sprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, -1))
         sprite.setSize(0.75f * ConstVals.PPM)
         sprite.setRegion(region!!)
 

@@ -129,6 +129,10 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
         val damageableFixture = Fixture(GameRectangle().set(body), FixtureType.DAMAGEABLE)
         body.addFixture(damageableFixture)
 
+        // shield fixture
+        val shieldFixture = Fixture(GameRectangle().set(body), FixtureType.SHIELD)
+        body.addFixture(shieldFixture)
+
         return BodyComponentCreator.create(this, body)
     }
 

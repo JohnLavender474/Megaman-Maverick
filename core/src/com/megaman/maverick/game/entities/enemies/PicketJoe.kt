@@ -189,6 +189,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             _sprite.setFlip(isFacing(Facing.LEFT), false)
             val center = body.getCenter()
             _sprite.setCenter(center.x, center.y)
+            _sprite.hidden = if (invincible) damageBlink else false
         }
 
         return spritesComponent

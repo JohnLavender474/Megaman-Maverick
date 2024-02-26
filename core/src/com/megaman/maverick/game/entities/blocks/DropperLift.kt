@@ -14,6 +14,8 @@ import com.engine.common.extensions.toGdxArray
 import com.engine.common.objects.Loop
 import com.engine.common.objects.Properties
 import com.engine.common.time.Timer
+import com.engine.drawables.sorting.DrawingPriority
+import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
@@ -113,7 +115,7 @@ class DropperLift(game: MegamanMaverickGame) : Block(game), ISpriteEntity, IAnim
     })
 
     private fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite()
+        val sprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, -1))
         sprite.setSize(ConstVals.PPM * 1.5f, ConstVals.PPM.toFloat())
 
         val spritesComponent = SpritesComponent(this, "dropperLift" to sprite)

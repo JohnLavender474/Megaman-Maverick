@@ -123,7 +123,7 @@ class RocketPlatform(game: MegamanMaverickGame) :
     }
 
     private fun defineSpritesCompoent(): SpritesComponent {
-        val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.PLAYGROUND, 2))
+        val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.BACKGROUND, -1))
         sprite.setSize(4f * ConstVals.PPM)
 
         val spritesComponent = SpritesComponent(this, "rocket" to sprite)

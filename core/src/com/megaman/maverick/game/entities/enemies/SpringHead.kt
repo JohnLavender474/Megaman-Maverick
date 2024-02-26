@@ -129,7 +129,8 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         body.addFixture(shieldFixture)
 
         // bouncer fixture
-        val bouncerFixture = Fixture(GameRectangle().setSize(0.7f * ConstVals.PPM), FixtureType.BOUNCER)
+        val bouncerFixture = Fixture(GameRectangle().setSize(0.5f * ConstVals.PPM), FixtureType.BOUNCER)
+        bouncerFixture.offsetFromBodyCenter.y = 0.1f * ConstVals.PPM
         bouncerFixture.putProperty(
             ConstKeys.VELOCITY_ALTERATION,
             { bounceable: Fixture, _: Float -> velocityAlteration(bounceable) })

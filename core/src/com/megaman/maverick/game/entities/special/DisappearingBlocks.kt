@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.special
 
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Array
 import com.engine.audio.AudioComponent
 import com.engine.common.CAUSE_OF_DEATH_MESSAGE
@@ -23,6 +24,8 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.blocks.AnimatedBlock
 import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntities
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.utils.getMegamanMaverickGame
+import com.megaman.maverick.game.utils.toGameRectangle
 import java.util.*
 
 class DisappearingBlocks(game: MegamanMaverickGame) :
@@ -112,6 +115,7 @@ class DisappearingBlocks(game: MegamanMaverickGame) :
                     if (keysToRender.size > 2) keysToRender.poll()
                     GameLogger.debug(TAG, "defineUpdatablesComponent(): keysToRender = $keysToRender")
 
+                    var soundRequested = false
                     children.forEach { spriteBlock ->
                         spriteBlock as AnimatedBlock
 
@@ -122,9 +126,14 @@ class DisappearingBlocks(game: MegamanMaverickGame) :
                         spriteBlock.body.physics.collisionOn = on
                         spriteBlock.body.fixtures.forEach { entry -> entry.second.active = on }
                         spriteBlock.hidden = !on
+
+                        val gameCamera = getMegamanMaverickGame().getGameCamera()
+                        if (!soundRequested && gameCamera.toGameRectangle().overlaps(spriteBlock.body as Rectangle)) {
+                            requestToPlaySound(SoundAsset.DISAPPEARING_BLOCK_SOUND, false)
+                            soundRequested = true
+                        }
                     }
 
-                    requestToPlaySound(SoundAsset.DISAPPEARING_BLOCK_SOUND, false)
                     timer.reset()
                 }
             })

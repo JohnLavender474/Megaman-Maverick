@@ -21,7 +21,7 @@ class FloatingCanHole(game: MegamanMaverickGame) : GameEntity(game), IParentEnti
 
     companion object {
         const val TAG = "FloatingCanHole"
-        private const val SPAWN_DELAY = 3f
+        private const val SPAWN_DELAY = 2.5f
         private const val MAX_SPAWNED = 3
     }
 

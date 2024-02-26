@@ -78,7 +78,7 @@ class MegamanMaverickGame : Game2D() {
     companion object {
         const val TAG = "MegamanMaverickGame"
         const val DEBUG_TEXT = false
-        const val DEBUG_SHAPES = true
+        const val DEBUG_SHAPES = false
         const val DEFAULT_VOLUME = 0.5f
         val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(WanaanLauncher.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
@@ -170,9 +170,9 @@ class MegamanMaverickGame : Game2D() {
         // startLevelScreen(Level.TEST1)
         // startLevelScreen(Level.TEST2)
         // startLevelScreen(Level.TEST3)
-        // startLevelScreen(Level.TEST4)
+        startLevelScreen(Level.TEST4)
         // startLevelScreen(Level.TEST5)
-        startLevelScreen(Level.TEST6)
+        // startLevelScreen(Level.TEST6)
         // setCurrentScreen(ScreenEnum.MAIN.name)
         // startLevelScreen(Level.TIMBER_WOMAN)
         // startLevelScreen(Level.RODENT_MAN)

@@ -268,7 +268,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="17" name="sensors" visible="0">
+ <objectgroup id="17" name="sensors">
   <object id="260" name="Gate" x="1344" y="10432" width="64" height="96">
    <properties>
     <property name="room" value="Room6"/>
@@ -330,7 +330,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="12" name="blocks">
+ <objectgroup id="12" name="blocks" visible="0">
   <object id="5" x="0" y="9440" width="480" height="224"/>
   <object id="26" name="ConveyorBelt" x="608" y="9456" width="96" height="16">
    <properties>

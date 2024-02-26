@@ -64,7 +64,7 @@ class BlackBackground(game: MegamanMaverickGame) : GameEntity(game), ISpriteEnti
     }
 
     override val eventKeyMask = objectSetOf<Any>(
-        EventType.REQ_BLACK_BACKGROUND, EventType.BEGIN_ROOM_TRANS, EventType.END_ROOM_TRANS
+        EventType.PLAYER_SPAWN, EventType.REQ_BLACK_BACKGROUND, EventType.BEGIN_ROOM_TRANS, EventType.END_ROOM_TRANS
     )
 
     private val lightEventQueue = PriorityQueue<LightEvent>()
@@ -146,6 +146,16 @@ class BlackBackground(game: MegamanMaverickGame) : GameEntity(game), ISpriteEnti
     @Suppress("UNCHECKED_CAST")
     override fun onEvent(event: Event) {
         when (event.key) {
+            EventType.PLAYER_SPAWN -> {
+                darkMode = false
+                tiles.forEach { tile ->
+                    tile.startAlpha = tile.currentAlpha
+                    tile.targetAlpha = 0f
+                    tile.timer.reset()
+                    tile.set = true
+                }
+            }
+
             EventType.REQ_BLACK_BACKGROUND -> {
                 val keys = event.getProperty(ConstKeys.KEYS) as ObjectSet<Int>
                 if (keys.contains(key)) {

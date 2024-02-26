@@ -184,6 +184,7 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
             _sprite as GameSprite
             val center = body.getCenter()
             _sprite.setCenter(center.x, center.y)
+            _sprite.hidden = if (invincible) damageBlink else false
         }
 
         return spritesComponent
