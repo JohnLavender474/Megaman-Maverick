@@ -39,6 +39,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
+import com.megaman.maverick.game.world.getEntity
 
 class SniperJoeShield(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity, IFaceable {
 
@@ -104,6 +105,16 @@ class SniperJoeShield(game: MegamanMaverickGame) : GameEntity(game), IProjectile
         GameLogger.debug(TAG, "Destroyed")
     }
 
+    override fun hitBlock(blockFixture: Fixture) = explodeAndDie()
+
+    override fun hitBody(bodyFixture: Fixture) {
+        if (bodyFixture.getEntity() != owner) explodeAndDie()
+    }
+
+    override fun hitShield(shieldFixture: Fixture) {
+        if (shieldFixture.getEntity() != owner) explodeAndDie()
+    }
+
     private fun defineUpdatablesComponent(): UpdatablesComponent = UpdatablesComponent(this, {
         rotationTimer.update(it)
         if (rotationTimer.isFinished()) {
@@ -126,6 +137,10 @@ class SniperJoeShield(game: MegamanMaverickGame) : GameEntity(game), IProjectile
         body.addFixture(bodyFixture)
         bodyShapes.add(bodyFixture.shape)
 
+        val projectileFixture = Fixture(GameRectangle(), FixtureType.PROJECTILE)
+        body.addFixture(projectileFixture)
+        bodyShapes.add(projectileFixture.shape)
+
         // damagerFixture
         val damagerFixture = Fixture(GameRectangle(), FixtureType.DAMAGER)
         body.addFixture(damagerFixture)
@@ -141,8 +156,8 @@ class SniperJoeShield(game: MegamanMaverickGame) : GameEntity(game), IProjectile
             body.physics.velocity = trajectory
 
             val rotated = thrownRotations.getCurrent().equalsAny(1, 3)
-            val size = if (rotated) Vector2(ConstVals.PPM.toFloat(), 0.5f * ConstVals.PPM)
-            else Vector2(0.5f * ConstVals.PPM, ConstVals.PPM.toFloat())
+            val size = if (rotated) Vector2(0.75f * ConstVals.PPM, 0.5f * ConstVals.PPM)
+            else Vector2(0.5f * ConstVals.PPM, 0.75f * ConstVals.PPM)
 
             bodyShapes.forEach {
                 it as GameRectangle

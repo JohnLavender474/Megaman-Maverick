@@ -25,7 +25,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
                 GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "left actuator just pressed")
             },
             onPressContinued = { poller, delta ->
-                if (damaged || poller.isPressed(ControllerButton.RIGHT) || teleporting) return@ButtonActuator
+                if (!ready || damaged || poller.isPressed(ControllerButton.RIGHT) || teleporting) return@ButtonActuator
 
                 facing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) Facing.RIGHT else Facing.LEFT
 
@@ -59,7 +59,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
                 GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "right actuator just pressed")
             },
             onPressContinued = { poller, delta ->
-                if (damaged || poller.isPressed(ControllerButton.LEFT) || teleporting) return@ButtonActuator
+                if (!ready || damaged || poller.isPressed(ControllerButton.LEFT) || teleporting) return@ButtonActuator
 
                 facing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) Facing.LEFT else Facing.RIGHT
 

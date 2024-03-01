@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.ObjectSet
+import com.badlogic.gdx.utils.SortedIntList
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.engine.Game2D
 import com.engine.GameEngine
@@ -52,6 +53,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.MegaControllerPoller
+import com.megaman.maverick.game.entities.bosses.Bospider
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.hazards.WanaanLauncher
 import com.megaman.maverick.game.entities.megaman.Megaman
@@ -78,9 +80,9 @@ class MegamanMaverickGame : Game2D() {
     companion object {
         const val TAG = "MegamanMaverickGame"
         const val DEBUG_TEXT = false
-        const val DEBUG_SHAPES = false
+        const val DEBUG_SHAPES = true
         const val DEFAULT_VOLUME = 0.5f
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(WanaanLauncher.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(Bospider.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.SIDE, FixtureType.BLOCK)
         }
@@ -93,8 +95,8 @@ class MegamanMaverickGame : Game2D() {
 
     fun startLevelScreen(level: Level) {
         val levelScreen = screens.get(ScreenEnum.LEVEL.name) as MegaLevelScreen
-        levelScreen.tmxMapSource = level.tmxSourceFile
         levelScreen.music = level.musicAss
+        levelScreen.tmxMapSource = level.tmxSourceFile
         setCurrentScreen(ScreenEnum.LEVEL.name)
     }
 
@@ -234,10 +236,9 @@ class MegamanMaverickGame : Game2D() {
 
     private fun createGameEngine(): IGameEngine {
         val drawables = PriorityQueue<IDrawable<Batch>> { o1, o2 ->
-            if (o1 is IComparableDrawable<Batch> && o2 is IComparableDrawable<Batch>) o1.compareTo(o2)
-            else if (o1 is IComparableDrawable<Batch>) 1
-            else if (o2 is IComparableDrawable<Batch>) -1
-            else 0
+            o1 as IComparableDrawable<Batch>
+            o2 as IComparableDrawable<Batch>
+            o1.compareTo(o2)
         }
         properties.put(ConstKeys.DRAWABLES, drawables)
         val shapes = PriorityQueue<IDrawableShape> { s1, s2 -> s1.shapeType.ordinal - s2.shapeType.ordinal }

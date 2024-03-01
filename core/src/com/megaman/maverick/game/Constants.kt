@@ -15,6 +15,9 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val PROPS = "props"
+    const val OBJECT = "object"
+    const val MUSIC = "music"
     const val INSTANT = "instant"
     const val BOUNDS_SUPPLIER = "bounds_supplier"
     const val POSITION_SUPPLIER = "position_supplier"

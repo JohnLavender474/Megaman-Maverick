@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.OrderedSet
 import com.engine.audio.IAudioManager
 import com.engine.audio.SoundRequest
 import com.engine.common.interfaces.Updatable
+import com.engine.common.time.Timer
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 
@@ -46,14 +47,15 @@ class MegaAudioManager(
 
     private val soundQueue = OrderedSet<SoundRequest>()
     private val playingSounds = Array<SoundEntry>()
+
     private var currentMusic: Music? = null
+    private var fadeOutMusicTimer: Timer? = null
+    private var musicPaused = false
 
     init {
         musicVolume = DEFAULT_VOLUME
         soundVolume = DEFAULT_VOLUME
     }
-
-    fun isSoundPlaying(sound: SoundAsset) = playingSounds.any { it.ass == sound }
 
     override fun update(delta: Float) {
         soundQueue.forEach {
@@ -72,34 +74,42 @@ class MegaAudioManager(
             e.time += delta
             if (e.time > e.ass.seconds) eIter.remove()
         }
+
+        if (!musicPaused && fadeOutMusicTimer != null) {
+            fadeOutMusicTimer!!.update(delta)
+            currentMusic?.volume = musicVolume - (musicVolume * fadeOutMusicTimer!!.getRatio())
+            if (fadeOutMusicTimer!!.isFinished()) {
+                fadeOutMusicTimer = null
+                stopMusic()
+            }
+        }
     }
 
     override fun playMusic(key: Any?, loop: Boolean) {
-        if (key != null) {
-            currentMusic?.stop()
-            currentMusic = music.get(key as MusicAsset)
-        }
-        currentMusic?.isLooping = true
-        currentMusic?.volume = musicVolume
-        currentMusic?.play()
+        if (key == null) throw IllegalArgumentException("Key cannot be null")
+        currentMusic?.stop()
+        currentMusic = music.get(key as MusicAsset)
+        fadeOutMusicTimer = null
+        currentMusic!!.isLooping = loop
+        currentMusic!!.volume = musicVolume
+        currentMusic!!.play()
+        musicPaused = false
     }
 
     override fun stopMusic(key: Any?) {
         currentMusic?.stop()
+        fadeOutMusicTimer = null
+        musicPaused = true
     }
 
     override fun pauseMusic(key: Any?) {
         currentMusic?.pause()
+        musicPaused = true
     }
 
     override fun playSound(key: Any?, loop: Boolean) {
         if (key == null) return
         playSound(SoundRequest(key, loop))
-        /*
-        val sound = sounds.get(key as SoundAsset)
-        val id = sound.play(soundVolume)
-        playingSounds.add(SoundEntry(id, key))
-         */
     }
 
     fun playSound(soundRequest: SoundRequest) {
@@ -120,5 +130,17 @@ class MegaAudioManager(
 
     fun resumeAllSound() {
         sounds.values().forEach { it.resume() }
+    }
+
+    fun isSoundPlaying(sound: SoundAsset) = playingSounds.any { it.ass == sound }
+
+    fun fadeOutMusic(time: Float) {
+        fadeOutMusicTimer = Timer(time)
+        fadeOutMusicTimer!!.runOnFinished = { currentMusic?.volume = musicVolume }
+    }
+
+    fun stopFadingOutMusic() {
+        fadeOutMusicTimer = null
+        currentMusic?.volume = musicVolume
     }
 }

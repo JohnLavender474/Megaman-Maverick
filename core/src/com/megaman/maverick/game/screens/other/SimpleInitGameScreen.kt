@@ -3,6 +3,7 @@ package com.megaman.maverick.game.screens.other
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.ObjectSet
 import com.engine.drawables.fonts.BitmapFontHandle
 import com.engine.screens.BaseScreen
 import com.megaman.maverick.game.ConstVals
@@ -13,6 +14,8 @@ import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.setToDefaultPosition
 
 class SimpleInitGameScreen(private val megamanGame: MegamanMaverickGame) : BaseScreen(megamanGame) {
+
+    override val eventKeyMask = ObjectSet<Any>()
 
     private lateinit var text: BitmapFontHandle
     private val uiCamera = megamanGame.getUiCamera()

@@ -40,6 +40,8 @@ class BossSelectScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MEG
         private const val BACK = "BACK"
     }
 
+    override val eventKeyMask = ObjectSet<Any>()
+
     private val bNameSet = ObjectSet<String>()
 
     private val bName: BitmapFontHandle

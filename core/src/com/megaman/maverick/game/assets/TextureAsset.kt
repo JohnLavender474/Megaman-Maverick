@@ -49,6 +49,8 @@ enum class TextureAsset(src: String) : IAsset {
     GATES("Gates.txt"),
     PLATFORMS_1("Platforms1.txt"),
 
+    BOSSES("Bosses.txt"),
+
     // Main bosses
     TIMBER_WOMAN("TimberWoman.txt"),
     WINTRY_MAN("WintryMan.txt"),
@@ -64,6 +66,7 @@ enum class TextureAsset(src: String) : IAsset {
 
     // Other bosses
     GUTS_TANK("GutsTank.txt");
+    // BOSPIDER("Bospider.txt");
 
     override val source = TEXTURE_ASSET_PREFIX + src
     override val assClass = TextureAtlas::class.java

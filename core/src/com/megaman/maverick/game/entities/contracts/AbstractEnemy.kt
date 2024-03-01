@@ -43,14 +43,18 @@ import com.megaman.maverick.game.utils.getMegamanMaverickGame
 import com.megaman.maverick.game.utils.toGameRectangle
 import kotlin.reflect.KClass
 
-abstract class AbstractEnemy(game: MegamanMaverickGame) : GameEntity(game), IDamager, IDamageable, IBodyEntity,
+abstract class AbstractEnemy(
+    game: MegamanMaverickGame,
+    dmgDuration: Float = DEFAULT_DMG_DURATION,
+    dmgBlinkDur: Float = DEFAULT_DMG_BLINK_DUR
+) : GameEntity(game), IDamager, IDamageable, IBodyEntity,
     IAudioEntity, IHealthEntity, ISpriteEntity, ICullableEntity {
 
     companion object {
         const val TAG = "AbstractEnemy"
         const val DEFAULT_CULL_TIME = 1f
-        private const val DEFAULT_DMG_DURATION = .15f
-        private const val DEFAULT_DMG_BLINK_DUR = .025f
+        const val DEFAULT_DMG_DURATION = .15f
+        const val DEFAULT_DMG_BLINK_DUR = .025f
     }
 
     override val invincible: Boolean
@@ -61,8 +65,8 @@ abstract class AbstractEnemy(game: MegamanMaverickGame) : GameEntity(game), IDam
 
     protected abstract val damageNegotiations: ObjectMap<KClass<out IDamager>, DamageNegotiation>
 
-    protected val damageTimer = Timer(DEFAULT_DMG_DURATION)
-    protected val damageBlinkTimer = Timer(DEFAULT_DMG_BLINK_DUR)
+    protected val damageTimer = Timer(dmgDuration)
+    protected val damageBlinkTimer = Timer(dmgBlinkDur)
     protected var damageBlink = false
     protected var dropItemOnDeath = true
 

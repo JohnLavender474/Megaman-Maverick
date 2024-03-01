@@ -5,8 +5,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectSet
 import com.engine.animations.Animation
-import com.engine.common.objects.props
 import com.engine.common.time.Timer
 import com.engine.drawables.fonts.BitmapFontHandle
 import com.engine.screens.BaseScreen
@@ -22,7 +22,9 @@ import com.megaman.maverick.game.utils.getDefaultCameraPosition
 import java.util.*
 
 
-class BossIntroScreen(game: MegamanMaverickGame) : BaseScreen(game, props()) {
+class BossIntroScreen(game: MegamanMaverickGame) : BaseScreen(game) {
+
+    override val eventKeyMask = ObjectSet<Any>()
 
     private val uiCam = game.getUiCamera()
     private val audioMan = game.audioMan

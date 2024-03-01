@@ -238,12 +238,12 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
         val body = Body(BodyType.DYNAMIC)
         body.setSize(0.75f * ConstVals.PPM)
 
-        val shapes = Array<() -> IDrawableShape?>()
+        val debugShapes = Array<() -> IDrawableShape?>()
 
         // body fixture
         val bodyFixture = Fixture(GameRectangle().setSize(0.75f * ConstVals.PPM), FixtureType.BODY)
         body.addFixture(bodyFixture)
-        shapes.add { bodyFixture.shape }
+        debugShapes.add { bodyFixture.shape }
 
         // feet fixture
         val feetFixture = Fixture(GameRectangle().setSize(0.15f * ConstVals.PPM), FixtureType.FEET)
@@ -292,7 +292,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
             shieldFixture.putProperty(ConstKeys.DIRECTION, directionRotation)
         })
 
-        addComponent(DrawableShapesComponent(this, shapes))
+        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }

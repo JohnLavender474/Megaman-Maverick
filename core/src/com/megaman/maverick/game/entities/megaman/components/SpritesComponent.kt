@@ -17,8 +17,8 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
     val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
     sprite.setSize(2.475f * ConstVals.PPM, 1.875f * ConstVals.PPM)
 
-    val SpritesComponent = SpritesComponent(this, "player" to sprite)
-    SpritesComponent.putUpdateFunction("player") { _, player ->
+    val spritesComponent = SpritesComponent(this, "player" to sprite)
+    spritesComponent.putUpdateFunction("player") { _, player ->
         player as GameSprite
 
         val direction = if (isBehaviorActive(BehaviorType.AIR_DASHING)) getProperty(
@@ -52,8 +52,7 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
             Direction.UP, Direction.DOWN -> 0f
             Direction.LEFT -> 0.15f
             Direction.RIGHT -> -0.15f
-        }
-        else when (direction) {
+        } else when (direction) {
             Direction.UP, Direction.DOWN -> 0f
             Direction.LEFT -> 0.425f
             Direction.RIGHT -> -0.425f
@@ -62,5 +61,5 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
         player.setAlpha(if (damageFlash) 0f else 1f)
     }
 
-    return SpritesComponent
+    return spritesComponent
 }

@@ -442,6 +442,21 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Bosses/Sigma Rat/Claw.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>36,18,72,36</rect>
+                <key>scale9Paddings</key>
+                <rect>36,18,72,36</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Bosses/Timber Woman/Damaged.png</key>
             <key type="filename">../frames/Bosses/Timber Woman/OnFire.png</key>
             <key type="filename">../frames/Bosses/Timber Woman/Stand.png</key>

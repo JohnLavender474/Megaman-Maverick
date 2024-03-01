@@ -6,11 +6,13 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
+import com.badlogic.gdx.utils.ObjectSet
 import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.extensions.objectMapOf
+import com.engine.common.extensions.objectSetOf
 import com.engine.common.time.Timer
 import com.engine.drawables.fonts.BitmapFontHandle
 import com.engine.screens.menus.IMenuButton
@@ -26,8 +28,7 @@ import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
 import com.megaman.maverick.game.utils.getDefaultCameraPosition
 import com.megaman.maverick.game.utils.setToDefaultPosition
 
-class MainScreen(game: MegamanMaverickGame) :
-    AbstractMenuScreen(game, MainScreenButton.GAME_START.text) {
+class MainScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainScreenButton.GAME_START.text) {
 
     enum class MainScreenButton(val text: String) {
         GAME_START("GAME START"),
@@ -50,6 +51,7 @@ class MainScreen(game: MegamanMaverickGame) :
         private val SETTINGS_TRAJ = Vector3(15f * ConstVals.PPM, 0f, 0f)
     }
 
+    override val eventKeyMask = objectSetOf<Any>()
     override val menuButtons = objectMapOf<String, IMenuButton>()
 
     private val pose = Sprite()

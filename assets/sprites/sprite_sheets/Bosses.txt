@@ -1,7 +1,7 @@
 Bosses.png
 size: 1024, 912
 format: RGBA8888
-filter: Linear,Linear
+filter: Nearest,Nearest
 repeat: none
 Blunt Man/Damaged
   rotate: false

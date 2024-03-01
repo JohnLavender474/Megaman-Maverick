@@ -11,17 +11,19 @@ import com.badlogic.gdx.utils.ObjectMap
 import com.engine.IGameEngine
 import com.engine.animations.AnimationsSystem
 import com.engine.audio.AudioSystem
-import com.engine.audio.IAudioManager
 import com.engine.behaviors.BehaviorsSystem
 import com.engine.common.GameLogger
 import com.engine.common.extensions.gdxArrayOf
+import com.engine.common.extensions.objectSetOf
 import com.engine.common.interfaces.Initializable
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
+import com.engine.common.shapes.toGameRectangle
 import com.engine.controller.ControllerSystem
 import com.engine.controller.polling.IControllerPoller
 import com.engine.drawables.IDrawable
 import com.engine.drawables.shapes.IDrawableShape
+import com.engine.drawables.sprites.SpritesSystem
 import com.engine.events.Event
 import com.engine.events.IEventsManager
 import com.engine.graph.SimpleNodeGraphMap
@@ -34,11 +36,13 @@ import com.engine.updatables.UpdatablesSystem
 import com.engine.world.WorldSystem
 import com.megaman.maverick.game.*
 import com.megaman.maverick.game.assets.MusicAsset
+import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.drawables.sprites.Background
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.camera.CameraManagerForRooms
+import com.megaman.maverick.game.screens.levels.events.BossSpawnEventHandler
 import com.megaman.maverick.game.screens.levels.events.EndLevelEventHandler
 import com.megaman.maverick.game.screens.levels.events.PlayerDeathEventHandler
 import com.megaman.maverick.game.screens.levels.events.PlayerSpawnEventHandler
@@ -49,8 +53,7 @@ import com.megaman.maverick.game.screens.levels.stats.PlayerStatsHandler
 import com.megaman.maverick.game.utils.toProps
 import java.util.*
 
-class MegaLevelScreen(game: MegamanMaverickGame) :
-    TiledMapLevelScreen(game, props()), Initializable {
+class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), Initializable {
 
     companion object {
         const val TAG = "MegaLevelScreen"
@@ -58,7 +61,25 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
         private const val INTERPOLATE_GAME_CAM = true
         private const val DEFAULT_BACKGROUND_PARALLAX_FACTOR = 0.5f
         private const val DEFAULT_FOREGROUND_PARALLAX_FACTOR = 2f
+        private const val FADE_OUT_MUSIC_ON_BOSS_SPAWN = 1f
     }
+
+    override val eventKeyMask = objectSetOf<Any>(
+        EventType.GAME_PAUSE,
+        EventType.GAME_RESUME,
+        EventType.PLAYER_SPAWN,
+        EventType.PLAYER_READY,
+        EventType.PLAYER_JUST_DIED,
+        EventType.PLAYER_DONE_DYIN,
+        EventType.ADD_PLAYER_HEALTH,
+        EventType.ADD_HEART_TANK,
+        EventType.GATE_INIT_OPENING,
+        EventType.NEXT_ROOM_REQ,
+        EventType.GATE_INIT_CLOSING,
+        EventType.REQ_SHAKE_CAM,
+        EventType.ENTER_BOSS_ROOM,
+        EventType.END_LEVEL_SUCCESSFULLY
+    )
 
     val megamanGame: MegamanMaverickGame
         get() = super.game as MegamanMaverickGame
@@ -72,7 +93,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
     val eventsMan: IEventsManager
         get() = megamanGame.eventsMan
 
-    val audioMan: IAudioManager
+    val audioMan: MegaAudioManager
         get() = megamanGame.audioMan
 
     val controllerPoller: IControllerPoller
@@ -90,6 +111,8 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
 
     private lateinit var playerSpawnEventHandler: PlayerSpawnEventHandler
     private lateinit var playerDeathEventHandler: PlayerDeathEventHandler
+
+    private lateinit var bossSpawnEventHandler: BossSpawnEventHandler
 
     private lateinit var drawables: MutableCollection<IDrawable<Batch>>
     private lateinit var shapes: PriorityQueue<IDrawableShape>
@@ -134,6 +157,8 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
 
         playerSpawnEventHandler = PlayerSpawnEventHandler(megamanGame)
         playerDeathEventHandler = PlayerDeathEventHandler(megamanGame)
+
+        bossSpawnEventHandler = BossSpawnEventHandler(megamanGame)
 
         // array of systems that should be switched off and back on during room transitions
         @Suppress("UNCHECKED_CAST")
@@ -314,7 +339,8 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
                     TAG,
                     "onEvent(): Player spawn --> spawn Megaman: ${playerSpawnsMan.currentSpawnProps!!}"
                 )
-                megamanGame.gameEngine.spawn(megaman, playerSpawnsMan.currentSpawnProps!!)
+                game.gameEngine.systems.forEach { it.on = true }
+                game.gameEngine.spawn(megaman, playerSpawnsMan.currentSpawnProps!!)
             }
 
             EventType.PLAYER_READY -> {
@@ -408,6 +434,24 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
                 // TODO: shake camera
             }
 
+            EventType.ENTER_BOSS_ROOM -> {
+                GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Enter boss room --> init boss spawn")
+
+                val bossRoom = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!
+                val bossMapObject = bossRoom.properties.get(ConstKeys.OBJECT, RectangleMapObject::class.java)
+                val bossName = bossMapObject.name
+                val bossSpawnProps = bossMapObject.properties.toProps()
+                bossSpawnProps.put(ConstKeys.BOUNDS, bossMapObject.rectangle.toGameRectangle())
+                bossSpawnEventHandler.init(bossName, bossSpawnProps)
+
+
+                megaman.running = false
+                engine.systems.forEach {
+                    if (it !is SpritesSystem && it !is WorldSystem && it !is AnimationsSystem) it.on = false
+                }
+                audioMan.fadeOutMusic(FADE_OUT_MUSIC_ON_BOSS_SPAWN)
+            }
+
             EventType.END_LEVEL_SUCCESSFULLY -> {
                 GameLogger.debug(
                     MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): End level successfully --> end level"
@@ -422,9 +466,9 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
         if (controllerPoller.isJustPressed(ControllerButton.START) &&
             playerStatsHandler.finished &&
             playerSpawnEventHandler.finished &&
-            playerDeathEventHandler.finished
-        )
-            if (megamanGame.paused) megamanGame.resume() else megamanGame.pause()
+            playerDeathEventHandler.finished &&
+            bossSpawnEventHandler.finished
+        ) if (megamanGame.paused) megamanGame.resume() else megamanGame.pause()
 
         // illegal for game to be paused when spawn or death event handlers are running
         // force game resume
@@ -432,8 +476,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
             (!playerStatsHandler.finished ||
                     !playerSpawnEventHandler.finished ||
                     !playerDeathEventHandler.finished)
-        )
-            game.resume()
+        ) game.resume()
 
         // things to run only when game is NOT paused
         if (!game.paused) {
@@ -450,6 +493,8 @@ class MegaLevelScreen(game: MegamanMaverickGame) :
                 val spawns = spawnsMan.getSpawnsAndClear()
                 spawns.forEach { spawn -> engine.spawn(spawn.entity, spawn.properties) }
             }
+
+            if (!bossSpawnEventHandler.finished) bossSpawnEventHandler.update(delta)
 
             if (!playerSpawnEventHandler.finished) playerSpawnEventHandler.update(delta)
             else if (!playerDeathEventHandler.finished) playerDeathEventHandler.update(delta)
