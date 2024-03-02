@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.bosses
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.PolylineMapObject
+import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.Queue
@@ -17,6 +18,7 @@ import com.engine.common.extensions.toGdxArray
 import com.engine.common.objects.Loop
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
+import com.engine.common.shapes.toGameRectangle
 import com.engine.common.time.Timer
 import com.engine.damage.IDamager
 import com.engine.drawables.sorting.DrawingPriority
@@ -38,11 +40,15 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
+import com.megaman.maverick.game.entities.factories.EntityFactories
+import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.toProps
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import kotlin.reflect.KClass
@@ -52,12 +58,13 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
     companion object {
         const val TAG = "Bospider"
         private const val SPAWN_DELAY = 2.5f
+        private const val MAX_CHILDREN = 4
         private const val MIN_SPEED = 5f
         private const val MAX_SPEED = 15f
         private const val START_POINT_OFFSET = 2f
-        private const val OPEN_EYE_MAX_DURATION = 3f
-        private const val OPEN_EYE_MIN_DURATION = 1f
-        private const val CLOSE_EYE_DURATION = 0.5f
+        private const val OPEN_EYE_MAX_DURATION = 2f
+        private const val OPEN_EYE_MIN_DURATION = 0.5f
+        private const val CLOSE_EYE_DURATION = 0.35f
         private const val DEBUG_TIMER = 1f
         private var climbRegion: TextureRegion? = null
         private var stillRegion: TextureRegion? = null
@@ -79,6 +86,9 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
     private val paths = Array<Array<Vector2>>()
     private val currentPath = Queue<Vector2>()
     private val stateLoop = Loop(BospiderState.values().toGdxArray())
+
+    private val childrenSpawnPoints = Array<RectangleMapObject>()
+
     private val spawnDelayTimer = Timer(SPAWN_DELAY)
     private val closeEyeTimer = Timer(CLOSE_EYE_DURATION)
     private val debugTimer = Timer(DEBUG_TIMER)
@@ -104,12 +114,14 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         body.setCenter(spawn.x, spawn.y + START_POINT_OFFSET * ConstVals.PPM)
 
         paths.clear()
+        childrenSpawnPoints.clear()
         spawnProps.forEach { _, value ->
-            if (value !is PolylineMapObject) return@forEach
-            val rawPath = value.polyline.transformedVertices
-            val path = Array<Vector2>()
-            for (i in rawPath.indices step 2) path.add(Vector2(rawPath[i], rawPath[i + 1]))
-            paths.add(path)
+            if (value is PolylineMapObject) {
+                val rawPath = value.polyline.transformedVertices
+                val path = Array<Vector2>()
+                for (i in rawPath.indices step 2) path.add(Vector2(rawPath[i], rawPath[i + 1]))
+                paths.add(path)
+            } else if (value is RectangleMapObject) childrenSpawnPoints.add(value)
         }
 
         stateLoop.reset()
@@ -157,6 +169,15 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
                     spawnDelayTimer.update(delta)
                     if (spawnDelayTimer.isFinished()) {
+                        val numChildrenToSpawn = MAX_CHILDREN - children.size
+                        for (i in 0 until numChildrenToSpawn) {
+                            val spawnRectObject = childrenSpawnPoints.get(i)
+                            val spawnProps = spawnRectObject.properties.toProps()
+                            spawnProps.put(ConstKeys.BOUNDS, spawnRectObject.rectangle.toGameRectangle())
+                            val babySpider = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.BABY_SPIDER)!!
+                            game.gameEngine.spawn(babySpider, spawnProps)
+                            children.add(babySpider)
+                        }
                         val path = paths.random()
                         currentPath.clear()
                         path.forEach { currentPath.addLast(it) }

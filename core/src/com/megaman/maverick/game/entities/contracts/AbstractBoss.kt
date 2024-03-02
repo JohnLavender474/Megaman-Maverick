@@ -16,7 +16,7 @@ abstract class AbstractBoss(
 
     companion object {
         const val TAG = "AbstractBoss"
-        const val DEFAULT_BOSS_DMG_DURATION = 0.5f
+        const val DEFAULT_BOSS_DMG_DURATION = 0.75f
     }
 
     override val eventKeyMask = objectSetOf<Any>(EventType.END_BOSS_SPAWN)

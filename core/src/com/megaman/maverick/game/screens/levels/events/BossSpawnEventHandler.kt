@@ -21,7 +21,6 @@ class BossSpawnEventHandler(private val game: MegamanMaverickGame) : Updatable {
     companion object {
         const val TAG = "BossSpawnEventHandler"
         private const val SPAWN_TIME = 1f
-        private const val FADE_OUT_MUSIC_ON_BOSS_SPAWN = 1f
     }
 
     val finished: Boolean

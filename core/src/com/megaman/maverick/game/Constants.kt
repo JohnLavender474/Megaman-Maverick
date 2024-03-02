@@ -15,6 +15,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val SLOW = "slow"
     const val PROPS = "props"
     const val OBJECT = "object"
     const val MUSIC = "music"

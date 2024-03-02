@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="650" height="51" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="418">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="650" height="51" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="430">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/Gravity Man Stage.tsx"/>
  <tileset firstgid="4609" source="../tsx/MM3Wily1.tsx"/>
@@ -464,40 +464,68 @@
   </object>
   <object id="385" name="Bospider" x="15216" y="640" width="32" height="32">
    <properties>
+    <property name="baby1" type="object" value="426"/>
+    <property name="baby2" type="object" value="427"/>
+    <property name="baby3" type="object" value="428"/>
+    <property name="baby4" type="object" value="429"/>
     <property name="music" value="DUEL_OF_THE_FATES_MUSIC"/>
-    <property name="path1" type="object" value="410"/>
-    <property name="path2" type="object" value="411"/>
-    <property name="path3" type="object" value="412"/>
-    <property name="path4" type="object" value="413"/>
-    <property name="path5" type="object" value="414"/>
-    <property name="path6" type="object" value="415"/>
-    <property name="path7" type="object" value="416"/>
-    <property name="path8" type="object" value="417"/>
+    <property name="path1" type="object" value="418"/>
+    <property name="path2" type="object" value="419"/>
+    <property name="path3" type="object" value="420"/>
+    <property name="path4" type="object" value="421"/>
+    <property name="path5" type="object" value="422"/>
+    <property name="path6" type="object" value="423"/>
+    <property name="path7" type="object" value="424"/>
+    <property name="path8" type="object" value="425"/>
    </properties>
   </object>
-  <object id="410" x="15232" y="672" visible="0">
-   <polyline points="0,0 160,32 208,96 208,160 160,160 144,240 -208,240 -208,-16 -160,224 -96,96 16,224 64,160 64,64 192,192 -208,240"/>
+  <object id="418" x="15232" y="672" visible="0">
+   <polyline points="0,0 0,32 -208,32 -208,80 -64,80 -64,112 0,112 0,144 64,144 64,240 208,240"/>
   </object>
-  <object id="411" x="15232" y="672" visible="0">
-   <polyline points="0,0 -160,32 -128,64 -160,96 -32,128 -64,160 128,192 32,224 -32,96 -96,224 -128,192 -208,240 -208,-16 208,-16 208,248 160,192 128,240 -32,240"/>
+  <object id="419" x="15232" y="672" visible="0">
+   <polyline points="0,0 0,96 -208,96 -208,128 32,128 32,168 208,168 208,240 -208,240"/>
   </object>
-  <object id="412" x="15232" y="672" visible="0">
-   <polyline points="0,0 0,96 -208,144 208,176 -208,208 208,240 0,240"/>
+  <object id="420" x="15232" y="672" visible="0">
+   <polyline points="0,0 0,32 208,32 208,128 64,128 64,184 -160,184 -160,208 -208,208 -208,240 208,240"/>
   </object>
-  <object id="413" x="15232" y="672" visible="0">
-   <polyline points="0,0 208,144 0,256 -216,72 -216,248 -144,16 -88,240 40,-8 208,240 -64,240 208,-8 208,240 -216,-16 -216,248 96,248"/>
+  <object id="421" x="15232" y="672" visible="0">
+   <polyline points="0,0 208,0 208,32 160,32 160,64 96,64 96,96 -96,96 -96,160 -160,160 -160,192 -208,192 -208,240 0,240"/>
   </object>
-  <object id="414" x="15232" y="680" visible="0">
-   <polyline points="0,0 0,216 48,88 112,240 -208,240 -64,152 -208,152 208,232 208,-24 128,240 64,184 48,232 32,176 8,232 64,176 96,232 136,48 -112,232 -208,-24 -208,240"/>
+  <object id="422" x="15232" y="672" visible="0">
+   <polyline points="0,0 -208,0 -208,160 -64,160 -64,192 168,192 168,240 -208,240"/>
   </object>
-  <object id="415" x="15232" y="672" visible="0">
-   <polyline points="0,0 -216,24 208,48 -208,80 208,112 -208,152 216,184 -216,216 200,240 -216,192 208,144 -216,112 208,72 208,-8 -208,-8 -208,240 0,240"/>
+  <object id="423" x="15232" y="672" visible="0">
+   <polyline points="0,0 0,32 128,32 128,128 -208,128 -208,192 208,192 208,240 -208,240"/>
   </object>
-  <object id="416" x="15232" y="672" visible="0">
-   <polyline points="0,0 0,40 128,40 128,96 64,96 64,136 0,136 0,176 -128,176 -128,208 128,208 128,248"/>
+  <object id="424" x="15232" y="672" visible="0">
+   <polyline points="0,0 0,64 64,64 64,128 208,128 208,160 128,160 128,192 0,192 0,224 -208,224"/>
   </object>
-  <object id="417" x="15232" y="672" visible="0">
-   <polyline points="0,0 -192,0 -192,32 -128,32 -128,96 -32,96 -32,160 208,160 208,0 160,0 160,72 56,112 56,184 -216,240 -216,-8 -128,96 -32,96 -32,160 -72,160 -72,192 -144,192 -144,216 -192,208 -192,240 -24,240 184,104 208,240 64,240"/>
+  <object id="425" x="15232" y="672" visible="0">
+   <polyline points="0,0 0,240 208,240"/>
+  </object>
+  <object id="426" name="BabySpider" x="15072" y="656" width="32" height="32">
+   <properties>
+    <property name="left" type="bool" value="false"/>
+    <property name="slow" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="427" name="BabySpider" x="15152" y="656" width="32" height="32">
+   <properties>
+    <property name="left" type="bool" value="false"/>
+    <property name="slow" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="428" name="BabySpider" x="15280" y="656" width="32" height="32">
+   <properties>
+    <property name="left" type="bool" value="true"/>
+    <property name="slow" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="429" name="BabySpider" x="15360" y="656" width="32" height="32">
+   <properties>
+    <property name="left" type="bool" value="true"/>
+    <property name="slow" type="bool" value="true"/>
+   </properties>
   </object>
  </objectgroup>
  <objectgroup id="9" name="sensors">
