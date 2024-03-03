@@ -28,6 +28,7 @@ import com.engine.events.Event
 import com.engine.events.IEventsManager
 import com.engine.graph.SimpleNodeGraphMap
 import com.engine.motion.MotionSystem
+import com.engine.pathfinding.PathfindingSystem
 import com.engine.screens.levels.tiledmap.TiledMapLevelScreen
 import com.engine.spawns.ISpawner
 import com.engine.spawns.SpawnsManager
@@ -38,6 +39,7 @@ import com.megaman.maverick.game.*
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.drawables.sprites.Background
+import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.events.EventType
@@ -49,6 +51,7 @@ import com.megaman.maverick.game.screens.levels.events.PlayerSpawnEventHandler
 import com.megaman.maverick.game.screens.levels.map.layers.MegaMapLayerBuilders
 import com.megaman.maverick.game.screens.levels.map.layers.MegaMapLayerBuildersParams
 import com.megaman.maverick.game.screens.levels.spawns.PlayerSpawnsManager
+import com.megaman.maverick.game.screens.levels.stats.EntityStatsHandler
 import com.megaman.maverick.game.screens.levels.stats.PlayerStatsHandler
 import com.megaman.maverick.game.utils.toProps
 import java.util.*
@@ -78,6 +81,9 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
         EventType.GATE_INIT_CLOSING,
         EventType.REQ_SHAKE_CAM,
         EventType.ENTER_BOSS_ROOM,
+        EventType.BEGIN_BOSS_SPAWN,
+        EventType.BOSS_DEFEATED,
+        EventType.BOSS_DEAD,
         EventType.END_LEVEL_SUCCESSFULLY
     )
 
@@ -104,6 +110,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
     private lateinit var spawnsMan: SpawnsManager
     private lateinit var playerSpawnsMan: PlayerSpawnsManager
     private lateinit var playerStatsHandler: PlayerStatsHandler
+    private lateinit var entityStatsHandler: EntityStatsHandler
 
     private lateinit var levelStateHandler: LevelStateHandler
     private lateinit var endLevelEventHandler: EndLevelEventHandler
@@ -154,6 +161,8 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
 
         playerStatsHandler = PlayerStatsHandler(megaman)
         playerStatsHandler.init()
+
+        entityStatsHandler = EntityStatsHandler(megamanGame)
 
         playerSpawnEventHandler = PlayerSpawnEventHandler(megamanGame)
         playerDeathEventHandler = PlayerDeathEventHandler(megamanGame)
@@ -211,19 +220,15 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
         // set end transition logic for camera manager
         cameraManagerForRooms.endTransition = {
             GameLogger.debug(TAG, "End transition logic for camera manager")
-            systemsToSwitch.forEach { systems.get(it.simpleName)?.let { system -> system.on = true } }
-
             eventsMan.submitEvent(
                 Event(
                     EventType.END_ROOM_TRANS,
                     props(ConstKeys.ROOM to cameraManagerForRooms.currentGameRoom)
                 )
             )
-
             val currentRoom = cameraManagerForRooms.currentGameRoom
             if (currentRoom?.properties?.containsKey(ConstKeys.EVENT) == true) {
                 val props = props(ConstKeys.ROOM to currentRoom)
-
                 val roomEvent =
                     when (val roomEventString =
                         currentRoom.properties.get(ConstKeys.EVENT, String::class.java)) {
@@ -233,7 +238,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
                     }
 
                 eventsMan.submitEvent(Event(roomEvent, props))
-            }
+            } else systemsToSwitch.forEach { systems.get(it.simpleName)?.let { system -> system.on = true } }
         }
     }
 
@@ -341,6 +346,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
                 )
                 game.gameEngine.systems.forEach { it.on = true }
                 game.gameEngine.spawn(megaman, playerSpawnsMan.currentSpawnProps!!)
+                entityStatsHandler.unset()
             }
 
             EventType.PLAYER_READY -> {
@@ -444,12 +450,37 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
                 bossSpawnProps.put(ConstKeys.BOUNDS, bossMapObject.rectangle.toGameRectangle())
                 bossSpawnEventHandler.init(bossName, bossSpawnProps)
 
-
                 megaman.running = false
                 engine.systems.forEach {
                     if (it !is SpritesSystem && it !is WorldSystem && it !is AnimationsSystem) it.on = false
                 }
                 audioMan.fadeOutMusic(FADE_OUT_MUSIC_ON_BOSS_SPAWN)
+            }
+
+            EventType.BEGIN_BOSS_SPAWN -> {
+                val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
+                entityStatsHandler.set(boss)
+            }
+
+            EventType.BOSS_DEFEATED -> {
+                megaman.canBeDamaged = false
+                audioMan.stopMusic()
+                engine.systems.forEach {
+                    val systemsToSwitch =
+                        gdxArrayOf(
+                            ControllerSystem::class,
+                            MotionSystem::class,
+                            BehaviorsSystem::class,
+                        )
+                    engine.systems.forEach {
+                        if (systemsToSwitch.contains(it::class)) it.on = false
+                    }
+                }
+                entityStatsHandler.unset()
+            }
+
+            EventType.BOSS_DEAD -> {
+                eventsMan.submitEvent(Event(EventType.END_LEVEL_SUCCESSFULLY))
             }
 
             EventType.END_LEVEL_SUCCESSFULLY -> {
@@ -534,6 +565,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
 
         // render the ui
         batch.projectionMatrix = uiCamera.combined
+        entityStatsHandler.draw(batch)
         playerStatsHandler.draw(batch)
         if (!playerSpawnEventHandler.finished) playerSpawnEventHandler.draw(batch)
 

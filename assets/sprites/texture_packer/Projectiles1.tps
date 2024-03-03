@@ -176,6 +176,8 @@
             <key type="filename">../frames/Projectiles1/Bullet.png</key>
             <key type="filename">../frames/Projectiles1/Fire/Fireball.png</key>
             <key type="filename">../frames/Projectiles1/Snowball.png</key>
+            <key type="filename">../frames/Projectiles1/SpiderWeb/Gray.png</key>
+            <key type="filename">../frames/Projectiles1/SpiderWeb/White.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -225,6 +227,7 @@
             <key type="filename">../frames/Projectiles1/Electric/SmallElectric.png</key>
             <key type="filename">../frames/Projectiles1/Electric/Zap.png</key>
             <key type="filename">../frames/Projectiles1/HalfChargedShot.png</key>
+            <key type="filename">../frames/Projectiles1/SpiderWeb/BlinkWhite.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

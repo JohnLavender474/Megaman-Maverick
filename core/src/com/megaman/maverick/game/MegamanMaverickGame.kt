@@ -54,6 +54,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.MegaControllerPoller
 import com.megaman.maverick.game.entities.bosses.Bospider
+import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.enemies.BabySpider
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.hazards.WanaanLauncher
@@ -74,6 +75,7 @@ import com.megaman.maverick.game.world.MegaCollisionHandler
 import com.megaman.maverick.game.world.MegaContactListener
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.AbstractSet
 
 @Suppress("UNCHECKED_CAST")
 class MegamanMaverickGame : Game2D() {
@@ -83,7 +85,7 @@ class MegamanMaverickGame : Game2D() {
         const val DEBUG_TEXT = false
         const val DEBUG_SHAPES = true
         const val DEFAULT_VOLUME = 0.5f
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(BabySpider.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(AbstractBoss.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.SIDE, FixtureType.BLOCK)
         }
@@ -170,10 +172,10 @@ class MegamanMaverickGame : Game2D() {
         screens.put(ScreenEnum.SIMPLE_END_LEVEL_SUCCESSFULLY.name, SimpleEndLevelScreen(this))
         screens.put(ScreenEnum.SIMPLE_INIT_GAME.name, SimpleInitGameScreen(this))
 
-        // startLevelScreen(Level.TEST1)
+        startLevelScreen(Level.TEST1)
         // startLevelScreen(Level.TEST2)
         // startLevelScreen(Level.TEST3)
-        startLevelScreen(Level.TEST4)
+        // startLevelScreen(Level.TEST4)
         // startLevelScreen(Level.TEST5)
         // startLevelScreen(Level.TEST6)
         // setCurrentScreen(ScreenEnum.MAIN.name)

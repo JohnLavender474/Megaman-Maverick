@@ -69,7 +69,10 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         get() = !damageTimer.isFinished()
 
     override val invincible: Boolean
-        get() = damaged || !damageRecoveryTimer.isFinished()
+        get() = damaged || !damageRecoveryTimer.isFinished() || !canBeDamaged
+
+    var canBeDamaged = true
+    var canMove = true
 
     internal val damageTimer = Timer(MegamanValues.DAMAGE_DURATION).setToEnd()
     internal val damageRecoveryTimer = Timer(MegamanValues.DAMAGE_RECOVERY_TIME).setToEnd()
@@ -122,7 +125,7 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         SpikeBall::class to dmgNeg(8),
         Peat::class to dmgNeg(2),
         BulbBlaster::class to dmgNeg(2),
-        Bospider:: class to dmgNeg(2),
+        Bospider:: class to dmgNeg(5),
         BabySpider::class to dmgNeg(2)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
@@ -144,7 +147,7 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
 
     val weaponHandler = MegamanWeaponHandler(this)
 
-    val canChargeCurrentWeapon: Boolean
+    private val canChargeCurrentWeapon: Boolean
         get() = weaponHandler.isChargeable(currentWeapon)
 
     val chargeStatus: MegaChargeStatus
@@ -169,7 +172,7 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
 
     var damageFlash = false
     var maverick = false
-    var ready: Boolean = false
+    var ready = false
         set(value) {
             field = value
             firstSprite!!.hidden = !field
@@ -181,7 +184,8 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
             GameLogger.debug(TAG, "directionRotation: value = $value")
             body.cardinalRotation = value
             when (value) {
-                Direction.UP, Direction.RIGHT -> { // jump
+                Direction.UP, Direction.RIGHT -> {
+                    // jump
                     jumpVel = MegamanValues.JUMP_VEL
                     wallJumpVel = MegamanValues.WALL_JUMP_VEL
                     waterJumpVel = MegamanValues.WATER_JUMP_VEL
@@ -199,7 +203,8 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
                     swimVel = MegamanValues.SWIM_VEL_Y
                 }
 
-                Direction.DOWN, Direction.LEFT -> { // jump
+                Direction.DOWN, Direction.LEFT -> {
+                    // jump
                     jumpVel = -MegamanValues.JUMP_VEL
                     wallJumpVel = -MegamanValues.WALL_JUMP_VEL
                     waterJumpVel = -MegamanValues.WATER_JUMP_VEL
@@ -244,6 +249,9 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
             putProperty(ConstKeys.RUNNING, value)
         }
 
+    var teleporting = false
+        private set
+
     internal var jumpVel = 0f
     internal var wallJumpVel = 0f
     internal var waterJumpVel = 0f
@@ -255,9 +263,6 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
     internal var waterGravity = 0f
     internal var waterIceGravity = 0f
     internal var swimVel = 0f
-
-    var teleporting = false
-        private set
 
     override fun init() {
         addComponent(AudioComponent(this))
@@ -278,12 +283,9 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         setHealth(getMaxHealth())
         game.eventsMan.addListener(this)
 
-        // set Megaman's position
         val bounds = properties.get(ConstKeys.BOUNDS) as GameRectangle
         body.positionOnPoint(bounds.getBottomCenterPoint(), Position.BOTTOM_CENTER)
-        GameLogger.debug(TAG, "spawn(): body = $body")
 
-        // initialize Megaman's props
         facing = Facing.RIGHT
         aButtonTask = AButtonTask.JUMP
         currentWeapon = MegamanWeapon.BUSTER
@@ -294,6 +296,9 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         damageTimer.setToEnd()
         damageRecoveryTimer.setToEnd()
         damageFlashTimer.reset()
+
+        canMove = true
+        canBeDamaged = true
 
         shootAnimTimer.reset()
         groundSlideTimer.reset()

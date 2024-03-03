@@ -34,8 +34,7 @@ const val MEGAMAN_GROUND_SLIDE_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: Grou
 internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
     val behaviorsComponent = BehaviorsComponent(this)
 
-    // wall slide
-    val wallSlide = Behavior( // evaluate
+    val wallSlide = Behavior(
         evaluate = {
             if ((body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && game.controllerPoller.isPressed(
                     if (isDirectionRotatedDown() || isDirectionRotatedRight()) ControllerButton.RIGHT

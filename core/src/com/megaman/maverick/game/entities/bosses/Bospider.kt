@@ -3,6 +3,7 @@ package com.megaman.maverick.game.entities.bosses
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.PolylineMapObject
 import com.badlogic.gdx.maps.objects.RectangleMapObject
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.Queue
@@ -11,12 +12,14 @@ import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
 import com.engine.common.GameLogger
+import com.engine.common.enums.Position
 import com.engine.common.extensions.equalsAny
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.extensions.toGdxArray
 import com.engine.common.objects.Loop
 import com.engine.common.objects.Properties
+import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.shapes.toGameRectangle
 import com.engine.common.time.Timer
@@ -37,6 +40,7 @@ import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
@@ -45,6 +49,8 @@ import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
+import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
@@ -66,6 +72,8 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         private const val OPEN_EYE_MIN_DURATION = 0.5f
         private const val CLOSE_EYE_DURATION = 0.35f
         private const val DEBUG_TIMER = 1f
+        private const val EXPLOSION_TIME = 0.25f
+        private const val WEB_SPEED = 10f
         private var climbRegion: TextureRegion? = null
         private var stillRegion: TextureRegion? = null
         private var openEyeRegion: TextureRegion? = null
@@ -77,7 +85,9 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
     override var children = Array<IGameEntity>()
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(1), Fireball::class to dmgNeg(2), ChargedShot::class to dmgNeg {
+        Bullet::class to dmgNeg(1),
+        Fireball::class to dmgNeg(2),
+        ChargedShot::class to dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 2 else 1
         }, ChargedShotExplosion::class to dmgNeg(1)
@@ -92,6 +102,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
     private val spawnDelayTimer = Timer(SPAWN_DELAY)
     private val closeEyeTimer = Timer(CLOSE_EYE_DURATION)
     private val debugTimer = Timer(DEBUG_TIMER)
+    private val explosionTimer = Timer(EXPLOSION_TIME)
 
     private lateinit var openEyeTimer: Timer
     private lateinit var spawn: Vector2
@@ -140,6 +151,25 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         updatablesComponent.add { delta ->
             if (!ready) return@add
 
+            if (defeated) {
+                explosionTimer.update(delta)
+                if (explosionTimer.isFinished()) {
+                    val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
+                    val position = Position.values().toGdxArray().random()
+                    game.gameEngine.spawn(
+                        explosion,
+                        props(
+                            ConstKeys.SOUND to SoundAsset.EXPLOSION_2_SOUND,
+                            ConstKeys.POSITION to body.getCenter().add(
+                                position.x * ConstVals.PPM.toFloat(), position.y + ConstVals.PPM.toFloat()
+                            )
+                        )
+                    )
+                    explosionTimer.reset()
+                }
+                return@add
+            }
+
             debugTimer.update(delta)
             if (debugTimer.isFinished()) {
                 GameLogger.debug(TAG, "defineUpdatablesComponent(): state = ${stateLoop.getCurrent()}")
@@ -167,6 +197,10 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
                     body.physics.velocity.setZero()
 
+                    if (spawnDelayTimer.isAtBeginning()) {
+                        val shootWeb = MathUtils.random.nextBoolean()
+                        if (shootWeb) shootWeb()
+                    }
                     spawnDelayTimer.update(delta)
                     if (spawnDelayTimer.isFinished()) {
                         val numChildrenToSpawn = MAX_CHILDREN - children.size
@@ -189,7 +223,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
                     if (currentPath.isEmpty) {
                         body.physics.velocity.setZero()
                         val openEyeDuration =
-                            OPEN_EYE_MIN_DURATION + (OPEN_EYE_MAX_DURATION - OPEN_EYE_MIN_DURATION) * (1f - getHealthRatio())
+                            OPEN_EYE_MIN_DURATION + (OPEN_EYE_MAX_DURATION - OPEN_EYE_MIN_DURATION) * getHealthRatio()
                         openEyeTimer = Timer(openEyeDuration)
                         stateLoop.next()
                         return@add
@@ -227,26 +261,11 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         }
     }
 
-    private fun moveToSpawn() {
-        val target = spawn.cpy()
-        val center = body.getCenter()
-        val directionToSpawn = target.sub(center).nor()
-        val velocity = directionToSpawn.scl(MIN_SPEED).scl(ConstVals.PPM.toFloat())
-        body.physics.velocity.set(velocity)
+    override fun triggerDefeat() {
+        super.triggerDefeat()
+        children.forEach { it.kill() }
+        children.clear()
     }
-
-    private fun moveToNextTarget() {
-        val target = currentPath.first().cpy()
-        val center = body.getCenter()
-        val directionToTarget = target.sub(center).nor()
-        val velocity = directionToTarget.scl(getCurrentSpeed())
-        body.physics.velocity.set(velocity)
-    }
-
-    private fun getCurrentSpeed() = ConstVals.PPM * (MIN_SPEED + (MAX_SPEED - MIN_SPEED) * (1 - getHealthRatio()))
-
-    private fun getHealthRatio() =
-        (getCurrentHealth() - getMinHealth()).toFloat() / (getMaxHealth() - getMinHealth()).toFloat()
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
@@ -301,4 +320,37 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }
+
+    private fun moveToSpawn() {
+        val target = spawn.cpy()
+        val center = body.getCenter()
+        val directionToSpawn = target.sub(center).nor()
+        val velocity = directionToSpawn.scl(MIN_SPEED).scl(ConstVals.PPM.toFloat())
+        body.physics.velocity.set(velocity)
+    }
+
+    private fun moveToNextTarget() {
+        val target = currentPath.first().cpy()
+        val center = body.getCenter()
+        val directionToTarget = target.sub(center).nor()
+        val velocity = directionToTarget.scl(getCurrentSpeed())
+        body.physics.velocity.set(velocity)
+    }
+
+    private fun getCurrentSpeed() = ConstVals.PPM * (MIN_SPEED + (MAX_SPEED - MIN_SPEED) * (1 - getHealthRatio()))
+
+    private fun getHealthRatio() =
+        (getCurrentHealth() - getMinHealth()).toFloat() / (getMaxHealth() - getMinHealth()).toFloat()
+
+    private fun shootWeb() {
+        val web = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SPIDER_WEB)!!
+        val trajectory = megaman.body.getCenter().sub(body.getCenter()).nor().scl(WEB_SPEED * ConstVals.PPM)
+        val props = props(
+            ConstKeys.POSITION to body.getBottomCenterPoint(),
+            ConstKeys.TRAJECTORY to trajectory,
+            ConstKeys.OWNER to this
+        )
+        game.gameEngine.spawn(web, props)
+    }
+
 }

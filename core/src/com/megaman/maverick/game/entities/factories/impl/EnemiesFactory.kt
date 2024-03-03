@@ -14,6 +14,7 @@ class EnemiesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
     companion object {
         const val TAG = "EnemiesFactory"
 
+        const val TEST_ENEMY = "TestEnemy"
         const val MET = "Met"
         const val BAT = "Bat"
         const val RATTON = "Ratton"
@@ -55,6 +56,7 @@ class EnemiesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
     private val pools = ObjectMap<Any, Pool<IGameEntity>>()
 
     init {
+        pools.put(TEST_ENEMY, EntityPoolCreator.create(1) { TestEnemy(game) })
         pools.put(BAT, EntityPoolCreator.create(3) { Bat(game) })
         pools.put(MET, EntityPoolCreator.create(3) { Met(game) })
         pools.put(FLOATING_CAN, EntityPoolCreator.create(5) { FloatingCan(game) })

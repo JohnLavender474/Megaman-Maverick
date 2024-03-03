@@ -38,6 +38,8 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) :
         get() =
             preBeamTimer.isFinished() && beamDownTimer.isFinished() && beamTransitionTimer.isFinished()
 
+    private val megaman = game.megaman
+
     private val blinkTimer = Timer(BLINK_READY_DUR).setToEnd()
     private val preBeamTimer = Timer(PRE_BEAM_DUR).setToEnd()
     private val beamDownTimer = Timer(BEAM_DOWN_DUR).setToEnd()
@@ -87,8 +89,11 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) :
         beamLandAnimation.reset()
         beamSprite.setPosition(-ConstVals.PPM.toFloat(), -ConstVals.PPM.toFloat())
 
-        game.megaman.ready = false
-        game.megaman.body.physics.gravityOn = false
+        megaman.ready = false
+        megaman.canBeDamaged = false
+        megaman.body.physics.gravityOn = false
+        megaman.setAllBehaviorsAllowed(false)
+
         game.getSystems().get(ControllerSystem::class.simpleName).on = false
 
         GameLogger.debug(TAG, "Submitted PLAYER_SPAWN event")
@@ -149,8 +154,10 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) :
             GameLogger.debug(TAG, "Beam transition timer just finished")
             game.getSystems().get(ControllerSystem::class.simpleName).on = true
 
-            game.megaman.body.physics.gravityOn = true
-            game.megaman.ready = true
+            megaman.body.physics.gravityOn = true
+            megaman.canBeDamaged = true
+            megaman.ready = true
+            megaman.setAllBehaviorsAllowed(true)
 
             game.eventsMan.submitEvent(Event(EventType.PLAYER_READY))
             game.audioMan.playSound(SoundAsset.BEAM_IN_SOUND, false)

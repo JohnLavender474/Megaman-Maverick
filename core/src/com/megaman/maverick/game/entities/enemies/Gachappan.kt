@@ -49,6 +49,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
+import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
@@ -142,6 +143,14 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
         super<AbstractEnemy>.onDestroy()
         block?.kill()
         block = null
+        if (hasDepletedHealth()) {
+            val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
+            val props = props(
+                ConstKeys.POSITION to body.getCenter(),
+                ConstKeys.SOUND to SoundAsset.EXPLOSION_1_SOUND
+            )
+            game.gameEngine.spawn(explosion, props)
+        }
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {

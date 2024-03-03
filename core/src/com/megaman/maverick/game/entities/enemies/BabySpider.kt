@@ -8,7 +8,6 @@ import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
 import com.engine.common.GameLogger
-import com.engine.common.enums.Position
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.objects.Properties
@@ -18,7 +17,6 @@ import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
 import com.engine.world.Body
 import com.engine.world.BodyComponent
@@ -30,7 +28,6 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
-import com.megaman.maverick.game.entities.bosses.Bospider
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
@@ -106,7 +103,7 @@ class BabySpider(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy() position = ${body.getCenter()}")
-        super<AbstractEnemy>.onDestroy()
+        super.onDestroy()
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -121,27 +118,27 @@ class BabySpider(game: MegamanMaverickGame) : AbstractEnemy(game) {
         debugShapes.add { bodyFixture.shape }
 
         val leftFixture = Fixture(GameRectangle().setSize(0.1f * ConstVals.PPM), FixtureType.SIDE)
-        leftFixture.offsetFromBodyCenter.x = -0.25f * ConstVals.PPM
+        leftFixture.offsetFromBodyCenter.x = -0.275f * ConstVals.PPM
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftFixture)
         leftFixture.shape.color = Color.YELLOW
         debugShapes.add { leftFixture.shape }
 
         val rightFixture = Fixture(GameRectangle().setSize(0.1f * ConstVals.PPM), FixtureType.SIDE)
-        rightFixture.offsetFromBodyCenter.x = 0.25f * ConstVals.PPM
+        rightFixture.offsetFromBodyCenter.x = 0.275f * ConstVals.PPM
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
         rightFixture.shape.color = Color.YELLOW
         debugShapes.add { rightFixture.shape }
 
         val feetFixture = Fixture(GameRectangle().setSize(0.1f * ConstVals.PPM), FixtureType.FEET)
-        feetFixture.offsetFromBodyCenter.y = -0.125f * ConstVals.PPM
+        feetFixture.offsetFromBodyCenter.y = -0.15f * ConstVals.PPM
         body.addFixture(feetFixture)
         feetFixture.shape.color = Color.GREEN
         debugShapes.add { feetFixture.shape }
 
         val headFixture = Fixture(GameRectangle().setSize(0.1f * ConstVals.PPM), FixtureType.HEAD)
-        headFixture.offsetFromBodyCenter.y = 0.125f * ConstVals.PPM
+        headFixture.offsetFromBodyCenter.y = 0.15f * ConstVals.PPM
         body.addFixture(headFixture)
         headFixture.shape.color = Color.BLUE
         debugShapes.add { headFixture.shape }

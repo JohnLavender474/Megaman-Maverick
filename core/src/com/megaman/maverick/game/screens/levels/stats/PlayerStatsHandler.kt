@@ -24,7 +24,7 @@ import com.megaman.maverick.game.events.EventType
 class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatable, IDrawable<Batch> {
 
     companion object {
-        private const val BAR_X: Float = .4f * ConstVals.PPM
+        private const val BAR_X: Float = 0.75f * ConstVals.PPM
         private const val BAR_Y: Float = 7f * ConstVals.PPM
         private const val SPECIAL_ITEM_DUR = .35f
         private const val DUR_PER_BIT = .1f

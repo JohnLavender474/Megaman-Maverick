@@ -86,7 +86,10 @@ class MegaAudioManager(
     }
 
     override fun playMusic(key: Any?, loop: Boolean) {
-        if (key == null) throw IllegalArgumentException("Key cannot be null")
+        if (key == null) {
+            currentMusic?.play()
+            return
+        }
         currentMusic?.stop()
         currentMusic = music.get(key as MusicAsset)
         fadeOutMusicTimer = null

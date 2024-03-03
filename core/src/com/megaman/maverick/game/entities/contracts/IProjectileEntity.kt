@@ -42,18 +42,12 @@ interface IProjectileEntity : IOwnable, IDamager, IBodyEntity, ISpriteEntity, IA
 
 internal fun IProjectileEntity.defineProjectileComponents(): Array<IGameComponent> {
     val components = Array<IGameComponent>()
-
-    // add audio component
     components.add(AudioComponent(this))
-
-    // cull on events: player spawn, begin room transition, and gate init opening
     val cullEvents =
         objectSetOf<Any>(
             EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING
         )
     val cullOnEvent = CullableOnEvent({ cullEvents.contains(it.key) }, cullEvents)
-
-    // cull on out of game camera
     val cullOnOutOfGameCam =
         CullableOnUncontained<Camera>(
             containerSupplier = { game.viewports.get(ConstKeys.GAME).camera },
@@ -62,6 +56,5 @@ internal fun IProjectileEntity.defineProjectileComponents(): Array<IGameComponen
         ConstKeys.CULL_EVENTS to cullOnEvent,
         ConstKeys.CULL_OUT_OF_BOUNDS to cullOnOutOfGameCam
     )))
-
     return components
 }

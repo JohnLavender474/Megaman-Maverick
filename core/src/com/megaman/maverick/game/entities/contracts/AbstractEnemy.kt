@@ -44,11 +44,8 @@ import com.megaman.maverick.game.utils.toGameRectangle
 import kotlin.reflect.KClass
 
 abstract class AbstractEnemy(
-    game: MegamanMaverickGame,
-    dmgDuration: Float = DEFAULT_DMG_DURATION,
-    dmgBlinkDur: Float = DEFAULT_DMG_BLINK_DUR
-) : GameEntity(game), IDamager, IDamageable, IBodyEntity,
-    IAudioEntity, IHealthEntity, ISpriteEntity, ICullableEntity {
+    game: MegamanMaverickGame, dmgDuration: Float = DEFAULT_DMG_DURATION, dmgBlinkDur: Float = DEFAULT_DMG_BLINK_DUR
+) : GameEntity(game), IDamager, IDamageable, IBodyEntity, IAudioEntity, IHealthEntity, ISpriteEntity, ICullableEntity {
 
     companion object {
         const val TAG = "AbstractEnemy"
@@ -130,9 +127,11 @@ abstract class AbstractEnemy(
 
     protected open fun definePointsComponent(): PointsComponent {
         val pointsComponent = PointsComponent(this)
-        pointsComponent.putPoints(ConstKeys.HEALTH, ConstVals.MAX_HEALTH)
+        pointsComponent.putPoints(
+            ConstKeys.HEALTH, max = ConstVals.MAX_HEALTH, current = ConstVals.MAX_HEALTH, min = ConstVals.MIN_HEALTH
+        )
         pointsComponent.putListener(ConstKeys.HEALTH) {
-            if (it.current <= 0) kill(props(CAUSE_OF_DEATH_MESSAGE to "Health depleted"))
+            if (it.current <= ConstVals.MIN_HEALTH) kill()
         }
         return pointsComponent
     }
@@ -150,8 +149,10 @@ abstract class AbstractEnemy(
         damageTimer.reset()
 
         val damage = damageNegotiations[damagerKey].get(damager)
-        getHealthPoints().translate(-damage)
+        addHealth(-damage)
+
         requestToPlaySound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
+
         return true
     }
 

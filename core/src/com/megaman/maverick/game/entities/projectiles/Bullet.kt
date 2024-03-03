@@ -70,6 +70,11 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity, I
 
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
+    override fun hitBody(bodyFixture: Fixture) {
+        val entity = bodyFixture.getEntity()
+        if (entity is IDamageable && !entity.canBeDamagedBy(this)) explodeAndDie()
+    }
+
     override fun hitBlock(blockFixture: Fixture) = explodeAndDie()
 
     override fun hitShield(shieldFixture: Fixture) {

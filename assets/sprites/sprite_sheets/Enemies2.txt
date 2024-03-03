@@ -1,7 +1,7 @@
 Enemies2.png
 size: 968, 536
 format: RGBA8888
-filter: Linear,Linear
+filter: Nearest,Nearest
 repeat: none
 Adamski/Blue
   rotate: false
