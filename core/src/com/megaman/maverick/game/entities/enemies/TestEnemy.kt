@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
+import com.badlogic.gdx.math.Vector2
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.objects.Properties
@@ -31,6 +32,7 @@ class TestEnemy(game: MegamanMaverickGame) : AbstractEnemy(game) {
     companion object {
         private const val WEB_SHOOT_DUR = 3f
         private const val WEB_SPEED = 10f
+        private const val ANGLE_X = 25f
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>()
@@ -49,7 +51,7 @@ class TestEnemy(game: MegamanMaverickGame) : AbstractEnemy(game) {
         updatablesComponent.add {
             webShootTimer.update(it)
             if (webShootTimer.isFinished()) {
-                shootWeb()
+                shootWebs()
                 webShootTimer.reset()
             }
         }
@@ -68,12 +70,21 @@ class TestEnemy(game: MegamanMaverickGame) : AbstractEnemy(game) {
         return SpritesComponent(this, TAG to sprite)
     }
 
-    private fun shootWeb() {
+    private fun shootWebs() {
+        val centerTrajectory = megaman.body.getCenter().sub(body.getCenter()).nor()
+        val leftTrajectory = centerTrajectory.cpy().rotateDeg(-ANGLE_X)
+        val rightTrajectory = centerTrajectory.cpy().rotateDeg(ANGLE_X)
+        shootWeb(centerTrajectory)
+        shootWeb(leftTrajectory)
+        shootWeb(rightTrajectory)
+    }
+
+    private fun shootWeb(trajectory: Vector2) {
         val web = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SPIDER_WEB)!!
-        val trajectory = megaman.body.getCenter().sub(body.getCenter()).nor().scl(WEB_SPEED * ConstVals.PPM)
+        val scaledTrajectory = trajectory.scl(WEB_SPEED * ConstVals.PPM)
         val props = props(
             ConstKeys.POSITION to body.getBottomCenterPoint(),
-            ConstKeys.TRAJECTORY to trajectory,
+            ConstKeys.TRAJECTORY to scaledTrajectory,
             ConstKeys.OWNER to this
         )
         game.gameEngine.spawn(web, props)

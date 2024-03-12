@@ -16,6 +16,9 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val FIXTURES = "fixtures"
+    const val BODY = "body"
+    const val TANK = "tank"
     const val SLOW = "slow"
     const val PROPS = "props"
     const val OBJECT = "object"

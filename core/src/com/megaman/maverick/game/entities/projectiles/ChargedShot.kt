@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Vector2
 import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
-import com.engine.common.CAUSE_OF_DEATH_MESSAGE
 import com.engine.common.enums.Direction
 import com.engine.common.enums.Facing
 import com.engine.common.enums.Position
@@ -169,7 +168,7 @@ class ChargedShot(game: MegamanMaverickGame) :
     }
 
     override fun explodeAndDie() {
-        kill(props(CAUSE_OF_DEATH_MESSAGE to "Explode and die"))
+        kill()
         val e = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.CHARGED_SHOT_EXPLOSION)
 
         val direction =
@@ -193,11 +192,11 @@ class ChargedShot(game: MegamanMaverickGame) :
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
 
-        // Projectile fixture
+        // projectile fixture
         val projectileFixture = Fixture(GameRectangle(), FixtureType.PROJECTILE)
         body.addFixture(projectileFixture)
 
-        // Damager fixture
+        // damager fixture
         val damagerFixture = Fixture(GameRectangle(), FixtureType.DAMAGER)
         body.addFixture(damagerFixture)
 

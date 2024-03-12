@@ -13,7 +13,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.ObjectSet
-import com.badlogic.gdx.utils.SortedIntList
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.engine.Game2D
 import com.engine.GameEngine
@@ -25,6 +24,7 @@ import com.engine.common.GameLogLevel
 import com.engine.common.GameLogger
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.extensions.objectSetOf
+import com.engine.common.objects.MutableArray
 import com.engine.controller.ControllerSystem
 import com.engine.controller.ControllerUtils
 import com.engine.controller.buttons.Button
@@ -36,7 +36,6 @@ import com.engine.drawables.fonts.BitmapFontHandle
 import com.engine.drawables.fonts.FontsSystem
 import com.engine.drawables.shapes.DrawableShapesSystem
 import com.engine.drawables.shapes.IDrawableShape
-import com.engine.drawables.sorting.IComparableDrawable
 import com.engine.drawables.sprites.SpritesSystem
 import com.engine.events.EventsManager
 import com.engine.graph.IGraphMap
@@ -53,11 +52,8 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.MegaControllerPoller
-import com.megaman.maverick.game.entities.bosses.Bospider
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
-import com.megaman.maverick.game.entities.enemies.BabySpider
 import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.hazards.WanaanLauncher
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
@@ -75,7 +71,6 @@ import com.megaman.maverick.game.world.MegaCollisionHandler
 import com.megaman.maverick.game.world.MegaContactListener
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.collections.AbstractSet
 
 @Suppress("UNCHECKED_CAST")
 class MegamanMaverickGame : Game2D() {
@@ -83,7 +78,7 @@ class MegamanMaverickGame : Game2D() {
     companion object {
         const val TAG = "MegamanMaverickGame"
         const val DEBUG_TEXT = false
-        const val DEBUG_SHAPES = true
+        const val DEBUG_SHAPES = false
         const val DEFAULT_VOLUME = 0.5f
         val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(AbstractBoss.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
@@ -111,7 +106,7 @@ class MegamanMaverickGame : Game2D() {
 
     fun getUiCamera() = viewports.get(ConstKeys.UI).camera as OrthographicCamera
 
-    fun getDrawables() = properties.get(ConstKeys.DRAWABLES) as MutableCollection<IDrawable<Batch>>
+    fun getDrawables() = properties.get(ConstKeys.DRAWABLES) as MutableArray<IDrawable<Batch>>
 
     fun getShapes() = properties.get(ConstKeys.SHAPES) as PriorityQueue<IDrawableShape>
 
@@ -238,11 +233,7 @@ class MegamanMaverickGame : Game2D() {
     }
 
     private fun createGameEngine(): IGameEngine {
-        val drawables = PriorityQueue<IDrawable<Batch>> { o1, o2 ->
-            o1 as IComparableDrawable<Batch>
-            o2 as IComparableDrawable<Batch>
-            o1.compareTo(o2)
-        }
+        val drawables = MutableArray<IDrawable<Batch>>()
         properties.put(ConstKeys.DRAWABLES, drawables)
         val shapes = PriorityQueue<IDrawableShape> { s1, s2 -> s1.shapeType.ordinal - s2.shapeType.ordinal }
         properties.put(ConstKeys.SHAPES, shapes)
@@ -268,7 +259,8 @@ class MegamanMaverickGame : Game2D() {
             FixtureType.LASER to objectSetOf(FixtureType.BLOCK)
         )
 
-        val engine = GameEngine(ControllerSystem(controllerPoller),
+        val engine = GameEngine(
+            ControllerSystem(controllerPoller),
             AnimationsSystem(),
             BehaviorsSystem(),
             WorldSystem(

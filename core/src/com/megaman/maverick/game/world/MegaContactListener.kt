@@ -87,7 +87,7 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
                 )
             )!!
             val entity = bodyFixture.getEntity()
-            val instant = deathFixture.getProperty(ConstKeys.INSTANT, Boolean::class)!!
+            val instant = deathFixture.getProperty(ConstKeys.INSTANT, Boolean::class) ?: false
             if (entity is IDamageable && (instant || !entity.invincible)) bodyFixture.depleteHealth()
         }
 
@@ -427,7 +427,7 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
                 )
             )!!
             val entity = bodyFixture.getEntity()
-            val instant = deathFixture.getProperty(ConstKeys.INSTANT, Boolean::class)!!
+            val instant = deathFixture.getProperty(ConstKeys.INSTANT, Boolean::class) ?: false
             if (entity is IDamageable && (instant || !entity.invincible)) bodyFixture.depleteHealth()
         }
 
@@ -601,9 +601,7 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
         // side, block
         if (contact.fixturesMatch(FixtureType.SIDE, FixtureType.BLOCK)) {
             printDebugLog(contact, "End Contact: Side-Block, contact = $contact")
-            val (side, other) = contact.getFixturesInOrder(FixtureType.SIDE, FixtureType.BLOCK)!!
-
-            if (other.getBody().hasBodyLabel(BodyLabel.NO_SIDE_TOUCHIE)) return
+            val (side, _) = contact.getFixturesInOrder(FixtureType.SIDE, FixtureType.BLOCK)!!
 
             val body = side.getBody()
             val sideType = side.getProperty(ConstKeys.SIDE)

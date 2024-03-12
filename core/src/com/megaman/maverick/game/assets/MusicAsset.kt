@@ -13,6 +13,7 @@ enum class MusicAsset(src: String) : IAsset {
     MM11_FUSE_MAN_MUSIC("Megaman11_FuseMan.mp3"),
     MM7_JUNK_MAN_MUSIC("MM7_JunkMan.mp3"),
     MM11_TORCH_MAN_MUSIC("Megaman11_TorchMan.mp3"),
+    MMX6_SIGMA("MMX6_Sigma.mp3"),
     MM6_WILY_BATTLE_MUSIC("MM6_WilyBattle.mp3"),
     MM8_FROST_MAN_MUSIC("MM8_FrostMan.mp3"),
     MM8_FROST_MAN_ALT_MUSIC("MM8_FrostMan_Alt.mp3"),

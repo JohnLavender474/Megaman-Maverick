@@ -125,7 +125,7 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         SpikeBall::class to dmgNeg(8),
         Peat::class to dmgNeg(2),
         BulbBlaster::class to dmgNeg(2),
-        Bospider:: class to dmgNeg(5),
+        Bospider::class to dmgNeg(5),
         BabySpider::class to dmgNeg(2)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
@@ -385,12 +385,17 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
     }
 
     override fun canBeDamagedBy(damager: IDamager) =
-        !invincible && dmgNegotations.containsKey(damager::class) && (damager is AbstractEnemy || damager is IHazard || (damager is IProjectileEntity && damager.owner != this))
+        !invincible && dmgNegotations.containsKey(damager::class) && (
+                damager is AbstractEnemy || damager is IHazard ||
+                        (damager is IProjectileEntity && damager.owner != this)
+                )
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
-        if (!isBehaviorActive(BehaviorType.RIDING_CART) && !noDmgBounce.contains(damager::class) && damager is IGameEntity && damager.hasComponent(
-                BodyComponent::class
-            )
+        if (canMove &&
+            !isBehaviorActive(BehaviorType.RIDING_CART) &&
+            !noDmgBounce.contains(damager::class) &&
+            damager is IGameEntity &&
+            damager.hasComponent(BodyComponent::class)
         ) {
             val enemyBody = damager.getComponent(BodyComponent::class)!!.body
             body.physics.velocity.x =

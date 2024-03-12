@@ -3,6 +3,7 @@ package com.megaman.maverick.game.entities.blocks
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectSet
 import com.engine.IGame2D
 import com.engine.common.GameLogger
 import com.engine.common.extensions.objectMapOf
@@ -34,6 +35,8 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
         private set
     protected val debugShapeSuppliers = Array<() -> IDrawableShape?>()
 
+    private val fixturesToRemove = ObjectSet<Fixture>()
+
     override fun init() {
         GameLogger.debug(TAG, "init(): Initializing Block entity.")
         addComponent(defineBodyComponent())
@@ -41,18 +44,6 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
         addComponent(
             DrawableShapesComponent(this, debugShapeSuppliers = debugShapeSuppliers, debug = true)
         )
-    }
-
-    protected open fun defineBodyComponent(): BodyComponent {
-        val body = Body(BodyType.STATIC)
-
-        // block fixture
-        blockFixture = Fixture(GameRectangle(), FixtureType.BLOCK)
-        body.addFixture(blockFixture)
-
-        body.preProcess.put(ConstKeys.DEFAULT, Updatable { (blockFixture.shape as GameRectangle).set(body) })
-
-        return BodyComponentCreator.create(this, body)
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -86,10 +77,16 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
 
         body.clearBodyLabels()
         if (properties.containsKey(ConstKeys.BODY_LABELS)) {
-            val labels = (properties.get(ConstKeys.BODY_LABELS) as String).replace("\\s+", "").split(",")
-            for (label in labels) {
-                val bodyLabel = BodyLabel.valueOf(label.uppercase())
-                body.addBodyLabel(bodyLabel)
+            val labels = properties.get(ConstKeys.BODY_LABELS)
+            if (labels is String) {
+                val labelStrings = labels.replace("\\s+", "").split(",")
+                labelStrings.forEach {
+                    val bodyLabel = BodyLabel.valueOf(it.uppercase())
+                    body.addBodyLabels(bodyLabel)
+                }
+            } else {
+                labels as Array<BodyLabel>
+                body.addBodyLabels(labels)
             }
         }
 
@@ -101,5 +98,36 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
 
         val blockFixtureOn = spawnProps.getOrDefault(ConstKeys.BLOCK_ON, true) as Boolean
         blockFixture.active = blockFixtureOn
+
+        val fixtureEntriesToAdd = spawnProps.get(ConstKeys.FIXTURES) as Array<Pair<FixtureType, Properties>>?
+        fixtureEntriesToAdd?.forEach { fixtureEntry ->
+            val (fixtureType, fixtureProps) = fixtureEntry
+            val fixture = Fixture(GameRectangle().set(body), fixtureType)
+            fixture.putAllProperties(fixtureProps)
+            fixture.setEntity(this)
+            body.addFixture(fixture)
+            fixturesToRemove.add(fixture)
+        }
+    }
+
+    override fun onDestroy() {
+        super<GameEntity>.onDestroy()
+        val fixtureIter = body.fixtures.iterator()
+        while (fixtureIter.hasNext()) {
+            val (_, fixture) = fixtureIter.next()
+            if (fixturesToRemove.contains(fixture)) fixtureIter.remove()
+        }
+    }
+
+    protected open fun defineBodyComponent(): BodyComponent {
+        val body = Body(BodyType.STATIC)
+
+        // block fixture
+        blockFixture = Fixture(GameRectangle(), FixtureType.BLOCK)
+        body.addFixture(blockFixture)
+
+        body.preProcess.put(ConstKeys.DEFAULT, Updatable { (blockFixture.shape as GameRectangle).set(body) })
+
+        return BodyComponentCreator.create(this, body)
     }
 }

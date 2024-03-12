@@ -72,7 +72,7 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity, I
 
     override fun hitBody(bodyFixture: Fixture) {
         val entity = bodyFixture.getEntity()
-        if (entity is IDamageable && !entity.canBeDamagedBy(this)) explodeAndDie()
+        if (entity != owner && entity is IDamageable && !entity.canBeDamagedBy(this)) explodeAndDie()
     }
 
     override fun hitBlock(blockFixture: Fixture) = explodeAndDie()
@@ -83,27 +83,21 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity, I
 
         val trajectory = body.physics.velocity.cpy()
         if (isDirectionRotatedVertically()) trajectory.x *= -1f else trajectory.y *= -1f
-
-        val deflection =
-            if (shieldFixture.properties.containsKey(ConstKeys.DIRECTION))
-                shieldFixture.properties.get(ConstKeys.DIRECTION) as Direction
-            else Direction.UP
-
+        val deflection = shieldFixture.properties.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
         when (deflection) {
             Direction.UP -> trajectory.y = 5f * ConstVals.PPM
             Direction.DOWN -> trajectory.y = -5f * ConstVals.PPM
             Direction.LEFT -> trajectory.x = -5f * ConstVals.PPM
             Direction.RIGHT -> trajectory.x = 5f * ConstVals.PPM
         }
-
         body.physics.velocity.set(trajectory)
+
         requestToPlaySound(SoundAsset.DINK_SOUND, false)
     }
 
     override fun explodeAndDie() {
         kill()
-        val disintegration =
-            EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)
+        val disintegration = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)
         game.gameEngine.spawn(disintegration!!, props(ConstKeys.POSITION to body.getCenter()))
     }
 
@@ -118,8 +112,7 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity, I
         body.addFixture(bodyFixture)
 
         // projectile fixture
-        val projectileFixture =
-            Fixture(GameRectangle().setSize(.2f * ConstVals.PPM), FixtureType.PROJECTILE)
+        val projectileFixture = Fixture(GameRectangle().setSize(.2f * ConstVals.PPM), FixtureType.PROJECTILE)
         body.addFixture(projectileFixture)
 
         // damager fixture
@@ -134,8 +127,8 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity, I
     }
 
     private fun defineSpritesCompoent(): SpritesComponent {
-        if (bulletRegion == null)
-            bulletRegion = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Bullet")
+        if (bulletRegion == null) bulletRegion =
+            game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Bullet")
 
         val sprite = GameSprite(bulletRegion!!, DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(1.25f * ConstVals.PPM)

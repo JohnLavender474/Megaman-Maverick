@@ -1,7 +1,7 @@
 Projectiles1.png
 size: 512, 324
 format: RGBA8888
-filter: Linear,Linear
+filter: Nearest,Nearest
 repeat: none
 Bullet
   rotate: false

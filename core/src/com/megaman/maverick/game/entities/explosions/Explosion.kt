@@ -82,7 +82,7 @@ class Explosion(game: MegamanMaverickGame) : GameEntity(game), IHazard, IOwnable
 
     private fun defineUpdatablesComponent() = UpdatablesComponent(this, {
         durationTimer.update(it)
-        if (durationTimer.isFinished()) kill(props(CAUSE_OF_DEATH_MESSAGE to "Duration timer finished"))
+        if (durationTimer.isFinished()) kill()
     })
 
     private fun defineAnimationsComponent(): AnimationsComponent {

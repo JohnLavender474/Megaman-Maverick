@@ -109,7 +109,7 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : GameEntity(game), IProje
         val body = Body(BodyType.ABSTRACT)
         body.setSize(ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
 
-        // Damager fixture
+        // damager fixture
         val damagerFixture =
             Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat()), FixtureType.DAMAGER)
         body.addFixture(damagerFixture)

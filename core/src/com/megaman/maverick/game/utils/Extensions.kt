@@ -6,12 +6,14 @@ import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.maps.MapObject
 import com.badlogic.gdx.maps.MapProperties
+import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.OrderedMap
 import com.engine.common.extensions.getMusic
 import com.engine.common.extensions.getSound
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
+import com.engine.common.shapes.toGameRectangle
 import com.engine.entities.IGameEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -21,11 +23,15 @@ import com.megaman.maverick.game.assets.SoundAsset
 
 fun IGameEntity.getMegamanMaverickGame() = game as MegamanMaverickGame
 
-fun MapObject.toProps(): Properties {
+fun RectangleMapObject.toProps(): Properties {
     val props = Properties()
+
     props.put(ConstKeys.NAME, name)
+    props.put(ConstKeys.BOUNDS, rectangle.toGameRectangle())
+
     val objProps = properties.toProps()
     props.putAll(objProps)
+
     return props
 }
 

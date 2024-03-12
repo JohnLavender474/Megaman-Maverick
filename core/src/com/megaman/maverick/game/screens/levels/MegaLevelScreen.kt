@@ -16,6 +16,7 @@ import com.engine.common.GameLogger
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.objectSetOf
 import com.engine.common.interfaces.Initializable
+import com.engine.common.objects.MutableArray
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.toGameRectangle
@@ -23,12 +24,12 @@ import com.engine.controller.ControllerSystem
 import com.engine.controller.polling.IControllerPoller
 import com.engine.drawables.IDrawable
 import com.engine.drawables.shapes.IDrawableShape
+import com.engine.drawables.sorting.IComparableDrawable
 import com.engine.drawables.sprites.SpritesSystem
 import com.engine.events.Event
 import com.engine.events.IEventsManager
 import com.engine.graph.SimpleNodeGraphMap
 import com.engine.motion.MotionSystem
-import com.engine.pathfinding.PathfindingSystem
 import com.engine.screens.levels.tiledmap.TiledMapLevelScreen
 import com.engine.spawns.ISpawner
 import com.engine.spawns.SpawnsManager
@@ -121,7 +122,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
 
     private lateinit var bossSpawnEventHandler: BossSpawnEventHandler
 
-    private lateinit var drawables: MutableCollection<IDrawable<Batch>>
+    private lateinit var drawables: MutableArray<IDrawable<Batch>>
     private lateinit var shapes: PriorityQueue<IDrawableShape>
     private lateinit var backgrounds: Array<Background>
 
@@ -452,7 +453,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
 
                 megaman.running = false
                 engine.systems.forEach {
-                    if (it !is SpritesSystem && it !is WorldSystem && it !is AnimationsSystem) it.on = false
+                    it.on = it is WorldSystem || it is SpritesSystem || it is AnimationsSystem
                 }
                 audioMan.fadeOutMusic(FADE_OUT_MUSIC_ON_BOSS_SPAWN)
             }
@@ -465,16 +466,14 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
             EventType.BOSS_DEFEATED -> {
                 megaman.canBeDamaged = false
                 audioMan.stopMusic()
+                val systemsToSwitch =
+                    gdxArrayOf(
+                        ControllerSystem::class,
+                        MotionSystem::class,
+                        BehaviorsSystem::class,
+                    )
                 engine.systems.forEach {
-                    val systemsToSwitch =
-                        gdxArrayOf(
-                            ControllerSystem::class,
-                            MotionSystem::class,
-                            BehaviorsSystem::class,
-                        )
-                    engine.systems.forEach {
-                        if (systemsToSwitch.contains(it::class)) it.on = false
-                    }
+                    if (systemsToSwitch.contains(it::class)) it.on = false
                 }
                 entityStatsHandler.unset()
             }
@@ -558,6 +557,8 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
         // render the game ground
         batch.projectionMatrix = gameCamera.combined
         tiledMapLevelRenderer?.render(gameCamera)
+
+        drawables.sort()
         drawables.forEach { it.draw(batch) }
         drawables.clear()
 

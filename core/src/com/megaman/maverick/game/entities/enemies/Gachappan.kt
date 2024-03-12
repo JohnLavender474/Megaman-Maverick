@@ -293,7 +293,7 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
 
     private fun shoot() {
         val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
-        val spawn = body.getBottomCenterPoint().add(0.5f * ConstVals.PPM * facing.value, 0.15f * ConstVals.PPM)
+        val spawn = body.getBottomCenterPoint().add(0.5f * ConstVals.PPM * facing.value, 0.175f * ConstVals.PPM)
         val trajectory = Vector2(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
         val bulletProps = props(
             ConstKeys.POSITION to spawn,

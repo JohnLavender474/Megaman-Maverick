@@ -74,6 +74,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         private const val DEBUG_TIMER = 1f
         private const val EXPLOSION_TIME = 0.25f
         private const val WEB_SPEED = 10f
+        private const val ANGLE_X = 25f
         private var climbRegion: TextureRegion? = null
         private var stillRegion: TextureRegion? = null
         private var openEyeRegion: TextureRegion? = null
@@ -107,6 +108,8 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
     private lateinit var openEyeTimer: Timer
     private lateinit var spawn: Vector2
 
+    private var firstSpawn = true
+
     override fun init() {
         if (climbRegion == null || stillRegion == null || openEyeRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES.source)
@@ -137,6 +140,8 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
         stateLoop.reset()
         spawnDelayTimer.reset()
+
+        firstSpawn = true
     }
 
     override fun onDestroy() {
@@ -197,9 +202,9 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
                     body.physics.velocity.setZero()
 
-                    if (spawnDelayTimer.isAtBeginning()) {
+                    if (!firstSpawn && spawnDelayTimer.isAtBeginning()) {
                         val shootWeb = MathUtils.random.nextBoolean()
-                        if (shootWeb) shootWeb()
+                        if (shootWeb) shootWebs()
                     }
                     spawnDelayTimer.update(delta)
                     if (spawnDelayTimer.isFinished()) {
@@ -212,9 +217,13 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
                             game.gameEngine.spawn(babySpider, spawnProps)
                             children.add(babySpider)
                         }
+
                         val path = paths.random()
                         currentPath.clear()
                         path.forEach { currentPath.addLast(it) }
+
+                        firstSpawn = false
+
                         stateLoop.next()
                     }
                 }
@@ -296,7 +305,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
             _sprite as GameSprite
             val center = body.getCenter()
             _sprite.setCenter(center.x, center.y)
-            _sprite.hidden = damageBlink
+            _sprite.hidden = damageBlink || !ready
         }
         return spritesComponent
     }
@@ -342,12 +351,22 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
     private fun getHealthRatio() =
         (getCurrentHealth() - getMinHealth()).toFloat() / (getMaxHealth() - getMinHealth()).toFloat()
 
-    private fun shootWeb() {
+    private fun shootWebs() {
+        requestToPlaySound(SoundAsset.SPLASH_SOUND, false)
+        val centerTrajectory = megaman.body.getCenter().sub(body.getCenter()).nor()
+        val leftTrajectory = centerTrajectory.cpy().rotateDeg(-ANGLE_X)
+        val rightTrajectory = centerTrajectory.cpy().rotateDeg(ANGLE_X)
+        shootWeb(centerTrajectory)
+        shootWeb(leftTrajectory)
+        shootWeb(rightTrajectory)
+    }
+
+    private fun shootWeb(trajectory: Vector2) {
         val web = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SPIDER_WEB)!!
-        val trajectory = megaman.body.getCenter().sub(body.getCenter()).nor().scl(WEB_SPEED * ConstVals.PPM)
+        val scaledTrajectory = trajectory.scl(WEB_SPEED * ConstVals.PPM)
         val props = props(
             ConstKeys.POSITION to body.getBottomCenterPoint(),
-            ConstKeys.TRAJECTORY to trajectory,
+            ConstKeys.TRAJECTORY to scaledTrajectory,
             ConstKeys.OWNER to this
         )
         game.gameEngine.spawn(web, props)

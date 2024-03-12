@@ -123,6 +123,8 @@ abstract class AbstractEnemy(
             val cullOnOutOfBounds = getGameCameraCullingLogic(this, cullTime)
             putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, cullOnOutOfBounds)
         } else removeCullable(ConstKeys.CULL_OUT_OF_BOUNDS)
+        damageTimer.setToEnd()
+        damageBlinkTimer.setToEnd()
     }
 
     protected open fun definePointsComponent(): PointsComponent {

@@ -14,26 +14,27 @@ enum class BodyLabel {
     NO_PROJECTILE_COLLISION
 }
 
-fun Body.addBodyLabel(bodyLabel: BodyLabel) {
-    getProperty(ConstKeys.BODY_LABELS)?.let {
-        @Suppress("UNCHECKED_CAST") val labels = it as ObjectSet<BodyLabel>
-        labels.add(bodyLabel)
-    } ?: putProperty(ConstKeys.BODY_LABELS, objectSetOf(bodyLabel))
-}
+fun Body.addBodyLabels(vararg bodyLabels: BodyLabel) = addBodyLabels(bodyLabels.asIterable())
 
-fun Body.clearBodyLabels() {
+fun Body.addBodyLabels(bodyLabels: Iterable<BodyLabel>) =
     getProperty(ConstKeys.BODY_LABELS)?.let {
-        @Suppress("UNCHECKED_CAST") val labels = it as ObjectSet<BodyLabel>
+        val labels = it as ObjectSet<BodyLabel>
+        bodyLabels.forEach { bodyLabel ->
+            labels.add(bodyLabel)
+        }
+    } ?: putProperty(ConstKeys.BODY_LABELS, objectSetOf(bodyLabels))
+
+fun Body.clearBodyLabels() =
+    getProperty(ConstKeys.BODY_LABELS)?.let {
+        val labels = it as ObjectSet<BodyLabel>
         labels.clear()
     }
-}
 
-fun Body.removeBodyLabel(bodyLabel: BodyLabel) {
+fun Body.removeBodyLabel(bodyLabel: BodyLabel) =
     getProperty(ConstKeys.BODY_LABELS)?.let {
         @Suppress("UNCHECKED_CAST") val labels = it as ObjectSet<BodyLabel>
         labels.remove(bodyLabel)
     }
-}
 
 fun Body.hasBodyLabel(bodyLabel: BodyLabel) =
     getProperty(ConstKeys.BODY_LABELS)?.let {
