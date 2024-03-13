@@ -134,7 +134,8 @@
   <object id="76" x="0" y="0" width="5248" height="64"/>
   <object id="145" x="4960" y="416" width="56" height="8">
    <properties>
-    <property name="body_labels" value="COLLIDE_DOWN_ONLY,NO_PROJECTILE_COLLISION"/>
+    <property name="body_labels" value="collide_down_only"/>
+    <property name="fixture_labels" value="no_projectile_collision,no_side_touchie"/>
    </properties>
   </object>
   <object id="66" name="IceBlock" x="3744" y="544" width="1152" height="64"/>

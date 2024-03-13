@@ -7,10 +7,7 @@ import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
 import com.engine.common.enums.Position
-import com.engine.common.extensions.getTextureAtlas
-import com.engine.common.extensions.map
-import com.engine.common.extensions.objectMapOf
-import com.engine.common.extensions.toGdxArray
+import com.engine.common.extensions.*
 import com.engine.common.objects.Loop
 import com.engine.common.objects.Properties
 import com.engine.common.time.Timer
@@ -27,6 +24,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.utils.getMegamanMaverickGame
+import com.megaman.maverick.game.world.BodyLabel
 import com.megaman.maverick.game.world.FixtureType
 
 class DropperLift(game: MegamanMaverickGame) : Block(game), ISpriteEntity, IAnimatedEntity {
@@ -63,7 +61,7 @@ class DropperLift(game: MegamanMaverickGame) : Block(game), ISpriteEntity, IAnim
     }
 
     override fun spawn(spawnProps: Properties) {
-        spawnProps.put(ConstKeys.BODY_LABELS, "collide_down_only")
+        spawnProps.put(ConstKeys.BODY_LABELS, objectSetOf(BodyLabel.COLLIDE_DOWN_ONLY))
         super.spawn(spawnProps)
         loop.reset()
         timer.reset()

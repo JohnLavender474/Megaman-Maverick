@@ -31,8 +31,9 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
         const val STANDARD_FRICTION_Y = 0f
     }
 
-    protected lateinit var blockFixture: Fixture
+    lateinit var blockFixture: Fixture
         private set
+
     protected val debugShapeSuppliers = Array<() -> IDrawableShape?>()
 
     private val fixturesToRemove = ObjectSet<Fixture>()
@@ -82,11 +83,26 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
                 val labelStrings = labels.replace("\\s+", "").split(",")
                 labelStrings.forEach {
                     val bodyLabel = BodyLabel.valueOf(it.uppercase())
-                    body.addBodyLabels(bodyLabel)
+                    body.addBodyLabel(bodyLabel)
                 }
             } else {
-                labels as Array<BodyLabel>
+                labels as ObjectSet<BodyLabel>
                 body.addBodyLabels(labels)
+            }
+        }
+
+        blockFixture.clearFixtureLabels()
+        if (properties.containsKey(ConstKeys.FIXTURE_LABELS)) {
+            val labels = properties.get(ConstKeys.FIXTURE_LABELS)
+            if (labels is String) {
+                val labelStrings = labels.replace("\\s+", "").split(",")
+                labelStrings.forEach {
+                    val fixtureLabel = FixtureLabel.valueOf(it.uppercase())
+                    blockFixture.addFixtureLabel(fixtureLabel)
+                }
+            } else {
+                labels as ObjectSet<FixtureLabel>
+                blockFixture.addFixtureLabels(labels)
             }
         }
 
@@ -117,6 +133,7 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
             val (_, fixture) = fixtureIter.next()
             if (fixturesToRemove.contains(fixture)) fixtureIter.remove()
         }
+        fixturesToRemove.clear()
     }
 
     protected open fun defineBodyComponent(): BodyComponent {

@@ -14,6 +14,7 @@ import com.engine.common.enums.Position
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.objectMapOf
+import com.engine.common.extensions.objectSetOf
 import com.engine.common.interfaces.IFaceable
 import com.engine.common.interfaces.isFacing
 import com.engine.common.objects.Loop
@@ -54,8 +55,7 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.world.BodyComponentCreator
-import com.megaman.maverick.game.world.FixtureType
+import com.megaman.maverick.game.world.*
 import kotlin.reflect.KClass
 
 class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAnimatedEntity, IDrawableShapesEntity {
@@ -134,8 +134,9 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
         val blockBounds = GameRectangle().setSize(1.5f * ConstVals.PPM, 3f * ConstVals.PPM)
         val blockProps = props(
             ConstKeys.BOUNDS to blockBounds,
-            ConstKeys.BODY_LABELS to "no_side_touchie,no_projectile_collision"
+            ConstKeys.FIXTURE_LABELS to objectSetOf(FixtureLabel.NO_SIDE_TOUCHIE),
         )
+        block!!.blockFixture.addFixtureLabel(FixtureLabel.NO_PROJECTILE_COLLISION)
         game.gameEngine.spawn(block!!, blockProps)
     }
 

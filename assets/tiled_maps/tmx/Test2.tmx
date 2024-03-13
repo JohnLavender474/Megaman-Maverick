@@ -113,7 +113,8 @@
   <object id="119" x="7040" y="1184" width="64" height="224"/>
   <object id="129" x="360" y="1536" width="16" height="8">
    <properties>
-    <property name="BodyLabel" value="CollideDownOnly,NoSideTouchie"/>
+    <property name="body_labels" value="collide_down_only"/>
+    <property name="fixture_labels" value="no_projectile_collision,no_side_touchie"/>
    </properties>
   </object>
   <object id="130" x="416" y="1344" width="64" height="256"/>
@@ -239,7 +240,7 @@
  <objectgroup id="4" name="player">
   <object id="184" name="0" x="416" y="1952" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="5" name="game_rooms">
+ <objectgroup id="5" name="game_rooms" visible="0">
   <object id="8" name="room2" x="1440" y="1152" width="2208" height="448"/>
   <object id="19" name="room3" x="3648" y="1152" width="1728" height="448"/>
   <object id="53" name="room4" x="5376" y="1152" width="1120" height="448"/>

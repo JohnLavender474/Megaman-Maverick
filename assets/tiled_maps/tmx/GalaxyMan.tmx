@@ -38,7 +38,8 @@
  <objectgroup id="6" name="blocks">
   <object id="4" x="1016" y="4640" width="48" height="8">
    <properties>
-    <property name="body_labels" value="COLLIDE_DOWN_ONLY,NO_PROJECTILE_COLLISION,NO_SIDE_TOUCHIE"/>
+    <property name="body_labels" value="collide_down_only"/>
+    <property name="fixture_labels" value="no_projectile_collision,no_side_touchie"/>
    </properties>
   </object>
   <object id="5" x="576" y="4640" width="448" height="32"/>

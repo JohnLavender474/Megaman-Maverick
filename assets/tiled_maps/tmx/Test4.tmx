@@ -77,7 +77,8 @@
   <object id="184" x="4160" y="1120" width="32" height="288"/>
   <object id="186" x="4920" y="800" width="48" height="8">
    <properties>
-    <property name="body_labels" value="collide_down_only,no_projectile_collision"/>
+    <property name="body_labels" value="collide_down_only"/>
+    <property name="fixture_labels" value="no_side_touchie,no_projectile_collision"/>
    </properties>
   </object>
   <object id="192" x="5120" y="800" width="256" height="32"/>

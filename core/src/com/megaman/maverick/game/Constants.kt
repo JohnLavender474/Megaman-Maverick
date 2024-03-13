@@ -16,6 +16,10 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val CLOSE = "close"
+    const val FIXTURE_LABELS = "fixture_labels"
+    const val FRONT = "front"
+    const val BACK = "back"
     const val FIXTURES = "fixtures"
     const val BODY = "body"
     const val TANK = "tank"

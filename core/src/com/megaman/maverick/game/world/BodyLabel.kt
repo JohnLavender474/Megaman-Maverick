@@ -1,43 +1,39 @@
 package com.megaman.maverick.game.world
 
 import com.badlogic.gdx.utils.ObjectSet
-import com.engine.common.extensions.objectSetOf
 import com.engine.world.Body
 import com.megaman.maverick.game.ConstKeys
 
 enum class BodyLabel {
-    PLAYER_BODY,
-    NO_SIDE_TOUCHIE,
     COLLIDE_DOWN_ONLY,
     COLLIDE_UP_ONLY,
-    PRESS_UP_FALL_THRU,
-    NO_PROJECTILE_COLLISION
+    PRESS_UP_FALL_THRU
 }
 
-fun Body.addBodyLabels(vararg bodyLabels: BodyLabel) = addBodyLabels(bodyLabels.asIterable())
+fun Body.addBodyLabel(bodyLabel: BodyLabel) {
+    val labels = getOrDefaultProperty(ConstKeys.BODY_LABELS, ObjectSet<BodyLabel>()) as ObjectSet<BodyLabel>
+    labels.add(bodyLabel)
+    putProperty(ConstKeys.BODY_LABELS, labels)
+}
 
-fun Body.addBodyLabels(bodyLabels: Iterable<BodyLabel>) =
-    getProperty(ConstKeys.BODY_LABELS)?.let {
-        val labels = it as ObjectSet<BodyLabel>
-        bodyLabels.forEach { bodyLabel ->
-            labels.add(bodyLabel)
-        }
-    } ?: putProperty(ConstKeys.BODY_LABELS, objectSetOf(bodyLabels))
+fun Body.addBodyLabels(bodyLabels: ObjectSet<BodyLabel>) {
+    val labels = getOrDefaultProperty(ConstKeys.BODY_LABELS, ObjectSet<BodyLabel>()) as ObjectSet<BodyLabel>
+    labels.addAll(bodyLabels)
+    putProperty(ConstKeys.BODY_LABELS, labels)
+}
 
-fun Body.clearBodyLabels() =
-    getProperty(ConstKeys.BODY_LABELS)?.let {
-        val labels = it as ObjectSet<BodyLabel>
-        labels.clear()
-    }
+fun Body.clearBodyLabels() {
+    removeProperty(ConstKeys.BODY_LABELS)
+}
 
-fun Body.removeBodyLabel(bodyLabel: BodyLabel) =
-    getProperty(ConstKeys.BODY_LABELS)?.let {
-        @Suppress("UNCHECKED_CAST") val labels = it as ObjectSet<BodyLabel>
-        labels.remove(bodyLabel)
-    }
+fun Body.removeBodyLabel(bodyLabel: BodyLabel) {
+    if (!hasProperty(ConstKeys.BODY_LABELS)) return
+    val labels = getProperty(ConstKeys.BODY_LABELS) as ObjectSet<BodyLabel>
+    labels.remove(bodyLabel)
+}
 
-fun Body.hasBodyLabel(bodyLabel: BodyLabel) =
-    getProperty(ConstKeys.BODY_LABELS)?.let {
-        @Suppress("UNCHECKED_CAST") val labels = it as ObjectSet<BodyLabel>
-        labels.contains(bodyLabel)
-    } ?: false
+fun Body.hasBodyLabel(bodyLabel: BodyLabel): Boolean {
+    if (!hasProperty(ConstKeys.BODY_LABELS)) return false
+    val labels = getProperty(ConstKeys.BODY_LABELS) as ObjectSet<BodyLabel>
+    return labels.contains(bodyLabel)
+}

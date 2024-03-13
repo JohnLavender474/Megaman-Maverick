@@ -9,6 +9,7 @@ import com.engine.animations.Animator
 import com.engine.audio.AudioComponent
 import com.engine.common.GameLogger
 import com.engine.common.enums.Position
+import com.engine.common.extensions.equalsAny
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.extensions.objectSetOf
@@ -74,6 +75,7 @@ class Gate(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IAudioEnt
 
     private var resettable = false
     private var transitionFinished = false
+    private var showCloseEvent = true
 
     override fun init() {
         if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.GATES.source)
@@ -95,6 +97,7 @@ class Gate(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IAudioEnt
             spawnProps.getOrDefault(ConstKeys.ORIENTATION, "HORIZONTAL") as String
         )
         resettable = spawnProps.getOrDefault(ConstKeys.RESET, false, Boolean::class)
+        showCloseEvent = spawnProps.getOrDefault(ConstKeys.CLOSE, true, Boolean::class)
     }
 
     override fun onEvent(event: Event) {
@@ -143,7 +146,7 @@ class Gate(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IAudioEnt
                 GameLogger.debug(TAG, "Set gate to CLOSING")
                 transitionFinished = false
                 state = GateState.CLOSING
-                requestToPlaySound(SoundAsset.BOSS_DOOR, false)
+                if (showCloseEvent) requestToPlaySound(SoundAsset.BOSS_DOOR, false)
                 game.eventsMan.submitEvent(Event(EventType.GATE_INIT_CLOSING))
             }
         }
@@ -185,7 +188,8 @@ class Gate(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IAudioEnt
         spritesComponent.putUpdateFunction("gate") { _, _sprite ->
             _sprite as GameSprite
 
-            _sprite.hidden = state == GateState.OPEN
+            _sprite.hidden = state == GateState.OPEN ||
+                    (state.equalsAny(GateState.CLOSING, GateState.CLOSED) && !showCloseEvent)
             _sprite.setFlip(state == GateState.CLOSING || state == GateState.CLOSED, false)
 
             _sprite.setOriginCenter()
