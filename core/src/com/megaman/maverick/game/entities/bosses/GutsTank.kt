@@ -11,16 +11,20 @@ import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
 import com.engine.common.enums.Direction
+import com.engine.common.enums.Facing
 import com.engine.common.enums.Position
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.extensions.objectSetOf
+import com.engine.common.interfaces.IFaceable
+import com.engine.common.interfaces.isFacing
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.shapes.getPosition
 import com.engine.common.time.Timer
+import com.engine.damage.IDamageable
 import com.engine.damage.IDamager
 import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
@@ -30,9 +34,9 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
+import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
-import com.engine.entities.contracts.IAnimatedEntity
-import com.engine.entities.contracts.IParentEntity
+import com.engine.entities.contracts.*
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.Body
 import com.engine.world.BodyComponent
@@ -48,7 +52,9 @@ import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
-import com.megaman.maverick.game.world.*
+import com.megaman.maverick.game.world.BodyComponentCreator
+import com.megaman.maverick.game.world.FixtureLabel
+import com.megaman.maverick.game.world.FixtureType
 import kotlin.reflect.KClass
 
 class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, IParentEntity {
@@ -58,28 +64,39 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
     }
 
     enum class GutsTankAttackState {
-        LAUNCH_FIST, CHUCK_BULLETS_FROM_MOUTH, SHOOT_BLASTS_FROM_MOUTH
-    }
+        LAUNCH_FIST, LAUNCH_RUNNING_METS, LAUNCH_FLYING_METS, CHUNK_BULLETS, SHOOT_BLASTS
+    }/*
+    TODO:
+      - cannot chunk bullets and shoot blasts at the same time
+      - cannot launch fist and launch running or flying mets at the same time
+      -
+    */
 
     companion object {
         const val TAG = "GutsTank"
         private const val BODY_WIDTH = 8f
         private const val BODY_HEIGHT = 4.46875f
         private const val TANK_BLOCK_HEIGHT = 2.0365f
-        private const val BODY_BLOCK_WIDTH = 5.48625f
+        private const val BODY_BLOCK_WIDTH = 4.65f
         private const val BODY_BLOCK_HEIGHT = 12f
         private const val X_VEL = 2f
         private const val MOVEMENT_PAUSE_DUR = 2f
+        private const val BULLETS_TO_CHUNK = 5
+        private const val BULLET_CHUNK_DELAY = 0.5f
+        private const val BLASTS_TO_SHOOT = 3
+        private const val BLAST_SHOOT_DELAY = 1.5f
         private var mouthOpenRegion: TextureRegion? = null
         private var mouthClosedRegion: TextureRegion? = null
-        private var fistRegion: TextureRegion? = null
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>()
     override var children = Array<IGameEntity>()
 
     private val attackStates = ObjectSet<GutsTankAttackState>()
+
     private val movementPauseTimer = Timer(MOVEMENT_PAUSE_DUR)
+    private val bulletChunkDelayTimer = Timer(BULLET_CHUNK_DELAY)
+    private val blastShootDelayTimer = Timer(BLAST_SHOOT_DELAY)
 
     private lateinit var frontPoint: Vector2
     private lateinit var backPoint: Vector2
@@ -89,14 +106,18 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
     private var tankBlock: Block? = null
     private var bodyBlock: Block? = null
+    private var fist: GutsTankFist? = null
+
     private var moveToFront = true
 
+    private var bulletsChunked = 0
+    private var blastsShot = 0
+
     override fun init() {
-        if (mouthOpenRegion == null || mouthClosedRegion == null || fistRegion == null) {
+        if (mouthOpenRegion == null || mouthClosedRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES.source)
             mouthOpenRegion = atlas.findRegion("GutsTank/MouthOpen")
             mouthClosedRegion = atlas.findRegion("GutsTank/MouthClosed")
-            fistRegion = atlas.findRegion("GutsTank/Fist")
         }
         super<AbstractBoss>.init()
         addComponent(defineAnimationsComponent())
@@ -131,8 +152,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
                 ConstKeys.CULL_OUT_OF_BOUNDS to false,
                 ConstKeys.BOUNDS to bodyBlockBounds,
                 ConstKeys.FIXTURE_LABELS to objectSetOf(
-                    FixtureLabel.NO_SIDE_TOUCHIE,
-                    FixtureLabel.NO_PROJECTILE_COLLISION
+                    FixtureLabel.NO_SIDE_TOUCHIE, FixtureLabel.NO_PROJECTILE_COLLISION
                 ),
                 ConstKeys.FIXTURES to gdxArrayOf(
                     Pair(FixtureType.SHIELD, props(ConstKeys.DIRECTION to Direction.UP))
@@ -143,6 +163,9 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         tankBlockOffset = tankBlockBounds.getCenter().sub(body.getCenter())
         bodyBlockOffset = bodyBlockBounds.getCenter().sub(body.getCenter())
 
+        fist = GutsTankFist(game as MegamanMaverickGame)
+        game.gameEngine.spawn(fist!!, props(ConstKeys.PARENT to this))
+
         frontPoint = spawnProps.get(ConstKeys.FRONT, RectangleMapObject::class)!!.rectangle.getPosition()
         backPoint = spawnProps.get(ConstKeys.BACK, RectangleMapObject::class)!!.rectangle.getPosition()
 
@@ -151,12 +174,21 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         attackStates.clear()
 
         movementPauseTimer.reset()
+
+        bulletChunkDelayTimer.reset()
+        bulletsChunked = 0
+
+        blastShootDelayTimer.reset()
+        blastsShot = 0
     }
 
     override fun onDestroy() {
         super<AbstractBoss>.onDestroy()
         children.forEach { it.kill() }
         children.clear()
+
+        fist?.kill()
+        fist = null
 
         tankBlock!!.body.fixtures.forEach { println(it) }
         tankBlock?.onDestroy()
@@ -170,8 +202,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
             if (!tankBlock!!.body.getCenter()
-                    .epsilonEquals(body.getCenter().add(tankBlockOffset), 0.01f) ||
-                !bodyBlock!!.body.getCenter()
+                    .epsilonEquals(body.getCenter().add(tankBlockOffset), 0.01f) || !bodyBlock!!.body.getCenter()
                     .epsilonEquals(body.getCenter().add(bodyBlockOffset), 0.01f)
             ) {
                 tankBlock!!.body.setCenter(body.getCenter().add(tankBlockOffset))
@@ -224,8 +255,9 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body }
 
-        val damageableFixture = Fixture(GameRectangle().setSize(1f * ConstVals.PPM), FixtureType.DAMAGEABLE)
-        damageableFixture.offsetFromBodyCenter.x = -2f * ConstVals.PPM
+        val damageableFixture = Fixture(
+            GameRectangle().setSize(0.75f * ConstVals.PPM, 0.5f * ConstVals.PPM), FixtureType.DAMAGEABLE
+        )
         damageableFixture.offsetFromBodyCenter.y = 2.5f * ConstVals.PPM
         body.addFixture(damageableFixture)
         damageableFixture.shape.color = Color.PURPLE
@@ -254,12 +286,150 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         return spritesComponent
     }
 
+    internal fun laugh() {
+        // TODO: laugh, stop all attacks
+    }
+
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = {
             "mouth_closed"
         }
         val animations = objectMapOf<String, IAnimation>(
             "mouth_closed" to Animation(mouthClosedRegion!!, 1, 2, 0.1f, true)
+        )
+        val animator = Animator(keySupplier, animations)
+        return AnimationsComponent(this, animator)
+    }
+}
+
+class GutsTankFist(game: MegamanMaverickGame) : GameEntity(game), IChildEntity, IBodyEntity, ISpriteEntity,
+    IAnimatedEntity, IFaceable, IDamager {
+
+    enum class GutsTankFistState {
+        ATTACHED, LAUNCHED, RETURNING
+    }
+
+    companion object {
+        const val TAG = "GutsTankFist"
+        private const val LAUNCH_SPEED = 10f
+        private const val RETURN_SPEED = 2f
+        private const val FIST_OFFSET_X = -2f
+        private const val FIST_OFFSET_Y = 0.65f
+        private var fistRegion: TextureRegion? = null
+        private var launchedRegion: TextureRegion? = null
+    }
+
+    override var parent: IGameEntity? = null
+
+    override lateinit var facing: Facing
+
+    private lateinit var target: Vector2
+    private lateinit var state: GutsTankFistState
+
+    private val attachment: Vector2
+        get() = (parent as GutsTank).body.getCenter().add(FIST_OFFSET_X * ConstVals.PPM, FIST_OFFSET_Y * ConstVals.PPM)
+
+    override fun init() {
+        if (launchedRegion == null || fistRegion == null) {
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES.source)
+            fistRegion = atlas.findRegion("GutsTank/Fist")
+            launchedRegion = atlas.findRegion("GutsTank/FistLaunched")
+        }
+        super<GameEntity>.init()
+        addComponent(defineUpdatablesComponent())
+        addComponent(defineBodyComponent())
+        addComponent(defineSpritesComponent())
+        addComponent(defineAnimationsComponent())
+    }
+
+    override fun spawn(spawnProps: Properties) {
+        super.spawn(spawnProps)
+        parent = spawnProps.get(ConstKeys.PARENT, GutsTank::class)
+        state = GutsTankFistState.ATTACHED
+        facing = Facing.LEFT
+    }
+
+    override fun canDamage(damageable: IDamageable) = true
+
+    override fun onDamageInflictedTo(damageable: IDamageable) = (parent as GutsTank).laugh()
+
+    private fun defineUpdatablesComponent() = UpdatablesComponent(this, { delta ->
+        when (state) {
+            GutsTankFistState.ATTACHED -> {
+                body.setCenter(attachment)
+            }
+
+            GutsTankFistState.LAUNCHED -> {
+
+            }
+
+            GutsTankFistState.RETURNING -> {
+
+            }
+        }
+    })
+
+    private fun defineBodyComponent(): BodyComponent {
+        val body = Body(BodyType.ABSTRACT)
+        body.setSize(1f * ConstVals.PPM)
+        body.color = Color.GRAY
+
+        val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body }
+
+        val damagerFixture = Fixture(
+            GameRectangle().setSize(1f * ConstVals.PPM), FixtureType.DAMAGER
+        )
+        body.addFixture(damagerFixture)
+        damagerFixture.shape.color = Color.RED
+        debugShapes.add { damagerFixture.shape }
+
+        val damageableFixture = Fixture(
+            GameRectangle().setSize(0.1f * ConstVals.PPM, 1f * ConstVals.PPM), FixtureType.DAMAGEABLE
+        )
+        body.addFixture(damageableFixture)
+        damageableFixture.shape.color = Color.PURPLE
+        debugShapes.add { damageableFixture.shape }
+
+        val shieldFixture = Fixture(
+            GameRectangle().setSize(0.9f * ConstVals.PPM, 1f * ConstVals.PPM), FixtureType.SHIELD
+        )
+        body.addFixture(shieldFixture)
+        shieldFixture.shape.color = Color.BLUE
+        debugShapes.add { shieldFixture.shape }
+
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            shieldFixture.offsetFromBodyCenter.x = 0.1f * facing.value * ConstVals.PPM
+            damageableFixture.offsetFromBodyCenter.x = 0.5f * -facing.value * ConstVals.PPM
+        }
+
+        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+
+        return BodyComponentCreator.create(this, body)
+    }
+
+    private fun defineSpritesComponent(): SpritesComponent {
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
+        sprite.setSize(2.25f * ConstVals.PPM)
+        val spritesComponent = SpritesComponent(this, TAG to sprite)
+        spritesComponent.putUpdateFunction(TAG) { _, _sprite ->
+            _sprite as GameSprite
+            val center = body.getCenter()
+            _sprite.setCenter(center.x, center.y)
+            _sprite.setFlip(isFacing(Facing.LEFT), false)
+        }
+        return spritesComponent
+    }
+
+    private fun defineAnimationsComponent(): AnimationsComponent {
+        val keySupplier: () -> String? = {
+            when (state) {
+                GutsTankFistState.ATTACHED -> "fist"
+                else -> "launched"
+            }
+        }
+        val animations = objectMapOf<String, IAnimation>(
+            "fist" to Animation(fistRegion!!), "launched" to Animation(launchedRegion!!, 2, 1, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
