@@ -464,6 +464,7 @@
   <object id="438" x="7040" y="11040" width="64" height="384"/>
   <object id="439" x="7552" y="10688" width="40" height="736">
    <properties>
+    <property name="block_filters" value="Met"/>
     <property name="fixture_labels" value="no_side_touchie,no_projectile_collision"/>
    </properties>
   </object>
@@ -545,6 +546,7 @@
    <properties>
     <property name="back" type="object" value="469"/>
     <property name="front" type="object" value="468"/>
+    <property name="killer_wall" type="object" value="439"/>
     <property name="music" value="MMX6_SIGMA"/>
    </properties>
   </object>

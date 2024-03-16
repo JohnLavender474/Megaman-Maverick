@@ -49,23 +49,21 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity, I
     override lateinit var directionRotation: Direction
 
     override fun init() {
-        defineProjectileComponents().forEach { addComponent(it) }
+        addComponents(defineProjectileComponents())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesCompoent())
     }
 
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
-
         owner = spawnProps.get(ConstKeys.OWNER) as IGameEntity?
-
         val spawn = spawnProps.get(ConstKeys.POSITION) as Vector2
         body.setCenter(spawn)
-
         directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
-
         val trajectory = spawnProps.get(ConstKeys.TRAJECTORY) as Vector2
-        body.physics.velocity.set(trajectory.scl(ConstVals.PPM.toFloat()))
+        body.physics.velocity.set(trajectory)
+        val gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, Vector2(), Vector2::class)
+        body.physics.gravity.set(gravity)
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
@@ -106,16 +104,13 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity, I
         body.setSize(.15f * ConstVals.PPM)
         body.physics.velocityClamp.set(CLAMP * ConstVals.PPM, CLAMP * ConstVals.PPM)
 
-        // body fixture
         val bodyFixture = Fixture(GameRectangle().set(body), FixtureType.BODY)
         bodyFixture.putProperty(ConstKeys.GRAVITY_ROTATABLE, false)
         body.addFixture(bodyFixture)
 
-        // projectile fixture
         val projectileFixture = Fixture(GameRectangle().setSize(.2f * ConstVals.PPM), FixtureType.PROJECTILE)
         body.addFixture(projectileFixture)
 
-        // damager fixture
         val damagerFixture = Fixture(GameRectangle().setSize(.2f * ConstVals.PPM), FixtureType.DAMAGER)
         body.addFixture(damagerFixture)
 
@@ -129,19 +124,15 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity, I
     private fun defineSpritesCompoent(): SpritesComponent {
         if (bulletRegion == null) bulletRegion =
             game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Bullet")
-
         val sprite = GameSprite(bulletRegion!!, DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(1.25f * ConstVals.PPM)
-
         val spritesComponent = SpritesComponent(this, "bullet" to sprite)
         spritesComponent.putUpdateFunction("bullet") { _, _sprite ->
             (_sprite as GameSprite).setPosition(body.getCenter(), Position.CENTER)
-
             val rotation = if (directionRotation.isVertical()) 0f else 90f
             _sprite.setOriginCenter()
             _sprite.rotation = rotation
         }
-
         return spritesComponent
     }
 }

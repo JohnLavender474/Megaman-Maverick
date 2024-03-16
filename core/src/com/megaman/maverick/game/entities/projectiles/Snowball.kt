@@ -52,7 +52,7 @@ class Snowball(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity 
             region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Snowball")
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
-        defineProjectileComponents().forEach { addComponent(it) }
+        addComponents(defineProjectileComponents())
     }
 
     override fun spawn(spawnProps: Properties) {

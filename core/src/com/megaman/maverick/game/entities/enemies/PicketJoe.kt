@@ -111,7 +111,6 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
             facing = if (megaman.body.x >= body.x) Facing.RIGHT else Facing.LEFT
-
             if (standing) {
                 standTimer.update(it)
                 if (standTimer.isFinished()) setToThrowingPickets()
@@ -129,7 +128,6 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
-        // feet fixture
         val feetFixture = Fixture(
             GameRectangle().setSize(0.8f * ConstVals.PPM, 0.1f * ConstVals.PPM), FixtureType.FEET
         )
@@ -138,7 +136,6 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         feetFixture.shape.color = Color.GREEN
         debugShapes.add { feetFixture.shape }
 
-        // shield fixture
         val shieldFixture = Fixture(
             GameRectangle().setSize(0.4f * ConstVals.PPM, 0.9f * ConstVals.PPM), FixtureType.SHIELD
         )
@@ -147,7 +144,6 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         shieldFixture.shape.color = Color.BLUE
         debugShapes.add { shieldFixture.shape }
 
-        // damager fixture
         val damagerFixture = Fixture(
             GameRectangle().setSize(0.75f * ConstVals.PPM, 1.15f * ConstVals.PPM), FixtureType.DAMAGER
         )
@@ -155,7 +151,6 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         damagerFixture.shape.color = Color.RED
         debugShapes.add { damagerFixture.shape }
 
-        // damageable fixture
         val damageableFixture = Fixture(
             GameRectangle().setSize(0.8f * ConstVals.PPM, 1.35f * ConstVals.PPM), FixtureType.DAMAGEABLE
         )
@@ -163,7 +158,6 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         damageableFixture.shape.color = Color.PURPLE
         debugShapes.add { damageableFixture.shape }
 
-        // pre-process
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             body.physics.gravity.y =
                 ConstVals.PPM * if (body.isSensing(BodySense.FEET_ON_GROUND)) -GROUND_GRAVITY else -GRAVITY
@@ -182,7 +176,6 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.35f * ConstVals.PPM)
-
         val spritesComponent = SpritesComponent(this, "picket_joe" to sprite)
         spritesComponent.putUpdateFunction("picket_joe") { _, _sprite ->
             _sprite as GameSprite
@@ -191,7 +184,6 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             _sprite.setCenter(center.x, center.y)
             _sprite.hidden = if (invincible) damageBlink else false
         }
-
         return spritesComponent
     }
 

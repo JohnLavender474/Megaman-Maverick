@@ -16,6 +16,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val BLOCK_FILTERS = "block_filters"
     const val CLOSE = "close"
     const val FIXTURE_LABELS = "fixture_labels"
     const val FRONT = "front"

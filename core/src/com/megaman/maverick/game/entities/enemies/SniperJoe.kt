@@ -455,6 +455,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
             EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
         }
 
+        trajectory.scl(ConstVals.PPM.toFloat())
         game.gameEngine.spawn(entity, props)
     }
 }

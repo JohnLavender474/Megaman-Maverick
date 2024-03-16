@@ -20,6 +20,7 @@ class ProjectilesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
         const val FIREBALL = "Fireball"
         const val SNOWBALL = "Snowball"
         const val CHARGED_SHOT = "ChargedShot"
+        const val PURPLE_BLAST = "PurpleBlast"
         const val PRECIOUS_SHOT = "PreciousShot"
         const val PETAL = "Petal"
         const val ELECTRIC_BALL = "ElectricBall"
@@ -34,6 +35,7 @@ class ProjectilesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
     init {
         pools.put(BULLET, EntityPoolCreator.create(100) { Bullet(game) })
         pools.put(CHARGED_SHOT, EntityPoolCreator.create(5) { ChargedShot(game) })
+        pools.put(PURPLE_BLAST, EntityPoolCreator.create(5) { PurpleBlast(game) })
         pools.put(FIREBALL, EntityPoolCreator.create(3) { Fireball(game) })
         pools.put(JOEBALL, EntityPoolCreator.create(3) { JoeBall(game) })
         pools.put(PETAL, EntityPoolCreator.create(4) { Petal(game) })

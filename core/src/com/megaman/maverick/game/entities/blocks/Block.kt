@@ -124,6 +124,18 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
             body.addFixture(fixture)
             fixturesToRemove.add(fixture)
         }
+
+        body.clearBlockFilters()
+        if (properties.containsKey(ConstKeys.BLOCK_FILTERS)) {
+            val filters = properties.get(ConstKeys.BLOCK_FILTERS)
+            if (filters is String) {
+                val filterStrings = filters.replace("\\s+", "").split(",")
+                filterStrings.forEach { body.addBlockFilter(it) }
+            } else {
+                filters as ObjectSet<String>
+                filters.forEach { body.addBlockFilter(it) }
+            }
+        }
     }
 
     override fun onDestroy() {

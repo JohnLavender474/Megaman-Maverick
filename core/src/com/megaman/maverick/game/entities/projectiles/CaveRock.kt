@@ -53,7 +53,7 @@ class CaveRock(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity 
         if (rockRegion == null)
             rockRegion =
                 game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "CaveRock/Rock")
-        defineProjectileComponents().forEach { addComponent(it) }
+        addComponents(defineProjectileComponents())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
     }

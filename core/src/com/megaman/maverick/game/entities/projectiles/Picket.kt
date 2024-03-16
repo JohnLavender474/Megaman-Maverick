@@ -67,26 +67,22 @@ class Picket(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity {
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
-        // body fixture
         val bodyFixture = Fixture(GameRectangle().setSize(0.5f * ConstVals.PPM), FixtureType.BODY)
         body.addFixture(bodyFixture)
         bodyFixture.shape.color = Color.YELLOW
         debugShapes.add { bodyFixture.shape }
 
-        // projectile fixture
         val projectileFixture =
             Fixture(GameRectangle().setSize(0.5f * ConstVals.PPM), FixtureType.PROJECTILE)
         body.addFixture(projectileFixture)
         projectileFixture.shape.color = Color.GREEN
         debugShapes.add { projectileFixture.shape }
 
-        // damager fixture
         val damagerFixture = Fixture(GameRectangle().setSize(0.4f * ConstVals.PPM), FixtureType.DAMAGER)
         body.addFixture(damagerFixture)
         damagerFixture.shape.color = Color.RED
         debugShapes.add { damagerFixture.shape }
 
-        // shield fixture
         val shieldFixture = Fixture(GameRectangle().setSize(0.5f * ConstVals.PPM), FixtureType.SHIELD)
         body.addFixture(shieldFixture)
         shieldFixture.shape.color = Color.BLUE
@@ -100,14 +96,12 @@ class Picket(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity {
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
-
         val spritesComponent = SpritesComponent(this, "picket" to sprite)
         spritesComponent.putUpdateFunction("picket") { _, _sprite ->
             _sprite as GameSprite
             val center = body.getCenter()
             _sprite.setCenter(center.x, center.y)
         }
-
         return spritesComponent
     }
 

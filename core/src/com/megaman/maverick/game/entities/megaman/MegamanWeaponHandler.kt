@@ -77,7 +77,6 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
                         .15f * ConstVals.PPM
                     else if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) -.05f * ConstVals.PPM
                     else .05f * ConstVals.PPM
-                // else .25f * ConstVals.PPM
                 spawnCenter.x += if (megaman.isDirectionRotatedLeft()) -xOffset else xOffset
 
                 val yOffset: Float = ConstVals.PPM * .85f * megaman.facing.value
@@ -193,6 +192,7 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
         if (megaman.isDirectionRotatedVertically())
             trajectory.x = MEGA_BUSTER_BULLET_VEL * megaman.facing.value
         else trajectory.y = MEGA_BUSTER_BULLET_VEL * megaman.facing.value
+        trajectory.scl(ConstVals.PPM.toFloat())
 
         val props = Properties()
         props.put(ConstKeys.OWNER, megaman)

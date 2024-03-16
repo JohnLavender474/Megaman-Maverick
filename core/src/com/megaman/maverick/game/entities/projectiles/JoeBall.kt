@@ -64,7 +64,7 @@ class JoeBall(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity {
         if (snowJoeBallReg == null)
             snowJoeBallReg =
                 game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "SnowJoeball")
-        defineProjectileComponents().forEach { addComponent(it) }
+        addComponents(defineProjectileComponents())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())

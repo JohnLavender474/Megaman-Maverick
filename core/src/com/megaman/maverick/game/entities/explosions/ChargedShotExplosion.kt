@@ -65,7 +65,7 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : GameEntity(game), IProje
             halfChargedRegion =
                 game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "HalfChargedShot")
 
-        defineProjectileComponents().forEach { addComponent(it) }
+        addComponents(defineProjectileComponents())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())

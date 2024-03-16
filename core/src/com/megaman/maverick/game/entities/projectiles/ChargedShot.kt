@@ -62,7 +62,7 @@ class ChargedShot(game: MegamanMaverickGame) :
 
     override lateinit var directionRotation: Direction
 
-    private val trajectory = Vector2()
+    private lateinit var trajectory: Vector2
 
     var fullyCharged = false
         private set
@@ -76,7 +76,7 @@ class ChargedShot(game: MegamanMaverickGame) :
             halfChargedRegion =
                 game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "HalfChargedShot")
 
-        defineProjectileComponents().forEach { addComponent(it) }
+        addComponents(defineProjectileComponents())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
@@ -99,8 +99,7 @@ class ChargedShot(game: MegamanMaverickGame) :
         body.setSize(bodyDimension)
         body.fixtures.forEach { (it.second.shape as GameRectangle).setSize(bodyDimension) }
 
-        val _trajectory = spawnProps.get(ConstKeys.TRAJECTORY) as Vector2
-        trajectory.set(_trajectory.scl(ConstVals.PPM.toFloat()))
+        trajectory = spawnProps.get(ConstKeys.TRAJECTORY) as Vector2
 
         facing =
             if (directionRotation.isVertical()) if (trajectory.x > 0f) Facing.RIGHT else Facing.LEFT

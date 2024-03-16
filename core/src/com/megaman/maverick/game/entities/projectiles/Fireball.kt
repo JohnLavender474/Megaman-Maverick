@@ -67,7 +67,7 @@ class Fireball(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity 
         if (fireballAtlas == null)
             fireballAtlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
         if (flameAtlas == null) flameAtlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
-        defineProjectileComponents().forEach { addComponent(it) }
+        addComponents(defineProjectileComponents())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())

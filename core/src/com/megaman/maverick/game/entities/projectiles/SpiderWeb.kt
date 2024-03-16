@@ -88,7 +88,7 @@ class SpiderWeb(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity
             blinkWhiteRegion = atlas.findRegion("SpiderWeb/BlinkWhite")
         }
         super<GameEntity>.init()
-        defineProjectileComponents().forEach { addComponent(it) }
+        addComponents(defineProjectileComponents())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineUpdatablesComponent())

@@ -57,7 +57,7 @@ class ElectricBall(game: MegamanMaverickGame) : GameEntity(game), IProjectileEnt
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
-        defineProjectileComponents().forEach { addComponent(it) }
+        addComponents(defineProjectileComponents())
     }
 
     override fun spawn(spawnProps: Properties) {

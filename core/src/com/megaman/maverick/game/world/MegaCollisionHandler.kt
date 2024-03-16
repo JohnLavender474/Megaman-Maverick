@@ -26,6 +26,7 @@ class MegaCollisionHandler(private val game: MegamanMaverickGame) : ICollisionHa
         } else return false
 
         if (staticBody.getEntity().getProperty(ConstKeys.PARENT) == dynamicBody.getEntity()) return true
+        if (staticBody.hasBlockFilter(dynamicBody.getEntity().getTag())) return true
 
         if (staticBody.hasBodyLabel(BodyLabel.PRESS_UP_FALL_THRU) &&
             dynamicBody == megaman.body &&

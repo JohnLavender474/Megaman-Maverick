@@ -68,7 +68,7 @@ class SniperJoeShield(game: MegamanMaverickGame) : GameEntity(game), IProjectile
             orangeRegion = atlas.findRegion("SniperJoeShield/Orange")
             blueRegion = atlas.findRegion("SniperJoeShield/Blue")
         }
-        defineProjectileComponents().forEach { addComponent(it) }
+        addComponents(defineProjectileComponents())
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())

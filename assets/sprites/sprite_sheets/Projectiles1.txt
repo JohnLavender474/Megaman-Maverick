@@ -1,7 +1,7 @@
 Projectiles1.png
-size: 512, 324
+size: 512, 372
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Linear,Linear
 repeat: none
 Bullet
   rotate: false
@@ -12,14 +12,14 @@ Bullet
   index: -1
 CaveRock/Burst
   rotate: false
-  xy: 0, 196
+  xy: 0, 244
   size: 384, 128
   orig: 384, 128
   offset: 0, 0
   index: -1
 CaveRock/Rock
   rotate: false
-  xy: 384, 196
+  xy: 384, 244
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
@@ -89,7 +89,7 @@ Joeball
   index: -1
 Petal
   rotate: false
-  xy: 0, 132
+  xy: 0, 180
   size: 256, 64
   orig: 256, 64
   offset: 0, 0
@@ -113,6 +113,20 @@ PreciousShot/Shoot
   xy: 324, 96
   size: 108, 36
   orig: 108, 36
+  offset: 0, 0
+  index: -1
+PurpleBlast/Blast
+  rotate: false
+  xy: 0, 132
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+PurpleBlast/Charge
+  rotate: false
+  xy: 96, 132
+  size: 336, 48
+  orig: 336, 48
   offset: 0, 0
   index: -1
 Snowball

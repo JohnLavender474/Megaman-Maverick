@@ -70,7 +70,7 @@ class Petal(game: MegamanMaverickGame) :
     override fun init() {
         if (region == null)
             region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Petal")
-        defineProjectileComponents().forEach { addComponent(it) }
+        addComponents(defineProjectileComponents())
         addComponent(AudioComponent(this))
         addComponent(defineBodyComponent())
         addComponent(defineSpriteComponent())
