@@ -275,8 +275,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
                     Direction.DOWN -> Vector2(0f, gravity)
                     Direction.LEFT -> Vector2(gravity, 0f)
                     Direction.RIGHT -> Vector2(-gravity, 0f)
-                })
-                    .scl(ConstVals.PPM.toFloat())
+                }).scl(ConstVals.PPM.toFloat())
 
             shieldFixture.active = behavior == MetBehavior.SHIELDING
             damageableFixture.active = behavior != MetBehavior.SHIELDING

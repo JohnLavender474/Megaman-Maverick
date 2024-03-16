@@ -183,6 +183,7 @@
             <key type="filename">../frames/Enemies1/GapingFish/Chomping.png</key>
             <key type="filename">../frames/Enemies1/GapingFish/Gaping.png</key>
             <key type="filename">../frames/Enemies1/GapingFish/Swimming.png</key>
+            <key type="filename">../frames/Enemies1/HeliMet/Fly.png</key>
             <key type="filename">../frames/Enemies1/MagFly.png</key>
             <key type="filename">../frames/Enemies1/Met/Run.png</key>
             <key type="filename">../frames/Enemies1/Penguin/Stand.png</key>
@@ -209,6 +210,7 @@
             <key type="filename">../frames/Enemies1/Bat/OpenEyes.png</key>
             <key type="filename">../frames/Enemies1/Bat/OpenWings.png</key>
             <key type="filename">../frames/Enemies1/BlueScrewie/Down.png</key>
+            <key type="filename">../frames/Enemies1/HeliMet/Shield.png</key>
             <key type="filename">../frames/Enemies1/LaserBeamer.png</key>
             <key type="filename">../frames/Enemies1/Met/GetUp.png</key>
             <key type="filename">../frames/Enemies1/Met/LayDown.png</key>
@@ -257,6 +259,7 @@
             <key type="filename">../frames/Enemies1/BlueScrewie/Drop.png</key>
             <key type="filename">../frames/Enemies1/BlueScrewie/Rise.png</key>
             <key type="filename">../frames/Enemies1/BlueScrewie/Shoot.png</key>
+            <key type="filename">../frames/Enemies1/HeliMet/PopUp.png</key>
             <key type="filename">../frames/Enemies1/PicketJoe/Throw.png</key>
             <key type="filename">../frames/Enemies1/RedScrewie/Drop.png</key>
             <key type="filename">../frames/Enemies1/RedScrewie/Rise.png</key>
