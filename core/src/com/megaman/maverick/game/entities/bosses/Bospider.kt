@@ -12,7 +12,6 @@ import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
 import com.engine.common.GameLogger
-import com.engine.common.enums.Position
 import com.engine.common.extensions.equalsAny
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.objectMapOf
@@ -49,7 +48,6 @@ import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
-import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
@@ -72,7 +70,6 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         private const val OPEN_EYE_MIN_DURATION = 0.5f
         private const val CLOSE_EYE_DURATION = 0.35f
         private const val DEBUG_TIMER = 1f
-        private const val EXPLOSION_TIME = 0.25f
         private const val WEB_SPEED = 10f
         private const val ANGLE_X = 25f
         private var climbRegion: TextureRegion? = null
@@ -103,7 +100,6 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
     private val spawnDelayTimer = Timer(SPAWN_DELAY)
     private val closeEyeTimer = Timer(CLOSE_EYE_DURATION)
     private val debugTimer = Timer(DEBUG_TIMER)
-    private val explosionTimer = Timer(EXPLOSION_TIME)
 
     private lateinit var openEyeTimer: Timer
     private lateinit var spawn: Vector2
@@ -155,23 +151,8 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
             if (!ready) return@add
-
             if (defeated) {
-                explosionTimer.update(delta)
-                if (explosionTimer.isFinished()) {
-                    val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
-                    val position = Position.values().toGdxArray().random()
-                    game.gameEngine.spawn(
-                        explosion,
-                        props(
-                            ConstKeys.SOUND to SoundAsset.EXPLOSION_2_SOUND,
-                            ConstKeys.POSITION to body.getCenter().add(
-                                position.x * ConstVals.PPM.toFloat(), position.y + ConstVals.PPM.toFloat()
-                            )
-                        )
-                    )
-                    explosionTimer.reset()
-                }
+                explodeOnDefeat(delta)
                 return@add
             }
 

@@ -1,7 +1,9 @@
 package com.megaman.maverick.game.entities.contracts
 
 import com.engine.common.GameLogger
+import com.engine.common.enums.Position
 import com.engine.common.extensions.objectSetOf
+import com.engine.common.extensions.toGdxArray
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.time.Timer
@@ -12,6 +14,10 @@ import com.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.factories.EntityFactories
+import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.events.EventType
 
 abstract class AbstractBoss(
@@ -25,11 +31,13 @@ abstract class AbstractBoss(
         const val TAG = "AbstractBoss"
         const val DEFAULT_BOSS_DMG_DURATION = 0.75f
         const val DEFAULT_DEFEAT_DURATION = 3f
+        const val EXPLOSION_TIME = 0.25f
     }
 
     override val eventKeyMask = objectSetOf<Any>(EventType.END_BOSS_SPAWN, EventType.PLAYER_SPAWN)
 
     protected val defeatTimer = Timer(defeatDur)
+    protected val explosionTimer = Timer(EXPLOSION_TIME)
 
     var ready = false
     var defeated = false
@@ -40,6 +48,24 @@ abstract class AbstractBoss(
         game.eventsMan.submitEvent(Event(EventType.BOSS_DEFEATED, props(ConstKeys.BOSS to this)))
         defeatTimer.reset()
         defeated = true
+    }
+
+    protected open fun explodeOnDefeat(delta: Float) {
+        explosionTimer.update(delta)
+        if (explosionTimer.isFinished()) {
+            val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
+            val position = Position.values().toGdxArray().random()
+            game.gameEngine.spawn(
+                explosion,
+                props(
+                    ConstKeys.SOUND to SoundAsset.EXPLOSION_2_SOUND,
+                    ConstKeys.POSITION to body.getCenter().add(
+                        position.x * ConstVals.PPM.toFloat(), position.y + ConstVals.PPM.toFloat()
+                    )
+                )
+            )
+            explosionTimer.reset()
+        }
     }
 
     override fun init() {

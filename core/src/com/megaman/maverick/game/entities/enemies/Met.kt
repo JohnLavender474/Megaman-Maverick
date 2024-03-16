@@ -152,13 +152,8 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
             }).scl(ConstVals.PPM.toFloat())
 
         val offset = ConstVals.PPM / 64f
-        val spawn =
-            body
-                .getCenter()
-                .add(
-                    if (facing == Facing.LEFT) -offset else offset,
-                    if (isDirectionRotatedDown()) -offset else offset
-                )
+        val spawn = body.getCenter()
+            .add(offset * facing.value, if (isDirectionRotatedDown()) -offset else offset)
 
         val spawnProps =
             props(
@@ -174,8 +169,6 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
         super.defineUpdatablesComponent(updatablesComponent)
 
         updatablesComponent.add {
-            if (megaman.dead) return@add
-
             if (runOnly) behavior = MetBehavior.RUNNING
 
             when (behavior) {
@@ -217,10 +210,8 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
 
                     val runningTimer = metBehaviorTimers.get(MetBehavior.RUNNING)
 
-                    val runImpulse =
-                        ConstVals.PPM *
-                                facing.value *
-                                if (body.isSensing(BodySense.IN_WATER)) RUN_IN_WATER_VELOCITY else RUN_VELOCITY
+                    val runImpulse = ConstVals.PPM * facing.value *
+                            if (body.isSensing(BodySense.IN_WATER)) RUN_IN_WATER_VELOCITY else RUN_VELOCITY
                     when (directionRotation) {
                         Direction.UP,
                         Direction.DOWN -> body.physics.velocity.x = runImpulse

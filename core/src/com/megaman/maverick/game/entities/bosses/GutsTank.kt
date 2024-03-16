@@ -148,9 +148,9 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
     private lateinit var moveState: GutsTankMoveState
     private lateinit var killerWall: GameRectangle
 
-    private var tankBlock: Block? = null
-    private var bodyBlock: Block? = null
-    private var fist: GutsTankFist? = null
+    internal var tankBlock: Block? = null
+    internal var bodyBlock: Block? = null
+    internal var fist: GutsTankFist? = null
 
     private var reachedFrontFirstTime = false
     private var moveToFront = true
@@ -241,20 +241,42 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
         super<AbstractBoss>.onDestroy()
         runningMetsArray.forEach { it.kill() }
         runningMetsArray.clear()
-
         fist?.kill()
         fist = null
-
-        tankBlock!!.onDestroy()
+        tankBlock?.kill()
         tankBlock = null
-
-        bodyBlock!!.onDestroy()
+        bodyBlock?.kill()
         bodyBlock = null
+    }
+
+    override fun triggerDefeat() {
+        super.triggerDefeat()
+        moveState = GutsTankMoveState.PAUSE
+        runningMetsArray.forEach { it.setHealth(0) }
+        runningMetsArray.clear()
+        fist?.setHealth(0)
+        fist = null
+        tankBlock?.kill()
+        tankBlock = null
+        bodyBlock?.kill()
+        bodyBlock = null
+    }
+
+    override fun canBeDamagedBy(damager: IDamager): Boolean {
+        if (damager is IProjectileEntity && (damager.owner == this || damager.owner == fist || damager.owner == tankBlock || damager.owner == bodyBlock)) return false
+        return super.canBeDamagedBy(damager)
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            if (!ready) return@add
+            if (defeated) {
+                body.physics.velocity.setZero()
+                explodeOnDefeat(delta)
+                return@add
+            }
+
             val runningMetIter = runningMetsArray.iterator()
             while (runningMetIter.hasNext()) {
                 val met = runningMetIter.next()
@@ -280,8 +302,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                     val attack = ATTACK_STATES.random()
                     if (attack != GutsTankAttackState.LAUNCH_FIST) attackState = attack
                     if (attack == GutsTankAttackState.SHOOT_BLASTS) requestToPlaySound(
-                        SoundAsset.MM2_MECHA_DRAGON,
-                        false
+                        SoundAsset.MM2_MECHA_DRAGON, false
                     )
                     attackDelayTimer.reset()
                 }
@@ -290,9 +311,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
             if (fist?.dead == true) fist = null
             if (fist?.state == GutsTankFist.GutsTankFistState.ATTACHED) {
                 launchFistDelayTimer.update(delta)
-                if (launchFistDelayTimer.isFinished() &&
-                    !fist!!.body.overlaps(megaman.body as Rectangle)
-                ) {
+                if (launchFistDelayTimer.isFinished() && !fist!!.body.overlaps(megaman.body as Rectangle)) {
                     launchFistDelayTimer.reset()
                     fist!!.launch()
                 }
@@ -330,8 +349,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                         game.gameEngine.spawn(
                             blast, props(
                                 ConstKeys.POSITION to body.getCenter().add(
-                                    -1.65f * ConstVals.PPM,
-                                    1.5f * ConstVals.PPM
+                                    -1.65f * ConstVals.PPM, 1.5f * ConstVals.PPM
                                 ),
                                 ConstKeys.TRAJECTORY to trajectory,
                                 ConstKeys.FACING to Facing.LEFT,
@@ -354,9 +372,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                                 ConstKeys.POSITION to Vector2(
                                     bodyBlock!!.body.x - (0.75f * ConstVals.PPM),
                                     tankBlock!!.body.getMaxY() + (0.25f * ConstVals.PPM)
-                                ),
-                                ConstKeys.RIGHT to false,
-                                Met.RUN_ONLY to true
+                                ), ConstKeys.RIGHT to false, Met.RUN_ONLY to true
                             )
                         )
                         runningMets++
@@ -503,9 +519,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = {
-            if (attackState == GutsTankAttackState.CHUNK_BULLETS ||
-                attackState == GutsTankAttackState.SHOOT_BLASTS
-            ) "mouth_open"
+            if (attackState == GutsTankAttackState.CHUNK_BULLETS || attackState == GutsTankAttackState.SHOOT_BLASTS) "mouth_open"
             else "mouth_closed"
         }
         val animations = objectMapOf<String, IAnimation>(
@@ -554,8 +568,7 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
     private lateinit var target: Vector2
 
     private val attachment: Vector2
-        get() = (parent as GutsTank).body.getCenter()
-            .add(FIST_OFFSET_X * ConstVals.PPM, FIST_OFFSET_Y * ConstVals.PPM)
+        get() = (parent as GutsTank).body.getCenter().add(FIST_OFFSET_X * ConstVals.PPM, FIST_OFFSET_Y * ConstVals.PPM)
 
     override fun init() {
         if (launchedRegion == null || fistRegion == null) {
@@ -590,7 +603,12 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
     }
 
     override fun canBeDamagedBy(damager: IDamager): Boolean {
-        if (damager is IProjectileEntity && damager.owner == parent) return false
+        if (damager is IProjectileEntity && (
+                    damager.owner == this || damager.owner == parent ||
+                            damager.owner == (parent as GutsTank).tankBlock ||
+                            damager.owner == (parent as GutsTank).bodyBlock
+                    )
+        ) return false
         return super.canBeDamagedBy(damager)
     }
 
@@ -621,8 +639,7 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
                         return@add
                     }
                     if (launchDelayTimer.isJustFinished()) requestToPlaySound(SoundAsset.BURST_SOUND, false)
-                    body.physics.velocity =
-                        target.cpy().sub(body.getCenter()).nor().scl(LAUNCH_SPEED * ConstVals.PPM)
+                    body.physics.velocity = target.cpy().sub(body.getCenter()).nor().scl(LAUNCH_SPEED * ConstVals.PPM)
                     if (body.contains(target)) {
                         GameLogger.debug(TAG, "Fist hit target")
                         state = GutsTankFistState.RETURNING
