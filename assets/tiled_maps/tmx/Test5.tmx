@@ -545,19 +545,17 @@
   <object id="465" name="GutsTank" x="8160" y="11360" width="32" height="32">
    <properties>
     <property name="back" type="object" value="469"/>
-    <property name="fly1" type="object" value="472"/>
-    <property name="fly2" type="object" value="471"/>
-    <property name="fly3" type="object" value="473"/>
+    <property name="fly1" type="object" value="471"/>
+    <property name="fly2" type="object" value="473"/>
     <property name="front" type="object" value="468"/>
     <property name="killer_wall" type="object" value="439"/>
     <property name="music" value="MMX6_SIGMA"/>
    </properties>
   </object>
-  <object id="468" x="7712" y="11360" width="32" height="32"/>
-  <object id="469" x="7904" y="11360" width="32" height="32"/>
-  <object id="471" x="7688" y="11264" width="32" height="32"/>
-  <object id="472" x="7744" y="11232" width="32" height="32"/>
-  <object id="473" x="7632" y="11272" width="32" height="32"/>
+  <object id="468" x="7744" y="11360" width="32" height="32"/>
+  <object id="469" x="7872" y="11360" width="32" height="32"/>
+  <object id="471" x="7728" y="11296" width="32" height="32"/>
+  <object id="473" x="7632" y="11296" width="32" height="32"/>
  </objectgroup>
  <layer id="20" name="background_tiles" width="300" height="400">
   <data encoding="csv">

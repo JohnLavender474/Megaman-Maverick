@@ -92,7 +92,6 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
 
         private const val FLY1 = "fly1"
         private const val FLY2 = "fly2"
-        private const val FLY3 = "fly3"
 
         private const val BODY_WIDTH = 8f
         private const val BODY_HEIGHT = 4.46875f
@@ -102,8 +101,8 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
         private const val BODY_BLOCK_WIDTH = 4.75f
         private const val BODY_BLOCK_HEIGHT = 12f
 
-        private const val MIN_X_VEL = 2f
-        private const val MAX_X_VEL = 4f
+        private const val MIN_X_VEL = 1.5f
+        private const val MAX_X_VEL = 3f
         private const val MOVEMENT_PAUSE_DUR = 1.5f
 
         private const val ATTACK_DELAY = 1.5f
@@ -121,7 +120,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
         private const val RUNNING_METS_TO_LAUNCH = 3
         private const val RUNNING_MET_DELAY = 1f
 
-        private const val FLYING_METS_TO_LAUNCH = 3
+        private const val FLYING_METS_TO_LAUNCH = 2
         private const val FLYING_MET_DELAY = 1f
 
         private const val LAUNCH_FIST_DELAY = 10f
@@ -233,8 +232,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
         flyingMetTargets.clear()
         val fly1Target = spawnProps.get(FLY1, RectangleMapObject::class)!!.rectangle.getCenter()
         val fly2Target = spawnProps.get(FLY2, RectangleMapObject::class)!!.rectangle.getCenter()
-        val fly3Target = spawnProps.get(FLY3, RectangleMapObject::class)!!.rectangle.getCenter()
-        flyingMetTargets.addAll(fly1Target, fly2Target, fly3Target)
+        flyingMetTargets.addAll(fly1Target, fly2Target)
 
         moveState = GutsTankMoveState.MOVE
         moveToFront = true
