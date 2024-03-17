@@ -1,5 +1,5 @@
 Bosses.png
-size: 1008, 944
+size: 1024, 1040
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -166,21 +166,28 @@ GutsTank/Fist
   index: -1
 GutsTank/FistLaunched
   rotate: false
-  xy: 400, 464
+  xy: 144, 464
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
+GutsTank/Laughing
+  rotate: false
+  xy: 576, 656
+  size: 384, 192
+  orig: 384, 192
+  offset: 0, 0
+  index: -1
 GutsTank/MouthClosed
   rotate: false
-  xy: 0, 752
+  xy: 0, 848
   size: 384, 192
   orig: 384, 192
   offset: 0, 0
   index: -1
 GutsTank/MouthOpen
   rotate: false
-  xy: 384, 752
+  xy: 384, 848
   size: 384, 192
   orig: 384, 192
   offset: 0, 0
@@ -320,7 +327,7 @@ Nuke Man/Jump
   index: -1
 Nuke Man/Stand
   rotate: false
-  xy: 0, 400
+  xy: 896, 336
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
@@ -369,63 +376,63 @@ Precious Man/StandShoot
   index: -1
 Roaster Man/Aim
   rotate: false
-  xy: 128, 400
+  xy: 0, 400
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Roaster Man/CoolPose
   rotate: false
-  xy: 192, 400
+  xy: 64, 400
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
   index: -1
 Roaster Man/FallingWithStyle
   rotate: false
-  xy: 320, 400
+  xy: 192, 400
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
   index: -1
 Roaster Man/FlyFlap
   rotate: false
-  xy: 448, 400
+  xy: 320, 400
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
   index: -1
 Roaster Man/RetractWings
   rotate: false
-  xy: 576, 400
+  xy: 448, 400
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Roaster Man/Stand
   rotate: false
-  xy: 640, 400
+  xy: 512, 400
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
   index: -1
 Roaster Man/StandFlap
   rotate: false
-  xy: 768, 400
+  xy: 640, 400
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
   index: -1
 Roaster Man/SuaveCombSweep
   rotate: false
-  xy: 0, 464
+  xy: 768, 400
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
   index: -1
 Roaster Man/Wet
   rotate: false
-  xy: 128, 464
+  xy: 896, 400
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
@@ -474,49 +481,49 @@ Rodent Man/WallSlide
   index: -1
 Sigma Rat/Claw
   rotate: false
-  xy: 256, 464
+  xy: 0, 464
   size: 144, 72
   orig: 144, 72
   offset: 0, 0
   index: -1
 Timber Woman/Damaged
   rotate: false
-  xy: 448, 464
+  xy: 192, 464
   size: 192, 96
   orig: 192, 96
   offset: 0, 0
   index: -1
 Timber Woman/Jump
   rotate: false
-  xy: 0, 560
+  xy: 384, 464
   size: 384, 96
   orig: 384, 96
   offset: 0, 0
   index: -1
 Timber Woman/JustLand
   rotate: false
-  xy: 384, 560
+  xy: 0, 560
   size: 480, 96
   orig: 480, 96
   offset: 0, 0
   index: -1
 Timber Woman/OnFire
   rotate: false
-  xy: 0, 656
+  xy: 480, 560
   size: 192, 96
   orig: 192, 96
   offset: 0, 0
   index: -1
 Timber Woman/Stand
   rotate: false
-  xy: 192, 656
+  xy: 672, 560
   size: 192, 96
   orig: 192, 96
   offset: 0, 0
   index: -1
 Timber Woman/Swing
   rotate: false
-  xy: 384, 656
+  xy: 0, 656
   size: 576, 96
   orig: 576, 96
   offset: 0, 0

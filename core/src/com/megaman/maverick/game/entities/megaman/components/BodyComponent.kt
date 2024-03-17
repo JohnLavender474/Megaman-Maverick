@@ -28,27 +28,21 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     body.width = .75f * ConstVals.PPM
     body.physics.takeFrictionFromOthers = true
 
-    // drawable shapes
     val shapes = Array<() -> IDrawableShape?>()
 
-    // player fixture
     val playerFixture = Fixture(GameRectangle().setWidth(0.8f * ConstVals.PPM), FixtureType.PLAYER)
     body.addFixture(playerFixture)
     playerFixture.shape.color = Color.WHITE
-    // shapes.add { playerFixture.shape }
 
-    // body fixture
     val bodyFixture = Fixture(GameRectangle().setWidth(.8f * ConstVals.PPM), FixtureType.BODY)
     body.addFixture(bodyFixture)
     bodyFixture.shape.color = Color.BLUE
-    // shapes.add { bodyFixture.shape }
 
     val onBounce = {
         if (!body.isSensing(BodySense.IN_WATER) /* TODO: && has(MegaAbility.AIR_DASH) */)
             aButtonTask = AButtonTask.AIR_DASH
     }
 
-    // feet fixture
     val feetFixture =
         Fixture(
             GameRectangle().setWidth(.6f * ConstVals.PPM).setHeight(.15f * ConstVals.PPM),
@@ -59,7 +53,6 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     feetFixture.shape.color = Color.GREEN
     shapes.add { feetFixture.bodyRelativeShape }
 
-    // head fixture
     val headFixture =
         Fixture(
             GameRectangle().setWidth(.6f * ConstVals.PPM).setHeight(.15f * ConstVals.PPM),
@@ -68,9 +61,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     headFixture.setRunnable(onBounce)
     body.addFixture(headFixture)
     headFixture.shape.color = Color.RED
-    // shapes.add { headFixture.bodyRelativeShape }
 
-    // left fixture
     val leftFixture = Fixture(GameRectangle().setWidth(.2f * ConstVals.PPM), FixtureType.SIDE)
     leftFixture.setRunnable(onBounce)
     leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
@@ -78,7 +69,6 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     leftFixture.shape.color = Color.YELLOW
     shapes.add { leftFixture.bodyRelativeShape }
 
-    // right fixture
     val rightFixture = Fixture(GameRectangle().setWidth(.2f * ConstVals.PPM), FixtureType.SIDE)
     rightFixture.setRunnable(onBounce)
     rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
@@ -86,14 +76,11 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     rightFixture.shape.color = Color.BLUE
     shapes.add { rightFixture.bodyRelativeShape }
 
-    // damageable fixture
     val damageableFixture =
         Fixture(GameRectangle().setSize(.8f * ConstVals.PPM), FixtureType.DAMAGEABLE)
     body.addFixture(damageableFixture)
     damageableFixture.shape.color = Color.RED
-    // shapes.add { damageableFixture.bodyRelativeShape }
 
-    // water listener fixture
     val waterListenerFixture =
         Fixture(
             GameRectangle().setSize(.8f * ConstVals.PPM, ConstVals.PPM / 4f),
@@ -101,9 +88,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
         )
     body.addFixture(waterListenerFixture)
     waterListenerFixture.shape.color = Color.PURPLE
-    // shapes.add { waterListenerFixture.bodyRelativeShape }
 
-    // pre-process
     body.preProcess.put(ConstKeys.DEFAULT, Updatable {
         val wallSlidingOnIce =
             isBehaviorActive(BehaviorType.WALL_SLIDING) &&

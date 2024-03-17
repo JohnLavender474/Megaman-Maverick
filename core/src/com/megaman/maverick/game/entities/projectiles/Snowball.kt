@@ -2,8 +2,6 @@ package com.megaman.maverick.game.entities.projectiles
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
-import com.engine.common.CAUSE_OF_DEATH_MESSAGE
-import com.engine.common.GameLogger
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.extensions.objectSetOf
 import com.engine.common.objects.Properties
@@ -13,7 +11,6 @@ import com.engine.damage.IDamageable
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setSize
-import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
 import com.engine.world.Body
 import com.engine.world.BodyComponent
@@ -25,6 +22,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.defineProjectileComponents
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -35,7 +33,7 @@ import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.getEntity
 import kotlin.reflect.KClass
 
-class Snowball(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity {
+class Snowball(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     companion object {
         const val TAG = "Snowball"

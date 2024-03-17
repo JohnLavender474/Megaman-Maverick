@@ -63,8 +63,10 @@ abstract class AbstractEnemy(
 
     protected val damageTimer = Timer(dmgDuration)
     protected val damageBlinkTimer = Timer(dmgBlinkDur)
+
     protected var damageBlink = false
     protected var dropItemOnDeath = true
+    protected var onDamageInflictedTo: ((IDamageable) -> Unit)? = null
 
     override fun init() {
         addComponent(definePointsComponent())
@@ -117,6 +119,7 @@ abstract class AbstractEnemy(
 
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
+        onDamageInflictedTo = spawnProps.get(ConstKeys.ON_DAMAGE_INFLICTED_TO) as ((IDamageable) -> Unit)?
         dropItemOnDeath = spawnProps.getOrDefault(ConstKeys.DROP_ITEM_ON_DEATH, true, Boolean::class)
         val cullWhenOutOfCamBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
         if (cullWhenOutOfCamBounds) {
@@ -162,6 +165,7 @@ abstract class AbstractEnemy(
     override fun canDamage(damageable: IDamageable) = true
 
     override fun onDamageInflictedTo(damageable: IDamageable) {
+        onDamageInflictedTo?.invoke(damageable)
     }
 
     protected open fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {

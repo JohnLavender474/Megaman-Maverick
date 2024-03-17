@@ -360,6 +360,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Bosses/GutsTank/Laughing.png</key>
             <key type="filename">../frames/Bosses/GutsTank/MouthClosed.png</key>
             <key type="filename">../frames/Bosses/GutsTank/MouthOpen.png</key>
             <struct type="IndividualSpriteSettings">

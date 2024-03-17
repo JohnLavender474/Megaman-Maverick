@@ -22,7 +22,6 @@ import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setSize
-import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IAudioEntity
 import com.engine.points.PointsComponent
@@ -35,16 +34,15 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
-import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.defineProjectileComponents
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import kotlin.reflect.KClass
 
-class Petal(game: MegamanMaverickGame) :
-    GameEntity(game), IProjectileEntity, IAudioEntity, IHealthEntity, IDamager, IDamageable {
+class Petal(game: MegamanMaverickGame) : AbstractProjectile(game), IAudioEntity, IHealthEntity, IDamager, IDamageable {
 
     companion object {
         const val TAG = "Petal"
@@ -93,7 +91,7 @@ class Petal(game: MegamanMaverickGame) :
     }
 
     override fun onDestroy() {
-        super<GameEntity>.onDestroy()
+        super<AbstractProjectile>.onDestroy()
         GameLogger.debug(TAG, "Petal destroyed")
     }
 

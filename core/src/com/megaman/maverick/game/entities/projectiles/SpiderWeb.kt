@@ -25,7 +25,6 @@ import com.engine.drawables.sorting.DrawingPriority
 import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
-import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
 import com.engine.events.Event
 import com.engine.events.IEventListener
@@ -40,14 +39,14 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.IProjectileEntity
+import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.defineProjectileComponents
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.BodyComponentCreator
 
-class SpiderWeb(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity, IEventListener, IFaceable {
+class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IEventListener, IFaceable {
 
     companion object {
         const val TAG = "SpiderWeb"
@@ -87,7 +86,7 @@ class SpiderWeb(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity
             grayRegion = atlas.findRegion("SpiderWeb/Gray")
             blinkWhiteRegion = atlas.findRegion("SpiderWeb/BlinkWhite")
         }
-        super<GameEntity>.init()
+        super.init()
         addComponents(defineProjectileComponents())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
@@ -114,7 +113,7 @@ class SpiderWeb(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity
     }
 
     override fun onDestroy() {
-        super<GameEntity>.onDestroy()
+        super.onDestroy()
         if (stuckToMegaman) {
             explode()
             WEBS_STUCK_TO_MEGAMAN.remove(this)

@@ -33,8 +33,7 @@ import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import kotlin.reflect.KClass
 
-class SnowballExplosion(game: MegamanMaverickGame) :
-    GameEntity(game), IBodyEntity, ISpriteEntity, IDamager {
+class SnowballExplosion(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEntity, IDamager {
 
     companion object {
         const val DURATION = 0.075f
