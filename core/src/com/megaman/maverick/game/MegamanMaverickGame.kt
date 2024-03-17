@@ -54,6 +54,7 @@ import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.MegaControllerPoller
 import com.megaman.maverick.game.entities.bosses.GutsTank
 import com.megaman.maverick.game.entities.bosses.GutsTankFist
+import com.megaman.maverick.game.entities.enemies.HeliMet
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.screens.ScreenEnum
@@ -81,7 +82,7 @@ class MegamanMaverickGame : Game2D() {
         const val DEBUG_TEXT = false
         const val DEBUG_SHAPES = true
         const val DEFAULT_VOLUME = 0.5f
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(GutsTank.TAG, GutsTankFist.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(HeliMet.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.SIDE, FixtureType.BLOCK)
         }

@@ -42,11 +42,15 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity, I
 
     companion object {
         private const val CLAMP = 10f
+        private const val BOUNCE_LIMIT = 3
         private var bulletRegion: TextureRegion? = null
     }
 
     override var owner: IGameEntity? = null
+
     override lateinit var directionRotation: Direction
+
+    private var bounced = 0
 
     override fun init() {
         addComponents(defineProjectileComponents())
@@ -64,6 +68,7 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity, I
         body.physics.velocity.set(trajectory)
         val gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, Vector2(), Vector2::class)
         body.physics.gravity.set(gravity)
+        bounced = 0
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
@@ -77,6 +82,13 @@ class Bullet(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity, I
 
     override fun hitShield(shieldFixture: Fixture) {
         if (owner == shieldFixture.getEntity()) return
+
+        bounced++
+        if (bounced >= BOUNCE_LIMIT) {
+            kill()
+            return
+        }
+
         owner = shieldFixture.getEntity()
 
         val trajectory = body.physics.velocity.cpy()

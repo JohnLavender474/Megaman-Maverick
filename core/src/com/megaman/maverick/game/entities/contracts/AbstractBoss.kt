@@ -68,13 +68,9 @@ abstract class AbstractBoss(
         }
     }
 
-    override fun init() {
-        super.init()
-        dropItemOnDeath = false
-    }
-
     override fun spawn(spawnProps: Properties) {
         game.eventsMan.addListener(this)
+        spawnProps.put(ConstKeys.DROP_ITEM_ON_DEATH, false)
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
         ready = false
         defeated = false

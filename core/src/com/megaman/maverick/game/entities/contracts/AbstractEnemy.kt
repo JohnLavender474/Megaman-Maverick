@@ -117,6 +117,7 @@ abstract class AbstractEnemy(
 
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
+        dropItemOnDeath = spawnProps.getOrDefault(ConstKeys.DROP_ITEM_ON_DEATH, true, Boolean::class)
         val cullWhenOutOfCamBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
         if (cullWhenOutOfCamBounds) {
             val cullTime = spawnProps.getOrDefault(ConstKeys.CULL_TIME, DEFAULT_CULL_TIME, Float::class)

@@ -6,6 +6,7 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.OrderedSet
 import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
@@ -23,6 +24,7 @@ import com.engine.common.interfaces.isFacing
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
+import com.engine.common.shapes.getCenter
 import com.engine.common.shapes.getPosition
 import com.engine.common.shapes.toGameRectangle
 import com.engine.common.time.Timer
@@ -56,6 +58,7 @@ import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
+import com.megaman.maverick.game.entities.enemies.HeliMet
 import com.megaman.maverick.game.entities.enemies.Met
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -77,7 +80,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
     }
 
     enum class GutsTankAttackState {
-        LAUNCH_FIST, LAUNCH_RUNNING_METS, /* LAUNCH_FLYING_METS, */ CHUNK_BULLETS, SHOOT_BLASTS
+        LAUNCH_FIST, LAUNCH_RUNNING_METS, LAUNCH_FLYING_METS, CHUNK_BULLETS, SHOOT_BLASTS, DO_NOTHING
     }
 
     companion object {
@@ -86,6 +89,10 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
         private val ATTACK_STATES = GutsTankAttackState.values()
 
         private const val KILLER_WALL = "killer_wall"
+
+        private const val FLY1 = "fly1"
+        private const val FLY2 = "fly2"
+        private const val FLY3 = "fly3"
 
         private const val BODY_WIDTH = 8f
         private const val BODY_HEIGHT = 4.46875f
@@ -98,7 +105,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
         private const val X_VEL = 2f
         private const val MOVEMENT_PAUSE_DUR = 2f
 
-        private const val ATTACK_DELAY = 1f
+        private const val ATTACK_DELAY = 1.75f
 
         private const val BULLETS_TO_CHUNK = 5
         private const val CHUNKED_BULLET_GRAVITY = -0.15f
@@ -114,9 +121,11 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
         private const val RUNNING_MET_DELAY = 1f
 
         private const val FLYING_METS_TO_LAUNCH = 3
-        private const val FLYING_MET_DELAY = 0.5f
+        private const val FLYING_MET_DELAY = 1f
 
         private const val LAUNCH_FIST_DELAY = 10f
+
+        private const val DO_THING_DUR = 1f
 
         private var mouthOpenRegion: TextureRegion? = null
         private var mouthClosedRegion: TextureRegion? = null
@@ -129,7 +138,10 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
         }, ChargedShotExplosion::class to dmgNeg(1)
     )
 
-    private var attackState: GutsTankAttackState? = null
+    internal var tankBlock: Block? = null
+    internal var bodyBlock: Block? = null
+    internal val runningMetsSet = OrderedSet<Met>()
+    internal val flyingMetsSet = OrderedSet<HeliMet>()
 
     private val attackDelayTimer = Timer(ATTACK_DELAY)
     private val movementPauseTimer = Timer(MOVEMENT_PAUSE_DUR)
@@ -138,8 +150,9 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
     private val runningMetDelayTimer = Timer(RUNNING_MET_DELAY)
     private val flyingMetDelayTimer = Timer(FLYING_MET_DELAY)
     private val launchFistDelayTimer = Timer(LAUNCH_FIST_DELAY)
+    private val doNothingTimer = Timer(DO_THING_DUR)
 
-    private val runningMetsArray = Array<Met>()
+    private val flyingMetTargets = Array<Vector2>()
 
     private lateinit var frontPoint: Vector2
     private lateinit var backPoint: Vector2
@@ -148,13 +161,10 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
     private lateinit var moveState: GutsTankMoveState
     private lateinit var killerWall: GameRectangle
 
-    internal var tankBlock: Block? = null
-    internal var bodyBlock: Block? = null
-    internal var fist: GutsTankFist? = null
-
+    private var attackState: GutsTankAttackState? = null
+    private var fist: GutsTankFist? = null
     private var reachedFrontFirstTime = false
     private var moveToFront = true
-
     private var bulletsChunked = 0
     private var blastsShot = 0
     private var runningMets = 0
@@ -219,6 +229,12 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
         frontPoint = spawnProps.get(ConstKeys.FRONT, RectangleMapObject::class)!!.rectangle.getPosition()
         backPoint = spawnProps.get(ConstKeys.BACK, RectangleMapObject::class)!!.rectangle.getPosition()
 
+        flyingMetTargets.clear()
+        val fly1Target = spawnProps.get(FLY1, RectangleMapObject::class)!!.rectangle.getCenter()
+        val fly2Target = spawnProps.get(FLY2, RectangleMapObject::class)!!.rectangle.getCenter()
+        val fly3Target = spawnProps.get(FLY3, RectangleMapObject::class)!!.rectangle.getCenter()
+        flyingMetTargets.addAll(fly1Target, fly2Target, fly3Target)
+
         moveState = GutsTankMoveState.MOVE
         moveToFront = true
         reachedFrontFirstTime = false
@@ -235,12 +251,19 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
         blastsShot = 0
 
         launchFistDelayTimer.reset()
+
+        runningMets = 0
+        flyingMets = 0
+
+        doNothingTimer.reset()
     }
 
     override fun onDestroy() {
         super<AbstractBoss>.onDestroy()
-        runningMetsArray.forEach { it.kill() }
-        runningMetsArray.clear()
+        runningMetsSet.forEach { it.kill() }
+        runningMetsSet.clear()
+        flyingMetsSet.forEach { it.kill() }
+        flyingMetsSet.clear()
         fist?.kill()
         fist = null
         tankBlock?.kill()
@@ -252,8 +275,10 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
     override fun triggerDefeat() {
         super.triggerDefeat()
         moveState = GutsTankMoveState.PAUSE
-        runningMetsArray.forEach { it.setHealth(0) }
-        runningMetsArray.clear()
+        runningMetsSet.forEach { it.setHealth(0) }
+        runningMetsSet.clear()
+        flyingMetsSet.forEach { it.setHealth(0) }
+        flyingMetsSet.clear()
         fist?.setHealth(0)
         fist = null
         tankBlock?.kill()
@@ -263,7 +288,18 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
     }
 
     override fun canBeDamagedBy(damager: IDamager): Boolean {
-        if (damager is IProjectileEntity && (damager.owner == this || damager.owner == fist || damager.owner == tankBlock || damager.owner == bodyBlock)) return false
+        if (damager is IProjectileEntity) {
+            damager.owner?.let { damagerOwner ->
+                if (
+                    damagerOwner == this ||
+                    damagerOwner == fist ||
+                    damagerOwner == tankBlock ||
+                    damagerOwner == bodyBlock ||
+                    (damagerOwner is Met && runningMetsSet.contains(damagerOwner)) ||
+                    (damagerOwner is HeliMet && flyingMetsSet.contains(damagerOwner))
+                ) return false
+            }
+        }
         return super.canBeDamagedBy(damager)
     }
 
@@ -277,15 +313,17 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                 return@add
             }
 
-            val runningMetIter = runningMetsArray.iterator()
+            val runningMetIter = runningMetsSet.iterator()
             while (runningMetIter.hasNext()) {
                 val met = runningMetIter.next()
+                if (met.body.getMaxX() <= killerWall.getMaxX()) met.kill()
                 if (met.dead) runningMetIter.remove()
-                if (met.body.getMaxX() <= killerWall.getMaxX()) {
-                    GameLogger.debug(TAG, "Running Met killed by killer wall")
-                    met.kill()
-                    runningMetIter.remove()
-                }
+            }
+
+            val flyingMetIter = flyingMetsSet.iterator()
+            while (flyingMetIter.hasNext()) {
+                val met = flyingMetIter.next()
+                if (met.dead) flyingMetIter.remove()
             }
 
             if (!tankBlock!!.body.getCenter()
@@ -363,41 +401,60 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                 }
 
                 GutsTankAttackState.LAUNCH_RUNNING_METS -> {
-                    runningMetDelayTimer.update(delta)
-                    if (runningMetDelayTimer.isFinished()) {
-                        requestToPlaySound(SoundAsset.CHILL_SHOOT, false)
-                        val runningMet = EntityFactories.fetch(EntityType.ENEMY, "Met")!!
-                        game.gameEngine.spawn(
-                            runningMet, props(
-                                ConstKeys.POSITION to Vector2(
-                                    bodyBlock!!.body.x - (0.75f * ConstVals.PPM),
-                                    tankBlock!!.body.getMaxY() + (0.25f * ConstVals.PPM)
-                                ), ConstKeys.RIGHT to false, Met.RUN_ONLY to true
+                    if (runningMetsSet.size >= RUNNING_METS_TO_LAUNCH) finishAttack(attackState!!)
+                    else {
+                        runningMetDelayTimer.update(delta)
+                        if (runningMetDelayTimer.isFinished()) {
+                            requestToPlaySound(SoundAsset.CHILL_SHOOT, false)
+                            val runningMet = EntityFactories.fetch(EntityType.ENEMY, "Met")!!
+                            game.gameEngine.spawn(
+                                runningMet, props(
+                                    ConstKeys.POSITION to Vector2(
+                                        bodyBlock!!.body.x - (0.75f * ConstVals.PPM),
+                                        tankBlock!!.body.getMaxY() + (0.25f * ConstVals.PPM)
+                                    ), ConstKeys.RIGHT to false, Met.RUN_ONLY to true
+                                )
                             )
-                        )
-                        runningMets++
-                        runningMetsArray.add(runningMet as Met)
-                        runningMetDelayTimer.reset()
-                        if (runningMets >= RUNNING_METS_TO_LAUNCH) finishAttack(attackState!!)
+                            runningMetsSet.add(runningMet as Met)
+                            runningMetDelayTimer.reset()
+                            runningMets++
+                            if (runningMetsSet.size >= RUNNING_METS_TO_LAUNCH ||
+                                runningMets >= RUNNING_METS_TO_LAUNCH
+                            ) finishAttack(attackState!!)
+                        }
                     }
                 }
 
-                /*
                 GutsTankAttackState.LAUNCH_FLYING_METS -> {
-                    flyingMetDelayTimer.update(delta)
-                    if (flyingMetDelayTimer.isFinished()) {
-                        val flyingMet = EntityFactories.fetch(EntityType.ENEMY, "FlyingMet")!!
-                        game.gameEngine.spawn(
-                            flyingMet, props(
-                                ConstKeys.POSITION to body.getCenter().add(0f, 1.5f * ConstVals.PPM),
-                                ConstKeys.FACING to Facing.LEFT
+                    if (flyingMetsSet.size >= FLYING_METS_TO_LAUNCH) finishAttack(attackState!!)
+                    else {
+                        flyingMetDelayTimer.update(delta)
+                        if (flyingMetDelayTimer.isFinished()) {
+                            requestToPlaySound(SoundAsset.CHILL_SHOOT, false)
+                            val flyingMet = EntityFactories.fetch(EntityType.ENEMY, "HeliMet")!! as HeliMet
+                            val target = flyingMetTargets.get(flyingMetsSet.size)
+                            game.gameEngine.spawn(
+                                flyingMet, props(
+                                    ConstKeys.POSITION to Vector2(
+                                        bodyBlock!!.body.x - (0.75f * ConstVals.PPM),
+                                        tankBlock!!.body.getMaxY() + (0.65f * ConstVals.PPM)
+                                    ), ConstKeys.FACING to Facing.LEFT, ConstKeys.TARGET to target
+                                )
                             )
-                        )
-                        flyingMets++
-                        if (flyingMets >= FLYING_METS_TO_LAUNCH) finishAttack(attackState!!)
+                            flyingMetsSet.add(flyingMet)
+                            flyingMetDelayTimer.reset()
+                            flyingMets++
+                            if (flyingMetsSet.size >= FLYING_METS_TO_LAUNCH ||
+                                flyingMets >= FLYING_METS_TO_LAUNCH
+                            ) finishAttack(attackState!!)
+                        }
                     }
                 }
-                 */
+
+                GutsTankAttackState.DO_NOTHING -> {
+                    doNothingTimer.update(delta)
+                    if (doNothingTimer.isFinished()) finishAttack(attackState!!)
+                }
 
                 else -> {}
             }
@@ -494,21 +551,19 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                 blastShootDelayTimer.reset()
             }
 
-            GutsTankAttackState.LAUNCH_FIST -> {
-                launchFistDelayTimer.reset()
-            }
+            GutsTankAttackState.LAUNCH_FIST -> launchFistDelayTimer.reset()
 
             GutsTankAttackState.LAUNCH_RUNNING_METS -> {
-                runningMets = 0
                 runningMetDelayTimer.reset()
+                runningMets = 0
             }
 
-            /*
             GutsTankAttackState.LAUNCH_FLYING_METS -> {
-                flyingMets = 0
                 flyingMetDelayTimer.reset()
+                flyingMets = 0
             }
-             */
+
+            GutsTankAttackState.DO_NOTHING -> doNothingTimer.reset()
         }
         this.attackState = null
     }
@@ -603,20 +658,25 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
     }
 
     override fun canBeDamagedBy(damager: IDamager): Boolean {
-        if (damager is IProjectileEntity && (
-                    damager.owner == this || damager.owner == parent ||
-                            damager.owner == (parent as GutsTank).tankBlock ||
-                            damager.owner == (parent as GutsTank).bodyBlock
-                    )
-        ) return false
+        if (damager is IProjectileEntity) {
+            damager.owner?.let { damagerOwner ->
+                if (
+                    damagerOwner == this ||
+                    damagerOwner == parent ||
+                    damagerOwner == (parent as GutsTank).tankBlock ||
+                    damagerOwner == (parent as GutsTank).bodyBlock ||
+                    (damagerOwner is Met && (parent as GutsTank).runningMetsSet.contains(damagerOwner)) ||
+                    (damagerOwner is HeliMet && (parent as GutsTank).flyingMetsSet.contains(damagerOwner))
+                ) return false
+            }
+        }
         return super.canBeDamagedBy(damager)
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) = (parent as GutsTank).laugh()
 
     fun launch() {
-        target = getMegamanMaverickGame().megaman.body.getCenter()
-        GameLogger.debug(TAG, "Target on launch: $target")
+        facing = if (megaman.body.x < body.getCenter().x) Facing.LEFT else Facing.RIGHT
         state = GutsTankFistState.LAUNCHED
         launchDelayTimer.reset()
     }
@@ -632,13 +692,15 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
                 }
 
                 GutsTankFistState.LAUNCHED -> {
-                    facing = Facing.LEFT
                     launchDelayTimer.update(delta)
                     if (!launchDelayTimer.isFinished()) {
                         body.physics.velocity.setZero()
                         return@add
                     }
-                    if (launchDelayTimer.isJustFinished()) requestToPlaySound(SoundAsset.BURST_SOUND, false)
+                    if (launchDelayTimer.isJustFinished()) {
+                        target = getMegamanMaverickGame().megaman.body.getCenter()
+                        requestToPlaySound(SoundAsset.BURST_SOUND, false)
+                    }
                     body.physics.velocity = target.cpy().sub(body.getCenter()).nor().scl(LAUNCH_SPEED * ConstVals.PPM)
                     if (body.contains(target)) {
                         GameLogger.debug(TAG, "Fist hit target")
@@ -648,7 +710,7 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
                 }
 
                 GutsTankFistState.RETURNING -> {
-                    facing = Facing.RIGHT
+                    facing = if (attachment.x < body.getCenter().x) Facing.LEFT else Facing.RIGHT
                     returnDelayTimer.update(delta)
                     if (returnDelayTimer.isFinished()) {
                         body.physics.velocity = attachment.cpy().sub(body.getCenter()).nor().scl(

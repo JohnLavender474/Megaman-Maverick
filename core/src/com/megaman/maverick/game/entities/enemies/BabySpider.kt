@@ -78,14 +78,14 @@ class BabySpider(game: MegamanMaverickGame) : AbstractEnemy(game) {
             runRegion = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, "BabySpider/Run")
             stillRegion = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, "BabySpider/Still")
         }
-        dropItemOnDeath = false
         super.init()
         addComponent(defineAnimationsComponent())
     }
 
     override fun spawn(spawnProps: Properties) {
-        GameLogger.debug(TAG, "spawn props = $spawnProps")
+        spawnProps.put(ConstKeys.DROP_ITEM_ON_DEATH, false)
         super.spawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
         body.physics.gravity.y = GRAVITY_BEFORE_LAND * ConstVals.PPM
