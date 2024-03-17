@@ -80,7 +80,7 @@ class MegamanMaverickGame : Game2D() {
     companion object {
         const val TAG = "MegamanMaverickGame"
         const val DEBUG_TEXT = false
-        const val DEBUG_SHAPES = true
+        const val DEBUG_SHAPES = false
         const val DEFAULT_VOLUME = 0.5f
         val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(HeliMet.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->

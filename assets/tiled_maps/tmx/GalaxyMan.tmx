@@ -58,7 +58,7 @@
   <object id="33" x="2112" y="4288" width="384" height="384"/>
   <object id="42" x="0" y="4352" width="96" height="448">
    <properties>
-    <property name="body_labels" value="no_side_touchie,no_projectile_collision"/>
+    <property name="fixture_labels" value="no_side_touchie,no_projectile_collision"/>
    </properties>
   </object>
   <object id="56" x="1432" y="4512" width="296" height="32"/>

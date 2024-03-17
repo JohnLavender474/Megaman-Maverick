@@ -5,6 +5,8 @@ import com.megaman.maverick.game.ConstKeys
 
 interface IHealthEntity : IPointsEntity {
 
+    fun getHealthRatio() = getCurrentHealth().toFloat() / getMaxHealth().toFloat()
+
     fun getHealthPoints() = getPoints(ConstKeys.HEALTH)
 
     fun getCurrentHealth() = getHealthPoints().current

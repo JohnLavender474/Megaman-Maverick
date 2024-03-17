@@ -329,9 +329,6 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
     private fun getCurrentSpeed() = ConstVals.PPM * (MIN_SPEED + (MAX_SPEED - MIN_SPEED) * (1 - getHealthRatio()))
 
-    private fun getHealthRatio() =
-        (getCurrentHealth() - getMinHealth()).toFloat() / (getMaxHealth() - getMinHealth()).toFloat()
-
     private fun shootWebs() {
         requestToPlaySound(SoundAsset.SPLASH_SOUND, false)
         val centerTrajectory = megaman.body.getCenter().sub(body.getCenter()).nor()

@@ -3,7 +3,6 @@ package com.megaman.maverick.game.entities.contracts
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.ObjectMap
 import com.engine.audio.AudioComponent
-import com.engine.common.CAUSE_OF_DEATH_MESSAGE
 import com.engine.common.GameLogger
 import com.engine.common.enums.Facing
 import com.engine.common.extensions.objectSetOf
@@ -95,7 +94,8 @@ abstract class AbstractEnemy(
                             EntityFactories.fetch(EntityType.ITEM, ItemsFactory.HEALTH_BULB)
                         }
 
-                        3, 4, 5 -> { // TODO: EntityFactories.fetch(EntityType.ITEM, ItemsFactory.WEAPON_ENERGY)
+                        3, 4, 5 -> {
+                            // TODO: EntityFactories.fetch(EntityType.ITEM, ItemsFactory.WEAPON_ENERGY)
                             null
                         }
 
@@ -211,7 +211,6 @@ abstract class AbstractEnemy(
     fun isMegamanShootingAtMe(): Boolean {
         val megaman = getMegamanMaverickGame().megaman
         if (!megaman.shooting) return false
-
         return body.x < megaman.body.x && megaman.facing == Facing.LEFT || body.x > megaman.body.x && megaman.facing == Facing.RIGHT
     }
 

@@ -29,7 +29,7 @@ abstract class AbstractBoss(
 
     companion object {
         const val TAG = "AbstractBoss"
-        const val DEFAULT_BOSS_DMG_DURATION = 0.75f
+        const val DEFAULT_BOSS_DMG_DURATION = 1.25f
         const val DEFAULT_DEFEAT_DURATION = 3f
         const val EXPLOSION_TIME = 0.25f
     }

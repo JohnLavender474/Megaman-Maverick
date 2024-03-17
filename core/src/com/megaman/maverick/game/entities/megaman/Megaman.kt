@@ -33,7 +33,6 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.bosses.Bospider
-import com.megaman.maverick.game.entities.bosses.GutsTank
 import com.megaman.maverick.game.entities.bosses.GutsTankFist
 import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.enemies.*
@@ -130,7 +129,8 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         Bospider::class to dmgNeg(5),
         BabySpider::class to dmgNeg(2),
         GutsTankFist::class to dmgNeg(3),
-        PurpleBlast::class to dmgNeg(3)
+        PurpleBlast::class to dmgNeg(3),
+        HeliMet::class to dmgNeg(3)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 

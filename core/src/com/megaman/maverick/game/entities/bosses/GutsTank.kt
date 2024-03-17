@@ -102,10 +102,11 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
         private const val BODY_BLOCK_WIDTH = 4.75f
         private const val BODY_BLOCK_HEIGHT = 12f
 
-        private const val X_VEL = 2f
-        private const val MOVEMENT_PAUSE_DUR = 2f
+        private const val MIN_X_VEL = 2f
+        private const val MAX_X_VEL = 4f
+        private const val MOVEMENT_PAUSE_DUR = 1.5f
 
-        private const val ATTACK_DELAY = 1.75f
+        private const val ATTACK_DELAY = 1.5f
 
         private const val BULLETS_TO_CHUNK = 5
         private const val CHUNKED_BULLET_GRAVITY = -0.15f
@@ -134,7 +135,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
         Bullet::class to dmgNeg(1), ChargedShot::class to dmgNeg {
             it as ChargedShot
-            if (it.fullyCharged) 3 else 2
+            if (it.fullyCharged) 2 else 1
         }, ChargedShotExplosion::class to dmgNeg(1)
     )
 
@@ -290,13 +291,9 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
     override fun canBeDamagedBy(damager: IDamager): Boolean {
         if (damager is IProjectileEntity) {
             damager.owner?.let { damagerOwner ->
-                if (
-                    damagerOwner == this ||
-                    damagerOwner == fist ||
-                    damagerOwner == tankBlock ||
-                    damagerOwner == bodyBlock ||
-                    (damagerOwner is Met && runningMetsSet.contains(damagerOwner)) ||
-                    (damagerOwner is HeliMet && flyingMetsSet.contains(damagerOwner))
+                if (damagerOwner == this || damagerOwner == fist || damagerOwner == tankBlock || damagerOwner == bodyBlock || (damagerOwner is Met && runningMetsSet.contains(
+                        damagerOwner
+                    )) || (damagerOwner is HeliMet && flyingMetsSet.contains(damagerOwner))
                 ) return false
             }
         }
@@ -418,9 +415,9 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                             runningMetsSet.add(runningMet as Met)
                             runningMetDelayTimer.reset()
                             runningMets++
-                            if (runningMetsSet.size >= RUNNING_METS_TO_LAUNCH ||
-                                runningMets >= RUNNING_METS_TO_LAUNCH
-                            ) finishAttack(attackState!!)
+                            if (runningMetsSet.size >= RUNNING_METS_TO_LAUNCH || runningMets >= RUNNING_METS_TO_LAUNCH) finishAttack(
+                                attackState!!
+                            )
                         }
                     }
                 }
@@ -444,9 +441,9 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                             flyingMetsSet.add(flyingMet)
                             flyingMetDelayTimer.reset()
                             flyingMets++
-                            if (flyingMetsSet.size >= FLYING_METS_TO_LAUNCH ||
-                                flyingMets >= FLYING_METS_TO_LAUNCH
-                            ) finishAttack(attackState!!)
+                            if (flyingMetsSet.size >= FLYING_METS_TO_LAUNCH || flyingMets >= FLYING_METS_TO_LAUNCH) finishAttack(
+                                attackState!!
+                            )
                         }
                     }
                 }
@@ -462,9 +459,10 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
             when (moveState) {
                 GutsTankMoveState.MOVE -> {
                     if (moveToFront) {
-                        body.physics.velocity.x = -X_VEL * ConstVals.PPM
-                        tankBlock!!.body.physics.velocity.x = -X_VEL * ConstVals.PPM
-                        bodyBlock!!.body.physics.velocity.x = -X_VEL * ConstVals.PPM
+                        val xVel = MIN_X_VEL + (MAX_X_VEL - MIN_X_VEL) * (1f - getHealthRatio())
+                        body.physics.velocity.x = -xVel * ConstVals.PPM
+                        tankBlock!!.body.physics.velocity.x = -xVel * ConstVals.PPM
+                        bodyBlock!!.body.physics.velocity.x = -xVel * ConstVals.PPM
                         if (body.x <= frontPoint.x) {
                             body.x = frontPoint.x
                             body.physics.velocity.x = 0f
@@ -473,10 +471,11 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                             movementPauseTimer.reset()
                         }
                     } else {
+                        val xVel = MIN_X_VEL + (MAX_X_VEL - MIN_X_VEL) * (1f - getHealthRatio())
                         reachedFrontFirstTime = true
-                        body.physics.velocity.x = X_VEL * ConstVals.PPM
-                        tankBlock!!.body.physics.velocity.x = X_VEL * ConstVals.PPM
-                        bodyBlock!!.body.physics.velocity.x = X_VEL * ConstVals.PPM
+                        body.physics.velocity.x = xVel * ConstVals.PPM
+                        tankBlock!!.body.physics.velocity.x = xVel * ConstVals.PPM
+                        bodyBlock!!.body.physics.velocity.x = xVel * ConstVals.PPM
                         if (body.x >= backPoint.x) {
                             body.x = backPoint.x
                             body.physics.velocity.x = 0f
@@ -507,7 +506,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
         debugShapes.add { body }
 
         val damageableFixture = Fixture(
-            GameRectangle().setSize(1.15f * ConstVals.PPM, 0.5f * ConstVals.PPM), FixtureType.DAMAGEABLE
+            GameRectangle().setSize(1.15f * ConstVals.PPM, 0.85f * ConstVals.PPM), FixtureType.DAMAGEABLE
         )
         damageableFixture.offsetFromBodyCenter.x = -1.45f * ConstVals.PPM
         damageableFixture.offsetFromBodyCenter.y = 2.35f * ConstVals.PPM
@@ -660,13 +659,9 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
     override fun canBeDamagedBy(damager: IDamager): Boolean {
         if (damager is IProjectileEntity) {
             damager.owner?.let { damagerOwner ->
-                if (
-                    damagerOwner == this ||
-                    damagerOwner == parent ||
-                    damagerOwner == (parent as GutsTank).tankBlock ||
-                    damagerOwner == (parent as GutsTank).bodyBlock ||
-                    (damagerOwner is Met && (parent as GutsTank).runningMetsSet.contains(damagerOwner)) ||
-                    (damagerOwner is HeliMet && (parent as GutsTank).flyingMetsSet.contains(damagerOwner))
+                if (damagerOwner == this || damagerOwner == parent || damagerOwner == (parent as GutsTank).tankBlock || damagerOwner == (parent as GutsTank).bodyBlock || (damagerOwner is Met && (parent as GutsTank).runningMetsSet.contains(
+                        damagerOwner
+                    )) || (damagerOwner is HeliMet && (parent as GutsTank).flyingMetsSet.contains(damagerOwner))
                 ) return false
             }
         }
