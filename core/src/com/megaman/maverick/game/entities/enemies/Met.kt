@@ -55,9 +55,7 @@ import kotlin.reflect.KClass
 class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectionRotatable {
 
     enum class MetBehavior {
-        SHIELDING,
-        POP_UP,
-        RUNNING
+        SHIELDING, POP_UP, RUNNING
     }
 
     companion object {
@@ -88,20 +86,18 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
             body.cardinalRotation = value
         }
 
-    override val damageNegotiations =
-        objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-            Bullet::class to dmgNeg(10),
-            Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-            ChargedShot::class to dmgNeg(ConstVals.MAX_HEALTH),
-            ChargedShotExplosion::class to dmgNeg(ConstVals.MAX_HEALTH)
-        )
+    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+        Bullet::class to dmgNeg(10),
+        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class to dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShotExplosion::class to dmgNeg(ConstVals.MAX_HEALTH)
+    )
 
-    private val metBehaviorTimers =
-        objectMapOf(
-            MetBehavior.SHIELDING to Timer(SHIELDING_DURATION),
-            MetBehavior.POP_UP to Timer(POP_UP_DURATION),
-            MetBehavior.RUNNING to Timer(RUNNING_DURATION)
-        )
+    private val metBehaviorTimers = objectMapOf(
+        MetBehavior.SHIELDING to Timer(SHIELDING_DURATION),
+        MetBehavior.POP_UP to Timer(POP_UP_DURATION),
+        MetBehavior.RUNNING to Timer(RUNNING_DURATION)
+    )
 
     private lateinit var type: String
 
@@ -143,24 +139,19 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
     override fun getTag() = TAG
 
     private fun shoot() {
-        val trajectory =
-            (when (directionRotation) {
-                Direction.UP -> Vector2(BULLET_TRAJECTORY_X * facing.value, BULLET_TRAJECTORY_Y)
-                Direction.DOWN -> Vector2(BULLET_TRAJECTORY_X * facing.value, -BULLET_TRAJECTORY_Y)
-                Direction.LEFT -> Vector2(BULLET_TRAJECTORY_Y, BULLET_TRAJECTORY_X * facing.value)
-                Direction.RIGHT -> Vector2(BULLET_TRAJECTORY_Y, -BULLET_TRAJECTORY_X * facing.value)
-            }).scl(ConstVals.PPM.toFloat())
+        val trajectory = (when (directionRotation) {
+            Direction.UP -> Vector2(BULLET_TRAJECTORY_X * facing.value, BULLET_TRAJECTORY_Y)
+            Direction.DOWN -> Vector2(BULLET_TRAJECTORY_X * facing.value, -BULLET_TRAJECTORY_Y)
+            Direction.LEFT -> Vector2(BULLET_TRAJECTORY_Y, BULLET_TRAJECTORY_X * facing.value)
+            Direction.RIGHT -> Vector2(BULLET_TRAJECTORY_Y, -BULLET_TRAJECTORY_X * facing.value)
+        }).scl(ConstVals.PPM.toFloat())
 
         val offset = ConstVals.PPM / 64f
-        val spawn = body.getCenter()
-            .add(offset * facing.value, if (isDirectionRotatedDown()) -offset else offset)
+        val spawn = body.getCenter().add(offset * facing.value, if (isDirectionRotatedDown()) -offset else offset)
 
-        val spawnProps =
-            props(
-                ConstKeys.OWNER to this,
-                ConstKeys.TRAJECTORY to trajectory,
-                ConstKeys.POSITION to spawn
-            )
+        val spawnProps = props(
+            ConstKeys.OWNER to this, ConstKeys.TRAJECTORY to trajectory, ConstKeys.POSITION to spawn
+        )
         val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)
         game.gameEngine.spawn(bullet!!, spawnProps)
     }
@@ -173,9 +164,12 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
 
             when (behavior) {
                 MetBehavior.SHIELDING -> {
+                    when (directionRotation) {
+                        Direction.UP, Direction.DOWN -> body.physics.velocity.x = 0f
+                        Direction.LEFT, Direction.RIGHT -> body.physics.velocity.y = 0f
+                    }
                     val shieldTimer = metBehaviorTimers.get(MetBehavior.SHIELDING)
-                    if (!isMegamanShootingAtMe() && body.isSensing(BodySense.FEET_ON_GROUND))
-                        shieldTimer.update(it)
+                    if (!isMegamanShootingAtMe() && body.isSensing(BodySense.FEET_ON_GROUND)) shieldTimer.update(it)
                     if (shieldTimer.isFinished()) behavior = MetBehavior.POP_UP
                 }
 
@@ -185,21 +179,16 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
                         return@add
                     }
 
-                    facing =
-                        when (directionRotation) {
-                            Direction.UP,
-                            Direction.DOWN -> if (megaman.body.x > body.x) Facing.RIGHT else Facing.LEFT
-
-                            Direction.LEFT,
-                            Direction.RIGHT -> if (megaman.body.y > body.y) Facing.RIGHT else Facing.LEFT
-                        }
+                    facing = when (directionRotation) {
+                        Direction.UP, Direction.DOWN -> if (megaman.body.x > body.x) Facing.RIGHT else Facing.LEFT
+                        Direction.LEFT, Direction.RIGHT -> if (megaman.body.y > body.y) Facing.RIGHT else Facing.LEFT
+                    }
 
                     val popUpTimer = metBehaviorTimers.get(MetBehavior.POP_UP)
                     if (popUpTimer.isAtBeginning()) shoot()
                     popUpTimer.update(it)
-
-                    if (popUpTimer.isFinished())
-                        behavior = if (runningAllowed) MetBehavior.RUNNING else MetBehavior.SHIELDING
+                    if (popUpTimer.isFinished()) behavior =
+                        if (runningAllowed) MetBehavior.RUNNING else MetBehavior.SHIELDING
                 }
 
                 MetBehavior.RUNNING -> {
@@ -210,14 +199,11 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
 
                     val runningTimer = metBehaviorTimers.get(MetBehavior.RUNNING)
 
-                    val runImpulse = ConstVals.PPM * facing.value *
-                            if (body.isSensing(BodySense.IN_WATER)) RUN_IN_WATER_VELOCITY else RUN_VELOCITY
+                    val runImpulse =
+                        ConstVals.PPM * facing.value * if (body.isSensing(BodySense.IN_WATER)) RUN_IN_WATER_VELOCITY else RUN_VELOCITY
                     when (directionRotation) {
-                        Direction.UP,
-                        Direction.DOWN -> body.physics.velocity.x = runImpulse
-
-                        Direction.LEFT,
-                        Direction.RIGHT -> body.physics.velocity.y = runImpulse
+                        Direction.UP, Direction.DOWN -> body.physics.velocity.x = runImpulse
+                        Direction.LEFT, Direction.RIGHT -> body.physics.velocity.y = runImpulse
                     }
 
                     if (!runOnly) {
@@ -246,36 +232,29 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
         feetFixture.offsetFromBodyCenter.y = -0.375f * ConstVals.PPM
         body.addFixture(feetFixture)
 
-        val shieldFixture =
-            Fixture(
-                GameRectangle().setSize(0.75f * ConstVals.PPM, 0.5f * ConstVals.PPM),
-                FixtureType.SHIELD
-            )
+        val shieldFixture = Fixture(
+            GameRectangle().setSize(0.75f * ConstVals.PPM, 0.5f * ConstVals.PPM), FixtureType.SHIELD
+        )
         body.addFixture(shieldFixture)
 
-        val damageableFixture =
-            Fixture(GameRectangle().setSize(0.75f * ConstVals.PPM), FixtureType.DAMAGEABLE)
+        val damageableFixture = Fixture(GameRectangle().setSize(0.75f * ConstVals.PPM), FixtureType.DAMAGEABLE)
         body.addFixture(damageableFixture)
 
-        val damagerFixture =
-            Fixture(GameRectangle().setSize(0.75f * ConstVals.PPM), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(GameRectangle().setSize(0.75f * ConstVals.PPM), FixtureType.DAMAGER)
         body.addFixture(damagerFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             body.physics.velocityClamp =
                 (if (isDirectionRotatedVertically()) Vector2(VELOCITY_CLAMP_X, VELOCITY_CLAMP_Y)
-                else Vector2(VELOCITY_CLAMP_Y, VELOCITY_CLAMP_X))
-                    .scl(ConstVals.PPM.toFloat())
+                else Vector2(VELOCITY_CLAMP_Y, VELOCITY_CLAMP_X)).scl(ConstVals.PPM.toFloat())
 
-            val gravity =
-                (if (body.isSensing(BodySense.FEET_ON_GROUND)) GRAVITY_ON_GROUND else GRAVITY_IN_AIR) * ConstVals.PPM
-            body.physics.gravity =
-                (when (directionRotation) {
-                    Direction.UP -> Vector2(0f, -gravity)
-                    Direction.DOWN -> Vector2(0f, gravity)
-                    Direction.LEFT -> Vector2(gravity, 0f)
-                    Direction.RIGHT -> Vector2(-gravity, 0f)
-                }).scl(ConstVals.PPM.toFloat())
+            val gravity = (if (body.isSensing(BodySense.FEET_ON_GROUND)) GRAVITY_ON_GROUND else GRAVITY_IN_AIR)
+            body.physics.gravity = (when (directionRotation) {
+                Direction.UP -> Vector2(0f, -gravity)
+                Direction.DOWN -> Vector2(0f, gravity)
+                Direction.LEFT -> Vector2(gravity, 0f)
+                Direction.RIGHT -> Vector2(-gravity, 0f)
+            }).scl(ConstVals.PPM.toFloat())
 
             shieldFixture.active = behavior == MetBehavior.SHIELDING
             damageableFixture.active = behavior != MetBehavior.SHIELDING
@@ -300,24 +279,21 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
             val flipY = directionRotation == Direction.DOWN
             _sprite.setFlip(flipX, flipY)
 
-            val rotation =
-                when (directionRotation) {
-                    Direction.UP,
-                    Direction.DOWN -> 0f
+            val rotation = when (directionRotation) {
+                Direction.UP, Direction.DOWN -> 0f
 
-                    Direction.LEFT -> 90f
-                    Direction.RIGHT -> 270f
-                }
+                Direction.LEFT -> 90f
+                Direction.RIGHT -> 270f
+            }
             sprite.setOriginCenter()
             _sprite.setRotation(rotation)
 
-            val position =
-                when (directionRotation) {
-                    Direction.UP -> Position.BOTTOM_CENTER
-                    Direction.DOWN -> Position.TOP_CENTER
-                    Direction.LEFT -> Position.CENTER_RIGHT
-                    Direction.RIGHT -> Position.CENTER_LEFT
-                }
+            val position = when (directionRotation) {
+                Direction.UP -> Position.BOTTOM_CENTER
+                Direction.DOWN -> Position.TOP_CENTER
+                Direction.LEFT -> Position.CENTER_RIGHT
+                Direction.RIGHT -> Position.CENTER_LEFT
+            }
             val bodyPosition = body.getPositionPoint(position)
             _sprite.setPosition(bodyPosition, position)
         }
@@ -334,18 +310,16 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
             }
         }
 
-        val animator =
-            Animator(
-                keySupplier,
-                objectMapOf(
-                    "Run" to Animation(atlas!!.findRegion("Met/Run"), 1, 2, 0.125f, true),
-                    "PopUp" to Animation(atlas!!.findRegion("Met/PopUp"), false),
-                    "LayDown" to Animation(atlas!!.findRegion("Met/LayDown"), false),
-                    "SnowRun" to Animation(atlas!!.findRegion("SnowMet/Run"), 1, 2, 0.125f, true),
-                    "SnowMet" to Animation(atlas!!.findRegion("SnowMet/PopUp"), false),
-                    "SnowLayDown" to Animation(atlas!!.findRegion("SnowMet/LayDown"), false)
-                )
+        val animator = Animator(
+            keySupplier, objectMapOf(
+                "Run" to Animation(atlas!!.findRegion("Met/Run"), 1, 2, 0.125f, true),
+                "PopUp" to Animation(atlas!!.findRegion("Met/PopUp"), false),
+                "LayDown" to Animation(atlas!!.findRegion("Met/LayDown"), false),
+                "SnowRun" to Animation(atlas!!.findRegion("SnowMet/Run"), 1, 2, 0.125f, true),
+                "SnowMet" to Animation(atlas!!.findRegion("SnowMet/PopUp"), false),
+                "SnowLayDown" to Animation(atlas!!.findRegion("SnowMet/LayDown"), false)
             )
+        )
 
         return AnimationsComponent(this, animator)
     }

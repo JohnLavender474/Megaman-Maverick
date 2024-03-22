@@ -14,6 +14,7 @@ import com.engine.common.enums.Direction
 import com.engine.common.enums.Facing
 import com.engine.common.enums.Position
 import com.engine.common.enums.ProcessState
+import com.engine.common.extensions.equalsAny
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.objectMapOf
@@ -184,18 +185,15 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
 
         val shapes = Array<() -> IDrawableShape?>()
 
-        // body fixture
         val bodyFixture = Fixture(GameRectangle().set(body), FixtureType.BODY)
         body.addFixture(bodyFixture)
 
-        // feet fixture
         val feetFixture = Fixture(GameRectangle().setSize(0.1f * ConstVals.PPM), FixtureType.FEET)
         feetFixture.offsetFromBodyCenter.y = -0.75f * ConstVals.PPM
         body.addFixture(feetFixture)
         feetFixture.shape.color = Color.GREEN
         shapes.add { feetFixture.shape }
 
-        // damager fixture
         val damagerFixture = Fixture(
             GameRectangle().setSize(0.75f * ConstVals.PPM, 1.15f * ConstVals.PPM), FixtureType.DAMAGER
         )
@@ -203,7 +201,6 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
         damagerFixture.shape.color = Color.RED
         shapes.add { damagerFixture.bodyRelativeShape }
 
-        // damageable fixture
         val damageableFixture = Fixture(
             GameRectangle().setSize(0.8f * ConstVals.PPM, 1.35f * ConstVals.PPM), FixtureType.DAMAGEABLE
         )
@@ -211,7 +208,6 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
         damageableFixture.shape.color = Color.PURPLE
         shapes.add { damageableFixture.bodyRelativeShape }
 
-        // shield fixture
         val shieldFixture = Fixture(
             GameRectangle().setSize(0.4f * ConstVals.PPM, 0.9f * ConstVals.PPM), FixtureType.SHIELD
         )
@@ -219,7 +215,6 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
         shieldFixture.shape.color = Color.BLUE
         shapes.add { shieldFixture.bodyRelativeShape }
 
-        // trigger fixture
         val triggerFixture = Fixture(GameRectangle(), FixtureType.CONSUMER)
         triggerFixture.setConsumer { processState, fixture ->
             if (hasShield && processState == ProcessState.BEGIN && fixture.fixtureLabel == FixtureType.PLAYER) setToThrowShield =
@@ -230,12 +225,14 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
         triggerFixture.shape.color = Color.YELLOW
         shapes.add { triggerFixture.shape }
 
-        // pre-process
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             if (canThrowShield && throwShieldTrigger != null) {
                 triggerFixture.active = true
                 triggerFixture.shape = throwShieldTrigger!!
             } else triggerFixture.active = false
+
+            if (directionRotation.equalsAny(Direction.UP, Direction.DOWN)) body.physics.velocity.x = 0f
+            else body.physics.velocity.y = 0f
 
             val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) -GROUND_GRAVITY else -GRAVITY
             body.physics.gravity = (when (directionRotation) {
@@ -305,7 +302,8 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
                 Direction.UP, Direction.DOWN -> if (megaman.body.x > body.x) Facing.RIGHT else Facing.LEFT
                 Direction.LEFT, Direction.RIGHT -> if (megaman.body.y > body.y) Facing.RIGHT else Facing.LEFT
             }
-            if (body.isSensing(BodySense.FEET_ON_GROUND) && megaman.body.x >= body.x && megaman.body.getMaxX() <= body.getMaxX()) jump()
+
+            if (shouldJump()) jump()
 
             if (!isInGameCamBounds()) {
                 state = if (hasShield) SniperJoeState.WAITING_SHIELDED else SniperJoeState.WAITING_NO_SHIELD
@@ -415,8 +413,19 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
         )
     }
 
+    private fun shouldJump() = body.isSensing(BodySense.FEET_ON_GROUND) && (when (directionRotation) {
+        Direction.UP, Direction.DOWN -> megaman.body.x >= body.x && megaman.body.getMaxX() <= body.getMaxX()
+        Direction.LEFT, Direction.RIGHT -> megaman.body.y >= body.y && megaman.body.getMaxY() <= body.getMaxY()
+    })
+
     private fun jump() {
-        body.physics.velocity.set(0f, JUMP_IMPULSE * ConstVals.PPM)
+        val impulse = (when (directionRotation) {
+            Direction.UP -> Vector2(0f, JUMP_IMPULSE)
+            Direction.DOWN -> Vector2(0f, -JUMP_IMPULSE)
+            Direction.LEFT -> Vector2(-JUMP_IMPULSE, 0f)
+            Direction.RIGHT -> Vector2(JUMP_IMPULSE, 0f)
+        }).scl(ConstVals.PPM.toFloat())
+        body.physics.velocity = impulse
     }
 
     private fun shoot() {

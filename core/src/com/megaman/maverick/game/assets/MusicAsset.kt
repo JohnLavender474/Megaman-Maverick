@@ -18,6 +18,7 @@ enum class MusicAsset(src: String) : IAsset {
     MM8_FROST_MAN_MUSIC("MM8_FrostMan.mp3"),
     MM8_FROST_MAN_ALT_MUSIC("MM8_FrostMan_Alt.mp3"),
     MMX2_X_HUNTER_MUSIC("MMX2_X-Hunter.mp3"),
+    MMX_SIGMA_2_STAGE("MMX_Sigma_2_Stage.mp3"),
     MMX5_VOLT_KRAKEN_MUSIC("MMX5_VoltKraken.mp3"),
     MMX_CHILL_PENGUIN_MUSIC("MMX_ChillPenguin_Famitard.mp3"),
     MMX_SIGMA_1ST_MUSIC("MMX_Sigma1st.mp3"),

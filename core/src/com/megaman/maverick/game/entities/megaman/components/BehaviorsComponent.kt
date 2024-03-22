@@ -376,24 +376,19 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
         override fun init() {
             aButtonTask = if (body.isSensing(BodySense.IN_WATER)) AButtonTask.SWIM else AButtonTask.AIR_DASH
-
-            body.physics.gravityOn = false // body.physics.collisionOn = false
-
+            body.physics.gravityOn = false
             body.setCenterX(ladder.body.getCenter().x)
             if (body.getMaxY() <= ladder.body.y) body.setY(ladder.body.y)
             else if (body.y >= ladder.body.getMaxY()) body.setMaxY(ladder.body.getMaxY())
-
             body.physics.velocity.setZero()
         }
 
         override fun act(delta: Float) {
             body.setCenterX(ladder.body.getCenter().x)
-
             if (shooting) {
                 body.physics.velocity.setZero()
                 return
             }
-
             if (game.controllerPoller.isPressed(ControllerButton.UP)) body.physics.velocity.y =
                 MegamanValues.CLIMB_VEL * ConstVals.PPM
             else if (game.controllerPoller.isPressed(ControllerButton.DOWN)) body.physics.velocity.y =
@@ -402,7 +397,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         }
 
         override fun end() {
-            body.physics.gravityOn = true // body.physics.collisionOn = true
+            body.physics.gravityOn = true
             body.physics.velocity.setZero()
             aButtonTask = if (body.isSensing(BodySense.IN_WATER)) AButtonTask.SWIM else AButtonTask.AIR_DASH
         }
@@ -444,26 +439,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                         BodySense.SIDE_TOUCHING_BLOCK_LEFT
                     ) && isFacing(Facing.LEFT))
                 ) 0f else MegamanValues.CART_RIDE_MAX_SPEED * ConstVals.PPM * facing.value
-
-            /*
-            val vel = body.physics.velocity
-            if ((body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) && isFacing(Facing.RIGHT)) ||
-                (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && isFacing(Facing.LEFT))
-            ) vel.x = 0f else {
-                val impulseX = MegamanValues.CART_RIDE_IMPULSE * ConstVals.PPM * facing.value * delta
-                if (isBehaviorActive(BehaviorType.JUMPING) || !body.isSensing(BodySense.FEET_ON_GROUND))
-                    impulseX / 2f
-
-                vel.x += impulseX
-
-                /*
-                if (vel.x > MegamanValues.CART_RIDE_MAX_SPEED * ConstVals.PPM)
-                    vel.x = MegamanValues.CART_RIDE_MAX_SPEED * ConstVals.PPM
-                else if (vel.x < -MegamanValues.CART_RIDE_MAX_SPEED * ConstVals.PPM)
-                    vel.x = -MegamanValues.CART_RIDE_MAX_SPEED * ConstVals.PPM
-                 */
-            }
-            */
         }
 
         override fun end() {

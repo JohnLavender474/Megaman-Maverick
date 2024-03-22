@@ -41,6 +41,7 @@ import com.engine.drawables.sprites.setSize
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.entities.contracts.IChildEntity
+import com.engine.entities.contracts.IDrawableShapesEntity
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.Body
 import com.engine.world.BodyComponent
@@ -106,7 +107,8 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
         private const val MAX_X_VEL = 3f
         private const val MOVEMENT_PAUSE_DUR = 1.5f
 
-        private const val ATTACK_DELAY = 1.5f
+        private const val ATTACK_DELAY_MIN = 1f
+        private const val ATTACK_DELAY_MAX = 2f
 
         private const val BULLETS_TO_CHUNK = 5
         private const val CHUNKED_BULLET_GRAVITY = -0.15f
@@ -125,8 +127,8 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
         private const val FLYING_MET_DELAY = 1f
 
         private const val LAUNCH_FIST_DELAY = 10f
-        private const val DO_THING_DUR = 1f
-        private const val LAUGH_DUR = 1f
+        private const val DO_NOTHING_DUR = 1f
+        private const val LAUGH_DUR = 1.25f
 
         private var laughingRegion: TextureRegion? = null
         private var mouthOpenRegion: TextureRegion? = null
@@ -136,7 +138,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
         Bullet::class to dmgNeg(1), ChargedShot::class to dmgNeg {
             it as ChargedShot
-            if (it.fullyCharged) 2 else 1
+            if (it.fullyCharged) 3 else 2
         }, ChargedShotExplosion::class to dmgNeg(1)
     )
 
@@ -145,14 +147,14 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
     internal val runningMetsSet = OrderedSet<Met>()
     internal val flyingMetsSet = OrderedSet<HeliMet>()
 
-    private val attackDelayTimer = Timer(ATTACK_DELAY)
+    private val attackDelayTimer = Timer(ATTACK_DELAY_MAX)
     private val movementPauseTimer = Timer(MOVEMENT_PAUSE_DUR)
     private val bulletChunkDelayTimer = Timer(BULLET_CHUNK_DELAY)
     private val blastShootDelayTimer = Timer(BLAST_SHOOT_DELAY)
     private val runningMetDelayTimer = Timer(RUNNING_MET_DELAY)
     private val flyingMetDelayTimer = Timer(FLYING_MET_DELAY)
     private val launchFistDelayTimer = Timer(LAUNCH_FIST_DELAY)
-    private val doNothingTimer = Timer(DO_THING_DUR)
+    private val doNothingTimer = Timer(DO_NOTHING_DUR)
     private val laughTimer = Timer(LAUGH_DUR)
 
     private val flyingMetTargets = Array<Vector2>()
@@ -245,7 +247,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
         reachedFrontFirstTime = false
 
         attackState = null
-        attackDelayTimer.reset()
+        attackDelayTimer.resetDuration(ATTACK_DELAY_MAX)
 
         movementPauseTimer.reset()
 
@@ -317,6 +319,8 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
             if (laughing) {
                 laughTimer.update(delta)
                 body.physics.velocity.x = 0f
+                tankBlock?.body!!.physics.velocity.x = 0f
+                bodyBlock?.body!!.physics.velocity.x = 0f
                 return@add
             }
 
@@ -349,7 +353,8 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                     if (attack == GutsTankAttackState.SHOOT_BLASTS) requestToPlaySound(
                         SoundAsset.MM2_MECHA_DRAGON, false
                     )
-                    attackDelayTimer.reset()
+                    val newDuration = ATTACK_DELAY_MIN + (ATTACK_DELAY_MAX - ATTACK_DELAY_MIN) * getHealthRatio()
+                    attackDelayTimer.resetDuration(newDuration)
                 }
             }
 
@@ -379,7 +384,8 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                                 ConstKeys.OWNER to this,
                                 ConstKeys.ON_DAMAGE_INFLICTED_TO to { damageable: IDamageable ->
                                     if (damageable is Megaman) laugh()
-                                }
+                                },
+                                ConstKeys.CULL_OUT_OF_BOUNDS to false
                             )
                         )
                         bulletsChunked++
@@ -404,7 +410,8 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                                 ConstKeys.OWNER to this,
                                 ConstKeys.ON_DAMAGE_INFLICTED_TO to { damageable: IDamageable ->
                                     if (damageable is Megaman) laugh()
-                                }
+                                },
+                                ConstKeys.CULL_OUT_OF_BOUNDS to false
                             )
                         )
                         blastsShot++
@@ -425,10 +432,14 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                                     ConstKeys.POSITION to Vector2(
                                         bodyBlock!!.body.x - (0.75f * ConstVals.PPM),
                                         tankBlock!!.body.getMaxY() + (0.25f * ConstVals.PPM)
-                                    ), ConstKeys.RIGHT to false, Met.RUN_ONLY to true,
+                                    ),
+                                    ConstKeys.RIGHT to false,
+                                    Met.RUN_ONLY to true,
                                     ConstKeys.ON_DAMAGE_INFLICTED_TO to { damageable: IDamageable ->
                                         if (damageable is Megaman) laugh()
-                                    }
+                                    },
+                                    ConstKeys.DROP_ITEM_ON_DEATH to false,
+                                    ConstKeys.CULL_OUT_OF_BOUNDS to false
                                 )
                             )
                             runningMetsSet.add(runningMet as Met)
@@ -454,10 +465,14 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                                     ConstKeys.POSITION to Vector2(
                                         bodyBlock!!.body.x - (0.75f * ConstVals.PPM),
                                         tankBlock!!.body.getMaxY() + (0.65f * ConstVals.PPM)
-                                    ), ConstKeys.FACING to Facing.LEFT, ConstKeys.TARGET to target,
+                                    ),
+                                    ConstKeys.FACING to Facing.LEFT,
+                                    ConstKeys.TARGET to target,
                                     ConstKeys.ON_DAMAGE_INFLICTED_TO to { damageable: IDamageable ->
                                         if (damageable is Megaman) laugh()
-                                    }
+                                    },
+                                    ConstKeys.DROP_ITEM_ON_DEATH to false,
+                                    ConstKeys.CULL_OUT_OF_BOUNDS to false
                                 )
                             )
                             flyingMetsSet.add(flyingMet)
@@ -596,10 +611,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = {
             if (laughing) "laughing"
-            else if (
-                attackState == GutsTankAttackState.CHUNK_BULLETS ||
-                attackState == GutsTankAttackState.SHOOT_BLASTS
-            ) "mouth_open"
+            else if (attackState == GutsTankAttackState.CHUNK_BULLETS || attackState == GutsTankAttackState.SHOOT_BLASTS) "mouth_open"
             else "mouth_closed"
         }
         val animations = objectMapOf<String, IAnimation>(
@@ -613,7 +625,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
 }
 
 class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration = DAMAGE_DURATION), IChildEntity,
-    IFaceable {
+    IDrawableShapesEntity, IFaceable {
 
     enum class GutsTankFistState {
         ATTACHED, LAUNCHED, RETURNING
@@ -641,10 +653,10 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
     override var parent: IGameEntity? = null
     override lateinit var facing: Facing
 
+    internal lateinit var state: GutsTankFistState
+
     private val launchDelayTimer = Timer(LAUNCH_DELAY)
     private val returnDelayTimer = Timer(RETURN_DELAY)
-
-    internal lateinit var state: GutsTankFistState
 
     private lateinit var target: Vector2
 
@@ -671,7 +683,6 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
     }
 
     override fun onDestroy() {
-        GameLogger.debug(TAG, "onDestroy()")
         super<AbstractEnemy>.onDestroy()
         if (getCurrentHealth() <= ConstVals.MIN_HEALTH) {
             val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!

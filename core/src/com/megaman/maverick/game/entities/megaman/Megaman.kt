@@ -188,8 +188,7 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
             GameLogger.debug(TAG, "directionRotation: value = $value")
             body.cardinalRotation = value
             when (value) {
-                Direction.UP, Direction.RIGHT -> {
-                    // jump
+                Direction.UP, Direction.RIGHT -> { // jump
                     jumpVel = MegamanValues.JUMP_VEL
                     wallJumpVel = MegamanValues.WALL_JUMP_VEL
                     waterJumpVel = MegamanValues.WATER_JUMP_VEL
@@ -207,8 +206,7 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
                     swimVel = MegamanValues.SWIM_VEL_Y
                 }
 
-                Direction.DOWN, Direction.LEFT -> {
-                    // jump
+                Direction.DOWN, Direction.LEFT -> { // jump
                     jumpVel = -MegamanValues.JUMP_VEL
                     wallJumpVel = -MegamanValues.WALL_JUMP_VEL
                     waterJumpVel = -MegamanValues.WATER_JUMP_VEL
@@ -277,7 +275,6 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         addComponent(defineControllerComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
-
         weaponHandler.putWeapon(MegamanWeapon.BUSTER)
     }
 
@@ -367,16 +364,6 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
                     MEGAMAN_EVENT_LISTENER_TAG, "BEGIN/CONTINUE ROOM TRANS: position = $position"
                 )
                 body.setCenter(position)
-                /*
-                body.positionOnPoint(
-                    position, when (directionRotation) {
-                        Direction.UP -> Position.BOTTOM_CENTER
-                        Direction.DOWN -> Position.TOP_CENTER
-                        Direction.LEFT -> Position.CENTER_RIGHT
-                        Direction.RIGHT -> Position.CENTER_LEFT
-                    }
-                )
-                 */
                 stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
             }
 
@@ -389,17 +376,12 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
     }
 
     override fun canBeDamagedBy(damager: IDamager) =
-        !invincible && dmgNegotations.containsKey(damager::class) && (
-                damager is AbstractEnemy || damager is IHazard ||
-                        (damager is IProjectileEntity && damager.owner != this)
-                )
+        !invincible && dmgNegotations.containsKey(damager::class) && (damager is AbstractEnemy || damager is IHazard || (damager is IProjectileEntity && damager.owner != this))
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
-        if (canMove &&
-            !isBehaviorActive(BehaviorType.RIDING_CART) &&
-            !noDmgBounce.contains(damager::class) &&
-            damager is IGameEntity &&
-            damager.hasComponent(BodyComponent::class)
+        if (canMove && !isBehaviorActive(BehaviorType.RIDING_CART) && !noDmgBounce.contains(damager::class) && damager is IGameEntity && damager.hasComponent(
+                BodyComponent::class
+            )
         ) {
             val enemyBody = damager.getComponent(BodyComponent::class)!!.body
             body.physics.velocity.x =
