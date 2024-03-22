@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.engine.audio.AudioComponent
 import com.engine.common.GameLogger
+import com.engine.common.enums.Direction
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
@@ -43,6 +44,8 @@ class WanaanLauncher(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity,
     private val timer = Timer(TIMER_DURATION)
     private val sensors = Array<GameRectangle>()
 
+    private lateinit var direction: Direction
+
     private var wanaan: Wanaan? = null
 
     override fun init() {
@@ -57,6 +60,11 @@ class WanaanLauncher(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity,
         body.setCenter(spawn)
         val children = getObjectProps(spawnProps)
         children.forEach { sensors.add(it.rectangle.toGameRectangle()) }
+        if (spawnProps.containsKey(ConstKeys.DIRECTION)) {
+            var direction = spawnProps.get(ConstKeys.DIRECTION)!!
+            if (direction is String) direction = Direction.valueOf(direction.uppercase())
+            this.direction = direction as Direction
+        } else this.direction = Direction.UP
         timer.setToEnd()
     }
 
@@ -96,7 +104,8 @@ class WanaanLauncher(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity,
         game.gameEngine.spawn(
             wanaan!!, props(
                 ConstKeys.POSITION to body.getTopCenterPoint(),
-                ConstKeys.IMPULSE to Vector2(0f, WANAAN_IMPULSE * ConstVals.PPM)
+                ConstKeys.DIRECTION to direction,
+                ConstKeys.IMPULSE to WANAAN_IMPULSE * ConstVals.PPM
             )
         )
         requestToPlaySound(SoundAsset.CHOMP_SOUND, false)

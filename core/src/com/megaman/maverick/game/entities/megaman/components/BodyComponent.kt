@@ -104,7 +104,13 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
             Direction.DOWN -> {
                 body.physics.gravity.set(0f, gravityValue * ConstVals.PPM)
                 body.physics.defaultFrictionOnSelf =
-                    Vector2(ConstVals.STANDARD_RESISTANCE_X, ConstVals.STANDARD_RESISTANCE_Y)
+                    when (directionRotation) {
+                        Direction.UP,
+                        Direction.DOWN -> Vector2(ConstVals.STANDARD_RESISTANCE_X, ConstVals.STANDARD_RESISTANCE_Y)
+
+                        Direction.LEFT,
+                        Direction.RIGHT -> Vector2(ConstVals.STANDARD_RESISTANCE_Y, ConstVals.STANDARD_RESISTANCE_X)
+                    }
 
                 body.physics.velocityClamp = if (isBehaviorActive(BehaviorType.RIDING_CART))
                     Vector2(

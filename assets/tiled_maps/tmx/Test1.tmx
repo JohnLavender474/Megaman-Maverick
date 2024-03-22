@@ -212,7 +212,7 @@
    </properties>
   </object>
   <object id="113" x="3808" y="480" width="192" height="64"/>
-  <object id="145" name="WanaanLauncherChild" x="17344" y="320" width="96" height="288"/>
+  <object id="145" name="WanaanLauncherChild" x="17264" y="328" width="96" height="288"/>
   <object id="157" x="18336" y="448" width="32" height="32"/>
   <object id="158" x="18592" y="448" width="32" height="32"/>
  </objectgroup>

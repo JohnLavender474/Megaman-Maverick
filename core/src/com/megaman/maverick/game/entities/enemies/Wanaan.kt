@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.Array
 import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
+import com.engine.common.enums.Direction
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.objects.Properties
@@ -47,9 +48,10 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
     val cullPoint: Vector2
         get() = body.getCenter()
 
+    private lateinit var direction: Direction
+
     override fun init() {
-        if (region == null)
-            region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, "Wanaan")
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, "Wanaan")
         super<AbstractEnemy>.init()
         addComponent(defineAnimationsComponent())
     }
@@ -58,8 +60,14 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
         super.spawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setBottomCenterToPoint(spawn)
-        val impulse = spawnProps.get(ConstKeys.IMPULSE, Vector2::class)!!
-        body.physics.velocity.set(impulse)
+        direction = spawnProps.get(ConstKeys.DIRECTION, Direction::class)!!
+        val impulse = spawnProps.get(ConstKeys.IMPULSE, Float::class)!!
+        body.physics.velocity = when (direction) {
+            Direction.UP -> Vector2(0f, impulse)
+            Direction.DOWN -> Vector2(0f, -impulse)
+            Direction.LEFT -> Vector2(-impulse, 0f)
+            Direction.RIGHT -> Vector2(impulse, 0f)
+        }
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -69,13 +77,11 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
-        // shield fixture
         val shieldFixture = Fixture(GameRectangle().setSize(1f * ConstVals.PPM), FixtureType.SHIELD)
         body.addFixture(shieldFixture)
         shieldFixture.shape.color = Color.GREEN
         debugShapes.add { shieldFixture.shape }
 
-        // damager fixture
         val damagerFixture = Fixture(GameRectangle().setSize(1f * ConstVals.PPM), FixtureType.DAMAGER)
         body.addFixture(damagerFixture)
         damagerFixture.shape.color = Color.RED
@@ -95,6 +101,12 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
             val center = body.getCenter()
             _sprite.setCenter(center.x, center.y)
             _sprite.setFlip(false, comingDown)
+            when (direction) {
+                Direction.UP -> _sprite.rotation = 0f
+                Direction.DOWN -> _sprite.rotation = 180f
+                Direction.LEFT -> _sprite.rotation = 90f
+                Direction.RIGHT -> _sprite.rotation = 270f
+            }
         }
         return spritesComponent
     }
