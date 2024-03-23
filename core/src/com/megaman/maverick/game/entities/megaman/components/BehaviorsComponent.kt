@@ -371,12 +371,12 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             }
 
             if (body.isSensing(BodySense.FEET_TOUCHING_LADDER) && game.controllerPoller.isPressed(
-                    if (isDirectionRotatedDown()) ControllerButton.UP else ControllerButton.DOWN
+                    ControllerButton.DOWN
                 )
             ) return true
 
             if (body.isSensing(BodySense.HEAD_TOUCHING_LADDER) && game.controllerPoller.isPressed(
-                    if (isDirectionRotatedDown()) ControllerButton.DOWN else ControllerButton.UP
+                    ControllerButton.UP
                 )
             ) return true
 

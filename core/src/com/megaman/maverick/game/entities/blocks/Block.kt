@@ -7,7 +7,6 @@ import com.badlogic.gdx.utils.ObjectSet
 import com.engine.IGame2D
 import com.engine.common.GameLogger
 import com.engine.common.extensions.objectMapOf
-import com.engine.common.interfaces.Updatable
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.cullables.CullablesComponent
@@ -150,13 +149,9 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
 
     protected open fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.STATIC)
-
-        // block fixture
         blockFixture = Fixture(GameRectangle(), FixtureType.BLOCK)
         body.addFixture(blockFixture)
-
-        body.preProcess.put(ConstKeys.DEFAULT, Updatable { (blockFixture.shape as GameRectangle).set(body) })
-
+        body.preProcess.put(ConstKeys.DEFAULT) { (blockFixture.shape as GameRectangle).set(body) }
         return BodyComponentCreator.create(this, body)
     }
 }

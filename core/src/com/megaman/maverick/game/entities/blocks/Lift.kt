@@ -3,6 +3,7 @@ package com.megaman.maverick.game.entities.blocks
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
+import com.engine.common.enums.Direction
 import com.engine.common.extensions.equalsAny
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.objects.Properties
@@ -20,13 +21,14 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.utils.getMegamanMaverickGame
 import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.isSensing
 import com.megaman.maverick.game.world.setEntity
 
-class Lift(game: MegamanMaverickGame) : Block(game), ISpriteEntity {
+class Lift(game: MegamanMaverickGame) : Block(game), ISpriteEntity, IDirectionRotatable {
 
     enum class LiftState {
         LIFTING, FALLING, STOPPED
@@ -39,15 +41,14 @@ class Lift(game: MegamanMaverickGame) : Block(game), ISpriteEntity {
         private const val FALL_SPEED = 2f
     }
 
-    lateinit var currentState: LiftState
-        private set
-    lateinit var stopPoint: Vector2
-        private set
+    override lateinit var directionRotation: Direction
+
+    private lateinit var currentState: LiftState
+    private lateinit var stopPoint: Vector2
 
     override fun init() {
         super<Block>.init()
-        if (region == null)
-            region = game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "Lift")
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "Lift")
         addComponent(defineSpritesComponent())
         addComponent(defineUpdatablesComponent())
     }
@@ -57,20 +58,51 @@ class Lift(game: MegamanMaverickGame) : Block(game), ISpriteEntity {
         currentState = LiftState.STOPPED
         stopPoint = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(stopPoint)
+        if (spawnProps.containsKey(ConstKeys.DIRECTION)) {
+            var direction = spawnProps.get(ConstKeys.DIRECTION)
+            if (direction is String) direction = Direction.valueOf(direction.uppercase())
+            directionRotation = direction as Direction
+        } else directionRotation = Direction.UP
     }
 
     override fun defineBodyComponent(): BodyComponent {
         val bodyComponent = super.defineBodyComponent()
 
-        // head fixture
-        val headFixture = Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f), FixtureType.HEAD)
-        headFixture.offsetFromBodyCenter.y = 0.5f * ConstVals.PPM
+        val headFixture = Fixture(GameRectangle(), FixtureType.HEAD)
         headFixture.setEntity(this)
         bodyComponent.body.addFixture(headFixture)
         headFixture.shape.color = Color.BLUE
         debugShapeSuppliers.add { headFixture.shape }
 
+        bodyComponent.body.preProcess.put(ConstKeys.HEAD) {
+            (headFixture.shape as GameRectangle).setSize(
+                when (directionRotation) {
+                    Direction.UP, Direction.DOWN -> Vector2(
+                        ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM
+                    )
+
+                    Direction.LEFT, Direction.RIGHT -> Vector2(
+                        0.1f * ConstVals.PPM, ConstVals.PPM.toFloat()
+                    )
+                }
+            )
+
+            headFixture.offsetFromBodyCenter = when (directionRotation) {
+                Direction.UP -> Vector2(0f, 0.5f * ConstVals.PPM)
+                Direction.DOWN -> Vector2(0f, -0.5f * ConstVals.PPM)
+                Direction.LEFT -> Vector2(-0.5f * ConstVals.PPM, 0f)
+                Direction.RIGHT -> Vector2(0.5f * ConstVals.PPM, 0f)
+            }
+        }
+
         return bodyComponent
+    }
+
+    private fun aboveStopPoint() = when (directionRotation) {
+        Direction.UP -> body.getCenter().y > stopPoint.y
+        Direction.DOWN -> body.getCenter().y < stopPoint.y
+        Direction.LEFT -> body.getCenter().x < stopPoint.x
+        Direction.RIGHT -> body.getCenter().x > stopPoint.x
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent(this, {
@@ -82,14 +114,30 @@ class Lift(game: MegamanMaverickGame) : Block(game), ISpriteEntity {
         }
 
         currentState = if (megamanOverlapping && !body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)) LiftState.LIFTING
-        else if (body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) || body.getCenter().y > stopPoint.y) LiftState.FALLING
+        else if (body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) || aboveStopPoint()) LiftState.FALLING
         else LiftState.STOPPED
 
         when (currentState) {
-            LiftState.LIFTING -> body.physics.velocity.y = LIFT_SPEED * ConstVals.PPM
-            LiftState.FALLING -> body.physics.velocity.y = -FALL_SPEED * ConstVals.PPM
+            LiftState.LIFTING -> {
+                body.physics.velocity = when (directionRotation) {
+                    Direction.UP -> Vector2(0f, LIFT_SPEED * ConstVals.PPM)
+                    Direction.DOWN -> Vector2(0f, -LIFT_SPEED * ConstVals.PPM)
+                    Direction.LEFT -> Vector2(-LIFT_SPEED * ConstVals.PPM, 0f)
+                    Direction.RIGHT -> Vector2(LIFT_SPEED * ConstVals.PPM, 0f)
+                }
+            }
+
+            LiftState.FALLING -> {
+                body.physics.velocity = when (directionRotation) {
+                    Direction.UP -> Vector2(0f, -FALL_SPEED * ConstVals.PPM)
+                    Direction.DOWN -> Vector2(0f, FALL_SPEED * ConstVals.PPM)
+                    Direction.LEFT -> Vector2(FALL_SPEED * ConstVals.PPM, 0f)
+                    Direction.RIGHT -> Vector2(-FALL_SPEED * ConstVals.PPM, 0f)
+                }
+            }
+
             else -> {
-                body.physics.velocity.y = 0f
+                body.physics.velocity.setZero()
                 body.setCenter(stopPoint)
             }
         }
@@ -99,15 +147,14 @@ class Lift(game: MegamanMaverickGame) : Block(game), ISpriteEntity {
         val sprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, -1))
         sprite.setSize(0.75f * ConstVals.PPM)
         sprite.setRegion(region!!)
-
-        val spritesComponent = SpritesComponent(this, "lift" to sprite)
-        spritesComponent.putUpdateFunction("lift") { _, _sprite ->
+        val spritesComponent = SpritesComponent(this, TAG to sprite)
+        spritesComponent.putUpdateFunction(TAG) { _, _sprite ->
             _sprite as GameSprite
+            _sprite.setOriginCenter()
+            _sprite.rotation = directionRotation.rotation
             val center = body.getCenter()
             _sprite.setCenter(center.x, center.y)
         }
-
         return spritesComponent
     }
-
 }
