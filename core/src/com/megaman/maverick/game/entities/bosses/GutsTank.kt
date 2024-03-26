@@ -136,10 +136,12 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(1), ChargedShot::class to dmgNeg {
+        Bullet::class to dmgNeg(1),
+        ChargedShot::class to dmgNeg {
             it as ChargedShot
-            if (it.fullyCharged) 3 else 2
-        }, ChargedShotExplosion::class to dmgNeg(1)
+            if (it.fullyCharged) 2 else 1
+        },
+        ChargedShotExplosion::class to dmgNeg(1)
     )
 
     internal var tankBlock: Block? = null
@@ -676,6 +678,7 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
     override fun spawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "spawn(): spawnProps = $spawnProps")
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
+        spawnProps.put(ConstKeys.DROP_ITEM_ON_DEATH, false)
         super.spawn(spawnProps)
         parent = spawnProps.get(ConstKeys.PARENT, GutsTank::class)
         state = GutsTankFistState.ATTACHED
@@ -697,9 +700,11 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
     override fun canBeDamagedBy(damager: IDamager): Boolean {
         if (damager is IProjectileEntity) {
             damager.owner?.let { damagerOwner ->
-                if (damagerOwner == this || damagerOwner == parent || damagerOwner == (parent as GutsTank).tankBlock || damagerOwner == (parent as GutsTank).bodyBlock || (damagerOwner is Met && (parent as GutsTank).runningMetsSet.contains(
-                        damagerOwner
-                    )) || (damagerOwner is HeliMet && (parent as GutsTank).flyingMetsSet.contains(damagerOwner))
+                if (damagerOwner == this || damagerOwner == parent ||
+                    damagerOwner == (parent as GutsTank).tankBlock ||
+                    damagerOwner == (parent as GutsTank).bodyBlock ||
+                    (damagerOwner is Met && (parent as GutsTank).runningMetsSet.contains(damagerOwner)) ||
+                    (damagerOwner is HeliMet && (parent as GutsTank).flyingMetsSet.contains(damagerOwner))
                 ) return false
             }
         }
@@ -708,7 +713,7 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
 
     override fun onDamageInflictedTo(damageable: IDamageable) = (parent as GutsTank).laugh()
 
-    fun launch() {
+    internal fun launch() {
         facing = if (megaman.body.x < body.getCenter().x) Facing.LEFT else Facing.RIGHT
         state = GutsTankFistState.LAUNCHED
         launchDelayTimer.reset()
@@ -825,7 +830,8 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
             }
         }
         val animations = objectMapOf<String, IAnimation>(
-            "fist" to Animation(fistRegion!!), "launched" to Animation(launchedRegion!!, 2, 1, 0.1f, true)
+            "fist" to Animation(fistRegion!!),
+            "launched" to Animation(launchedRegion!!, 2, 1, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

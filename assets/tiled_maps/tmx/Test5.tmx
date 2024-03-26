@@ -467,7 +467,7 @@
    </properties>
   </object>
   <object id="446" x="2624" y="11360" width="96" height="128"/>
-  <object id="447" x="7008" y="11040" width="576" height="256"/>
+  <object id="447" x="7008" y="11040" width="560" height="256"/>
   <object id="453" x="480" y="9568" width="1312" height="32"/>
   <object id="454" x="2144" y="9568" width="800" height="64"/>
   <object id="455" x="3296" y="9568" width="384" height="48"/>
