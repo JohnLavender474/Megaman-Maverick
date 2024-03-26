@@ -55,28 +55,29 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
             val spawnCenter = Vector2(megaman.body.getCenter())
 
             if (megaman.isDirectionRotatedVertically()) {
-                spawnCenter.x +=
-                    ConstVals.PPM * megaman.facing.value *
-                            if (megaman.isBehaviorActive(BehaviorType.RIDING_CART)) 1.5f else 0.85f
+                spawnCenter.x += ConstVals.PPM * megaman.facing.value * if (megaman.isBehaviorActive(BehaviorType.RIDING_CART)) 1.5f else 0.85f
 
                 var yOffset: Float = ConstVals.PPM / 16f
-                if (megaman.isBehaviorActive(BehaviorType.RIDING_CART))
-                    yOffset += .35f * ConstVals.PPM
-                else if (megaman.isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.WALL_SLIDING))
-                    yOffset += .15f * ConstVals.PPM
+                if (megaman.isBehaviorActive(BehaviorType.RIDING_CART)) yOffset += .35f * ConstVals.PPM
+                else if (megaman.isAnyBehaviorActive(
+                        BehaviorType.CLIMBING,
+                        BehaviorType.WALL_SLIDING
+                    )
+                ) yOffset += .15f * ConstVals.PPM
                 else if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) yOffset -= .05f * ConstVals.PPM
                 else yOffset += .25f * ConstVals.PPM
 
                 spawnCenter.y += if (megaman.isDirectionRotatedDown()) -yOffset else yOffset
             } else {
                 var xOffset = ConstVals.PPM / 16f
-                xOffset +=
-                    if (megaman.isBehaviorActive(BehaviorType.RIDING_CART))
-                        .25f * ConstVals.PPM
-                    else if (megaman.isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.WALL_SLIDING))
-                        .15f * ConstVals.PPM
-                    else if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) -.05f * ConstVals.PPM
-                    else .05f * ConstVals.PPM
+                xOffset += if (megaman.isBehaviorActive(BehaviorType.RIDING_CART)) .25f * ConstVals.PPM
+                else if (megaman.isAnyBehaviorActive(
+                        BehaviorType.CLIMBING,
+                        BehaviorType.WALL_SLIDING
+                    )
+                ) .15f * ConstVals.PPM
+                else if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) -.05f * ConstVals.PPM
+                else .05f * ConstVals.PPM
                 spawnCenter.x += if (megaman.isDirectionRotatedLeft()) -xOffset else xOffset
 
                 val yOffset: Float = ConstVals.PPM * .85f * megaman.facing.value
@@ -94,8 +95,7 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
 
     fun getSpawned(weapon: MegamanWeapon) = weapons[weapon]?.spawned
 
-    fun putWeapon(weapon: MegamanWeapon): MegaWeaponEntry? =
-        weapons.put(weapon, getWeaponEntry(weapon))
+    fun putWeapon(weapon: MegamanWeapon): MegaWeaponEntry? = weapons.put(weapon, getWeaponEntry(weapon))
 
     fun hasWeapon(weapon: MegamanWeapon) = weapons.containsKey(weapon)
 
@@ -105,16 +105,13 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
         val e = weapons[weapon]
         if (!e.cooldownTimer.isFinished() || !e.canFireWeapon()) return false
 
-        val cost =
-            if (e.chargeable())
-                (if (weapon === MegamanWeapon.BUSTER) 0
-                else
-                    when (stat) {
-                        MegaChargeStatus.FULLY_CHARGED -> e.fullyChargedCost()
-                        MegaChargeStatus.HALF_CHARGED -> e.halfChargedCost()
-                        MegaChargeStatus.NOT_CHARGED -> e.normalCost()
-                    })
-            else e.normalCost()
+        val cost = if (e.chargeable()) (if (weapon === MegamanWeapon.BUSTER) 0
+        else when (stat) {
+            MegaChargeStatus.FULLY_CHARGED -> e.fullyChargedCost()
+            MegaChargeStatus.HALF_CHARGED -> e.halfChargedCost()
+            MegaChargeStatus.NOT_CHARGED -> e.normalCost()
+        })
+        else e.normalCost()
 
         return cost <= e.ammo
     }
@@ -127,8 +124,7 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
         val weaponEntry = weapons[weapon]
         weaponEntry.ammo += delta
 
-        if (weaponEntry.ammo >= MegamanValues.MAX_WEAPON_AMMO)
-            weaponEntry.ammo = MegamanValues.MAX_WEAPON_AMMO
+        if (weaponEntry.ammo >= MegamanValues.MAX_WEAPON_AMMO) weaponEntry.ammo = MegamanValues.MAX_WEAPON_AMMO
         else if (weaponEntry.ammo < 0) weaponEntry.ammo = 0
     }
 
@@ -140,9 +136,8 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
         weapons[weapon]?.ammo = 0
     }
 
-    fun getAmmo(weapon: MegamanWeapon) =
-        if (!hasWeapon(weapon)) 0
-        else if (weapon == MegamanWeapon.BUSTER) Int.MAX_VALUE else weapons[weapon].ammo
+    fun getAmmo(weapon: MegamanWeapon) = if (!hasWeapon(weapon)) 0
+    else if (weapon == MegamanWeapon.BUSTER) Int.MAX_VALUE else weapons[weapon].ammo
 
     fun fireWeapon(weapon: MegamanWeapon, stat: MegaChargeStatus): Boolean {
         var _stat: MegaChargeStatus = stat
@@ -150,21 +145,18 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
         if (!isChargeable(weapon)) _stat = MegaChargeStatus.NOT_CHARGED
 
         val weaponEntry = weapons[weapon]
-        val cost =
-            if (weapon === MegamanWeapon.BUSTER) 0
-            else
-                when (_stat) {
-                    MegaChargeStatus.FULLY_CHARGED -> weaponEntry.fullyChargedCost()
-                    MegaChargeStatus.HALF_CHARGED -> weaponEntry.halfChargedCost()
-                    MegaChargeStatus.NOT_CHARGED -> weaponEntry.normalCost()
-                }
+        val cost = if (weapon === MegamanWeapon.BUSTER) 0
+        else when (_stat) {
+            MegaChargeStatus.FULLY_CHARGED -> weaponEntry.fullyChargedCost()
+            MegaChargeStatus.HALF_CHARGED -> weaponEntry.halfChargedCost()
+            MegaChargeStatus.NOT_CHARGED -> weaponEntry.normalCost()
+        }
         if (cost > getAmmo(weapon)) return false
 
-        val projectile =
-            when (weapon) {
-                MegamanWeapon.BUSTER -> fireMegaBuster(_stat)
-                MegamanWeapon.FLAME_TOSS -> fireFlameToss(_stat)
-            }
+        val projectile = when (weapon) {
+            MegamanWeapon.BUSTER -> fireMegaBuster(_stat)
+            MegamanWeapon.FLAME_TOSS -> fireFlameToss(_stat)
+        }
 
         weaponEntry.spawned.add(projectile)
         weaponEntry.cooldownTimer.reset()
@@ -173,24 +165,22 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
         return true
     }
 
-    private fun getWeaponEntry(weapon: MegamanWeapon) =
-        when (weapon) {
-            MegamanWeapon.BUSTER -> MegaWeaponEntry(.01f)
-            MegamanWeapon.FLAME_TOSS -> {
-                val e = MegaWeaponEntry(.5f)
-                e.normalCost = { 3 }
-                e.halfChargedCost = { 5 }
-                e.fullyChargedCost = { 7 }
-                e.chargeable = { !megaman.body.isSensing(BodySense.IN_WATER) }
-                e.canFireWeapon = { !megaman.body.isSensing(BodySense.IN_WATER) && e.spawned.size == 0 }
-                e
-            }
+    private fun getWeaponEntry(weapon: MegamanWeapon) = when (weapon) {
+        MegamanWeapon.BUSTER -> MegaWeaponEntry(.01f)
+        MegamanWeapon.FLAME_TOSS -> {
+            val e = MegaWeaponEntry(.5f)
+            e.normalCost = { 3 }
+            e.halfChargedCost = { 5 }
+            e.fullyChargedCost = { 7 }
+            e.chargeable = { !megaman.body.isSensing(BodySense.IN_WATER) }
+            e.canFireWeapon = { !megaman.body.isSensing(BodySense.IN_WATER) && e.spawned.size == 0 }
+            e
         }
+    }
 
     private fun fireMegaBuster(stat: MegaChargeStatus): IProjectileEntity {
         val trajectory = Vector2()
-        if (megaman.isDirectionRotatedVertically())
-            trajectory.x = MEGA_BUSTER_BULLET_VEL * megaman.facing.value
+        if (megaman.isDirectionRotatedVertically()) trajectory.x = MEGA_BUSTER_BULLET_VEL * megaman.facing.value
         else trajectory.y = MEGA_BUSTER_BULLET_VEL * megaman.facing.value
         trajectory.scl(ConstVals.PPM.toFloat())
 
@@ -199,31 +189,27 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
         props.put(ConstKeys.TRAJECTORY, trajectory)
         props.put(ConstKeys.DIRECTION, megaman.directionRotation)
 
-        val megaBusterShot =
-            when (stat) {
-                MegaChargeStatus.NOT_CHARGED ->
-                    EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)
+        val megaBusterShot = when (stat) {
+            MegaChargeStatus.NOT_CHARGED -> EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)
 
-                MegaChargeStatus.HALF_CHARGED,
-                MegaChargeStatus.FULLY_CHARGED -> {
-                    props.put(ConstKeys.BOOLEAN, stat == MegaChargeStatus.FULLY_CHARGED)
-                    EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.CHARGED_SHOT)
-                }
-            } ?: throw IllegalStateException("MegaBusterShot is null")
+            MegaChargeStatus.HALF_CHARGED, MegaChargeStatus.FULLY_CHARGED -> {
+                props.put(ConstKeys.BOOLEAN, stat == MegaChargeStatus.FULLY_CHARGED)
+                EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.CHARGED_SHOT)
+            }
+        } ?: throw IllegalStateException("MegaBusterShot is null")
 
-        if (stat === MegaChargeStatus.NOT_CHARGED)
-            megaman.requestToPlaySound(SoundAsset.MEGA_BUSTER_BULLET_SHOT_SOUND, false)
+        if (stat === MegaChargeStatus.NOT_CHARGED) megaman.requestToPlaySound(
+            SoundAsset.MEGA_BUSTER_BULLET_SHOT_SOUND,
+            false
+        )
         else {
             megaman.requestToPlaySound(SoundAsset.MEGA_BUSTER_CHARGED_SHOT_SOUND, false)
             megaman.stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
         }
 
         val s = spawnCenter
-
         if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING)) s.y += 0.1f * ConstVals.PPM
-        if (megaman.isDirectionRotatedDown())
-            if (megaman.isBehaviorActive(BehaviorType.CLIMBING)) s.y -= .45f * ConstVals.PPM
-            else s.y -= .05f * ConstVals.PPM
+        if (megaman.isDirectionRotatedDown()) s.y -= .05f * ConstVals.PPM
 
         props.put(ConstKeys.POSITION, s)
         gameEngine.spawn(megaBusterShot, props)
@@ -235,18 +221,14 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
         val props = Properties()
         props.put(ConstKeys.OWNER, megaman)
 
-        val fireball =
-            when (stat) {
-                MegaChargeStatus.NOT_CHARGED,
-                MegaChargeStatus.HALF_CHARGED,
-                MegaChargeStatus.FULLY_CHARGED -> {
-                    props.put(ConstKeys.LEFT, megaman.facing == Facing.LEFT)
-                    EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.FIREBALL) as Fireball
-                }
+        val fireball = when (stat) {
+            MegaChargeStatus.NOT_CHARGED, MegaChargeStatus.HALF_CHARGED, MegaChargeStatus.FULLY_CHARGED -> {
+                props.put(ConstKeys.LEFT, megaman.facing == Facing.LEFT)
+                EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.FIREBALL) as Fireball
             }
+        }
 
-        props.put(ConstKeys.POSITION, spawnCenter)
-        // TODO: trajectory should be different depending on charge status
+        props.put(ConstKeys.POSITION, spawnCenter) // TODO: trajectory should be different depending on charge status
         props.put(ConstKeys.TRAJECTORY, FLAME_TOSS_TRAJECTORY)
         gameEngine.spawn(fireball, props)
 

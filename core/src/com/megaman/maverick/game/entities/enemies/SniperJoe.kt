@@ -246,7 +246,6 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
             shieldFixture.offsetFromBodyCenter.x =
                 0.35f * ConstVals.PPM * if (isDirectionRotatedUp() || isDirectionRotatedLeft()) facing.value
                 else -facing.value
-            shieldFixture.putProperty(ConstKeys.DIRECTION, directionRotation)
 
             if (shielded) damageableFixture.offsetFromBodyCenter.x =
                 0.25f * ConstVals.PPM * if (isDirectionRotatedUp() || isDirectionRotatedLeft()) -facing.value

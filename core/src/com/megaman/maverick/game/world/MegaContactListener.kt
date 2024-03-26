@@ -249,10 +249,9 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             val (bodyFixture, gravityChangeFixture) = contact.getFixturesInOrder(
                 FixtureType.BODY, FixtureType.GRAVITY_CHANGE
             )!!
-
             val direction = gravityChangeFixture.getProperty(ConstKeys.DIRECTION, Direction::class) ?: return
-
-            val canChangeGravity = bodyFixture.properties.getOrDefault(ConstKeys.GRAVITY_ROTATABLE, true) as Boolean
+            val canChangeGravity =
+                bodyFixture.properties.getOrDefault(ConstKeys.GRAVITY_ROTATABLE, true, Boolean::class)
             if (!canChangeGravity) return
 
             val body = bodyFixture.getBody()
@@ -274,6 +273,24 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             val entity = bodyFixture.getEntity()
             if (entity is IDirectionRotatable && entity.directionRotation != direction) entity.directionRotation =
                 direction
+        }
+
+        // block, gravity change
+        else if (contact.fixturesMatch(FixtureType.BLOCK, FixtureType.GRAVITY_CHANGE)) {
+            val (blockFixture, gravityChangeFixture) = contact.getFixturesInOrder(
+                FixtureType.BLOCK, FixtureType.GRAVITY_CHANGE
+            )!!
+            val direction = gravityChangeFixture.getProperty(ConstKeys.DIRECTION, Direction::class) ?: return
+            val canChangeGravity = blockFixture.properties.getOrDefault(
+                ConstKeys.GRAVITY_ROTATABLE, true, Boolean::class
+            )
+            if (!canChangeGravity) return
+            if (direction.isHorizontal()) {
+                val blockBody = blockFixture.getBody()
+                val frictionX = blockBody.physics.frictionToApply.x
+                blockBody.physics.frictionToApply.x = blockBody.physics.frictionToApply.y
+                blockBody.physics.frictionToApply.y = frictionX
+            }
         }
 
         // projectile, block or body or shield or water
@@ -526,15 +543,34 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             if (!gravityChangeFixture.bodyRelativeShape!!.contains(bodyPointToCheck)) return
 
             val entity = bodyFixture.getEntity()
-            if (entity is IDirectionRotatable && entity.directionRotation != direction) entity.directionRotation =
-                direction
+            if (entity is IDirectionRotatable && entity.directionRotation != direction)
+                entity.directionRotation = direction
+        }
+
+        // block, gravity change
+        else if (contact.fixturesMatch(FixtureType.BLOCK, FixtureType.GRAVITY_CHANGE)) {
+            val (blockFixture, gravityChangeFixture) = contact.getFixturesInOrder(
+                FixtureType.BLOCK, FixtureType.GRAVITY_CHANGE
+            )!!
+            val direction = gravityChangeFixture.getProperty(ConstKeys.DIRECTION, Direction::class) ?: return
+            val canChangeGravity = blockFixture.properties.getOrDefault(
+                ConstKeys.GRAVITY_ROTATABLE, true, Boolean::class
+            )
+            if (!canChangeGravity) return
+            if (direction.isHorizontal()) {
+                val blockBody = blockFixture.getBody()
+                val frictionX = blockBody.physics.frictionToApply.x
+                blockBody.physics.frictionToApply.x = blockBody.physics.frictionToApply.y
+                blockBody.physics.frictionToApply.y = frictionX
+            }
         }
 
         // laser, block
         else if (contact.fixturesMatch(
                 FixtureType.LASER, FixtureType.BLOCK
             )
-        ) { // printDebugLog(contact, "continueContact(): Laser-Block, contact = $contact")
+        ) {
+            printDebugLog(contact, "continueContact(): Laser-Block, contact = $contact")
             val (laser, block) = contact.getFixturesInOrder(FixtureType.LASER, FixtureType.BLOCK)!!
 
             val laserEntity = laser.getEntity()

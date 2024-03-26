@@ -132,7 +132,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="6" name="specials" visible="0">
+ <objectgroup id="6" name="specials">
   <object id="32" name="SpringBouncer" x="3904" y="1288" width="32" height="16">
    <properties>
     <property name="direction" value="right"/>
@@ -240,7 +240,7 @@
  <objectgroup id="4" name="player" visible="0">
   <object id="186" name="0" x="1280" y="1504" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="5" name="game_rooms">
+ <objectgroup id="5" name="game_rooms" visible="0">
   <object id="8" name="room2" x="1440" y="1152" width="2208" height="448"/>
   <object id="19" name="room3" x="3648" y="1152" width="1728" height="448"/>
   <object id="53" name="room4" x="5376" y="1152" width="1120" height="448"/>

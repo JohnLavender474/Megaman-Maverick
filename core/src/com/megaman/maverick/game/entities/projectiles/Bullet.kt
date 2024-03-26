@@ -95,12 +95,27 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
 
         val trajectory = body.physics.velocity.cpy()
         if (isDirectionRotatedVertically()) trajectory.x *= -1f else trajectory.y *= -1f
-        val deflection = shieldFixture.properties.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
+        val deflection = shieldFixture.properties.get(ConstKeys.DIRECTION) as Direction?
         when (deflection) {
-            Direction.UP -> trajectory.y = 5f * ConstVals.PPM
-            Direction.DOWN -> trajectory.y = -5f * ConstVals.PPM
-            Direction.LEFT -> trajectory.x = -5f * ConstVals.PPM
-            Direction.RIGHT -> trajectory.x = 5f * ConstVals.PPM
+            Direction.UP -> {
+                when (directionRotation) {
+                    Direction.UP -> trajectory.y = 5f * ConstVals.PPM
+                    Direction.DOWN -> trajectory.y = -5f * ConstVals.PPM
+                    Direction.LEFT -> trajectory.x = -5f * ConstVals.PPM
+                    Direction.RIGHT -> trajectory.x = 5f * ConstVals.PPM
+                }
+            }
+
+            Direction.DOWN -> {
+                when (directionRotation) {
+                    Direction.UP -> trajectory.y = -5f * ConstVals.PPM
+                    Direction.DOWN -> trajectory.y = 5f * ConstVals.PPM
+                    Direction.LEFT -> trajectory.x = 5f * ConstVals.PPM
+                    Direction.RIGHT -> trajectory.x = -5f * ConstVals.PPM
+                }
+            }
+
+            else -> {}
         }
         body.physics.velocity.set(trajectory)
 
