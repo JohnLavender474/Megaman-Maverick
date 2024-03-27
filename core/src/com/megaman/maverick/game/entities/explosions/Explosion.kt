@@ -107,7 +107,7 @@ class Explosion(game: MegamanMaverickGame) : GameEntity(game), IHazard, IOwnable
         val body = Body(BodyType.ABSTRACT)
         body.setSize(1.5f * ConstVals.PPM)
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
-        val damagerFixture = Fixture(GameRectangle(body), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
         body.addFixture(damagerFixture)
         return BodyComponentCreator.create(this, body)
     }

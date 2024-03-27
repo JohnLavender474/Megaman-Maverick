@@ -224,23 +224,25 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
-        val bodyFixture = Fixture(GameRectangle().setSize(0.75f * ConstVals.PPM), FixtureType.BODY)
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(0.75f * ConstVals.PPM))
         body.addFixture(bodyFixture)
-        debugShapes.add { bodyFixture.shape }
+        debugShapes.add { bodyFixture.getShape() }
 
-        val feetFixture = Fixture(GameRectangle().setSize(0.15f * ConstVals.PPM), FixtureType.FEET)
+        val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.15f * ConstVals.PPM))
         feetFixture.offsetFromBodyCenter.y = -0.375f * ConstVals.PPM
         body.addFixture(feetFixture)
 
         val shieldFixture = Fixture(
-            GameRectangle().setSize(0.75f * ConstVals.PPM, 0.5f * ConstVals.PPM), FixtureType.SHIELD
+            body,
+            FixtureType.SHIELD,
+            GameRectangle().setSize(0.75f * ConstVals.PPM, 0.5f * ConstVals.PPM)
         )
         body.addFixture(shieldFixture)
 
-        val damageableFixture = Fixture(GameRectangle().setSize(0.75f * ConstVals.PPM), FixtureType.DAMAGEABLE)
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.75f * ConstVals.PPM))
         body.addFixture(damageableFixture)
 
-        val damagerFixture = Fixture(GameRectangle().setSize(0.75f * ConstVals.PPM), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.75f * ConstVals.PPM))
         body.addFixture(damagerFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {

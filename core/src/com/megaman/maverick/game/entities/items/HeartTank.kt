@@ -84,8 +84,7 @@ class HeartTank(game: MegamanMaverickGame) :
         val body = Body(BodyType.ABSTRACT)
         body.setSize(ConstVals.PPM.toFloat())
 
-        // item fixture
-        val itemFixture = Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat()), FixtureType.ITEM)
+        val itemFixture = Fixture(body, FixtureType.ITEM, GameRectangle().setSize(ConstVals.PPM.toFloat()))
         body.addFixture(itemFixture)
 
         return BodyComponentCreator.create(this, body)

@@ -129,16 +129,13 @@ class Peat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
             DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true)
         )
 
-        // body fixture
-        val bodyFixture = Fixture(GameRectangle().setSize(0.25f * ConstVals.PPM), FixtureType.BODY)
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(0.25f * ConstVals.PPM))
         body.addFixture(bodyFixture)
 
-        // damager fixture
-        val damagerFixture = Fixture(GameRectangle().setSize(0.25f * ConstVals.PPM), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.25f * ConstVals.PPM))
         body.addFixture(damagerFixture)
 
-        // damageable fixture
-        val damageableFixture = Fixture(GameRectangle().setSize(0.25f * ConstVals.PPM), FixtureType.DAMAGEABLE)
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.25f * ConstVals.PPM))
         body.addFixture(damageableFixture)
 
         return BodyComponentCreator.create(this, body)

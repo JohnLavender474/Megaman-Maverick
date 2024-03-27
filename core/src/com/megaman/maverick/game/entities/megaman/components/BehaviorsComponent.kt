@@ -10,6 +10,7 @@ import com.engine.common.enums.Facing
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.interfaces.Updatable
 import com.engine.common.interfaces.isFacing
+import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.ControllerButton
@@ -481,7 +482,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             cart.body.physics.gravityOn = false
 
             cart.childBlock.body.physics.collisionOn = false
-            cart.childBlock.body.fixtures.forEach { it.second.active = false }
+            cart.childBlock.body.fixtures.forEach { (it.second as Fixture).active = false }
 
             body.setBottomCenterToPoint(cart.body.getBottomCenterPoint())
             body.preProcess.put(ConstKeys.CART, Updatable {
@@ -507,7 +508,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             cart.sprites.values().forEach { it.hidden = false }
 
             cart.childBlock.body.physics.collisionOn = true
-            cart.childBlock.body.fixtures.forEach { it.second.active = true }
+            cart.childBlock.body.fixtures.forEach { (it.second as Fixture).active = true }
 
             body.translation(0f, ConstVals.PPM / 1.75f)
             body.physics.velocity.y = MegamanValues.JUMP_VEL * ConstVals.PPM

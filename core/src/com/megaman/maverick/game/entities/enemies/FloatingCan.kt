@@ -47,6 +47,7 @@ import kotlin.reflect.KClass
 class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
     companion object {
+        const val TAG = "FloatingCan"
         private var textureRegion: TextureRegion? = null
         private const val SPAWN_DELAY = 1f
         private const val SPAWN_BLINK = 0.1f
@@ -79,10 +80,8 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
         val spawn = if (spawnProps.containsKey(ConstKeys.BOUNDS)) (spawnProps.get(
-            ConstKeys.BOUNDS,
-            GameRectangle::class
-        ))!!.getCenter()
-        else spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+            ConstKeys.BOUNDS, GameRectangle::class
+        ))!!.getCenter() else spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
         spawnDelayTimer.reset()
         spawningBlinkTimer.reset()
@@ -111,14 +110,12 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
         val shapes = Array<() -> IDrawableShape?>()
 
-        // damageable fixture
-        val damageableFixture = Fixture(GameRectangle().setSize(.75f * ConstVals.PPM), FixtureType.DAMAGEABLE)
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(.75f * ConstVals.PPM))
         body.addFixture(damageableFixture)
 
-        // damager fixture
-        val damagerFixture = Fixture(GameRectangle().setSize(.75f * ConstVals.PPM), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(.75f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        shapes.add { damageableFixture.shape }
+        shapes.add { damageableFixture.getShape() }
 
         addComponent(DrawableShapesComponent(this, shapes))
 
@@ -132,10 +129,8 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
         spritesComponent.putUpdateFunction("can") { _, _sprite ->
             _sprite as GameSprite
             _sprite.setPosition(body.getCenter(), Position.CENTER)
-            if (!spawnDelayTimer.isFinished())
-                _sprite.hidden = spawnDelayBlink
-            else if (spawnDelayTimer.isJustFinished())
-                _sprite.hidden = if (invincible) damageBlink else false
+            if (!spawnDelayTimer.isFinished()) _sprite.hidden = spawnDelayBlink
+            else if (spawnDelayTimer.isJustFinished()) _sprite.hidden = if (invincible) damageBlink else false
         }
         return spritesComponent
     }
@@ -147,12 +142,11 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
     }
 
     private fun definePathfindingComponent(): PathfindingComponent {
-        val params = PathfinderParams(
-            startSupplier = { body.getCenter() },
+        val params = PathfinderParams(startSupplier = { body.getCenter() },
             targetSupplier = { getMegamanMaverickGame().megaman.body.getCenterPoint() },
             allowDiagonal = { true },
             filter = { _, objs ->
-                objs.none { it is Fixture && it.fixtureLabel == FixtureType.BLOCK }
+                objs.none { it is Fixture && it.getFixtureType() == FixtureType.BLOCK }
             })
         val pathfindingComponent = PathfindingComponent(this, params, {
             StandardPathfinderResultConsumer.consume(
@@ -160,7 +154,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
                 body,
                 body.getCenter(),
                 FLY_SPEED,
-                body.fixtures.find { pair -> pair.first == FixtureType.DAMAGER }!!.second.shape as GameRectangle,
+                body.fixtures.find { pair -> pair.first == FixtureType.DAMAGER }!!.second.getShape() as GameRectangle,
                 stopOnTargetReached = false,
                 stopOnTargetNull = false,
                 postProcess = { if (!spawnDelayTimer.isFinished()) body.physics.velocity.setZero() },

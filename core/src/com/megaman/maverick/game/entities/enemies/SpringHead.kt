@@ -37,7 +37,6 @@ import com.megaman.maverick.game.utils.VelocityAlterationType
 import com.megaman.maverick.game.utils.getMegamanMaverickGame
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
-import com.megaman.maverick.game.world.getBody
 import kotlin.reflect.KClass
 
 class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
@@ -96,40 +95,36 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val body = Body(BodyType.DYNAMIC)
         body.setSize(ConstVals.PPM / 4f)
 
-        // left fixture
-        val leftFixture = Fixture(GameRectangle().setSize(0.1f * ConstVals.PPM), FixtureType.SIDE)
+        val leftFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         leftFixture.offsetFromBodyCenter.set(-0.4f * ConstVals.PPM, -ConstVals.PPM / 4f)
         body.addFixture(leftFixture)
 
-        // right fixture
-        val rightFixture = Fixture(GameRectangle().setSize(0.1f * ConstVals.PPM), FixtureType.SIDE)
+        val rightFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         rightFixture.offsetFromBodyCenter.set(0.4f * ConstVals.PPM, -ConstVals.PPM / 4f)
         body.addFixture(rightFixture)
 
         val c1 = GameRectangle().setSize(ConstVals.PPM.toFloat())
 
-        // damager fixture
-        val damagerFixture = Fixture(c1.copy(), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, c1.copy())
         body.addFixture(damagerFixture)
 
-        // damageable fixture
-        val damageableFixture = Fixture(c1.copy(), FixtureType.DAMAGEABLE)
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, c1.copy())
         body.addFixture(damageableFixture)
 
-        // val shieldFixture
         val shieldFixture =
             Fixture(
+                body,
+                FixtureType.SHIELD,
                 GameRectangle().setSize(0.85f * ConstVals.PPM, 0.6f * ConstVals.PPM),
-                FixtureType.SHIELD
             )
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
         shieldFixture.offsetFromBodyCenter.y = 0.1f * ConstVals.PPM
         body.addFixture(shieldFixture)
 
-        // bouncer fixture
-        val bouncerFixture = Fixture(GameRectangle().setSize(0.5f * ConstVals.PPM), FixtureType.BOUNCER)
+        val bouncerFixture = Fixture(body, FixtureType.BOUNCER,
+            GameRectangle().setSize(0.5f * ConstVals.PPM))
         bouncerFixture.offsetFromBodyCenter.y = 0.1f * ConstVals.PPM
         bouncerFixture.putProperty(
             ConstKeys.VELOCITY_ALTERATION,

@@ -119,7 +119,7 @@ class HealthBulb(game: MegamanMaverickGame) :
 
         body.setSize((if (large) 0.5f else 0.25f) * ConstVals.PPM)
         body.setCenter(spawn)
-        (itemFixture.shape as GameRectangle).set(body)
+        (itemFixture.rawShape as GameRectangle).set(body)
         feetFixture.offsetFromBodyCenter.y = (if (large) -0.25f else -0.125f) * ConstVals.PPM
     }
 
@@ -139,23 +139,20 @@ class HealthBulb(game: MegamanMaverickGame) :
 
         val shapes = Array<() -> IDrawableShape?>()
 
-        // body fixture
-        val bodyFixture = Fixture(GameRectangle().set(body), FixtureType.BODY)
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
 
-        // item fixture
-        itemFixture = Fixture(GameRectangle(), FixtureType.ITEM)
+        itemFixture = Fixture(body, FixtureType.ITEM, GameRectangle())
         body.addFixture(itemFixture)
 
-        itemFixture.shape.color = Color.PURPLE
-        shapes.add { itemFixture.shape }
+        itemFixture.rawShape.color = Color.PURPLE
+        shapes.add { itemFixture.getShape() }
 
-        // feet fixture
-        feetFixture = Fixture(GameRectangle().setSize(0.1f * ConstVals.PPM), FixtureType.FEET)
+        feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.1f * ConstVals.PPM))
         body.addFixture(feetFixture)
 
-        feetFixture.shape.color = Color.GREEN
-        shapes.add { feetFixture.shape }
+        feetFixture.rawShape.color = Color.GREEN
+        shapes.add { feetFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             if (!landed) {

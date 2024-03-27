@@ -95,24 +95,20 @@ class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
 
-        // body fixture
-        val bodyFixture = Fixture(GameRectangle(), FixtureType.BODY)
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle())
         body.addFixture(bodyFixture)
 
-        // feet fixture
-        val feetFixture = Fixture(GameRectangle().setHeight(0.1f * ConstVals.PPM), FixtureType.FEET)
+        val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setHeight(0.1f * ConstVals.PPM))
         body.addFixture(feetFixture)
 
-        // damageable fixture
-        val damageableFixture = Fixture(GameRectangle(), FixtureType.DAMAGEABLE)
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle())
         body.addFixture(damageableFixture)
 
-        // damager fixture
-        val damagerFixture = Fixture(GameRectangle(), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
         body.addFixture(damagerFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
-            val feetBounds = feetFixture.shape as GameRectangle
+            val feetBounds = feetFixture.rawShape as GameRectangle
             if (standing || jumping) {
                 body.setSize(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat())
                 feetBounds.width = 0.65f * ConstVals.PPM
@@ -123,8 +119,8 @@ class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
                 feetFixture.offsetFromBodyCenter.y = -0.25f * ConstVals.PPM
             }
 
-            (damageableFixture.shape as GameRectangle).set(body)
-            (damagerFixture.shape as GameRectangle).set(body)
+            (damageableFixture.rawShape as GameRectangle).set(body)
+            (damagerFixture.rawShape as GameRectangle).set(body)
 
             body.physics.gravity.y =
                 (if (body.isSensing(BodySense.FEET_ON_GROUND)) G_GRAV else GRAV) * ConstVals.PPM

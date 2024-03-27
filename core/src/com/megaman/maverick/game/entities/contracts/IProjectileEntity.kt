@@ -16,7 +16,7 @@ import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.ISpriteEntity
-import com.engine.world.Fixture
+import com.engine.world.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.events.EventType
 
@@ -31,13 +31,13 @@ interface IProjectileEntity : IOwnable, IDamager, IBodyEntity, ISpriteEntity, IA
 
     fun explodeAndDie() {}
 
-    fun hitBody(bodyFixture: Fixture) {}
+    fun hitBody(bodyFixture: IFixture) {}
 
-    fun hitBlock(blockFixture: Fixture) {}
+    fun hitBlock(blockFixture: IFixture) {}
 
-    fun hitShield(shieldFixture: Fixture) {}
+    fun hitShield(shieldFixture: IFixture) {}
 
-    fun hitWater(waterFixture: Fixture) {}
+    fun hitWater(waterFixture: IFixture) {}
 }
 
 internal fun IProjectileEntity.defineProjectileComponents(): Array<IGameComponent> {
@@ -52,9 +52,13 @@ internal fun IProjectileEntity.defineProjectileComponents(): Array<IGameComponen
         CullableOnUncontained<Camera>(
             containerSupplier = { game.viewports.get(ConstKeys.GAME).camera },
             containable = { it.overlaps(body) })
-    components.add(CullablesComponent(this, objectMapOf(
-        ConstKeys.CULL_EVENTS to cullOnEvent,
-        ConstKeys.CULL_OUT_OF_BOUNDS to cullOnOutOfGameCam
-    )))
+    components.add(
+        CullablesComponent(
+            this, objectMapOf(
+                ConstKeys.CULL_EVENTS to cullOnEvent,
+                ConstKeys.CULL_OUT_OF_BOUNDS to cullOnOutOfGameCam
+            )
+        )
+    )
     return components
 }

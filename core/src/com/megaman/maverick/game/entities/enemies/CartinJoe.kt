@@ -137,64 +137,67 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpriteEntity,
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
-        // body fixture
-        val bodyFixture =
-            Fixture(GameRectangle().setSize(1.25f * ConstVals.PPM, 1.85f * ConstVals.PPM), FixtureType.BODY)
+        val bodyFixture = Fixture(
+            body, FixtureType.BODY, GameRectangle().setSize(1.25f * ConstVals.PPM, 1.85f * ConstVals.PPM)
+        )
         body.addFixture(bodyFixture)
-        bodyFixture.shape.color = Color.GRAY // debugShapes.add { bodyFixture.shape }
+        bodyFixture.getShape().color = Color.GRAY
 
-        // shield fixture
         val shieldFixture =
-            Fixture(GameRectangle().setSize(1.25f * ConstVals.PPM, 0.75f * ConstVals.PPM), FixtureType.SHIELD)
+            Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(1.25f * ConstVals.PPM, 0.75f * ConstVals.PPM))
         shieldFixture.offsetFromBodyCenter.y = -0.25f * ConstVals.PPM
         body.addFixture(shieldFixture)
-        shieldFixture.shape.color = Color.BLUE
-        debugShapes.add { shieldFixture.shape }
+        shieldFixture.getShape().color = Color.BLUE
+        debugShapes.add { shieldFixture.getShape() }
 
-        // damager fixture
         val damagerFixture =
-            Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat(), 1.25f * ConstVals.PPM), FixtureType.DAMAGER)
+            Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(ConstVals.PPM.toFloat(), 1.25f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        damagerFixture.shape.color = Color.RED // debugShapes.add { damagerFixture.shape }
+        damagerFixture.getShape().color = Color.RED
+        debugShapes.add { damagerFixture.getShape() }
 
-        // damageable fixture
-        val damageableFixture =
-            Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.75f * ConstVals.PPM), FixtureType.DAMAGEABLE)
+        val damageableFixture = Fixture(
+            body, FixtureType.DAMAGEABLE, GameRectangle().setSize(
+                ConstVals.PPM.toFloat(), 0.75f * ConstVals.PPM
+            )
+        )
         damageableFixture.offsetFromBodyCenter.y = 0.45f * ConstVals.PPM
         body.addFixture(damageableFixture)
-        damageableFixture.shape.color = Color.PURPLE
-        debugShapes.add { damageableFixture.shape }
+        damageableFixture.getShape().color = Color.PURPLE
+        debugShapes.add { damageableFixture.getShape() }
 
-        // feet fixture
         val feetFixture =
-            Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM), FixtureType.FEET)
+            Fixture(body, FixtureType.FEET, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyCenter.y = -0.6f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.shape.color = Color.GREEN // debugShapes.add { feetFixture.shape }
+        feetFixture.getShape().color = Color.GREEN
+        debugShapes.add { feetFixture.getShape() }
 
         val onBounce: () -> Unit = {
             swapFacing()
             GameLogger.debug(TAG, "onBounce: swap facing to $facing")
         }
 
-        // left fixture
-        val leftFixture = Fixture(GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM), FixtureType.SIDE)
+        val leftFixture = Fixture(
+            body, FixtureType.SIDE, GameRectangle().setSize(
+                0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM
+            )
+        )
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         leftFixture.setRunnable(onBounce)
         leftFixture.offsetFromBodyCenter.x = -0.75f * ConstVals.PPM
         body.addFixture(leftFixture)
-        leftFixture.shape.color = Color.YELLOW
-        debugShapes.add { leftFixture.shape }
+        leftFixture.getShape().color = Color.YELLOW
+        debugShapes.add { leftFixture.getShape() }
 
-        // right fixture
         val rightFixture =
-            Fixture(GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM), FixtureType.SIDE)
+            Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM))
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         rightFixture.setRunnable(onBounce)
         rightFixture.offsetFromBodyCenter.x = 0.75f * ConstVals.PPM
         body.addFixture(rightFixture)
-        rightFixture.shape.color = Color.YELLOW
-        debugShapes.add { rightFixture.shape }
+        rightFixture.getShape().color = Color.YELLOW
+        debugShapes.add { rightFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             body.physics.gravity.y =

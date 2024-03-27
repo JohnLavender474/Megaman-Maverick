@@ -2,7 +2,6 @@
 
 package com.megaman.maverick.game.entities.special
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
 import com.engine.animations.Animation
@@ -91,54 +90,36 @@ class Cart(game: MegamanMaverickGame) : GameEntity(game), IOwnable, IBodyEntity,
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
-        // cart fixture
         val cartFixture =
-            Fixture(GameRectangle().setSize(0.75f * ConstVals.PPM, 1.5f * ConstVals.PPM), FixtureType.CART)
+            Fixture(body, FixtureType.CART, GameRectangle().setSize(0.75f * ConstVals.PPM, 1.5f * ConstVals.PPM))
         cartFixture.offsetFromBodyCenter.y = -0.25f * ConstVals.PPM
         cartFixture.putProperty(ConstKeys.ENTITY, this)
         body.addFixture(cartFixture)
-        cartFixture.shape.color = Color.GOLD
-        debugShapes.add { cartFixture.shape }
 
-        // body fixture
         val bodyFixture =
-            Fixture(GameRectangle().setSize(1.25f * ConstVals.PPM, 0.75f * ConstVals.PPM), FixtureType.BODY)
+            Fixture(body, FixtureType.BODY, GameRectangle().setSize(1.25f * ConstVals.PPM, 0.75f * ConstVals.PPM))
         body.addFixture(bodyFixture)
-        bodyFixture.shape.color = Color.GRAY
-        // debugShapes.add { bodyFixture.shape }
 
-        // shield fixture
         val shieldFixture =
-            Fixture(GameRectangle().setSize(1.25f * ConstVals.PPM, 0.75f * ConstVals.PPM), FixtureType.SHIELD)
+            Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(1.25f * ConstVals.PPM, 0.75f * ConstVals.PPM))
         body.addFixture(shieldFixture)
-        shieldFixture.shape.color = Color.BLUE
-        // debugShapes.add { shieldFixture.shape }
 
-        // left fixture
         val leftFixture =
-            Fixture(GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM), FixtureType.SIDE)
+            Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM))
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         leftFixture.offsetFromBodyCenter.x = -0.75f * ConstVals.PPM
         body.addFixture(leftFixture)
-        leftFixture.shape.color = Color.YELLOW
-        // debugShapes.add { leftFixture.shape }
 
-        // right fixture
         val rightFixture =
-            Fixture(GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM), FixtureType.SIDE)
+            Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM))
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         rightFixture.offsetFromBodyCenter.x = 0.75f * ConstVals.PPM
         body.addFixture(rightFixture)
-        rightFixture.shape.color = Color.YELLOW
-        // debugShapes.add { rightFixture.shape }
 
-        // feet fixture
         val feetFixture =
-            Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM), FixtureType.FEET)
+            Fixture(body, FixtureType.FEET, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyCenter.y = -0.6f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.shape.color = Color.GREEN
-        // debugShapes.add { feetFixture.shape }
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             childBlock.body.setBottomCenterToPoint(body.getBottomCenterPoint())

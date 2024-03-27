@@ -132,42 +132,36 @@ class SuicideBummer(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable,
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
-        // body fixture
-        val bodyFixture = Fixture(GameRectangle().set(body), FixtureType.BODY)
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
-        bodyFixture.shape.color = Color.GRAY
-        debugShapes.add { bodyFixture.shape }
+        bodyFixture.getShape().color = Color.GRAY
+        debugShapes.add { bodyFixture.getShape() }
 
-        // damager fixture
-        val damagerFixture = Fixture(GameRectangle().set(body), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().set(body))
         body.addFixture(damagerFixture)
 
-        // damageable fixture
-        val damageableFixture = Fixture(GameRectangle().set(body), FixtureType.DAMAGEABLE)
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().set(body))
         body.addFixture(damageableFixture)
 
-        // left fixture
-        val leftFixture = Fixture(GameRectangle().setSize(0.1f * ConstVals.PPM), FixtureType.SIDE)
+        val leftFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         leftFixture.offsetFromBodyCenter = Vector2(-0.6255f * ConstVals.PPM, -0.625f * ConstVals.PPM)
         body.addFixture(leftFixture)
-        leftFixture.shape.color = Color.YELLOW
-        debugShapes.add { leftFixture.shape }
+        leftFixture.getShape().color = Color.YELLOW
+        debugShapes.add { leftFixture.getShape() }
 
-        // right fixture
-        val rightFixture = Fixture(GameRectangle().setSize(0.1f * ConstVals.PPM), FixtureType.SIDE)
+        val rightFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         rightFixture.offsetFromBodyCenter = Vector2(0.625f * ConstVals.PPM, -0.625f * ConstVals.PPM)
         body.addFixture(rightFixture)
-        rightFixture.shape.color = Color.YELLOW
-        debugShapes.add { rightFixture.shape }
+        rightFixture.getShape().color = Color.YELLOW
+        debugShapes.add { rightFixture.getShape() }
 
-        // feet fixture
-        val feetFixture = Fixture(GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM), FixtureType.FEET)
+        val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyCenter.y = -0.5f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.shape.color = Color.GREEN
-        debugShapes.add { feetFixture.shape }
+        feetFixture.getShape().color = Color.GREEN
+        debugShapes.add { feetFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.velocity.x =

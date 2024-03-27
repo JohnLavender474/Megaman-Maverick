@@ -114,20 +114,20 @@ class Adamski(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
-        val bodyFixture = Fixture(GameRectangle().set(body), FixtureType.BODY)
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
-        bodyFixture.shape.color = Color.GRAY
-        debugShapes.add { bodyFixture.shape }
+        bodyFixture.getShape().color = Color.GRAY
+        debugShapes.add { bodyFixture.getShape() }
 
-        val damagerFixture = Fixture(GameRectangle().set(body), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().set(body))
         body.addFixture(damagerFixture)
-        damagerFixture.shape.color = Color.RED
-        debugShapes.add { damagerFixture.shape }
+        damagerFixture.getShape().color = Color.RED
+        debugShapes.add { damagerFixture.getShape() }
 
-        val damageableFixture = Fixture(GameRectangle().set(body), FixtureType.DAMAGEABLE)
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().set(body))
         body.addFixture(damageableFixture)
-        damageableFixture.shape.color = Color.PURPLE
-        debugShapes.add { damageableFixture.shape }
+        damageableFixture.getShape().color = Color.PURPLE
+        debugShapes.add { damageableFixture.getShape() }
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
 

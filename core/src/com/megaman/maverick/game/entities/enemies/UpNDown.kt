@@ -106,13 +106,13 @@ class UpNDown(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAnim
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.5f * ConstVals.PPM)
 
-        val bodyFixture = Fixture(GameRectangle().set(body), FixtureType.BODY)
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
 
-        val damagerFixture = Fixture(GameRectangle().set(body), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().set(body))
         body.addFixture(damagerFixture)
 
-        val damageableFixture = Fixture(GameRectangle().set(body), FixtureType.DAMAGEABLE)
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().set(body))
         body.addFixture(damageableFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT) {

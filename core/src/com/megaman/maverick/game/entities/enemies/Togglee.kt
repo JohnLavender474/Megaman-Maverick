@@ -185,27 +185,28 @@ class Togglee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
-        // body fixture
-        val bodyFixture = Fixture(GameRectangle().setSize(body.getSize()), FixtureType.BODY)
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(body.getSize()))
         body.addFixture(bodyFixture)
-        bodyFixture.shape.color = Color.GRAY
-        debugShapes.add { bodyFixture.shape }
+        bodyFixture.getShape().color = Color.GRAY
+        debugShapes.add { bodyFixture.getShape() }
 
-        // damager fixture
         val damagerFixture = Fixture(
-            GameRectangle().setSize(ConstVals.PPM.toFloat()), FixtureType.DAMAGER
+            body,
+            FixtureType.DAMAGER,
+            GameRectangle().setSize(ConstVals.PPM.toFloat())
         )
         body.addFixture(damagerFixture)
-        damagerFixture.shape.color = Color.RED
-        debugShapes.add { damagerFixture.shape }
+        damagerFixture.getShape().color = Color.RED
+        debugShapes.add { damagerFixture.getShape() }
 
-        // damageable fixture
         val damageableFixture = Fixture(
-            GameRectangle().setSize(ConstVals.PPM.toFloat()), FixtureType.DAMAGEABLE
+            body,
+            FixtureType.DAMAGEABLE,
+            GameRectangle().setSize(ConstVals.PPM.toFloat())
         )
         body.addFixture(damageableFixture)
-        damageableFixture.shape.color = Color.PURPLE
-        debugShapes.add { damageableFixture.shape }
+        damageableFixture.getShape().color = Color.PURPLE
+        debugShapes.add { damageableFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             damagerFixture.active = !moving

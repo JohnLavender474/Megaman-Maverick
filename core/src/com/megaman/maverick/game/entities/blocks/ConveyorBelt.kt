@@ -60,15 +60,15 @@ class ConveyorBelt(game: MegamanMaverickGame) : ISpriteEntity, IDrawableShapesEn
 
         // initialize force fixture if not already present
         if (forceFixture == null) {
-            forceFixture = Fixture(GameRectangle(), FixtureType.FORCE)
+            forceFixture = Fixture(body, FixtureType.FORCE, GameRectangle())
             forceFixture!!.offsetFromBodyCenter.y = ConstVals.PPM / 8f
             forceFixture!!.setEntity(this)
             body.addFixture(forceFixture!!)
-            addDebugShapeSupplier { forceFixture!!.shape }
+            addDebugShapeSupplier { forceFixture!!.getShape() }
         }
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS) as Rectangle
-        (forceFixture!!.shape as GameRectangle).setSize(
+        (forceFixture!!.rawShape as GameRectangle).setSize(
             bounds.width - ConstVals.PPM / 4f, bounds.height
         )
 

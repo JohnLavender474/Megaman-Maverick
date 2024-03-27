@@ -23,8 +23,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 
-open class AnimatedBlock(game: MegamanMaverickGame) :
-    Block(game), ISpriteEntity, IAnimatedEntity, Resettable {
+open class AnimatedBlock(game: MegamanMaverickGame) : Block(game), ISpriteEntity, IAnimatedEntity, Resettable {
 
     companion object {
         const val TAG = "AnimatedBlock"
@@ -48,22 +47,15 @@ open class AnimatedBlock(game: MegamanMaverickGame) :
     override fun spawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "spawn(): spawnProps = $spawnProps")
         super.spawn(spawnProps)
-
         trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2(), Vector2::class)
-
-        @Suppress("UNCHECKED_CAST")
         deathPredicate = spawnProps.get(ConstKeys.DEATH) as ArgsPredicate<Properties>?
-
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
-
         spriteSize = spawnProps.getOrDefault(ConstKeys.SIZE, bounds.getSize(), Vector2::class)
         spriteSize.x = spawnProps.getOrDefault(ConstKeys.WIDTH, bounds.width, Float::class)
         spriteSize.y = spawnProps.getOrDefault(ConstKeys.HEIGHT, bounds.height, Float::class)
-
         val animation = spawnProps.get(ConstKeys.ANIMATION, String::class)!!
         AnimatedBlockAnimators.createAndSetAnimations(animation, this)
-
         if (spawnProps.containsKey(ConstKeys.RUN_ON_SPAWN)) {
             val runOnSpawn = spawnProps.get(ConstKeys.RUN_ON_SPAWN, Runnable::class)!!
             runOnSpawn.run()
@@ -73,11 +65,12 @@ open class AnimatedBlock(game: MegamanMaverickGame) :
     protected open fun defineUpdateablesComponent(updateablesComponent: UpdatablesComponent) {
         updateablesComponent.add {
             body.physics.velocity = trajectory
-
-            if (deathPredicate != null &&
-                deathPredicate!!.test(props(ConstKeys.DELTA to it, ConstKeys.ENTITY to this))
-            )
-                kill(props(CAUSE_OF_DEATH_MESSAGE to "Death predicate returned true"))
+            if (deathPredicate != null && deathPredicate!!.test(
+                    props(
+                        ConstKeys.DELTA to it, ConstKeys.ENTITY to this
+                    )
+                )
+            ) kill(props(CAUSE_OF_DEATH_MESSAGE to "Death predicate returned true"))
         }
     }
 
@@ -107,25 +100,24 @@ object AnimatedBlockAnimators {
 
         val assMan = animatedBlock.game.assMan
 
-        val animation: Animation =
-            when (key) {
-                "Brick1" -> {
-                    val region = assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "Brick1")
-                    Animation(region, 1, 3, 0.05f, false)
-                }
-
-                "CaveRock" -> {
-                    val region = assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "CaveRock/Rock")
-                    Animation(region)
-                }
-
-                "Platform1_64x8" -> {
-                    val region = assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "Platform1_64x8")
-                    Animation(region)
-                }
-
-                else -> throw IllegalArgumentException("$TAG: Illegal key = $key")
+        val animation: Animation = when (key) {
+            "Brick1" -> {
+                val region = assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "Brick1")
+                Animation(region, 1, 3, 0.05f, false)
             }
+
+            "CaveRock" -> {
+                val region = assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "CaveRock/Rock")
+                Animation(region)
+            }
+
+            "Platform1_64x8" -> {
+                val region = assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "Platform1_64x8")
+                Animation(region)
+            }
+
+            else -> throw IllegalArgumentException("$TAG: Illegal key = $key")
+        }
 
         val animator = Animator(animation)
         animators.add({ animatedBlock.sprites.get("block") } to animator)

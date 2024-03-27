@@ -104,39 +104,36 @@ class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
         val shapes = Array<() -> IDrawableShape?>()
 
-        // water-listener fixture
         val waterListenerFixture = Fixture(
-            GameRectangle().setSize(ConstVals.PPM.toFloat(), ConstVals.PPM / 2f), FixtureType.WATER_LISTENER
+            body,
+            FixtureType.WATER_LISTENER,
+            GameRectangle().setSize(ConstVals.PPM.toFloat(), ConstVals.PPM / 2f)
         )
         waterListenerFixture.offsetFromBodyCenter.y = ConstVals.PPM / 4f
         body.addFixture(waterListenerFixture)
-        shapes.add { waterListenerFixture.shape }
+        shapes.add { waterListenerFixture.getShape() }
 
         val m1 = GameRectangle().setSize(0.75f * ConstVals.PPM, 0.2f * ConstVals.PPM)
 
-        // head fixture
-        val headFixture = Fixture(m1.copy(), FixtureType.HEAD)
+        val headFixture = Fixture(body, FixtureType.HEAD, m1.copy())
         headFixture.offsetFromBodyCenter.y = 0.375f * ConstVals.PPM
         body.addFixture(headFixture)
-        shapes.add { headFixture.shape }
+        shapes.add { headFixture.getShape() }
 
-        // feet fixture
-        val feetFixture = Fixture(m1.copy(), FixtureType.FEET)
+        val feetFixture = Fixture(body, FixtureType.FEET, m1.copy())
         feetFixture.offsetFromBodyCenter.y = -0.375f * ConstVals.PPM
         body.addFixture(feetFixture)
-        shapes.add { feetFixture.shape }
+        shapes.add { feetFixture.getShape() }
 
         val m2 = GameRectangle().setSize(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat())
 
-        // damageable fixture
-        val damageableFixture = Fixture(m2.copy(), FixtureType.DAMAGEABLE)
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, m2.copy())
         body.addFixture(damageableFixture)
-        shapes.add { damageableFixture.shape }
+        shapes.add { damageableFixture.getShape() }
 
-        // damager fixture
-        val damagerFixture = Fixture(m2.copy(), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, m2.copy())
         body.addFixture(damagerFixture)
-        shapes.add { damagerFixture.shape }
+        shapes.add { damagerFixture.getShape() }
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
 
@@ -146,8 +143,8 @@ class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
         sprite.setSize(1.5f * ConstVals.PPM)
-        val SpritesComponent = SpritesComponent(this, "gapingFish" to sprite)
-        SpritesComponent.putUpdateFunction("gapingFish") { _, _sprite ->
+        val SpritesComponent = SpritesComponent(this, TAG to sprite)
+        SpritesComponent.putUpdateFunction(TAG) { _, _sprite ->
             _sprite as GameSprite
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
             _sprite.setFlip(facing == Facing.LEFT, false)

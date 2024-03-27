@@ -185,50 +185,50 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
 
         val shapes = Array<() -> IDrawableShape?>()
 
-        val bodyFixture = Fixture(GameRectangle().set(body), FixtureType.BODY)
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
 
-        val feetFixture = Fixture(GameRectangle().setSize(0.1f * ConstVals.PPM), FixtureType.FEET)
+        val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyCenter.y = -0.75f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.shape.color = Color.GREEN
-        shapes.add { feetFixture.shape }
+        feetFixture.rawShape.color = Color.GREEN
+        shapes.add { feetFixture.getShape() }
 
         val damagerFixture = Fixture(
-            GameRectangle().setSize(0.75f * ConstVals.PPM, 1.15f * ConstVals.PPM), FixtureType.DAMAGER
+            body, FixtureType.DAMAGER, GameRectangle().setSize(0.75f * ConstVals.PPM, 1.15f * ConstVals.PPM)
         )
         body.addFixture(damagerFixture)
-        damagerFixture.shape.color = Color.RED
-        shapes.add { damagerFixture.bodyRelativeShape }
+        damagerFixture.rawShape.color = Color.RED
+        shapes.add { damagerFixture.getShape() }
 
         val damageableFixture = Fixture(
-            GameRectangle().setSize(0.8f * ConstVals.PPM, 1.35f * ConstVals.PPM), FixtureType.DAMAGEABLE
+            body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.8f * ConstVals.PPM, 1.35f * ConstVals.PPM)
         )
         body.addFixture(damageableFixture)
-        damageableFixture.shape.color = Color.PURPLE
-        shapes.add { damageableFixture.bodyRelativeShape }
+        damageableFixture.getShape().color = Color.PURPLE
+        shapes.add { damageableFixture.getShape() }
 
         val shieldFixture = Fixture(
-            GameRectangle().setSize(0.4f * ConstVals.PPM, 0.9f * ConstVals.PPM), FixtureType.SHIELD
+            body, FixtureType.SHIELD, GameRectangle().setSize(0.4f * ConstVals.PPM, 0.9f * ConstVals.PPM)
         )
         body.addFixture(shieldFixture)
-        shieldFixture.shape.color = Color.BLUE
-        shapes.add { shieldFixture.bodyRelativeShape }
+        shieldFixture.getShape().color = Color.BLUE
+        shapes.add { shieldFixture.getShape() }
 
-        val triggerFixture = Fixture(GameRectangle(), FixtureType.CONSUMER)
+        val triggerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle())
         triggerFixture.setConsumer { processState, fixture ->
-            if (hasShield && processState == ProcessState.BEGIN && fixture.fixtureLabel == FixtureType.PLAYER) setToThrowShield =
-                true
+            if (hasShield && processState == ProcessState.BEGIN && fixture.getFixtureType() == FixtureType.PLAYER)
+                setToThrowShield = true
         }
         triggerFixture.attachedToBody = false
         body.addFixture(triggerFixture)
-        triggerFixture.shape.color = Color.YELLOW
-        shapes.add { triggerFixture.shape }
+        triggerFixture.getShape().color = Color.YELLOW
+        shapes.add { triggerFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             if (canThrowShield && throwShieldTrigger != null) {
                 triggerFixture.active = true
-                triggerFixture.shape = throwShieldTrigger!!
+                triggerFixture.rawShape = throwShieldTrigger!!
             } else triggerFixture.active = false
 
             if (directionRotation.equalsAny(Direction.UP, Direction.DOWN)) body.physics.velocity.x = 0f

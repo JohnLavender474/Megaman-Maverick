@@ -152,23 +152,20 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
-        // body fixture
-        val bodyFixture = Fixture(GameRectangle().setSize(0.75f * ConstVals.PPM), FixtureType.BODY)
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(0.75f * ConstVals.PPM))
         body.addFixture(bodyFixture)
-        bodyFixture.shape.color = Color.GOLD
-        debugShapes.add { bodyFixture.shape }
+        bodyFixture.getShape().color = Color.GOLD
+        debugShapes.add { bodyFixture.getShape() }
 
-        // damager fixture
-        val damagerFixture = Fixture(GameRectangle().setSize(0.75f * ConstVals.PPM), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.75f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        damagerFixture.shape.color = Color.RED
-        debugShapes.add { damagerFixture.shape }
+        damagerFixture.getShape().color = Color.RED
+        debugShapes.add { damagerFixture.getShape() }
 
-        // damageable fixture
-        val damageableFixture = Fixture(GameRectangle().setSize(0.75f * ConstVals.PPM), FixtureType.DAMAGEABLE)
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.75f * ConstVals.PPM))
         body.addFixture(damageableFixture)
-        damageableFixture.shape.color = Color.PURPLE
-        debugShapes.add { damageableFixture.shape }
+        damageableFixture.getShape().color = Color.PURPLE
+        debugShapes.add { damageableFixture.getShape() }
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
 
@@ -178,15 +175,13 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(0.85f * ConstVals.PPM)
-
-        val spritesComponent = SpritesComponent(this, "eyee" to sprite)
-        spritesComponent.putUpdateFunction("eyee") { _, _sprite ->
+        val spritesComponent = SpritesComponent(this, TAG to sprite)
+        spritesComponent.putUpdateFunction(TAG) { _, _sprite ->
             _sprite as GameSprite
             val center = body.getCenter()
             _sprite.setCenter(center.x, center.y)
             _sprite.hidden = if (invincible) damageBlink else false
         }
-
         return spritesComponent
     }
 

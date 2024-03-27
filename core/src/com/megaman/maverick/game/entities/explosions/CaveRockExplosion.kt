@@ -75,11 +75,10 @@ class CaveRockExplosion(game: MegamanMaverickGame) :
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
-        // damager fixture
-        val damagerFixture = Fixture(GameRectangle().setSize(1f * ConstVals.PPM), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(1f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        damagerFixture.shape.color = Color.RED
-        debugShapes.add { damagerFixture.shape }
+        damagerFixture.rawShape.color = Color.RED
+        debugShapes.add { damagerFixture.getShape() }
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
 

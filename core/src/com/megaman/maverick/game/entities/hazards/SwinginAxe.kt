@@ -75,18 +75,16 @@ class SwinginAxe(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity, I
 
         val shapesComponent = getComponent(DrawableShapesComponent::class)!!
 
-        // death circle
         deathCircle = GameCircle()
         deathCircle.setRadius(ConstVals.PPM.toFloat())
-        val deathFixture = Fixture(deathCircle, FixtureType.DEATH)
+        val deathFixture = Fixture(body, FixtureType.DEATH, deathCircle)
         deathFixture.attachedToBody = false
         body.addFixture(deathFixture)
         shapesComponent.debugShapeSuppliers.add { deathCircle }
 
-        // shield fixture
         shieldCircle = GameCircle()
         shieldCircle.setRadius(ConstVals.PPM.toFloat())
-        val shieldFixture = Fixture(shieldCircle, FixtureType.SHIELD)
+        val shieldFixture = Fixture(body, FixtureType.SHIELD, shieldCircle)
         shieldFixture.attachedToBody = false
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
         body.addFixture(shieldFixture)

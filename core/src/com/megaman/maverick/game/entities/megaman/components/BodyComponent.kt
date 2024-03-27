@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
 import com.engine.common.interfaces.Updatable
 import com.engine.common.shapes.GameRectangle
@@ -30,13 +31,13 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
 
     val shapes = Array<() -> IDrawableShape?>()
 
-    val playerFixture = Fixture(GameRectangle().setWidth(0.8f * ConstVals.PPM), FixtureType.PLAYER)
+    val playerFixture = Fixture(body, FixtureType.PLAYER, GameRectangle().setWidth(0.8f * ConstVals.PPM))
     body.addFixture(playerFixture)
-    playerFixture.shape.color = Color.WHITE
+    playerFixture.rawShape.color = Color.WHITE
 
-    val bodyFixture = Fixture(GameRectangle().setWidth(.8f * ConstVals.PPM), FixtureType.BODY)
+    val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setWidth(.8f * ConstVals.PPM))
     body.addFixture(bodyFixture)
-    bodyFixture.shape.color = Color.BLUE
+    bodyFixture.rawShape.color = Color.BLUE
 
     val onBounce = {
         if (!body.isSensing(BodySense.IN_WATER) /* TODO: && has(MegaAbility.AIR_DASH) */)
@@ -45,51 +46,61 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
 
     val feetFixture =
         Fixture(
-            GameRectangle().setWidth(.6f * ConstVals.PPM).setHeight(.15f * ConstVals.PPM),
-            FixtureType.FEET
+            body,
+            FixtureType.FEET,
+            GameRectangle().setWidth(.6f * ConstVals.PPM).setHeight(.15f * ConstVals.PPM)
         )
     feetFixture.setRunnable(onBounce)
     body.addFixture(feetFixture)
-    feetFixture.shape.color = Color.GREEN
-    shapes.add { feetFixture.bodyRelativeShape }
+    feetFixture.rawShape.color = Color.GREEN
+    shapes.add { feetFixture.getShape() }
 
     val headFixture =
         Fixture(
-            GameRectangle().setWidth(.6f * ConstVals.PPM).setHeight(.15f * ConstVals.PPM),
-            FixtureType.HEAD
+            body,
+            FixtureType.HEAD,
+            GameRectangle().setWidth(.6f * ConstVals.PPM).setHeight(.15f * ConstVals.PPM)
         )
     headFixture.setRunnable(onBounce)
     body.addFixture(headFixture)
-    headFixture.shape.color = Color.RED
+    headFixture.rawShape.color = Color.RED
 
-    val leftFixture = Fixture(GameRectangle().setWidth(.2f * ConstVals.PPM), FixtureType.SIDE)
+    val leftFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setWidth(.2f * ConstVals.PPM))
     leftFixture.setRunnable(onBounce)
     leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
     body.addFixture(leftFixture)
-    leftFixture.shape.color = Color.YELLOW
-    shapes.add { leftFixture.bodyRelativeShape }
+    leftFixture.rawShape.color = Color.YELLOW
+    shapes.add { leftFixture.getShape() }
 
-    val rightFixture = Fixture(GameRectangle().setWidth(.2f * ConstVals.PPM), FixtureType.SIDE)
+    val rightFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setWidth(.2f * ConstVals.PPM))
     rightFixture.setRunnable(onBounce)
     rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
     body.addFixture(rightFixture)
-    rightFixture.shape.color = Color.BLUE
-    shapes.add { rightFixture.bodyRelativeShape }
+    rightFixture.rawShape.color = Color.BLUE
+    shapes.add { rightFixture.getShape() }
 
     val damageableFixture =
-        Fixture(GameRectangle().setSize(.8f * ConstVals.PPM), FixtureType.DAMAGEABLE)
+        Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(.8f * ConstVals.PPM))
     body.addFixture(damageableFixture)
-    damageableFixture.shape.color = Color.RED
+    damageableFixture.rawShape.color = Color.RED
 
     val waterListenerFixture =
         Fixture(
-            GameRectangle().setSize(.8f * ConstVals.PPM, ConstVals.PPM / 4f),
-            FixtureType.WATER_LISTENER
+            body,
+            FixtureType.WATER_LISTENER,
+            GameRectangle().setSize(.8f * ConstVals.PPM, ConstVals.PPM / 4f)
         )
     body.addFixture(waterListenerFixture)
-    waterListenerFixture.shape.color = Color.PURPLE
+    waterListenerFixture.rawShape.color = Color.PURPLE
 
     body.preProcess.put(ConstKeys.DEFAULT, Updatable {
+        /*
+        GameLogger.debug(
+            MEGAMAN_BODY_COMPONENT_TAG,
+            "feet.rawShape = ${feetFixture.rawShape} ; feet.shape = ${feetFixture.getShape()}"
+        )
+         */
+
         val wallSlidingOnIce =
             isBehaviorActive(BehaviorType.WALL_SLIDING) &&
                     (body.isSensingAny(BodySense.SIDE_TOUCHING_ICE_LEFT, BodySense.SIDE_TOUCHING_ICE_RIGHT))
@@ -149,17 +160,17 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
         if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) {
             body.height = .45f * ConstVals.PPM
             feetFixture.offsetFromBodyCenter.y = -ConstVals.PPM / 4f
-            (leftFixture.shape as Rectangle).setHeight(.25f * ConstVals.PPM)
-            (rightFixture.shape as Rectangle).setHeight(.25f * ConstVals.PPM)
+            (leftFixture.rawShape as Rectangle).setHeight(.25f * ConstVals.PPM)
+            (rightFixture.rawShape as Rectangle).setHeight(.25f * ConstVals.PPM)
         } else {
             body.height = .95f * ConstVals.PPM
             feetFixture.offsetFromBodyCenter.y = -ConstVals.PPM / 2f
-            (leftFixture.shape as Rectangle).setHeight(.6f * ConstVals.PPM)
-            (rightFixture.shape as Rectangle).setHeight(.6f * ConstVals.PPM)
+            (leftFixture.rawShape as Rectangle).setHeight(.6f * ConstVals.PPM)
+            (rightFixture.rawShape as Rectangle).setHeight(.6f * ConstVals.PPM)
         }
 
-        (bodyFixture.shape as Rectangle).set(body)
-        (playerFixture.shape as Rectangle).set(body)
+        (bodyFixture.rawShape as Rectangle).set(body)
+        (playerFixture.rawShape as Rectangle).set(body)
     })
 
     addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))

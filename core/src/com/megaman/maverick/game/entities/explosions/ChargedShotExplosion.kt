@@ -108,9 +108,8 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
         val body = Body(BodyType.ABSTRACT)
         body.setSize(ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
 
-        // damager fixture
         val damagerFixture =
-            Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat()), FixtureType.DAMAGER)
+            Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(ConstVals.PPM.toFloat()))
         body.addFixture(damagerFixture)
 
         return BodyComponentCreator.create(this, body)

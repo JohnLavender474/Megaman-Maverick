@@ -22,10 +22,7 @@ import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.ISpriteEntity
 import com.engine.updatables.UpdatablesComponent
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
-import com.engine.world.Fixture
+import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.ControllerButton
@@ -71,7 +68,7 @@ class SpringBouncer(game: MegamanMaverickGame) :
         bounceTimer.setToEnd()
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
-        (bounceFixture.shape as GameRectangle).set(bounds)
+        (bounceFixture.rawShape as GameRectangle).set(bounds)
         val directionString = spawnProps.get(ConstKeys.DIRECTION, String::class)!!
         direction =
             when (directionString) {
@@ -87,7 +84,7 @@ class SpringBouncer(game: MegamanMaverickGame) :
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.STATIC)
 
-        bounceFixture = Fixture(GameRectangle(), FixtureType.BOUNCER)
+        bounceFixture = Fixture(body, FixtureType.BOUNCER, GameRectangle())
         bounceFixture.setVelocityAlteration { fixture, _ -> bounce(fixture) }
         body.addFixture(bounceFixture)
 
@@ -136,7 +133,7 @@ class SpringBouncer(game: MegamanMaverickGame) :
         return AnimationsComponent(this, animator)
     }
 
-    private fun bounce(fixture: Fixture): VelocityAlteration {
+    private fun bounce(fixture: IFixture): VelocityAlteration {
         requestToPlaySound(SoundAsset.DINK_SOUND, false)
         bounceTimer.reset()
 

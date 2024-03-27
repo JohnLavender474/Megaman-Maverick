@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.special
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -76,7 +75,7 @@ class Water(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteE
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
         body.fixtures.forEach { (_, fixture) ->
-            val shape = fixture.shape
+            val shape = (fixture as Fixture).rawShape
             if (shape is GameRectangle) shape.set(bounds)
         }
 
@@ -94,11 +93,8 @@ class Water(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteE
         val body = Body(BodyType.ABSTRACT)
         val shapes = Array<() -> IDrawableShape?>()
 
-        // water fixture
-        waterFixture = Fixture(GameRectangle(), FixtureType.WATER)
+        waterFixture = Fixture(body, FixtureType.WATER, GameRectangle())
         body.addFixture(waterFixture)
-        waterFixture.shape.color = Color.BLUE
-        shapes.add { waterFixture.shape }
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
 

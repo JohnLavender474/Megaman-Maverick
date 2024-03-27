@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.projectiles
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -16,10 +15,7 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.IGameEntity
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
-import com.engine.world.Fixture
+import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -55,7 +51,7 @@ class Picket(game: MegamanMaverickGame) : AbstractProjectile(game) {
         body.physics.velocity.set(impulseX, impulseY)
     }
 
-    override fun hitBlock(blockFixture: Fixture) {
+    override fun hitBlock(blockFixture: IFixture) {
         // TODO: certain blocks breakable with picket
     }
 
@@ -66,26 +62,18 @@ class Picket(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
-        val bodyFixture = Fixture(GameRectangle().setSize(0.5f * ConstVals.PPM), FixtureType.BODY)
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(0.5f * ConstVals.PPM))
         body.addFixture(bodyFixture)
-        bodyFixture.shape.color = Color.YELLOW
-        debugShapes.add { bodyFixture.shape }
 
         val projectileFixture =
-            Fixture(GameRectangle().setSize(0.5f * ConstVals.PPM), FixtureType.PROJECTILE)
+            Fixture(body, FixtureType.PROJECTILE, GameRectangle().setSize(0.5f * ConstVals.PPM))
         body.addFixture(projectileFixture)
-        projectileFixture.shape.color = Color.GREEN
-        debugShapes.add { projectileFixture.shape }
 
-        val damagerFixture = Fixture(GameRectangle().setSize(0.4f * ConstVals.PPM), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.4f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        damagerFixture.shape.color = Color.RED
-        debugShapes.add { damagerFixture.shape }
 
-        val shieldFixture = Fixture(GameRectangle().setSize(0.5f * ConstVals.PPM), FixtureType.SHIELD)
+        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(0.5f * ConstVals.PPM))
         body.addFixture(shieldFixture)
-        shieldFixture.shape.color = Color.BLUE
-        debugShapes.add { shieldFixture.shape }
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
 

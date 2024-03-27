@@ -17,10 +17,7 @@ import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IAnimatedEntity
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
-import com.engine.world.Fixture
+import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -62,7 +59,7 @@ class GachappanBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
         body.physics.velocity.set(impulse)
     }
 
-    override fun hitBlock(blockFixture: Fixture) = explodeAndDie()
+    override fun hitBlock(blockFixture: IFixture) = explodeAndDie()
 
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
@@ -83,17 +80,14 @@ class GachappanBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
         body.physics.velocityClamp.set(CLAMP * ConstVals.PPM, CLAMP * ConstVals.PPM)
 
-        // body fixture
-        val bodyFixture = Fixture(GameRectangle().set(body), FixtureType.BODY)
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         bodyFixture.putProperty(ConstKeys.GRAVITY_ROTATABLE, false)
         body.addFixture(bodyFixture)
 
-        // projectile fixture
-        val projectileFixture = Fixture(GameRectangle().setSize(.2f * ConstVals.PPM), FixtureType.PROJECTILE)
+        val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameRectangle().setSize(.2f * ConstVals.PPM))
         body.addFixture(projectileFixture)
 
-        // damager fixture
-        val damagerFixture = Fixture(GameRectangle().setSize(.2f * ConstVals.PPM), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(.2f * ConstVals.PPM))
         body.addFixture(damagerFixture)
 
         addComponent(

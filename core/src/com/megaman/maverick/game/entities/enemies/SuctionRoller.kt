@@ -105,71 +105,71 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
 
         val shapes = Array<() -> IDrawableShape?>()
 
-        // body fixture
         val bodyFixture =
             Fixture(
+                body,
+                FixtureType.BODY,
                 GameRectangle().setSize(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat()),
-                FixtureType.BODY
             )
         body.addFixture(bodyFixture)
 
-        bodyFixture.shape.color = Color.BLUE
-        shapes.add { bodyFixture.shape }
+        bodyFixture.rawShape.color = Color.BLUE
+        shapes.add { bodyFixture.getShape() }
 
-        // feet fixture
         val feetFixture =
-            Fixture(GameRectangle().setSize(ConstVals.PPM / 4f, ConstVals.PPM / 32f), FixtureType.FEET)
+            Fixture(body, FixtureType.FEET, GameRectangle().setSize(ConstVals.PPM / 4f, ConstVals.PPM / 32f))
         feetFixture.offsetFromBodyCenter.y = -0.6f * ConstVals.PPM
         body.addFixture(feetFixture)
 
-        feetFixture.shape.color = Color.GREEN
-        shapes.add { feetFixture.shape }
+        feetFixture.rawShape.color = Color.GREEN
+        shapes.add { feetFixture.getShape() }
 
-        // left fixture
         val leftFixture =
             Fixture(
-                GameRectangle().setSize(ConstVals.PPM / 32f, ConstVals.PPM.toFloat()), FixtureType.SIDE
+                body,
+                FixtureType.SIDE,
+                GameRectangle().setSize(ConstVals.PPM / 32f, ConstVals.PPM.toFloat())
             )
         leftFixture.offsetFromBodyCenter.x = -0.375f * ConstVals.PPM
         leftFixture.offsetFromBodyCenter.y = ConstVals.PPM / 5f
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftFixture)
 
-        leftFixture.shape.color = Color.ORANGE
-        shapes.add { leftFixture.shape }
+        leftFixture.rawShape.color = Color.ORANGE
+        shapes.add { leftFixture.getShape() }
 
-        // right fixture
         val rightFixture =
             Fixture(
-                GameRectangle().setSize(ConstVals.PPM / 32f, ConstVals.PPM.toFloat()), FixtureType.SIDE
+                body,
+                FixtureType.SIDE,
+                GameRectangle().setSize(ConstVals.PPM / 32f, ConstVals.PPM.toFloat())
             )
         rightFixture.offsetFromBodyCenter.x = 0.375f * ConstVals.PPM
         rightFixture.offsetFromBodyCenter.y = ConstVals.PPM / 5f
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
 
-        rightFixture.shape.color = Color.ORANGE
-        shapes.add { rightFixture.shape }
+        rightFixture.rawShape.color = Color.ORANGE
+        shapes.add { rightFixture.getShape() }
 
-        // damageable fixture
         val damageableFixture =
             Fixture(
+                body,
+                FixtureType.DAMAGEABLE,
                 GameRectangle().setSize(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat()),
-                FixtureType.DAMAGEABLE
             )
         body.addFixture(damageableFixture)
 
-        // damager fixture
         val damagerFixture =
             Fixture(
+                body,
+                FixtureType.DAMAGER,
                 GameRectangle().setSize(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat()),
-                FixtureType.DAMAGER
             )
         body.addFixture(damagerFixture)
 
-        shapes.add { damagerFixture.shape }
+        shapes.add { damagerFixture.getShape() }
 
-        // pre-process
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             body.physics.gravity.y =
                 if (body.isSensing(BodySense.FEET_ON_GROUND)) 0f else GRAVITY * ConstVals.PPM

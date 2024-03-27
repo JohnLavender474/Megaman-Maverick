@@ -117,7 +117,7 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
         val fixtureEntriesToAdd = spawnProps.get(ConstKeys.FIXTURES) as Array<Pair<FixtureType, Properties>>?
         fixtureEntriesToAdd?.forEach { fixtureEntry ->
             val (fixtureType, fixtureProps) = fixtureEntry
-            val fixture = Fixture(GameRectangle().set(body), fixtureType)
+            val fixture = Fixture(body, fixtureType, GameRectangle().set(body))
             fixture.putAllProperties(fixtureProps)
             fixture.setEntity(this)
             body.addFixture(fixture)
@@ -149,9 +149,9 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
 
     protected open fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.STATIC)
-        blockFixture = Fixture(GameRectangle(), FixtureType.BLOCK)
+        blockFixture = Fixture(body, FixtureType.BLOCK, GameRectangle())
         body.addFixture(blockFixture)
-        body.preProcess.put(ConstKeys.DEFAULT) { (blockFixture.shape as GameRectangle).set(body) }
+        body.preProcess.put(ConstKeys.DEFAULT) { (blockFixture.rawShape as GameRectangle).set(body) }
         return BodyComponentCreator.create(this, body)
     }
 }

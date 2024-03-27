@@ -129,34 +129,41 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val debugShapes = Array<() -> IDrawableShape?>()
 
         val feetFixture = Fixture(
-            GameRectangle().setSize(0.8f * ConstVals.PPM, 0.1f * ConstVals.PPM), FixtureType.FEET
+            body, FixtureType.FEET,
+            GameRectangle().setSize(0.8f * ConstVals.PPM, 0.1f * ConstVals.PPM)
         )
         feetFixture.offsetFromBodyCenter.y = -0.5f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.shape.color = Color.GREEN
-        debugShapes.add { feetFixture.shape }
+        feetFixture.rawShape.color = Color.GREEN
+        debugShapes.add { feetFixture.getShape() }
 
         val shieldFixture = Fixture(
-            GameRectangle().setSize(0.4f * ConstVals.PPM, 0.9f * ConstVals.PPM), FixtureType.SHIELD
+            body,
+            FixtureType.SHIELD,
+            GameRectangle().setSize(0.4f * ConstVals.PPM, 0.9f * ConstVals.PPM)
         )
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
         body.addFixture(shieldFixture)
-        shieldFixture.shape.color = Color.BLUE
-        debugShapes.add { shieldFixture.shape }
+        shieldFixture.rawShape.color = Color.BLUE
+        debugShapes.add { shieldFixture.getShape() }
 
         val damagerFixture = Fixture(
-            GameRectangle().setSize(0.75f * ConstVals.PPM, 1.15f * ConstVals.PPM), FixtureType.DAMAGER
+            body,
+            FixtureType.DAMAGER,
+            GameRectangle().setSize(0.75f * ConstVals.PPM, 1.15f * ConstVals.PPM)
         )
         body.addFixture(damagerFixture)
-        damagerFixture.shape.color = Color.RED
-        debugShapes.add { damagerFixture.shape }
+        damagerFixture.rawShape.color = Color.RED
+        debugShapes.add { damagerFixture.getShape() }
 
         val damageableFixture = Fixture(
-            GameRectangle().setSize(0.8f * ConstVals.PPM, 1.35f * ConstVals.PPM), FixtureType.DAMAGEABLE
+            body,
+            FixtureType.DAMAGEABLE,
+            GameRectangle().setSize(0.8f * ConstVals.PPM, 1.35f * ConstVals.PPM)
         )
         body.addFixture(damageableFixture)
-        damageableFixture.shape.color = Color.PURPLE
-        debugShapes.add { damageableFixture.shape }
+        damageableFixture.rawShape.color = Color.PURPLE
+        debugShapes.add { damageableFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             body.physics.gravity.y =

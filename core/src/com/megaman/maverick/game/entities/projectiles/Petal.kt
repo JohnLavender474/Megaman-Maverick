@@ -125,26 +125,19 @@ class Petal(game: MegamanMaverickGame) : AbstractProjectile(game), IAudioEntity,
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
-        // body fixture
-        val bodyFixture = Fixture(GameRectangle().setSize(0.4f * ConstVals.PPM), FixtureType.BODY)
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(0.4f * ConstVals.PPM))
         body.addFixture(bodyFixture)
 
-        // projectile fixture
         val projectileFixture =
-            Fixture(GameRectangle().setSize(0.4f * ConstVals.PPM), FixtureType.PROJECTILE)
+            Fixture(body, FixtureType.PROJECTILE, GameRectangle().setSize(0.4f * ConstVals.PPM))
         body.addFixture(projectileFixture)
-        // debugShapes.add { projectileFixture.shape }
 
-        // damager fixture
-        val damagerFixture = Fixture(GameRectangle().setSize(0.4f * ConstVals.PPM), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.4f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        debugShapes.add { damagerFixture.shape }
 
-        // damageable fixture
         val damageableFixture =
-            Fixture(GameRectangle().setSize(0.4f * ConstVals.PPM), FixtureType.DAMAGEABLE)
+            Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.4f * ConstVals.PPM))
         body.addFixture(damageableFixture)
-        // debugShapes.add { damageableFixture.shape }
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
 

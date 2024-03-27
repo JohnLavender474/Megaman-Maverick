@@ -170,32 +170,30 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable,
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
-        // body fixture
-        val bodyFixture = Fixture(GameRectangle().set(body), FixtureType.BODY)
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
-        bodyFixture.shape.color = Color.GRAY
-        debugShapes.add { bodyFixture.shape }
+        bodyFixture.getShape().color = Color.GRAY
+        debugShapes.add { bodyFixture.getShape() }
 
-        // damager fixture
-        val damagerFixture = Fixture(GameRectangle().set(body), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().set(body))
         body.addFixture(damagerFixture)
-        damagerFixture.shape.color = Color.RED
-        debugShapes.add { damagerFixture.shape }
+        damagerFixture.getShape().color = Color.RED
+        debugShapes.add { damagerFixture.getShape() }
 
-        // damageable fixture
-        val damageableFixture = Fixture(GameRectangle().set(body), FixtureType.DAMAGEABLE)
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().set(body))
         body.addFixture(damageableFixture)
-        damageableFixture.shape.color = Color.PURPLE
-        debugShapes.add { damageableFixture.shape }
+        damageableFixture.getShape().color = Color.PURPLE
+        debugShapes.add { damageableFixture.getShape() }
 
-        // feet fixture
         val feetFixture = Fixture(
-            GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.2f * ConstVals.PPM), FixtureType.FEET
+            body,
+            FixtureType.FEET,
+            GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.2f * ConstVals.PPM)
         )
         feetFixture.offsetFromBodyCenter.y = -ConstVals.PPM.toFloat()
         body.addFixture(feetFixture)
-        feetFixture.shape.color = Color.GREEN
-        debugShapes.add { feetFixture.shape }
+        feetFixture.getShape().color = Color.GREEN
+        debugShapes.add { feetFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.gravity.y =

@@ -39,7 +39,7 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
         }
     }
 
-    override fun beginContact(contact: Contact, delta: Float) { // do not check for contacts within the same entity
+    override fun beginContact(contact: Contact, delta: Float) {
         if (contact.fixture1.getEntity() == contact.fixture2.getEntity()) return
 
         // consumer
@@ -97,7 +97,7 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             printDebugLog(contact, "beginContact(): Block-Side, contact = $contact")
             val (block, side) = contact.getFixturesInOrder(FixtureType.BLOCK, FixtureType.SIDE)!!
 
-            if (block.hasFixtureLabel(FixtureLabel.NO_SIDE_TOUCHIE)) return
+            if (block.hasFixtureType(FixtureLabel.NO_SIDE_TOUCHIE)) return
 
             val body = side.getBody()
             val sideType = side.getProperty(ConstKeys.SIDE)
@@ -140,7 +140,7 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             val (feet, block) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.BLOCK)!!
 
             val body = feet.getBody()
-            val posDelta = block.getBody().positionDelta
+            val posDelta = block.getBody().getPositionDelta()
 
             body.x += posDelta.x
             body.y += posDelta.y
@@ -255,20 +255,20 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             if (!canChangeGravity) return
 
             val body = bodyFixture.getBody()
-            val pd = body.positionDelta
+            val pd = body.getPositionDelta()
             val bodyPointToCheck = if (pd.x > 0f) {
                 if (pd.y > 0f) body.getTopRightPoint()
                 else if (pd.y < 0f) body.getBottomRightPoint() else body.getCenterRightPoint()
             } else if (pd.x < 0f) {
-                if (body.positionDelta.y > 0f) body.getTopLeftPoint()
-                else if (body.positionDelta.y < 0f) body.getBottomLeftPoint()
+                if (body.getPositionDelta().y > 0f) body.getTopLeftPoint()
+                else if (body.getPositionDelta().y < 0f) body.getBottomLeftPoint()
                 else body.getCenterLeftPoint()
             } else {
                 if (pd.y > 0f) body.getTopCenterPoint()
                 else if (pd.y < 0f) body.getBottomCenterPoint() else body.getCenter()
             }
 
-            if (!gravityChangeFixture.bodyRelativeShape!!.contains(bodyPointToCheck)) return
+            if (!gravityChangeFixture.getShape().contains(bodyPointToCheck)) return
 
             val entity = bodyFixture.getEntity()
             if (entity is IDirectionRotatable && entity.directionRotation != direction) entity.directionRotation =
@@ -308,9 +308,9 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
                 )
             )!!
 
-            if (other.hasFixtureLabel(FixtureLabel.NO_PROJECTILE_COLLISION)) return
+            if (other.hasFixtureType(FixtureLabel.NO_PROJECTILE_COLLISION)) return
             val projectileEntity = projectile.getEntity() as IProjectileEntity
-            when (other.fixtureLabel) {
+            when (other.getFixtureType()) {
                 FixtureType.BLOCK -> {
                     printDebugLog(contact, "beginContact(): Projectile-Block, contact = $contact")
                     projectileEntity.hitBlock(other)
@@ -421,7 +421,7 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             val (feet, block) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.BLOCK)!!
 
             val body = feet.getBody()
-            val posDelta = block.getBody().positionDelta
+            val posDelta = block.getBody().getPositionDelta()
 
             body.x += posDelta.x
             body.y += posDelta.y
@@ -439,12 +439,12 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
 
             val feetDirection = if (feetEntity is IDirectionRotatable) feetEntity.directionRotation else Direction.UP
             val feetPoint = when (feetDirection) {
-                Direction.UP -> feetFixture.shape.getBoundingRectangle().getBottomCenterPoint()
-                Direction.DOWN -> feetFixture.shape.getBoundingRectangle().getTopCenterPoint()
-                Direction.LEFT -> feetFixture.shape.getBoundingRectangle().getCenterRightPoint()
-                Direction.RIGHT -> feetFixture.shape.getBoundingRectangle().getCenterLeftPoint()
+                Direction.UP -> feetFixture.getShape().getBoundingRectangle().getBottomCenterPoint()
+                Direction.DOWN -> feetFixture.getShape().getBoundingRectangle().getTopCenterPoint()
+                Direction.LEFT -> feetFixture.getShape().getBoundingRectangle().getCenterRightPoint()
+                Direction.RIGHT -> feetFixture.getShape().getBoundingRectangle().getCenterLeftPoint()
             }
-            if (ladderFixture.shape.contains(feetPoint)) {
+            if (ladderFixture.getShape().contains(feetPoint)) {
                 val body = feetFixture.getBody()
                 body.setBodySense(BodySense.FEET_TOUCHING_LADDER, true)
                 body.putProperty(ConstKeys.LADDER, ladderFixture.getEntity())
@@ -458,12 +458,12 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
 
             val headDirection = if (headEntity is IDirectionRotatable) headEntity.directionRotation else Direction.UP
             val headPoint = when (headDirection) {
-                Direction.UP -> headFixture.shape.getBoundingRectangle().getTopCenterPoint()
-                Direction.DOWN -> headFixture.shape.getBoundingRectangle().getBottomCenterPoint()
-                Direction.LEFT -> headFixture.shape.getBoundingRectangle().getCenterLeftPoint()
-                Direction.RIGHT -> headFixture.shape.getBoundingRectangle().getCenterRightPoint()
+                Direction.UP -> headFixture.getShape().getBoundingRectangle().getTopCenterPoint()
+                Direction.DOWN -> headFixture.getShape().getBoundingRectangle().getBottomCenterPoint()
+                Direction.LEFT -> headFixture.getShape().getBoundingRectangle().getCenterLeftPoint()
+                Direction.RIGHT -> headFixture.getShape().getBoundingRectangle().getCenterRightPoint()
             }
-            if (ladderFixture.shape.contains(headPoint)) {
+            if (ladderFixture.getShape().contains(headPoint)) {
                 val body = headFixture.getBody()
                 body.setBodySense(BodySense.HEAD_TOUCHING_LADDER, true)
                 body.putProperty(ConstKeys.LADDER, ladderFixture.getEntity())
@@ -527,20 +527,20 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             if (!canChangeGravity) return
 
             val body = bodyFixture.getBody()
-            val pd = body.positionDelta
+            val pd = body.getPositionDelta()
             val bodyPointToCheck = if (pd.x > 0f) {
                 if (pd.y > 0f) body.getTopRightPoint()
                 else if (pd.y < 0f) body.getBottomRightPoint() else body.getCenterRightPoint()
             } else if (pd.x < 0f) {
-                if (body.positionDelta.y > 0f) body.getTopLeftPoint()
-                else if (body.positionDelta.y < 0f) body.getBottomLeftPoint()
+                if (body.getPositionDelta().y > 0f) body.getTopLeftPoint()
+                else if (body.getPositionDelta().y < 0f) body.getBottomLeftPoint()
                 else body.getCenterLeftPoint()
             } else {
                 if (pd.y > 0f) body.getTopCenterPoint()
                 else if (pd.y < 0f) body.getBottomCenterPoint() else body.getCenter()
             }
 
-            if (!gravityChangeFixture.bodyRelativeShape!!.contains(bodyPointToCheck)) return
+            if (!gravityChangeFixture.getShape().contains(bodyPointToCheck)) return
 
             val entity = bodyFixture.getEntity()
             if (entity is IDirectionRotatable && entity.directionRotation != direction)
@@ -577,7 +577,7 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             val blockEntity = block.getEntity()
 
             if (laserEntity != blockEntity) {
-                val blockRectangle = block.shape as GameRectangle
+                val blockRectangle = block.getShape() as GameRectangle
                 val laserLine = laser.getProperty(ConstKeys.LINE, GameLine::class)!!
                 val intersections = laser.properties.get(ConstKeys.COLLECTION) as MutableCollection<Vector2>?
                 intersections?.let {
@@ -602,7 +602,7 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
         else if (contact.fixturesMatch(FixtureType.SIDE, FixtureType.BLOCK)) {
             val (side, block) = contact.getFixturesInOrder(FixtureType.SIDE, FixtureType.BLOCK)!!
 
-            if (block.hasFixtureLabel(FixtureLabel.NO_SIDE_TOUCHIE)) return
+            if (block.hasFixtureType(FixtureLabel.NO_SIDE_TOUCHIE)) return
 
             val body = side.getBody()
             val sideType = side.getProperty(ConstKeys.SIDE)

@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.special
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -18,7 +17,6 @@ import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
-import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setSize
@@ -132,7 +130,7 @@ class PortalHopper(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, I
         thisDirection = direction
         launch = true
 
-        val hopPoint = when(thisDirection) {
+        val hopPoint = when (thisDirection) {
             Direction.UP -> body.getTopCenterPoint()
             Direction.DOWN -> body.getBottomCenterPoint()
             Direction.LEFT -> body.getCenterLeftPoint()
@@ -191,12 +189,8 @@ class PortalHopper(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, I
         val body = Body(BodyType.ABSTRACT)
         body.setSize(ConstVals.PPM.toFloat())
 
-        val debugShapes = Array<() -> IDrawableShape?>()
-
-        val teleporterFixture = Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat()), FixtureType.TELEPORTER)
+        val teleporterFixture = Fixture(body, FixtureType.TELEPORTER, GameRectangle().setSize(ConstVals.PPM.toFloat()))
         body.addFixture(teleporterFixture)
-        teleporterFixture.shape.color = Color.BLUE
-        debugShapes.add { teleporterFixture.shape }
 
         return BodyComponentCreator.create(this, body)
     }

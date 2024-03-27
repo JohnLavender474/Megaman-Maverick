@@ -178,63 +178,58 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
-        // body fixture
-        val bodyFixture = Fixture(GameRectangle().set(body), FixtureType.BODY)
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
-        bodyFixture.shape.color = Color.GRAY
-        debugShapes.add { bodyFixture.shape }
+        bodyFixture.getShape().color = Color.GRAY
+        debugShapes.add { bodyFixture.getShape() }
 
-        // damager fixture 1
         val damagerFixture1 =
-            Fixture(GameRectangle().setSize(2f * ConstVals.PPM, 1.5f * ConstVals.PPM), FixtureType.DAMAGER)
+            Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(2f * ConstVals.PPM, 1.5f * ConstVals.PPM))
         damagerFixture1.offsetFromBodyCenter.y = -0.5f * ConstVals.PPM
         body.addFixture(damagerFixture1)
-        damagerFixture1.shape.color = Color.RED
-        // debugShapes.add { damagerFixture1.shape }
+        damagerFixture1.getShape().color = Color.RED
+        debugShapes.add { damagerFixture1.getShape() }
 
-        // damager fixture 2
         val damagerFixture2 = Fixture(
-            GameRectangle().setSize(1f * ConstVals.PPM, 1.5f * ConstVals.PPM), FixtureType.DAMAGER
+            body,
+            FixtureType.DAMAGER,
+            GameRectangle().setSize(1f * ConstVals.PPM, 1.5f * ConstVals.PPM)
         )
         damagerFixture2.offsetFromBodyCenter.y = 0.5f * ConstVals.PPM
         body.addFixture(damagerFixture2)
-        damagerFixture2.shape.color = Color.RED
-        // debugShapes.add { damagerFixture2.shape }
+        damagerFixture2.getShape().color = Color.RED
+        debugShapes.add { damagerFixture2.getShape() }
 
-        // damageable fixture 1
         val damageableFixture1 =
-            Fixture(GameRectangle().setSize(0.75f * ConstVals.PPM, 0.5f * ConstVals.PPM), FixtureType.DAMAGEABLE)
+            Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.5f * ConstVals.PPM))
         damageableFixture1.offsetFromBodyCenter.y = -0.35f * ConstVals.PPM
         body.addFixture(damageableFixture1)
-        damageableFixture1.shape.color = Color.PURPLE
-        debugShapes.add { damageableFixture1.shape }
+        damageableFixture1.getShape().color = Color.PURPLE
+        debugShapes.add { damageableFixture1.getShape() }
 
-        // damageable fixture 2
         val damageableFixture2 =
-            Fixture(GameRectangle().setSize(0.25f * ConstVals.PPM, 0.25f * ConstVals.PPM), FixtureType.DAMAGEABLE)
+            Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.25f * ConstVals.PPM))
         damageableFixture2.offsetFromBodyCenter.y = -1.25f * ConstVals.PPM
         body.addFixture(damageableFixture2)
-        damageableFixture2.shape.color = Color.PURPLE
-        debugShapes.add { damageableFixture2.shape }
+        damageableFixture2.getShape().color = Color.PURPLE
+        debugShapes.add { damageableFixture2.getShape() }
 
-        // shield fixture 1
         val shieldFixture1 =
-            Fixture(GameRectangle().setSize(1f * ConstVals.PPM, 3f * ConstVals.PPM), FixtureType.SHIELD)
+            Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(1f * ConstVals.PPM, 3f * ConstVals.PPM))
         shieldFixture1.putProperty(ConstKeys.DIRECTION, Direction.UP)
         body.addFixture(shieldFixture1)
-        shieldFixture1.shape.color = Color.BLUE
-        // debugShapes.add { shieldFixture1.shape }
+        shieldFixture1.getShape().color = Color.BLUE
+        debugShapes.add { shieldFixture1.getShape() }
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
 
-        // pre-process
         val damageableFixtures = gdxArrayOf(damageableFixture1, damageableFixture2)
         body.preProcess.put(ConstKeys.DEFAULT) {
             val (state, _) = loop.getCurrent()
             val active = state == GachappanState.SHOOT
             damageableFixtures.forEach {
                 it.active = active
-                it.shape.color = if (active) Color.PURPLE else Color.CLEAR
+                it.getShape().color = if (active) Color.PURPLE else Color.CLEAR
             }
 
             val offsetX = 0.5f * ConstVals.PPM * facing.value

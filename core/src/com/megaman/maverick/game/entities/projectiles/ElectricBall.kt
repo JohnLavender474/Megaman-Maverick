@@ -15,19 +15,14 @@ import com.engine.damage.IDamageable
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setSize
-import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
-import com.engine.world.Fixture
+import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.defineProjectileComponents
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
@@ -74,7 +69,7 @@ class ElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         explodeAndDie()
     }
 
-    override fun hitBlock(blockFixture: Fixture) {
+    override fun hitBlock(blockFixture: IFixture) {
         explodeAndDie()
     }
 
@@ -88,12 +83,10 @@ class ElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
         val bounds = GameRectangle()
 
-        // projectile fixture
-        val projectileFixture = Fixture(bounds, FixtureType.PROJECTILE)
+        val projectileFixture = Fixture(body, FixtureType.PROJECTILE, bounds)
         body.addFixture(projectileFixture)
 
-        // damager fixture
-        val damagerFixture = Fixture(bounds, FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, bounds)
         body.addFixture(damagerFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {

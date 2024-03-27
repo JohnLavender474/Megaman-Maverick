@@ -22,10 +22,7 @@ import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.IGameEntity
 import com.engine.updatables.UpdatablesComponent
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
-import com.engine.world.Fixture
+import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -104,13 +101,13 @@ class SniperJoeShield(game: MegamanMaverickGame) : AbstractProjectile(game), IFa
         GameLogger.debug(TAG, "Destroyed")
     }
 
-    override fun hitBlock(blockFixture: Fixture) = explodeAndDie()
+    override fun hitBlock(blockFixture: IFixture) = explodeAndDie()
 
-    override fun hitBody(bodyFixture: Fixture) {
+    override fun hitBody(bodyFixture: IFixture) {
         if (bodyFixture.getEntity() != owner) explodeAndDie()
     }
 
-    override fun hitShield(shieldFixture: Fixture) {
+    override fun hitShield(shieldFixture: IFixture) {
         if (shieldFixture.getEntity() != owner) explodeAndDie()
     }
 
@@ -131,26 +128,18 @@ class SniperJoeShield(game: MegamanMaverickGame) : AbstractProjectile(game), IFa
         val bodyShapes = Array<IGameShape2D>()
         bodyShapes.add(body)
 
-        // body fixture
-        val bodyFixture = Fixture(GameRectangle(), FixtureType.BODY)
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle())
         body.addFixture(bodyFixture)
-        bodyShapes.add(bodyFixture.shape)
 
-        val projectileFixture = Fixture(GameRectangle(), FixtureType.PROJECTILE)
+        val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameRectangle())
         body.addFixture(projectileFixture)
-        bodyShapes.add(projectileFixture.shape)
 
-        // damagerFixture
-        val damagerFixture = Fixture(GameRectangle(), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
         body.addFixture(damagerFixture)
-        bodyShapes.add(damagerFixture.shape)
 
-        // shield fixture
-        val shieldFixture = Fixture(GameRectangle(), FixtureType.SHIELD)
+        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle())
         body.addFixture(shieldFixture)
-        bodyShapes.add(shieldFixture.shape)
 
-        // pre-process
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.velocity = trajectory
 

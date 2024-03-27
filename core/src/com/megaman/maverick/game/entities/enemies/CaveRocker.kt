@@ -125,43 +125,41 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
-        // body fixture
         val bodyFixture = Fixture(
-            GameRectangle().setSize(1.25f * ConstVals.PPM, 1.5f * ConstVals.PPM), FixtureType.BODY
+            body, FixtureType.BODY, GameRectangle().setSize(1.25f * ConstVals.PPM, 1.5f * ConstVals.PPM)
         )
         body.addFixture(bodyFixture)
-        bodyFixture.shape.color = Color.YELLOW
-        debugShapes.add { bodyFixture.shape }
+        bodyFixture.rawShape.color = Color.YELLOW
+        debugShapes.add { bodyFixture.getShape() }
 
-        // damager fixture
         val damagerFixture = Fixture(
-            GameRectangle().setSize(1.25f * ConstVals.PPM, 1.5f * ConstVals.PPM), FixtureType.DAMAGER
+            body, FixtureType.DAMAGER, GameRectangle().setSize(1.25f * ConstVals.PPM, 1.5f * ConstVals.PPM)
         )
         body.addFixture(damagerFixture)
-        damagerFixture.shape.color = Color.RED
-        debugShapes.add { damagerFixture.shape }
+        damagerFixture.rawShape.color = Color.RED
+        debugShapes.add { damagerFixture.getShape() }
 
-        // damageable fixture
-        val damageableFixture = Fixture(GameRectangle().setSize(1.15f * ConstVals.PPM), FixtureType.DAMAGEABLE)
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(1.15f * ConstVals.PPM))
         body.addFixture(damageableFixture)
-        damageableFixture.shape.color = Color.PURPLE
-        debugShapes.add { damageableFixture.shape }
+        damageableFixture.rawShape.color = Color.PURPLE
+        debugShapes.add { damageableFixture.getShape() }
 
-        // head fixture
         val headFixture = Fixture(
-            GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM), FixtureType.HEAD
+            body, FixtureType.HEAD, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM)
         )
         headFixture.offsetFromBodyCenter.y = 0.55f * ConstVals.PPM
         body.addFixture(headFixture)
-        headFixture.shape.color = Color.BLUE
-        debugShapes.add { headFixture.shape }
+        headFixture.getShape().color = Color.BLUE
+        debugShapes.add { headFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             newRock?.let { _newRock ->
                 if (throwing && _newRock.dead) {
                     GameLogger.debug(TAG, "New rock died before reaching cave rocker, so spawning a new one")
                     spawnNewRock()
-                } else if (_newRock.body.overlaps(headFixture.shape) || _newRock.body.y < headFixture.shape.getY()) {
+                } else if (_newRock.body.overlaps(headFixture.getShape()) ||
+                    _newRock.body.y < headFixture.getShape().getY()
+                ) {
                     GameLogger.debug(
                         TAG,
                         "New rock landed on cave rocker's head. Setting [throwing] to false and resetting wait timer"

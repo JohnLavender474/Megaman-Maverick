@@ -123,25 +123,24 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
         val shapes = Array<() -> IDrawableShape?>()
 
-        // damager fixture
-        val damagerFixture = Fixture(GameRectangle().setSize(0.15f * ConstVals.PPM), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.15f * ConstVals.PPM))
         body.addFixture(damagerFixture)
 
-        damagerFixture.shape.color = Color.RED
-        shapes.add { damagerFixture.shape }
+        damagerFixture.rawShape.color = Color.RED
+        shapes.add { damagerFixture.getShape() }
 
-        // damageable fixture
         val damageableFixture = Fixture(
-            GameRectangle().setSize(0.65f * ConstVals.PPM, 0.5f * ConstVals.PPM), FixtureType.DAMAGEABLE
+            body,
+            FixtureType.DAMAGEABLE,
+            GameRectangle().setSize(0.65f * ConstVals.PPM, 0.5f * ConstVals.PPM)
         )
         body.addFixture(damageableFixture)
 
-        damageableFixture.shape.color = Color.PURPLE
-        shapes.add { damageableFixture.shape }
+        damageableFixture.rawShape.color = Color.PURPLE
+        shapes.add { damageableFixture.getShape() }
 
-        // pre-process
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
-            val damageableBounds = damageableFixture.shape as GameRectangle
+            val damageableBounds = damageableFixture.rawShape as GameRectangle
             if (down) {
                 damageableBounds.height = 0.2f * ConstVals.PPM
                 damageableFixture.offsetFromBodyCenter.y = (if (upsideDown) 0.15f else -0.15f) * ConstVals.PPM

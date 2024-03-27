@@ -73,8 +73,7 @@ class SnowballExplosion(game: MegamanMaverickGame) : GameEntity(game), IBodyEnti
         val body = Body(BodyType.ABSTRACT)
         body.setSize(ConstVals.PPM.toFloat())
 
-        // damager fixture
-        val damagerFixture = Fixture(GameRectangle(body), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
         body.addFixture(damagerFixture)
 
         return BodyComponentCreator.create(this, body)

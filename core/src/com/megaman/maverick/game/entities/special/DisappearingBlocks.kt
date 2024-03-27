@@ -18,6 +18,7 @@ import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.IParentEntity
 import com.engine.updatables.UpdatablesComponent
+import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
@@ -79,7 +80,7 @@ class DisappearingBlocks(game: MegamanMaverickGame) :
                 ConstKeys.RUN_ON_SPAWN,
                 Runnable {
                     child.body.physics.collisionOn = false
-                    child.body.fixtures.forEach { entry -> entry.second.active = false }
+                    child.body.fixtures.forEach { entry -> (entry.second as Fixture).active = false }
                     child.hidden = true
                 })
             game.gameEngine.spawn(child, props)
@@ -124,7 +125,7 @@ class DisappearingBlocks(game: MegamanMaverickGame) :
 
                         if (blockKey == next) spriteBlock.reset()
                         spriteBlock.body.physics.collisionOn = on
-                        spriteBlock.body.fixtures.forEach { entry -> entry.second.active = on }
+                        spriteBlock.body.fixtures.forEach { entry -> (entry.second as Fixture).active = on }
                         spriteBlock.hidden = !on
 
                         val gameCamera = getMegamanMaverickGame().getGameCamera()

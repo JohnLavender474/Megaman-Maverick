@@ -13,14 +13,13 @@ class IceBlock(game: MegamanMaverickGame) : Block(game) {
 
     override fun init() {
         super.init()
-        ice = Fixture(GameRectangle(), FixtureType.ICE)
+        ice = Fixture(body, FixtureType.ICE, GameRectangle())
         ice.setEntity(this)
         body.addFixture(ice)
     }
 
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
-        // body.physics.frictionToApply.x = 0f
-        (ice.shape as GameRectangle).set(body)
+        (ice.rawShape as GameRectangle).set(body)
     }
 }

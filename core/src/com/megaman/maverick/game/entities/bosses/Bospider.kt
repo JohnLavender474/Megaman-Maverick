@@ -260,13 +260,13 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(2f * ConstVals.PPM)
-        val bodyFixture = Fixture(GameRectangle().setSize(2f * ConstVals.PPM), FixtureType.BODY)
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(2f * ConstVals.PPM))
         body.addFixture(bodyFixture)
-        val damagerFixture = Fixture(GameRectangle().setSize(2f * ConstVals.PPM), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(2f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        val damageableFixture = Fixture(GameRectangle().setSize(2f * ConstVals.PPM), FixtureType.DAMAGEABLE)
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(2f * ConstVals.PPM))
         body.addFixture(damageableFixture)
-        val shieldFixture = Fixture(GameRectangle().setSize(2f * ConstVals.PPM), FixtureType.SHIELD)
+        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(2f * ConstVals.PPM))
         body.addFixture(shieldFixture)
         body.preProcess.put(ConstKeys.DEFAULT) {
             val shielded =

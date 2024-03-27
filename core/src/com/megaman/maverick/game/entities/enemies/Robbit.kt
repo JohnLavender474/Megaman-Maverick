@@ -107,27 +107,23 @@ class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
-        // body fixture
-        val bodyFixture = Fixture(GameRectangle().setSize(1.5f * ConstVals.PPM), FixtureType.BODY)
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(1.5f * ConstVals.PPM))
         body.addFixture(bodyFixture)
-        bodyFixture.shape.color = Color.BLUE
-        debugShapes.add { bodyFixture.shape }
+        bodyFixture.rawShape.color = Color.BLUE
+        debugShapes.add { bodyFixture.getShape() }
 
-        // feet fixture
         val feetFixture =
-            Fixture(GameRectangle().setSize(ConstVals.PPM / 4f, 0.2f * ConstVals.PPM), FixtureType.FEET)
+            Fixture(body, FixtureType.FEET, GameRectangle().setSize(ConstVals.PPM / 4f, 0.2f * ConstVals.PPM))
         feetFixture.offsetFromBodyCenter.y = -0.75f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.shape.color = Color.GREEN
-        debugShapes.add { feetFixture.shape }
+        feetFixture.rawShape.color = Color.GREEN
+        debugShapes.add { feetFixture.getShape() }
 
-        // damageable fixture
         val damageableFixture =
-            Fixture(GameRectangle().setSize(1.5f * ConstVals.PPM), FixtureType.DAMAGEABLE)
+            Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(1.5f * ConstVals.PPM))
         body.addFixture(damageableFixture)
 
-        // damager fixture
-        val damagerFixture = Fixture(GameRectangle().setSize(1.5f * ConstVals.PPM), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(1.5f * ConstVals.PPM))
         body.addFixture(damagerFixture)
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))

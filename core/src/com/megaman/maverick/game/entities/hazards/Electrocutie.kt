@@ -22,6 +22,7 @@ import com.engine.updatables.UpdatablesComponent
 import com.engine.world.Body
 import com.engine.world.BodyComponent
 import com.engine.world.BodyType
+import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -197,7 +198,7 @@ class Electrocutie(game: MegamanMaverickGame) : GameEntity(game), IHazard, IBody
         val shock = currentState == ElectrocutieState.SHOCK
         children.forEach { child ->
             if (child is Bolt) {
-                child.body.fixtures.forEach { childFixture -> childFixture.second.active = shock }
+                child.body.fixtures.forEach { childFixture -> (childFixture.second as Fixture).active = shock }
                 child.sprites.values().forEach { childSprite -> childSprite.hidden = !shock }
             }
         }

@@ -115,10 +115,10 @@ class SpikeBall(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpr
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
-        val damagerFixture = Fixture(GameCircle().setRadius(0.75f * ConstVals.PPM), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.75f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        damagerFixture.shape.color = Color.RED
-        debugShapes.add { damagerFixture.shape }
+        damagerFixture.getShape().color = Color.RED
+        debugShapes.add { damagerFixture.getShape() }
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
 

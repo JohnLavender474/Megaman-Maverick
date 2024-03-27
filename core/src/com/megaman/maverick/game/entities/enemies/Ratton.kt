@@ -87,27 +87,24 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
-        // body fixture
-        val bodyFixture = Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat()), FixtureType.BODY)
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(ConstVals.PPM.toFloat()))
         body.addFixture(bodyFixture)
-        bodyFixture.shape.color = Color.BLUE
-        debugShapes.add { bodyFixture.shape }
+        bodyFixture.rawShape.color = Color.BLUE
+        debugShapes.add { bodyFixture.getShape() }
 
-        // feet fixture
-        val feetFixture = Fixture(GameRectangle().setSize(ConstVals.PPM / 4f, 0.2f * ConstVals.PPM), FixtureType.FEET)
+        val feetFixture =
+            Fixture(body, FixtureType.FEET, GameRectangle().setSize(ConstVals.PPM / 4f, 0.2f * ConstVals.PPM))
         feetFixture.offsetFromBodyCenter.y = -0.5f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.shape.color = Color.GREEN
-        debugShapes.add { feetFixture.shape }
+        feetFixture.rawShape.color = Color.GREEN
+        debugShapes.add { feetFixture.getShape() }
 
         // TODO: create head fixture, bounce megaman as reference to DK Country rat boss!
 
-        // damageable fixture
-        val damageableFixture = Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat()), FixtureType.DAMAGEABLE)
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(ConstVals.PPM.toFloat()))
         body.addFixture(damageableFixture)
 
-        // damager fixture
-        val damagerFixture = Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat()), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(ConstVals.PPM.toFloat()))
         body.addFixture(damagerFixture)
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))

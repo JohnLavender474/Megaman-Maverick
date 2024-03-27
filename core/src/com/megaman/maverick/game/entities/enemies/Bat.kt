@@ -22,10 +22,7 @@ import com.engine.drawables.sprites.setSize
 import com.engine.pathfinding.PathfinderParams
 import com.engine.pathfinding.PathfindingComponent
 import com.engine.updatables.UpdatablesComponent
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
-import com.engine.world.Fixture
+import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -132,31 +129,26 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
         // head fixture
         val headFixture = Fixture(
-            GameRectangle().setSize(.5f * ConstVals.PPM, .175f * ConstVals.PPM), FixtureType.HEAD
+            body, FixtureType.HEAD, GameRectangle().setSize(.5f * ConstVals.PPM, .175f * ConstVals.PPM)
         )
         headFixture.offsetFromBodyCenter.y = 0.375f * ConstVals.PPM
         body.addFixture(headFixture)
 
-        // model for following fixtures
         val model = GameRectangle().setSize(0.75f * ConstVals.PPM)
 
-        // damageable fixture
-        val damageableFixture = Fixture(model.copy(), FixtureType.DAMAGEABLE)
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, model.copy())
         body.addFixture(damageableFixture)
 
-        // damager fixture
-        val damagerFixture = Fixture(model.copy(), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, model.copy())
         body.addFixture(damagerFixture)
 
-        // shield fixture
-        val shieldFixture = Fixture(model.copy(), FixtureType.SHIELD)
+        val shieldFixture = Fixture(body, FixtureType.SHIELD, model.copy())
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
         body.addFixture(shieldFixture)
 
-        // scanner fixture
-        val scannerFixture = Fixture(model.copy(), FixtureType.CONSUMER)
-        val consumer: (Fixture) -> Unit = {
-            if (it.fixtureLabel == FixtureType.DAMAGEABLE && it.getEntity() == getMegamanMaverickGame().megaman) status =
+        val scannerFixture = Fixture(body, FixtureType.CONSUMER, model.copy())
+        val consumer: (IFixture) -> Unit = {
+            if (it.getFixtureType() == FixtureType.DAMAGEABLE && it.getEntity() == getMegamanMaverickGame().megaman) status =
                 BatStatus.FLYING_TO_RETREAT
         }
         scannerFixture.setConsumer { _, it -> consumer(it) }
@@ -167,8 +159,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
             damageableFixture.active = status != BatStatus.HANGING
 
             if (status == BatStatus.FLYING_TO_RETREAT) body.physics.velocity.set(
-                0f,
-                FLY_TO_RETREAT_SPEED * ConstVals.PPM
+                0f, FLY_TO_RETREAT_SPEED * ConstVals.PPM
             )
             else if (status != BatStatus.FLYING_TO_ATTACK) body.physics.velocity.setZero()
         })
@@ -187,7 +178,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
         val SpritesComponent = SpritesComponent(this, "bat" to sprite)
         SpritesComponent.putUpdateFunction("bat") { _, _sprite ->
             _sprite as GameSprite
-            _sprite.setPosition(body.getCenter(), Position.CENTER) // TODO: _sprite.hidden = damageBlink
+            _sprite.setPosition(body.getCenter(), Position.CENTER)
         }
         return SpritesComponent
     }
@@ -214,7 +205,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
             targetSupplier = { getMegamanMaverickGame().megaman.body.getTopCenterPoint() },
             allowDiagonal = { true },
             filter = { _, objs ->
-                for (obj in objs) if (obj is Fixture && obj.fixtureLabel == FixtureType.BLOCK) return@PathfinderParams false
+                for (obj in objs) if (obj is Fixture && obj.getFixtureType() == FixtureType.BLOCK) return@PathfinderParams false
                 return@PathfinderParams true
             })
 

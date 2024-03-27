@@ -12,10 +12,7 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.IGameEntity
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
-import com.engine.world.Fixture
+import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -68,18 +65,18 @@ class Snowball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         body.physics.gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, Vector2(), Vector2::class)
     }
 
-    override fun hitBody(bodyFixture: Fixture) {
+    override fun hitBody(bodyFixture: IFixture) {
         if (bodyFixture.getEntity() !is AbstractEnemy && bodyFixture.getEntity() !is IProjectileEntity)
             explodeAndDie()
     }
 
-    override fun hitBlock(blockFixture: Fixture) = explodeAndDie()
+    override fun hitBlock(blockFixture: IFixture) = explodeAndDie()
 
-    override fun hitShield(shieldFixture: Fixture) {
+    override fun hitShield(shieldFixture: IFixture) {
         if (shieldFixture.getEntity() != owner) explodeAndDie()
     }
 
-    override fun hitWater(waterFixture: Fixture) = explodeAndDie()
+    override fun hitWater(waterFixture: IFixture) = explodeAndDie()
 
     override fun explodeAndDie() {
         kill()
@@ -102,17 +99,14 @@ class Snowball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         body.setSize(0.15f * ConstVals.PPM)
         body.physics.velocityClamp.set(CLAMP * ConstVals.PPM.toFloat(), CLAMP * ConstVals.PPM.toFloat())
 
-        // body fixture
-        val bodyFixture = Fixture(GameRectangle(body), FixtureType.BODY)
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         body.addFixture(bodyFixture)
 
-        // projectile fixture
         val projectileFixture =
-            Fixture(GameRectangle().setSize(0.2f * ConstVals.PPM), FixtureType.PROJECTILE)
+            Fixture(body, FixtureType.PROJECTILE, GameRectangle().setSize(0.2f * ConstVals.PPM))
         body.addFixture(projectileFixture)
 
-        // damager fixture
-        val damagerFixture = Fixture(GameRectangle().setSize(0.2f * ConstVals.PPM), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.2f * ConstVals.PPM))
         body.addFixture(damagerFixture)
 
         return BodyComponentCreator.create(this, body)

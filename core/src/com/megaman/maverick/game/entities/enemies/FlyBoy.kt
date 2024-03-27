@@ -96,41 +96,37 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
         val shapes = Array<() -> IDrawableShape?>()
 
-        // body fixture
-        val bodyFixture = Fixture(GameRectangle().set(body), FixtureType.BODY)
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
-        bodyFixture.shape.color = Color.BLUE
-        shapes.add { bodyFixture.shape }
+        bodyFixture.rawShape.color = Color.BLUE
+        shapes.add { bodyFixture.getShape() }
 
-        // feet fixture
-        val feetFixture = Fixture(GameRectangle().setSize(ConstVals.PPM * 0.5f), FixtureType.FEET)
+        val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(ConstVals.PPM * 0.5f))
         feetFixture.offsetFromBodyCenter.y = -ConstVals.PPM.toFloat()
         body.addFixture(feetFixture)
-        feetFixture.shape.color = Color.GREEN
-        shapes.add { feetFixture.shape }
+        feetFixture.rawShape.color = Color.GREEN
+        shapes.add { feetFixture.getShape() }
 
-        // head fixture
-        val headFixture = Fixture(GameRectangle().setSize(ConstVals.PPM * 0.5f), FixtureType.HEAD)
+        val headFixture = Fixture(body, FixtureType.HEAD, GameRectangle().setSize(ConstVals.PPM * 0.5f))
         headFixture.offsetFromBodyCenter.y = ConstVals.PPM.toFloat()
         body.addFixture(headFixture)
-        headFixture.shape.color = Color.ORANGE
-        shapes.add { headFixture.shape }
+        headFixture.rawShape.color = Color.ORANGE
+        shapes.add { headFixture.getShape() }
 
-        // damager fixture
         val damagerFixture = Fixture(
-            GameRectangle().setSize(0.8f * ConstVals.PPM, 1.5f * ConstVals.PPM), FixtureType.DAMAGER
+            body,
+            FixtureType.DAMAGER,
+            GameRectangle().setSize(0.8f * ConstVals.PPM, 1.5f * ConstVals.PPM)
         )
         body.addFixture(damagerFixture)
-        damagerFixture.shape.color = Color.RED
-        shapes.add { damagerFixture.shape }
+        damagerFixture.rawShape.color = Color.RED
+        shapes.add { damagerFixture.getShape() }
 
-        // damageable fixture
-        val damageableFixture = Fixture(GameRectangle().set(body), FixtureType.DAMAGEABLE)
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().set(body))
         body.addFixture(damageableFixture)
-        damageableFixture.shape.color = Color.PURPLE
-        shapes.add { damageableFixture.shape }
+        damageableFixture.rawShape.color = Color.PURPLE
+        shapes.add { damageableFixture.getShape() }
 
-        // pre-process
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             body.physics.gravityOn = standing
             body.physics.gravity.y = (if (body.isSensing(BodySense.FEET_ON_GROUND)) G_GRAV else GRAV) * ConstVals.PPM

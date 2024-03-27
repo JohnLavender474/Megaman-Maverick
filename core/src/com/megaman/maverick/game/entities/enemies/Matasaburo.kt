@@ -76,9 +76,10 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val body = Body(BodyType.DYNAMIC)
         body.setSize(ConstVals.PPM.toFloat())
 
-        // blow fixture
         val blowFixture = Fixture(
-            GameRectangle().setSize(10f * ConstVals.PPM, 1.15f * ConstVals.PPM), FixtureType.FORCE
+            body,
+            FixtureType.FORCE,
+            GameRectangle().setSize(10f * ConstVals.PPM, 1.15f * ConstVals.PPM)
         )
         blowFixture.setVelocityAlteration { fixture, _ ->
             val entity = fixture.getEntity()
@@ -89,15 +90,12 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         }
         body.addFixture(blowFixture)
 
-        // damager fixture
-        val damagerFixture = Fixture(GameRectangle().setSize(0.85f * ConstVals.PPM), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.85f * ConstVals.PPM))
         body.addFixture(damagerFixture)
 
-        // damageable fixture
-        val damageableFixture = Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat()), FixtureType.DAMAGEABLE)
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(ConstVals.PPM.toFloat()))
         body.addFixture(damageableFixture)
 
-        // pre-process
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             val offsetX = 5f * ConstVals.PPM * facing.value
             blowFixture.offsetFromBodyCenter.x = offsetX
@@ -107,16 +105,16 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite()
+        val sprite = GameSprite ()
         sprite.setSize(1.5f * ConstVals.PPM)
-        val SpritesComponent = SpritesComponent(this, "matasaburo" to sprite)
-        SpritesComponent.putUpdateFunction("matasaburo") { _, _sprite ->
+        val spritesComponent = SpritesComponent(this, TAG to sprite)
+        spritesComponent.putUpdateFunction(TAG) { _, _sprite ->
             _sprite as GameSprite
             val position = body.getBottomCenterPoint()
             _sprite.setPosition(position, Position.BOTTOM_CENTER)
             _sprite.setFlip(facing == Facing.LEFT, false)
         }
-        return SpritesComponent
+        return spritesComponent
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {

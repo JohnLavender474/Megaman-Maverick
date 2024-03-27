@@ -137,21 +137,22 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body }
 
-        // body fixture
-        val bodyFixture = Fixture(GameRectangle().setSize(0.85f * ConstVals.PPM), FixtureType.BODY)
+        val bodyFixture = Fixture(
+            body,
+            FixtureType.BODY, GameRectangle().setSize(0.85f * ConstVals.PPM)
+        )
         body.addFixture(bodyFixture)
 
-        // damager fixture
-        val damagerFixture = Fixture(GameRectangle().setSize(0.85f * ConstVals.PPM), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.85f * ConstVals.PPM))
         body.addFixture(damagerFixture)
 
-        // damageable fixture
-        val damageableFixture = Fixture(GameRectangle().setSize(0.85f * ConstVals.PPM), FixtureType.DAMAGEABLE)
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.85f * ConstVals.PPM))
         body.addFixture(damageableFixture)
 
-        // side fixture
         val sideFixture = Fixture(
-            GameRectangle().setSize(0.1f * ConstVals.PPM, 0.1f * ConstVals.PPM), FixtureType.SIDE
+            body,
+            FixtureType.SIDE,
+            GameRectangle().setSize(0.1f * ConstVals.PPM, 0.1f * ConstVals.PPM)
         )
         body.addFixture(sideFixture)
 
@@ -185,15 +186,13 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
-
-        val spritesComponent = SpritesComponent(this, "elecn" to sprite)
-        spritesComponent.putUpdateFunction("elecn") { _, _sprite ->
+        val spritesComponent = SpritesComponent(this, TAG to sprite)
+        spritesComponent.putUpdateFunction(TAG) { _, _sprite ->
             _sprite as GameSprite
             val center = body.getCenter()
             _sprite.setCenter(center.x, center.y)
             _sprite.setFlip(isFacing(Facing.LEFT), false)
         }
-
         return spritesComponent
     }
 

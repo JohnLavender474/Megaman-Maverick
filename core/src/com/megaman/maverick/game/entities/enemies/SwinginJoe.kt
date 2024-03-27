@@ -106,40 +106,40 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
         val shapes = Array<() -> IDrawableShape?>()
 
-        // damager fixture
         val damagerFixture =
             Fixture(
+                body,
+                FixtureType.DAMAGER,
                 GameRectangle().setSize(0.75f * ConstVals.PPM, 1.15f * ConstVals.PPM),
-                FixtureType.DAMAGER
             )
         body.addFixture(damagerFixture)
 
-        damagerFixture.shape.color = Color.RED
-        shapes.add { damagerFixture.shape }
+        damagerFixture.rawShape.color = Color.RED
+        shapes.add { damagerFixture.getShape() }
 
-        // damageable fixture
         val damageableFixture =
             Fixture(
+                body,
+                FixtureType.DAMAGEABLE,
                 GameRectangle().setSize(0.8f * ConstVals.PPM, 1.35f * ConstVals.PPM),
-                FixtureType.DAMAGEABLE
             )
         body.addFixture(damageableFixture)
 
-        damageableFixture.shape.color = Color.PURPLE
-        shapes.add { damageableFixture.shape }
+        damageableFixture.rawShape.color = Color.PURPLE
+        shapes.add { damageableFixture.getShape() }
 
-        // shield fixture
         val shieldFixture =
             Fixture(
-                GameRectangle().setSize(0.4f * ConstVals.PPM, 0.9f * ConstVals.PPM), FixtureType.SHIELD
+                body,
+                FixtureType.SHIELD,
+                GameRectangle().setSize(0.4f * ConstVals.PPM, 0.9f * ConstVals.PPM)
             )
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
         body.addFixture(shieldFixture)
 
-        shieldFixture.shape.color = Color.BLUE
-        shapes.add { shieldFixture.shape }
+        shieldFixture.rawShape.color = Color.BLUE
+        shapes.add { shieldFixture.getShape() }
 
-        // pre-process
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             shieldFixture.active = setting == SwinginJoeSetting.SWING_EYES_CLOSED
             if (setting == SwinginJoeSetting.SWING_EYES_CLOSED) {

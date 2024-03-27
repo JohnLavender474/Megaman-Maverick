@@ -18,10 +18,7 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.IGameEntity
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
-import com.engine.world.Fixture
+import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -86,12 +83,12 @@ class JoeBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         explodeAndDie()
     }
 
-    override fun hitBlock(blockFixture: Fixture) {
+    override fun hitBlock(blockFixture: IFixture) {
         super.hitBlock(blockFixture)
         explodeAndDie()
     }
 
-    override fun hitShield(shieldFixture: Fixture) {
+    override fun hitShield(shieldFixture: IFixture) {
         super.hitShield(shieldFixture)
         owner = shieldFixture.getEntity()
         trajectory.x *= -1f
@@ -116,17 +113,14 @@ class JoeBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         body.setSize(0.15f * ConstVals.PPM)
         body.physics.velocityClamp.set(CLAMP * ConstVals.PPM, CLAMP * ConstVals.PPM)
 
-        // body fixture
-        val bodyFixture = Fixture(GameRectangle().set(body), FixtureType.BODY)
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
 
-        // projectile fixture
         val projectileFixture =
-            Fixture(GameRectangle().setSize(0.2f * ConstVals.PPM), FixtureType.PROJECTILE)
+            Fixture(body, FixtureType.PROJECTILE, GameRectangle().setSize(0.2f * ConstVals.PPM))
         body.addFixture(projectileFixture)
 
-        // damager fixture
-        val damagerFixture = Fixture(GameRectangle().setSize(0.2f * ConstVals.PPM), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.2f * ConstVals.PPM))
         body.addFixture(damagerFixture)
 
         return BodyComponentCreator.create(this, body)

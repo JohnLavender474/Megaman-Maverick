@@ -18,10 +18,7 @@ import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.IGameEntity
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
-import com.engine.world.Fixture
+import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -75,14 +72,14 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
         explodeAndDie()
     }
 
-    override fun hitBody(bodyFixture: Fixture) {
+    override fun hitBody(bodyFixture: IFixture) {
         val entity = bodyFixture.getEntity()
         if (entity != owner && entity is IDamageable && !entity.canBeDamagedBy(this)) explodeAndDie()
     }
 
-    override fun hitBlock(blockFixture: Fixture) = explodeAndDie()
+    override fun hitBlock(blockFixture: IFixture) = explodeAndDie()
 
-    override fun hitShield(shieldFixture: Fixture) {
+    override fun hitShield(shieldFixture: IFixture) {
         if (owner == shieldFixture.getEntity()) return
 
         bounced++
@@ -133,14 +130,14 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
         body.setSize(.15f * ConstVals.PPM)
         body.physics.velocityClamp.set(CLAMP * ConstVals.PPM, CLAMP * ConstVals.PPM)
 
-        val bodyFixture = Fixture(GameRectangle().set(body), FixtureType.BODY)
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         bodyFixture.putProperty(ConstKeys.GRAVITY_ROTATABLE, false)
         body.addFixture(bodyFixture)
 
-        val projectileFixture = Fixture(GameRectangle().setSize(.2f * ConstVals.PPM), FixtureType.PROJECTILE)
+        val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameRectangle().setSize(.2f * ConstVals.PPM))
         body.addFixture(projectileFixture)
 
-        val damagerFixture = Fixture(GameRectangle().setSize(.2f * ConstVals.PPM), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(.2f * ConstVals.PPM))
         body.addFixture(damagerFixture)
 
         addComponent(

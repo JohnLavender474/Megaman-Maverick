@@ -54,15 +54,7 @@ class Imorm(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        // Bullet::class to dmgNeg(10),
         Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        /*
-        ChargedShot::class to dmgNeg {
-            it as ChargedShot
-            if (it.fullyCharged) 15 else 10
-        },
-        ChargedShotExplosion::class to dmgNeg(5)
-         */
     )
 
     override lateinit var facing: Facing
@@ -106,40 +98,44 @@ class Imorm(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
-        val bodyFixture = Fixture(GameRectangle().set(body), FixtureType.BODY)
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
-        bodyFixture.shape.color = Color.GRAY
-        debugShapes.add { bodyFixture.shape }
+        bodyFixture.getShape().color = Color.GRAY
+        debugShapes.add { bodyFixture.getShape() }
 
-        val damagerFixture = Fixture(GameRectangle().setHeight(0.5f * ConstVals.PPM), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setHeight(0.5f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        damagerFixture.shape.color = Color.RED
-        debugShapes.add { damagerFixture.shape }
+        damagerFixture.getShape().color = Color.RED
+        debugShapes.add { damagerFixture.getShape() }
 
-        val damageableFixture = Fixture(GameRectangle().setHeight(0.5f * ConstVals.PPM), FixtureType.DAMAGEABLE)
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setHeight(0.5f * ConstVals.PPM))
         body.addFixture(damageableFixture)
-        damageableFixture.shape.color = Color.PURPLE
-        debugShapes.add { damageableFixture.shape }
+        damageableFixture.getShape().color = Color.PURPLE
+        debugShapes.add { damageableFixture.getShape() }
 
-        val shieldFixture = Fixture(GameRectangle().setHeight(0.5f * ConstVals.PPM), FixtureType.SHIELD)
+        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle().setHeight(0.5f * ConstVals.PPM))
         body.addFixture(shieldFixture)
-        shieldFixture.shape.color = Color.CYAN
-        debugShapes.add { shieldFixture.shape }
+        shieldFixture.getShape().color = Color.CYAN
+        debugShapes.add { shieldFixture.getShape() }
 
-        val leftFixture = Fixture(GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM), FixtureType.SIDE)
+        val leftFixture = Fixture(
+            body, FixtureType.SIDE, GameRectangle().setSize(
+                0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM
+            )
+        )
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         leftFixture.offsetFromBodyCenter.x = -SLITHER_DISTANCE * 1.5f
         body.addFixture(leftFixture)
-        leftFixture.shape.color = Color.YELLOW
-        debugShapes.add { leftFixture.shape }
+        leftFixture.getShape().color = Color.YELLOW
+        debugShapes.add { leftFixture.getShape() }
 
         val rightFixture =
-            Fixture(GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM), FixtureType.SIDE)
+            Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM))
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         rightFixture.offsetFromBodyCenter.x = SLITHER_DISTANCE * 1.5f
         body.addFixture(rightFixture)
-        rightFixture.shape.color = Color.YELLOW
-        debugShapes.add { rightFixture.shape }
+        rightFixture.getShape().color = Color.YELLOW
+        debugShapes.add { rightFixture.getShape() }
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
 
@@ -147,9 +143,9 @@ class Imorm(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
             val width = if (slitherTimer.time <= 0.15f) 0.375f * ConstVals.PPM
             else if (slitherTimer.time <= 0.3f || slitherTimer.time >= 0.45f) 0.5f * ConstVals.PPM
             else 0.95f * ConstVals.PPM
-            (damagerFixture.shape as GameRectangle).width = width
-            (damageableFixture.shape as GameRectangle).width = width
-            (shieldFixture.shape as GameRectangle).width = 0.9f * ConstVals.PPM
+            (damagerFixture.getShape() as GameRectangle).width = width
+            (damageableFixture.getShape() as GameRectangle).width = width
+            (shieldFixture.getShape() as GameRectangle).width = 0.9f * ConstVals.PPM
 
             if (isFacing(Facing.LEFT) && !body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT))
                 facing = Facing.RIGHT

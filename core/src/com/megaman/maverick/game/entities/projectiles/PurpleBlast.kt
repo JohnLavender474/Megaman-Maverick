@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.projectiles
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -85,15 +84,11 @@ class PurpleBlast(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceab
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body }
 
-        val damagerFixture = Fixture(GameRectangle().setSize(0.5f * ConstVals.PPM), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.5f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        damagerFixture.shape.color = Color.RED
-        debugShapes.add { damagerFixture.shape }
 
-        val projectileFixture = Fixture(GameRectangle().setSize(0.5f * ConstVals.PPM), FixtureType.PROJECTILE)
+        val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameRectangle().setSize(0.5f * ConstVals.PPM))
         body.addFixture(projectileFixture)
-        projectileFixture.shape.color = Color.BLUE
-        debugShapes.add { projectileFixture.shape }
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
 

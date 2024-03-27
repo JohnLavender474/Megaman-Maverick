@@ -177,16 +177,14 @@ class Saw(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEnt
         val body = Body(BodyType.ABSTRACT)
         body.setSize(2f * ConstVals.PPM)
 
-        // death fixture
         val deathCircle = GameCircle()
         deathCircle.setRadius(ConstVals.PPM.toFloat())
-        val deathFixture = Fixture(deathCircle, FixtureType.DEATH)
+        val deathFixture = Fixture(body, FixtureType.DEATH, deathCircle)
         body.addFixture(deathFixture)
 
-        // shield fixture
         val shieldCircle = GameCircle()
         shieldCircle.setRadius(ConstVals.PPM.toFloat())
-        val shieldFixture = Fixture(shieldCircle, FixtureType.SHIELD)
+        val shieldFixture = Fixture(body, FixtureType.SHIELD, shieldCircle)
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
         body.addFixture(shieldFixture)
 

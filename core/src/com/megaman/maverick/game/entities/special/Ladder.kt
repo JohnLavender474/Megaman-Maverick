@@ -33,9 +33,8 @@ class Ladder(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity {
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
 
-        // ladder fixture
         ladderRectangle = GameRectangle()
-        val ladderFixture = Fixture(ladderRectangle, FixtureType.LADDER)
+        val ladderFixture = Fixture(body, FixtureType.LADDER, ladderRectangle)
         body.addFixture(ladderFixture)
 
         addComponent(

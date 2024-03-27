@@ -99,26 +99,23 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.75f * ConstVals.PPM, 1.5f * ConstVals.PPM)
 
-        // damager fixture
-        val damagerFixture = Fixture(GameRectangle(body), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
         body.addFixture(damagerFixture)
 
-        // damageable fixture
-        val damageableFixture = Fixture(GameRectangle().setHeight(body.height), FixtureType.DAMAGEABLE)
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setHeight(body.height))
         body.addFixture(damageableFixture)
 
-        // shield fixture
         val shieldFixture =
             Fixture(
+                body,
+                FixtureType.SHIELD,
                 GameRectangle().setSize(0.75f * ConstVals.PPM, 1.25f * ConstVals.PPM),
-                FixtureType.SHIELD
             )
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
         body.addFixture(shieldFixture)
 
-        // pre-process
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
-            val damageableShape = damageableFixture.shape as GameRectangle
+            val damageableShape = damageableFixture.rawShape as GameRectangle
             if (turningAround) {
                 shieldFixture.active = false
                 damageableFixture.offsetFromBodyCenter.x = 0f

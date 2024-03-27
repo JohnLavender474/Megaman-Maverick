@@ -112,46 +112,46 @@ class BabySpider(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
-        val bodyFixture = Fixture(GameRectangle().set(body), FixtureType.BODY)
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
-        bodyFixture.shape.color = Color.GRAY
-        debugShapes.add { bodyFixture.shape }
+        bodyFixture.getShape().color = Color.GRAY
+        debugShapes.add { bodyFixture.getShape() }
 
-        val leftFixture = Fixture(GameRectangle().setSize(0.1f * ConstVals.PPM), FixtureType.SIDE)
+        val leftFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         leftFixture.offsetFromBodyCenter.x = -0.275f * ConstVals.PPM
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftFixture)
-        leftFixture.shape.color = Color.YELLOW
-        debugShapes.add { leftFixture.shape }
+        leftFixture.getShape().color = Color.YELLOW
+        debugShapes.add { leftFixture.getShape() }
 
-        val rightFixture = Fixture(GameRectangle().setSize(0.1f * ConstVals.PPM), FixtureType.SIDE)
+        val rightFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         rightFixture.offsetFromBodyCenter.x = 0.275f * ConstVals.PPM
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
-        rightFixture.shape.color = Color.YELLOW
-        debugShapes.add { rightFixture.shape }
+        rightFixture.getShape().color = Color.YELLOW
+        debugShapes.add { rightFixture.getShape() }
 
-        val feetFixture = Fixture(GameRectangle().setSize(0.1f * ConstVals.PPM), FixtureType.FEET)
+        val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyCenter.y = -0.15f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.shape.color = Color.GREEN
-        debugShapes.add { feetFixture.shape }
+        feetFixture.getShape().color = Color.GREEN
+        debugShapes.add { feetFixture.getShape() }
 
-        val headFixture = Fixture(GameRectangle().setSize(0.1f * ConstVals.PPM), FixtureType.HEAD)
+        val headFixture = Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.1f * ConstVals.PPM))
         headFixture.offsetFromBodyCenter.y = 0.15f * ConstVals.PPM
         body.addFixture(headFixture)
-        headFixture.shape.color = Color.BLUE
-        debugShapes.add { headFixture.shape }
+        headFixture.getShape().color = Color.BLUE
+        debugShapes.add { headFixture.getShape() }
 
-        val damagerFixture = Fixture(GameRectangle().set(body), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().set(body))
         body.addFixture(damagerFixture)
-        damagerFixture.shape.color = Color.RED
-        debugShapes.add { damagerFixture.shape }
+        damagerFixture.getShape().color = Color.RED
+        debugShapes.add { damagerFixture.getShape() }
 
-        val damageableFixture = Fixture(GameRectangle().set(body), FixtureType.DAMAGEABLE)
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().set(body))
         body.addFixture(damageableFixture)
-        damageableFixture.shape.color = Color.PURPLE
-        debugShapes.add { damageableFixture.shape }
+        damageableFixture.getShape().color = Color.PURPLE
+        debugShapes.add { damageableFixture.getShape() }
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
 

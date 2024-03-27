@@ -58,7 +58,7 @@ class Spike(game: MegamanMaverickGame) :
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
         body.fixtures.forEach { entry ->
-            val shape = entry.second.shape
+            val shape = (entry.second as Fixture).rawShape
             if (shape is GameRectangle) shape.set(bounds)
         }
 
@@ -87,7 +87,7 @@ class Spike(game: MegamanMaverickGame) :
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
 
-        val deathFixture = Fixture(GameRectangle(), FixtureType.DEATH)
+        val deathFixture = Fixture(body, FixtureType.DEATH, GameRectangle())
         body.addFixture(deathFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {

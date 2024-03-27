@@ -125,8 +125,6 @@ class Gate(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IAudioEnt
 
     fun stateIsOfOpenType() = state == GateState.OPENABLE || state == GateState.OPENING || state == GateState.OPEN
 
-    fun stateIsOfCloseType() = state == GateState.CLOSING || state == GateState.CLOSED
-
     private fun defineUpdatablesComponent() = UpdatablesComponent(this, {
         if (state == GateState.OPENING) {
             timer.update(it)
@@ -165,14 +163,13 @@ class Gate(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IAudioEnt
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
 
-        // gate fixture
-        val gateFixture = Fixture(GameRectangle(), FixtureType.GATE)
+        val gateFixture = Fixture(body, FixtureType.GATE, GameRectangle())
         body.addFixture(gateFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             val bodySize = if (orientation == GateOrientation.HORIZONTAL) Vector2(2f, 3f) else Vector2(3f, 2f)
             body.setSize(bodySize.scl(ConstVals.PPM.toFloat()))
-            (gateFixture.shape as GameRectangle).set(body)
+            (gateFixture.rawShape as GameRectangle).set(body)
             body.setCenter(center)
         })
 

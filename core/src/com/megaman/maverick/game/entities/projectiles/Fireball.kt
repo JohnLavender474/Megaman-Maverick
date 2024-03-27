@@ -22,10 +22,7 @@ import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.IGameEntity
 import com.engine.updatables.UpdatablesComponent
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
-import com.engine.world.Fixture
+import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -94,28 +91,27 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         explodeAndDie()
     }
 
-    override fun hitBody(bodyFixture: Fixture) {
+    override fun hitBody(bodyFixture: IFixture) {
         super.hitBody(bodyFixture)
         if (mask(owner, bodyFixture.getEntity(), { it is Megaman }, { it is AbstractEnemy })) explodeAndDie()
     }
 
-    override fun hitBlock(blockFixture: Fixture) {
+    override fun hitBlock(blockFixture: IFixture) {
         super.hitBlock(blockFixture)
         explodeAndDie()
     }
 
-    override fun hitShield(shieldFixture: Fixture) {
+    override fun hitShield(shieldFixture: IFixture) {
         super.hitShield(shieldFixture)
         xVel *= -1f
         requestToPlaySound(SoundAsset.DINK_SOUND, false)
     }
 
-    override fun hitWater(waterFixture: Fixture) {
+    override fun hitWater(waterFixture: IFixture) {
         super.hitWater(waterFixture)
         kill(props(CAUSE_OF_DEATH_MESSAGE to "Hit water"))
         val smokePuff = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SMOKE_PUFF)!!
-        val waterBounds = waterFixture.shape.getBoundingRectangle()
-        val spawn = Vector2(body.getCenter().x, waterBounds.getMaxY())
+        val spawn = Vector2(body.getCenter().x, waterFixture.getShape().getMaxY())
         game.gameEngine.spawn(smokePuff, props(ConstKeys.POSITION to spawn))
         getMegamanMaverickGame().audioMan.playSound(SoundAsset.WHOOSH_SOUND, false)
     }
@@ -125,13 +121,11 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
         body.setSize(0.9f * ConstVals.PPM)
 
-        // projectile fixture
         val projectileFixture =
-            Fixture(GameRectangle().setSize(0.9f * ConstVals.PPM), FixtureType.PROJECTILE)
+            Fixture(body, FixtureType.PROJECTILE, GameRectangle().setSize(0.9f * ConstVals.PPM))
         body.addFixture(projectileFixture)
 
-        // damager fixture
-        val damagerFixture = Fixture(GameRectangle().setSize(0.9f * ConstVals.PPM), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.9f * ConstVals.PPM))
         body.addFixture(damagerFixture)
 
         return BodyComponentCreator.create(this, body)

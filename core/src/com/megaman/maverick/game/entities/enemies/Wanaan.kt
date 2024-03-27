@@ -31,6 +31,7 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
+import com.megaman.maverick.game.world.getPositionDelta
 import kotlin.reflect.KClass
 
 class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
@@ -44,7 +45,7 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>()
 
     val comingDown: Boolean
-        get() = body.positionDelta.y < 0f
+        get() = body.getPositionDelta().y < 0f
     val cullPoint: Vector2
         get() = body.getCenter()
 
@@ -77,15 +78,15 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
-        val shieldFixture = Fixture(GameRectangle().setSize(1f * ConstVals.PPM), FixtureType.SHIELD)
+        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(1f * ConstVals.PPM))
         body.addFixture(shieldFixture)
-        shieldFixture.shape.color = Color.GREEN
-        debugShapes.add { shieldFixture.shape }
+        shieldFixture.getShape().color = Color.GREEN
+        debugShapes.add { shieldFixture.getShape() }
 
-        val damagerFixture = Fixture(GameRectangle().setSize(1f * ConstVals.PPM), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(1f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        damagerFixture.shape.color = Color.RED
-        debugShapes.add { damagerFixture.shape }
+        damagerFixture.getShape().color = Color.RED
+        debugShapes.add { damagerFixture.getShape() }
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
 

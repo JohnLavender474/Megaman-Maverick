@@ -27,10 +27,7 @@ import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.IGameEntity
 import com.engine.updatables.UpdatablesComponent
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
-import com.engine.world.Fixture
+import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -95,7 +92,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceab
         (firstSprite as GameSprite).setSize(spriteDimension)
 
         body.setSize(bodyDimension)
-        body.fixtures.forEach { (it.second.shape as GameRectangle).setSize(bodyDimension) }
+        body.fixtures.forEach { ((it.second as Fixture).rawShape as GameRectangle).setSize(bodyDimension) }
 
         trajectory = spawnProps.get(ConstKeys.TRAJECTORY) as Vector2
 
@@ -109,9 +106,9 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceab
 
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
-    override fun hitBlock(blockFixture: Fixture) = explodeAndDie()
+    override fun hitBlock(blockFixture: IFixture) = explodeAndDie()
 
-    override fun hitShield(shieldFixture: Fixture) {
+    override fun hitShield(shieldFixture: IFixture) {
         val shieldEntity = shieldFixture.getEntity()
         if (shieldEntity == owner) return
         if (shieldEntity is IOwnable && shieldEntity.owner == owner) return
@@ -189,15 +186,12 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceab
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
 
-        // projectile fixture
-        val projectileFixture = Fixture(GameRectangle(), FixtureType.PROJECTILE)
+        val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameRectangle())
         body.addFixture(projectileFixture)
 
-        // damager fixture
-        val damagerFixture = Fixture(GameRectangle(), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
         body.addFixture(damagerFixture)
 
-        // add drawable shape component for debugging
         addComponent(
             DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true)
         )

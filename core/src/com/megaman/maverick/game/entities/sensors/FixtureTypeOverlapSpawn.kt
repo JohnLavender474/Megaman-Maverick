@@ -12,10 +12,7 @@ import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.IParentEntity
 import com.engine.updatables.UpdatablesComponent
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
-import com.engine.world.Fixture
+import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntities
@@ -48,7 +45,7 @@ class FixtureTypeOverlapSpawn(game: MegamanMaverickGame) : GameEntity(game), IBo
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
-        body.fixtures.forEach { (it.second.shape as GameRectangle).set(bounds) }
+        body.fixtures.forEach { ((it.second as Fixture).rawShape as GameRectangle).set(bounds) }
 
         entitiesToSpawn = convertObjectPropsToEntities(spawnProps)
 
@@ -66,9 +63,9 @@ class FixtureTypeOverlapSpawn(game: MegamanMaverickGame) : GameEntity(game), IBo
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
 
-        val consumerFixture = Fixture(GameRectangle(), FixtureType.CONSUMER)
-        val consumer: (ProcessState, Fixture) -> Unit = { _, it ->
-            fixturesConsumed.add(it.fixtureLabel as FixtureType)
+        val consumerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle())
+        val consumer: (ProcessState, IFixture) -> Unit = { _, it ->
+            fixturesConsumed.add(it.getFixtureType() as FixtureType)
         }
         consumerFixture.setConsumer(consumer)
         body.addFixture(consumerFixture)

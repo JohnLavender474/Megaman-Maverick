@@ -67,15 +67,16 @@ class Lift(game: MegamanMaverickGame) : Block(game), ISpriteEntity, IDirectionRo
 
     override fun defineBodyComponent(): BodyComponent {
         val bodyComponent = super.defineBodyComponent()
+        val body = bodyComponent.body
 
-        val headFixture = Fixture(GameRectangle(), FixtureType.HEAD)
+        val headFixture = Fixture(body, FixtureType.HEAD, GameRectangle())
         headFixture.setEntity(this)
-        bodyComponent.body.addFixture(headFixture)
-        headFixture.shape.color = Color.BLUE
-        debugShapeSuppliers.add { headFixture.shape }
+        body.addFixture(headFixture)
+        headFixture.getShape().color = Color.BLUE
+        debugShapeSuppliers.add { headFixture.getShape() }
 
-        bodyComponent.body.preProcess.put(ConstKeys.HEAD) {
-            (headFixture.shape as GameRectangle).setSize(
+        body.preProcess.put(ConstKeys.HEAD) {
+            (headFixture.getShape() as GameRectangle).setSize(
                 when (directionRotation) {
                     Direction.UP, Direction.DOWN -> Vector2(
                         ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM
@@ -108,9 +109,9 @@ class Lift(game: MegamanMaverickGame) : Block(game), ISpriteEntity, IDirectionRo
     private fun defineUpdatablesComponent() = UpdatablesComponent(this, {
         val megaman = getMegamanMaverickGame().megaman
         val megamanOverlapping = !megaman.dead && megaman.body.fixtures.any {
-            it.second.fixtureLabel.equalsAny(
+            it.second.getFixtureType().equalsAny(
                 FixtureType.SIDE, FixtureType.FEET
-            ) && it.second.shape.overlaps(body)
+            ) && it.second.getShape().overlaps(body)
         }
 
         currentState = if (megamanOverlapping && !body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)) LiftState.LIFTING

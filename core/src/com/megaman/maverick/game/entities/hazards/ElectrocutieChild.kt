@@ -92,30 +92,27 @@ class ElectrocutieChild(game: MegamanMaverickGame) : GameEntity(game), IHazard, 
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
-        // body fixture
-        val bodyFixture = Fixture(GameRectangle(), FixtureType.BODY)
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle())
         body.addFixture(bodyFixture)
-        bodyFixture.shape.color = Color.GRAY
-        debugShapes.add { bodyFixture.shape }
+        bodyFixture.getShape().color = Color.GRAY
+        debugShapes.add { bodyFixture.getShape() }
 
-        // damager fixture
-        val damagerFixture = Fixture(GameRectangle(), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
         body.addFixture(damagerFixture)
-        damagerFixture.shape.color = Color.RED
-        debugShapes.add { damagerFixture.shape }
+        damagerFixture.getShape().color = Color.RED
+        debugShapes.add { damagerFixture.getShape() }
 
-        // shield fixture
-        val shieldFixture = Fixture(GameRectangle(), FixtureType.SHIELD)
+        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle())
         body.addFixture(shieldFixture)
-        shieldFixture.shape.color = Color.BLUE
-        debugShapes.add { shieldFixture.shape }
+        shieldFixture.getShape().color = Color.BLUE
+        debugShapes.add { shieldFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             val size = if (direction.isVertical()) Vector2(0.85f * ConstVals.PPM, 0.35f * ConstVals.PPM)
             else Vector2(0.35f * ConstVals.PPM, 0.85f * ConstVals.PPM)
 
             body.setSize(size)
-            body.fixtures.forEach { (it.second.shape as GameRectangle).setSize(size) }
+            body.fixtures.forEach { (it.second.getShape() as GameRectangle).setSize(size) }
 
             if (resetBodyPosition) {
                 when (direction) {

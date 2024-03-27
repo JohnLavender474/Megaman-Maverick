@@ -85,11 +85,10 @@ class Bolt(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IHazard, 
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
-        // damager fixture
-        val damagerFixture = Fixture(GameRectangle(), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
         body.addFixture(damagerFixture)
-        damagerFixture.shape.color = Color.RED
-        debugShapes.add { damagerFixture.shape }
+        damagerFixture.getShape().color = Color.RED
+        debugShapes.add { damagerFixture.getShape() }
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
 

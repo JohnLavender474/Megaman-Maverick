@@ -179,23 +179,20 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
         val fixturesRectangle = GameRectangle()
 
-        // body fixture
-        val bodyFixture = Fixture(fixturesRectangle, FixtureType.BODY)
+        val bodyFixture = Fixture(body, FixtureType.BODY, fixturesRectangle)
         bodyFixture.attachedToBody = false
         body.addFixture(bodyFixture)
-        debugShapes.add { bodyFixture.shape }
+        debugShapes.add { bodyFixture.getShape() }
 
-        // damager fixture
-        val damagerFixture = Fixture(fixturesRectangle, FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, fixturesRectangle)
         damagerFixture.attachedToBody = false
         body.addFixture(damagerFixture)
-        debugShapes.add { if (damagerFixture.active) damagerFixture.shape else null }
+        debugShapes.add { if (damagerFixture.active) damagerFixture.getShape() else null }
 
-        // damageable fixture
-        val damageableFixture = Fixture(fixturesRectangle, FixtureType.DAMAGEABLE)
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, fixturesRectangle)
         damageableFixture.attachedToBody = false
         body.addFixture(damageableFixture)
-        debugShapes.add { if (damageableFixture.active) damageableFixture.shape else null }
+        debugShapes.add { if (damageableFixture.active) damageableFixture.getShape() else null }
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             fixturesRectangle.setSize(

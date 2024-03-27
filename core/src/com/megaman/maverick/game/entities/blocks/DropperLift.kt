@@ -69,8 +69,8 @@ class DropperLift(game: MegamanMaverickGame) : Block(game), ISpriteEntity, IAnim
 
     private fun isMegamanOverlapping(): Boolean {
         val megaman = getMegamanMaverickGame().megaman
-        val megamanFeet = megaman.body.fixtures.map { it.second }.find { it.fixtureLabel == FixtureType.FEET }!!
-        return megamanFeet.shape.overlaps(body) || megaman.body.overlaps(body as Rectangle)
+        val megamanFeet = megaman.body.fixtures.map { it.second }.find { it.getFixtureType() == FixtureType.FEET }!!
+        return megamanFeet.getShape().overlaps(body) || megaman.body.overlaps(body as Rectangle)
     }
 
     private fun setActive(active: Boolean) {

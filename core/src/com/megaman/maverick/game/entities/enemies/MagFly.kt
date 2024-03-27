@@ -86,40 +86,36 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
         val shapes = Array<() -> IDrawableShape?>()
 
-        // body fixture
-        val bodyFixture = Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat()), FixtureType.BODY)
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(ConstVals.PPM.toFloat()))
         body.addFixture(bodyFixture)
 
-        shapes.add { bodyFixture.shape }
+        shapes.add { bodyFixture.getShape() }
 
-        // left fixture
-        val leftFixture = Fixture(GameRectangle().setSize(0.1f * ConstVals.PPM), FixtureType.SIDE)
+        val leftFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         leftFixture.offsetFromBodyCenter.x = -0.6f * ConstVals.PPM
         leftFixture.offsetFromBodyCenter.y = 0.4f * ConstVals.PPM
         body.addFixture(leftFixture)
 
-        shapes.add { leftFixture.shape }
+        shapes.add { leftFixture.getShape() }
 
-        // right fixture
-        val rightFixture = Fixture(GameRectangle().setSize(0.1f * ConstVals.PPM), FixtureType.SIDE)
+        val rightFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         rightFixture.offsetFromBodyCenter.x = 0.6f * ConstVals.PPM
         rightFixture.offsetFromBodyCenter.y = 0.4f * ConstVals.PPM
         body.addFixture(rightFixture)
 
-        shapes.add { rightFixture.shape }
+        shapes.add { rightFixture.getShape() }
 
-        // force fixture
         forceFixture = Fixture(
-            GameRectangle().setSize(ConstVals.PPM / 2f, ConstVals.VIEW_HEIGHT * ConstVals.PPM), FixtureType.FORCE
+            body,
+            FixtureType.FORCE,
+            GameRectangle().setSize(ConstVals.PPM / 2f, ConstVals.VIEW_HEIGHT * ConstVals.PPM)
         )
         forceFixture.offsetFromBodyCenter.y = -ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f
         forceFixture.setVelocityAlteration { fixture, _ ->
             val entity = fixture.getEntity()
-
             if (entity is AbstractEnemy || (entity is Megaman && entity.damaged)) return@setVelocityAlteration VelocityAlteration.addNone()
-
             if (entity is IProjectileEntity) entity.owner = null
 
             val x = PULL_FORCE_X * ConstVals.PPM * facing.value
@@ -129,22 +125,18 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         }
         body.addFixture(forceFixture)
 
-        forceFixture.shape.color = Color.YELLOW
-        shapes.add { forceFixture.shape }
+        forceFixture.rawShape.color = Color.YELLOW
+        shapes.add { forceFixture.getShape() }
 
-        // damageable fixture
-        val damageableFixture = Fixture(GameRectangle().setSize(ConstVals.PPM.toFloat()), FixtureType.DAMAGEABLE)
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(ConstVals.PPM.toFloat()))
         body.addFixture(damageableFixture)
+        damageableFixture.rawShape.color = Color.PURPLE
+        shapes.add { damageableFixture.getShape() }
 
-        damageableFixture.shape.color = Color.PURPLE
-        shapes.add { damageableFixture.shape }
-
-        // damager fixture
-        val damagerFixture = Fixture(GameRectangle().setSize(0.85f * ConstVals.PPM), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.85f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-
-        damagerFixture.shape.color = Color.RED
-        shapes.add { damagerFixture.shape }
+        damagerFixture.rawShape.color = Color.RED
+        shapes.add { damagerFixture.getShape() }
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
 
@@ -174,7 +166,7 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             }
 
             val megaman = getMegamanMaverickGame().megaman
-            val slow = megaman.body.overlaps(forceFixture.shape as Rectangle)
+            val slow = megaman.body.overlaps(forceFixture.getShape() as Rectangle)
 
             if (!slow && megaman.body.y < body.y && !facingAndMMDirMatch()) facing =
                 if (megaman.body.x > body.x) Facing.RIGHT else Facing.LEFT

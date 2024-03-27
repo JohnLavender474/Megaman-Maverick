@@ -19,10 +19,7 @@ import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
-import com.engine.world.Fixture
+import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -84,17 +81,17 @@ class CaveRock(game: MegamanMaverickGame) : AbstractProjectile(game) {
         explodeAndDie()
     }
 
-    override fun hitBlock(blockFixture: Fixture) {
+    override fun hitBlock(blockFixture: IFixture) {
         if (passThroughBlocks) return
         GameLogger.debug(TAG, "Hit block: $blockFixture")
         explodeAndDie()
     }
 
-    override fun hitWater(waterFixture: Fixture) {
+    override fun hitWater(waterFixture: IFixture) {
         // set x vel to zero and sink slowly
     }
 
-    override fun hitShield(shieldFixture: Fixture) {
+    override fun hitShield(shieldFixture: IFixture) {
         // bounce
     }
 
@@ -104,25 +101,22 @@ class CaveRock(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
-        // projectile fixture
         val projectileFixture =
-            Fixture(GameRectangle().setSize(0.75f * ConstVals.PPM), FixtureType.PROJECTILE)
+            Fixture(body, FixtureType.PROJECTILE, GameRectangle().setSize(0.75f * ConstVals.PPM))
         body.addFixture(projectileFixture)
-        projectileFixture.shape.color = Color.YELLOW
-        debugShapes.add { projectileFixture.shape }
+        projectileFixture.rawShape.color = Color.YELLOW
+        debugShapes.add { projectileFixture.getShape() }
 
-        // damager fixture
         val damagerFixture =
-            Fixture(GameRectangle().setSize(0.65f * ConstVals.PPM), FixtureType.DAMAGER)
+            Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.65f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        damagerFixture.shape.color = Color.RED
-        debugShapes.add { damagerFixture.shape }
+        damagerFixture.getShape().color = Color.RED
+        debugShapes.add { damagerFixture.getShape() }
 
-        // shieldFixture
-        val shieldFixture = Fixture(GameRectangle().setSize(0.75f * ConstVals.PPM), FixtureType.SHIELD)
+        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(0.75f * ConstVals.PPM))
         body.addFixture(shieldFixture)
-        shieldFixture.shape.color = Color.BLUE
-        debugShapes.add { shieldFixture.shape }
+        shieldFixture.getShape().color = Color.BLUE
+        debugShapes.add { shieldFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             body.physics.gravity.y = gravity

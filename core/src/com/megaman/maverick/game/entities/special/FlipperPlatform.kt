@@ -142,8 +142,8 @@ class FlipperPlatform(game: MegamanMaverickGame) : GameEntity(game), ISpriteEnti
                 block!!.body.y -= 0.3f * ConstVals.PPM
 
                 val megamanFeet = getMegamanMaverickGame().megaman.body.fixtures.first { pair ->
-                    pair.second.fixtureLabel == FixtureType.FEET
-                }.second.shape as Rectangle
+                    pair.second.getFixtureType() == FixtureType.FEET
+                }.second.getShape() as Rectangle
                 if (switchDelay.isFinished() && block!!.body.overlaps(megamanFeet)) {
                     switchDelay.reset()
                     requestToPlaySound(SoundAsset.BLOOPITY_SOUND, false)
@@ -158,8 +158,8 @@ class FlipperPlatform(game: MegamanMaverickGame) : GameEntity(game), ISpriteEnti
                 block!!.body.y -= 0.3f * ConstVals.PPM
 
                 val megamanFeet = getMegamanMaverickGame().megaman.body.fixtures.first { pair ->
-                    pair.second.fixtureLabel == FixtureType.FEET
-                }.second.shape as Rectangle
+                    pair.second.getFixtureType() == FixtureType.FEET
+                }.second.getShape() as Rectangle
                 if (switchDelay.isFinished() && block!!.body.overlaps(megamanFeet)) {
                     switchDelay.reset()
                     requestToPlaySound(SoundAsset.BLOOPITY_SOUND, false)

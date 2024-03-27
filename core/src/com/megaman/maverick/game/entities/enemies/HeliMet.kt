@@ -167,16 +167,16 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body }
 
-        val bodyFixture = Fixture(GameRectangle().setSize(0.75f * ConstVals.PPM), FixtureType.BODY)
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(0.75f * ConstVals.PPM))
         body.addFixture(bodyFixture)
 
-        val damagerFixture = Fixture(GameRectangle().setSize(0.75f * ConstVals.PPM), FixtureType.DAMAGER)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.75f * ConstVals.PPM))
         body.addFixture(damagerFixture)
 
-        val damageableFixture = Fixture(GameRectangle().setSize(0.75f * ConstVals.PPM), FixtureType.DAMAGEABLE)
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.75f * ConstVals.PPM))
         body.addFixture(damageableFixture)
 
-        val shieldFixture = Fixture(GameRectangle().setSize(0.75f * ConstVals.PPM), FixtureType.SHIELD)
+        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(0.75f * ConstVals.PPM))
         body.addFixture(shieldFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT) {

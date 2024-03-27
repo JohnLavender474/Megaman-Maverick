@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.special
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.utils.Array
 import com.engine.common.enums.Direction
 import com.engine.common.extensions.objectMapOf
@@ -34,7 +33,7 @@ class GravityChange(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity {
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
-        (gravityChangeFixture.shape as GameRectangle).set(bounds)
+        (gravityChangeFixture.rawShape as GameRectangle).set(bounds)
 
         spawnProps.get(ConstKeys.DIRECTION).let { direction ->
             if (direction is String)
@@ -57,11 +56,8 @@ class GravityChange(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity {
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
-        // gravity-change fixture
-        gravityChangeFixture = Fixture(GameRectangle(), FixtureType.GRAVITY_CHANGE)
+        gravityChangeFixture = Fixture(body, FixtureType.GRAVITY_CHANGE, GameRectangle())
         body.addFixture(gravityChangeFixture)
-        gravityChangeFixture.shape.color = Color.ORANGE
-        debugShapes.add { gravityChangeFixture.shape }
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
 
