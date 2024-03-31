@@ -134,7 +134,7 @@ class SuicideBummer(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable,
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
-        bodyFixture.getShape().color = Color.GRAY
+        bodyFixture.rawShape.color = Color.GRAY
         debugShapes.add { bodyFixture.getShape() }
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().set(body))
@@ -147,20 +147,20 @@ class SuicideBummer(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable,
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         leftFixture.offsetFromBodyCenter = Vector2(-0.6255f * ConstVals.PPM, -0.625f * ConstVals.PPM)
         body.addFixture(leftFixture)
-        leftFixture.getShape().color = Color.YELLOW
+        leftFixture.rawShape.color = Color.YELLOW
         debugShapes.add { leftFixture.getShape() }
 
         val rightFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         rightFixture.offsetFromBodyCenter = Vector2(0.625f * ConstVals.PPM, -0.625f * ConstVals.PPM)
         body.addFixture(rightFixture)
-        rightFixture.getShape().color = Color.YELLOW
+        rightFixture.rawShape.color = Color.YELLOW
         debugShapes.add { rightFixture.getShape() }
 
         val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyCenter.y = -0.5f * ConstVals.PPM
+        feetFixture.offsetFromBodyCenter.y = -0.625f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.getShape().color = Color.GREEN
+        feetFixture.rawShape.color = Color.GREEN
         debugShapes.add { feetFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
@@ -179,14 +179,11 @@ class SuicideBummer(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable,
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
-
-        val spritesComponent = SpritesComponent(this, TAG to sprite)
-        spritesComponent.putUpdateFunction(TAG) { _, _sprite ->
-            _sprite as GameSprite
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
             _sprite.setFlip(isFacing(Facing.LEFT), false)
         }
-
         return spritesComponent
     }
 

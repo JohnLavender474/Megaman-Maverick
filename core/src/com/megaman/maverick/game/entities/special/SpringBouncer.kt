@@ -97,10 +97,8 @@ class SpringBouncer(game: MegamanMaverickGame) :
         val sprite = GameSprite()
         sprite.setSize(SPRITE_DIM * ConstVals.PPM)
         sprite.setOriginCenter()
-
-        val SpritesComponent = SpritesComponent(this, "spring_bouncer" to sprite)
-        SpritesComponent.putUpdateFunction("spring_bouncer") { _, _sprite ->
-            _sprite as GameSprite
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.rotation =
                 when (direction) {
                     Direction.UP -> 0f
@@ -118,8 +116,7 @@ class SpringBouncer(game: MegamanMaverickGame) :
             val bodyPosition = body.getPositionPoint(position)
             sprite.setPosition(bodyPosition, position)
         }
-
-        return SpritesComponent
+        return spritesComponent
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

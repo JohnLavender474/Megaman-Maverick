@@ -1,6 +1,8 @@
 package com.megaman.maverick.game.entities.enemies
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
+import com.badlogic.gdx.utils.Array
 import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
@@ -16,8 +18,11 @@ import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
 import com.engine.damage.IDamager
+import com.engine.drawables.shapes.DrawableShapesComponent
+import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
+import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.Body
@@ -59,9 +64,10 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
 
     private val turnAroundTimer = Timer(TURN_AROUND_DUR)
 
-    private var minX = 0f
-    private var maxX = 0f
-    private var left = false
+    private var min = 0f
+    private var max = 0f
+    private var vertical = false
+    private var switch = false
 
     private val turningAround: Boolean
         get() = !turnAroundTimer.isFinished()
@@ -79,51 +85,87 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        val targetX = spawn.x + spawnProps.get(ConstKeys.VALUE, Float::class)!! * ConstVals.PPM
-        if (spawn.x < targetX) {
-            minX = spawn.x
-            maxX = targetX
-            left = false
+        vertical = spawnProps.getOrDefault(ConstKeys.VERTICAL, false, Boolean::class)
+
+        if (vertical) {
+            val targetY = spawn.y + spawnProps.get(ConstKeys.VALUE, Float::class)!! * ConstVals.PPM
+            if (spawn.y < targetY) {
+                min = spawn.y
+                max = targetY
+                switch = false
+            } else {
+                min = targetY
+                max = spawn.y
+                switch = true
+            }
         } else {
-            minX = targetX
-            maxX = spawn.x
-            left = true
+            val targetX = spawn.x + spawnProps.get(ConstKeys.VALUE, Float::class)!! * ConstVals.PPM
+            if (spawn.x < targetX) {
+                min = spawn.x
+                max = targetX
+                switch = false
+            } else {
+                min = targetX
+                max = spawn.x
+                switch = true
+            }
         }
 
         turnAroundTimer.reset()
-
-        GameLogger.debug(TAG, "Start X: ${spawn.x}. Target X: $targetX. Left: $left")
     }
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.75f * ConstVals.PPM, 1.5f * ConstVals.PPM)
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
+        val debugShapes = Array<() -> IDrawableShape?>()
+
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
         body.addFixture(damagerFixture)
+        damagerFixture.rawShape.color = Color.RED
+        debugShapes.add { damagerFixture.getShape() }
 
-        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setHeight(body.height))
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle())
         body.addFixture(damageableFixture)
+        damageableFixture.rawShape.color = Color.PURPLE
+        debugShapes.add { damageableFixture.getShape() }
 
-        val shieldFixture =
-            Fixture(
-                body,
-                FixtureType.SHIELD,
-                GameRectangle().setSize(0.75f * ConstVals.PPM, 1.25f * ConstVals.PPM),
-            )
+        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle())
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
         body.addFixture(shieldFixture)
+        shieldFixture.rawShape.color = Color.BLUE
+        debugShapes.add { shieldFixture.rawShape }
+
+        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
+            (damagerFixture.rawShape as GameRectangle).set(body)
+
+            if (vertical) {
+                body.setSize(1.5f * ConstVals.PPM, 0.75f * ConstVals.PPM)
+                (damageableFixture.rawShape as GameRectangle).width = body.width
+                (shieldFixture.rawShape as GameRectangle).setSize(1.25f * ConstVals.PPM, 0.75f * ConstVals.PPM)
+            } else {
+                body.setSize(0.75f * ConstVals.PPM, 1.5f * ConstVals.PPM)
+                (damageableFixture.rawShape as GameRectangle).height = body.height
+                (shieldFixture.rawShape as GameRectangle).setSize(0.75f * ConstVals.PPM, 1.25f * ConstVals.PPM)
+            }
+
             val damageableShape = damageableFixture.rawShape as GameRectangle
             if (turningAround) {
                 shieldFixture.active = false
                 damageableFixture.offsetFromBodyCenter.x = 0f
-                damageableShape.width = 0.5f * ConstVals.PPM
+                if (vertical)
+                    damageableShape.height = 0.5f * ConstVals.PPM
+                else damageableShape.width = 0.5f * ConstVals.PPM
             } else {
                 shieldFixture.active = true
-                damageableFixture.offsetFromBodyCenter.x = (if (left) 0.5f else -0.5f) * ConstVals.PPM
-                damageableShape.width = 0.15f * ConstVals.PPM
+                if (vertical) {
+                    damageableFixture.offsetFromBodyCenter.y = (if (switch) 0.5f else -0.5f) * ConstVals.PPM
+                    damageableShape.height = 0.15f * ConstVals.PPM
+                } else {
+                    damageableFixture.offsetFromBodyCenter.x = (if (switch) 0.5f else -0.5f) * ConstVals.PPM
+                    damageableShape.width = 0.15f * ConstVals.PPM
+                }
             }
         })
 
@@ -133,19 +175,36 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            val centerX = body.getCenter().x
-            if (centerX < minX || centerX > maxX) {
-                turnAroundTimer.reset()
-                body.setCenterX(if (centerX < minX) minX else maxX)
-                body.physics.velocity.setZero()
-                left = centerX >= maxX
-            }
+            if (vertical) {
+                val centerY = body.getCenter().y
+                if (centerY < min || centerY > max) {
+                    turnAroundTimer.reset()
+                    body.setCenterY(if (centerY < min) min else max)
+                    body.physics.velocity.setZero()
+                    switch = centerY >= max
+                }
 
-            turnAroundTimer.update(it)
-            if (turnAroundTimer.isJustFinished()) {
-                val x = X_VEL * ConstVals.PPM * (if (left) -1 else 1)
-                body.physics.velocity.x = x
-                GameLogger.debug(TAG, "Turning around. New x vel: $x")
+                turnAroundTimer.update(it)
+                if (turnAroundTimer.isJustFinished()) {
+                    val y = X_VEL * ConstVals.PPM * (if (switch) -1 else 1)
+                    body.physics.velocity.y = y
+                    GameLogger.debug(TAG, "Turning around. New y vel: $y")
+                }
+            } else {
+                val centerX = body.getCenter().x
+                if (centerX < min || centerX > max) {
+                    turnAroundTimer.reset()
+                    body.setCenterX(if (centerX < min) min else max)
+                    body.physics.velocity.setZero()
+                    switch = centerX >= max
+                }
+
+                turnAroundTimer.update(it)
+                if (turnAroundTimer.isJustFinished()) {
+                    val x = X_VEL * ConstVals.PPM * (if (switch) -1 else 1)
+                    body.physics.velocity.x = x
+                    GameLogger.debug(TAG, "Turning around. New x vel: $x")
+                }
             }
         }
     }
@@ -153,23 +212,22 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, "shieldattacker" to sprite)
-        spritesComponent.putUpdateFunction("shieldattacker") { _, _sprite ->
-            _sprite as GameSprite
-            _sprite.setFlip(turningAround != left, false)
-            val center = body.getCenter()
-            _sprite.setCenter(center.x, center.y)
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.setFlip(turningAround != switch, false)
+            _sprite.setCenter(body.getCenter())
+            _sprite.setOriginCenter()
+            _sprite.rotation = if (vertical) 90f else 0f
         }
         return spritesComponent
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String = { if (turningAround) "turn" else "attack" }
-        val animations =
-            objectMapOf<String, IAnimation>(
-                "turn" to Animation(atlas!!.findRegion("ShieldAttacker/TurnAround"), 1, 5, 0.1f, false),
-                "attack" to Animation(atlas!!.findRegion("ShieldAttacker/Attack"), 1, 2, 0.1f, true)
-            )
+        val animations = objectMapOf<String, IAnimation>(
+            "turn" to Animation(atlas!!.findRegion("ShieldAttacker/TurnAround"), 1, 5, 0.1f, false),
+            "attack" to Animation(atlas!!.findRegion("ShieldAttacker/Attack"), 1, 2, 0.1f, true)
+        )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }

@@ -125,9 +125,8 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, "can" to sprite)
-        spritesComponent.putUpdateFunction("can") { _, _sprite ->
-            _sprite as GameSprite
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getCenter(), Position.CENTER)
             if (!spawnDelayTimer.isFinished()) _sprite.hidden = spawnDelayBlink
             else if (spawnDelayTimer.isJustFinished()) _sprite.hidden = if (invincible) damageBlink else false

@@ -85,6 +85,6 @@ class Splash(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity {
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -1))
         sprite.setAlpha(ALPHA)
-        return SpritesComponent(this, "splash" to sprite)
+        return SpritesComponent(this, sprite)
     }
 }

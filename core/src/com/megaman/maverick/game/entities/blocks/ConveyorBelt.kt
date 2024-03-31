@@ -14,7 +14,6 @@ import com.engine.common.shapes.GameRectangle
 import com.engine.drawables.sorting.DrawingPriority
 import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.ISprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.entities.contracts.IDrawableShapesEntity
 import com.engine.entities.contracts.ISpriteEntity
@@ -81,8 +80,8 @@ class ConveyorBelt(game: MegamanMaverickGame) : ISpriteEntity, IDrawableShapesEn
         forceFixture!!.setVelocityAlteration { _, _ -> velocityAlteration }
 
         // sprite and animators
-        val sprites = OrderedMap<String, ISprite>()
-        val animators = Array<Pair<() -> ISprite, IAnimator>>()
+        val sprites = OrderedMap<String, GameSprite>()
+        val animators = Array<Pair<() -> GameSprite, IAnimator>>()
         val numParts = (bounds.width / ConstVals.PPM).toInt()
         for (i in 0 until numParts) {
             val part = if (i == 0) "left" else if (i == numParts - 1) "right" else "middle $i"

@@ -19,6 +19,7 @@ import com.engine.damage.IDamageable
 import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
+import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.IGameEntity
 import com.engine.updatables.UpdatablesComponent
@@ -159,10 +160,8 @@ class SniperJoeShield(game: MegamanMaverickGame) : AbstractProjectile(game), IFa
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(ConstVals.PPM.toFloat())
-
-        val spritesComponent = SpritesComponent(this, TAG to sprite)
-        spritesComponent.putUpdateFunction(TAG) { _, _sprite ->
-            _sprite as GameSprite
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setRegion(
                 when (type) {
                     ORANGE_TYPE -> orangeRegion!!
@@ -170,13 +169,11 @@ class SniperJoeShield(game: MegamanMaverickGame) : AbstractProjectile(game), IFa
                     else -> throw IllegalArgumentException("Invalid type: $type")
                 }
             )
-            val center = body.getCenter()
-            _sprite.setCenter(center.x, center.y)
+            _sprite.setCenter(body.getCenter())
             _sprite.setFlip(facing == Facing.LEFT, false)
             _sprite.setOriginCenter()
             _sprite.rotation = thrownRotations.getCurrent()
         }
-
         return spritesComponent
     }
 }

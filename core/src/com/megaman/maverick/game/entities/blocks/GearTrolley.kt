@@ -60,13 +60,11 @@ class GearTrolley(game: MegamanMaverickGame) : Block(game), IMotionEntity, ISpri
 
         game.eventsMan.addListener(this)
 
-        // define the spawn and bounds
         val spawn = (spawnProps.get(ConstKeys.BOUNDS) as GameRectangle).getCenter()
         val bounds = GameRectangle().setSize(WIDTH * ConstVals.PPM, HEIGHT * ConstVals.PPM)
         bounds.setBottomCenterToPoint(spawn)
         body.set(bounds)
 
-        // define the trajectory
         val trajectory = Trajectory(spawnProps.get(ConstKeys.TRAJECTORY) as String, ConstVals.PPM)
         val motionDefinition = MotionDefinition(motion = trajectory,
             function = { value, _ -> body.physics.velocity.set(value) },
@@ -90,15 +88,12 @@ class GearTrolley(game: MegamanMaverickGame) : Block(game), IMotionEntity, ISpri
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, -1))
         sprite.setSize(1.5f * ConstVals.PPM)
-
-        val SpritesComponent = SpritesComponent(this, "trolley" to sprite)
-        SpritesComponent.putUpdateFunction("trolley") { _, _sprite ->
-            _sprite as GameSprite
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getCenter(), Position.CENTER)
             _sprite.translateY(-ConstVals.PPM / 16f)
         }
-
-        return SpritesComponent
+        return spritesComponent
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

@@ -236,17 +236,12 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game) {
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.25f * ConstVals.PPM)
-
-        val spritesComponent = SpritesComponent(this, "hanibiran" to sprite)
-        spritesComponent.putUpdateFunction("hanibiran") { _, _sprite ->
-            _sprite as GameSprite
-
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
             val position = body.getBottomCenterPoint()
             _sprite.setPosition(position, Position.BOTTOM_CENTER)
-
             _sprite.hidden = state == HanabiranState.SLEEPING
         }
-
         return spritesComponent
     }
 

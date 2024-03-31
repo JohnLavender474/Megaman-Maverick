@@ -16,13 +16,11 @@ import com.engine.common.GameLogger
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.objectSetOf
 import com.engine.common.interfaces.Initializable
-import com.engine.common.objects.MutableArray
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.toGameRectangle
 import com.engine.controller.ControllerSystem
 import com.engine.controller.polling.IControllerPoller
-import com.engine.drawables.IDrawable
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sorting.IComparableDrawable
 import com.engine.drawables.sprites.SpritesSystem
@@ -122,7 +120,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
 
     private lateinit var bossSpawnEventHandler: BossSpawnEventHandler
 
-    private lateinit var drawables: MutableArray<IDrawable<Batch>>
+    private lateinit var drawables: PriorityQueue<IComparableDrawable<Batch>>
     private lateinit var shapes: PriorityQueue<IDrawableShape>
     private lateinit var backgrounds: Array<Background>
 
@@ -558,11 +556,10 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
         batch.projectionMatrix = gameCamera.combined
         tiledMapLevelRenderer?.render(gameCamera)
 
-        drawables.sort()
-        drawables.forEach { it.draw(batch) }
-        drawables.clear()
-
-        // TODO: render foreground
+        while (!drawables.isEmpty()) {
+            val drawable = drawables.poll()
+            drawable.draw(batch)
+        }
 
         // render the ui
         batch.projectionMatrix = uiCamera.combined

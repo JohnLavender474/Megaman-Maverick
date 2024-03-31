@@ -172,9 +172,8 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
-        val SpritesComponent = SpritesComponent(this, "springHead" to sprite)
-        SpritesComponent.putUpdateFunction("springHead") { _, _sprite ->
-            _sprite as GameSprite
+        val SpritesComponent = SpritesComponent(this, sprite)
+        SpritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
             _sprite.setFlip(facing == Facing.LEFT, false)
         }

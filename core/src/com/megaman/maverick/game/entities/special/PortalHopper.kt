@@ -19,6 +19,7 @@ import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
+import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IAnimatedEntity
@@ -198,16 +199,12 @@ class PortalHopper(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, I
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(ConstVals.PPM.toFloat())
-
-        val spritesComponent = SpritesComponent(this, "hopper" to sprite)
-        spritesComponent.putUpdateFunction("hopper") { _, _sprite ->
-            _sprite as GameSprite
-            val center = body.getCenter()
-            _sprite.setCenter(center.x, center.y)
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.setCenter(body.getCenter())
             _sprite.setOriginCenter()
             _sprite.rotation = rotation
         }
-
         return spritesComponent
     }
 

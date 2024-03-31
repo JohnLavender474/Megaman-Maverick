@@ -67,7 +67,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
     )
 
     override lateinit var directionRotation: Direction
-    override var facing = Facing.RIGHT
+    override lateinit var facing: Facing
 
     private val behaviorTimer = Timer(CHANGE_BEHAV_DUR)
     private lateinit var currentBehavior: DragonFlyBehavior
@@ -94,6 +94,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
         currentBehavior = DragonFlyBehavior.MOVE_UP
         previousBehavior = DragonFlyBehavior.MOVE_UP
         behaviorTimer.reset()
+        facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -216,9 +217,8 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, TAG to sprite)
-        spritesComponent.putUpdateFunction(TAG) { _, _sprite ->
-            _sprite as GameSprite
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setOriginCenter()
             _sprite.rotation = directionRotation.rotation
             _sprite.setPosition(body.getCenter(), Position.CENTER)

@@ -135,14 +135,11 @@ class Cart(game: MegamanMaverickGame) : GameEntity(game), IOwnable, IBodyEntity,
     private fun defineSpriteComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(2.45f * ConstVals.PPM, 1.85f * ConstVals.PPM)
-
-        val spritesComponent = SpritesComponent(this, "cart" to sprite)
-        spritesComponent.putUpdateFunction("cart") { _, _sprite ->
-            _sprite as GameSprite
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
             val position = body.getBottomCenterPoint()
             _sprite.setPosition(position, Position.BOTTOM_CENTER)
         }
-
         return spritesComponent
     }
 

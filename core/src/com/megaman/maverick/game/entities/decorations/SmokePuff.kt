@@ -57,7 +57,7 @@ class SmokePuff(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity {
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 3))
         sprite.setSize(ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
-        return SpritesComponent(this, "smoke_puff" to sprite)
+        return SpritesComponent(this, sprite)
     }
 
     private fun defineUpdatablesComponent() =

@@ -16,6 +16,7 @@ import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
+import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
@@ -132,14 +133,10 @@ class CaveRock(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val sprite = GameSprite()
         sprite.setSize(2.5f * ConstVals.PPM)
         sprite.setRegion(rockRegion!!)
-
-        val spritesComponent = SpritesComponent(this, "rock" to sprite)
-        spritesComponent.putUpdateFunction("rock") { _, _sprite ->
-            _sprite as GameSprite
-            val center = body.getCenter()
-            _sprite.setCenter(center.x, center.y)
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.setCenter(body.getCenter())
         }
-
         return spritesComponent
     }
 

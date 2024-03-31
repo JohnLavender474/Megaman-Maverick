@@ -177,15 +177,14 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.35f * ConstVals.PPM)
-        val SpritesComponent = SpritesComponent(this, "screwie" to sprite)
-        SpritesComponent.putUpdateFunction("screwie") { _, _sprite ->
-            _sprite as GameSprite
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
             val position = if (upsideDown) Position.TOP_CENTER else Position.BOTTOM_CENTER
             val bodyPosition = body.getPositionPoint(position)
             _sprite.setPosition(bodyPosition, position)
             _sprite.setFlip(false, upsideDown)
         }
-        return SpritesComponent
+        return spritesComponent
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

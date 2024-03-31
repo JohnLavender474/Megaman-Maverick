@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="650" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="12" nextobjectid="160">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="650" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="12" nextobjectid="162">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/Gravity Man Stage.tsx"/>
  <tileset firstgid="4609" source="../tsx/MM3Wily1.tsx"/>
@@ -237,7 +237,7 @@
   <object id="17" name="Water" x="1216" y="480" width="384" height="128"/>
   <object id="63" name="GravityChange" x="6784" y="256" width="192" height="320">
    <properties>
-    <property name="Direction" value="DOWN"/>
+    <property name="direction" value="down"/>
    </properties>
   </object>
   <object id="73" name="Cart" x="8320" y="544" width="32" height="32"/>
@@ -246,14 +246,14 @@
     <property name="direction" value="up"/>
    </properties>
   </object>
-  <object id="106" name="GravityChange" x="6976" y="256" width="192" height="320">
+  <object id="106" name="GravityChange" x="6984" y="256" width="184" height="320">
    <properties>
-    <property name="Direction" value="UP"/>
+    <property name="direction" value="up"/>
    </properties>
   </object>
-  <object id="107" name="GravityChange" x="6592" y="256" width="192" height="320">
+  <object id="107" name="GravityChange" x="6592" y="256" width="184" height="320">
    <properties>
-    <property name="Direction" value="UP"/>
+    <property name="direction" value="up"/>
    </properties>
   </object>
   <object id="123" name="BlackBackground" x="13896" y="224" width="3384" height="416">
@@ -266,7 +266,7 @@
   <object id="146" name="FlipperPlatform" x="16832" y="512" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="4" name="player">
-  <object id="159" name="0" x="10336" y="544" width="32" height="32"/>
+  <object id="161" name="0" x="12832" y="544" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="8" name="hazards">
   <object id="65" name="SwinginAxe" x="256" y="320" width="32" height="32"/>

@@ -14,6 +14,7 @@ import com.engine.common.shapes.GameRectangle
 import com.engine.damage.IDamageable
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
+import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.IGameEntity
 import com.engine.world.*
@@ -102,14 +103,10 @@ class ElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(ConstVals.PPM.toFloat())
-
-        val spritesComponent = SpritesComponent(this, "electric" to sprite)
-        spritesComponent.putUpdateFunction("electric") { _, _sprite ->
-            _sprite as GameSprite
-            val center = body.getCenter()
-            _sprite.setCenter(center.x, center.y)
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.setCenter(body.getCenter())
         }
-
         return spritesComponent
     }
 

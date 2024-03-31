@@ -152,9 +152,9 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
             game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Bullet")
         val sprite = GameSprite(bulletRegion!!, DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(1.25f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, "bullet" to sprite)
-        spritesComponent.putUpdateFunction("bullet") { _, _sprite ->
-            (_sprite as GameSprite).setPosition(body.getCenter(), Position.CENTER)
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.setPosition(body.getCenter(), Position.CENTER)
             val rotation = if (directionRotation.isVertical()) 0f else 90f
             _sprite.setOriginCenter()
             _sprite.rotation = rotation

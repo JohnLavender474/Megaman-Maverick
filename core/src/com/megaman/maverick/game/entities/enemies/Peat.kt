@@ -18,6 +18,7 @@ import com.engine.damage.IDamager
 import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
+import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.updatables.UpdatablesComponent
@@ -144,11 +145,9 @@ class Peat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, TAG to sprite)
-        spritesComponent.putUpdateFunction(TAG) { _, _sprite ->
-            _sprite as GameSprite
-            val center = body.getCenter()
-            _sprite.setCenter(center.x, center.y)
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.setCenter(body.getCenter())
             _sprite.setFlip(isFacing(Facing.LEFT), false)
         }
         return spritesComponent

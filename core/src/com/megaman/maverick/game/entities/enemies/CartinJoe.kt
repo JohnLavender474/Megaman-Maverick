@@ -214,9 +214,8 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpriteEntity,
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
 
-        val spritesComponent = SpritesComponent(this, "cartin_joe" to sprite)
-        spritesComponent.putUpdateFunction("cartin_joe") { _, _sprite ->
-            _sprite as GameSprite
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
             val position = body.getBottomCenterPoint()
             _sprite.setPosition(position, Position.BOTTOM_CENTER)
             _sprite.setFlip(isFacing(Facing.RIGHT), false)

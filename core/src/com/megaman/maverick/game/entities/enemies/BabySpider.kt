@@ -17,6 +17,7 @@ import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
+import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
 import com.engine.world.Body
 import com.engine.world.BodyComponent
@@ -201,22 +202,9 @@ class BabySpider(game: MegamanMaverickGame) : AbstractEnemy(game) {
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, TAG to sprite)
-        spritesComponent.putUpdateFunction(TAG) { _, _sprite ->
-            _sprite as GameSprite
-            /*
-            val position = when (state) {
-                BabySpiderState.FALLING -> Position.CENTER
-                BabySpiderState.RUNNING_ON_GROUND -> Position.BOTTOM_CENTER
-                BabySpiderState.RUNNING_ON_CEILING -> Position.TOP_CENTER
-                BabySpiderState.SCALING_WALL_LEFT -> Position.CENTER_LEFT
-                BabySpiderState.SCALING_WALL_RIGHT -> Position.CENTER_RIGHT
-            }
-            val bodyPosition = body.getPositionPoint(position)
-            _sprite.setPosition(bodyPosition, position)
-             */
-            val center = body.getCenter()
-            _sprite.setCenter(center.x, center.y)
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.setCenter(body.getCenter())
             _sprite.setOriginCenter()
             val rotation = when (state) {
                 BabySpiderState.FALLING, BabySpiderState.RUNNING_ON_GROUND -> 0f

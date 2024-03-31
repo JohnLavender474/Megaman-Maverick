@@ -177,9 +177,8 @@ class FlipperPlatform(game: MegamanMaverickGame) : GameEntity(game), ISpriteEnti
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(2.6875f * ConstVals.PPM, 1.875f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, TAG to sprite)
-        spritesComponent.putUpdateFunction(TAG) { _, _sprite ->
-            _sprite as GameSprite
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(bounds.getTopCenterPoint(), Position.TOP_CENTER)
         }
         return spritesComponent

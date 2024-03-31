@@ -19,7 +19,6 @@ import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sorting.DrawingPriority
 import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.ISprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
@@ -107,7 +106,7 @@ class Water(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteE
     }
 
     private fun defineDrawables(bounds: GameRectangle) {
-        val sprites = OrderedMap<String, ISprite>()
+        val sprites = OrderedMap<String, GameSprite>()
 
         val waterSprite = GameSprite(waterReg!!, DrawingPriority(DrawingSection.FOREGROUND, 10))
         waterSprite.setBounds(bounds.x, bounds.y, bounds.width, bounds.height)
@@ -117,7 +116,7 @@ class Water(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteE
         val rows = (bounds.height / ConstVals.PPM).toInt()
         val columns = (bounds.width / ConstVals.PPM).toInt()
 
-        val animators = Array<Pair<() -> ISprite, IAnimator>>()
+        val animators = Array<Pair<() -> GameSprite, IAnimator>>()
 
         for (x in 0 until columns) {
             for (y in 0 until rows) {

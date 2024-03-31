@@ -156,9 +156,8 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(2.25f * ConstVals.PPM)
-        val SpritesComponent = SpritesComponent(this, "swingin_joe" to sprite)
-        SpritesComponent.putUpdateFunction("swingin_joe") { _, _sprite ->
-            _sprite as GameSprite
+        val SpritesComponent = SpritesComponent(this, sprite)
+        SpritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
             _sprite.setFlip(facing == Facing.LEFT, false)
             if (facing == Facing.RIGHT) _sprite.translateX(-0.515f * ConstVals.PPM)

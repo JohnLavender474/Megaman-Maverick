@@ -125,14 +125,11 @@ class RocketPlatform(game: MegamanMaverickGame) :
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.BACKGROUND, -1))
         sprite.setSize(4f * ConstVals.PPM)
-
-        val spritesComponent = SpritesComponent(this, "rocket" to sprite)
-        spritesComponent.putUpdateFunction("rocket") { _, _sprite ->
-            _sprite as GameSprite
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getTopCenterPoint(), Position.TOP_CENTER)
             _sprite.translateY(ConstVals.PPM / 16f)
         }
-
         return spritesComponent
     }
 

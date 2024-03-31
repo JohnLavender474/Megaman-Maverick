@@ -99,10 +99,8 @@ class Bolt(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IHazard, 
         val sprite = GameSprite()
         sprite.setSize(ConstVals.PPM.toFloat())
 
-        val spritesComponent = SpritesComponent(this, "bolt" to sprite)
-        spritesComponent.putUpdateFunction("bolt") { _, _sprite ->
-            _sprite as GameSprite
-
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setOriginCenter()
             _sprite.rotation = if (vertical) 0f else 90f
 

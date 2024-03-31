@@ -117,9 +117,9 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
 
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
-        val spritesComponent = SpritesComponent(this, "explosion" to sprite)
-        spritesComponent.putUpdateFunction("explosion") { _, _sprite ->
-            (_sprite as GameSprite).setPosition(body.getCenter(), Position.CENTER)
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.setPosition(body.getCenter(), Position.CENTER)
 
             val rotation =
                 when (direction) {

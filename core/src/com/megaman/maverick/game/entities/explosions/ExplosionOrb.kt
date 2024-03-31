@@ -59,7 +59,7 @@ class ExplosionOrb(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity 
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(3f * ConstVals.PPM)
-        return SpritesComponent(this, "orb" to sprite)
+        return SpritesComponent(this, sprite)
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

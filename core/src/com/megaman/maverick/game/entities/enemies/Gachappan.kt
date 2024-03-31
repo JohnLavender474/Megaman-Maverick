@@ -14,7 +14,6 @@ import com.engine.common.enums.Position
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.objectMapOf
-import com.engine.common.extensions.objectSetOf
 import com.engine.common.interfaces.IFaceable
 import com.engine.common.interfaces.isFacing
 import com.engine.common.objects.Loop
@@ -45,17 +44,16 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.world.*
+import com.megaman.maverick.game.world.BodyComponentCreator
+import com.megaman.maverick.game.world.FixtureType
 import kotlin.reflect.KClass
 
 class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAnimatedEntity, IDrawableShapesEntity {
@@ -86,8 +84,6 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
     )
 
     private lateinit var loop: Loop<Pair<GachappanState, Timer>>
-
-    private var block: Block? = null
 
     override fun init() {
         if (waitRegion == null || shootRegion == null || openRegion == null) {
@@ -127,23 +123,11 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
         body.setBottomCenterToPoint(spawn)
 
         loop.reset()
-
         facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
-
-        block = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.STANDARD) as Block
-        val blockBounds = GameRectangle().setSize(1.5f * ConstVals.PPM, 3f * ConstVals.PPM)
-        val blockProps = props(
-            ConstKeys.BOUNDS to blockBounds,
-            ConstKeys.FIXTURE_LABELS to objectSetOf(FixtureLabel.NO_SIDE_TOUCHIE),
-        )
-        block!!.blockFixture.addFixtureLabel(FixtureLabel.NO_PROJECTILE_COLLISION)
-        game.gameEngine.spawn(block!!, blockProps)
     }
 
     override fun onDestroy() {
         super<AbstractEnemy>.onDestroy()
-        block?.kill()
-        block = null
         if (hasDepletedHealth()) {
             val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
             val props = props(
@@ -158,11 +142,6 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
             facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
-            if (isFacing(Facing.LEFT))
-                block?.body?.setBottomRightToPoint(body.getBottomRightPoint())
-            else
-                block?.body?.setBottomLeftToPoint(body.getBottomLeftPoint())
-
             val (_, timer) = loop.getCurrent()
             timer.update(it)
             if (timer.isFinished()) {
@@ -180,14 +159,14 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
-        bodyFixture.getShape().color = Color.GRAY
+        bodyFixture.rawShape.color = Color.GRAY
         debugShapes.add { bodyFixture.getShape() }
 
         val damagerFixture1 =
             Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(2f * ConstVals.PPM, 1.5f * ConstVals.PPM))
         damagerFixture1.offsetFromBodyCenter.y = -0.5f * ConstVals.PPM
         body.addFixture(damagerFixture1)
-        damagerFixture1.getShape().color = Color.RED
+        damagerFixture1.rawShape.color = Color.RED
         debugShapes.add { damagerFixture1.getShape() }
 
         val damagerFixture2 = Fixture(
@@ -197,28 +176,28 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
         )
         damagerFixture2.offsetFromBodyCenter.y = 0.5f * ConstVals.PPM
         body.addFixture(damagerFixture2)
-        damagerFixture2.getShape().color = Color.RED
+        damagerFixture2.rawShape.color = Color.RED
         debugShapes.add { damagerFixture2.getShape() }
 
         val damageableFixture1 =
             Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.5f * ConstVals.PPM))
         damageableFixture1.offsetFromBodyCenter.y = -0.35f * ConstVals.PPM
         body.addFixture(damageableFixture1)
-        damageableFixture1.getShape().color = Color.PURPLE
+        damageableFixture1.rawShape.color = Color.PURPLE
         debugShapes.add { damageableFixture1.getShape() }
 
         val damageableFixture2 =
             Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.25f * ConstVals.PPM))
         damageableFixture2.offsetFromBodyCenter.y = -1.25f * ConstVals.PPM
         body.addFixture(damageableFixture2)
-        damageableFixture2.getShape().color = Color.PURPLE
+        damageableFixture2.rawShape.color = Color.PURPLE
         debugShapes.add { damageableFixture2.getShape() }
 
         val shieldFixture1 =
             Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(1f * ConstVals.PPM, 3f * ConstVals.PPM))
         shieldFixture1.putProperty(ConstKeys.DIRECTION, Direction.UP)
         body.addFixture(shieldFixture1)
-        shieldFixture1.getShape().color = Color.BLUE
+        shieldFixture1.rawShape.color = Color.BLUE
         debugShapes.add { shieldFixture1.getShape() }
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
@@ -245,9 +224,8 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(3f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, TAG to sprite)
-        spritesComponent.putUpdateFunction(TAG) { _, _sprite ->
-            _sprite as GameSprite
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
             val position = body.getBottomCenterPoint()
             _sprite.setPosition(position, Position.BOTTOM_CENTER)
             _sprite.setFlip(isFacing(Facing.LEFT), false)

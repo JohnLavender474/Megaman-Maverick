@@ -134,14 +134,13 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.25f * ConstVals.PPM)
-        val SpritesComponent = SpritesComponent(this, "fireball" to sprite)
-        SpritesComponent.putUpdateFunction("fireball") { delta, _sprite ->
-            _sprite as GameSprite
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { delta, _sprite ->
             val position = body.getBottomCenterPoint()
             _sprite.setPosition(position, Position.BOTTOM_CENTER)
             sprite.rotation = if (burst) 0f else ROTATION * delta
         }
-        return SpritesComponent
+        return spritesComponent
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

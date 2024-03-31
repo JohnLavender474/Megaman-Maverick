@@ -10,6 +10,7 @@ import com.engine.common.shapes.GameRectangle
 import com.engine.damage.IDamageable
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
+import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.IGameEntity
 import com.engine.world.*
@@ -116,14 +117,10 @@ class Snowball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val sprite = GameSprite()
         sprite.setSize(0.85f * ConstVals.PPM)
         sprite.setRegion(region!!)
-
-        val spritesComponent = SpritesComponent(this, "snowball" to sprite)
-        spritesComponent.putUpdateFunction("snowball") { _, _sprite ->
-            _sprite as GameSprite
-            val center = body.getCenter()
-            _sprite.setCenter(center.x, center.y)
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.setCenter(body.getCenter())
         }
-
         return spritesComponent
     }
 }

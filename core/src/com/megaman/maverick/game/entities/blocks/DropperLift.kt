@@ -116,9 +116,8 @@ class DropperLift(game: MegamanMaverickGame) : Block(game), ISpriteEntity, IAnim
         val sprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, -1))
         sprite.setSize(ConstVals.PPM * 1.5f, ConstVals.PPM.toFloat())
 
-        val spritesComponent = SpritesComponent(this, "dropperLift" to sprite)
-        spritesComponent.putUpdateFunction("dropperLift") { _, _sprite ->
-            _sprite as GameSprite
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getTopCenterPoint(), Position.TOP_CENTER)
         }
 

@@ -14,6 +14,7 @@ import com.engine.common.time.Timer
 import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
+import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
@@ -97,13 +98,12 @@ class SwinginAxe(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity, I
         val sprite = GameSprite()
         sprite.setSize(8f * ConstVals.PPM)
         sprite.setRegion(textureRegion!!)
-        val spritesComponent = SpritesComponent(this, "axe" to sprite)
-        spritesComponent.putUpdateFunction("axe") { delta, _sprite ->
-            _sprite as GameSprite
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { delta, _sprite ->
             val center = pendulum.anchor
-            _sprite.setCenter(center.x, center.y)
+            _sprite.setCenter(center)
             _sprite.setOriginCenter()
-            _sprite.setFlip(flipX = false, flipY = true)
+            _sprite.setFlip(false, true)
             if (DEBUG_SWING_ROTATION) {
                 debugSwingRotationTimer.update(delta)
                 if (debugSwingRotationTimer.isFinished()) {

@@ -212,11 +212,10 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceab
 
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
-        val spritesComponent = SpritesComponent(this, "shot" to sprite)
-        spritesComponent.putUpdateFunction("shot") { _, _sprite ->
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setFlip(isFacing(Facing.LEFT), false)
-
-            (_sprite as GameSprite).setPosition(body.getCenter(), Position.CENTER)
+            _sprite.setPosition(body.getCenter(), Position.CENTER)
 
             val rotation =
                 when (directionRotation) {

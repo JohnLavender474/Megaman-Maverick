@@ -25,6 +25,7 @@ import com.engine.drawables.sorting.DrawingPriority
 import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
+import com.engine.drawables.sprites.setCenter
 import com.engine.entities.IGameEntity
 import com.engine.events.Event
 import com.engine.events.IEventListener
@@ -97,7 +98,7 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IEventLis
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
 
-        body.setSize(0.75f * ConstVals.PPM)
+        body.setSize(0.5f * ConstVals.PPM)
         val spawn = if (spawnProps.containsKey(ConstKeys.POSITION)) spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         else spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
@@ -187,12 +188,10 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IEventLis
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 5))
-        val spritesComponent = SpritesComponent(this, TAG to sprite)
-        spritesComponent.putUpdateFunction(TAG) { _, _sprite ->
-            _sprite as GameSprite
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setSize(body.width, body.height)
-            val center = body.getCenter()
-            _sprite.setCenter(center.x, center.y)
+            _sprite.setCenter(body.getCenter())
             _sprite.setFlip(isFacing(Facing.LEFT), false)
         }
         return spritesComponent

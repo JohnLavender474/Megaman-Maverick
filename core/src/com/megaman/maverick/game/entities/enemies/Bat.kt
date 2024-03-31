@@ -175,9 +175,8 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
 
-        val SpritesComponent = SpritesComponent(this, "bat" to sprite)
-        SpritesComponent.putUpdateFunction("bat") { _, _sprite ->
-            _sprite as GameSprite
+        val SpritesComponent = SpritesComponent(this, sprite)
+        SpritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getCenter(), Position.CENTER)
         }
         return SpritesComponent

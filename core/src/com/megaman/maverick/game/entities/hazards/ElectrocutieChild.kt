@@ -20,6 +20,7 @@ import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
+import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
@@ -134,10 +135,8 @@ class ElectrocutieChild(game: MegamanMaverickGame) : GameEntity(game), IHazard, 
         val sprite = GameSprite()
         sprite.setSize(1.25f * ConstVals.PPM)
 
-        val spritesComponent = SpritesComponent(this, "electrocutie" to sprite)
-        spritesComponent.putUpdateFunction("electrocutie") { _, _sprite ->
-            _sprite as GameSprite
-
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setOriginCenter()
             _sprite.rotation = direction.rotation
 
@@ -148,7 +147,7 @@ class ElectrocutieChild(game: MegamanMaverickGame) : GameEntity(game), IHazard, 
                 Direction.RIGHT -> Position.CENTER_LEFT
             }
             val bodyPosition = body.getPositionPoint(position)
-            _sprite.setCenter(bodyPosition.x, bodyPosition.y)
+            _sprite.setCenter(bodyPosition)
 
             val offset = when (direction) {
                 Direction.UP -> Vector2(0f, 0.15f * ConstVals.PPM)

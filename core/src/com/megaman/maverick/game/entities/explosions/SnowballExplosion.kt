@@ -16,6 +16,7 @@ import com.engine.damage.IDamageable
 import com.engine.damage.IDamager
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
+import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
@@ -52,7 +53,6 @@ class SnowballExplosion(game: MegamanMaverickGame) : GameEntity(game), IBodyEnti
         addComponent(defineUpdatablesComponent())
     }
 
-    @Suppress("UNCHECKED_CAST")
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
@@ -82,14 +82,10 @@ class SnowballExplosion(game: MegamanMaverickGame) : GameEntity(game), IBodyEnti
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(2.5f * ConstVals.PPM)
-
-        val spriteComponent = SpritesComponent(this, "snowballExplosion" to sprite)
-        spriteComponent.putUpdateFunction("snowballExplosion") { _, _sprite ->
-            _sprite as GameSprite
-            val center = body.getCenter()
-            _sprite.setCenter(center.x, center.y)
+        val spriteComponent = SpritesComponent(this, sprite)
+        spriteComponent.putUpdateFunction { _, _sprite ->
+            _sprite.setCenter(body.getCenter())
         }
-
         return spriteComponent
     }
 

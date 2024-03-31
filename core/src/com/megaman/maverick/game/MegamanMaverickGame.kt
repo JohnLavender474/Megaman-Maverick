@@ -24,18 +24,17 @@ import com.engine.common.GameLogLevel
 import com.engine.common.GameLogger
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.extensions.objectSetOf
-import com.engine.common.objects.MutableArray
 import com.engine.controller.ControllerSystem
 import com.engine.controller.ControllerUtils
 import com.engine.controller.buttons.Button
 import com.engine.controller.buttons.Buttons
 import com.engine.controller.polling.IControllerPoller
 import com.engine.cullables.CullablesSystem
-import com.engine.drawables.IDrawable
 import com.engine.drawables.fonts.BitmapFontHandle
 import com.engine.drawables.fonts.FontsSystem
 import com.engine.drawables.shapes.DrawableShapesSystem
 import com.engine.drawables.shapes.IDrawableShape
+import com.engine.drawables.sorting.IComparableDrawable
 import com.engine.drawables.sprites.SpritesSystem
 import com.engine.events.EventsManager
 import com.engine.graph.IGraphMap
@@ -71,7 +70,6 @@ import com.megaman.maverick.game.world.MegaContactListener
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-@Suppress("UNCHECKED_CAST")
 class MegamanMaverickGame : Game2D() {
 
     companion object {
@@ -105,7 +103,7 @@ class MegamanMaverickGame : Game2D() {
 
     fun getUiCamera() = viewports.get(ConstKeys.UI).camera as OrthographicCamera
 
-    fun getDrawables() = properties.get(ConstKeys.DRAWABLES) as MutableArray<IDrawable<Batch>>
+    fun getDrawables() = properties.get(ConstKeys.DRAWABLES) as PriorityQueue<IComparableDrawable<Batch>>
 
     fun getShapes() = properties.get(ConstKeys.SHAPES) as PriorityQueue<IDrawableShape>
 
@@ -166,13 +164,13 @@ class MegamanMaverickGame : Game2D() {
         screens.put(ScreenEnum.SIMPLE_END_LEVEL_SUCCESSFULLY.name, SimpleEndLevelScreen(this))
         screens.put(ScreenEnum.SIMPLE_INIT_GAME.name, SimpleInitGameScreen(this))
 
-        startLevelScreen(Level.TEST1)
+        // startLevelScreen(Level.TEST1)
         // startLevelScreen(Level.TEST2)
         // startLevelScreen(Level.TEST3)
         // startLevelScreen(Level.TEST4)
         // startLevelScreen(Level.TEST5)
         // startLevelScreen(Level.TEST6)
-        // startLevelScreen(Level.TEST7)
+        startLevelScreen(Level.TEST7)
         // setCurrentScreen(ScreenEnum.MAIN.name)
         // startLevelScreen(Level.TIMBER_WOMAN)
         // startLevelScreen(Level.RODENT_MAN)
@@ -233,7 +231,7 @@ class MegamanMaverickGame : Game2D() {
     }
 
     private fun createGameEngine(): IGameEngine {
-        val drawables = MutableArray<IDrawable<Batch>>()
+        val drawables = PriorityQueue<IComparableDrawable<Batch>>()
         properties.put(ConstKeys.DRAWABLES, drawables)
         val shapes = PriorityQueue<IDrawableShape> { s1, s2 -> s1.shapeType.ordinal - s2.shapeType.ordinal }
         properties.put(ConstKeys.SHAPES, shapes)
@@ -278,9 +276,9 @@ class MegamanMaverickGame : Game2D() {
             ),
             PointsSystem(),
             UpdatablesSystem(),
-            FontsSystem { drawables },
-            SpritesSystem { drawables },
-            DrawableShapesSystem({ shapes }, DEBUG_SHAPES),
+            FontsSystem { drawables.add(it) },
+            SpritesSystem { drawables.add(it) },
+            DrawableShapesSystem({ shapes.add(it) }, DEBUG_SHAPES),
             AudioSystem({ audioMan.playSound(it.source, it.loop) },
                 { audioMan.playMusic(it.source, it.loop) },
                 { audioMan.stopSound(it) },

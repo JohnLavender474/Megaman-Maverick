@@ -93,10 +93,8 @@ class HeartTank(game: MegamanMaverickGame) :
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
-        val SpritesComponent = SpritesComponent(this, "heart" to sprite)
-        SpritesComponent.putUpdateFunction("heart") { _, _sprite ->
-            _sprite as GameSprite
-
+        val SpritesComponent = SpritesComponent(this, sprite)
+        SpritesComponent.putUpdateFunction { _, _sprite ->
             val position = if (upsideDown) Position.TOP_CENTER else Position.BOTTOM_CENTER
             val bodyPosition = body.getPositionPoint(position)
             _sprite.setPosition(bodyPosition, position)

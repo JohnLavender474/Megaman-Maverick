@@ -12,6 +12,7 @@ import com.engine.drawables.sorting.DrawingPriority
 import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
+import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.contracts.ISpriteEntity
 import com.engine.updatables.UpdatablesComponent
@@ -148,13 +149,11 @@ class Lift(game: MegamanMaverickGame) : Block(game), ISpriteEntity, IDirectionRo
         val sprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, -1))
         sprite.setSize(0.75f * ConstVals.PPM)
         sprite.setRegion(region!!)
-        val spritesComponent = SpritesComponent(this, TAG to sprite)
-        spritesComponent.putUpdateFunction(TAG) { _, _sprite ->
-            _sprite as GameSprite
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setOriginCenter()
             _sprite.rotation = directionRotation.rotation
-            val center = body.getCenter()
-            _sprite.setCenter(center.x, center.y)
+            _sprite.setCenter(body.getCenter())
         }
         return spritesComponent
     }

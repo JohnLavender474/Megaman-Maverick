@@ -177,10 +177,8 @@ class HealthBulb(game: MegamanMaverickGame) :
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
 
-        val SpritesComponent = SpritesComponent(this, "healthBulb" to sprite)
-        SpritesComponent.putUpdateFunction("healthBulb") { _, _sprite ->
-            _sprite as GameSprite
-
+        val SpritesComponent = SpritesComponent(this, sprite)
+        SpritesComponent.putUpdateFunction { _, _sprite ->
             val position = if (upsideDown) Position.TOP_CENTER else Position.BOTTOM_CENTER
             val bodyPosition = body.getPositionPoint(position)
             _sprite.setPosition(bodyPosition, position)

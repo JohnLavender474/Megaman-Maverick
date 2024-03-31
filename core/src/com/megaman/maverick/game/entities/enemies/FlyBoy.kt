@@ -140,9 +140,8 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(ConstVals.PPM * 2.25f, ConstVals.PPM * 1.85f)
-        val SpritesComponent = SpritesComponent(this, "flyboy" to sprite)
-        SpritesComponent.putUpdateFunction("flyboy") { _, _sprite ->
-            _sprite as GameSprite
+        val SpritesComponent = SpritesComponent(this, sprite)
+        SpritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
             _sprite.setFlip(facing == Facing.LEFT, false)
         }

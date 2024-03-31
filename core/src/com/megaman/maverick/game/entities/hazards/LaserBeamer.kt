@@ -173,14 +173,11 @@ class LaserBeamer(game: MegamanMaverickGame) :
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
         sprite.setRegion(region!!)
-
-        val spritesComponent = SpritesComponent(this, "beamer" to sprite)
-        spritesComponent.putUpdateFunction("beamer") { _, _sprite ->
-            _sprite as GameSprite
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(rotatingLine.getOrigin(), Position.BOTTOM_CENTER)
             _sprite.translateY(-0.06f * ConstVals.PPM)
         }
-
         return spritesComponent
     }
 

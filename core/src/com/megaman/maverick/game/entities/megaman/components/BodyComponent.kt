@@ -94,13 +94,6 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     waterListenerFixture.rawShape.color = Color.PURPLE
 
     body.preProcess.put(ConstKeys.DEFAULT, Updatable {
-        /*
-        GameLogger.debug(
-            MEGAMAN_BODY_COMPONENT_TAG,
-            "feet.rawShape = ${feetFixture.rawShape} ; feet.shape = ${feetFixture.getShape()}"
-        )
-         */
-
         val wallSlidingOnIce =
             isBehaviorActive(BehaviorType.WALL_SLIDING) &&
                     (body.isSensingAny(BodySense.SIDE_TOUCHING_ICE_LEFT, BodySense.SIDE_TOUCHING_ICE_RIGHT))

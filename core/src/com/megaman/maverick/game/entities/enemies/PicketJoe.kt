@@ -28,6 +28,7 @@ import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
+import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.Body
@@ -183,12 +184,10 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.35f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, "picket_joe" to sprite)
-        spritesComponent.putUpdateFunction("picket_joe") { _, _sprite ->
-            _sprite as GameSprite
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setFlip(isFacing(Facing.LEFT), false)
-            val center = body.getCenter()
-            _sprite.setCenter(center.x, center.y)
+            _sprite.setCenter(body.getCenter())
             _sprite.hidden = if (invincible) damageBlink else false
         }
         return spritesComponent

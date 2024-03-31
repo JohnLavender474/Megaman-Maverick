@@ -134,7 +134,7 @@ internal fun Megaman.defineAnimationsComponent(): AnimationsComponent {
     }
 
     val animator = Animator(keySupplier, animations)
-    return AnimationsComponent(this, { sprites.get("player") }, animator)
+    return AnimationsComponent(this, { firstSprite!! }, animator)
 }
 
 private val animationKeys = gdxArrayOf(

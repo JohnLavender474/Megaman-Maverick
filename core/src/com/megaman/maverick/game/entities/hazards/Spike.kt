@@ -107,10 +107,8 @@ class Spike(game: MegamanMaverickGame) :
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
         sprite.setSize(ConstVals.PPM.toFloat())
 
-        val spriteComponent = SpritesComponent(this, "spike" to sprite)
-        spriteComponent.putUpdateFunction("spike") { _, _sprite ->
-            _sprite as GameSprite
-
+        val spriteComponent = SpritesComponent(this, sprite)
+        spriteComponent.putUpdateFunction { _, _sprite ->
             _sprite.rotation = spriteRotation
 
             val position = body.getPositionPoint(spritePosition)

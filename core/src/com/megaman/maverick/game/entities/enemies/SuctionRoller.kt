@@ -192,10 +192,8 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
         sprite.setOriginCenter()
-
-        val SpritesComponent = SpritesComponent(this, "suctionRoller" to sprite)
-        SpritesComponent.putUpdateFunction("suctionRoller") { _, _sprite ->
-            _sprite as GameSprite
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setFlip(facing == Facing.RIGHT, false)
 
             val position =
@@ -216,7 +214,7 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
                     if (facing == Facing.LEFT) -90f else 90f
                 } else 0f
         }
-        return SpritesComponent
+        return spritesComponent
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

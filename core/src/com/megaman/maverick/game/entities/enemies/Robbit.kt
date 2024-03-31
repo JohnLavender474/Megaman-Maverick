@@ -163,14 +163,11 @@ class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(4f * ConstVals.PPM, 3.5f * ConstVals.PPM)
-
-        val spritesComponent = SpritesComponent(this, "robbit" to sprite)
-        spritesComponent.putUpdateFunction("robbit") { _, _sprite ->
-            _sprite as GameSprite
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
             _sprite.setFlip(isFacing(Facing.LEFT), false)
         }
-
         return spritesComponent
     }
 

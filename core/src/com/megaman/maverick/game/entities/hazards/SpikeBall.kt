@@ -16,6 +16,7 @@ import com.engine.drawables.sorting.DrawingPriority
 import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
+import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
@@ -61,10 +62,11 @@ class SpikeBall(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpr
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
-        val length = spawnProps.get(ConstKeys.LENGTH, Int::class)!!
+        val length = spawnProps.get(ConstKeys.LENGTH, Float::class)!!
+        val gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, PENDULUM_GRAVITY, Float::class)
         val pendulum =
             Pendulum(
-                length.toFloat() * ConstVals.PPM, PENDULUM_GRAVITY * ConstVals.PPM, spawn, 1 / 60f
+                length * ConstVals.PPM, gravity * ConstVals.PPM, spawn, 1 / 60f
             )
         putMotionDefinition(
             ConstKeys.PENDULUM,
@@ -82,12 +84,12 @@ class SpikeBall(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpr
 
             val key = "chain_$tempIndex"
             sprites.put(key, chainSprite)
+
             val chainDistance = tempDistance * ConstVals.PPM
+
             putUpdateFunction(key) { _, _sprite ->
-                _sprite as GameSprite
                 val center = pendulum.getPointFromAnchor(chainDistance)
-                GameLogger.debug(TAG, "$key center: $center")
-                _sprite.setCenter(center.x, center.y)
+                _sprite.setCenter(center)
             }
 
             tempDistance += 0.25f
@@ -129,12 +131,9 @@ class SpikeBall(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpr
         val spikeSprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
         spikeSprite.setSize(2f * ConstVals.PPM)
         spikeSprite.setRegion(spikeRegion!!)
-        val spritesComponent = SpritesComponent(this, TAG to spikeSprite)
-        spritesComponent.putUpdateFunction(TAG) { _, _sprite ->
-            _sprite as GameSprite
-            val center = body.getCenter()
-            GameLogger.debug(TAG, "Spike ball center: $center")
-            _sprite.setCenter(center.x, center.y)
+        val spritesComponent = SpritesComponent(this, spikeSprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.setCenter(body.getCenter())
         }
         return spritesComponent
     }

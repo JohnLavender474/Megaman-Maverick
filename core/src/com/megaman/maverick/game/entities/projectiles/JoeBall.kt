@@ -16,6 +16,7 @@ import com.engine.common.shapes.GameRectangle
 import com.engine.damage.IDamageable
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
+import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.IGameEntity
 import com.engine.world.*
@@ -129,14 +130,12 @@ class JoeBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.25f * ConstVals.PPM)
-        val SpritesComponent = SpritesComponent(this, "joeBall" to sprite)
-        SpritesComponent.putUpdateFunction("joeBall") { _, _sprite ->
-            _sprite as GameSprite
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setFlip(trajectory.x < 0f, false)
-            val center = body.getCenter()
-            _sprite.setCenter(center.x, center.y)
+            _sprite.setCenter(body.getCenter())
         }
-        return SpritesComponent
+        return spritesComponent
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

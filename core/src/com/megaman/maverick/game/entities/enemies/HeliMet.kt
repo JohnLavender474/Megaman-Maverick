@@ -8,6 +8,7 @@ import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
+import com.engine.common.enums.Direction
 import com.engine.common.enums.Facing
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.objectMapOf
@@ -26,6 +27,7 @@ import com.engine.drawables.sorting.DrawingPriority
 import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
+import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.updatables.UpdatablesComponent
@@ -41,6 +43,7 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.enemies.HeliMet.HeliMetState.*
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -52,7 +55,7 @@ import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import kotlin.reflect.KClass
 
-class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
+class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDirectionRotatable, IFaceable {
 
     enum class HeliMetState {
         SHIELD,
@@ -81,6 +84,7 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         ChargedShotExplosion::class to dmgNeg(ConstVals.MAX_HEALTH)
     )
 
+    override lateinit var directionRotation: Direction
     override lateinit var facing: Facing
 
     private val popUpTimer = Timer(POP_UP_DUR)
@@ -103,6 +107,7 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
+
         if (spawnProps.containsKey(ConstKeys.POSITION)) {
             val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
             body.setCenter(spawn)
@@ -119,7 +124,21 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
             val megamanCenter = megaman.body.getCenter()
             target = if (target1.dst2(megamanCenter) < target2.dst2(megamanCenter)) target1 else target2
         }
-        facing = if (target.x < body.x) Facing.LEFT else Facing.RIGHT
+
+        val direction = spawnProps.get(ConstKeys.DIRECTION)
+        directionRotation = when (direction) {
+            null -> Direction.UP
+            is String -> Direction.valueOf(direction.uppercase())
+            else -> direction as Direction
+        }
+
+        facing = when (directionRotation) {
+            Direction.UP -> if (target.x < body.x) Facing.LEFT else Facing.RIGHT
+            Direction.DOWN -> if (target.x < body.x) Facing.RIGHT else Facing.LEFT
+            Direction.LEFT -> if (target.y < body.y) Facing.LEFT else Facing.RIGHT
+            Direction.RIGHT -> if (target.y < body.y) Facing.RIGHT else Facing.LEFT
+        }
+
         state = SHIELD
         popUpTimer.reset()
         shootDelayTimer.reset()
@@ -146,10 +165,37 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
                 }
 
                 FLY -> {
-                    facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
+                    facing = when (directionRotation) {
+                        Direction.UP -> if (target.x < body.x) Facing.LEFT else Facing.RIGHT
+                        Direction.DOWN -> if (target.x < body.x) Facing.RIGHT else Facing.LEFT
+                        Direction.LEFT -> if (target.y < body.y) Facing.LEFT else Facing.RIGHT
+                        Direction.RIGHT -> if (target.y < body.y) Facing.RIGHT else Facing.LEFT
+                    }
+
                     sideToSideTimer.update(delta)
-                    val velocityX = SIDE_TO_SIDE_VEL * ConstVals.PPM * sideToSideTimer.getValue()
-                    body.physics.velocity.x = velocityX
+
+                    when (directionRotation) {
+                        Direction.UP -> {
+                            val velocityX = SIDE_TO_SIDE_VEL * ConstVals.PPM * sideToSideTimer.getValue()
+                            body.physics.velocity.x = velocityX
+                        }
+
+                        Direction.DOWN -> {
+                            val velocityX = SIDE_TO_SIDE_VEL * ConstVals.PPM * sideToSideTimer.getValue()
+                            body.physics.velocity.x = -velocityX
+                        }
+
+                        Direction.LEFT -> {
+                            val velocityY = SIDE_TO_SIDE_VEL * ConstVals.PPM * sideToSideTimer.getValue()
+                            body.physics.velocity.y = -velocityY
+                        }
+
+                        Direction.RIGHT -> {
+                            val velocityY = SIDE_TO_SIDE_VEL * ConstVals.PPM * sideToSideTimer.getValue()
+                            body.physics.velocity.y = velocityY
+                        }
+                    }
+
                     shootDelayTimer.update(delta)
                     if (shootDelayTimer.isFinished()) {
                         shoot()
@@ -192,16 +238,18 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 4))
         sprite.setSize(1.5f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, TAG to sprite)
-        spritesComponent.putUpdateFunction(TAG) { delta, _sprite ->
-            _sprite as GameSprite
-            val center = body.getCenter()
-            _sprite.setCenter(center.x, center.y)
-            _sprite.setFlip(isFacing(Facing.LEFT), false)
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { delta, _sprite ->
+            _sprite.setCenter(body.getCenter())
+
+            if (directionRotation.isVertical())
+                _sprite.setFlip(isFacing(Facing.LEFT), false)
+            else _sprite.setFlip(false, isFacing(Facing.LEFT))
+
             _sprite.setOriginCenter()
             val rotation = if (state == SHIELD)
                 _sprite.rotation + (SHIELD_ROTATION_PER_SECOND * delta)
-            else 0f
+            else directionRotation.rotation
             _sprite.setRotation(rotation)
         }
         return spritesComponent
@@ -226,7 +274,27 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
     private fun shoot() {
         val trajectory = megaman.body.getCenter().sub(body.getCenter()).nor().scl(BULLET_VELOCITY * ConstVals.PPM)
-        val spawn = body.getCenter().add((ConstVals.PPM / 64f) * facing.value, -0.25f * ConstVals.PPM)
+        val spawn = when (directionRotation) {
+            Direction.UP -> body.getCenter()
+                .add(
+                    (ConstVals.PPM / 64f) * facing.value, -0.25f * ConstVals.PPM
+                )
+
+            Direction.DOWN -> body.getCenter()
+                .add(
+                    (ConstVals.PPM / 64f) * facing.value, 0.25f * ConstVals.PPM
+                )
+
+            Direction.LEFT -> body.getCenter()
+                .add(
+                    -0.25f * ConstVals.PPM, (ConstVals.PPM / 64f) * facing.value
+                )
+
+            Direction.RIGHT -> body.getCenter()
+                .add(
+                    0.25f * ConstVals.PPM, (ConstVals.PPM / 64f) * facing.value
+                )
+        }
         val spawnProps =
             props(
                 ConstKeys.OWNER to this,

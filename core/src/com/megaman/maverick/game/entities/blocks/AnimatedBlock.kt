@@ -16,6 +16,7 @@ import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
+import com.engine.drawables.sprites.setCenter
 import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.entities.contracts.ISpriteEntity
 import com.engine.updatables.UpdatablesComponent
@@ -76,12 +77,10 @@ open class AnimatedBlock(game: MegamanMaverickGame) : Block(game), ISpriteEntity
 
     protected open fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        val spritesComponent = SpritesComponent(this, "block" to sprite)
-        spritesComponent.putUpdateFunction("block") { _, _sprite ->
-            _sprite as GameSprite
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setSize(spriteSize.x, spriteSize.y)
-            val center = body.getCenter()
-            _sprite.setCenter(center.x, center.y)
+            _sprite.setCenter(body.getCenter())
             _sprite.hidden = hidden
         }
         return spritesComponent
@@ -120,6 +119,6 @@ object AnimatedBlockAnimators {
         }
 
         val animator = Animator(animation)
-        animators.add({ animatedBlock.sprites.get("block") } to animator)
+        animators.add({ animatedBlock.firstSprite!! } to animator)
     }
 }
