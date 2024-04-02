@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="500" height="150" tilewidth="32" tileheight="32" infinite="0" nextlayerid="16" nextobjectid="252">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="500" height="150" tilewidth="32" tileheight="32" infinite="0" nextlayerid="16" nextobjectid="253">
  <tileset firstgid="1" source="../tsx/mm9endless.tsx"/>
  <tileset firstgid="323" source="../tsx/mm9galaxy.tsx"/>
  <tileset firstgid="395" source="../tsx/mm9magma.tsx"/>
@@ -318,6 +318,11 @@
   </object>
   <object id="202" name="target_1" x="2960" y="4360" width="32" height="32"/>
   <object id="203" name="target_2" x="2960" y="4440" width="32" height="32"/>
+  <object id="252" name="SigmaRat" x="6352" y="4464" width="32" height="32">
+   <properties>
+    <property name="music" value=""/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="8" name="enemies">
   <object id="37" name="Bat" x="896" y="4448" width="32" height="32"/>
@@ -370,7 +375,12 @@
   <object id="51" name="room2" x="2208" y="3264" width="512" height="1536"/>
   <object id="127" name="room3" x="2720" y="3264" width="512" height="1536"/>
   <object id="209" name="room4" x="3232" y="4416" width="2368" height="384"/>
-  <object id="236" name="boss_room" x="6112" y="4416" width="512" height="384"/>
+  <object id="236" name="boss_room" x="6112" y="4416" width="512" height="384">
+   <properties>
+    <property name="event" value="boss"/>
+    <property name="object" type="object" value="252"/>
+   </properties>
+  </object>
   <object id="237" name="room5" x="5600" y="4416" width="512" height="384"/>
  </objectgroup>
  <layer id="15" name="tiles3" width="500" height="150">

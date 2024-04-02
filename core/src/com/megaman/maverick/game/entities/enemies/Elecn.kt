@@ -106,7 +106,7 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         body.setCenter(spawn)
         elecnLoop.reset()
         elecnTimer.reset()
-        facing = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, "LEFT", String::class))
+        facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {

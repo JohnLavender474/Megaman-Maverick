@@ -182,6 +182,8 @@
             <key type="filename">../frames/Bosses/Distributor Man/JustLand.png</key>
             <key type="filename">../frames/Bosses/Distributor Man/Shock.png</key>
             <key type="filename">../frames/Bosses/Distributor Man/Stand.png</key>
+            <key type="filename">../frames/Bosses/Sigma Rat/ElectricBall.png</key>
+            <key type="filename">../frames/Bosses/Sigma Rat/ElectricPulse.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -199,6 +201,7 @@
             <key type="filename">../frames/Bosses/Blunt Man/Jump.png</key>
             <key type="filename">../frames/Bosses/Blunt Man/Slide.png</key>
             <key type="filename">../frames/Bosses/Distributor Man/Jump.png</key>
+            <key type="filename">../frames/Bosses/Sigma Rat/ElectricBallDissipate.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -444,7 +447,9 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses/Sigma Rat/Claw.png</key>
+            <key type="filename">../frames/Bosses/Sigma Rat/Body.png</key>
+            <key type="filename">../frames/Bosses/Sigma Rat/BodyDamaged.png</key>
+            <key type="filename">../frames/Bosses/Sigma Rat/BodyTittyShootDamaged.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -453,9 +458,85 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>36,18,72,36</rect>
+                <rect>74,37,148,74</rect>
                 <key>scale9Paddings</key>
-                <rect>36,18,72,36</rect>
+                <rect>74,37,148,74</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses/Sigma Rat/BodyTittyShoot.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>37,37,74,74</rect>
+                <key>scale9Paddings</key>
+                <rect>37,37,74,74</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses/Sigma Rat/ClawClosed.png</key>
+            <key type="filename">../frames/Bosses/Sigma Rat/ClawOpen.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>6,6,12,12</rect>
+                <key>scale9Paddings</key>
+                <rect>6,6,12,12</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses/Sigma Rat/ClawFlash.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,6,24,12</rect>
+                <key>scale9Paddings</key>
+                <rect>12,6,24,12</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses/Sigma Rat/ElectricBallForm.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>24,8,48,16</rect>
+                <key>scale9Paddings</key>
+                <rect>24,8,48,16</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses/Sigma Rat/ElectricDissipate.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,4,24,8</rect>
+                <key>scale9Paddings</key>
+                <rect>12,4,24,8</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
