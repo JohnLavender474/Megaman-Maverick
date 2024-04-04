@@ -82,10 +82,6 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         body.physics.velocity.y = Y_BOUNCE * ConstVals.PPM
     }
 
-    override fun canDamage(damageable: IDamageable): Boolean {
-        TODO("Not yet implemented")
-    }
-
     override fun onDamageInflictedTo(damageable: IDamageable) {
         super.onDamageInflictedTo(damageable)
         explodeAndDie()
@@ -112,7 +108,7 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         kill(props(CAUSE_OF_DEATH_MESSAGE to "Hit water"))
         val smokePuff = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SMOKE_PUFF)!!
         val spawn = Vector2(body.getCenter().x, waterFixture.getShape().getMaxY())
-        game.gameEngine.spawn(smokePuff, props(ConstKeys.POSITION to spawn))
+        game.engine.spawn(smokePuff, props(ConstKeys.POSITION to spawn))
         getMegamanMaverickGame().audioMan.playSound(SoundAsset.WHOOSH_SOUND, false)
     }
 

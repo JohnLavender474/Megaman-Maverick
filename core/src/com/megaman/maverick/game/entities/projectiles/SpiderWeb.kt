@@ -139,7 +139,7 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IEventLis
             ConstKeys.POSITION to body.getCenter(),
             ConstKeys.SOUND to SoundAsset.EXPLOSION_2_SOUND
         )
-        game.gameEngine.spawn(explosion, props)
+        game.engine.spawn(explosion, props)
     }
 
     private fun stickToMegaman() {

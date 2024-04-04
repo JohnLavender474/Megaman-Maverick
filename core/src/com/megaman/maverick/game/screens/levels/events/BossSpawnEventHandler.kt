@@ -31,12 +31,12 @@ class BossSpawnEventHandler(private val game: MegamanMaverickGame) : Updatable {
         spawnTimer.runOnFirstUpdate = {
             val boss = EntityFactories.fetch(EntityType.BOSS, bossName)!! as AbstractBoss
             boss.ready = false
-            game.gameEngine.spawn(boss, bossSpawnProps)
+            game.engine.spawn(boss, bossSpawnProps)
             game.eventsMan.submitEvent(Event(EventType.BEGIN_BOSS_SPAWN, props(ConstKeys.BOSS to boss)))
         }
 
         spawnTimer.runOnFinished = {
-            game.gameEngine.systems.forEach { it.on = true }
+            game.engine.systems.forEach { it.on = true }
             val music = MusicAsset.valueOf(bossSpawnProps.get(ConstKeys.MUSIC, String::class)!!)
             game.audioMan.playMusic(music, true)
             game.eventsMan.submitEvent(Event(EventType.END_BOSS_SPAWN))

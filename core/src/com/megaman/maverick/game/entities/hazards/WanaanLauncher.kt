@@ -100,7 +100,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity,
     private fun launchWanaan() {
         GameLogger.debug(TAG, "Launching Wanaan")
         wanaan = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.WANAAN) as Wanaan?
-        game.gameEngine.spawn(
+        game.engine.spawn(
             wanaan!!, props(
                 ConstKeys.POSITION to body.getTopCenterPoint(),
                 ConstKeys.DIRECTION to direction,

@@ -221,7 +221,7 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             val yVel = ConstVals.PPM * (if (it.y == 1) 0f else if (it.y > 1) SHOCK_VEL else -SHOCK_VEL)
 
             val shock = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.ELECTRIC_BALL)!!
-            game.gameEngine.spawn(
+            game.engine.spawn(
                 shock, props(
                     ConstKeys.POSITION to body.getTopCenterPoint(), ConstKeys.X to xVel, ConstKeys.Y to yVel
                 )

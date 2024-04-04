@@ -149,7 +149,7 @@ class Togglee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         val entitiesToKill = if (on) offEntities else onEntities
         val entitiesToSpawn = if (on) onEntities else offEntities
         entitiesToKill.forEach { it.first.kill() }
-        entitiesToSpawn.forEach { game.gameEngine.spawn(it.first, it.second) }
+        entitiesToSpawn.forEach { game.engine.spawn(it.first, it.second) }
     }
 
     private fun switchToggleeState() {

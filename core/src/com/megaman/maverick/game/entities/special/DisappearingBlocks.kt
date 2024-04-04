@@ -83,7 +83,7 @@ class DisappearingBlocks(game: MegamanMaverickGame) :
                     child.body.fixtures.forEach { entry -> (entry.second as Fixture).active = false }
                     child.hidden = true
                 })
-            game.gameEngine.spawn(child, props)
+            game.engine.spawn(child, props)
 
             val thisKey = props.get(ConstKeys.KEY, String::class)!!
             GameLogger.debug(TAG, "spawn(): thisKey = $thisKey")

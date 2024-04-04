@@ -146,6 +146,6 @@ class CaveRock(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
         val caveRockExplosion =
             EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.CAVE_ROCK_EXPLOSION)!!
-        game.gameEngine.spawn(caveRockExplosion, props(ConstKeys.POSITION to body.getCenter()))
+        game.engine.spawn(caveRockExplosion, props(ConstKeys.POSITION to body.getCenter()))
     }
 }

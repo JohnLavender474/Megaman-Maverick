@@ -71,7 +71,7 @@ class Cart(game: MegamanMaverickGame) : GameEntity(game), IOwnable, IBodyEntity,
         super.spawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
-        game.gameEngine.spawn(
+        game.engine.spawn(
             childBlock, props(
                 ConstKeys.BOUNDS to GameRectangle().setSize(0.9f * ConstVals.PPM, 0.75f * ConstVals.PPM),
                 ConstKeys.PARENT to this

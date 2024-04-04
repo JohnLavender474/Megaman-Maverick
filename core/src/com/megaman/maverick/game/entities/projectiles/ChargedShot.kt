@@ -177,7 +177,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceab
                 ConstKeys.DIRECTION to direction,
                 ConstKeys.BOOLEAN to fullyCharged,
             )
-        game.gameEngine.spawn(e!!, props)
+        game.engine.spawn(e!!, props)
     }
 
     private fun defineUpdatablesComponent() =

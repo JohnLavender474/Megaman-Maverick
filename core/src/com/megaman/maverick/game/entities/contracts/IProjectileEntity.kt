@@ -22,12 +22,7 @@ import com.megaman.maverick.game.events.EventType
 
 interface IProjectileEntity : IOwnable, IDamager, IBodyEntity, ISpriteEntity, IAudioEntity, IGameEntity {
 
-    override fun canDamage(damageable: IDamageable) =
-        damageable != owner && damageable !is IProjectileEntity
-
-    override fun onDamageInflictedTo(damageable: IDamageable) {
-        // do nothing
-    }
+    override fun canDamage(damageable: IDamageable) = damageable != owner && damageable !is IProjectileEntity
 
     fun explodeAndDie() {}
 
@@ -43,20 +38,17 @@ interface IProjectileEntity : IOwnable, IDamager, IBodyEntity, ISpriteEntity, IA
 internal fun IProjectileEntity.defineProjectileComponents(): Array<IGameComponent> {
     val components = Array<IGameComponent>()
     components.add(AudioComponent(this))
-    val cullEvents =
-        objectSetOf<Any>(
-            EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING
-        )
+    val cullEvents = objectSetOf<Any>(
+        EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING
+    )
     val cullOnEvent = CullableOnEvent({ cullEvents.contains(it.key) }, cullEvents)
     val cullOnOutOfGameCam =
-        CullableOnUncontained<Camera>(
-            containerSupplier = { game.viewports.get(ConstKeys.GAME).camera },
+        CullableOnUncontained<Camera>(containerSupplier = { game.viewports.get(ConstKeys.GAME).camera },
             containable = { it.overlaps(body) })
     components.add(
         CullablesComponent(
             this, objectMapOf(
-                ConstKeys.CULL_EVENTS to cullOnEvent,
-                ConstKeys.CULL_OUT_OF_BOUNDS to cullOnOutOfGameCam
+                ConstKeys.CULL_EVENTS to cullOnEvent, ConstKeys.CULL_OUT_OF_BOUNDS to cullOnOutOfGameCam
             )
         )
     )

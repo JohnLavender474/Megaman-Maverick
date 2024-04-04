@@ -122,7 +122,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
     override fun explodeAndDie() {
         kill()
         val disintegration = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)
-        game.gameEngine.spawn(disintegration!!, props(ConstKeys.POSITION to body.getCenter()))
+        game.engine.spawn(disintegration!!, props(ConstKeys.POSITION to body.getCenter()))
     }
 
     private fun defineBodyComponent(): BodyComponent {

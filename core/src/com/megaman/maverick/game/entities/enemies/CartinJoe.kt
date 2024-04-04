@@ -258,6 +258,6 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpriteEntity,
 
         requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
 
-        game.gameEngine.spawn(entity, props)
+        game.engine.spawn(entity, props)
     }
 }

@@ -401,7 +401,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
 
     private fun throwShield() {
         val shield = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SNIPER_JOE_SHIELD)!!
-        game.gameEngine.spawn(
+        game.engine.spawn(
             shield, props(
                 ConstKeys.POSITION to body.getCenter(), ConstKeys.TRAJECTORY to normalizedTrajectory(
                     body.getCenter(), megaman.body.getCenter(), SHIELD_VEL * ConstVals.PPM
@@ -462,6 +462,6 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
         }
 
         trajectory.scl(ConstVals.PPM.toFloat())
-        game.gameEngine.spawn(entity, props)
+        game.engine.spawn(entity, props)
     }
 }

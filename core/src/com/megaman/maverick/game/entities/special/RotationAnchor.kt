@@ -88,7 +88,7 @@ open class RotationAnchor(game: MegamanMaverickGame) : GameEntity(game), IBodyEn
                 })
             )
 
-            game.gameEngine.spawn(child, childProps)
+            game.engine.spawn(child, childProps)
             children.add(child)
         }
     }

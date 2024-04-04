@@ -112,14 +112,6 @@ class LaserBeamer(game: MegamanMaverickGame) :
         switchTimer.setToEnd()
     }
 
-    override fun canDamage(damageable: IDamageable): Boolean {
-        return true
-    }
-
-    override fun onDamageInflictedTo(damageable: IDamageable) {
-        // do nothing
-    }
-
     override fun getTag() = TAG
 
     private fun defineBodyComponent(): BodyComponent {

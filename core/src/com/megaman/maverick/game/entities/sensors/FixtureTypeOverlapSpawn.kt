@@ -79,7 +79,7 @@ class FixtureTypeOverlapSpawn(game: MegamanMaverickGame) : GameEntity(game), IBo
         for (mask in spawnMask) {
             if (fixturesConsumed.contains(mask)) {
                 entitiesToSpawn.forEach { (entity, props) ->
-                    game.gameEngine.spawn(entity, props)
+                    game.engine.spawn(entity, props)
                     children.add(entity)
                 }
                 spawned = true

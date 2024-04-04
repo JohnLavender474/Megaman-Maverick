@@ -110,7 +110,7 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game) {
             "Shooting petal. Start: $start. Target: $target. Trajectory: $trajectory. Petal: $petal"
         )
 
-        game.gameEngine.spawn(
+        game.engine.spawn(
             petal,
             props(
                 ConstKeys.POSITION to start,

@@ -99,7 +99,7 @@ class Electrocutie(game: MegamanMaverickGame) : GameEntity(game), IHazard, IBody
             )
             val bottomElectrocutieChild =
                 EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.ELECTROCUTIE_CHILD)!! as ElectrocutieChild
-            game.gameEngine.spawn(bottomElectrocutieChild, bottomElectrocutieChildProps)
+            game.engine.spawn(bottomElectrocutieChild, bottomElectrocutieChildProps)
             children.add(bottomElectrocutieChild)
 
             // top electrocutie child
@@ -110,7 +110,7 @@ class Electrocutie(game: MegamanMaverickGame) : GameEntity(game), IHazard, IBody
             )
             val topElectrocutieChild =
                 EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.ELECTROCUTIE_CHILD)!! as ElectrocutieChild
-            game.gameEngine.spawn(topElectrocutieChild, topElectrocutieProps)
+            game.engine.spawn(topElectrocutieChild, topElectrocutieProps)
             children.add(topElectrocutieChild)
 
             // bolts
@@ -119,7 +119,7 @@ class Electrocutie(game: MegamanMaverickGame) : GameEntity(game), IHazard, IBody
                 val position = body.getBottomCenterPoint().add(0f, i * ConstVals.PPM.toFloat())
                 val bolt = EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.BOLT)!! as Bolt
 
-                game.gameEngine.spawn(
+                game.engine.spawn(
                     bolt, props(
                         ConstKeys.POSITION to position, ConstKeys.VERTICAL to true, ConstKeys.PARENT to this
                     )
@@ -139,7 +139,7 @@ class Electrocutie(game: MegamanMaverickGame) : GameEntity(game), IHazard, IBody
             )
             val bottomElectrocutieChild =
                 EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.ELECTROCUTIE_CHILD)!! as ElectrocutieChild
-            game.gameEngine.spawn(bottomElectrocutieChild, bottomElectrocutieProps)
+            game.engine.spawn(bottomElectrocutieChild, bottomElectrocutieProps)
             children.add(bottomElectrocutieChild)
 
             // top electrocutie child
@@ -150,7 +150,7 @@ class Electrocutie(game: MegamanMaverickGame) : GameEntity(game), IHazard, IBody
             )
             val topElectrocutieChild =
                 EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.ELECTROCUTIE_CHILD)!! as ElectrocutieChild
-            game.gameEngine.spawn(topElectrocutieChild, topElectrocutieProps)
+            game.engine.spawn(topElectrocutieChild, topElectrocutieProps)
             children.add(topElectrocutieChild)
 
             // bolts
@@ -159,7 +159,7 @@ class Electrocutie(game: MegamanMaverickGame) : GameEntity(game), IHazard, IBody
                 val position = body.getCenterLeftPoint().add(i * ConstVals.PPM.toFloat(), 0f)
                 val bolt = Bolt(getMegamanMaverickGame())
 
-                game.gameEngine.spawn(
+                game.engine.spawn(
                     bolt, props(
                         ConstKeys.POSITION to position, ConstKeys.VERTICAL to false, ConstKeys.PARENT to this
                     )

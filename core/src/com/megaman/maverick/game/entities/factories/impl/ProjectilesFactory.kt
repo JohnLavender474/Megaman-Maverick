@@ -5,6 +5,7 @@ import com.engine.common.objects.Pool
 import com.engine.entities.IGameEntity
 import com.engine.factories.IFactory
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.entities.projectiles.SigmaRatElectricBall
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.factories.EntityPoolCreator
 import com.megaman.maverick.game.entities.projectiles.*
@@ -28,12 +29,13 @@ class ProjectilesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
         const val SNIPER_JOE_SHIELD = "SniperJoeShield"
         const val GACHAPPAN_BALL = "GachappanBall"
         const val SPIDER_WEB = "SpiderWeb"
+        const val SIGMA_RAT_ELECTRIC_BALL = "SigmaRatElectricBall"
     }
 
     private val pools = ObjectMap<Any, Pool<IProjectileEntity>>()
 
     init {
-        pools.put(BULLET, EntityPoolCreator.create(100) { Bullet(game) })
+        pools.put(BULLET, EntityPoolCreator.create(20) { Bullet(game) })
         pools.put(CHARGED_SHOT, EntityPoolCreator.create(5) { ChargedShot(game) })
         pools.put(PURPLE_BLAST, EntityPoolCreator.create(5) { PurpleBlast(game) })
         pools.put(FIREBALL, EntityPoolCreator.create(3) { Fireball(game) })
@@ -46,6 +48,7 @@ class ProjectilesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
         pools.put(SNIPER_JOE_SHIELD, EntityPoolCreator.create(2) { SniperJoeShield(game) })
         pools.put(GACHAPPAN_BALL, EntityPoolCreator.create(3) { GachappanBall(game) })
         pools.put(SPIDER_WEB, EntityPoolCreator.create(1) { SpiderWeb(game) })
+        pools.put(SIGMA_RAT_ELECTRIC_BALL, EntityPoolCreator.create(8) { SigmaRatElectricBall(game) })
     }
 
     override fun fetch(key: Any) = pools.get(if (key == "") BULLET else key)?.fetch()

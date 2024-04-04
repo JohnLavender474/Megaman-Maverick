@@ -79,8 +79,6 @@ class Explosion(game: MegamanMaverickGame) : GameEntity(game), IHazard, IOwnable
 
     override fun canDamage(damageable: IDamageable) = damageable != owner
 
-    override fun onDamageInflictedTo(damageable: IDamageable) {}
-
     private fun defineUpdatablesComponent() = UpdatablesComponent(this, {
         durationTimer.update(it)
         if (durationTimer.isFinished()) kill()

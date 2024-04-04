@@ -53,7 +53,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                 val spawnType = spawnProps.get(ConstKeys.SPAWN_TYPE) as String?
                 if (spawnType == SpawnType.SPAWN_NOW) {
                     val entity = EntityFactories.fetch(entityType, it.name)!!
-                    game.gameEngine.spawn(entity, spawnProps)
+                    game.engine.spawn(entity, spawnProps)
                     return@forEach
                 }
 

@@ -196,7 +196,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
                             val spawnProps = spawnRectObject.properties.toProps()
                             spawnProps.put(ConstKeys.BOUNDS, spawnRectObject.rectangle.toGameRectangle())
                             val babySpider = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.BABY_SPIDER)!!
-                            game.gameEngine.spawn(babySpider, spawnProps)
+                            game.engine.spawn(babySpider, spawnProps)
                             children.add(babySpider)
                         }
 
@@ -346,7 +346,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
             ConstKeys.TRAJECTORY to scaledTrajectory,
             ConstKeys.OWNER to this
         )
-        game.gameEngine.spawn(web, props)
+        game.engine.spawn(web, props)
     }
 
 }

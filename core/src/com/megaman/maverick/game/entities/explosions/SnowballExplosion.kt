@@ -65,10 +65,6 @@ class SnowballExplosion(game: MegamanMaverickGame) : GameEntity(game), IBodyEnti
 
     override fun canDamage(damageable: IDamageable) = damageMask.contains(damageable::class)
 
-    override fun onDamageInflictedTo(damageable: IDamageable) {
-        TODO("Not yet implemented")
-    }
-
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(ConstVals.PPM.toFloat())

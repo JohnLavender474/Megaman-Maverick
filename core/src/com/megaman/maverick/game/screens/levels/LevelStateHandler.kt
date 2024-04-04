@@ -13,7 +13,7 @@ class LevelStateHandler(private val game: MegamanMaverickGame) {
     fun pause() {
         systemsOnPause.clear()
 
-        game.gameEngine.systems.forEach {
+        game.engine.systems.forEach {
             systemsOnPause.put(it, it.on)
             if (it !is SpritesSystem) it.on = false
         }

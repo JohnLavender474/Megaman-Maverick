@@ -55,7 +55,7 @@ abstract class AbstractBoss(
         if (explosionTimer.isFinished()) {
             val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
             val position = Position.values().toGdxArray().random()
-            game.gameEngine.spawn(
+            game.engine.spawn(
                 explosion,
                 props(
                     ConstKeys.SOUND to SoundAsset.EXPLOSION_2_SOUND,

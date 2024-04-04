@@ -146,7 +146,7 @@ class SwinginPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, I
                     "PicketJoe" -> {
                         val picketJoe = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.PICKET_JOE)!!
                         children.add(picketJoe)
-                        game.gameEngine.spawn(
+                        game.engine.spawn(
                             picketJoe, props(
                                 ConstKeys.POSITION to body.getTopCenterPoint(), ConstKeys.CULL_OUT_OF_BOUNDS to false
                             )
@@ -156,7 +156,7 @@ class SwinginPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, I
                     "SniperJoe" -> {
                         val sniperJoe = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.SNIPER_JOE)!!
                         children.add(sniperJoe)
-                        game.gameEngine.spawn(
+                        game.engine.spawn(
                             sniperJoe, props(
                                 ConstKeys.POSITION to body.getTopCenterPoint(), ConstKeys.CULL_OUT_OF_BOUNDS to false
                             )

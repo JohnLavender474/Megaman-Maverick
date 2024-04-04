@@ -80,14 +80,6 @@ class ElectrocutieChild(game: MegamanMaverickGame) : GameEntity(game), IHazard, 
         resetBodyPosition = true
     }
 
-    override fun canDamage(damageable: IDamageable): Boolean {
-        return true
-    }
-
-    override fun onDamageInflictedTo(damageable: IDamageable) {
-        // do nothing
-    }
-
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
 

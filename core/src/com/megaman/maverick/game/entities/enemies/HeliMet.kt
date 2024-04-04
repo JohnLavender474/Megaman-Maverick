@@ -302,6 +302,6 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
                 ConstKeys.POSITION to spawn
             )
         val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)
-        game.gameEngine.spawn(bullet!!, spawnProps)
+        game.engine.spawn(bullet!!, spawnProps)
     }
 }

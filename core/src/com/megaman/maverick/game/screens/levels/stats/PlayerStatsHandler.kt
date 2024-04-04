@@ -30,7 +30,7 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
         private const val DUR_PER_BIT = .1f
     }
 
-    private val engine = megaman.game.gameEngine
+    private val engine = megaman.game.engine
     private val assMan = megaman.game.assMan
     private val eventsMan = megaman.game.eventsMan
     private val audioMan = (megaman.game as MegamanMaverickGame).audioMan

@@ -107,10 +107,6 @@ class SpikeBall(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpr
         }
     }
 
-    override fun canDamage(damageable: IDamageable) = true
-
-    override fun onDamageInflictedTo(damageable: IDamageable) {}
-
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(2f * ConstVals.PPM)

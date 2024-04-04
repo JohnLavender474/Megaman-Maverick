@@ -109,12 +109,4 @@ class CaveRockExplosion(game: MegamanMaverickGame) :
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }
-
-    override fun canDamage(damageable: IDamageable): Boolean {
-        return true
-    }
-
-    override fun onDamageInflictedTo(damageable: IDamageable) {
-        // do nothing
-    }
 }

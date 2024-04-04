@@ -89,7 +89,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : GameEntity(game), ISpriteEnti
         bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
 
         block = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.STANDARD)!! as Block
-        game.gameEngine.spawn(
+        game.engine.spawn(
             block!!, props(
                 ConstKeys.BOUNDS to GameRectangle().setSize(1.1875f * ConstVals.PPM, 0.25f * ConstVals.PPM)
                     .setX(-100f * ConstVals.PPM), ConstKeys.CULL_OUT_OF_BOUNDS to false

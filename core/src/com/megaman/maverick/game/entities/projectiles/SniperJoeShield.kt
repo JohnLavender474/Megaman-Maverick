@@ -90,7 +90,7 @@ class SniperJoeShield(game: MegamanMaverickGame) : AbstractProjectile(game), IFa
     override fun explodeAndDie() {
         kill()
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
-        game.gameEngine.spawn(
+        game.engine.spawn(
             explosion, props(ConstKeys.POSITION to body.getCenter(), ConstKeys.SOUND to SoundAsset.EXPLOSION_2_SOUND)
         )
     }

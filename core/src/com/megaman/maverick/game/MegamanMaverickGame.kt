@@ -76,7 +76,7 @@ class MegamanMaverickGame : Game2D() {
         const val TAG = "MegamanMaverickGame"
         const val DEBUG_TEXT = false
         const val DEBUG_SHAPES = true
-        const val DEFAULT_VOLUME = 0.5f
+        const val DEFAULT_VOLUME = 0f
         val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.FEET, FixtureType.BLOCK)
@@ -127,7 +127,7 @@ class MegamanMaverickGame : Game2D() {
         assMan = AssetManager()
         loadAssets(assMan)
         assMan.finishLoading()
-        gameEngine = createGameEngine()
+        engine = createGameEngine()
         eventsMan = EventsManager()
 
         val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM

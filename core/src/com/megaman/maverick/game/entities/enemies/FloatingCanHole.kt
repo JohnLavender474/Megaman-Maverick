@@ -57,7 +57,7 @@ class FloatingCanHole(game: MegamanMaverickGame) : GameEntity(game), IParentEnti
             spawnDelayTimer.update(delta)
             if (spawnDelayTimer.isFinished()) {
                 val floatingCan = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.FLOATING_CAN)!!
-                game.gameEngine.spawn(floatingCan, props(ConstKeys.POSITION to spawn))
+                game.engine.spawn(floatingCan, props(ConstKeys.POSITION to spawn))
                 children.add(floatingCan)
                 spawnDelayTimer.reset()
             }

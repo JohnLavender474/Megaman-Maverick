@@ -92,7 +92,7 @@ class RocketPlatform(game: MegamanMaverickGame) :
                 children.add(subsequentEntity)
             }
 
-            game.gameEngine.spawn(subsequentEntity, subsequentEntityProps)
+            game.engine.spawn(subsequentEntity, subsequentEntityProps)
         }
     }
 

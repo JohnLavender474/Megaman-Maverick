@@ -134,7 +134,7 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
                 ConstKeys.POSITION to body.getCenter(),
                 ConstKeys.SOUND to SoundAsset.EXPLOSION_1_SOUND
             )
-            game.gameEngine.spawn(explosion, props)
+            game.engine.spawn(explosion, props)
         }
     }
 
@@ -254,7 +254,7 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
         val ball = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.GACHAPPAN_BALL)!!
         val impulseX = (megaman.body.x - body.x) * 0.9f
         val impulseY = BALL_IMPULSE * ConstVals.PPM
-        game.gameEngine.spawn(
+        game.engine.spawn(
             ball,
             props(
                 ConstKeys.OWNER to this,
@@ -274,7 +274,7 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
             ConstKeys.TRAJECTORY to trajectory,
             ConstKeys.OWNER to this
         )
-        game.gameEngine.spawn(bullet, bulletProps)
+        game.engine.spawn(bullet, bulletProps)
         requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
     }
 }

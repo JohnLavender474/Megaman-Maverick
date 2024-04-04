@@ -153,7 +153,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
             ConstKeys.OWNER to this, ConstKeys.TRAJECTORY to trajectory, ConstKeys.POSITION to spawn
         )
         val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)
-        game.gameEngine.spawn(bullet!!, spawnProps)
+        game.engine.spawn(bullet!!, spawnProps)
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {

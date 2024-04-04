@@ -173,17 +173,17 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">../frames/Bosses/Blunt Man/Damaged.png</key>
-            <key type="filename">../frames/Bosses/Blunt Man/Flaming.png</key>
-            <key type="filename">../frames/Bosses/Blunt Man/Flex.png</key>
-            <key type="filename">../frames/Bosses/Blunt Man/Stand.png</key>
-            <key type="filename">../frames/Bosses/Distributor Man/Damaged.png</key>
-            <key type="filename">../frames/Bosses/Distributor Man/JumpShock.png</key>
-            <key type="filename">../frames/Bosses/Distributor Man/JustLand.png</key>
-            <key type="filename">../frames/Bosses/Distributor Man/Shock.png</key>
-            <key type="filename">../frames/Bosses/Distributor Man/Stand.png</key>
-            <key type="filename">../frames/Bosses/Sigma Rat/ElectricBall.png</key>
-            <key type="filename">../frames/Bosses/Sigma Rat/ElectricPulse.png</key>
+            <key type="filename">../frames/Bosses/BluntMan/Damaged.png</key>
+            <key type="filename">../frames/Bosses/BluntMan/Flaming.png</key>
+            <key type="filename">../frames/Bosses/BluntMan/Flex.png</key>
+            <key type="filename">../frames/Bosses/BluntMan/Stand.png</key>
+            <key type="filename">../frames/Bosses/DistributorMan/Damaged.png</key>
+            <key type="filename">../frames/Bosses/DistributorMan/JumpShock.png</key>
+            <key type="filename">../frames/Bosses/DistributorMan/JustLand.png</key>
+            <key type="filename">../frames/Bosses/DistributorMan/Shock.png</key>
+            <key type="filename">../frames/Bosses/DistributorMan/Stand.png</key>
+            <key type="filename">../frames/Bosses/SigmaRat/ElectricBall.png</key>
+            <key type="filename">../frames/Bosses/SigmaRat/ElectricPulse.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -198,10 +198,10 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses/Blunt Man/Jump.png</key>
-            <key type="filename">../frames/Bosses/Blunt Man/Slide.png</key>
-            <key type="filename">../frames/Bosses/Distributor Man/Jump.png</key>
-            <key type="filename">../frames/Bosses/Sigma Rat/ElectricBallDissipate.png</key>
+            <key type="filename">../frames/Bosses/BluntMan/Jump.png</key>
+            <key type="filename">../frames/Bosses/BluntMan/Slide.png</key>
+            <key type="filename">../frames/Bosses/DistributorMan/Jump.png</key>
+            <key type="filename">../frames/Bosses/SigmaRat/ElectricBallDissipate.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -247,23 +247,23 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Bosses/Bospider/Still.png</key>
-            <key type="filename">../frames/Bosses/Freezer Man/GiveTheHand.png</key>
-            <key type="filename">../frames/Bosses/Freezer Man/Jump.png</key>
-            <key type="filename">../frames/Bosses/Freezer Man/StandOpenFridge.png</key>
-            <key type="filename">../frames/Bosses/Microwave Man/Head.png</key>
-            <key type="filename">../frames/Bosses/Microwave Man/HeadlessJump.png</key>
-            <key type="filename">../frames/Bosses/Microwave Man/HeadlessOpenDoor.png</key>
-            <key type="filename">../frames/Bosses/Microwave Man/HeadlessShoot.png</key>
-            <key type="filename">../frames/Bosses/Microwave Man/HeadlessStand.png</key>
-            <key type="filename">../frames/Bosses/Microwave Man/Jump.png</key>
-            <key type="filename">../frames/Bosses/Microwave Man/OpenDoor.png</key>
-            <key type="filename">../frames/Bosses/Microwave Man/Shoot.png</key>
-            <key type="filename">../frames/Bosses/Mister Man/Jump.png</key>
-            <key type="filename">../frames/Bosses/Nuke Man/Attack.png</key>
-            <key type="filename">../frames/Bosses/Nuke Man/BendKnees.png</key>
-            <key type="filename">../frames/Bosses/Nuke Man/Jump.png</key>
-            <key type="filename">../frames/Bosses/Roaster Man/Aim.png</key>
-            <key type="filename">../frames/Bosses/Roaster Man/RetractWings.png</key>
+            <key type="filename">../frames/Bosses/FreezerMan/GiveTheHand.png</key>
+            <key type="filename">../frames/Bosses/FreezerMan/Jump.png</key>
+            <key type="filename">../frames/Bosses/FreezerMan/StandOpenFridge.png</key>
+            <key type="filename">../frames/Bosses/MicrowaveMan/Head.png</key>
+            <key type="filename">../frames/Bosses/MicrowaveMan/HeadlessJump.png</key>
+            <key type="filename">../frames/Bosses/MicrowaveMan/HeadlessOpenDoor.png</key>
+            <key type="filename">../frames/Bosses/MicrowaveMan/HeadlessShoot.png</key>
+            <key type="filename">../frames/Bosses/MicrowaveMan/HeadlessStand.png</key>
+            <key type="filename">../frames/Bosses/MicrowaveMan/Jump.png</key>
+            <key type="filename">../frames/Bosses/MicrowaveMan/OpenDoor.png</key>
+            <key type="filename">../frames/Bosses/MicrowaveMan/Shoot.png</key>
+            <key type="filename">../frames/Bosses/MisterMan/Jump.png</key>
+            <key type="filename">../frames/Bosses/NukeMan/Attack.png</key>
+            <key type="filename">../frames/Bosses/NukeMan/BendKnees.png</key>
+            <key type="filename">../frames/Bosses/NukeMan/Jump.png</key>
+            <key type="filename">../frames/Bosses/RoasterMan/Aim.png</key>
+            <key type="filename">../frames/Bosses/RoasterMan/RetractWings.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -278,23 +278,23 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses/Freezer Man/JumpOpenFreezer.png</key>
-            <key type="filename">../frames/Bosses/Freezer Man/StandLookDown.png</key>
-            <key type="filename">../frames/Bosses/Freezer Man/StandLookUp.png</key>
-            <key type="filename">../frames/Bosses/Microwave Man/Stand.png</key>
-            <key type="filename">../frames/Bosses/Mister Man/Electrocuted.png</key>
-            <key type="filename">../frames/Bosses/Mister Man/Flex.png</key>
-            <key type="filename">../frames/Bosses/Mister Man/Squirt.png</key>
-            <key type="filename">../frames/Bosses/Mister Man/Stand.png</key>
-            <key type="filename">../frames/Bosses/Nuke Man/Charge.png</key>
-            <key type="filename">../frames/Bosses/Nuke Man/Stand.png</key>
-            <key type="filename">../frames/Bosses/Roaster Man/CoolPose.png</key>
-            <key type="filename">../frames/Bosses/Roaster Man/FallingWithStyle.png</key>
-            <key type="filename">../frames/Bosses/Roaster Man/FlyFlap.png</key>
-            <key type="filename">../frames/Bosses/Roaster Man/Stand.png</key>
-            <key type="filename">../frames/Bosses/Roaster Man/StandFlap.png</key>
-            <key type="filename">../frames/Bosses/Roaster Man/SuaveCombSweep.png</key>
-            <key type="filename">../frames/Bosses/Roaster Man/Wet.png</key>
+            <key type="filename">../frames/Bosses/FreezerMan/JumpOpenFreezer.png</key>
+            <key type="filename">../frames/Bosses/FreezerMan/StandLookDown.png</key>
+            <key type="filename">../frames/Bosses/FreezerMan/StandLookUp.png</key>
+            <key type="filename">../frames/Bosses/MicrowaveMan/Stand.png</key>
+            <key type="filename">../frames/Bosses/MisterMan/Electrocuted.png</key>
+            <key type="filename">../frames/Bosses/MisterMan/Flex.png</key>
+            <key type="filename">../frames/Bosses/MisterMan/Squirt.png</key>
+            <key type="filename">../frames/Bosses/MisterMan/Stand.png</key>
+            <key type="filename">../frames/Bosses/NukeMan/Charge.png</key>
+            <key type="filename">../frames/Bosses/NukeMan/Stand.png</key>
+            <key type="filename">../frames/Bosses/RoasterMan/CoolPose.png</key>
+            <key type="filename">../frames/Bosses/RoasterMan/FallingWithStyle.png</key>
+            <key type="filename">../frames/Bosses/RoasterMan/FlyFlap.png</key>
+            <key type="filename">../frames/Bosses/RoasterMan/Stand.png</key>
+            <key type="filename">../frames/Bosses/RoasterMan/StandFlap.png</key>
+            <key type="filename">../frames/Bosses/RoasterMan/SuaveCombSweep.png</key>
+            <key type="filename">../frames/Bosses/RoasterMan/Wet.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -309,7 +309,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses/Freezer Man/Opening.png</key>
+            <key type="filename">../frames/Bosses/FreezerMan/Opening.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -325,10 +325,10 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Bosses/GutsTank/Fist.png</key>
-            <key type="filename">../frames/Bosses/Precious Man/StandShoot.png</key>
-            <key type="filename">../frames/Bosses/Wintry Man/AboutToJump.png</key>
-            <key type="filename">../frames/Bosses/Wintry Man/Jump.png</key>
-            <key type="filename">../frames/Bosses/Wintry Man/StandShoot.png</key>
+            <key type="filename">../frames/Bosses/PreciousMan/StandShoot.png</key>
+            <key type="filename">../frames/Bosses/WintryMan/AboutToJump.png</key>
+            <key type="filename">../frames/Bosses/WintryMan/Jump.png</key>
+            <key type="filename">../frames/Bosses/WintryMan/StandShoot.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -344,11 +344,11 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Bosses/GutsTank/FistLaunched.png</key>
-            <key type="filename">../frames/Bosses/Precious Man/Jump.png</key>
-            <key type="filename">../frames/Bosses/Precious Man/Stand.png</key>
-            <key type="filename">../frames/Bosses/Rodent Man/Slash.png</key>
-            <key type="filename">../frames/Bosses/Rodent Man/WallSlide.png</key>
-            <key type="filename">../frames/Bosses/Wintry Man/Stand.png</key>
+            <key type="filename">../frames/Bosses/PreciousMan/Jump.png</key>
+            <key type="filename">../frames/Bosses/PreciousMan/Stand.png</key>
+            <key type="filename">../frames/Bosses/RodentMan/Slash.png</key>
+            <key type="filename">../frames/Bosses/RodentMan/WallSlide.png</key>
+            <key type="filename">../frames/Bosses/WintryMan/Stand.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -380,7 +380,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses/Microwave Man/HeadBounce.png</key>
+            <key type="filename">../frames/Bosses/MicrowaveMan/HeadBounce.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -395,12 +395,12 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses/Precious Man/JumpFreeze.png</key>
-            <key type="filename">../frames/Bosses/Precious Man/Run.png</key>
-            <key type="filename">../frames/Bosses/Rodent Man/Jump.png</key>
-            <key type="filename">../frames/Bosses/Rodent Man/Run.png</key>
-            <key type="filename">../frames/Bosses/Wintry Man/AirFreeze.png</key>
-            <key type="filename">../frames/Bosses/Wintry Man/Run.png</key>
+            <key type="filename">../frames/Bosses/PreciousMan/JumpFreeze.png</key>
+            <key type="filename">../frames/Bosses/PreciousMan/Run.png</key>
+            <key type="filename">../frames/Bosses/RodentMan/Jump.png</key>
+            <key type="filename">../frames/Bosses/RodentMan/Run.png</key>
+            <key type="filename">../frames/Bosses/WintryMan/AirFreeze.png</key>
+            <key type="filename">../frames/Bosses/WintryMan/Run.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -415,9 +415,9 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses/Precious Man/StandFreeze.png</key>
-            <key type="filename">../frames/Bosses/Rodent Man/Shoot.png</key>
-            <key type="filename">../frames/Bosses/Wintry Man/StandFreeze.png</key>
+            <key type="filename">../frames/Bosses/PreciousMan/StandFreeze.png</key>
+            <key type="filename">../frames/Bosses/RodentMan/Shoot.png</key>
+            <key type="filename">../frames/Bosses/WintryMan/StandFreeze.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -432,7 +432,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses/Rodent Man/Stand.png</key>
+            <key type="filename">../frames/Bosses/RodentMan/Stand.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -447,24 +447,8 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses/Sigma Rat/Body.png</key>
-            <key type="filename">../frames/Bosses/Sigma Rat/BodyDamaged.png</key>
-            <key type="filename">../frames/Bosses/Sigma Rat/BodyTittyShootDamaged.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>74,37,148,74</rect>
-                <key>scale9Paddings</key>
-                <rect>74,37,148,74</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Bosses/Sigma Rat/BodyTittyShoot.png</key>
+            <key type="filename">../frames/Bosses/SigmaRat/Body.png</key>
+            <key type="filename">../frames/Bosses/SigmaRat/BodyTittyShoot.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -479,8 +463,24 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses/Sigma Rat/ClawClosed.png</key>
-            <key type="filename">../frames/Bosses/Sigma Rat/ClawOpen.png</key>
+            <key type="filename">../frames/Bosses/SigmaRat/BodyDamaged.png</key>
+            <key type="filename">../frames/Bosses/SigmaRat/BodyTittyShootDamaged.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>74,37,148,74</rect>
+                <key>scale9Paddings</key>
+                <rect>74,37,148,74</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses/SigmaRat/ClawClosed.png</key>
+            <key type="filename">../frames/Bosses/SigmaRat/ClawOpen.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -495,7 +495,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses/Sigma Rat/ClawFlash.png</key>
+            <key type="filename">../frames/Bosses/SigmaRat/ClawFlash.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -510,7 +510,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses/Sigma Rat/ElectricBallForm.png</key>
+            <key type="filename">../frames/Bosses/SigmaRat/ElectricBallForm.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -525,7 +525,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses/Sigma Rat/ElectricDissipate.png</key>
+            <key type="filename">../frames/Bosses/SigmaRat/ElectricDissipate.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -540,9 +540,9 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses/Timber Woman/Damaged.png</key>
-            <key type="filename">../frames/Bosses/Timber Woman/OnFire.png</key>
-            <key type="filename">../frames/Bosses/Timber Woman/Stand.png</key>
+            <key type="filename">../frames/Bosses/TimberWoman/Damaged.png</key>
+            <key type="filename">../frames/Bosses/TimberWoman/OnFire.png</key>
+            <key type="filename">../frames/Bosses/TimberWoman/Stand.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -557,7 +557,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses/Timber Woman/Jump.png</key>
+            <key type="filename">../frames/Bosses/TimberWoman/Jump.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -572,7 +572,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses/Timber Woman/JustLand.png</key>
+            <key type="filename">../frames/Bosses/TimberWoman/JustLand.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -587,7 +587,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses/Timber Woman/Swing.png</key>
+            <key type="filename">../frames/Bosses/TimberWoman/Swing.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

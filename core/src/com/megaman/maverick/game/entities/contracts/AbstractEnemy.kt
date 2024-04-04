@@ -83,7 +83,6 @@ abstract class AbstractEnemy(
         addComponent(updatablesComponent)
 
         runnablesOnSpawn.add { setHealth(getMaxHealth()) }
-
         runnablesOnDestroy.add {
             if (hasDepletedHealth()) {
                 disintegrate()
@@ -108,7 +107,7 @@ abstract class AbstractEnemy(
 
                         else -> null
                     }
-                    entity?.let { game.gameEngine.spawn(it, props) }
+                    entity?.let { game.engine.spawn(it, props) }
                 }
             }
         }
@@ -151,18 +150,12 @@ abstract class AbstractEnemy(
     override fun takeDamageFrom(damager: IDamager): Boolean {
         val damagerKey = damager::class
         if (!damageNegotiations.containsKey(damagerKey)) return false
-
         damageTimer.reset()
-
         val damage = damageNegotiations[damagerKey].get(damager)
         addHealth(-damage)
-
         requestToPlaySound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
-
         return true
     }
-
-    override fun canDamage(damageable: IDamageable) = true
 
     override fun onDamageInflictedTo(damageable: IDamageable) {
         onDamageInflictedTo?.invoke(damageable)
@@ -202,21 +195,21 @@ abstract class AbstractEnemy(
         getMegamanMaverickGame().audioMan.playSound(SoundAsset.ENEMY_DAMAGE_SOUND)
         val disintegration = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)
         val props = disintegrationProps ?: props(ConstKeys.POSITION to body.getCenter())
-        game.gameEngine.spawn(disintegration!!, props)
+        game.engine.spawn(disintegration!!, props)
     }
 
     protected open fun explode(explosionProps: Properties? = null) {
         getMegamanMaverickGame().audioMan.playSound(SoundAsset.ENEMY_DAMAGE_SOUND)
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)
         val props = explosionProps ?: props(ConstKeys.POSITION to body.getCenter())
-        game.gameEngine.spawn(explosion!!, props)
+        game.engine.spawn(explosion!!, props)
     }
 
-    fun isMegamanShootingAtMe(): Boolean {
+    open fun isMegamanShootingAtMe(): Boolean {
         val megaman = getMegamanMaverickGame().megaman
         if (!megaman.shooting) return false
         return body.x < megaman.body.x && megaman.facing == Facing.LEFT || body.x > megaman.body.x && megaman.facing == Facing.RIGHT
     }
 
-    fun isInGameCamBounds() = getMegamanMaverickGame().getGameCamera().toGameRectangle().overlaps(body as Rectangle)
+    open fun isInGameCamBounds() = getMegamanMaverickGame().getGameCamera().toGameRectangle().overlaps(body as Rectangle)
 }

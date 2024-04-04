@@ -109,7 +109,7 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable,
                         0.15f * ConstVals.PPM * facing.value, 0.15f * ConstVals.PPM
                     )
                 )
-                game.gameEngine.spawn(sniperJoe, spawnProps)
+                game.engine.spawn(sniperJoe, spawnProps)
             }
         }
     }
@@ -235,7 +235,7 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable,
             ConstKeys.TRAJECTORY to trajectory,
             ConstKeys.OWNER to this
         )
-        game.gameEngine.spawn(bullet, props)
+        game.engine.spawn(bullet, props)
         requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
     }
 }

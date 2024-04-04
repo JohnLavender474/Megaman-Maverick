@@ -218,6 +218,6 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
                 ConstKeys.MASK to objectSetOf<KClass<out IDamageable>>(Megaman::class)
             )
         val joeBall = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.JOEBALL)!!
-        game.gameEngine.spawn(joeBall, props)
+        game.engine.spawn(joeBall, props)
     }
 }

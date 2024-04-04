@@ -167,7 +167,7 @@ class JoeBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         }
 
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, explosionType)!!
-        game.gameEngine.spawn(
+        game.engine.spawn(
             explosion,
             props(
                 ConstKeys.POSITION to body.getCenter(),

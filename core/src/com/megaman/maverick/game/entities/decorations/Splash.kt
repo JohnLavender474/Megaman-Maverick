@@ -47,7 +47,7 @@ class Splash(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity {
                 val spawn =
                     Vector2(splasher.x + ConstVals.PPM / 2f + i * ConstVals.PPM, water.y + water.height)
                 val s = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SPLASH)
-                game.gameEngine.spawn(s!!, props(ConstKeys.POSITION to spawn))
+                game.engine.spawn(s!!, props(ConstKeys.POSITION to spawn))
             }
         }
     }

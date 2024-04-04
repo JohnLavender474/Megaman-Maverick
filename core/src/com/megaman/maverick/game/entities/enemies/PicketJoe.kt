@@ -225,7 +225,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         GameLogger.debug(TAG, "throwPicket(): xFactor: $xFactor")
         val impulseX = (megaman.body.x - body.x) * xFactor
 
-        game.gameEngine.spawn(
+        game.engine.spawn(
             picket, props(
                 ConstKeys.OWNER to this,
                 ConstKeys.POSITION to spawn,

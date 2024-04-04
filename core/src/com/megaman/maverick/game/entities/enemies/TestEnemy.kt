@@ -87,6 +87,6 @@ class TestEnemy(game: MegamanMaverickGame) : AbstractEnemy(game) {
             ConstKeys.TRAJECTORY to scaledTrajectory,
             ConstKeys.OWNER to this
         )
-        game.gameEngine.spawn(web, props)
+        game.engine.spawn(web, props)
     }
 }

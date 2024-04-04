@@ -90,7 +90,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
         get() = super.game as MegamanMaverickGame
 
     val engine: IGameEngine
-        get() = game.gameEngine
+        get() = game.engine
 
     val megaman: Megaman
         get() = megamanGame.megaman
@@ -343,8 +343,8 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
                     TAG,
                     "onEvent(): Player spawn --> spawn Megaman: ${playerSpawnsMan.currentSpawnProps!!}"
                 )
-                game.gameEngine.systems.forEach { it.on = true }
-                game.gameEngine.spawn(megaman, playerSpawnsMan.currentSpawnProps!!)
+                game.engine.systems.forEach { it.on = true }
+                game.engine.spawn(megaman, playerSpawnsMan.currentSpawnProps!!)
                 entityStatsHandler.unset()
             }
 

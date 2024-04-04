@@ -24,12 +24,12 @@ class SensorsLayerBuilder(private val game: MegamanMaverickGame) : ITiledMapLaye
                 when (name) {
                     "Death" -> {
                         val death = EntityFactories.fetch(EntityType.SENSOR, SensorsFactory.DEATH)!!
-                        game.gameEngine.spawn(death, props)
+                        game.engine.spawn(death, props)
                     }
 
                     "Gate" -> {
                         val gate = EntityFactories.fetch(EntityType.SENSOR, SensorsFactory.GATE)!!
-                        game.gameEngine.spawn(gate, props)
+                        game.engine.spawn(gate, props)
                     }
 
                     else -> throw IllegalArgumentException("Unknown sensor type: $name")

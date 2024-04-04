@@ -83,7 +83,7 @@ class Snowball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         kill()
         val explosion =
             EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SNOWBALL_EXPLOSION)!!
-        game.gameEngine.spawn(
+        game.engine.spawn(
             explosion,
             props(
                 ConstKeys.POSITION to body.getCenter(),

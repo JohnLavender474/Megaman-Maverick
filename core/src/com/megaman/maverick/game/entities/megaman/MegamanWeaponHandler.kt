@@ -48,7 +48,7 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
         private val FLAME_TOSS_TRAJECTORY = Vector2(35f, 10f)
     }
 
-    private val gameEngine = megaman.game.gameEngine
+    private val gameEngine = megaman.game.engine
     private val weapons = ObjectMap<MegamanWeapon, MegaWeaponEntry>()
     private val spawnCenter: Vector2
         get() {

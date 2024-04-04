@@ -33,7 +33,7 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.bosses.Bospider
-import com.megaman.maverick.game.entities.bosses.GutsTankFist
+import com.megaman.maverick.game.entities.bosses.gutstank.GutsTankFist
 import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.enemies.*
 import com.megaman.maverick.game.entities.explosions.CaveRockExplosion
@@ -349,7 +349,7 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         explosionOrbTrajectories.forEach { trajectory ->
             val explosionOrb = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION_ORB)
             explosionOrb?.let { orb ->
-                game.gameEngine.spawn(
+                game.engine.spawn(
                     orb, props(ConstKeys.TRAJECTORY to trajectory, ConstKeys.POSITION to body.getCenter())
                 )
             }

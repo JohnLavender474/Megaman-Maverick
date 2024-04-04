@@ -203,7 +203,7 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     private fun throwRock() {
         throwing = true
         val caveRockToThrow = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.CAVE_ROCK)!!
-        game.gameEngine.spawn(
+        game.engine.spawn(
             caveRockToThrow, props(
                 ConstKeys.OWNER to this, ConstKeys.POSITION to body.getTopCenterPoint(), ConstKeys.IMPULSE to Vector2(
                     ROCK_IMPULSE_X * ConstVals.PPM * facing.value, ROCK_IMPULSE_Y * ConstVals.PPM
@@ -216,7 +216,7 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         val newRockSpawn = body.getCenter().add(0f, newRockOffsetY * ConstVals.PPM)
         val newRockTrajectory = Vector2(0f, -newRockOffsetY * ConstVals.PPM)
         newRock = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.CAVE_ROCK) as CaveRock
-        game.gameEngine.spawn(
+        game.engine.spawn(
             newRock!!, props(
                 ConstKeys.OWNER to this,
                 ConstKeys.POSITION to newRockSpawn,

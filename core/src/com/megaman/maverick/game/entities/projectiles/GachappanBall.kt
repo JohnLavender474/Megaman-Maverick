@@ -71,7 +71,7 @@ class GachappanBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
             ConstKeys.SOUND to SoundAsset.EXPLOSION_2_SOUND,
             ConstKeys.OWNER to owner
         )
-        game.gameEngine.spawn(explosion!!, props)
+        game.engine.spawn(explosion!!, props)
         kill()
     }
 

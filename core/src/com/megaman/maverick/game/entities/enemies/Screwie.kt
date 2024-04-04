@@ -215,7 +215,7 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
             spawn.y += (if (upsideDown) -0.215f else 0.215f) * ConstVals.PPM
             val trajectory = Vector2(it)
             if (upsideDown) trajectory.y *= -1f
-            game.gameEngine.spawn(
+            game.engine.spawn(
                 bullet, props(
                     ConstKeys.TRAJECTORY to trajectory, ConstKeys.POSITION to spawn, ConstKeys.OWNER to this
                 )
