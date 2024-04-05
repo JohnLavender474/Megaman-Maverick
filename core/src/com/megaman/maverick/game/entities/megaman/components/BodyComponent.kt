@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
-import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
 import com.engine.common.interfaces.Updatable
 import com.engine.common.shapes.GameRectangle

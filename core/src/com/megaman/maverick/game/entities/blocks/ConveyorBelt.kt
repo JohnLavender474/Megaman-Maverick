@@ -57,7 +57,6 @@ class ConveyorBelt(game: MegamanMaverickGame) : ISpriteEntity, IDrawableShapesEn
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
 
-        // initialize force fixture if not already present
         if (forceFixture == null) {
             forceFixture = Fixture(body, FixtureType.FORCE, GameRectangle())
             forceFixture!!.offsetFromBodyCenter.y = ConstVals.PPM / 8f
@@ -71,7 +70,6 @@ class ConveyorBelt(game: MegamanMaverickGame) : ISpriteEntity, IDrawableShapesEn
             bounds.width - ConstVals.PPM / 4f, bounds.height
         )
 
-        // velocity alteration
         val left = spawnProps.get(ConstKeys.LEFT) as Boolean
         var forceX = FORCE_AMOUNT * ConstVals.PPM
         if (left) forceX = -forceX
@@ -79,7 +77,6 @@ class ConveyorBelt(game: MegamanMaverickGame) : ISpriteEntity, IDrawableShapesEn
             VelocityAlteration(forceX = forceX, actionX = VelocityAlterationType.ADD)
         forceFixture!!.setVelocityAlteration { _, _ -> velocityAlteration }
 
-        // sprite and animators
         val sprites = OrderedMap<String, GameSprite>()
         val animators = Array<Pair<() -> GameSprite, IAnimator>>()
         val numParts = (bounds.width / ConstVals.PPM).toInt()

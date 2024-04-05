@@ -8,14 +8,18 @@ import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
+import com.engine.common.enums.Direction
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.objectMapOf
+import com.engine.common.getOverlapPushDirection
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
 import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
+import com.engine.drawables.sorting.DrawingPriority
+import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setCenter
@@ -27,6 +31,7 @@ import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
@@ -50,6 +55,7 @@ class SigmaRatElectricBall(game: MegamanMaverickGame) : GameEntity(game), IProje
     private val hitTimer = Timer(HIT_DUR)
 
     private var hit = false
+    private var explosionDirection: Direction? = null
 
     override fun init() {
         if (ballRegion == null || hitRegion == null) {
@@ -78,10 +84,14 @@ class SigmaRatElectricBall(game: MegamanMaverickGame) : GameEntity(game), IProje
         super.hitBlock(blockFixture)
         body.physics.velocity.setZero()
         hit = true
+        val blockBounds = blockFixture.getBody()
+        explosionDirection = getOverlapPushDirection(body, blockBounds)
+        requestToPlaySound(SoundAsset.BASSY_BLAST_SOUND, false)
     }
 
     internal fun launch(trajectory: Vector2) {
         body.physics.velocity = trajectory
+        requestToPlaySound(SoundAsset.BLAST_SOUND, false)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent(this, { delta ->
@@ -99,7 +109,10 @@ class SigmaRatElectricBall(game: MegamanMaverickGame) : GameEntity(game), IProje
             EntityType.EXPLOSION, ExplosionsFactory.SIGMA_RAT_ELECTRIC_BALL_EXPLOSION
         )
         game.engine.spawn(
-            explosion!! to props(ConstKeys.POSITION to body.getBottomCenterPoint())
+            explosion!! to props(
+                ConstKeys.POSITION to body.getBottomCenterPoint(),
+                ConstKeys.DIRECTION to (explosionDirection ?: Direction.UP)
+            )
         )
     }
 
@@ -127,7 +140,7 @@ class SigmaRatElectricBall(game: MegamanMaverickGame) : GameEntity(game), IProje
     }
 
     private fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite()
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 3))
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
@@ -139,8 +152,7 @@ class SigmaRatElectricBall(game: MegamanMaverickGame) : GameEntity(game), IProje
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { if (hit) "hit" else "ball" }
         val animations = objectMapOf<String, IAnimation>(
-            "ball" to Animation(ballRegion!!, 1, 2, 0.1f, true),
-            "hit" to Animation(hitRegion!!)
+            "ball" to Animation(ballRegion!!, 1, 2, 0.1f, true), "hit" to Animation(hitRegion!!)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

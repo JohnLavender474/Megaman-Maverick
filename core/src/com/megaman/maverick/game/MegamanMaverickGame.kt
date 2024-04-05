@@ -76,7 +76,7 @@ class MegamanMaverickGame : Game2D() {
         const val TAG = "MegamanMaverickGame"
         const val DEBUG_TEXT = false
         const val DEBUG_SHAPES = true
-        const val DEFAULT_VOLUME = 0f
+        const val DEFAULT_VOLUME = 0.5f
         val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.FEET, FixtureType.BLOCK)

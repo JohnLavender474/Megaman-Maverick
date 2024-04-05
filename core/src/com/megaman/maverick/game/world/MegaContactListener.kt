@@ -271,8 +271,8 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             if (!gravityChangeFixture.getShape().contains(bodyPointToCheck)) return
 
             val entity = bodyFixture.getEntity()
-            if (entity is IDirectionRotatable && entity.directionRotation != direction) entity.directionRotation =
-                direction
+            if (entity is IDirectionRotatable && entity.directionRotation != direction)
+                entity.directionRotation = direction
         }
 
         // block, gravity change

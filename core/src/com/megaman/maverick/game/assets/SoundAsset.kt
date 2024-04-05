@@ -45,7 +45,10 @@ enum class SoundAsset(src: String, val seconds: Int) : IAsset {
     TIME_STOPPER_SOUND("time_stopper.wav", 1),
     CHOMP_SOUND("chomp.wav", 1),
     BLOOPITY_SOUND("bloopity.wav", 1),
-    MM2_MECHA_DRAGON("mecha_dragon.wav", 1);
+    MM2_MECHA_DRAGON_SOUND("mecha_dragon.wav", 1),
+    BLAST_SOUND("blast.wav", 1),
+    BASSY_BLAST_SOUND("bassy_blast.wav", 1),
+    LIFT_OFF_SOUND("liftoff.wav", 2);
 
     override val source = SOUND_ASSET_PREFIX + src
     override val assClass = Sound::class.java

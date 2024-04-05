@@ -34,10 +34,13 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.bosses.Bospider
 import com.megaman.maverick.game.entities.bosses.gutstank.GutsTankFist
+import com.megaman.maverick.game.entities.bosses.sigmarat.SigmaRat
+import com.megaman.maverick.game.entities.bosses.sigmarat.SigmaRatClaw
 import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.enemies.*
 import com.megaman.maverick.game.entities.explosions.CaveRockExplosion
 import com.megaman.maverick.game.entities.explosions.Explosion
+import com.megaman.maverick.game.entities.explosions.SigmaRatElectricBallExplosion
 import com.megaman.maverick.game.entities.explosions.SnowballExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
@@ -130,7 +133,11 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         BabySpider::class to dmgNeg(2),
         GutsTankFist::class to dmgNeg(3),
         PurpleBlast::class to dmgNeg(3),
-        HeliMet::class to dmgNeg(3)
+        HeliMet::class to dmgNeg(3),
+        SigmaRat::class to dmgNeg(3),
+        SigmaRatElectricBall::class to dmgNeg(3),
+        SigmaRatElectricBallExplosion::class to dmgNeg(2),
+        SigmaRatClaw::class to dmgNeg(2)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 

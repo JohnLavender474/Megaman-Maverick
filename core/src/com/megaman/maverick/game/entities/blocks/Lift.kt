@@ -42,7 +42,11 @@ class Lift(game: MegamanMaverickGame) : Block(game), ISpriteEntity, IDirectionRo
         private const val FALL_SPEED = 2f
     }
 
-    override lateinit var directionRotation: Direction
+    override var directionRotation: Direction
+        get() = body.cardinalRotation
+        set(value) {
+            body.cardinalRotation = value
+        }
 
     private lateinit var currentState: LiftState
     private lateinit var stopPoint: Vector2
@@ -69,13 +73,17 @@ class Lift(game: MegamanMaverickGame) : Block(game), ISpriteEntity, IDirectionRo
     override fun defineBodyComponent(): BodyComponent {
         val bodyComponent = super.defineBodyComponent()
         val body = bodyComponent.body
+        debugShapeSuppliers.add { body.rotatedBounds }
 
-        val headFixture = Fixture(body, FixtureType.HEAD, GameRectangle())
+        val headFixture =
+            Fixture(body, FixtureType.HEAD, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM))
         headFixture.setEntity(this)
+        headFixture.offsetFromBodyCenter.y = 0.5f * ConstVals.PPM
         body.addFixture(headFixture)
-        headFixture.getShape().color = Color.BLUE
+        headFixture.rawShape.color = Color.BLUE
         debugShapeSuppliers.add { headFixture.getShape() }
 
+        /*
         body.preProcess.put(ConstKeys.HEAD) {
             (headFixture.getShape() as GameRectangle).setSize(
                 when (directionRotation) {
@@ -96,6 +104,7 @@ class Lift(game: MegamanMaverickGame) : Block(game), ISpriteEntity, IDirectionRo
                 Direction.RIGHT -> Vector2(0.5f * ConstVals.PPM, 0f)
             }
         }
+        */
 
         return bodyComponent
     }

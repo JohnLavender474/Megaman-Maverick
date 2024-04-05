@@ -344,7 +344,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                     val attack = ATTACK_STATES.random()
                     if (attack != GutsTankAttackState.LAUNCH_FIST) attackState = attack
                     if (attack == GutsTankAttackState.SHOOT_BLASTS) requestToPlaySound(
-                        SoundAsset.MM2_MECHA_DRAGON, false
+                        SoundAsset.MM2_MECHA_DRAGON_SOUND, false
                     )
                     val newDuration = ATTACK_DELAY_MIN + (ATTACK_DELAY_MAX - ATTACK_DELAY_MIN) * getHealthRatio()
                     attackDelayTimer.resetDuration(newDuration)

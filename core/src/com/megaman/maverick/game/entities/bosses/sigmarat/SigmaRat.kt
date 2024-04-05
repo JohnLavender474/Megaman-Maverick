@@ -37,6 +37,7 @@ import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.entities.EntityType
@@ -60,9 +61,9 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
 
         private const val SHOCK_BALL_SPAWN = "shock_ball_spawn"
 
-        private const val ELECTRIC_BALLS_MIN_ANGLE = 210f
-        private const val ELECTRIC_BALLS_MAX_ANGLE = 330f
-        private const val ELECTRIC_BALLS_COUNT = 9
+        private const val ELECTRIC_BALLS_MIN_ANGLE = 225f
+        private const val ELECTRIC_BALLS_MAX_ANGLE = 315f
+        private const val ELECTRIC_BALLS_COUNT = 12
         private const val ELECTRIC_BALLS_SPEED = 10f
         private const val ELECTRIC_BALL_SHOT_DELAY = 0.5f
 
@@ -179,6 +180,7 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
                     electricBalls.addLast(electricBall as SigmaRatElectricBall)
                 }
                 electricBallsClockwise = getRandomBool()
+                requestToPlaySound(SoundAsset.LIFT_OFF_SOUND, false)
             }
 
             SigmaRatAttack.FIRE_BLASTS -> {}
@@ -195,6 +197,8 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
             SigmaRatAttack.ELECTRIC_BALLS -> {
                 electricShotDelayTimer.update(delta)
                 if (electricShotDelayTimer.isFinished()) {
+                    electricShotDelayTimer.reset()
+
                     val electricBall = electricBalls.removeFirst()
                     val currentIndex = ELECTRIC_BALLS_COUNT - electricBalls.size - 1
                     val angleIncrement =
