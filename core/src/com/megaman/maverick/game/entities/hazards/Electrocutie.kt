@@ -91,7 +91,6 @@ class Electrocutie(game: MegamanMaverickGame) : GameEntity(game), IHazard, IBody
             minPosition = bounds.getCenter().x - (min * ConstVals.PPM)
             maxPosition = bounds.getCenter().x + (max * ConstVals.PPM)
 
-            // bottom electrocutie child
             val bottomElectrocutieChildProps = props(
                 ConstKeys.POSITION to bounds.getBottomCenterPoint(),
                 ConstKeys.DIRECTION to Direction.UP,
@@ -102,7 +101,6 @@ class Electrocutie(game: MegamanMaverickGame) : GameEntity(game), IHazard, IBody
             game.engine.spawn(bottomElectrocutieChild, bottomElectrocutieChildProps)
             children.add(bottomElectrocutieChild)
 
-            // top electrocutie child
             val topElectrocutieProps = props(
                 ConstKeys.POSITION to bounds.getTopCenterPoint(),
                 ConstKeys.DIRECTION to Direction.DOWN,
@@ -113,25 +111,24 @@ class Electrocutie(game: MegamanMaverickGame) : GameEntity(game), IHazard, IBody
             game.engine.spawn(topElectrocutieChild, topElectrocutieProps)
             children.add(topElectrocutieChild)
 
-            // bolts
             val length = bounds.height.roundToInt() / ConstVals.PPM
             for (i in 0 until length) {
                 val position = body.getBottomCenterPoint().add(0f, i * ConstVals.PPM.toFloat())
                 val bolt = EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.BOLT)!! as Bolt
-
                 game.engine.spawn(
                     bolt, props(
-                        ConstKeys.POSITION to position, ConstKeys.VERTICAL to true, ConstKeys.PARENT to this
+                        ConstKeys.POSITION to position,
+                        ConstKeys.DIRECTION to Direction.UP,
+                        ConstKeys.PARENT to this,
+                        ConstKeys.CULL_OUT_OF_BOUNDS to false
                     )
                 )
-
                 children.add(bolt)
             }
         } else {
             minPosition = bounds.getCenter().y - (min * ConstVals.PPM)
             maxPosition = bounds.getCenter().y + (max * ConstVals.PPM)
 
-            // bottom electrocutie child
             val bottomElectrocutieProps = props(
                 ConstKeys.POSITION to bounds.getCenterLeftPoint(),
                 ConstKeys.DIRECTION to Direction.RIGHT,
@@ -142,7 +139,6 @@ class Electrocutie(game: MegamanMaverickGame) : GameEntity(game), IHazard, IBody
             game.engine.spawn(bottomElectrocutieChild, bottomElectrocutieProps)
             children.add(bottomElectrocutieChild)
 
-            // top electrocutie child
             val topElectrocutieProps = props(
                 ConstKeys.POSITION to bounds.getCenterRightPoint(),
                 ConstKeys.DIRECTION to Direction.LEFT,
@@ -153,18 +149,18 @@ class Electrocutie(game: MegamanMaverickGame) : GameEntity(game), IHazard, IBody
             game.engine.spawn(topElectrocutieChild, topElectrocutieProps)
             children.add(topElectrocutieChild)
 
-            // bolts
             val length = bounds.width.roundToInt() / ConstVals.PPM
             for (i in 0 until length) {
                 val position = body.getCenterLeftPoint().add(i * ConstVals.PPM.toFloat(), 0f)
                 val bolt = Bolt(getMegamanMaverickGame())
-
                 game.engine.spawn(
                     bolt, props(
-                        ConstKeys.POSITION to position, ConstKeys.VERTICAL to false, ConstKeys.PARENT to this
+                        ConstKeys.POSITION to position,
+                        ConstKeys.DIRECTION to Direction.RIGHT,
+                        ConstKeys.PARENT to this,
+                        ConstKeys.CULL_OUT_OF_BOUNDS to false
                     )
                 )
-
                 children.add(bolt)
             }
         }
@@ -209,7 +205,7 @@ class Electrocutie(game: MegamanMaverickGame) : GameEntity(game), IHazard, IBody
         body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body }
+        debugShapes.add { body.rotatedBounds }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             children.forEach {

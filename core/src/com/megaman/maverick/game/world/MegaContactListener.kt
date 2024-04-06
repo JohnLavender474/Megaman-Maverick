@@ -97,7 +97,7 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             printDebugLog(contact, "beginContact(): Block-Side, contact = $contact")
             val (block, side) = contact.getFixturesInOrder(FixtureType.BLOCK, FixtureType.SIDE)!!
 
-            if (block.hasFixtureType(FixtureLabel.NO_SIDE_TOUCHIE)) return
+            if (block.hasFixtureLabel(FixtureLabel.NO_SIDE_TOUCHIE)) return
 
             val body = side.getBody()
             val sideType = side.getProperty(ConstKeys.SIDE)
@@ -308,7 +308,7 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
                 )
             )!!
 
-            if (other.hasFixtureType(FixtureLabel.NO_PROJECTILE_COLLISION)) return
+            if (other.hasFixtureLabel(FixtureLabel.NO_PROJECTILE_COLLISION)) return
             val projectileEntity = projectile.getEntity() as IProjectileEntity
             when (other.getFixtureType()) {
                 FixtureType.BLOCK -> {
@@ -602,7 +602,7 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
         else if (contact.fixturesMatch(FixtureType.SIDE, FixtureType.BLOCK)) {
             val (side, block) = contact.getFixturesInOrder(FixtureType.SIDE, FixtureType.BLOCK)!!
 
-            if (block.hasFixtureType(FixtureLabel.NO_SIDE_TOUCHIE)) return
+            if (block.hasFixtureLabel(FixtureLabel.NO_SIDE_TOUCHIE)) return
 
             val body = side.getBody()
             val sideType = side.getProperty(ConstKeys.SIDE)

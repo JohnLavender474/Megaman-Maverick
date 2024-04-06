@@ -51,6 +51,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.MegaControllerPoller
+import com.megaman.maverick.game.entities.bosses.sigmarat.SigmaRatClaw
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.screens.ScreenEnum
@@ -77,7 +78,7 @@ class MegamanMaverickGame : Game2D() {
         const val DEBUG_TEXT = false
         const val DEBUG_SHAPES = true
         const val DEFAULT_VOLUME = 0.5f
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(SigmaRatClaw.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.FEET, FixtureType.BLOCK)
         }

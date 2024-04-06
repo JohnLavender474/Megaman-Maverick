@@ -1,7 +1,9 @@
 package com.megaman.maverick.game.entities.projectiles
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.Array
 import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
@@ -12,6 +14,8 @@ import com.engine.common.interfaces.Updatable
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.damage.IDamageable
+import com.engine.drawables.shapes.DrawableShapesComponent
+import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setCenter
@@ -40,17 +44,14 @@ class ElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     val trajectory = Vector2()
 
-    var large = false
+    private var large = false
 
     override fun init() {
-        if (smallRegion == null)
-            smallRegion =
-                game.assMan.getTextureRegion(
-                    TextureAsset.PROJECTILES_1.source, "Electric/SmallElectric"
-                )
-        if (largeRegion == null)
-            largeRegion =
-                game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Electric/BigElectric")
+        if (smallRegion == null) smallRegion = game.assMan.getTextureRegion(
+            TextureAsset.PROJECTILES_1.source, "Electric/SmallElectric"
+        )
+        if (largeRegion == null) largeRegion =
+            game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Electric/BigElectric")
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
@@ -61,28 +62,36 @@ class ElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         super.spawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
-        trajectory.x = spawnProps.get(ConstKeys.X, Float::class)!!
-        trajectory.y = spawnProps.get(ConstKeys.Y, Float::class)!!
+        if (spawnProps.containsKey(ConstKeys.TRAJECTORY)) trajectory.set(
+            spawnProps.get(
+                ConstKeys.TRAJECTORY,
+                Vector2::class
+            )!!
+        )
+        else {
+            trajectory.x = spawnProps.getOrDefault(ConstKeys.X, 0f, Float::class)
+            trajectory.y = spawnProps.getOrDefault(ConstKeys.Y, 0f, Float::class)
+        }
         large = spawnProps.getOrDefault(ConstKeys.LARGE, false, Boolean::class)
     }
 
-    override fun onDamageInflictedTo(damageable: IDamageable) {
-        explodeAndDie()
-    }
+    override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
-    override fun hitBlock(blockFixture: IFixture) {
-        explodeAndDie()
-    }
+    override fun hitBlock(blockFixture: IFixture) = explodeAndDie()
 
     override fun explodeAndDie() {
         // TODO: create zap explosion
-        requestToPlaySound(SoundAsset.MM3_ELECTRIC_PULSE_SOUND, false)
+        // requestToPlaySound(SoundAsset.MM3_ELECTRIC_PULSE_SOUND, false)
     }
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
+        body.color = Color.GRAY
 
         val bounds = GameRectangle()
+
+        val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body.rotatedBounds }
 
         val projectileFixture = Fixture(body, FixtureType.PROJECTILE, bounds)
         body.addFixture(projectileFixture)
@@ -96,6 +105,8 @@ class ElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
             bounds.setSize(size)
             body.physics.velocity = trajectory
         })
+
+        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -112,11 +123,10 @@ class ElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { if (large) "large" else "small" }
-        val animations =
-            objectMapOf<String, IAnimation>(
-                "large" to Animation(largeRegion!!, 1, 2, 0.15f, true),
-                "small" to Animation(smallRegion!!, 1, 2, 0.15f, true)
-            )
+        val animations = objectMapOf<String, IAnimation>(
+            "large" to Animation(largeRegion!!, 1, 2, 0.15f, true),
+            "small" to Animation(smallRegion!!, 1, 2, 0.15f, true)
+        )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }

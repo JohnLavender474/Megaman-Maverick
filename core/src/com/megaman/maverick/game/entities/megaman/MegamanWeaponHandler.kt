@@ -3,7 +3,6 @@ package com.megaman.maverick.game.entities.megaman
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
-import com.engine.common.enums.Facing
 import com.engine.common.interfaces.Resettable
 import com.engine.common.interfaces.Updatable
 import com.engine.common.objects.Properties
@@ -45,10 +44,9 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
 
     companion object {
         private const val MEGA_BUSTER_BULLET_VEL = 10f
-        private val FLAME_TOSS_TRAJECTORY = Vector2(35f, 10f)
     }
 
-    private val gameEngine = megaman.game.engine
+    private val engine = megaman.game.engine
     private val weapons = ObjectMap<MegamanWeapon, MegaWeaponEntry>()
     private val spawnCenter: Vector2
         get() {
@@ -60,8 +58,7 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
                 var yOffset: Float = ConstVals.PPM / 16f
                 if (megaman.isBehaviorActive(BehaviorType.RIDING_CART)) yOffset += .35f * ConstVals.PPM
                 else if (megaman.isAnyBehaviorActive(
-                        BehaviorType.CLIMBING,
-                        BehaviorType.WALL_SLIDING
+                        BehaviorType.CLIMBING, BehaviorType.WALL_SLIDING
                     )
                 ) yOffset += .15f * ConstVals.PPM
                 else if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) yOffset -= .05f * ConstVals.PPM
@@ -72,8 +69,7 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
                 var xOffset = ConstVals.PPM / 16f
                 xOffset += if (megaman.isBehaviorActive(BehaviorType.RIDING_CART)) .25f * ConstVals.PPM
                 else if (megaman.isAnyBehaviorActive(
-                        BehaviorType.CLIMBING,
-                        BehaviorType.WALL_SLIDING
+                        BehaviorType.CLIMBING, BehaviorType.WALL_SLIDING
                     )
                 ) .15f * ConstVals.PPM
                 else if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) -.05f * ConstVals.PPM
@@ -199,8 +195,7 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
         } ?: throw IllegalStateException("MegaBusterShot is null")
 
         if (stat === MegaChargeStatus.NOT_CHARGED) megaman.requestToPlaySound(
-            SoundAsset.MEGA_BUSTER_BULLET_SHOT_SOUND,
-            false
+            SoundAsset.MEGA_BUSTER_BULLET_SHOT_SOUND, false
         )
         else {
             megaman.requestToPlaySound(SoundAsset.MEGA_BUSTER_CHARGED_SHOT_SOUND, false)
@@ -212,28 +207,30 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
         if (megaman.isDirectionRotatedDown()) s.y -= .05f * ConstVals.PPM
 
         props.put(ConstKeys.POSITION, s)
-        gameEngine.spawn(megaBusterShot, props)
+        engine.spawn(megaBusterShot, props)
 
         return megaBusterShot as IProjectileEntity
     }
 
     private fun fireFlameToss(stat: MegaChargeStatus): IProjectileEntity {
         val props = Properties()
-        props.put(ConstKeys.OWNER, megaman)
-
+        props.put(ConstKeys.OWNER, megaman) // TODO: should be different for each charge level
         val fireball = when (stat) {
             MegaChargeStatus.NOT_CHARGED, MegaChargeStatus.HALF_CHARGED, MegaChargeStatus.FULLY_CHARGED -> {
-                props.put(ConstKeys.LEFT, megaman.facing == Facing.LEFT)
+                props.put(
+                    ConstKeys.TRAJECTORY, Vector2(
+                        MegamanValues.FLAME_TOSS_X_VEL * megaman.facing.value, MegamanValues.FLAME_TOSS_Y_VEL
+                    ).scl(ConstVals.PPM.toFloat())
+                )
+                props.put(ConstKeys.GRAVITY, Vector2(0f, MegamanValues.FLAME_TOSS_GRAVITY))
+                props.put(Fireball.BURST_ON_HIT_BODY, true)
+                props.put(Fireball.BURST_ON_DAMAGE_INFLICTED, true)
                 EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.FIREBALL) as Fireball
             }
         }
-
-        props.put(ConstKeys.POSITION, spawnCenter) // TODO: trajectory should be different depending on charge status
-        props.put(ConstKeys.TRAJECTORY, FLAME_TOSS_TRAJECTORY)
-        gameEngine.spawn(fireball, props)
-
+        props.put(ConstKeys.POSITION, spawnCenter)
+        engine.spawn(fireball, props)
         megaman.requestToPlaySound(SoundAsset.CRASH_BOMBER_SOUND, false)
-
         return fireball
     }
 }

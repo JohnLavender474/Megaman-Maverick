@@ -125,7 +125,6 @@ class ElectrocutieChild(game: MegamanMaverickGame) : GameEntity(game), IHazard, 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.25f * ConstVals.PPM)
-
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setOriginCenter()
@@ -148,7 +147,6 @@ class ElectrocutieChild(game: MegamanMaverickGame) : GameEntity(game), IHazard, 
             }
             _sprite.translate(offset.x, offset.y)
         }
-
         return spritesComponent
     }
 

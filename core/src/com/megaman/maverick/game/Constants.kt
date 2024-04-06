@@ -16,6 +16,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val SCALE = "scale"
     const val ANGLE = "angle"
     const val HEAD = "head"
     const val ON_DAMAGE_INFLICTED_TO = "on_damage_inflicted_to"

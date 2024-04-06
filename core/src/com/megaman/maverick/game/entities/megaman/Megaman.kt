@@ -137,7 +137,8 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         SigmaRat::class to dmgNeg(3),
         SigmaRatElectricBall::class to dmgNeg(3),
         SigmaRatElectricBallExplosion::class to dmgNeg(2),
-        SigmaRatClaw::class to dmgNeg(2)
+        SigmaRatClaw::class to dmgNeg(2),
+        Fireball::class to dmgNeg(3)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 

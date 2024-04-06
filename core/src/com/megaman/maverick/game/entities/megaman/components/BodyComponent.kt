@@ -9,10 +9,7 @@ import com.engine.common.interfaces.Updatable
 import com.engine.common.shapes.GameRectangle
 import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
-import com.engine.world.Fixture
+import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.behaviors.BehaviorType
@@ -22,6 +19,14 @@ import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.world.*
 
 const val MEGAMAN_BODY_COMPONENT_TAG = "MegamanBodyComponent"
+
+val Megaman.feet: IFixture
+    get() {
+        for (entry in body.fixtures) {
+            if (entry.first == FixtureType.FEET) return entry.second
+        }
+        throw IllegalStateException("Cannot find Megaman's feet")
+    }
 
 internal fun Megaman.defineBodyComponent(): BodyComponent {
     val body = Body(BodyType.DYNAMIC)

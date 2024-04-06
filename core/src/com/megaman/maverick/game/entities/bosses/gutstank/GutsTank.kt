@@ -127,12 +127,10 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(1),
-        ChargedShot::class to dmgNeg {
+        Bullet::class to dmgNeg(1), ChargedShot::class to dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 2 else 1
-        },
-        ChargedShotExplosion::class to dmgNeg(1)
+        }, ChargedShotExplosion::class to dmgNeg(1)
     )
 
     internal var tankBlock: Block? = null

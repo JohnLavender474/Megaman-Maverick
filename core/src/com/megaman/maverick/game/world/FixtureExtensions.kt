@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.world
 
+import com.badlogic.gdx.utils.ObjectSet
 import com.engine.common.enums.ProcessState
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.world.IFixture
