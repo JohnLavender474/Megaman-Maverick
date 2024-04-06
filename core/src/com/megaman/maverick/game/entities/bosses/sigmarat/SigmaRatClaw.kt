@@ -15,7 +15,6 @@ import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.extensions.objectSetOf
 import com.engine.common.objects.Properties
-import com.engine.common.objects.WeightedRandomSelector
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
@@ -50,6 +49,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.entities.factories.impl.HazardsFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.projectiles.SigmaRatElectricBall
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.BodyLabel
 import com.megaman.maverick.game.world.FixtureLabel
@@ -64,13 +64,14 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
         private const val LAUNCH_PAUSE_DUR = 0.25f
         private const val RETURN_SPEED = 5f
         private const val LAUNCH_SPEED = 10f
-        private const val SHOCK_PAUSE_DUR = 0.15f
+        private const val SHOCK_PAUSE_DUR = 0.75f
         private const val SHOCK_BOLT_SCALE = 2.5f
         private const val TITTY_GRAB_PAUSE_DUR = 0.25f
         private const val SHOCK_VELOCITY_Y = 10f
         private const val EPSILON = 0.1f
         private var closedRegion: TextureRegion? = null
         private var openRegion: TextureRegion? = null
+        private var shockRegion: TextureRegion? = null
     }
 
     enum class SigmaRatClawState {
@@ -98,14 +99,17 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
     private lateinit var returnTarget: Vector2
 
     private var block: Block? = null
+    private var shockBall: SigmaRatElectricBall? = null
     private var shocked = false
     private var reachedLaunchTarget = false
+    private var maxY = 0f
 
     override fun init() {
-        if (closedRegion == null || openRegion == null) {
+        if (closedRegion == null || openRegion == null || shockRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES.source)
             closedRegion = atlas.findRegion("SigmaRat/ClawClosed")
             openRegion = atlas.findRegion("SigmaRat/ClawOpen")
+            shockRegion = atlas.findRegion("SigmaRat/ClawFlash")
         }
         super<AbstractEnemy>.init()
         addComponent(defineAnimationsComponent())
@@ -124,7 +128,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
         block = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.STANDARD)!! as Block
         game.engine.spawn(
             block!!, props(
-                ConstKeys.BOUNDS to GameRectangle().setSize(1.15f * ConstVals.PPM, 0.2f * ConstVals.PPM)
+                ConstKeys.BOUNDS to GameRectangle().setSize(1.35f * ConstVals.PPM, 0.1f * ConstVals.PPM)
                     .setTopCenterToPoint(body.getTopCenterPoint()),
                 ConstKeys.BODY_LABELS to objectSetOf(BodyLabel.COLLIDE_DOWN_ONLY),
                 ConstKeys.FIXTURE_LABELS to objectSetOf(
@@ -134,6 +138,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
         )
 
         state = SigmaRatClawState.ROTATE
+        maxY = spawnProps.get(ConstKeys.MAX_Y, Float::class)!!
     }
 
     override fun onDestroy() {
@@ -156,10 +161,17 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
         state = SigmaRatClawState.SHOCK
         shockPauseTimer.reset()
         shocked = false
+        shockBall = EntityFactories.fetch(
+            EntityType.PROJECTILE, ProjectilesFactory.SIGMA_RAT_ELECTRIC_BALL
+        ) as SigmaRatElectricBall
+        game.engine.spawn(
+            shockBall!!, props(
+                ConstKeys.OWNER to this, ConstKeys.POSITION to body.getCenter().sub(0f, 0.15f * ConstVals.PPM)
+            )
+        )
     }
 
-    internal fun enterTittyGrabState() {
-        // TODO:
+    internal fun enterTittyGrabState() { // TODO:
         //  - open claw and hold for x seconds
         //  - move claw to SigmaRat's titty position (passed as spawn prop)
         //  - when both this claw and the other return true for 'isTittyGrabbed', then SigmaRat will perform titty
@@ -185,6 +197,10 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
             )
         )
         requestToPlaySound(SoundAsset.BURST_SOUND, false)
+
+        shockBall!!.launch(megaman.body.getCenter().sub(body.getCenter()).nor().scl(SHOCK_VELOCITY_Y * ConstVals.PPM))
+        shockBall = null
+        requestToPlaySound(SoundAsset.BLAST_SOUND, false)
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -223,10 +239,9 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
                         val trajectory =
                             launchTarget.cpy().sub(body.getCenter()).nor().scl(LAUNCH_SPEED * ConstVals.PPM)
                         body.physics.velocity = trajectory
-                        if (body.getCenter().epsilonEquals(
-                                launchTarget,
-                                EPSILON * ConstVals.PPM
-                            ) || megaman.body.contains(body.getCenter())
+                        if (body.getCenter().epsilonEquals(launchTarget, EPSILON * ConstVals.PPM) ||
+                            megaman.body.contains(body.getCenter()) ||
+                            body.getMaxY() >= maxY
                         ) {
                             launchPauseTimer.reset()
                             reachedLaunchTarget = true
@@ -281,8 +296,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
             val diff = target.sub(current)
             block!!.body.physics.velocity = diff.scl(1f / delta)
 
-            val swiping = state == SigmaRatClawState.LAUNCH
-            /*
+            val swiping = state == SigmaRatClawState.LAUNCH/*
             TODO: shield fixture?
             shieldFixture.active = !swiping
             shieldFixture.rawShape.color = if (!swiping) Color.BLUE else Color.GRAY
@@ -312,11 +326,14 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
         val keySupplier: () -> String? = {
             when (state) {
                 SigmaRatClawState.ROTATE, SigmaRatClawState.TITTY_GRAB -> "closed"
-                SigmaRatClawState.SHOCK, SigmaRatClawState.LAUNCH -> "open"
+                SigmaRatClawState.LAUNCH -> "open"
+                SigmaRatClawState.SHOCK -> if (shocked) "open" else "shock"
             }
         }
         val animations = objectMapOf<String, IAnimation>(
-            "closed" to Animation(closedRegion!!), "open" to Animation(openRegion!!)
+            "closed" to Animation(closedRegion!!),
+            "open" to Animation(openRegion!!),
+            "shock" to Animation(shockRegion!!, 1, 2, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

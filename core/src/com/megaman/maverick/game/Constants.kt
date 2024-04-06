@@ -73,6 +73,8 @@ object ConstKeys {
     const val TEXT = "text"
     const val MIN = "min"
     const val MAX = "max"
+    const val MAX_X = "max_x"
+    const val MAX_Y = "max_y"
     const val TOP = "top"
     const val VERTICAL = "vertical"
     const val LENGTH = "length"

@@ -76,6 +76,8 @@ class SigmaRatElectricBall(game: MegamanMaverickGame) : GameEntity(game), IProje
         owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
+        val trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2(), Vector2::class)
+        body.physics.velocity = trajectory
         hit = false
         hitTimer.reset()
     }

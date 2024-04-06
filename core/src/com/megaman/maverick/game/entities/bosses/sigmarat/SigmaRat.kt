@@ -11,10 +11,7 @@ import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
 import com.engine.common.enums.Position
-import com.engine.common.extensions.gdxArrayOf
-import com.engine.common.extensions.getRandomElements
-import com.engine.common.extensions.getTextureAtlas
-import com.engine.common.extensions.objectMapOf
+import com.engine.common.extensions.*
 import com.engine.common.getRandomBool
 import com.engine.common.objects.Properties
 import com.engine.common.objects.WeightedRandomSelector
@@ -63,6 +60,10 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
     companion object {
         const val TAG = "SigmaRat"
 
+        private const val HIGH_CHANCE = 6f
+        private const val MEDIUM_CHANCE = 3f
+        private const val LOW_CHANCE = 1f
+
         private const val ATTACK_DELAY_MIN = 0.25f
         private const val ATTACK_DELAY_MAX = 1.25f
 
@@ -88,7 +89,7 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
 
         private const val ELECTRIC_BALLS_SPEED = 10f
         private const val ELECTRIC_BALL_SHOT_DELAY = 0.5f
-        private const val INDEX_TO_TRY_CLAW_DURING_ELECTRIC_BALLS = 6
+        private val INDICES_TO_TRY_CLAW_DURING_ELECTRIC_BALLS = objectSetOf(3, 7)
 
         private const val FIREBALL_DELAY = 0.5f
         private const val FIREBALL_SPEED = 7.5f
@@ -112,10 +113,10 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
     )
 
     private val weightedAttackSelector = WeightedRandomSelector(
-        SigmaRatAttack.ELECTRIC_BALLS to 0.25f,
-        SigmaRatAttack.FIRE_BLASTS to 0.25f,
-        SigmaRatAttack.CLAW_SHOCK to 0.2f,
-        SigmaRatAttack.CLAW_LAUNCH to 0.3f
+        SigmaRatAttack.ELECTRIC_BALLS to HIGH_CHANCE,
+        SigmaRatAttack.FIRE_BLASTS to HIGH_CHANCE,
+        SigmaRatAttack.CLAW_SHOCK to MEDIUM_CHANCE,
+        SigmaRatAttack.CLAW_LAUNCH to HIGH_CHANCE
     )
 
     private val attackTimer = Timer(ATTACK_DELAY_MAX)
@@ -163,13 +164,20 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
         rightClaw = SigmaRatClaw(game as MegamanMaverickGame)
         game.engine.spawn(
             leftClaw!! to props(
-                ConstKeys.PARENT to this, ConstKeys.SPEED to CLAW_ROTATION_SPEED, ConstKeys.POSITION to leftClawSpawn
+                ConstKeys.PARENT to this,
+                ConstKeys.SPEED to CLAW_ROTATION_SPEED,
+                ConstKeys.POSITION to leftClawSpawn,
+                ConstKeys.MAX_Y to headPosition.y
             ), rightClaw!! to props(
-                ConstKeys.PARENT to this, ConstKeys.SPEED to -CLAW_ROTATION_SPEED, ConstKeys.POSITION to rightClawSpawn
+                ConstKeys.PARENT to this,
+                ConstKeys.SPEED to -CLAW_ROTATION_SPEED,
+                ConstKeys.POSITION to rightClawSpawn,
+                ConstKeys.MAX_Y to headPosition.y
             )
         )
 
         attackTimer.reset()
+        attackState = null
     }
 
     override fun onDestroy() {
@@ -186,12 +194,9 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
         val explosions = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION, 2)
         game.engine.spawn(
             explosions[0] to props(
-                ConstKeys.POSITION to leftClaw!!.body.getCenter(),
-                ConstKeys.SOUND to SoundAsset.EXPLOSION_1_SOUND
-            ),
-            explosions[1] to props(
-                ConstKeys.POSITION to rightClaw!!.body.getCenter(),
-                ConstKeys.SOUND to SoundAsset.EXPLOSION_1_SOUND
+                ConstKeys.POSITION to leftClaw!!.body.getCenter(), ConstKeys.SOUND to SoundAsset.EXPLOSION_1_SOUND
+            ), explosions[1] to props(
+                ConstKeys.POSITION to rightClaw!!.body.getCenter(), ConstKeys.SOUND to SoundAsset.EXPLOSION_1_SOUND
             )
         )
         leftClaw!!.kill()
@@ -230,6 +235,18 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
     }
 
     private fun startAttack() {
+        if (megaman.body.getMaxY() >= body.getCenter().y) {
+            weightedAttackSelector.putItem(SigmaRatAttack.CLAW_SHOCK, HIGH_CHANCE)
+            weightedAttackSelector.putItem(SigmaRatAttack.CLAW_LAUNCH, LOW_CHANCE)
+            weightedAttackSelector.putItem(SigmaRatAttack.ELECTRIC_BALLS, LOW_CHANCE)
+            weightedAttackSelector.putItem(SigmaRatAttack.FIRE_BLASTS, LOW_CHANCE)
+        } else {
+            weightedAttackSelector.putItem(SigmaRatAttack.CLAW_SHOCK, MEDIUM_CHANCE)
+            weightedAttackSelector.putItem(SigmaRatAttack.CLAW_LAUNCH, MEDIUM_CHANCE)
+            weightedAttackSelector.putItem(SigmaRatAttack.ELECTRIC_BALLS, HIGH_CHANCE)
+            weightedAttackSelector.putItem(SigmaRatAttack.FIRE_BLASTS, HIGH_CHANCE)
+        }
+
         val attackState = weightedAttackSelector.getRandomItem()
         when (attackState) {
             SigmaRatAttack.ELECTRIC_BALLS -> {
@@ -260,20 +277,26 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
             }
 
             SigmaRatAttack.CLAW_SHOCK -> {
-                val claw = if (megaman.feet.getShape().overlaps(leftClaw!!.body)) leftClaw
-                else if (megaman.feet.getShape().overlaps(rightClaw!!.body)) rightClaw
-                else if (getRandomBool()) leftClaw else rightClaw
-
-                if (claw!!.shocking) return
+                val claw = if (leftClaw!!.shocking || leftClaw!!.launched) rightClaw
+                else if (rightClaw!!.shocking || rightClaw!!.launched) leftClaw
+                else {
+                    val distToLeft = megaman.body.getCenter().dst2(leftClaw!!.body.getCenter())
+                    val distToRight = megaman.body.getCenter().dst2(rightClaw!!.body.getCenter())
+                    if (distToLeft > distToRight) rightClaw else leftClaw
+                }
+                if (claw!!.shocking || claw.launched) return
                 claw.enterShockState()
             }
 
             SigmaRatAttack.CLAW_LAUNCH -> {
-                val claw = if (megaman.feet.getShape().overlaps(leftClaw!!.body)) rightClaw
-                else if (megaman.feet.getShape().overlaps(rightClaw!!.body)) leftClaw
-                else if (getRandomBool()) leftClaw else rightClaw
-
-                if (claw!!.launched) return
+                val claw = if (leftClaw!!.shocking || leftClaw!!.launched) rightClaw
+                else if (rightClaw!!.shocking || rightClaw!!.launched) leftClaw
+                else {
+                    val distToLeft = megaman.body.getCenter().dst2(leftClaw!!.body.getCenter())
+                    val distToRight = megaman.body.getCenter().dst2(rightClaw!!.body.getCenter())
+                    if (distToLeft > distToRight) leftClaw else rightClaw
+                }
+                if (claw!!.shocking || claw.launched) return
                 claw.enterLaunchState()
             }
         }
@@ -298,21 +321,21 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
                     val trajectory = Vector2(0f, ELECTRIC_BALLS_SPEED * ConstVals.PPM).setAngleDeg(angle)
                     electricBall.launch(trajectory)
 
-                    if (index == INDEX_TO_TRY_CLAW_DURING_ELECTRIC_BALLS) {
+                    if (INDICES_TO_TRY_CLAW_DURING_ELECTRIC_BALLS.contains(index)) {
                         val attack = weightedAttackSelector.getRandomItem()
                         when (attack) {
                             SigmaRatAttack.CLAW_SHOCK -> {
-                                val claw = if (megaman.feet.getShape().overlaps(leftClaw!!.body)) leftClaw
-                                else if (megaman.feet.getShape().overlaps(rightClaw!!.body)) rightClaw
-                                else if (getRandomBool()) leftClaw else rightClaw
-                                if (!claw!!.shocking) claw.enterShockState()
+                                val distToLeft = megaman.body.getCenter().dst2(leftClaw!!.body.getCenter())
+                                val distToRight = megaman.body.getCenter().dst2(rightClaw!!.body.getCenter())
+                                val claw = if (distToLeft > distToRight) leftClaw else rightClaw
+                                if (!claw!!.shocking && !claw.launched) claw.enterShockState()
                             }
 
                             SigmaRatAttack.CLAW_LAUNCH -> {
-                                val claw = if (megaman.feet.getShape().overlaps(leftClaw!!.body)) rightClaw
-                                else if (megaman.feet.getShape().overlaps(rightClaw!!.body)) leftClaw
-                                else if (getRandomBool()) leftClaw else rightClaw
-                                if (!claw!!.launched) claw.enterLaunchState()
+                                val distToLeft = megaman.body.getCenter().dst2(leftClaw!!.body.getCenter())
+                                val distToRight = megaman.body.getCenter().dst2(rightClaw!!.body.getCenter())
+                                val claw = if (distToLeft > distToRight) leftClaw else rightClaw
+                                if (!claw!!.shocking && !claw.launched) claw.enterLaunchState()
                             }
 
                             else -> {}
