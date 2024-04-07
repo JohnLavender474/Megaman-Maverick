@@ -36,8 +36,8 @@ abstract class AbstractBoss(
 
     override val eventKeyMask = objectSetOf<Any>(EventType.END_BOSS_SPAWN, EventType.PLAYER_SPAWN)
 
-    protected val defeatTimer = Timer(defeatDur)
-    protected val explosionTimer = Timer(EXPLOSION_TIME)
+    protected open val defeatTimer = Timer(defeatDur)
+    protected open val explosionTimer = Timer(EXPLOSION_TIME)
 
     var ready = false
     var defeated = false

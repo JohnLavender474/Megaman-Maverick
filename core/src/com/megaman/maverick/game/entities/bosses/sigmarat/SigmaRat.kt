@@ -46,7 +46,6 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
-import com.megaman.maverick.game.entities.megaman.components.feet
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
@@ -102,7 +101,7 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
     }
 
     enum class SigmaRatAttack {
-        ELECTRIC_BALLS, FIRE_BLASTS, CLAW_SHOCK, CLAW_LAUNCH, /* TITTY_LASERS */
+        ELECTRIC_BALLS, FIRE_BLASTS, CLAW_SHOCK, CLAW_LAUNCH
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -114,7 +113,7 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
 
     private val weightedAttackSelector = WeightedRandomSelector(
         SigmaRatAttack.ELECTRIC_BALLS to HIGH_CHANCE,
-        SigmaRatAttack.FIRE_BLASTS to HIGH_CHANCE,
+        SigmaRatAttack.FIRE_BLASTS to MEDIUM_CHANCE,
         SigmaRatAttack.CLAW_SHOCK to MEDIUM_CHANCE,
         SigmaRatAttack.CLAW_LAUNCH to HIGH_CHANCE
     )
@@ -242,9 +241,9 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
             weightedAttackSelector.putItem(SigmaRatAttack.FIRE_BLASTS, LOW_CHANCE)
         } else {
             weightedAttackSelector.putItem(SigmaRatAttack.CLAW_SHOCK, MEDIUM_CHANCE)
-            weightedAttackSelector.putItem(SigmaRatAttack.CLAW_LAUNCH, MEDIUM_CHANCE)
+            weightedAttackSelector.putItem(SigmaRatAttack.CLAW_LAUNCH, HIGH_CHANCE)
             weightedAttackSelector.putItem(SigmaRatAttack.ELECTRIC_BALLS, HIGH_CHANCE)
-            weightedAttackSelector.putItem(SigmaRatAttack.FIRE_BLASTS, HIGH_CHANCE)
+            weightedAttackSelector.putItem(SigmaRatAttack.FIRE_BLASTS, MEDIUM_CHANCE)
         }
 
         val attackState = weightedAttackSelector.getRandomItem()
@@ -408,21 +407,13 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = {
             when {
-                damageBlink -> "BodyDamaged" /* when {
-                    attackState == SigmaRatHeadAttack.TITTY_LASERS -> "BodyTittyShootDamaged"
-                    else -> "BodyDamaged"
-                }
-                */
-
-                /* attackState == SigmaRatHeadAttack.TITTY_LASERS -> "BodyTittyShoot" */
+                damageBlink -> "BodyDamaged"
                 else -> "Body"
             }
         }
         val animations = objectMapOf<String, IAnimation>(
             "Body" to Animation(bodyRegion!!),
-            "BodyTittyShoot" to Animation(bodyTittyShootRegion!!),
-            "BodyDamaged" to Animation(bodyDamagedRegion!!, 1, 2, 0.1f, true),
-            "BodyTittyShootDamaged" to Animation(bodyTittyShootDamagedRegion!!, 1, 2, 0.1f, true)
+            "BodyDamaged" to Animation(bodyDamagedRegion!!, 1, 2, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

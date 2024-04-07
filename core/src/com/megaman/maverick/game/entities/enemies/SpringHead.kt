@@ -36,7 +36,9 @@ import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.VelocityAlterationType
 import com.megaman.maverick.game.utils.getMegamanMaverickGame
 import com.megaman.maverick.game.world.BodyComponentCreator
+import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.FixtureType
+import com.megaman.maverick.game.world.isSensing
 import kotlin.reflect.KClass
 
 class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
@@ -66,19 +68,16 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     private val turnTimer = Timer(TURN_DELAY)
     private val bounceTimer = Timer(BOUNCE_DUR)
 
-    private val speedUpScanner =
-        Rectangle().setSize(ConstVals.VIEW_WIDTH * ConstVals.PPM, ConstVals.PPM / 4f)
+    private val speedUpScanner = Rectangle().setSize(ConstVals.VIEW_WIDTH * ConstVals.PPM, ConstVals.PPM / 4f)
 
     private val facingWrongDirection: Boolean
         get() {
             val megamanBody = getMegamanMaverickGame().megaman.body
-            return (body.x < megamanBody.x && isFacing(Facing.LEFT)) ||
-                    (body.x > megamanBody.x && isFacing(Facing.RIGHT))
+            return (body.x < megamanBody.x && isFacing(Facing.LEFT)) || (body.x > megamanBody.x && isFacing(Facing.RIGHT))
         }
 
     override fun init() {
-        if (textureAtlas == null)
-            textureAtlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+        if (textureAtlas == null) textureAtlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
         super.init()
         addComponent(defineAnimationsComponent())
     }
@@ -113,21 +112,20 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, c1.copy())
         body.addFixture(damageableFixture)
 
-        val shieldFixture =
-            Fixture(
-                body,
-                FixtureType.SHIELD,
-                GameRectangle().setSize(0.85f * ConstVals.PPM, 0.6f * ConstVals.PPM),
-            )
+        val shieldFixture = Fixture(
+            body,
+            FixtureType.SHIELD,
+            GameRectangle().setSize(0.85f * ConstVals.PPM, 0.6f * ConstVals.PPM),
+        )
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
         shieldFixture.offsetFromBodyCenter.y = 0.1f * ConstVals.PPM
         body.addFixture(shieldFixture)
 
-        val bouncerFixture = Fixture(body, FixtureType.BOUNCER,
-            GameRectangle().setSize(0.5f * ConstVals.PPM))
+        val bouncerFixture = Fixture(
+            body, FixtureType.BOUNCER, GameRectangle().setSize(0.5f * ConstVals.PPM)
+        )
         bouncerFixture.offsetFromBodyCenter.y = 0.1f * ConstVals.PPM
-        bouncerFixture.putProperty(
-            ConstKeys.VELOCITY_ALTERATION,
+        bouncerFixture.putProperty(ConstKeys.VELOCITY_ALTERATION,
             { bounceable: Fixture, _: Float -> velocityAlteration(bounceable) })
         body.addFixture(bouncerFixture)
 
@@ -152,9 +150,7 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             turnTimer.update(it)
 
             val megaman = getMegamanMaverickGame().megaman
-            if (turnTimer.isJustFinished())
-                facing = if (megaman.body.x > body.x) Facing.RIGHT else Facing.LEFT
-
+            if (turnTimer.isJustFinished()) facing = if (megaman.body.x > body.x) Facing.RIGHT else Facing.LEFT
             if (turnTimer.isFinished() && facingWrongDirection) turnTimer.reset()
 
             bounceTimer.update(it)
@@ -163,9 +159,10 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
                 return@add
             }
 
-            val vel =
-                (if (megaman.body.overlaps(speedUpScanner)) SPEED_SUPER else SPEED_NORMAL) * ConstVals.PPM
-            body.physics.velocity.x = if (facing == Facing.LEFT) -vel else vel
+            body.physics.velocity.x =
+                if ((isFacing(Facing.LEFT) && !body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
+                    (isFacing(Facing.RIGHT) && !body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))) 0f
+                else (if (megaman.body.overlaps(speedUpScanner)) SPEED_SUPER else SPEED_NORMAL) * ConstVals.PPM * facing.value
         }
     }
 
@@ -182,12 +179,10 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String = { if (bouncing) "unleashed" else "compressed" }
-        val animations =
-            objectMapOf<String, IAnimation>(
-                "unleashed" to
-                        Animation(textureAtlas!!.findRegion("SpringHead/Unleashed"), 1, 6, 0.1f, true),
-                "compressed" to Animation(textureAtlas!!.findRegion("SpringHead/Compressed"))
-            )
+        val animations = objectMapOf<String, IAnimation>(
+            "unleashed" to Animation(textureAtlas!!.findRegion("SpringHead/Unleashed"), 1, 6, 0.1f, true),
+            "compressed" to Animation(textureAtlas!!.findRegion("SpringHead/Compressed"))
+        )
         return AnimationsComponent(this, Animator(keySupplier, animations))
     }
 }

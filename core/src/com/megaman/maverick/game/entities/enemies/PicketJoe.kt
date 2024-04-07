@@ -2,7 +2,6 @@ package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import com.badlogic.gdx.math.MathUtils.*
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.engine.animations.Animation
@@ -50,11 +49,8 @@ import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.world.BodyComponentCreator
-import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.FixtureType
-import com.megaman.maverick.game.world.isSensing
 import kotlin.math.abs
-import kotlin.math.sqrt
 import kotlin.reflect.KClass
 
 class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
@@ -65,8 +61,6 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         private const val STAND_DUR = .4f
         private const val THROW_DUR = .5f
         private const val PICKET_IMPULSE_Y = 10f
-        private const val GROUND_GRAVITY = 0.0015f
-        private const val GRAVITY = 0.375f
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -124,7 +118,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     }
 
     override fun defineBodyComponent(): BodyComponent {
-        val body = Body(BodyType.DYNAMIC)
+        val body = Body(BodyType.ABSTRACT)
         body.setSize(ConstVals.PPM.toFloat(), 1.25f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
@@ -167,8 +161,6 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         debugShapes.add { damageableFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
-            body.physics.gravity.y =
-                ConstVals.PPM * if (body.isSensing(BodySense.FEET_ON_GROUND)) -GROUND_GRAVITY else -GRAVITY
             shieldFixture.active = standing
             if (standing) {
                 damageableFixture.offsetFromBodyCenter.x = 0.25f * ConstVals.PPM * -facing.value

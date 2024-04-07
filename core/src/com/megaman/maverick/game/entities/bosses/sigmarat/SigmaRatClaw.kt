@@ -61,12 +61,11 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
     companion object {
         const val TAG = "SigmaRatClaw"
         private const val DEGREES_ON_RESET = 90f
-        private const val LAUNCH_PAUSE_DUR = 0.25f
+        private const val LAUNCH_PAUSE_DUR = 0.75f
         private const val RETURN_SPEED = 5f
         private const val LAUNCH_SPEED = 10f
         private const val SHOCK_PAUSE_DUR = 0.75f
         private const val SHOCK_BOLT_SCALE = 2.5f
-        private const val TITTY_GRAB_PAUSE_DUR = 0.25f
         private const val SHOCK_VELOCITY_Y = 10f
         private const val EPSILON = 0.1f
         private var closedRegion: TextureRegion? = null
@@ -92,7 +91,6 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
 
     private val launchPauseTimer = Timer(LAUNCH_PAUSE_DUR)
     private val shockPauseTimer = Timer(SHOCK_PAUSE_DUR)
-    private val tittyGrabPauseTimer = Timer(TITTY_GRAB_PAUSE_DUR)
 
     private lateinit var rotatingLine: RotatingLine
     private lateinit var launchTarget: Vector2
@@ -169,14 +167,6 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
                 ConstKeys.OWNER to this, ConstKeys.POSITION to body.getCenter().sub(0f, 0.15f * ConstVals.PPM)
             )
         )
-    }
-
-    internal fun enterTittyGrabState() { // TODO:
-        //  - open claw and hold for x seconds
-        //  - move claw to SigmaRat's titty position (passed as spawn prop)
-        //  - when both this claw and the other return true for 'isTittyGrabbed', then SigmaRat will perform titty
-        //    shock attack
-        //  - when titty shock attack is done, move claw to starting position in rotation
     }
 
     private fun shock() {
