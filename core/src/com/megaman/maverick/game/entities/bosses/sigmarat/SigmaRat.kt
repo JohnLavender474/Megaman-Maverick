@@ -42,11 +42,9 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
-import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
-import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.projectiles.SigmaRatElectricBall
@@ -104,12 +102,10 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
         ELECTRIC_BALLS, FIRE_BLASTS, CLAW_SHOCK, CLAW_LAUNCH
     }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(1), ChargedShot::class to dmgNeg {
-            it as ChargedShot
-            if (it.fullyCharged) 2 else 1
-        }, ChargedShotExplosion::class to dmgNeg(1)
-    )
+    override val damageNegotiations =
+        objectMapOf<KClass<out IDamager>, DamageNegotiation>(ChargedShot::class to dmgNeg {
+            if ((it as ChargedShot).fullyCharged) 1 else 0
+        })
 
     private val weightedAttackSelector = WeightedRandomSelector(
         SigmaRatAttack.ELECTRIC_BALLS to HIGH_CHANCE,
@@ -238,7 +234,7 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
             weightedAttackSelector.putItem(SigmaRatAttack.CLAW_SHOCK, HIGH_CHANCE)
             weightedAttackSelector.putItem(SigmaRatAttack.CLAW_LAUNCH, LOW_CHANCE)
             weightedAttackSelector.putItem(SigmaRatAttack.ELECTRIC_BALLS, LOW_CHANCE)
-            weightedAttackSelector.putItem(SigmaRatAttack.FIRE_BLASTS, LOW_CHANCE)
+            weightedAttackSelector.removeItem(SigmaRatAttack.FIRE_BLASTS)
         } else {
             weightedAttackSelector.putItem(SigmaRatAttack.CLAW_SHOCK, MEDIUM_CHANCE)
             weightedAttackSelector.putItem(SigmaRatAttack.CLAW_LAUNCH, HIGH_CHANCE)
@@ -388,6 +384,12 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
         damageableFixture.rawShape.color = Color.PURPLE
         debugShapes.add { damageableFixture.getShape() }
 
+        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(0.65f * ConstVals.PPM))
+        shieldFixture.offsetFromBodyCenter.y = 3f * ConstVals.PPM
+        body.addFixture(shieldFixture)
+        shieldFixture.rawShape.color = Color.CYAN
+        debugShapes.add { shieldFixture.getShape() }
+
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
@@ -412,8 +414,7 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
             }
         }
         val animations = objectMapOf<String, IAnimation>(
-            "Body" to Animation(bodyRegion!!),
-            "BodyDamaged" to Animation(bodyDamagedRegion!!, 1, 2, 0.1f, true)
+            "Body" to Animation(bodyRegion!!), "BodyDamaged" to Animation(bodyDamagedRegion!!, 1, 2, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

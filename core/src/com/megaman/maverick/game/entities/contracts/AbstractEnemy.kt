@@ -145,13 +145,15 @@ abstract class AbstractEnemy(
 
     protected abstract fun defineSpritesComponent(): SpritesComponent
 
-    override fun canBeDamagedBy(damager: IDamager) = !invincible && damageNegotiations.containsKey(damager::class)
+    override fun canBeDamagedBy(damager: IDamager) = !invincible &&
+            (damageNegotiations.get(damager::class)?.get(damager) ?: 0) > 0
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
         val damagerKey = damager::class
         if (!damageNegotiations.containsKey(damagerKey)) return false
         damageTimer.reset()
         val damage = damageNegotiations[damagerKey].get(damager)
+        if (damage <= 0) return false
         addHealth(-damage)
         requestToPlaySound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
         return true

@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.1.0</string>
+        <string>7.2.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -177,6 +177,7 @@
             <key type="filename">../frames/Bosses/BluntMan/Flaming.png</key>
             <key type="filename">../frames/Bosses/BluntMan/Flex.png</key>
             <key type="filename">../frames/Bosses/BluntMan/Stand.png</key>
+            <key type="filename">../frames/Bosses/CrewMan/Jump.png</key>
             <key type="filename">../frames/Bosses/DistributorMan/Damaged.png</key>
             <key type="filename">../frames/Bosses/DistributorMan/JumpShock.png</key>
             <key type="filename">../frames/Bosses/DistributorMan/JustLand.png</key>
@@ -200,6 +201,9 @@
             </struct>
             <key type="filename">../frames/Bosses/BluntMan/Jump.png</key>
             <key type="filename">../frames/Bosses/BluntMan/Slide.png</key>
+            <key type="filename">../frames/Bosses/CrewMan/Stand.png</key>
+            <key type="filename">../frames/Bosses/CrewMan/StandHoldBlock.png</key>
+            <key type="filename">../frames/Bosses/CrewMan/StandMouthOpen.png</key>
             <key type="filename">../frames/Bosses/DistributorMan/Jump.png</key>
             <key type="filename">../frames/Bosses/SigmaRat/ElectricBallDissipate.png</key>
             <struct type="IndividualSpriteSettings">
