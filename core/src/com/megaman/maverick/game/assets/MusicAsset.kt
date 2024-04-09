@@ -5,7 +5,6 @@ import com.badlogic.gdx.audio.Music
 const val MUSIC_ASSET_PREFIX = "music/"
 
 enum class MusicAsset(src: String) : IAsset {
-
     DUEL_OF_THE_FATES_MUSIC("duel_of_the_fates.mp3"),
     XENOBLADE_GAUR_PLAINS_MUSIC("xenoblade_gaur_plains.ogg"),
     MM11_WILY_STAGE_MUSIC("MM11_Wily_Stage.mp3"),
@@ -33,7 +32,7 @@ enum class MusicAsset(src: String) : IAsset {
     MM3_SNAKE_MAN_MUSIC("SnakeManMM3.mp3"),
     MM10_WILY1_MUSIC("MM10_Wily1.mp3"),
     MM9_GALAXY_MAN_MUSIC("MM9_GalaxyMan.mp3"),
-    CHRONO_TRIGGER_WORLD_REVOLUTION("ChronoTrigger_WorldRevolution.mp3"),;
+    CHRONO_TRIGGER_WORLD_REVOLUTION("ChronoTrigger_WorldRevolution.mp3"), ;
 
     override val source = MUSIC_ASSET_PREFIX + src
     override val assClass = Music::class.java

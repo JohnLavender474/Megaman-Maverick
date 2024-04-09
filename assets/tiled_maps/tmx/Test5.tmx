@@ -73,17 +73,17 @@
  </objectgroup>
  <objectgroup id="7" name="backgrounds"/>
  <objectgroup id="6" name="game_rooms">
-  <object id="17" name="Room1" x="0" y="9216" width="1984" height="384"/>
-  <object id="40" name="Room2" x="1984" y="9216" width="1216" height="384"/>
-  <object id="74" name="Room3" x="3200" y="9216" width="1344" height="384"/>
-  <object id="96" name="Room4" x="1376" y="9600" width="3168" height="384"/>
-  <object id="200" name="Room5" x="864" y="9600" width="512" height="992"/>
-  <object id="218" name="Room6" x="1376" y="10208" width="2720" height="384"/>
-  <object id="320" name="Room7" x="2528" y="10592" width="1568" height="384"/>
-  <object id="346" name="Room8" x="2528" y="11040" width="1824" height="384"/>
-  <object id="412" name="Room9" x="4352" y="11040" width="2720" height="384"/>
-  <object id="437" name="Room10" x="7072" y="11040" width="512" height="384"/>
-  <object id="443" name="BossRoom" x="7584" y="11040" width="640" height="384">
+  <object id="17" name="room1" x="0" y="9216" width="1984" height="384"/>
+  <object id="40" name="room2" x="1984" y="9216" width="1216" height="384"/>
+  <object id="74" name="room3" x="3200" y="9216" width="1344" height="384"/>
+  <object id="96" name="room4" x="1376" y="9600" width="3168" height="384"/>
+  <object id="200" name="room5" x="864" y="9600" width="512" height="992"/>
+  <object id="218" name="room6" x="1376" y="10208" width="2720" height="384"/>
+  <object id="320" name="room7" x="2528" y="10592" width="1568" height="384"/>
+  <object id="346" name="room8" x="2528" y="11040" width="1824" height="384"/>
+  <object id="412" name="room9" x="4352" y="11040" width="2720" height="384"/>
+  <object id="437" name="room10" x="7072" y="11040" width="512" height="384"/>
+  <object id="443" name="boss_room" x="7584" y="11040" width="640" height="384">
    <properties>
     <property name="event" value="boss"/>
     <property name="object" type="object" value="465"/>
@@ -324,7 +324,7 @@
    <properties>
     <property name="close" type="bool" value="false"/>
     <property name="reset" type="bool" value="true"/>
-    <property name="room" value="BossRoom"/>
+    <property name="room" value="boss_room"/>
    </properties>
   </object>
  </objectgroup>
