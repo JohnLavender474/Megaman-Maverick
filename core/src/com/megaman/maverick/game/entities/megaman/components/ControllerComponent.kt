@@ -96,7 +96,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
     val attack =
         ButtonActuator(
             onPressContinued = { _, delta ->
-                if (damaged) {
+                if (!ready || damaged) {
                     stopCharging()
                     return@ButtonActuator
                 }

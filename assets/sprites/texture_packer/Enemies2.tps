@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.1.0</string>
+        <string>7.2.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -177,6 +177,7 @@
             <key type="filename">../frames/Enemies2/Adamski/Orange.png</key>
             <key type="filename">../frames/Enemies2/Adamski/Purple.png</key>
             <key type="filename">../frames/Enemies2/Peat.png</key>
+            <key type="filename">../frames/Enemies2/Shotman/Shoot.png</key>
             <key type="filename">../frames/Enemies2/Taketenko/Propeller.png</key>
             <key type="filename">../frames/Enemies2/Togglee/Left.png</key>
             <key type="filename">../frames/Enemies2/Togglee/Right.png</key>
@@ -501,6 +502,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Enemies2/Shotman/Launch.png</key>
             <key type="filename">../frames/Enemies2/Taketenko/Fly.png</key>
             <key type="filename">../frames/Enemies2/Taketenko/Spin.png</key>
             <struct type="IndividualSpriteSettings">

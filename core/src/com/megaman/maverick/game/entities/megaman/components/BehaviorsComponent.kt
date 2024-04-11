@@ -36,6 +36,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
     val behaviorsComponent = BehaviorsComponent(this)
 
     val wallSlide = Behavior(evaluate = {
+        if (!ready || !canMove) return@Behavior false
+
         if ((body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && game.controllerPoller.isPressed(
                 if (isDirectionRotatedDown() || isDirectionRotatedRight()) ControllerButton.RIGHT
                 else ControllerButton.LEFT
@@ -87,9 +89,10 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
     // swim
     val swim = Behavior( // evaluate
         evaluate = {
-            if (damaged || isBehaviorActive(BehaviorType.RIDING_CART) || !body.isSensing(BodySense.IN_WATER) || body.isSensing(
-                    BodySense.HEAD_TOUCHING_BLOCK
-                )
+            if (!ready || !canMove) return@Behavior false
+
+            if (damaged || isBehaviorActive(BehaviorType.RIDING_CART) || !body.isSensing(BodySense.IN_WATER) ||
+                body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)
             ) return@Behavior false
 
             return@Behavior if (isBehaviorActive(BehaviorType.SWIMMING)) when (directionRotation) {
@@ -120,11 +123,11 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
     // jump
     val jump = Behavior( // evaluate
         evaluate = {
-            if (damaged || teleporting || isAnyBehaviorActive(
-                    BehaviorType.SWIMMING, BehaviorType.CLIMBING
-                ) || body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) || !game.controllerPoller.isPressed(ControllerButton.A) || game.controllerPoller.isPressed(
-                    ControllerButton.DOWN
-                )
+            if (!ready || !canMove) return@Behavior false
+
+            if (damaged || teleporting || isAnyBehaviorActive(BehaviorType.SWIMMING, BehaviorType.CLIMBING) ||
+                body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) || !game.controllerPoller.isPressed(ControllerButton.A) ||
+                game.controllerPoller.isPressed(ControllerButton.DOWN)
             ) return@Behavior false
 
             return@Behavior if (isBehaviorActive(BehaviorType.JUMPING)) {
@@ -185,9 +188,11 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         private val impulse = Vector2()
 
         override fun evaluate(delta: Float): Boolean {
-            if (damaged || teleporting || airDashTimer.isFinished() || body.isSensingAny(
-                    BodySense.FEET_ON_GROUND, BodySense.TELEPORTING
-                ) || isAnyBehaviorActive(BehaviorType.WALL_SLIDING, BehaviorType.CLIMBING, BehaviorType.RIDING_CART)
+            if (!ready || !canMove) return false
+
+            if (damaged || teleporting || airDashTimer.isFinished() ||
+                body.isSensingAny(BodySense.FEET_ON_GROUND, BodySense.TELEPORTING) ||
+                isAnyBehaviorActive(BehaviorType.WALL_SLIDING, BehaviorType.CLIMBING, BehaviorType.RIDING_CART)
             ) return false
 
             return if (isBehaviorActive(BehaviorType.AIR_DASHING)) game.controllerPoller.isPressed(ControllerButton.A)
@@ -256,18 +261,20 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         private var directionOnInit: Direction? = null
 
         override fun evaluate(delta: Float): Boolean {
+            if (!ready || !canMove) return false
+
             if (isBehaviorActive(BehaviorType.GROUND_SLIDING) && body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)) return true
 
-            if (damaged || groundSlideTimer.isFinished() || isBehaviorActive(BehaviorType.RIDING_CART) || !body.isSensing(
-                    BodySense.FEET_ON_GROUND
-                ) || !game.controllerPoller.isPressed(ControllerButton.DOWN)
+            if (damaged || groundSlideTimer.isFinished() || isBehaviorActive(BehaviorType.RIDING_CART) ||
+                !body.isSensing(BodySense.FEET_ON_GROUND) || !game.controllerPoller.isPressed(ControllerButton.DOWN)
             ) return false
 
             return if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) game.controllerPoller.isPressed(ControllerButton.A) && directionOnInit == directionRotation
             else game.controllerPoller.isJustPressed(ControllerButton.A)
         }
 
-        override fun init() { // In body pre-process, body height is reduced from .95f to .45f when ground sliding;
+        override fun init() {
+            // In body pre-process, body height is reduced from .95f to .45f when ground sliding;
             // when upside down, need to compensate, otherwise Megaman will be off the ground
             when (directionRotation) {
                 Direction.UP -> {}
@@ -284,9 +291,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         override fun act(delta: Float) {
             groundSlideTimer.update(delta)
 
-            if (damaged || isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) || isFacing(
-                    Facing.RIGHT
-                ) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)
+            if (damaged || isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) ||
+                isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)
             ) return
 
             val impulse = (if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_GROUND_SLIDE_VEL
@@ -331,6 +337,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         private lateinit var ladder: Ladder
 
         override fun evaluate(delta: Float): Boolean {
+            if (!ready || !canMove) return false
+
             if (damaged || isAnyBehaviorActive(
                     BehaviorType.JUMPING,
                     BehaviorType.AIR_DASHING,
@@ -468,11 +476,10 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         private lateinit var cart: Cart
 
         override fun evaluate(delta: Float) =
-            body.isSensing(BodySense.TOUCHING_CART) && !game.controllerPoller.areAllPressed(
-                gdxArrayOf(
-                    ControllerButton.A, ControllerButton.UP
-                )
-            )
+            ready && canMove &&
+            body.isSensing(BodySense.TOUCHING_CART) &&
+                    !game.controllerPoller.areAllPressed(
+                gdxArrayOf(ControllerButton.A, ControllerButton.UP))
 
         override fun init() {
             body.physics.velocity.setZero()

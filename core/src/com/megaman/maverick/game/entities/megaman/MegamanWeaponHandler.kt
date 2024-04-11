@@ -96,7 +96,7 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
     fun hasWeapon(weapon: MegamanWeapon) = weapons.containsKey(weapon)
 
     fun canFireWeapon(weapon: MegamanWeapon, stat: MegaChargeStatus): Boolean {
-        if (!hasWeapon(weapon)) return false
+        if (!megaman.ready || !hasWeapon(weapon)) return false
 
         val e = weapons[weapon]
         if (!e.cooldownTimer.isFinished() || !e.canFireWeapon()) return false
