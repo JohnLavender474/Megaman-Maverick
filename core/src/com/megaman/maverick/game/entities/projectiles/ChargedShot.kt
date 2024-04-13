@@ -85,7 +85,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceab
         fullyCharged = spawnProps.get(ConstKeys.BOOLEAN) as Boolean
         directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
 
-        var bodyDimension = .75f * ConstVals.PPM
+        var bodyDimension = 0.75f * ConstVals.PPM
         var spriteDimension = ConstVals.PPM.toFloat()
 
         if (fullyCharged) spriteDimension *= 1.5f else bodyDimension /= 2f

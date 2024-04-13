@@ -34,6 +34,7 @@ import com.engine.drawables.fonts.BitmapFontHandle
 import com.engine.drawables.fonts.FontsSystem
 import com.engine.drawables.shapes.DrawableShapesSystem
 import com.engine.drawables.shapes.IDrawableShape
+import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sorting.IComparableDrawable
 import com.engine.drawables.sprites.SpritesSystem
 import com.engine.events.EventsManager
@@ -51,7 +52,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.MegaControllerPoller
-import com.megaman.maverick.game.entities.bosses.sigmarat.SigmaRatClaw
+import com.megaman.maverick.game.entities.enemies.Met
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.screens.ScreenEnum
@@ -76,9 +77,9 @@ class MegamanMaverickGame : Game2D() {
     companion object {
         const val TAG = "MegamanMaverickGame"
         const val DEBUG_TEXT = false
-        const val DEBUG_SHAPES = false
+        const val DEBUG_SHAPES = true
         const val DEFAULT_VOLUME = 0.5f
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(SigmaRatClaw.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(Met.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.FEET, FixtureType.BLOCK)
         }
@@ -104,7 +105,8 @@ class MegamanMaverickGame : Game2D() {
 
     fun getUiCamera() = viewports.get(ConstKeys.UI).camera as OrthographicCamera
 
-    fun getDrawables() = properties.get(ConstKeys.DRAWABLES) as PriorityQueue<IComparableDrawable<Batch>>
+    fun getDrawables() = properties.get(ConstKeys.DRAWABLES) as ObjectMap<DrawingSection,
+            PriorityQueue<IComparableDrawable<Batch>>>
 
     fun getShapes() = properties.get(ConstKeys.SHAPES) as PriorityQueue<IDrawableShape>
 
@@ -165,7 +167,7 @@ class MegamanMaverickGame : Game2D() {
         screens.put(ScreenEnum.SIMPLE_END_LEVEL_SUCCESSFULLY.name, SimpleEndLevelScreen(this))
         screens.put(ScreenEnum.SIMPLE_INIT_GAME.name, SimpleInitGameScreen(this))
 
-        startLevelScreen(Level.TEST1)
+        // startLevelScreen(Level.TEST1)
         // startLevelScreen(Level.TEST2)
         // startLevelScreen(Level.TEST3)
         // startLevelScreen(Level.TEST4)
@@ -174,7 +176,7 @@ class MegamanMaverickGame : Game2D() {
         // startLevelScreen(Level.TEST7)
         // setCurrentScreen(ScreenEnum.MAIN.name)
         // startLevelScreen(Level.TIMBER_WOMAN)
-        // startLevelScreen(Level.RODENT_MAN)
+        startLevelScreen(Level.RODENT_MAN)
         // startLevelScreen(Level.FREEZER_MAN)
         // startLevelScreen(Level.GALAXY_MAN)
         // setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME.name)
@@ -232,8 +234,10 @@ class MegamanMaverickGame : Game2D() {
     }
 
     private fun createGameEngine(): IGameEngine {
-        val drawables = PriorityQueue<IComparableDrawable<Batch>>()
+        val drawables = ObjectMap<DrawingSection, PriorityQueue<IComparableDrawable<Batch>>>()
+        DrawingSection.values().forEach { section -> drawables.put(section, PriorityQueue()) }
         properties.put(ConstKeys.DRAWABLES, drawables)
+
         val shapes = PriorityQueue<IDrawableShape> { s1, s2 -> s1.shapeType.ordinal - s2.shapeType.ordinal }
         properties.put(ConstKeys.SHAPES, shapes)
 
@@ -277,8 +281,8 @@ class MegamanMaverickGame : Game2D() {
             ),
             PointsSystem(),
             UpdatablesSystem(),
-            FontsSystem { drawables.add(it) },
-            SpritesSystem { drawables.add(it) },
+            FontsSystem { font -> drawables.get(font.priority.section).add(font) },
+            SpritesSystem { sprite -> drawables.get(sprite.priority.section).add(sprite) },
             DrawableShapesSystem({ shapes.add(it) }, DEBUG_SHAPES),
             AudioSystem({ audioMan.playSound(it.source, it.loop) },
                 { audioMan.playMusic(it.source, it.loop) },

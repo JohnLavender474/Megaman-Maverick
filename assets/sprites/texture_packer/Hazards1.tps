@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.1.0</string>
+        <string>7.2.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -174,6 +174,8 @@
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
             <key type="filename">../frames/Hazards1/Bolt.png</key>
+            <key type="filename">../frames/Hazards1/CeilingCrusher/Bar.png</key>
+            <key type="filename">../frames/Hazards1/CeilingCrusher/Crusher.png</key>
             <key type="filename">../frames/Hazards1/Electrocutie/Move.png</key>
             <key type="filename">../frames/Hazards1/Electrocutie/Shock.png</key>
             <key type="filename">../frames/Hazards1/FlameThrower.png</key>

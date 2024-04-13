@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.megaman.components
 
 import com.engine.common.GameLogger
 import com.engine.updatables.UpdatablesComponent
+import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.extensions.stopCharging
 
@@ -11,6 +12,13 @@ internal fun Megaman.defineUpdatablesComponent() =
     UpdatablesComponent(
         this,
         { delta ->
+            // if megaman is below game bounds, this means a pit with a Death sensor failed to kill him
+            // this is a last resort to kill him
+            if (body.x < -10 * ConstVals.PPM || body.y < -10 * ConstVals.PPM) {
+                GameLogger.error(MEGAMAN_UPDATE_COMPONENT_TAG, "Megaman is below game bounds, killing him")
+                kill()
+            }
+
             // update weapons
             if (!weaponHandler.isChargeable(currentWeapon)) stopCharging()
             weaponHandler.update(delta)

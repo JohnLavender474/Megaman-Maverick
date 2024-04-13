@@ -123,6 +123,11 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
+        body.addFixture(bodyFixture)
+        bodyFixture.rawShape.color = Color.YELLOW
+        debugShapes.add { bodyFixture.getShape() }
+
         val feetFixture = Fixture(
             body, FixtureType.FEET,
             GameRectangle().setSize(0.8f * ConstVals.PPM, 0.1f * ConstVals.PPM)

@@ -36,7 +36,7 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.getMegamanMaverickGame
 import java.util.*
 
-class BlackBackground(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity, IEventListener {
+class Darkness(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity, IEventListener {
 
     companion object {
         const val TAG = "BlackBackground"
@@ -97,7 +97,7 @@ class BlackBackground(game: MegamanMaverickGame) : GameEntity(game), ISpriteEnti
         tiles = Matrix(rows, columns)
         for (x in 0 until columns) {
             for (y in 0 until rows) {
-                val sprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, 0))
+                val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0))
                 sprite.setRegion(region!!)
                 val spriteX = bounds.x + (x * ConstVals.PPM)
                 val spriteY = bounds.y + (y * ConstVals.PPM)
@@ -111,8 +111,6 @@ class BlackBackground(game: MegamanMaverickGame) : GameEntity(game), ISpriteEnti
                 val key = "[$x][$y]"
                 sprites.put(key, sprite)
                 putUpdateFunction(key) { delta, _sprite ->
-                    _sprite as GameSprite
-
                     if (tile.startAlpha < 0f) tile.startAlpha = 0f
                     else if (tile.startAlpha > 1f) tile.startAlpha = 1f
 

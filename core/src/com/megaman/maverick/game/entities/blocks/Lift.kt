@@ -155,7 +155,7 @@ class Lift(game: MegamanMaverickGame) : Block(game), ISpriteEntity, IDirectionRo
     })
 
     private fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, -1))
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -1))
         sprite.setSize(0.75f * ConstVals.PPM)
         sprite.setRegion(region!!)
         val spritesComponent = SpritesComponent(this, sprite)

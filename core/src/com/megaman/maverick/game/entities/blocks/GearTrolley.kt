@@ -86,7 +86,7 @@ class GearTrolley(game: MegamanMaverickGame) : Block(game), IMotionEntity, ISpri
     }
 
     private fun defineSpritesCompoent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, -1))
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -1))
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->

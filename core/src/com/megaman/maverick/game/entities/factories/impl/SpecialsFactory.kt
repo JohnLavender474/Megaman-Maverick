@@ -21,7 +21,7 @@ class SpecialsFactory(private val game: MegamanMaverickGame) : IFactory<IGameEnt
         const val ROTATION_ANCHOR = "RotationAnchor"
         const val PORTAL_HOPPER = "PortalHopper"
         const val FIXTURE_TYPE_OVERLAP_SPAWN = "FixtureTypeOverlapSpawn"
-        const val BLACK_BACKGROUND = "BlackBackground"
+        const val DARKNESS = "Darkness"
         const val FLIPPER_PLATFORM = "FlipperPlatform"
     }
 
@@ -37,7 +37,7 @@ class SpecialsFactory(private val game: MegamanMaverickGame) : IFactory<IGameEnt
         pools.put(ROTATION_ANCHOR, EntityPoolCreator.create(2) { RotationAnchor(game) })
         pools.put(PORTAL_HOPPER, EntityPoolCreator.create(5) { PortalHopper(game) })
         pools.put(FIXTURE_TYPE_OVERLAP_SPAWN, EntityPoolCreator.create(5) { FixtureTypeOverlapSpawn(game) })
-        pools.put(BLACK_BACKGROUND, EntityPoolCreator.create(1) { BlackBackground(game) })
+        pools.put(DARKNESS, EntityPoolCreator.create(1) { Darkness(game) })
         pools.put(FLIPPER_PLATFORM, EntityPoolCreator.create(2) { FlipperPlatform(game) })
     }
 

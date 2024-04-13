@@ -16,6 +16,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val MIDDLE = "middle"
     const val SCALE = "scale"
     const val ANGLE = "angle"
     const val HEAD = "head"

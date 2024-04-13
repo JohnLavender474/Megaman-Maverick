@@ -22,6 +22,7 @@ import com.engine.common.shapes.toGameRectangle
 import com.engine.controller.ControllerSystem
 import com.engine.controller.polling.IControllerPoller
 import com.engine.drawables.shapes.IDrawableShape
+import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sorting.IComparableDrawable
 import com.engine.drawables.sprites.SpritesSystem
 import com.engine.events.Event
@@ -120,7 +121,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
 
     private lateinit var bossSpawnEventHandler: BossSpawnEventHandler
 
-    private lateinit var drawables: PriorityQueue<IComparableDrawable<Batch>>
+    private lateinit var drawables: ObjectMap<DrawingSection, PriorityQueue<IComparableDrawable<Batch>>>
     private lateinit var shapes: PriorityQueue<IDrawableShape>
     private lateinit var backgrounds: Array<Background>
 
@@ -552,17 +553,35 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
         batch.projectionMatrix = backgroundCamera.combined
         backgrounds.forEach { it.draw(batch) }
 
-        // render the game ground
+        // render background sprites
         batch.projectionMatrix = gameCamera.combined
+
+        val backgroundSprites = drawables.get(DrawingSection.BACKGROUND)
+        while (!backgroundSprites.isEmpty()) {
+            val backgroundSprite = backgroundSprites.poll()
+            backgroundSprite.draw(batch)
+        }
+
+        // render the game ground
         tiledMapLevelRenderer?.render(gameCamera)
 
-        while (!drawables.isEmpty()) {
-            val drawable = drawables.poll()
-            drawable.draw(batch)
+        // render the game ground sprites
+        val gameGroundSprites = drawables.get(DrawingSection.PLAYGROUND)
+        while (!gameGroundSprites.isEmpty()) {
+            val gameGroundSprite = gameGroundSprites.poll()
+            gameGroundSprite.draw(batch)
+        }
+
+        // render the foreground sprites
+        val foregroundSprites = drawables.get(DrawingSection.FOREGROUND)
+        while (!foregroundSprites.isEmpty()) {
+            val foregroundSprite = foregroundSprites.poll()
+            foregroundSprite.draw(batch)
         }
 
         // render the ui
         batch.projectionMatrix = uiCamera.combined
+
         entityStatsHandler.draw(batch)
         playerStatsHandler.draw(batch)
         if (!playerSpawnEventHandler.finished) playerSpawnEventHandler.draw(batch)

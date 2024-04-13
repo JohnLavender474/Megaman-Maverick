@@ -89,7 +89,7 @@ class ConveyorBelt(game: MegamanMaverickGame) : ISpriteEntity, IDrawableShapesEn
                     else -> middle
                 }
             val animation = Animation(region!!, 1, 2, 0.15f, true)
-            val sprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, -1))
+            val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -1))
             sprite.setBounds(
                 bounds.x + i * ConstVals.PPM, bounds.y, ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat()
             )

@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Array
 import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
+import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
 import com.engine.common.enums.Facing
 import com.engine.common.enums.Position
@@ -60,16 +61,15 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
 
     companion object {
         const val TAG = "Met"
-        const val RUN_ONLY = "RunOnly"
-        const val RUNNING_ALLOWED = "RunningAllowed"
+        const val RUN_ONLY = "run_only"
+        const val RUNNING_ALLOWED = "running_allowed"
 
         private var atlas: TextureAtlas? = null
 
         private const val SHIELDING_DURATION = 1.15f
         private const val RUNNING_DURATION = .5f
         private const val POP_UP_DURATION = .5f
-        private const val RUN_VELOCITY = 8f
-        private const val RUN_IN_WATER_VELOCITY = 3f
+        private const val RUN_SPEED = 8f
         private const val GRAVITY_IN_AIR = 18f
         private const val GRAVITY_ON_GROUND = .15f
         private const val BULLET_TRAJECTORY_X = 15f
@@ -106,9 +106,9 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
             field = value
             metBehaviorTimers.values().forEach { it.reset() }
         }
-
     private var runOnly = false
     private var runningAllowed = false
+    private var runSpeed = RUN_SPEED
 
     override fun init() {
         super.init()
@@ -117,6 +117,8 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
     }
 
     override fun spawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "Spawn props = $spawnProps")
+
         super.spawn(spawnProps)
         behavior = MetBehavior.SHIELDING
 
@@ -126,19 +128,26 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
         } else spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setBottomCenterToPoint(spawn)
 
-        runningAllowed = spawnProps.getOrDefault(RUNNING_ALLOWED, true) as Boolean
-        runOnly = spawnProps.getOrDefault(RUN_ONLY, false) as Boolean
-        type = spawnProps.getOrDefault(ConstKeys.TYPE, "") as String
-
-        val right = spawnProps.getOrDefault(ConstKeys.RIGHT, false) as Boolean
+        runningAllowed = spawnProps.getOrDefault(RUNNING_ALLOWED, true, Boolean::class)
+        runOnly = spawnProps.getOrDefault(RUN_ONLY, false, Boolean::class)
+        runSpeed = spawnProps.getOrDefault(ConstKeys.SPEED, RUN_SPEED, Float::class)
+        type = spawnProps.getOrDefault(ConstKeys.TYPE, "", String::class)
+        val right = spawnProps.getOrDefault(ConstKeys.RIGHT, megaman.body.x > body.x, Boolean::class)
         facing = if (right) Facing.RIGHT else Facing.LEFT
 
         directionRotation = Direction.UP
     }
 
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "Destroying Met")
+        super.onDestroy()
+    }
+
     override fun getTag() = TAG
 
     private fun shoot() {
+        GameLogger.debug(TAG, "Met is shooting")
+
         val trajectory = (when (directionRotation) {
             Direction.UP -> Vector2(BULLET_TRAJECTORY_X * facing.value, BULLET_TRAJECTORY_Y)
             Direction.DOWN -> Vector2(BULLET_TRAJECTORY_X * facing.value, -BULLET_TRAJECTORY_Y)
@@ -200,7 +209,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
                     val runningTimer = metBehaviorTimers.get(MetBehavior.RUNNING)
 
                     val runImpulse =
-                        ConstVals.PPM * facing.value * if (body.isSensing(BodySense.IN_WATER)) RUN_IN_WATER_VELOCITY else RUN_VELOCITY
+                        ConstVals.PPM * facing.value * if (body.isSensing(BodySense.IN_WATER)) (runSpeed / 2f) else runSpeed
                     when (directionRotation) {
                         Direction.UP, Direction.DOWN -> body.physics.velocity.x = runImpulse
                         Direction.LEFT, Direction.RIGHT -> body.physics.velocity.y = runImpulse
@@ -233,9 +242,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
         body.addFixture(feetFixture)
 
         val shieldFixture = Fixture(
-            body,
-            FixtureType.SHIELD,
-            GameRectangle().setSize(0.75f * ConstVals.PPM, 0.5f * ConstVals.PPM)
+            body, FixtureType.SHIELD, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.5f * ConstVals.PPM)
         )
         body.addFixture(shieldFixture)
 

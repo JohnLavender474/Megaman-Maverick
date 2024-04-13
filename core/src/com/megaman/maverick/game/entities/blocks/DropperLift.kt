@@ -113,7 +113,7 @@ class DropperLift(game: MegamanMaverickGame) : Block(game), ISpriteEntity, IAnim
     })
 
     private fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, -1))
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -1))
         sprite.setSize(ConstVals.PPM * 1.5f, ConstVals.PPM.toFloat())
 
         val spritesComponent = SpritesComponent(this, sprite)

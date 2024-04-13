@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.1.0</string>
+        <string>7.2.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -188,7 +188,13 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Specials1/LightSwitch/Off.png</key>
+            <key type="filename">../frames/Specials1/LightSwitch/On.png</key>
             <key type="filename">../frames/Specials1/PortalHopper/Launch.png</key>
+            <key type="filename">../frames/Specials1/RailTrack/Drop.png</key>
+            <key type="filename">../frames/Specials1/RailTrack/Left.png</key>
+            <key type="filename">../frames/Specials1/RailTrack/Middle.png</key>
+            <key type="filename">../frames/Specials1/RailTrack/Right.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -200,6 +206,21 @@
                 <rect>8,8,16,16</rect>
                 <key>scale9Paddings</key>
                 <rect>8,8,16,16</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Specials1/LightSwitch/SwitchOff.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>24,8,48,16</rect>
+                <key>scale9Paddings</key>
+                <rect>24,8,48,16</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -215,6 +236,36 @@
                 <rect>16,8,32,16</rect>
                 <key>scale9Paddings</key>
                 <rect>16,8,32,16</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Specials1/RailTrack/Platform.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,16,32,32</rect>
+                <key>scale9Paddings</key>
+                <rect>16,16,32,32</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Specials1/RailTrack/PlatformDrop.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>48,16,96,32</rect>
+                <key>scale9Paddings</key>
+                <rect>48,16,96,32</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

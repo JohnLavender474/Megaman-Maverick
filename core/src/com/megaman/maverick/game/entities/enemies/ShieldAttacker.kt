@@ -51,6 +51,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
         private var atlas: TextureAtlas? = null
         private const val TURN_AROUND_DUR = 0.5f
         private const val X_VEL = 6f
+        private const val CULL_TIME = 5f
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -79,7 +80,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
     }
 
     override fun spawn(spawnProps: Properties) {
-        spawnProps.put(ConstKeys.CULL_TIME, 2f)
+        spawnProps.put(ConstKeys.CULL_TIME, CULL_TIME)
         super.spawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()

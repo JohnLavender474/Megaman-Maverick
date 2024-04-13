@@ -166,10 +166,10 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
                 FLY -> {
                     facing = when (directionRotation) {
-                        Direction.UP -> if (target.x < body.x) Facing.LEFT else Facing.RIGHT
-                        Direction.DOWN -> if (target.x < body.x) Facing.RIGHT else Facing.LEFT
-                        Direction.LEFT -> if (target.y < body.y) Facing.LEFT else Facing.RIGHT
-                        Direction.RIGHT -> if (target.y < body.y) Facing.RIGHT else Facing.LEFT
+                        Direction.UP -> if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
+                        Direction.DOWN -> if (megaman.body.x < body.x) Facing.RIGHT else Facing.LEFT
+                        Direction.LEFT -> if (megaman.body.y < body.y) Facing.LEFT else Facing.RIGHT
+                        Direction.RIGHT -> if (megaman.body.y < body.y) Facing.RIGHT else Facing.LEFT
                     }
 
                     sideToSideTimer.update(delta)
@@ -273,7 +273,6 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     }
 
     private fun shoot() {
-        val trajectory = megaman.body.getCenter().sub(body.getCenter()).nor().scl(BULLET_VELOCITY * ConstVals.PPM)
         val spawn = when (directionRotation) {
             Direction.UP -> body.getCenter()
                 .add(
@@ -295,6 +294,7 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
                     0.25f * ConstVals.PPM, (ConstVals.PPM / 64f) * facing.value
                 )
         }
+        val trajectory = megaman.body.getCenter().sub(spawn).nor().scl(BULLET_VELOCITY * ConstVals.PPM)
         val spawnProps =
             props(
                 ConstKeys.OWNER to this,

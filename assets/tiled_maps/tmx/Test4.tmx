@@ -562,7 +562,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="6" name="specials" visible="0">
+ <objectgroup id="6" name="specials">
   <object id="177" name="Water" x="4192" y="1152" width="768" height="256"/>
   <object id="185" name="Ladder" x="4928" y="800" width="32" height="640"/>
   <object id="283" name="DisappearingBlocks" x="8160" y="640" width="864" height="352">
@@ -576,7 +576,7 @@
     <property name="child7" type="object" value="294"/>
    </properties>
   </object>
-  <object id="323" name="BlackBackground" x="10464" y="608" width="4736" height="416">
+  <object id="323" name="Darkness" x="10464" y="608" width="4736" height="416">
    <properties>
     <property name="hidden" type="bool" value="true"/>
     <property name="key" type="int" value="1"/>

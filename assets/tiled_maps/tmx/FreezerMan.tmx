@@ -73,7 +73,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="4" name="game_rooms" visible="0">
+ <objectgroup id="4" name="game_rooms">
   <object id="52" name="Room1" x="32" y="128" width="2560" height="448"/>
   <object id="81" name="Room2" x="2592" y="128" width="2464" height="448"/>
   <object id="146" name="Room3" x="2520" y="576" width="2536" height="448"/>
