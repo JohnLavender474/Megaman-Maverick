@@ -9,8 +9,8 @@ enum class SoundAsset(src: String, val seconds: Int) : IAsset {
     DINK_SOUND("dink.mp3", 1),
     ERROR_SOUND("error.mp3", 1),
     THUMP_SOUND("thump.mp3", 1),
-    WALL_JUMP("wall_jump.mp3", 1),
-    CHILL_SHOOT("chill_shoot.mp3", 1),
+    WALL_JUMP_SOUND("wall_jump.mp3", 1),
+    CHILL_SHOOT_SOUND("chill_shoot.mp3", 1),
     WHOOSH_SOUND("whoosh.mp3", 2),
     PAUSE_SOUND("pause_menu.mp3", 1),
     EXPLOSION_1_SOUND("explosion1.mp3", 2),
@@ -24,7 +24,7 @@ enum class SoundAsset(src: String, val seconds: Int) : IAsset {
     MEGAMAN_DAMAGE_SOUND("megaman_damage.mp3", 1),
     MEGAMAN_DEFEAT_SOUND("megaman_defeat.mp3", 2),
     SWIM_SOUND("swim.mp3", 1),
-    BOSS_DOOR("boss_door.wav", 1),
+    BOSS_DOOR_SOUND("boss_door.wav", 1),
     CURSOR_MOVE_BLOOP_SOUND("cursor_move_bloop.mp3", 1),
     SPLASH_SOUND("water_splash.wav", 1),
     BEAM_IN_SOUND("beam_in.wav", 1),
@@ -47,7 +47,9 @@ enum class SoundAsset(src: String, val seconds: Int) : IAsset {
     MM2_MECHA_DRAGON_SOUND("mecha_dragon.wav", 1),
     BLAST_SOUND("blast.wav", 1),
     BASSY_BLAST_SOUND("bassy_blast.wav", 1),
-    LIFT_OFF_SOUND("liftoff.wav", 2);
+    LIFT_OFF_SOUND("liftoff.wav", 2),
+    CONVEYOR_LIFT_SOUND("conveyor_lift.mp3", 1),
+    QUAKE_SOUND("quake.mp3", 1);
 
     override val source = SOUND_ASSET_PREFIX + src
     override val assClass = Sound::class.java

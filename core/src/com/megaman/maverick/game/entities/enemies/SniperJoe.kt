@@ -452,7 +452,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
             props.put(ConstKeys.GRAVITY_ON, true)
             props.put(ConstKeys.GRAVITY, Vector2(0f, -SNOWBALL_GRAV * ConstVals.PPM))
 
-            requestToPlaySound(SoundAsset.CHILL_SHOOT, false)
+            requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
 
             EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SNOWBALL)!!
         } else {

@@ -15,6 +15,8 @@ import com.engine.common.interfaces.IBoundsSupplier
 import com.engine.common.interfaces.Resettable
 import com.engine.common.interfaces.Updatable
 import com.engine.common.interpolate
+import com.engine.common.shapes.GameRectangle
+import com.engine.common.shapes.toGameRectangle
 import com.engine.common.time.Timer
 import com.megaman.maverick.game.ConstVals
 import kotlin.math.min
@@ -172,8 +174,8 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
         if (focus == null) return
         if (currentGameRoom != null && !currentGameRoom!!.rectangle.overlaps(focus!!.getBounds()))
             currentGameRoom = null
-        val currentRoomBounds = currentGameRoom?.rectangle ?: return
-        if (currentRoomBounds.overlaps(focus!!.getBounds())) {
+        val currentRoomBounds = currentGameRoom?.rectangle?.toGameRectangle() ?: return
+        if (currentRoomBounds.overlaps(focus!!.getBounds() as Rectangle)) {
             setCameraToFocusable(delta)
             if (camera.position.y >
                 (currentRoomBounds.y + currentRoomBounds.height) - camera.viewportHeight / 2f
@@ -199,7 +201,7 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
             if (room.rectangle.overlaps(focus!!.getBounds()) && room.name != currentGameRoomKey) {
                 val width = 5f * ConstVals.PPM
                 val height = 5f * ConstVals.PPM
-                val boundingBox = Rectangle().setSize(width, height).setCenter(focus!!.getBounds().getCenter())
+                val boundingBox = GameRectangle().setSize(width, height).setCenter(focus!!.getBounds().getCenter())
                 transitionDirection =
                     getOverlapPushDirection(boundingBox, currentRoomBounds, Rectangle())
                 GameLogger.debug(TAG, "transitionToRoom(): transition direction = $transitionDirection")

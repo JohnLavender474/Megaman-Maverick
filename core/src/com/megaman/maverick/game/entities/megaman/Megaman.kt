@@ -6,6 +6,7 @@ import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
 import com.engine.common.enums.Facing
 import com.engine.common.enums.Position
+import com.engine.common.enums.Size
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.extensions.objectSetOf
@@ -138,7 +139,15 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         SigmaRatElectricBall::class to dmgNeg(3),
         SigmaRatElectricBallExplosion::class to dmgNeg(2),
         SigmaRatClaw::class to dmgNeg(2),
-        Fireball::class to dmgNeg(3)
+        Fireball::class to dmgNeg(3),
+        BoulderProjectile::class to dmgNeg {
+            it as BoulderProjectile
+            when (it.size) {
+                Size.LARGE -> 4
+                Size.MEDIUM -> 2
+                Size.SMALL -> 1
+            }
+        }
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 

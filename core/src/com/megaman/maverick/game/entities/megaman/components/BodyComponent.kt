@@ -18,8 +18,6 @@ import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.world.*
 
-const val MEGAMAN_BODY_COMPONENT_TAG = "MegamanBodyComponent"
-
 val Megaman.feet: IFixture
     get() {
         for (entry in body.fixtures) {

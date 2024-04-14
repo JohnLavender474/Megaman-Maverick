@@ -416,7 +416,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                     else {
                         runningMetDelayTimer.update(delta)
                         if (runningMetDelayTimer.isFinished()) {
-                            requestToPlaySound(SoundAsset.CHILL_SHOOT, false)
+                            requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
                             val runningMet = EntityFactories.fetch(EntityType.ENEMY, "Met")!!
                             game.engine.spawn(
                                 runningMet, props(
@@ -448,7 +448,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                     else {
                         flyingMetDelayTimer.update(delta)
                         if (flyingMetDelayTimer.isFinished()) {
-                            requestToPlaySound(SoundAsset.CHILL_SHOOT, false)
+                            requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
                             val flyingMet = EntityFactories.fetch(EntityType.ENEMY, "HeliMet")!! as HeliMet
                             val target = flyingMetTargets.get(flyingMetsSet.size)
                             game.engine.spawn(

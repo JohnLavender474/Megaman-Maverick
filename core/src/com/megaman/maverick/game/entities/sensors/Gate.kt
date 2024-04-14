@@ -119,7 +119,7 @@ class Gate(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IAudioEnt
 
     fun trigger() {
         state = GateState.OPENING
-        getMegamanMaverickGame().audioMan.playSound(SoundAsset.BOSS_DOOR, false)
+        getMegamanMaverickGame().audioMan.playSound(SoundAsset.BOSS_DOOR_SOUND, false)
         game.eventsMan.submitEvent(Event(EventType.GATE_INIT_OPENING))
     }
 
@@ -144,7 +144,7 @@ class Gate(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IAudioEnt
                 GameLogger.debug(TAG, "Set gate to CLOSING")
                 transitionFinished = false
                 state = GateState.CLOSING
-                if (showCloseEvent) requestToPlaySound(SoundAsset.BOSS_DOOR, false)
+                if (showCloseEvent) requestToPlaySound(SoundAsset.BOSS_DOOR_SOUND, false)
                 game.eventsMan.submitEvent(Event(EventType.GATE_INIT_CLOSING))
             }
         }

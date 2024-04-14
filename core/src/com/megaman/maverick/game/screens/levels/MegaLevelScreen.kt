@@ -1,5 +1,7 @@
 package com.megaman.maverick.game.screens.levels
 
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
@@ -44,6 +46,7 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.camera.CameraManagerForRooms
+import com.megaman.maverick.game.screens.levels.camera.CameraShaker
 import com.megaman.maverick.game.screens.levels.events.BossSpawnEventHandler
 import com.megaman.maverick.game.screens.levels.events.EndLevelEventHandler
 import com.megaman.maverick.game.screens.levels.events.PlayerDeathEventHandler
@@ -89,19 +92,14 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
 
     val megamanGame: MegamanMaverickGame
         get() = super.game as MegamanMaverickGame
-
     val engine: IGameEngine
         get() = game.engine
-
     val megaman: Megaman
         get() = megamanGame.megaman
-
     val eventsMan: IEventsManager
         get() = megamanGame.eventsMan
-
     val audioMan: MegaAudioManager
         get() = megamanGame.audioMan
-
     val controllerPoller: IControllerPoller
         get() = megamanGame.controllerPoller
 
@@ -115,6 +113,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
     private lateinit var levelStateHandler: LevelStateHandler
     private lateinit var endLevelEventHandler: EndLevelEventHandler
     private lateinit var cameraManagerForRooms: CameraManagerForRooms
+    private lateinit var cameraShaker: CameraShaker
 
     private lateinit var playerSpawnEventHandler: PlayerSpawnEventHandler
     private lateinit var playerDeathEventHandler: PlayerDeathEventHandler
@@ -187,6 +186,8 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
         cameraManagerForRooms.interpolate = INTERPOLATE_GAME_CAM
         cameraManagerForRooms.interpolationScalar = 5f
         cameraManagerForRooms.focus = megaman
+
+        cameraShaker = CameraShaker(gameCamera)
 
         // set begin transition logic for camera manager
         cameraManagerForRooms.beginTransition = {
@@ -437,7 +438,13 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
                 GameLogger.debug(
                     MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Req shake cam --> shake the camera"
                 )
-                // TODO: shake camera
+                if (cameraShaker.isFinished) {
+                    val duration = event.properties.get(ConstKeys.DURATION, Float::class)!!
+                    val interval = event.properties.get(ConstKeys.INTERVAL, Float::class)!!
+                    val shakeX = event.properties.get(ConstKeys.X, Float::class)!!
+                    val shakeY = event.properties.get(ConstKeys.Y, Float::class)!!
+                    cameraShaker.startShake(duration, interval, shakeX, shakeY)
+                }
             }
 
             EventType.ENTER_BOSS_ROOM -> {
@@ -598,6 +605,19 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
             shape.draw(shapeRenderer)
         }
         shapeRenderer.end()
+
+        // shake camera if not finished
+        if (Gdx.app.input.isKeyJustPressed(Keys.G)) eventsMan.submitEvent(
+            Event(
+                EventType.REQ_SHAKE_CAM, props(
+                    ConstKeys.DURATION to 1f,
+                    ConstKeys.INTERVAL to 0.1f,
+                    ConstKeys.X to 0.25f,
+                    ConstKeys.Y to 0.25f
+                )
+            )
+        )
+        if (!cameraShaker.isFinished) cameraShaker.update(delta)
     }
 
     override fun hide() = dispose()

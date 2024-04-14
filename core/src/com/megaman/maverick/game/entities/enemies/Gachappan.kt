@@ -262,7 +262,7 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
                 ConstKeys.IMPULSE to Vector2(impulseX, impulseY)
             )
         )
-        requestToPlaySound(SoundAsset.CHILL_SHOOT, false)
+        requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
     }
 
     private fun shoot() {

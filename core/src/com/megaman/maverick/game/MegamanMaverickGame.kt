@@ -55,6 +55,7 @@ import com.megaman.maverick.game.controllers.MegaControllerPoller
 import com.megaman.maverick.game.entities.enemies.Met
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.projectiles.BoulderProjectile
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
@@ -79,7 +80,7 @@ class MegamanMaverickGame : Game2D() {
         const val DEBUG_TEXT = false
         const val DEBUG_SHAPES = true
         const val DEFAULT_VOLUME = 0.5f
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(Met.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(BoulderProjectile.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.FEET, FixtureType.BLOCK)
         }
@@ -167,7 +168,7 @@ class MegamanMaverickGame : Game2D() {
         screens.put(ScreenEnum.SIMPLE_END_LEVEL_SUCCESSFULLY.name, SimpleEndLevelScreen(this))
         screens.put(ScreenEnum.SIMPLE_INIT_GAME.name, SimpleInitGameScreen(this))
 
-        // startLevelScreen(Level.TEST1)
+        startLevelScreen(Level.TEST1)
         // startLevelScreen(Level.TEST2)
         // startLevelScreen(Level.TEST3)
         // startLevelScreen(Level.TEST4)
@@ -176,7 +177,7 @@ class MegamanMaverickGame : Game2D() {
         // startLevelScreen(Level.TEST7)
         // setCurrentScreen(ScreenEnum.MAIN.name)
         // startLevelScreen(Level.TIMBER_WOMAN)
-        startLevelScreen(Level.RODENT_MAN)
+        // startLevelScreen(Level.RODENT_MAN)
         // startLevelScreen(Level.FREEZER_MAN)
         // startLevelScreen(Level.GALAXY_MAN)
         // setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME.name)
