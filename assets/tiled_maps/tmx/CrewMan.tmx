@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="250" height="42" tilewidth="32" tileheight="32" infinite="0" nextlayerid="16" nextobjectid="201">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="250" height="42" tilewidth="32" tileheight="32" infinite="0" nextlayerid="16" nextobjectid="204">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/PurpleStuff.tsx"/>
  <tileset firstgid="1097" source="../tsx/Needleman.tsx"/>
@@ -194,7 +194,7 @@
     <property name="speed" type="float" value="4"/>
    </properties>
   </object>
-  <object id="200" name="PicketJoe" x="6464" y="1088" width="32" height="32"/>
+  <object id="200" name="PicketJoe" x="6256" y="752" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="12" name="hazards">
   <object id="106" name="Saw" x="3792" y="1024" width="32" height="32">
@@ -273,7 +273,7 @@
   </object>
   <object id="132" x="2656" y="800" width="64" height="128"/>
   <object id="134" x="2496" y="1216" width="2464" height="64"/>
-  <object id="139" x="4248" y="800" width="2632" height="96"/>
+  <object id="139" x="4248" y="800" width="3392" height="96"/>
   <object id="143" x="4544" y="856" width="64" height="264"/>
   <object id="145" x="4896" y="1152" width="96" height="128"/>
   <object id="146" name="SwinginPlatform" x="5096" y="1064" width="64" height="24">
@@ -303,7 +303,7 @@
   <object id="198" x="6656" y="1088" width="96" height="32"/>
  </objectgroup>
  <objectgroup id="14" name="player">
-  <object id="147" name="0" x="5472" y="1152" width="32" height="32"/>
+  <object id="203" name="0" x="6496" y="1088" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="7" name="sensors">
   <object id="71" name="Death" x="3328" y="448" width="64" height="32"/>
@@ -323,12 +323,25 @@
  </objectgroup>
  <objectgroup id="8" name="specials">
   <object id="130" name="Ladder" x="2624" y="800" width="32" height="416"/>
+  <object id="201" name="RailTrack" x="6784" y="1152" width="320" height="32">
+   <properties>
+    <property name="child" type="int" value="8"/>
+    <property name="right" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="202" name="RailTrack" x="6976" y="1088" width="352" height="32">
+   <properties>
+    <property name="child" type="int" value="8"/>
+    <property name="drops" value="2,8"/>
+    <property name="right" type="bool" value="false"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="5" name="game_rooms" visible="0">
   <object id="59" name="room1" x="0" y="96" width="3968" height="384"/>
   <object id="60" name="room2" x="2496" y="480" width="1472" height="384"/>
   <object id="61" name="room3" x="2496" y="864" width="2080" height="384"/>
-  <object id="142" name="room4" x="4576" y="864" width="2312" height="384"/>
+  <object id="142" name="room4" x="4576" y="864" width="3064" height="384"/>
  </objectgroup>
  <objectgroup id="15" name="children">
   <object id="176" name="Target1" x="880" y="272" width="32" height="32"/>

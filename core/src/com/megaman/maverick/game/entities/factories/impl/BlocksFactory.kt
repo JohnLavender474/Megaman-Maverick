@@ -7,12 +7,12 @@ import com.engine.factories.IFactory
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.blocks.*
 import com.megaman.maverick.game.entities.factories.EntityPoolCreator
+import com.megaman.maverick.game.entities.special.RailTrackPlatform
 
 class BlocksFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntity> {
 
     companion object {
         const val TAG = "BlockFactory"
-
         const val STANDARD = "Standard"
         const val ANIMATED_BLOCK = "AnimatedBlock"
         const val ICE_BLOCK = "IceBlock"
@@ -23,6 +23,7 @@ class BlocksFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntit
         const val LIFT = "Lift"
         const val PROPELLER_PLATFORM = "PropellerPlatform"
         const val SWINGIN_PLATFORM = "SwinginPlatform"
+        const val RAIL_TRACK_PLATFORM = "RailTrackPlatform"
     }
 
     private val pools = ObjectMap<Any, Pool<Block>>()
@@ -38,6 +39,7 @@ class BlocksFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntit
         pools.put(LIFT, EntityPoolCreator.create(2) { Lift(game) })
         pools.put(PROPELLER_PLATFORM, EntityPoolCreator.create(3) { PropellerPlatform(game) })
         pools.put(SWINGIN_PLATFORM, EntityPoolCreator.create(2) { SwinginPlatform(game) })
+        pools.put(RAIL_TRACK_PLATFORM, EntityPoolCreator.create(2) { RailTrackPlatform(game) })
     }
 
     override fun fetch(key: Any) = pools.get(if (key == "" || key == "Block") STANDARD else key)?.fetch()

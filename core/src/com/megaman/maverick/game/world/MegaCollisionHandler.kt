@@ -14,6 +14,8 @@ import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 class MegaCollisionHandler(private val game: MegamanMaverickGame) : ICollisionHandler {
 
     private fun trySpecialCollission(body1: Body, body2: Body): Boolean {
+        if (!body1.physics.collisionOn || !body2.physics.collisionOn) return true
+
         val megaman = game.megaman
 
         val staticBody: Body

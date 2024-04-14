@@ -137,15 +137,19 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
         // feet, block
         else if (contact.fixturesMatch(FixtureType.FEET, FixtureType.BLOCK)) {
             printDebugLog(contact, "beginContact(): Feet-Block, contact = $contact")
-            val (feet, block) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.BLOCK)!!
+            val (feetFixture, blockFixture) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.BLOCK)!!
+            val body = feetFixture.getBody()
+            if (!blockFixture.getBody().physics.collisionOn) {
+                body.setBodySense(BodySense.FEET_ON_GROUND, false)
+                return
+            }
 
-            val body = feet.getBody()
-            val posDelta = block.getBody().getPositionDelta()
+            val posDelta = blockFixture.getBody().getPositionDelta()
 
             body.x += posDelta.x
             body.y += posDelta.y
 
-            val entity = feet.getEntity()
+            val entity = feetFixture.getEntity()
             if (entity is Megaman) entity.aButtonTask = AButtonTask.JUMP
 
             body.setBodySense(BodySense.FEET_ON_GROUND, true)
@@ -418,15 +422,19 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
 
         // feet, block
         else if (contact.fixturesMatch(FixtureType.FEET, FixtureType.BLOCK)) {
-            val (feet, block) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.BLOCK)!!
+            val (feetFixture, blockFixture) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.BLOCK)!!
+            val body = feetFixture.getBody()
+            if (!blockFixture.getBody().physics.collisionOn) {
+                body.setBodySense(BodySense.FEET_ON_GROUND, false)
+                return
+            }
 
-            val body = feet.getBody()
-            val posDelta = block.getBody().getPositionDelta()
+            val posDelta = blockFixture.getBody().getPositionDelta()
 
             body.x += posDelta.x
             body.y += posDelta.y
 
-            val entity = feet.getEntity()
+            val entity = feetFixture.getEntity()
             if (entity is Megaman) entity.aButtonTask = AButtonTask.JUMP
 
             body.setBodySense(BodySense.FEET_ON_GROUND, true)
@@ -642,12 +650,12 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
         // feet, block
         else if (contact.fixturesMatch(FixtureType.FEET, FixtureType.BLOCK)) {
             printDebugLog(contact, "End Contact: Feet-Block, contact = $contact")
-            val (feet, _) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.BLOCK)!!
+            val (feetFixture, _) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.BLOCK)!!
 
-            val body = feet.getBody()
+            val body = feetFixture.getBody()
             body.setBodySense(BodySense.FEET_ON_GROUND, false)
 
-            val entity = feet.getEntity()
+            val entity = feetFixture.getEntity()
             if (entity is Megaman) entity.aButtonTask = if (entity.body.isSensing(BodySense.IN_WATER)) AButtonTask.SWIM
             else AButtonTask.AIR_DASH
         }

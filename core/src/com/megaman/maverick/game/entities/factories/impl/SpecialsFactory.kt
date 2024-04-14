@@ -23,6 +23,7 @@ class SpecialsFactory(private val game: MegamanMaverickGame) : IFactory<IGameEnt
         const val FIXTURE_TYPE_OVERLAP_SPAWN = "FixtureTypeOverlapSpawn"
         const val DARKNESS = "Darkness"
         const val FLIPPER_PLATFORM = "FlipperPlatform"
+        const val RAIL_TRACK = "RailTrack"
     }
 
     private val pools = ObjectMap<Any, Pool<IGameEntity>>()
@@ -39,6 +40,7 @@ class SpecialsFactory(private val game: MegamanMaverickGame) : IFactory<IGameEnt
         pools.put(FIXTURE_TYPE_OVERLAP_SPAWN, EntityPoolCreator.create(5) { FixtureTypeOverlapSpawn(game) })
         pools.put(DARKNESS, EntityPoolCreator.create(1) { Darkness(game) })
         pools.put(FLIPPER_PLATFORM, EntityPoolCreator.create(2) { FlipperPlatform(game) })
+        pools.put(RAIL_TRACK, EntityPoolCreator.create(2) { RailTrack(game) })
     }
 
     override fun fetch(key: Any) = pools.get(key)?.fetch()
