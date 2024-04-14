@@ -120,25 +120,19 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.65f * ConstVals.PPM, 0.5f * ConstVals.PPM)
-
         val shapes = Array<() -> IDrawableShape?>()
-
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.15f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-
         damagerFixture.rawShape.color = Color.RED
         shapes.add { damagerFixture.getShape() }
-
         val damageableFixture = Fixture(
             body,
             FixtureType.DAMAGEABLE,
             GameRectangle().setSize(0.65f * ConstVals.PPM, 0.5f * ConstVals.PPM)
         )
         body.addFixture(damageableFixture)
-
         damageableFixture.rawShape.color = Color.PURPLE
         shapes.add { damageableFixture.getShape() }
-
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             val damageableBounds = damageableFixture.rawShape as GameRectangle
             if (down) {
@@ -149,9 +143,7 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
                 damageableFixture.offsetFromBodyCenter.y = 0f
             }
         })
-
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
-
         return BodyComponentCreator.create(this, body)
     }
 
@@ -213,7 +205,7 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
             val spawn = Vector2(body.getCenter())
             if (it.x > 0) spawn.x += 0.2f * ConstVals.PPM else if (it.x < 0) spawn.x -= 0.2f * ConstVals.PPM
             spawn.y += (if (upsideDown) -0.215f else 0.215f) * ConstVals.PPM
-            val trajectory = Vector2(it)
+            val trajectory = Vector2(it).scl(ConstVals.PPM.toFloat())
             if (upsideDown) trajectory.y *= -1f
             game.engine.spawn(
                 bullet, props(

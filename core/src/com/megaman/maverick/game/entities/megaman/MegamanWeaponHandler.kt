@@ -215,7 +215,7 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
 
     private fun fireFlameToss(stat: MegaChargeStatus): IProjectileEntity {
         val props = Properties()
-        props.put(ConstKeys.OWNER, megaman) // TODO: should be different for each charge level
+        props.put(ConstKeys.OWNER, megaman)
         val fireball = when (stat) {
             MegaChargeStatus.NOT_CHARGED, MegaChargeStatus.HALF_CHARGED, MegaChargeStatus.FULLY_CHARGED -> {
                 props.put(
