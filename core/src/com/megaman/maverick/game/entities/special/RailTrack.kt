@@ -41,7 +41,7 @@ class RailTrack(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity {
     companion object {
         const val TAG = "RailTrack"
         private const val DROPS = "drops"
-        private const val PLATFORM_SPEED = 2.5f
+        private const val PLATFORM_SPEED = 2.75f
         private var leftTrackRegion: TextureRegion? = null
         private var rightTrackRegion: TextureRegion? = null
         private var middleTrackRegion: TextureRegion? = null
@@ -130,10 +130,10 @@ class RailTrack(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity {
 
     private fun defineUpdatablesComponent() = UpdatablesComponent(this, {
         platform!!.body.setCenterY(bounds.getCenter().y + 0.35f * ConstVals.PPM)
-        if (platformRight && platform!!.pivot.getMaxX() >= bounds.getMaxX()) {
+        if (platformRight && platform!!.pivot.getMaxX() >= bounds.getMaxX() - 0.5f * ConstVals.PPM) {
             platform!!.body.physics.velocity.x = PLATFORM_SPEED * ConstVals.PPM * -1f
             platformRight = false
-        } else if (!platformRight && platform!!.pivot.x <= bounds.getX()) {
+        } else if (!platformRight && platform!!.pivot.x <= bounds.getX() + 0.5f * ConstVals.PPM) {
             platform!!.body.physics.velocity.x = PLATFORM_SPEED * ConstVals.PPM
             platformRight = true
         }

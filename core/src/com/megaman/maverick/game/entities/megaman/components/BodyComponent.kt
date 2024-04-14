@@ -30,18 +30,22 @@ val Megaman.feet: IFixture
 
 internal fun Megaman.defineBodyComponent(): BodyComponent {
     val body = Body(BodyType.DYNAMIC)
+    body.color = Color.BROWN
     body.width = .75f * ConstVals.PPM
     body.physics.takeFrictionFromOthers = true
 
     val shapes = Array<() -> IDrawableShape?>()
+    shapes.add { body.rotatedBounds }
 
     val playerFixture = Fixture(body, FixtureType.PLAYER, GameRectangle().setWidth(0.8f * ConstVals.PPM))
     body.addFixture(playerFixture)
     playerFixture.rawShape.color = Color.WHITE
+    shapes.add { playerFixture.getShape() }
 
     val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setWidth(.8f * ConstVals.PPM))
     body.addFixture(bodyFixture)
     bodyFixture.rawShape.color = Color.BLUE
+    shapes.add { bodyFixture.getShape() }
 
     val onBounce = {
         if (!body.isSensing(BodySense.IN_WATER) /* TODO: && has(MegaAbility.AIR_DASH) */)
@@ -68,6 +72,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     headFixture.setRunnable(onBounce)
     body.addFixture(headFixture)
     headFixture.rawShape.color = Color.RED
+    shapes.add { headFixture.getShape() }
 
     val leftFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setWidth(.2f * ConstVals.PPM))
     leftFixture.setRunnable(onBounce)
@@ -152,15 +157,15 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
         rightFixture.offsetFromBodyCenter.set(rightSideOffset)
         leftFixture.offsetFromBodyCenter.set(rightSideOffset.scl(-1f))
 
-        headFixture.offsetFromBodyCenter.y = 0.4f * ConstVals.PPM
-
         if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) {
             body.height = .45f * ConstVals.PPM
+            headFixture.offsetFromBodyCenter.y = ConstVals.PPM / 4f
             feetFixture.offsetFromBodyCenter.y = -ConstVals.PPM / 4f
             (leftFixture.rawShape as Rectangle).setHeight(.25f * ConstVals.PPM)
             (rightFixture.rawShape as Rectangle).setHeight(.25f * ConstVals.PPM)
         } else {
             body.height = .95f * ConstVals.PPM
+            headFixture.offsetFromBodyCenter.y = ConstVals.PPM / 2f
             feetFixture.offsetFromBodyCenter.y = -ConstVals.PPM / 2f
             (leftFixture.rawShape as Rectangle).setHeight(.6f * ConstVals.PPM)
             (rightFixture.rawShape as Rectangle).setHeight(.6f * ConstVals.PPM)
