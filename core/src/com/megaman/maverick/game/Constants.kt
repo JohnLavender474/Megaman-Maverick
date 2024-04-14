@@ -16,6 +16,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val GRAVITY_CHANGEABLE = "gravity_changeable"
     const val INTERVAL = "interval"
     const val MIDDLE = "middle"
     const val SCALE = "scale"

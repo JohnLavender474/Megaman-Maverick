@@ -205,6 +205,7 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
         val s = spawnCenter
         if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING)) s.y += 0.1f * ConstVals.PPM
         if (megaman.isDirectionRotatedDown()) s.y -= .05f * ConstVals.PPM
+        if (!megaman.body.isSensing(BodySense.FEET_ON_GROUND)) s.y -= .15f * ConstVals.PPM
 
         props.put(ConstKeys.POSITION, s)
         engine.spawn(megaBusterShot, props)

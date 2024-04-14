@@ -104,11 +104,12 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
         val wallSlidingOnIce =
             isBehaviorActive(BehaviorType.WALL_SLIDING) &&
                     (body.isSensingAny(BodySense.SIDE_TOUCHING_ICE_LEFT, BodySense.SIDE_TOUCHING_ICE_RIGHT))
-        val gravityValue =
+        var gravityValue =
             if (body.isSensing(BodySense.IN_WATER))
                 if (wallSlidingOnIce) waterIceGravity else waterGravity
             else if (wallSlidingOnIce) iceGravity
             else if (body.isSensing(BodySense.FEET_ON_GROUND)) groundGravity else gravity
+        gravityValue *= gravityScalar
 
         when (directionRotation) {
             Direction.UP,

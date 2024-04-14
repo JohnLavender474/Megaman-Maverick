@@ -63,7 +63,7 @@ import kotlin.reflect.KClass
 
 class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IEventListener, IFaceable, IDamageable,
     IDirectionRotatable, IBodyEntity, IHealthEntity, ISpriteEntity, IBehaviorsEntity, IPointsEntity, IAudioEntity,
-    IBoundsSupplier {
+    IScalableGravityEntity, IBoundsSupplier {
 
     companion object {
         const val TAG = "Megaman"
@@ -205,14 +205,13 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
             GameLogger.debug(TAG, "directionRotation: value = $value")
             body.cardinalRotation = value
             when (value) {
-                Direction.UP, Direction.RIGHT -> { // jump
+                Direction.UP, Direction.RIGHT -> {
                     jumpVel = MegamanValues.JUMP_VEL
                     wallJumpVel = MegamanValues.WALL_JUMP_VEL
                     waterJumpVel = MegamanValues.WATER_JUMP_VEL
                     waterWallJumpVel = MegamanValues.WATER_WALL_JUMP_VEL
                     cartJumpVel = MegamanValues.CART_JUMP_VEL
 
-                    // gravity
                     gravity = MegamanValues.GRAVITY
                     groundGravity = MegamanValues.GROUND_GRAVITY
                     iceGravity = MegamanValues.ICE_GRAVITY
@@ -270,6 +269,8 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
 
     var teleporting = false
         private set
+
+    override var gravityScalar = 1f
 
     internal var jumpVel = 0f
     internal var wallJumpVel = 0f
@@ -337,6 +338,7 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         })
 
         teleporting = false
+        gravityScalar = 1f
     }
 
     override fun onDestroy() {

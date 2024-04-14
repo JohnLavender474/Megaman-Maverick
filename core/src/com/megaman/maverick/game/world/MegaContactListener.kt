@@ -253,10 +253,6 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             val (bodyFixture, gravityChangeFixture) = contact.getFixturesInOrder(
                 FixtureType.BODY, FixtureType.GRAVITY_CHANGE
             )!!
-            val direction = gravityChangeFixture.getProperty(ConstKeys.DIRECTION, Direction::class) ?: return
-            val canChangeGravity =
-                bodyFixture.properties.getOrDefault(ConstKeys.GRAVITY_ROTATABLE, true, Boolean::class)
-            if (!canChangeGravity) return
 
             val body = bodyFixture.getBody()
             val pd = body.getPositionDelta()
@@ -271,12 +267,27 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
                 if (pd.y > 0f) body.getTopCenterPoint()
                 else if (pd.y < 0f) body.getBottomCenterPoint() else body.getCenter()
             }
-
             if (!gravityChangeFixture.getShape().contains(bodyPointToCheck)) return
 
             val entity = bodyFixture.getEntity()
-            if (entity is IDirectionRotatable && entity.directionRotation != direction)
-                entity.directionRotation = direction
+            if (gravityChangeFixture.hasProperty(ConstKeys.GRAVITY) && entity is IScalableGravityEntity) {
+                val canChangeGravityValue =
+                    bodyFixture.properties.getOrDefault(ConstKeys.GRAVITY_CHANGEABLE, true, Boolean::class)
+                if (canChangeGravityValue) {
+                    val scalar = gravityChangeFixture.getProperty(ConstKeys.GRAVITY, Float::class)!!
+                    entity.gravityScalar = scalar
+                }
+            }
+
+            if (gravityChangeFixture.hasProperty(ConstKeys.DIRECTION)) {
+                val canChangeGravityRotation =
+                    bodyFixture.properties.getOrDefault(ConstKeys.GRAVITY_ROTATABLE, true, Boolean::class)
+                if (canChangeGravityRotation) {
+                    val direction = gravityChangeFixture.getProperty(ConstKeys.DIRECTION, Direction::class) ?: return
+                    if (entity is IDirectionRotatable && entity.directionRotation != direction)
+                        entity.directionRotation = direction
+                }
+            }
         }
 
         // block, gravity change
