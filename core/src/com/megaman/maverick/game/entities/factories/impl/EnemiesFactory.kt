@@ -13,7 +13,6 @@ class EnemiesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
 
     companion object {
         const val TAG = "EnemiesFactory"
-
         const val TEST_ENEMY = "TestEnemy"
         const val MET = "Met"
         const val BAT = "Bat"
@@ -53,6 +52,8 @@ class EnemiesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
         const val BABY_SPIDER = "BabySpider"
         const val HELI_MET = "HeliMet"
         const val SHOT_MAN = "Shotman"
+        const val PETIT_DEVIL = "PetitDevil"
+        const val PETIT_DEVIL_CHILD = "PetitDevilChild"
     }
 
     private val pools = ObjectMap<Any, Pool<IGameEntity>>()
@@ -96,6 +97,8 @@ class EnemiesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
         pools.put(BABY_SPIDER, EntityPoolCreator.create(4) { BabySpider(game) })
         pools.put(HELI_MET, EntityPoolCreator.create(2) { HeliMet(game) })
         pools.put(SHOT_MAN, EntityPoolCreator.create(1) { Shotman(game) })
+        pools.put(PETIT_DEVIL, EntityPoolCreator.create(2) { PetitDevil(game) })
+        pools.put(PETIT_DEVIL_CHILD, EntityPoolCreator.create(4) { PetitDevilChild(game) })
     }
 
     override fun fetch(key: Any): IGameEntity? {

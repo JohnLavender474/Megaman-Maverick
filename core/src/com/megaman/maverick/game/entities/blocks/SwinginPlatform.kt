@@ -48,13 +48,10 @@ class SwinginPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, I
     override val eventKeyMask = objectSetOf<Any>(
         EventType.PLAYER_SPAWN
     )
-
     override var children = Array<IGameEntity>()
 
     private lateinit var pendulum: Pendulum
-
     private val timeToSpawnEnemyTimer = Timer(TIME_TO_SPAWN_ENEMY)
-
     private var target: Vector2? = null
     private var enemyToSpawn: String? = null
 

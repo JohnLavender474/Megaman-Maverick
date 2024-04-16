@@ -168,7 +168,7 @@ class MegamanMaverickGame : Game2D() {
         screens.put(ScreenEnum.SIMPLE_END_LEVEL_SUCCESSFULLY.name, SimpleEndLevelScreen(this))
         screens.put(ScreenEnum.SIMPLE_INIT_GAME.name, SimpleInitGameScreen(this))
 
-        // startLevelScreen(Level.TEST1)
+        startLevelScreen(Level.TEST1)
         // startLevelScreen(Level.TEST2)
         // startLevelScreen(Level.TEST3)
         // startLevelScreen(Level.TEST4)
@@ -179,7 +179,7 @@ class MegamanMaverickGame : Game2D() {
         // startLevelScreen(Level.TIMBER_WOMAN)
         // startLevelScreen(Level.RODENT_MAN)
         // startLevelScreen(Level.FREEZER_MAN)
-        startLevelScreen(Level.GALAXY_MAN)
+        // startLevelScreen(Level.GALAXY_MAN)
         // setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME.name)
     }
 

@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.1.0</string>
+        <string>7.2.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -260,6 +260,10 @@
             <key type="filename">../frames/Enemies1/BlueScrewie/Rise.png</key>
             <key type="filename">../frames/Enemies1/BlueScrewie/Shoot.png</key>
             <key type="filename">../frames/Enemies1/HeliMet/PopUp.png</key>
+            <key type="filename">../frames/Enemies1/PetitDevil/LargeGreen.png</key>
+            <key type="filename">../frames/Enemies1/PetitDevil/LargeOrange.png</key>
+            <key type="filename">../frames/Enemies1/PetitDevil/SmallGreen.png</key>
+            <key type="filename">../frames/Enemies1/PetitDevil/SmallOrange.png</key>
             <key type="filename">../frames/Enemies1/PicketJoe/Throw.png</key>
             <key type="filename">../frames/Enemies1/RedScrewie/Drop.png</key>
             <key type="filename">../frames/Enemies1/RedScrewie/Rise.png</key>
