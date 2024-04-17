@@ -50,6 +50,7 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
+import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -59,7 +60,8 @@ import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.world.*
 import kotlin.reflect.KClass
 
-class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectionRotatable {
+class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravityEntity, IFaceable,
+    IDirectionRotatable {
 
     companion object {
         const val TAG = "SniperJoe"
@@ -106,14 +108,13 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
             if (it.fullyCharged) 15 else 5
         }, ChargedShotExplosion::class to dmgNeg(3)
     )
-
     override var directionRotation: Direction
         get() = body.cardinalRotation
         set(value) {
             body.cardinalRotation = value
         }
-
     override var facing = Facing.RIGHT
+    override var gravityScalar = 1f
 
     private lateinit var type: String
     private lateinit var state: SniperJoeState
@@ -177,6 +178,8 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
         waitTimer.reset()
         shootTimer.setToEnd()
         throwShieldTimer.setToEnd()
+
+        gravityScalar = 1f
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -240,7 +243,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
                 Direction.DOWN -> Vector2(0f, -gravity)
                 Direction.LEFT -> Vector2(-gravity, 0f)
                 Direction.RIGHT -> Vector2(gravity, 0f)
-            }).scl(ConstVals.PPM.toFloat())
+            }).scl(ConstVals.PPM.toFloat() * gravityScalar)
 
             shieldFixture.active = shielded
             shieldFixture.offsetFromBodyCenter.x =

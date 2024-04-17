@@ -107,17 +107,14 @@ class Togglee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
     override fun spawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
+        spawnProps.put(ConstKeys.CULL_EVENTS, false)
         super.spawn(spawnProps)
-
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
-
         val directionString = spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class)
         directionRotation = Direction.valueOf(directionString.uppercase())
-
         text = spawnProps.get(ConstKeys.TEXT, String::class)!!
         getFont(ConstKeys.DEFAULT).position.set(body.getCenter().add(0f, 1.75f * ConstVals.PPM))
-
         val childEntities = convertObjectPropsToEntities(spawnProps)
         GameLogger.debug(TAG, "Child entities: ${childEntities.map { "${it.first}:${it.second} " }}")
         childEntities.forEach {
@@ -125,10 +122,8 @@ class Togglee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
             if (childType) onEntities.add(it)
             else offEntities.add(it)
         }
-
         toggleeState = ToggleeState.TOGGLED_OFF
         switchTimer.setToEnd()
-
         spawnEntities(false)
     }
 

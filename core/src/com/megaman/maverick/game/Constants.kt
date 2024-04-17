@@ -16,6 +16,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val DIE = "die"
     const val GREEN = "green"
     const val ORANGE = "orange"
     const val GRAVITY_CHANGEABLE = "gravity_changeable"

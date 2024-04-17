@@ -72,25 +72,17 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
                 )
             )
         ) {
-            val (deathFixture, bodyFixture) = contact.getFixtureSetsInOrder(
+            val (deathFixture, otherFixture) = contact.getFixtureSetsInOrder(
                 objectSetOf(FixtureType.DEATH), objectSetOf(
                     FixtureType.FEET, FixtureType.SIDE, FixtureType.HEAD, FixtureType.BODY
                 )
             )!!
-            val entity = bodyFixture.getEntity()
+            val entity = otherFixture.getEntity()
+            val canDie = entity.getOrDefaultProperty(ConstKeys.DIE, true, Boolean::class)
+            if (!canDie) return
             val instant = deathFixture.getProperty(ConstKeys.INSTANT, Boolean::class) ?: false
-            if (entity is IDamageable && (instant || !entity.invincible)) bodyFixture.depleteHealth()
+            if (entity is IDamageable && (instant || !entity.invincible)) otherFixture.depleteHealth()
         }
-
-        // death, damageable
-        /*
-        else if (contact.fixturesMatch(FixtureType.DEATH, FixtureType.DAMAGEABLE)) {
-            printDebugLog(contact, "beginContact(): Death-Damageable, contact = $contact")
-            val (_, damageable) = contact.getFixturesInOrder(FixtureType.DEATH, FixtureType.DAMAGEABLE)!!
-
-            damageable.depleteHealth()
-        }
-         */
 
         // block, side
         else if (contact.fixturesMatch(FixtureType.BLOCK, FixtureType.SIDE)) {
@@ -427,6 +419,8 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
                 )
             )!!
             val entity = bodyFixture.getEntity()
+            val canDie = entity.getOrDefaultProperty(ConstKeys.DIE, true, Boolean::class)
+            if (!canDie) return
             val instant = deathFixture.getProperty(ConstKeys.INSTANT, Boolean::class) ?: false
             if (entity is IDamageable && (instant || !entity.invincible)) bodyFixture.depleteHealth()
         }

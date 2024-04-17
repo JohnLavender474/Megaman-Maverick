@@ -21,6 +21,7 @@ import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.ICullableEntity
 import com.engine.entities.contracts.ISpriteEntity
+import com.engine.events.Event
 import com.engine.points.PointsComponent
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.BodyComponent
@@ -73,15 +74,10 @@ abstract class AbstractEnemy(
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
         addComponent(AudioComponent(this))
-
-        val cullablesComponent = CullablesComponent(this)
-        defineCullablesComponent(cullablesComponent)
-        addComponent(cullablesComponent)
-
+        addComponent(CullablesComponent(this))
         val updatablesComponent = UpdatablesComponent(this)
         defineUpdatablesComponent(updatablesComponent)
         addComponent(updatablesComponent)
-
         runnablesOnSpawn.add { setHealth(getMaxHealth()) }
         runnablesOnDestroy.add {
             if (hasDepletedHealth()) {
@@ -111,7 +107,6 @@ abstract class AbstractEnemy(
                 }
             }
         }
-
         setStandardOnPortalHopperStartProp(this)
         setStandardOnPortalHopperEndProp(this)
     }
@@ -126,6 +121,22 @@ abstract class AbstractEnemy(
             val cullOnOutOfBounds = getGameCameraCullingLogic(this, cullTime)
             putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, cullOnOutOfBounds)
         } else removeCullable(ConstKeys.CULL_OUT_OF_BOUNDS)
+        val cullEvents = spawnProps.getOrDefault(ConstKeys.CULL_EVENTS, true, Boolean::class)
+        if (cullEvents) {
+            val eventsToCullOn = objectSetOf<Any>(
+                EventType.GAME_OVER, EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING
+            )
+            val cullOnEvents = CullableOnEvent({ eventsToCullOn.contains(it.key) }, eventsToCullOn)
+            runnablesOnSpawn.add {
+                game.eventsMan.addListener(cullOnEvents)
+                GameLogger.debug(TAG, "Added CullableOnEvent from EventsManager")
+            }
+            runnablesOnDestroy.add {
+                game.eventsMan.removeListener(cullOnEvents)
+                GameLogger.debug(TAG, "Removed CullableOnEvent from EventsManager")
+            }
+            putCullable(ConstKeys.CULL_EVENTS, cullOnEvents)
+        } else removeCullable(ConstKeys.CULL_EVENTS)
         damageTimer.setToEnd()
         damageBlinkTimer.setToEnd()
     }
@@ -175,22 +186,6 @@ abstract class AbstractEnemy(
             }
             if (damageTimer.isJustFinished()) damageBlink = false
         }
-    }
-
-    protected open fun defineCullablesComponent(cullablesComponent: CullablesComponent) {
-        val eventsToCullOn = objectSetOf<Any>(
-            EventType.GAME_OVER, EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING
-        )
-        val cullOnEvents = CullableOnEvent({ eventsToCullOn.contains(it.key) }, eventsToCullOn)
-        runnablesOnSpawn.add {
-            game.eventsMan.addListener(cullOnEvents)
-            GameLogger.debug(TAG, "Added CullableOnEvent from EventsManager")
-        }
-        runnablesOnDestroy.add {
-            game.eventsMan.removeListener(cullOnEvents)
-            GameLogger.debug(TAG, "Removed CullableOnEvent from EventsManager")
-        }
-        cullablesComponent.put(ConstKeys.CULL_EVENTS, cullOnEvents)
     }
 
     protected open fun disintegrate(disintegrationProps: Properties? = null) {

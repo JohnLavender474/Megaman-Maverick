@@ -41,6 +41,7 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
@@ -54,7 +55,8 @@ import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.isSensing
 import kotlin.reflect.KClass
 
-class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAnimatedEntity {
+class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravityEntity, IFaceable,
+    IAnimatedEntity {
 
     companion object {
         const val TAG = "BigJumpingJoe"
@@ -66,14 +68,12 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable,
         private const val GROUND_GRAVITY = -0.001f
         private const val GRAVITY = -0.5f
         private const val BULLET_X_VEL = 10f
-        private const val FIRST_BULLET_Y_VEL = -0.045f
-        private const val SECOND_BULLET_Y_VEL = -0.025f
-        private const val THIRD_BULLET_Y_VEL = -0.01f
+        private const val FIRST_BULLET_Y_VEL = -0.15f
+        private const val SECOND_BULLET_Y_VEL = -0.25f
+        private const val THIRD_BULLET_Y_VEL = -0.35f
         private var standRegion: TextureRegion? = null
         private var jumpRegion: TextureRegion? = null
     }
-
-    override lateinit var facing: Facing
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
         Bullet::class to dmgNeg(3), Fireball::class to dmgNeg(10), ChargedShot::class to dmgNeg {
@@ -81,6 +81,8 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable,
             if (it.fullyCharged) 10 else 5
         }, ChargedShotExplosion::class to dmgNeg(3)
     )
+    override var gravityScalar = 1f
+    override lateinit var facing: Facing
 
     private val waitTimer = Timer(WAIT_DURATION)
     private val jumpDelayTimer = Timer(JUMP_DELAY)
@@ -89,7 +91,6 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable,
             TimeMarkedRunnable(0.5f) { shoot(SECOND_BULLET_Y_VEL) },
             TimeMarkedRunnable(0.75f) { shoot(THIRD_BULLET_Y_VEL) })
     )
-
     private var timesJumped = 0
     private var feetOnGround = false
 
@@ -116,17 +117,15 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable,
 
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
-
         val spawn = getProperty(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
         facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
-
         waitTimer.reset()
         jumpDelayTimer.setToEnd()
         shootTimer.reset()
-
         timesJumped = 0
         feetOnGround = true
+        gravityScalar = 1f
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -186,9 +185,7 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable,
         debugShapes.add { damageableFixture.getShape() }
 
         val feetFixture = Fixture(
-            body,
-            FixtureType.FEET,
-            GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.2f * ConstVals.PPM)
+            body, FixtureType.FEET, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.2f * ConstVals.PPM)
         )
         feetFixture.offsetFromBodyCenter.y = -ConstVals.PPM.toFloat()
         body.addFixture(feetFixture)
@@ -197,8 +194,7 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable,
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.gravity.y =
-                ConstVals.PPM * if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
-
+                ConstVals.PPM * if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY * gravityScalar
         }
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))

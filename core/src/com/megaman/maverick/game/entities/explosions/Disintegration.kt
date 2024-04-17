@@ -40,7 +40,6 @@ class Disintegration(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntit
         if (disintegrationRegion == null)
             disintegrationRegion =
                 game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "Disintegration")
-
         addComponent(AudioComponent(this))
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
@@ -50,10 +49,8 @@ class Disintegration(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntit
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
         durationTimer.reset()
-
         val spawn = spawnProps.get(ConstKeys.POSITION) as Vector2
         (firstSprite as GameSprite).setPosition(spawn, Position.CENTER)
-
         requestToPlaySound(SoundAsset.THUMP_SOUND, false)
     }
 
