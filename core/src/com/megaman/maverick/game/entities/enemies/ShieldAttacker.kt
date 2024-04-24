@@ -215,6 +215,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.hidden = damageBlink
             _sprite.setFlip(turningAround != switch, false)
             _sprite.setCenter(body.getCenter())
             _sprite.setOriginCenter()

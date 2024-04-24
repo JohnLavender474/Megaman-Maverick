@@ -241,6 +241,7 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { delta, _sprite ->
+            _sprite.hidden = damageBlink
             _sprite.setCenter(body.getCenter())
 
             if (directionRotation.isVertical())
@@ -251,7 +252,7 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
             val rotation = if (state == SHIELD)
                 _sprite.rotation + (SHIELD_ROTATION_PER_SECOND * delta)
             else directionRotation.rotation
-            _sprite.setRotation(rotation)
+            _sprite.rotation = rotation
         }
         return spritesComponent
     }

@@ -8,6 +8,7 @@ import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.audio.AudioComponent
 import com.engine.common.GameLogger
+import com.engine.common.enums.Direction
 import com.engine.common.enums.Position
 import com.engine.common.extensions.equalsAny
 import com.engine.common.extensions.getTextureAtlas
@@ -19,6 +20,8 @@ import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
+import com.engine.drawables.sorting.DrawingPriority
+import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
@@ -49,11 +52,7 @@ class Gate(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IAudioEnt
     companion object {
         const val TAG = "Gate"
         private var atlas: TextureAtlas? = null
-        private const val DURATION = .5f
-    }
-
-    enum class GateOrientation {
-        UP, DOWN, HORIZONTAL
+        private const val DURATION = 0.5f
     }
 
     enum class GateState {
@@ -66,7 +65,7 @@ class Gate(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IAudioEnt
 
     lateinit var state: GateState
         private set
-    lateinit var orientation: GateOrientation
+    lateinit var direction: Direction
         private set
 
     private val timer = Timer(DURATION)
@@ -89,15 +88,14 @@ class Gate(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IAudioEnt
 
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
-        reset()
         game.eventsMan.addListener(this)
         center.set((spawnProps.get(ConstKeys.BOUNDS) as GameRectangle).getCenter())
         nextRoomKey = spawnProps.get(ConstKeys.ROOM) as String
-        orientation = GateOrientation.valueOf(
-            spawnProps.getOrDefault(ConstKeys.ORIENTATION, "HORIZONTAL") as String
-        )
+        val directionString = spawnProps.getOrDefault(ConstKeys.DIRECTION, "left", String::class)
+        direction = Direction.valueOf(directionString.uppercase())
         resettable = spawnProps.getOrDefault(ConstKeys.RESET, false, Boolean::class)
         showCloseEvent = spawnProps.getOrDefault(ConstKeys.CLOSE, true, Boolean::class)
+        reset()
     }
 
     override fun onEvent(event: Event) {
@@ -123,7 +121,8 @@ class Gate(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IAudioEnt
         game.eventsMan.submitEvent(Event(EventType.GATE_INIT_OPENING))
     }
 
-    fun stateIsOfOpenType() = state == GateState.OPENABLE || state == GateState.OPENING || state == GateState.OPEN
+    private fun stateIsOfOpenType() =
+        state == GateState.OPENABLE || state == GateState.OPENING || state == GateState.OPEN
 
     private fun defineUpdatablesComponent() = UpdatablesComponent(this, {
         if (state == GateState.OPENING) {
@@ -162,12 +161,10 @@ class Gate(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IAudioEnt
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-
         val gateFixture = Fixture(body, FixtureType.GATE, GameRectangle())
         body.addFixture(gateFixture)
-
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
-            val bodySize = if (orientation == GateOrientation.HORIZONTAL) Vector2(2f, 3f) else Vector2(3f, 2f)
+            val bodySize = if (direction.isHorizontal()) Vector2(2f, 3f) else Vector2(3f, 2f)
             body.setSize(bodySize.scl(ConstVals.PPM.toFloat()))
             (gateFixture.rawShape as GameRectangle).set(body)
             body.setCenter(center)
@@ -178,41 +175,43 @@ class Gate(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IAudioEnt
 
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite()
-
-        sprite.setSize(4f * ConstVals.PPM, 3f * ConstVals.PPM)
-
-        val spritesComponent = SpritesComponent(this, "gate" to sprite)
-        spritesComponent.putUpdateFunction("gate") { _, _sprite ->
-            _sprite as GameSprite
-
-            _sprite.hidden = state == GateState.OPEN ||
-                    (state.equalsAny(GateState.CLOSING, GateState.CLOSED) && !showCloseEvent)
-            _sprite.setFlip(state == GateState.CLOSING || state == GateState.CLOSED, false)
+        sprite.setSize(ConstVals.PPM.toFloat(), 3f * ConstVals.PPM)
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.hidden =
+                state == GateState.OPEN || (state.equalsAny(GateState.CLOSING, GateState.CLOSED) && !showCloseEvent)
 
             _sprite.setOriginCenter()
-            _sprite.rotation = when (orientation) {
-                GateOrientation.UP, GateOrientation.DOWN -> 270f
-
-                GateOrientation.HORIZONTAL -> 0f
+            _sprite.rotation = when (direction) {
+                Direction.UP, Direction.DOWN -> 90f
+                Direction.LEFT, Direction.RIGHT -> 0f
             }
 
-            val position = if (orientation == GateOrientation.HORIZONTAL) when (state) {
-                GateState.CLOSING, GateState.CLOSED -> Position.BOTTOM_RIGHT
+            val position = when (state) {
+                GateState.CLOSING, GateState.CLOSED -> when (direction) {
+                    Direction.UP -> Position.BOTTOM_CENTER
+                    Direction.DOWN -> Position.TOP_CENTER
+                    Direction.LEFT -> Position.BOTTOM_RIGHT
+                    Direction.RIGHT -> Position.BOTTOM_LEFT
+                }
 
-                else -> Position.BOTTOM_LEFT
+                else -> when (direction) {
+                    Direction.UP -> Position.TOP_CENTER
+                    Direction.DOWN -> Position.BOTTOM_CENTER
+                    Direction.LEFT -> Position.BOTTOM_LEFT
+                    Direction.RIGHT -> Position.BOTTOM_RIGHT
+                }
             }
-            else Position.CENTER
             val bodyPosition = body.getPositionPoint(position)
             _sprite.setPosition(bodyPosition, position)
 
-            val translateY = when (orientation) {
-                GateOrientation.UP -> if (stateIsOfOpenType()) -1f else 1f
-                GateOrientation.DOWN -> if (stateIsOfOpenType()) 1f else -1f
-                GateOrientation.HORIZONTAL -> 0f
+            val translateY = when (direction) {
+                Direction.UP -> if (stateIsOfOpenType()) -1f else 1f
+                Direction.DOWN -> if (stateIsOfOpenType()) 1f else -1f
+                else -> 0f
             }
             _sprite.translateY(translateY * ConstVals.PPM)
         }
-
         return spritesComponent
     }
 
@@ -220,21 +219,17 @@ class Gate(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IAudioEnt
         val keySupplier = {
             when (state) {
                 GateState.OPENABLE, GateState.CLOSED -> "closed"
-
                 GateState.OPENING -> "opening"
                 GateState.OPEN -> null
                 GateState.CLOSING -> "closing"
             }
         }
-
-        val closed = Animation(atlas!!.findRegion("closed"), 1, 1, 1f, true)
-        val opening = Animation(atlas!!.findRegion("opening"), 1, 4, 0.125f, false)
+        val closed = Animation(atlas!!.findRegion("closed"))
+        val opening = Animation(atlas!!.findRegion("opening"), 1, 5, 0.125f, false)
         val closing = Animation(opening, reverse = true)
-
         val animator = Animator(
             keySupplier, objectMapOf("closed" to closed, "opening" to opening, "closing" to closing)
         )
-
         return AnimationsComponent(this, animator)
     }
 }

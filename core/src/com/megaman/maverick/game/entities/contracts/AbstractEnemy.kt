@@ -21,7 +21,6 @@ import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.ICullableEntity
 import com.engine.entities.contracts.ISpriteEntity
-import com.engine.events.Event
 import com.engine.points.PointsComponent
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.BodyComponent
@@ -50,8 +49,8 @@ abstract class AbstractEnemy(
     companion object {
         const val TAG = "AbstractEnemy"
         const val DEFAULT_CULL_TIME = 1f
-        const val DEFAULT_DMG_DURATION = .15f
-        const val DEFAULT_DMG_BLINK_DUR = .025f
+        const val DEFAULT_DMG_DURATION = 0.5f
+        const val DEFAULT_DMG_BLINK_DUR = 0.05f
     }
 
     override val invincible: Boolean
@@ -183,8 +182,7 @@ abstract class AbstractEnemy(
                     damageBlinkTimer.reset()
                     damageBlink = !damageBlink
                 }
-            }
-            if (damageTimer.isJustFinished()) damageBlink = false
+            } else damageBlink = false
         }
     }
 
@@ -208,5 +206,6 @@ abstract class AbstractEnemy(
         return body.x < megaman.body.x && megaman.facing == Facing.LEFT || body.x > megaman.body.x && megaman.facing == Facing.RIGHT
     }
 
-    open fun isInGameCamBounds() = getMegamanMaverickGame().getGameCamera().toGameRectangle().overlaps(body as Rectangle)
+    open fun isInGameCamBounds() =
+        getMegamanMaverickGame().getGameCamera().toGameRectangle().overlaps(body as Rectangle)
 }

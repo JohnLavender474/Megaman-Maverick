@@ -226,6 +226,7 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
         sprite.setSize(3f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.hidden = damageBlink
             val position = body.getBottomCenterPoint()
             _sprite.setPosition(position, Position.BOTTOM_CENTER)
             _sprite.setFlip(isFacing(Facing.LEFT), false)

@@ -1,67 +1,74 @@
 Specials1.png
-size: 448, 152
+size: 512, 152
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 Cart
   rotate: false
-  xy: 0, 32
+  xy: 64, 32
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
-LightSwitch/Off
+Force
   rotate: false
   xy: 0, 0
+  size: 128, 32
+  orig: 128, 32
+  offset: 0, 0
+  index: -1
+LightSwitch/Off
+  rotate: false
+  xy: 128, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 LightSwitch/On
   rotate: false
-  xy: 32, 0
+  xy: 160, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 LightSwitch/SwitchOff
   rotate: false
-  xy: 64, 0
+  xy: 192, 0
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 PortalHopper/Launch
   rotate: false
-  xy: 160, 0
+  xy: 288, 0
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 PortalHopper/Wait
   rotate: false
-  xy: 256, 0
+  xy: 384, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 RailTrack/Drop
   rotate: false
-  xy: 320, 0
+  xy: 448, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 RailTrack/Left
   rotate: false
-  xy: 352, 0
+  xy: 480, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 RailTrack/Middle
   rotate: false
-  xy: 384, 0
+  xy: 0, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -82,14 +89,14 @@ RailTrack/PlatformDrop
   index: -1
 RailTrack/Right
   rotate: false
-  xy: 416, 0
+  xy: 32, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SpringBounce
   rotate: false
-  xy: 96, 32
+  xy: 160, 32
   size: 320, 56
   orig: 320, 56
   offset: 0, 0

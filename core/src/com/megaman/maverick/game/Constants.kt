@@ -16,6 +16,8 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val DECORATIONS = "decorations"
+    const val FILTER = "filter"
     const val DIE = "die"
     const val GREEN = "green"
     const val ORANGE = "orange"

@@ -134,6 +134,7 @@ class UpNDown(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAnim
         sprite.setSize(0.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction{ _, _sprite ->
+            _sprite.hidden = damageBlink
             _sprite.setCenter(body.getCenter())
             _sprite.setFlip(facing == Facing.LEFT, false)
         }

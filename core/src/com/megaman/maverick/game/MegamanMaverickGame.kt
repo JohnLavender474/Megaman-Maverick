@@ -52,7 +52,6 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.MegaControllerPoller
-import com.megaman.maverick.game.entities.enemies.Met
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.BoulderProjectile
@@ -78,7 +77,7 @@ class MegamanMaverickGame : Game2D() {
     companion object {
         const val TAG = "MegamanMaverickGame"
         const val DEBUG_TEXT = false
-        const val DEBUG_SHAPES = true
+        const val DEBUG_SHAPES = false
         const val DEFAULT_VOLUME = 0.5f
         val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(BoulderProjectile.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
@@ -172,14 +171,15 @@ class MegamanMaverickGame : Game2D() {
         // startLevelScreen(Level.TEST2)
         // startLevelScreen(Level.TEST3)
         // startLevelScreen(Level.TEST4)
-        // startLevelScreen(Level.TEST5)
+        startLevelScreen(Level.TEST5)
         // startLevelScreen(Level.TEST6)
         // startLevelScreen(Level.TEST7)
         // setCurrentScreen(ScreenEnum.MAIN.name)
+        // startLevelScreen(Level.MAGNET_MAN)
         // startLevelScreen(Level.TIMBER_WOMAN)
         // startLevelScreen(Level.RODENT_MAN)
         // startLevelScreen(Level.FREEZER_MAN)
-        startLevelScreen(Level.GALAXY_MAN)
+        // startLevelScreen(Level.GALAXY_MAN)
         // setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME.name)
     }
 

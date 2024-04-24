@@ -96,7 +96,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
     val attack =
         ButtonActuator(
             onPressContinued = { _, delta ->
-                if (!ready || damaged) {
+                if (!ready || damaged || teleporting) {
                     stopCharging()
                     return@ButtonActuator
                 }
@@ -116,12 +116,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
                 chargingTimer.update(delta)
             },
             onJustReleased = {
-                if (damaged) {
-                    stopCharging()
-                    return@ButtonActuator
-                }
-
-                if (!weaponHandler.canFireWeapon(currentWeapon, chargeStatus)) {
+                if (damaged || teleporting || !ready || !weaponHandler.canFireWeapon(currentWeapon, chargeStatus)) {
                     stopCharging()
                     return@ButtonActuator
                 }

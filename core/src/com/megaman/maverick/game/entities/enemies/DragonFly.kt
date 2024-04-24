@@ -219,6 +219,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.hidden = damageBlink
             _sprite.setOriginCenter()
             _sprite.rotation = directionRotation.rotation
             _sprite.setPosition(body.getCenter(), Position.CENTER)

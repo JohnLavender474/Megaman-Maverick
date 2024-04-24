@@ -178,6 +178,7 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
         sprite.setSize(0.85f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.hidden = damageBlink
             _sprite.setCenter(body.getCenter())
             _sprite.hidden = if (invincible) damageBlink else false
         }

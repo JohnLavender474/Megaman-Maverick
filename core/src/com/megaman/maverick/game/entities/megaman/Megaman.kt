@@ -52,6 +52,7 @@ import com.megaman.maverick.game.entities.hazards.SpikeBall
 import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOSION_ORB_SPEED
+import com.megaman.maverick.game.entities.megaman.extensions.stopCharging
 import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.entities.projectiles.SniperJoeShield
 import com.megaman.maverick.game.entities.utils.setStandardOnPortalHopperContinueProp
@@ -149,7 +150,8 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
             }
         },
         PetitDevil::class to dmgNeg(3),
-        PetitDevilChild::class to dmgNeg(2)
+        PetitDevilChild::class to dmgNeg(2),
+        Shotman::class to dmgNeg(2)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 
@@ -329,12 +331,14 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
 
         putProperty(ConstKeys.ON_PORTAL_HOPPER_START, {
             standardOnPortalHopperStart(this)
+            stopCharging()
             if (isBehaviorActive(BehaviorType.AIR_DASHING)) forceQuitBehavior(BehaviorType.AIR_DASHING)
             teleporting = true
         })
         setStandardOnPortalHopperContinueProp(this)
         putProperty(ConstKeys.ON_PORTAL_HOPPER_END, {
             standardOnPortalHopperEnd(this)
+            stopCharging()
             aButtonTask = AButtonTask.AIR_DASH
             teleporting = false
         })

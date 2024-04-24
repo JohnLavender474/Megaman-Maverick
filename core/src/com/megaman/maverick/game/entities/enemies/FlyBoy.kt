@@ -140,23 +140,21 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(ConstVals.PPM * 2.25f, ConstVals.PPM * 1.85f)
-        val SpritesComponent = SpritesComponent(this, sprite)
-        SpritesComponent.putUpdateFunction { _, _sprite ->
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.hidden = damageBlink
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
             _sprite.setFlip(facing == Facing.LEFT, false)
         }
-        return SpritesComponent
+        return spritesComponent
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
             val megaman = getMegamanMaverickGame().megaman
-
             facing = if (body.x > megaman.body.x) Facing.LEFT else Facing.RIGHT
-
             if (body.isSensing(BodySense.FEET_ON_GROUND)) body.physics.velocity.x = 0f
-
             if (standing && body.isSensing(BodySense.FEET_ON_GROUND)) {
                 standTimer.update(it)
                 if (standTimer.isJustFinished()) {
@@ -164,7 +162,6 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
                     body.physics.velocity.y = FLY_VEL * ConstVals.PPM
                 }
             }
-
             if (flying) {
                 flyTimer.update(it)
                 if (flyTimer.isJustFinished() || body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)) {

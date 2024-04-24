@@ -264,9 +264,10 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.35f * ConstVals.PPM)
-
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.hidden = damageBlink
+
             val flipX = facing == Facing.LEFT
             val flipY = directionRotation == Direction.DOWN
             _sprite.setFlip(flipX, flipY)
@@ -278,7 +279,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
                 Direction.RIGHT -> 270f
             }
             sprite.setOriginCenter()
-            _sprite.setRotation(rotation)
+            _sprite.rotation = rotation
 
             val position = when (directionRotation) {
                 Direction.UP -> Position.BOTTOM_CENTER

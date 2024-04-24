@@ -180,13 +180,12 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(2.5f * ConstVals.PPM)
-
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.hidden = damageBlink
             _sprite.setFlip(isFacing(Facing.LEFT), false)
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
         }
-
         return spritesComponent
     }
 

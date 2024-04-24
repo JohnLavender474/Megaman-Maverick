@@ -36,11 +36,12 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
         val spawners = returnProps.get(ConstKeys.SPAWNERS) as Array<ISpawner>
 
         val entityType = when (layer.name) {
+            ConstKeys.DECORATIONS -> EntityType.DECORATION
             ConstKeys.ENEMIES -> EntityType.ENEMY
             ConstKeys.ITEMS -> EntityType.ITEM
             ConstKeys.BLOCKS -> EntityType.BLOCK
             ConstKeys.SPECIALS -> EntityType.SPECIAL
-            ConstKeys.HAZARDS -> EntityType.HAZARD // TODO: add other entity types
+            ConstKeys.HAZARDS -> EntityType.HAZARD
             else -> throw IllegalArgumentException("Unknown spawner type: ${layer.name}")
         }
         GameLogger.debug(TAG, "build(): Entity type: $entityType")

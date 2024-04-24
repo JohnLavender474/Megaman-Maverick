@@ -149,6 +149,7 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         sprite.setSize(1.5f * ConstVals.PPM)
         val SpritesComponent = SpritesComponent(this, sprite)
         SpritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.hidden = damageBlink
             _sprite.setCenter(body.getCenter())
             _sprite.setFlip(facing == Facing.LEFT, false)
         }

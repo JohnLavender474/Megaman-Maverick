@@ -46,12 +46,11 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     companion object {
         const val TAG = "Matasaburo"
-        private const val BLOW_FORCE = 15f
+        private const val BLOW_FORCE = 25f
         private var matasaburoReg: TextureRegion? = null
     }
 
     override var facing = Facing.RIGHT
-
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
         Bullet::class to dmgNeg(10), Fireball::class to dmgNeg(ConstVals.MAX_HEALTH), ChargedShot::class to dmgNeg {
             it as ChargedShot
@@ -75,6 +74,9 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
         body.setSize(ConstVals.PPM.toFloat())
+
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
+        body.addFixture(bodyFixture)
 
         val blowFixture = Fixture(
             body,
@@ -105,10 +107,11 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite ()
+        val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.hidden = damageBlink
             val position = body.getBottomCenterPoint()
             _sprite.setPosition(position, Position.BOTTOM_CENTER)
             _sprite.setFlip(facing == Facing.LEFT, false)

@@ -183,6 +183,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         sprite.setSize(1.35f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.hidden = damageBlink
             _sprite.setFlip(isFacing(Facing.LEFT), false)
             _sprite.setCenter(body.getCenter())
             _sprite.hidden = if (invincible) damageBlink else false

@@ -138,6 +138,7 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
         sprite.setSize(1f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.hidden = damageBlink
             _sprite.setCenter(body.getCenter())
         }
         return spritesComponent

@@ -141,6 +141,7 @@ class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         sprite.setSize(1.5f * ConstVals.PPM)
         val SpritesComponent = SpritesComponent(this, sprite)
         SpritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.hidden = damageBlink
             _sprite.setFlip(facing == Facing.LEFT, false)
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
             if (sliding) sprite.translateY(-0.25f * ConstVals.PPM)

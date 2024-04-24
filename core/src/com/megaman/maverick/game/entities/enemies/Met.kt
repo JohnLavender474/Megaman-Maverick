@@ -282,6 +282,8 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
 
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.hidden = damageBlink
+
             val flipX = facing == Facing.LEFT
             val flipY = directionRotation == Direction.DOWN
             _sprite.setFlip(flipX, flipY)
@@ -293,7 +295,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
                 Direction.RIGHT -> 270f
             }
             sprite.setOriginCenter()
-            _sprite.setRotation(rotation)
+            _sprite.rotation = rotation
 
             val position = when (directionRotation) {
                 Direction.UP -> Position.BOTTOM_CENTER

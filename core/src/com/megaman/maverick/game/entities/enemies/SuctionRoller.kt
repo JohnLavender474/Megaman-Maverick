@@ -198,6 +198,7 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setFlip(facing == Facing.RIGHT, false)
+            _sprite.hidden = damageBlink
 
             val position =
                 if (onWall) {

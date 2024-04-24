@@ -317,7 +317,7 @@
   <object id="417" name="Death" x="5344" y="2144" width="32" height="288"/>
   <object id="440" name="Gate" x="7040" y="2272" width="64" height="96">
    <properties>
-    <property name="room" value="Room10"/>
+    <property name="room" value="room10"/>
    </properties>
   </object>
   <object id="442" name="Gate" x="7552" y="2272" width="64" height="96">

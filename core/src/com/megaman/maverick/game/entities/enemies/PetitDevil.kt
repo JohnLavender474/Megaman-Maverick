@@ -15,6 +15,7 @@ import com.engine.common.interfaces.isFacing
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
+import com.engine.cullables.ICullable
 import com.engine.damage.IDamager
 import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.sprites.GameSprite
@@ -53,7 +54,7 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     companion object {
         const val TAG = "PetitDevil"
-        private const val SPEED = 3f
+        private const val SPEED = 4f
         private val CHILDREN = gdxArrayOf(0f, 90f, 180f, 270f)
         private var orangeRegion: TextureRegion? = null
         private var greenRegion: TextureRegion? = null
@@ -84,10 +85,15 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     override fun spawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.DIE, false)
+        spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
+
         super.spawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
+
         type = spawnProps.getOrDefault(ConstKeys.TYPE, ConstKeys.GREEN, String::class)
+
         CHILDREN.forEach { angle ->
             val child = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.PETIT_DEVIL_CHILD)!!
             game.engine.spawn(
@@ -96,9 +102,19 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
                 )
             )
         }
+
         facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
+
         val trajectory = megaman.body.getCenter().sub(body.getCenter()).nor().scl(SPEED * ConstVals.PPM)
         body.physics.velocity = trajectory
+
+        putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, object : ICullable {
+            override fun shouldBeCulled(delta: Float): Boolean {
+                if (isInGameCamBounds()) return false
+                for (child in children) if ((child as AbstractEnemy).isInGameCamBounds()) return false
+                return true
+            }
+        })
     }
 
     override fun onDestroy() {
@@ -202,6 +218,7 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
 
     override fun spawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.DIE, false)
+        spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
         super.spawn(spawnProps)
         parent = spawnProps.get(ConstKeys.PARENT, IGameEntity::class)!!
         val origin = (parent as IBodyEntity).body.getCenter()
@@ -250,6 +267,7 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
         sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.hidden = damageBlink
             _sprite.setCenter(body.getCenter())
             _sprite.setFlip(isFacing(Facing.LEFT), false)
         }

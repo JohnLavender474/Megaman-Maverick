@@ -158,8 +158,10 @@ class Shotman(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity 
         sprite.setSize(1.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.hidden = damageBlink
             val bodyPosition = body.getBottomCenterPoint()
             _sprite.setPosition(bodyPosition, Position.BOTTOM_CENTER)
+            _sprite.hidden = damageBlink
         }
         return spritesComponent
     }

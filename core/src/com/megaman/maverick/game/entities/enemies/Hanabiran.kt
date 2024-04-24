@@ -238,6 +238,7 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game) {
         sprite.setSize(1.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.hidden = damageBlink
             val position = body.getBottomCenterPoint()
             _sprite.setPosition(position, Position.BOTTOM_CENTER)
             _sprite.hidden = state == HanabiranState.SLEEPING

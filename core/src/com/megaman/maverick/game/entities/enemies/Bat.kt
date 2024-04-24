@@ -174,12 +174,12 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
-
-        val SpritesComponent = SpritesComponent(this, sprite)
-        SpritesComponent.putUpdateFunction { _, _sprite ->
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.hidden = damageBlink
             _sprite.setPosition(body.getCenter(), Position.CENTER)
         }
-        return SpritesComponent
+        return spritesComponent
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

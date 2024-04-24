@@ -388,6 +388,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                 GutsTankAttackState.SHOOT_BLASTS -> {
                     blastShootDelayTimer.update(delta)
                     if (blastShootDelayTimer.isFinished()) {
+                        requestToPlaySound(SoundAsset.MM2_MECHA_DRAGON_SOUND, false)
                         val blast = EntityFactories.fetch(EntityType.PROJECTILE, "PurpleBlast")!!
                         val angle = BLAST_ANGLES.random()
                         val trajectory = Vector2(BLAST_VELOCITY * ConstVals.PPM, 0f).setAngleDeg(angle)
@@ -399,9 +400,6 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                                 ConstKeys.TRAJECTORY to trajectory,
                                 ConstKeys.FACING to Facing.LEFT,
                                 ConstKeys.OWNER to this,
-                                ConstKeys.ON_DAMAGE_INFLICTED_TO to { damageable: IDamageable ->
-                                    if (damageable is Megaman) laugh()
-                                },
                                 ConstKeys.CULL_OUT_OF_BOUNDS to false
                             )
                         )
@@ -436,9 +434,8 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                             runningMetsSet.add(runningMet as Met)
                             runningMetDelayTimer.reset()
                             runningMets++
-                            if (runningMetsSet.size >= RUNNING_METS_TO_LAUNCH || runningMets >= RUNNING_METS_TO_LAUNCH) finishAttack(
-                                attackState!!
-                            )
+                            if (runningMetsSet.size >= RUNNING_METS_TO_LAUNCH || runningMets >= RUNNING_METS_TO_LAUNCH)
+                                finishAttack(attackState!!)
                         }
                     }
                 }
