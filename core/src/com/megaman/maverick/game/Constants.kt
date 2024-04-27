@@ -16,6 +16,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val JUMP = "jump"
     const val DECORATIONS = "decorations"
     const val FILTER = "filter"
     const val DIE = "die"

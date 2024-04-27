@@ -60,7 +60,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
         val spawn = spawnProps.get(ConstKeys.POSITION) as Vector2
         body.setCenter(spawn)
         directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
-        val trajectory = spawnProps.get(ConstKeys.TRAJECTORY) as Vector2
+        val trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
         body.physics.velocity.set(trajectory)
         val gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, Vector2(), Vector2::class)
         body.physics.gravity.set(gravity)

@@ -82,13 +82,10 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
     override fun spawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.CULL_TIME, CULL_TIME)
         super.spawn(spawnProps)
-
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
-        body.setCenter(spawn)
-
         vertical = spawnProps.getOrDefault(ConstKeys.VERTICAL, false, Boolean::class)
-
         if (vertical) {
+            body.setSize(1.5f * ConstVals.PPM, 0.75f * ConstVals.PPM)
             val targetY = spawn.y + spawnProps.get(ConstKeys.VALUE, Float::class)!! * ConstVals.PPM
             if (spawn.y < targetY) {
                 min = spawn.y
@@ -100,6 +97,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
                 switch = true
             }
         } else {
+            body.setSize(0.75f * ConstVals.PPM, 1.5f * ConstVals.PPM)
             val targetX = spawn.x + spawnProps.get(ConstKeys.VALUE, Float::class)!! * ConstVals.PPM
             if (spawn.x < targetX) {
                 min = spawn.x
@@ -111,7 +109,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
                 switch = true
             }
         }
-
+        body.setCenter(spawn)
         turnAroundTimer.reset()
     }
 

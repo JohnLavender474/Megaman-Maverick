@@ -97,7 +97,7 @@ class Darkness(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity, IEv
         tiles = Matrix(rows, columns)
         for (x in 0 until columns) {
             for (y in 0 until rows) {
-                val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0))
+                val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -1))
                 sprite.setRegion(region!!)
                 val spriteX = bounds.x + (x * ConstVals.PPM)
                 val spriteY = bounds.y + (y * ConstVals.PPM)
@@ -193,9 +193,7 @@ class Darkness(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity, IEv
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent(this, {
-        tiles.forEach {
-            it.set = false
-        }
+        tiles.forEach { it.set = false }
 
         while (!lightEventQueue.isEmpty()) {
             val lightEvent = lightEventQueue.poll()

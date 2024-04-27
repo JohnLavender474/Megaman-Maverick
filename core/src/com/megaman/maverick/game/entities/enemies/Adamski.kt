@@ -58,11 +58,11 @@ class Adamski(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
     override val damageNegotiations =
         objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-            Bullet::class to dmgNeg(10),
+            Bullet::class to dmgNeg(15),
             Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
             ChargedShot::class to dmgNeg {
                 it as ChargedShot
-                if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
+                if (it.fullyCharged) ConstVals.MAX_HEALTH else 20
             },
             ChargedShotExplosion::class to dmgNeg(ConstVals.MAX_HEALTH)
         )

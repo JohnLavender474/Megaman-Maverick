@@ -197,7 +197,7 @@ public enum BossType {
             return timerPairs;
         }
     },
-    RODENT_MAN("Rodent Man", Level.RODENT_MAN, Position.BOTTOM_CENTER, TextureAsset.RODENT_MAN) {
+    RODENT_MAN("Rodent Man", Level.CREW_MAN, Position.BOTTOM_CENTER, TextureAsset.RODENT_MAN) {
         @Override
         public Vector2 getSpriteSize() {
             return new Vector2(2.5f, 2f);

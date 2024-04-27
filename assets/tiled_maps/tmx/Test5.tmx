@@ -180,23 +180,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="18" name="items">
-  <object id="271" name="HeartTank" x="3136" y="256" width="32" height="32">
-   <properties>
-    <property name="value" value="A"/>
-   </properties>
-  </object>
-  <object id="272" name="HeartTank" x="1024" y="768" width="32" height="32">
-   <properties>
-    <property name="value" value="B"/>
-   </properties>
-  </object>
-  <object id="419" name="HeartTank" x="4888" y="2176" width="32" height="32">
-   <properties>
-    <property name="value" value="D"/>
-   </properties>
-  </object>
- </objectgroup>
+ <objectgroup id="18" name="items"/>
  <objectgroup id="4" name="specials" visible="0">
   <object id="82" name="SpringBouncer" x="4136" y="512" width="16" height="32">
    <properties>

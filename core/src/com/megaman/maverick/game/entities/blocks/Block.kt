@@ -49,9 +49,10 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
 
-        val cullOutOfBounds =
-            if (spawnProps.containsKey(ConstKeys.CULL_OUT_OF_BOUNDS)) spawnProps.get(ConstKeys.CULL_OUT_OF_BOUNDS) as Boolean
-            else true
+        val cullOutOfBounds = if (spawnProps.containsKey(ConstKeys.CULL_OUT_OF_BOUNDS)) spawnProps.get(
+            ConstKeys.CULL_OUT_OF_BOUNDS, Boolean::class
+        )!!
+        else true
         if (cullOutOfBounds) addComponent(
             CullablesComponent(
                 this, objectMapOf(

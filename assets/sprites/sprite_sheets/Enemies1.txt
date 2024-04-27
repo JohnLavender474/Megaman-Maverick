@@ -1,5 +1,5 @@
 Enemies1.png
-size: 512, 560
+size: 512, 576
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -533,6 +533,13 @@ SnowSeal/Stand
   xy: 144, 416
   size: 96, 48
   orig: 96, 48
+  offset: 0, 0
+  index: -1
+Spiky
+  rotate: false
+  xy: 480, 512
+  size: 32, 64
+  orig: 32, 64
   offset: 0, 0
   index: -1
 SpringHead/Compressed

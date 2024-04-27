@@ -116,26 +116,21 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(1f * ConstVals.PPM)
-
+        body.setSize(0.65f * ConstVals.PPM)
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
-
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().set(body))
         body.addFixture(damagerFixture)
-
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().set(body))
         body.addFixture(damageableFixture)
-
-        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle().set(body))
+        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(0.8f * ConstVals.PPM))
         body.addFixture(shieldFixture)
-
         return BodyComponentCreator.create(this, body)
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1f * ConstVals.PPM)
+        sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink

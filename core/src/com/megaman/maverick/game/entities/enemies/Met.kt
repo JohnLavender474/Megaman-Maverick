@@ -312,24 +312,24 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier = {
-            when (behavior) {
-                MetBehavior.SHIELDING -> "LayDown"
-                MetBehavior.POP_UP -> "PopUp"
-                MetBehavior.RUNNING -> "Run"
-            }
+            "$type${
+                when (behavior) {
+                    MetBehavior.SHIELDING -> "LayDown"
+                    MetBehavior.POP_UP -> "PopUp"
+                    MetBehavior.RUNNING -> "Run"
+                }
+            }"
         }
-
         val animator = Animator(
             keySupplier, objectMapOf(
                 "Run" to Animation(atlas!!.findRegion("Met/Run"), 1, 2, 0.125f, true),
                 "PopUp" to Animation(atlas!!.findRegion("Met/PopUp"), false),
                 "LayDown" to Animation(atlas!!.findRegion("Met/LayDown"), false),
                 "SnowRun" to Animation(atlas!!.findRegion("SnowMet/Run"), 1, 2, 0.125f, true),
-                "SnowMet" to Animation(atlas!!.findRegion("SnowMet/PopUp"), false),
+                "SnowPopUp" to Animation(atlas!!.findRegion("SnowMet/PopUp"), false),
                 "SnowLayDown" to Animation(atlas!!.findRegion("SnowMet/LayDown"), false)
             )
         )
-
         return AnimationsComponent(this, animator)
     }
 }

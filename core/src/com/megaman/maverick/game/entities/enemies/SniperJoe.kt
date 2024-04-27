@@ -130,6 +130,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
     private val shootTimer = Timer(SHOOT_DUR)
     private val throwShieldTimer = Timer(THROW_SHIELD_DUR)
 
+    private var canJump = true
     private var canThrowShield = false
     private var setToThrowShield = false
 
@@ -170,6 +171,8 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
             canThrowShield = false
             throwShieldTrigger = null
         }
+
+        canJump = spawnProps.getOrDefault(ConstKeys.JUMP, true, Boolean::class)
 
         type = spawnProps.getOrDefault(ConstKeys.TYPE, DEFAULT_TYPE) as String
         state = SniperJoeState.WAITING_SHIELDED
@@ -304,7 +307,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
                 Direction.LEFT, Direction.RIGHT -> if (megaman.body.y > body.y) Facing.RIGHT else Facing.LEFT
             }
 
-            if (shouldJump()) jump()
+            if (canJump && shouldJump()) jump()
 
             if (!isInGameCamBounds()) {
                 state = if (hasShield) SniperJoeState.WAITING_SHIELDED else SniperJoeState.WAITING_NO_SHIELD

@@ -77,7 +77,7 @@ class MegamanMaverickGame : Game2D() {
     companion object {
         const val TAG = "MegamanMaverickGame"
         const val DEBUG_TEXT = false
-        const val DEBUG_SHAPES = false
+        const val DEBUG_SHAPES = true
         const val DEFAULT_VOLUME = 0.5f
         val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(BoulderProjectile.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
@@ -167,7 +167,7 @@ class MegamanMaverickGame : Game2D() {
         screens.put(ScreenEnum.SIMPLE_END_LEVEL_SUCCESSFULLY.name, SimpleEndLevelScreen(this))
         screens.put(ScreenEnum.SIMPLE_INIT_GAME.name, SimpleInitGameScreen(this))
 
-        // startLevelScreen(Level.TEST1)
+        startLevelScreen(Level.TEST1)
         // startLevelScreen(Level.TEST2)
         // startLevelScreen(Level.TEST3)
         // startLevelScreen(Level.TEST4)
@@ -175,10 +175,10 @@ class MegamanMaverickGame : Game2D() {
         // startLevelScreen(Level.TEST6)
         // startLevelScreen(Level.TEST7)
         // setCurrentScreen(ScreenEnum.MAIN.name)
-        startLevelScreen(Level.MAGNET_MAN)
-        // startLevelScreen(Level.TIMBER_WOMAN)
-        // startLevelScreen(Level.RODENT_MAN)
-        // startLevelScreen(Level.FREEZER_MAN)
+        // startLevelScreen(Level.MAGNET_MAN)
+        // startLevelScreen(Level.TIMBER_WOMAN
+        // startLevelScreen(Level.CREW_MAN)
+        // startLevelScreen(Level.FREEZE_MAN)
         // startLevelScreen(Level.GALAXY_MAN)
         // setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME.name)
     }

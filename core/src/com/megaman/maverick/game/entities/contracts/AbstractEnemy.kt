@@ -49,7 +49,7 @@ abstract class AbstractEnemy(
     companion object {
         const val TAG = "AbstractEnemy"
         const val DEFAULT_CULL_TIME = 1f
-        const val DEFAULT_DMG_DURATION = 0.5f
+        const val DEFAULT_DMG_DURATION = 0.25f
         const val DEFAULT_DMG_BLINK_DUR = 0.05f
     }
 

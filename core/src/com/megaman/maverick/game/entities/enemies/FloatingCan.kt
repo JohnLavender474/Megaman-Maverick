@@ -106,9 +106,12 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(.75f * ConstVals.PPM)
+        body.setSize(0.75f * ConstVals.PPM)
 
         val shapes = Array<() -> IDrawableShape?>()
+
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
+        body.addFixture(bodyFixture)
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(.75f * ConstVals.PPM))
         body.addFixture(damageableFixture)
