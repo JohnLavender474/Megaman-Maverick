@@ -7,7 +7,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.setEntity
 
-class IceBlock(game: MegamanMaverickGame) : Block(game) {
+open class IceBlock(game: MegamanMaverickGame) : Block(game) {
 
     private lateinit var ice: Fixture
 

@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.2.0</string>
+        <string>7.3.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -193,6 +193,9 @@
             <key type="filename">../frames/Platforms1/Boulder/Large.png</key>
             <key type="filename">../frames/Platforms1/Boulder/Medium.png</key>
             <key type="filename">../frames/Platforms1/Boulder/Small.png</key>
+            <key type="filename">../frames/Platforms1/BreakableIce/1.png</key>
+            <key type="filename">../frames/Platforms1/BreakableIce/2.png</key>
+            <key type="filename">../frames/Platforms1/BreakableIce/3.png</key>
             <key type="filename">../frames/Platforms1/Brick2.png</key>
             <key type="filename">../frames/Platforms1/TrackBlock.png</key>
             <struct type="IndividualSpriteSettings">
@@ -206,6 +209,21 @@
                 <rect>8,8,16,16</rect>
                 <key>scale9Paddings</key>
                 <rect>8,8,16,16</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Platforms1/BreakableIce/Shards.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>40,8,80,16</rect>
+                <key>scale9Paddings</key>
+                <rect>40,8,80,16</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

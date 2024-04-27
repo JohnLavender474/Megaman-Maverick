@@ -48,7 +48,6 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
     companion object {
         private var atlas: TextureAtlas? = null
-
         private const val DEBUG_PATHFINDING = false
         private const val HANG_DURATION = 1.75f
         private const val RELEASE_FROM_PERCH_DURATION = .25f
@@ -127,7 +126,6 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(.5f * ConstVals.PPM, .25f * ConstVals.PPM)
 
-        // head fixture
         val headFixture = Fixture(
             body, FixtureType.HEAD, GameRectangle().setSize(.5f * ConstVals.PPM, .175f * ConstVals.PPM)
         )

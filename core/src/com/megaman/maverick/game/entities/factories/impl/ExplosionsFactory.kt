@@ -22,6 +22,7 @@ class ExplosionsFactory(private val game: MegamanMaverickGame) : IFactory<IGameE
         const val CHARGED_SHOT_EXPLOSION = "ChargedShotExplosion"
         const val CAVE_ROCK_EXPLOSION = "CaveRockExplosion"
         const val SIGMA_RAT_ELECTRIC_BALL_EXPLOSION = "SigmaRatElectricBallExplosion"
+        const val ICE_SHARD = "IceShard"
     }
 
     private val pools = ObjectMap<Any, Pool<IGameEntity>>()
@@ -36,6 +37,7 @@ class ExplosionsFactory(private val game: MegamanMaverickGame) : IFactory<IGameE
         pools.put(
             SIGMA_RAT_ELECTRIC_BALL_EXPLOSION,
             EntityPoolCreator.create(2) { SigmaRatElectricBallExplosion(game) })
+        pools.put(ICE_SHARD, EntityPoolCreator.create(5) { IceShard(game) })
     }
 
     override fun fetch(key: Any): IGameEntity? {

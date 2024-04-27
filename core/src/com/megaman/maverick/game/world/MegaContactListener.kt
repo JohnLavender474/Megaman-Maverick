@@ -3,9 +3,12 @@ package com.megaman.maverick.game.world
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.engine.common.GameLogger
+import com.engine.common.allAreTrue
 import com.engine.common.enums.Direction
+import com.engine.common.enums.Facing
 import com.engine.common.enums.ProcessState
 import com.engine.common.extensions.objectSetOf
+import com.engine.common.interfaces.isFacing
 import com.engine.common.shapes.GameLine
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.shapes.ShapeUtils
@@ -17,6 +20,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
+import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.decorations.Splash
 import com.megaman.maverick.game.entities.megaman.Megaman
@@ -87,15 +91,18 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
         // block, side
         else if (contact.fixturesMatch(FixtureType.BLOCK, FixtureType.SIDE)) {
             printDebugLog(contact, "beginContact(): Block-Side, contact = $contact")
-            val (block, side) = contact.getFixturesInOrder(FixtureType.BLOCK, FixtureType.SIDE)!!
+            val (blockFixture, sideFixture) = contact.getFixturesInOrder(FixtureType.BLOCK, FixtureType.SIDE)!!
 
-            if (block.hasFixtureLabel(FixtureLabel.NO_SIDE_TOUCHIE)) return
+            if (blockFixture.hasFixtureLabel(FixtureLabel.NO_SIDE_TOUCHIE)) return
 
-            val body = side.getBody()
-            val sideType = side.getProperty(ConstKeys.SIDE)
+            val body = sideFixture.getBody()
+            val sideType = sideFixture.getProperty(ConstKeys.SIDE)
 
             if (sideType == ConstKeys.LEFT) body.setBodySense(BodySense.SIDE_TOUCHING_BLOCK_LEFT, true)
             else body.setBodySense(BodySense.SIDE_TOUCHING_BLOCK_RIGHT, true)
+
+            val block = blockFixture.getEntity() as Block
+            block.hitBySide(sideFixture)
         }
 
         // side, gate
@@ -145,6 +152,9 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             if (entity is Megaman) entity.aButtonTask = AButtonTask.JUMP
 
             body.setBodySense(BodySense.FEET_ON_GROUND, true)
+
+            val block = blockFixture.getEntity() as Block
+            block.hitByFeet(feetFixture)
         }
 
         // feet, ice
@@ -185,6 +195,9 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             val body = head.getBody()
             body.setBodySense(BodySense.HEAD_TOUCHING_BLOCK, true)
             body.physics.velocity.y = 0f
+
+            val blockEntity = block.getEntity() as Block
+            blockEntity.hitByHead(head)
         }
 
         // water listener, water
@@ -276,8 +289,8 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
                     bodyFixture.properties.getOrDefault(ConstKeys.GRAVITY_ROTATABLE, true, Boolean::class)
                 if (canChangeGravityRotation) {
                     val direction = gravityChangeFixture.getProperty(ConstKeys.DIRECTION, Direction::class) ?: return
-                    if (entity is IDirectionRotatable && entity.directionRotation != direction)
-                        entity.directionRotation = direction
+                    if (entity is IDirectionRotatable && entity.directionRotation != direction) entity.directionRotation =
+                        direction
                 }
             }
         }
@@ -309,33 +322,39 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             printDebugLog(
                 contact, "beginContact(): Projectile-Block/Body/Shield/Water, contact = $contact"
             )
-            val (projectile, other) = contact.getFixtureSetsInOrder(
+            val (projectileFixture, otherFixture) = contact.getFixtureSetsInOrder(
                 objectSetOf(FixtureType.PROJECTILE), objectSetOf(
-                    FixtureType.BLOCK, FixtureType.BODY, FixtureType.SHIELD, FixtureType.WATER
+                    FixtureType.BLOCK, FixtureType.BODY, FixtureType.SHIELD, FixtureType.WATER, FixtureType.PROJECTILE
                 )
             )!!
 
-            if (other.hasFixtureLabel(FixtureLabel.NO_PROJECTILE_COLLISION)) return
-            val projectileEntity = projectile.getEntity() as IProjectileEntity
-            when (other.getFixtureType()) {
+            if (otherFixture.hasFixtureLabel(FixtureLabel.NO_PROJECTILE_COLLISION)) return
+            val projectile = projectileFixture.getEntity() as IProjectileEntity
+            when (otherFixture.getFixtureType()) {
                 FixtureType.BLOCK -> {
                     printDebugLog(contact, "beginContact(): Projectile-Block, contact = $contact")
-                    projectileEntity.hitBlock(other)
+                    projectile.hitBlock(otherFixture)
+                    (otherFixture.getEntity() as Block).hitByProjectile(projectileFixture)
                 }
 
                 FixtureType.BODY -> {
                     printDebugLog(contact, "beginContact(): Projectile-Body, contact = $contact")
-                    projectileEntity.hitBody(other)
+                    projectile.hitBody(otherFixture)
                 }
 
                 FixtureType.SHIELD -> {
                     printDebugLog(contact, "beginContact(): Projectile-Shield, contact = $contact")
-                    projectileEntity.hitShield(other)
+                    projectile.hitShield(otherFixture)
                 }
 
                 FixtureType.WATER -> {
                     printDebugLog(contact, "beginContact(): Projectile-Water, contact = $contact")
-                    projectileEntity.hitWater(other)
+                    projectile.hitWater(otherFixture)
+                }
+
+                FixtureType.PROJECTILE -> {
+                    printDebugLog(contact, "beginContact(): Projectile-Projectile, contact = $contact")
+                    projectile.hitProjectile(otherFixture)
                 }
             }
         }
@@ -495,10 +514,18 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
 
         // feet, ice
         else if (contact.fixturesMatch(FixtureType.FEET, FixtureType.ICE)) {
-            val (feet, _) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.ICE)!!
+            val (feetFixture, _) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.ICE)!!
 
-            val body = feet.getBody()
+            val body = feetFixture.getBody()
             body.setBodySense(BodySense.FEET_ON_ICE, true)
+
+            val entity = feetFixture.getEntity()
+            if (entity is Megaman) {
+                if (entity.body.isSensing(BodySense.FEET_ON_GROUND) &&
+                    (entity.body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && entity.isFacing(Facing.LEFT) ||
+                    (entity.body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) && entity.isFacing(Facing.RIGHT)))
+                ) return
+            }
 
             body.physics.frictionOnSelf.set(1.0175f, 1.0175f)
         }
@@ -556,8 +583,8 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             if (!gravityChangeFixture.getShape().contains(bodyPointToCheck)) return
 
             val entity = bodyFixture.getEntity()
-            if (entity is IDirectionRotatable && entity.directionRotation != direction)
-                entity.directionRotation = direction
+            if (entity is IDirectionRotatable && entity.directionRotation != direction) entity.directionRotation =
+                direction
         }
 
         // block, gravity change

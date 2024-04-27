@@ -60,10 +60,16 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(10), Fireball::class to dmgNeg(ConstVals.MAX_HEALTH), ChargedShot::class to dmgNeg {
+        Bullet::class to dmgNeg(10),
+        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class to dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
-        }, ChargedShotExplosion::class to dmgNeg(15)
+        },
+        ChargedShotExplosion::class to dmgNeg {
+            it as ChargedShotExplosion
+            if (it.fullyCharged) ConstVals.MAX_HEALTH else 10
+        }
     )
 
     private val loop = Loop(EyeeState.values().toGdxArray())
@@ -92,8 +98,8 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
-        start = spawn.cpy()
 
+        start = spawn.cpy()
         val endX = spawnProps.getOrDefault(ConstKeys.X, 0f, Float::class)
         val endY = spawnProps.getOrDefault(ConstKeys.Y, 0f, Float::class)
         end = start.cpy().add(endX * ConstVals.PPM, endY * ConstVals.PPM)
@@ -148,7 +154,7 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
     }
 
     override fun defineBodyComponent(): BodyComponent {
-        val body = Body(BodyType.DYNAMIC)
+        val body = Body(BodyType.ABSTRACT)
         body.setSize(0.75f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()

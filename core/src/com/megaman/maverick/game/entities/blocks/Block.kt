@@ -14,10 +14,7 @@ import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
-import com.engine.world.Fixture
+import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.*
@@ -49,10 +46,7 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
 
-        val cullOutOfBounds = if (spawnProps.containsKey(ConstKeys.CULL_OUT_OF_BOUNDS)) spawnProps.get(
-            ConstKeys.CULL_OUT_OF_BOUNDS, Boolean::class
-        )!!
-        else true
+        val cullOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
         if (cullOutOfBounds) addComponent(
             CullablesComponent(
                 this, objectMapOf(
@@ -147,6 +141,14 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
         }
         fixturesToRemove.clear()
     }
+
+    open fun hitBySide(sideFixture: IFixture) {}
+
+    open fun hitByFeet(feetFixture: IFixture) {}
+
+    open fun hitByHead(headFixture: IFixture) {}
+
+    open fun hitByProjectile(projectileFixture: IFixture) {}
 
     protected open fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.STATIC)

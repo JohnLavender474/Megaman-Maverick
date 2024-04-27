@@ -167,7 +167,7 @@ class MegamanMaverickGame : Game2D() {
         screens.put(ScreenEnum.SIMPLE_END_LEVEL_SUCCESSFULLY.name, SimpleEndLevelScreen(this))
         screens.put(ScreenEnum.SIMPLE_INIT_GAME.name, SimpleInitGameScreen(this))
 
-        startLevelScreen(Level.TEST1)
+        // startLevelScreen(Level.TEST1)
         // startLevelScreen(Level.TEST2)
         // startLevelScreen(Level.TEST3)
         // startLevelScreen(Level.TEST4)
@@ -178,7 +178,7 @@ class MegamanMaverickGame : Game2D() {
         // startLevelScreen(Level.MAGNET_MAN)
         // startLevelScreen(Level.TIMBER_WOMAN
         // startLevelScreen(Level.CREW_MAN)
-        // startLevelScreen(Level.FREEZE_MAN)
+        startLevelScreen(Level.FREEZE_MAN)
         // startLevelScreen(Level.GALAXY_MAN)
         // setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME.name)
     }
@@ -258,7 +258,7 @@ class MegamanMaverickGame : Game2D() {
             FixtureType.FEET to objectSetOf(FixtureType.ICE, FixtureType.BLOCK, FixtureType.BOUNCER),
             FixtureType.HEAD to objectSetOf(FixtureType.BLOCK, FixtureType.BOUNCER),
             FixtureType.PROJECTILE to objectSetOf(
-                FixtureType.BODY, FixtureType.BLOCK, FixtureType.SHIELD, FixtureType.WATER
+                FixtureType.BODY, FixtureType.BLOCK, FixtureType.SHIELD, FixtureType.WATER, FixtureType.PROJECTILE
             ),
             FixtureType.LASER to objectSetOf(FixtureType.BLOCK)
         )

@@ -49,7 +49,9 @@ enum class SoundAsset(src: String, val seconds: Int) : IAsset {
     BASSY_BLAST_SOUND("bassy_blast.wav", 1),
     LIFT_OFF_SOUND("liftoff.wav", 2),
     CONVEYOR_LIFT_SOUND("conveyor_lift.mp3", 1),
-    QUAKE_SOUND("quake.mp3", 1);
+    QUAKE_SOUND("quake.mp3", 1),
+    ICE_SHARD_1_SOUND("ice_shard_1.wav", 1),
+    ICE_SHARD_2_SOUND("ice_shard_2.wav", 1);
 
     override val source = SOUND_ASSET_PREFIX + src
     override val assClass = Sound::class.java

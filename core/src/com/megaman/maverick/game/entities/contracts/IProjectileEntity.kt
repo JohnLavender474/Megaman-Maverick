@@ -33,6 +33,8 @@ interface IProjectileEntity : IOwnable, IDamager, IBodyEntity, ISpriteEntity, IA
     fun hitShield(shieldFixture: IFixture) {}
 
     fun hitWater(waterFixture: IFixture) {}
+
+    fun hitProjectile(projectileFixture: IFixture) {}
 }
 
 internal fun IProjectileEntity.defineProjectileComponents(): Array<IGameComponent> {

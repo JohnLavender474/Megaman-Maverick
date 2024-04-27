@@ -8,6 +8,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.blocks.*
 import com.megaman.maverick.game.entities.factories.EntityPoolCreator
 import com.megaman.maverick.game.entities.special.RailTrackPlatform
+import javax.naming.BinaryRefAddr
 
 class BlocksFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntity> {
 
@@ -24,6 +25,7 @@ class BlocksFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntit
         const val PROPELLER_PLATFORM = "PropellerPlatform"
         const val SWINGIN_PLATFORM = "SwinginPlatform"
         const val RAIL_TRACK_PLATFORM = "RailTrackPlatform"
+        const val BREAKABLE_ICE = "BreakableIce"
     }
 
     private val pools = ObjectMap<Any, Pool<Block>>()
@@ -40,6 +42,7 @@ class BlocksFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntit
         pools.put(PROPELLER_PLATFORM, EntityPoolCreator.create(3) { PropellerPlatform(game) })
         pools.put(SWINGIN_PLATFORM, EntityPoolCreator.create(2) { SwinginPlatform(game) })
         pools.put(RAIL_TRACK_PLATFORM, EntityPoolCreator.create(2) { RailTrackPlatform(game) })
+        pools.put(BREAKABLE_ICE, EntityPoolCreator.create(5) { BreakableIce(game) })
     }
 
     override fun fetch(key: Any) = pools.get(if (key == "" || key == "Block") STANDARD else key)?.fetch()

@@ -4,10 +4,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.engine.common.enums.Direction
+import com.engine.common.enums.Facing
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.getOverlapPushDirection
-import com.engine.common.getSingleMostDirectionFromStartToTarget
+import com.engine.common.interfaces.IFaceable
+import com.engine.common.interfaces.isFacing
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
@@ -32,12 +34,13 @@ import com.megaman.maverick.game.entities.contracts.defineProjectileComponents
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.utils.getMegamanMaverickGame
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.getEntity
 
-class Snowhead(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity {
+class Snowhead(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity, IFaceable {
 
     companion object {
         const val TAG = "Snowhead"
@@ -52,6 +55,7 @@ class Snowhead(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity 
     }
 
     override var owner: IGameEntity? = null
+    override lateinit var facing: Facing
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(
@@ -71,6 +75,7 @@ class Snowhead(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity 
         val trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2(), Vector2::class)
         body.physics.velocity = trajectory
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
+        facing = if (trajectory.x > 0f) Facing.RIGHT else Facing.LEFT
     }
 
     private fun bounceBullets(collisionShape: IGameShape2D) {
@@ -116,6 +121,12 @@ class Snowhead(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity 
         explodeAndDie()
     }
 
+    override fun hitProjectile(projectileFixture: IFixture) {
+        val projectile = projectileFixture.getEntity() as IProjectileEntity
+        if (projectile.owner == owner) return
+        if (projectile.owner is Megaman) explodeAndDie()
+    }
+
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.5f * ConstVals.PPM)
@@ -140,6 +151,7 @@ class Snowhead(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity 
         sprite.setSize(1.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.setFlip(isFacing(Facing.RIGHT), false)
             _sprite.setCenter(body.getCenter())
         }
         return spritesComponent
