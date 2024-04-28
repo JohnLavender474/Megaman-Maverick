@@ -41,8 +41,6 @@ class Snowball(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override var owner: IGameEntity? = null
 
-    // TODO: private var formFirst = false
-
     override fun init() {
         if (region == null)
             region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Snowball")
@@ -53,8 +51,6 @@ class Snowball(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
-
-        // TODO: formFirst = spawnProps.getOrDefault(ConstKeys.FORM, false, Boolean::class)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)

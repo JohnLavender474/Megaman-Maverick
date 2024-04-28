@@ -100,6 +100,7 @@ class SnowheadThrower(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
         throwDelay.reset()
         standTimer.reset()
         throwing = false
+        facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
     }
 
     override fun onDestroy() {

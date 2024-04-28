@@ -41,9 +41,9 @@ class SpringBouncer(game: MegamanMaverickGame) :
 
     companion object {
         private var atlas: TextureAtlas? = null
-        private const val BOUNCE_DURATION = .5f
+        private const val BOUNCE_DURATION = 0.5f
         private const val X_BOUNCE = 25f
-        private const val Y_BOUNCE = 18f
+        private const val Y_BOUNCE = 24f
         private const val SPRITE_DIM = 1.5f
     }
 
@@ -76,8 +76,7 @@ class SpringBouncer(game: MegamanMaverickGame) :
                 ConstKeys.DOWN -> Direction.DOWN
                 ConstKeys.LEFT -> Direction.LEFT
                 ConstKeys.RIGHT -> Direction.RIGHT
-                else ->
-                    throw IllegalArgumentException("Incompatible value for direction: $directionString")
+                else -> throw IllegalArgumentException("Incompatible value for direction: $directionString")
             }
     }
 

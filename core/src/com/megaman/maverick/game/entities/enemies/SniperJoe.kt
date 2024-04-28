@@ -72,7 +72,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         private val TIMES_TO_SHOOT = floatArrayOf(0.15f, 0.75f, 1.35f)
 
         private const val BULLET_SPEED = 7.5f
-        private const val SNOWBALL_X = 10f
+        private const val SNOWBALL_X = 8f
         private const val SNOWBALL_Y = 5f
         private const val SNOWBALL_GRAV = 0.15f
         private const val JUMP_IMPULSE = 15f
@@ -468,7 +468,6 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
             EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
         }
 
-        trajectory.scl(ConstVals.PPM.toFloat())
         game.engine.spawn(entity, props)
     }
 }
