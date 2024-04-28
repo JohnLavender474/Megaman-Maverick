@@ -26,7 +26,7 @@
   </object>
   <object id="138" x="0" y="960" width="32" height="640">
    <properties>
-    <property name="body_labels" value="no_side_touchie,no_projectile_collision"/>
+    <property name="fixture_labels" value="no_side_touchie,no_projectile_collision"/>
    </properties>
   </object>
   <object id="139" name="PropellerPlatform" x="2400" y="1328" width="32" height="8">
@@ -584,11 +584,11 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="4" name="player">
+ <objectgroup id="4" name="temp">
   <object id="440" name="4" x="14704" y="896" width="32" height="32"/>
   <object id="453" name="0" x="10496" y="928" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="14" name="temp">
+ <objectgroup id="14" name="player">
   <object id="446" name="0" x="96" y="1472" width="32" height="32"/>
   <object id="437" name="1" x="3168" y="1152" width="32" height="32"/>
   <object id="438" name="2" x="5184" y="768" width="32" height="32"/>

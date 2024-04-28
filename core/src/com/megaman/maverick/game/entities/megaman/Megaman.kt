@@ -60,6 +60,9 @@ import com.megaman.maverick.game.entities.utils.standardOnPortalHopperEnd
 import com.megaman.maverick.game.entities.utils.standardOnPortalHopperStart
 import com.megaman.maverick.game.entities.utils.stopSoundNow
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.misc.StunType
+import com.megaman.maverick.game.world.BodySense
+import com.megaman.maverick.game.world.isSensingAny
 import kotlin.reflect.KClass
 
 class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IEventListener, IFaceable, IDamageable,
@@ -73,13 +76,17 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
 
     val damaged: Boolean
         get() = !damageTimer.isFinished()
+    val stunned: Boolean
+        get() = !stunTimer.isFinished()
 
     override val invincible: Boolean
         get() = damaged || !damageRecoveryTimer.isFinished() || !canBeDamaged
 
     var canBeDamaged = true
     var canMove = true
+        get() = field && !stunned && !damaged
 
+    internal val stunTimer = Timer()
     internal val damageTimer = Timer(MegamanValues.DAMAGE_DURATION).setToEnd()
     internal val damageRecoveryTimer = Timer(MegamanValues.DAMAGE_RECOVERY_TIME).setToEnd()
     internal val damageFlashTimer = Timer(MegamanValues.DAMAGE_FLASH_DURATION)
@@ -168,7 +175,10 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
     internal val groundSlideTimer = Timer(MegamanValues.MAX_GROUND_SLIDE_TIME)
 
     override val eventKeyMask = objectSetOf<Any>(
-        EventType.BEGIN_ROOM_TRANS, EventType.CONTINUE_ROOM_TRANS, EventType.GATE_INIT_OPENING
+        EventType.BEGIN_ROOM_TRANS,
+        EventType.CONTINUE_ROOM_TRANS,
+        EventType.GATE_INIT_OPENING,
+        EventType.STUN_PLAYER
     )
 
     override val upgradeHandler = MegamanUpgradeHandler(this)
@@ -400,27 +410,53 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
                 body.physics.velocity.setZero()
                 stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
             }
+
+            EventType.STUN_PLAYER -> {
+                GameLogger.debug(MEGAMAN_EVENT_LISTENER_TAG, "STUN_PLAYER_IF_ON_SURFACE")
+                val stunType = event.getProperty(ConstKeys.TYPE, StunType::class)!!
+                when (stunType) {
+                    StunType.STUN_BOUNCE_IF_ON_SURFACE,
+                    StunType.STUN_BOUNCE_ALWAYS -> {
+                        if (stunType == StunType.STUN_BOUNCE_IF_ON_SURFACE &&
+                            !body.isSensingAny(
+                                BodySense.FEET_ON_GROUND, BodySense.SIDE_TOUCHING_BLOCK_LEFT,
+                                BodySense.SIDE_TOUCHING_BLOCK_RIGHT
+                            )
+                        ) return
+
+                        val stunOriginX = event.getProperty(ConstKeys.X, Float::class)!!
+                        stunBounce(stunOriginX)
+                        val stunDuration = event.getProperty(ConstKeys.DURATION, Float::class)!!
+                        stunTimer.resetDuration(stunDuration)
+                    }
+                }
+            }
         }
     }
 
     override fun canBeDamagedBy(damager: IDamager) =
         !invincible && dmgNegotations.containsKey(damager::class) && (damager is AbstractEnemy || damager is IHazard || (damager is IProjectileEntity && damager.owner != this))
 
+    fun stunBounce(bounceOriginX: Float) {
+        body.physics.velocity.x =
+            (if (bounceOriginX > body.x) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
+        body.physics.velocity.y = MegamanValues.DMG_Y * ConstVals.PPM
+    }
+
     override fun takeDamageFrom(damager: IDamager): Boolean {
-        if (canMove && !isBehaviorActive(BehaviorType.RIDING_CART) && !noDmgBounce.contains(damager::class) && damager is IGameEntity && damager.hasComponent(
-                BodyComponent::class
-            )
+        if (canMove && !isBehaviorActive(BehaviorType.RIDING_CART) &&
+            !noDmgBounce.contains(damager::class) &&
+            damager is IGameEntity &&
+            damager.hasComponent(BodyComponent::class)
         ) {
             val enemyBody = damager.getComponent(BodyComponent::class)!!.body
-            body.physics.velocity.x =
-                (if (enemyBody.x > body.x) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
-            body.physics.velocity.y = MegamanValues.DMG_Y * ConstVals.PPM
+            stunBounce(enemyBody.x)
         }
         val damage = dmgNegotations.get(damager::class).get(damager)
-        damageTimer.reset()
         addHealth(-damage)
         requestToPlaySound(SoundAsset.MEGAMAN_DAMAGE_SOUND, false)
         stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
+        damageTimer.reset()
         return true
     }
 

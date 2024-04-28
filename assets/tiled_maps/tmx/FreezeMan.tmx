@@ -631,7 +631,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="10" name="sensors">
+ <objectgroup id="10" name="sensors" visible="0">
   <object id="75" name="Death" x="2272" y="3904" width="608" height="32"/>
   <object id="207" name="Death" x="3840" y="4704" width="5120" height="96">
    <properties>
@@ -652,5 +652,5 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="7" name="hazards"/>
+ <objectgroup id="7" name="hazards" visible="0"/>
 </map>

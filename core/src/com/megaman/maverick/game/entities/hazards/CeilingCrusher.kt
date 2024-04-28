@@ -8,7 +8,6 @@ import com.engine.audio.AudioComponent
 import com.engine.common.GameLogger
 import com.engine.common.enums.Position
 import com.engine.common.extensions.getTextureAtlas
-import com.engine.common.extensions.objectSetOf
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
@@ -32,10 +31,14 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.world.*
+import com.megaman.maverick.game.world.BodyComponentCreator
+import com.megaman.maverick.game.world.FixtureType
+import com.megaman.maverick.game.world.getEntity
+import com.megaman.maverick.game.world.setConsumer
 
 class CeilingCrusher(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEntity, IAudioEntity, IHazard,
     IDamager {
@@ -56,7 +59,7 @@ class CeilingCrusher(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity,
 
     private val dropDelayTimer = Timer(DROP_DELAY)
     private val raiseDelayTimer = Timer(RAISE_DELAY)
-
+    private var block: Block? = null
     private lateinit var start: Vector2
     private lateinit var state: CeilingCrusherState
 
@@ -101,6 +104,8 @@ class CeilingCrusher(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity,
         val keysToRemove = Array<String>()
         sprites.keys().forEach { if (it != SpritesComponent.SPRITE) keysToRemove.add(it) }
         keysToRemove.forEach { sprites.remove(it) }
+        block?.kill()
+        block = null
     }
 
     private fun setToCrushIfTarget(fixture: IFixture) {
@@ -124,17 +129,10 @@ class CeilingCrusher(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity,
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.STATIC)
-
         val debugShapes = Array<() -> IDrawableShape?>()
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle())
         body.addFixture(bodyFixture)
-
-        val blockFixture = Fixture(body, FixtureType.BLOCK, GameRectangle())
-        blockFixture.addFixtureLabels(objectSetOf(FixtureLabel.NO_SIDE_TOUCHIE, FixtureLabel.NO_PROJECTILE_COLLISION))
-        body.addFixture(blockFixture)
-        blockFixture.rawShape.color = Color.YELLOW
-        debugShapes.add { blockFixture.getShape() }
 
         val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle())
         body.addFixture(shieldFixture)
@@ -172,7 +170,6 @@ class CeilingCrusher(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity,
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             (bodyFixture.rawShape as GameRectangle).setSize(0.5f * ConstVals.PPM, body.height)
-            (blockFixture.rawShape as GameRectangle).setSize(0.5f * ConstVals.PPM, body.height)
             (shieldFixture.rawShape as GameRectangle).setSize(0.5f * ConstVals.PPM, body.height)
 
             bottomFixture.active = state == CeilingCrusherState.DROPPING

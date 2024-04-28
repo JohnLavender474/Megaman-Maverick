@@ -38,7 +38,7 @@ internal fun Megaman.defineAnimationsComponent(): AnimationsComponent {
                 else if (halfCharged) "Cartin_HalfCharged"
                 else "Cartin"
             }
-        } else if (damaged) "Damaged"
+        } else if (damaged || stunned) "Damaged"
         else if (isBehaviorActive(BehaviorType.CLIMBING)) {
             if (!body.isSensing(BodySense.HEAD_TOUCHING_LADDER)) {
                 if (shooting) "ClimbShoot"

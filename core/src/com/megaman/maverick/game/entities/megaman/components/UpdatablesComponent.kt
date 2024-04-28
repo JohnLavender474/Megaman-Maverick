@@ -12,20 +12,17 @@ internal fun Megaman.defineUpdatablesComponent() =
     UpdatablesComponent(
         this,
         { delta ->
-            // if megaman is below game bounds, this means a pit with a Death sensor failed to kill him
-            // this is a last resort to kill him
             if (body.x < -10 * ConstVals.PPM || body.y < -10 * ConstVals.PPM) {
                 GameLogger.error(MEGAMAN_UPDATE_COMPONENT_TAG, "Megaman is below game bounds, killing him")
                 kill()
             }
 
-            // update weapons
             if (!weaponHandler.isChargeable(currentWeapon)) stopCharging()
             weaponHandler.update(delta)
 
-            // if under damage, reset the charge timer and update the damage flash timer
+            stunTimer.update(delta)
             damageTimer.update(delta)
-            if (damaged) chargingTimer.reset()
+            if (stunned || damaged) chargingTimer.reset()
             if (damageTimer.isJustFinished()) damageRecoveryTimer.reset()
 
             if (damageTimer.isFinished() && !damageRecoveryTimer.isFinished()) {
@@ -38,7 +35,6 @@ internal fun Megaman.defineUpdatablesComponent() =
             }
             if (damageRecoveryTimer.isJustFinished()) damageFlash = false
 
-            // update the timers
             shootAnimTimer.update(delta)
             wallJumpTimer.update(delta)
 
