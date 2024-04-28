@@ -5,8 +5,10 @@ import com.engine.entities.IGameEntity
 
 object EntityPoolCreator {
 
-    fun <T : IGameEntity> create(startAmount: Int = 10, supplier: () -> T): Pool<T> {
-        val pool = Pool(startAmount, supplier)
+    private const val START_AMOUNT = 0
+
+    fun <T : IGameEntity> create(supplier: () -> T): Pool<T> {
+        val pool = Pool(START_AMOUNT, supplier)
         pool.onSupplyNew = { e -> e.runnablesOnDestroy.add { pool.pool(e) } }
         return pool
     }

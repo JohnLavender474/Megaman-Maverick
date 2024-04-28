@@ -1,16 +1,13 @@
 package com.megaman.maverick.game.entities.factories.impl
 
-import com.badlogic.gdx.utils.ObjectMap
-import com.engine.common.objects.Pool
-import com.engine.entities.IGameEntity
-import com.engine.factories.IFactory
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.decorations.ForceDecoration
 import com.megaman.maverick.game.entities.decorations.SmokePuff
 import com.megaman.maverick.game.entities.decorations.Splash
+import com.megaman.maverick.game.entities.factories.EntityFactory
 import com.megaman.maverick.game.entities.factories.EntityPoolCreator
 
-class DecorationsFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntity> {
+class DecorationsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
 
     companion object {
         const val SPLASH = "Splash"
@@ -18,12 +15,10 @@ class DecorationsFactory(private val game: MegamanMaverickGame) : IFactory<IGame
         const val FORCE = "ForceDecoration"
     }
 
-    private val pools = ObjectMap<Any, Pool<IGameEntity>>()
-
-    init {
-        pools.put(SPLASH, EntityPoolCreator.create(5) { Splash(game) })
-        pools.put(SMOKE_PUFF, EntityPoolCreator.create(5) { SmokePuff(game) })
-        pools.put(FORCE, EntityPoolCreator.create(5) { ForceDecoration(game) })
+    override fun init() {
+        pools.put(SPLASH, EntityPoolCreator.create { Splash(game) })
+        pools.put(SMOKE_PUFF, EntityPoolCreator.create { SmokePuff(game) })
+        pools.put(FORCE, EntityPoolCreator.create { ForceDecoration(game) })
     }
 
     override fun fetch(key: Any) = pools.get(key)?.fetch()

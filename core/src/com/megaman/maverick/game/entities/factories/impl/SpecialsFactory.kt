@@ -1,15 +1,12 @@
 package com.megaman.maverick.game.entities.factories.impl
 
-import com.badlogic.gdx.utils.ObjectMap
-import com.engine.common.objects.Pool
-import com.engine.entities.IGameEntity
-import com.engine.factories.IFactory
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.entities.factories.EntityFactory
 import com.megaman.maverick.game.entities.factories.EntityPoolCreator
 import com.megaman.maverick.game.entities.sensors.FixtureTypeOverlapSpawn
 import com.megaman.maverick.game.entities.special.*
 
-class SpecialsFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntity> {
+class SpecialsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
 
     companion object {
         const val WATER = "Water"
@@ -27,22 +24,20 @@ class SpecialsFactory(private val game: MegamanMaverickGame) : IFactory<IGameEnt
         const val FORCE = "Force"
     }
 
-    private val pools = ObjectMap<Any, Pool<IGameEntity>>()
-
-    init {
-        pools.put(WATER, EntityPoolCreator.create(3) { Water(game) })
-        pools.put(SPRING_BOUNCER, EntityPoolCreator.create(2) { SpringBouncer(game) })
-        pools.put(LADDER, EntityPoolCreator.create(10) { Ladder(game) })
-        pools.put(GRAVITY_CHANGE, EntityPoolCreator.create(10) { GravityChange(game) })
-        pools.put(DISAPPEARING_BLOCKS, EntityPoolCreator.create(2) { DisappearingBlocks(game) })
-        pools.put(CART, EntityPoolCreator.create(2) { Cart(game) })
-        pools.put(ROTATION_ANCHOR, EntityPoolCreator.create(2) { RotationAnchor(game) })
-        pools.put(PORTAL_HOPPER, EntityPoolCreator.create(5) { PortalHopper(game) })
-        pools.put(FIXTURE_TYPE_OVERLAP_SPAWN, EntityPoolCreator.create(5) { FixtureTypeOverlapSpawn(game) })
-        pools.put(DARKNESS, EntityPoolCreator.create(1) { Darkness(game) })
-        pools.put(FLIPPER_PLATFORM, EntityPoolCreator.create(2) { FlipperPlatform(game) })
-        pools.put(RAIL_TRACK, EntityPoolCreator.create(2) { RailTrack(game) })
-        pools.put(FORCE, EntityPoolCreator.create(5) { Force(game) })
+    override fun init() {
+        pools.put(WATER, EntityPoolCreator.create { Water(game) })
+        pools.put(SPRING_BOUNCER, EntityPoolCreator.create { SpringBouncer(game) })
+        pools.put(LADDER, EntityPoolCreator.create { Ladder(game) })
+        pools.put(GRAVITY_CHANGE, EntityPoolCreator.create { GravityChange(game) })
+        pools.put(DISAPPEARING_BLOCKS, EntityPoolCreator.create { DisappearingBlocks(game) })
+        pools.put(CART, EntityPoolCreator.create { Cart(game) })
+        pools.put(ROTATION_ANCHOR, EntityPoolCreator.create { RotationAnchor(game) })
+        pools.put(PORTAL_HOPPER, EntityPoolCreator.create { PortalHopper(game) })
+        pools.put(FIXTURE_TYPE_OVERLAP_SPAWN, EntityPoolCreator.create { FixtureTypeOverlapSpawn(game) })
+        pools.put(DARKNESS, EntityPoolCreator.create { Darkness(game) })
+        pools.put(FLIPPER_PLATFORM, EntityPoolCreator.create { FlipperPlatform(game) })
+        pools.put(RAIL_TRACK, EntityPoolCreator.create { RailTrack(game) })
+        pools.put(FORCE, EntityPoolCreator.create { Force(game) })
     }
 
     override fun fetch(key: Any) = pools.get(key)?.fetch()

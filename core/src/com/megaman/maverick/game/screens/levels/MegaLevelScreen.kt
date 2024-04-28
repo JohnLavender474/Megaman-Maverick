@@ -42,6 +42,8 @@ import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.drawables.sprites.Background
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
+import com.megaman.maverick.game.entities.factories.EntityFactories
+import com.megaman.maverick.game.entities.factories.EntityFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.events.EventType
@@ -168,7 +170,6 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
 
         bossSpawnEventHandler = BossSpawnEventHandler(megamanGame)
 
-        // array of systems that should be switched off and back on during room transitions
         @Suppress("UNCHECKED_CAST")
         val systems = megamanGame.properties.get(ConstKeys.SYSTEMS) as ObjectMap<String, IGameSystem>
         val systemsToSwitch =
@@ -189,7 +190,6 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
 
         cameraShaker = CameraShaker(gameCamera)
 
-        // set begin transition logic for camera manager
         cameraManagerForRooms.beginTransition = {
             GameLogger.debug(TAG, "Begin transition logic for camera manager")
             systemsToSwitch.forEach { systems.get(it.simpleName)?.let { system -> system.on = false } }
@@ -205,7 +205,6 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
             )
         }
 
-        // set continue transition logic for camera manager
         cameraManagerForRooms.continueTransition = { _ ->
             if (cameraManagerForRooms.delayJustFinished)
                 systems.get(AnimationsSystem::class.simpleName)?.on = true
@@ -218,7 +217,6 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
             )
         }
 
-        // set end transition logic for camera manager
         cameraManagerForRooms.endTransition = {
             GameLogger.debug(TAG, "End transition logic for camera manager")
             eventsMan.submitEvent(
@@ -244,22 +242,17 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
     }
 
     override fun show() {
-        // lazily initialize this level screen
         if (!initialized) init()
-
         dispose()
+
+        EntityFactories.init()
         super.show()
 
-        // add this screen as an event listener
         eventsMan.addListener(this)
-
-        // set all systems to on
         engine.systems.forEach { it.on = true }
 
-        // start playing the level music
         music?.let { audioMan.playMusic(it, true) }
 
-        // set the world graph map using the tiled map load result
         if (tiledMapLoadResult == null)
             throw IllegalStateException("No tiled map load result found in level screen")
         val (map, _, worldWidth, worldHeight) = tiledMapLoadResult!!
@@ -273,8 +266,6 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
         megamanGame.setGraphMap(worldGraphMap)
 
         playerSpawnEventHandler.init()
-
-        // set the parallax factor for background and foreground cameras
         val mapProps = map.properties.toProps()
         backgroundParallaxFactor = mapProps.getOrDefault(
             ConstKeys.BACKGROUND_PARALLAX_FACTOR,
@@ -291,28 +282,22 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
         MegaMapLayerBuilders(MegaMapLayerBuildersParams(game as MegamanMaverickGame, spawnsMan))
 
     override fun buildLevel(result: Properties) {
-        // set the backgrounds array
         backgrounds = result.get(ConstKeys.BACKGROUNDS) as Array<Background>? ?: Array()
 
-        // set the player spawns
         val playerSpawns =
             result.get("${ConstKeys.PLAYER}_${ConstKeys.SPAWNS}") as Array<RectangleMapObject>?
                 ?: Array()
         playerSpawnsMan.set(playerSpawns)
 
-        // set the game rooms for the camera manager
         cameraManagerForRooms.gameRooms =
             result.get(ConstKeys.GAME_ROOMS) as Array<RectangleMapObject>? ?: Array()
 
-        // set the spawners for blocks, enemies, items, etc.
         val spawners = result.get(ConstKeys.SPAWNERS) as Array<ISpawner>? ?: Array()
         spawnsMan.setSpawners(spawners)
 
-        // add the level dispose logic to the disposables array
         val _disposables = result.get(ConstKeys.DISPOSABLES) as Array<Disposable>? ?: Array()
         disposables.addAll(_disposables)
 
-        // reset positions of cameras
         backgroundCamera.position.set(ConstFuncs.getCamInitPos())
         gameCamera.position.set(ConstFuncs.getCamInitPos())
         foregroundCamera.position.set(ConstFuncs.getCamInitPos())
@@ -498,7 +483,6 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
     }
 
     override fun render(delta: Float) {
-        // game can only be paused if neither spawn nor death event handlers are running
         if (controllerPoller.isJustPressed(ControllerButton.START) &&
             playerStatsHandler.finished &&
             playerSpawnEventHandler.finished &&
@@ -506,23 +490,16 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
             bossSpawnEventHandler.finished
         ) if (megamanGame.paused) megamanGame.resume() else megamanGame.pause()
 
-        // illegal for game to be paused when spawn or death event handlers are running
-        // force game resume
         if (game.paused &&
             (!playerStatsHandler.finished ||
                     !playerSpawnEventHandler.finished ||
                     !playerDeathEventHandler.finished)
         ) game.resume()
 
-        // things to run only when game is NOT paused
         if (!game.paused) {
-            // update backgrounds
             backgrounds.forEach { it.update(delta) }
-
-            // update the camera manager for rooms
             cameraManagerForRooms.update(delta)
 
-            // spawns do not update when player is first spawning if there is a room transition underway
             if (playerSpawnEventHandler.finished && !cameraManagerForRooms.transitioning) {
                 playerSpawnsMan.run()
                 spawnsMan.update(delta)
@@ -538,7 +515,6 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
             playerStatsHandler.update(delta)
         }
 
-        // update the background and foreground camera positions
         if (camerasSetToGameCamera) {
             val gameCamDeltaX = gameCamera.position.x - gameCameraPriorPosition.x
             backgroundCamera.position.x += gameCamDeltaX * backgroundParallaxFactor
@@ -549,18 +525,14 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
         }
         gameCameraPriorPosition.set(gameCamera.position)
 
-        // update the game engine
         engine.update(delta)
 
-        // render the level
         val batch = megamanGame.batch
         batch.begin()
 
-        // render backgrounds
         batch.projectionMatrix = backgroundCamera.combined
         backgrounds.forEach { it.draw(batch) }
 
-        // render background sprites
         batch.projectionMatrix = gameCamera.combined
 
         val backgroundSprites = drawables.get(DrawingSection.BACKGROUND)
@@ -569,24 +541,20 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
             backgroundSprite.draw(batch)
         }
 
-        // render the game ground
         tiledMapLevelRenderer?.render(gameCamera)
 
-        // render the game ground sprites
         val gameGroundSprites = drawables.get(DrawingSection.PLAYGROUND)
         while (!gameGroundSprites.isEmpty()) {
             val gameGroundSprite = gameGroundSprites.poll()
             gameGroundSprite.draw(batch)
         }
 
-        // render the foreground sprites
         val foregroundSprites = drawables.get(DrawingSection.FOREGROUND)
         while (!foregroundSprites.isEmpty()) {
             val foregroundSprite = foregroundSprites.poll()
             foregroundSprite.draw(batch)
         }
 
-        // render the ui
         batch.projectionMatrix = uiCamera.combined
 
         entityStatsHandler.draw(batch)
@@ -595,7 +563,6 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
 
         batch.end()
 
-        // render the shapes
         val shapeRenderer = megamanGame.shapeRenderer
         shapeRenderer.projectionMatrix = gameCamera.combined
 
@@ -606,7 +573,6 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
         }
         shapeRenderer.end()
 
-        // shake camera if not finished
         if (Gdx.app.input.isKeyJustPressed(Keys.G)) eventsMan.submitEvent(
             Event(
                 EventType.REQ_SHAKE_CAM, props(
@@ -624,7 +590,9 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
 
     override fun dispose() {
         GameLogger.debug(TAG, "dispose(): Disposing level screen")
+
         super.dispose()
+        EntityFactories.clear()
 
         if (initialized) {
             disposables.forEach { it.dispose() }

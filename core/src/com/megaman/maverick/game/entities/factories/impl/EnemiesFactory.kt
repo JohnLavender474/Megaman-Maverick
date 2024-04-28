@@ -1,15 +1,13 @@
 package com.megaman.maverick.game.entities.factories.impl
 
-import com.badlogic.gdx.utils.ObjectMap
 import com.engine.common.GameLogger
-import com.engine.common.objects.Pool
 import com.engine.entities.IGameEntity
-import com.engine.factories.IFactory
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.enemies.*
+import com.megaman.maverick.game.entities.factories.EntityFactory
 import com.megaman.maverick.game.entities.factories.EntityPoolCreator
 
-class EnemiesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
+class EnemiesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
 
     companion object {
         const val TAG = "EnemiesFactory"
@@ -58,51 +56,49 @@ class EnemiesFactory(game: MegamanMaverickGame) : IFactory<IGameEntity> {
         const val SPIKY = "Spiky"
     }
 
-    private val pools = ObjectMap<Any, Pool<IGameEntity>>()
-
-    init {
-        pools.put(TEST_ENEMY, EntityPoolCreator.create(1) { TestEnemy(game) })
-        pools.put(BAT, EntityPoolCreator.create(3) { Bat(game) })
-        pools.put(MET, EntityPoolCreator.create(3) { Met(game) })
-        pools.put(FLOATING_CAN, EntityPoolCreator.create(5) { FloatingCan(game) })
-        pools.put(FLOATING_CAN_HOLE, EntityPoolCreator.create(2) { FloatingCanHole(game) })
-        pools.put(DRAGON_FLY, EntityPoolCreator.create(2) { DragonFly(game) })
-        pools.put(FLY_BOY, EntityPoolCreator.create(2) { FlyBoy(game) })
-        pools.put(GAPING_FISH, EntityPoolCreator.create(3) { GapingFish(game) })
-        pools.put(SPRING_HEAD, EntityPoolCreator.create(2) { SpringHead(game) })
-        pools.put(SUCTION_ROLLER, EntityPoolCreator.create(2) { SuctionRoller(game) })
-        pools.put(MAG_FLY, EntityPoolCreator.create(2) { MagFly(game) })
-        pools.put(MATASABURO, EntityPoolCreator.create(2) { Matasaburo(game) })
-        pools.put(SWINGIN_JOE, EntityPoolCreator.create(2) { SwinginJoe(game) })
-        pools.put(SNIPER_JOE, EntityPoolCreator.create(2) { SniperJoe(game) })
-        pools.put(CARTIN_JOE, EntityPoolCreator.create(2) { CartinJoe(game) })
-        pools.put(PENGUIN, EntityPoolCreator.create(2) { Penguin(game) })
-        pools.put(SHIELD_ATTACKER, EntityPoolCreator.create(2) { ShieldAttacker(game) })
-        pools.put(SCREWIE, EntityPoolCreator.create(5) { Screwie(game) })
-        pools.put(HANABIRAN, EntityPoolCreator.create(2) { Hanabiran(game) })
-        pools.put(RATTON, EntityPoolCreator.create(2) { Ratton(game) })
-        pools.put(PICKET_JOE, EntityPoolCreator.create(2) { PicketJoe(game) })
-        pools.put(ELECN, EntityPoolCreator.create(2) { Elecn(game) })
-        pools.put(ROBBIT, EntityPoolCreator.create(2) { Robbit(game) })
-        pools.put(CAVE_ROCKER, EntityPoolCreator.create(2) { CaveRocker(game) })
-        pools.put(EYEE, EntityPoolCreator.create(3) { Eyee(game) })
-        pools.put(TOGGLEE, EntityPoolCreator.create(2) { Togglee(game) })
-        pools.put(ADAMSKI, EntityPoolCreator.create(6) { Adamski(game) })
-        pools.put(BIG_JUMPING_JOE, EntityPoolCreator.create(2) { BigJumpingJoe(game) })
-        pools.put(UP_N_DOWN, EntityPoolCreator.create(3) { UpNDown(game) })
-        pools.put(SUICIDE_BUMMER, EntityPoolCreator.create(3) { SuicideBummer(game) })
-        pools.put(GACHAPPAN, EntityPoolCreator.create(2) { Gachappan(game) })
-        pools.put(BULB_BLASTER, EntityPoolCreator.create(1) { BulbBlaster(game) })
-        pools.put(IMORM, EntityPoolCreator.create(2) { Imorm(game) })
-        pools.put(WANAAN, EntityPoolCreator.create(2) { Wanaan(game) })
-        pools.put(PEAT, EntityPoolCreator.create(2) { Peat(game) })
-        pools.put(BABY_SPIDER, EntityPoolCreator.create(4) { BabySpider(game) })
-        pools.put(HELI_MET, EntityPoolCreator.create(2) { HeliMet(game) })
-        pools.put(SHOT_MAN, EntityPoolCreator.create(1) { Shotman(game) })
-        pools.put(PETIT_DEVIL, EntityPoolCreator.create(2) { PetitDevil(game) })
-        pools.put(PETIT_DEVIL_CHILD, EntityPoolCreator.create(4) { PetitDevilChild(game) })
-        pools.put(SNOWHEAD_THROWER, EntityPoolCreator.create(2) { SnowheadThrower(game) })
-        pools.put(SPIKY, EntityPoolCreator.create(2) { Spiky(game) })
+    override fun init() {
+        pools.put(TEST_ENEMY, EntityPoolCreator.create { TestEnemy(game) })
+        pools.put(BAT, EntityPoolCreator.create { Bat(game) })
+        pools.put(MET, EntityPoolCreator.create { Met(game) })
+        pools.put(FLOATING_CAN, EntityPoolCreator.create { FloatingCan(game) })
+        pools.put(FLOATING_CAN_HOLE, EntityPoolCreator.create { FloatingCanHole(game) })
+        pools.put(DRAGON_FLY, EntityPoolCreator.create { DragonFly(game) })
+        pools.put(FLY_BOY, EntityPoolCreator.create { FlyBoy(game) })
+        pools.put(GAPING_FISH, EntityPoolCreator.create { GapingFish(game) })
+        pools.put(SPRING_HEAD, EntityPoolCreator.create { SpringHead(game) })
+        pools.put(SUCTION_ROLLER, EntityPoolCreator.create { SuctionRoller(game) })
+        pools.put(MAG_FLY, EntityPoolCreator.create { MagFly(game) })
+        pools.put(MATASABURO, EntityPoolCreator.create { Matasaburo(game) })
+        pools.put(SWINGIN_JOE, EntityPoolCreator.create { SwinginJoe(game) })
+        pools.put(SNIPER_JOE, EntityPoolCreator.create { SniperJoe(game) })
+        pools.put(CARTIN_JOE, EntityPoolCreator.create { CartinJoe(game) })
+        pools.put(PENGUIN, EntityPoolCreator.create { Penguin(game) })
+        pools.put(SHIELD_ATTACKER, EntityPoolCreator.create { ShieldAttacker(game) })
+        pools.put(SCREWIE, EntityPoolCreator.create { Screwie(game) })
+        pools.put(HANABIRAN, EntityPoolCreator.create { Hanabiran(game) })
+        pools.put(RATTON, EntityPoolCreator.create { Ratton(game) })
+        pools.put(PICKET_JOE, EntityPoolCreator.create { PicketJoe(game) })
+        pools.put(ELECN, EntityPoolCreator.create { Elecn(game) })
+        pools.put(ROBBIT, EntityPoolCreator.create { Robbit(game) })
+        pools.put(CAVE_ROCKER, EntityPoolCreator.create { CaveRocker(game) })
+        pools.put(EYEE, EntityPoolCreator.create { Eyee(game) })
+        pools.put(TOGGLEE, EntityPoolCreator.create { Togglee(game) })
+        pools.put(ADAMSKI, EntityPoolCreator.create { Adamski(game) })
+        pools.put(BIG_JUMPING_JOE, EntityPoolCreator.create { BigJumpingJoe(game) })
+        pools.put(UP_N_DOWN, EntityPoolCreator.create { UpNDown(game) })
+        pools.put(SUICIDE_BUMMER, EntityPoolCreator.create { SuicideBummer(game) })
+        pools.put(GACHAPPAN, EntityPoolCreator.create { Gachappan(game) })
+        pools.put(BULB_BLASTER, EntityPoolCreator.create { BulbBlaster(game) })
+        pools.put(IMORM, EntityPoolCreator.create { Imorm(game) })
+        pools.put(WANAAN, EntityPoolCreator.create { Wanaan(game) })
+        pools.put(PEAT, EntityPoolCreator.create { Peat(game) })
+        pools.put(BABY_SPIDER, EntityPoolCreator.create { BabySpider(game) })
+        pools.put(HELI_MET, EntityPoolCreator.create { HeliMet(game) })
+        pools.put(SHOT_MAN, EntityPoolCreator.create { Shotman(game) })
+        pools.put(PETIT_DEVIL, EntityPoolCreator.create { PetitDevil(game) })
+        pools.put(PETIT_DEVIL_CHILD, EntityPoolCreator.create { PetitDevilChild(game) })
+        pools.put(SNOWHEAD_THROWER, EntityPoolCreator.create { SnowheadThrower(game) })
+        pools.put(SPIKY, EntityPoolCreator.create { Spiky(game) })
     }
 
     override fun fetch(key: Any): IGameEntity? {

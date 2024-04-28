@@ -1,16 +1,12 @@
 package com.megaman.maverick.game.entities.factories.impl
 
-import com.badlogic.gdx.utils.ObjectMap
-import com.engine.common.objects.Pool
-import com.engine.entities.IGameEntity
-import com.engine.factories.IFactory
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.blocks.*
+import com.megaman.maverick.game.entities.factories.EntityFactory
 import com.megaman.maverick.game.entities.factories.EntityPoolCreator
 import com.megaman.maverick.game.entities.special.RailTrackPlatform
-import javax.naming.BinaryRefAddr
 
-class BlocksFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntity> {
+class BlocksFactory(private val game: MegamanMaverickGame) : EntityFactory() {
 
     companion object {
         const val TAG = "BlockFactory"
@@ -28,21 +24,19 @@ class BlocksFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntit
         const val BREAKABLE_ICE = "BreakableIce"
     }
 
-    private val pools = ObjectMap<Any, Pool<Block>>()
-
-    init {
-        pools.put(STANDARD, EntityPoolCreator.create(10) { Block(game) })
-        pools.put(ANIMATED_BLOCK, EntityPoolCreator.create(10) { AnimatedBlock(game) })
-        pools.put(ICE_BLOCK, EntityPoolCreator.create(10) { IceBlock(game) })
-        pools.put(GEAR_TROLLEY, EntityPoolCreator.create(5) { GearTrolley(game) })
-        pools.put(CONVEYOR_BELT, EntityPoolCreator.create(5) { ConveyorBelt(game) })
-        pools.put(ROCKET_PLATFORM, EntityPoolCreator.create(5) { RocketPlatform(game) })
-        pools.put(DROPPER_LIFT, EntityPoolCreator.create(2) { DropperLift(game) })
-        pools.put(LIFT, EntityPoolCreator.create(2) { Lift(game) })
-        pools.put(PROPELLER_PLATFORM, EntityPoolCreator.create(3) { PropellerPlatform(game) })
-        pools.put(SWINGIN_PLATFORM, EntityPoolCreator.create(2) { SwinginPlatform(game) })
-        pools.put(RAIL_TRACK_PLATFORM, EntityPoolCreator.create(2) { RailTrackPlatform(game) })
-        pools.put(BREAKABLE_ICE, EntityPoolCreator.create(5) { BreakableIce(game) })
+    override fun init() {
+        pools.put(STANDARD, EntityPoolCreator.create { Block(game) })
+        pools.put(ANIMATED_BLOCK, EntityPoolCreator.create { AnimatedBlock(game) })
+        pools.put(ICE_BLOCK, EntityPoolCreator.create { IceBlock(game) })
+        pools.put(GEAR_TROLLEY, EntityPoolCreator.create { GearTrolley(game) })
+        pools.put(CONVEYOR_BELT, EntityPoolCreator.create { ConveyorBelt(game) })
+        pools.put(ROCKET_PLATFORM, EntityPoolCreator.create { RocketPlatform(game) })
+        pools.put(DROPPER_LIFT, EntityPoolCreator.create { DropperLift(game) })
+        pools.put(LIFT, EntityPoolCreator.create { Lift(game) })
+        pools.put(PROPELLER_PLATFORM, EntityPoolCreator.create { PropellerPlatform(game) })
+        pools.put(SWINGIN_PLATFORM, EntityPoolCreator.create { SwinginPlatform(game) })
+        pools.put(RAIL_TRACK_PLATFORM, EntityPoolCreator.create { RailTrackPlatform(game) })
+        pools.put(BREAKABLE_ICE, EntityPoolCreator.create { BreakableIce(game) })
     }
 
     override fun fetch(key: Any) = pools.get(if (key == "" || key == "Block") STANDARD else key)?.fetch()

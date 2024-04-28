@@ -1,15 +1,13 @@
 package com.megaman.maverick.game.entities.factories.impl
 
-import com.badlogic.gdx.utils.ObjectMap
 import com.engine.common.GameLogger
-import com.engine.common.objects.Pool
 import com.engine.entities.IGameEntity
-import com.engine.factories.IFactory
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.explosions.*
+import com.megaman.maverick.game.entities.factories.EntityFactory
 import com.megaman.maverick.game.entities.factories.EntityPoolCreator
 
-class ExplosionsFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntity> {
+class ExplosionsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
 
     companion object {
         const val TAG = "ExplosionFactory"
@@ -25,19 +23,17 @@ class ExplosionsFactory(private val game: MegamanMaverickGame) : IFactory<IGameE
         const val ICE_SHARD = "IceShard"
     }
 
-    private val pools = ObjectMap<Any, Pool<IGameEntity>>()
-
-    init {
-        pools.put(EXPLOSION, EntityPoolCreator.create(5) { Explosion(game) })
-        pools.put(SNOWBALL_EXPLOSION, EntityPoolCreator.create(3) { SnowballExplosion(game) })
-        pools.put(DISINTEGRATION, EntityPoolCreator.create(10) { Disintegration(game) })
-        pools.put(CHARGED_SHOT_EXPLOSION, EntityPoolCreator.create(3) { ChargedShotExplosion(game) })
-        pools.put(EXPLOSION_ORB, EntityPoolCreator.create(8) { ExplosionOrb(game) })
-        pools.put(CAVE_ROCK_EXPLOSION, EntityPoolCreator.create(2) { CaveRockExplosion(game) })
+    override fun init() {
+        pools.put(EXPLOSION, EntityPoolCreator.create { Explosion(game) })
+        pools.put(SNOWBALL_EXPLOSION, EntityPoolCreator.create { SnowballExplosion(game) })
+        pools.put(DISINTEGRATION, EntityPoolCreator.create { Disintegration(game) })
+        pools.put(CHARGED_SHOT_EXPLOSION, EntityPoolCreator.create { ChargedShotExplosion(game) })
+        pools.put(EXPLOSION_ORB, EntityPoolCreator.create { ExplosionOrb(game) })
+        pools.put(CAVE_ROCK_EXPLOSION, EntityPoolCreator.create { CaveRockExplosion(game) })
         pools.put(
             SIGMA_RAT_ELECTRIC_BALL_EXPLOSION,
-            EntityPoolCreator.create(2) { SigmaRatElectricBallExplosion(game) })
-        pools.put(ICE_SHARD, EntityPoolCreator.create(5) { IceShard(game) })
+            EntityPoolCreator.create { SigmaRatElectricBallExplosion(game) })
+        pools.put(ICE_SHARD, EntityPoolCreator.create { IceShard(game) })
     }
 
     override fun fetch(key: Any): IGameEntity? {

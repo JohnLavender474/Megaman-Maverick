@@ -5,10 +5,11 @@ import com.engine.common.objects.Pool
 import com.engine.entities.IGameEntity
 import com.engine.factories.IFactory
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.entities.factories.EntityFactory
 import com.megaman.maverick.game.entities.factories.EntityPoolCreator
 import com.megaman.maverick.game.entities.hazards.*
 
-class HazardsFactory(private val game: MegamanMaverickGame) : IFactory<IGameEntity> {
+class HazardsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
 
     companion object {
         const val SAW = "Saw"
@@ -23,19 +24,17 @@ class HazardsFactory(private val game: MegamanMaverickGame) : IFactory<IGameEnti
         const val CEILING_CRUSHER = "CeilingCrusher"
     }
 
-    private val pools = ObjectMap<Any, Pool<IGameEntity>>()
-
-    init {
-        pools.put(SAW, EntityPoolCreator.create(2) { Saw(game) })
-        pools.put(LASER_BEAMER, EntityPoolCreator.create(2) { LaserBeamer(game) })
-        pools.put(SWINGIN_AXE, EntityPoolCreator.create(2) { SwinginAxe(game) })
-        pools.put(SPIKE, EntityPoolCreator.create(10) { Spike(game) })
-        pools.put(BOLT, EntityPoolCreator.create(2) { Bolt(game) })
-        pools.put(ELECTROCUTIE, EntityPoolCreator.create(4) { Electrocutie(game) })
-        pools.put(ELECTROCUTIE_CHILD, EntityPoolCreator.create(4) { ElectrocutieChild(game) })
-        pools.put(SPIKE_BALL, EntityPoolCreator.create(2) { SpikeBall(game) })
-        pools.put(WANAAN_LAUNCHER, EntityPoolCreator.create(2) { WanaanLauncher(game) })
-        pools.put(CEILING_CRUSHER, EntityPoolCreator.create(2) { CeilingCrusher(game) })
+    override fun init() {
+        pools.put(SAW, EntityPoolCreator.create { Saw(game) })
+        pools.put(LASER_BEAMER, EntityPoolCreator.create { LaserBeamer(game) })
+        pools.put(SWINGIN_AXE, EntityPoolCreator.create { SwinginAxe(game) })
+        pools.put(SPIKE, EntityPoolCreator.create { Spike(game) })
+        pools.put(BOLT, EntityPoolCreator.create { Bolt(game) })
+        pools.put(ELECTROCUTIE, EntityPoolCreator.create { Electrocutie(game) })
+        pools.put(ELECTROCUTIE_CHILD, EntityPoolCreator.create { ElectrocutieChild(game) })
+        pools.put(SPIKE_BALL, EntityPoolCreator.create { SpikeBall(game) })
+        pools.put(WANAAN_LAUNCHER, EntityPoolCreator.create { WanaanLauncher(game) })
+        pools.put(CEILING_CRUSHER, EntityPoolCreator.create { CeilingCrusher(game) })
     }
 
     override fun fetch(key: Any) = pools.get(key)?.fetch()

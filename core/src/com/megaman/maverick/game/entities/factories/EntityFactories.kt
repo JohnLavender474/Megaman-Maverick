@@ -1,12 +1,14 @@
 package com.megaman.maverick.game.entities.factories
 
+import com.engine.common.interfaces.IClearable
+import com.engine.common.interfaces.Initializable
 import com.engine.entities.IGameEntity
 import com.engine.factories.Factories
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.factories.impl.*
 
-object EntityFactories : Factories<IGameEntity>() {
+object EntityFactories : Factories<IGameEntity>(), Initializable, IClearable {
 
     fun initialize(game: MegamanMaverickGame) {
         factories.put(EntityType.BLOCK, BlocksFactory(game))
@@ -20,4 +22,8 @@ object EntityFactories : Factories<IGameEntity>() {
         factories.put(EntityType.HAZARD, HazardsFactory(game))
         factories.put(EntityType.SENSOR, SensorsFactory(game))
     }
+
+    override fun init() = factories.forEach { (it.value as EntityFactory).init() }
+
+    override fun clear() = factories.forEach { (it.value as EntityFactory).clear() }
 }
