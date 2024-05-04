@@ -116,8 +116,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
                     if (body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)) status = BatStatus.HANGING
                 }
 
-                BatStatus.FLYING_TO_ATTACK -> { // TODO: add attack logic
-                }
+                else -> {}
             }
         }
     }
@@ -144,10 +143,10 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
         body.addFixture(shieldFixture)
 
-        val scannerFixture = Fixture(body, FixtureType.CONSUMER, model.copy())
+        val scannerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.7f * ConstVals.PPM))
         val consumer: (IFixture) -> Unit = {
-            if (it.getFixtureType() == FixtureType.DAMAGEABLE && it.getEntity() == getMegamanMaverickGame().megaman) status =
-                BatStatus.FLYING_TO_RETREAT
+            if (it.getFixtureType() == FixtureType.DAMAGEABLE && it.getEntity() == getMegamanMaverickGame().megaman)
+                status = BatStatus.FLYING_TO_RETREAT
         }
         scannerFixture.setConsumer { _, it -> consumer(it) }
         body.addFixture(scannerFixture)

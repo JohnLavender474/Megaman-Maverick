@@ -43,7 +43,7 @@ class SpringBouncer(game: MegamanMaverickGame) :
         private var atlas: TextureAtlas? = null
         private const val BOUNCE_DURATION = 0.5f
         private const val X_BOUNCE = 25f
-        private const val Y_BOUNCE = 24f
+        private const val Y_BOUNCE = 18f
         private const val SPRITE_DIM = 1.5f
     }
 

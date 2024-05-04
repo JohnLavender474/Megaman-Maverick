@@ -43,7 +43,6 @@ import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.drawables.sprites.Background
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.EntityFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.events.EventType
@@ -89,6 +88,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
         EventType.BEGIN_BOSS_SPAWN,
         EventType.BOSS_DEFEATED,
         EventType.BOSS_DEAD,
+        EventType.MINI_BOSS_DEAD,
         EventType.END_LEVEL_SUCCESSFULLY
     )
 
@@ -440,13 +440,16 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
                 val bossName = bossMapObject.name
                 val bossSpawnProps = bossMapObject.properties.toProps()
                 bossSpawnProps.put(ConstKeys.BOUNDS, bossMapObject.rectangle.toGameRectangle())
-                bossSpawnEventHandler.init(bossName, bossSpawnProps)
+
+                val mini = bossSpawnProps.getOrDefault(ConstKeys.MINI, false, Boolean::class)
+                if (!mini) audioMan.fadeOutMusic(FADE_OUT_MUSIC_ON_BOSS_SPAWN)
+
+                bossSpawnEventHandler.init(bossName, bossSpawnProps, mini)
 
                 megaman.running = false
                 engine.systems.forEach {
                     it.on = it is WorldSystem || it is SpritesSystem || it is AnimationsSystem
                 }
-                audioMan.fadeOutMusic(FADE_OUT_MUSIC_ON_BOSS_SPAWN)
             }
 
             EventType.BEGIN_BOSS_SPAWN -> {
@@ -455,8 +458,10 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
             }
 
             EventType.BOSS_DEFEATED -> {
+                val mini = event.getProperty(ConstKeys.MINI, Boolean::class)!!
+                if (!mini) audioMan.stopMusic()
+
                 megaman.canBeDamaged = false
-                audioMan.stopMusic()
                 val systemsToSwitch =
                     gdxArrayOf(
                         ControllerSystem::class,
@@ -470,7 +475,13 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
             }
 
             EventType.BOSS_DEAD -> {
-                eventsMan.submitEvent(Event(EventType.END_LEVEL_SUCCESSFULLY))
+                val mini = event.getProperty(ConstKeys.MINI, Boolean::class)!!
+                val eventType = if (mini) EventType.MINI_BOSS_DEAD else EventType.END_LEVEL_SUCCESSFULLY
+                eventsMan.submitEvent(Event(eventType))
+            }
+
+            EventType.MINI_BOSS_DEAD -> {
+                engine.systems.forEach { it.on = true }
             }
 
             EventType.END_LEVEL_SUCCESSFULLY -> {

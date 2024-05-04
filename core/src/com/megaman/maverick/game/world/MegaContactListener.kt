@@ -3,7 +3,6 @@ package com.megaman.maverick.game.world
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.engine.common.GameLogger
-import com.engine.common.allAreTrue
 import com.engine.common.enums.Direction
 import com.engine.common.enums.Facing
 import com.engine.common.enums.ProcessState
@@ -25,6 +24,7 @@ import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.decorations.Splash
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
+import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.sensors.Gate
 import com.megaman.maverick.game.entities.special.Cart
 import com.megaman.maverick.game.entities.special.Water
@@ -217,9 +217,12 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             Splash.generate(game, listener.getBody(), water.getBody())
 
             val waterEntity = water.getEntity() as Water
-            if ((entity is Megaman || entity is AbstractEnemy) && waterEntity.splashSound) game.audioMan.playSound(
-                SoundAsset.SPLASH_SOUND, false
-            )
+            if ((entity is Megaman || entity is AbstractEnemy) && waterEntity.splashSound)
+                game.audioMan.playSound(SoundAsset.SPLASH_SOUND, false)
+            if (entity is Megaman) {
+                entity.putProperty("old_gravity_scalar", entity.gravityScalar)
+                entity.gravityScalar = MegamanValues.WATER_GRAVITY_SCALAR
+            }
         }
 
         // head, ladder
@@ -523,7 +526,7 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             if (entity is Megaman) {
                 if (entity.body.isSensing(BodySense.FEET_ON_GROUND) &&
                     (entity.body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && entity.isFacing(Facing.LEFT) ||
-                    (entity.body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) && entity.isFacing(Facing.RIGHT)))
+                            (entity.body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) && entity.isFacing(Facing.RIGHT)))
                 ) return
             }
 
@@ -538,9 +541,9 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             body.setBodySense(BodySense.IN_WATER, true)
 
             val entity = listener.getEntity()
-            if (entity is Megaman && !entity.body.isSensing(BodySense.FEET_ON_GROUND) && !entity.isBehaviorActive(
-                    BehaviorType.WALL_SLIDING
-                )
+            if (entity is Megaman &&
+                !entity.body.isSensing(BodySense.FEET_ON_GROUND) &&
+                !entity.isBehaviorActive(BehaviorType.WALL_SLIDING)
             ) entity.aButtonTask = AButtonTask.SWIM
         }
 
@@ -753,6 +756,11 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
 
             game.audioMan.playSound(SoundAsset.SPLASH_SOUND, false)
             Splash.generate(game, listener.getBody(), water.getBody())
+
+            if (listenerEntity is Megaman) {
+                val oldGravityScalar = listenerEntity.getOrDefaultProperty("old_gravity_scalar", 1f, Float::class)
+                listenerEntity.gravityScalar = oldGravityScalar
+            }
         }
 
         // player, cart

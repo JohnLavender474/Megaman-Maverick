@@ -40,35 +40,13 @@ abstract class AbstractBoss(
     protected open val explosionTimer = Timer(EXPLOSION_TIME)
 
     var ready = false
+    var mini = false
+        private set
     var defeated = false
         private set
 
-    protected open fun triggerDefeat() {
-        GameLogger.debug(TAG, "triggerDefeat() = sending event and resetting defeat timer")
-        game.eventsMan.submitEvent(Event(EventType.BOSS_DEFEATED, props(ConstKeys.BOSS to this)))
-        defeatTimer.reset()
-        defeated = true
-    }
-
-    protected open fun explodeOnDefeat(delta: Float) {
-        explosionTimer.update(delta)
-        if (explosionTimer.isFinished()) {
-            val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
-            val position = Position.values().toGdxArray().random()
-            game.engine.spawn(
-                explosion,
-                props(
-                    ConstKeys.SOUND to SoundAsset.EXPLOSION_2_SOUND,
-                    ConstKeys.POSITION to body.getCenter().add(
-                        position.x * ConstVals.PPM.toFloat(), position.y + ConstVals.PPM.toFloat()
-                    )
-                )
-            )
-            explosionTimer.reset()
-        }
-    }
-
     override fun spawn(spawnProps: Properties) {
+        mini = spawnProps.getOrDefault(ConstKeys.MINI, false, Boolean::class)
         game.eventsMan.addListener(this)
         spawnProps.put(ConstKeys.DROP_ITEM_ON_DEATH, false)
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
@@ -100,7 +78,7 @@ abstract class AbstractBoss(
                 if (defeatTimer.isFinished()) {
                     GameLogger.debug(TAG, "Defeat timer is finished, dying and sending BOSS_DEAD event")
                     game.eventsMan.submitEvent(
-                        Event(EventType.BOSS_DEAD, props(ConstKeys.BOSS to this))
+                        Event(EventType.BOSS_DEAD, props(ConstKeys.MINI to mini))
                     )
                     kill()
                 }
@@ -117,5 +95,30 @@ abstract class AbstractBoss(
             if (it.current <= ConstVals.MIN_HEALTH && !defeated) triggerDefeat()
         }
         return pointsComponent
+    }
+
+    protected open fun triggerDefeat() {
+        GameLogger.debug(TAG, "triggerDefeat() = sending event and resetting defeat timer")
+        game.eventsMan.submitEvent(Event(EventType.BOSS_DEFEATED, props(ConstKeys.MINI to mini)))
+        defeatTimer.reset()
+        defeated = true
+    }
+
+    protected open fun explodeOnDefeat(delta: Float) {
+        explosionTimer.update(delta)
+        if (explosionTimer.isFinished()) {
+            val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
+            val position = Position.values().toGdxArray().random()
+            game.engine.spawn(
+                explosion,
+                props(
+                    ConstKeys.SOUND to SoundAsset.EXPLOSION_2_SOUND,
+                    ConstKeys.POSITION to body.getCenter().add(
+                        position.x * ConstVals.PPM.toFloat(), position.y + ConstVals.PPM.toFloat()
+                    )
+                )
+            )
+            explosionTimer.reset()
+        }
     }
 }

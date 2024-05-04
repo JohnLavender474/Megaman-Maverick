@@ -23,6 +23,7 @@ enum class EventType {
     END_BOSS_SPAWN,
     BOSS_DEFEATED,
     BOSS_DEAD,
+    MINI_BOSS_DEAD,
     REQ_SHAKE_CAM,
     END_LEVEL_SUCCESSFULLY,
     TELEPORT,

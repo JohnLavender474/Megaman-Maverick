@@ -141,7 +141,6 @@ class Darkness(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity, IEv
         sprites.clear()
     }
 
-    @Suppress("UNCHECKED_CAST")
     override fun onEvent(event: Event) {
         when (event.key) {
             EventType.PLAYER_SPAWN -> {

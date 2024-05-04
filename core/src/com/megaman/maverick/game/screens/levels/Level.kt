@@ -20,7 +20,10 @@ enum class Level(tmxSourceFile: String, val musicAss: MusicAsset) {
     CREW_MAN("CrewMan.tmx", MusicAsset.MM7_JUNK_MAN_MUSIC),
     FREEZE_MAN("FreezeMan.tmx", MusicAsset.MMX_CHILL_PENGUIN_MUSIC),
     MICROWAVE_MAN("Test1.tmx", MusicAsset.XENOBLADE_GAUR_PLAINS_MUSIC),
-    GALAXY_MAN("GalaxyMan.tmx", MusicAsset.MM9_GALAXY_MAN_MUSIC);
+    GALAXY_MAN("GalaxyMan.tmx", MusicAsset.MM9_GALAXY_MAN_MUSIC),
+    WILY_STAGE_1("WilyStage1.tmx", MusicAsset.MMX_SIGMA_1ST_MUSIC),
+    WILY_STAGE_2("WilyStage2.tmx", MusicAsset.MMX_SIGMA_2_STAGE),
+    WILY_STAGE_3("WilyStage3.tmx", MusicAsset.MMZ_ENEMY_HALL_MUSIC);
 
     val tmxSourceFile = "tiled_maps/tmx/$tmxSourceFile"
 }

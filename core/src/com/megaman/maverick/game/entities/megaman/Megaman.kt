@@ -34,6 +34,7 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.bosses.Bospider
+import com.megaman.maverick.game.entities.bosses.PenguinMiniBoss
 import com.megaman.maverick.game.entities.bosses.gutstank.GutsTankFist
 import com.megaman.maverick.game.entities.bosses.sigmarat.SigmaRat
 import com.megaman.maverick.game.entities.bosses.sigmarat.SigmaRatClaw
@@ -161,7 +162,8 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         Shotman::class to dmgNeg(2),
         Snowhead::class to dmgNeg(2),
         SnowheadThrower::class to dmgNeg(3),
-        Spiky::class to dmgNeg(3)
+        Spiky::class to dmgNeg(3),
+        PenguinMiniBoss::class to dmgNeg(3)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 
@@ -225,8 +227,6 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
                 Direction.UP, Direction.RIGHT -> {
                     jumpVel = MegamanValues.JUMP_VEL
                     wallJumpVel = MegamanValues.WALL_JUMP_VEL
-                    waterJumpVel = MegamanValues.WATER_JUMP_VEL
-                    waterWallJumpVel = MegamanValues.WATER_WALL_JUMP_VEL
                     cartJumpVel = MegamanValues.CART_JUMP_VEL
 
                     gravity = MegamanValues.GRAVITY
@@ -235,25 +235,20 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
                     waterGravity = MegamanValues.WATER_GRAVITY
                     waterIceGravity = MegamanValues.WATER_ICE_GRAVITY
 
-                    // swim
                     swimVel = MegamanValues.SWIM_VEL_Y
                 }
 
-                Direction.DOWN, Direction.LEFT -> { // jump
+                Direction.DOWN, Direction.LEFT -> {
                     jumpVel = -MegamanValues.JUMP_VEL
                     wallJumpVel = -MegamanValues.WALL_JUMP_VEL
-                    waterJumpVel = -MegamanValues.WATER_JUMP_VEL
-                    waterWallJumpVel = -MegamanValues.WATER_WALL_JUMP_VEL
                     cartJumpVel = -MegamanValues.CART_JUMP_VEL
 
-                    // gravity
                     gravity = -MegamanValues.GRAVITY
                     groundGravity = -MegamanValues.GROUND_GRAVITY
                     iceGravity = -MegamanValues.ICE_GRAVITY
                     waterGravity = -MegamanValues.WATER_GRAVITY
                     waterIceGravity = -MegamanValues.WATER_ICE_GRAVITY
 
-                    // swim
                     swimVel = -MegamanValues.SWIM_VEL_Y
                 }
             }
@@ -291,9 +286,7 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
 
     internal var jumpVel = 0f
     internal var wallJumpVel = 0f
-    internal var waterJumpVel = 0f
     internal var cartJumpVel = 0f
-    internal var waterWallJumpVel = 0f
     internal var gravity = 0f
     internal var groundGravity = 0f
     internal var iceGravity = 0f

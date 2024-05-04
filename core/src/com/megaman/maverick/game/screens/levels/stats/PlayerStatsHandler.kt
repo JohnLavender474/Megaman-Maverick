@@ -86,14 +86,18 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
         if (!finished) throw IllegalStateException("Cannot call attain if handler is not finished")
         if (megaman.has(armorPiece)) return
         audioMan.playMusic(SoundAsset.LIFE_SOUND, false)
-        val timer = Timer(SPECIAL_ITEM_DUR)/*
+        val timer = Timer(SPECIAL_ITEM_DUR)
+        /*
         timer = Timer(SPECIAL_ITEM_DUR)
         timer?.runOnFinished = { megaman.add(armorPiece) }
          */
     }
 
     fun attain(heartTank: MegaHeartTank) {
-        if (megaman.has(heartTank)) return
+        if (megaman.has(heartTank) || megaman.getMaxHealth() == ConstVals.MAX_HEALTH) {
+            audioMan.playSound(SoundAsset.ERROR_SOUND, false)
+            return
+        }
 
         val timer = Timer(SPECIAL_ITEM_DUR)
         timer.runOnFirstUpdate = {

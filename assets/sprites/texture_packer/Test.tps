@@ -124,7 +124,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>../sprite_sheets/Items1.txt</filename>
+                <filename>../sprite_sheets/Test.txt</filename>
             </struct>
         </map>
         <key>multiPackMode</key>
@@ -173,10 +173,7 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">../frames/Items1/EmptyHealthTank.png</key>
-            <key type="filename">../frames/Items1/Key.png</key>
-            <key type="filename">../frames/Items1/SmallHealthBulb.png</key>
-            <key type="filename">../frames/Items1/SmallWeaponBulb.png</key>
+            <key type="filename">../frames/Test/PenguinMiniBoss.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -185,43 +182,9 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>8,8,16,16</rect>
+                <rect>46,59,93,117</rect>
                 <key>scale9Paddings</key>
-                <rect>8,8,16,16</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Items1/HealthBulb.png</key>
-            <key type="filename">../frames/Items1/HealthTank.png</key>
-            <key type="filename">../frames/Items1/HeartTank.png</key>
-            <key type="filename">../frames/Items1/WeaponBulb.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>16,8,32,16</rect>
-                <key>scale9Paddings</key>
-                <rect>16,8,32,16</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Items1/SniperJoeShield/Blue.png</key>
-            <key type="filename">../frames/Items1/SniperJoeShield/Orange.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>5,5,9,9</rect>
-                <key>scale9Paddings</key>
-                <rect>5,5,9,9</rect>
+                <rect>46,59,93,117</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -232,7 +195,7 @@
             <struct type="SpriteSheet">
                 <key>files</key>
                 <array>
-                    <filename>../frames/Items1</filename>
+                    <filename>../frames/Test</filename>
                 </array>
             </struct>
         </map>

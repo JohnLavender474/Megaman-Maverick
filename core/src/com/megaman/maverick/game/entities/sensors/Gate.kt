@@ -20,8 +20,6 @@ import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
-import com.engine.drawables.sorting.DrawingPriority
-import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
@@ -41,6 +39,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.getMegamanMaverickGame
 import com.megaman.maverick.game.world.BodyComponentCreator
@@ -59,7 +58,8 @@ class Gate(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IAudioEnt
         OPENABLE, OPENING, OPEN, CLOSING, CLOSED
     }
 
-    override val eventKeyMask = objectSetOf<Any>(EventType.PLAYER_SPAWN, EventType.END_ROOM_TRANS)
+    override val eventKeyMask =
+        objectSetOf<Any>(EventType.PLAYER_SPAWN, EventType.END_ROOM_TRANS, EventType.MINI_BOSS_DEAD)
 
     val center = Vector2()
 
@@ -69,9 +69,13 @@ class Gate(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IAudioEnt
         private set
 
     private val timer = Timer(DURATION)
+    private val audioMan: MegaAudioManager
+        get() = getMegamanMaverickGame().audioMan
 
     private lateinit var nextRoomKey: String
 
+    private var triggerable = true
+    private var miniBossGate = false
     private var resettable = false
     private var transitionFinished = false
     private var showCloseEvent = true
@@ -88,13 +92,22 @@ class Gate(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IAudioEnt
 
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
+
         game.eventsMan.addListener(this)
         center.set((spawnProps.get(ConstKeys.BOUNDS) as GameRectangle).getCenter())
+
         nextRoomKey = spawnProps.get(ConstKeys.ROOM) as String
+
         val directionString = spawnProps.getOrDefault(ConstKeys.DIRECTION, "left", String::class)
         direction = Direction.valueOf(directionString.uppercase())
+
+        triggerable = spawnProps.getOrDefault(ConstKeys.TRIGGER, true, Boolean::class)
         resettable = spawnProps.getOrDefault(ConstKeys.RESET, false, Boolean::class)
         showCloseEvent = spawnProps.getOrDefault(ConstKeys.CLOSE, true, Boolean::class)
+
+        miniBossGate = spawnProps.getOrDefault("${ConstKeys.MINI}_${ConstKeys.BOSS}", false, Boolean::class)
+        if (miniBossGate) triggerable = false
+
         reset()
     }
 
@@ -106,6 +119,10 @@ class Gate(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IAudioEnt
                 val room = event.getProperty(ConstKeys.ROOM) as RectangleMapObject
                 if (nextRoomKey == room.name) transitionFinished = true
             }
+
+            EventType.MINI_BOSS_DEAD -> {
+                if (miniBossGate) triggerable = true
+            }
         }
     }
 
@@ -116,8 +133,10 @@ class Gate(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IAudioEnt
     }
 
     fun trigger() {
+        if (!triggerable) return
+
         state = GateState.OPENING
-        getMegamanMaverickGame().audioMan.playSound(SoundAsset.BOSS_DOOR_SOUND, false)
+        audioMan.playSound(SoundAsset.BOSS_DOOR_SOUND, false)
         game.eventsMan.submitEvent(Event(EventType.GATE_INIT_OPENING))
     }
 

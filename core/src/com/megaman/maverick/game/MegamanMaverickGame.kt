@@ -177,9 +177,12 @@ class MegamanMaverickGame : Game2D() {
         // setCurrentScreen(ScreenEnum.MAIN.name)
         // startLevelScreen(Level.MAGNET_MAN)
         // startLevelScreen(Level.TIMBER_WOMAN
-        startLevelScreen(Level.CREW_MAN)
+        // startLevelScreen(Level.CREW_MAN)
         // startLevelScreen(Level.FREEZE_MAN)
         // startLevelScreen(Level.GALAXY_MAN)
+        // startLevelScreen(Level.WILY_STAGE_1)
+        startLevelScreen(Level.WILY_STAGE_2)
+        // startLevelScreen(Level.WILY_STAGE_3)
         // setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME.name)
     }
 

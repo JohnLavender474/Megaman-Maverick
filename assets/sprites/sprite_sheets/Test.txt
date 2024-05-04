@@ -1,0 +1,12 @@
+Test.png
+size: 185, 235
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+PenguinMiniBoss
+  rotate: false
+  xy: 0, 0
+  size: 185, 235
+  orig: 185, 235
+  offset: 0, 0
+  index: -1

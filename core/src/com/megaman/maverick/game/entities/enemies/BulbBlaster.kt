@@ -1,16 +1,14 @@
 package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectSet
 import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
-import com.engine.common.extensions.getTextureAtlas
-import com.engine.common.extensions.objectMapOf
-import com.engine.common.extensions.toInt
-import com.engine.common.extensions.toObjectSet
+import com.engine.common.extensions.*
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
@@ -23,6 +21,7 @@ import com.engine.drawables.sprites.setSize
 import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.entities.contracts.IMotionEntity
 import com.engine.events.Event
+import com.engine.events.IEventListener
 import com.engine.motion.MotionComponent
 import com.engine.motion.MotionComponent.MotionDefinition
 import com.engine.motion.Trajectory
@@ -38,12 +37,12 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import kotlin.reflect.KClass
 
-class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
-    IMotionEntity {
+class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IEventListener, IAnimatedEntity, IMotionEntity {
 
     companion object {
         const val TAG = "BulbBlaster"
@@ -55,9 +54,12 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>()
+    override val eventKeyMask = objectSetOf<Any>(EventType.END_ROOM_TRANS)
+
 
     private val timer = Timer(STATE_DUR)
     private lateinit var keys: ObjectSet<Int>
+    private lateinit var spawnRoom: String
     private var light = false
 
     override fun init() {
@@ -74,6 +76,8 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
     override fun spawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
         super.spawn(spawnProps)
+
+        game.eventsMan.addListener(this)
 
         val spawn = if (spawnProps.containsKey(ConstKeys.POSITION)) spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         else spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
@@ -93,13 +97,25 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
                 onReset = { body.setCenter(spawn) })
             putMotionDefinition(ConstKeys.TRAJECTORY, motionDefinition)
         }
+
+        spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)!!
     }
 
     override fun onDestroy() {
         super<AbstractEnemy>.onDestroy()
+        game.eventsMan.removeListener(this)
         clearMotionDefinitions()
         light = false
         sendEvent()
+    }
+
+    override fun onEvent(event: Event) {
+        when (event.key) {
+            EventType.END_ROOM_TRANS -> {
+                val room = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!.name
+                if (room != spawnRoom) kill()
+            }
+        }
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
