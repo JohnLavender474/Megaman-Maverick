@@ -3,7 +3,7 @@ package com.megaman.maverick.game.spawns
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.utils.ObjectSet
 import com.engine.common.GameLogger
-import com.engine.common.shapes.GameRectangle
+import com.engine.common.shapes.IGameShape2D
 import com.engine.spawns.Spawn
 import com.engine.spawns.SpawnerForBoundsEntered
 import com.engine.spawns.SpawnerForEvent
@@ -15,13 +15,13 @@ object SpawnerFactory {
 
     fun spawnerForWhenEnteringCamera(
         camera: Camera,
-        spawnBounds: GameRectangle,
+        spawnShape: IGameShape2D,
         spawnSupplier: () -> Spawn,
         respawnable: Boolean = true
     ): SpawnerForBoundsEntered {
         GameLogger.debug(TAG, "spawnerForWhenEnteringCamera(): Creating spawner for camera: $camera")
         return SpawnerForBoundsEntered(
-            spawnSupplier, { spawnBounds }, { camera.toGameRectangle() }, respawnable = respawnable
+            spawnSupplier, { spawnShape }, { camera.toGameRectangle() }, respawnable = respawnable
         )
     }
 

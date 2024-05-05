@@ -6,14 +6,16 @@ import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.maps.MapObject
 import com.badlogic.gdx.maps.MapProperties
+import com.badlogic.gdx.maps.objects.CircleMapObject
+import com.badlogic.gdx.maps.objects.PolygonMapObject
+import com.badlogic.gdx.maps.objects.PolylineMapObject
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.OrderedMap
 import com.engine.common.extensions.getMusic
 import com.engine.common.extensions.getSound
 import com.engine.common.objects.Properties
-import com.engine.common.shapes.GameRectangle
-import com.engine.common.shapes.toGameRectangle
+import com.engine.common.shapes.*
 import com.engine.entities.IGameEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -23,15 +25,56 @@ import com.megaman.maverick.game.assets.SoundAsset
 
 fun IGameEntity.getMegamanMaverickGame() = game as MegamanMaverickGame
 
+fun MapObject.convertToProps(): Properties = when (this) {
+    is RectangleMapObject -> toProps()
+    is PolygonMapObject -> toProps()
+    is CircleMapObject -> toProps()
+    is PolylineMapObject -> toProps()
+    else -> throw IllegalArgumentException("Unknown map object type: $this")
+}
+
+fun MapObject.getShape(): IGameShape2D = when (this) {
+    is RectangleMapObject -> rectangle.toGameRectangle()
+    is PolygonMapObject -> polygon.toGamePolygon()
+    is CircleMapObject -> circle.toGameCircle()
+    // TODO: support polyline map object
+    else -> throw IllegalArgumentException("Unknown map object type: $this")
+}
+
 fun RectangleMapObject.toProps(): Properties {
     val props = Properties()
-
     props.put(ConstKeys.NAME, name)
-    props.put(ConstKeys.BOUNDS, rectangle.toGameRectangle())
-
+    props.put(ConstKeys.BOUNDS, getShape())
     val objProps = properties.toProps()
     props.putAll(objProps)
+    return props
+}
 
+fun PolygonMapObject.toProps(): Properties {
+    val props = Properties()
+    props.put(ConstKeys.NAME, name)
+    props.put(ConstKeys.POLYGON, getShape())
+    val objProps = properties.toProps()
+    props.putAll(objProps)
+    return props
+}
+
+fun CircleMapObject.toProps(): Properties {
+    val props = Properties()
+    props.put(ConstKeys.NAME, name)
+    props.put(ConstKeys.CIRCLE, getShape())
+    val objProps = properties.toProps()
+    props.putAll(objProps)
+    return props
+}
+
+fun PolylineMapObject.toProps(): Properties {
+    val props = Properties()
+    props.put(ConstKeys.NAME, name)
+    // TODO: props.put(ConstKeys.LINES, getShape())
+    props.put(ConstKeys.LINES, polyline.toGameLines())
+    val objProps = properties.toProps()
+    props.putAll(objProps)
     return props
 }
 

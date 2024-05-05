@@ -219,10 +219,7 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             val waterEntity = water.getEntity() as Water
             if ((entity is Megaman || entity is AbstractEnemy) && waterEntity.splashSound)
                 game.audioMan.playSound(SoundAsset.SPLASH_SOUND, false)
-            if (entity is Megaman) {
-                entity.putProperty("old_gravity_scalar", entity.gravityScalar)
-                entity.gravityScalar = MegamanValues.WATER_GRAVITY_SCALAR
-            }
+            if (entity is Megaman) entity.gravityScalar = MegamanValues.WATER_GRAVITY_SCALAR
         }
 
         // head, ladder
@@ -404,7 +401,7 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
         }
     }
 
-    override fun continueContact(contact: Contact, delta: Float) { // do not check for contacts within the same entity
+    override fun continueContact(contact: Contact, delta: Float) {
         if (contact.fixture1.getEntity() == contact.fixture2.getEntity()) return
 
         // consumer
@@ -655,7 +652,7 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
         }
     }
 
-    override fun endContact(contact: Contact, delta: Float) { // do not check for contacts within the same entity
+    override fun endContact(contact: Contact, delta: Float) {
         if (contact.fixture1.getEntity() == contact.fixture2.getEntity()) return
 
         // side, block
@@ -757,10 +754,7 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             game.audioMan.playSound(SoundAsset.SPLASH_SOUND, false)
             Splash.generate(game, listener.getBody(), water.getBody())
 
-            if (listenerEntity is Megaman) {
-                val oldGravityScalar = listenerEntity.getOrDefaultProperty("old_gravity_scalar", 1f, Float::class)
-                listenerEntity.gravityScalar = oldGravityScalar
-            }
+            if (listenerEntity is Megaman) listenerEntity.gravityScalar = 1f
         }
 
         // player, cart

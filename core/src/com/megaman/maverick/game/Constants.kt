@@ -16,6 +16,9 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val LINES = "lines"
+    const val CIRCLE = "circle"
+    const val POLYGON = "polygon"
     const val MINI = "mini"
     const val INDEX = "index"
     const val JUMP = "jump"

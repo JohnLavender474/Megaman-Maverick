@@ -17,7 +17,8 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.spawns.SpawnerFactory
-import com.megaman.maverick.game.utils.toProps
+import com.megaman.maverick.game.utils.convertToProps
+import com.megaman.maverick.game.utils.getShape
 
 class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITiledMapLayerBuilder {
 
@@ -47,78 +48,75 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
         GameLogger.debug(TAG, "build(): Entity type: $entityType")
 
         layer.objects.forEach {
-            if (it is RectangleMapObject) {
-                val spawnProps = it.toProps()
-                spawnProps.put(ConstKeys.BOUNDS, it.rectangle.toGameRectangle())
+            val spawnProps = it.convertToProps()
 
-                val spawnType = spawnProps.get(ConstKeys.SPAWN_TYPE) as String?
-                if (spawnType == SpawnType.SPAWN_NOW) {
-                    val entity = EntityFactories.fetch(entityType, it.name)!!
-                    game.engine.spawn(entity, spawnProps)
-                    return@forEach
-                }
+            val spawnType = spawnProps.get(ConstKeys.SPAWN_TYPE) as String?
+            if (spawnType == SpawnType.SPAWN_NOW) {
+                val entity = EntityFactories.fetch(entityType, it.name)!!
+                game.engine.spawn(entity, spawnProps)
+                return@forEach
+            }
 
-                val spawnSupplier = {
-                    val entity = EntityFactories.fetch(entityType, it.name ?: "")
-                        ?: throw IllegalStateException("Entity of type $entityType not found: ${it.name}")
-                    Spawn(entity, spawnProps)
-                }
-                val respawnable =
-                    !spawnProps.containsKey(ConstKeys.RESPAWNABLE) || spawnProps.get(ConstKeys.RESPAWNABLE) as Boolean
+            val spawnSupplier = {
+                val entity = EntityFactories.fetch(entityType, it.name ?: "")
+                    ?: throw IllegalStateException("Entity of type $entityType not found: ${it.name}")
+                Spawn(entity, spawnProps)
+            }
+            val respawnable =
+                !spawnProps.containsKey(ConstKeys.RESPAWNABLE) || spawnProps.get(ConstKeys.RESPAWNABLE) as Boolean
 
-                when (spawnType) {
-                    SpawnType.SPAWN_ROOM -> {
-                        val roomName = it.properties.get(SpawnType.SPAWN_ROOM) as String
-                        val gameRooms = returnProps.get(ConstKeys.GAME_ROOMS) as Array<RectangleMapObject>
+            when (spawnType) {
+                SpawnType.SPAWN_ROOM -> {
+                    val roomName = it.properties.get(SpawnType.SPAWN_ROOM) as String
+                    val gameRooms = returnProps.get(ConstKeys.GAME_ROOMS) as Array<RectangleMapObject>
 
-                        var roomFound = false
-                        for (room in gameRooms) if (roomName == room.name) {
-                            spawnProps.put(ConstKeys.ROOM, room)
-                            val spawner = SpawnerFactory.spawnerForWhenEnteringCamera(
-                                game.getGameCamera(), room.rectangle.toGameRectangle(), spawnSupplier, respawnable
-                            )
-                            spawners.add(spawner)
-
-                            GameLogger.debug(
-                                TAG, "build(): Adding spawner $spawner for game rectangle object ${it.name}"
-                            )
-
-                            roomFound = true
-                            break
-                        }
-
-                        check(roomFound) { "Room not found: $roomName" }
-                    }
-
-                    SpawnType.SPAWN_EVENT -> {
-                        val events = ObjectSet<Any>()
-                        val eventNames = (spawnProps.get(ConstKeys.EVENTS) as String).split(",")
-                        eventNames.forEach { eventName ->
-                            val eventType = EventType.valueOf(eventName)
-                            events.add(eventType)
-                        }
-
-                        val spawner = SpawnerFactory.spawnerForWhenEventCalled(events, spawnSupplier, respawnable)
-                        spawners.add(spawner)
-
-                        GameLogger.debug(
-                            TAG, "build(): Adding spawner $spawner for game rectangle object ${it.name}"
-                        )
-
-                        game.eventsMan.addListener(spawner)
-                        disposables.add { game.eventsMan.removeListener(spawner) }
-                    }
-
-                    else -> {
+                    var roomFound = false
+                    for (room in gameRooms) if (roomName == room.name) {
+                        spawnProps.put(ConstKeys.ROOM, room)
                         val spawner = SpawnerFactory.spawnerForWhenEnteringCamera(
-                            game.getGameCamera(), it.rectangle.toGameRectangle(), spawnSupplier, respawnable
+                            game.getGameCamera(), room.rectangle.toGameRectangle(), spawnSupplier, respawnable
                         )
                         spawners.add(spawner)
 
                         GameLogger.debug(
                             TAG, "build(): Adding spawner $spawner for game rectangle object ${it.name}"
                         )
+
+                        roomFound = true
+                        break
                     }
+
+                    check(roomFound) { "Room not found: $roomName" }
+                }
+
+                SpawnType.SPAWN_EVENT -> {
+                    val events = ObjectSet<Any>()
+                    val eventNames = (spawnProps.get(ConstKeys.EVENTS) as String).split(",")
+                    eventNames.forEach { eventName ->
+                        val eventType = EventType.valueOf(eventName)
+                        events.add(eventType)
+                    }
+
+                    val spawner = SpawnerFactory.spawnerForWhenEventCalled(events, spawnSupplier, respawnable)
+                    spawners.add(spawner)
+
+                    GameLogger.debug(
+                        TAG, "build(): Adding spawner $spawner for game rectangle object ${it.name}"
+                    )
+
+                    game.eventsMan.addListener(spawner)
+                    disposables.add { game.eventsMan.removeListener(spawner) }
+                }
+
+                else -> {
+                    val spawner = SpawnerFactory.spawnerForWhenEnteringCamera(
+                        game.getGameCamera(), it.getShape(), spawnSupplier, respawnable
+                    )
+                    spawners.add(spawner)
+
+                    GameLogger.debug(
+                        TAG, "build(): Adding spawner $spawner for game rectangle object ${it.name}"
+                    )
                 }
             }
         }
