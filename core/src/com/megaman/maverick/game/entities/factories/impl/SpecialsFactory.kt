@@ -10,6 +10,7 @@ class SpecialsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
 
     companion object {
         const val WATER = "Water"
+        const val POLYGON_WATER = "PolygonWater"
         const val LADDER = "Ladder"
         const val GRAVITY_CHANGE = "GravityChange"
         const val SPRING_BOUNCER = "SpringBouncer"
@@ -26,6 +27,7 @@ class SpecialsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
 
     override fun init() {
         pools.put(WATER, EntityPoolCreator.create { Water(game) })
+        pools.put(POLYGON_WATER, EntityPoolCreator.create { PolygonWater(game) })
         pools.put(SPRING_BOUNCER, EntityPoolCreator.create { SpringBouncer(game) })
         pools.put(LADDER, EntityPoolCreator.create { Ladder(game) })
         pools.put(GRAVITY_CHANGE, EntityPoolCreator.create { GravityChange(game) })

@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.OrderedMap
 import com.engine.common.extensions.getMusic
 import com.engine.common.extensions.getSound
+import com.engine.common.objects.Matrix
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.*
 import com.engine.entities.IGameEntity
@@ -22,6 +23,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
+import kotlin.math.roundToInt
 
 fun IGameEntity.getMegamanMaverickGame() = game as MegamanMaverickGame
 
@@ -114,3 +116,22 @@ fun AssetManager.getMusics(): OrderedMap<MusicAsset, Music> {
     for (ass in MusicAsset.values()) music.put(ass, getMusic(ass.source))
     return music
 }
+
+fun GamePolygon.splitIntoGameRectanglesBasedOnCenter(rectWidth: Float, rectHeight: Float): Matrix<GameRectangle> {
+    val bounds = libgdxPolygon.boundingRectangle
+    val x = bounds.x
+    val y = bounds.y
+    val width = bounds.width
+    val height = bounds.height
+    val rows = (height / rectHeight).roundToInt()
+    val columns = (width / rectWidth).roundToInt()
+    val matrix = Matrix<GameRectangle>(rows, columns)
+    for (row in 0 until rows) {
+        for (column in 0 until columns) {
+            val rectangle = GameRectangle(x + column * rectWidth, y + row * rectHeight, rectWidth, rectHeight)
+            if (contains(rectangle.getCenter())) matrix[column, row] = rectangle
+        }
+    }
+    return matrix
+}
+

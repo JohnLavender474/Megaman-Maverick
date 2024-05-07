@@ -1,12 +1,14 @@
 package com.megaman.maverick.game.screens.levels.map.layers
 
 import com.badlogic.gdx.maps.MapLayer
+import com.badlogic.gdx.maps.objects.PolygonMapObject
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.ObjectSet
 import com.engine.common.GameLogger
 import com.engine.common.objects.Properties
+import com.engine.common.shapes.GamePolygon
 import com.engine.common.shapes.toGameRectangle
 import com.engine.screens.levels.tiledmap.builders.ITiledMapLayerBuilder
 import com.engine.spawns.ISpawner
@@ -48,7 +50,15 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
         GameLogger.debug(TAG, "build(): Entity type: $entityType")
 
         layer.objects.forEach {
+            if (it.name == "PolygonWater" && it is PolygonMapObject) {
+                val polygon = it.polygon
+                println("Polygon 1: ${polygon.transformedVertices.toList()}")
+            }
             val spawnProps = it.convertToProps()
+            if (it.name == "PolygonWater") {
+                val polygon = spawnProps.get(ConstKeys.POLYGON, GamePolygon::class)!!
+                println("Polygon 2: $polygon")
+            }
 
             val spawnType = spawnProps.get(ConstKeys.SPAWN_TYPE) as String?
             if (spawnType == SpawnType.SPAWN_NOW) {

@@ -27,6 +27,7 @@ import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.sensors.Gate
 import com.megaman.maverick.game.entities.special.Cart
+import com.megaman.maverick.game.entities.special.PolygonWater
 import com.megaman.maverick.game.entities.special.Water
 import com.megaman.maverick.game.utils.VelocityAlterator
 
@@ -216,10 +217,13 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
 
             Splash.generate(game, listener.getBody(), water.getBody())
 
-            val waterEntity = water.getEntity() as Water
-            if ((entity is Megaman || entity is AbstractEnemy) && waterEntity.splashSound)
+            val waterEntity = water.getEntity()
+            if ((entity is Megaman || entity is AbstractEnemy) &&
+                ((waterEntity is Water && waterEntity.splashSound) || (waterEntity is PolygonWater && waterEntity.splashSound))
+            ) {
                 game.audioMan.playSound(SoundAsset.SPLASH_SOUND, false)
-            if (entity is Megaman) entity.gravityScalar = MegamanValues.WATER_GRAVITY_SCALAR
+                if (entity is Megaman) entity.gravityScalar = MegamanValues.WATER_GRAVITY_SCALAR
+            }
         }
 
         // head, ladder
@@ -288,7 +292,8 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
                 val canChangeGravityRotation =
                     bodyFixture.properties.getOrDefault(ConstKeys.GRAVITY_ROTATABLE, true, Boolean::class)
                 if (canChangeGravityRotation) {
-                    val direction = gravityChangeFixture.getProperty(ConstKeys.DIRECTION, Direction::class) ?: return
+                    val direction =
+                        gravityChangeFixture.getProperty(ConstKeys.DIRECTION, Direction::class) ?: return
                     if (entity is IDirectionRotatable && entity.directionRotation != direction) entity.directionRotation =
                         direction
                 }
@@ -324,7 +329,11 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             )
             val (projectileFixture, otherFixture) = contact.getFixtureSetsInOrder(
                 objectSetOf(FixtureType.PROJECTILE), objectSetOf(
-                    FixtureType.BLOCK, FixtureType.BODY, FixtureType.SHIELD, FixtureType.WATER, FixtureType.PROJECTILE
+                    FixtureType.BLOCK,
+                    FixtureType.BODY,
+                    FixtureType.SHIELD,
+                    FixtureType.WATER,
+                    FixtureType.PROJECTILE
                 )
             )!!
 
@@ -469,7 +478,8 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             val (feetFixture, ladderFixture) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.LADDER)!!
             val feetEntity = feetFixture.getEntity()
 
-            val feetDirection = if (feetEntity is IDirectionRotatable) feetEntity.directionRotation else Direction.UP
+            val feetDirection =
+                if (feetEntity is IDirectionRotatable) feetEntity.directionRotation else Direction.UP
             val feetPoint = when (feetDirection) {
                 Direction.UP -> feetFixture.getShape().getBoundingRectangle().getBottomCenterPoint()
                 Direction.DOWN -> feetFixture.getShape().getBoundingRectangle().getTopCenterPoint()
@@ -488,7 +498,8 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             val (headFixture, ladderFixture) = contact.getFixturesInOrder(FixtureType.HEAD, FixtureType.LADDER)!!
             val headEntity = headFixture.getEntity()
 
-            val headDirection = if (headEntity is IDirectionRotatable) headEntity.directionRotation else Direction.UP
+            val headDirection =
+                if (headEntity is IDirectionRotatable) headEntity.directionRotation else Direction.UP
             val headPoint = when (headDirection) {
                 Direction.UP -> headFixture.getShape().getBoundingRectangle().getTopCenterPoint()
                 Direction.DOWN -> headFixture.getShape().getBoundingRectangle().getBottomCenterPoint()
@@ -688,8 +699,9 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             body.setBodySense(BodySense.FEET_ON_GROUND, false)
 
             val entity = feetFixture.getEntity()
-            if (entity is Megaman) entity.aButtonTask = if (entity.body.isSensing(BodySense.IN_WATER)) AButtonTask.SWIM
-            else AButtonTask.AIR_DASH
+            if (entity is Megaman) entity.aButtonTask =
+                if (entity.body.isSensing(BodySense.IN_WATER)) AButtonTask.SWIM
+                else AButtonTask.AIR_DASH
         }
 
         // feet, ice

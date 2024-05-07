@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.0.0</string>
+        <string>7.3.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -124,7 +124,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>../SpriteSheets/Environs1.txt</filename>
+                <filename>../sprite_sheets/Environs1.txt</filename>
             </struct>
         </map>
         <key>multiPackMode</key>
@@ -173,7 +173,7 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">../Frames/Environs1/Water/Splash.png</key>
+            <key type="filename">../frames/Environs1/Water/Splash.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -188,8 +188,8 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Environs1/Water/Surface.png</key>
-            <key type="filename">../Frames/Environs1/Water/Under.png</key>
+            <key type="filename">../frames/Environs1/Water/Surface.png</key>
+            <key type="filename">../frames/Environs1/Water/Under.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -204,7 +204,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Environs1/Water/Water.png</key>
+            <key type="filename">../frames/Environs1/Water/Water.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -219,9 +219,9 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Environs1/Wood/DeadBranch.png</key>
-            <key type="filename">../Frames/Environs1/Wood/Leaf.png</key>
-            <key type="filename">../Frames/Environs1/Wood/Stump.png</key>
+            <key type="filename">../frames/Environs1/Wood/DeadBranch.png</key>
+            <key type="filename">../frames/Environs1/Wood/Leaf.png</key>
+            <key type="filename">../frames/Environs1/Wood/Stump.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -236,7 +236,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Environs1/Wood/FallingLeaf.png</key>
+            <key type="filename">../frames/Environs1/Wood/FallingLeaf.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -258,7 +258,7 @@
             <struct type="SpriteSheet">
                 <key>files</key>
                 <array>
-                    <filename>../Frames/Environs1</filename>
+                    <filename>../frames/Environs1</filename>
                 </array>
             </struct>
         </map>
