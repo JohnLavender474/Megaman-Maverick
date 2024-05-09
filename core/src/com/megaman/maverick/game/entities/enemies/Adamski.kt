@@ -64,7 +64,10 @@ class Adamski(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
                 it as ChargedShot
                 if (it.fullyCharged) ConstVals.MAX_HEALTH else 20
             },
-            ChargedShotExplosion::class to dmgNeg(ConstVals.MAX_HEALTH)
+            ChargedShotExplosion::class to dmgNeg{
+                it as ChargedShotExplosion
+                if (it.fullyCharged) ConstVals.MAX_HEALTH else 10
+            }
         )
 
     private var type = 0

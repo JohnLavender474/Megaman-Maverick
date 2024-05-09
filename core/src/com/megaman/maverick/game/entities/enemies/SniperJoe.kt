@@ -103,10 +103,16 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(3), Fireball::class to dmgNeg(15), ChargedShot::class to dmgNeg {
+        Bullet::class to dmgNeg(3),
+        Fireball::class to dmgNeg(15),
+        ChargedShot::class to dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 15 else 5
-        }, ChargedShotExplosion::class to dmgNeg(3)
+        },
+        ChargedShotExplosion::class to dmgNeg {
+            it as ChargedShotExplosion
+            if (it.fullyCharged) 5 else 3
+        }
     )
     override var directionRotation: Direction
         get() = body.cardinalRotation
