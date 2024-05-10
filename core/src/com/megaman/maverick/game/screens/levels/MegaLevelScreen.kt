@@ -476,7 +476,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
 
             EventType.BOSS_DEAD -> {
                 val mini = event.getProperty(ConstKeys.MINI, Boolean::class)!!
-                val eventType = if (mini) EventType.MINI_BOSS_DEAD else EventType.END_LEVEL_SUCCESSFULLY
+                val eventType = if (mini) EventType.MINI_BOSS_DEAD else EventType.VICTORY_EVENT
                 eventsMan.submitEvent(Event(eventType))
             }
 

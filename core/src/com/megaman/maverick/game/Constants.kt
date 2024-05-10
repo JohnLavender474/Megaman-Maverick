@@ -13,6 +13,7 @@ object ConstVals {
     const val MIN_HEALTH = 0
     const val BOSS_DROP_DOWN_DURATION = 0.25f
     const val MEGAMAN_MAVERICK_FONT = "Megaman10Font.ttf"
+    const val UI_ARROW_BLINK_DUR = 0.3f
 }
 
 object ConstKeys {

@@ -2,6 +2,7 @@ package com.megaman.maverick.game.screens.menus
 
 import com.badlogic.gdx.utils.ObjectMap
 import com.engine.common.enums.Direction
+import com.engine.common.extensions.gdxArrayOf
 import com.engine.screens.BaseScreen
 import com.engine.screens.menus.IMenuButton
 import com.megaman.maverick.game.ControllerButton
@@ -11,19 +12,21 @@ abstract class AbstractMenuScreen(game: MegamanMaverickGame, protected val first
     BaseScreen(game) {
 
     protected val castGame: MegamanMaverickGame = game
-
     protected abstract val menuButtons: ObjectMap<String, IMenuButton>
-
-    var currentButtonKey = firstButtonKey
-
     protected var selectionMade = false
         private set
+
+    var currentButtonKey = firstButtonKey
 
     protected open fun onAnyMovement() {
         // do nothing
     }
 
     protected open fun onAnySelection() = true
+
+    protected open fun undoSelection() {
+        selectionMade = false
+    }
 
     override fun show() {
         selectionMade = false
@@ -50,10 +53,9 @@ abstract class AbstractMenuScreen(game: MegamanMaverickGame, protected val first
                 menuButton.onNavigate(d, delta)?.let { currentButtonKey = it }
             }
 
-            if (game.controllerPoller.isJustPressed(ControllerButton.START) ||
-                game.controllerPoller.isJustPressed(ControllerButton.A)
-            )
-                if (onAnySelection()) selectionMade = menuButton.onSelect(delta)
+            if (game.controllerPoller.isAnyJustPressed(gdxArrayOf(ControllerButton.START, ControllerButton.A)) &&
+                onAnySelection()
+            ) selectionMade = menuButton.onSelect(delta)
         }
     }
 

@@ -28,6 +28,7 @@ allprojects {
         ashleyVersion = '1.7.4'
         aiVersion = '1.8.2'
         gdxControllersVersion = '2.2.1'
+        jamepadVersion = '2.0.14.2'
     }
 
     repositories {
@@ -39,7 +40,6 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
         maven { url "https://jitpack.io" }
     }
-
 }
 
 project(":desktop") {
@@ -52,6 +52,12 @@ project(":desktop") {
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         api "com.badlogicgames.gdx-controllers:gdx-controllers-desktop:$gdxControllersVersion"
         api "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+        api "com.badlogicgames.gdx:gdx-lwjgl3-glfw-awt-macos:$gdxVersion" // Mac OS
+        constraints {
+            implementation("com.badlogicgames.jamepad:jamepad:$jamepadVersion") {
+                because("Default jamepad version 2.0.14.1 is missing macOS arm64 binaries.")
+            }
+        }
     }
 }
 

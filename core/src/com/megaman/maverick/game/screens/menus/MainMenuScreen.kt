@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
-import com.badlogic.gdx.utils.ObjectSet
 import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
 import com.engine.common.extensions.getTextureAtlas
@@ -17,6 +16,7 @@ import com.engine.common.time.Timer
 import com.engine.drawables.fonts.BitmapFontHandle
 import com.engine.screens.menus.IMenuButton
 import com.megaman.maverick.game.ConstVals
+import com.megaman.maverick.game.ConstVals.UI_ARROW_BLINK_DUR
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
@@ -28,7 +28,7 @@ import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
 import com.megaman.maverick.game.utils.getDefaultCameraPosition
 import com.megaman.maverick.game.utils.setToDefaultPosition
 
-class MainScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainScreenButton.GAME_START.text) {
+class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainScreenButton.GAME_START.text) {
 
     enum class MainScreenButton(val text: String) {
         GAME_START("GAME START"),
@@ -46,8 +46,7 @@ class MainScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainScree
 
     companion object {
         const val TAG = "MainScreen"
-        private const val SETTINGS_ARROW_BLINK_DUR = .3f
-        private const val SETTINGS_TRANS_DUR = .5f
+        private const val SETTINGS_TRANS_DUR = 0.5f
         private val SETTINGS_TRAJ = Vector3(15f * ConstVals.PPM, 0f, 0f)
     }
 
@@ -71,7 +70,7 @@ class MainScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainScree
     private val fontHandles = Array<BitmapFontHandle>()
     private val settingsArrows = Array<Sprite>()
 
-    private val settingsArrowBlinkTimer = Timer(SETTINGS_ARROW_BLINK_DUR)
+    private val settingsArrowBlinkTimer = Timer(UI_ARROW_BLINK_DUR)
     private val blinkArrows = ObjectMap<String, BlinkingArrow>()
 
     private var settingsArrowBlink = false
@@ -82,7 +81,7 @@ class MainScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainScree
         MainScreenButton.values().forEach {
             val fontHandle =
                 BitmapFontHandle(
-                    { it.text },
+                    it.text,
                     getDefaultFontSize(),
                     Vector2(2f * ConstVals.PPM, row * ConstVals.PPM),
                     centerX = false,
@@ -180,7 +179,7 @@ class MainScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainScree
             MainScreenButton.GAME_START.text,
             object : IMenuButton {
                 override fun onSelect(delta: Float): Boolean {
-                    castGame.setCurrentScreen(ScreenEnum.BOSS_SELECT.name)
+                    castGame.setCurrentScreen(ScreenEnum.BOSS_SELECT_SCREEN.name)
                     return true
                 }
 

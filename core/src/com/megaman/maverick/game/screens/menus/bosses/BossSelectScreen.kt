@@ -89,7 +89,7 @@ class BossSelectScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MEG
             })
             _menuButtons!!.put(BACK, object : IMenuButton {
                 override fun onSelect(delta: Float): Boolean {
-                    castGame.setCurrentScreen(ScreenEnum.MAIN.name)
+                    castGame.setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
                     return true
                 }
 
@@ -257,9 +257,9 @@ class BossSelectScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MEG
             slide.update(delta)
             if (outro) outTimer.update(delta)
             if (outTimer.isFinished()) {
-                val bIntroScreen = castGame.screens.get(ScreenEnum.BOSS_INTRO.name) as BossIntroScreen
+                val bIntroScreen = castGame.screens.get(ScreenEnum.BOSS_INTRO_SCREEN.name) as BossIntroScreen
                 bIntroScreen.set(bSelect!!)
-                castGame.setCurrentScreen(ScreenEnum.BOSS_INTRO.name)
+                castGame.setCurrentScreen(ScreenEnum.BOSS_INTRO_SCREEN.name)
                 return
             }
             for (e in bars) {

@@ -54,13 +54,14 @@ import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.MegaControllerPoller
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.projectiles.BoulderProjectile
 import com.megaman.maverick.game.entities.special.PolygonWater
 import com.megaman.maverick.game.entities.special.Water
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
-import com.megaman.maverick.game.screens.menus.MainScreen
+import com.megaman.maverick.game.screens.menus.ControllerSettingsScreen
+import com.megaman.maverick.game.screens.menus.KeyboardSettingsScreen
+import com.megaman.maverick.game.screens.menus.MainMenuScreen
 import com.megaman.maverick.game.screens.menus.bosses.BossIntroScreen
 import com.megaman.maverick.game.screens.menus.bosses.BossSelectScreen
 import com.megaman.maverick.game.screens.other.SimpleEndLevelScreen
@@ -93,10 +94,10 @@ class MegamanMaverickGame : Game2D() {
     private lateinit var debugText: BitmapFontHandle
 
     fun startLevelScreen(level: Level) {
-        val levelScreen = screens.get(ScreenEnum.LEVEL.name) as MegaLevelScreen
+        val levelScreen = screens.get(ScreenEnum.LEVEL_SCREEN.name) as MegaLevelScreen
         levelScreen.music = level.musicAss
         levelScreen.tmxMapSource = level.tmxSourceFile
-        setCurrentScreen(ScreenEnum.LEVEL.name)
+        setCurrentScreen(ScreenEnum.LEVEL_SCREEN.name)
     }
 
     fun getBackgroundCamera() = viewports.get(ConstKeys.BACKGROUND).camera as OrthographicCamera
@@ -162,12 +163,14 @@ class MegamanMaverickGame : Game2D() {
         megaman.init()
         megaman.initialized = true
 
-        screens.put(ScreenEnum.LEVEL.name, MegaLevelScreen(this))
-        screens.put(ScreenEnum.MAIN.name, MainScreen(this))
-        screens.put(ScreenEnum.BOSS_SELECT.name, BossSelectScreen(this))
-        screens.put(ScreenEnum.BOSS_INTRO.name, BossIntroScreen(this))
-        screens.put(ScreenEnum.SIMPLE_END_LEVEL_SUCCESSFULLY.name, SimpleEndLevelScreen(this))
-        screens.put(ScreenEnum.SIMPLE_INIT_GAME.name, SimpleInitGameScreen(this))
+        screens.put(ScreenEnum.LEVEL_SCREEN.name, MegaLevelScreen(this))
+        screens.put(ScreenEnum.MAIN_MENU_SCREEN.name, MainMenuScreen(this))
+        screens.put(ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name, KeyboardSettingsScreen(this, buttons))
+        screens.put(ScreenEnum.CONTROLLER_SETTINGS_SCREEN.name, ControllerSettingsScreen(this, buttons))
+        screens.put(ScreenEnum.BOSS_SELECT_SCREEN.name, BossSelectScreen(this))
+        screens.put(ScreenEnum.BOSS_INTRO_SCREEN.name, BossIntroScreen(this))
+        screens.put(ScreenEnum.SIMPLE_END_LEVEL_SUCCESSFULLY_SCREEN.name, SimpleEndLevelScreen(this))
+        screens.put(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name, SimpleInitGameScreen(this))
 
         // startLevelScreen(Level.TEST1)
         // startLevelScreen(Level.TEST2)
@@ -184,8 +187,10 @@ class MegamanMaverickGame : Game2D() {
         // startLevelScreen(Level.GALAXY_MAN)
         // startLevelScreen(Level.WILY_STAGE_1)
         // startLevelScreen(Level.WILY_STAGE_2)
-        startLevelScreen(Level.WILY_STAGE_3)
+        // startLevelScreen(Level.WILY_STAGE_3)
         // setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME.name)
+        setCurrentScreen(ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name)
+        // setCurrentScreen(ScreenEnum.CONTROLLER_SETTINGS_SCREEN.name)
     }
 
     override fun render() {
@@ -201,7 +206,7 @@ class MegamanMaverickGame : Game2D() {
     }
 
     private fun defineControllerPoller(): IControllerPoller {
-        val buttons = Buttons()
+        buttons = Buttons()
         buttons.put(ControllerButton.LEFT, Button(Input.Keys.A))
         buttons.put(ControllerButton.RIGHT, Button(Input.Keys.D))
         buttons.put(ControllerButton.UP, Button(Input.Keys.W))
