@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.ObjectSet
+import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
 import com.engine.controller.ControllerUtils
 import com.engine.controller.buttons.Buttons
@@ -14,6 +15,7 @@ import com.engine.screens.menus.IMenuButton
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.ControllerButton
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.utils.BlinkingArrow
 import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
@@ -38,8 +40,8 @@ class ControllerSettingsScreen(game: MegamanMaverickGame, private val buttons: B
             return super.buttonUp(controller, buttonIndex)
         }
     }
-    private val controller: Controller
-        get() = ControllerUtils.getController()!!
+    private val controller: Controller?
+        get() = ControllerUtils.getController()
     private val fontHandles = Array<BitmapFontHandle>()
     private val blinkingArrow: BlinkingArrow
     private var selectedButton: ControllerButton? = null
@@ -86,8 +88,10 @@ class ControllerSettingsScreen(game: MegamanMaverickGame, private val buttons: B
 
             menuButtons.put(controllerButton.name, object : IMenuButton {
                 override fun onSelect(delta: Float): Boolean {
+                    if (controller == null) return false
+
                     selectedButton = controllerButton
-                    controller.addListener(buttonListener)
+                    controller!!.addListener(buttonListener)
                     return true
                 }
 
@@ -115,6 +119,12 @@ class ControllerSettingsScreen(game: MegamanMaverickGame, private val buttons: B
     }
 
     override fun render(delta: Float) {
+        if (controller == null) {
+            GameLogger.error(TAG, "No controller found")
+            castGame.audioMan.playSound(SoundAsset.ERROR_SOUND, false)
+            game.setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
+            return
+        }
         super.render(delta)
 
         val arrowY =

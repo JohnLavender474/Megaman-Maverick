@@ -2,13 +2,13 @@ package com.megaman.maverick.game.screens.menus
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputAdapter
-import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.ObjectSet
 import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
+import com.engine.common.time.Timer
 import com.engine.controller.buttons.Buttons
 import com.engine.drawables.fonts.BitmapFontHandle
 import com.engine.screens.menus.IMenuButton
@@ -26,32 +26,50 @@ class KeyboardSettingsScreen(game: MegamanMaverickGame, private val buttons: But
     companion object {
         const val TAG = "KeyboardSettingsScreen"
         private const val BACK = "BACK TO MAIN MENU"
+        private const val DELAY_ON_CHANGE = 0.25f
     }
 
     override val menuButtons = ObjectMap<String, IMenuButton>()
     override val eventKeyMask = ObjectSet<Any>()
 
+    private val delayOnChangeTimer = Timer(DELAY_ON_CHANGE)
     private val keyboardListener = object : InputAdapter() {
-        override fun keyUp(keycode: Int): Boolean {
+        override fun keyDown(keycode: Int): Boolean {
+            if (selectedButton == null) return true
+
             val button = buttons.get(selectedButton!!)
             GameLogger.debug(TAG, "Setting [$selectedButton] keycode from [${button.keyboardCode}] to [$keycode]")
+
+            // if any buttons match the keycode, then switch them
+            buttons.values().forEach {
+                if (it.keyboardCode == keycode) it.keyboardCode = button.keyboardCode
+            }
             button.keyboardCode = keycode
-            Gdx.input.inputProcessor = oldInputProcessor
-            oldInputProcessor = null
-            undoSelection()
+
+            Gdx.input.inputProcessor = null
+            selectedButton = null
+
+            delayOnChangeTimer.reset()
             return true
         }
     }
-    private val hintFontHandle: BitmapFontHandle = BitmapFontHandle(
-        "Press any key to set a new code for the selected button",
-
-    )
-    private val fontHandles = Array<BitmapFontHandle>()
+    private val hintFontHandle: BitmapFontHandle
+    private val buttonFontHandles = Array<BitmapFontHandle>()
     private val blinkingArrow: BlinkingArrow
     private var selectedButton: ControllerButton? = null
-    private var oldInputProcessor: InputProcessor? = null
 
     init {
+        hintFontHandle = BitmapFontHandle(
+            { "Press any key to set \na new code for the button: \n$selectedButton" },
+            getDefaultFontSize(),
+            Vector2(
+                ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f,
+                ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f
+            ),
+            fontSource = "Megaman10Font.ttf",
+            centerX = true,
+            centerY = true,
+        )
 
         var row = 10.75f
         blinkingArrow = BlinkingArrow(game.assMan, Vector2(2.5f * ConstVals.PPM, row * ConstVals.PPM))
@@ -64,7 +82,7 @@ class KeyboardSettingsScreen(game: MegamanMaverickGame, private val buttons: But
             centerY = false,
             fontSource = "Megaman10Font.ttf"
         )
-        fontHandles.add(backFontHandle)
+        buttonFontHandles.add(backFontHandle)
 
         menuButtons.put(BACK, object : IMenuButton {
             override fun onSelect(delta: Float): Boolean {
@@ -90,12 +108,11 @@ class KeyboardSettingsScreen(game: MegamanMaverickGame, private val buttons: But
                 centerY = false,
                 fontSource = "Megaman10Font.ttf"
             )
-            fontHandles.add(buttonFontHandle)
+            buttonFontHandles.add(buttonFontHandle)
 
             menuButtons.put(controllerButton.name, object : IMenuButton {
                 override fun onSelect(delta: Float): Boolean {
                     selectedButton = controllerButton
-                    oldInputProcessor = Gdx.input.inputProcessor
                     Gdx.input.inputProcessor = keyboardListener
                     return true
                 }
@@ -120,11 +137,15 @@ class KeyboardSettingsScreen(game: MegamanMaverickGame, private val buttons: But
 
     override fun show() {
         super.show()
+        delayOnChangeTimer.setToEnd()
         castGame.getUiCamera().setToDefaultPosition()
     }
 
     override fun render(delta: Float) {
         super.render(delta)
+
+        delayOnChangeTimer.update(delta)
+        if (delayOnChangeTimer.isJustFinished()) undoSelection()
 
         val arrowY =
             if (currentButtonKey == BACK) 10.6f else 10.6f - (ControllerButton.valueOf(currentButtonKey).ordinal + 1)
@@ -133,8 +154,11 @@ class KeyboardSettingsScreen(game: MegamanMaverickGame, private val buttons: But
 
         game.batch.projectionMatrix = castGame.getUiCamera().combined
         game.batch.begin()
-        blinkingArrow.draw(game.batch)
-        fontHandles.forEach { it.draw(game.batch) }
+        if (selectedButton != null) hintFontHandle.draw(game.batch)
+        else {
+            blinkingArrow.draw(game.batch)
+            buttonFontHandles.forEach { it.draw(game.batch) }
+        }
         game.batch.end()
     }
 }

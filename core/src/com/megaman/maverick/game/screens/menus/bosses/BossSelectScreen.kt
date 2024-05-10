@@ -36,6 +36,7 @@ class BossSelectScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MEG
 
     companion object {
         private val INTRO_BLOCKS_TRANS = Vector3(15f * ConstVals.PPM, 0f, 0f)
+        private val CAM_POS = getDefaultCameraPosition().add(0f, 0.55f * ConstVals.PPM, 0f)
         private const val MEGA_MAN = "MEGA MAN"
         private const val BACK = "BACK"
     }
@@ -43,13 +44,12 @@ class BossSelectScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MEG
     override val eventKeyMask = ObjectSet<Any>()
 
     private val bNameSet = ObjectSet<String>()
-
     private val bName: BitmapFontHandle
     private val slide = ScreenSlide(
         castGame.getUiCamera(),
         INTRO_BLOCKS_TRANS,
-        getDefaultCameraPosition().sub(INTRO_BLOCKS_TRANS),
-        getDefaultCameraPosition(),
+        CAM_POS.cpy().sub(INTRO_BLOCKS_TRANS),
+        CAM_POS,
         .5f,
         false
     )
@@ -144,9 +144,7 @@ class BossSelectScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MEG
         }
         outTimer.setRunnables(outTimerRunnable)
         val megamanFacesAtlas = castGame.assMan.get(TextureAsset.FACES_1.source, TextureAtlas::class.java)
-        val megamanFaces: MutableMap<Position, TextureRegion> = EnumMap(
-            Position::class.java
-        )
+        val megamanFaces: MutableMap<Position, TextureRegion> = EnumMap(Position::class.java)
         for (position in Position.values()) {
             val faceRegion: TextureRegion = megamanFacesAtlas.findRegion("Maverick/" + position.name)
             megamanFaces[position] = faceRegion
@@ -160,7 +158,7 @@ class BossSelectScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MEG
         for (boss in BossType.values()) bp.add(BossPane(castGame, boss))
         t.add(
             BitmapFontHandle(
-                { "PRESS START" },
+                "PRESS START",
                 getDefaultFontSize(),
                 Vector2(5.35f * ConstVals.PPM, 13.85f * ConstVals.PPM),
                 centerX = false,
@@ -170,7 +168,7 @@ class BossSelectScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MEG
         )
         t.add(
             BitmapFontHandle(
-                { BACK }, getDefaultFontSize(), Vector2(
+                BACK, getDefaultFontSize(), Vector2(
                     12.35f * ConstVals.PPM, ConstVals.PPM.toFloat()
                 ), false, centerY = false, fontSource = "Megaman10Font.ttf"
             )

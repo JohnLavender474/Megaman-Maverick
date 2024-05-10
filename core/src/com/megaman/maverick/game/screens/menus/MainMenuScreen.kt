@@ -13,6 +13,7 @@ import com.engine.common.extensions.getTextureRegion
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.extensions.objectSetOf
 import com.engine.common.time.Timer
+import com.engine.controller.ControllerUtils
 import com.engine.drawables.fonts.BitmapFontHandle
 import com.engine.screens.menus.IMenuButton
 import com.megaman.maverick.game.ConstVals
@@ -42,6 +43,8 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
         BACK("BACK"),
         MUSIC_VOLUME("MUSIC VOLUME"),
         EFFECTS_VOLUME("SFX VOLUME"),
+        KEYBOARD_SETTINGS("KEYBOARD SETTINGS"),
+        CONTROLLER_SETTINGS("CONTROLLER SETTINGS")
     }
 
     companion object {
@@ -74,6 +77,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
     private val blinkArrows = ObjectMap<String, BlinkingArrow>()
 
     private var settingsArrowBlink = false
+    private var doNotPlayPing = false
 
     init {
         var row = 4.75f
@@ -95,7 +99,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
             row -= 0.025f * ConstVals.PPM
         }
 
-        row = 12.5f
+        row = 11f
 
         MainScreenSettingsButton.values().forEach {
             val fontHandle =
@@ -129,7 +133,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
             BitmapFontHandle(
                 { (castGame.audioMan.musicVolume * 10f).toInt().toString() },
                 getDefaultFontSize(),
-                Vector2(25.2f * ConstVals.PPM, 12f * ConstVals.PPM),
+                Vector2(25.2f * ConstVals.PPM, 10.45f * ConstVals.PPM),
                 centerX = true,
                 centerY = true,
                 fontSource = "Megaman10Font.ttf"
@@ -140,7 +144,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
             BitmapFontHandle(
                 { (castGame.audioMan.soundVolume * 10f).toInt().toString() },
                 getDefaultFontSize(),
-                Vector2(25.2f * ConstVals.PPM, 11.2f * ConstVals.PPM),
+                Vector2(25.2f * ConstVals.PPM, 9.625f * ConstVals.PPM),
                 centerX = true,
                 centerY = true,
                 fontSource = "Megaman10Font.ttf"
@@ -148,7 +152,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
         )
 
         val arrowRegion = game.assMan.getTextureRegion(TextureAsset.UI_1.source, "Arrow")
-        var y = 11.35f
+        var y = 9.8f
         for (i in 0 until 4) {
             if (i != 0 && i % 2 == 0) y -= 0.85f
             val blinkArrow = Sprite(arrowRegion)
@@ -331,7 +335,47 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
                         }
 
                         Direction.UP -> MainScreenSettingsButton.MUSIC_VOLUME.text
+                        Direction.DOWN -> MainScreenSettingsButton.KEYBOARD_SETTINGS.text
+                    }
+                }
+            })
+
+        menuButtons.put(
+            MainScreenSettingsButton.KEYBOARD_SETTINGS.text,
+            object : IMenuButton {
+                override fun onSelect(delta: Float): Boolean {
+                    castGame.setCurrentScreen(ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name)
+                    return true
+                }
+
+                override fun onNavigate(direction: Direction, delta: Float): String? {
+                    return when (direction) {
+                        Direction.UP -> MainScreenSettingsButton.EFFECTS_VOLUME.text
+                        Direction.DOWN -> MainScreenSettingsButton.CONTROLLER_SETTINGS.text
+                        else -> null
+                    }
+                }
+            })
+
+        menuButtons.put(
+            MainScreenSettingsButton.CONTROLLER_SETTINGS.text,
+            object : IMenuButton {
+                override fun onSelect(delta: Float): Boolean {
+                    if (!ControllerUtils.isControllerConnected()) {
+                        GameLogger.debug(TAG, "No controller connected")
+                        game.audioMan.playSound(SoundAsset.ERROR_SOUND, false)
+                        doNotPlayPing = true
+                        return false
+                    }
+                    game.setCurrentScreen(ScreenEnum.CONTROLLER_SETTINGS_SCREEN.name)
+                    return true
+                }
+
+                override fun onNavigate(direction: Direction, delta: Float): String? {
+                    return when (direction) {
+                        Direction.UP -> MainScreenSettingsButton.KEYBOARD_SETTINGS.text
                         Direction.DOWN -> MainScreenSettingsButton.BACK.text
+                        else -> null
                     }
                 }
             })
@@ -339,6 +383,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
 
     override fun show() {
         super.show()
+        screenSlide.reset()
         castGame.getUiCamera().setToDefaultPosition()
         castGame.audioMan.playMusic(MusicAsset.MM_OMEGA_TITLE_THEME_MUSIC)
     }
@@ -380,9 +425,11 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
         castGame.audioMan.playSound(SoundAsset.CURSOR_MOVE_BLOOP_SOUND)
     }
 
-    override fun onAnySelection(): Boolean {
+    override fun onAnySelection() {
         val allow = screenSlide.finished
-        if (allow) castGame.audioMan.playSound(SoundAsset.SELECT_PING_SOUND)
-        return allow
+        if (allow) {
+            if (doNotPlayPing) doNotPlayPing = false
+            else castGame.audioMan.playSound(SoundAsset.SELECT_PING_SOUND)
+        }
     }
 }

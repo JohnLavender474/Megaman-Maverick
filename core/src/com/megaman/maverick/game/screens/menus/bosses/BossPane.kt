@@ -22,7 +22,7 @@ class BossPane(
     companion object {
         const val PANE_BOUNDS_WIDTH = 5.33f
         const val PANE_BOUNDS_HEIGHT = 4f
-        const val BOTTOM_OFFSET = 1.35f
+        const val BOTTOM_OFFSET = 1.05f
         const val SPRITE_HEIGHT = 2f
         const val SPRITE_WIDTH = 2.5f
         const val PANE_HEIGHT = 3f

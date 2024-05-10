@@ -126,24 +126,10 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
             },
         )
 
-    // swap weapon
-    val select =
-        ButtonActuator(
-            onJustPressed = {
-                // TODO: implement this
-                /*
-                var x: Int = currWeapon.ordinal() + 1
-                if (x >= MegamanWeapon.values().length) {
-                    x = 0
-                }
-                currWeapon = MegamanWeapon.values().get(x)
-                 */
-            })
-
     return ControllerComponent(
         this,
         ControllerButton.LEFT to { left },
         ControllerButton.RIGHT to { right },
-        ControllerButton.B to { attack },
-        ControllerButton.SELECT to { select })
+        ControllerButton.B to { attack }
+    )
 }

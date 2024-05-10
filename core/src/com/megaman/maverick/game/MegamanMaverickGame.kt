@@ -82,7 +82,7 @@ class MegamanMaverickGame : Game2D() {
         const val DEBUG_TEXT = false
         const val DEBUG_SHAPES = true
         const val DEFAULT_VOLUME = 0.5f
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(Water.TAG, PolygonWater.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(KeyboardSettingsScreen.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.FEET, FixtureType.BLOCK)
         }
@@ -179,7 +179,6 @@ class MegamanMaverickGame : Game2D() {
         // startLevelScreen(Level.TEST5)
         // startLevelScreen(Level.TEST6)
         // startLevelScreen(Level.TEST7)
-        // setCurrentScreen(ScreenEnum.MAIN.name)
         // startLevelScreen(Level.MAGNET_MAN)
         // startLevelScreen(Level.TIMBER_WOMAN
         // startLevelScreen(Level.CREW_MAN)
@@ -188,9 +187,10 @@ class MegamanMaverickGame : Game2D() {
         // startLevelScreen(Level.WILY_STAGE_1)
         // startLevelScreen(Level.WILY_STAGE_2)
         // startLevelScreen(Level.WILY_STAGE_3)
-        // setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME.name)
-        setCurrentScreen(ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name)
+        // setCurrentScreen(ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name)
         // setCurrentScreen(ScreenEnum.CONTROLLER_SETTINGS_SCREEN.name)
+        // setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME.name)
+        setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
     }
 
     override fun render() {
