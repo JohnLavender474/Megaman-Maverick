@@ -50,7 +50,7 @@ class BossSelectScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MEG
         INTRO_BLOCKS_TRANS,
         CAM_POS.cpy().sub(INTRO_BLOCKS_TRANS),
         CAM_POS,
-        .5f,
+        0.5f,
         false
     )
     private val bar1 = Sprite()

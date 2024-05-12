@@ -526,14 +526,9 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
             playerStatsHandler.update(delta)
         }
 
-        if (camerasSetToGameCamera) {
-            val gameCamDeltaX = gameCamera.position.x - gameCameraPriorPosition.x
-            backgroundCamera.position.x += gameCamDeltaX * backgroundParallaxFactor
-        } else {
-            backgroundCamera.position.set(gameCamera.position)
-            foregroundCamera.position.set(gameCamera.position)
-            camerasSetToGameCamera = true
-        }
+
+        val gameCamDeltaX = gameCamera.position.x - gameCameraPriorPosition.x
+        backgroundCamera.position.x += gameCamDeltaX * backgroundParallaxFactor
         gameCameraPriorPosition.set(gameCamera.position)
 
         engine.update(delta)

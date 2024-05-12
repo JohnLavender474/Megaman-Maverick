@@ -522,7 +522,7 @@
   <object id="21" name="IceBlock" x="2552" y="3808" width="136" height="48"/>
   <object id="22" name="IceBlock" x="2528" y="3776" width="96" height="512"/>
   <object id="23" name="IceBlock" x="2496" y="4096" width="72" height="192"/>
-  <object id="24" name="IceBlock" x="2464" y="3784" width="80" height="536"/>
+  <object id="24" name="IceBlock" x="2464" y="3776" width="80" height="544"/>
   <object id="25" name="IceBlock" x="2528" y="3744" width="64" height="112"/>
   <object id="47" name="IceBlock" x="2656" y="4280" width="32" height="72"/>
   <object id="51" name="IceBlock" x="2528" y="3552" width="32" height="224"/>

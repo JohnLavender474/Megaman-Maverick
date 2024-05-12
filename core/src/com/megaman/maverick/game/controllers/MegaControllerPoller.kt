@@ -18,16 +18,14 @@ class MegaControllerPoller(buttons: Buttons) : ControllerPoller(buttons) {
         GameLogger.debug(TAG, "run(): controllerConnected = $controllerConnected")
 
         if (!controllerConnected && ControllerUtils.isControllerConnected()) {
-            controllerConnected = true
-            val mapping = ControllerUtils.getController()?.mapping
-            if (mapping != null) {
-                buttons.get(ControllerButton.LEFT)?.controllerCode = mapping.buttonDpadLeft
-                buttons.get(ControllerButton.RIGHT)?.controllerCode = mapping.buttonDpadRight
-                buttons.get(ControllerButton.UP)?.controllerCode = mapping.buttonDpadUp
-                buttons.get(ControllerButton.DOWN)?.controllerCode = mapping.buttonDpadDown
-                buttons.get(ControllerButton.A)?.controllerCode = mapping.buttonB
-                buttons.get(ControllerButton.B)?.controllerCode = mapping.buttonY
-                buttons.get(ControllerButton.START).controllerCode = mapping.buttonStart
+            val controller = ControllerUtils.getController()
+            if (controller != null) {
+                controllerConnected = true
+                buttons.forEach {
+                    it.value.controllerCode = ControllerUtils.getControllerCode(
+                        controller, it.key as ControllerButton
+                    )
+                }
             }
         }
 

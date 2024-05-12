@@ -104,7 +104,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
         MainScreenSettingsButton.values().forEach {
             val fontHandle =
                 BitmapFontHandle(
-                    { it.text },
+                    it.text,
                     getDefaultFontSize(),
                     Vector2(17f * ConstVals.PPM, row * ConstVals.PPM),
                     centerX = false,
@@ -120,7 +120,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
 
         fontHandles.add(
             BitmapFontHandle(
-                { "© OLD LAVY GENES, 20XX" },
+                "© OLDLAVYGENES 20XX",
                 getDefaultFontSize(),
                 Vector2(0.15f * ConstVals.PPM, 0.5f * ConstVals.PPM),
                 centerX = false,
@@ -177,7 +177,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
             ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f, (ConstVals.VIEW_HEIGHT - 0.5f) * ConstVals.PPM / 2f
         )
         pose.setRegion(atlas.findRegion("MegamanMaverick"))
-        pose.setBounds(8f * ConstVals.PPM, -ConstVals.PPM / 12f, 6f * ConstVals.PPM, 6f * ConstVals.PPM)
+        pose.setBounds(8.5f * ConstVals.PPM, -ConstVals.PPM / 12f, 6f * ConstVals.PPM, 6f * ConstVals.PPM)
 
         menuButtons.put(
             MainScreenButton.GAME_START.text,

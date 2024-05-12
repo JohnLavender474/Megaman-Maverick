@@ -2,6 +2,11 @@ package com.megaman.maverick.game
 
 import com.badlogic.gdx.math.Vector3
 
+object PreferenceFiles {
+    const val MEGAMAN_MAVERICK_CONTROLLER_PREFERENCES = "Megaman Maverick - Controller Preferences"
+    const val MEGAMAN_MAVERICK_KEYBOARD_PREFERENCES = "Megaman Maverick - Keyboard Preferences"
+}
+
 object ConstVals {
     const val VIEW_WIDTH = 16f
     const val VIEW_HEIGHT = 12f

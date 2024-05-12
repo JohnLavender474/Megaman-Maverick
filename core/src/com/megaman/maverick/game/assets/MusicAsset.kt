@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.assets
 
 import com.badlogic.gdx.audio.Music
+import com.badlogic.gdx.utils.Array
 
 const val MUSIC_ASSET_PREFIX = "music/"
 
@@ -34,6 +35,14 @@ enum class MusicAsset(src: String) : IAsset {
     MM9_GALAXY_MAN_MUSIC("MM9_GalaxyMan.mp3"),
     CHRONO_TRIGGER_WORLD_REVOLUTION("ChronoTrigger_WorldRevolution.mp3"),
     MM3_MAGNET_MAN("MM3_Magnet_Man.mp3");
+
+    companion object {
+        fun valuesAsIAssetArray(): Array<IAsset> {
+            val assets = Array<IAsset>()
+            values().forEach { assets.add(it) }
+            return assets
+        }
+    }
 
     override val source = MUSIC_ASSET_PREFIX + src
     override val assClass = Music::class.java

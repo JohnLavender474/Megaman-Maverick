@@ -232,7 +232,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="6" name="temp">
+ <objectgroup id="6" name="player">
   <object id="66" name="1" x="3872" y="736" width="32" height="32"/>
   <object id="227" name="2" x="4672" y="1184" width="32" height="32"/>
   <object id="228" name="3" x="8784" y="1184" width="32" height="32"/>
@@ -323,7 +323,7 @@
   <object id="223" x="7456" y="1088" width="96" height="32"/>
   <object id="224" x="7648" y="1088" width="192" height="32"/>
  </objectgroup>
- <objectgroup id="14" name="player">
+ <objectgroup id="14" name="temp">
   <object id="231" name="0" x="5472" y="1152" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="7" name="sensors">

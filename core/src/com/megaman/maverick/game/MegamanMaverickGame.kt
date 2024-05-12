@@ -1,14 +1,10 @@
 package com.megaman.maverick.game
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.Input
 import com.badlogic.gdx.assets.AssetManager
-import com.badlogic.gdx.audio.Music
-import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectMap
@@ -22,12 +18,12 @@ import com.engine.audio.AudioSystem
 import com.engine.behaviors.BehaviorsSystem
 import com.engine.common.GameLogLevel
 import com.engine.common.GameLogger
+import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.extensions.objectSetOf
+import com.engine.common.objects.MultiCollectionIterable
 import com.engine.controller.ControllerSystem
 import com.engine.controller.ControllerUtils
-import com.engine.controller.buttons.Button
-import com.engine.controller.buttons.Buttons
 import com.engine.controller.polling.IControllerPoller
 import com.engine.cullables.CullablesSystem
 import com.engine.drawables.fonts.BitmapFontHandle
@@ -47,20 +43,19 @@ import com.engine.systems.IGameSystem
 import com.engine.updatables.UpdatablesSystem
 import com.engine.world.Contact
 import com.engine.world.WorldSystem
+import com.megaman.maverick.game.assets.IAsset
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.MegaControllerPoller
+import com.megaman.maverick.game.controllers.loadButtons
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.special.PolygonWater
-import com.megaman.maverick.game.entities.special.Water
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
 import com.megaman.maverick.game.screens.menus.ControllerSettingsScreen
-import com.megaman.maverick.game.screens.menus.KeyboardSettingsScreen
 import com.megaman.maverick.game.screens.menus.MainMenuScreen
 import com.megaman.maverick.game.screens.menus.bosses.BossIntroScreen
 import com.megaman.maverick.game.screens.menus.bosses.BossSelectScreen
@@ -82,7 +77,7 @@ class MegamanMaverickGame : Game2D() {
         const val DEBUG_TEXT = false
         const val DEBUG_SHAPES = true
         const val DEFAULT_VOLUME = 0.5f
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(KeyboardSettingsScreen.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(ControllerSettingsScreen.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.FEET, FixtureType.BLOCK)
         }
@@ -108,8 +103,8 @@ class MegamanMaverickGame : Game2D() {
 
     fun getUiCamera() = viewports.get(ConstKeys.UI).camera as OrthographicCamera
 
-    fun getDrawables() = properties.get(ConstKeys.DRAWABLES) as ObjectMap<DrawingSection,
-            PriorityQueue<IComparableDrawable<Batch>>>
+    fun getDrawables() =
+        properties.get(ConstKeys.DRAWABLES) as ObjectMap<DrawingSection, PriorityQueue<IComparableDrawable<Batch>>>
 
     fun getShapes() = properties.get(ConstKeys.SHAPES) as PriorityQueue<IDrawableShape>
 
@@ -124,7 +119,7 @@ class MegamanMaverickGame : Game2D() {
         GameLogger.set(GameLogLevel.ERROR)
         GameLogger.filterByTag = true
         GameLogger.tagsToLog.addAll(TAGS_TO_LOG)
-        GameLogger.debug(Game2D.TAG, "create()")
+        GameLogger.debug(TAG, "create()")
 
         shapeRenderer = ShapeRenderer()
         shapeRenderer.setAutoShapeType(true)
@@ -165,8 +160,8 @@ class MegamanMaverickGame : Game2D() {
 
         screens.put(ScreenEnum.LEVEL_SCREEN.name, MegaLevelScreen(this))
         screens.put(ScreenEnum.MAIN_MENU_SCREEN.name, MainMenuScreen(this))
-        screens.put(ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name, KeyboardSettingsScreen(this, buttons))
-        screens.put(ScreenEnum.CONTROLLER_SETTINGS_SCREEN.name, ControllerSettingsScreen(this, buttons))
+        screens.put(ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name, ControllerSettingsScreen(this, buttons, true))
+        screens.put(ScreenEnum.CONTROLLER_SETTINGS_SCREEN.name, ControllerSettingsScreen(this, buttons, false))
         screens.put(ScreenEnum.BOSS_SELECT_SCREEN.name, BossSelectScreen(this))
         screens.put(ScreenEnum.BOSS_INTRO_SCREEN.name, BossIntroScreen(this))
         screens.put(ScreenEnum.SIMPLE_END_LEVEL_SUCCESSFULLY_SCREEN.name, SimpleEndLevelScreen(this))
@@ -189,8 +184,8 @@ class MegamanMaverickGame : Game2D() {
         // startLevelScreen(Level.WILY_STAGE_3)
         // setCurrentScreen(ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name)
         // setCurrentScreen(ScreenEnum.CONTROLLER_SETTINGS_SCREEN.name)
-        // setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME.name)
-        setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
+        setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name)
+        // setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
     }
 
     override fun render() {
@@ -206,43 +201,21 @@ class MegamanMaverickGame : Game2D() {
     }
 
     private fun defineControllerPoller(): IControllerPoller {
-        buttons = Buttons()
-        buttons.put(ControllerButton.LEFT, Button(Input.Keys.A))
-        buttons.put(ControllerButton.RIGHT, Button(Input.Keys.D))
-        buttons.put(ControllerButton.UP, Button(Input.Keys.W))
-        buttons.put(ControllerButton.DOWN, Button(Input.Keys.S))
-        buttons.put(ControllerButton.B, Button(Input.Keys.J))
-        buttons.put(ControllerButton.A, Button(Input.Keys.K))
-        buttons.put(ControllerButton.START, Button(Input.Keys.ENTER))
-        if (ControllerUtils.isControllerConnected()) {
-            val mapping = ControllerUtils.getController()?.mapping
-            if (mapping != null) {
-                buttons.get(ControllerButton.LEFT)?.controllerCode = mapping.buttonDpadLeft
-                buttons.get(ControllerButton.RIGHT)?.controllerCode = mapping.buttonDpadRight
-                buttons.get(ControllerButton.UP)?.controllerCode = mapping.buttonDpadUp
-                buttons.get(ControllerButton.DOWN)?.controllerCode = mapping.buttonDpadDown
-                buttons.get(ControllerButton.A)?.controllerCode = mapping.buttonB
-                buttons.get(ControllerButton.B)?.controllerCode = mapping.buttonY
-                buttons.get(ControllerButton.START)?.controllerCode = mapping.buttonStart
-            }
-        }
+        buttons = ControllerUtils.loadButtons()
         return MegaControllerPoller(buttons)
     }
 
-    private fun loadAssets(assMan: AssetManager) {
-        MusicAsset.values().forEach {
-            GameLogger.debug(TAG, "loadAssets(): Loading music asset: ${it.source}")
-            assMan.load(it.source, Music::class.java)
+    private fun loadAssets(assMan: AssetManager) =
+        MultiCollectionIterable<IAsset>(
+            gdxArrayOf(
+                MusicAsset.valuesAsIAssetArray(),
+                SoundAsset.valuesAsIAssetArray(),
+                TextureAsset.valuesAsIAssetArray()
+            )
+        ).forEach {
+            GameLogger.debug(TAG, "loadAssets(): Loading ${it.assClass.simpleName} asset: ${it.source}")
+            assMan.load(it.source, it.assClass)
         }
-        SoundAsset.values().forEach {
-            GameLogger.debug(TAG, "loadAssets(): Loading sound asset: ${it.source}")
-            assMan.load(it.source, Sound::class.java)
-        }
-        TextureAsset.values().forEach {
-            GameLogger.debug(TAG, "loadAssets(): Loading texture asset: ${it.source}")
-            assMan.load(it.source, TextureAtlas::class.java)
-        }
-    }
 
     private fun createGameEngine(): IGameEngine {
         val drawables = ObjectMap<DrawingSection, PriorityQueue<IComparableDrawable<Batch>>>()
