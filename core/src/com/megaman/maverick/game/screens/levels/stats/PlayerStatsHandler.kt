@@ -18,7 +18,10 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.drawables.sprites.BitsBar
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.megaman.constants.*
+import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
+import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
+import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
+import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.events.EventType
 
 class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatable, IDrawable<Batch> {
@@ -82,17 +85,6 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
         }
     }
 
-    fun attain(armorPiece: MegaArmorPiece) {
-        if (!finished) throw IllegalStateException("Cannot call attain if handler is not finished")
-        if (megaman.has(armorPiece)) return
-        audioMan.playMusic(SoundAsset.LIFE_SOUND, false)
-        val timer = Timer(SPECIAL_ITEM_DUR)
-        /*
-        timer = Timer(SPECIAL_ITEM_DUR)
-        timer?.runOnFinished = { megaman.add(armorPiece) }
-         */
-    }
-
     fun attain(heartTank: MegaHeartTank) {
         if (megaman.has(heartTank) || megaman.getMaxHealth() == ConstVals.MAX_HEALTH) {
             audioMan.playSound(SoundAsset.ERROR_SOUND, false)
@@ -116,9 +108,7 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
 
     fun attain(healthTank: MegaHealthTank) {
         check(finished) { "Cannot call attain if handler is not finished" }
-
         if (megaman.has(healthTank)) return
-
         /*
         timer = Timer(SPECIAL_ITEM_DUR)
         timer!!.runOnFinished = { megaman.put(healthTank) }

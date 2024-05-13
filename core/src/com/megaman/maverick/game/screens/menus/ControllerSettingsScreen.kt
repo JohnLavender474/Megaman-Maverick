@@ -42,68 +42,73 @@ class ControllerSettingsScreen(
     override val eventKeyMask = ObjectSet<Any>()
 
     private val delayOnChangeTimer = Timer(DELAY_ON_CHANGE)
-    private val keyboardListener = object : InputAdapter() {
-        override fun keyDown(keycode: Int): Boolean {
-            if (selectedButton == null) return true
-
-            val button = buttons.get(selectedButton!!)
-            GameLogger.debug(TAG, "Setting [$selectedButton] keycode from [${button.keyboardCode}] to [$keycode]")
-
-            // if any buttons match the keycode, then switch them
-            buttons.values().forEach { if (it.keyboardCode == keycode) it.keyboardCode = button.keyboardCode }
-            button.keyboardCode = keycode
-
-            // save the keyboard codes to preferences
-            val keyboardPreferences = ControllerUtils.getKeyboardPreferences()
-            buttons.forEach {
-                val keyboardCode = it.value.keyboardCode
-                keyboardPreferences.putInteger((it.key as ControllerButton).name, keyboardCode)
-            }
-            keyboardPreferences.flush()
-
-            Gdx.input.inputProcessor = null
-            selectedButton = null
-
-            delayOnChangeTimer.reset()
-            return true
-        }
-    }
-    private val buttonListener = object : ControllerAdapter() {
-        override fun buttonDown(controller: Controller, buttonIndex: Int): Boolean {
-            if (selectedButton == null) return true
-
-            val button = buttons.get(selectedButton!!)
-            GameLogger.debug(
-                TAG, "Setting [$selectedButton] controller code from [${button.controllerCode}] to [$buttonIndex]"
-            )
-
-            // if any buttons match the controller code, then switch them
-            buttons.values().forEach { if (it.controllerCode == buttonIndex) it.controllerCode = button.controllerCode }
-            button.controllerCode = buttonIndex
-
-            // save the controller codes to preferences
-            val controllerPreferences = ControllerUtils.getControllerPreferences(controller)
-            buttons.forEach {
-                val controllerCode = it.value.controllerCode ?: return@forEach
-                controllerPreferences.putInteger((it.key as ControllerButton).name, controllerCode)
-            }
-            controllerPreferences.flush()
-
-            controller.removeListener(this)
-            selectedButton = null
-
-            delayOnChangeTimer.reset()
-            return super.buttonUp(controller, buttonIndex)
-        }
-    }
     private val controller: Controller?
         get() = ControllerUtils.getController()
-    private val hintFontHandle: BitmapFontHandle
     private val fontHandles = Array<BitmapFontHandle>()
-    private val blinkingArrow: BlinkingArrow
     private var selectedButton: ControllerButton? = null
+    private lateinit var keyboardListener: InputAdapter
+    private lateinit var buttonListener: ControllerAdapter
+    private lateinit var hintFontHandle: BitmapFontHandle
+    private lateinit var blinkingArrow: BlinkingArrow
 
-    init {
+    override fun init() {
+        keyboardListener = object : InputAdapter() {
+            override fun keyDown(keycode: Int): Boolean {
+                if (selectedButton == null) return true
+
+                val button = buttons.get(selectedButton!!)
+                GameLogger.debug(TAG, "Setting [$selectedButton] keycode from [${button.keyboardCode}] to [$keycode]")
+
+                // if any buttons match the keycode, then switch them
+                buttons.values().forEach { if (it.keyboardCode == keycode) it.keyboardCode = button.keyboardCode }
+                button.keyboardCode = keycode
+
+                // save the keyboard codes to preferences
+                val keyboardPreferences = ControllerUtils.getKeyboardPreferences()
+                buttons.forEach {
+                    val keyboardCode = it.value.keyboardCode
+                    keyboardPreferences.putInteger((it.key as ControllerButton).name, keyboardCode)
+                }
+                keyboardPreferences.flush()
+
+                Gdx.input.inputProcessor = null
+                selectedButton = null
+
+                delayOnChangeTimer.reset()
+                return true
+            }
+        }
+
+        buttonListener = object : ControllerAdapter() {
+            override fun buttonDown(controller: Controller, buttonIndex: Int): Boolean {
+                if (selectedButton == null) return true
+
+                val button = buttons.get(selectedButton!!)
+                GameLogger.debug(
+                    TAG, "Setting [$selectedButton] controller code from [${button.controllerCode}] to [$buttonIndex]"
+                )
+
+                // if any buttons match the controller code, then switch them
+                buttons.values()
+                    .forEach { if (it.controllerCode == buttonIndex) it.controllerCode = button.controllerCode }
+                button.controllerCode = buttonIndex
+
+                // save the controller codes to preferences
+                val controllerPreferences = ControllerUtils.getControllerPreferences(controller)
+                buttons.forEach {
+                    val controllerCode = it.value.controllerCode ?: return@forEach
+                    controllerPreferences.putInteger((it.key as ControllerButton).name, controllerCode)
+                }
+                controllerPreferences.flush()
+
+                controller.removeListener(this)
+                selectedButton = null
+
+                delayOnChangeTimer.reset()
+                return super.buttonUp(controller, buttonIndex)
+            }
+        }
+
         hintFontHandle = BitmapFontHandle(
             {
                 "Press any ${if (isKeyboardSettings) "keyboard key" else "controller button"} to set \na new code for" +
@@ -158,7 +163,7 @@ class ControllerSettingsScreen(
         menuButtons.put(RESET_TO_DEFAULTS, object : IMenuButton {
             override fun onSelect(delta: Float): Boolean {
                 ControllerUtils.resetToDefaults(buttons, isKeyboardSettings)
-                game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
+                castGame.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
                 return false
             }
 
@@ -253,7 +258,6 @@ class ControllerSettingsScreen(
 
         game.batch.projectionMatrix = castGame.getUiCamera().combined
         game.batch.begin()
-
         if (selectedButton != null) hintFontHandle.draw(game.batch)
         else {
             blinkingArrow.draw(game.batch)

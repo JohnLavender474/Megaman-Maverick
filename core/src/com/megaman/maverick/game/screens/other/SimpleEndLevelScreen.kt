@@ -15,8 +15,7 @@ class SimpleEndLevelScreen(private val megamanGame: MegamanMaverickGame) : BaseS
 
     private lateinit var successText: BitmapFontHandle
 
-    override fun show() {
-        super.show()
+    override fun init() {
         successText =
             BitmapFontHandle(
                 { "LEVEL COMPLETE!" },
@@ -29,6 +28,10 @@ class SimpleEndLevelScreen(private val megamanGame: MegamanMaverickGame) : BaseS
                 centerY = true,
                 fontSource = ConstVals.MEGAMAN_MAVERICK_FONT
             )
+    }
+
+    override fun show() {
+        super.show()
         megamanGame.audioMan.playSound(SoundAsset.MM1_VICTORY_SOUND, false)
     }
 

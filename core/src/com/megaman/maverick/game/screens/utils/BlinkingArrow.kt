@@ -13,12 +13,15 @@ import com.engine.drawables.sprites.setSize
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.TextureAsset
 
-class BlinkingArrow(assMan: AssetManager, _center: Vector2) : Updatable, IDrawable<Batch> {
+class BlinkingArrow(assMan: AssetManager, _center: Vector2 = Vector2()) : Updatable, IDrawable<Batch> {
 
     companion object {
         private const val BLINK_DUR = 0.2f
     }
 
+    var position: Vector2
+        get() = arrowSprite.getPosition()
+        set(value) = arrowSprite.setPosition(value.x, value.y)
     var center: Vector2
         get() = arrowSprite.getCenter()
         set(value) = arrowSprite.setCenter(value)

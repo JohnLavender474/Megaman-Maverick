@@ -133,8 +133,6 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
 
     private lateinit var disposables: Array<Disposable>
 
-    private var initialized = false
-
     private val gameCameraPriorPosition = Vector3()
     private var backgroundParallaxFactor = DEFAULT_BACKGROUND_PARALLAX_FACTOR
     private var foregroundParallaxFactor = DEFAULT_FOREGROUND_PARALLAX_FACTOR

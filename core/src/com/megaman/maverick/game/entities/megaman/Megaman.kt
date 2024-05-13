@@ -184,7 +184,7 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         EventType.STUN_PLAYER
     )
 
-    override val upgradeHandler = MegamanUpgradeHandler(this)
+    override val upgradeHandler = MegamanUpgradeHandler(game.state, this)
 
     val weaponHandler = MegamanWeaponHandler(this)
 

@@ -79,7 +79,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
     private var settingsArrowBlink = false
     private var doNotPlayPing = false
 
-    init {
+    override fun init() {
         var row = 4.75f
 
         MainScreenButton.values().forEach {
@@ -363,7 +363,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
                 override fun onSelect(delta: Float): Boolean {
                     if (!ControllerUtils.isControllerConnected()) {
                         GameLogger.debug(TAG, "No controller connected")
-                        game.audioMan.playSound(SoundAsset.ERROR_SOUND, false)
+                        castGame.audioMan.playSound(SoundAsset.ERROR_SOUND, false)
                         doNotPlayPing = true
                         return false
                     }
@@ -406,16 +406,12 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
         val batch = game.batch
         batch.projectionMatrix = castGame.getUiCamera().combined
         batch.begin()
-
         blinkArrows.get(currentButtonKey).draw(batch)
         title.draw(batch)
         pose.draw(batch)
         subtitle.draw(batch)
-
         fontHandles.forEach { it.draw(batch) }
-
         if (settingsArrowBlink) settingsArrows.forEach { it.draw(batch) }
-
         batch.end()
     }
 

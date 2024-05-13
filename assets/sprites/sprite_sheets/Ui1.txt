@@ -12,14 +12,14 @@ Arrow
   index: -1
 Background
   rotate: false
-  xy: 72, 0
+  xy: 104, 0
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Bar
   rotate: false
-  xy: 1386, 0
+  xy: 1418, 0
   size: 256, 64
   orig: 256, 64
   offset: 0, 0
@@ -33,7 +33,7 @@ Bit
   index: -1
 BlackBar
   rotate: false
-  xy: 136, 0
+  xy: 168, 0
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -82,14 +82,14 @@ MegamanHelmet
   index: -1
 MegamanMaverick
   rotate: false
-  xy: 200, 0
+  xy: 232, 0
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 MegamanPose
   rotate: false
-  xy: 712, 0
+  xy: 744, 0
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
@@ -110,28 +110,28 @@ MegamanTitle
   index: -1
 Pane
   rotate: false
-  xy: 264, 0
+  xy: 296, 0
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 PaneBlinking
   rotate: false
-  xy: 456, 0
+  xy: 488, 0
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
   index: -1
 PaneHighlighted
   rotate: false
-  xy: 328, 0
+  xy: 360, 0
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 PaneShattered
   rotate: false
-  xy: 392, 0
+  xy: 424, 0
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -145,7 +145,7 @@ RedBit
   index: -1
 StageSelectBox_Blinking
   rotate: false
-  xy: 584, 0
+  xy: 616, 0
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
@@ -173,7 +173,7 @@ StandardBit
   index: -1
 Stars
   rotate: false
-  xy: 1642, 0
+  xy: 1674, 0
   size: 256, 64
   orig: 256, 64
   offset: 0, 0
@@ -208,28 +208,35 @@ Stars4
   index: -1
 Subtitle8bit
   rotate: false
-  xy: 1096, 0
+  xy: 1128, 0
   size: 145, 145
   orig: 145, 145
   offset: 0, 0
   index: -1
+WhiteFrameBlackPane
+  rotate: false
+  xy: 72, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 Z
   rotate: false
-  xy: 840, 0
+  xy: 872, 0
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 Z8bit
   rotate: false
-  xy: 1241, 0
+  xy: 1273, 0
   size: 145, 145
   orig: 145, 145
   offset: 0, 0
   index: -1
 ZeroSilhouette
   rotate: false
-  xy: 968, 0
+  xy: 1000, 0
   size: 128, 128
   orig: 128, 128
   offset: 0, 0

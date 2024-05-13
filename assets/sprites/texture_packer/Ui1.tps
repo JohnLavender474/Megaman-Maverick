@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.0.0</string>
+        <string>7.4.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -124,7 +124,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>../SpriteSheets/Ui1.txt</filename>
+                <filename>../sprite_sheets/Ui1.txt</filename>
             </struct>
         </map>
         <key>multiPackMode</key>
@@ -177,6 +177,7 @@
             <key type="filename">../Frames/Ui1/Bit.png</key>
             <key type="filename">../Frames/Ui1/BlackBit.png</key>
             <key type="filename">../Frames/Ui1/RedBit.png</key>
+            <key type="filename">../Frames/Ui1/WhiteFrameBlackPane.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

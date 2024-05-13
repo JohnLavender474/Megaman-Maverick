@@ -21,7 +21,6 @@ import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
 import com.megaman.maverick.game.utils.getDefaultCameraPosition
 import java.util.*
 
-
 class BossIntroScreen(game: MegamanMaverickGame) : BaseScreen(game) {
 
     override val eventKeyMask = ObjectSet<Any>()
@@ -37,15 +36,15 @@ class BossIntroScreen(game: MegamanMaverickGame) : BaseScreen(game) {
 
     private val bLettersAnimQ = LinkedList<Runnable>()
 
-    private val durTimer: Timer
-    private val bDropTimer: Timer
-    private val barAnim: Animation
-    private val bText: BitmapFontHandle
+    private lateinit var durTimer: Timer
+    private lateinit var bDropTimer: Timer
+    private lateinit var barAnim: Animation
+    private lateinit var bText: BitmapFontHandle
 
     private var b: BossType? = null
     private var currBAnim: Pair<Sprite, Queue<Pair<Animation, Timer>?>>? = null
 
-    init {
+    override fun init() {
         val barReg: TextureRegion = game.assMan.get(TextureAsset.UI_1.source, TextureAtlas::class.java).findRegion(
             "Bar"
         )
@@ -62,7 +61,7 @@ class BossIntroScreen(game: MegamanMaverickGame) : BaseScreen(game) {
         }
 
         for (i in 0 until STARS_N_BARS) {
-            stars.add(Stars(game, 0f, i * ConstVals.PPM * ConstVals.VIEW_HEIGHT / 4f))
+            stars.add(Stars(game as MegamanMaverickGame, 0f, i * ConstVals.PPM * ConstVals.VIEW_HEIGHT / 4f))
         }
 
         durTimer = Timer(DUR)

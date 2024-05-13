@@ -20,9 +20,7 @@ class SimpleInitGameScreen(private val megamanGame: MegamanMaverickGame) : BaseS
     private lateinit var text: BitmapFontHandle
     private val uiCamera = megamanGame.getUiCamera()
 
-    override fun show() {
-        super.show()
-        uiCamera.setToDefaultPosition()
+    override fun init() {
         text =
             BitmapFontHandle(
                 { "Press enter to start game" },
@@ -35,6 +33,11 @@ class SimpleInitGameScreen(private val megamanGame: MegamanMaverickGame) : BaseS
                 centerY = true,
                 fontSource = ConstVals.MEGAMAN_MAVERICK_FONT
             )
+    }
+
+    override fun show() {
+        super.show()
+        uiCamera.setToDefaultPosition()
     }
 
     override fun render(delta: Float) {

@@ -1,10 +1,7 @@
 package com.megaman.maverick.game.entities.megaman
 
-import com.badlogic.gdx.utils.ObjectMap
-import com.badlogic.gdx.utils.ObjectSet
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
-import com.megaman.maverick.game.entities.megaman.constants.MegaArmorPiece
+import com.megaman.maverick.game.GameState
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 
@@ -16,15 +13,7 @@ interface IMegaUpgradable {
 
     fun has(heartTank: MegaHeartTank) = upgradeHandler.has(heartTank)
 
-    fun has(ability: MegaAbility) = upgradeHandler.has(ability)
-
-    fun has(armorPiece: MegaArmorPiece) = upgradeHandler.has(armorPiece)
-
     fun add(heartTank: MegaHeartTank) = upgradeHandler.add(heartTank)
-
-    fun add(ability: MegaAbility) = upgradeHandler.add(ability)
-
-    fun add(armorPiece: MegaArmorPiece) = upgradeHandler.add(armorPiece)
 
     fun addToHealthTank(health: Int) = upgradeHandler.add(health)
 
@@ -37,33 +26,17 @@ interface IMegaUpgradable {
     operator fun get(healthTank: MegaHealthTank) = upgradeHandler[healthTank]
 }
 
-class MegamanUpgradeHandler(private val megaman: Megaman) {
+class MegamanUpgradeHandler(private val gameState: GameState, private val megaman: Megaman) {
 
-    private val abilities = ObjectSet<MegaAbility>()
-    private val heartTanks = ObjectSet<MegaHeartTank>()
-    private val armorPieces = ObjectSet<MegaArmorPiece>()
-    private val healthTanks = ObjectMap<MegaHealthTank, Int>()
+    private val heartTanks = gameState.heartTanksCollected
+    private val healthTanks = gameState.healthTanksCollected
 
     fun has(heartTank: MegaHeartTank) = heartTanks.contains(heartTank)
 
-    fun has(ability: MegaAbility) = abilities.contains(ability)
-
-    fun has(armorPiece: MegaArmorPiece) = armorPieces.contains(armorPiece)
-
     fun add(heartTank: MegaHeartTank) {
         if (has(heartTank)) return
-
-        heartTanks.add(heartTank)
+        gameState.heartTanksCollected.add(heartTank)
         megaman.getHealthPoints().max += MegaHeartTank.HEALTH_BUMP
-    }
-
-    fun add(ability: MegaAbility) = abilities.add(ability)
-
-    fun add(armorPiece: MegaArmorPiece) {
-        if (has(armorPiece)) return
-        armorPieces.add(armorPiece)
-
-        // TODO: event on add armor piece
     }
 
     fun add(health: Int): Boolean {
@@ -108,6 +81,5 @@ class MegamanUpgradeHandler(private val megaman: Megaman) {
 
     fun has(healthTank: MegaHealthTank) = healthTanks.containsKey(healthTank)
 
-    operator fun get(healthTank: MegaHealthTank): Int =
-        if (!has(healthTank)) 0 else healthTanks[healthTank]
+    operator fun get(healthTank: MegaHealthTank): Int = if (!has(healthTank)) 0 else healthTanks[healthTank]
 }

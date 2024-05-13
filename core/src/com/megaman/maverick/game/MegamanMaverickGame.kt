@@ -52,11 +52,14 @@ import com.megaman.maverick.game.controllers.MegaControllerPoller
 import com.megaman.maverick.game.controllers.loadButtons
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
 import com.megaman.maverick.game.screens.menus.ControllerSettingsScreen
+import com.megaman.maverick.game.screens.menus.LoadPasswordScreen
 import com.megaman.maverick.game.screens.menus.MainMenuScreen
+import com.megaman.maverick.game.screens.menus.ViewPasswordScreen
 import com.megaman.maverick.game.screens.menus.bosses.BossIntroScreen
 import com.megaman.maverick.game.screens.menus.bosses.BossSelectScreen
 import com.megaman.maverick.game.screens.other.SimpleEndLevelScreen
@@ -76,14 +79,18 @@ class MegamanMaverickGame : Game2D() {
         const val TAG = "MegamanMaverickGame"
         const val DEBUG_TEXT = false
         const val DEBUG_SHAPES = true
-        const val DEFAULT_VOLUME = 0f
+        const val DEFAULT_VOLUME = 0.5f
         val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(ControllerSettingsScreen.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.FEET, FixtureType.BLOCK)
         }
     }
 
+    lateinit var state: GameState
+
     lateinit var megaman: Megaman
+    lateinit var megamanUpgradeHandler: MegamanUpgradeHandler
+
     lateinit var audioMan: MegaAudioManager
 
     private lateinit var debugText: BitmapFontHandle
@@ -154,12 +161,18 @@ class MegamanMaverickGame : Game2D() {
 
         EntityFactories.initialize(this)
 
+        state = GameState()
+
         megaman = Megaman(this)
         megaman.init()
         megaman.initialized = true
 
+        megamanUpgradeHandler = MegamanUpgradeHandler(state, megaman)
+
         screens.put(ScreenEnum.LEVEL_SCREEN.name, MegaLevelScreen(this))
         screens.put(ScreenEnum.MAIN_MENU_SCREEN.name, MainMenuScreen(this))
+        screens.put(ScreenEnum.VIEW_PASSWORD_SCREEN.name, ViewPasswordScreen(this))
+        screens.put(ScreenEnum.LOAD_PASSWORD_SCREEN.name, LoadPasswordScreen(this))
         screens.put(ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name, ControllerSettingsScreen(this, buttons, true))
         screens.put(ScreenEnum.CONTROLLER_SETTINGS_SCREEN.name, ControllerSettingsScreen(this, buttons, false))
         screens.put(ScreenEnum.BOSS_SELECT_SCREEN.name, BossSelectScreen(this))
