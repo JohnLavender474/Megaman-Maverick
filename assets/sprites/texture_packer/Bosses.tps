@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.2.0</string>
+        <string>7.3.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -204,6 +204,7 @@
             <key type="filename">../frames/Bosses/CrewMan/Stand.png</key>
             <key type="filename">../frames/Bosses/CrewMan/StandHoldBlock.png</key>
             <key type="filename">../frames/Bosses/CrewMan/StandMouthOpen.png</key>
+            <key type="filename">../frames/Bosses/CrewMan/Throw.png</key>
             <key type="filename">../frames/Bosses/DistributorMan/Jump.png</key>
             <key type="filename">../frames/Bosses/SigmaRat/ElectricBallDissipate.png</key>
             <struct type="IndividualSpriteSettings">
@@ -396,6 +397,21 @@
                 <rect>96,16,192,32</rect>
                 <key>scale9Paddings</key>
                 <rect>96,16,192,32</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses/PenguinMiniBoss/PenguinMiniBoss.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>132,21,264,41</rect>
+                <key>scale9Paddings</key>
+                <rect>132,21,264,41</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

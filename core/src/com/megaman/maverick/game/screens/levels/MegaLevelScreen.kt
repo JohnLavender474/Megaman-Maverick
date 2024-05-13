@@ -482,6 +482,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
 
             EventType.MINI_BOSS_DEAD -> {
                 engine.systems.forEach { it.on = true }
+                megaman.canBeDamaged = true
             }
 
             EventType.END_LEVEL_SUCCESSFULLY -> {

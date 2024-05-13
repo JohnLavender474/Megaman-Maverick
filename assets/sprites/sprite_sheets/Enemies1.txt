@@ -3,58 +3,65 @@ size: 512, 576
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-Bat/Fly
+BabyPenguin
   rotate: false
   xy: 0, 0
+  size: 20, 15
+  orig: 20, 15
+  offset: 0, 0
+  index: -1
+Bat/Fly
+  rotate: false
+  xy: 20, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 Bat/Hang
   rotate: false
-  xy: 64, 0
+  xy: 84, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Bat/OpenEyes
   rotate: false
-  xy: 96, 0
+  xy: 116, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Bat/OpenWings
   rotate: false
-  xy: 128, 0
+  xy: 148, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 BlueScrewie/Down
   rotate: false
-  xy: 160, 0
+  xy: 180, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 BlueScrewie/Drop
   rotate: false
-  xy: 192, 0
+  xy: 212, 0
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 BlueScrewie/Rise
   rotate: false
-  xy: 288, 0
+  xy: 308, 0
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 BlueScrewie/Shoot
   rotate: false
-  xy: 384, 0
+  xy: 404, 0
   size: 96, 32
   orig: 96, 32
   offset: 0, 0

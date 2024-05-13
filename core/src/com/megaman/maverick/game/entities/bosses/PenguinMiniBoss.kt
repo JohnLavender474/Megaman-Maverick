@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.bosses
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -17,10 +18,11 @@ import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
 import com.engine.damage.IDamager
+import com.engine.drawables.shapes.DrawableShapesComponent
+import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
-import com.engine.drawables.sprites.setSize
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.entities.contracts.IParentEntity
@@ -32,6 +34,7 @@ import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
@@ -53,9 +56,12 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
 
     companion object {
         const val TAG = "PenguinMiniBoss"
-        private const val IDLE_DUR = 2f
-        private const val LAUNCH_PENGUINS_DUR = 1f
-        private const val SHOOT_SNOWBALLS_DUR = 1f
+        private const val IDLE_DUR = 1f
+        private const val MAX_CHILDREN = 3
+        private const val LAUNCH_PENGUINS_DUR = 0.75f
+        private const val SHOOT_SNOWBALLS_DUR = 0.5f
+        private const val SNOWBALL_IMPULSE_Y = 10f
+        private const val SNOWBALL_GRAVITY = -0.15f
         private const val SNOWBALLS_TO_LAUNCH = 3
         private var region: TextureRegion? = null
     }
@@ -73,15 +79,15 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
     private var snowballsLaunched = 0
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(2),
+        Bullet::class to dmgNeg(1),
         Fireball::class to dmgNeg(10),
         ChargedShot::class to dmgNeg {
             it as ChargedShot
-            if (it.fullyCharged) 5 else 3
+            if (it.fullyCharged) 3 else 2
         },
         ChargedShotExplosion::class to dmgNeg {
             it as ChargedShotExplosion
-            if (it.fullyCharged) 3 else 1
+            if (it.fullyCharged) 2 else 1
         }
     )
     override var children = Array<IGameEntity>()
@@ -89,7 +95,7 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
 
     override fun init() {
         if (region == null)
-            region = game.assMan.getTextureRegion(TextureAsset.TEST.source, "PenguinMiniBoss")
+            region = game.assMan.getTextureRegion(TextureAsset.BOSSES.source, "PenguinMiniBoss/PenguinMiniBoss")
         super<AbstractBoss>.init()
         addComponent(defineAnimationsComponent())
     }
@@ -104,9 +110,33 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
         snowballsLaunched = 0
     }
 
+    override fun onDestroy() {
+        super<AbstractBoss>.onDestroy()
+        children.forEach { it.kill() }
+        children.clear()
+    }
+
+    override fun triggerDefeat() {
+        super.triggerDefeat()
+        children.forEach { it.kill() }
+        children.clear()
+    }
+
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            if (!ready) return@add
+            if (defeated) {
+                explodeOnDefeat(delta)
+                return@add
+            }
+
+            val iter = children.iterator()
+            while (iter.hasNext()) {
+                val child = iter.next()
+                if (child.dead) iter.remove()
+            }
+
             when (penguinMiniBossState) {
                 PenguinMiniBossState.IDLE -> {
                     idleTimer.update(delta)
@@ -119,6 +149,10 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
                 }
 
                 PenguinMiniBossState.LAUNCH_PENGUINS -> {
+                    if (children.size >= MAX_CHILDREN) {
+                        penguinMiniBossState = PenguinMiniBossState.IDLE
+                        return@add
+                    }
                     launchPenguinsTimer.update(delta)
                     if (launchPenguinsTimer.isFinished()) {
                         launchBabyPenguin()
@@ -128,11 +162,14 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
                 }
 
                 PenguinMiniBossState.SHOOT_SNOWBALLS -> {
+                    if (snowballsLaunched >= SNOWBALLS_TO_LAUNCH) {
+                        snowballsLaunched = 0
+                        penguinMiniBossState = PenguinMiniBossState.IDLE
+                    }
                     shootSnowballsTimer.update(delta)
                     if (shootSnowballsTimer.isFinished()) {
                         shootSnowball()
                         snowballsLaunched++
-                        if (snowballsLaunched == SNOWBALLS_TO_LAUNCH) penguinMiniBossState = PenguinMiniBossState.IDLE
                         shootSnowballsTimer.reset()
                     }
                 }
@@ -142,56 +179,82 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
 
     private fun shootSnowball() {
         val snowball = EntityFactories.fetch(EntityType.PROJECTILE, "Snowball")!! as Snowball
-        val spawn = Vector2() // TODO: Get spawn point
-        val trajectory = Vector2() // TODO: Get trajectory
+        val spawn = body.getBottomCenterPoint().add(0f, 0.15f * ConstVals.PPM)
+        val impulseX = (megaman.body.x - body.x) * 1.5f
+        val impulseY = SNOWBALL_IMPULSE_Y * ConstVals.PPM
+        val trajectory = Vector2(impulseX, impulseY)
+        val gravity = Vector2(0f, SNOWBALL_GRAVITY * ConstVals.PPM)
         game.engine.spawn(
             snowball, props(
                 ConstKeys.POSITION to spawn,
                 ConstKeys.TRAJECTORY to trajectory,
+                ConstKeys.GRAVITY_ON to true,
+                ConstKeys.GRAVITY to gravity,
                 ConstKeys.OWNER to this
             )
         )
+        requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
     }
 
     private fun launchBabyPenguin() {
         val penguin = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.BABY_PENGUIN)!! as BabyPenguin
-        val spawn = Vector2() // TODO: Get spawn point
+        val spawn = body.getBottomCenterPoint().add(0f, 0.15f * ConstVals.PPM)
         game.engine.spawn(
             penguin, props(
                 ConstKeys.POSITION to spawn,
                 ConstKeys.LEFT to (facing == Facing.LEFT)
             )
         )
+        children.add(penguin)
     }
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(2f * ConstVals.PPM)
+        body.setSize(2.5f * ConstVals.PPM, 3f * ConstVals.PPM)
+
+        val debugShapes = Array<() -> IDrawableShape?>()
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
+        bodyFixture.rawShape.color = Color.GRAY
+        debugShapes.add { bodyFixture.getShape() }
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().set(body))
+        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(2f * ConstVals.PPM))
+        shieldFixture.offsetFromBodyCenter.y = -0.25f * ConstVals.PPM
+        body.addFixture(shieldFixture)
+        shieldFixture.rawShape.color = Color.BLUE
+        debugShapes.add { shieldFixture.getShape() }
+
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(2f * ConstVals.PPM))
         body.addFixture(damagerFixture)
+        damagerFixture.rawShape.color = Color.RED
+        debugShapes.add { damagerFixture.getShape() }
 
-        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().set(body))
+        val damageableFixture =
+            Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.25f * ConstVals.PPM))
+        damageableFixture.offsetFromBodyCenter.y = 1.25f * ConstVals.PPM
         body.addFixture(damageableFixture)
+        damageableFixture.rawShape.color = Color.PURPLE
+        debugShapes.add { damageableFixture.getShape() }
+
+        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(2f * ConstVals.PPM)
+        sprite.setSize(2.5f * ConstVals.PPM, 3f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            _sprite.hidden = damageBlink
         }
         return spritesComponent
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val animation = Animation(region!!)
+        val animation = Animation(region!!, 1, 8, 0.1f, true)
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }

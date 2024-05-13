@@ -18,7 +18,6 @@ import com.engine.screens.menus.IMenuButton
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.ControllerButton
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.PreferenceFiles
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.controllers.getControllerPreferences
 import com.megaman.maverick.game.controllers.getKeyboardPreferences

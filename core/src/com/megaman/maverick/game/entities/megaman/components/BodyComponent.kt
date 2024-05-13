@@ -90,6 +90,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
         Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(.8f * ConstVals.PPM))
     body.addFixture(damageableFixture)
     damageableFixture.rawShape.color = Color.RED
+    shapes.add { damageableFixture.getShape() }
 
     val waterListenerFixture =
         Fixture(

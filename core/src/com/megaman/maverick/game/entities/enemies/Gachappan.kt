@@ -77,10 +77,16 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
     override lateinit var facing: Facing
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(2), Fireball::class to dmgNeg(10), ChargedShot::class to dmgNeg {
+        Bullet::class to dmgNeg(2),
+        Fireball::class to dmgNeg(10),
+        ChargedShot::class to dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 5 else 3
-        }, ChargedShotExplosion::class to dmgNeg(2)
+        },
+        ChargedShotExplosion::class to dmgNeg {
+            it as ChargedShotExplosion
+            if (it.fullyCharged) 3 else 1
+        }
     )
 
     private lateinit var loop: Loop<Pair<GachappanState, Timer>>

@@ -54,13 +54,11 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceab
 
     override var owner: IGameEntity? = null
     override var facing = Facing.RIGHT
-
     override lateinit var directionRotation: Direction
-
-    private lateinit var trajectory: Vector2
-
     var fullyCharged = false
         private set
+
+    private lateinit var trajectory: Vector2
 
     override fun init() {
         if (fullyChargedRegion == null)
@@ -117,11 +115,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceab
         swapFacing()
         if (directionRotation.isVertical()) trajectory.x *= -1f else trajectory.y *= -1f
 
-        val deflection =
-            if (shieldFixture.properties.containsKey(ConstKeys.DIRECTION))
-                shieldFixture.properties.get(ConstKeys.DIRECTION) as Direction
-            else Direction.UP
-
+        val deflection = shieldFixture.getOrDefaultProperty(ConstKeys.DIRECTION, Direction.UP, Direction::class)
         val newTrajectory =
             when (directionRotation) {
                 Direction.UP -> {

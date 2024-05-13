@@ -7,6 +7,7 @@ import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.common.CAUSE_OF_DEATH_MESSAGE
+import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
@@ -14,6 +15,7 @@ import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
 import com.engine.damage.IDamageable
 import com.engine.damage.IDamager
+import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setCenter
@@ -71,6 +73,14 @@ class SnowballExplosion(game: MegamanMaverickGame) : GameEntity(game), IBodyEnti
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
         body.addFixture(damagerFixture)
+
+        addComponent(
+            DrawableShapesComponent(
+                this,
+                debugShapeSuppliers = gdxArrayOf({ damagerFixture.getShape() }),
+                debug = true
+            )
+        )
 
         return BodyComponentCreator.create(this, body)
     }

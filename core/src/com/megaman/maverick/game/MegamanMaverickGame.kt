@@ -76,7 +76,7 @@ class MegamanMaverickGame : Game2D() {
         const val TAG = "MegamanMaverickGame"
         const val DEBUG_TEXT = false
         const val DEBUG_SHAPES = true
-        const val DEFAULT_VOLUME = 0.5f
+        const val DEFAULT_VOLUME = 0f
         val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(ControllerSettingsScreen.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.FEET, FixtureType.BLOCK)
@@ -177,14 +177,14 @@ class MegamanMaverickGame : Game2D() {
         // startLevelScreen(Level.MAGNET_MAN)
         // startLevelScreen(Level.TIMBER_WOMAN
         // startLevelScreen(Level.CREW_MAN)
-        // startLevelScreen(Level.FREEZE_MAN)
+        startLevelScreen(Level.FREEZE_MAN)
         // startLevelScreen(Level.GALAXY_MAN)
         // startLevelScreen(Level.WILY_STAGE_1)
         // startLevelScreen(Level.WILY_STAGE_2)
         // startLevelScreen(Level.WILY_STAGE_3)
         // setCurrentScreen(ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name)
         // setCurrentScreen(ScreenEnum.CONTROLLER_SETTINGS_SCREEN.name)
-        setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name)
+        // setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name)
         // setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
     }
 
@@ -225,27 +225,6 @@ class MegamanMaverickGame : Game2D() {
         val shapes = PriorityQueue<IDrawableShape> { s1, s2 -> s1.shapeType.ordinal - s2.shapeType.ordinal }
         properties.put(ConstKeys.SHAPES, shapes)
 
-        val contactFilterMap = objectMapOf<Any, ObjectSet<Any>>(
-            FixtureType.CONSUMER to objectSetOf(*FixtureType.values()),
-            FixtureType.PLAYER to objectSetOf(FixtureType.ITEM),
-            FixtureType.DAMAGEABLE to objectSetOf(FixtureType.DAMAGER),
-            FixtureType.BODY to objectSetOf(FixtureType.FORCE, FixtureType.GRAVITY_CHANGE),
-            FixtureType.DEATH to objectSetOf(
-                FixtureType.FEET, FixtureType.SIDE, FixtureType.HEAD, FixtureType.BODY
-            ),
-            FixtureType.WATER_LISTENER to objectSetOf(FixtureType.WATER),
-            FixtureType.LADDER to objectSetOf(FixtureType.HEAD, FixtureType.FEET),
-            FixtureType.SIDE to objectSetOf(
-                FixtureType.ICE, FixtureType.GATE, FixtureType.BLOCK, FixtureType.BOUNCER
-            ),
-            FixtureType.FEET to objectSetOf(FixtureType.ICE, FixtureType.BLOCK, FixtureType.BOUNCER),
-            FixtureType.HEAD to objectSetOf(FixtureType.BLOCK, FixtureType.BOUNCER),
-            FixtureType.PROJECTILE to objectSetOf(
-                FixtureType.BODY, FixtureType.BLOCK, FixtureType.SHIELD, FixtureType.WATER, FixtureType.PROJECTILE
-            ),
-            FixtureType.LASER to objectSetOf(FixtureType.BLOCK)
-        )
-
         val engine = GameEngine(
             ControllerSystem(controllerPoller),
             AnimationsSystem(),
@@ -255,7 +234,30 @@ class MegamanMaverickGame : Game2D() {
                 { getGraphMap() },
                 ConstVals.FIXED_TIME_STEP,
                 MegaCollisionHandler(this),
-                contactFilterMap,
+                objectMapOf(
+                    FixtureType.CONSUMER to objectSetOf(*FixtureType.values()),
+                    FixtureType.PLAYER to objectSetOf(FixtureType.ITEM),
+                    FixtureType.DAMAGEABLE to objectSetOf(FixtureType.DAMAGER),
+                    FixtureType.BODY to objectSetOf(FixtureType.FORCE, FixtureType.GRAVITY_CHANGE),
+                    FixtureType.DEATH to objectSetOf(
+                        FixtureType.FEET, FixtureType.SIDE, FixtureType.HEAD, FixtureType.BODY
+                    ),
+                    FixtureType.WATER_LISTENER to objectSetOf(FixtureType.WATER),
+                    FixtureType.LADDER to objectSetOf(FixtureType.HEAD, FixtureType.FEET),
+                    FixtureType.SIDE to objectSetOf(
+                        FixtureType.ICE, FixtureType.GATE, FixtureType.BLOCK, FixtureType.BOUNCER
+                    ),
+                    FixtureType.FEET to objectSetOf(FixtureType.ICE, FixtureType.BLOCK, FixtureType.BOUNCER),
+                    FixtureType.HEAD to objectSetOf(FixtureType.BLOCK, FixtureType.BOUNCER),
+                    FixtureType.PROJECTILE to objectSetOf(
+                        FixtureType.BODY,
+                        FixtureType.BLOCK,
+                        FixtureType.SHIELD,
+                        FixtureType.WATER,
+                        FixtureType.PROJECTILE
+                    ),
+                    FixtureType.LASER to objectSetOf(FixtureType.BLOCK)
+                ),
                 debug = true
             ),
             CullablesSystem(),

@@ -8,6 +8,8 @@ import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.damage.IDamageable
+import com.engine.drawables.sorting.DrawingPriority
+import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setCenter
@@ -62,10 +64,7 @@ class Snowball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         body.physics.gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, Vector2(), Vector2::class)
     }
 
-    override fun hitBody(bodyFixture: IFixture) {
-        if (bodyFixture.getEntity() !is AbstractEnemy && bodyFixture.getEntity() !is IProjectileEntity)
-            explodeAndDie()
-    }
+    override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
     override fun hitBlock(blockFixture: IFixture) = explodeAndDie()
 
@@ -110,7 +109,7 @@ class Snowball(game: MegamanMaverickGame) : AbstractProjectile(game) {
     }
 
     private fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite()
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND,  10))
         sprite.setSize(0.85f * ConstVals.PPM)
         sprite.setRegion(region!!)
         val spritesComponent = SpritesComponent(this, sprite)

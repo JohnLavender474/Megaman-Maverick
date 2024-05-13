@@ -152,7 +152,7 @@
   <object id="443" x="6080" y="832" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="7" name="items"/>
- <objectgroup id="3" name="game_rooms" visible="0">
+ <objectgroup id="3" name="game_rooms">
   <object id="5" name="room1" x="0" y="992" width="3104" height="576"/>
   <object id="153" name="room2" x="3104" y="992" width="2016" height="384"/>
   <object id="180" name="room3" x="4608" y="608" width="512" height="384"/>

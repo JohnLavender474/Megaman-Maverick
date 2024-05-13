@@ -1,7 +1,7 @@
 Environs1.png
 size: 1152, 64
 format: RGBA8888
-filter: Linear,Linear
+filter: Nearest,Nearest
 repeat: none
 Water/Splash
   rotate: false

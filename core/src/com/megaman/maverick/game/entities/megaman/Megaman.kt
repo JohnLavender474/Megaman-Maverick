@@ -163,7 +163,8 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         Snowhead::class to dmgNeg(2),
         SnowheadThrower::class to dmgNeg(3),
         Spiky::class to dmgNeg(3),
-        PenguinMiniBoss::class to dmgNeg(3)
+        PenguinMiniBoss::class to dmgNeg(3),
+        BabyPenguin::class to dmgNeg(2)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 

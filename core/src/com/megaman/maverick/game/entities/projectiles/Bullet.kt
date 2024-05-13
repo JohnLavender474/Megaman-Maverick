@@ -43,7 +43,6 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
     }
 
     override var owner: IGameEntity? = null
-
     override lateinit var directionRotation: Direction
 
     private var bounced = 0
@@ -92,7 +91,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
 
         val trajectory = body.physics.velocity.cpy()
         if (isDirectionRotatedVertically()) trajectory.x *= -1f else trajectory.y *= -1f
-        val deflection = shieldFixture.properties.get(ConstKeys.DIRECTION) as Direction?
+        val deflection = shieldFixture.getOrDefaultProperty(ConstKeys.DIRECTION, Direction.UP, Direction::class)
         when (deflection) {
             Direction.UP -> {
                 when (directionRotation) {
