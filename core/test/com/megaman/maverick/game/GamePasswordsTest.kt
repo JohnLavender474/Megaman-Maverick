@@ -1,6 +1,7 @@
 package com.megaman.maverick.game
 
 import com.engine.common.extensions.objectMapOf
+import com.engine.common.extensions.objectSetOf
 import com.megaman.maverick.game.entities.bosses.BossType
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
@@ -81,6 +82,61 @@ class GamePasswordsTest : DescribeSpec({
             val newState = GameState()
             GamePasswords.loadGamePassword(newState, password)
             newState shouldBe state
+        }
+
+        it("should load game password - 3") {
+            // if
+            // bosses defeated = Timber Woman, Rodent Man --> 0, 6
+            // heart tanks collected = A, C --> 8, 10
+            // health tanks collected = B --> 18
+            // indices set to true: 8, 17, 33, 23, 13
+            val password = intArrayOf(
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+            )
+
+            // when
+            val state = GameState()
+            GamePasswords.loadGamePassword(state, password)
+
+            // then
+            state.bossesDefeated shouldBe objectSetOf(BossType.TIMBER_WOMAN, BossType.RODENT_MAN)
+            state.heartTanksCollected shouldBe objectSetOf(MegaHeartTank.A, MegaHeartTank.C)
+            state.healthTanksCollected shouldBe objectMapOf(MegaHealthTank.B to 0)
         }
     }
 })

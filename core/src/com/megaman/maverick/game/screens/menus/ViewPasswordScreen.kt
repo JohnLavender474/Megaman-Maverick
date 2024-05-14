@@ -16,16 +16,18 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.GamePasswords
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.utils.BlinkingArrow
 import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
 import com.megaman.maverick.game.utils.setToDefaultPosition
 
-class ViewPasswordScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, CONTINUE) {
+class ViewPasswordScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, SAVE) {
 
     companion object {
         const val TAG = "ViewPasswordScreen"
+        private const val SAVE = "SAVE"
         private const val CONTINUE = "CONTINUE"
         private const val MAIN_MENU = "MAIN MENU"
         private const val FRAMES_X = 2f
@@ -52,10 +54,20 @@ class ViewPasswordScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, C
 
         password = GamePasswords.getGamePassword(castGame.state)
 
+        val saveFont = BitmapFontHandle(
+            SAVE,
+            getDefaultFontSize(),
+            Vector2(1f * ConstVals.PPM, 3f * ConstVals.PPM),
+            centerX = true,
+            centerY = true,
+            ConstVals.MEGAMAN_MAVERICK_FONT,
+        )
+        fontHandles.add(saveFont)
+
         val continueFont = BitmapFontHandle(
             CONTINUE,
             getDefaultFontSize(),
-            Vector2(1f * ConstVals.PPM, 1f * ConstVals.PPM),
+            Vector2(1f * ConstVals.PPM, 2f * ConstVals.PPM),
             centerX = true,
             centerY = true,
             ConstVals.MEGAMAN_MAVERICK_FONT,
@@ -94,13 +106,28 @@ class ViewPasswordScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, C
         )
         dots.setPosition(FRAMES_X * ConstVals.PPM, FRAMES_Y * ConstVals.PPM)
 
-        menuButtons.put(CONTINUE, object : IMenuButton {
-            override fun onNavigate(direction: Direction, delta: Float): String? {
-                return when (direction) {
-                    Direction.UP, Direction.DOWN -> MAIN_MENU
+        menuButtons.put(SAVE, object : IMenuButton {
+            override fun onNavigate(direction: Direction, delta: Float) =
+                when(direction) {
+                    Direction.UP -> MAIN_MENU
+                    Direction.DOWN -> CONTINUE
                     else -> null
                 }
+
+            override fun onSelect(delta: Float): Boolean {
+                castGame.saveState()
+                castGame.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
+                return false
             }
+        })
+
+        menuButtons.put(CONTINUE, object : IMenuButton {
+            override fun onNavigate(direction: Direction, delta: Float) =
+                when (direction) {
+                    Direction.UP -> SAVE
+                    Direction.DOWN -> MAIN_MENU
+                    else -> null
+                }
 
             override fun onSelect(delta: Float): Boolean {
                 game.setCurrentScreen(ScreenEnum.BOSS_SELECT_SCREEN.name)
@@ -109,12 +136,12 @@ class ViewPasswordScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, C
         })
 
         menuButtons.put(MAIN_MENU, object : IMenuButton {
-            override fun onNavigate(direction: Direction, delta: Float): String? {
-                return when (direction) {
-                    Direction.UP, Direction.DOWN -> CONTINUE
+            override fun onNavigate(direction: Direction, delta: Float) =
+                when (direction) {
+                    Direction.UP -> CONTINUE
+                    Direction.DOWN -> SAVE
                     else -> null
                 }
-            }
 
             override fun onSelect(delta: Float): Boolean {
                 game.setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)

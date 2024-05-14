@@ -213,6 +213,25 @@ class MegamanMaverickGame : Game2D() {
         }
     }
 
+    fun saveState() {
+        val saveFile = Gdx.app.getPreferences(PreferenceFiles.MEGAMAN_MAVERICK_SAVE_FILE)
+        val password = GamePasswords.getGamePassword(state)
+        saveFile.putString(ConstKeys.PASSWORD, password.joinToString(""))
+    }
+
+    fun hasSavedState(): Boolean {
+        val saveFile = Gdx.app.getPreferences(PreferenceFiles.MEGAMAN_MAVERICK_SAVE_FILE)
+        return saveFile.contains(ConstKeys.PASSWORD)
+    }
+
+    fun loadSavedState() {
+        val saveFile = Gdx.app.getPreferences(PreferenceFiles.MEGAMAN_MAVERICK_SAVE_FILE)
+        if (saveFile.contains(ConstKeys.PASSWORD)) {
+            val password = saveFile.getString(ConstKeys.PASSWORD)
+            GamePasswords.loadGamePassword(state, password.toCharArray().map { it.toString().toInt() }.toIntArray())
+        }
+    }
+
     private fun defineControllerPoller(): IControllerPoller {
         buttons = ControllerUtils.loadButtons()
         return MegaControllerPoller(buttons)

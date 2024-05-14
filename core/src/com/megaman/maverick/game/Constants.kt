@@ -3,6 +3,7 @@ package com.megaman.maverick.game
 import com.badlogic.gdx.math.Vector3
 
 object PreferenceFiles {
+    const val MEGAMAN_MAVERICK_SAVE_FILE = "Megaman Maverick - Save File"
     const val MEGAMAN_MAVERICK_CONTROLLER_PREFERENCES = "Megaman Maverick - Controller Preferences"
     const val MEGAMAN_MAVERICK_KEYBOARD_PREFERENCES = "Megaman Maverick - Keyboard Preferences"
 }
@@ -22,6 +23,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val PASSWORD = "password"
     const val LINES = "lines"
     const val CIRCLE = "circle"
     const val POLYGON = "polygon"
