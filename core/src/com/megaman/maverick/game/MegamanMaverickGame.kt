@@ -192,7 +192,7 @@ class MegamanMaverickGame : Game2D() {
         // startLevelScreen(Level.CREW_MAN)
         // startLevelScreen(Level.FREEZE_MAN)
         // startLevelScreen(Level.GALAXY_MAN)
-        startLevelScreen(Level.WILY_STAGE_1)
+        // startLevelScreen(Level.WILY_STAGE_1)
         // startLevelScreen(Level.WILY_STAGE_2)
         // startLevelScreen(Level.WILY_STAGE_3)
         // setCurrentScreen(ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name)
