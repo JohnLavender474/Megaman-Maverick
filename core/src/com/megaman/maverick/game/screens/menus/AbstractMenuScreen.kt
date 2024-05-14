@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.screens.menus
 
 import com.badlogic.gdx.utils.ObjectMap
+import com.badlogic.gdx.utils.ObjectSet
 import com.engine.common.enums.Direction
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.screens.BaseScreen
@@ -9,6 +10,8 @@ import com.megaman.maverick.game.ControllerButton
 import com.megaman.maverick.game.MegamanMaverickGame
 
 abstract class AbstractMenuScreen(game: MegamanMaverickGame, protected var firstButtonKey: String) : BaseScreen(game) {
+
+    override val eventKeyMask = ObjectSet<Any>()
 
     protected val castGame: MegamanMaverickGame = game
     protected abstract val menuButtons: ObjectMap<String, IMenuButton>
@@ -30,11 +33,13 @@ abstract class AbstractMenuScreen(game: MegamanMaverickGame, protected var first
     }
 
     override fun show() {
+        super.show()
         selectionMade = false
         currentButtonKey = firstButtonKey
     }
 
     override fun render(delta: Float) {
+        super.render(delta)
         if (selectionMade || game.paused) return
 
         val menuButton = menuButtons.get(currentButtonKey)
@@ -65,14 +70,19 @@ abstract class AbstractMenuScreen(game: MegamanMaverickGame, protected var first
     }
 
     override fun pause() {
+        super.pause()
         castGame.audioMan.pauseAllSound()
         castGame.audioMan.pauseMusic()
     }
 
     override fun resume() {
+        super.resume()
         castGame.audioMan.resumeAllSound()
         castGame.audioMan.playMusic()
     }
 
-    override fun dispose() = castGame.audioMan.stopMusic()
+    override fun dispose() {
+        super.dispose()
+        castGame.audioMan.stopMusic()
+    }
 }

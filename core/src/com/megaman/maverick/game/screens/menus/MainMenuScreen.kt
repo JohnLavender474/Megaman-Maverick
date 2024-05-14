@@ -11,7 +11,7 @@ import com.engine.common.enums.Direction
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.extensions.objectMapOf
-import com.engine.common.extensions.objectSetOf
+import com.engine.common.extensions.toGdxArray
 import com.engine.common.time.Timer
 import com.engine.controller.ControllerUtils
 import com.engine.drawables.fonts.BitmapFontHandle
@@ -29,11 +29,12 @@ import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
 import com.megaman.maverick.game.utils.getDefaultCameraPosition
 import com.megaman.maverick.game.utils.setToDefaultPosition
 
-class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainScreenButton.NEW_GAME.text) {
+class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainScreenButton.START_NEW_GAME.text) {
 
     enum class MainScreenButton(val text: String) {
-        NEW_GAME("NEW GAME"),
-        LOAD_GAME("LOAD GAME"),
+        START_NEW_GAME("START NEW GAME"),
+        LOAD_PASSWORD("LOAD PASSWORD"),
+        LOAD_SAVE_FILE("LOAD SAVE FILE"),
         SETTINGS("SETTINGS"),
         CREDITS("CREDITS"),
         EXIT("EXIT")
@@ -53,7 +54,6 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
         private val SETTINGS_TRAJ = Vector3(15f * ConstVals.PPM, 0f, 0f)
     }
 
-    override val eventKeyMask = objectSetOf<Any>()
     override val menuButtons = objectMapOf<String, IMenuButton>()
 
     private val pose = Sprite()
@@ -93,8 +93,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
                     fontSource = "Megaman10Font.ttf"
                 )
             fontHandles.add(fontHandle)
-            val arrowCenter =
-                Vector2(1.5f * ConstVals.PPM, (row - 0.25f) * ConstVals.PPM)
+            val arrowCenter = Vector2(1.5f * ConstVals.PPM, (row - 0.25f) * ConstVals.PPM)
             blinkArrows.put(it.text, BlinkingArrow(game.assMan, arrowCenter))
             row -= 0.025f * ConstVals.PPM
         }
@@ -112,8 +111,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
                     fontSource = "Megaman10Font.ttf"
                 )
             fontHandles.add(fontHandle)
-            val arrowCenter =
-                Vector2(16.5f * ConstVals.PPM, (row - 0.25f) * ConstVals.PPM)
+            val arrowCenter = Vector2(16.5f * ConstVals.PPM, (row - 0.25f) * ConstVals.PPM)
             blinkArrows.put(it.text, BlinkingArrow(game.assMan, arrowCenter))
             row -= ConstVals.PPM * .025f
         }
@@ -122,7 +120,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
             BitmapFontHandle(
                 "© OLDLAVYGENES 20XX",
                 getDefaultFontSize(),
-                Vector2(0.15f * ConstVals.PPM, 0.5f * ConstVals.PPM),
+                Vector2(5f * ConstVals.PPM, 0.5f * ConstVals.PPM),
                 centerX = false,
                 centerY = false,
                 fontSource = "Megaman10Font.ttf"
@@ -177,10 +175,10 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
             ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f, (ConstVals.VIEW_HEIGHT - 0.5f) * ConstVals.PPM / 2f
         )
         pose.setRegion(atlas.findRegion("MegamanMaverick"))
-        pose.setBounds(8.5f * ConstVals.PPM, -ConstVals.PPM / 12f, 6f * ConstVals.PPM, 6f * ConstVals.PPM)
+        pose.setBounds(9f * ConstVals.PPM, -ConstVals.PPM / 12f, 6f * ConstVals.PPM, 6f * ConstVals.PPM)
 
         menuButtons.put(
-            MainScreenButton.NEW_GAME.text,
+            MainScreenButton.START_NEW_GAME.text,
             object : IMenuButton {
                 override fun onSelect(delta: Float): Boolean {
                     castGame.state.reset()
@@ -190,25 +188,50 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
 
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
                     Direction.UP -> MainScreenButton.EXIT.text
-                    Direction.DOWN -> MainScreenButton.LOAD_GAME.text
+                    Direction.DOWN -> MainScreenButton.LOAD_PASSWORD.text
                     else -> null
                 }
             })
 
         menuButtons.put(
-            MainScreenButton.LOAD_GAME.text,
+            MainScreenButton.LOAD_PASSWORD.text,
             object : IMenuButton {
                 override fun onSelect(delta: Float): Boolean {
-                    game.setCurrentScreen(ScreenEnum.LOAD_GAME_SCREEN.name)
+                    game.setCurrentScreen(ScreenEnum.LOAD_PASSWORD_SCREEN.name)
                     return false
                 }
 
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
-                    Direction.UP -> MainScreenButton.NEW_GAME.text
-                    Direction.DOWN -> MainScreenButton.SETTINGS.text
+                    Direction.UP -> MainScreenButton.START_NEW_GAME.text
+                    Direction.DOWN -> MainScreenButton.LOAD_SAVE_FILE.text
                     else -> null
                 }
             })
+
+        menuButtons.put(
+            MainScreenButton.LOAD_SAVE_FILE.text,
+            object : IMenuButton {
+                override fun onSelect(delta: Float): Boolean {
+                    if (castGame.hasSavedState() && castGame.loadSavedState()) {
+                        GameLogger.debug(TAG, "Loaded saved state")
+                        castGame.setCurrentScreen(ScreenEnum.BOSS_SELECT_SCREEN.name)
+                        castGame.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
+                        return true
+                    } else {
+                        GameLogger.error(TAG, "Failed to load saved state")
+                        castGame.audioMan.playSound(SoundAsset.ERROR_SOUND, false)
+                        doNotPlayPing = true
+                        return false
+                    }
+                }
+
+                override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
+                    Direction.UP -> MainScreenButton.LOAD_PASSWORD.text
+                    Direction.DOWN -> MainScreenButton.SETTINGS.text
+                    else -> null
+                }
+            }
+        )
 
         menuButtons.put(
             MainScreenButton.SETTINGS.text,
@@ -220,7 +243,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
                 }
 
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
-                    Direction.UP -> MainScreenButton.LOAD_GAME.text
+                    Direction.UP -> MainScreenButton.LOAD_SAVE_FILE.text
                     Direction.DOWN -> MainScreenButton.CREDITS.text
                     else -> null
                 }
@@ -230,6 +253,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
             MainScreenButton.CREDITS.text,
             object : IMenuButton {
                 override fun onSelect(delta: Float): Boolean {
+                    // TODO: show credits
                     return false
                 }
 
@@ -250,7 +274,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
 
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
                     Direction.UP -> MainScreenButton.CREDITS.text
-                    Direction.DOWN -> MainScreenButton.NEW_GAME.text
+                    Direction.DOWN -> MainScreenButton.START_NEW_GAME.text
                     else -> null
                 }
             })
@@ -367,6 +391,8 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
         screenSlide.reset()
         castGame.getUiCamera().setToDefaultPosition()
         castGame.audioMan.playMusic(MusicAsset.MM_OMEGA_TITLE_THEME_MUSIC)
+        GameLogger.debug(TAG, "Current button key: $currentButtonKey")
+        GameLogger.debug(TAG, "Blinking arrows keys: ${blinkArrows.keys().toGdxArray()}")
     }
 
     override fun render(delta: Float) {

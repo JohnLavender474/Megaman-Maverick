@@ -22,12 +22,13 @@ object GamePasswords {
         )
         multiCollectionIterable.forEach { outerIndex, _, value ->
             val index = indices[outerIndex]
-            password[index] = when (value) {
+            val digit = when (value) {
                 is BossType -> if (state.bossesDefeated.contains(value)) 1 else 0
                 is MegaHeartTank -> if (state.heartTanksCollected.contains(value)) 1 else 0
                 is MegaHealthTank -> if (state.healthTanksCollected.containsKey(value)) 1 else 0
-                else -> throw IllegalStateException("Invalid value: $value")
+                else -> null
             }
+            if (digit != null) password[index] = digit
         }
         return password
     }
@@ -50,7 +51,6 @@ object GamePasswords {
                 is BossType -> if (passwordArray[index] == 1) bossesDefeated.add(value)
                 is MegaHeartTank -> if (passwordArray[index] == 1) heartTanksCollected.add(value)
                 is MegaHealthTank -> if (passwordArray[index] == 1) healthTanksCollected.put(value, 0)
-                else -> throw IllegalStateException("Invalid value: $value")
             }
         }
     }

@@ -33,7 +33,9 @@ import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sorting.IComparableDrawable
 import com.engine.drawables.sprites.SpritesSystem
+import com.engine.events.Event
 import com.engine.events.EventsManager
+import com.engine.events.IEventListener
 import com.engine.graph.IGraphMap
 import com.engine.motion.MotionSystem
 import com.engine.pathfinding.Pathfinder
@@ -53,13 +55,14 @@ import com.megaman.maverick.game.controllers.loadButtons
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
+import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
 import com.megaman.maverick.game.screens.menus.ControllerSettingsScreen
 import com.megaman.maverick.game.screens.menus.LoadPasswordScreen
 import com.megaman.maverick.game.screens.menus.MainMenuScreen
-import com.megaman.maverick.game.screens.menus.SaveScreen
+import com.megaman.maverick.game.screens.menus.SaveGameScreen
 import com.megaman.maverick.game.screens.menus.bosses.BossIntroScreen
 import com.megaman.maverick.game.screens.menus.bosses.BossSelectScreen
 import com.megaman.maverick.game.screens.other.SimpleEndLevelScreen
@@ -73,18 +76,23 @@ import com.megaman.maverick.game.world.MegaContactListener
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class MegamanMaverickGame : Game2D() {
+class MegamanMaverickGame : Game2D(), IEventListener {
 
     companion object {
         const val TAG = "MegamanMaverickGame"
         const val DEBUG_TEXT = false
         const val DEBUG_SHAPES = false
         const val DEFAULT_VOLUME = 0.5f
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(ControllerSettingsScreen.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(MainMenuScreen.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.FEET, FixtureType.BLOCK)
         }
     }
+
+    override val eventKeyMask = objectSetOf<Any>(
+        EventType.TURN_CONTROLLER_ON,
+        EventType.TURN_CONTROLLER_OFF
+    )
 
     lateinit var state: GameState
 
@@ -97,6 +105,7 @@ class MegamanMaverickGame : Game2D() {
 
     fun startLevelScreen(level: Level) {
         val levelScreen = screens.get(ScreenEnum.LEVEL_SCREEN.name) as MegaLevelScreen
+        levelScreen.level = level
         levelScreen.music = level.musicAss
         levelScreen.tmxMapSource = level.tmxSourceFile
         setCurrentScreen(ScreenEnum.LEVEL_SCREEN.name)
@@ -137,6 +146,7 @@ class MegamanMaverickGame : Game2D() {
         assMan.finishLoading()
         engine = createGameEngine()
         eventsMan = EventsManager()
+        eventsMan.addListener(this)
 
         val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
         val screenHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
@@ -171,8 +181,9 @@ class MegamanMaverickGame : Game2D() {
 
         screens.put(ScreenEnum.LEVEL_SCREEN.name, MegaLevelScreen(this))
         screens.put(ScreenEnum.MAIN_MENU_SCREEN.name, MainMenuScreen(this))
-        screens.put(ScreenEnum.SAVE_SCREEN.name, SaveScreen(this))
-        screens.put(ScreenEnum.LOAD_GAME_SCREEN.name, LoadPasswordScreen(this))
+        screens.put(ScreenEnum.SAVE_GAME_SCREEN.name, SaveGameScreen(this))
+        screens.put(ScreenEnum.LOAD_PASSWORD_SCREEN.name, LoadPasswordScreen(this))
+
         screens.put(ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name, ControllerSettingsScreen(this, buttons, true))
         screens.put(ScreenEnum.CONTROLLER_SETTINGS_SCREEN.name, ControllerSettingsScreen(this, buttons, false))
         screens.put(ScreenEnum.BOSS_SELECT_SCREEN.name, BossSelectScreen(this))
@@ -192,13 +203,20 @@ class MegamanMaverickGame : Game2D() {
         // startLevelScreen(Level.CREW_MAN)
         // startLevelScreen(Level.FREEZE_MAN)
         // startLevelScreen(Level.GALAXY_MAN)
-        // startLevelScreen(Level.WILY_STAGE_1)
-        startLevelScreen(Level.WILY_STAGE_2)
+        startLevelScreen(Level.WILY_STAGE_1)
+        // startLevelScreen(Level.WILY_STAGE_2)
         // startLevelScreen(Level.WILY_STAGE_3)
         // setCurrentScreen(ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name)
         // setCurrentScreen(ScreenEnum.CONTROLLER_SETTINGS_SCREEN.name)
         // setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name)
         // setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
+    }
+
+    override fun onEvent(event: Event) {
+        when (event.key) {
+            EventType.TURN_CONTROLLER_OFF -> controllerPoller.on = false
+            EventType.TURN_CONTROLLER_ON -> controllerPoller.on = true
+        }
     }
 
     override fun render() {
@@ -224,12 +242,21 @@ class MegamanMaverickGame : Game2D() {
         return saveFile.contains(ConstKeys.PASSWORD)
     }
 
-    fun loadSavedState() {
+    fun loadSavedState(): Boolean {
         val saveFile = Gdx.app.getPreferences(PreferenceFiles.MEGAMAN_MAVERICK_SAVE_FILE)
         if (saveFile.contains(ConstKeys.PASSWORD)) {
             val password = saveFile.getString(ConstKeys.PASSWORD)
-            GamePasswords.loadGamePassword(state, password.toCharArray().map { it.toString().toInt() }.toIntArray())
+            if (password == null) {
+                GameLogger.error(TAG, "loadSavedState(): Password is null")
+                return false
+            } else {
+                GameLogger.debug(TAG, "loadSavedState(): Password found")
+                GamePasswords.loadGamePassword(state, password.toCharArray().map { it.toString().toInt() }.toIntArray())
+                return true
+            }
         }
+        GameLogger.error(TAG, "loadSavedState(): Password not found")
+        return false
     }
 
     private fun defineControllerPoller(): IControllerPoller {

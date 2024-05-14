@@ -177,6 +177,7 @@
             <key type="filename">../Frames/Ui1/Bit.png</key>
             <key type="filename">../Frames/Ui1/BlackBit.png</key>
             <key type="filename">../Frames/Ui1/RedBit.png</key>
+            <key type="filename">../Frames/Ui1/RedDot.png</key>
             <key type="filename">../Frames/Ui1/WhiteFrameBlackPane.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>

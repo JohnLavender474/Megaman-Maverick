@@ -1,6 +1,8 @@
 package com.megaman.maverick.game.screens.levels
 
+import com.engine.common.extensions.objectMapOf
 import com.megaman.maverick.game.assets.MusicAsset
+import com.megaman.maverick.game.screens.ScreenEnum
 
 enum class Level(tmxSourceFile: String, val musicAss: MusicAsset) {
     TEST1("Test1.tmx", MusicAsset.MMX2_X_HUNTER_MUSIC),
@@ -26,4 +28,26 @@ enum class Level(tmxSourceFile: String, val musicAss: MusicAsset) {
     WILY_STAGE_3("WilyStage3.tmx", MusicAsset.MMZ_ENEMY_HALL_MUSIC);
 
     val tmxSourceFile = "tiled_maps/tmx/$tmxSourceFile"
+}
+
+object LevelCompletionMap {
+
+    private val map = objectMapOf(
+        Level.MAGNET_MAN to ScreenEnum.SAVE_GAME_SCREEN,
+        Level.TIMBER_WOMAN to ScreenEnum.SAVE_GAME_SCREEN,
+        Level.DISTRIBUTOR_MAN to ScreenEnum.SAVE_GAME_SCREEN,
+        Level.ROASTER_MAN to ScreenEnum.SAVE_GAME_SCREEN,
+        Level.MISTER_MAN to ScreenEnum.SAVE_GAME_SCREEN,
+        Level.BLUNT_MAN to ScreenEnum.SAVE_GAME_SCREEN,
+        Level.NUKE_MAN to ScreenEnum.SAVE_GAME_SCREEN,
+        Level.CREW_MAN to ScreenEnum.SAVE_GAME_SCREEN,
+        Level.FREEZE_MAN to ScreenEnum.SAVE_GAME_SCREEN,
+        Level.MICROWAVE_MAN to ScreenEnum.SAVE_GAME_SCREEN,
+        Level.GALAXY_MAN to ScreenEnum.SAVE_GAME_SCREEN,
+        Level.WILY_STAGE_1 to ScreenEnum.WILY_CASTLE_SCREEN,
+        Level.WILY_STAGE_2 to ScreenEnum.WILY_CASTLE_SCREEN,
+        Level.WILY_STAGE_3 to ScreenEnum.WILY_CASTLE_SCREEN
+    )
+
+    fun getNextScreen(level: Level) = map[level]
 }

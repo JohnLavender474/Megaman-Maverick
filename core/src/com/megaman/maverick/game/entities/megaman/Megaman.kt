@@ -310,7 +310,10 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
     override fun spawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "spawn(): spawnProps = $spawnProps")
         super.spawn(spawnProps)
+
         setHealth(getMaxHealth())
+        weaponHandler.setAllToMaxAmmo()
+
         game.eventsMan.addListener(this)
 
         val bounds = properties.get(ConstKeys.BOUNDS) as GameRectangle

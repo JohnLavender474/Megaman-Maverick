@@ -35,8 +35,7 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) :
     }
 
     val finished: Boolean
-        get() =
-            preBeamTimer.isFinished() && beamDownTimer.isFinished() && beamTransitionTimer.isFinished()
+        get() = preBeamTimer.isFinished() && beamDownTimer.isFinished() && beamTransitionTimer.isFinished()
 
     private val megaman = game.megaman
 
@@ -94,13 +93,15 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) :
         megaman.body.physics.gravityOn = false
         megaman.setAllBehaviorsAllowed(false)
 
-        game.getSystems().get(ControllerSystem::class.simpleName).on = false
-
         GameLogger.debug(TAG, "Submitted PLAYER_SPAWN event")
         game.eventsMan.submitEvent(Event(EventType.PLAYER_SPAWN))
+        game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
     }
 
     override fun draw(drawer: Batch) {
+        val drawing = drawer.isDrawing
+        if (!drawing) drawer.begin()
+
         if (blinkReady) {
             drawer.projectionMatrix = game.getUiCamera().combined
             ready.draw(drawer)
@@ -112,6 +113,8 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) :
             drawer.projectionMatrix = game.getGameCamera().combined
             beamSprite.draw(drawer)
         }
+
+        if (!drawing) drawer.end()
     }
 
     override fun update(delta: Float) {
@@ -160,7 +163,8 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) :
             megaman.setAllBehaviorsAllowed(true)
 
             game.eventsMan.submitEvent(Event(EventType.PLAYER_READY))
-            game.audioMan.playSound(SoundAsset.BEAM_IN_SOUND, false)
+            game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
+            game.audioMan.playSound(SoundAsset.BEAM_SOUND, false)
         }
     }
 }

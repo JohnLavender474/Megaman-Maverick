@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
-import com.badlogic.gdx.utils.ObjectSet
 import com.engine.common.enums.Direction
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.drawables.fonts.BitmapFontHandle
@@ -23,7 +22,7 @@ import com.megaman.maverick.game.screens.utils.BlinkingArrow
 import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
 import com.megaman.maverick.game.utils.setToDefaultPosition
 
-class SaveScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, SAVE) {
+class SaveGameScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, SAVE) {
 
     companion object {
         const val TAG = "SaveScreen"
@@ -36,7 +35,6 @@ class SaveScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, SAVE) {
         private var dotRegion: TextureRegion? = null
     }
 
-    override val eventKeyMask = ObjectSet<Any>()
     override val menuButtons = ObjectMap<String, IMenuButton>()
 
     private val fontHandles = Array<BitmapFontHandle>()

@@ -28,7 +28,7 @@ enum class SoundAsset(src: String, val seconds: Int) : IAsset {
     BOSS_DOOR_SOUND("boss_door.wav", 1),
     CURSOR_MOVE_BLOOP_SOUND("cursor_move_bloop.mp3", 1),
     SPLASH_SOUND("water_splash.wav", 1),
-    BEAM_IN_SOUND("beam_in.wav", 1),
+    BEAM_SOUND("beam_in.wav", 1),
     MEGA_BUSTER_CHARGING_SOUND("buster_charging_fadeout.wav", 4),
     AIR_SHOOTER_SOUND("air_shooter.wav", 1),
     ATOMIC_FIRE_SOUND("atomic_fire.wav", 1),

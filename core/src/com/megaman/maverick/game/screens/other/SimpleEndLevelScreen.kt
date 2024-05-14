@@ -7,7 +7,7 @@ import com.engine.screens.BaseScreen
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
-import com.megaman.maverick.game.utils.MegaUtilMethods
+import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
 
 class SimpleEndLevelScreen(private val megamanGame: MegamanMaverickGame) : BaseScreen(megamanGame) {
 
@@ -18,8 +18,8 @@ class SimpleEndLevelScreen(private val megamanGame: MegamanMaverickGame) : BaseS
     override fun init() {
         successText =
             BitmapFontHandle(
-                { "LEVEL COMPLETE!" },
-                MegaUtilMethods.getDefaultFontSize(),
+                "LEVEL COMPLETE!",
+                getDefaultFontSize(),
                 Vector2(
                     ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f,
                     ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f

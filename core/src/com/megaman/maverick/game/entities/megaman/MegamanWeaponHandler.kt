@@ -124,6 +124,8 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
         else if (weaponEntry.ammo < 0) weaponEntry.ammo = 0
     }
 
+    fun setAllToMaxAmmo() = weapons.keys().forEach { setToMaxAmmo(it) }
+
     fun setToMaxAmmo(weapon: MegamanWeapon) {
         weapons[weapon]?.ammo = MegamanValues.MAX_WEAPON_AMMO
     }
