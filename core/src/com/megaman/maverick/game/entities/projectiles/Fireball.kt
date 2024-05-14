@@ -9,9 +9,11 @@ import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
 import com.engine.common.CAUSE_OF_DEATH_MESSAGE
+import com.engine.common.enums.Direction
 import com.engine.common.enums.Position
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.objectMapOf
+import com.engine.common.getOverlapPushDirection
 import com.engine.common.mask
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
@@ -64,6 +66,7 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
     private lateinit var cullTimer: Timer
 
     private var burst = false
+    private var burstDirection = Direction.UP
     private var burstOnDamageInflicted = false
     private var burstOnHitBody = false
 
@@ -98,6 +101,7 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         burstOnDamageInflicted = spawnProps.getOrDefault(BURST_ON_DAMAGE_INFLICTED, false, Boolean::class)
         burstOnHitBody = spawnProps.getOrDefault(BURST_ON_HIT_BODY, false, Boolean::class)
         burst = false
+        burstDirection = Direction.UP
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) {
@@ -107,18 +111,22 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun hitBody(bodyFixture: IFixture) {
         super.hitBody(bodyFixture)
-        if (burstOnHitBody && mask(owner, bodyFixture.getEntity(), { it is Megaman }, { it is AbstractEnemy }))
+        if (burstOnHitBody && mask(owner, bodyFixture.getEntity(), { it is Megaman }, { it is AbstractEnemy })) {
+            burstDirection = getOverlapPushDirection(body, bodyFixture.getShape()) ?: Direction.UP
             explodeAndDie()
+        }
     }
 
     override fun hitBlock(blockFixture: IFixture) {
         super.hitBlock(blockFixture)
+        burstDirection = getOverlapPushDirection(body, blockFixture.getShape()) ?: Direction.UP
         explodeAndDie()
     }
 
     override fun hitShield(shieldFixture: IFixture) {
         super.hitShield(shieldFixture)
         body.physics.velocity.x *= -1f
+        burstDirection = getOverlapPushDirection(body, shieldFixture.getShape()) ?: Direction.UP
         requestToPlaySound(SoundAsset.DINK_SOUND, false)
     }
 
@@ -132,8 +140,8 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
     }
 
     private fun defineBodyComponent(): BodyComponent {
-        val body = Body(BodyType.DYNAMIC)
-        body.setSize(0.75f * ConstVals.PPM)
+        val body = Body(BodyType.ABSTRACT)
+        body.setSize(ConstVals.PPM.toFloat())
         body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
@@ -165,7 +173,7 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
             val bodyPosition = body.getPositionPoint(position)
             _sprite.setPosition(bodyPosition, position)
             _sprite.setOriginCenter()
-            _sprite.rotation = if (burst) 0f else _sprite.rotation + ROTATION * delta
+            _sprite.rotation = if (burst) burstDirection.rotation else _sprite.rotation + ROTATION * delta
         }
         return spritesComponent
     }

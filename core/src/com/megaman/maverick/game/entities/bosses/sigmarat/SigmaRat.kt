@@ -68,7 +68,7 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
 
         private const val HEAD_POSITION = "head_position"
 
-        private val ANGLES = gdxArrayOf(
+        private val ELECTRIC_BALL_ANGLES = gdxArrayOf(
             225f,
             232.5f,
             240f,
@@ -82,6 +82,21 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
             300f,
             307.5f,
             315f,
+        )
+        private val FIRE_BALL_ANGLES = gdxArrayOf(
+            180f,
+            195f,
+            210f,
+            225f,
+            240f,
+            255f,
+            270f,
+            285f,
+            300f,
+            315f,
+            330f,
+            345f,
+            360f
         )
 
         private const val ELECTRIC_BALLS_SPEED = 10f
@@ -113,24 +128,17 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
         SigmaRatAttack.CLAW_SHOCK to MEDIUM_CHANCE,
         SigmaRatAttack.CLAW_LAUNCH to HIGH_CHANCE
     )
-
     private val attackTimer = Timer(ATTACK_DELAY_MAX)
-
     private val electricBalls = Queue<SigmaRatElectricBall>()
     private val electricShotDelayTimer = Timer(ELECTRIC_BALL_SHOT_DELAY)
     private val fireballs = Queue<Pair<Fireball, Float>>()
     private val fireballDelayTimer = Timer(FIREBALL_DELAY)
-
     private lateinit var headPosition: Vector2
-
     private lateinit var leftClawSpawn: Vector2
     private lateinit var rightClawSpawn: Vector2
-
     private var leftClaw: SigmaRatClaw? = null
     private var rightClaw: SigmaRatClaw? = null
-
     private var attackState: SigmaRatAttack? = null
-
     private var electricBallsClockwise = false
 
     override fun init() {
@@ -246,7 +254,7 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
         when (attackState) {
             SigmaRatAttack.ELECTRIC_BALLS -> {
                 electricShotDelayTimer.reset()
-                for (i in 0 until ANGLES.size) {
+                for (i in 0 until ELECTRIC_BALL_ANGLES.size) {
                     val electricBall =
                         EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SIGMA_RAT_ELECTRIC_BALL)!!
                     game.engine.spawn(electricBall, props(ConstKeys.POSITION to headPosition))
@@ -258,7 +266,7 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
 
             SigmaRatAttack.FIRE_BLASTS -> {
                 fireballDelayTimer.reset()
-                val angles = ANGLES.getRandomElements(3)
+                val angles = FIRE_BALL_ANGLES.getRandomElements(3)
                 for (angle in angles) {
                     val fireball =
                         EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.FIREBALL)!! as Fireball
@@ -309,9 +317,9 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
                     val electricBall = electricBalls.removeFirst()
 
                     var index = if (electricBallsClockwise) electricBalls.size
-                    else ANGLES.size - electricBalls.size - 1
-                    index = index.coerceIn(0, ANGLES.size - 1)
-                    val angle = ANGLES[index]
+                    else ELECTRIC_BALL_ANGLES.size - electricBalls.size - 1
+                    index = index.coerceIn(0, ELECTRIC_BALL_ANGLES.size - 1)
+                    val angle = ELECTRIC_BALL_ANGLES[index]
 
                     val trajectory = Vector2(0f, ELECTRIC_BALLS_SPEED * ConstVals.PPM).setAngleDeg(angle)
                     electricBall.launch(trajectory)

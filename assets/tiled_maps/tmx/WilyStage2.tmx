@@ -23,13 +23,13 @@
   </object>
  </objectgroup>
  <objectgroup id="10" name="items"/>
- <objectgroup id="4" name="player">
+ <objectgroup id="4" name="temp">
   <object id="248" name="0" x="96" y="4672" width="32" height="32"/>
   <object id="249" name="1" x="2368" y="4576" width="32" height="32"/>
   <object id="250" name="2" x="3296" y="4736" width="32" height="32"/>
   <object id="251" name="3" x="5840" y="4704" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="16" name="temp">
+ <objectgroup id="16" name="player">
   <object id="256" name="1" x="5792" y="4704" width="32" height="32"/>
   <object id="259" name="0" x="5376" y="4704" width="32" height="32"/>
  </objectgroup>
@@ -324,7 +324,7 @@
    <properties>
     <property name="head_position" type="object" value="257"/>
     <property name="left" type="object" value="253"/>
-    <property name="music" value="CHRONO_TRIGGER_WORLD_REVOLUTION"/>
+    <property name="music" value="CHRONO_TRIGGER_WORLD_REVOLUTION_MUSIC"/>
     <property name="right" type="object" value="254"/>
    </properties>
   </object>
@@ -378,7 +378,7 @@
   <object id="247" name="Gachappan" x="5456" y="4704" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="12" name="backgrounds"/>
- <objectgroup id="9" name="game_rooms">
+ <objectgroup id="9" name="game_rooms" visible="0">
   <object id="1" name="room1" x="0" y="4416" width="2208" height="384"/>
   <object id="51" name="room2" x="2208" y="3264" width="512" height="1536"/>
   <object id="127" name="room3" x="2720" y="3264" width="512" height="1536"/>
