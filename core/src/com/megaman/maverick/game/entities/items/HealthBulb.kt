@@ -11,7 +11,6 @@ import com.engine.animations.IAnimation
 import com.engine.common.CAUSE_OF_DEATH_MESSAGE
 import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
-import com.engine.common.enums.Position
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.objectMapOf
@@ -26,7 +25,10 @@ import com.engine.cullables.CullableOnEvent
 import com.engine.cullables.CullablesComponent
 import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
-import com.engine.drawables.sprites.*
+import com.engine.drawables.sprites.GameSprite
+import com.engine.drawables.sprites.SpritesComponent
+import com.engine.drawables.sprites.setCenter
+import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.ISpriteEntity
@@ -108,6 +110,7 @@ class HealthBulb(game: MegamanMaverickGame) : GameEntity(game), ItemEntity, ISpr
         body.setCenter(spawn)
         (itemFixture.rawShape as GameRectangle).set(body)
         feetFixture.offsetFromBodyCenter.y = (if (large) -0.25f else -0.125f) * ConstVals.PPM
+        directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
     }
 
     override fun contactWithPlayer(megaman: Megaman) {
@@ -157,7 +160,7 @@ class HealthBulb(game: MegamanMaverickGame) : GameEntity(game), ItemEntity, ISpr
         sprite.setSize(0.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
-           _sprite.setCenter(body.getCenter())
+            _sprite.setCenter(body.getCenter())
             _sprite.hidden = blink
         }
         return spritesComponent
