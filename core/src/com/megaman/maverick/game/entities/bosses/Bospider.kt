@@ -84,12 +84,16 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
     override var children = Array<IGameEntity>()
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(ConstVals.MAX_HEALTH),
+        Bullet::class to dmgNeg(1),
         Fireball::class to dmgNeg(2),
         ChargedShot::class to dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 2 else 1
-        }, ChargedShotExplosion::class to dmgNeg(1)
+        },
+        ChargedShotExplosion::class to dmgNeg {
+            it as ChargedShotExplosion
+            if (it.fullyCharged) 2 else 1
+        }
     )
 
     private val paths = Array<Array<Vector2>>()

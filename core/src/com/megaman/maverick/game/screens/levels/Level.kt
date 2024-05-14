@@ -49,5 +49,5 @@ object LevelCompletionMap {
         Level.WILY_STAGE_3 to ScreenEnum.WILY_CASTLE_SCREEN
     )
 
-    fun getNextScreen(level: Level) = map[level]
+    fun getNextScreen(level: Level): ScreenEnum = map[level]
 }

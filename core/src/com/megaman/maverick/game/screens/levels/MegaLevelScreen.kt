@@ -490,7 +490,9 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
             playerSpawnEventHandler.finished &&
             playerDeathEventHandler.finished &&
             bossSpawnEventHandler.finished
-        ) if (megamanGame.paused) megamanGame.resume() else megamanGame.pause()
+        ) {
+            if (megamanGame.paused) megamanGame.resume() else megamanGame.pause()
+        }
 
         if (game.paused &&
             (!playerStatsHandler.finished ||
