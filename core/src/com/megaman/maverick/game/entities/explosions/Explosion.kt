@@ -6,11 +6,9 @@ import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.audio.AudioComponent
-import com.engine.common.CAUSE_OF_DEATH_MESSAGE
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.objects.Properties
-import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
 import com.engine.damage.IDamageable
@@ -91,7 +89,7 @@ class Explosion(game: MegamanMaverickGame) : GameEntity(game), IHazard, IOwnable
     }
 
     private fun defineSpritesCompoent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
+        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
         sprite.setSize(2.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->

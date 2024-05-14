@@ -59,7 +59,7 @@ import com.megaman.maverick.game.screens.levels.MegaLevelScreen
 import com.megaman.maverick.game.screens.menus.ControllerSettingsScreen
 import com.megaman.maverick.game.screens.menus.LoadPasswordScreen
 import com.megaman.maverick.game.screens.menus.MainMenuScreen
-import com.megaman.maverick.game.screens.menus.ViewPasswordScreen
+import com.megaman.maverick.game.screens.menus.SaveScreen
 import com.megaman.maverick.game.screens.menus.bosses.BossIntroScreen
 import com.megaman.maverick.game.screens.menus.bosses.BossSelectScreen
 import com.megaman.maverick.game.screens.other.SimpleEndLevelScreen
@@ -78,7 +78,7 @@ class MegamanMaverickGame : Game2D() {
     companion object {
         const val TAG = "MegamanMaverickGame"
         const val DEBUG_TEXT = false
-        const val DEBUG_SHAPES = true
+        const val DEBUG_SHAPES = false
         const val DEFAULT_VOLUME = 0.5f
         val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(ControllerSettingsScreen.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
@@ -171,8 +171,8 @@ class MegamanMaverickGame : Game2D() {
 
         screens.put(ScreenEnum.LEVEL_SCREEN.name, MegaLevelScreen(this))
         screens.put(ScreenEnum.MAIN_MENU_SCREEN.name, MainMenuScreen(this))
-        screens.put(ScreenEnum.VIEW_PASSWORD_SCREEN.name, ViewPasswordScreen(this))
-        screens.put(ScreenEnum.LOAD_PASSWORD_SCREEN.name, LoadPasswordScreen(this))
+        screens.put(ScreenEnum.SAVE_SCREEN.name, SaveScreen(this))
+        screens.put(ScreenEnum.LOAD_GAME_SCREEN.name, LoadPasswordScreen(this))
         screens.put(ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name, ControllerSettingsScreen(this, buttons, true))
         screens.put(ScreenEnum.CONTROLLER_SETTINGS_SCREEN.name, ControllerSettingsScreen(this, buttons, false))
         screens.put(ScreenEnum.BOSS_SELECT_SCREEN.name, BossSelectScreen(this))
@@ -190,9 +190,9 @@ class MegamanMaverickGame : Game2D() {
         // startLevelScreen(Level.MAGNET_MAN)
         // startLevelScreen(Level.TIMBER_WOMAN
         // startLevelScreen(Level.CREW_MAN)
-        startLevelScreen(Level.FREEZE_MAN)
+        // startLevelScreen(Level.FREEZE_MAN)
         // startLevelScreen(Level.GALAXY_MAN)
-        // startLevelScreen(Level.WILY_STAGE_1)
+        startLevelScreen(Level.WILY_STAGE_1)
         // startLevelScreen(Level.WILY_STAGE_2)
         // startLevelScreen(Level.WILY_STAGE_3)
         // setCurrentScreen(ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name)

@@ -23,10 +23,10 @@ import com.megaman.maverick.game.screens.utils.BlinkingArrow
 import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
 import com.megaman.maverick.game.utils.setToDefaultPosition
 
-class ViewPasswordScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, SAVE) {
+class SaveScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, SAVE) {
 
     companion object {
-        const val TAG = "ViewPasswordScreen"
+        const val TAG = "SaveScreen"
         private const val SAVE = "SAVE"
         private const val CONTINUE = "CONTINUE"
         private const val MAIN_MENU = "MAIN MENU"

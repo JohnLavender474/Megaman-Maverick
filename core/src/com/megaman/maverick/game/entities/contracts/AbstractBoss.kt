@@ -75,6 +75,13 @@ abstract class AbstractBoss(
         updatablesComponent.add { delta ->
             if (defeated) {
                 defeatTimer.update(delta)
+
+                damageBlinkTimer.update(delta)
+                if (damageBlinkTimer.isFinished()) {
+                    damageBlinkTimer.reset()
+                    damageBlink = !damageBlink
+                }
+
                 if (defeatTimer.isFinished()) {
                     GameLogger.debug(TAG, "Defeat timer is finished, dying and sending BOSS_DEAD event")
                     game.eventsMan.submitEvent(

@@ -9,16 +9,16 @@ import com.engine.controller.buttons.Buttons
 import com.megaman.maverick.game.ControllerButton
 import com.megaman.maverick.game.PreferenceFiles
 
-fun ControllerUtils.getKeyboardPreferences(): Preferences =
+fun getKeyboardPreferences(): Preferences =
     Gdx.app.getPreferences(PreferenceFiles.MEGAMAN_MAVERICK_KEYBOARD_PREFERENCES)
 
-fun ControllerUtils.getControllerPreferences(controller: Controller): Preferences =
+fun getControllerPreferences(controller: Controller): Preferences =
     Gdx.app.getPreferences("${PreferenceFiles.MEGAMAN_MAVERICK_CONTROLLER_PREFERENCES} - ${controller.name}")
 
 fun ControllerUtils.loadButtons(): Buttons {
     val buttons = Buttons()
 
-    val keyboardPreferences = ControllerUtils.getKeyboardPreferences()
+    val keyboardPreferences = getKeyboardPreferences()
     ControllerButton.values().forEach {
         val keyboardCode = keyboardPreferences.getInteger(it.name, it.defaultKeyboardKey)
         buttons.put(it, Button(keyboardCode))

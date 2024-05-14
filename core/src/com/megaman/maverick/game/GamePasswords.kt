@@ -33,7 +33,7 @@ object GamePasswords {
     }
 
     fun loadGamePassword(state: GameState, password: IntArray) {
-        state.clear()
+        state.reset()
         val (bossesDefeated, heartTanksCollected, healthTanksCollected) = state
 
         val passwordArray = password.map { it.toString().toInt() }.toIntArray()

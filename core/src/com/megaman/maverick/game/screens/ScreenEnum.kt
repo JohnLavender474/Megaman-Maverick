@@ -3,9 +3,8 @@ package com.megaman.maverick.game.screens
 enum class ScreenEnum {
     MAIN_MENU_SCREEN,
     LEVEL_SCREEN,
-    EXTRAS_SCREEN,
-    VIEW_PASSWORD_SCREEN,
-    LOAD_PASSWORD_SCREEN,
+    SAVE_SCREEN,
+    LOAD_GAME_SCREEN,
     KEYBOARD_SETTINGS_SCREEN,
     CONTROLLER_SETTINGS_SCREEN,
     BOSS_INTRO_SCREEN,

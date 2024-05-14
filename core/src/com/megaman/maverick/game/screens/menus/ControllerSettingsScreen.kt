@@ -64,7 +64,7 @@ class ControllerSettingsScreen(
                 button.keyboardCode = keycode
 
                 // save the keyboard codes to preferences
-                val keyboardPreferences = ControllerUtils.getKeyboardPreferences()
+                val keyboardPreferences = getKeyboardPreferences()
                 buttons.forEach {
                     val keyboardCode = it.value.keyboardCode
                     keyboardPreferences.putInteger((it.key as ControllerButton).name, keyboardCode)
@@ -94,7 +94,7 @@ class ControllerSettingsScreen(
                 button.controllerCode = buttonIndex
 
                 // save the controller codes to preferences
-                val controllerPreferences = ControllerUtils.getControllerPreferences(controller)
+                val controllerPreferences = getControllerPreferences(controller)
                 buttons.forEach {
                     val controllerCode = it.value.controllerCode ?: return@forEach
                     controllerPreferences.putInteger((it.key as ControllerButton).name, controllerCode)

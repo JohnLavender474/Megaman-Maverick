@@ -89,7 +89,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
         EventType.BOSS_DEFEATED,
         EventType.BOSS_DEAD,
         EventType.MINI_BOSS_DEAD,
-        EventType.END_LEVEL_SUCCESSFULLY
+        EventType.VICTORY_EVENT
     )
 
     val megamanGame: MegamanMaverickGame
@@ -230,7 +230,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
                     when (val roomEventString =
                         currentRoom.properties.get(ConstKeys.EVENT, String::class.java)) {
                         ConstKeys.BOSS -> EventType.ENTER_BOSS_ROOM
-                        ConstKeys.SUCCESS -> EventType.END_LEVEL_SUCCESSFULLY
+                        ConstKeys.SUCCESS -> EventType.VICTORY_EVENT
                         else -> throw IllegalStateException("Unknown room event: $roomEventString")
                     }
 
@@ -483,7 +483,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
                 megaman.canBeDamaged = true
             }
 
-            EventType.END_LEVEL_SUCCESSFULLY -> {
+            EventType.VICTORY_EVENT -> {
                 GameLogger.debug(
                     MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): End level successfully --> end level"
                 )
