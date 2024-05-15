@@ -588,7 +588,7 @@
   <object id="454" name="1" x="3136" y="1152" width="32" height="32"/>
   <object id="455" name="2" x="5216" y="768" width="32" height="32"/>
   <object id="456" name="3" x="10944" y="928" width="32" height="32"/>
-  <object id="464" name="0" x="14784" y="896" width="32" height="32"/>
+  <object id="464" name="0" x="14336" y="896" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="8" name="hazards">
   <object id="161" name="LaserBeamer" x="3856" y="1048" width="32" height="32">

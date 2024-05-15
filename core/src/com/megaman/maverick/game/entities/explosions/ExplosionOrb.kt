@@ -70,7 +70,7 @@ class ExplosionOrb(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity 
         UpdatablesComponent(
             this,
             {
-                (firstSprite as GameSprite).translate(
+                firstSprite!!.translate(
                     trajectory.x * ConstVals.PPM * it, trajectory.y * ConstVals.PPM * it
                 )
             })
@@ -87,8 +87,7 @@ class ExplosionOrb(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity 
             )
         )
 
-        val cullOnEvent =
-            CullableOnEvent({ it.key == EventType.PLAYER_SPAWN }, objectSetOf(EventType.PLAYER_SPAWN))
+        val cullOnEvent = CullableOnEvent({ it.key == EventType.PLAYER_SPAWN }, objectSetOf(EventType.PLAYER_SPAWN))
         cullable.put(ConstKeys.CULL_EVENTS, cullOnEvent)
 
         runnablesOnSpawn.add { game.eventsMan.addListener(cullOnEvent) }

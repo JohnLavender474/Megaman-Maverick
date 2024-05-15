@@ -1,0 +1,39 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "",
+    "expandedProjectPaths": [
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "/Users/johnlavender/IdeaProjects/Megaman-Maverick/assets/tiled_maps/tsx/Blizzardman.tsx": {
+            "scaleInDock": 1
+        },
+        "/Users/johnlavender/IdeaProjects/Megaman-Maverick/assets/tiled_maps/tsx/ForestTiles.tsx": {
+            "scaleInDock": 1
+        },
+        "/Users/johnlavender/IdeaProjects/Megaman-Maverick/assets/tiled_maps/tsx/Hornetman.tsx": {
+            "scaleInDock": 1
+        },
+        "/Users/johnlavender/IdeaProjects/Megaman-Maverick/assets/tiled_maps/tsx/Tileset1.tsx": {
+            "scaleInDock": 1
+        },
+        "TimberWoman.tmx": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 243.5,
+                "y": 355
+            }
+        }
+    },
+    "map.lastUsedFormat": "tmx",
+    "openFiles": [
+    ],
+    "project": "TimberWoman.tiled-project",
+    "recentFiles": [
+        "TimberWoman.tmx"
+    ]
+}
