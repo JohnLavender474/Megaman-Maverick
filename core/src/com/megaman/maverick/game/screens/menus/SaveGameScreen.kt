@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
+import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.drawables.fonts.BitmapFontHandle
@@ -44,6 +45,9 @@ class SaveGameScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, SAVE)
     private lateinit var dots: SpriteMatrix
 
     override fun init() {
+        GameLogger.debug(TAG, "Initializing...")
+        super.init()
+
         if (frameRegion == null || dotRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.UI_1.source)
             frameRegion = atlas.findRegion("WhiteFrameBlackPane")
@@ -149,6 +153,7 @@ class SaveGameScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, SAVE)
     }
 
     override fun show() {
+        GameLogger.debug(TAG, "Showing...")
         super.show()
         castGame.getUiCamera().setToDefaultPosition()
         castGame.audioMan.playMusic(MusicAsset.MM2_PASSWORD_SCREEN_MUSIC)

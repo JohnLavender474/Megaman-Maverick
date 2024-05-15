@@ -68,9 +68,7 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IEventLis
     }
 
     override val eventKeyMask = objectSetOf<Any>(EventType.PLAYER_JUST_DIED)
-
     override var owner: IGameEntity? = null
-
     override lateinit var facing: Facing
 
     private val megaman = game.megaman
@@ -97,6 +95,7 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IEventLis
 
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
+        game.eventsMan.addListener(this)
 
         body.setSize(0.5f * ConstVals.PPM)
         val spawn = if (spawnProps.containsKey(ConstKeys.POSITION)) spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
@@ -115,6 +114,7 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IEventLis
 
     override fun onDestroy() {
         super.onDestroy()
+        game.eventsMan.removeListener(this)
         if (stuckToMegaman) {
             explode()
             WEBS_STUCK_TO_MEGAMAN.remove(this)

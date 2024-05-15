@@ -59,6 +59,8 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
+import com.megaman.maverick.game.screens.levels.MegaLevelScreen.Companion.MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG
+import com.megaman.maverick.game.screens.levels.events.EndLevelEventHandler
 import com.megaman.maverick.game.screens.menus.ControllerSettingsScreen
 import com.megaman.maverick.game.screens.menus.LoadPasswordScreen
 import com.megaman.maverick.game.screens.menus.MainMenuScreen
@@ -83,7 +85,8 @@ class MegamanMaverickGame : Game2D(), IEventListener {
         const val DEBUG_TEXT = false
         const val DEBUG_SHAPES = false
         const val DEFAULT_VOLUME = 0.5f
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(MainMenuScreen.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> =
+            objectSetOf(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, EndLevelEventHandler.TAG, SaveGameScreen.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.FEET, FixtureType.BLOCK)
         }
@@ -183,7 +186,6 @@ class MegamanMaverickGame : Game2D(), IEventListener {
         screens.put(ScreenEnum.MAIN_MENU_SCREEN.name, MainMenuScreen(this))
         screens.put(ScreenEnum.SAVE_GAME_SCREEN.name, SaveGameScreen(this))
         screens.put(ScreenEnum.LOAD_PASSWORD_SCREEN.name, LoadPasswordScreen(this))
-
         screens.put(ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name, ControllerSettingsScreen(this, buttons, true))
         screens.put(ScreenEnum.CONTROLLER_SETTINGS_SCREEN.name, ControllerSettingsScreen(this, buttons, false))
         screens.put(ScreenEnum.BOSS_SELECT_SCREEN.name, BossSelectScreen(this))

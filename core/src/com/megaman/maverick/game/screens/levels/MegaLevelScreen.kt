@@ -337,6 +337,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
 
             EventType.PLAYER_READY -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Player ready")
+                game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
             }
 
             EventType.PLAYER_JUST_DIED -> {
@@ -448,6 +449,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
             }
 
             EventType.BOSS_DEFEATED -> {
+                GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Boss defeated")
                 val mini = event.getProperty(ConstKeys.MINI, Boolean::class)!!
                 if (!mini) audioMan.stopMusic()
 
@@ -459,6 +461,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
             }
 
             EventType.BOSS_DEAD -> {
+                GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Boss dead")
                 val mini = event.getProperty(ConstKeys.MINI, Boolean::class)!!
                 val eventType = if (mini) EventType.MINI_BOSS_DEAD else EventType.VICTORY_EVENT
                 eventsMan.submitEvent(Event(eventType))
@@ -472,11 +475,12 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
             }
 
             EventType.VICTORY_EVENT -> {
-                GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): End level")
+                GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Victory event")
                 endLevelEventHandler.init()
             }
 
             EventType.END_LEVEL -> {
+                GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): End level")
                 game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
                 val nextScreen = LevelCompletionMap.getNextScreen(level!!)
                 game.setCurrentScreen(nextScreen.name)

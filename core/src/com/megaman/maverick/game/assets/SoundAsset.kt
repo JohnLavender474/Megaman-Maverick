@@ -23,7 +23,7 @@ enum class SoundAsset(src: String, val seconds: Int) : IAsset {
     ENEMY_DAMAGE_SOUND("enemy_damage.mp3", 1),
     MEGAMAN_LAND_SOUND("megaman_land.mp3", 1),
     MEGAMAN_DAMAGE_SOUND("megaman_damage.mp3", 1),
-    MEGAMAN_DEFEAT_SOUND("megaman_defeat.mp3", 2),
+    DEFEAT_SOUND("megaman_defeat.mp3", 2),
     SWIM_SOUND("swim.mp3", 1),
     BOSS_DOOR_SOUND("boss_door.wav", 1),
     CURSOR_MOVE_BLOOP_SOUND("cursor_move_bloop.mp3", 1),

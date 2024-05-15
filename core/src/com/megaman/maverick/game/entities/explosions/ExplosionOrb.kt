@@ -49,15 +49,13 @@ class ExplosionOrb(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity 
 
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
-
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-        (firstSprite as GameSprite).setCenter(spawn.x, spawn.y)
-
+        firstSprite!!.setCenter(spawn.x, spawn.y)
         trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
     }
 
     private fun defineSpritesCompoent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
+        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 2))
         sprite.setSize(3f * ConstVals.PPM)
         return SpritesComponent(this, sprite)
     }

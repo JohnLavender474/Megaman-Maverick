@@ -4,7 +4,6 @@ import com.engine.common.GameLogger
 import com.engine.common.interfaces.Initializable
 import com.engine.common.interfaces.Updatable
 import com.engine.common.time.Timer
-import com.engine.controller.ControllerSystem
 import com.engine.events.Event
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
@@ -25,10 +24,10 @@ class PlayerDeathEventHandler(private val game: MegamanMaverickGame) : Initializ
     override fun init() {
         GameLogger.debug(TAG, "Initializing...")
         deathTimer.reset()
-        game.getSystems().get(ControllerSystem::class.simpleName).on = false
+        game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
         game.megaman.body.physics.gravityOn = false
         game.megaman.ready = false
-        game.audioMan.playSound(SoundAsset.MEGAMAN_DEFEAT_SOUND)
+        game.audioMan.playSound(SoundAsset.DEFEAT_SOUND)
         GameLogger.debug(TAG, "Initialized")
     }
 

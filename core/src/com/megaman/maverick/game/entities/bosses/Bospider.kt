@@ -84,7 +84,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
     override var children = Array<IGameEntity>()
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(1),
+        Bullet::class to dmgNeg(ConstVals.MAX_HEALTH),
         Fireball::class to dmgNeg(2),
         ChargedShot::class to dmgNeg {
             it as ChargedShot

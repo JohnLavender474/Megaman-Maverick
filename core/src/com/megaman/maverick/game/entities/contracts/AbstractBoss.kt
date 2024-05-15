@@ -1,7 +1,9 @@
 package com.megaman.maverick.game.entities.contracts
 
+import com.badlogic.gdx.math.Vector2
 import com.engine.common.GameLogger
 import com.engine.common.enums.Position
+import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.objectSetOf
 import com.engine.common.extensions.toGdxArray
 import com.engine.common.objects.Properties
@@ -18,7 +20,9 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOSION_ORB_SPEED
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.getMegamanMaverickGame
 
 abstract class AbstractBoss(
     game: MegamanMaverickGame,
@@ -61,6 +65,28 @@ abstract class AbstractBoss(
         game.eventsMan.removeListener(this)
         ready = false
         super.onDestroy()
+
+        if (getCurrentHealth() > 0) return
+
+        getMegamanMaverickGame().audioMan.playSound(SoundAsset.DEFEAT_SOUND)
+        val explosionOrbTrajectories = gdxArrayOf(
+            Vector2(-EXPLOSION_ORB_SPEED, 0f),
+            Vector2(-EXPLOSION_ORB_SPEED, EXPLOSION_ORB_SPEED),
+            Vector2(0f, EXPLOSION_ORB_SPEED),
+            Vector2(EXPLOSION_ORB_SPEED, EXPLOSION_ORB_SPEED),
+            Vector2(EXPLOSION_ORB_SPEED, 0f),
+            Vector2(EXPLOSION_ORB_SPEED, -EXPLOSION_ORB_SPEED),
+            Vector2(0f, -EXPLOSION_ORB_SPEED),
+            Vector2(-EXPLOSION_ORB_SPEED, -EXPLOSION_ORB_SPEED)
+        )
+        explosionOrbTrajectories.forEach { trajectory ->
+            val explosionOrb = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION_ORB)
+            explosionOrb?.let { orb ->
+                game.engine.spawn(
+                    orb, props(ConstKeys.TRAJECTORY to trajectory, ConstKeys.POSITION to body.getCenter())
+                )
+            }
+        }
     }
 
     override fun onEvent(event: Event) {

@@ -380,7 +380,6 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
             Vector2(0f, -EXPLOSION_ORB_SPEED),
             Vector2(-EXPLOSION_ORB_SPEED, -EXPLOSION_ORB_SPEED)
         )
-
         explosionOrbTrajectories.forEach { trajectory ->
             val explosionOrb = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION_ORB)
             explosionOrb?.let { orb ->
@@ -410,8 +409,7 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
 
             EventType.STUN_PLAYER -> {
                 GameLogger.debug(MEGAMAN_EVENT_LISTENER_TAG, "STUN_PLAYER_IF_ON_SURFACE")
-                val stunType = event.getProperty(ConstKeys.TYPE, StunType::class)!!
-                when (stunType) {
+                when (val stunType = event.getProperty(ConstKeys.TYPE, StunType::class)!!) {
                     StunType.STUN_BOUNCE_IF_ON_SURFACE,
                     StunType.STUN_BOUNCE_ALWAYS -> {
                         if (stunType == StunType.STUN_BOUNCE_IF_ON_SURFACE &&
@@ -432,7 +430,9 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
     }
 
     override fun canBeDamagedBy(damager: IDamager) =
-        !invincible && dmgNegotations.containsKey(damager::class) && (damager is AbstractEnemy || damager is IHazard || (damager is IProjectileEntity && damager.owner != this))
+        !invincible && dmgNegotations.containsKey(damager::class) &&
+                (damager is AbstractEnemy || damager is IHazard ||
+                        (damager is IProjectileEntity && damager.owner != this))
 
     fun stunBounce(bounceOriginX: Float) {
         body.physics.velocity.x =

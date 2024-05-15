@@ -18,12 +18,12 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.screens.ScreenEnum
 
 class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializable, Updatable, IDrawable<Batch> {
 
     companion object {
         const val TAG = "PlayerSpawnEventHandler"
+        private const val START_DELAY_DUR = 3f
         private const val PRE_BEAM_DUR = 7f
         private const val BEAM_UP_DUR = 0.5f
         private const val BEAM_TRANS_DUR = 0.2f
@@ -31,13 +31,15 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
     }
 
     val finished: Boolean
-        get() = preBeamTimer.isFinished() &&
+        get() = startDelayTimer.isFinished() &&
+                preBeamTimer.isFinished() &&
                 beamUpTimer.isFinished() &&
                 beamTransitionTimer.isFinished() &&
                 beamEndTimer.isFinished()
 
     private val megaman = game.megaman
 
+    private val startDelayTimer = Timer(START_DELAY_DUR).setToEnd()
     private val preBeamTimer = Timer(PRE_BEAM_DUR).setToEnd()
     private val beamUpTimer = Timer(BEAM_UP_DUR).setToEnd()
     private val beamTransitionTimer = Timer(BEAM_TRANS_DUR).setToEnd()
@@ -48,11 +50,6 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
     private lateinit var beamTransAnim: Animation
 
     private var initialized = false
-
-    private fun endLevelSuccessfully() {
-        game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
-        game.setCurrentScreen(ScreenEnum.SAVE_GAME_SCREEN.name)
-    }
 
     override fun init() {
         GameLogger.debug(PlayerSpawnEventHandler.TAG, "Initializing...")
@@ -66,7 +63,7 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
             beamTransAnim = Animation(atlas.findRegion("BeamLand"), 1, 2, 0.1f, false).reversed()
         }
 
-        preBeamTimer.reset()
+        startDelayTimer.reset()
 
         beamTransAnim.reset()
         beamSprite.hidden = true
@@ -76,13 +73,14 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
         megaman.setAllBehaviorsAllowed(false)
 
         game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
-        game.audioMan.playSound(SoundAsset.MM1_VICTORY_SOUND, false)
     }
 
     override fun draw(drawer: Batch) {
         val drawing = drawer.isDrawing
         if (!drawing) drawer.begin()
-        if (preBeamTimer.isFinished() && (!beamUpTimer.isFinished() || !beamTransitionTimer.isFinished())) {
+        if (startDelayTimer.isFinished() && preBeamTimer.isFinished() &&
+            (!beamUpTimer.isFinished() || !beamTransitionTimer.isFinished())
+        ) {
             drawer.projectionMatrix = game.getGameCamera().combined
             beamSprite.draw(drawer)
         }
@@ -90,7 +88,14 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
     }
 
     override fun update(delta: Float) {
-        if (!preBeamTimer.isFinished()) preBeam(delta)
+        if (!startDelayTimer.isFinished()) {
+            startDelayTimer.update(delta)
+            if (startDelayTimer.isJustFinished()) {
+                GameLogger.debug(TAG, "Start delay timer just finished")
+                preBeamTimer.reset()
+                game.audioMan.playSound(SoundAsset.MM1_VICTORY_SOUND, false)
+            }
+        } else if (!preBeamTimer.isFinished()) preBeam(delta)
         else if (!beamTransitionTimer.isFinished()) {
             beamSprite.hidden = false
             beamTrans(delta)
@@ -103,6 +108,7 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
     private fun preBeam(delta: Float) {
         preBeamTimer.update(delta)
         if (preBeamTimer.isFinished()) {
+            GameLogger.debug(TAG, "Pre-beam timer just finished")
             megaman.ready = false
             beamSprite.setCenter(megaman.body.getCenter())
             beamTransitionTimer.reset()
@@ -114,7 +120,10 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
         beamTransitionTimer.update(delta)
         beamTransAnim.update(delta)
         beamSprite.setRegion(beamTransAnim.getCurrentRegion())
-        if (beamTransitionTimer.isFinished()) beamUpTimer.reset()
+        if (beamTransitionTimer.isFinished()) {
+            GameLogger.debug(TAG, "Beam transition timer just finished")
+            beamUpTimer.reset()
+        }
     }
 
     private fun beamUp(delta: Float) {
@@ -123,6 +132,7 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
         val center = megaman.body.getCenter()
         beamSprite.setCenter(center.x, center.y + offsetY)
         if (beamUpTimer.isFinished()) {
+            GameLogger.debug(TAG, "Beam up timer just finished")
             beamSprite.hidden = true
             beamEndTimer.reset()
         }
@@ -130,6 +140,9 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
 
     private fun beamEnd(delta: Float) {
         beamEndTimer.update(delta)
-        if (beamEndTimer.isFinished()) game.eventsMan.submitEvent(Event(EventType.END_LEVEL)) // endLevelSuccessfully()
+        if (beamEndTimer.isFinished()) {
+            GameLogger.debug(TAG, "Beam end timer just finished")
+            game.eventsMan.submitEvent(Event(EventType.END_LEVEL))
+        }
     }
 }
