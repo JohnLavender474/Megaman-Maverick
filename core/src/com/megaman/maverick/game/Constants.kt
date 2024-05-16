@@ -23,6 +23,8 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val PRIORITY = "priority"
+    const val SECTION = "section"
     const val PASSWORD = "password"
     const val LINES = "lines"
     const val CIRCLE = "circle"

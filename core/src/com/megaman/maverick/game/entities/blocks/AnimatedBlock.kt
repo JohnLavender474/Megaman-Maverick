@@ -86,7 +86,7 @@ open class AnimatedBlock(game: MegamanMaverickGame) : Block(game), ISpriteEntity
         return spritesComponent
     }
 
-    override fun reset() = getAnimatorsArray().forEach { it.second.reset() }
+    override fun reset() = animators.forEach { it.second.reset() }
 }
 
 object AnimatedBlockAnimators {
@@ -94,7 +94,7 @@ object AnimatedBlockAnimators {
     const val TAG = "AnimatedBlockAnimators"
 
     fun createAndSetAnimations(key: String, animatedBlock: AnimatedBlock) {
-        val animators = animatedBlock.getAnimatorsArray()
+        val animators = animatedBlock.animators
         animators.clear()
 
         val assMan = animatedBlock.game.assMan

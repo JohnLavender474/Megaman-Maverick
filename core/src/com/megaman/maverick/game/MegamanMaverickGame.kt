@@ -59,8 +59,7 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
-import com.megaman.maverick.game.screens.levels.MegaLevelScreen.Companion.MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG
-import com.megaman.maverick.game.screens.levels.events.EndLevelEventHandler
+import com.megaman.maverick.game.screens.levels.map.layers.BackgroundLayerBuilder
 import com.megaman.maverick.game.screens.menus.ControllerSettingsScreen
 import com.megaman.maverick.game.screens.menus.LoadPasswordScreen
 import com.megaman.maverick.game.screens.menus.MainMenuScreen
@@ -86,7 +85,7 @@ class MegamanMaverickGame : Game2D(), IEventListener {
         const val DEBUG_SHAPES = false
         const val DEFAULT_VOLUME = 0.5f
         val TAGS_TO_LOG: ObjectSet<String> =
-            objectSetOf(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, EndLevelEventHandler.TAG, SaveGameScreen.TAG)
+            objectSetOf(BackgroundLayerBuilder.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.FEET, FixtureType.BLOCK)
         }
@@ -201,11 +200,11 @@ class MegamanMaverickGame : Game2D(), IEventListener {
         // startLevelScreen(Level.TEST6)
         // startLevelScreen(Level.TEST7)
         // startLevelScreen(Level.MAGNET_MAN)
-        // startLevelScreen(Level.TIMBER_WOMAN
+        startLevelScreen(Level.TIMBER_WOMAN)
         // startLevelScreen(Level.CREW_MAN)
         // startLevelScreen(Level.FREEZE_MAN)
         // startLevelScreen(Level.GALAXY_MAN)
-        startLevelScreen(Level.WILY_STAGE_1)
+        // startLevelScreen(Level.WILY_STAGE_1)
         // startLevelScreen(Level.WILY_STAGE_2)
         // startLevelScreen(Level.WILY_STAGE_3)
         // setCurrentScreen(ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name)

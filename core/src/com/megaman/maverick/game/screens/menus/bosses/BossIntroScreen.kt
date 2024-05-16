@@ -60,9 +60,12 @@ class BossIntroScreen(game: MegamanMaverickGame) : BaseScreen(game) {
             bars.add(bar)
         }
 
-        for (i in 0 until STARS_N_BARS) {
-            stars.add(Stars(game as MegamanMaverickGame, 0f, i * ConstVals.PPM * ConstVals.VIEW_HEIGHT / 4f))
-        }
+        for (i in 0 until STARS_N_BARS) stars.add(
+            Stars(
+                game as MegamanMaverickGame,
+                Vector2(0f, i * ConstVals.PPM * ConstVals.VIEW_HEIGHT / 4f)
+            )
+        )
 
         durTimer = Timer(DUR)
         bDropTimer = Timer(B_DROP)
@@ -99,9 +102,8 @@ class BossIntroScreen(game: MegamanMaverickGame) : BaseScreen(game) {
         bDropTimer.reset()
         bLettersTimer.reset()
         bLettersDelay.reset()
-        for (i in 0 until stars.size) {
-            stars[i] = Stars(game as MegamanMaverickGame, 0f, i * ConstVals.PPM * ConstVals.VIEW_HEIGHT / 4f)
-        }
+        for (i in 0 until stars.size) stars[i] =
+            Stars(game as MegamanMaverickGame, Vector2(0f, i * ConstVals.PPM * ConstVals.VIEW_HEIGHT / 4f))
         currBAnim!!.component1().setPosition(
             ((ConstVals.VIEW_WIDTH / 2f) - 1.5f) * ConstVals.PPM, ConstVals.VIEW_HEIGHT * ConstVals.PPM
         )

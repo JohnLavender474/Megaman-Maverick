@@ -6,6 +6,7 @@ import com.engine.common.GameLogger
 import com.engine.common.interfaces.Updatable
 import com.engine.drawables.IDrawable
 import com.engine.drawables.sorting.DrawingPriority
+import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpriteMatrix
 
@@ -13,11 +14,11 @@ open class Background(
     startX: Float,
     startY: Float,
     model: TextureRegion,
-    priority: DrawingPriority,
     modelWidth: Float,
     modelHeight: Float,
     rows: Int,
-    columns: Int
+    columns: Int,
+    priority: DrawingPriority = DrawingPriority(DrawingSection.BACKGROUND, 0)
 ) : Updatable, IDrawable<Batch> {
 
     companion object {
