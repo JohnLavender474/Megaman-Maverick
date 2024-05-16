@@ -63,7 +63,7 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game) {
     companion object {
         const val TAG = "Hanabiran"
         private var atlas: TextureAtlas? = null
-        private const val SLEEP_DURATION = 1f
+        private const val SLEEP_DURATION = 0.5f
         private const val RISE_DROP_DURATION = 0.45f
         private const val PETAL_DURATION = 0.5f
         private const val ANIMATION_FRAME_DURATION = 0.15f
@@ -92,10 +92,8 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
-
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.setBottomCenterToPoint(bounds.getBottomCenterPoint())
-
         state = HanabiranState.SLEEPING
     }
 

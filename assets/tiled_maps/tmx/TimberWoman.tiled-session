@@ -17,6 +17,9 @@
         "/Users/johnlavender/IdeaProjects/Megaman-Maverick/assets/tiled_maps/tsx/Hornetman.tsx": {
             "scaleInDock": 1
         },
+        "/Users/johnlavender/IdeaProjects/Megaman-Maverick/assets/tiled_maps/tsx/MagnetMan2.tsx": {
+            "scaleInDock": 1
+        },
         "/Users/johnlavender/IdeaProjects/Megaman-Maverick/assets/tiled_maps/tsx/Tileset1.tsx": {
             "scaleInDock": 1
         },
@@ -25,41 +28,56 @@
                 5
             ],
             "scale": 1,
-            "selectedLayer": 10,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 133.5,
-                "y": 744
+                "x": 744,
+                "y": 649
             }
         },
         "OLD_TimberWoman.tmx": {
+            "expandedObjectLayers": [
+                11
+            ],
             "scale": 1,
-            "selectedLayer": 0,
+            "selectedLayer": 5,
             "viewCenter": {
-                "x": 295.5,
-                "y": 1315
+                "x": 1958,
+                "y": 1388
             }
         },
         "TimberWoman.tmx": {
             "expandedObjectLayers": [
                 2,
-                11,
+                9,
                 12,
-                6,
-                3
+                6
             ],
             "scale": 1,
-            "selectedLayer": 2,
+            "selectedLayer": 6,
             "viewCenter": {
-                "x": 666,
-                "y": 480
+                "x": 1269,
+                "y": 917
+            }
+        },
+        "WilyStage2.tmx": {
+            "scale": 1,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 5561,
+                "y": 4565
             }
         },
         "WilyStage3.tmx": {
+            "expandedObjectLayers": [
+                22,
+                9,
+                12
+            ],
             "scale": 0.33,
             "selectedLayer": 12,
             "viewCenter": {
-                "x": 3315.151515151515,
-                "y": 851.5151515151513
+                "x": 2960.606060606061,
+                "y": 627.2727272727273
             }
         },
         "WilyStage3.tmx#Tileset1": {
@@ -70,7 +88,9 @@
     "openFiles": [
     ],
     "project": "TimberWoman.tiled-project",
+    "property.type": "bool",
     "recentFiles": [
+        "MagnetMan.tmx",
         "TimberWoman.tmx"
     ]
 }

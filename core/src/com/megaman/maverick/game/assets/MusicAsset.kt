@@ -7,7 +7,7 @@ const val MUSIC_ASSET_PREFIX = "music/"
 
 enum class MusicAsset(src: String) : IAsset {
     DUEL_OF_THE_FATES_MUSIC("duel_of_the_fates.mp3"),
-    XENOBLADE_GAUR_PLAINS_MUSIC("xenoblade_gaur_plains.ogg"),
+    XENOBLADE_GAUR_PLAINS_MUSIC("Xenoblade_GaurPlains.wav"),
     MM11_WILY_STAGE_MUSIC("MM11_Wily_Stage.mp3"),
     FF7_BOSS_MUSIC("FF7_LetTheBattlesBegin.mp3"),
     MM11_FUSE_MAN_MUSIC("Megaman11_FuseMan.mp3"),

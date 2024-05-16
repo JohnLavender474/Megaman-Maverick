@@ -156,7 +156,7 @@ class Petal(game: MegamanMaverickGame) : AbstractProjectile(game), IAudioEntity,
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val animation = Animation(region!!, 1, 4, 0.015f, true)
+        val animation = Animation(region!!, 1, 4, 0.1f, true)
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }

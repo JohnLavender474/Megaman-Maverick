@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.ObjectMap
 import com.engine.IGameEngine
 import com.engine.animations.AnimationsSystem
+import com.engine.audio.AudioSystem
 import com.engine.behaviors.BehaviorsSystem
 import com.engine.common.GameLogger
 import com.engine.common.extensions.gdxArrayOf
@@ -20,6 +21,7 @@ import com.engine.common.interfaces.Initializable
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.toGameRectangle
+import com.engine.controller.ControllerSystem
 import com.engine.controller.polling.IControllerPoller
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sorting.DrawingSection
@@ -33,6 +35,7 @@ import com.engine.screens.levels.tiledmap.TiledMapLevelScreen
 import com.engine.spawns.ISpawner
 import com.engine.spawns.SpawnsManager
 import com.engine.systems.IGameSystem
+import com.engine.updatables.UpdatablesSystem
 import com.engine.world.WorldSystem
 import com.megaman.maverick.game.*
 import com.megaman.maverick.game.assets.MusicAsset
@@ -176,9 +179,23 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
 
         cameraShaker = CameraShaker(gameCamera)
 
+        val systemsToSwitch =
+            gdxArrayOf(
+                AnimationsSystem::class,
+                ControllerSystem::class,
+                MotionSystem::class,
+                UpdatablesSystem::class,
+                BehaviorsSystem::class,
+                WorldSystem::class,
+                AudioSystem::class
+            )
+
         cameraManagerForRooms.beginTransition = {
             GameLogger.debug(TAG, "Begin transition logic for camera manager")
-            eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
+            systemsToSwitch.forEach {
+                GameLogger.debug(TAG, "Turning off system: ${it.simpleName}")
+                systemsMap.get(it.simpleName).on = false
+            }
             eventsMan.submitEvent(
                 Event(
                     EventType.BEGIN_ROOM_TRANS,
@@ -192,6 +209,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
         }
 
         cameraManagerForRooms.continueTransition = { _ ->
+            if (cameraManagerForRooms.delayJustFinished) systemsMap.get(AnimationsSystem::class.simpleName)?.on = true
             eventsMan.submitEvent(
                 Event(
                     EventType.CONTINUE_ROOM_TRANS,
@@ -208,6 +226,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
                     props(ConstKeys.ROOM to cameraManagerForRooms.currentGameRoom)
                 )
             )
+
             val currentRoom = cameraManagerForRooms.currentGameRoom
             if (currentRoom?.properties?.containsKey(ConstKeys.EVENT) == true) {
                 val props = props(ConstKeys.ROOM to currentRoom)
@@ -220,7 +239,10 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
                     }
 
                 eventsMan.submitEvent(Event(roomEvent, props))
-            } else game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
+            } else systemsToSwitch.forEach {
+                GameLogger.debug(TAG, "Turning on system: ${it::class.simpleName}")
+                systemsMap.get(it.simpleName).on = true
+            }
         }
     }
 

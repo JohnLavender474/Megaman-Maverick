@@ -150,13 +150,6 @@
     <property name="type" value="R"/>
    </properties>
   </object>
-  <object id="370" name="Saw" x="2344" y="1744" width="32" height="32">
-   <properties>
-    <property name="SpawnRoom" value="Room8"/>
-    <property name="SpawnType" value="SpawnRoom"/>
-    <property name="type" value="R"/>
-   </properties>
-  </object>
   <object id="372" name="Saw" x="2848" y="2336" width="32" height="32">
    <properties>
     <property name="SpawnRoom" value="Room8"/>
@@ -252,11 +245,6 @@
     <property name="direction" value="up"/>
    </properties>
   </object>
-  <object id="405" name="Water" x="2424" y="2656" width="1568" height="448">
-   <properties>
-    <property name="splash" type="bool" value="false"/>
-   </properties>
-  </object>
   <object id="518" name="PolygonWater" x="3904" y="1600">
    <polygon points="0,0 128,0 128,352 -96,352 -96,232 -96,224 -64,224 -64,192 -160,192 -160,224 -128,224 -128,352 -1120,352 -1120,320 -1152,320 -1152,576 -1120,576 -1120,544 320,544 320,800 -1184,800 -1184,736 -1248,736 -1248,0 -64,0 -64,96 -96,96 -96,128 32,128 32,256 64,256 64,96 0,96"/>
   </object>
@@ -275,7 +263,11 @@
   <object id="250" name="Death" x="2528" y="736" width="160" height="32"/>
   <object id="249" name="Death" x="2816" y="736" width="32" height="96"/>
   <object id="255" name="Death" x="1408" y="1024" width="2400" height="96"/>
-  <object id="261" name="Death" x="864" y="1600" width="1664" height="352"/>
+  <object id="261" name="Death" x="864" y="1600" width="1664" height="352">
+   <properties>
+    <property name="instant" type="bool" value="true"/>
+   </properties>
+  </object>
   <object id="303" name="Death" x="2624" y="1184" width="96" height="32"/>
   <object id="304" name="Death" x="2784" y="1184" width="96" height="32"/>
   <object id="305" name="Death" x="2944" y="1184" width="576" height="32"/>
@@ -289,7 +281,6 @@
   <object id="350" name="Death" x="2656" y="2368" width="1568" height="120"/>
   <object id="351" name="Death" x="2784" y="2144" width="1312" height="32"/>
   <object id="352" name="Death" x="3360" y="2144" width="96" height="64"/>
-  <object id="384" name="Death" x="2344" y="1824" width="32" height="32"/>
   <object id="385" name="Death" x="2848" y="2336" width="32" height="32"/>
   <object id="394" name="Death" x="3968" y="2208" width="32" height="32"/>
   <object id="416" name="Death" x="4864" y="2240" width="416" height="32"/>
@@ -443,7 +434,7 @@
   <object id="484" x="5376" y="2144" width="96" height="32"/>
   <object id="496" x="5504" y="2208" width="32" height="32"/>
   <object id="497" x="5568" y="2272" width="32" height="32"/>
-  <object id="498" x="4224" y="416" width="192" height="32"/>
+  <object id="498" x="4256" y="416" width="160" height="32"/>
   <object id="499" x="3752" y="1808" width="80" height="176"/>
   <object id="500" x="2752" y="1920" width="32" height="256"/>
  </objectgroup>
