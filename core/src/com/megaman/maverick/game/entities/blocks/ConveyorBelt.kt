@@ -16,7 +16,7 @@ import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.entities.contracts.IDrawableShapesEntity
-import com.engine.entities.contracts.ISpriteEntity
+import com.engine.entities.contracts.ISpritesEntity
 import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -28,7 +28,7 @@ import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.setEntity
 import com.megaman.maverick.game.world.setVelocityAlteration
 
-class ConveyorBelt(game: MegamanMaverickGame) : ISpriteEntity, IDrawableShapesEntity, Block(game) {
+class ConveyorBelt(game: MegamanMaverickGame) : ISpritesEntity, IDrawableShapesEntity, Block(game) {
 
     companion object {
         private const val FORCE_AMOUNT = 45f

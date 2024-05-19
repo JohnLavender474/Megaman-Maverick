@@ -26,7 +26,7 @@ import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.IDrawableShapesEntity
-import com.engine.entities.contracts.ISpriteEntity
+import com.engine.entities.contracts.ISpritesEntity
 import com.engine.motion.MotionComponent
 import com.engine.motion.RotatingLine
 import com.engine.updatables.UpdatablesComponent
@@ -44,7 +44,7 @@ import com.megaman.maverick.game.world.FixtureType
 import java.util.*
 
 class LaserBeamer(game: MegamanMaverickGame) :
-    GameEntity(game), IHazard, ISpriteEntity, IBodyEntity, IDrawableShapesEntity, IDamager {
+    GameEntity(game), IHazard, ISpritesEntity, IBodyEntity, IDrawableShapesEntity, IDamager {
 
     companion object {
         const val TAG = "LaserBeamer"

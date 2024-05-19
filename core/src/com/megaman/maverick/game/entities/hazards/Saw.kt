@@ -23,7 +23,7 @@ import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.IMotionEntity
-import com.engine.entities.contracts.ISpriteEntity
+import com.engine.entities.contracts.ISpritesEntity
 import com.engine.motion.MotionComponent
 import com.engine.motion.MotionComponent.MotionDefinition
 import com.engine.motion.Pendulum
@@ -40,7 +40,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
-class Saw(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEntity, IMotionEntity {
+class Saw(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesEntity, IMotionEntity {
 
     companion object {
         const val PENDULUM_TYPE = "P"

@@ -26,7 +26,7 @@ import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.entities.contracts.IBodyEntity
-import com.engine.entities.contracts.ISpriteEntity
+import com.engine.entities.contracts.ISpritesEntity
 import com.engine.world.Body
 import com.engine.world.BodyComponent
 import com.engine.world.BodyType
@@ -44,7 +44,7 @@ import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.isSensing
 import kotlin.math.abs
 
-class Cart(game: MegamanMaverickGame) : GameEntity(game), IOwnable, IBodyEntity, ISpriteEntity, IAnimatedEntity {
+class Cart(game: MegamanMaverickGame) : GameEntity(game), IOwnable, IBodyEntity, ISpritesEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "Cart"

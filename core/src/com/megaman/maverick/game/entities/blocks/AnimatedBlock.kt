@@ -18,13 +18,13 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setCenter
 import com.engine.entities.contracts.IAnimatedEntity
-import com.engine.entities.contracts.ISpriteEntity
+import com.engine.entities.contracts.ISpritesEntity
 import com.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 
-open class AnimatedBlock(game: MegamanMaverickGame) : Block(game), ISpriteEntity, IAnimatedEntity, Resettable {
+open class AnimatedBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity, Resettable {
 
     companion object {
         const val TAG = "AnimatedBlock"

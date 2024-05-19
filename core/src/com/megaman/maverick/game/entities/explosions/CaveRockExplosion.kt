@@ -26,7 +26,7 @@ import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.IBodyEntity
-import com.engine.entities.contracts.ISpriteEntity
+import com.engine.entities.contracts.ISpritesEntity
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.Body
 import com.engine.world.BodyComponent
@@ -41,7 +41,7 @@ import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
 class CaveRockExplosion(game: MegamanMaverickGame) :
-    GameEntity(game), IDamager, IBodyEntity, IAudioEntity, ISpriteEntity, IAnimatedEntity {
+    GameEntity(game), IDamager, IBodyEntity, IAudioEntity, ISpritesEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "CaveRockExplosion"

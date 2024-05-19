@@ -17,7 +17,7 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.entities.contracts.IAnimatedEntity
-import com.engine.entities.contracts.ISpriteEntity
+import com.engine.entities.contracts.ISpritesEntity
 import com.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -27,7 +27,7 @@ import com.megaman.maverick.game.utils.getMegamanMaverickGame
 import com.megaman.maverick.game.world.BodyLabel
 import com.megaman.maverick.game.world.FixtureType
 
-class DropperLift(game: MegamanMaverickGame) : Block(game), ISpriteEntity, IAnimatedEntity {
+class DropperLift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity {
 
     enum class DropperLiftState {
         CLOSED, OPENING, OPEN, CLOSING

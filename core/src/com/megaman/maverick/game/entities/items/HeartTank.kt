@@ -17,7 +17,7 @@ import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
-import com.engine.entities.contracts.ISpriteEntity
+import com.engine.entities.contracts.ISpritesEntity
 import com.engine.events.Event
 import com.engine.world.Body
 import com.engine.world.BodyComponent
@@ -37,7 +37,7 @@ import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
 class HeartTank(game: MegamanMaverickGame) :
-    GameEntity(game), ItemEntity, IBodyEntity, ISpriteEntity, IUpsideDownable {
+    GameEntity(game), ItemEntity, IBodyEntity, ISpritesEntity, IUpsideDownable {
 
     companion object {
         const val TAG = "HeartTank"

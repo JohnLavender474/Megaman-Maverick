@@ -23,7 +23,7 @@ import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.IBodyEntity
-import com.engine.entities.contracts.ISpriteEntity
+import com.engine.entities.contracts.ISpritesEntity
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
@@ -40,7 +40,7 @@ import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.getEntity
 import com.megaman.maverick.game.world.setConsumer
 
-class CeilingCrusher(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEntity, IAudioEntity, IHazard,
+class CeilingCrusher(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesEntity, IAudioEntity, IHazard,
     IDamager {
 
     companion object {

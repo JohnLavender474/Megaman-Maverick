@@ -23,7 +23,7 @@ import com.engine.drawables.sprites.SpritesComponent
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.entities.contracts.IBodyEntity
-import com.engine.entities.contracts.ISpriteEntity
+import com.engine.entities.contracts.ISpritesEntity
 import com.engine.world.Body
 import com.engine.world.BodyComponent
 import com.engine.world.BodyType
@@ -36,7 +36,7 @@ import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
-class Water(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEntity, IAnimatedEntity {
+class Water(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "Water"

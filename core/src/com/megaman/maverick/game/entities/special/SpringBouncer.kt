@@ -20,7 +20,7 @@ import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.IBodyEntity
-import com.engine.entities.contracts.ISpriteEntity
+import com.engine.entities.contracts.ISpritesEntity
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
@@ -37,7 +37,7 @@ import com.megaman.maverick.game.world.getEntity
 import com.megaman.maverick.game.world.setVelocityAlteration
 
 class SpringBouncer(game: MegamanMaverickGame) :
-    GameEntity(game), ISpriteEntity, IBodyEntity, IAudioEntity {
+    GameEntity(game), ISpritesEntity, IBodyEntity, IAudioEntity {
 
     companion object {
         private var atlas: TextureAtlas? = null

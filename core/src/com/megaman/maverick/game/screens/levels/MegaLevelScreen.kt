@@ -144,42 +144,28 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
     private var camerasSetToGameCamera = false
 
     override fun init() {
-        if (initialized) return
-        initialized = true
-
         disposables = Array()
-
         spawnsMan = SpawnsManager()
         levelStateHandler = LevelStateHandler(megamanGame)
         endLevelEventHandler = EndLevelEventHandler(megamanGame)
-
         drawables = megamanGame.getDrawables()
         shapes = megamanGame.getShapes()
-
         backgroundCamera = megamanGame.getBackgroundCamera()
         gameCamera = megamanGame.getGameCamera()
         foregroundCamera = megamanGame.getForegroundCamera()
         uiCamera = megamanGame.getUiCamera()
-
         playerSpawnsMan = PlayerSpawnsManager(gameCamera)
-
         playerStatsHandler = PlayerStatsHandler(megaman)
         playerStatsHandler.init()
-
         entityStatsHandler = EntityStatsHandler(megamanGame)
-
         playerSpawnEventHandler = PlayerSpawnEventHandler(megamanGame)
         playerDeathEventHandler = PlayerDeathEventHandler(megamanGame)
-
         bossSpawnEventHandler = BossSpawnEventHandler(megamanGame)
-
         cameraManagerForRooms = CameraManagerForRooms(gameCamera)
         cameraManagerForRooms.interpolate = INTERPOLATE_GAME_CAM
         cameraManagerForRooms.interpolationScalar = 5f
         cameraManagerForRooms.focus = megaman
-
         cameraShaker = CameraShaker(gameCamera)
-
         val systemsToSwitch =
             gdxArrayOf(
                 AnimationsSystem::class,
@@ -190,7 +176,6 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
                 WorldSystem::class,
                 AudioSystem::class
             )
-
         cameraManagerForRooms.beginTransition = {
             GameLogger.debug(TAG, "Begin transition logic for camera manager")
             systemsToSwitch.forEach {
@@ -208,7 +193,6 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
                 )
             )
         }
-
         cameraManagerForRooms.continueTransition = { _ ->
             if (cameraManagerForRooms.delayJustFinished) systemsMap.get(AnimationsSystem::class.simpleName)?.on = true
             eventsMan.submitEvent(
@@ -218,7 +202,6 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
                 )
             )
         }
-
         cameraManagerForRooms.endTransition = {
             GameLogger.debug(TAG, "End transition logic for camera manager")
             eventsMan.submitEvent(
@@ -267,6 +250,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
         megamanGame.setGraphMap(worldGraphMap)
 
         playerSpawnEventHandler.init()
+
         val mapProps = map.properties.toProps()
         backgroundParallaxFactor = mapProps.getOrDefault(
             ConstKeys.BACKGROUND_PARALLAX_FACTOR,
@@ -277,6 +261,10 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
             DEFAULT_FOREGROUND_PARALLAX_FACTOR, Float::class
         )
         camerasSetToGameCamera = false
+        backgroundCamera.position.set(ConstFuncs.getCamInitPos())
+        gameCamera.position.set(ConstFuncs.getCamInitPos())
+        foregroundCamera.position.set(ConstFuncs.getCamInitPos())
+        uiCamera.position.set(ConstFuncs.getCamInitPos())
     }
 
     override fun getLayerBuilders() =
@@ -298,11 +286,6 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
 
         val _disposables = result.get(ConstKeys.DISPOSABLES) as Array<Disposable>? ?: Array()
         disposables.addAll(_disposables)
-
-        backgroundCamera.position.set(ConstFuncs.getCamInitPos())
-        gameCamera.position.set(ConstFuncs.getCamInitPos())
-        foregroundCamera.position.set(ConstFuncs.getCamInitPos())
-        uiCamera.position.set(ConstFuncs.getCamInitPos())
     }
 
     override fun onEvent(event: Event) {
@@ -520,7 +503,6 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
 
             playerStatsHandler.update(delta)
         }
-
 
         val gameCamDeltaX = gameCamera.position.x - gameCameraPriorPosition.x
         backgroundCamera.position.x += gameCamDeltaX * backgroundParallaxFactor

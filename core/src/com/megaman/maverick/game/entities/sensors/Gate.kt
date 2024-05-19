@@ -26,7 +26,7 @@ import com.engine.drawables.sprites.setPosition
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.IBodyEntity
-import com.engine.entities.contracts.ISpriteEntity
+import com.engine.entities.contracts.ISpritesEntity
 import com.engine.events.Event
 import com.engine.events.IEventListener
 import com.engine.updatables.UpdatablesComponent
@@ -45,7 +45,7 @@ import com.megaman.maverick.game.utils.getMegamanMaverickGame
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
-class Gate(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IAudioEntity, ISpriteEntity, IEventListener,
+class Gate(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IAudioEntity, ISpritesEntity, IEventListener,
     Resettable {
 
     companion object {

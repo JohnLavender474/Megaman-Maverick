@@ -31,7 +31,7 @@ import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
-import com.engine.entities.contracts.ISpriteEntity
+import com.engine.entities.contracts.ISpritesEntity
 import com.engine.events.Event
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.Body
@@ -51,7 +51,7 @@ import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.isSensing
 
-class HealthBulb(game: MegamanMaverickGame) : GameEntity(game), ItemEntity, ISpriteEntity, IBodyEntity,
+class HealthBulb(game: MegamanMaverickGame) : GameEntity(game), ItemEntity, ISpritesEntity, IBodyEntity,
     IDirectionRotatable {
 
     companion object {

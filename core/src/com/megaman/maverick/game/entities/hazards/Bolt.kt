@@ -37,7 +37,7 @@ import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
-class Bolt(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IHazard, IDamager, ISpriteEntity,
+class Bolt(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IHazard, IDamager, ISpritesEntity,
     IAnimatedEntity, ICullableEntity, IChildEntity, IDirectionRotatable {
 
     companion object {

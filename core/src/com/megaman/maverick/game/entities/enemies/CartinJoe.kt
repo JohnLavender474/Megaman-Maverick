@@ -32,7 +32,7 @@ import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IAnimatedEntity
-import com.engine.entities.contracts.ISpriteEntity
+import com.engine.entities.contracts.ISpritesEntity
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.Body
 import com.engine.world.BodyComponent
@@ -57,7 +57,7 @@ import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.world.*
 import kotlin.reflect.KClass
 
-class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpriteEntity, IAnimatedEntity, IFaceable,
+class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity, IAnimatedEntity, IFaceable,
     IDirectionRotatable {
 
     companion object {

@@ -20,7 +20,7 @@ import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.ICullableEntity
-import com.engine.entities.contracts.ISpriteEntity
+import com.engine.entities.contracts.ISpritesEntity
 import com.engine.points.PointsComponent
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.BodyComponent
@@ -44,7 +44,7 @@ import kotlin.reflect.KClass
 
 abstract class AbstractEnemy(
     game: MegamanMaverickGame, dmgDuration: Float = DEFAULT_DMG_DURATION, dmgBlinkDur: Float = DEFAULT_DMG_BLINK_DUR
-) : GameEntity(game), IDamager, IDamageable, IBodyEntity, IAudioEntity, IHealthEntity, ISpriteEntity, ICullableEntity {
+) : GameEntity(game), IDamager, IDamageable, IBodyEntity, IAudioEntity, IHealthEntity, ISpritesEntity, ICullableEntity {
 
     companion object {
         const val TAG = "AbstractEnemy"

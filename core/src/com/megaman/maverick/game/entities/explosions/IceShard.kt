@@ -13,7 +13,7 @@ import com.engine.drawables.sprites.*
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.IBodyEntity
-import com.engine.entities.contracts.ISpriteEntity
+import com.engine.entities.contracts.ISpritesEntity
 import com.engine.world.Body
 import com.engine.world.BodyComponent
 import com.engine.world.BodyType
@@ -25,7 +25,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.BodyComponentCreator
 
-class IceShard(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEntity, IAudioEntity {
+class IceShard(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesEntity, IAudioEntity {
 
     companion object {
         const val TAG = "IceShard"

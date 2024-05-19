@@ -19,7 +19,7 @@ import com.engine.drawables.sprites.setSize
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IChildEntity
 import com.engine.entities.contracts.IParentEntity
-import com.engine.entities.contracts.ISpriteEntity
+import com.engine.entities.contracts.ISpritesEntity
 import com.engine.events.Event
 import com.engine.events.IEventListener
 import com.engine.motion.MotionComponent
@@ -32,7 +32,7 @@ import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntities
 import com.megaman.maverick.game.events.EventType
 
 class RocketPlatform(game: MegamanMaverickGame) :
-    Block(game), IParentEntity, ISpriteEntity, IEventListener {
+    Block(game), IParentEntity, ISpritesEntity, IEventListener {
 
     companion object {
         private var region: TextureRegion? = null
@@ -108,7 +108,7 @@ class RocketPlatform(game: MegamanMaverickGame) :
             EventType.BEGIN_ROOM_TRANS -> {
                 firstSprite!!.hidden = true
                 children.forEach { child ->
-                    if (child is ISpriteEntity) child.sprites.values().forEach { it.hidden = true }
+                    if (child is ISpritesEntity) child.sprites.values().forEach { it.hidden = true }
                 }
                 getComponent(MotionComponent::class)?.reset()
             }
@@ -116,7 +116,7 @@ class RocketPlatform(game: MegamanMaverickGame) :
             EventType.END_ROOM_TRANS -> {
                 firstSprite!!.hidden = false
                 children.forEach { child ->
-                    if (child is ISpriteEntity) child.sprites.values().forEach { it.hidden = false }
+                    if (child is ISpritesEntity) child.sprites.values().forEach { it.hidden = false }
                 }
             }
         }

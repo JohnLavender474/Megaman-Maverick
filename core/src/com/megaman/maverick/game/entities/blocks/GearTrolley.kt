@@ -16,7 +16,7 @@ import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.contracts.IMotionEntity
-import com.engine.entities.contracts.ISpriteEntity
+import com.engine.entities.contracts.ISpritesEntity
 import com.engine.events.Event
 import com.engine.events.IEventListener
 import com.engine.motion.MotionComponent
@@ -28,7 +28,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.events.EventType
 
-class GearTrolley(game: MegamanMaverickGame) : Block(game), IMotionEntity, ISpriteEntity, IEventListener {
+class GearTrolley(game: MegamanMaverickGame) : Block(game), IMotionEntity, ISpritesEntity, IEventListener {
 
     companion object {
         private var region: TextureRegion? = null

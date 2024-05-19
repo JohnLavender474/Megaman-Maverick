@@ -17,7 +17,7 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
-import com.engine.entities.contracts.ISpriteEntity
+import com.engine.entities.contracts.ISpritesEntity
 import com.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -27,7 +27,7 @@ import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.getMegamanMaverickGame
 
-class ExplosionOrb(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity {
+class ExplosionOrb(game: MegamanMaverickGame) : GameEntity(game), ISpritesEntity {
 
     companion object {
         const val TAG = "ExplosionOrb"

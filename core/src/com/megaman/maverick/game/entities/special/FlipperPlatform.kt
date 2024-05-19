@@ -21,7 +21,7 @@ import com.engine.drawables.sprites.setPosition
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.entities.contracts.IAudioEntity
-import com.engine.entities.contracts.ISpriteEntity
+import com.engine.entities.contracts.ISpritesEntity
 import com.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -36,7 +36,7 @@ import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.getMegamanMaverickGame
 import com.megaman.maverick.game.world.FixtureType
 
-class FlipperPlatform(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity, IAnimatedEntity, IAudioEntity {
+class FlipperPlatform(game: MegamanMaverickGame) : GameEntity(game), ISpritesEntity, IAnimatedEntity, IAudioEntity {
 
     companion object {
         const val TAG = "FlipperPlatform"

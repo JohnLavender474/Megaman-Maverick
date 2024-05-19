@@ -15,14 +15,14 @@ import com.engine.damage.IDamager
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.IBodyEntity
-import com.engine.entities.contracts.ISpriteEntity
+import com.engine.entities.contracts.ISpritesEntity
 import com.engine.world.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.events.EventType
 
-interface IProjectileEntity : IOwnable, IDamager, IBodyEntity, ISpriteEntity, IAudioEntity, IGameEntity {
+interface IProjectileEntity : IOwnable, IDamager, IBodyEntity, ISpritesEntity, IAudioEntity, IGameEntity {
 
-    override fun canDamage(damageable: IDamageable) = damageable != owner && damageable !is IProjectileEntity
+    override fun canDamage(damageable: IDamageable) = damageable != owner
 
     fun explodeAndDie() {}
 

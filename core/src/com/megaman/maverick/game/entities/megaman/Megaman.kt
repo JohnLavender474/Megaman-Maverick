@@ -67,7 +67,7 @@ import com.megaman.maverick.game.world.isSensingAny
 import kotlin.reflect.KClass
 
 class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IEventListener, IFaceable, IDamageable,
-    IDirectionRotatable, IBodyEntity, IHealthEntity, ISpriteEntity, IBehaviorsEntity, IPointsEntity, IAudioEntity,
+    IDirectionRotatable, IBodyEntity, IHealthEntity, ISpritesEntity, IBehaviorsEntity, IPointsEntity, IAudioEntity,
     IScalableGravityEntity, IBoundsSupplier {
 
     companion object {

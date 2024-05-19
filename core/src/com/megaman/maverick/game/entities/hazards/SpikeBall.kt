@@ -22,7 +22,7 @@ import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.IDrawableShapesEntity
 import com.engine.entities.contracts.IMotionEntity
-import com.engine.entities.contracts.ISpriteEntity
+import com.engine.entities.contracts.ISpritesEntity
 import com.engine.motion.MotionComponent
 import com.engine.motion.MotionComponent.MotionDefinition
 import com.engine.motion.Pendulum
@@ -38,7 +38,7 @@ import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
-class SpikeBall(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEntity, IMotionEntity,
+class SpikeBall(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesEntity, IMotionEntity,
     IDrawableShapesEntity, IDamager, IHazard {
 
     companion object {

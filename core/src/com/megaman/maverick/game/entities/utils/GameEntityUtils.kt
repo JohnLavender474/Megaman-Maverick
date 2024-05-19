@@ -10,7 +10,7 @@ import com.engine.common.shapes.toGameRectangle
 import com.engine.cullables.CullableOnUncontained
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IBodyEntity
-import com.engine.entities.contracts.ISpriteEntity
+import com.engine.entities.contracts.ISpritesEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
@@ -62,7 +62,7 @@ fun standardOnPortalHopperStart(entity: IGameEntity) {
         body.physics.collisionOn = false
         body.physics.gravityOn = false
     }
-    if (entity is ISpriteEntity) entity.sprites.forEach { it.value.hidden = true }
+    if (entity is ISpritesEntity) entity.sprites.forEach { it.value.hidden = true }
 }
 
 fun setStandardOnPortalHopperStartProp(entity: IGameEntity) {
@@ -81,7 +81,7 @@ fun standardOnPortalHopperEnd(entity: IGameEntity) {
         body.physics.collisionOn = true
         body.physics.gravityOn = true
     }
-    if (entity is ISpriteEntity) entity.sprites.forEach { it.value.hidden = false }
+    if (entity is ISpritesEntity) entity.sprites.forEach { it.value.hidden = false }
 }
 
 fun setStandardOnPortalHopperEndProp(entity: IGameEntity) {

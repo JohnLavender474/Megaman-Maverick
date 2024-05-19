@@ -9,13 +9,13 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.entities.GameEntity
-import com.engine.entities.contracts.ISpriteEntity
+import com.engine.entities.contracts.ISpritesEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 
-class Tree(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity {
+class Tree(game: MegamanMaverickGame) : GameEntity(game), ISpritesEntity {
 
     companion object {
         const val TAG = "Tree1"

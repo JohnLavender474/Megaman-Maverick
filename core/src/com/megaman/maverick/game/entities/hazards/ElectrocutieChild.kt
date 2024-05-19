@@ -26,7 +26,7 @@ import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.IChildEntity
-import com.engine.entities.contracts.ISpriteEntity
+import com.engine.entities.contracts.ISpritesEntity
 import com.engine.world.Body
 import com.engine.world.BodyComponent
 import com.engine.world.BodyType
@@ -39,7 +39,7 @@ import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
-class ElectrocutieChild(game: MegamanMaverickGame) : GameEntity(game), IHazard, IDamager, IBodyEntity, ISpriteEntity,
+class ElectrocutieChild(game: MegamanMaverickGame) : GameEntity(game), IHazard, IDamager, IBodyEntity, ISpritesEntity,
     IAnimatedEntity, IChildEntity {
 
     enum class ElectrocutieState {

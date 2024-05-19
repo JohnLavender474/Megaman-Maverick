@@ -20,7 +20,7 @@ import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IDrawableShapesEntity
 import com.engine.entities.contracts.IMotionEntity
 import com.engine.entities.contracts.IParentEntity
-import com.engine.entities.contracts.ISpriteEntity
+import com.engine.entities.contracts.ISpritesEntity
 import com.engine.events.Event
 import com.engine.events.IEventListener
 import com.engine.motion.MotionComponent
@@ -35,7 +35,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
 import com.megaman.maverick.game.events.EventType
 
-class SwinginPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, ISpriteEntity, IMotionEntity,
+class SwinginPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, ISpritesEntity, IMotionEntity,
     IDrawableShapesEntity, IEventListener {
 
     companion object {

@@ -20,7 +20,7 @@ import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.IDrawableShapesEntity
 import com.engine.entities.contracts.IMotionEntity
-import com.engine.entities.contracts.ISpriteEntity
+import com.engine.entities.contracts.ISpritesEntity
 import com.engine.motion.MotionComponent
 import com.engine.motion.Pendulum
 import com.engine.world.Body
@@ -34,7 +34,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
-class SwinginAxe(game: MegamanMaverickGame) : GameEntity(game), ISpriteEntity, IBodyEntity, IMotionEntity,
+class SwinginAxe(game: MegamanMaverickGame) : GameEntity(game), ISpritesEntity, IBodyEntity, IMotionEntity,
     IDrawableShapesEntity {
 
     companion object {

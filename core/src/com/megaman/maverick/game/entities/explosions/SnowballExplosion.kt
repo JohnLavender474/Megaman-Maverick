@@ -22,7 +22,7 @@ import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
-import com.engine.entities.contracts.ISpriteEntity
+import com.engine.entities.contracts.ISpritesEntity
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.Body
 import com.engine.world.BodyComponent
@@ -36,7 +36,7 @@ import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import kotlin.reflect.KClass
 
-class SnowballExplosion(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpriteEntity, IDamager {
+class SnowballExplosion(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesEntity, IDamager {
 
     companion object {
         const val DURATION = 0.075f

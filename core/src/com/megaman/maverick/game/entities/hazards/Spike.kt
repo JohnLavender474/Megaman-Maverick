@@ -17,7 +17,7 @@ import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.IChildEntity
-import com.engine.entities.contracts.ISpriteEntity
+import com.engine.entities.contracts.ISpritesEntity
 import com.engine.world.Body
 import com.engine.world.BodyComponent
 import com.engine.world.BodyType
@@ -30,7 +30,7 @@ import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
 class Spike(game: MegamanMaverickGame) :
-    GameEntity(game), IChildEntity, IBodyEntity, ISpriteEntity {
+    GameEntity(game), IChildEntity, IBodyEntity, ISpritesEntity {
 
     companion object {
         const val TAG = "Spike"
