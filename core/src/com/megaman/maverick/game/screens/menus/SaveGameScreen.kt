@@ -62,6 +62,7 @@ class SaveGameScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, SAVE)
             Vector2(1f * ConstVals.PPM, 3f * ConstVals.PPM),
             centerX = true,
             centerY = true,
+            hidden = false,
             ConstVals.MEGAMAN_MAVERICK_FONT,
         )
         fontHandles.add(saveFont)
@@ -72,6 +73,7 @@ class SaveGameScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, SAVE)
             Vector2(1f * ConstVals.PPM, 2f * ConstVals.PPM),
             centerX = true,
             centerY = true,
+            hidden = false,
             ConstVals.MEGAMAN_MAVERICK_FONT,
         )
         fontHandles.add(continueFont)
@@ -82,6 +84,7 @@ class SaveGameScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, SAVE)
             Vector2(3f * ConstVals.PPM, 1f * ConstVals.PPM),
             centerX = true,
             centerY = true,
+            hidden = false,
             ConstVals.MEGAMAN_MAVERICK_FONT,
         )
         fontHandles.add(mainMenuFont)

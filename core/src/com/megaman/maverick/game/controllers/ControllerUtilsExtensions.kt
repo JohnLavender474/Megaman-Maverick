@@ -6,7 +6,6 @@ import com.badlogic.gdx.controllers.Controller
 import com.engine.controller.ControllerUtils
 import com.engine.controller.buttons.Button
 import com.engine.controller.buttons.Buttons
-import com.megaman.maverick.game.ControllerButton
 import com.megaman.maverick.game.PreferenceFiles
 
 fun getKeyboardPreferences(): Preferences =
@@ -29,7 +28,8 @@ fun ControllerUtils.loadButtons(): Buttons {
         val controllerPreferences = getControllerPreferences(controller)
         ControllerButton.values().forEach {
             val controllerCode = controllerPreferences.getInteger(it.name, controller.mapping.getMapping(it))
-            buttons.put(it, Button(controllerCode))
+            val button = buttons.get(it)
+            button.controllerCode = controllerCode
         }
     }
 

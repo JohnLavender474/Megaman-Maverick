@@ -5,7 +5,7 @@ import com.engine.common.enums.Facing
 import com.engine.controller.ControllerComponent
 import com.engine.controller.buttons.ButtonActuator
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.ControllerButton
+import com.megaman.maverick.game.controllers.ControllerButton
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus

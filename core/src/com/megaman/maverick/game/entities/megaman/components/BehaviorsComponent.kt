@@ -13,7 +13,7 @@ import com.engine.common.interfaces.isFacing
 import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.ControllerButton
+import com.megaman.maverick.game.controllers.ControllerButton
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman

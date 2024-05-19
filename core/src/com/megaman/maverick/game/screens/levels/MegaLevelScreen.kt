@@ -40,6 +40,7 @@ import com.engine.world.WorldSystem
 import com.megaman.maverick.game.*
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
+import com.megaman.maverick.game.controllers.ControllerButton
 import com.megaman.maverick.game.drawables.sprites.Background
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -247,17 +248,12 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
     }
 
     override fun show() {
-        if (!initialized) init()
         dispose()
-
         EntityFactories.init()
         super.show()
-
         eventsMan.addListener(this)
         engine.systems.forEach { it.on = true }
-
         music?.let { audioMan.playMusic(it, true) }
-
         if (tiledMapLoadResult == null)
             throw IllegalStateException("No tiled map load result found in level screen")
         val (map, _, worldWidth, worldHeight) = tiledMapLoadResult!!
@@ -597,18 +593,14 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
 
     override fun dispose() {
         GameLogger.debug(TAG, "dispose(): Disposing level screen")
-
         super.dispose()
         EntityFactories.clear()
-
         if (initialized) {
             disposables.forEach { it.dispose() }
             disposables.clear()
-
             engine.reset()
             audioMan.stopMusic()
             eventsMan.removeListener(this)
-
             spawnsMan.reset()
             playerSpawnsMan.reset()
             cameraManagerForRooms.reset()

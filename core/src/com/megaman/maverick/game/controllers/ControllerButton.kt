@@ -1,4 +1,4 @@
-package com.megaman.maverick.game
+package com.megaman.maverick.game.controllers
 
 import com.badlogic.gdx.Input
 

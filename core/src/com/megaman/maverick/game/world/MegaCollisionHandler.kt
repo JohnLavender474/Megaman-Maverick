@@ -6,7 +6,7 @@ import com.engine.world.BodyType
 import com.engine.world.ICollisionHandler
 import com.engine.world.StandardCollisionHandler
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.ControllerButton
+import com.megaman.maverick.game.controllers.ControllerButton
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable

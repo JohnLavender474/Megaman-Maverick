@@ -4,7 +4,6 @@ import com.engine.common.GameLogger
 import com.engine.controller.ControllerUtils
 import com.engine.controller.buttons.Buttons
 import com.engine.controller.polling.ControllerPoller
-import com.megaman.maverick.game.ControllerButton
 
 class MegaControllerPoller(buttons: Buttons) : ControllerPoller(buttons) {
 

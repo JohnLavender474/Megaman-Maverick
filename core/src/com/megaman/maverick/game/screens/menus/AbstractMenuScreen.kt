@@ -6,7 +6,7 @@ import com.engine.common.enums.Direction
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.screens.BaseScreen
 import com.engine.screens.menus.IMenuButton
-import com.megaman.maverick.game.ControllerButton
+import com.megaman.maverick.game.controllers.ControllerButton
 import com.megaman.maverick.game.MegamanMaverickGame
 
 abstract class AbstractMenuScreen(game: MegamanMaverickGame, protected var firstButtonKey: String) : BaseScreen(game) {
