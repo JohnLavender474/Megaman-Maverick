@@ -1,7 +1,5 @@
 package com.megaman.maverick.game.entities.megaman.components
 
-import com.engine.common.CAUSE_OF_DEATH_MESSAGE
-import com.engine.common.objects.props
 import com.engine.points.PointsComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals

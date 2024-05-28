@@ -33,7 +33,7 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
             Direction.LEFT -> 90f
             Direction.RIGHT -> 270f
         }
-        sprite.setOriginCenter()
+        player.setOriginCenter()
         player.setRotation(rotation)
 
         val position = when (direction) {

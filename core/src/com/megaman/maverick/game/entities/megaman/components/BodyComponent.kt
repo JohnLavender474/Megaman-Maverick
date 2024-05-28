@@ -158,13 +158,13 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
         leftFixture.offsetFromBodyCenter.set(rightSideOffset.scl(-1f))
 
         if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) {
-            body.height = .45f * ConstVals.PPM
+            body.height = 0.45f * ConstVals.PPM
             headFixture.offsetFromBodyCenter.y = ConstVals.PPM / 4f
             feetFixture.offsetFromBodyCenter.y = -ConstVals.PPM / 4f
             (leftFixture.rawShape as Rectangle).setHeight(.25f * ConstVals.PPM)
             (rightFixture.rawShape as Rectangle).setHeight(.25f * ConstVals.PPM)
         } else {
-            body.height = .95f * ConstVals.PPM
+            body.height = 0.95f * ConstVals.PPM
             headFixture.offsetFromBodyCenter.y = ConstVals.PPM / 2f
             feetFixture.offsetFromBodyCenter.y = -ConstVals.PPM / 2f
             (leftFixture.rawShape as Rectangle).setHeight(.6f * ConstVals.PPM)
