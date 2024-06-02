@@ -64,7 +64,8 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
             if (it == MegamanWeapon.BUSTER) return@forEach
 
             val bitSource = when (it) {
-                MegamanWeapon.FLAME_TOSS -> "RedBit"
+                MegamanWeapon.RUSH_JETPACK -> "RedBit"
+                MegamanWeapon.FLAME_TOSS -> "OrangeBit"
                 else -> throw IllegalStateException("No bit source for weapon $it")
             }
 

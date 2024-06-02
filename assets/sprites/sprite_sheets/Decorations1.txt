@@ -1,0 +1,12 @@
+Decorations1.png
+size: 96, 32
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+JetpackFlame
+  rotate: false
+  xy: 0, 0
+  size: 96, 32
+  orig: 96, 32
+  offset: 0, 0
+  index: -1

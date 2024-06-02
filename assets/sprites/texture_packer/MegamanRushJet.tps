@@ -124,7 +124,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>../sprite_sheets/Explosions1.txt</filename>
+                <filename>../sprite_sheets/Megaman_RUSH_JETPACK.txt</filename>
             </struct>
         </map>
         <key>multiPackMode</key>
@@ -173,10 +173,20 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">../frames/Explosions1/Disintegration.png</key>
-            <key type="filename">../frames/Explosions1/HalfChargedShot.png</key>
-            <key type="filename">../frames/Explosions1/PreciousExplosion.png</key>
-            <key type="filename">../frames/Explosions1/SnowballExplode.png</key>
+            <key type="filename">../frames/MegamanRushJet/AirDash.png</key>
+            <key type="filename">../frames/MegamanRushJet/ClimbShoot.png</key>
+            <key type="filename">../frames/MegamanRushJet/FinishClimb.png</key>
+            <key type="filename">../frames/MegamanRushJet/GroundSlide.png</key>
+            <key type="filename">../frames/MegamanRushJet/GroundSlideShoot.png</key>
+            <key type="filename">../frames/MegamanRushJet/Jump.png</key>
+            <key type="filename">../frames/MegamanRushJet/JumpShoot.png</key>
+            <key type="filename">../frames/MegamanRushJet/SlipSlide.png</key>
+            <key type="filename">../frames/MegamanRushJet/SlipSlideShoot.png</key>
+            <key type="filename">../frames/MegamanRushJet/StandShoot.png</key>
+            <key type="filename">../frames/MegamanRushJet/Swim.png</key>
+            <key type="filename">../frames/MegamanRushJet/SwimShoot.png</key>
+            <key type="filename">../frames/MegamanRushJet/WallSlide.png</key>
+            <key type="filename">../frames/MegamanRushJet/WallSlideShoot.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -185,13 +195,16 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>24,8,48,16</rect>
+                <rect>12,12,24,24</rect>
                 <key>scale9Paddings</key>
-                <rect>24,8,48,16</rect>
+                <rect>12,12,24,24</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Explosions1/Explosion.png</key>
+            <key type="filename">../frames/MegamanRushJet/Climb.png</key>
+            <key type="filename">../frames/MegamanRushJet/Jetpack.png</key>
+            <key type="filename">../frames/MegamanRushJet/JetpackShoot.png</key>
+            <key type="filename">../frames/MegamanRushJet/Stand.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -200,13 +213,13 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>176,16,352,32</rect>
+                <rect>24,12,48,24</rect>
                 <key>scale9Paddings</key>
-                <rect>176,16,352,32</rect>
+                <rect>24,12,48,24</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Explosions1/ExplosionOrbs.png</key>
+            <key type="filename">../frames/MegamanRushJet/Damaged.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -215,13 +228,14 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>32,16,64,32</rect>
+                <rect>36,12,72,24</rect>
                 <key>scale9Paddings</key>
-                <rect>32,16,64,32</rect>
+                <rect>36,12,72,24</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Explosions1/SmokePuff.png</key>
+            <key type="filename">../frames/MegamanRushJet/Run.png</key>
+            <key type="filename">../frames/MegamanRushJet/RunShoot.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -230,9 +244,9 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>56,8,112,16</rect>
+                <rect>48,12,96,24</rect>
                 <key>scale9Paddings</key>
-                <rect>56,8,112,16</rect>
+                <rect>48,12,96,24</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -243,7 +257,7 @@
             <struct type="SpriteSheet">
                 <key>files</key>
                 <array>
-                    <filename>../frames/Explosions1</filename>
+                    <filename>../frames/MegamanRushJet</filename>
                 </array>
             </struct>
         </map>

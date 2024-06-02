@@ -2,6 +2,7 @@ package com.megaman.maverick.game
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.assets.AssetManager
+import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
@@ -204,8 +205,8 @@ class MegamanMaverickGame : Game2D(), IEventListener {
         // startLevelScreen(Level.FREEZE_MAN)
         // startLevelScreen(Level.GALAXY_MAN)
         // startLevelScreen(Level.WILY_STAGE_1)
-        // startLevelScreen(Level.WILY_STAGE_2)
-        startLevelScreen(Level.WILY_STAGE_3)
+        startLevelScreen(Level.WILY_STAGE_2)
+        // startLevelScreen(Level.WILY_STAGE_3)
         // setCurrentScreen(ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name)
         // setCurrentScreen(ScreenEnum.CONTROLLER_SETTINGS_SCREEN.name)
         // setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name)
@@ -220,6 +221,8 @@ class MegamanMaverickGame : Game2D(), IEventListener {
     }
 
     override fun render() {
+        Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
+        Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT)
         super.render()
         val delta = Gdx.graphics.deltaTime
         audioMan.update(delta)

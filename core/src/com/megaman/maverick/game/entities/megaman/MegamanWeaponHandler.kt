@@ -3,6 +3,7 @@ package com.megaman.maverick.game.entities.megaman
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
+import com.engine.common.extensions.equalsAny
 import com.engine.common.interfaces.Resettable
 import com.engine.common.interfaces.Updatable
 import com.engine.common.objects.Properties
@@ -137,13 +138,15 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
     fun getAmmo(weapon: MegamanWeapon) = if (!hasWeapon(weapon)) 0
     else if (weapon == MegamanWeapon.BUSTER) Int.MAX_VALUE else weapons[weapon].ammo
 
+    fun isDepleted(weapon: MegamanWeapon) = getAmmo(weapon) == 0
+
     fun fireWeapon(weapon: MegamanWeapon, stat: MegaChargeStatus): Boolean {
         var _stat: MegaChargeStatus = stat
         if (!canFireWeapon(weapon, _stat)) return false
         if (!isChargeable(weapon)) _stat = MegaChargeStatus.NOT_CHARGED
 
         val weaponEntry = weapons[weapon]
-        val cost = if (weapon === MegamanWeapon.BUSTER) 0
+        val cost = if (weapon.equalsAny(MegamanWeapon.BUSTER, MegamanWeapon.RUSH_JETPACK)) 0
         else when (_stat) {
             MegaChargeStatus.FULLY_CHARGED -> weaponEntry.fullyChargedCost()
             MegaChargeStatus.HALF_CHARGED -> weaponEntry.halfChargedCost()
@@ -152,7 +155,7 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
         if (cost > getAmmo(weapon)) return false
 
         val projectile = when (weapon) {
-            MegamanWeapon.BUSTER -> fireMegaBuster(_stat)
+            MegamanWeapon.BUSTER, MegamanWeapon.RUSH_JETPACK -> fireMegaBuster(_stat)
             MegamanWeapon.FLAME_TOSS -> fireFlameToss(_stat)
         }
 
@@ -165,6 +168,7 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
 
     private fun getWeaponEntry(weapon: MegamanWeapon) = when (weapon) {
         MegamanWeapon.BUSTER -> MegaWeaponEntry(.01f)
+        MegamanWeapon.RUSH_JETPACK -> MegaWeaponEntry(cooldownDur = 0.1f, chargeable = { false })
         MegamanWeapon.FLAME_TOSS -> {
             val e = MegaWeaponEntry(.5f)
             e.normalCost = { 3 }
@@ -205,7 +209,8 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
         }
 
         val s = spawnCenter
-        if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING)) s.y += 0.1f * ConstVals.PPM
+        if (megaman.isBehaviorActive(BehaviorType.JETPACKING)) s.y += 0.065f * ConstVals.PPM
+        else if (megaman.isAnyBehaviorActive(BehaviorType.GROUND_SLIDING)) s.y += 0.1f * ConstVals.PPM
         else if (megaman.isDirectionRotatedDown()) s.y -= .05f * ConstVals.PPM
         else if (!megaman.body.isSensing(BodySense.FEET_ON_GROUND) &&
             !megaman.isAnyBehaviorActive(BehaviorType.WALL_SLIDING, BehaviorType.CLIMBING)

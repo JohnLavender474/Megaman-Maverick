@@ -8,20 +8,25 @@ import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
 import com.engine.common.enums.Facing
 import com.engine.common.extensions.gdxArrayOf
+import com.engine.common.extensions.objectMapOf
 import com.engine.common.interfaces.Updatable
 import com.engine.common.interfaces.isFacing
+import com.engine.common.time.Timer
+import com.engine.controller.buttons.ButtonStatus
 import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.controllers.ControllerButton
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
+import com.megaman.maverick.game.controllers.ControllerButton
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegamanKeys
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
+import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.special.Cart
 import com.megaman.maverick.game.entities.special.Ladder
+import com.megaman.maverick.game.utils.getMegamanMaverickGame
 import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.isSensing
 import com.megaman.maverick.game.world.isSensingAny
@@ -36,7 +41,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
     val behaviorsComponent = BehaviorsComponent(this)
 
     val wallSlide = Behavior(evaluate = {
-        if (!ready || !canMove) return@Behavior false
+        if (!ready || !canMove || isBehaviorActive(BehaviorType.JETPACKING)) return@Behavior false
 
         if ((body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && game.controllerPoller.isPressed(
                 if (isDirectionRotatedDown() || isDirectionRotatedRight()) ControllerButton.RIGHT
@@ -121,10 +126,11 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
     val jump = Behavior(
         evaluate = {
-            if (!ready || !canMove) return@Behavior false
-
-            if (damaged || teleporting || isAnyBehaviorActive(BehaviorType.SWIMMING, BehaviorType.CLIMBING) ||
-                body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) || !game.controllerPoller.isPressed(ControllerButton.A) ||
+            if (!ready || !canMove || damaged || teleporting || isAnyBehaviorActive(
+                    BehaviorType.SWIMMING,
+                    BehaviorType.CLIMBING, BehaviorType.JETPACKING
+                ) || body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) ||
+                !game.controllerPoller.isPressed(ControllerButton.A) ||
                 game.controllerPoller.isPressed(ControllerButton.DOWN)
             ) return@Behavior false
 
@@ -182,15 +188,21 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         private val impulse = Vector2()
 
         override fun evaluate(delta: Float): Boolean {
-            if (!ready || !canMove) return false
-
-            if (damaged || teleporting || airDashTimer.isFinished() ||
+            if (!ready || !canMove || damaged || teleporting || airDashTimer.isFinished() ||
                 body.isSensingAny(BodySense.FEET_ON_GROUND, BodySense.TELEPORTING) ||
-                isAnyBehaviorActive(BehaviorType.WALL_SLIDING, BehaviorType.CLIMBING, BehaviorType.RIDING_CART)
+                isAnyBehaviorActive(
+                    BehaviorType.WALL_SLIDING, BehaviorType.CLIMBING, BehaviorType.RIDING_CART,
+                    BehaviorType.JETPACKING
+                )
             ) return false
 
             return if (isBehaviorActive(BehaviorType.AIR_DASHING)) game.controllerPoller.isPressed(ControllerButton.A)
-            else game.controllerPoller.isJustPressed(ControllerButton.A) && aButtonTask == AButtonTask.AIR_DASH
+            else aButtonTask == AButtonTask.AIR_DASH && game.controllerPoller.allMatch(
+                objectMapOf(
+                    ControllerButton.A to ButtonStatus.JUST_PRESSED,
+                    ControllerButton.UP to ButtonStatus.RELEASED
+                )
+            )
         }
 
         override fun init() {
@@ -258,8 +270,11 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             if (isBehaviorActive(BehaviorType.GROUND_SLIDING) && body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)) return true
 
-            if (damaged || groundSlideTimer.isFinished() || isBehaviorActive(BehaviorType.RIDING_CART) ||
-                !body.isSensing(BodySense.FEET_ON_GROUND) || !game.controllerPoller.isPressed(ControllerButton.DOWN)
+            if (damaged || groundSlideTimer.isFinished() || isAnyBehaviorActive(
+                    BehaviorType.RIDING_CART,
+                    BehaviorType.JETPACKING
+                ) || !body.isSensing(BodySense.FEET_ON_GROUND) ||
+                !game.controllerPoller.isPressed(ControllerButton.DOWN)
             ) return false
 
             return if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) game.controllerPoller.isPressed(ControllerButton.A) && directionOnInit == directionRotation
@@ -335,7 +350,9 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     BehaviorType.JUMPING,
                     BehaviorType.AIR_DASHING,
                     BehaviorType.GROUND_SLIDING,
-                    BehaviorType.RIDING_CART
+                    BehaviorType.RIDING_CART,
+                    BehaviorType.SWIMMING,
+                    BehaviorType.JETPACKING
                 ) || !body.properties.containsKey(ConstKeys.LADDER)
             ) return false
 
@@ -467,11 +484,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         private lateinit var cart: Cart
 
         override fun evaluate(delta: Float) =
-            ready && canMove &&
-                    body.isSensing(BodySense.TOUCHING_CART) &&
-                    !game.controllerPoller.areAllPressed(
-                        gdxArrayOf(ControllerButton.A, ControllerButton.UP)
-                    )
+            ready && canMove && body.isSensing(BodySense.TOUCHING_CART) &&
+                    !game.controllerPoller.areAllPressed(gdxArrayOf(ControllerButton.A, ControllerButton.UP))
 
         override fun init() {
             body.physics.velocity.setZero()
@@ -515,6 +529,56 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         }
     }
 
+    val jetpacking = object : AbstractBehavior() {
+
+        private val timePerBitTimer = Timer(MegamanValues.JETPACK_TIME_PER_BIT)
+
+        override fun evaluate(delta: Float): Boolean {
+            if (!ready || !canMove || damaged || teleporting || currentWeapon != MegamanWeapon.RUSH_JETPACK ||
+                weaponHandler.isDepleted(MegamanWeapon.RUSH_JETPACK) || !game.controllerPoller.areAllPressed(
+                    gdxArrayOf(ControllerButton.A, ControllerButton.UP)
+                ) || body.isSensing(BodySense.FEET_ON_GROUND) || isAnyBehaviorActive(
+                    BehaviorType.WALL_SLIDING, BehaviorType.AIR_DASHING, BehaviorType.GROUND_SLIDING,
+                )
+            ) return false
+
+            return if (isBehaviorActive(BehaviorType.JETPACKING)) game.controllerPoller.areAllPressed(
+                gdxArrayOf(ControllerButton.A, ControllerButton.UP)
+            )
+            else game.controllerPoller.allMatch(
+                objectMapOf(
+                    ControllerButton.UP to ButtonStatus.PRESSED,
+                    ControllerButton.A to ButtonStatus.JUST_PRESSED
+                )
+            )
+        }
+
+        override fun init() {
+            requestToPlaySound(SoundAsset.JETPACK_SOUND, true)
+            body.physics.gravityOn = false
+            timePerBitTimer.reset()
+        }
+
+        override fun act(delta: Float) {
+            when (directionRotation) {
+                Direction.UP -> body.physics.velocity.y = MegamanValues.JETPACK_Y_IMPULSE * ConstVals.PPM
+                Direction.DOWN -> body.physics.velocity.y = -MegamanValues.JETPACK_Y_IMPULSE * ConstVals.PPM
+                Direction.LEFT -> body.physics.velocity.x = -MegamanValues.JETPACK_Y_IMPULSE * ConstVals.PPM
+                Direction.RIGHT -> body.physics.velocity.x = MegamanValues.JETPACK_Y_IMPULSE * ConstVals.PPM
+            }
+            timePerBitTimer.update(delta)
+            if (timePerBitTimer.isFinished()) {
+                weaponHandler.translateAmmo(MegamanWeapon.RUSH_JETPACK, -1)
+                timePerBitTimer.reset()
+            }
+        }
+
+        override fun end() {
+            body.physics.gravityOn = true
+            getMegamanMaverickGame().audioMan.stopSound(SoundAsset.JETPACK_SOUND)
+        }
+    }
+
     behaviorsComponent.addBehavior(BehaviorType.WALL_SLIDING, wallSlide)
     behaviorsComponent.addBehavior(BehaviorType.SWIMMING, swim)
     behaviorsComponent.addBehavior(BehaviorType.JUMPING, jump)
@@ -522,6 +586,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
     behaviorsComponent.addBehavior(BehaviorType.GROUND_SLIDING, groundSlide)
     behaviorsComponent.addBehavior(BehaviorType.CLIMBING, climb)
     behaviorsComponent.addBehavior(BehaviorType.RIDING_CART, ridingCart)
+    behaviorsComponent.addBehavior(BehaviorType.JETPACKING, jetpacking)
 
     return behaviorsComponent
 }

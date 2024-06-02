@@ -1,0 +1,152 @@
+Megaman_RUSH_JETPACK.png
+size: 1680, 48
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+AirDash
+  rotate: false
+  xy: 0, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Climb
+  rotate: false
+  xy: 48, 0
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+ClimbShoot
+  rotate: false
+  xy: 144, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Damaged
+  rotate: false
+  xy: 192, 0
+  size: 240, 48
+  orig: 240, 48
+  offset: 0, 0
+  index: -1
+FinishClimb
+  rotate: false
+  xy: 432, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+GroundSlide
+  rotate: false
+  xy: 480, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+GroundSlideShoot
+  rotate: false
+  xy: 528, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Jetpack
+  rotate: false
+  xy: 576, 0
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+JetpackShoot
+  rotate: false
+  xy: 672, 0
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+Jump
+  rotate: false
+  xy: 768, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+JumpShoot
+  rotate: false
+  xy: 816, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Run
+  rotate: false
+  xy: 864, 0
+  size: 192, 48
+  orig: 192, 48
+  offset: 0, 0
+  index: -1
+RunShoot
+  rotate: false
+  xy: 1056, 0
+  size: 192, 48
+  orig: 192, 48
+  offset: 0, 0
+  index: -1
+SlipSlide
+  rotate: false
+  xy: 1248, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+SlipSlideShoot
+  rotate: false
+  xy: 1296, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Stand
+  rotate: false
+  xy: 1344, 0
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+StandShoot
+  rotate: false
+  xy: 1440, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Swim
+  rotate: false
+  xy: 1488, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+SwimShoot
+  rotate: false
+  xy: 1536, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+WallSlide
+  rotate: false
+  xy: 1584, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+WallSlideShoot
+  rotate: false
+  xy: 1632, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1

@@ -216,7 +216,7 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
     var ready = false
         set(value) {
             field = value
-            firstSprite!!.hidden = !field
+            sprites.get("megaman")!!.hidden = !field
         }
 
     override var directionRotation: Direction
@@ -305,6 +305,7 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
         weaponHandler.putWeapon(MegamanWeapon.BUSTER)
+        weaponHandler.putWeapon(MegamanWeapon.RUSH_JETPACK)
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -321,7 +322,7 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
 
         facing = Facing.RIGHT
         aButtonTask = AButtonTask.JUMP
-        currentWeapon = MegamanWeapon.BUSTER
+        currentWeapon = MegamanWeapon.RUSH_JETPACK
         directionRotation = Direction.UP
         running = false
         damageFlash = false

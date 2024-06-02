@@ -52,7 +52,8 @@ enum class SoundAsset(src: String, val seconds: Int) : IAsset {
     CONVEYOR_LIFT_SOUND("conveyor_lift.mp3", 1),
     QUAKE_SOUND("quake.mp3", 1),
     ICE_SHARD_1_SOUND("ice_shard_1.wav", 1),
-    ICE_SHARD_2_SOUND("ice_shard_2.wav", 1);
+    ICE_SHARD_2_SOUND("ice_shard_2.wav", 1),
+    JETPACK_SOUND("jetpack.wav", 1);
 
     companion object {
         fun valuesAsIAssetArray(): Array<IAsset> {

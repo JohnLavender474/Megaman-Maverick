@@ -173,12 +173,10 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">../Frames/Ui1/Arrow.png</key>
-            <key type="filename">../Frames/Ui1/Bit.png</key>
-            <key type="filename">../Frames/Ui1/BlackBit.png</key>
-            <key type="filename">../Frames/Ui1/RedBit.png</key>
-            <key type="filename">../Frames/Ui1/RedDot.png</key>
-            <key type="filename">../Frames/Ui1/WhiteFrameBlackPane.png</key>
+            <key type="filename">../frames/Ui1/Arrow.png</key>
+            <key type="filename">../frames/Ui1/BlackBit.png</key>
+            <key type="filename">../frames/Ui1/RedDot.png</key>
+            <key type="filename">../frames/Ui1/WhiteFrameBlackPane.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -193,12 +191,12 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Ui1/Background.png</key>
-            <key type="filename">../Frames/Ui1/BlackBar.png</key>
-            <key type="filename">../Frames/Ui1/MegamanMaverick.png</key>
-            <key type="filename">../Frames/Ui1/Pane.png</key>
-            <key type="filename">../Frames/Ui1/PaneHighlighted.png</key>
-            <key type="filename">../Frames/Ui1/PaneShattered.png</key>
+            <key type="filename">../frames/Ui1/Background.png</key>
+            <key type="filename">../frames/Ui1/BlackBar.png</key>
+            <key type="filename">../frames/Ui1/MegamanMaverick.png</key>
+            <key type="filename">../frames/Ui1/Pane.png</key>
+            <key type="filename">../frames/Ui1/PaneHighlighted.png</key>
+            <key type="filename">../frames/Ui1/PaneShattered.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -213,8 +211,8 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Ui1/Bar.png</key>
-            <key type="filename">../Frames/Ui1/Stars.png</key>
+            <key type="filename">../frames/Ui1/Bar.png</key>
+            <key type="filename">../frames/Ui1/Stars.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -229,7 +227,22 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Ui1/BorderBlock.png</key>
+            <key type="filename">../frames/Ui1/Bit.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>73,19,146,38</rect>
+                <key>scale9Paddings</key>
+                <rect>73,19,146,38</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Ui1/BorderBlock.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -244,7 +257,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Ui1/Canvas.png</key>
+            <key type="filename">../frames/Ui1/Canvas.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -259,7 +272,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Ui1/EmptyBit.png</key>
+            <key type="filename">../frames/Ui1/EmptyBit.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -274,22 +287,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Ui1/FlameBit.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>65,17,129,33</rect>
-                <key>scale9Paddings</key>
-                <rect>65,17,129,33</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../Frames/Ui1/MegamanHelmet.png</key>
+            <key type="filename">../frames/Ui1/MegamanHelmet.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -304,9 +302,9 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Ui1/MegamanPose.png</key>
-            <key type="filename">../Frames/Ui1/Z.png</key>
-            <key type="filename">../Frames/Ui1/ZeroSilhouette.png</key>
+            <key type="filename">../frames/Ui1/MegamanPose.png</key>
+            <key type="filename">../frames/Ui1/Z.png</key>
+            <key type="filename">../frames/Ui1/ZeroSilhouette.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -321,7 +319,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Ui1/MegamanSubtitle.png</key>
+            <key type="filename">../frames/Ui1/MegamanSubtitle.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -336,7 +334,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Ui1/MegamanTitle.png</key>
+            <key type="filename">../frames/Ui1/MegamanTitle.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -351,8 +349,23 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Ui1/PaneBlinking.png</key>
-            <key type="filename">../Frames/Ui1/StageSelectBox_Blinking.png</key>
+            <key type="filename">../frames/Ui1/OrangeBit.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,4,32,8</rect>
+                <key>scale9Paddings</key>
+                <rect>16,4,32,8</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Ui1/PaneBlinking.png</key>
+            <key type="filename">../frames/Ui1/StageSelectBox_Blinking.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -367,8 +380,23 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Ui1/StageSelectBox_Highlighted.png</key>
-            <key type="filename">../Frames/Ui1/StageSelectBox_Unhighlighted.png</key>
+            <key type="filename">../frames/Ui1/RedBit.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>115,30,230,59</rect>
+                <key>scale9Paddings</key>
+                <rect>115,30,230,59</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Ui1/StageSelectBox_Highlighted.png</key>
+            <key type="filename">../frames/Ui1/StageSelectBox_Unhighlighted.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -383,7 +411,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Ui1/StandardBit.png</key>
+            <key type="filename">../frames/Ui1/StandardBit.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -398,10 +426,10 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Ui1/Stars1.png</key>
-            <key type="filename">../Frames/Ui1/Stars2.png</key>
-            <key type="filename">../Frames/Ui1/Stars3.png</key>
-            <key type="filename">../Frames/Ui1/Stars4.png</key>
+            <key type="filename">../frames/Ui1/Stars1.png</key>
+            <key type="filename">../frames/Ui1/Stars2.png</key>
+            <key type="filename">../frames/Ui1/Stars3.png</key>
+            <key type="filename">../frames/Ui1/Stars4.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -416,8 +444,8 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Ui1/Subtitle8bit.png</key>
-            <key type="filename">../Frames/Ui1/Z8bit.png</key>
+            <key type="filename">../frames/Ui1/Subtitle8bit.png</key>
+            <key type="filename">../frames/Ui1/Z8bit.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -439,7 +467,7 @@
             <struct type="SpriteSheet">
                 <key>files</key>
                 <array>
-                    <filename>../Frames/Ui1</filename>
+                    <filename>../frames/Ui1</filename>
                 </array>
             </struct>
         </map>

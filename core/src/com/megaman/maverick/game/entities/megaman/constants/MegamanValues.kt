@@ -37,6 +37,9 @@ object MegamanValues {
     const val WATER_AIR_DASH_END_BUMP = 2f
     const val MAX_AIR_DASH_TIME = .25f
 
+    const val JETPACK_Y_IMPULSE = 2f
+    const val JETPACK_TIME_PER_BIT = 0.25f
+
     const val GROUND_SLIDE_VEL = 12f
     const val WATER_GROUND_SLIDE_VEL = 6f
     const val MAX_GROUND_SLIDE_TIME = .35f

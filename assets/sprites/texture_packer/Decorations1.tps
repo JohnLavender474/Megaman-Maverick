@@ -124,7 +124,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>../sprite_sheets/Explosions1.txt</filename>
+                <filename>../sprite_sheets/Decorations1.txt</filename>
             </struct>
         </map>
         <key>multiPackMode</key>
@@ -173,10 +173,7 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">../frames/Explosions1/Disintegration.png</key>
-            <key type="filename">../frames/Explosions1/HalfChargedShot.png</key>
-            <key type="filename">../frames/Explosions1/PreciousExplosion.png</key>
-            <key type="filename">../frames/Explosions1/SnowballExplode.png</key>
+            <key type="filename">../frames/Decorations1/JetpackFlame.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -188,51 +185,6 @@
                 <rect>24,8,48,16</rect>
                 <key>scale9Paddings</key>
                 <rect>24,8,48,16</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Explosions1/Explosion.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>176,16,352,32</rect>
-                <key>scale9Paddings</key>
-                <rect>176,16,352,32</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Explosions1/ExplosionOrbs.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>32,16,64,32</rect>
-                <key>scale9Paddings</key>
-                <rect>32,16,64,32</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Explosions1/SmokePuff.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>56,8,112,16</rect>
-                <key>scale9Paddings</key>
-                <rect>56,8,112,16</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -243,7 +195,7 @@
             <struct type="SpriteSheet">
                 <key>files</key>
                 <array>
-                    <filename>../frames/Explosions1</filename>
+                    <filename>../frames/Decorations1</filename>
                 </array>
             </struct>
         </map>

@@ -8,16 +8,21 @@ import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
+import com.engine.drawables.sprites.setSize
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegamanKeys
 
 internal fun Megaman.defineSpritesComponent(): SpritesComponent {
-    val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
-    sprite.setSize(2.475f * ConstVals.PPM, 1.875f * ConstVals.PPM)
-    val spritesComponent = SpritesComponent(this, sprite)
-    spritesComponent.putUpdateFunction { _, player ->
+    val spritesComponent = SpritesComponent(this)
+
+    val megamanSprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
+    megamanSprite.setSize(2.475f * ConstVals.PPM, 1.875f * ConstVals.PPM)
+
+    spritesComponent.sprites.put("megaman", megamanSprite)
+
+    spritesComponent.putUpdateFunction("megaman") { _, player ->
         val direction = if (isBehaviorActive(BehaviorType.AIR_DASHING)) getProperty(
             MegamanKeys.DIRECTION_ON_AIR_DASH, Direction::class
         )!!
@@ -56,6 +61,33 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
         }
         player.translateX(xTranslation * ConstVals.PPM)
         player.setAlpha(if (damageFlash) 0f else 1f)
+    }
+
+    val jetpackFlameSprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0), false)
+    jetpackFlameSprite.setSize(ConstVals.PPM.toFloat())
+
+    spritesComponent.sprites.put("jetpackFlame", jetpackFlameSprite)
+
+    spritesComponent.putUpdateFunction("jetpackFlame") { _, flame ->
+        val hidden = !isBehaviorActive(BehaviorType.JETPACKING)
+        flame.hidden = hidden
+        if (hidden) {
+            return@putUpdateFunction
+        }
+
+        flame.setOriginCenter()
+        flame.setRotation(directionRotation.rotation)
+
+        val verticalOffset = -0.25f * ConstVals.PPM
+        val facingOffsetScaled = -0.45f * facing.value * ConstVals.PPM
+        val offset = when (directionRotation) {
+            Direction.UP -> floatArrayOf(facingOffsetScaled, verticalOffset)
+            Direction.DOWN -> floatArrayOf(facingOffsetScaled, -verticalOffset)
+            Direction.LEFT -> floatArrayOf(verticalOffset, facingOffsetScaled)
+            Direction.RIGHT -> floatArrayOf(-verticalOffset, -facingOffsetScaled)
+        }
+        val position = body.getPositionPoint(Position.CENTER).add(offset[0], offset[1])
+        flame.setPosition(position, Position.CENTER)
     }
 
     return spritesComponent

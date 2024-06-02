@@ -10,6 +10,7 @@ import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
+import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.megaman.extensions.shoot
 import com.megaman.maverick.game.entities.megaman.extensions.stopCharging
 import com.megaman.maverick.game.world.BodySense
@@ -18,7 +19,6 @@ import com.megaman.maverick.game.world.isSensing
 const val MEGAMAN_CONTROLLER_COMPONENT_TAG = "MegamanControllerComponent"
 
 internal fun Megaman.defineControllerComponent(): ControllerComponent {
-    // left
     val left =
         ButtonActuator(
             onJustPressed = { _ ->
@@ -55,7 +55,6 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
                 if (!poller.isPressed(ControllerButton.RIGHT)) running = false
             })
 
-    // right
     val right =
         ButtonActuator(
             onJustPressed = { _ ->
@@ -92,27 +91,15 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
                 if (!poller.isPressed(ControllerButton.LEFT)) running = false
             })
 
-    // attack
     val attack =
         ButtonActuator(
             onPressContinued = { _, delta ->
-                if (!ready || damaged || teleporting) {
+                if (!ready || damaged || teleporting || currentWeapon == MegamanWeapon.RUSH_JETPACK ||
+                    (!charging && !weaponHandler.canFireWeapon(currentWeapon, MegaChargeStatus.HALF_CHARGED)) ||
+                    (charging && !weaponHandler.canFireWeapon(currentWeapon, MegaChargeStatus.FULLY_CHARGED))) {
                     stopCharging()
                     return@ButtonActuator
                 }
-
-                if (!charging &&
-                    !weaponHandler.canFireWeapon(currentWeapon, MegaChargeStatus.HALF_CHARGED)
-                ) {
-                    stopCharging()
-                    return@ButtonActuator
-                }
-
-                if (charging &&
-                    !weaponHandler.canFireWeapon(currentWeapon, MegaChargeStatus.FULLY_CHARGED)
-                )
-                    return@ButtonActuator
-
                 chargingTimer.update(delta)
             },
             onJustReleased = {
@@ -120,7 +107,6 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
                     stopCharging()
                     return@ButtonActuator
                 }
-
                 shoot()
                 stopCharging()
             },
