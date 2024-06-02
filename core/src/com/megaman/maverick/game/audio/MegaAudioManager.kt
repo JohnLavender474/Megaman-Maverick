@@ -127,6 +127,14 @@ class MegaAudioManager(
         sounds.get(key as SoundAsset).pause()
     }
 
+    fun stopAllLoopingSounds() {
+        playingSounds.filter { it.loop }.forEach {
+            val sound = sounds[it.ass]
+            sound.stop(it.id)
+            playingSounds.removeValue(it, false)
+        }
+    }
+
     fun pauseAllSound() {
         sounds.values().forEach { it.pause() }
     }

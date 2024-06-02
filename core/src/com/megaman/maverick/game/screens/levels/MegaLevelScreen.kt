@@ -330,6 +330,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
                     "onEvent(): Player just died --> init death handler"
                 )
                 audioMan.stopMusic()
+                audioMan.stopAllLoopingSounds()
                 playerDeathEventHandler.init()
             }
 

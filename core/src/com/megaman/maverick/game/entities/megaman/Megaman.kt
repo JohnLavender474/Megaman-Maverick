@@ -223,6 +223,9 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         get() = body.cardinalRotation
         set(value) {
             GameLogger.debug(TAG, "directionRotation: value = $value")
+
+            forceQuitBehavior(BehaviorType.JETPACKING)
+
             body.cardinalRotation = value
             when (value) {
                 Direction.UP, Direction.RIGHT -> {
