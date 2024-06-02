@@ -444,6 +444,12 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         body.physics.velocity.y = MegamanValues.DMG_Y * ConstVals.PPM
     }
 
+    fun setToNextWeapon() {
+        val index = currentWeapon.ordinal
+        val nextIndex = (index + 1) % MegamanWeapon.values().size
+        currentWeapon = MegamanWeapon.values()[nextIndex]
+    }
+
     override fun takeDamageFrom(damager: IDamager): Boolean {
         if (canMove && !isBehaviorActive(BehaviorType.RIDING_CART) &&
             !noDmgBounce.contains(damager::class) &&

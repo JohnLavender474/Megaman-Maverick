@@ -5,8 +5,8 @@ import com.engine.common.enums.Facing
 import com.engine.controller.ControllerComponent
 import com.engine.controller.buttons.ButtonActuator
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.controllers.ControllerButton
 import com.megaman.maverick.game.behaviors.BehaviorType
+import com.megaman.maverick.game.controllers.ControllerButton
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
@@ -96,7 +96,8 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
             onPressContinued = { _, delta ->
                 if (!ready || damaged || teleporting || currentWeapon == MegamanWeapon.RUSH_JETPACK ||
                     (!charging && !weaponHandler.canFireWeapon(currentWeapon, MegaChargeStatus.HALF_CHARGED)) ||
-                    (charging && !weaponHandler.canFireWeapon(currentWeapon, MegaChargeStatus.FULLY_CHARGED))) {
+                    (charging && !weaponHandler.canFireWeapon(currentWeapon, MegaChargeStatus.FULLY_CHARGED))
+                ) {
                     stopCharging()
                     return@ButtonActuator
                 }
@@ -112,10 +113,18 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
             },
         )
 
+    val changeWeapon = ButtonActuator(
+        onJustReleased = { _ ->
+            if (!ready || damaged || teleporting) return@ButtonActuator
+            setToNextWeapon()
+        }
+    )
+
     return ControllerComponent(
         this,
         ControllerButton.LEFT to { left },
         ControllerButton.RIGHT to { right },
-        ControllerButton.B to { attack }
+        ControllerButton.B to { attack },
+        ControllerButton.SELECT to { changeWeapon }
     )
 }

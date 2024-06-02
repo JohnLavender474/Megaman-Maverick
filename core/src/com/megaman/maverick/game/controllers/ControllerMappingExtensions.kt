@@ -10,4 +10,5 @@ fun ControllerMapping.getMapping(button: ControllerButton) = when (button) {
     ControllerButton.A -> buttonB
     ControllerButton.B -> buttonY
     ControllerButton.START -> buttonStart
+    ControllerButton.SELECT -> buttonA
 }
