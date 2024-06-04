@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="650" height="51" tilewidth="32" tileheight="32" infinite="0" nextlayerid="15" nextobjectid="465">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="650" height="51" tilewidth="32" tileheight="32" infinite="0" nextlayerid="15" nextobjectid="466">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/Gravity Man Stage.tsx"/>
  <tileset firstgid="4609" source="../tsx/MM3Wily1.tsx"/>
@@ -103,7 +103,7 @@
   <object id="241" x="6592" y="576" width="192" height="224"/>
   <object id="242" x="6528" y="576" width="168" height="128"/>
   <object id="243" x="6464" y="512" width="128" height="128"/>
-  <object id="244" x="5088" y="512" width="2272" height="96"/>
+  <object id="244" x="5080" y="512" width="2280" height="128"/>
   <object id="252" x="7296" y="520" width="64" height="280"/>
   <object id="256" name="DropperLift" x="7440" y="920" width="32" height="8"/>
   <object id="257" name="DropperLift" x="7552" y="888" width="32" height="8"/>
@@ -150,9 +150,10 @@
   <object id="441" x="5792" y="832" width="32" height="32"/>
   <object id="442" x="5952" y="832" width="32" height="32"/>
   <object id="443" x="6080" y="832" width="32" height="32"/>
+  <object id="465" x="0" y="992" width="2920" height="32"/>
  </objectgroup>
  <objectgroup id="7" name="items"/>
- <objectgroup id="3" name="game_rooms" visible="0">
+ <objectgroup id="3" name="game_rooms">
   <object id="5" name="room1" x="0" y="992" width="3104" height="576"/>
   <object id="153" name="room2" x="3104" y="992" width="2016" height="384"/>
   <object id="180" name="room3" x="4608" y="608" width="512" height="384"/>

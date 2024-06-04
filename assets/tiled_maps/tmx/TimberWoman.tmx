@@ -118,7 +118,7 @@
   <object id="33" name="Hanabiran" x="1568" y="864" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="5" name="items"/>
- <objectgroup id="6" name="game_rooms" visible="0">
+ <objectgroup id="6" name="game_rooms">
   <object id="6" name="room1" x="0" y="640" width="1696" height="384"/>
   <object id="31" name="room2" x="1696" y="640" width="768" height="384"/>
  </objectgroup>
