@@ -142,9 +142,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     Direction.LEFT -> velocity.x < 0f
                     Direction.RIGHT -> velocity.x > 0f
                 }
-            } else aButtonTask == AButtonTask.JUMP && game.controllerPoller.isJustPressed(ControllerButton.A) && (body.isSensing(
-                BodySense.FEET_ON_GROUND
-            ) || isBehaviorActive(BehaviorType.WALL_SLIDING))
+            } else aButtonTask == AButtonTask.JUMP && game.controllerPoller.isJustPressed(ControllerButton.A) &&
+                    (body.isSensing(BodySense.FEET_ON_GROUND) || isBehaviorActive(BehaviorType.WALL_SLIDING))
         },
         init = {
             val v = Vector2()
@@ -230,9 +229,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
         override fun act(delta: Float) {
             airDashTimer.update(delta)
-            if (isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) || isFacing(Facing.RIGHT) && body.isSensing(
-                    BodySense.SIDE_TOUCHING_BLOCK_RIGHT
-                )
+            if (isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) ||
+                isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)
             ) return
 
             if (facing != lastFacing) impulse.scl(-1f)
