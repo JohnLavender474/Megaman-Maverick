@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="100" height="35" tilewidth="32" tileheight="32" infinite="0" nextlayerid="13" nextobjectid="35">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="100" height="35" tilewidth="32" tileheight="32" infinite="0" nextlayerid="13" nextobjectid="50">
  <tileset firstgid="1" source="../tsx/ForestTiles.tsx"/>
  <tileset firstgid="337" source="../tsx/Tileset1.tsx"/>
  <layer id="10" name="tiles2" width="100" height="35">
@@ -90,6 +90,19 @@
   <object id="17" name="WindyGrass" x="608" y="832" width="64" height="32"/>
   <object id="29" name="WindyGrass" x="1056" y="896" width="128" height="32"/>
   <object id="30" name="WindyGrass" x="1600" y="864" width="288" height="32"/>
+  <object id="35" name="FallingLeaf" x="416" y="832" width="32" height="32"/>
+  <object id="36" name="FallingLeaf" x="32" y="832" width="32" height="32"/>
+  <object id="38" name="FallingLeaf" x="400" y="848" width="32" height="32"/>
+  <object id="39" name="FallingLeaf" x="408" y="856" width="32" height="32"/>
+  <object id="40" name="FallingLeaf" x="440" y="840" width="32" height="32"/>
+  <object id="41" name="FallingLeaf" x="48" y="880" width="32" height="32"/>
+  <object id="42" name="FallingLeaf" x="24" y="864" width="32" height="32"/>
+  <object id="43" name="FallingLeaf" x="56" y="840" width="32" height="32"/>
+  <object id="44" name="FallingLeaf" x="264" y="848" width="32" height="32"/>
+  <object id="45" name="FallingLeaf" x="240" y="856" width="32" height="32"/>
+  <object id="46" name="FallingLeaf" x="256" y="872" width="32" height="32"/>
+  <object id="47" name="FallingLeaf" x="272" y="824" width="32" height="32"/>
+  <object id="48" name="FallingLeaf" x="248" y="824" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="2" name="blocks">
   <object id="4" x="0" y="928" width="1184" height="96"/>
@@ -115,8 +128,12 @@
  </objectgroup>
  <objectgroup id="4" name="enemies">
   <object id="13" name="Hanabiran" x="816" y="832" width="32" height="32"/>
-  <object id="32" name="Hanabiran" x="1280" y="800" width="32" height="32"/>
-  <object id="33" name="Hanabiran" x="1568" y="864" width="32" height="32"/>
+  <object id="33" name="Hanabiran" x="1824" y="864" width="32" height="32"/>
+  <object id="49" name="Peat" x="1360" y="712" width="32" height="32">
+   <properties>
+    <property name="gravity_x" type="float" value="-0.5"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="5" name="items"/>
  <objectgroup id="6" name="game_rooms" visible="0">

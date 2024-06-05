@@ -1,67 +1,74 @@
 Environs1.png
-size: 706, 224
+size: 768, 224
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+Leaves/SpringLeaf
+  rotate: false
+  xy: 0, 0
+  size: 160, 32
+  orig: 160, 32
+  offset: 0, 0
+  index: -1
 Trees/Tree1
   rotate: false
-  xy: 448, 0
+  xy: 160, 0
   size: 98, 160
   orig: 98, 160
   offset: 0, 0
   index: -1
 Water/Splash
   rotate: false
-  xy: 546, 0
+  xy: 258, 0
   size: 160, 32
   orig: 160, 32
   offset: 0, 0
   index: -1
 Water/Surface
   rotate: false
-  xy: 128, 0
+  xy: 418, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 Water/Under
   rotate: false
-  xy: 192, 0
+  xy: 482, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 Water/Water
   rotate: false
-  xy: 0, 0
+  xy: 546, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 WindyGrass/Left
   rotate: false
-  xy: 32, 0
+  xy: 578, 0
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 WindyGrass/Middle
   rotate: false
-  xy: 64, 0
+  xy: 610, 0
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 WindyGrass/Right
   rotate: false
-  xy: 96, 0
+  xy: 642, 0
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 Wood/DeadBranch
   rotate: false
-  xy: 256, 0
+  xy: 674, 0
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -75,14 +82,14 @@ Wood/FallingLeaf
   index: -1
 Wood/Leaf
   rotate: false
-  xy: 320, 0
+  xy: 640, 160
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Wood/Stump
   rotate: false
-  xy: 384, 0
+  xy: 704, 160
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
