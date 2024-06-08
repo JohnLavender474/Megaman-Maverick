@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.3.0</string>
+        <string>7.4.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -264,9 +264,6 @@
             <key type="filename">../frames/Bosses/MicrowaveMan/OpenDoor.png</key>
             <key type="filename">../frames/Bosses/MicrowaveMan/Shoot.png</key>
             <key type="filename">../frames/Bosses/MisterMan/Jump.png</key>
-            <key type="filename">../frames/Bosses/NukeMan/Attack.png</key>
-            <key type="filename">../frames/Bosses/NukeMan/BendKnees.png</key>
-            <key type="filename">../frames/Bosses/NukeMan/Jump.png</key>
             <key type="filename">../frames/Bosses/RoasterMan/Aim.png</key>
             <key type="filename">../frames/Bosses/RoasterMan/RetractWings.png</key>
             <struct type="IndividualSpriteSettings">
@@ -291,8 +288,6 @@
             <key type="filename">../frames/Bosses/MisterMan/Flex.png</key>
             <key type="filename">../frames/Bosses/MisterMan/Squirt.png</key>
             <key type="filename">../frames/Bosses/MisterMan/Stand.png</key>
-            <key type="filename">../frames/Bosses/NukeMan/Charge.png</key>
-            <key type="filename">../frames/Bosses/NukeMan/Stand.png</key>
             <key type="filename">../frames/Bosses/RoasterMan/CoolPose.png</key>
             <key type="filename">../frames/Bosses/RoasterMan/FallingWithStyle.png</key>
             <key type="filename">../frames/Bosses/RoasterMan/FlyFlap.png</key>
@@ -331,6 +326,10 @@
             </struct>
             <key type="filename">../frames/Bosses/GutsTank/Fist.png</key>
             <key type="filename">../frames/Bosses/PreciousMan/StandShoot.png</key>
+            <key type="filename">../frames/Bosses/ReactMan/Jump.png</key>
+            <key type="filename">../frames/Bosses/ReactMan/Stand.png</key>
+            <key type="filename">../frames/Bosses/ReactMan/Throw.png</key>
+            <key type="filename">../frames/Bosses/ReactMan/Up.png</key>
             <key type="filename">../frames/Bosses/WintryMan/AboutToJump.png</key>
             <key type="filename">../frames/Bosses/WintryMan/Jump.png</key>
             <key type="filename">../frames/Bosses/WintryMan/StandShoot.png</key>
@@ -449,6 +448,21 @@
                 <rect>36,12,72,24</rect>
                 <key>scale9Paddings</key>
                 <rect>36,12,72,24</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses/ReactMan/Run.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>24,24,48,48</rect>
+                <key>scale9Paddings</key>
+                <rect>24,24,48,48</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
