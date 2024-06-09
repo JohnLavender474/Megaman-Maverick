@@ -55,7 +55,7 @@ class GamePasswordsTest : DescribeSpec({
             state.bossesDefeated.addAll(
                 BossType.BLUNT_MAN,
                 BossType.RODENT_MAN,
-                BossType.MICROWAVE_MAN,
+                BossType.REACT_MAN,
                 BossType.ROASTER_MAN,
                 BossType.TIMBER_WOMAN
             )
