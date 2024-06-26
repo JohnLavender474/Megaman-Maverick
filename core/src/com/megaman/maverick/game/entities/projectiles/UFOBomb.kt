@@ -12,6 +12,8 @@ import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameCircle
 import com.engine.drawables.shapes.IDrawableShape
+import com.engine.drawables.sorting.DrawingPriority
+import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setCenter
@@ -94,8 +96,8 @@ class UFOBomb(game: MegamanMaverickGame): GameEntity(game), IProjectileEntity, I
     }
 
     private fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite()
-        sprite.setSize(1.25f * ConstVals.PPM)
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0))
+        sprite.setSize(0.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())

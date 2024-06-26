@@ -18,6 +18,8 @@ import com.engine.common.time.Timer
 import com.engine.damage.IDamager
 import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
+import com.engine.drawables.sorting.DrawingPriority
+import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setCenter
@@ -33,10 +35,15 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
+import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.projectiles.Bullet
+import com.megaman.maverick.game.entities.projectiles.ChargedShot
+import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import kotlin.reflect.KClass
@@ -45,13 +52,22 @@ class UFOBombBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     companion object {
         const val TAG = "UFOBombBot"
-        private const val DROP_DELAY = 2f
-        private const val DROP_DURATION = 0.25f
+        private const val X_VEL = 3f
+        private const val DROP_DELAY = 1.5f
+        private const val DROP_DURATION = 1f
         private var flyRegion: TextureRegion? = null
         private var dropRegion: TextureRegion? = null
     }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>()
+    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+        Bullet::class to dmgNeg(10),
+        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class to dmgNeg {
+            it as ChargedShot
+            if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
+        },
+        ChargedShotExplosion::class to dmgNeg(15)
+    )
     override lateinit var facing: Facing
 
     private val dropDelayTimer = Timer(DROP_DELAY)
@@ -61,8 +77,8 @@ class UFOBombBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     override fun init() {
         if (dropRegion == null || flyRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-            dropRegion = atlas.findRegion("UFOBombBot/Drop")
-            flyRegion = atlas.findRegion("UFOBombBot/Fly")
+            dropRegion = atlas.findRegion("UFOBombBot/Dropping")
+            flyRegion = atlas.findRegion("UFOBombBot/Closed")
         }
         super<AbstractEnemy>.init()
         addComponent(defineAnimationsComponent())
@@ -70,10 +86,16 @@ class UFOBombBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
+        body.setCenter(spawn)
         dropping = false
         dropDelayTimer.reset()
         dropDurationTimer.reset()
+        facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
     }
+
+    private fun isMegamanUnderMe() = megaman.body.getMaxY() <= body.y &&
+            megaman.body.getCenter().x >= body.x && megaman.body.getCenter().x <= body.getMaxX()
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
@@ -83,10 +105,11 @@ class UFOBombBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
                 if (dropDurationTimer.isFinished()) {
                     dropping = false
                     dropDurationTimer.reset()
+                    facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
                 }
             } else {
                 dropDelayTimer.update(delta)
-                if (dropDelayTimer.isFinished()) {
+                if (dropDelayTimer.isFinished() || isMegamanUnderMe()) {
                     dropBomb()
                     dropping = true
                     dropDelayTimer.reset()
@@ -105,7 +128,7 @@ class UFOBombBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.85f * ConstVals.PPM, 0.5f * ConstVals.PPM)
+        body.setSize(1f * ConstVals.PPM, 0.85f * ConstVals.PPM)
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
@@ -119,16 +142,21 @@ class UFOBombBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         val drawables = gdxArrayOf<() -> IDrawableShape?>({ body })
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = drawables, debug = true))
 
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            body.physics.velocity.x = if (dropping) 0f else X_VEL * ConstVals.PPM * facing.value
+        }
+
         return BodyComponentCreator.create(this, body)
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite()
-        sprite.setSize(1.25f * ConstVals.PPM)
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
+        sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())
-            _sprite.setFlip(isFacing(Facing.LEFT), false)
+            _sprite.setFlip(isFacing(Facing.RIGHT), false)
+            _sprite.hidden = damageBlink
         }
         return spritesComponent
     }
@@ -136,7 +164,7 @@ class UFOBombBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { if (dropping) "drop" else "fly" }
         val animations = objectMapOf<String, IAnimation>(
-            "drop" to Animation(dropRegion!!, 1, 2, 0.1f, false),
+            "drop" to Animation(dropRegion!!, 1, 3, 0.05f, false),
             "fly" to Animation(flyRegion!!, 1, 2, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)

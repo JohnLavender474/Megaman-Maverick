@@ -12,5 +12,4 @@ abstract class EntityFactory : IFactory<IGameEntity>, Initializable, IClearable 
     protected val pools = ObjectMap<Any, Pool<IGameEntity>>()
 
     override fun clear() = pools.clear()
-
 }

@@ -1,9 +1,5 @@
 package com.megaman.maverick.game.entities.factories.impl
 
-import com.badlogic.gdx.utils.ObjectMap
-import com.engine.common.objects.Pool
-import com.engine.entities.IGameEntity
-import com.engine.factories.IFactory
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.factories.EntityFactory
 import com.megaman.maverick.game.entities.factories.EntityPoolCreator
@@ -22,6 +18,8 @@ class HazardsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         const val SPIKE_BALL = "SpikeBall"
         const val WANAAN_LAUNCHER = "WanaanLauncher"
         const val CEILING_CRUSHER = "CeilingCrusher"
+        const val ACID_GOOP = "AcidGoop"
+        const val ACID_GOOP_SUPPLIER = "AcidGoopSupplier"
     }
 
     override fun init() {
@@ -35,6 +33,8 @@ class HazardsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(SPIKE_BALL, EntityPoolCreator.create { SpikeBall(game) })
         pools.put(WANAAN_LAUNCHER, EntityPoolCreator.create { WanaanLauncher(game) })
         pools.put(CEILING_CRUSHER, EntityPoolCreator.create { CeilingCrusher(game) })
+        pools.put(ACID_GOOP, EntityPoolCreator.create { AcidGoop(game) })
+        pools.put(ACID_GOOP_SUPPLIER, EntityPoolCreator.create { AcidGoopSupplier(game) })
     }
 
     override fun fetch(key: Any) = pools.get(key)?.fetch()

@@ -45,9 +45,9 @@ class BossIntroScreen(game: MegamanMaverickGame) : BaseScreen(game) {
     private var currBAnim: Pair<Sprite, Queue<Pair<Animation, Timer>?>>? = null
 
     override fun init() {
-        val barReg: TextureRegion = game.assMan.get(TextureAsset.UI_1.source, TextureAtlas::class.java).findRegion(
-            "Bar"
-        )
+        super.init()
+        val barReg: TextureRegion = game.assMan
+            .get(TextureAsset.UI_1.source, TextureAtlas::class.java).findRegion("Bar")
         barAnim = Animation(barReg, 1, 4, Array.with(.3f, .15f, .15f, .15f), true)
         for (i in 0 until STARS_N_BARS) {
             val bar = Sprite()
@@ -97,6 +97,7 @@ class BossIntroScreen(game: MegamanMaverickGame) : BaseScreen(game) {
     }
 
     override fun show() {
+        super.show()
         bText.textSupplier = { "" }
         durTimer.reset()
         bDropTimer.reset()

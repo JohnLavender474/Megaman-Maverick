@@ -39,9 +39,9 @@ import com.megaman.maverick.game.world.FixtureType
 class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     companion object {
-        private const val FULLY_CHARGED_DURATION = .6f
-        private const val HALF_CHARGED_DURATION = .3f
-        private const val SOUND_INTERVAL = .15f
+        private const val FULLY_CHARGED_DURATION = 0.6f
+        private const val HALF_CHARGED_DURATION = 0.3f
+        private const val SOUND_INTERVAL = 0.15f
 
         private var fullyChargedRegion: TextureRegion? = null
         private var halfChargedRegion: TextureRegion? = null
@@ -75,11 +75,15 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
         super.spawn(spawnProps)
         soundTimer.reset()
 
-        owner = spawnProps.get(ConstKeys.OWNER) as IGameEntity
-        direction = spawnProps.get(ConstKeys.DIRECTION, Direction::class)!!
+        owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
+        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
         fullyCharged = spawnProps.get(ConstKeys.BOOLEAN) as Boolean
 
-        durationTimer = Timer(if (fullyCharged) FULLY_CHARGED_DURATION else HALF_CHARGED_DURATION)
+        val duration = spawnProps.getOrDefault(
+            ConstKeys.DURATION,
+            if (fullyCharged) FULLY_CHARGED_DURATION else HALF_CHARGED_DURATION, Float::class
+        )
+        durationTimer = Timer(duration)
 
         val spawn = spawnProps.get(ConstKeys.POSITION) as Vector2
         body.setCenter(spawn)
@@ -93,9 +97,7 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
             this,
             {
                 durationTimer.update(it)
-                if (durationTimer.isFinished()) {
-                    kill(props(CAUSE_OF_DEATH_MESSAGE to "Duration timer finished"))
-                }
+                if (durationTimer.isFinished()) kill(props(CAUSE_OF_DEATH_MESSAGE to "Duration timer finished"))
 
                 soundTimer.update(it)
                 if (soundTimer.isFinished()) {
@@ -120,7 +122,6 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getCenter(), Position.CENTER)
-
             val rotation =
                 when (direction) {
                     Direction.RIGHT -> 0f

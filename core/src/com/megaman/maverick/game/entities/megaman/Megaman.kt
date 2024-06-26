@@ -46,10 +46,7 @@ import com.megaman.maverick.game.entities.explosions.SigmaRatElectricBallExplosi
 import com.megaman.maverick.game.entities.explosions.SnowballExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-import com.megaman.maverick.game.entities.hazards.Bolt
-import com.megaman.maverick.game.entities.hazards.ElectrocutieChild
-import com.megaman.maverick.game.entities.hazards.LaserBeamer
-import com.megaman.maverick.game.entities.hazards.SpikeBall
+import com.megaman.maverick.game.entities.hazards.*
 import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOSION_ORB_SPEED
@@ -164,7 +161,12 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         SnowheadThrower::class to dmgNeg(3),
         Spiky::class to dmgNeg(3),
         PenguinMiniBoss::class to dmgNeg(3),
-        BabyPenguin::class to dmgNeg(2)
+        BabyPenguin::class to dmgNeg(2),
+        UFOBomb::class to dmgNeg(3),
+        UFOBombBot::class to dmgNeg(2),
+        RollingBot::class to dmgNeg(3),
+        RollingBotShot::class to dmgNeg(3),
+        AcidGoop::class to dmgNeg(3)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 

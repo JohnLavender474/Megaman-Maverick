@@ -96,7 +96,10 @@ class BossPane(
 
     override fun draw(drawer: Batch) {
         paneSprite.draw(drawer)
-        bossSprite.setRegion(bossRegSupplier.get())
-        bossSprite.draw(drawer)
+        val bossRegion = bossRegSupplier.get()
+        if (bossRegion != null) {
+            bossSprite.setRegion(bossRegion)
+            bossSprite.draw(drawer)
+        }
     }
 }

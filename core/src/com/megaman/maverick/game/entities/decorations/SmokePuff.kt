@@ -6,16 +6,18 @@ import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
-import com.engine.common.CAUSE_OF_DEATH_MESSAGE
 import com.engine.common.enums.Position
+import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.objects.Properties
-import com.engine.common.objects.props
+import com.engine.common.shapes.toGameRectangle
+import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.sorting.DrawingPriority
 import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
+import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.ISpritesEntity
 import com.engine.updatables.UpdatablesComponent
@@ -24,7 +26,6 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 
-/** A smoke puff decoration. */
 class SmokePuff(game: MegamanMaverickGame) : GameEntity(game), ISpritesEntity {
 
     companion object {
@@ -49,23 +50,26 @@ class SmokePuff(game: MegamanMaverickGame) : GameEntity(game), ISpritesEntity {
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val animation = Animation(smokePuffRegion!!, 1, 7, 0.025f, false)
+        animation = Animation(smokePuffRegion!!, 1, 7, 0.025f, false)
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }
 
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 3))
-        sprite.setSize(ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
+        sprite.setSize(ConstVals.PPM.toFloat())
+        addComponent(
+            DrawableShapesComponent(
+                this,
+                debugShapeSuppliers = gdxArrayOf({ sprite.boundingRectangle.toGameRectangle() }),
+                debug = true
+            )
+        )
         return SpritesComponent(this, sprite)
     }
 
     private fun defineUpdatablesComponent() =
-        UpdatablesComponent(
-            this,
-            {
-                if (animation.isFinished()) {
-                    kill(props(CAUSE_OF_DEATH_MESSAGE to "Smoke puff animation finished."))
-                }
-            })
+        UpdatablesComponent(this, {
+            if (animation.isFinished()) kill()
+        })
 }
