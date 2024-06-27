@@ -5,7 +5,14 @@ filter: Nearest,Nearest
 repeat: none
 Bullet
   rotate: false
-  xy: 112, 0
+  xy: 160, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+CannonBall
+  rotate: false
+  xy: 192, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -26,42 +33,42 @@ CaveRock/Rock
   index: -1
 Electric/BigElectric
   rotate: false
-  xy: 144, 0
+  xy: 224, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 Electric/ElectricBallPulse
   rotate: false
-  xy: 208, 0
+  xy: 288, 0
   size: 128, 32
   orig: 128, 32
   offset: 0, 0
   index: -1
 Electric/PurpleShockBalls
   rotate: false
-  xy: 336, 0
+  xy: 416, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 Electric/SmallElectric
   rotate: false
-  xy: 400, 0
+  xy: 0, 32
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 Electric/Zap
   rotate: false
-  xy: 0, 32
+  xy: 64, 32
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 Fire/Fireball
   rotate: false
-  xy: 64, 32
+  xy: 128, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -75,14 +82,14 @@ GachappanBall
   index: -1
 HalfChargedShot
   rotate: false
-  xy: 96, 32
+  xy: 160, 32
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 Joeball
   rotate: false
-  xy: 160, 32
+  xy: 224, 32
   size: 128, 32
   orig: 128, 32
   offset: 0, 0
@@ -96,7 +103,7 @@ Petal
   index: -1
 Picket
   rotate: false
-  xy: 288, 32
+  xy: 352, 32
   size: 128, 32
   orig: 128, 32
   offset: 0, 0
@@ -131,56 +138,63 @@ PurpleBlast/Charge
   index: -1
 RollingBotShot
   rotate: false
-  xy: 416, 32
+  xy: 0, 64
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 Snowball
   rotate: false
-  xy: 480, 32
+  xy: 64, 64
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SnowballForm
   rotate: false
-  xy: 0, 64
+  xy: 96, 64
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 SnowJoeball
   rotate: false
-  xy: 96, 64
+  xy: 192, 64
   size: 128, 32
   orig: 128, 32
   offset: 0, 0
   index: -1
 SpiderWeb/BlinkWhite
   rotate: false
-  xy: 224, 64
+  xy: 320, 64
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 SpiderWeb/Gray
   rotate: false
-  xy: 288, 64
+  xy: 384, 64
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SpiderWeb/White
   rotate: false
-  xy: 320, 64
+  xy: 416, 64
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-UFOBomb
+ToxicGoopShot
   rotate: false
   xy: 32, 0
+  size: 48, 16
+  orig: 48, 16
+  offset: 0, 0
+  index: -1
+UFOBomb
+  rotate: false
+  xy: 80, 0
   size: 80, 16
   orig: 80, 16
   offset: 0, 0
