@@ -116,7 +116,7 @@ class AcidGoop(game: MegamanMaverickGame) : GameEntity(game), IDamager, IHazard,
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().set(body))
         body.addFixture(damagerFixture)
 
-        addComponent(DrawableShapesComponent(this, gdxArrayOf({ body }), debug = true))
+        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
