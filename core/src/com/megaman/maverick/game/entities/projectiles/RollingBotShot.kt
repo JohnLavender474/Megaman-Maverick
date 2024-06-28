@@ -14,6 +14,7 @@ import com.engine.common.interfaces.isFacing
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
+import com.engine.damage.IDamageable
 import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
@@ -73,9 +74,7 @@ class RollingBotShot(game: MegamanMaverickGame) : GameEntity(game), IProjectileE
         )
     }
 
-    override fun hitBody(bodyFixture: IFixture) {
-        if (bodyFixture.getEntity() != this && bodyFixture.getEntity() != owner) explodeAndDie()
-    }
+    override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
     override fun hitBlock(blockFixture: IFixture) = explodeAndDie()
 

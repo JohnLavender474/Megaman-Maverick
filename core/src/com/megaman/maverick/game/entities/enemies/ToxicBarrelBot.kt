@@ -54,13 +54,7 @@ import kotlin.reflect.KClass
 class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
 
     enum class ToxicBarrelBotState {
-        CLOSED,
-        OPENING_TOP,
-        OPEN_TOP,
-        CLOSING_TOP,
-        OPENING_CENTER,
-        OPEN_CENTER,
-        CLOSING_CENTER
+        CLOSED, OPENING_TOP, OPEN_TOP, CLOSING_TOP, OPENING_CENTER, OPEN_CENTER, CLOSING_CENTER
     }
 
     companion object {
@@ -75,8 +69,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         private var openTopRegion: TextureRegion? = null
     }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(3),
+    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(Bullet::class to dmgNeg(3),
         Fireball::class to dmgNeg(15),
         ChargedShot::class to dmgNeg {
             it as ChargedShot
@@ -85,8 +78,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         ChargedShotExplosion::class to dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 5 else 3
-        }
-    )
+        })
     override lateinit var facing: Facing
 
     private val closedTimer = Timer(CLOSED_DUR)
@@ -136,9 +128,8 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
                 ToxicBarrelBotState.OPENING_TOP, ToxicBarrelBotState.OPENING_CENTER -> {
                     transTimer.update(delta)
                     if (transTimer.isFinished()) {
-                        state =
-                            if (state == ToxicBarrelBotState.OPENING_TOP) ToxicBarrelBotState.OPEN_TOP
-                            else ToxicBarrelBotState.OPEN_CENTER
+                        state = if (state == ToxicBarrelBotState.OPENING_TOP) ToxicBarrelBotState.OPEN_TOP
+                        else ToxicBarrelBotState.OPEN_CENTER
                         transTimer.reset()
                     }
                 }
@@ -150,9 +141,8 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
                         shot = true
                     }
                     if (openTimer.isFinished()) {
-                        state =
-                            if (state == ToxicBarrelBotState.OPEN_TOP) ToxicBarrelBotState.CLOSING_TOP
-                            else ToxicBarrelBotState.CLOSING_CENTER
+                        state = if (state == ToxicBarrelBotState.OPEN_TOP) ToxicBarrelBotState.CLOSING_TOP
+                        else ToxicBarrelBotState.CLOSING_CENTER
                         openTimer.reset()
                     }
                 }
@@ -181,8 +171,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
                 )
             )
             requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
-        } else {
-            /*
+        } else {/*
             val spawn = body.getCenter().add(
                 0.15f * ConstVals.PPM * facing.value,
                 0.1f * ConstVals.PPM
@@ -213,37 +202,50 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         damagerFixture.rawShape.color = Color.RED
         debugShapes.add { damagerFixture.getShape() }
 
-        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.35f * ConstVals.PPM))
+        val damageableFixture = Fixture(
+            body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.85f * ConstVals.PPM, 0.65f * ConstVals.PPM)
+        )
         damageableFixture.attachedToBody = false
         body.addFixture(damageableFixture)
         damageableFixture.rawShape.color = Color.PURPLE
         debugShapes.add { damageableFixture.getShape() }
 
-        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle().setWidth(0.85f * ConstVals.PPM))
+        val shieldFixture = Fixture(
+            body, FixtureType.SHIELD, GameRectangle().setSize(0.65f * ConstVals.PPM, 0.85f * ConstVals.PPM)
+        )
         body.addFixture(shieldFixture)
         shieldFixture.rawShape.color = Color.CYAN
         debugShapes.add { shieldFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            body.height = if (state.equalsAny(ToxicBarrelBotState.OPENING_TOP, ToxicBarrelBotState.OPEN_TOP))
-                1.5f * ConstVals.PPM else 0.85f * ConstVals.PPM
+            body.height = if (state.equalsAny(
+                    ToxicBarrelBotState.OPENING_TOP,
+                    ToxicBarrelBotState.OPEN_TOP
+                )
+            ) 1.5f * ConstVals.PPM else 0.85f * ConstVals.PPM
             body.setBottomCenterToPoint(position)
 
             body.fixtures.forEach { entry ->
                 val fixture = entry.second as Fixture
+                val bounds = fixture.rawShape as GameRectangle
+
                 when (fixture.type) {
                     FixtureType.DAMAGEABLE -> {
-                        val center =
-                            if (state.equalsAny(ToxicBarrelBotState.OPENING_TOP, ToxicBarrelBotState.OPEN_TOP))
-                                body.getTopCenterPoint().sub(0f, 0.35f * ConstVals.PPM)
-                            else body.getCenter().sub(0f, 0.05f * ConstVals.PPM)
-                        center.x += 0.5f * ConstVals.PPM * facing.value
-                        (fixture.rawShape as GameRectangle).setCenter(center)
+                        val center: Vector2
+                        if (state.equalsAny(ToxicBarrelBotState.OPENING_TOP, ToxicBarrelBotState.OPEN_TOP)) {
+                            bounds.setWidth(0.85f * ConstVals.PPM)
+                            center = body.getTopCenterPoint().sub(0f, 0.35f * ConstVals.PPM)
+                        } else {
+                            bounds.setWidth(0.5f * ConstVals.PPM)
+                            center = body.getCenter().sub(0f, 0.05f * ConstVals.PPM)
+                        }
+                        center.x += 0.2f * ConstVals.PPM * facing.value
+                        bounds.setCenter(center)
                         fixture.active = state.equalsAny(ToxicBarrelBotState.OPEN_TOP, ToxicBarrelBotState.OPEN_CENTER)
                     }
 
-                    FixtureType.SHIELD -> (fixture.rawShape as GameRectangle).setHeight(body.height)
-                    else -> (fixture.rawShape as GameRectangle).set(body)
+                    FixtureType.SHIELD -> bounds.setBottomCenterToPoint(body.getBottomCenterPoint())
+                    else -> bounds.set(body)
                 }
             }
         }
@@ -270,12 +272,10 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         val keySupplier = {
             when (state) {
                 ToxicBarrelBotState.CLOSED -> "closed"
-                ToxicBarrelBotState.OPENING_TOP,
-                ToxicBarrelBotState.OPEN_TOP -> "open_top"
+                ToxicBarrelBotState.OPENING_TOP, ToxicBarrelBotState.OPEN_TOP -> "open_top"
 
                 ToxicBarrelBotState.CLOSING_TOP -> "closing_top"
-                ToxicBarrelBotState.OPENING_CENTER,
-                ToxicBarrelBotState.OPEN_CENTER -> "open_center"
+                ToxicBarrelBotState.OPENING_CENTER, ToxicBarrelBotState.OPEN_CENTER -> "open_center"
 
                 ToxicBarrelBotState.CLOSING_CENTER -> "closing_center"
             }
