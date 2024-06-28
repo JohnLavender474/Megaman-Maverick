@@ -64,7 +64,7 @@ class GachappanBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
 
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
-    override fun explodeAndDie() {
+    override fun explodeAndDie(vararg params: Any) {
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)
         val props = props(
             ConstKeys.POSITION to body.getCenter(),

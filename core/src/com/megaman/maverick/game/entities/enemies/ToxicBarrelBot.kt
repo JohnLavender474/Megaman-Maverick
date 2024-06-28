@@ -59,11 +59,12 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
 
     companion object {
         const val TAG = "ToxicBarrelBot"
-        private const val CLOSED_DUR = 1.5f
+        private const val CLOSED_DUR = 1f
         private const val TRANS_DUR = 0.5f
-        private const val OPEN_DUR = 2f
-        private const val SHOOT_TIME = 1f
+        private const val OPEN_DUR = 1f
+        private const val SHOOT_TIME = 0.5f
         private const val BULLET_SPEED = 7.5f
+        private const val GOOP_SHOT_X_IMPULSE = 8f
         private var closedRegion: TextureRegion? = null
         private var openCenterRegion: TextureRegion? = null
         private var openTopRegion: TextureRegion? = null
@@ -171,18 +172,20 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
                 )
             )
             requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
-        } else {/*
+        } else {
             val spawn = body.getCenter().add(
-                0.15f * ConstVals.PPM * facing.value,
-                0.1f * ConstVals.PPM
+                0.25f * ConstVals.PPM * facing.value,
+                0.35f * ConstVals.PPM
             )
-            val toxicGoopShot = EntityFactories.fetch(EntityType.PROJECTILE, "")!!
+            val toxicGoopShot = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.TOXIC_GOOP_SHOT)!!
             game.engine.spawn(
                 toxicGoopShot, props(
-                    ConstKeys.POSITION to spawn
+                    ConstKeys.POSITION to spawn,
+                    ConstKeys.OWNER to this,
+                    ConstKeys.IMPULSE to Vector2(GOOP_SHOT_X_IMPULSE * ConstVals.PPM * facing.value, 0f)
                 )
             )
-             */
+            requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
         }
     }
 

@@ -77,14 +77,10 @@ class CaveRock(game: MegamanMaverickGame) : AbstractProjectile(game) {
             spawnProps.getOrDefault(ConstKeys.GRAVITY, STANDARD_GRAVITY * ConstVals.PPM, Float::class)
     }
 
-    override fun onDamageInflictedTo(damageable: IDamageable) {
-        GameLogger.debug(TAG, "onDamageInflictedTo(): damageable = $damageable")
-        explodeAndDie()
-    }
+    override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
     override fun hitBlock(blockFixture: IFixture) {
         if (passThroughBlocks) return
-        GameLogger.debug(TAG, "Hit block: $blockFixture")
         explodeAndDie()
     }
 
@@ -140,7 +136,7 @@ class CaveRock(game: MegamanMaverickGame) : AbstractProjectile(game) {
         return spritesComponent
     }
 
-    override fun explodeAndDie() {
+    override fun explodeAndDie(vararg params: Any) {
         GameLogger.debug(TAG, "burst()")
         kill(props(CAUSE_OF_DEATH_MESSAGE to "Burst"))
 

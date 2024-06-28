@@ -5,7 +5,7 @@ filter: Nearest,Nearest
 repeat: none
 Disintegration
   rotate: false
-  xy: 0, 0
+  xy: 96, 0
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
@@ -26,29 +26,36 @@ ExplosionOrbs
   index: -1
 HalfChargedShot
   rotate: false
-  xy: 96, 0
+  xy: 192, 0
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 PreciousExplosion
   rotate: false
-  xy: 192, 0
+  xy: 288, 0
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 SmokePuff
   rotate: false
-  xy: 288, 0
+  xy: 384, 0
   size: 224, 32
   orig: 224, 32
   offset: 0, 0
   index: -1
 SnowballExplode
   rotate: false
-  xy: 512, 0
+  xy: 608, 0
   size: 96, 32
   orig: 96, 32
+  offset: 0, 0
+  index: -1
+ToxicGoopSplash
+  rotate: false
+  xy: 0, 0
+  size: 96, 16
+  orig: 96, 16
   offset: 0, 0
   index: -1

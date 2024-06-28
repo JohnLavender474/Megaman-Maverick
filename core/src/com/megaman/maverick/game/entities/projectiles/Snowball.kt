@@ -74,7 +74,7 @@ class Snowball(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun hitWater(waterFixture: IFixture) = explodeAndDie()
 
-    override fun explodeAndDie() {
+    override fun explodeAndDie(vararg params: Any) {
         kill()
         val explosion =
             EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SNOWBALL_EXPLOSION)!!

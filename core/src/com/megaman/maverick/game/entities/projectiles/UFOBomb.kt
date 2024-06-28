@@ -69,7 +69,7 @@ class UFOBomb(game: MegamanMaverickGame): GameEntity(game), IProjectileEntity, I
         if (bodyFixture.getEntity() is Megaman) explodeAndDie()
     }
 
-    override fun explodeAndDie() {
+    override fun explodeAndDie(vararg params: Any) {
         kill()
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
         game.engine.spawn(explosion, props(

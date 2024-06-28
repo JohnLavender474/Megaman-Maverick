@@ -28,6 +28,7 @@ class ProjectilesFactory(private val game: MegamanMaverickGame) : EntityFactory(
         const val SNOW_HEAD = "SnowHead"
         const val UFO_BOMB = "UFOBomb"
         const val ROLLING_BOT_SHOT = "RollingBotShot"
+        const val TOXIC_GOOP_SHOT = "ToxicGoopShot"
     }
 
     override fun init() {
@@ -49,6 +50,7 @@ class ProjectilesFactory(private val game: MegamanMaverickGame) : EntityFactory(
         pools.put(SNOW_HEAD, EntityPoolCreator.create { Snowhead(game) })
         pools.put(UFO_BOMB, EntityPoolCreator.create { UFOBomb(game) })
         pools.put(ROLLING_BOT_SHOT, EntityPoolCreator.create { RollingBotShot(game) })
+        pools.put(TOXIC_GOOP_SHOT, EntityPoolCreator.create { ToxicGoopShot(game) })
     }
 
     override fun fetch(key: Any) = pools.get(if (key == "") BULLET else key)?.fetch()

@@ -24,7 +24,7 @@ interface IProjectileEntity : IOwnable, IDamager, IBodyEntity, ISpritesEntity, I
 
     override fun canDamage(damageable: IDamageable) = damageable != owner
 
-    fun explodeAndDie() {}
+    fun explodeAndDie(vararg params: Any) {}
 
     fun hitBody(bodyFixture: IFixture) {}
 
@@ -39,7 +39,9 @@ interface IProjectileEntity : IOwnable, IDamager, IBodyEntity, ISpritesEntity, I
 
 internal fun IProjectileEntity.defineProjectileComponents(): Array<IGameComponent> {
     val components = Array<IGameComponent>()
+
     components.add(AudioComponent(this))
+
     val cullEvents = objectSetOf<Any>(
         EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING
     )
@@ -54,5 +56,6 @@ internal fun IProjectileEntity.defineProjectileComponents(): Array<IGameComponen
             )
         )
     )
+
     return components
 }

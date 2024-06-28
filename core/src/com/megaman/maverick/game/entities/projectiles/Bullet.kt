@@ -66,10 +66,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
         bounced = 0
     }
 
-    override fun onDamageInflictedTo(damageable: IDamageable) {
-        super.onDamageInflictedTo(damageable)
-        explodeAndDie()
-    }
+    override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
     override fun hitBody(bodyFixture: IFixture) {
         val entity = bodyFixture.getEntity()
@@ -118,7 +115,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
         requestToPlaySound(SoundAsset.DINK_SOUND, false)
     }
 
-    override fun explodeAndDie() {
+    override fun explodeAndDie(vararg params: Any) {
         kill()
         val disintegration = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)
         game.engine.spawn(disintegration!!, props(ConstKeys.POSITION to body.getCenter()))

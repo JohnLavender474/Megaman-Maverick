@@ -40,10 +40,7 @@ import com.megaman.maverick.game.entities.bosses.sigmarat.SigmaRat
 import com.megaman.maverick.game.entities.bosses.sigmarat.SigmaRatClaw
 import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.enemies.*
-import com.megaman.maverick.game.entities.explosions.CaveRockExplosion
-import com.megaman.maverick.game.entities.explosions.Explosion
-import com.megaman.maverick.game.entities.explosions.SigmaRatElectricBallExplosion
-import com.megaman.maverick.game.entities.explosions.SnowballExplosion
+import com.megaman.maverick.game.entities.explosions.*
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.hazards.*
@@ -167,7 +164,9 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         RollingBot::class to dmgNeg(3),
         RollingBotShot::class to dmgNeg(3),
         AcidGoop::class to dmgNeg(3),
-        ToxicBarrelBot::class to dmgNeg(3)
+        ToxicBarrelBot::class to dmgNeg(3),
+        ToxicGoopShot::class to dmgNeg(3),
+        ToxicGoopSplash::class to dmgNeg(3)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 

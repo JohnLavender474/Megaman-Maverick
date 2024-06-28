@@ -101,7 +101,7 @@ class Snowhead(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity,
         }
     }
 
-    override fun explodeAndDie() {
+    override fun explodeAndDie(vararg params: Any) {
         kill()
         getMegamanMaverickGame().audioMan.playSound(SoundAsset.CHILL_SHOOT_SOUND, false)
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SNOWBALL_EXPLOSION)!!

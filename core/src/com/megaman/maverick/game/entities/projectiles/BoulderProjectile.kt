@@ -103,18 +103,11 @@ class BoulderProjectile(game: MegamanMaverickGame) : GameEntity(game), IProjecti
         spawnExplodeDelay.reset()
     }
 
-    override fun onDestroy() {
-        GameLogger.debug(TAG, "On destroy")
-        super<GameEntity>.onDestroy()
-    }
-
-    override fun explodeAndDie() {
-        GameLogger.debug(TAG, "Exploding and dying")
-        super.explodeAndDie()
+    override fun explodeAndDie(vararg params: Any) {
+        kill()
         val disintegration = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)
         game.engine.spawn(disintegration!!, props(ConstKeys.POSITION to body.getCenter()))
         if (size == Size.SMALL) requestToPlaySound(SoundAsset.THUMP_SOUND, false)
-        kill()
     }
 
     private fun breakApart(shape: IGameShape2D) {

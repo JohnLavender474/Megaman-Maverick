@@ -79,15 +79,9 @@ class JoeBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         body.physics.velocity.set(trajectory)
     }
 
-    override fun onDamageInflictedTo(damageable: IDamageable) {
-        super.onDamageInflictedTo(damageable)
-        explodeAndDie()
-    }
+    override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
-    override fun hitBlock(blockFixture: IFixture) {
-        super.hitBlock(blockFixture)
-        explodeAndDie()
-    }
+    override fun hitBlock(blockFixture: IFixture) = explodeAndDie()
 
     override fun hitShield(shieldFixture: IFixture) {
         super.hitShield(shieldFixture)
@@ -149,7 +143,7 @@ class JoeBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         return AnimationsComponent(this, animator)
     }
 
-    override fun explodeAndDie() {
+    override fun explodeAndDie(vararg params: Any) {
         kill()
 
         val explosionType: String

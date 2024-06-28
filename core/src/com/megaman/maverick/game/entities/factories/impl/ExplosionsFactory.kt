@@ -21,6 +21,7 @@ class ExplosionsFactory(private val game: MegamanMaverickGame) : EntityFactory()
         const val CAVE_ROCK_EXPLOSION = "CaveRockExplosion"
         const val SIGMA_RAT_ELECTRIC_BALL_EXPLOSION = "SigmaRatElectricBallExplosion"
         const val ICE_SHARD = "IceShard"
+        const val TOXIC_GOOP_SPLASH = "ToxicGoopSplash"
     }
 
     override fun init() {
@@ -34,6 +35,7 @@ class ExplosionsFactory(private val game: MegamanMaverickGame) : EntityFactory()
             SIGMA_RAT_ELECTRIC_BALL_EXPLOSION,
             EntityPoolCreator.create { SigmaRatElectricBallExplosion(game) })
         pools.put(ICE_SHARD, EntityPoolCreator.create { IceShard(game) })
+        pools.put(TOXIC_GOOP_SPLASH, EntityPoolCreator.create { ToxicGoopSplash(game) })
     }
 
     override fun fetch(key: Any): IGameEntity? {
