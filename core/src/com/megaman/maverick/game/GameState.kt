@@ -5,13 +5,15 @@ import com.badlogic.gdx.utils.ObjectSet
 import com.engine.common.interfaces.Resettable
 import com.engine.points.Points
 import com.megaman.maverick.game.entities.bosses.BossType
+import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 
 data class GameState(
     var bossesDefeated: ObjectSet<BossType> = ObjectSet(),
     var heartTanksCollected: ObjectSet<MegaHeartTank> = ObjectSet(),
-    var healthTanksCollected: ObjectMap<MegaHealthTank, Int> = ObjectMap()
+    var healthTanksCollected: ObjectMap<MegaHealthTank, Int> = ObjectMap(),
+    var abilitiesAttained: ObjectSet<MegaAbility> = ObjectSet()
 ) : Resettable {
 
     companion object {
@@ -26,5 +28,6 @@ data class GameState(
         bossesDefeated.clear()
         heartTanksCollected.clear()
         healthTanksCollected.clear()
+        abilitiesAttained.clear()
     }
 }

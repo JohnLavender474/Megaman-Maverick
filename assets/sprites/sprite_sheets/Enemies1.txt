@@ -285,9 +285,9 @@ PicketJoe/Stand
   index: -1
 PicketJoe/Throw
   rotate: false
-  xy: 416, 128
-  size: 96, 32
-  orig: 96, 32
+  xy: 0, 160
+  size: 128, 32
+  orig: 128, 32
   offset: 0, 0
   index: -1
 PreciousJoe/Charge
@@ -327,28 +327,28 @@ Ratton/Stand
   index: -1
 RedScrewie/Down
   rotate: false
-  xy: 0, 160
+  xy: 128, 160
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 RedScrewie/Drop
   rotate: false
-  xy: 32, 160
+  xy: 160, 160
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 RedScrewie/Rise
   rotate: false
-  xy: 128, 160
+  xy: 256, 160
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 RedScrewie/Shoot
   rotate: false
-  xy: 224, 160
+  xy: 352, 160
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
@@ -383,7 +383,7 @@ RollerBot/Shoot
   index: -1
 ShieldAttacker/Attack
   rotate: false
-  xy: 320, 160
+  xy: 448, 160
   size: 64, 32
   orig: 64, 32
   offset: 0, 0

@@ -52,21 +52,18 @@ class UFOBombBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     companion object {
         const val TAG = "UFOBombBot"
-        private const val X_VEL = 3f
+        private const val X_VEL = 2f
         private const val DROP_DELAY = 1.5f
-        private const val DROP_DURATION = 1f
+        private const val DROP_DURATION = 1.5f
         private var flyRegion: TextureRegion? = null
         private var dropRegion: TextureRegion? = null
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(10),
+        Bullet::class to dmgNeg(15),
         Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg {
-            it as ChargedShot
-            if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
-        },
-        ChargedShotExplosion::class to dmgNeg(15)
+        ChargedShot::class to dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShotExplosion::class to dmgNeg(ConstVals.MAX_HEALTH)
     )
     override lateinit var facing: Facing
 

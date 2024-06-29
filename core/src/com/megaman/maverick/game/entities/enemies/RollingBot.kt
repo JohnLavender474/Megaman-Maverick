@@ -59,10 +59,10 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     companion object {
         const val TAG = "RollingBot"
-        private const val X_VEL = 3.5f
+        private const val X_VEL = 3f
         private const val ROLL_DURATION = 1f
         private const val OPEN_DELAY = 0.3f
-        private const val SHOOT_DELAY = 0.75f
+        private const val SHOOT_DELAY = 0.5f
         private const val BULLETS_TO_SHOOT = 3
         private const val GRAVITY = -0.15f
         private const val GROUND_GRAVITY = -0.0001f
@@ -73,8 +73,8 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(3),
-        Fireball::class to dmgNeg(15),
+        Bullet::class to dmgNeg(5),
+        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
         ChargedShot::class to dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 15 else 5

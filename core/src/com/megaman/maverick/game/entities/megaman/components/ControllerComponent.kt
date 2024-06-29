@@ -8,6 +8,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.ControllerButton
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
@@ -95,7 +96,10 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
         ButtonActuator(
             onPressContinued = { _, delta ->
                 if (!ready || damaged || teleporting || currentWeapon == MegamanWeapon.RUSH_JETPACK ||
-                    (!charging && !weaponHandler.canFireWeapon(currentWeapon, MegaChargeStatus.HALF_CHARGED)) ||
+                    !has(MegaAbility.CHARGE_WEAPONS) || (!charging && !weaponHandler.canFireWeapon(
+                        currentWeapon,
+                        MegaChargeStatus.HALF_CHARGED
+                    )) ||
                     (charging && !weaponHandler.canFireWeapon(currentWeapon, MegaChargeStatus.FULLY_CHARGED))
                 ) {
                     stopCharging()

@@ -79,7 +79,7 @@ class ElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun hitBlock(blockFixture: IFixture) = explodeAndDie()
 
-    override fun explodeAndDie(vararg params: Any) {
+    override fun explodeAndDie(vararg params: Any?) {
         // TODO: create zap explosion
         // requestToPlaySound(SoundAsset.MM3_ELECTRIC_PULSE_SOUND, false)
     }

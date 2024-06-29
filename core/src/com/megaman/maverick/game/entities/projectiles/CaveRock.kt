@@ -136,7 +136,7 @@ class CaveRock(game: MegamanMaverickGame) : AbstractProjectile(game) {
         return spritesComponent
     }
 
-    override fun explodeAndDie(vararg params: Any) {
+    override fun explodeAndDie(vararg params: Any?) {
         GameLogger.debug(TAG, "burst()")
         kill(props(CAUSE_OF_DEATH_MESSAGE to "Burst"))
 

@@ -6,6 +6,7 @@ import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.audio.AudioComponent
+import com.engine.common.enums.Direction
 import com.engine.common.enums.Position
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.getTextureRegion
@@ -35,13 +36,14 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
 class ToxicGoopSplash(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
-    IAudioEntity, IOwnable, IDamager {
+    IAudioEntity, IDirectionRotatable, IOwnable, IDamager {
 
     companion object {
         const val TAG = "ToxicGoopSplash"
@@ -50,6 +52,7 @@ class ToxicGoopSplash(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity
     }
 
     override var owner: IGameEntity? = null
+    override lateinit var directionRotation: Direction
 
     private val splashTimer = Timer(SPLASH_DUR)
 
@@ -66,8 +69,14 @@ class ToxicGoopSplash(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
         owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
+        directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-        body.setBottomCenterToPoint(spawn)
+        when (directionRotation) {
+            Direction.UP -> body.setBottomCenterToPoint(spawn)
+            Direction.DOWN -> body.setTopCenterToPoint(spawn)
+            Direction.LEFT -> body.setCenterRightToPoint(spawn)
+            Direction.RIGHT -> body.setCenterLeftToPoint(spawn)
+        }
         splashTimer.reset()
         requestToPlaySound(SoundAsset.SPLASH_SOUND, false)
     }
@@ -97,6 +106,8 @@ class ToxicGoopSplash(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            _sprite.setOriginCenter()
+            _sprite.rotation = directionRotation.rotation
         }
         return spritesComponent
     }

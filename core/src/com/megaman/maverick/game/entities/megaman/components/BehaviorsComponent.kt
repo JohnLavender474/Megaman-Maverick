@@ -20,10 +20,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.ControllerButton
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
-import com.megaman.maverick.game.entities.megaman.constants.MegamanKeys
-import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.special.Cart
 import com.megaman.maverick.game.entities.special.Ladder
 import com.megaman.maverick.game.utils.getMegamanMaverickGame
@@ -41,7 +38,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
     val behaviorsComponent = BehaviorsComponent(this)
 
     val wallSlide = Behavior(evaluate = {
-        if (!ready || !canMove || isBehaviorActive(BehaviorType.JETPACKING)) return@Behavior false
+        if (!ready || !canMove || !has(MegaAbility.WALL_SLIDE) || isBehaviorActive(BehaviorType.JETPACKING))
+            return@Behavior false
 
         if ((body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && game.controllerPoller.isPressed(
                 if (isDirectionRotatedDown() || isDirectionRotatedRight()) ControllerButton.RIGHT
@@ -96,8 +94,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             if (!ready || !canMove) return@Behavior false
 
             if (damaged || isBehaviorActive(BehaviorType.RIDING_CART) || !body.isSensing(BodySense.IN_WATER) ||
-                body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)
-            ) return@Behavior false
+                body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)) return@Behavior false
 
             return@Behavior if (isBehaviorActive(BehaviorType.SWIMMING)) when (directionRotation) {
                 Direction.UP -> body.physics.velocity.y > 0f
@@ -188,7 +185,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
         override fun evaluate(delta: Float): Boolean {
             if (!ready || !canMove || damaged || teleporting || airDashTimer.isFinished() ||
-                body.isSensingAny(BodySense.FEET_ON_GROUND, BodySense.TELEPORTING) ||
+                !has(MegaAbility.AIR_DASH) || body.isSensingAny(BodySense.FEET_ON_GROUND, BodySense.TELEPORTING) ||
                 isAnyBehaviorActive(
                     BehaviorType.WALL_SLIDING, BehaviorType.CLIMBING, BehaviorType.RIDING_CART,
                     BehaviorType.JETPACKING
@@ -264,7 +261,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         private var directionOnInit: Direction? = null
 
         override fun evaluate(delta: Float): Boolean {
-            if (!ready || !canMove) return false
+            if (!ready || !canMove || !has(MegaAbility.GROUND_SLIDE)) return false
 
             if (isBehaviorActive(BehaviorType.GROUND_SLIDING) && body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)) return true
 

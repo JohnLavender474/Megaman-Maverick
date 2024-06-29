@@ -143,7 +143,7 @@ class JoeBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         return AnimationsComponent(this, animator)
     }
 
-    override fun explodeAndDie(vararg params: Any) {
+    override fun explodeAndDie(vararg params: Any?) {
         kill()
 
         val explosionType: String

@@ -59,7 +59,7 @@ class RollingBotShot(game: MegamanMaverickGame) : GameEntity(game), IProjectileE
         addComponent(defineAnimationsComponent())
     }
 
-    override fun explodeAndDie(vararg params: Any) {
+    override fun explodeAndDie(vararg params: Any?) {
         kill()
         getMegamanMaverickGame().audioMan.playSound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.CHARGED_SHOT_EXPLOSION)!!

@@ -115,7 +115,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
         requestToPlaySound(SoundAsset.DINK_SOUND, false)
     }
 
-    override fun explodeAndDie(vararg params: Any) {
+    override fun explodeAndDie(vararg params: Any?) {
         kill()
         val disintegration = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)
         game.engine.spawn(disintegration!!, props(ConstKeys.POSITION to body.getCenter()))
@@ -146,7 +146,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
     private fun defineSpritesCompoent(): SpritesComponent {
         if (bulletRegion == null) bulletRegion =
             game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Bullet")
-        val sprite = GameSprite(bulletRegion!!, DrawingPriority(DrawingSection.PLAYGROUND, 10))
+        val sprite = GameSprite(bulletRegion!!, DrawingPriority(DrawingSection.FOREGROUND, 5))
         sprite.setSize(1.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->

@@ -327,7 +327,7 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
 
         facing = Facing.RIGHT
         aButtonTask = AButtonTask.JUMP
-        currentWeapon = MegamanWeapon.RUSH_JETPACK
+        currentWeapon = MegamanWeapon.BUSTER
         directionRotation = Direction.UP
         running = false
         damageFlash = false

@@ -5,8 +5,10 @@ import com.badlogic.gdx.math.Vector2
 import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
+import com.engine.common.enums.Direction
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.getTextureRegion
+import com.engine.common.getOverlapPushDirection
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
@@ -19,6 +21,7 @@ import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IAnimatedEntity
+import com.engine.entities.contracts.IBodyEntity
 import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -60,16 +63,21 @@ class ToxicGoopShot(game: MegamanMaverickGame) : GameEntity(game), IProjectileEn
         body.physics.velocity.set(impulse)
     }
 
-    override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
+    override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie(
+        getOverlapPushDirection(body.rotatedBounds, (damageable as IBodyEntity).body.rotatedBounds)
+    )
 
-    override fun hitBlock(blockFixture: IFixture) = explodeAndDie()
+    override fun hitBlock(blockFixture: IFixture) = explodeAndDie(
+        getOverlapPushDirection(body.rotatedBounds, blockFixture.getBody().rotatedBounds)
+    )
 
-    override fun explodeAndDie(vararg params: Any) {
+    override fun explodeAndDie(vararg params: Any?) {
         kill()
         val goopSplash = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.TOXIC_GOOP_SPLASH)!!
         game.engine.spawn(
             goopSplash, props(
                 ConstKeys.OWNER to this,
+                ConstKeys.DIRECTION to params[0] as Direction,
                 ConstKeys.POSITION to body.getBottomCenterPoint()
             )
         )

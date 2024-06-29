@@ -48,11 +48,11 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
         private var textureAtlas: TextureAtlas? = null
 
-        private const val SPEED_NORMAL = 2.5f
-        private const val SPEED_SUPER = 7f
+        private const val SPEED_NORMAL = 2f
+        private const val SPEED_SUPER = 5f
 
         private const val BOUNCE_DUR = 2f
-        private const val TURN_DELAY = .25f
+        private const val TURN_DELAY = 0.35f
 
         private const val X_BOUNCE = 10f
         private const val Y_BOUNCE = 20f

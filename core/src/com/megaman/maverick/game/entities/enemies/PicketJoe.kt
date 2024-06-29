@@ -58,16 +58,21 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     companion object {
         const val TAG = "PicketJoe"
         private var atlas: TextureAtlas? = null
-        private const val STAND_DUR = .4f
-        private const val THROW_DUR = .5f
+        private const val STAND_DUR = 0.5f
+        private const val THROW_DUR = 0.4f
         private const val PICKET_IMPULSE_Y = 10f
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(10), Fireball::class to dmgNeg(ConstVals.MAX_HEALTH), ChargedShot::class to dmgNeg {
+        Bullet::class to dmgNeg(10),
+        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class to dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
-        }, ChargedShotExplosion::class to dmgNeg(15)
+        }, ChargedShotExplosion::class to dmgNeg {
+            it as ChargedShotExplosion
+            if (it.fullyCharged) 15 else 5
+        }
     )
 
     override var facing = Facing.RIGHT
@@ -195,7 +200,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val keySupplier: () -> String? = { if (standing) "stand" else "throw" }
         val animations = objectMapOf<String, IAnimation>(
             "stand" to Animation(atlas!!.findRegion("PicketJoe/Stand")),
-            "throw" to Animation(atlas!!.findRegion("PicketJoe/Throw"), 1, 3, 0.1f, false)
+            "throw" to Animation(atlas!!.findRegion("PicketJoe/Throw"), 1, 4, 0.1f, false)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

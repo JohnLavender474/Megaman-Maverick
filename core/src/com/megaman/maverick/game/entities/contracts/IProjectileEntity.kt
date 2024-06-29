@@ -24,7 +24,7 @@ interface IProjectileEntity : IOwnable, IDamager, IBodyEntity, ISpritesEntity, I
 
     override fun canDamage(damageable: IDamageable) = damageable != owner
 
-    fun explodeAndDie(vararg params: Any) {}
+    fun explodeAndDie(vararg params: Any?) {}
 
     fun hitBody(bodyFixture: IFixture) {}
 

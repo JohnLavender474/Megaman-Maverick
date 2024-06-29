@@ -71,10 +71,11 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(Bullet::class to dmgNeg(3),
-        Fireball::class to dmgNeg(15),
+        Bullet::class to dmgNeg(5),
+        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
         ChargedShot::class to dmgNeg {
             it as ChargedShot
-            if (it.fullyCharged) 15 else 5
+            if (it.fullyCharged) 15 else 10
         },
         ChargedShotExplosion::class to dmgNeg {
             it as ChargedShotExplosion
@@ -108,8 +109,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         transTimer.reset()
         openTimer.reset()
         state = ToxicBarrelBotState.CLOSED
-        val left = spawnProps.getOrDefault(ConstKeys.LEFT, megaman.body.x < body.x, Boolean::class)
-        facing = if (left) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
         shot = false
     }
 
@@ -118,6 +118,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         updatablesComponent.add { delta ->
             when (state) {
                 ToxicBarrelBotState.CLOSED -> {
+                    facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
                     closedTimer.update(delta)
                     if (closedTimer.isFinished()) {
                         val openingTop = getRandomBool()

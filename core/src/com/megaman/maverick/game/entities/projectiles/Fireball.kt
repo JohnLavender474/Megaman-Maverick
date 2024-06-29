@@ -201,7 +201,7 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         return updatablesComponent
     }
 
-    override fun explodeAndDie(vararg params: Any) {
+    override fun explodeAndDie(vararg params: Any?) {
         burst = true
         requestToPlaySound(SoundAsset.ATOMIC_FIRE_SOUND, false)
     }

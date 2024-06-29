@@ -103,7 +103,7 @@ class BoulderProjectile(game: MegamanMaverickGame) : GameEntity(game), IProjecti
         spawnExplodeDelay.reset()
     }
 
-    override fun explodeAndDie(vararg params: Any) {
+    override fun explodeAndDie(vararg params: Any?) {
         kill()
         val disintegration = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)
         game.engine.spawn(disintegration!!, props(ConstKeys.POSITION to body.getCenter()))

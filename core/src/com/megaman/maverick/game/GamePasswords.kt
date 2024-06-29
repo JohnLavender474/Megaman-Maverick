@@ -4,12 +4,15 @@ import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.toGdxArray
 import com.engine.common.objects.MultiCollectionIterable
 import com.megaman.maverick.game.entities.bosses.BossType
+import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
+import java.lang.IllegalStateException
 
 object GamePasswords {
 
-    private val indices = gdxArrayOf(8, 31, 18, 21, 15, 2, 17, 12, 33, 1, 23, 16, 6, 14, 5, 11, 28, 10, 13, 0)
+    private val indices =
+        gdxArrayOf(8, 31, 18, 21, 15, 2, 17, 12, 7, 22, 35, 3, 33, 1, 23, 16, 6, 14, 5, 11, 28, 10, 13, 0)
 
     fun getGamePassword(state: GameState): IntArray {
         val password = IntArray(36)
@@ -17,7 +20,8 @@ object GamePasswords {
             gdxArrayOf(
                 BossType.values().toGdxArray(),
                 MegaHeartTank.values().toGdxArray(),
-                MegaHealthTank.values().toGdxArray()
+                MegaHealthTank.values().toGdxArray(),
+                MegaAbility.values().toGdxArray()
             )
         )
         multiCollectionIterable.forEach { outerIndex, _, value ->
@@ -26,9 +30,10 @@ object GamePasswords {
                 is BossType -> if (state.bossesDefeated.contains(value)) 1 else 0
                 is MegaHeartTank -> if (state.heartTanksCollected.contains(value)) 1 else 0
                 is MegaHealthTank -> if (state.healthTanksCollected.containsKey(value)) 1 else 0
-                else -> null
+                is MegaAbility -> if (state.abilitiesAttained.contains(value)) 1 else 0
+                else -> throw IllegalStateException("Unknown value type: ${value::class}")
             }
-            if (digit != null) password[index] = digit
+            password[index] = digit
         }
         return password
     }
@@ -42,7 +47,8 @@ object GamePasswords {
             gdxArrayOf(
                 BossType.values().toGdxArray(),
                 MegaHeartTank.values().toGdxArray(),
-                MegaHealthTank.values().toGdxArray()
+                MegaHealthTank.values().toGdxArray(),
+                MegaAbility.values().toGdxArray()
             )
         )
         multiCollectionIterable.forEach { outerIndex, _, value ->
@@ -51,6 +57,8 @@ object GamePasswords {
                 is BossType -> if (passwordArray[index] == 1) bossesDefeated.add(value)
                 is MegaHeartTank -> if (passwordArray[index] == 1) heartTanksCollected.add(value)
                 is MegaHealthTank -> if (passwordArray[index] == 1) healthTanksCollected.put(value, 0)
+                is MegaAbility -> if (passwordArray[index] == 1) state.abilitiesAttained.add(value)
+                else -> throw IllegalStateException("Unknown value type: ${value::class}")
             }
         }
     }

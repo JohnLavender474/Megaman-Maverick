@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.megaman
 
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.GameState
+import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 
@@ -24,12 +25,17 @@ interface IMegaUpgradable {
     fun has(healthTank: MegaHealthTank) = upgradeHandler.has(healthTank)
 
     operator fun get(healthTank: MegaHealthTank) = upgradeHandler[healthTank]
+
+    fun has(ability: MegaAbility) = upgradeHandler.has(ability)
+
+    fun add(ability: MegaAbility) = upgradeHandler.add(ability)
 }
 
 class MegamanUpgradeHandler(private val gameState: GameState, private val megaman: Megaman) {
 
     private val heartTanks = gameState.heartTanksCollected
     private val healthTanks = gameState.healthTanksCollected
+    private val abilities = gameState.abilitiesAttained
 
     fun has(heartTank: MegaHeartTank) = heartTanks.contains(heartTank)
 
@@ -82,4 +88,8 @@ class MegamanUpgradeHandler(private val gameState: GameState, private val megama
     fun has(healthTank: MegaHealthTank) = healthTanks.containsKey(healthTank)
 
     operator fun get(healthTank: MegaHealthTank): Int = if (!has(healthTank)) 0 else healthTanks[healthTank]
+
+    fun has(ability: MegaAbility) = abilities.contains(ability)
+
+    fun add(ability: MegaAbility) = abilities.add(ability)
 }

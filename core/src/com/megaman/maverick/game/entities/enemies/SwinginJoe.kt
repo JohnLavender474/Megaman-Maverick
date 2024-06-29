@@ -68,10 +68,15 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override var facing = Facing.RIGHT
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(3), Fireball::class to dmgNeg(15), ChargedShot::class to dmgNeg {
+        Bullet::class to dmgNeg(5),
+        Fireball::class to dmgNeg(15),
+        ChargedShot::class to dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 15 else 5
-        }, ChargedShotExplosion::class to dmgNeg(3)
+        }, ChargedShotExplosion::class to dmgNeg {
+            it as ChargedShotExplosion
+            if (it.fullyCharged) 5 else 3
+        }
     )
 
     private lateinit var setting: SwinginJoeSetting
