@@ -8,8 +8,6 @@ import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
-import com.engine.common.CAUSE_OF_DEATH_MESSAGE
-import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.getTextureAtlas
@@ -114,8 +112,7 @@ class HealthBulb(game: MegamanMaverickGame) : GameEntity(game), ItemEntity, ISpr
     }
 
     override fun contactWithPlayer(megaman: Megaman) {
-        GameLogger.debug(TAG, "contactWithPlayer")
-        kill(props(CAUSE_OF_DEATH_MESSAGE to "Megaman touched the health bulb!"))
+        kill()
         game.eventsMan.submitEvent(
             Event(
                 EventType.ADD_PLAYER_HEALTH, props(ConstKeys.VALUE to (if (large) LARGE_HEALTH else SMALL_HEALTH))
@@ -124,7 +121,7 @@ class HealthBulb(game: MegamanMaverickGame) : GameEntity(game), ItemEntity, ISpr
     }
 
     private fun defineBodyComponent(): BodyComponent {
-        val body = Body(BodyType.DYNAMIC)
+        val body = Body(BodyType.STATIC)
         val debugShapes = Array<() -> IDrawableShape?>()
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
@@ -148,10 +145,10 @@ class HealthBulb(game: MegamanMaverickGame) : GameEntity(game), ItemEntity, ISpr
                 Direction.DOWN -> Vector2(0f, GRAVITY)
             }
             body.physics.gravity = gravity.scl(ConstVals.PPM.toFloat())
-            body.physics.gravityOn = !body.isSensing(BodySense.FEET_ON_GROUND)
         })
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+
         return BodyComponentCreator.create(this, body)
     }
 
@@ -183,7 +180,13 @@ class HealthBulb(game: MegamanMaverickGame) : GameEntity(game), ItemEntity, ISpr
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent(this, {
+        if (body.isSensing(BodySense.FEET_ON_GROUND)) {
+            body.physics.gravityOn = false
+            body.physics.velocity.setZero()
+        } else body.physics.gravityOn = true
+
         if (!timeCull) return@UpdatablesComponent
+
         if (warning) {
             blinkTimer.update(it)
             if (blinkTimer.isJustFinished()) {
@@ -191,7 +194,8 @@ class HealthBulb(game: MegamanMaverickGame) : GameEntity(game), ItemEntity, ISpr
                 blink = !blink
             }
         }
+
         cullTimer.update(it)
-        if (cullTimer.isFinished()) kill(props(CAUSE_OF_DEATH_MESSAGE to "Time's up!"))
+        if (cullTimer.isFinished()) kill()
     })
 }

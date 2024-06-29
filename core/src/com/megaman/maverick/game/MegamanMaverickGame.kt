@@ -84,7 +84,7 @@ class MegamanMaverickGame : Game2D(), IEventListener {
     companion object {
         const val TAG = "MegamanMaverickGame"
         const val DEBUG_TEXT = false
-        const val DEBUG_SHAPES = false
+        const val DEBUG_SHAPES = true
         const val DEFAULT_VOLUME = 0.5f
         val TAGS_TO_LOG: ObjectSet<String> =
             objectSetOf(RollingBot.TAG)

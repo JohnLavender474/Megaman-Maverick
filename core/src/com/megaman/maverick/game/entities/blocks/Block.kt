@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.blocks
 
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
@@ -53,26 +52,18 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
                     ConstKeys.CULL_OUT_OF_BOUNDS to getGameCameraCullingLogic(this)
                 )
             )
-        )
-        else removeComponent(CullablesComponent::class)
+        ) else removeComponent(CullablesComponent::class)
 
-        if (properties.containsKey(ConstKeys.FRICTION_X)) body.physics.frictionToApply.x =
-            properties.get(ConstKeys.FRICTION_X) as Float
-        else body.physics.frictionToApply.x = STANDARD_FRICTION_X
-
-        if (properties.containsKey(ConstKeys.FRICTION_Y)) body.physics.frictionToApply.y =
-            properties.get(ConstKeys.FRICTION_Y) as Float
-        else body.physics.frictionToApply.y = STANDARD_FRICTION_Y
-
-        if (properties.containsKey(ConstKeys.GRAVITY_ON)) body.physics.gravityOn =
-            properties.get(ConstKeys.GRAVITY_ON) as Boolean
-
-        if (properties.containsKey(ConstKeys.RESIST_ON)) body.physics.takeFrictionFromOthers =
-            properties.get(ConstKeys.RESIST_ON) as Boolean
+        body.physics.frictionToApply.x = if (spawnProps.containsKey(ConstKeys.FRICTION_X))
+            spawnProps.get(ConstKeys.FRICTION_X) as Float else STANDARD_FRICTION_X
+        body.physics.frictionToApply.y = if (spawnProps.containsKey(ConstKeys.FRICTION_Y))
+            spawnProps.get(ConstKeys.FRICTION_Y) as Float else STANDARD_FRICTION_Y
+        body.physics.gravityOn = spawnProps.getOrDefault(ConstKeys.GRAVITY_ON, false, Boolean::class)
+        body.physics.takeFrictionFromOthers = spawnProps.getOrDefault(ConstKeys.RESIST_ON, true, Boolean::class)
 
         body.clearBodyLabels()
-        if (properties.containsKey(ConstKeys.BODY_LABELS)) {
-            val labels = properties.get(ConstKeys.BODY_LABELS)
+        if (spawnProps.containsKey(ConstKeys.BODY_LABELS)) {
+            val labels = spawnProps.get(ConstKeys.BODY_LABELS)
             if (labels is String) {
                 val labelStrings = labels.replace("\\s+", "").split(",")
                 labelStrings.forEach {
@@ -86,8 +77,8 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
         }
 
         blockFixture.clearFixtureLabels()
-        if (properties.containsKey(ConstKeys.FIXTURE_LABELS)) {
-            val labels = properties.get(ConstKeys.FIXTURE_LABELS)
+        if (spawnProps.containsKey(ConstKeys.FIXTURE_LABELS)) {
+            val labels = spawnProps.get(ConstKeys.FIXTURE_LABELS)
             if (labels is String) {
                 val labelStrings = labels.replace("\\s+", "").split(",")
                 labelStrings.forEach {
@@ -100,14 +91,13 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
             }
         }
 
-        val bounds = spawnProps.get(ConstKeys.BOUNDS, Rectangle::class)
+        val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)
         if (bounds != null) body.set(bounds)
 
         val position = spawnProps.get(ConstKeys.POSITION, Vector2::class)
         if (position != null) body.setPosition(position)
 
-        val blockFixtureOn = spawnProps.getOrDefault(ConstKeys.BLOCK_ON, true) as Boolean
-        blockFixture.active = blockFixtureOn
+        blockFixture.active = spawnProps.getOrDefault(ConstKeys.BLOCK_ON, true, Boolean::class)
 
         val fixtureEntriesToAdd = spawnProps.get(ConstKeys.FIXTURES) as Array<Pair<FixtureType, Properties>>?
         fixtureEntriesToAdd?.forEach { fixtureEntry ->
@@ -120,8 +110,8 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
         }
 
         body.clearBlockFilters()
-        if (properties.containsKey(ConstKeys.BLOCK_FILTERS)) {
-            val filters = properties.get(ConstKeys.BLOCK_FILTERS)
+        if (spawnProps.containsKey(ConstKeys.BLOCK_FILTERS)) {
+            val filters = spawnProps.get(ConstKeys.BLOCK_FILTERS)
             if (filters is String) {
                 val filterStrings = filters.replace("\\s+", "").split(",")
                 filterStrings.forEach { body.addBlockFilter(it) }

@@ -59,7 +59,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         const val TAG = "PicketJoe"
         private var atlas: TextureAtlas? = null
         private const val STAND_DUR = 0.5f
-        private const val THROW_DUR = 0.4f
+        private const val THROW_DUR = 0.5f
         private const val PICKET_IMPULSE_Y = 10f
     }
 
@@ -200,7 +200,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val keySupplier: () -> String? = { if (standing) "stand" else "throw" }
         val animations = objectMapOf<String, IAnimation>(
             "stand" to Animation(atlas!!.findRegion("PicketJoe/Stand")),
-            "throw" to Animation(atlas!!.findRegion("PicketJoe/Throw"), 1, 4, 0.1f, false)
+            "throw" to Animation(atlas!!.findRegion("PicketJoe/Throw"), 1, 4, 0.125f, false)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

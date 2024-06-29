@@ -8,7 +8,9 @@ import com.engine.audio.AudioComponent
 import com.engine.common.GameLogger
 import com.engine.common.enums.Position
 import com.engine.common.extensions.getTextureAtlas
+import com.engine.common.extensions.objectSetOf
 import com.engine.common.objects.Properties
+import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
 import com.engine.damage.IDamager
@@ -23,6 +25,7 @@ import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.IBodyEntity
+import com.engine.entities.contracts.ICullableEntity
 import com.engine.entities.contracts.ISpritesEntity
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.*
@@ -31,17 +34,20 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IHazard
+import com.megaman.maverick.game.entities.factories.EntityFactories
+import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.getEntity
 import com.megaman.maverick.game.world.setConsumer
 
-class CeilingCrusher(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesEntity, IAudioEntity, IHazard,
-    IDamager {
+class CeilingCrusher(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesEntity, ICullableEntity,
+    IAudioEntity, IHazard, IDamager {
 
     companion object {
         const val TAG = "CeilingCrusher"
@@ -64,6 +70,8 @@ class CeilingCrusher(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity,
     private lateinit var state: CeilingCrusherState
 
     private var height = 0
+
+    override fun getTag() = TAG
 
     override fun init() {
         if (crusherRegion == null || barRegion == null) {
@@ -96,6 +104,12 @@ class CeilingCrusher(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity,
             }
         }
         state = CeilingCrusherState.WAITING
+        block = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.STANDARD) as Block
+        game.engine.spawn(block!!, props(
+            ConstKeys.BOUNDS to GameRectangle().setSize(2f * ConstVals.PPM, 0.5f * ConstVals.PPM),
+            ConstKeys.BLOCK_FILTERS to objectSetOf(TAG),
+            ConstKeys.CULL_OUT_OF_BOUNDS to false
+        ))
     }
 
     override fun onDestroy() {
@@ -118,7 +132,7 @@ class CeilingCrusher(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity,
     }
 
     private fun setToStopIfBlock(fixture: IFixture) {
-        if (fixture.getFixtureType() == FixtureType.BLOCK) {
+        if (fixture.getEntity() != block && fixture.getFixtureType() == FixtureType.BLOCK) {
             GameLogger.debug(TAG, "setToStopIfBlock: fixture = $fixture")
             state = CeilingCrusherState.RAISING
             body.physics.velocity.setZero()
@@ -176,7 +190,7 @@ class CeilingCrusher(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity,
 
             consumerFixture.active = state == CeilingCrusherState.WAITING
             val consumer = consumerFixture.rawShape as GameRectangle
-            consumer.setSize(1.15f * ConstVals.PPM, 2.25f * ConstVals.PPM * height)
+            consumer.setSize(2f * ConstVals.PPM, 2.25f * ConstVals.PPM * height)
             consumer.setTopCenterToPoint(body.getBottomCenterPoint())
 
             crusherFixture.active = state == CeilingCrusherState.DROPPING
@@ -185,6 +199,8 @@ class CeilingCrusher(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity,
 
             val feet = bottomFixture.rawShape as GameRectangle
             feet.setCenter(body.getBottomCenterPoint())
+
+            block!!.body.setBottomCenterToPoint(body.getBottomCenterPoint())
         }
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
