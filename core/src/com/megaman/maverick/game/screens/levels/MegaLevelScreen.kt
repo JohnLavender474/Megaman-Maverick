@@ -33,11 +33,15 @@ import com.engine.graph.SimpleNodeGraphMap
 import com.engine.motion.MotionSystem
 import com.engine.screens.levels.tiledmap.TiledMapLevelScreen
 import com.engine.spawns.ISpawner
+import com.engine.spawns.Spawn
 import com.engine.spawns.SpawnsManager
 import com.engine.systems.IGameSystem
 import com.engine.updatables.UpdatablesSystem
 import com.engine.world.WorldSystem
-import com.megaman.maverick.game.*
+import com.megaman.maverick.game.ConstFuncs
+import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.ConstVals
+import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.ControllerButton
@@ -139,9 +143,12 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
     private lateinit var disposables: Array<Disposable>
 
     private val gameCameraPriorPosition = Vector3()
+
     private var backgroundParallaxFactor = DEFAULT_BACKGROUND_PARALLAX_FACTOR
     private var foregroundParallaxFactor = DEFAULT_FOREGROUND_PARALLAX_FACTOR
     private var camerasSetToGameCamera = false
+
+    private val spawns = Array<Spawn>()
 
     override fun init() {
         disposables = Array()
@@ -485,15 +492,18 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
                     !playerDeathEventHandler.finished)
         ) game.resume()
 
+        engine.update(delta)
+
         if (!game.paused) {
             backgrounds.forEach { it.update(delta) }
             cameraManagerForRooms.update(delta)
 
+            spawnsMan.update(delta)
+            spawns.addAll(spawnsMan.getSpawnsAndClear())
             if (playerSpawnEventHandler.finished && !cameraManagerForRooms.transitioning) {
                 playerSpawnsMan.run()
-                spawnsMan.update(delta)
-                val spawns = spawnsMan.getSpawnsAndClear()
                 spawns.forEach { spawn -> engine.spawn(spawn.entity, spawn.properties) }
+                spawns.clear()
             }
 
             if (!bossSpawnEventHandler.finished) bossSpawnEventHandler.update(delta)
@@ -508,8 +518,6 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
         val gameCamDeltaX = gameCamera.position.x - gameCameraPriorPosition.x
         backgroundCamera.position.x += gameCamDeltaX * backgroundParallaxFactor
         gameCameraPriorPosition.set(gameCamera.position)
-
-        engine.update(delta)
 
         val batch = megamanGame.batch
         batch.begin()
@@ -578,6 +586,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
         GameLogger.debug(TAG, "dispose(): Disposing level screen")
         super.dispose()
         EntityFactories.clear()
+        spawns.clear()
         if (initialized) {
             disposables.forEach { it.dispose() }
             disposables.clear()

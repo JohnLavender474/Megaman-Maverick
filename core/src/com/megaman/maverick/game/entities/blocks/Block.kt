@@ -16,6 +16,7 @@ import com.engine.entities.contracts.IBodyEntity
 import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.entities.utils.isLoggingLifecyle
 import com.megaman.maverick.game.world.*
 
 open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
@@ -24,6 +25,7 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
         const val TAG = "Block"
         const val STANDARD_FRICTION_X = 0.035f
         const val STANDARD_FRICTION_Y = 0f
+        const val TIME_TO_CULL = 3f
     }
 
     lateinit var blockFixture: Fixture
@@ -43,13 +45,14 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
     }
 
     override fun spawn(spawnProps: Properties) {
+        if (isLoggingLifecyle()) GameLogger.debug(TAG, "Spawned: $spawnProps")
         super.spawn(spawnProps)
 
         val cullOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
         if (cullOutOfBounds) addComponent(
             CullablesComponent(
                 this, objectMapOf(
-                    ConstKeys.CULL_OUT_OF_BOUNDS to getGameCameraCullingLogic(this)
+                    ConstKeys.CULL_OUT_OF_BOUNDS to getGameCameraCullingLogic(this, TIME_TO_CULL)
                 )
             )
         ) else removeComponent(CullablesComponent::class)
@@ -123,6 +126,7 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
     }
 
     override fun onDestroy() {
+        if (isLoggingLifecyle()) GameLogger.debug(TAG, "Destroyed: $properties")
         super<GameEntity>.onDestroy()
         val fixtureIter = body.fixtures.iterator()
         while (fixtureIter.hasNext()) {

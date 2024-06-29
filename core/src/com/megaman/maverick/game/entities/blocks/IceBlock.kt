@@ -9,6 +9,10 @@ import com.megaman.maverick.game.world.setEntity
 
 open class IceBlock(game: MegamanMaverickGame) : Block(game) {
 
+    companion object {
+        const val TAG = "IceBlock"
+    }
+
     private lateinit var ice: Fixture
 
     override fun init() {

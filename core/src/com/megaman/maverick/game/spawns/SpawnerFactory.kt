@@ -13,7 +13,7 @@ object SpawnerFactory {
 
     const val TAG = "SpawnerFactory"
 
-    fun spawnerForWhenEnteringCamera(
+    fun spawnerForWhenInCamera(
         camera: Camera,
         spawnShape: IGameShape2D,
         spawnSupplier: () -> Spawn,

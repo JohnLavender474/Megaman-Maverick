@@ -83,7 +83,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                     var roomFound = false
                     for (room in gameRooms) if (roomName == room.name) {
                         spawnProps.put(ConstKeys.ROOM, room)
-                        val spawner = SpawnerFactory.spawnerForWhenEnteringCamera(
+                        val spawner = SpawnerFactory.spawnerForWhenInCamera(
                             game.getGameCamera(), room.rectangle.toGameRectangle(), spawnSupplier, respawnable
                         )
                         spawners.add(spawner)
@@ -119,7 +119,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                 }
 
                 else -> {
-                    val spawner = SpawnerFactory.spawnerForWhenEnteringCamera(
+                    val spawner = SpawnerFactory.spawnerForWhenInCamera(
                         game.getGameCamera(), it.getShape(), spawnSupplier, respawnable
                     )
                     spawners.add(spawner)

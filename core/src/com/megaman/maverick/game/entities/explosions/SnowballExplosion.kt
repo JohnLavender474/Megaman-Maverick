@@ -32,11 +32,12 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import kotlin.reflect.KClass
 
-class SnowballExplosion(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesEntity, IDamager {
+class SnowballExplosion(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesEntity, IHazard, IDamager {
 
     companion object {
         const val DURATION = 0.075f
@@ -69,7 +70,7 @@ class SnowballExplosion(game: MegamanMaverickGame) : GameEntity(game), IBodyEnti
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(ConstVals.PPM.toFloat())
+        body.setSize(1.5f * ConstVals.PPM)
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
         body.addFixture(damagerFixture)

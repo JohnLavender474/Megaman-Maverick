@@ -50,17 +50,19 @@ class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         private var atlas: TextureAtlas? = null
         private const val STAND_DUR = 1f
         private const val SLIDE_DUR = 0.25f
-        private const val G_GRAV = -.0015f
+        private const val G_GRAV = -0.0015f
         private const val GRAV = -0.375f
         private const val JUMP_X = 5f
-        private const val JUMP_Y = 20f
+        private const val JUMP_Y = 10f
         private const val SLIDE_X = 8f
     }
 
     override var facing = Facing.RIGHT
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(10), Fireball::class to dmgNeg(ConstVals.MAX_HEALTH), ChargedShot::class to dmgNeg {
+        Bullet::class to dmgNeg(10),
+        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class to dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
         }, ChargedShotExplosion::class to dmgNeg(15)

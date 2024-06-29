@@ -164,7 +164,7 @@
    </properties>
   </object>
   <object id="185" name="SuctionRoller" x="1376" y="432" width="16" height="16"/>
-  <object id="186" name="Met" x="2144" y="416" width="32" height="32"/>
+  <object id="186" name="Met" x="2160" y="432" width="16" height="16"/>
   <object id="191" name="ShieldAttacker" x="2808" y="704" width="16" height="16">
    <properties>
     <property name="value" type="float" value="2"/>
