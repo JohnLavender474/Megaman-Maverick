@@ -95,8 +95,8 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         setting = SwinginJoeSetting.SWING_EYES_CLOSED
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.positionOnPoint(spawn, Position.BOTTOM_CENTER)
-        type = if (spawnProps.containsKey(ConstKeys.TYPE)) spawnProps.get(ConstKeys.TYPE, String::class)!!
-        else ""
+        type = if (spawnProps.containsKey(ConstKeys.TYPE))
+            spawnProps.get(ConstKeys.TYPE, String::class)!! else ""
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -141,8 +141,8 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             shieldFixture.active = setting == SwinginJoeSetting.SWING_EYES_CLOSED
             damageableFixture.active = setting != SwinginJoeSetting.SWING_EYES_CLOSED
             if (setting == SwinginJoeSetting.SWING_EYES_CLOSED) {
-                damageableFixture.offsetFromBodyCenter.x = 0.25f * ConstVals.PPM * -facing.value
-                shieldFixture.offsetFromBodyCenter.x = 0.35f * ConstVals.PPM * facing.value
+                damageableFixture.offsetFromBodyCenter.x = 0.05f * ConstVals.PPM * -facing.value
+                shieldFixture.offsetFromBodyCenter.x = 0.1f * ConstVals.PPM * facing.value
             } else damageableFixture.offsetFromBodyCenter.x = 0f
         })
 
@@ -159,7 +159,7 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             _sprite.hidden = damageBlink
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
             _sprite.setFlip(facing == Facing.LEFT, false)
-            if (facing == Facing.RIGHT) _sprite.translateX(-0.515f * ConstVals.PPM)
+            _sprite.translateX(-0.25f * ConstVals.PPM * facing.value)
         }
         return SpritesComponent
     }
