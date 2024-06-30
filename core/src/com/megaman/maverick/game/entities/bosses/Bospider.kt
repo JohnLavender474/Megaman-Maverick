@@ -84,7 +84,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
     override var children = Array<IGameEntity>()
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(ConstVals.MAX_HEALTH),
+        Bullet::class to dmgNeg(1),
         Fireball::class to dmgNeg(2),
         ChargedShot::class to dmgNeg {
             it as ChargedShot
@@ -267,7 +267,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         body.setSize(2f * ConstVals.PPM)
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(2f * ConstVals.PPM))
         body.addFixture(bodyFixture)
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(2f * ConstVals.PPM))
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(1.75f * ConstVals.PPM))
         body.addFixture(damagerFixture)
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(2f * ConstVals.PPM))
         body.addFixture(damageableFixture)

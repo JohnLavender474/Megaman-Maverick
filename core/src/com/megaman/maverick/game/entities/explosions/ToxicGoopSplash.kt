@@ -69,7 +69,7 @@ class ToxicGoopSplash(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
         owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
-        directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
+        directionRotation = spawnProps.getOrDefaultNotNull(ConstKeys.DIRECTION, Direction.UP, Direction::class)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         when (directionRotation) {
             Direction.UP -> body.setBottomCenterToPoint(spawn)

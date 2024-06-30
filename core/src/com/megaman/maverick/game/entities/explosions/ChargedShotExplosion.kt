@@ -8,12 +8,14 @@ import com.engine.animations.Animator
 import com.engine.common.CAUSE_OF_DEATH_MESSAGE
 import com.engine.common.enums.Direction
 import com.engine.common.enums.Position
+import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
+import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.sorting.DrawingPriority
 import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
@@ -108,12 +110,14 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
-
-        val damagerFixture =
-            Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(ConstVals.PPM.toFloat()))
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
         body.addFixture(damagerFixture)
-
+        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            val size = if (fullyCharged) 1.5f * ConstVals.PPM else ConstVals.PPM.toFloat()
+            body.setSize(size)
+            (damagerFixture.rawShape as GameRectangle).setSize(size)
+        }
         return BodyComponentCreator.create(this, body)
     }
 

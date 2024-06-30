@@ -121,7 +121,7 @@ class HealthBulb(game: MegamanMaverickGame) : GameEntity(game), ItemEntity, ISpr
     }
 
     private fun defineBodyComponent(): BodyComponent {
-        val body = Body(BodyType.STATIC)
+        val body = Body(BodyType.ABSTRACT)
         val debugShapes = Array<() -> IDrawableShape?>()
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))

@@ -79,11 +79,11 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
     private var snowballsLaunched = 0
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(1),
+        Bullet::class to dmgNeg(2),
         Fireball::class to dmgNeg(10),
         ChargedShot::class to dmgNeg {
             it as ChargedShot
-            if (it.fullyCharged) 3 else 2
+            if (it.fullyCharged) 5 else 3
         },
         ChargedShotExplosion::class to dmgNeg {
             it as ChargedShotExplosion
@@ -231,7 +231,7 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
         debugShapes.add { damagerFixture.getShape() }
 
         val damageableFixture =
-            Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.25f * ConstVals.PPM))
+            Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.65f * ConstVals.PPM, 0.25f * ConstVals.PPM))
         damageableFixture.offsetFromBodyCenter.y = 1.25f * ConstVals.PPM
         body.addFixture(damageableFixture)
         damageableFixture.rawShape.color = Color.PURPLE

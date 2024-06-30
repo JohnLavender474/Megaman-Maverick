@@ -57,6 +57,7 @@ import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
+import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
@@ -181,14 +182,10 @@ class MegamanMaverickGame : Game2D(), IEventListener {
         megaman.initialized = true
 
         megamanUpgradeHandler = MegamanUpgradeHandler(state, megaman)
-
-        // TODO: add upgrades to megaman at game start for testing, comment out in finished version
-        /*
         megamanUpgradeHandler.add(MegaAbility.CHARGE_WEAPONS)
         megamanUpgradeHandler.add(MegaAbility.AIR_DASH)
         megamanUpgradeHandler.add(MegaAbility.GROUND_SLIDE)
         megamanUpgradeHandler.add(MegaAbility.WALL_SLIDE)
-        */
 
         screens.put(ScreenEnum.LEVEL_SCREEN.name, MegaLevelScreen(this))
         screens.put(ScreenEnum.MAIN_MENU_SCREEN.name, MainMenuScreen(this))
@@ -210,9 +207,9 @@ class MegamanMaverickGame : Game2D(), IEventListener {
         // startLevelScreen(Level.TEST7)
         // startLevelScreen(Level.MAGNET_MAN)
         // startLevelScreen(Level.TIMBER_WOMAN)
-        // startLevelScreen(Level.REACT_MAN)
-        //  startLevelScreen(Level.CREW_MAN)
-        startLevelScreen(Level.FREEZE_MAN)
+        startLevelScreen(Level.REACT_MAN)
+        // startLevelScreen(Level.CREW_MAN)
+        // startLevelScreen(Level.FREEZE_MAN)
         // startLevelScreen(Level.GALAXY_MAN)
         // startLevelScreen(Level.WILY_STAGE_1)
         // startLevelScreen(Level.WILY_STAGE_2)

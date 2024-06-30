@@ -127,7 +127,7 @@
   <object id="306" name="1" x="11072" y="1344" width="32" height="32"/>
   <object id="321" name="5" x="13040" y="1344" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="3" name="enemies">
+ <objectgroup id="3" name="enemies" visible="0">
   <object id="62" name="SnowheadThrower" x="2664" y="592" width="16" height="16">
    <properties>
     <property name="type" value="Snow"/>
@@ -220,7 +220,7 @@
     <property name="type" value="Snow"/>
    </properties>
   </object>
-  <object id="224" name="SniperJoe" x="8352" y="1360" width="16" height="16">
+  <object id="224" name="SnowheadThrower" x="8352" y="1360" width="16" height="16">
    <properties>
     <property name="type" value="Snow"/>
    </properties>
@@ -291,7 +291,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="13" name="children">
+ <objectgroup id="13" name="children" visible="0">
   <object id="288" name="PenguinMiniBoss" x="10800" y="1344" width="32" height="32">
    <properties>
     <property name="mini" type="bool" value="true"/>
@@ -492,7 +492,7 @@
   <object id="343" name="IceBlock" x="5376" y="1184" width="96" height="64"/>
   <object id="344" name="BreakableIce" x="6848" y="1296" width="64" height="64"/>
  </objectgroup>
- <objectgroup id="9" name="backgrounds">
+ <objectgroup id="9" name="backgrounds" visible="0">
   <object id="48" name="Background" x="0" y="1216" width="544" height="384">
    <properties>
     <property name="atlas" value="Backgrounds2.txt"/>
@@ -511,7 +511,7 @@
    <polygon points="0,0 32,0 32,-32 544,-32 544,0 576,0 576,192 0,192"/>
   </object>
  </objectgroup>
- <objectgroup id="10" name="sensors">
+ <objectgroup id="10" name="sensors" visible="0">
   <object id="75" name="Death" x="3200" y="704" width="608" height="32"/>
   <object id="207" name="Death" x="4896" y="1504" width="6304" height="96">
    <properties>

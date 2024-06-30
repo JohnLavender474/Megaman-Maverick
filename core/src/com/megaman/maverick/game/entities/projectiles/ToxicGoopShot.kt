@@ -77,7 +77,7 @@ class ToxicGoopShot(game: MegamanMaverickGame) : GameEntity(game), IProjectileEn
         game.engine.spawn(
             goopSplash, props(
                 ConstKeys.OWNER to this,
-                ConstKeys.DIRECTION to params[0] as Direction,
+                ConstKeys.DIRECTION to params[0] as Direction?,
                 ConstKeys.POSITION to body.getBottomCenterPoint()
             )
         )
