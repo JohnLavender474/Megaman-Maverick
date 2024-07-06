@@ -132,7 +132,7 @@ abstract class AbstractBoss(
 
     protected open fun triggerDefeat() {
         GameLogger.debug(TAG, "triggerDefeat() = sending event and resetting defeat timer")
-        game.eventsMan.submitEvent(Event(EventType.BOSS_DEFEATED, props(ConstKeys.MINI to mini)))
+        game.eventsMan.submitEvent(Event(EventType.BOSS_DEFEATED, props(ConstKeys.BOSS to this)))
         defeatTimer.reset()
         defeated = true
     }

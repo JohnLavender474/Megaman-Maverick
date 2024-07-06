@@ -101,6 +101,7 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
     }
 
     override fun spawn(spawnProps: Properties) {
+        spawnProps.put(ConstKeys.MINI, true)
         super.spawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)

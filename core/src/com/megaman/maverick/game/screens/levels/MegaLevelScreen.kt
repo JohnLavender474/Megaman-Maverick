@@ -10,12 +10,13 @@ import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.ObjectMap
-import com.engine.IGameEngine
+import com.engine.GameEngine
 import com.engine.animations.AnimationsSystem
 import com.engine.audio.AudioSystem
 import com.engine.behaviors.BehaviorsSystem
 import com.engine.common.GameLogger
 import com.engine.common.extensions.gdxArrayOf
+import com.engine.common.extensions.isAny
 import com.engine.common.extensions.objectSetOf
 import com.engine.common.interfaces.Initializable
 import com.engine.common.objects.Properties
@@ -23,6 +24,7 @@ import com.engine.common.objects.props
 import com.engine.common.shapes.toGameRectangle
 import com.engine.controller.ControllerSystem
 import com.engine.controller.polling.IControllerPoller
+import com.engine.damage.IDamager
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sorting.IComparableDrawable
@@ -47,6 +49,7 @@ import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.ControllerButton
 import com.megaman.maverick.game.drawables.sprites.Background
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
+import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
@@ -100,8 +103,8 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
 
     val megamanGame: MegamanMaverickGame
         get() = super.game as MegamanMaverickGame
-    val engine: IGameEngine
-        get() = game.engine
+    val engine: GameEngine
+        get() = game.engine as GameEngine
     val systemsMap: ObjectMap<String, IGameSystem>
         get() = megamanGame.getSystems()
     val megaman: Megaman
@@ -438,8 +441,10 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
 
             EventType.BOSS_DEFEATED -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Boss defeated")
-                val mini = event.getProperty(ConstKeys.MINI, Boolean::class)!!
-                if (!mini) audioMan.stopMusic()
+                val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
+                if (!boss.mini) audioMan.stopMusic()
+
+                engine.forEachEntity { if (it.isAny(IDamager::class, IHazard::class) && it != boss) it.kill() }
 
                 val systemsToSwitch = gdxArrayOf(MotionSystem::class, BehaviorsSystem::class)
                 engine.systems.forEach { if (systemsToSwitch.contains(it::class)) it.on = false }

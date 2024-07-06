@@ -264,6 +264,7 @@
             <key type="filename">../frames/Bosses/MicrowaveMan/OpenDoor.png</key>
             <key type="filename">../frames/Bosses/MicrowaveMan/Shoot.png</key>
             <key type="filename">../frames/Bosses/MisterMan/Jump.png</key>
+            <key type="filename">../frames/Bosses/ReactorMonkeyMiniBoss/Nuclear_Monkey_Ball.png</key>
             <key type="filename">../frames/Bosses/RoasterMan/Aim.png</key>
             <key type="filename">../frames/Bosses/RoasterMan/RetractWings.png</key>
             <struct type="IndividualSpriteSettings">
@@ -463,6 +464,37 @@
                 <rect>24,24,48,48</rect>
                 <key>scale9Paddings</key>
                 <rect>24,24,48,48</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses/ReactorMonkeyMiniBoss/Jump.png</key>
+            <key type="filename">../frames/Bosses/ReactorMonkeyMiniBoss/Stand.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>38,40,76,80</rect>
+                <key>scale9Paddings</key>
+                <rect>38,40,76,80</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses/ReactorMonkeyMiniBoss/Throw.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>152,40,304,80</rect>
+                <key>scale9Paddings</key>
+                <rect>152,40,304,80</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

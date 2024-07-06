@@ -20,12 +20,13 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.HazardsFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.BodyComponentCreator
 
-class AcidGoopSupplier(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ICullableEntity {
+class AcidGoopSupplier(game: MegamanMaverickGame) : GameEntity(game), IHazard, IBodyEntity, ICullableEntity {
 
     companion object {
         const val TAG = "AcidGoopSupplier"

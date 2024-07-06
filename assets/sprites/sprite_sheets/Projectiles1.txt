@@ -1,5 +1,5 @@
 Projectiles1.png
-size: 512, 372
+size: 512, 388
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -19,14 +19,14 @@ CannonBall
   index: -1
 CaveRock/Burst
   rotate: false
-  xy: 0, 244
+  xy: 0, 260
   size: 384, 128
   orig: 384, 128
   offset: 0, 0
   index: -1
 CaveRock/Rock
   rotate: false
-  xy: 384, 244
+  xy: 384, 260
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
@@ -94,9 +94,23 @@ Joeball
   orig: 128, 32
   offset: 0, 0
   index: -1
+Monkey_Ball
+  rotate: false
+  xy: 432, 132
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+Nuclear_Monkey_Ball
+  rotate: false
+  xy: 0, 196
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
 Petal
   rotate: false
-  xy: 0, 180
+  xy: 64, 196
   size: 256, 64
   orig: 256, 64
   offset: 0, 0

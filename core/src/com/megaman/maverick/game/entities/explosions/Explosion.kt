@@ -9,7 +9,7 @@ import com.engine.audio.AudioComponent
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.objects.Properties
-import com.engine.common.shapes.GameRectangle
+import com.engine.common.shapes.GameCircle
 import com.engine.common.time.Timer
 import com.engine.damage.IDamageable
 import com.engine.damage.IDamager
@@ -45,7 +45,7 @@ class Explosion(game: MegamanMaverickGame) : GameEntity(game), IHazard, IOwnable
 
     companion object {
         private var explosionRegion: TextureRegion? = null
-        private const val DURATION = .275f
+        private const val DURATION = 0.275f
     }
 
     override var owner: IGameEntity? = null
@@ -100,10 +100,16 @@ class Explosion(game: MegamanMaverickGame) : GameEntity(game), IHazard, IOwnable
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(1.5f * ConstVals.PPM)
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
+        body.setSize(2f * ConstVals.PPM)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(ConstVals.PPM.toFloat()))
         body.addFixture(damagerFixture)
+        addComponent(
+            DrawableShapesComponent(
+                this,
+                debugShapeSuppliers = gdxArrayOf({ damagerFixture.getShape() }),
+                debug = true
+            )
+        )
         return BodyComponentCreator.create(this, body)
     }
 }
