@@ -40,6 +40,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
+import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.getMegamanMaverickGame
 import com.megaman.maverick.game.world.BodyComponentCreator
@@ -121,7 +122,14 @@ class Gate(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IAudioEnt
             }
 
             EventType.MINI_BOSS_DEAD -> {
-                if (miniBossGate) triggerable = true
+                if (miniBossGate) {
+                    val thisBossKey = getOrDefaultProperty("${ConstKeys.BOSS}_${ConstKeys.KEY}", "1", String::class)
+                    val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
+                    val otherBossKey =
+                        boss.getOrDefaultProperty("${ConstKeys.BOSS}_${ConstKeys.KEY}", "1", String::class)
+                    GameLogger.debug(TAG, "This boss key: $thisBossKey. Other boss key: $otherBossKey")
+                    if (thisBossKey == otherBossKey) triggerable = true
+                }
             }
         }
     }

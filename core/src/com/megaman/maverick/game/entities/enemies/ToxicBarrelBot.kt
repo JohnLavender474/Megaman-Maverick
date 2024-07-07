@@ -245,7 +245,10 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
                         }
                         center.x += 0.2f * ConstVals.PPM * facing.value
                         bounds.setCenter(center)
-                        fixture.active = state.equalsAny(ToxicBarrelBotState.OPEN_TOP, ToxicBarrelBotState.OPEN_CENTER)
+                        fixture.active = state.equalsAny(
+                            ToxicBarrelBotState.OPEN_TOP, ToxicBarrelBotState.OPEN_CENTER,
+                            ToxicBarrelBotState.CLOSING_TOP, ToxicBarrelBotState.CLOSING_CENTER
+                        )
                     }
 
                     FixtureType.SHIELD -> bounds.setBottomCenterToPoint(body.getBottomCenterPoint())

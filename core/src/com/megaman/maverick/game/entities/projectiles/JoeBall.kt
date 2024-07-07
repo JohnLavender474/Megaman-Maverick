@@ -32,7 +32,6 @@ import com.megaman.maverick.game.entities.contracts.defineProjectileComponents
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.utils.getMegamanMaverickGame
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.getEntity
@@ -155,7 +154,7 @@ class JoeBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
             }
 
             else -> {
-                soundAsset = SoundAsset.EXPLOSION_1_SOUND
+                soundAsset = SoundAsset.EXPLOSION_2_SOUND
                 explosionType = ExplosionsFactory.EXPLOSION
             }
         }
@@ -165,13 +164,12 @@ class JoeBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
             explosion,
             props(
                 ConstKeys.POSITION to body.getCenter(),
+                ConstKeys.SOUND to soundAsset,
                 ConstKeys.MASK to
                         objectSetOf<KClass<out IDamageable>>(
                             if (owner is Megaman) AbstractEnemy::class else Megaman::class
                         )
             )
         )
-
-        getMegamanMaverickGame().audioMan.playSound(soundAsset, false)
     }
 }

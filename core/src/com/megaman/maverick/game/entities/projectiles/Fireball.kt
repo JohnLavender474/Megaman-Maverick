@@ -42,7 +42,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.defineProjectileComponents
 import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
+import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.utils.getMegamanMaverickGame
 import com.megaman.maverick.game.world.BodyComponentCreator
@@ -132,11 +132,11 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun hitWater(waterFixture: IFixture) {
         super.hitWater(waterFixture)
-        kill(props(CAUSE_OF_DEATH_MESSAGE to "Hit water"))
-        val smokePuff = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SMOKE_PUFF)!!
+        val smokePuff = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SMOKE_PUFF)!!
         val spawn = Vector2(body.getCenter().x, waterFixture.getShape().getMaxY())
-        game.engine.spawn(smokePuff, props(ConstKeys.POSITION to spawn))
+        game.engine.spawn(smokePuff, props(ConstKeys.POSITION to spawn, ConstKeys.OWNER to owner))
         getMegamanMaverickGame().audioMan.playSound(SoundAsset.WHOOSH_SOUND, false)
+        kill()
     }
 
     private fun defineBodyComponent(): BodyComponent {

@@ -13,23 +13,24 @@ import com.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
 
-class FloatingCanHole(game: MegamanMaverickGame) : GameEntity(game), IParentEntity {
+class FloatingCanHole(game: MegamanMaverickGame) : GameEntity(game), IHazard, IParentEntity {
 
 
     companion object {
         const val TAG = "FloatingCanHole"
         private const val SPAWN_DELAY = 2.5f
-        private const val MAX_SPAWNED = 3
+        private const val DEFAULT_MAX_SPAWNED = 3
     }
 
     override var children = Array<IGameEntity>()
 
     private val spawnDelayTimer = Timer(SPAWN_DELAY)
-
     private lateinit var spawn: Vector2
+    private var maxToSpawn = DEFAULT_MAX_SPAWNED
 
     override fun init() {
         addComponent(defineUpdatablesComponent())
@@ -38,11 +39,12 @@ class FloatingCanHole(game: MegamanMaverickGame) : GameEntity(game), IParentEnti
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
         spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
+        maxToSpawn = spawnProps.getOrDefault(ConstKeys.MAX, DEFAULT_MAX_SPAWNED, Int::class)
         spawnDelayTimer.reset()
     }
 
     override fun onDestroy() {
-        super<GameEntity>.onDestroy()
+        super.onDestroy()
         children.forEach { it.kill() }
         children.clear()
     }
@@ -53,7 +55,7 @@ class FloatingCanHole(game: MegamanMaverickGame) : GameEntity(game), IParentEnti
             val child = iter.next()
             if (child.dead) iter.remove()
         }
-        if (children.size < MAX_SPAWNED) {
+        if (children.size < maxToSpawn) {
             spawnDelayTimer.update(delta)
             if (spawnDelayTimer.isFinished()) {
                 val floatingCan = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.FLOATING_CAN)!!

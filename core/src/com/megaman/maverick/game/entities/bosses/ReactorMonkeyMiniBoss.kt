@@ -6,6 +6,7 @@ import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
+import com.engine.common.GameLogger
 import com.engine.common.enums.Facing
 import com.engine.common.enums.Position
 import com.engine.common.extensions.gdxArrayOf
@@ -20,6 +21,8 @@ import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
 import com.engine.damage.IDamager
 import com.engine.drawables.shapes.DrawableShapesComponent
+import com.engine.drawables.sorting.DrawingPriority
+import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
@@ -97,7 +100,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
     }
 
     override fun spawn(spawnProps: Properties) {
-        spawnProps.put(ConstKeys.MINI, true)
+        GameLogger.debug(TAG, "Boss key = ${spawnProps.get("${ConstKeys.BOSS}_${ConstKeys.KEY}")}")
         super.spawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
@@ -120,7 +123,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
         game.engine.spawn(
             monkeyBall!!,
             props(
-                ConstKeys.POSITION to body.getTopCenterPoint().add(0f, 4f * ConstVals.PPM),
+                ConstKeys.POSITION to body.getTopCenterPoint().add(0f, 3f * ConstVals.PPM),
                 ConstKeys.OWNER to this
             )
         )
@@ -202,7 +205,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite()
+        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
         sprite.setSize(6.25f * ConstVals.PPM, 6.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->

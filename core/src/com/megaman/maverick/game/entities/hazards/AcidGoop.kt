@@ -38,7 +38,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
+import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.utils.getMegamanMaverickGame
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.BodySense
@@ -97,8 +97,8 @@ class AcidGoop(game: MegamanMaverickGame) : GameEntity(game), IDamager, IHazard,
     })
 
     private fun spawnSmokePuff() {
-        val smokePuff = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SMOKE_PUFF)!!
-        game.engine.spawn(smokePuff, props(ConstKeys.POSITION to body.getBottomCenterPoint()))
+        val smokePuff = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SMOKE_PUFF)!!
+        game.engine.spawn(smokePuff, props(ConstKeys.POSITION to body.getBottomCenterPoint(), ConstKeys.OWNER to this))
     }
 
     private fun defineBodyComponent(): BodyComponent {
