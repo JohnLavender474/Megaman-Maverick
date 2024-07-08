@@ -224,7 +224,8 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.height = if (state.equalsAny(
                     ToxicBarrelBotState.OPENING_TOP,
-                    ToxicBarrelBotState.OPEN_TOP
+                    ToxicBarrelBotState.OPEN_TOP,
+                    ToxicBarrelBotState.CLOSING_TOP
                 )
             ) 1.5f * ConstVals.PPM else 0.85f * ConstVals.PPM
             body.setBottomCenterToPoint(position)
@@ -236,7 +237,12 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
                 when (fixture.type) {
                     FixtureType.DAMAGEABLE -> {
                         val center: Vector2
-                        if (state.equalsAny(ToxicBarrelBotState.OPENING_TOP, ToxicBarrelBotState.OPEN_TOP)) {
+                        if (state.equalsAny(
+                                ToxicBarrelBotState.OPENING_TOP,
+                                ToxicBarrelBotState.OPEN_TOP,
+                                ToxicBarrelBotState.CLOSING_TOP
+                            )
+                        ) {
                             bounds.setWidth(0.85f * ConstVals.PPM)
                             center = body.getTopCenterPoint().sub(0f, 0.35f * ConstVals.PPM)
                         } else {
@@ -245,10 +251,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
                         }
                         center.x += 0.2f * ConstVals.PPM * facing.value
                         bounds.setCenter(center)
-                        fixture.active = state.equalsAny(
-                            ToxicBarrelBotState.OPEN_TOP, ToxicBarrelBotState.OPEN_CENTER,
-                            ToxicBarrelBotState.CLOSING_TOP, ToxicBarrelBotState.CLOSING_CENTER
-                        )
+                        fixture.active = state != ToxicBarrelBotState.CLOSED
                     }
 
                     FixtureType.SHIELD -> bounds.setBottomCenterToPoint(body.getBottomCenterPoint())
@@ -280,10 +283,8 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
             when (state) {
                 ToxicBarrelBotState.CLOSED -> "closed"
                 ToxicBarrelBotState.OPENING_TOP, ToxicBarrelBotState.OPEN_TOP -> "open_top"
-
                 ToxicBarrelBotState.CLOSING_TOP -> "closing_top"
                 ToxicBarrelBotState.OPENING_CENTER, ToxicBarrelBotState.OPEN_CENTER -> "open_center"
-
                 ToxicBarrelBotState.CLOSING_CENTER -> "closing_center"
             }
         }

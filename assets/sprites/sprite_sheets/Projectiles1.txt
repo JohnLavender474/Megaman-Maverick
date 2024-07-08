@@ -206,6 +206,13 @@ ToxicGoopShot
   orig: 48, 16
   offset: 0, 0
   index: -1
+TubeBeam
+  rotate: false
+  xy: 448, 64
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 UFOBomb
   rotate: false
   xy: 80, 0

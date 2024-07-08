@@ -25,6 +25,7 @@ object ConstVals {
 object ConstKeys {
     const val LOG = "log"
     const val LIFECYCLE = "lifecycle"
+    const val DELAY = "delay"
     const val FALL = "fall"
     const val ELAPSE = "elapse"
     const val PRIORITY = "priority"

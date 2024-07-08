@@ -19,5 +19,4 @@ abstract class AbstractProjectile(game: MegamanMaverickGame) : GameEntity(game),
         super.onDamageInflictedTo(damageable)
         onDamageInflictedTo?.invoke(damageable)
     }
-
 }

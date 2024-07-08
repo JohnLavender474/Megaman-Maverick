@@ -16,7 +16,6 @@ import com.engine.common.shapes.GameCircle
 import com.engine.common.shapes.GameLine
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
-import com.engine.damage.IDamageable
 import com.engine.damage.IDamager
 import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.sprites.GameSprite
@@ -43,8 +42,8 @@ import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import java.util.*
 
-class LaserBeamer(game: MegamanMaverickGame) :
-    GameEntity(game), IHazard, ISpritesEntity, IBodyEntity, IDrawableShapesEntity, IDamager {
+class LaserBeamer(game: MegamanMaverickGame) : GameEntity(game), IHazard, ISpritesEntity, IBodyEntity,
+    IDrawableShapesEntity, IDamager {
 
     companion object {
         const val TAG = "LaserBeamer"
@@ -73,8 +72,7 @@ class LaserBeamer(game: MegamanMaverickGame) :
     private var contactIndex = 0
 
     override fun init() {
-        if (region == null)
-            region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, "LaserBeamer")
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, "LaserBeamer")
 
         laser = GameLine()
         laser.thickness = THICKNESS
@@ -128,12 +126,9 @@ class LaserBeamer(game: MegamanMaverickGame) :
         body.addFixture(damagerFixture)
         addProdShapeSupplier { damagerFixture.getShape() }
 
-        val shieldFixture =
-            Fixture(
-                body,
-                FixtureType.SHIELD,
-                GameRectangle().setSize(ConstVals.PPM.toFloat(), ConstVals.PPM * 0.85f)
-            )
+        val shieldFixture = Fixture(
+            body, FixtureType.SHIELD, GameRectangle().setSize(ConstVals.PPM.toFloat(), ConstVals.PPM * 0.85f)
+        )
         shieldFixture.offsetFromBodyCenter.y = ConstVals.PPM / 2f
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
         body.addFixture(shieldFixture)
@@ -144,9 +139,8 @@ class LaserBeamer(game: MegamanMaverickGame) :
         })
 
         body.postProcess.put(ConstKeys.DEFAULT, Updatable {
-            val end =
-                if (contacts.isEmpty()) rotatingLine.getEndPoint()
-                else contacts.first()
+            val end = if (contacts.isEmpty()) rotatingLine.getEndPoint()
+            else contacts.first()
             laser.setFirstLocalPoint(rotatingLine.getOrigin())
             laser.setSecondLocalPoint(end)
 
@@ -173,48 +167,45 @@ class LaserBeamer(game: MegamanMaverickGame) :
         return spritesComponent
     }
 
-    private fun defineUpdatablesComponent() =
-        UpdatablesComponent(
-            this,
-            {
-                contactTimer.update(it)
-                if (contactTimer.isFinished()) {
-                    contactIndex++
-                    contactTimer.reset()
-                }
-                if (contactIndex > 2) contactIndex = 0
-                contactGlow.setRadius(CONTACT_RADII[contactIndex])
+    private fun defineUpdatablesComponent() = UpdatablesComponent(this, {
+        contactTimer.update(it)
+        if (contactTimer.isFinished()) {
+            contactIndex++
+            contactTimer.reset()
+        }
+        if (contactIndex > 2) contactIndex = 0
+        contactGlow.setRadius(CONTACT_RADII[contactIndex])
 
-                /*
-                val end =
-                    if (contacts.isEmpty()) rotatingLine.getEndPoint()
-                    else contacts.first()
-                contacts.clear()
-                laser.setFirstLocalPoint(rotatingLine.getOrigin())
-                laser.setSecondLocalPoint(end)
-                 */
+        /*
+        val end =
+            if (contacts.isEmpty()) rotatingLine.getEndPoint()
+            else contacts.first()
+        contacts.clear()
+        laser.setFirstLocalPoint(rotatingLine.getOrigin())
+        laser.setSecondLocalPoint(end)
+         */
 
-                switchTimer.update(it)
-                if (!switchTimer.isFinished()) return@UpdatablesComponent
+        switchTimer.update(it)
+        if (!switchTimer.isFinished()) return@UpdatablesComponent
 
-                if (switchTimer.isJustFinished()) {
-                    clockwise = !clockwise
-                    var speed = SPEED * ConstVals.PPM
-                    if (clockwise) speed *= -1f
-                    rotatingLine.speed = speed
-                    GameLogger.debug(TAG, "update: switchTimer.isJustFinished(), clockwise = $clockwise")
-                }
+        if (switchTimer.isJustFinished()) {
+            clockwise = !clockwise
+            var speed = SPEED * ConstVals.PPM
+            if (clockwise) speed *= -1f
+            rotatingLine.speed = speed
+            GameLogger.debug(TAG, "update: switchTimer.isJustFinished(), clockwise = $clockwise")
+        }
 
-                rotatingLine.update(it)
+        rotatingLine.update(it)
 
-                if (clockwise && rotatingLine.degrees <= MIN_DEGREES) {
-                    rotatingLine.degrees = MIN_DEGREES
-                    switchTimer.reset()
-                    GameLogger.debug(TAG, "update: clockwise && rotatingLine.degrees <= MIN_DEGREES")
-                } else if (!clockwise && rotatingLine.degrees >= MAX_DEGREES) {
-                    rotatingLine.degrees = MAX_DEGREES
-                    switchTimer.reset()
-                    GameLogger.debug(TAG, "update: !clockwise && rotatingLine.degrees >= MAX_DEGREES")
-                }
-            })
+        if (clockwise && rotatingLine.degrees <= MIN_DEGREES) {
+            rotatingLine.degrees = MIN_DEGREES
+            switchTimer.reset()
+            GameLogger.debug(TAG, "update: clockwise && rotatingLine.degrees <= MIN_DEGREES")
+        } else if (!clockwise && rotatingLine.degrees >= MAX_DEGREES) {
+            rotatingLine.degrees = MAX_DEGREES
+            switchTimer.reset()
+            GameLogger.debug(TAG, "update: !clockwise && rotatingLine.degrees >= MAX_DEGREES")
+        }
+    })
 }

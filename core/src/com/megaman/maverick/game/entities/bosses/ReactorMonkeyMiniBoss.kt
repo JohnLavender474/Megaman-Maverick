@@ -123,7 +123,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
         game.engine.spawn(
             monkeyBall!!,
             props(
-                ConstKeys.POSITION to body.getTopCenterPoint().add(0f, 3f * ConstVals.PPM),
+                ConstKeys.POSITION to body.getTopCenterPoint().add(0f, 4f * ConstVals.PPM),
                 ConstKeys.OWNER to this
             )
         )

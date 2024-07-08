@@ -170,7 +170,8 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         ToxicGoopSplash::class to dmgNeg(3),
         ReactorMonkeyBall::class to dmgNeg(3),
         ReactorMonkeyMiniBoss::class to dmgNeg(3),
-        SmokePuff::class to dmgNeg(2)
+        SmokePuff::class to dmgNeg(2),
+        TubeBeam::class to dmgNeg(5)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 
