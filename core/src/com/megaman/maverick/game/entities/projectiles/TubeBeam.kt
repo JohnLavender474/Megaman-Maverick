@@ -53,10 +53,12 @@ class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IDirection
 
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
+        directionRotation = spawnProps.get(ConstKeys.DIRECTION, Direction::class)!!
+        val size = if (directionRotation.isHorizontal()) Vector2(2f, 0.85f) else Vector2(0.85f, 2f)
+        body.setSize(size.scl(ConstVals.PPM.toFloat()))
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
         trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
-        directionRotation = spawnProps.get(ConstKeys.DIRECTION, Direction::class)!!
     }
 
     private fun defineBodyComponent(): BodyComponent {
@@ -65,10 +67,7 @@ class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IDirection
         body.addFixture(damagerFixture)
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.velocity.set(trajectory)
-            val size = if (directionRotation.isHorizontal()) Vector2(2f, 0.85f) else Vector2(0.85f, 2f)
-            size.scl(ConstVals.PPM.toFloat())
-            body.setSize(size)
-            (damagerFixture.rawShape as GameRectangle).setSize(size)
+            (damagerFixture.rawShape as GameRectangle).setSize(body.getSize())
         }
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
         return BodyComponentCreator.create(this, body)

@@ -123,7 +123,7 @@ class AcidGoop(game: MegamanMaverickGame) : GameEntity(game), IDamager, IHazard,
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(0.25f * ConstVals.PPM)
+        sprite.setSize(0.35f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
