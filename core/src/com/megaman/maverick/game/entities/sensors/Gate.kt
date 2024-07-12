@@ -1,8 +1,10 @@
 package com.megaman.maverick.game.entities.sensors
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.Array
 import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
@@ -20,6 +22,8 @@ import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
+import com.engine.drawables.shapes.DrawableShapesComponent
+import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
@@ -188,15 +192,30 @@ class Gate(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IAudioEnt
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
+        body.color = Color.GRAY
+        val debugShapes = Array<() -> IDrawableShape?>()
+        // debugShapes.add { body }
         val gateFixture = Fixture(body, FixtureType.GATE, GameRectangle())
+        gateFixture.attachedToBody = false
+        gateFixture.rawShape.color = Color.GREEN
+        debugShapes.add { gateFixture.getShape() }
         body.addFixture(gateFixture)
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             val bodySize = if (direction.isHorizontal()) Vector2(2f, 3f) else Vector2(3f, 2f)
             body.setSize(bodySize.scl(ConstVals.PPM.toFloat()))
-            (gateFixture.rawShape as GameRectangle).set(body)
             body.setCenter(center)
-        })
 
+            val gateShape = gateFixture.rawShape as GameRectangle
+            val gateSize = if (direction.isHorizontal()) Vector2(1f, 3f) else Vector2(3f, 1f)
+            gateShape.setSize(gateSize.scl(ConstVals.PPM.toFloat()))
+            when (direction) {
+                Direction.UP -> gateShape.setTopCenterToPoint(body.getTopCenterPoint())
+                Direction.DOWN -> gateShape.setBottomCenterToPoint(body.getBottomCenterPoint())
+                Direction.LEFT -> gateShape.setCenterLeftToPoint(body.getCenterLeftPoint())
+                Direction.RIGHT -> gateShape.setCenterRightToPoint(body.getCenterRightPoint())
+            }
+        })
+        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
         return BodyComponentCreator.create(this, body)
     }
 

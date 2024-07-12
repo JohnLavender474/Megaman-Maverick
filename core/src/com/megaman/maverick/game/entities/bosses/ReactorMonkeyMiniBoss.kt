@@ -70,7 +70,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(ConstVals.MAX_HEALTH),
+        Bullet::class to dmgNeg(1),
         Fireball::class to dmgNeg(3),
         ChargedShot::class to dmgNeg {
             it as ChargedShot

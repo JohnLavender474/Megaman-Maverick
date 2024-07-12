@@ -125,7 +125,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
         body.addFixture(damagerFixture)
         shapes.add { damageableFixture.getShape() }
 
-        addComponent(DrawableShapesComponent(this, shapes))
+        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }

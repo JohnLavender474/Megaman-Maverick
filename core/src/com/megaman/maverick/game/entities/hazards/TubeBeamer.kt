@@ -36,7 +36,7 @@ class TubeBeamer(game: MegamanMaverickGame) : GameEntity(game), IAudioEntity, IB
     companion object {
         const val TAG = "TubeBeamer"
         private const val VELOCITY = 10f
-        private const val SPAWN_DELAY = 1f
+        private const val SPAWN_DELAY = 1.25f
         private const val DEFAULT_INITIAL_DELAY = 0f
     }
 

@@ -61,11 +61,14 @@ class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IDirection
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(2f * ConstVals.PPM, 0.85f * ConstVals.PPM)
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
         body.addFixture(damagerFixture)
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.velocity.set(trajectory)
+            val size = if (directionRotation.isHorizontal()) Vector2(2f, 0.85f) else Vector2(0.85f, 2f)
+            size.scl(ConstVals.PPM.toFloat())
+            body.setSize(size)
+            (damagerFixture.rawShape as GameRectangle).setSize(size)
         }
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
         return BodyComponentCreator.create(this, body)
