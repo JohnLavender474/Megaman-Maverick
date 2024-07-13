@@ -49,7 +49,6 @@ import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.projectiles.ReactorMonkeyBall
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
-import kotlin.math.abs
 import kotlin.reflect.KClass
 
 class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, IFaceable {
@@ -137,9 +136,17 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
 
     fun hurlMonkeyBall() {
         monkeyBall!!.body.physics.gravityOn = true
-        val xFactor = 1f - ((abs(megaman.body.y - body.y) / ConstVals.PPM) / 10f) + 0.2f
-        val impulseX = (megaman.body.x - body.x) * xFactor
-        val impulse = Vector2(impulseX, BALL_IMPULSE_Y * ConstVals.PPM)
+
+        val horizontalDistance = megaman.body.x - body.x
+        val verticalDistance = megaman.body.y - body.y
+
+        val adjustedImpulseX = horizontalDistance * 1.1f
+
+        val baseImpulseY = BALL_IMPULSE_Y * ConstVals.PPM
+        val adjustedImpulseY = baseImpulseY + (verticalDistance * 0.75f)
+
+        val impulse = Vector2(adjustedImpulseX, adjustedImpulseY)
+
         monkeyBall!!.body.physics.velocity.set(impulse)
         monkeyBall!!.firstSprite!!.hidden = false
     }
