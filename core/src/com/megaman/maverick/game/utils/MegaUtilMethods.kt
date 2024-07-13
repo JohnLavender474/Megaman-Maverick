@@ -13,4 +13,35 @@ object MegaUtilMethods {
     }
 
     fun getDefaultFontSize() = Math.round(ConstVals.PPM / 2f)
+
+    fun calculateJumpImpulse(
+        source: Vector2,
+        target: Vector2,
+        horizontalScalar: Float,
+        verticalBaseImpulse: Float,
+        verticalScalar: Float
+    ) = calculateJumpImpulse(
+        source.x,
+        source.y,
+        target.x,
+        target.y,
+        horizontalScalar,
+        verticalBaseImpulse,
+        verticalScalar
+    )
+
+    fun calculateJumpImpulse(
+        sourceX: Float, sourceY: Float,
+        targetX: Float, targetY: Float,
+        horizontalScalar: Float, verticalBaseImpulse: Float,
+        verticalScalar: Float
+    ): Vector2 {
+        val horizontalDistance = targetX - sourceX
+        val verticalDistance = targetY - sourceY
+
+        val impulseX = horizontalDistance * horizontalScalar
+        val impulseY = verticalBaseImpulse + (verticalDistance * verticalScalar)
+
+        return Vector2(impulseX, impulseY)
+    }
 }

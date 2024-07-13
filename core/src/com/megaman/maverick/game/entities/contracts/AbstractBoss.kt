@@ -91,7 +91,7 @@ abstract class AbstractBoss(
 
     override fun onEvent(event: Event) {
         when (event.key) {
-            EventType.END_BOSS_SPAWN -> ready = true
+            EventType.END_BOSS_SPAWN -> onReady()
             EventType.PLAYER_SPAWN -> kill()
         }
     }
@@ -128,6 +128,10 @@ abstract class AbstractBoss(
             if (it.current <= ConstVals.MIN_HEALTH && !defeated) triggerDefeat()
         }
         return pointsComponent
+    }
+
+    protected open fun onReady() {
+        ready = true
     }
 
     protected open fun triggerDefeat() {

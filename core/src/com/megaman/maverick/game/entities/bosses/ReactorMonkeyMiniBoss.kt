@@ -1,7 +1,6 @@
 package com.megaman.maverick.game.entities.bosses
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.math.Vector2
 import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
@@ -47,6 +46,7 @@ import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.projectiles.ReactorMonkeyBall
+import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import kotlin.reflect.KClass
@@ -64,12 +64,13 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
         private const val THROW_DUR = 0.3f
         private const val BALL_CATCH_RADIUS = 0.25f
         private const val BALL_IMPULSE_Y = 6.5f
+        private const val HORIZONTAL_SCALAR = 1.1f
+        private const val VERTICAL_SCALAR = 0.75f
         private var standRegion: TextureRegion? = null
         private var throwRegion: TextureRegion? = null
     }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(1),
+    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(Bullet::class to dmgNeg(1),
         Fireball::class to dmgNeg(3),
         ChargedShot::class to dmgNeg {
             it as ChargedShot
@@ -78,8 +79,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
         ChargedShotExplosion::class to dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 2 else 1
-        }
-    )
+        })
     override lateinit var facing: Facing
 
     private val throwTimer = Timer(THROW_DUR)
@@ -120,10 +120,8 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
         monkeyBall =
             EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.REACTOR_MONKEY_BALL)!! as ReactorMonkeyBall
         game.engine.spawn(
-            monkeyBall!!,
-            props(
-                ConstKeys.POSITION to body.getTopCenterPoint().add(0f, 4f * ConstVals.PPM),
-                ConstKeys.OWNER to this
+            monkeyBall!!, props(
+                ConstKeys.POSITION to body.getTopCenterPoint().add(0f, 4f * ConstVals.PPM), ConstKeys.OWNER to this
             )
         )
     }
@@ -136,17 +134,10 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
 
     fun hurlMonkeyBall() {
         monkeyBall!!.body.physics.gravityOn = true
-
-        val horizontalDistance = megaman.body.x - body.x
-        val verticalDistance = megaman.body.y - body.y
-
-        val adjustedImpulseX = horizontalDistance * 1.1f
-
-        val baseImpulseY = BALL_IMPULSE_Y * ConstVals.PPM
-        val adjustedImpulseY = baseImpulseY + (verticalDistance * 0.75f)
-
-        val impulse = Vector2(adjustedImpulseX, adjustedImpulseY)
-
+        val impulse = MegaUtilMethods.calculateJumpImpulse(
+            body.getPosition(), megaman.body.getPosition(), HORIZONTAL_SCALAR,
+            BALL_IMPULSE_Y * ConstVals.PPM, VERTICAL_SCALAR
+        )
         monkeyBall!!.body.physics.velocity.set(impulse)
         monkeyBall!!.firstSprite!!.hidden = false
     }
@@ -202,9 +193,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
 
         addComponent(
             DrawableShapesComponent(
-                this,
-                debugShapeSuppliers = gdxArrayOf({ body }, { ballCatchArea }),
-                debug = true
+                this, debugShapeSuppliers = gdxArrayOf({ body }, { ballCatchArea }), debug = true
             )
         )
 
