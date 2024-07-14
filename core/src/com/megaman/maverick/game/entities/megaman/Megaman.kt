@@ -35,6 +35,7 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.bosses.Bospider
 import com.megaman.maverick.game.entities.bosses.PenguinMiniBoss
+import com.megaman.maverick.game.entities.bosses.ReactMan
 import com.megaman.maverick.game.entities.bosses.ReactorMonkeyMiniBoss
 import com.megaman.maverick.game.entities.bosses.gutstank.GutsTankFist
 import com.megaman.maverick.game.entities.bosses.sigmarat.SigmaRat
@@ -171,7 +172,9 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         ReactorMonkeyBall::class to dmgNeg(3),
         ReactorMonkeyMiniBoss::class to dmgNeg(3),
         SmokePuff::class to dmgNeg(2),
-        TubeBeam::class to dmgNeg(5)
+        TubeBeam::class to dmgNeg(5),
+        ReactMan::class to dmgNeg(3),
+        ReactManProjectile::class to dmgNeg(3)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 

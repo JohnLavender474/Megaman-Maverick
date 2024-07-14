@@ -19,6 +19,7 @@ import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.IGameEntity
+import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -37,7 +38,7 @@ import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.getEntity
 import kotlin.reflect.KClass
 
-class JoeBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
+class JoeBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
 
     companion object {
         const val SNOW_TYPE = "Snow"

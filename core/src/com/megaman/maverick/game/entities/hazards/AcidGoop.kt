@@ -74,7 +74,7 @@ class AcidGoop(game: MegamanMaverickGame) : GameEntity(game), IDamager, IHazard,
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-        body.setCenter(spawn)
+        body.setTopCenterToPoint(spawn)
         body.physics.gravityOn = false
         dissipateTimer.reset()
         dissipating = false
@@ -123,7 +123,7 @@ class AcidGoop(game: MegamanMaverickGame) : GameEntity(game), IDamager, IHazard,
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(0.35f * ConstVals.PPM)
+        sprite.setSize(0.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
