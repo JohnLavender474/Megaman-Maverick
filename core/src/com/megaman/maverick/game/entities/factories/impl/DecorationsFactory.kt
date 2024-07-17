@@ -13,6 +13,7 @@ class DecorationsFactory(private val game: MegamanMaverickGame) : EntityFactory(
         const val WINDY_GRASS = "WindyGrass"
         const val FALLING_LEAF = "FallingLeaf"
         const val TREE = "Tree"
+        const val LAVA_FALL = "LavaFall"
     }
 
     override fun init() {
@@ -21,6 +22,7 @@ class DecorationsFactory(private val game: MegamanMaverickGame) : EntityFactory(
         pools.put(WINDY_GRASS, EntityPoolCreator.create { WindyGrass(game) })
         pools.put(FALLING_LEAF, EntityPoolCreator.create { FallingLeaf(game) })
         pools.put(TREE, EntityPoolCreator.create { Tree(game) })
+        pools.put(LAVA_FALL, EntityPoolCreator.create { LavaFall(game) })
     }
 
     override fun fetch(key: Any) = pools.get(key)?.fetch()

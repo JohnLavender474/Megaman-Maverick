@@ -1,5 +1,5 @@
 Decorations1.png
-size: 96, 32
+size: 1656, 260
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -8,5 +8,12 @@ JetpackFlame
   xy: 0, 0
   size: 96, 32
   orig: 96, 32
+  offset: 0, 0
+  index: -1
+Lava
+  rotate: false
+  xy: 96, 0
+  size: 1560, 260
+  orig: 1560, 260
   offset: 0, 0
   index: -1
