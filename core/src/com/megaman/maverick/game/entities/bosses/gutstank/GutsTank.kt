@@ -51,7 +51,7 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
-import com.megaman.maverick.game.entities.contracts.IProjectileEntity
+import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.enemies.HeliMet
 import com.megaman.maverick.game.entities.enemies.Met
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
@@ -287,7 +287,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
     }
 
     override fun canBeDamagedBy(damager: IDamager): Boolean {
-        if (damager is IProjectileEntity) {
+        if (damager is AbstractProjectile) {
             damager.owner?.let { damagerOwner ->
                 if (damagerOwner == this || damagerOwner == fist || damagerOwner == tankBlock || damagerOwner == bodyBlock || (damagerOwner is Met && runningMetsSet.contains(
                         damagerOwner

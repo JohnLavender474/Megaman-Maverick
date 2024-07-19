@@ -13,7 +13,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.IProjectileEntity
+import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
@@ -31,7 +31,7 @@ class MegaWeaponEntry(
     var halfChargedCost: () -> Int = { 0 },
     var fullyChargedCost: () -> Int = { 0 },
     var cooldownTimer: Timer = Timer(cooldownDur).setToEnd(),
-    var spawned: Array<IProjectileEntity> = Array(),
+    var spawned: Array<AbstractProjectile> = Array(),
     var ammo: Int = MegamanValues.MAX_WEAPON_AMMO
 ) : Updatable {
 
@@ -180,7 +180,7 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
         }
     }
 
-    private fun fireMegaBuster(stat: MegaChargeStatus): IProjectileEntity {
+    private fun fireMegaBuster(stat: MegaChargeStatus): AbstractProjectile {
         val trajectory = Vector2()
         if (megaman.isDirectionRotatedVertically()) trajectory.x = MEGA_BUSTER_BULLET_VEL * megaman.facing.value
         else trajectory.y = MEGA_BUSTER_BULLET_VEL * megaman.facing.value
@@ -219,10 +219,10 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
         props.put(ConstKeys.POSITION, s)
         engine.spawn(megaBusterShot, props)
 
-        return megaBusterShot as IProjectileEntity
+        return megaBusterShot as AbstractProjectile
     }
 
-    private fun fireFlameToss(stat: MegaChargeStatus): IProjectileEntity {
+    private fun fireFlameToss(stat: MegaChargeStatus): AbstractProjectile {
         val props = Properties()
         props.put(ConstKeys.OWNER, megaman)
         val fireball = when (stat) {

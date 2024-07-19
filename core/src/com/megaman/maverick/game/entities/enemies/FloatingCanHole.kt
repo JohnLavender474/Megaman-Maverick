@@ -19,7 +19,6 @@ import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
 
 class FloatingCanHole(game: MegamanMaverickGame) : GameEntity(game), IHazard, IParentEntity {
 
-
     companion object {
         const val TAG = "FloatingCanHole"
         private const val SPAWN_DELAY = 2.5f

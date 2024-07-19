@@ -18,7 +18,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.IProjectileEntity
+import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
@@ -59,7 +59,7 @@ class BreakableIce(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity, 
     override fun hitByHead(headFixture: IFixture) = hit()
 
     override fun hitByProjectile(projectileFixture: IFixture) {
-        val projectile = projectileFixture.getEntity() as IProjectileEntity
+        val projectile = projectileFixture.getEntity() as AbstractProjectile
         when (projectile) {
             is Bullet -> hit()
             is ChargedShot -> {

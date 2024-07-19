@@ -174,7 +174,8 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         SmokePuff::class to dmgNeg(2),
         TubeBeam::class to dmgNeg(5),
         ReactMan::class to dmgNeg(3),
-        ReactManProjectile::class to dmgNeg(3)
+        ReactManProjectile::class to dmgNeg(3),
+        FlameThrower::class to dmgNeg(6)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 
@@ -446,7 +447,7 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
     override fun canBeDamagedBy(damager: IDamager) =
         !invincible && dmgNegotations.containsKey(damager::class) &&
                 (damager is AbstractEnemy || damager is IHazard ||
-                        (damager is IProjectileEntity && damager.owner != this))
+                        (damager is AbstractProjectile && damager.owner != this))
 
     fun stunBounce(bounceOriginX: Float) {
         body.physics.velocity.x =

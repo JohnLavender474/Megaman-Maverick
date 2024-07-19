@@ -8,7 +8,6 @@ import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
-import com.engine.common.CAUSE_OF_DEATH_MESSAGE
 import com.engine.common.enums.Direction
 import com.engine.common.enums.Position
 import com.engine.common.extensions.getTextureAtlas
@@ -17,7 +16,7 @@ import com.engine.common.getOverlapPushDirection
 import com.engine.common.mask
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
-import com.engine.common.shapes.GameRectangle
+import com.engine.common.shapes.GameCircle
 import com.engine.common.time.Timer
 import com.engine.damage.IDamageable
 import com.engine.drawables.shapes.DrawableShapesComponent
@@ -40,11 +39,10 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.entities.contracts.defineProjectileComponents
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.utils.getMegamanMaverickGame
+import com.megaman.maverick.game.entities.utils.playSoundNow
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.getEntity
@@ -55,20 +53,22 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         const val TAG = "Fireball"
         const val BURST_ON_DAMAGE_INFLICTED = "burst_on_damage_inflicted"
         const val BURST_ON_HIT_BODY = "burst_on_hit_body"
+        const val BURST_ON_HIT_BLOCK = "burst_on_hit_block"
         private var fireballAtlas: TextureAtlas? = null
         private var flameAtlas: TextureAtlas? = null
-        private const val ROTATION = 1000f
-        private const val CULL_DUR = 1f
+        private const val ROTATION = 720f
+        private const val BURST_CULL_DUR = 1f
     }
 
     override var owner: IGameEntity? = null
 
-    private lateinit var cullTimer: Timer
+    private lateinit var burstCullTimer: Timer
+    private lateinit var burstDirection: Direction
 
-    private var burst = false
-    private var burstDirection = Direction.UP
     private var burstOnDamageInflicted = false
+    private var burstOnHitBlock = true
     private var burstOnHitBody = false
+    private var burst = false
 
     override fun init() {
         if (fireballAtlas == null)
@@ -86,22 +86,26 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
 
-        val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+        val spawn = spawnProps.getOrDefault(ConstKeys.POSITION, Vector2(), Vector2::class)
         body.setCenter(spawn)
 
         val trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2(), Vector2::class)
         body.physics.velocity = trajectory
 
-        val cullTime = spawnProps.getOrDefault(ConstKeys.CULL_TIME, CULL_DUR, Float::class)
-        cullTimer = Timer(cullTime)
+        val cullTime = spawnProps.getOrDefault(ConstKeys.CULL_TIME, BURST_CULL_DUR, Float::class)
+        burstCullTimer = Timer(cullTime)
 
         val gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, Vector2(), Vector2::class)
         body.physics.gravity = gravity
 
         burstOnDamageInflicted = spawnProps.getOrDefault(BURST_ON_DAMAGE_INFLICTED, false, Boolean::class)
         burstOnHitBody = spawnProps.getOrDefault(BURST_ON_HIT_BODY, false, Boolean::class)
+        burstOnHitBlock = spawnProps.getOrDefault(BURST_ON_HIT_BLOCK, true, Boolean::class)
+
         burst = false
         burstDirection = Direction.UP
+
+
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) {
@@ -110,7 +114,6 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
     }
 
     override fun hitBody(bodyFixture: IFixture) {
-        super.hitBody(bodyFixture)
         if (burstOnHitBody && mask(owner, bodyFixture.getEntity(), { it is Megaman }, { it is AbstractEnemy })) {
             burstDirection = getOverlapPushDirection(body, bodyFixture.getShape()) ?: Direction.UP
             explodeAndDie()
@@ -118,42 +121,41 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
     }
 
     override fun hitBlock(blockFixture: IFixture) {
-        super.hitBlock(blockFixture)
-        burstDirection = getOverlapPushDirection(body, blockFixture.getShape()) ?: Direction.UP
-        explodeAndDie()
+        if (burstOnHitBlock) {
+            burstDirection = getOverlapPushDirection(body, blockFixture.getShape()) ?: Direction.UP
+            explodeAndDie()
+        }
     }
 
     override fun hitShield(shieldFixture: IFixture) {
-        super.hitShield(shieldFixture)
         body.physics.velocity.x *= -1f
         burstDirection = getOverlapPushDirection(body, shieldFixture.getShape()) ?: Direction.UP
         requestToPlaySound(SoundAsset.DINK_SOUND, false)
     }
 
     override fun hitWater(waterFixture: IFixture) {
-        super.hitWater(waterFixture)
         val smokePuff = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SMOKE_PUFF)!!
         val spawn = Vector2(body.getCenter().x, waterFixture.getShape().getMaxY())
         game.engine.spawn(smokePuff, props(ConstKeys.POSITION to spawn, ConstKeys.OWNER to owner))
-        getMegamanMaverickGame().audioMan.playSound(SoundAsset.WHOOSH_SOUND, false)
+        playSoundNow(SoundAsset.WHOOSH_SOUND, false)
         kill()
     }
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(ConstVals.PPM.toFloat())
+        body.setSize(0.6f * ConstVals.PPM)
         body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.rotatedBounds }
 
         val projectileFixture =
-            Fixture(body, FixtureType.PROJECTILE, GameRectangle().setSize(0.9f * ConstVals.PPM))
+            Fixture(body, FixtureType.PROJECTILE, GameCircle().setRadius(0.25f * ConstVals.PPM))
         body.addFixture(projectileFixture)
         projectileFixture.rawShape.color = Color.GREEN
         debugShapes.add { projectileFixture.getShape() }
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.9f * ConstVals.PPM))
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.25f * ConstVals.PPM))
         body.addFixture(damagerFixture)
         damagerFixture.rawShape.color = Color.RED
         debugShapes.add { damagerFixture.getShape() }
@@ -167,7 +169,7 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { delta, _sprite ->
-            val size = if (burst) 1.25f else 2.5f
+            val size = if (burst) 0.85f else 1.65f
             _sprite.setSize(size * ConstVals.PPM)
             val position = if (burst) Position.BOTTOM_CENTER else Position.CENTER
             val bodyPosition = body.getPositionPoint(position)
@@ -194,9 +196,9 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         updatablesComponent.add {
             if (burst) {
                 body.physics.velocity.setZero()
-                cullTimer.update(it)
+                burstCullTimer.update(it)
             }
-            if (cullTimer.isFinished()) kill(props(CAUSE_OF_DEATH_MESSAGE to "Cull timer finished"))
+            if (burstCullTimer.isFinished()) kill()
         }
         return updatablesComponent
     }

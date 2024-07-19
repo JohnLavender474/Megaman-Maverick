@@ -339,7 +339,7 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             )!!
 
             if (otherFixture.hasFixtureLabel(FixtureLabel.NO_PROJECTILE_COLLISION)) return
-            val projectile = projectileFixture.getEntity() as IProjectileEntity
+            val projectile = projectileFixture.getEntity() as AbstractProjectile
             when (otherFixture.getFixtureType()) {
                 FixtureType.BLOCK -> {
                     printDebugLog(contact, "beginContact(): Projectile-Block, contact = $contact")

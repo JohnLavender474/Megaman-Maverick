@@ -12,6 +12,8 @@ import com.badlogic.gdx.maps.objects.PolylineMapObject
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.OrderedMap
+import com.engine.common.enums.Direction
+import com.engine.common.enums.Position
 import com.engine.common.extensions.getMusic
 import com.engine.common.extensions.getSound
 import com.engine.common.objects.Matrix
@@ -146,5 +148,12 @@ fun GamePolygon.splitIntoGameRectanglesBasedOnCenter(rectWidth: Float, rectHeigh
         }
     }
     return matrix
+}
+
+fun Direction.getOpposingPosition() = when (this) {
+    Direction.UP -> Position.BOTTOM_CENTER
+    Direction.DOWN -> Position.TOP_CENTER
+    Direction.LEFT -> Position.CENTER_RIGHT
+    Direction.RIGHT -> Position.CENTER_LEFT
 }
 

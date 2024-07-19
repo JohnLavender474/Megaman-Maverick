@@ -1,5 +1,5 @@
 Enemies2.png
-size: 512, 1200
+size: 512, 1328
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -22,6 +22,13 @@ Adamski/Purple
   xy: 0, 32
   size: 64, 32
   orig: 64, 32
+  offset: 0, 0
+  index: -1
+AngryFlameBall
+  rotate: false
+  xy: 0, 1136
+  size: 366, 188
+  orig: 366, 188
   offset: 0, 0
   index: -1
 BabySpider/Run
@@ -383,7 +390,7 @@ ToxicBarrelBot/Closed
   index: -1
 ToxicBarrelBot/OpenCenter
   rotate: false
-  xy: 256, 1008
+  xy: 366, 1136
   size: 96, 192
   orig: 96, 192
   offset: 0, 0

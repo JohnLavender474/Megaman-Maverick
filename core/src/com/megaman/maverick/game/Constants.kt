@@ -23,8 +23,10 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val DEATH_IMMUNE = "death_immune"
     const val ACTIVE = "active"
     const val BIG = "big"
+    const val SMALL = "small"
     const val LOG = "log"
     const val LIFECYCLE = "lifecycle"
     const val DELAY = "delay"

@@ -208,7 +208,8 @@
             <key type="filename">../frames/Hazards1/CeilingCrusher/Crusher.png</key>
             <key type="filename">../frames/Hazards1/Electrocutie/Move.png</key>
             <key type="filename">../frames/Hazards1/Electrocutie/Shock.png</key>
-            <key type="filename">../frames/Hazards1/FlameThrower.png</key>
+            <key type="filename">../frames/Hazards1/FlameThrower/Cool.png</key>
+            <key type="filename">../frames/Hazards1/FlameThrower/Hot.png</key>
             <key type="filename">../frames/Hazards1/LaserBeamer.png</key>
             <key type="filename">../frames/Hazards1/Sea Mine/Wait.png</key>
             <key type="filename">../frames/Hazards1/Spike4.png</key>
@@ -230,6 +231,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Hazards1/Electrocutie/Charge.png</key>
+            <key type="filename">../frames/Hazards1/FlameThrower/Blink.png</key>
             <key type="filename">../frames/Hazards1/Sea Mine/Blow.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>

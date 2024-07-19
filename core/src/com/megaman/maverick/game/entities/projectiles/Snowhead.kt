@@ -20,7 +20,6 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
-import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
 import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
@@ -29,8 +28,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.IProjectileEntity
-import com.megaman.maverick.game.entities.contracts.defineProjectileComponents
+import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -40,7 +38,7 @@ import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.getEntity
 
-class Snowhead(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity, IFaceable {
+class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable {
 
     companion object {
         const val TAG = "Snowhead"
@@ -61,7 +59,6 @@ class Snowhead(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity,
         if (region == null) region = game.assMan.getTextureRegion(
             TextureAsset.ENEMIES_2.source, "SnowheadThrower/Snowhead"
         )
-        super<GameEntity>.init()
         addComponents(defineProjectileComponents())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
@@ -122,7 +119,7 @@ class Snowhead(game: MegamanMaverickGame) : GameEntity(game), IProjectileEntity,
     }
 
     override fun hitProjectile(projectileFixture: IFixture) {
-        val projectile = projectileFixture.getEntity() as IProjectileEntity
+        val projectile = projectileFixture.getEntity() as AbstractProjectile
         if (projectile.owner == owner) return
         if (projectile.owner is Megaman) explodeAndDie()
     }

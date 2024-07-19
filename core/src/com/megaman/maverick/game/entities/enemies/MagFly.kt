@@ -33,7 +33,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.IProjectileEntity
+import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.Bullet
@@ -117,7 +117,7 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         forceFixture.setVelocityAlteration { fixture, _ ->
             val entity = fixture.getEntity()
             if (entity is AbstractEnemy || (entity is Megaman && entity.damaged)) return@setVelocityAlteration VelocityAlteration.addNone()
-            if (entity is IProjectileEntity) entity.owner = null
+            if (entity is AbstractProjectile) entity.owner = null
 
             val x = PULL_FORCE_X * ConstVals.PPM * facing.value
             val y = PULL_FORCE_Y * ConstVals.PPM

@@ -29,7 +29,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.IProjectileEntity
+import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
@@ -86,7 +86,7 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         blowFixture.setVelocityAlteration { fixture, _ ->
             val entity = fixture.getEntity()
             if (entity is AbstractEnemy) return@setVelocityAlteration VelocityAlteration.addNone()
-            if (entity is IProjectileEntity) entity.owner = null
+            if (entity is AbstractProjectile) entity.owner = null
             val force = BLOW_FORCE * ConstVals.PPM * facing.value
             return@setVelocityAlteration VelocityAlteration.add(force, 0f)
         }

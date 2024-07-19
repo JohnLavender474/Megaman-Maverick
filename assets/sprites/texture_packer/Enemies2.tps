@@ -196,6 +196,21 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Enemies2/AngryFlameBall.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>92,47,183,94</rect>
+                <key>scale9Paddings</key>
+                <rect>92,47,183,94</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Enemies2/BabySpider/Run.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>

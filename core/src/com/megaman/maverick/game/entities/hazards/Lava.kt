@@ -9,6 +9,7 @@ import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimator
 import com.engine.common.extensions.getTextureAtlas
+import com.engine.common.interfaces.UpdateFunction
 import com.engine.common.objects.Matrix
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
@@ -43,6 +44,7 @@ class Lava(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesE
     }
 
     private lateinit var type: String
+    private var left = false
 
     override fun init() {
         if (regions == null) {
@@ -62,6 +64,7 @@ class Lava(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesE
         body.set(bounds)
         type = spawnProps.getOrDefault(ConstKeys.TYPE, FLOW, String::class)
         val cells = bounds.split(ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
+        left = spawnProps.getOrDefault(ConstKeys.LEFT, false, Boolean::class)
         defineDrawables(cells)
     }
 
@@ -77,20 +80,25 @@ class Lava(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesE
 
     private fun defineDrawables(cells: Matrix<GameRectangle>) {
         val sprites = OrderedMap<String, GameSprite>()
+        val updateFunctions = ObjectMap<String, UpdateFunction<GameSprite>>()
         val animators = Array<Pair<() -> GameSprite, IAnimator>>()
         cells.forEach { x, y, gameRectangle ->
             if (gameRectangle == null) return@forEach
 
             val lavaSprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
             lavaSprite.setBounds(gameRectangle)
-            sprites.put("lava_${x}_${y}", lavaSprite)
+            val key = "lava_${x}_${y}"
+            sprites.put(key, lavaSprite)
+            if (type == FALL) updateFunctions.put(key, UpdateFunction { _, _sprite ->
+                _sprite.setFlip(left, false)
+            })
 
             val region = regions!!.get(type)
             val animation = Animation(region!!, 1, 3, 0.1f, true)
             val animator = Animator(animation)
             animators.add({ lavaSprite } to animator)
         }
-        addComponent(SpritesComponent(this, sprites))
+        addComponent(SpritesComponent(this, sprites, updateFunctions))
         addComponent(AnimationsComponent(this, animators))
     }
 }
