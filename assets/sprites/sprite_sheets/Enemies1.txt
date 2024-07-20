@@ -290,6 +290,13 @@ PicketJoe/Throw
   orig: 128, 32
   offset: 0, 0
   index: -1
+Popoheli
+  rotate: false
+  xy: 128, 160
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
 PreciousJoe/Charge
   rotate: false
   xy: 336, 360
@@ -327,28 +334,28 @@ Ratton/Stand
   index: -1
 RedScrewie/Down
   rotate: false
-  xy: 128, 160
+  xy: 192, 160
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 RedScrewie/Drop
   rotate: false
-  xy: 160, 160
+  xy: 224, 160
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 RedScrewie/Rise
   rotate: false
-  xy: 256, 160
+  xy: 320, 160
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 RedScrewie/Shoot
   rotate: false
-  xy: 352, 160
+  xy: 416, 160
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
@@ -383,168 +390,168 @@ RollerBot/Shoot
   index: -1
 ShieldAttacker/Attack
   rotate: false
-  xy: 448, 160
+  xy: 0, 192
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 ShieldAttacker/TurnAround
   rotate: false
-  xy: 0, 192
+  xy: 64, 192
   size: 160, 32
   orig: 160, 32
   offset: 0, 0
   index: -1
 SniperJoe/Orange/JumpNoShield
   rotate: false
-  xy: 160, 192
+  xy: 224, 192
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SniperJoe/Orange/JumpWithShield
   rotate: false
-  xy: 192, 192
+  xy: 256, 192
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SniperJoe/Orange/ShootingNoShield
   rotate: false
-  xy: 224, 192
+  xy: 288, 192
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SniperJoe/Orange/ShootingWithShield
   rotate: false
-  xy: 256, 192
+  xy: 320, 192
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SniperJoe/Orange/StandNoShield
   rotate: false
-  xy: 288, 192
+  xy: 352, 192
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SniperJoe/Orange/StandShielded
   rotate: false
-  xy: 320, 192
+  xy: 384, 192
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SniperJoe/Orange/ThrowShield
   rotate: false
-  xy: 352, 192
+  xy: 416, 192
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SniperJoe/Snow/JumpNoShield
   rotate: false
-  xy: 384, 192
+  xy: 448, 192
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SniperJoe/Snow/JumpWithShield
   rotate: false
-  xy: 416, 192
+  xy: 480, 192
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SniperJoe/Snow/ShootingNoShield
   rotate: false
-  xy: 448, 192
+  xy: 0, 224
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SniperJoe/Snow/ShootingWithShield
   rotate: false
-  xy: 480, 192
+  xy: 32, 224
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SniperJoe/Snow/StandNoShield
   rotate: false
-  xy: 0, 224
+  xy: 64, 224
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SniperJoe/Snow/StandShielded
   rotate: false
-  xy: 32, 224
+  xy: 96, 224
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SniperJoe/Snow/ThrowShield
   rotate: false
-  xy: 64, 224
+  xy: 128, 224
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SnowBat/Fly
   rotate: false
-  xy: 96, 224
+  xy: 160, 224
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 SnowBat/Hang
   rotate: false
-  xy: 160, 224
+  xy: 224, 224
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SnowBat/OpenEyes
   rotate: false
-  xy: 192, 224
+  xy: 256, 224
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SnowBat/OpenWings
   rotate: false
-  xy: 224, 224
+  xy: 288, 224
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SnowMet/GetUp
   rotate: false
-  xy: 256, 224
+  xy: 320, 224
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SnowMet/LayDown
   rotate: false
-  xy: 288, 224
+  xy: 352, 224
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SnowMet/PopUp
   rotate: false
-  xy: 320, 224
+  xy: 384, 224
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SnowMet/Run
   rotate: false
-  xy: 352, 224
+  xy: 416, 224
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
@@ -579,7 +586,7 @@ Spiky
   index: -1
 SpringHead/Compressed
   rotate: false
-  xy: 416, 224
+  xy: 480, 224
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

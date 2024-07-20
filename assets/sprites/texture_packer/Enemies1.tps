@@ -202,6 +202,7 @@
             <key type="filename">../frames/Enemies1/MagFly.png</key>
             <key type="filename">../frames/Enemies1/Met/Run.png</key>
             <key type="filename">../frames/Enemies1/Penguin/Stand.png</key>
+            <key type="filename">../frames/Enemies1/Popoheli.png</key>
             <key type="filename">../frames/Enemies1/ShieldAttacker/Attack.png</key>
             <key type="filename">../frames/Enemies1/SnowBat/Fly.png</key>
             <key type="filename">../frames/Enemies1/SnowMet/Run.png</key>

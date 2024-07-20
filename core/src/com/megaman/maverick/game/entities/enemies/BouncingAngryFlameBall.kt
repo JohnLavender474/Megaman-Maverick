@@ -6,19 +6,23 @@ import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.common.enums.Facing
+import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.interfaces.IFaceable
+import com.engine.common.interfaces.isFacing
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameCircle
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
 import com.engine.damage.IDamager
+import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.contracts.IAnimatedEntity
+import com.engine.updatables.UpdatablesComponent
 import com.engine.world.Body
 import com.engine.world.BodyComponent
 import com.engine.world.BodyType
@@ -64,6 +68,13 @@ class BouncingAngryFlameBall(game: MegamanMaverickGame) : AbstractEnemy(game), I
         bounceDelayTimer.reset()
     }
 
+    override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
+        super.defineUpdatablesComponent(updatablesComponent)
+        updatablesComponent.add {
+            facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
+        }
+    }
+
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(ConstVals.PPM.toFloat())
@@ -89,6 +100,14 @@ class BouncingAngryFlameBall(game: MegamanMaverickGame) : AbstractEnemy(game), I
             }
         }
 
+        addComponent(
+            DrawableShapesComponent(
+                this,
+                debugShapeSuppliers = gdxArrayOf({ bodyFixture.getShape() }),
+                debug = true
+            )
+        )
+
         return BodyComponentCreator.create(this, body)
     }
 
@@ -98,6 +117,7 @@ class BouncingAngryFlameBall(game: MegamanMaverickGame) : AbstractEnemy(game), I
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())
+            _sprite.setFlip(isFacing(Facing.RIGHT), false)
             _sprite.hidden = damageBlink
         }
         return spritesComponent

@@ -70,11 +70,15 @@ class Lava(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesE
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
+
         val deathFixture = Fixture(body, FixtureType.DEATH, GameRectangle())
+        deathFixture.putProperty(ConstKeys.INSTANT, true)
         body.addFixture(deathFixture)
+
         body.preProcess.put(ConstKeys.DEFAULT) {
             (deathFixture.rawShape as GameRectangle).set(body)
         }
+
         return BodyComponentCreator.create(this, body)
     }
 
