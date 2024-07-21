@@ -212,6 +212,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         heliSprite.setSize(1.25f * ConstVals.PPM)
         sprites.put("heli", heliSprite)
         updateFunctions.put("heli") { _, _sprite ->
+            _sprite.setFlip(isFacing(Facing.RIGHT), false)
             _sprite.setCenter(body.getCenter())
         }
 

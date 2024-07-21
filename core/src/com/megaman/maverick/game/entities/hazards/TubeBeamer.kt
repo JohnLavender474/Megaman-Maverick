@@ -5,10 +5,12 @@ import com.engine.audio.AudioComponent
 import com.engine.common.enums.Direction
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.objectMapOf
+import com.engine.common.extensions.objectSetOf
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
+import com.engine.cullables.CullableOnEvent
 import com.engine.cullables.CullablesComponent
 import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.entities.GameEntity
@@ -28,6 +30,7 @@ import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.BodyComponentCreator
 
 class TubeBeamer(game: MegamanMaverickGame) : GameEntity(game), IAudioEntity, IBodyEntity, ICullableEntity,
@@ -99,7 +102,15 @@ class TubeBeamer(game: MegamanMaverickGame) : GameEntity(game), IAudioEntity, IB
     }
 
     private fun defineCullablesComponent(): CullablesComponent {
-        val cullable = getGameCameraCullingLogic(this)
-        return CullablesComponent(this, objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullable))
+        val cullableOutOfBounds = getGameCameraCullingLogic(this)
+        val cullEvents =
+            objectSetOf<Any>(EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING, EventType.PLAYER_SPAWN)
+        val cullableOnEvents = CullableOnEvent({ cullEvents.contains(it) }, cullEvents)
+        return CullablesComponent(
+            this, objectMapOf(
+                ConstKeys.CULL_OUT_OF_BOUNDS to cullableOutOfBounds,
+                ConstKeys.CULL_EVENTS to cullableOnEvents
+            )
+        )
     }
 }

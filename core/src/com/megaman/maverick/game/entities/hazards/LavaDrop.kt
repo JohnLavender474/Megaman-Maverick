@@ -46,11 +46,11 @@ import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.isSensing
 
-class AcidGoop(game: MegamanMaverickGame) : GameEntity(game), IDamager, IHazard, ISpritesEntity, IAnimatedEntity,
+class LavaDrop(game: MegamanMaverickGame) : GameEntity(game), IDamager, IHazard, ISpritesEntity, IAnimatedEntity,
     IBodyEntity, ICullableEntity {
 
     companion object {
-        const val TAG = "AcidGoop"
+        const val TAG = "LavaDrop"
         private const val GRAVITY = -0.15f
         private const val DISSIPATE_DUR = 0.125f
         private var fallingRegion: TextureRegion? = null
@@ -63,8 +63,8 @@ class AcidGoop(game: MegamanMaverickGame) : GameEntity(game), IDamager, IHazard,
     override fun init() {
         if (fallingRegion == null || splatRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
-            fallingRegion = atlas.findRegion("AcidGoop/Falling")
-            splatRegion = atlas.findRegion("AcidGoop/Landed")
+            fallingRegion = atlas.findRegion("LavaDrop/Falling")
+            splatRegion = atlas.findRegion("LavaDrop/Landed")
         }
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())

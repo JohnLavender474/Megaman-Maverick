@@ -177,7 +177,8 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         ReactManProjectile::class to dmgNeg(3),
         FlameThrower::class to dmgNeg(6),
         Popoheli::class to dmgNeg(3),
-        BouncingAngryFlameBall::class to dmgNeg(3)
+        BouncingAngryFlameBall::class to dmgNeg(3),
+        LavaDrop::class to dmgNeg(6)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 

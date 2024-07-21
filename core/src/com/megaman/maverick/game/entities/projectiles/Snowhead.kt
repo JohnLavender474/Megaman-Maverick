@@ -33,7 +33,8 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.utils.getMegamanMaverickGame
+import com.megaman.maverick.game.entities.utils.overlapsGameCamera
+import com.megaman.maverick.game.entities.utils.playSoundNow
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.getEntity
@@ -100,7 +101,7 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
 
     override fun explodeAndDie(vararg params: Any?) {
         kill()
-        getMegamanMaverickGame().audioMan.playSound(SoundAsset.CHILL_SHOOT_SOUND, false)
+        if (overlapsGameCamera()) playSoundNow(SoundAsset.CHILL_SHOOT_SOUND, false)
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SNOWBALL_EXPLOSION)!!
         game.engine.spawn(explosion, props(ConstKeys.POSITION to body.getCenter()))
     }

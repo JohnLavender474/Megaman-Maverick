@@ -8,8 +8,12 @@ import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimator
+import com.engine.common.enums.Direction
+import com.engine.common.enums.Facing
 import com.engine.common.extensions.getTextureAtlas
+import com.engine.common.interfaces.IFaceable
 import com.engine.common.interfaces.UpdateFunction
+import com.engine.common.interfaces.isFacing
 import com.engine.common.objects.Matrix
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
@@ -30,11 +34,13 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.utils.split
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
-class Lava(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity {
+class Lava(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+    IDirectionRotatable, IFaceable {
 
     companion object {
         const val TAG = "Lava"
@@ -43,8 +49,11 @@ class Lava(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesE
         private var regions: ObjectMap<String, TextureRegion>? = null
     }
 
+    override lateinit var directionRotation: Direction
+    override lateinit var facing: Facing
+
     private lateinit var type: String
-    private var left = false
+    private var spritePriorityValue = 0
 
     override fun init() {
         if (regions == null) {
@@ -60,11 +69,18 @@ class Lava(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesE
 
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
+
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
+
         type = spawnProps.getOrDefault(ConstKeys.TYPE, FLOW, String::class)
+
+        directionRotation =
+            Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
+        facing = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, "right", String::class).uppercase())
+        spritePriorityValue = spawnProps.getOrDefault(ConstKeys.PRIORITY, if (type == FALL) 1 else 0, Int::class)
+
         val cells = bounds.split(ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
-        left = spawnProps.getOrDefault(ConstKeys.LEFT, false, Boolean::class)
         defineDrawables(cells)
     }
 
@@ -91,10 +107,15 @@ class Lava(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesE
 
             val lavaSprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
             lavaSprite.setBounds(gameRectangle)
+
             val key = "lava_${x}_${y}"
             sprites.put(key, lavaSprite)
-            if (type == FALL) updateFunctions.put(key, UpdateFunction { _, _sprite ->
-                _sprite.setFlip(left, false)
+
+            updateFunctions.put(key, UpdateFunction { _, _sprite ->
+                _sprite.setOriginCenter()
+                _sprite.rotation = directionRotation.rotation
+                _sprite.setFlip(isFacing(Facing.LEFT), false)
+                _sprite.priority.value = spritePriorityValue
             })
 
             val region = regions!!.get(type)

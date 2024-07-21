@@ -43,10 +43,9 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
+import com.megaman.maverick.game.entities.utils.playSoundNow
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.utils.getMegamanMaverickGame
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
@@ -65,20 +64,14 @@ class Gate(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IAudioEnt
 
     override val eventKeyMask =
         objectSetOf<Any>(EventType.PLAYER_SPAWN, EventType.END_ROOM_TRANS, EventType.MINI_BOSS_DEAD)
-
     val center = Vector2()
-
     lateinit var state: GateState
         private set
     lateinit var direction: Direction
         private set
 
     private val timer = Timer(DURATION)
-    private val audioMan: MegaAudioManager
-        get() = getMegamanMaverickGame().audioMan
-
     private lateinit var nextRoomKey: String
-
     private var triggerable = true
     private var miniBossGate = false
     private var resettable = false
@@ -148,7 +141,7 @@ class Gate(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IAudioEnt
         if (!triggerable) return
 
         state = GateState.OPENING
-        audioMan.playSound(SoundAsset.BOSS_DOOR_SOUND, false)
+        playSoundNow(SoundAsset.BOSS_DOOR_SOUND, false)
         game.eventsMan.submitEvent(Event(EventType.GATE_INIT_OPENING))
     }
 

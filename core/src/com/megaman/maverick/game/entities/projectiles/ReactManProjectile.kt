@@ -34,10 +34,9 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
-import com.megaman.maverick.game.utils.getMegamanMaverickGame
+import com.megaman.maverick.game.entities.utils.playSoundNow
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
@@ -49,24 +48,24 @@ class ReactManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game), 
         private const val DIE_DUR = 0.1f
         private val shatterTrajectories = objectMapOf(
             Direction.UP to gdxArrayOf(
-                Vector2(3f, 7f),
-                Vector2(0f, 7f),
-                Vector2(-3f, 7f)
+                Vector2(5f, 9f),
+                Vector2(0f, 9f),
+                Vector2(-5f, 9f)
             ),
             Direction.DOWN to gdxArrayOf(
-                Vector2(3f, -7f),
-                Vector2(0f, -7f),
-                Vector2(-3f, -7f)
+                Vector2(5f, -9f),
+                Vector2(0f, -9f),
+                Vector2(-5f, -9f)
             ),
             Direction.LEFT to gdxArrayOf(
-                Vector2(-7f, 3f),
-                Vector2(-7f, 0f),
-                Vector2(-7f, -3f)
+                Vector2(-9f, 5f),
+                Vector2(-9f, 0f),
+                Vector2(-9f, -5f)
             ),
             Direction.RIGHT to gdxArrayOf(
-                Vector2(7f, 3f),
-                Vector2(7f, 0f),
-                Vector2(7f, -3f)
+                Vector2(9f, 5f),
+                Vector2(9f, 0f),
+                Vector2(9f, -5f)
             )
         )
         private var bigRegion: TextureRegion? = null
@@ -134,7 +133,7 @@ class ReactManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game), 
     }
 
     private fun shatter(shape: IGameShape2D) {
-        getMegamanMaverickGame().audioMan.playSound(SoundAsset.BURST_SOUND, false)
+        playSoundNow(SoundAsset.BURST_SOUND, false)
         val direction = getOverlapPushDirection(body, shape) ?: Direction.UP
         shatterTrajectories.get(direction).forEach { trajectory ->
             val projectile = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.REACT_MAN_PROJECTILE)!!

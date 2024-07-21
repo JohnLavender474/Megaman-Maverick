@@ -31,7 +31,8 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-import com.megaman.maverick.game.utils.getMegamanMaverickGame
+import com.megaman.maverick.game.entities.utils.overlapsGameCamera
+import com.megaman.maverick.game.entities.utils.playSoundNow
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
@@ -58,7 +59,7 @@ class RollingBotShot(game: MegamanMaverickGame) : AbstractProjectile(game), IFac
 
     override fun explodeAndDie(vararg params: Any?) {
         kill()
-        getMegamanMaverickGame().audioMan.playSound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
+        if (overlapsGameCamera()) playSoundNow(SoundAsset.ENEMY_DAMAGE_SOUND, false)
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.CHARGED_SHOT_EXPLOSION)!!
         game.engine.spawn(
             explosion, props(

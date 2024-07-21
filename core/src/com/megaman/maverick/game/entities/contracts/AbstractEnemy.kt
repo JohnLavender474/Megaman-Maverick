@@ -34,9 +34,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.factories.impl.ItemsFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
-import com.megaman.maverick.game.entities.utils.setStandardOnPortalHopperEndProp
-import com.megaman.maverick.game.entities.utils.setStandardOnPortalHopperStartProp
+import com.megaman.maverick.game.entities.utils.*
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.getMegamanMaverickGame
 import com.megaman.maverick.game.utils.toGameRectangle
@@ -187,21 +185,20 @@ abstract class AbstractEnemy(
     }
 
     protected open fun disintegrate(disintegrationProps: Properties? = null) {
-        getMegamanMaverickGame().audioMan.playSound(SoundAsset.ENEMY_DAMAGE_SOUND)
+        if (overlapsGameCamera()) playSoundNow(SoundAsset.ENEMY_DAMAGE_SOUND, false)
         val disintegration = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)
         val props = disintegrationProps ?: props(ConstKeys.POSITION to body.getCenter())
         game.engine.spawn(disintegration!!, props)
     }
 
     protected open fun explode(explosionProps: Properties? = null) {
-        getMegamanMaverickGame().audioMan.playSound(SoundAsset.ENEMY_DAMAGE_SOUND)
+        playSoundNow(SoundAsset.ENEMY_DAMAGE_SOUND, false)
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)
         val props = explosionProps ?: props(ConstKeys.POSITION to body.getCenter())
         game.engine.spawn(explosion!!, props)
     }
 
     open fun isMegamanShootingAtMe(): Boolean {
-        val megaman = getMegamanMaverickGame().megaman
         if (!megaman.shooting) return false
         return body.x < megaman.body.x && megaman.facing == Facing.LEFT || body.x > megaman.body.x && megaman.facing == Facing.RIGHT
     }

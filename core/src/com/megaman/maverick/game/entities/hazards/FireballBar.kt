@@ -49,6 +49,7 @@ class FireballBar(game: MegamanMaverickGame) : GameEntity(game), IParentEntity {
             val fireball = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.FIREBALL)!!
             game.engine.spawn(
                 fireball, props(
+                    ConstKeys.OWNER to this,
                     ConstKeys.CULL_OUT_OF_BOUNDS to false,
                     ConstKeys.CULL_EVENTS to false,
                     Fireball.BURST_ON_HIT_BLOCK to false
