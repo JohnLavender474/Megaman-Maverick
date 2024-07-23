@@ -77,15 +77,15 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
     override lateinit var facing: Facing
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(2),
-        Fireball::class to dmgNeg(10),
+        Bullet::class to dmgNeg(5),
+        Fireball::class to dmgNeg(15),
         ChargedShot::class to dmgNeg {
             it as ChargedShot
-            if (it.fullyCharged) 5 else 3
+            if (it.fullyCharged) 15 else 10
         },
         ChargedShotExplosion::class to dmgNeg {
             it as ChargedShotExplosion
-            if (it.fullyCharged) 3 else 1
+            if (it.fullyCharged) 5 else 3
         }
     )
 
@@ -129,6 +129,7 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
         body.setBottomCenterToPoint(spawn)
 
         loop.reset()
+        loop.forEach { it.second.reset() }
         facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
     }
 
@@ -193,7 +194,7 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
         debugShapes.add { damageableFixture1.getShape() }
 
         val damageableFixture2 =
-            Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.25f * ConstVals.PPM))
+            Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.45f * ConstVals.PPM))
         damageableFixture2.offsetFromBodyCenter.y = -1.25f * ConstVals.PPM
         body.addFixture(damageableFixture2)
         damageableFixture2.rawShape.color = Color.PURPLE

@@ -72,7 +72,9 @@ class Spiky(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
         super.spawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
-        facing = Facing.valueOf(spawnProps.get(ConstKeys.FACING, String::class)!!.uppercase())
+        facing = if (spawnProps.containsKey(ConstKeys.FACING))
+            Facing.valueOf(spawnProps.get(ConstKeys.FACING, String::class)!!.uppercase())
+        else if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
     }
 
     override fun defineBodyComponent(): BodyComponent {

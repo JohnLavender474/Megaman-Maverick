@@ -49,6 +49,7 @@ import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.ControllerButton
 import com.megaman.maverick.game.drawables.sprites.Background
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
+import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
@@ -325,6 +326,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
                     "onEvent(): Player spawn --> spawn Megaman: ${playerSpawnsMan.currentSpawnProps!!}"
                 )
                 engine.systems.forEach { it.on = true }
+                engine.forEachEntity { if (it is AbstractEnemy) it.kill() }
                 engine.spawn(megaman, playerSpawnsMan.currentSpawnProps!!)
                 entityStatsHandler.unset()
             }

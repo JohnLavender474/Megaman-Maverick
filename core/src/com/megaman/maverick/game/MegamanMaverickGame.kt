@@ -57,6 +57,7 @@ import com.megaman.maverick.game.entities.bosses.ReactorMonkeyMiniBoss
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
+import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
 import com.megaman.maverick.game.entities.sensors.Gate
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.ScreenEnum
@@ -185,8 +186,8 @@ class MegamanMaverickGame : Game2D(), IEventListener {
         megamanUpgradeHandler.add(MegaAbility.CHARGE_WEAPONS)
         megamanUpgradeHandler.add(MegaAbility.AIR_DASH)
         megamanUpgradeHandler.add(MegaAbility.GROUND_SLIDE)
+        */
         megamanUpgradeHandler.add(MegaAbility.WALL_SLIDE)
-         */
 
         screens.put(ScreenEnum.LEVEL_SCREEN.name, MegaLevelScreen(this))
         screens.put(ScreenEnum.MAIN_MENU_SCREEN.name, MainMenuScreen(this))
@@ -208,12 +209,12 @@ class MegamanMaverickGame : Game2D(), IEventListener {
         // startLevelScreen(Level.TEST7)
         // startLevelScreen(Level.MAGNET_MAN)
         // startLevelScreen(Level.TIMBER_WOMAN)
-        startLevelScreen(Level.REACT_MAN)
+        // startLevelScreen(Level.REACT_MAN)
         // startLevelScreen(Level.INFERNO_MAN)
         // startLevelScreen(Level.CREW_MAN)
         // startLevelScreen(Level.FREEZE_MAN)
         // startLevelScreen(Level.GALAXY_MAN)
-        // startLevelScreen(Level.WILY_STAGE_1)
+        startLevelScreen(Level.WILY_STAGE_1)
         // startLevelScreen(Level.WILY_STAGE_2)
         // startLevelScreen(Level.WILY_STAGE_3)
         // setCurrentScreen(ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name)

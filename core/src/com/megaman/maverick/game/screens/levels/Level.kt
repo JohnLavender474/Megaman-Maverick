@@ -17,7 +17,7 @@ enum class Level(tmxSourceFile: String, val musicAss: MusicAsset) {
     REACT_MAN("ReactMan.tmx", MusicAsset.MM11_FUSE_MAN_MUSIC),
     DISTRIBUTOR_MAN("Test1.tmx", MusicAsset.XENOBLADE_GAUR_PLAINS_MUSIC),
     ROASTER_MAN("Test1.tmx", MusicAsset.XENOBLADE_GAUR_PLAINS_MUSIC),
-    INFERNO_MAN("InfernoMan.tmx", MusicAsset.MM11_TORCH_MAN_MUSIC),
+    INFERNO_MAN("InfernoMan.tmx", MusicAsset.MMX6_BLAZE_HEATNIX),
     BLUNT_MAN("Test1.tmx", MusicAsset.XENOBLADE_GAUR_PLAINS_MUSIC),
     NUKE_MAN("Test1.tmx", MusicAsset.XENOBLADE_GAUR_PLAINS_MUSIC),
     CREW_MAN("CrewMan.tmx", MusicAsset.MM7_JUNK_MAN_MUSIC),

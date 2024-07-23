@@ -20,7 +20,7 @@ import com.engine.common.interfaces.UpdateFunction
 import com.engine.common.interfaces.isFacing
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
-import com.engine.common.shapes.toGameRectangle
+import com.engine.common.shapes.getCenter
 import com.engine.common.time.Timer
 import com.engine.damage.IDamager
 import com.engine.drawables.shapes.DrawableShapesComponent
@@ -48,6 +48,7 @@ import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
+import java.util.*
 import kotlin.reflect.KClass
 
 class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
@@ -101,15 +102,15 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        val target1 =
-            spawnProps.get("${ConstKeys.TARGET}_1", RectangleMapObject::class)!!.rectangle.toGameRectangle().getCenter()
-        val target2 =
-            spawnProps.get("${ConstKeys.TARGET}_2", RectangleMapObject::class)!!.rectangle.toGameRectangle().getCenter()
         val megamanCenter = megaman.body.getCenter()
-        target = if (target1.dst2(megamanCenter) < target2.dst2(megamanCenter)) target1 else target2
+        val targets = PriorityQueue<Vector2> { target1, target2 ->
+            target1.dst2(megamanCenter).compareTo(target2.dst2(megamanCenter))
+        }
+        spawnProps.getAllMatching { it.toString().startsWith(ConstKeys.TARGET) }
+            .forEach { targets.add((it.second as RectangleMapObject).rectangle.getCenter()) }
+        target = targets.poll()
 
         state = PopoheliState.APPROACHING
-
         facing = if (target.x < body.x) Facing.LEFT else Facing.RIGHT
 
         attackTimer.reset()

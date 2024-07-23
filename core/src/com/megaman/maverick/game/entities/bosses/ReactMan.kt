@@ -129,6 +129,12 @@ class ReactMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         facing = if (megaman.body.x <= body.x) Facing.LEFT else Facing.RIGHT
     }
 
+    override fun onDestroy() {
+        super<AbstractBoss>.onDestroy()
+        projectile?.kill()
+        projectile = null
+    }
+
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
@@ -241,10 +247,7 @@ class ReactMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
     }
 
     private fun throwProjectile() {
-        val trajectory = megaman.body.getCenter()
-            .sub(body.getCenter())
-            .nor()
-            .scl(PROJECTILE_SPEED * ConstVals.PPM)
+        val trajectory = megaman.body.getCenter().sub(body.getCenter()).nor().scl(PROJECTILE_SPEED * ConstVals.PPM)
         projectile!!.setTrajectory(trajectory)
         projectile!!.active = true
         projectile = null

@@ -37,6 +37,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.IOwnable
+import com.megaman.maverick.game.entities.utils.overlapsGameCamera
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
@@ -69,7 +70,7 @@ class Explosion(game: MegamanMaverickGame) : GameEntity(game), IHazard, IOwnable
         body.setCenter(spawn)
         durationTimer.reset()
         owner = spawnProps.get(ConstKeys.OWNER) as IGameEntity?
-        if (spawnProps.containsKey(ConstKeys.SOUND)) {
+        if (spawnProps.containsKey(ConstKeys.SOUND) && overlapsGameCamera()) {
             val sound = spawnProps.get(ConstKeys.SOUND, SoundAsset::class)!!
             requestToPlaySound(sound, false)
         }

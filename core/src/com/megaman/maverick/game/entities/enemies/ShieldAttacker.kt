@@ -55,21 +55,24 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(10), Fireball::class to dmgNeg(ConstVals.MAX_HEALTH), ChargedShot::class to dmgNeg {
+        Bullet::class to dmgNeg(10),
+        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class to dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
-        }, ChargedShotExplosion::class to dmgNeg(15)
+        },
+        ChargedShotExplosion::class to dmgNeg {
+            it as ChargedShotExplosion
+            if (it.fullyCharged) 15 else 5
+        }
     )
-
     override var facing = Facing.RIGHT
 
     private val turnAroundTimer = Timer(TURN_AROUND_DUR)
-
     private var min = 0f
     private var max = 0f
     private var vertical = false
     private var switch = false
-
     private val turningAround: Boolean
         get() = !turnAroundTimer.isFinished()
 
