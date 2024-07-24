@@ -23,6 +23,9 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val MOVE = "move"
+    const val START = "start"
+    const val HIT_BY_PROJECTILE = "hit_by_projectile"
     const val DEATH_IMMUNE = "death_immune"
     const val ACTIVE = "active"
     const val BIG = "big"

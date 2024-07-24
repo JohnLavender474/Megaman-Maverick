@@ -36,7 +36,6 @@ class EnemiesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         const val ROBBIT = "Robbit"
         const val CAVE_ROCKER = "CaveRocker"
         const val EYEE = "Eyee"
-        const val TOGGLEE = "Togglee"
         const val ADAMSKI = "Adamski"
         const val BIG_JUMPING_JOE = "BigJumpingJoe"
         const val UP_N_DOWN = "Up_N_Down"
@@ -87,7 +86,6 @@ class EnemiesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(ROBBIT, EntityPoolCreator.create { Robbit(game) })
         pools.put(CAVE_ROCKER, EntityPoolCreator.create { CaveRocker(game) })
         pools.put(EYEE, EntityPoolCreator.create { Eyee(game) })
-        pools.put(TOGGLEE, EntityPoolCreator.create { Togglee(game) })
         pools.put(ADAMSKI, EntityPoolCreator.create { Adamski(game) })
         pools.put(BIG_JUMPING_JOE, EntityPoolCreator.create { BigJumpingJoe(game) })
         pools.put(UP_N_DOWN, EntityPoolCreator.create { UpNDown(game) })

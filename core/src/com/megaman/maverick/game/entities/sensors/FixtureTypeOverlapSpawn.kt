@@ -15,7 +15,7 @@ import com.engine.updatables.UpdatablesComponent
 import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntities
+import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntitySuppliers
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.setConsumer
@@ -28,7 +28,7 @@ class FixtureTypeOverlapSpawn(game: MegamanMaverickGame) : GameEntity(game), IBo
 
     override var children = Array<IGameEntity>()
 
-    private lateinit var entitiesToSpawn: Array<Pair<IGameEntity, Properties>>
+    private lateinit var entitySuppliers: Array<Pair<() -> IGameEntity, Properties>>
     private lateinit var spawnMask: OrderedSet<FixtureType>
 
     private val fixturesConsumed = ObjectSet<FixtureType>()
@@ -47,7 +47,7 @@ class FixtureTypeOverlapSpawn(game: MegamanMaverickGame) : GameEntity(game), IBo
         body.set(bounds)
         body.fixtures.forEach { ((it.second as Fixture).rawShape as GameRectangle).set(bounds) }
 
-        entitiesToSpawn = convertObjectPropsToEntities(spawnProps)
+        entitySuppliers = convertObjectPropsToEntitySuppliers(spawnProps)
 
         val mask = spawnProps.get(ConstKeys.MASK, String::class)!!.split(",")
         spawnMask = (mask.map { FixtureType.valueOf(it.uppercase()) }).toOrderedSet()
@@ -78,7 +78,8 @@ class FixtureTypeOverlapSpawn(game: MegamanMaverickGame) : GameEntity(game), IBo
 
         for (mask in spawnMask) {
             if (fixturesConsumed.contains(mask)) {
-                entitiesToSpawn.forEach { (entity, props) ->
+                entitySuppliers.forEach { (entitySupplier, props) ->
+                    val entity = entitySupplier.invoke()
                     game.engine.spawn(entity, props)
                     children.add(entity)
                 }

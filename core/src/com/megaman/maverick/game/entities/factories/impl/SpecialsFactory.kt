@@ -23,6 +23,7 @@ class SpecialsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         const val FLIPPER_PLATFORM = "FlipperPlatform"
         const val RAIL_TRACK = "RailTrack"
         const val FORCE = "Force"
+        const val TOGGLEE = "Togglee"
     }
 
     override fun init() {
@@ -40,6 +41,7 @@ class SpecialsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(FLIPPER_PLATFORM, EntityPoolCreator.create { FlipperPlatform(game) })
         pools.put(RAIL_TRACK, EntityPoolCreator.create { RailTrack(game) })
         pools.put(FORCE, EntityPoolCreator.create { Force(game) })
+        pools.put(TOGGLEE, EntityPoolCreator.create { Togglee(game) })
     }
 
     override fun fetch(key: Any) = pools.get(key)?.fetch()

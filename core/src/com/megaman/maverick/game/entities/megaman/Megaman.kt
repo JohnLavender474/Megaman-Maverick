@@ -52,6 +52,7 @@ import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOS
 import com.megaman.maverick.game.entities.megaman.extensions.stopCharging
 import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.entities.projectiles.SniperJoeShield
+import com.megaman.maverick.game.entities.special.Togglee
 import com.megaman.maverick.game.entities.utils.setStandardOnPortalHopperContinueProp
 import com.megaman.maverick.game.entities.utils.standardOnPortalHopperEnd
 import com.megaman.maverick.game.entities.utils.standardOnPortalHopperStart

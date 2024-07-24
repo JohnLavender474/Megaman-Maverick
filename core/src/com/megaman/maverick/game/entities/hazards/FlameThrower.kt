@@ -131,7 +131,7 @@ class FlameThrower(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, I
                 if (blinkTimer.isFinished()) {
                     blinkTimer.reset()
                     loop.next()
-                    if (overlapsGameCamera()) requestToPlaySound(SoundAsset.FLAMETHROWER, false)
+                    if (overlapsGameCamera()) requestToPlaySound(SoundAsset.FLAMETHROWER_SOUND, false)
                 }
             }
 

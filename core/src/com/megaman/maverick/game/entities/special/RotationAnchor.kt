@@ -27,7 +27,7 @@ import com.engine.world.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntities
+import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntitySuppliers
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.BodyComponentCreator
 
@@ -60,8 +60,9 @@ open class RotationAnchor(game: MegamanMaverickGame) : GameEntity(game), IBodyEn
         clearProdShapeSuppliers()
 
         val spawn = bounds.getCenter()
-        val childEntities = convertObjectPropsToEntities(spawnProps)
-        childEntities.forEach { (child, childProps) ->
+        val childEntities = convertObjectPropsToEntitySuppliers(spawnProps)
+        childEntities.forEach { (childSupplier, childProps) ->
+            val child = childSupplier.invoke()
             if (child !is IBodyEntity) throw IllegalArgumentException("Entity must be an IBodyEntity")
 
             val childSpawn = childProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()

@@ -28,7 +28,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntities
+import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntitySuppliers
 import com.megaman.maverick.game.events.EventType
 
 class RocketPlatform(game: MegamanMaverickGame) :
@@ -83,16 +83,17 @@ class RocketPlatform(game: MegamanMaverickGame) :
 
         // spawn the entities triggered by this entity's spawning, collecting any subsequent entities
         // that implement IChildEntity into the children collection
-        val subsequentEntities = convertObjectPropsToEntities(spawnProps)
-        subsequentEntities.forEach { entry ->
-            val (subsequentEntity, subsequentEntityProps) = entry
+        val subsequentEntitySuppliers = convertObjectPropsToEntitySuppliers(spawnProps)
+        subsequentEntitySuppliers.forEach { entry ->
+            val (subsequentEntitySupplier, subsequentEntityProps) = entry
 
-            if (subsequentEntity is IChildEntity) {
-                subsequentEntity.parent = this
-                children.add(subsequentEntity)
+            val entity = subsequentEntitySupplier.invoke()
+            if (entity is IChildEntity) {
+                entity.parent = this
+                children.add(entity)
             }
 
-            game.engine.spawn(subsequentEntity, subsequentEntityProps)
+            game.engine.spawn(entity, subsequentEntityProps)
         }
     }
 

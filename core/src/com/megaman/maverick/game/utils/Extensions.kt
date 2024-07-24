@@ -119,19 +119,6 @@ fun AssetManager.getMusics(): OrderedMap<MusicAsset, Music> {
     return music
 }
 
-fun GameRectangle.split(rectWidth: Float, rectHeight: Float): Matrix<GameRectangle> {
-    val rows = (height / rectHeight).roundToInt()
-    val columns = (width / rectWidth).roundToInt()
-    val matrix = Matrix<GameRectangle>(rows, columns)
-    for (row in 0 until rows) {
-        for (column in 0 until columns) {
-            val rectangle = GameRectangle(x + column * rectWidth, y + row * rectHeight, rectWidth, rectHeight)
-            matrix[column, row] = rectangle
-        }
-    }
-    return matrix
-}
-
 fun GamePolygon.splitIntoGameRectanglesBasedOnCenter(rectWidth: Float, rectHeight: Float): Matrix<GameRectangle> {
     val bounds = getBoundingRectangle()
     val x = bounds.x

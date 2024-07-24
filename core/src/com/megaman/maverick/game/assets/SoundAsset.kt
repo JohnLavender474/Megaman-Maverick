@@ -55,7 +55,7 @@ enum class SoundAsset(src: String, val seconds: Int) : IAsset {
     ICE_SHARD_2_SOUND("ice_shard_2.wav", 1),
     JETPACK_SOUND("jetpack.mp3", 1),
     MARIO_FIREBALL_SOUND("mario_fireball.mp3", 1),
-    FLAMETHROWER("flamethrower.wav", 2);
+    FLAMETHROWER_SOUND("flamethrower.wav", 2);
 
     companion object {
         fun valuesAsIAssetArray(): Array<IAsset> {

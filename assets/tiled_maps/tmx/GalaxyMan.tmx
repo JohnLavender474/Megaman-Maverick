@@ -431,6 +431,14 @@
     <property name="spawn_type" value="spawn_now"/>
    </properties>
   </object>
+  <object id="98" name="Togglee" x="2864" y="4208" width="32" height="32">
+   <properties>
+    <property name="child1" type="object" value="97"/>
+    <property name="child2" type="object" value="100"/>
+    <property name="spawn_type" value="spawn_now"/>
+    <property name="text" value="PORTAL"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="11" name="enemies">
   <object id="67" name="Adamski" x="592" y="4736" width="32" height="32">
@@ -458,14 +466,6 @@
    <properties>
     <property name="down" type="bool" value="false"/>
     <property name="type" value="blue"/>
-   </properties>
-  </object>
-  <object id="98" name="Togglee" x="2864" y="4208" width="32" height="32">
-   <properties>
-    <property name="child1" type="object" value="97"/>
-    <property name="child2" type="object" value="100"/>
-    <property name="spawn_type" value="spawn_now"/>
-    <property name="text" value="PORTAL"/>
    </properties>
   </object>
   <object id="109" name="Screwie" x="1312" y="4672" width="32" height="32">

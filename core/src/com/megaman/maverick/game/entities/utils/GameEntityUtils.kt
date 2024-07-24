@@ -33,25 +33,33 @@ fun getObjectProps(props: Properties): Array<RectangleMapObject> {
     return objectProps
 }
 
-fun convertObjectPropsToEntities(props: Properties): Array<Pair<IGameEntity, Properties>> {
-    val childEntities = Array<Pair<IGameEntity, Properties>>()
+fun convertObjectPropsToEntitySuppliers(props: Properties): Array<Pair<() -> IGameEntity, Properties>> {
+    val childEntitySuppliers = Array<Pair<() -> IGameEntity, Properties>>()
+
     props.forEach { key, value ->
         if (value is RectangleMapObject) {
             val childProps = value.toProps()
             if (childProps.containsKey(ConstKeys.ENTITY_TYPE)) {
                 val entityTypeString = childProps.get(ConstKeys.ENTITY_TYPE) as String
                 val entityType = EntityType.valueOf(entityTypeString.uppercase())
-                val childEntity = EntityFactories.fetch(entityType, value.name)!!
+
+                val childEntitySupplier: () -> IGameEntity = {
+                    EntityFactories.fetch(entityType, value.name)!!
+                }
+
                 GameLogger.debug(
                     "convertObjectPropsToEntities()", "entityType=$entityType,name=${value.name}"
                 )
+
                 childProps.put(ConstKeys.CHILD_KEY, key)
                 childProps.put(ConstKeys.BOUNDS, value.rectangle.toGameRectangle())
-                childEntities.add(childEntity to childProps)
+
+                childEntitySuppliers.add(childEntitySupplier to childProps)
             }
         }
     }
-    return childEntities
+
+    return childEntitySuppliers
 }
 
 fun standardOnPortalHopperStart(entity: IGameEntity) {

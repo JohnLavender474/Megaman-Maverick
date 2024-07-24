@@ -23,7 +23,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.blocks.AnimatedBlock
-import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntities
+import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntitySuppliers
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.getMegamanMaverickGame
 import com.megaman.maverick.game.utils.toGameRectangle
@@ -63,7 +63,7 @@ class DisappearingBlocks(game: MegamanMaverickGame) :
         GameLogger.debug(TAG, "spawn(): duration = $duration")
         timer = Timer(duration)
 
-        val childrenPropsArray = convertObjectPropsToEntities(spawnProps)
+        val childrenPropsArray = convertObjectPropsToEntitySuppliers(spawnProps)
         childrenPropsArray.sort { o1, o2 ->
             val key1 = o1.second.get(ConstKeys.KEY, String::class)!!
             val key2 = o2.second.get(ConstKeys.KEY, String::class)!!
