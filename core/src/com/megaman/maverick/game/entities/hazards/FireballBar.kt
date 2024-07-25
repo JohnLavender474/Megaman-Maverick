@@ -43,7 +43,9 @@ class FireballBar(game: MegamanMaverickGame) : GameEntity(game), IParentEntity {
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
-        val speed = spawnProps.getOrDefault(ConstKeys.SPEED, DEFAULT_SPEED, Float::class)
+        var speed = spawnProps.getOrDefault(ConstKeys.SPEED, DEFAULT_SPEED, Float::class)
+        val flip = spawnProps.getOrDefault(ConstKeys.FLIP, false, Boolean::class)
+        if (flip) speed *= -1f
         rotatingLine = RotatingLine(spawn, RADIUS * ConstVals.PPM, speed * ConstVals.PPM)
         for (i in 0 until BALLS) {
             val fireball = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.FIREBALL)!!

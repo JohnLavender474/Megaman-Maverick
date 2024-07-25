@@ -62,16 +62,19 @@ class Togglee(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISprit
         const val ENEMY_TYPE = "enemy"
         const val LEVER_TYPE = "lever"
         const val TOGGLEE_ON_ENTITY = "togglee_on_entity"
-        private const val DEFAULT_SWITCH_DURATION = 0.45f
+        private const val ENEMY_SWITCH_DURATION = 0.45f
+        private const val LEVER_SWITCH_DURATION = 0.1f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
     override var children = Array<IGameEntity>()
     override lateinit var directionRotation: Direction
+
     val moving: Boolean
         get() = toggleeState.equalsAny(ToggleeState.TOGGLING_TO_ON, ToggleeState.TOGGLING_TO_OFF)
     val on: Boolean
         get() = toggleeState == ToggleeState.TOGGLED_ON
+
     lateinit var type: String
     lateinit var toggleeState: ToggleeState
         private set
@@ -80,6 +83,7 @@ class Togglee(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISprit
 
     private val offEntitySuppliers = Array<Pair<() -> IGameEntity, Properties>>()
     private val onEntitySuppliers = Array<Pair<() -> IGameEntity, Properties>>()
+
     private lateinit var switchTimer: Timer
     private lateinit var position: Position
 
@@ -129,7 +133,11 @@ class Togglee(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISprit
 
         toggleeState = ToggleeState.TOGGLED_OFF
 
-        val switchDuration = spawnProps.getOrDefault(ConstKeys.DURATION, DEFAULT_SWITCH_DURATION, Float::class)
+        val switchDuration = when (type) {
+            ENEMY_TYPE -> ENEMY_SWITCH_DURATION
+            LEVER_TYPE -> LEVER_SWITCH_DURATION
+            else -> throw IllegalArgumentException("Invalid type: $type")
+        }
         switchTimer = Timer(switchDuration).setToEnd()
 
         spawnEntities(false)

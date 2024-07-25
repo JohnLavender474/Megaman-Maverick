@@ -69,9 +69,9 @@ class Lava(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesE
     private lateinit var drawingSection: DrawingSection
     private lateinit var type: String
     private lateinit var moveTarget: Vector2
+    private lateinit var bodyMatrix: Matrix<GameRectangle>
 
     private var spritePriorityValue = 0
-    private var bodyMatrix: Matrix<GameRectangle>? = null
 
     private var moveBeforeKill = false
     private var movingBeforeKill = false
@@ -109,12 +109,10 @@ class Lava(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesE
 
         val lavaStartX = spawnProps.getOrDefault("${ConstKeys.MOVE}_${ConstKeys.X}", 0f, Float::class)
         val lavaStartY = spawnProps.getOrDefault("${ConstKeys.MOVE}_${ConstKeys.Y}", 0f, Float::class)
-        moveTarget = bounds.getCenter().add(lavaStartX * ConstVals.PPM, lavaStartY * ConstVals.PPM)
+        moveTarget = body.getCenter().add(lavaStartX * ConstVals.PPM, lavaStartY * ConstVals.PPM)
 
         val dimensions = bounds.getSplitDimensions(ConstVals.PPM.toFloat())
         defineDrawables(dimensions.first, dimensions.second)
-
-        bodyMatrix = null
 
         moveBeforeKill = spawnProps.containsKey(MOVE_BEFORE_KILL)
         movingBeforeKill = false
@@ -132,6 +130,7 @@ class Lava(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesE
         }
 
     private fun moveBeforeKill() {
+        GameLogger.debug(TAG, "Moving before killing lava.")
         movingBeforeKill = true
         val moveBeforeKillTargetRaw = getProperty(MOVE_BEFORE_KILL, String::class)!!
             .split(",").map { it.toFloat() }
@@ -140,8 +139,8 @@ class Lava(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesE
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent(this, {
-        bodyMatrix = if (moving) body.splitByCellSize(ConstVals.PPM.toFloat()) else null
-        if (movingBeforeKill && bodyMatrix == null) kill()
+        bodyMatrix = body.splitByCellSize(ConstVals.PPM.toFloat())
+        if (movingBeforeKill && !moving) kill()
     })
 
     private fun defineBodyComponent(): BodyComponent {
@@ -157,7 +156,7 @@ class Lava(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesE
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             if (moving) {
-                // GameLogger.debug(TAG, "Moving to target: $moveTarget. Current pos: ${body.getCenter()}")
+                GameLogger.debug(TAG, "Moving to target: $moveTarget. Current pos: ${body.getCenter()}")
                 val direction = moveTarget.cpy().sub(body.getCenter()).nor()
                 body.physics.velocity.set(direction.scl(SPEED * ConstVals.PPM))
                 deathFixture.active = false
@@ -188,10 +187,8 @@ class Lava(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesE
                 sprites.put(key, sprite)
 
                 updateFunctions.put(key, UpdateFunction { _, _sprite ->
-                    bodyMatrix?.let {
-                        val bounds = it[col, row]!!
-                        _sprite.setCenter(bounds.getCenter())
-                    }
+                    val bounds = bodyMatrix[col, row]!!
+                    _sprite.setCenter(bounds.getCenter())
                     _sprite.setOriginCenter()
                     _sprite.rotation = directionRotation.rotation
                     _sprite.setFlip(isFacing(Facing.LEFT), false)
