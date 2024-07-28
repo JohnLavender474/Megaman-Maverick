@@ -236,6 +236,8 @@
             <key type="filename">../frames/Enemies1/Penguin/Slide.png</key>
             <key type="filename">../frames/Enemies1/Penguin/Slippin.png</key>
             <key type="filename">../frames/Enemies1/PicketJoe/Stand.png</key>
+            <key type="filename">../frames/Enemies1/PopupCanon/Down.png</key>
+            <key type="filename">../frames/Enemies1/PopupCanon/Up.png</key>
             <key type="filename">../frames/Enemies1/RedScrewie/Down.png</key>
             <key type="filename">../frames/Enemies1/SniperJoe/Orange/JumpNoShield.png</key>
             <key type="filename">../frames/Enemies1/SniperJoe/Orange/JumpWithShield.png</key>
@@ -357,6 +359,21 @@
                 <rect>54,9,108,18</rect>
                 <key>scale9Paddings</key>
                 <rect>54,9,108,18</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies1/PopupCanon/Rise.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>24,16,48,32</rect>
+                <key>scale9Paddings</key>
+                <rect>24,16,48,32</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

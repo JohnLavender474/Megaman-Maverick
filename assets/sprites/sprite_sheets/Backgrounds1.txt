@@ -1,81 +1,25 @@
 Backgrounds1.png
-size: 1024, 1856
+size: 1324, 224
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-BKG01
+AnimatedStarsBG
   rotate: false
   xy: 0, 0
-  size: 416, 832
-  orig: 416, 832
+  size: 768, 224
+  orig: 768, 224
   offset: 0, 0
   index: -1
-BKG02
+SnowMountains
   rotate: false
-  xy: 416, 0
-  size: 256, 512
-  orig: 256, 512
-  offset: 0, 0
-  index: -1
-BKG03
-  rotate: false
-  xy: 672, 0
-  size: 256, 512
-  orig: 256, 512
-  offset: 0, 0
-  index: -1
-BKG04
-  rotate: false
-  xy: 0, 832
-  size: 256, 512
-  orig: 256, 512
-  offset: 0, 0
-  index: -1
-BKG05
-  rotate: false
-  xy: 256, 832
-  size: 256, 512
-  orig: 256, 512
-  offset: 0, 0
-  index: -1
-BKG06
-  rotate: false
-  xy: 512, 832
-  size: 256, 512
-  orig: 256, 512
-  offset: 0, 0
-  index: -1
-BKG07
-  rotate: false
-  xy: 768, 832
-  size: 256, 512
-  orig: 256, 512
-  offset: 0, 0
-  index: -1
-BKG08
-  rotate: false
-  xy: 0, 1344
-  size: 256, 512
-  orig: 256, 512
-  offset: 0, 0
-  index: -1
-BKG09
-  rotate: false
-  xy: 256, 1344
-  size: 256, 512
-  orig: 256, 512
-  offset: 0, 0
-  index: -1
-BKG10
-  rotate: false
-  xy: 512, 1344
-  size: 256, 512
-  orig: 256, 512
+  xy: 768, 0
+  size: 300, 149
+  orig: 300, 149
   offset: 0, 0
   index: -1
 StarFieldBG
   rotate: false
-  xy: 768, 1344
+  xy: 1068, 0
   size: 256, 224
   orig: 256, 224
   offset: 0, 0

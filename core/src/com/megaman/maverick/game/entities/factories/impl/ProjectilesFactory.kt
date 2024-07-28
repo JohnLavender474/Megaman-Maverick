@@ -21,7 +21,7 @@ class ProjectilesFactory(private val game: MegamanMaverickGame) : EntityFactory(
         const val ELECTRIC_BALL = "ElectricBall"
         const val CAVE_ROCK = "CaveRock"
         const val SNIPER_JOE_SHIELD = "SniperJoeShield"
-        const val GACHAPPAN_BALL = "GachappanBall"
+        const val EXPLODING_BALL = "ExplodingBall"
         const val SPIDER_WEB = "SpiderWeb"
         const val SIGMA_RAT_ELECTRIC_BALL = "SigmaRatElectricBall"
         const val BOULDER_PROJECTILE = "BoulderProjectile"
@@ -46,7 +46,7 @@ class ProjectilesFactory(private val game: MegamanMaverickGame) : EntityFactory(
         pools.put(ELECTRIC_BALL, EntityPoolCreator.create { ElectricBall(game) })
         pools.put(CAVE_ROCK, EntityPoolCreator.create { CaveRock(game) })
         pools.put(SNIPER_JOE_SHIELD, EntityPoolCreator.create { SniperJoeShield(game) })
-        pools.put(GACHAPPAN_BALL, EntityPoolCreator.create { GachappanBall(game) })
+        pools.put(EXPLODING_BALL, EntityPoolCreator.create { ExplodingBall(game) })
         pools.put(SPIDER_WEB, EntityPoolCreator.create { SpiderWeb(game) })
         pools.put(SIGMA_RAT_ELECTRIC_BALL, EntityPoolCreator.create { SigmaRatElectricBall(game) })
         pools.put(BOULDER_PROJECTILE, EntityPoolCreator.create { BoulderProjectile(game) })

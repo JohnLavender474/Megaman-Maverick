@@ -147,8 +147,9 @@ abstract class AbstractBoss(
             val position = Position.values().toGdxArray().random()
             game.engine.spawn(
                 explosion, props(
-                    ConstKeys.SOUND to SoundAsset.EXPLOSION_2_SOUND, ConstKeys.POSITION to body.getCenter().add(
-                        position.x * ConstVals.PPM.toFloat(), position.y + ConstVals.PPM.toFloat()
+                    ConstKeys.SOUND to SoundAsset.EXPLOSION_2_SOUND,
+                    ConstKeys.POSITION to body.getCenter().add(
+                        position.x * 0.75f * ConstVals.PPM, position.y * 0.75f * ConstVals.PPM
                     )
                 )
             )

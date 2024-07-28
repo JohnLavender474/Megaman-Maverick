@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.0.0</string>
+        <string>7.4.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -124,7 +124,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename></filename>
+                <filename>../sprite_sheets/Backgrounds1.txt</filename>
             </struct>
         </map>
         <key>multiPackMode</key>
@@ -173,7 +173,7 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">../Frames/Backgrounds/BKG01.png</key>
+            <key type="filename">../frames/Backgrounds1/AnimatedStarsBG.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -182,21 +182,13 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>104,208,208,416</rect>
+                <rect>192,56,384,112</rect>
                 <key>scale9Paddings</key>
-                <rect>104,208,208,416</rect>
+                <rect>192,56,384,112</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Backgrounds/BKG02.png</key>
-            <key type="filename">../Frames/Backgrounds/BKG03.png</key>
-            <key type="filename">../Frames/Backgrounds/BKG04.png</key>
-            <key type="filename">../Frames/Backgrounds/BKG05.png</key>
-            <key type="filename">../Frames/Backgrounds/BKG06.png</key>
-            <key type="filename">../Frames/Backgrounds/BKG07.png</key>
-            <key type="filename">../Frames/Backgrounds/BKG08.png</key>
-            <key type="filename">../Frames/Backgrounds/BKG09.png</key>
-            <key type="filename">../Frames/Backgrounds/BKG10.png</key>
+            <key type="filename">../frames/Backgrounds1/SnowMountains.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -205,13 +197,13 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>64,128,128,256</rect>
+                <rect>417,208,834,415</rect>
                 <key>scale9Paddings</key>
-                <rect>64,128,128,256</rect>
+                <rect>417,208,834,415</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../Frames/Backgrounds/StarFieldBG.png</key>
+            <key type="filename">../frames/Backgrounds1/StarFieldBG.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -233,17 +225,7 @@
             <struct type="SpriteSheet">
                 <key>files</key>
                 <array>
-                    <filename>../Frames/Backgrounds/BKG01.png</filename>
-                    <filename>../Frames/Backgrounds/BKG02.png</filename>
-                    <filename>../Frames/Backgrounds/BKG03.png</filename>
-                    <filename>../Frames/Backgrounds/BKG04.png</filename>
-                    <filename>../Frames/Backgrounds/BKG05.png</filename>
-                    <filename>../Frames/Backgrounds/BKG06.png</filename>
-                    <filename>../Frames/Backgrounds/BKG07.png</filename>
-                    <filename>../Frames/Backgrounds/BKG08.png</filename>
-                    <filename>../Frames/Backgrounds/BKG09.png</filename>
-                    <filename>../Frames/Backgrounds/BKG10.png</filename>
-                    <filename>../Frames/Backgrounds/StarFieldBG.png</filename>
+                    <filename>../frames/Backgrounds1</filename>
                 </array>
             </struct>
         </map>

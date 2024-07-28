@@ -15,7 +15,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.drawables.sprites.Stars
+import com.megaman.maverick.game.drawables.sprites.ScrollingStars
 import com.megaman.maverick.game.entities.bosses.BossType
 import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
 import com.megaman.maverick.game.utils.getDefaultCameraPosition
@@ -32,7 +32,7 @@ class BossIntroScreen(game: MegamanMaverickGame) : BaseScreen(game) {
     private val bLettersTimer = Timer(B_LET_DUR)
 
     private val bars = Array<Sprite>()
-    private val stars = Array<Stars>()
+    private val scrollingStars = Array<ScrollingStars>()
 
     private val bLettersAnimQ = LinkedList<Runnable>()
 
@@ -60,8 +60,8 @@ class BossIntroScreen(game: MegamanMaverickGame) : BaseScreen(game) {
             bars.add(bar)
         }
 
-        for (i in 0 until STARS_N_BARS) stars.add(
-            Stars(
+        for (i in 0 until STARS_N_BARS) scrollingStars.add(
+            ScrollingStars(
                 game as MegamanMaverickGame,
                 Vector2(0f, i * ConstVals.PPM * ConstVals.VIEW_HEIGHT / 4f)
             )
@@ -103,8 +103,8 @@ class BossIntroScreen(game: MegamanMaverickGame) : BaseScreen(game) {
         bDropTimer.reset()
         bLettersTimer.reset()
         bLettersDelay.reset()
-        for (i in 0 until stars.size) stars[i] =
-            Stars(game as MegamanMaverickGame, Vector2(0f, i * ConstVals.PPM * ConstVals.VIEW_HEIGHT / 4f))
+        for (i in 0 until scrollingStars.size) scrollingStars[i] =
+            ScrollingStars(game as MegamanMaverickGame, Vector2(0f, i * ConstVals.PPM * ConstVals.VIEW_HEIGHT / 4f))
         currBAnim!!.component1().setPosition(
             ((ConstVals.VIEW_WIDTH / 2f) - 1.5f) * ConstVals.PPM, ConstVals.VIEW_HEIGHT * ConstVals.PPM
         )
@@ -124,7 +124,7 @@ class BossIntroScreen(game: MegamanMaverickGame) : BaseScreen(game) {
         val bSprite = currBAnim!!.component1()
         if (!game.paused) {
             durTimer.update(delta)
-            for (s in stars) s.update(delta)
+            for (s in scrollingStars) s.update(delta)
             barAnim.update(delta)
             for (b in bars) b.setRegion(barAnim.getCurrentRegion())
             bDropTimer.update(delta)
@@ -157,7 +157,7 @@ class BossIntroScreen(game: MegamanMaverickGame) : BaseScreen(game) {
         val batch = game.batch
         batch.projectionMatrix = uiCam.combined
         batch.begin()
-        for (s in stars) s.draw(batch)
+        for (s in scrollingStars) s.draw(batch)
         for (b in bars) b.draw(batch)
         bSprite.draw(batch)
         bText.draw(batch)

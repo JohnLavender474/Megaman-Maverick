@@ -341,7 +341,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
                     MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG,
                     "onEvent(): Player just died --> init death handler"
                 )
-                audioMan.stopMusic()
+                audioMan.unsetMusic()
                 audioMan.stopAllLoopingSounds()
                 playerDeathEventHandler.init()
             }
@@ -444,14 +444,19 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
             EventType.BOSS_DEFEATED -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Boss defeated")
                 val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
-                if (!boss.mini) audioMan.stopMusic()
+
+                if (!boss.mini) audioMan.unsetMusic()
 
                 engine.forEachEntity { if (it.isAny(IDamager::class, IHazard::class) && it != boss) it.kill() }
 
+                /*
                 val systemsToSwitch = gdxArrayOf(MotionSystem::class, BehaviorsSystem::class)
                 engine.systems.forEach { if (systemsToSwitch.contains(it::class)) it.on = false }
+                 */
+
                 eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
                 megaman.canBeDamaged = false
+
                 entityStatsHandler.unset()
             }
 
@@ -463,8 +468,11 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
             }
 
             EventType.MINI_BOSS_DEAD -> {
+                /*
                 val systemsToSwitch = gdxArrayOf(MotionSystem::class, BehaviorsSystem::class)
                 engine.systems.forEach { if (systemsToSwitch.contains(it::class)) it.on = true }
+                 */
+
                 eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
                 megaman.canBeDamaged = true
             }

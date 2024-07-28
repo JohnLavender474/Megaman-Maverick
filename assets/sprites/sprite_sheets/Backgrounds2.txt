@@ -1,96 +1,117 @@
 Backgrounds2.png
-size: 2048, 2878
+size: 2048, 1536
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-BKG11
+BKG01
   rotate: false
   xy: 0, 0
-  size: 512, 512
-  orig: 512, 512
+  size: 200, 400
+  orig: 200, 400
   offset: 0, 0
   index: -1
-BKG12
+BKG02
   rotate: false
-  xy: 512, 0
-  size: 512, 512
-  orig: 512, 512
+  xy: 200, 0
+  size: 256, 512
+  orig: 256, 512
   offset: 0, 0
   index: -1
-BKG13
+BKG03
   rotate: false
-  xy: 1024, 0
-  size: 512, 512
-  orig: 512, 512
+  xy: 456, 0
+  size: 256, 512
+  orig: 256, 512
   offset: 0, 0
   index: -1
-BKG14
+BKG04
   rotate: false
-  xy: 1536, 0
-  size: 512, 512
-  orig: 512, 512
+  xy: 712, 0
+  size: 256, 512
+  orig: 256, 512
   offset: 0, 0
   index: -1
-BKG15
+BKG05
+  rotate: false
+  xy: 968, 0
+  size: 256, 512
+  orig: 256, 512
+  offset: 0, 0
+  index: -1
+BKG06
+  rotate: false
+  xy: 1224, 0
+  size: 256, 512
+  orig: 256, 512
+  offset: 0, 0
+  index: -1
+BKG07
+  rotate: false
+  xy: 1480, 0
+  size: 256, 512
+  orig: 256, 512
+  offset: 0, 0
+  index: -1
+BKG08
+  rotate: false
+  xy: 1736, 0
+  size: 256, 512
+  orig: 256, 512
+  offset: 0, 0
+  index: -1
+BKG09
   rotate: false
   xy: 0, 512
-  size: 512, 512
-  orig: 512, 512
+  size: 256, 512
+  orig: 256, 512
   offset: 0, 0
   index: -1
-BKG16
+BKG10
+  rotate: false
+  xy: 256, 512
+  size: 256, 512
+  orig: 256, 512
+  offset: 0, 0
+  index: -1
+BKG11
   rotate: false
   xy: 512, 512
   size: 512, 512
   orig: 512, 512
   offset: 0, 0
   index: -1
-BKG17
+BKG12
   rotate: false
   xy: 1024, 512
   size: 512, 512
   orig: 512, 512
   offset: 0, 0
   index: -1
-BKG18
+BKG13
   rotate: false
   xy: 1536, 512
   size: 512, 512
   orig: 512, 512
   offset: 0, 0
   index: -1
-BKG19
+BKG14
   rotate: false
   xy: 0, 1024
   size: 512, 512
   orig: 512, 512
   offset: 0, 0
   index: -1
-BKG20
+BKG15
   rotate: false
   xy: 512, 1024
-  size: 512, 1024
-  orig: 512, 1024
+  size: 512, 512
+  orig: 512, 512
   offset: 0, 0
   index: -1
-BKG21
+BKG16
   rotate: false
   xy: 1024, 1024
-  size: 512, 1024
-  orig: 512, 1024
-  offset: 0, 0
-  index: -1
-BKG22
-  rotate: false
-  xy: 1536, 1024
-  size: 512, 1024
-  orig: 512, 1024
-  offset: 0, 0
-  index: -1
-SnowMountains
-  rotate: false
-  xy: 0, 2048
-  size: 1668, 830
-  orig: 1668, 830
+  size: 512, 512
+  orig: 512, 512
   offset: 0, 0
   index: -1

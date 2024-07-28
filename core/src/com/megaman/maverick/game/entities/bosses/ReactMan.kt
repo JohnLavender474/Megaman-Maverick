@@ -74,7 +74,7 @@ class ReactMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         private const val JUMP_IMPULSE = 10.5f
         private const val HORIZONTAL_SCALAR = 1f
         private const val VERTICAL_SCALAR = 1f
-        private const val THROW_DELAY = 0.5f
+        private const val THROW_DELAY = 0.25f
         private const val PROJECTILE_SPEED = 10f
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -97,11 +97,15 @@ class ReactMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
     private val danceTimer = Timer(DANCE_DUR)
     private val runTimer = Timer(RUN_DUR)
     private val throwTimer = Timer(THROW_DELAY)
+
     private val projectilePosition: Vector2
         get() = body.getTopCenterPoint().add(0.1f * ConstVals.PPM * -facing.value, 0f)
+
     private var projectile: ReactManProjectile? = null
-    private lateinit var state: ReactManState
     private var jumped = false
+    private var throwOnJump = true
+
+    private lateinit var state: ReactManState
 
     override fun init() {
         if (regions.isEmpty) {
@@ -118,13 +122,18 @@ class ReactMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
+
         standTimer.reset()
         danceTimer.reset()
         throwTimer.reset()
         runTimer.reset()
+
         jumped = false
+        throwOnJump = true
+
         state = ReactManState.DANCE
         facing = if (megaman.body.x <= body.x) Facing.LEFT else Facing.RIGHT
     }
@@ -175,12 +184,22 @@ class ReactMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
                     if (!jumped) {
                         jump()
                         jumped = true
+                        throwOnJump = !throwOnJump
                         return@add
+                    }
+
+                    if (megaman.body.x <= body.x) facing = Facing.LEFT
+                    else if (megaman.body.getMaxX() >= body.getMaxX()) facing = Facing.RIGHT
+
+                    if (throwOnJump) {
+                        throwTimer.update(delta)
+                        if (throwTimer.isJustFinished()) throwProjectile()
                     }
 
                     if (body.isSensing(BodySense.FEET_ON_GROUND) && body.physics.velocity.y <= 0f) {
                         jumped = false
-                        state = ReactManState.THROW
+                        throwTimer.reset()
+                        state = if (throwOnJump) ReactManState.RUN else ReactManState.THROW
                     }
                 }
 
@@ -189,12 +208,13 @@ class ReactMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
                     body.physics.velocity.setZero()
 
-                    if (megaman.body.x <= body.x) facing = Facing.LEFT
-                    else if (megaman.body.getMaxX() >= body.getMaxX()) facing = Facing.RIGHT
-
                     throwTimer.update(delta)
                     if (throwTimer.isFinished()) {
                         throwTimer.reset()
+
+                        if (megaman.body.x <= body.x) facing = Facing.LEFT
+                        else if (megaman.body.getMaxX() >= body.getMaxX()) facing = Facing.RIGHT
+
                         state = ReactManState.RUN
                     }
                 }
@@ -326,7 +346,11 @@ class ReactMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { if (defeated) "Die" else state.name }
+        val keySupplier: () -> String? = {
+            if (defeated) "Die"
+            else if (state == ReactManState.JUMP && throwOnJump && throwTimer.isFinished()) ReactManState.THROW.name
+            else state.name
+        }
         val animations = objectMapOf<String, IAnimation>(
             ReactManState.STAND.name to Animation(
                 regions.get(ReactManState.STAND.regionName), 1, 3, gdxArrayOf(1f, 0.1f, 0.1f), true

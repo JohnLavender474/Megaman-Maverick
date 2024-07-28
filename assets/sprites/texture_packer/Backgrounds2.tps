@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.0.0</string>
+        <string>7.4.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -50,7 +50,7 @@
         <key>dxtCompressionMode</key>
         <enum type="SettingsBase::DxtCompressionMode">DXT_PERCEPTUAL</enum>
         <key>ditherType</key>
-        <enum type="SettingsBase::DitherType">NearestNeighbour</enum>
+        <enum type="SettingsBase::DitherType">PngQuantLow</enum>
         <key>backgroundColor</key>
         <uint>0</uint>
         <key>libGdx</key>
@@ -80,9 +80,9 @@
         <key>maxTextureSize</key>
         <QSize>
             <key>width</key>
-            <int>4096</int>
+            <int>2048</int>
             <key>height</key>
-            <int>4096</int>
+            <int>2048</int>
         </QSize>
         <key>fixedTextureSize</key>
         <QSize>
@@ -124,7 +124,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>Backgrounds2.txt</filename>
+                <filename>../sprite_sheets/Backgrounds2.txt</filename>
             </struct>
         </map>
         <key>multiPackMode</key>
@@ -173,15 +173,50 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">../Frames/Backgrounds/BKG11.png</key>
-            <key type="filename">../Frames/Backgrounds/BKG12.png</key>
-            <key type="filename">../Frames/Backgrounds/BKG13.png</key>
-            <key type="filename">../Frames/Backgrounds/BKG14.png</key>
-            <key type="filename">../Frames/Backgrounds/BKG15.png</key>
-            <key type="filename">../Frames/Backgrounds/BKG16.png</key>
-            <key type="filename">../Frames/Backgrounds/BKG17.png</key>
-            <key type="filename">../Frames/Backgrounds/BKG18.png</key>
-            <key type="filename">../Frames/Backgrounds/BKG19.png</key>
+            <key type="filename">../frames/Backgrounds2/BKG01.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>104,208,208,416</rect>
+                <key>scale9Paddings</key>
+                <rect>104,208,208,416</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Backgrounds2/BKG02.png</key>
+            <key type="filename">../frames/Backgrounds2/BKG03.png</key>
+            <key type="filename">../frames/Backgrounds2/BKG04.png</key>
+            <key type="filename">../frames/Backgrounds2/BKG05.png</key>
+            <key type="filename">../frames/Backgrounds2/BKG06.png</key>
+            <key type="filename">../frames/Backgrounds2/BKG07.png</key>
+            <key type="filename">../frames/Backgrounds2/BKG08.png</key>
+            <key type="filename">../frames/Backgrounds2/BKG09.png</key>
+            <key type="filename">../frames/Backgrounds2/BKG10.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>64,128,128,256</rect>
+                <key>scale9Paddings</key>
+                <rect>64,128,128,256</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Backgrounds2/BKG11.png</key>
+            <key type="filename">../frames/Backgrounds2/BKG12.png</key>
+            <key type="filename">../frames/Backgrounds2/BKG13.png</key>
+            <key type="filename">../frames/Backgrounds2/BKG14.png</key>
+            <key type="filename">../frames/Backgrounds2/BKG15.png</key>
+            <key type="filename">../frames/Backgrounds2/BKG16.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -193,38 +228,6 @@
                 <rect>128,128,256,256</rect>
                 <key>scale9Paddings</key>
                 <rect>128,128,256,256</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../Frames/Backgrounds/BKG20.png</key>
-            <key type="filename">../Frames/Backgrounds/BKG21.png</key>
-            <key type="filename">../Frames/Backgrounds/BKG22.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>128,256,256,512</rect>
-                <key>scale9Paddings</key>
-                <rect>128,256,256,512</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../Frames/Backgrounds/SnowMountains.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>417,208,834,415</rect>
-                <key>scale9Paddings</key>
-                <rect>417,208,834,415</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -235,19 +238,7 @@
             <struct type="SpriteSheet">
                 <key>files</key>
                 <array>
-                    <filename>../Frames/Backgrounds/BKG11.png</filename>
-                    <filename>../Frames/Backgrounds/BKG12.png</filename>
-                    <filename>../Frames/Backgrounds/BKG13.png</filename>
-                    <filename>../Frames/Backgrounds/BKG14.png</filename>
-                    <filename>../Frames/Backgrounds/BKG15.png</filename>
-                    <filename>../Frames/Backgrounds/BKG16.png</filename>
-                    <filename>../Frames/Backgrounds/BKG17.png</filename>
-                    <filename>../Frames/Backgrounds/BKG18.png</filename>
-                    <filename>../Frames/Backgrounds/BKG19.png</filename>
-                    <filename>../Frames/Backgrounds/BKG20.png</filename>
-                    <filename>../Frames/Backgrounds/BKG21.png</filename>
-                    <filename>../Frames/Backgrounds/BKG22.png</filename>
-                    <filename>../Frames/Backgrounds/SnowMountains.png</filename>
+                    <filename>../frames/Backgrounds2</filename>
                 </array>
             </struct>
         </map>

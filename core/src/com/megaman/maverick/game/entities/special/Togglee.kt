@@ -63,7 +63,7 @@ class Togglee(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISprit
         const val LEVER_TYPE = "lever"
         const val TOGGLEE_ON_ENTITY = "togglee_on_entity"
         private const val ENEMY_SWITCH_DURATION = 0.45f
-        private const val LEVER_SWITCH_DURATION = 0.1f
+        private const val LEVER_SWITCH_DURATION = 0.25f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -173,8 +173,8 @@ class Togglee(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISprit
         requestToPlaySound(SoundAsset.SELECT_PING_SOUND, false)
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, {
-        switchTimer.update(it)
+    private fun defineUpdatablesComponent() = UpdatablesComponent(this, { delta ->
+        switchTimer.update(delta)
         if (switchTimer.isJustFinished()) {
             toggleeState = if (toggleeState == ToggleeState.TOGGLING_TO_OFF) {
                 spawnEntities(false)
@@ -216,7 +216,7 @@ class Togglee(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISprit
         }
 
         body.setHitByProjectileReceiver {
-            switchToggleeState()
+            if (switchTimer.isFinished()) switchToggleeState()
         }
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))

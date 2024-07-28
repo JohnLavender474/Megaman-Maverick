@@ -259,7 +259,7 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
     private fun throwBall() {
         val spawn = body.getTopCenterPoint()
         spawn.x += 0.25f * ConstVals.PPM * -facing.value
-        val ball = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.GACHAPPAN_BALL)!!
+        val ball = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.EXPLODING_BALL)!!
         val impulseX = (megaman.body.x - body.x) * 0.9f
         val impulseY = BALL_IMPULSE * ConstVals.PPM
         game.engine.spawn(

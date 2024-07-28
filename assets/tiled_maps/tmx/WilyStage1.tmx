@@ -753,7 +753,7 @@
  <objectgroup id="12" name="backgrounds">
   <object id="112" name="Background" x="0" y="1056" width="288" height="576">
    <properties>
-    <property name="atlas" value="Backgrounds2.txt"/>
+    <property name="atlas" value="Backgrounds3.txt"/>
     <property name="columns" type="int" value="25"/>
     <property name="region" value="BKG22"/>
     <property name="rows" type="int" value="5"/>

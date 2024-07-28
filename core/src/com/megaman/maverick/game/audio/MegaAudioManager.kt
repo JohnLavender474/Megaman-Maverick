@@ -99,6 +99,11 @@ class MegaAudioManager(
         musicPaused = false
     }
 
+    fun unsetMusic() {
+        currentMusic?.stop()
+        currentMusic = null
+    }
+
     override fun stopMusic(key: Any?) {
         currentMusic?.stop()
         fadeOutMusicTimer = null

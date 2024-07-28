@@ -9,10 +9,7 @@ import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
 import com.engine.common.enums.Direction
-import com.engine.common.extensions.gdxArrayOf
-import com.engine.common.extensions.getTextureAtlas
-import com.engine.common.extensions.objectMapOf
-import com.engine.common.extensions.objectSetOf
+import com.engine.common.extensions.*
 import com.engine.common.interfaces.Updatable
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
@@ -61,6 +58,7 @@ class HealthBulb(game: MegamanMaverickGame) : GameEntity(game), ItemEntity, ISpr
         private const val BLINK_DUR = 0.01f
         private const val CULL_DUR = 3.5f
         private const val GRAVITY = 0.25f
+        private const val CLAMP = 5f
     }
 
     override var directionRotation: Direction
@@ -122,6 +120,8 @@ class HealthBulb(game: MegamanMaverickGame) : GameEntity(game), ItemEntity, ISpr
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
+        body.physics.velocityClamp.set(CLAMP * ConstVals.PPM)
+
         val debugShapes = Array<() -> IDrawableShape?>()
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
