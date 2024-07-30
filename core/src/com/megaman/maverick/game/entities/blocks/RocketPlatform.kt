@@ -18,6 +18,7 @@ import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IChildEntity
+import com.engine.entities.contracts.IMotionEntity
 import com.engine.entities.contracts.IParentEntity
 import com.engine.entities.contracts.ISpritesEntity
 import com.engine.events.Event
@@ -31,12 +32,11 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntitySuppliers
 import com.megaman.maverick.game.events.EventType
 
-class RocketPlatform(game: MegamanMaverickGame) :
-    Block(game), IParentEntity, ISpritesEntity, IEventListener {
+class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, ISpritesEntity, IMotionEntity,
+    IEventListener {
 
     companion object {
         private var region: TextureRegion? = null
-
         private const val WIDTH = .85f
         private const val HEIGHT = 3f
     }
@@ -45,14 +45,9 @@ class RocketPlatform(game: MegamanMaverickGame) :
     override val eventKeyMask = objectSetOf<Any>(EventType.BEGIN_ROOM_TRANS, EventType.END_ROOM_TRANS)
 
     override fun init() {
-        super<Block>.init()
-
         if (region == null)
-            region =
-                game.assMan.getTextureRegion(
-                    TextureAsset.PLATFORMS_1.source, "JeffBezosLittleDickRocket"
-                )
-
+            region = game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "JeffBezosLittleDickRocket")
+        super<Block>.init()
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
         addComponent(MotionComponent(this))
@@ -65,21 +60,20 @@ class RocketPlatform(game: MegamanMaverickGame) :
         game.eventsMan.addListener(this)
 
         // define the spawn and bounds
-        val spawn = (spawnProps.get(ConstKeys.BOUNDS) as GameRectangle).getBottomCenterPoint()
-        val bounds =
-            GameRectangle()
-                .setSize(WIDTH * ConstVals.PPM, HEIGHT * ConstVals.PPM)
-                .setBottomCenterToPoint(spawn)
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val bounds = GameRectangle()
+            .setSize(WIDTH * ConstVals.PPM, HEIGHT * ConstVals.PPM)
+            .setBottomCenterToPoint(spawn)
         body.set(bounds)
 
         // define the trajectory
-        val trajectory = Trajectory(spawnProps.get(ConstKeys.TRAJECTORY) as String, ConstVals.PPM)
+        val trajectory = Trajectory(spawnProps.get(ConstKeys.TRAJECTORY, String::class)!!, ConstVals.PPM)
         val motionDefinition =
             MotionComponent.MotionDefinition(
                 motion = trajectory,
                 function = { value, _ -> body.physics.velocity.set(value) },
                 onReset = { body.set(bounds) })
-        getComponent(MotionComponent::class)!!.put(ConstKeys.TRAJECTORY, motionDefinition)
+        putMotionDefinition(ConstKeys.TRAJECTORY, motionDefinition)
 
         // spawn the entities triggered by this entity's spawning, collecting any subsequent entities
         // that implement IChildEntity into the children collection
@@ -111,7 +105,7 @@ class RocketPlatform(game: MegamanMaverickGame) :
                 children.forEach { child ->
                     if (child is ISpritesEntity) child.sprites.values().forEach { it.hidden = true }
                 }
-                getComponent(MotionComponent::class)?.reset()
+                resetMotionComponent()
             }
 
             EventType.END_ROOM_TRANS -> {

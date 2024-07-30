@@ -272,7 +272,7 @@
     <property name="spawn_type" value="spawn_now"/>
    </properties>
   </object>
-  <object id="127" name="GravityChange" x="48" y="3352" width="6328" height="1456" visible="0">
+  <object id="127" name="GravityChange" x="48" y="3352" width="6328" height="1456">
    <properties>
     <property name="gravity" type="float" value="0.25"/>
    </properties>

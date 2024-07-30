@@ -173,6 +173,21 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
+            <key type="filename">../frames/Explosions1/AsteroidExplosion.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,18,24,36</rect>
+                <key>scale9Paddings</key>
+                <rect>12,18,24,36</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Explosions1/Disintegration.png</key>
             <key type="filename">../frames/Explosions1/HalfChargedShot.png</key>
             <key type="filename">../frames/Explosions1/PreciousExplosion.png</key>

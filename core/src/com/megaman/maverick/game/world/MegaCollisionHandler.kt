@@ -6,9 +6,9 @@ import com.engine.world.BodyType
 import com.engine.world.ICollisionHandler
 import com.engine.world.StandardCollisionHandler
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.controllers.ControllerButton
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.behaviors.BehaviorType
+import com.megaman.maverick.game.controllers.ControllerButton
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 
 class MegaCollisionHandler(private val game: MegamanMaverickGame) : ICollisionHandler {
@@ -32,9 +32,8 @@ class MegaCollisionHandler(private val game: MegamanMaverickGame) : ICollisionHa
         if (staticBody.getEntity().getProperty(ConstKeys.PARENT) == dynamicBody.getEntity()) return true
         if (staticBody.hasBlockFilter(dynamicBody.getEntity().getTag())) return true
 
-        if (staticBody.hasBodyLabel(BodyLabel.PRESS_UP_FALL_THRU) && dynamicBody == megaman.body && !megaman.isBehaviorActive(
-                BehaviorType.CLIMBING
-            ) && game.controllerPoller.isJustPressed(ControllerButton.UP)
+        if (staticBody.hasBodyLabel(BodyLabel.PRESS_UP_FALL_THRU) && dynamicBody == megaman.body &&
+            megaman.isBehaviorActive(BehaviorType.CLIMBING) && game.controllerPoller.isJustPressed(ControllerButton.UP)
         ) {
             dynamicBody.setMaxY(staticBody.getMaxY())
             return true

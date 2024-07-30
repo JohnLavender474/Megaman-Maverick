@@ -8,6 +8,7 @@ import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
+import com.engine.common.GameLogger
 import com.engine.common.extensions.equalsAny
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.objectMapOf
@@ -107,6 +108,8 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
         loop.reset()
         waitTimer.reset()
         progress = 0f
+
+        GameLogger.debug(TAG, "Movement scalar = $movementScalar")
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -114,7 +117,7 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
         updatablesComponent.add { delta ->
             when (currentState) {
                 EyeeState.MOVING_TO_END -> {
-                    progress += SPEED * ConstVals.PPM * delta / start.dst(end)
+                    progress += SPEED * movementScalar * ConstVals.PPM * (delta / start.dst(end))
                     if (progress >= 1f) {
                         progress = 1f
                         loop.next()
@@ -131,7 +134,7 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
                 }
 
                 EyeeState.MOVING_TO_START -> {
-                    progress -= SPEED * ConstVals.PPM * delta / start.dst(end)
+                    progress -= SPEED * movementScalar * ConstVals.PPM * (delta / start.dst(end))
                     if (progress <= 0f) {
                         progress = 0f
                         loop.next()

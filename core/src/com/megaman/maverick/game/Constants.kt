@@ -23,6 +23,12 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val HIT = "hit"
+    const val BLOCK = "block"
+    const val MOVEMENT = "movement"
+    const val SCALAR = "scalar"
+    const val RETREAT = "retreat"
+    const val ATTACK = "attack"
     const val MOVE = "move"
     const val START = "start"
     const val HIT_BY_PROJECTILE = "hit_by_projectile"

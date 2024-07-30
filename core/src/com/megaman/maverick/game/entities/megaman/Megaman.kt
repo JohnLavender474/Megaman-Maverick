@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.entities.megaman
 
 import com.badlogic.gdx.math.Vector2
+import com.engine.animations.Animator
 import com.engine.audio.AudioComponent
 import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
@@ -65,7 +66,7 @@ import kotlin.reflect.KClass
 
 class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IEventListener, IFaceable, IDamageable,
     IDirectionRotatable, IBodyEntity, IHealthEntity, ISpritesEntity, IBehaviorsEntity, IPointsEntity, IAudioEntity,
-    IScalableGravityEntity, IBoundsSupplier {
+    IAnimatedEntity, IScalableGravityEntity, IBoundsSupplier {
 
     companion object {
         const val TAG = "Megaman"
@@ -179,7 +180,8 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         FlameThrower::class to dmgNeg(6),
         Popoheli::class to dmgNeg(3),
         BouncingAngryFlameBall::class to dmgNeg(3),
-        LavaDrop::class to dmgNeg(6)
+        LavaDrop::class to dmgNeg(6),
+        PopupCanon::class to dmgNeg(3)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 
@@ -301,6 +303,15 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
     var teleporting = false
         private set
 
+    var movementScalar = 1f
+        set(value) {
+            field = value
+            animators.forEach {
+                val animator = it.second
+                if (animator is Animator) animator.updateScalar = value
+            }
+        }
+
     override var gravityScalar = 1f
 
     internal var jumpVel = 0f
@@ -374,6 +385,7 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
 
         teleporting = false
         gravityScalar = 1f
+        movementScalar = spawnProps.getOrDefault("${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}", 1f, Float::class)
     }
 
     override fun onDestroy() {

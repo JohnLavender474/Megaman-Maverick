@@ -31,13 +31,12 @@ import com.megaman.maverick.game.entities.contracts.IUpsideDownable
 import com.megaman.maverick.game.entities.contracts.ItemEntity
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
+import com.megaman.maverick.game.entities.utils.getMegaman
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.utils.getMegamanMaverickGame
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
-class HeartTank(game: MegamanMaverickGame) :
-    GameEntity(game), ItemEntity, IBodyEntity, ISpritesEntity, IUpsideDownable {
+class HeartTank(game: MegamanMaverickGame) : GameEntity(game), ItemEntity, IBodyEntity, ISpritesEntity, IUpsideDownable {
 
     companion object {
         const val TAG = "HeartTank"
@@ -45,7 +44,6 @@ class HeartTank(game: MegamanMaverickGame) :
     }
 
     override var upsideDown: Boolean = false
-
     lateinit var heartTank: MegaHeartTank
         private set
 
@@ -60,15 +58,13 @@ class HeartTank(game: MegamanMaverickGame) :
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
 
-        heartTank = MegaHeartTank.get(spawnProps.get(ConstKeys.VALUE, String::class)!!)
+        heartTank = MegaHeartTank.get(spawnProps.get(ConstKeys.VALUE, String::class)!!.uppercase())
         upsideDown = spawnProps.getOrDefault(ConstKeys.UPSIDE_DOWN, false) as Boolean
 
-        val megaman = getMegamanMaverickGame().megaman
-        if (megaman.has(heartTank))
+        if (getMegaman().has(heartTank))
             kill(props(CAUSE_OF_DEATH_MESSAGE to "Already have this heart tank."))
 
-        val spawn =
-            if (spawnProps.containsKey(ConstKeys.BOUNDS))
+        val spawn = if (spawnProps.containsKey(ConstKeys.BOUNDS))
                 spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
             else spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
 
@@ -98,7 +94,6 @@ class HeartTank(game: MegamanMaverickGame) :
             val position = if (upsideDown) Position.TOP_CENTER else Position.BOTTOM_CENTER
             val bodyPosition = body.getPositionPoint(position)
             _sprite.setPosition(bodyPosition, position)
-
             _sprite.setFlip(false, upsideDown)
         }
         return SpritesComponent

@@ -107,7 +107,7 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             block.hitBySide(sideFixture)
         }
 
-        // side, gate
+        // side / feet / head, gate
         else if (contact.fixtureSetsMatch(
                 objectSetOf(FixtureType.SIDE, FixtureType.FEET, FixtureType.HEAD), objectSetOf(FixtureType.GATE)
             )
@@ -200,6 +200,11 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
 
             val blockEntity = block.getEntity() as Block
             blockEntity.hitByHead(head)
+
+            if (head.hasConsumer()) {
+                val consumer = head.getConsumer()
+                consumer?.invoke(ProcessState.BEGIN, block)
+            }
         }
 
         // water listener, water
@@ -282,7 +287,7 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             val entity = bodyFixture.getEntity()
             if (gravityChangeFixture.hasProperty(ConstKeys.GRAVITY) && entity is IScalableGravityEntity) {
                 val canChangeGravityValue =
-                    bodyFixture.properties.getOrDefault(ConstKeys.GRAVITY_CHANGEABLE, true, Boolean::class)
+                    bodyFixture.getOrDefaultProperty(ConstKeys.GRAVITY_CHANGEABLE, true, Boolean::class)
                 if (canChangeGravityValue) {
                     val scalar = gravityChangeFixture.getProperty(ConstKeys.GRAVITY, Float::class)!!
                     entity.gravityScalar = scalar
@@ -600,8 +605,8 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             if (!gravityChangeFixture.getShape().contains(bodyPointToCheck)) return
 
             val entity = bodyFixture.getEntity()
-            if (entity is IDirectionRotatable && entity.directionRotation != direction) entity.directionRotation =
-                direction
+            if (entity is IDirectionRotatable && entity.directionRotation != direction)
+                entity.directionRotation = direction
         }
 
         // block, gravity change

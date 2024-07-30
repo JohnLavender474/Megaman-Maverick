@@ -19,6 +19,8 @@ import kotlin.math.abs
 
 const val MEGAMAN_ANIMATIONS_COMPONENT_TAG = "MegamanAnimationsComponent"
 
+lateinit var animations: ObjectMap<String, IAnimation>
+
 internal fun Megaman.defineAnimationsComponent(): AnimationsComponent {
     val megamanAnimationKeySupplier = {
         var key =
@@ -96,7 +98,7 @@ internal fun Megaman.defineAnimationsComponent(): AnimationsComponent {
         key
     }
 
-    val megamanAnimations = ObjectMap<String, IAnimation>()
+    animations = ObjectMap<String, IAnimation>()
 
     // TODO: create missing maverick animations
     gdxArrayOf("Megaman" /*, "MegamanMaverick"*/).forEach { megamanType ->
@@ -130,14 +132,14 @@ internal fun Megaman.defineAnimationsComponent(): AnimationsComponent {
                     "defineAnimationsComponent(): Putting animation \'${animationKey}\' with key \'${_animationKey}\'"
                 )
 
-                megamanAnimations.put(
+                animations.put(
                     _animationKey, Animation(atlas.findRegion(animationKey), def.rows, def.cols, def.durations)
                 )
             }
         }
     }
 
-    val megamanAnimator = Animator(megamanAnimationKeySupplier, megamanAnimations)
+    val megamanAnimator = Animator(megamanAnimationKeySupplier, animations)
 
     val jetpackFlameRegion = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, "JetpackFlame")
     val jetpackFlameAnimation = Animation(jetpackFlameRegion, 1, 3, 0.1f, true)

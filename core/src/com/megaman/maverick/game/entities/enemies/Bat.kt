@@ -1,9 +1,11 @@
 package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
+import com.badlogic.gdx.utils.ObjectMap
 import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
+import com.engine.animations.IAnimation
 import com.engine.common.enums.Direction
 import com.engine.common.enums.Position
 import com.engine.common.extensions.gdxArrayOf
@@ -19,6 +21,7 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
+import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.pathfinding.PathfinderParams
 import com.engine.pathfinding.PathfindingComponent
 import com.engine.updatables.UpdatablesComponent
@@ -39,7 +42,7 @@ import com.megaman.maverick.game.utils.getMegamanMaverickGame
 import com.megaman.maverick.game.world.*
 import kotlin.reflect.KClass
 
-class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
+class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
 
     enum class BatStatus(val region: String) {
         HANGING("Hang"), OPEN_EYES("OpenEyes"), OPEN_WINGS("OpenWings"), FLYING_TO_ATTACK("Fly"),
@@ -50,32 +53,33 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
         private var atlas: TextureAtlas? = null
         private const val DEBUG_PATHFINDING = false
         private const val HANG_DURATION = 1.75f
-        private const val RELEASE_FROM_PERCH_DURATION = .25f
-        private const val FLY_TO_ATTACK_SPEED = 3f
-        private const val FLY_TO_RETREAT_SPEED = 8f
+        private const val RELEASE_FROM_PERCH_DURATION = 0.25f
+        private const val DEFAULT_FLY_TO_ATTACK_SPEED = 3f
+        private const val DEFAULT_FLY_TO_RETREAT_SPEED = 8f
     }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(15),
+    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(Bullet::class to dmgNeg(15),
         Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
         ChargedShot::class to dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
-        }, ChargedShotExplosion::class to dmgNeg {
+        },
+        ChargedShotExplosion::class to dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
-        }
-    )
+        })
 
     private val hangTimer = Timer(HANG_DURATION)
     private val releasePerchTimer = Timer(RELEASE_FROM_PERCH_DURATION)
-
     private lateinit var type: String
     private lateinit var status: BatStatus
+    private lateinit var animations: ObjectMap<String, IAnimation>
+    private var flyToAttackSpeed = DEFAULT_FLY_TO_ATTACK_SPEED
+    private var flyToRetreatSpeed = DEFAULT_FLY_TO_RETREAT_SPEED
 
     override fun init() {
         if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
-        super.init()
+        super<AbstractEnemy>.init()
 
         addComponent(defineAnimationsComponent())
         addComponent(definePathfindingComponent())
@@ -91,12 +95,21 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
         val bounds = spawnProps.get(ConstKeys.BOUNDS) as GameRectangle
         body.setTopCenterToPoint(bounds.getTopCenterPoint())
 
-        type = if (spawnProps.containsKey(ConstKeys.TYPE)) spawnProps.get(ConstKeys.TYPE) as String else ""
+        type = spawnProps.getOrDefault(ConstKeys.TYPE, "", String::class)
+
+        val animDuration = spawnProps.getOrDefault("${ConstKeys.ANIMATION}_${ConstKeys.DURATION}", 0.1f, Float::class)
+        gdxArrayOf(animations.get("Fly"), animations.get("SnowFly")).forEach { it.setFrameDuration(animDuration) }
+
+        flyToAttackSpeed = spawnProps.getOrDefault(
+            "${ConstKeys.ATTACK}_${ConstKeys.SPEED}", DEFAULT_FLY_TO_ATTACK_SPEED, Float::class
+        )
+        flyToRetreatSpeed = spawnProps.getOrDefault(
+            "${ConstKeys.RETREAT}_${ConstKeys.SPEED}", DEFAULT_FLY_TO_RETREAT_SPEED, Float::class
+        )
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
-
         updatablesComponent.add {
             when (status) {
                 BatStatus.HANGING -> {
@@ -150,8 +163,8 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
         val scannerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.7f * ConstVals.PPM))
         val consumer: (IFixture) -> Unit = {
-            if (it.getFixtureType() == FixtureType.DAMAGEABLE && it.getEntity() == getMegamanMaverickGame().megaman)
-                status = BatStatus.FLYING_TO_RETREAT
+            if (it.getFixtureType() == FixtureType.DAMAGEABLE && it.getEntity() == megaman) status =
+                BatStatus.FLYING_TO_RETREAT
         }
         scannerFixture.setConsumer { _, it -> consumer(it) }
         body.addFixture(scannerFixture)
@@ -160,9 +173,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
             shieldFixture.active = status == BatStatus.HANGING
             damageableFixture.active = status != BatStatus.HANGING
 
-            if (status == BatStatus.FLYING_TO_RETREAT) body.physics.velocity.set(
-                0f, FLY_TO_RETREAT_SPEED * ConstVals.PPM
-            )
+            if (status == BatStatus.FLYING_TO_RETREAT) body.physics.velocity.set(0f, flyToRetreatSpeed * ConstVals.PPM)
             else if (status != BatStatus.FLYING_TO_ATTACK) body.physics.velocity.setZero()
         })
 
@@ -186,24 +197,23 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier = { type + status.region }
-        val animator = Animator(
-            keySupplier, objectMapOf(
-                "Hang" to Animation(atlas!!.findRegion("Bat/Hang"), true),
-                "Fly" to Animation(atlas!!.findRegion("Bat/Fly"), 1, 2, 0.1f, true),
-                "OpenEyes" to Animation(atlas!!.findRegion("Bat/OpenEyes"), true),
-                "OpenWings" to Animation(atlas!!.findRegion("Bat/OpenWings"), true),
-                "SnowHang" to Animation(atlas!!.findRegion("SnowBat/Hang"), true),
-                "SnowFly" to Animation(atlas!!.findRegion("SnowBat/Fly"), 1, 2, 0.1f, true),
-                "SnowOpenEyes" to Animation(atlas!!.findRegion("SnowBat/OpenEyes"), true),
-                "SnowOpenWings" to Animation(atlas!!.findRegion("SnowBat/OpenWings"), true)
-            )
+        animations = objectMapOf(
+            "Hang" to Animation(atlas!!.findRegion("Bat/Hang")),
+            "Fly" to Animation(atlas!!.findRegion("Bat/Fly"), 1, 2, 0.1f, true),
+            "OpenEyes" to Animation(atlas!!.findRegion("Bat/OpenEyes")),
+            "OpenWings" to Animation(atlas!!.findRegion("Bat/OpenWings")),
+            "SnowHang" to Animation(atlas!!.findRegion("SnowBat/Hang")),
+            "SnowFly" to Animation(atlas!!.findRegion("SnowBat/Fly"), 1, 2, 0.1f, true),
+            "SnowOpenEyes" to Animation(atlas!!.findRegion("SnowBat/OpenEyes")),
+            "SnowOpenWings" to Animation(atlas!!.findRegion("SnowBat/OpenWings"))
         )
+        val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }
 
     private fun definePathfindingComponent(): PathfindingComponent {
         val params = PathfinderParams(startSupplier = { body.getCenter() },
-            targetSupplier = { getMegamanMaverickGame().megaman.body.getTopCenterPoint() },
+            targetSupplier = { megaman.body.getTopCenterPoint() },
             allowDiagonal = { true },
             filter = { _, objs ->
                 for (obj in objs) if (obj is Fixture && obj.getFixtureType() == FixtureType.BLOCK) return@PathfinderParams false
@@ -215,7 +225,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game) {
                 it,
                 body,
                 body.getCenter(),
-                FLY_TO_ATTACK_SPEED,
+                { flyToAttackSpeed },
                 body,
                 stopOnTargetReached = false,
                 stopOnTargetNull = false,

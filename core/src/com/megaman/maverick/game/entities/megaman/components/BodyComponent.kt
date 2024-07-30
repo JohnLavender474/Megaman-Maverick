@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.engine.common.enums.Direction
+import com.engine.common.enums.ProcessState
 import com.engine.common.interfaces.Updatable
 import com.engine.common.shapes.GameRectangle
 import com.engine.drawables.shapes.DrawableShapesComponent
@@ -12,6 +13,7 @@ import com.engine.drawables.shapes.IDrawableShape
 import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
@@ -68,6 +70,10 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
             GameRectangle().setWidth(.6f * ConstVals.PPM).setHeight(.15f * ConstVals.PPM)
         )
     headFixture.setRunnable(onBounce)
+    headFixture.setConsumer { state, fixture ->
+        if (state == ProcessState.BEGIN && fixture.getFixtureType() == FixtureType.BLOCK)
+            requestToPlaySound(SoundAsset.MEGAMAN_LAND_SOUND, false)
+    }
     body.addFixture(headFixture)
     headFixture.rawShape.color = Color.RED
     shapes.add { headFixture.getShape() }

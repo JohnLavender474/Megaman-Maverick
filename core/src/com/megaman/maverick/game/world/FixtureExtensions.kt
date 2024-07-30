@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.world
 
-import com.badlogic.gdx.utils.ObjectSet
 import com.engine.common.enums.ProcessState
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.world.IFixture
@@ -42,6 +41,8 @@ fun IFixture.setRunnable(runnable: () -> Unit): IFixture {
 }
 
 fun IFixture.getRunnable() = properties.get(ConstKeys.RUNNABLE) as (() -> Unit)?
+
+fun IFixture.hasConsumer() = properties.containsKey(ConstKeys.CONSUMER)
 
 fun IFixture.setConsumer(consumer: (ProcessState, IFixture) -> Unit): IFixture {
     properties.put(ConstKeys.CONSUMER, consumer)

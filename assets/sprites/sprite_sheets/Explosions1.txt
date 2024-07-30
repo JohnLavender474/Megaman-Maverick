@@ -1,8 +1,15 @@
 Explosions1.png
-size: 832, 96
+size: 880, 104
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+AsteroidExplosion
+  rotate: false
+  xy: 832, 32
+  size: 48, 72
+  orig: 48, 72
+  offset: 0, 0
+  index: -1
 Disintegration
   rotate: false
   xy: 96, 0

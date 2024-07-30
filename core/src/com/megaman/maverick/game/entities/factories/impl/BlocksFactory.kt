@@ -39,5 +39,6 @@ class BlocksFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(BREAKABLE_ICE, EntityPoolCreator.create { BreakableIce(game) })
     }
 
-    override fun fetch(key: Any) = pools.get(if (key == "" || key == "Block") STANDARD else key)?.fetch()
+    override fun fetch(key: Any) =
+        pools.get(if (key == "" || key.toString().lowercase() == "block") STANDARD else key)?.fetch()
 }

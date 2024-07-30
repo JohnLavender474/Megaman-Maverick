@@ -24,6 +24,7 @@ import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.TimeMarkedRunnable
 import com.engine.common.time.Timer
 import com.engine.damage.IDamager
+import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
@@ -57,8 +58,8 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     companion object {
         const val TAG = "PopupCanon"
-        private const val SHOOT_X = 15f
-        private const val SHOOT_Y = 5f
+        private const val SHOOT_X = 8f
+        private const val SHOOT_Y = 2.5f
         private const val REST_DUR = 0.75f
         private const val TRANS_DUR = 0.6f
         private const val SHOOT_DUR = 0.25f
@@ -145,10 +146,8 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         body.addFixture(bodyFixture)
-        bodyFixture.rawShape.color = Color.GRAY
-        debugShapes.add { bodyFixture.getShape() }
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setWidth(0.85f * ConstVals.PPM))
         body.addFixture(damagerFixture)
         damagerFixture.rawShape.color = Color.RED
         debugShapes.add { damagerFixture.getShape() }
@@ -163,10 +162,11 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             damageableFixture.active = damageable
 
             val damager = loop.getCurrent() == PopupCanonState.SHOOT
-            (damagerFixture.rawShape as GameRectangle).height =
-                (if (damager) 0.85f * ConstVals.PPM else 0.1f) * ConstVals.PPM
-            damagerFixture.offsetFromBodyCenter.y = if (damager) 0.425f * ConstVals.PPM else 0f
+            (damagerFixture.rawShape as GameRectangle).height = (if (damager) 0.85f else 0.1f) * ConstVals.PPM
+            damagerFixture.offsetFromBodyCenter.y = if (damager) 0f else -0.375f * ConstVals.PPM
         }
+
+        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }

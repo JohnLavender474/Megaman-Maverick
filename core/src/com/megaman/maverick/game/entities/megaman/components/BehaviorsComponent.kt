@@ -94,7 +94,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             if (!ready || !canMove) return@Behavior false
 
             if (damaged || isBehaviorActive(BehaviorType.RIDING_CART) || !body.isSensing(BodySense.IN_WATER) ||
-                body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)) return@Behavior false
+                body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)
+            ) return@Behavior false
 
             return@Behavior if (isBehaviorActive(BehaviorType.SWIMMING)) when (directionRotation) {
                 Direction.UP -> body.physics.velocity.y > 0f
@@ -209,10 +210,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             if (isDirectionRotatedVertically()) impulse.y = 0f else impulse.x = 0f
 
-            val impulseValue =
-                facing.value * ConstVals.PPM * if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_AIR_DASH_VEL
-                else MegamanValues.AIR_DASH_VEL
-
+            val impulseValue = facing.value * ConstVals.PPM * movementScalar *
+                    (if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_AIR_DASH_VEL else MegamanValues.AIR_DASH_VEL)
             when (directionRotation) {
                 Direction.UP, Direction.DOWN -> impulse.x = impulseValue
 
@@ -220,7 +219,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             }
 
             lastFacing = facing
-
             putProperty(MegamanKeys.DIRECTION_ON_AIR_DASH, directionRotation)
         }
 
@@ -272,7 +270,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 !game.controllerPoller.isPressed(ControllerButton.DOWN)
             ) return false
 
-            return if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) game.controllerPoller.isPressed(ControllerButton.A) && directionOnInit == directionRotation
+            return if (isBehaviorActive(BehaviorType.GROUND_SLIDING))
+                game.controllerPoller.isPressed(ControllerButton.A) && directionOnInit == directionRotation
             else game.controllerPoller.isJustPressed(ControllerButton.A)
         }
 
@@ -295,11 +294,10 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             groundSlideTimer.update(delta)
 
             if (damaged || isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) ||
-                isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)
-            ) return
+                isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)) return
 
             val impulse = (if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_GROUND_SLIDE_VEL
-            else MegamanValues.GROUND_SLIDE_VEL) * ConstVals.PPM * facing.value
+            else MegamanValues.GROUND_SLIDE_VEL) * ConstVals.PPM * facing.value * movementScalar
 
             when (directionRotation) {
                 Direction.UP, Direction.DOWN -> body.physics.velocity.x = impulse
@@ -464,7 +462,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     )
                     else Vector2()
                 }
-            }).scl(ConstVals.PPM.toFloat())
+            }).scl(ConstVals.PPM * movementScalar)
         }
 
         override fun end() {
@@ -556,10 +554,10 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
         override fun act(delta: Float) {
             when (directionRotation) {
-                Direction.UP -> body.physics.velocity.y = MegamanValues.JETPACK_Y_IMPULSE * ConstVals.PPM
-                Direction.DOWN -> body.physics.velocity.y = -MegamanValues.JETPACK_Y_IMPULSE * ConstVals.PPM
-                Direction.LEFT -> body.physics.velocity.x = -MegamanValues.JETPACK_Y_IMPULSE * ConstVals.PPM
-                Direction.RIGHT -> body.physics.velocity.x = MegamanValues.JETPACK_Y_IMPULSE * ConstVals.PPM
+                Direction.UP -> body.physics.velocity.y = MegamanValues.JETPACK_Y_IMPULSE * ConstVals.PPM * movementScalar
+                Direction.DOWN -> body.physics.velocity.y = -MegamanValues.JETPACK_Y_IMPULSE * ConstVals.PPM * movementScalar
+                Direction.LEFT -> body.physics.velocity.x = -MegamanValues.JETPACK_Y_IMPULSE * ConstVals.PPM * movementScalar
+                Direction.RIGHT -> body.physics.velocity.x = MegamanValues.JETPACK_Y_IMPULSE * ConstVals.PPM * movementScalar
             }
             timePerBitTimer.update(delta)
             if (timePerBitTimer.isFinished()) {

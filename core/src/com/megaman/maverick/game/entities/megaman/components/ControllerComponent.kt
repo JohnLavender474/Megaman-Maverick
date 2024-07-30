@@ -44,9 +44,9 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
                     else MegamanValues.RUN_IMPULSE
 
                 if (isDirectionRotatedVertically() && body.physics.velocity.x > -threshold)
-                    body.physics.velocity.x -= impulse * delta * ConstVals.PPM
+                    body.physics.velocity.x -= impulse * delta * movementScalar * ConstVals.PPM
                 else if (isDirectionRotatedHorizontally() && body.physics.velocity.y > -threshold)
-                    body.physics.velocity.y -= impulse * delta * ConstVals.PPM
+                    body.physics.velocity.y -= impulse * delta * movementScalar * ConstVals.PPM
             },
             onJustReleased = { poller ->
                 GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "left actuator just released")
@@ -80,9 +80,9 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
                     else MegamanValues.RUN_IMPULSE
 
                 if (isDirectionRotatedVertically() && body.physics.velocity.x < threshold)
-                    body.physics.velocity.x += impulse * delta * ConstVals.PPM
+                    body.physics.velocity.x += impulse * delta * movementScalar * ConstVals.PPM
                 else if (isDirectionRotatedHorizontally() && body.physics.velocity.y < threshold)
-                    body.physics.velocity.y += impulse * delta * ConstVals.PPM
+                    body.physics.velocity.y += impulse * delta * movementScalar * ConstVals.PPM
             },
             onJustReleased = { poller ->
                 GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "right actuator just released")

@@ -6,6 +6,10 @@ import com.engine.entities.contracts.IBodyEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.utils.getMegamanMaverickGame
 
+fun IGameEntity.getGameCamera() = getMegamanMaverickGame().getGameCamera()
+
+fun IGameEntity.getMegaman() = getMegamanMaverickGame().megaman
+
 fun IGameEntity.playSoundNow(soundKey: Any, loop: Boolean) = getMegamanMaverickGame().audioMan.playSound(soundKey, loop)
 
 fun IGameEntity.stopSoundNow(soundKey: Any) = getMegamanMaverickGame().audioMan.stopSound(soundKey)

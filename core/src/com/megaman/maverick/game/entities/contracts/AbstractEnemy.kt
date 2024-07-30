@@ -55,13 +55,14 @@ abstract class AbstractEnemy(
         get() = !damageTimer.isFinished()
 
     protected val megaman: Megaman
-        get() = getMegamanMaverickGame().megaman
+        get() = getMegaman()
 
     protected abstract val damageNegotiations: ObjectMap<KClass<out IDamager>, DamageNegotiation>
 
     protected val damageTimer = Timer(dmgDuration)
     protected val damageBlinkTimer = Timer(dmgBlinkDur)
 
+    protected var movementScalar = 1f
     protected var damageBlink = false
     protected var dropItemOnDeath = true
     protected var onDamageInflictedTo: ((IDamageable) -> Unit)? = null
@@ -110,14 +111,18 @@ abstract class AbstractEnemy(
 
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
+
         onDamageInflictedTo = spawnProps.get(ConstKeys.ON_DAMAGE_INFLICTED_TO) as ((IDamageable) -> Unit)?
         dropItemOnDeath = spawnProps.getOrDefault(ConstKeys.DROP_ITEM_ON_DEATH, true, Boolean::class)
+        movementScalar = spawnProps.getOrDefault("${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}", 1f, Float::class)
+
         val cullWhenOutOfCamBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
         if (cullWhenOutOfCamBounds) {
             val cullTime = spawnProps.getOrDefault(ConstKeys.CULL_TIME, DEFAULT_CULL_TIME, Float::class)
             val cullOnOutOfBounds = getGameCameraCullingLogic(this, cullTime)
             putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, cullOnOutOfBounds)
         } else removeCullable(ConstKeys.CULL_OUT_OF_BOUNDS)
+
         val cullEvents = spawnProps.getOrDefault(ConstKeys.CULL_EVENTS, true, Boolean::class)
         if (cullEvents) {
             val eventsToCullOn = objectSetOf<Any>(
@@ -134,6 +139,7 @@ abstract class AbstractEnemy(
             }
             putCullable(ConstKeys.CULL_EVENTS, cullOnEvents)
         } else removeCullable(ConstKeys.CULL_EVENTS)
+
         damageTimer.setToEnd()
         damageBlinkTimer.setToEnd()
     }

@@ -11,7 +11,6 @@ class ExplosionsFactory(private val game: MegamanMaverickGame) : EntityFactory()
 
     companion object {
         const val TAG = "ExplosionFactory"
-
         const val EXPLOSION = "Explosion"
         const val EXPLOSION_ORB = "ExplosionOrb"
         const val DISINTEGRATION = "Disintegration"
@@ -23,6 +22,7 @@ class ExplosionsFactory(private val game: MegamanMaverickGame) : EntityFactory()
         const val ICE_SHARD = "IceShard"
         const val TOXIC_GOOP_SPLASH = "ToxicGoopSplash"
         const val SMOKE_PUFF = "SmokePuff"
+        const val ASTEROID_EXPLOSION = "AsteroidExplosion"
     }
 
     override fun init() {
@@ -38,6 +38,7 @@ class ExplosionsFactory(private val game: MegamanMaverickGame) : EntityFactory()
         pools.put(ICE_SHARD, EntityPoolCreator.create { IceShard(game) })
         pools.put(TOXIC_GOOP_SPLASH, EntityPoolCreator.create { ToxicGoopSplash(game) })
         pools.put(SMOKE_PUFF, EntityPoolCreator.create { SmokePuff(game) })
+        pools.put(ASTEROID_EXPLOSION, EntityPoolCreator.create { AsteroidExplosion(game) })
     }
 
     override fun fetch(key: Any): IGameEntity? {
