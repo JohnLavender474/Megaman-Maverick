@@ -67,13 +67,13 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
         private var atlas: TextureAtlas? = null
 
         private const val SHIELDING_DURATION = 1.15f
-        private const val RUNNING_DURATION = .5f
-        private const val POP_UP_DURATION = .5f
+        private const val RUNNING_DURATION = 0.5f
+        private const val POP_UP_DURATION = 0.5f
         private const val RUN_SPEED = 8f
         private const val GRAVITY_IN_AIR = 18f
         private const val GRAVITY_ON_GROUND = .15f
         private const val BULLET_TRAJECTORY_X = 15f
-        private const val BULLET_TRAJECTORY_Y = .25f
+        private const val BULLET_TRAJECTORY_Y = 0.25f
         private const val VELOCITY_CLAMP_X = 8f
         private const val VELOCITY_CLAMP_Y = 18f
     }

@@ -22,6 +22,7 @@ class BlocksFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         const val SWINGIN_PLATFORM = "SwinginPlatform"
         const val RAIL_TRACK_PLATFORM = "RailTrackPlatform"
         const val BREAKABLE_ICE = "BreakableIce"
+        const val BREAKABLE_BLOCK = "BreakableBlock"
     }
 
     override fun init() {
@@ -37,6 +38,7 @@ class BlocksFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(SWINGIN_PLATFORM, EntityPoolCreator.create { SwinginPlatform(game) })
         pools.put(RAIL_TRACK_PLATFORM, EntityPoolCreator.create { RailTrackPlatform(game) })
         pools.put(BREAKABLE_ICE, EntityPoolCreator.create { BreakableIce(game) })
+        pools.put(BREAKABLE_BLOCK, EntityPoolCreator.create { BreakableBlock(game) })
     }
 
     override fun fetch(key: Any) =

@@ -186,6 +186,8 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
         else trajectory.y = MEGA_BUSTER_BULLET_VEL * megaman.facing.value
         trajectory.scl(ConstVals.PPM.toFloat())
 
+        if (megaman.applyMovementScalarToBullet) trajectory.scl(megaman.movementScalar)
+
         val props = Properties()
         props.put(ConstKeys.OWNER, megaman)
         props.put(ConstKeys.TRAJECTORY, trajectory)

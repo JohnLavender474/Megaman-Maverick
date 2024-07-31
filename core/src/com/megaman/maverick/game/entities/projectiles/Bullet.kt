@@ -54,14 +54,20 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
 
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
+
         owner = spawnProps.get(ConstKeys.OWNER) as IGameEntity?
+
         val spawn = spawnProps.get(ConstKeys.POSITION) as Vector2
         body.setCenter(spawn)
+
         directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
+
         val trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
-        body.physics.velocity.set(trajectory)
+        body.physics.velocity.set(trajectory.scl(movementScalar))
+
         val gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, Vector2(), Vector2::class)
         body.physics.gravity.set(gravity)
+
         bounced = 0
     }
 

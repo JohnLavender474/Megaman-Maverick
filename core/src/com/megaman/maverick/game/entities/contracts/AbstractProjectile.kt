@@ -29,6 +29,7 @@ abstract class AbstractProjectile(game: MegamanMaverickGame) : GameEntity(game),
     ISpritesEntity, IAudioEntity, IGameEntity, ICullableEntity {
 
     protected var onDamageInflictedTo: ((IDamageable) -> Unit)? = null
+    protected var movementScalar = 1f
 
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
@@ -41,6 +42,8 @@ abstract class AbstractProjectile(game: MegamanMaverickGame) : GameEntity(game),
         val cullOnEvents = spawnProps.getOrDefault(ConstKeys.CULL_EVENTS, true, Boolean::class)
         if (cullOnEvents) putCullable(ConstKeys.CULL_EVENTS, getCullOnEventCullable())
         else removeCullOnEventCullable()
+
+        movementScalar = spawnProps.getOrDefault("${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}", 1f, Float::class)
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) {

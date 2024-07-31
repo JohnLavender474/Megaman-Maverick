@@ -326,6 +326,8 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
     internal var waterIceGravity = 0f
     internal var swimVel = 0f
 
+    internal var applyMovementScalarToBullet = false
+
     override fun init() {
         addComponent(AudioComponent(this))
         addComponent(defineUpdatablesComponent())
@@ -388,6 +390,7 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         teleporting = false
         gravityScalar = spawnProps.getOrDefault("${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}", 1f, Float::class)
         movementScalar = spawnProps.getOrDefault("${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}", 1f, Float::class)
+        applyMovementScalarToBullet = spawnProps.getOrDefault(ConstKeys.APPLY_SCALAR_TO_CHILDREN, false, Boolean::class)
     }
 
     override fun onDestroy() {

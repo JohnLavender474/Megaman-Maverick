@@ -25,7 +25,9 @@ import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
+import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.entities.contracts.IBodyEntity
+import com.engine.entities.contracts.ICullableEntity
 import com.engine.entities.contracts.ISpritesEntity
 import com.engine.events.Event
 import com.engine.updatables.UpdatablesComponent
@@ -40,14 +42,15 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.ItemEntity
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.isSensing
 
-class HealthBulb(game: MegamanMaverickGame) : GameEntity(game), ItemEntity, ISpritesEntity, IBodyEntity,
-    IDirectionRotatable {
+class HealthBulb(game: MegamanMaverickGame) : GameEntity(game), ItemEntity, ISpritesEntity, IAnimatedEntity,
+    IBodyEntity, ICullableEntity, IDirectionRotatable {
 
     companion object {
         const val TAG = "HealthBulb"
@@ -78,11 +81,7 @@ class HealthBulb(game: MegamanMaverickGame) : GameEntity(game), ItemEntity, ISpr
 
     override fun init() {
         if (textureAtlas == null) textureAtlas = game.assMan.getTextureAtlas(TextureAsset.ITEMS_1.source)
-        cullTimer.setRunnables(
-            gdxArrayOf(
-                TimeMarkedRunnable(TIME_TO_BLINK) { warning = true },
-            )
-        )
+        cullTimer.setRunnables(gdxArrayOf(TimeMarkedRunnable(TIME_TO_BLINK) { warning = true }))
         addComponent(defineBodyComponent())
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
@@ -92,20 +91,29 @@ class HealthBulb(game: MegamanMaverickGame) : GameEntity(game), ItemEntity, ISpr
 
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
+
         val spawn =
-            if (spawnProps.containsKey(ConstKeys.BOUNDS)) spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
-                .getCenter()
+            if (spawnProps.containsKey(ConstKeys.BOUNDS))
+                spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
             else spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         large = spawnProps.getOrDefault(ConstKeys.LARGE, true) as Boolean
         timeCull = !spawnProps.containsKey(ConstKeys.TIMED) || spawnProps.get(ConstKeys.TIMED, Boolean::class)!!
+
+        val cullOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, false, Boolean::class)
+        if (cullOutOfBounds) putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, getGameCameraCullingLogic(this, 0f))
+        else removeCullable(ConstKeys.CULL_OUT_OF_BOUNDS)
+
+        body.setSize((if (large) 0.5f else 0.25f) * ConstVals.PPM)
+        body.setCenter(spawn)
+
+        (itemFixture.rawShape as GameRectangle).set(body)
+        feetFixture.offsetFromBodyCenter.y = (if (large) -0.25f else -0.125f) * ConstVals.PPM
+
         warning = false
         blink = false
         blinkTimer.setToEnd()
         cullTimer.reset()
-        body.setSize((if (large) 0.5f else 0.25f) * ConstVals.PPM)
-        body.setCenter(spawn)
-        (itemFixture.rawShape as GameRectangle).set(body)
-        feetFixture.offsetFromBodyCenter.y = (if (large) -0.25f else -0.125f) * ConstVals.PPM
+
         directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
     }
 
