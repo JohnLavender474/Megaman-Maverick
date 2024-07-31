@@ -57,7 +57,6 @@ import com.megaman.maverick.game.entities.enemies.Eyee
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
-import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
@@ -84,7 +83,7 @@ class MegamanMaverickGame : Game2D(), IEventListener {
     companion object {
         const val TAG = "MegamanMaverickGame"
         const val DEBUG_TEXT = false
-        const val DEBUG_SHAPES = true
+        const val DEBUG_SHAPES = false
         const val DEFAULT_VOLUME = 0.5f
         val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(Eyee.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
@@ -181,10 +180,12 @@ class MegamanMaverickGame : Game2D(), IEventListener {
         megaman.initialized = true
 
         megamanUpgradeHandler = MegamanUpgradeHandler(state, megaman)
+        /*
         megamanUpgradeHandler.add(MegaAbility.CHARGE_WEAPONS)
         megamanUpgradeHandler.add(MegaAbility.AIR_DASH)
         megamanUpgradeHandler.add(MegaAbility.GROUND_SLIDE)
         megamanUpgradeHandler.add(MegaAbility.WALL_SLIDE)
+         */
 
         screens.put(ScreenEnum.LEVEL_SCREEN.name, MegaLevelScreen(this))
         screens.put(ScreenEnum.MAIN_MENU_SCREEN.name, MainMenuScreen(this))

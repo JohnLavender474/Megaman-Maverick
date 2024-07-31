@@ -39,6 +39,7 @@ import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
@@ -63,10 +64,11 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         private const val REST_DUR = 0.75f
         private const val TRANS_DUR = 0.6f
         private const val SHOOT_DUR = 0.25f
+        private const val DEFAULT_BALL_GRAVITY_SCALAR = 1f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    enum class PopupCanonState {
+    private enum class PopupCanonState {
         REST, RISE, SHOOT, FALL
     }
 
@@ -88,6 +90,7 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         "trans" to Timer(TRANS_DUR),
         "shoot" to Timer(SHOOT_DUR, gdxArrayOf(TimeMarkedRunnable(0.25f) { shoot() }))
     )
+    private var ballGravityScalar = DEFAULT_BALL_GRAVITY_SCALAR
 
     override fun init() {
         if (regions.isEmpty) {
@@ -107,16 +110,26 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
         loop.reset()
         timers.values().forEach { it.reset() }
+        ballGravityScalar = spawnProps.getOrDefault(
+            "${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}",
+            DEFAULT_BALL_GRAVITY_SCALAR,
+            Float::class
+        )
     }
 
     private fun shoot() {
         val explodingBall = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.EXPLODING_BALL)!!
         game.engine.spawn(
             explodingBall, props(
-                ConstKeys.POSITION to body.getCenter().add(0.25f * ConstVals.PPM * facing.value, 0.1f * ConstVals.PPM),
-                ConstKeys.IMPULSE to Vector2(SHOOT_X * facing.value, SHOOT_Y).scl(ConstVals.PPM.toFloat())
+                ConstKeys.POSITION to body.getCenter().add(
+                    0.25f * ConstVals.PPM * facing.value, 0.125f * ConstVals.PPM
+                ),
+                ConstKeys.IMPULSE to Vector2(SHOOT_X * facing.value, SHOOT_Y).scl(ConstVals.PPM.toFloat()),
+                "${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}" to ballGravityScalar
             )
         )
+
+        requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {

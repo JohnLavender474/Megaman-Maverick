@@ -62,7 +62,7 @@ class ExplodingBall(game: MegamanMaverickGame) : AbstractProjectile(game), IScal
         body.setCenter(spawn)
         val impulse = spawnProps.get(ConstKeys.IMPULSE, Vector2::class)!!
         body.physics.velocity.set(impulse)
-        gravityScalar = 1f
+        gravityScalar = spawnProps.getOrDefault("${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}", 1f, Float::class)
     }
 
     override fun hitBlock(blockFixture: IFixture) = explodeAndDie()

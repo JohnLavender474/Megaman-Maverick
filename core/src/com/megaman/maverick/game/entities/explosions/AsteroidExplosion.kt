@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.Array
 import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
+import com.engine.audio.AudioComponent
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameCircle
@@ -21,6 +22,7 @@ import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IAnimatedEntity
+import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.ISpritesEntity
 import com.engine.updatables.UpdatablesComponent
@@ -31,6 +33,7 @@ import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.IOwnable
@@ -38,7 +41,7 @@ import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
 class AsteroidExplosion(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
-    IDamager, IHazard, IOwnable {
+    IAudioEntity, IDamager, IHazard, IOwnable {
 
     companion object {
         const val TAG = "AsteroidExplosion"
@@ -52,6 +55,7 @@ class AsteroidExplosion(game: MegamanMaverickGame) : GameEntity(game), IBodyEnti
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "AsteroidExplosion")
+        addComponent(AudioComponent(this))
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
@@ -64,6 +68,7 @@ class AsteroidExplosion(game: MegamanMaverickGame) : GameEntity(game), IBodyEnti
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
         timer.reset()
+        requestToPlaySound(SoundAsset.BLAST_SOUND, false)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent(this, { delta ->

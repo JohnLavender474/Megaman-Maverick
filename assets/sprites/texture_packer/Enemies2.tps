@@ -486,6 +486,37 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Enemies2/JetMet/Jet.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>66,68,132,136</rect>
+                <key>scale9Paddings</key>
+                <rect>66,68,132,136</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies2/JetMet/Stand.png</key>
+            <key type="filename">../frames/Enemies2/JetMet/TakeOff.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>33,34,66,68</rect>
+                <key>scale9Paddings</key>
+                <rect>33,34,66,68</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Enemies2/RedTiggerSquirt.png</key>
             <key type="filename">../frames/Enemies2/YellowTiggerSquirt.png</key>
             <struct type="IndividualSpriteSettings">

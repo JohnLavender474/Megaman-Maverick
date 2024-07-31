@@ -181,7 +181,9 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         Popoheli::class to dmgNeg(3),
         BouncingAngryFlameBall::class to dmgNeg(3),
         LavaDrop::class to dmgNeg(6),
-        PopupCanon::class to dmgNeg(3)
+        PopupCanon::class to dmgNeg(3),
+        Asteroid::class to dmgNeg(3),
+        AsteroidExplosion::class to dmgNeg(3)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 
@@ -384,7 +386,7 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         })
 
         teleporting = false
-        gravityScalar = 1f
+        gravityScalar = spawnProps.getOrDefault("${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}", 1f, Float::class)
         movementScalar = spawnProps.getOrDefault("${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}", 1f, Float::class)
     }
 

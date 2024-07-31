@@ -1,5 +1,5 @@
 Enemies2.png
-size: 512, 1328
+size: 512, 1604
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -26,7 +26,7 @@ Adamski/Purple
   index: -1
 AngryFlameBall
   rotate: false
-  xy: 0, 1136
+  xy: 132, 1144
   size: 366, 188
   orig: 366, 188
   offset: 0, 0
@@ -248,6 +248,27 @@ Imorm
   orig: 192, 48
   offset: 0, 0
   index: -1
+JetMet/Jet
+  rotate: false
+  xy: 96, 1332
+  size: 264, 272
+  orig: 264, 272
+  offset: 0, 0
+  index: -1
+JetMet/Stand
+  rotate: false
+  xy: 256, 1008
+  size: 132, 136
+  orig: 132, 136
+  offset: 0, 0
+  index: -1
+JetMet/TakeOff
+  rotate: false
+  xy: 0, 1144
+  size: 132, 136
+  orig: 132, 136
+  offset: 0, 0
+  index: -1
 Peat
   rotate: false
   xy: 320, 32
@@ -390,7 +411,7 @@ ToxicBarrelBot/Closed
   index: -1
 ToxicBarrelBot/OpenCenter
   rotate: false
-  xy: 366, 1136
+  xy: 0, 1332
   size: 96, 192
   orig: 96, 192
   offset: 0, 0

@@ -324,10 +324,16 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             }
         }
 
-        // projectile, block or body or shield or water
+        // projectile, block or body or shield or water or projectile
         else if (contact.fixtureSetsMatch(
                 objectSetOf(FixtureType.PROJECTILE),
-                objectSetOf(FixtureType.BLOCK, FixtureType.BODY, FixtureType.SHIELD, FixtureType.WATER)
+                objectSetOf(
+                    FixtureType.BLOCK,
+                    FixtureType.BODY,
+                    FixtureType.SHIELD,
+                    FixtureType.WATER,
+                    FixtureType.PROJECTILE
+                )
             )
         ) {
             printDebugLog(
