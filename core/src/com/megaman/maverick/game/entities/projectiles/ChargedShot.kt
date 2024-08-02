@@ -51,7 +51,6 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceab
         private var halfChargedRegion: TextureRegion? = null
     }
 
-    override var owner: IGameEntity? = null
     override var facing = Facing.RIGHT
     override lateinit var directionRotation: Direction
     var fullyCharged = false
@@ -68,9 +67,6 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceab
             halfChargedRegion =
                 game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "HalfChargedShot")
 
-        addComponents(defineProjectileComponents())
-        addComponent(defineBodyComponent())
-        addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
         addComponent(defineUpdatablesComponent())
     }
@@ -176,7 +172,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceab
     private fun defineUpdatablesComponent() =
         UpdatablesComponent(this, { body.physics.velocity.set(trajectory) })
 
-    private fun defineBodyComponent(): BodyComponent {
+    override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
 
         val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameRectangle())
@@ -203,7 +199,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceab
         return AnimationsComponent(this, animator)
     }
 
-    private fun defineSpritesCompoent(): SpritesComponent {
+    override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->

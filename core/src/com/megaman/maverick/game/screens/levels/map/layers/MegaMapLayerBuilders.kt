@@ -35,6 +35,7 @@ class MegaMapLayerBuilders(private val params: MegaMapLayerBuildersParams) : Til
         layerBuilders.put(ConstKeys.SPECIALS, SpawnersLayerBuilder(params))
         layerBuilders.put(ConstKeys.SENSORS, SensorsLayerBuilder(params.game))
         layerBuilders.put(ConstKeys.DECORATIONS, SpawnersLayerBuilder(params))
+        layerBuilders.put(ConstKeys.PROJECTILES, SpawnersLayerBuilder(params))
     }
 
     override fun build(layers: MapLayers, returnProps: Properties) {

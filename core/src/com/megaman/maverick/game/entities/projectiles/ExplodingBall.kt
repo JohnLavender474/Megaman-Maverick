@@ -44,14 +44,11 @@ class ExplodingBall(game: MegamanMaverickGame) : AbstractProjectile(game), IScal
         private var region: TextureRegion? = null
     }
 
-    override var owner: IGameEntity? = null
     override var gravityScalar = 1f
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "GachappanBall")
-        addComponents(defineProjectileComponents())
-        addComponent(defineBodyComponent())
-        addComponent(defineSpritesComponent())
+        super<AbstractProjectile>.init()
         addComponent(defineAnimationsComponent())
     }
 
@@ -80,7 +77,7 @@ class ExplodingBall(game: MegamanMaverickGame) : AbstractProjectile(game), IScal
         kill()
     }
 
-    private fun defineBodyComponent(): BodyComponent {
+    override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.15f * ConstVals.PPM)
         body.physics.velocityClamp.set(CLAMP * ConstVals.PPM, CLAMP * ConstVals.PPM)
@@ -106,7 +103,7 @@ class ExplodingBall(game: MegamanMaverickGame) : AbstractProjectile(game), IScal
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun defineSpritesComponent(): SpritesComponent {
+    override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
         sprite.setSize(1.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)

@@ -14,22 +14,33 @@ import com.engine.cullables.CullablesComponent
 import com.engine.cullables.ICullable
 import com.engine.damage.IDamageable
 import com.engine.damage.IDamager
+import com.engine.drawables.sprites.SpritesComponent
 import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.ICullableEntity
 import com.engine.entities.contracts.ISpritesEntity
+import com.engine.world.BodyComponent
 import com.engine.world.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.events.EventType
 
 abstract class AbstractProjectile(game: MegamanMaverickGame) : GameEntity(game), IOwnable, IDamager, IBodyEntity,
-    ISpritesEntity, IAudioEntity, IGameEntity, ICullableEntity {
+    ISpritesEntity, IAudioEntity, ICullableEntity {
+
+    override var owner: IGameEntity? = null
 
     protected var onDamageInflictedTo: ((IDamageable) -> Unit)? = null
     protected var movementScalar = 1f
+
+    override fun init() {
+        super<GameEntity>.init()
+        addComponents(defineProjectileComponents())
+        addComponent(defineBodyComponent())
+        addComponent(defineSpritesComponent())
+    }
 
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
@@ -51,7 +62,7 @@ abstract class AbstractProjectile(game: MegamanMaverickGame) : GameEntity(game),
         onDamageInflictedTo?.invoke(damageable)
     }
 
-    fun defineProjectileComponents(): Array<IGameComponent> {
+    open fun defineProjectileComponents(): Array<IGameComponent> {
         val components = Array<IGameComponent>()
         components.add(AudioComponent(this))
         components.add(
@@ -100,4 +111,8 @@ abstract class AbstractProjectile(game: MegamanMaverickGame) : GameEntity(game),
     open fun hitWater(waterFixture: IFixture) {}
 
     open fun hitProjectile(projectileFixture: IFixture) {}
+
+    protected abstract fun defineBodyComponent(): BodyComponent
+
+    protected abstract fun defineSpritesComponent(): SpritesComponent
 }

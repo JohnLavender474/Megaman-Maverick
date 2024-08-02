@@ -23,7 +23,7 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
-import com.engine.entities.IGameEntity
+import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.Body
 import com.engine.world.BodyComponent
@@ -34,11 +34,10 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
-class PurpleBlast(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable {
+class PurpleBlast(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "PurpleBlast"
@@ -47,7 +46,6 @@ class PurpleBlast(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceab
         private var blastRegion: TextureRegion? = null
     }
 
-    override var owner: IGameEntity? = null
     override lateinit var facing: Facing
 
     private val chargeDelayTimer = Timer(CHARGE_DELAY)
@@ -58,10 +56,8 @@ class PurpleBlast(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceab
             chargeRegion = atlas.findRegion("PurpleBlast/Charge")
             blastRegion = atlas.findRegion("PurpleBlast/Blast")
         }
-        addComponents(defineProjectileComponents())
+        super<AbstractProjectile>.init()
         addComponent(defineUpdatablesComponent())
-        addComponent(defineBodyComponent())
-        addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
     }
 
@@ -80,7 +76,7 @@ class PurpleBlast(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceab
         chargeDelayTimer.update(delta)
     })
 
-    private fun defineBodyComponent(): BodyComponent {
+    override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.5f * ConstVals.PPM)
 
@@ -98,7 +94,7 @@ class PurpleBlast(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceab
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun defineSpritesComponent(): SpritesComponent {
+    override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 15))
         sprite.setSize(1f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)

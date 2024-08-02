@@ -28,7 +28,6 @@ import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
-import com.engine.entities.IGameEntity
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
@@ -60,8 +59,6 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         private const val BURST_CULL_DUR = 1f
     }
 
-    override var owner: IGameEntity? = null
-
     private lateinit var burstCullTimer: Timer
     private lateinit var burstDirection: Direction
 
@@ -74,9 +71,7 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         if (fireballAtlas == null)
             fireballAtlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
         if (flameAtlas == null) flameAtlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
-        addComponents(defineProjectileComponents())
-        addComponent(defineBodyComponent())
-        addComponent(defineSpritesCompoent())
+        super.init()
         addComponent(defineAnimationsComponent())
         addComponent(defineUpdatablesComponent())
     }
@@ -141,7 +136,7 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         kill()
     }
 
-    private fun defineBodyComponent(): BodyComponent {
+    override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.6f * ConstVals.PPM)
         body.color = Color.GRAY
@@ -165,7 +160,7 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun defineSpritesCompoent(): SpritesComponent {
+    override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { delta, _sprite ->

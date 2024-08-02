@@ -73,8 +73,6 @@ class ReactManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game), 
         private var dyingRegion: TextureRegion? = null
     }
 
-    override var owner: IGameEntity? = null
-
     var active = false
 
     private val dyingTimer = Timer(DIE_DUR)
@@ -88,10 +86,8 @@ class ReactManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game), 
             smallRegion = atlas.findRegion("ReactManProjectile/Small")
             dyingRegion = atlas.findRegion("ReactManProjectile/Die")
         }
-        addComponents(defineProjectileComponents())
+        super<AbstractProjectile>.init()
         addComponent(defineUpdatablesComponent())
-        addComponent(defineBodyComponent())
-        addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
     }
 
@@ -162,7 +158,7 @@ class ReactManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game), 
         }
     })
 
-    private fun defineBodyComponent(): BodyComponent {
+    override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.physics.gravity.set(0f, GRAVITY * ConstVals.PPM)
 
@@ -186,7 +182,7 @@ class ReactManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game), 
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun defineSpritesComponent(): SpritesComponent {
+    override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 2))
         sprite.setSize(0.85f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)

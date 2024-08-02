@@ -15,18 +15,17 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
-import com.engine.entities.IGameEntity
+import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
-class Picket(game: MegamanMaverickGame) : AbstractProjectile(game) {
+class Picket(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
 
     companion object {
         const val TAG = "Picket"
@@ -34,14 +33,10 @@ class Picket(game: MegamanMaverickGame) : AbstractProjectile(game) {
         private const val GRAVITY = -0.15f
     }
 
-    override var owner: IGameEntity? = null
-
     override fun init() {
         if (region == null)
             region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Picket")
-        addComponents(defineProjectileComponents())
-        addComponent(defineBodyComponent())
-        addComponent(defineSpritesComponent())
+        super<AbstractProjectile>.init()
         addComponent(defineAnimationsComponent())
     }
 
@@ -58,7 +53,7 @@ class Picket(game: MegamanMaverickGame) : AbstractProjectile(game) {
         // TODO: certain blocks breakable with picket
     }
 
-    private fun defineBodyComponent(): BodyComponent {
+    override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.5f * ConstVals.PPM)
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
@@ -83,7 +78,7 @@ class Picket(game: MegamanMaverickGame) : AbstractProjectile(game) {
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun defineSpritesComponent(): SpritesComponent {
+    override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)

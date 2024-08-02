@@ -27,6 +27,7 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setCenter
 import com.engine.entities.IGameEntity
+import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.events.Event
 import com.engine.events.IEventListener
 import com.engine.updatables.UpdatablesComponent
@@ -46,7 +47,7 @@ import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.BodyComponentCreator
 
-class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IEventListener, IFaceable {
+class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IEventListener, IFaceable {
 
     companion object {
         const val TAG = "SpiderWeb"
@@ -67,7 +68,6 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IEventLis
     }
 
     override val eventKeyMask = objectSetOf<Any>(EventType.PLAYER_JUST_DIED)
-    override var owner: IGameEntity? = null
     override lateinit var facing: Facing
 
     private val megaman = game.megaman
@@ -84,10 +84,7 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IEventLis
             grayRegion = atlas.findRegion("SpiderWeb/Gray")
             blinkWhiteRegion = atlas.findRegion("SpiderWeb/BlinkWhite")
         }
-        super.init()
-        addComponents(defineProjectileComponents())
-        addComponent(defineBodyComponent())
-        addComponent(defineSpritesComponent())
+        super<AbstractProjectile>.init()
         addComponent(defineUpdatablesComponent())
         addComponent(defineAnimationsComponent())
     }
@@ -112,7 +109,6 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IEventLis
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         game.eventsMan.removeListener(this)
         if (stuckToMegaman) {
             explode()
@@ -155,7 +151,7 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IEventLis
         WEBS_STUCK_TO_MEGAMAN.add(this)
     }
 
-    private fun defineBodyComponent(): BodyComponent {
+    override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         val debugShapes = gdxArrayOf<() -> IDrawableShape?>({ body })
         body.preProcess.put(ConstKeys.DEFAULT) { delta ->
@@ -185,7 +181,7 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IEventLis
         }
     })
 
-    private fun defineSpritesComponent(): SpritesComponent {
+    override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 5))
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->

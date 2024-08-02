@@ -56,7 +56,6 @@ class Explosion(game: MegamanMaverickGame) : GameEntity(game), IHazard, IOwnable
     override fun init() {
         if (explosionRegion == null) explosionRegion =
             game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "Explosion")
-
         addComponent(defineSpritesCompoent())
         addComponent(defineBodyComponent())
         addComponent(defineAnimationsComponent())

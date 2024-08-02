@@ -21,6 +21,7 @@ import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.IGameEntity
+import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -36,7 +37,7 @@ import com.megaman.maverick.game.entities.utils.playSoundNow
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
-class RollingBotShot(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable {
+class RollingBotShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "RollingBotShot"
@@ -45,15 +46,11 @@ class RollingBotShot(game: MegamanMaverickGame) : AbstractProjectile(game), IFac
         private var region: TextureRegion? = null
     }
 
-    override var owner: IGameEntity? = null
     override lateinit var facing: Facing
 
     override fun init() {
         if (region == null)
             region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "RollingBotShot")
-        addComponents(defineProjectileComponents())
-        addComponent(defineBodyComponent())
-        addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
     }
 
@@ -86,7 +83,7 @@ class RollingBotShot(game: MegamanMaverickGame) : AbstractProjectile(game), IFac
         body.physics.velocity.x = X_VEL * ConstVals.PPM * facing.value
     }
 
-    private fun defineBodyComponent(): BodyComponent {
+    override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.75f * ConstVals.PPM, 0.35f * ConstVals.PPM)
 
@@ -104,7 +101,7 @@ class RollingBotShot(game: MegamanMaverickGame) : AbstractProjectile(game), IFac
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun defineSpritesComponent(): SpritesComponent {
+    override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(0.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)

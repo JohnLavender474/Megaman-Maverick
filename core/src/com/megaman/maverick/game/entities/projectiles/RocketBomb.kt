@@ -2,106 +2,108 @@ package com.megaman.maverick.game.entities.projectiles
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.Array
 import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
+import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
-import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.getTextureRegion
-import com.engine.common.getOverlapPushDirection
+import com.engine.common.getSingleMostDirectionFromStartToTarget
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
-import com.engine.damage.IDamageable
-import com.engine.drawables.shapes.DrawableShapesComponent
+import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
-import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IAnimatedEntity
-import com.engine.entities.contracts.IBodyEntity
 import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.entities.utils.getMegaman
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
-class ToxicGoopShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
+class RocketBomb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IDirectionRotatable {
 
     companion object {
-        const val TAG = "ToxicGoopShot"
-        private const val GRAVITY = -0.05f
+        const val TAG = "RocketBomb"
+        private const val SPEED = 5f
         private var region: TextureRegion? = null
     }
 
+    override lateinit var directionRotation: Direction
+
     override fun init() {
         if (region == null)
-            region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "ToxicGoopShot")
+            region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "RocketBomb")
         super<AbstractProjectile>.init()
         addComponent(defineAnimationsComponent())
     }
 
     override fun spawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "spawn(): spawnProps=$spawnProps")
         super.spawn(spawnProps)
-        owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
-        val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
-        val impulse = spawnProps.getOrDefault(ConstKeys.IMPULSE, Vector2(), Vector2::class)
-        body.physics.velocity.set(impulse)
+        directionRotation = getSingleMostDirectionFromStartToTarget(spawn, getMegaman().body.getCenter())
+        body.physics.velocity = Vector2(0f, SPEED * ConstVals.PPM).rotateDeg(directionRotation.rotation)
     }
 
-    override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie(
-        getOverlapPushDirection(body.rotatedBounds, (damageable as IBodyEntity).body.rotatedBounds)
-    )
+    override fun hitBody(bodyFixture: IFixture) = explodeAndDie()
 
-    override fun hitBlock(blockFixture: IFixture) = explodeAndDie(
-        getOverlapPushDirection(body.rotatedBounds, blockFixture.getBody().rotatedBounds)
-    )
+    override fun hitBlock(blockFixture: IFixture) = explodeAndDie()
 
     override fun explodeAndDie(vararg params: Any?) {
         kill()
-        val goopSplash = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.TOXIC_GOOP_SPLASH)!!
+        val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
         game.engine.spawn(
-            goopSplash, props(
-                ConstKeys.OWNER to this,
-                ConstKeys.DIRECTION to params[0] as Direction?,
-                ConstKeys.POSITION to body.getBottomCenterPoint()
+            explosion,
+            props(
+                ConstKeys.POSITION to body.getCenter(),
+                ConstKeys.SOUND to SoundAsset.EXPLOSION_2_SOUND,
+                ConstKeys.OWNER to this
             )
         )
     }
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.5f * ConstVals.PPM)
-        body.physics.gravity.y = GRAVITY * ConstVals.PPM
+        body.setSize(0.75f * ConstVals.PPM, 1.25f * ConstVals.PPM)
 
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
-        body.addFixture(bodyFixture)
+        val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body.rotatedBounds }
 
-        val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameRectangle().set(body))
+        val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameRectangle(body))
         body.addFixture(projectileFixture)
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().set(body))
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
         body.addFixture(damagerFixture)
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
+        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle(body))
+        body.addFixture(shieldFixture)
 
         return BodyComponentCreator.create(this, body)
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(0.75f * ConstVals.PPM)
+        sprite.setSize(1.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())
+            _sprite.setOriginCenter()
+            _sprite.rotation = directionRotation.rotation
         }
         return spritesComponent
     }

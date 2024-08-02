@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectMap
 import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
@@ -84,6 +85,8 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
     private val shootTimer = Timer(SHOOT_DUR)
     private val dropTimer = Timer(RISE_DROP_DUR)
 
+    private lateinit var animations: ObjectMap<String, IAnimation>
+
     private var upsideDown = false
     private var type = ""
 
@@ -121,16 +124,23 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
         val position = if (upsideDown) Position.TOP_CENTER else Position.BOTTOM_CENTER
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(position)
         body.positionOnPoint(spawn, position)
+
+        val animationDuration = spawnProps.getOrDefault("${ConstKeys.ANIMATION}_${ConstKeys.DURATION}", 0.1f,
+            Float::class)
+        animations.values().forEach { it.setFrameDuration(animationDuration) }
     }
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.65f * ConstVals.PPM, 0.5f * ConstVals.PPM)
+
         val shapes = Array<() -> IDrawableShape?>()
+
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.15f * ConstVals.PPM))
         body.addFixture(damagerFixture)
         damagerFixture.rawShape.color = Color.RED
         shapes.add { damagerFixture.getShape() }
+
         val damageableFixture = Fixture(
             body,
             FixtureType.DAMAGEABLE,
@@ -139,6 +149,7 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
         body.addFixture(damageableFixture)
         damageableFixture.rawShape.color = Color.PURPLE
         shapes.add { damageableFixture.getShape() }
+
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             val damageableBounds = damageableFixture.rawShape as GameRectangle
             if (down) {
@@ -149,7 +160,9 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
                 damageableFixture.offsetFromBodyCenter.y = 0f
             }
         })
+
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
+
         return BodyComponentCreator.create(this, body)
     }
 
@@ -191,7 +204,7 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
             val key = if (down) "down" else if (shooting) "shoot" else if (rising) "rise" else "drop"
             "$type-$key"
         }
-        val animations = objectMapOf<String, IAnimation>(
+        animations = objectMapOf(
             "red-down" to Animation(atlas!!.findRegion("RedScrewie/Down")),
             "red-rise" to Animation(atlas!!.findRegion("RedScrewie/Rise"), 1, 3, 0.1f, false),
             "red-drop" to Animation(atlas!!.findRegion("RedScrewie/Drop"), 1, 3, 0.1f, false),
@@ -207,13 +220,17 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
     private fun shoot() {
         requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
+
         BULLET_TRAJECTORIES.forEach {
             val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
+
             val spawn = Vector2(body.getCenter())
             if (it.x > 0) spawn.x += 0.2f * ConstVals.PPM else if (it.x < 0) spawn.x -= 0.2f * ConstVals.PPM
             spawn.y += (if (upsideDown) -0.215f else 0.215f) * ConstVals.PPM
-            val trajectory = Vector2(it).scl(ConstVals.PPM.toFloat())
+
+            val trajectory = Vector2(it).scl(movementScalar * ConstVals.PPM)
             if (upsideDown) trajectory.y *= -1f
+
             game.engine.spawn(
                 bullet, props(
                     ConstKeys.TRAJECTORY to trajectory, ConstKeys.POSITION to spawn, ConstKeys.OWNER to this

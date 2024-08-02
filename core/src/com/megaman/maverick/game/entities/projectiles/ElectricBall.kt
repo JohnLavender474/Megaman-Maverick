@@ -20,7 +20,6 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
-import com.engine.entities.IGameEntity
 import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -38,8 +37,6 @@ class ElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         private var largeRegion: TextureRegion? = null
     }
 
-    override var owner: IGameEntity? = null
-
     val trajectory = Vector2()
 
     private var large = false
@@ -50,10 +47,8 @@ class ElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         )
         if (largeRegion == null) largeRegion =
             game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Electric/BigElectric")
-        addComponent(defineBodyComponent())
-        addComponent(defineSpritesComponent())
+        super.init()
         addComponent(defineAnimationsComponent())
-        addComponents(defineProjectileComponents())
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -82,7 +77,7 @@ class ElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         // requestToPlaySound(SoundAsset.MM3_ELECTRIC_PULSE_SOUND, false)
     }
 
-    private fun defineBodyComponent(): BodyComponent {
+    override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.color = Color.GRAY
 
@@ -109,7 +104,7 @@ class ElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun defineSpritesComponent(): SpritesComponent {
+    override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(this, sprite)

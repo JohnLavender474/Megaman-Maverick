@@ -53,16 +53,13 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
         private var region: TextureRegion? = null
     }
 
-    override var owner: IGameEntity? = null
     override lateinit var facing: Facing
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(
             TextureAsset.ENEMIES_2.source, "SnowheadThrower/Snowhead"
         )
-        addComponents(defineProjectileComponents())
-        addComponent(defineBodyComponent())
-        addComponent(defineSpritesComponent())
+        super.init()
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -125,7 +122,7 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
         if (projectile.owner is Megaman) explodeAndDie()
     }
 
-    private fun defineBodyComponent(): BodyComponent {
+    override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.5f * ConstVals.PPM)
 
@@ -143,7 +140,7 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun defineSpritesComponent(): SpritesComponent {
+    override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setRegion(region!!)
         sprite.setSize(1.25f * ConstVals.PPM)

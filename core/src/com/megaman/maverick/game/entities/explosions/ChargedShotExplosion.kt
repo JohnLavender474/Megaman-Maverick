@@ -23,6 +23,7 @@ import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.IGameEntity
+import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.Body
 import com.engine.world.BodyComponent
@@ -38,7 +39,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
-class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game) {
+class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
 
     companion object {
         private const val FULLY_CHARGED_DURATION = 0.6f
@@ -49,7 +50,6 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
         private var halfChargedRegion: TextureRegion? = null
     }
 
-    override var owner: IGameEntity? = null
     var fullyCharged = false
         private set
 
@@ -61,14 +61,10 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
         if (fullyChargedRegion == null)
             fullyChargedRegion =
                 game.assMan.getTextureRegion(TextureAsset.MEGAMAN_CHARGED_SHOT.source, "Collide")
-
         if (halfChargedRegion == null)
             halfChargedRegion =
                 game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "HalfChargedShot")
-
-        addComponents(defineProjectileComponents())
-        addComponent(defineBodyComponent())
-        addComponent(defineSpritesCompoent())
+        super<AbstractProjectile>.init()
         addComponent(defineAnimationsComponent())
         addComponent(defineUpdatablesComponent())
     }
@@ -108,7 +104,7 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
                 }
             })
 
-    private fun defineBodyComponent(): BodyComponent {
+    override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
         body.addFixture(damagerFixture)
@@ -121,7 +117,7 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun defineSpritesCompoent(): SpritesComponent {
+    override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->

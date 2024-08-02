@@ -39,8 +39,6 @@ class CaveRock(game: MegamanMaverickGame) : AbstractProjectile(game) {
         private const val STANDARD_GRAVITY = -0.5f
     }
 
-    override var owner: IGameEntity? = null
-
     var trajectory: Vector2? = null
     var passThroughBlocks = false
     var gravity = STANDARD_GRAVITY * ConstVals.PPM
@@ -49,9 +47,7 @@ class CaveRock(game: MegamanMaverickGame) : AbstractProjectile(game) {
         if (rockRegion == null)
             rockRegion =
                 game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "CaveRock/Rock")
-        addComponents(defineProjectileComponents())
-        addComponent(defineBodyComponent())
-        addComponent(defineSpritesComponent())
+        super.init()
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -89,7 +85,7 @@ class CaveRock(game: MegamanMaverickGame) : AbstractProjectile(game) {
         // bounce
     }
 
-    private fun defineBodyComponent(): BodyComponent {
+    override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.75f * ConstVals.PPM)
 
@@ -122,7 +118,7 @@ class CaveRock(game: MegamanMaverickGame) : AbstractProjectile(game) {
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun defineSpritesComponent(): SpritesComponent {
+    override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(2.5f * ConstVals.PPM)
         sprite.setRegion(rockRegion!!)

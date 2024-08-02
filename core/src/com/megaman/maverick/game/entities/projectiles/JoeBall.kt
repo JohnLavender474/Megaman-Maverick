@@ -18,7 +18,6 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
-import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
@@ -29,7 +28,6 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
@@ -50,8 +48,6 @@ class JoeBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEn
         private var snowJoeBallReg: TextureRegion? = null
     }
 
-    override var owner: IGameEntity? = null
-
     private val trajectory = Vector2()
     private var type = ""
 
@@ -61,9 +57,7 @@ class JoeBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEn
         if (snowJoeBallReg == null)
             snowJoeBallReg =
                 game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "SnowJoeball")
-        addComponents(defineProjectileComponents())
-        addComponent(defineBodyComponent())
-        addComponent(defineSpritesCompoent())
+        super<AbstractProjectile>.init()
         addComponent(defineAnimationsComponent())
     }
 
@@ -103,7 +97,7 @@ class JoeBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEn
         requestToPlaySound(SoundAsset.DINK_SOUND, false)
     }
 
-    private fun defineBodyComponent(): BodyComponent {
+    override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
         body.setSize(0.15f * ConstVals.PPM)
         body.physics.velocityClamp.set(CLAMP * ConstVals.PPM, CLAMP * ConstVals.PPM)
@@ -121,7 +115,7 @@ class JoeBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEn
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun defineSpritesCompoent(): SpritesComponent {
+    override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)

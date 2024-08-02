@@ -168,7 +168,7 @@ abstract class AbstractEnemy(
         damageTimer.reset()
         val damage = damageNegotiations[damagerKey].get(damager)
         if (damage <= 0) return false
-        addHealth(-damage)
+        translateHealth(-damage)
         requestToPlaySound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
         return true
     }

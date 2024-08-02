@@ -40,14 +40,10 @@ class Snowball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         private var region: TextureRegion? = null
     }
 
-    override var owner: IGameEntity? = null
-
     override fun init() {
         if (region == null)
             region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Snowball")
-        addComponent(defineBodyComponent())
-        addComponent(defineSpritesComponent())
-        addComponents(defineProjectileComponents())
+        super.init()
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -89,7 +85,7 @@ class Snowball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         )
     }
 
-    private fun defineBodyComponent(): BodyComponent {
+    override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.15f * ConstVals.PPM)
         body.physics.velocityClamp.set(CLAMP * ConstVals.PPM.toFloat(), CLAMP * ConstVals.PPM.toFloat())
@@ -107,7 +103,7 @@ class Snowball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun defineSpritesComponent(): SpritesComponent {
+    override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND,  10))
         sprite.setSize(0.85f * ConstVals.PPM)
         sprite.setRegion(region!!)

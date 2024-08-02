@@ -115,7 +115,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
             when (status) {
                 BatStatus.HANGING -> {
                     hangTimer.update(it)
-                    if (hangTimer.isFinished()) {
+                    if (hangTimer.isFinished() || !body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)) {
                         status = BatStatus.OPEN_EYES
                         hangTimer.reset()
                     }
@@ -145,7 +145,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
         body.setSize(.5f * ConstVals.PPM, .25f * ConstVals.PPM)
 
         val headFixture = Fixture(
-            body, FixtureType.HEAD, GameRectangle().setSize(.5f * ConstVals.PPM, .175f * ConstVals.PPM)
+            body, FixtureType.HEAD, GameRectangle().setSize(0.5f * ConstVals.PPM, .175f * ConstVals.PPM)
         )
         headFixture.offsetFromBodyCenter.y = 0.375f * ConstVals.PPM
         body.addFixture(headFixture)

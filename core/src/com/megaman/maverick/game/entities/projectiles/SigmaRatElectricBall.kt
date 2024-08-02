@@ -25,6 +25,7 @@ import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.IGameEntity
+import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
@@ -39,7 +40,7 @@ import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
-class SigmaRatElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
+class SigmaRatElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
 
     companion object {
         const val TAG = "SigmaRatElectricBall"
@@ -61,10 +62,8 @@ class SigmaRatElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game)
             ballRegion = atlas.findRegion("SigmaRat/ElectricBall")
             hitRegion = atlas.findRegion("SigmaRat/ElectricBallDissipate")
         }
-        addComponents(defineProjectileComponents())
+        super<AbstractProjectile>.init()
         addComponent(defineUpdatablesComponent())
-        addComponent(defineBodyComponent())
-        addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
     }
 
@@ -115,7 +114,7 @@ class SigmaRatElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game)
         )
     }
 
-    private fun defineBodyComponent(): BodyComponent {
+    override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(ConstVals.PPM.toFloat())
 
@@ -138,7 +137,7 @@ class SigmaRatElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game)
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun defineSpritesComponent(): SpritesComponent {
+    override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 3))
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)

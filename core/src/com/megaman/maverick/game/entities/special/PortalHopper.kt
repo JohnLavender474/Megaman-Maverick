@@ -99,13 +99,13 @@ class PortalHopper(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, I
     }
 
     override fun onDestroy() {
-        GameLogger.debug(TAG, "onDestroy()")
+        GameLogger.debug(TAG, "onDestroy(): thisKey=$thisKey")
         super<GameEntity>.onDestroy()
         game.eventsMan.removeListener(this)
     }
 
     override fun onEvent(event: Event) {
-        GameLogger.debug(TAG, "onEvent(): event=$event")
+        GameLogger.debug(TAG, "thisKey=$thisKey, onEvent(): event=$event")
         if (event.key == EventType.TELEPORT && event.isProperty(ConstKeys.KEY, thisKey)) {
             val entity = event.getProperty(ConstKeys.ENTITY, IBodyEntity::class)!!
             val direction = event.getProperty(ConstKeys.DIRECTION, Direction::class)!!
@@ -114,11 +114,12 @@ class PortalHopper(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, I
     }
 
     override fun teleportEntity(entity: IBodyEntity) {
-        GameLogger.debug(TAG, "teleportEntity(): entity=$entity")
+        GameLogger.debug(TAG, "thisKey=$thisKey, teleportEntity(): entity=$entity")
         game.eventsMan.submitEvent(
             Event(
                 EventType.TELEPORT, props(
-                    ConstKeys.ENTITY to entity, ConstKeys.KEY to nextKey,
+                    ConstKeys.ENTITY to entity,
+                    ConstKeys.KEY to nextKey,
                     ConstKeys.DIRECTION to nextDirection
                 )
             )
@@ -126,7 +127,7 @@ class PortalHopper(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, I
     }
 
     private fun receiveEntity(entity: IBodyEntity, direction: Direction) {
-        GameLogger.debug(TAG, "receiveEntity(): entity=$entity")
+        GameLogger.debug(TAG, "thisKey=$thisKey, receiveEntity(): entity=$entity")
 
         thisDirection = direction
         launch = true
@@ -148,7 +149,7 @@ class PortalHopper(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, I
         onPortalStart?.invoke()
 
         hopQueue.add(entity to Timer(PORTAL_HOP_DELAY))
-        GameLogger.debug(TAG, "teleportEntity(): entity=$entity, hopPoint=$hopPoint")
+        GameLogger.debug(TAG, "teleportEntity(): thisKey=$thisKey, entity=$entity, hopPoint=$hopPoint")
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent(this, { delta ->
@@ -166,7 +167,7 @@ class PortalHopper(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, I
             onPortalContinue?.invoke()
 
             if (timer.isFinished()) {
-                GameLogger.debug(TAG, "Timer finished: entity=$entity, timer=$timer")
+                GameLogger.debug(TAG, "Timer finished: thisKey=$thisKey, entity=$entity, timer=$timer")
 
                 requestToPlaySound(SoundAsset.TELEPORT_SOUND, false)
 

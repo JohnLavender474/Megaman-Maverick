@@ -99,8 +99,8 @@ class HealthBulb(game: MegamanMaverickGame) : GameEntity(game), ItemEntity, ISpr
         large = spawnProps.getOrDefault(ConstKeys.LARGE, true) as Boolean
         timeCull = !spawnProps.containsKey(ConstKeys.TIMED) || spawnProps.get(ConstKeys.TIMED, Boolean::class)!!
 
-        val cullOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, false, Boolean::class)
-        if (cullOutOfBounds) putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, getGameCameraCullingLogic(this, 0f))
+        val cullOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
+        if (cullOutOfBounds) putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, getGameCameraCullingLogic(this, 0.25f))
         else removeCullable(ConstKeys.CULL_OUT_OF_BOUNDS)
 
         body.setSize((if (large) 0.5f else 0.25f) * ConstVals.PPM)

@@ -492,7 +492,7 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
             stunBounce(enemyBody.x)
         }
         val damage = dmgNegotations.get(damager::class).get(damager)
-        addHealth(-damage)
+        translateHealth(-damage)
         requestToPlaySound(SoundAsset.MEGAMAN_DAMAGE_SOUND, false)
         stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
         damageTimer.reset()

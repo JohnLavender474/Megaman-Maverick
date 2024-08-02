@@ -65,10 +65,8 @@ class SniperJoeShield(game: MegamanMaverickGame) : AbstractProjectile(game), IFa
             orangeRegion = atlas.findRegion("SniperJoeShield/Orange")
             blueRegion = atlas.findRegion("SniperJoeShield/Blue")
         }
-        addComponents(defineProjectileComponents())
+        super.init()
         addComponent(defineUpdatablesComponent())
-        addComponent(defineBodyComponent())
-        addComponent(defineSpritesComponent())
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -120,7 +118,7 @@ class SniperJoeShield(game: MegamanMaverickGame) : AbstractProjectile(game), IFa
         }
     })
 
-    private fun defineBodyComponent(): BodyComponent {
+    override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.5f * ConstVals.PPM, ConstVals.PPM.toFloat())
 
@@ -157,7 +155,7 @@ class SniperJoeShield(game: MegamanMaverickGame) : AbstractProjectile(game), IFa
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun defineSpritesComponent(): SpritesComponent {
+    override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(this, sprite)

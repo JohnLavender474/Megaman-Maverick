@@ -17,6 +17,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
+import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.world.*
 
@@ -31,32 +32,31 @@ val Megaman.feet: IFixture
 internal fun Megaman.defineBodyComponent(): BodyComponent {
     val body = Body(BodyType.DYNAMIC)
     body.color = Color.BROWN
-    body.width = .75f * ConstVals.PPM
+    body.width = 0.75f * ConstVals.PPM
     body.physics.takeFrictionFromOthers = true
 
     val shapes = Array<() -> IDrawableShape?>()
     shapes.add { body.rotatedBounds }
 
-    val playerFixture = Fixture(body, FixtureType.PLAYER, GameRectangle().setWidth(0.8f * ConstVals.PPM))
+    val playerFixture = Fixture(body, FixtureType.PLAYER, GameRectangle().setWidth(0.5f * ConstVals.PPM))
     body.addFixture(playerFixture)
     playerFixture.rawShape.color = Color.WHITE
     shapes.add { playerFixture.getShape() }
 
-    val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setWidth(.8f * ConstVals.PPM))
+    val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setWidth(0.8f * ConstVals.PPM))
     body.addFixture(bodyFixture)
     bodyFixture.rawShape.color = Color.BLUE
     shapes.add { bodyFixture.getShape() }
 
     val onBounce = {
-        if (!body.isSensing(BodySense.IN_WATER) /* TODO: && has(MegaAbility.AIR_DASH) */)
-            aButtonTask = AButtonTask.AIR_DASH
+        if (!body.isSensing(BodySense.IN_WATER) && has(MegaAbility.AIR_DASH)) aButtonTask = AButtonTask.AIR_DASH
     }
 
     val feetFixture =
         Fixture(
             body,
             FixtureType.FEET,
-            GameRectangle().setWidth(.6f * ConstVals.PPM).setHeight(.15f * ConstVals.PPM)
+            GameRectangle().setWidth(0.6f * ConstVals.PPM).setHeight(0.15f * ConstVals.PPM)
         )
     feetFixture.setRunnable(onBounce)
     body.addFixture(feetFixture)
@@ -67,7 +67,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
         Fixture(
             body,
             FixtureType.HEAD,
-            GameRectangle().setWidth(.6f * ConstVals.PPM).setHeight(.15f * ConstVals.PPM)
+            GameRectangle().setWidth(0.6f * ConstVals.PPM).setHeight(0.15f * ConstVals.PPM)
         )
     headFixture.setRunnable(onBounce)
     headFixture.setConsumer { state, fixture ->
@@ -78,14 +78,14 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     headFixture.rawShape.color = Color.RED
     shapes.add { headFixture.getShape() }
 
-    val leftFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setWidth(.2f * ConstVals.PPM))
+    val leftFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setWidth(0.2f * ConstVals.PPM))
     leftFixture.setRunnable(onBounce)
     leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
     body.addFixture(leftFixture)
     leftFixture.rawShape.color = Color.YELLOW
     shapes.add { leftFixture.getShape() }
 
-    val rightFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setWidth(.2f * ConstVals.PPM))
+    val rightFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setWidth(0.2f * ConstVals.PPM))
     rightFixture.setRunnable(onBounce)
     rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
     body.addFixture(rightFixture)
@@ -93,7 +93,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     shapes.add { rightFixture.getShape() }
 
     val damageableFixture =
-        Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(.8f * ConstVals.PPM))
+        Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.8f * ConstVals.PPM))
     body.addFixture(damageableFixture)
     damageableFixture.rawShape.color = Color.RED
     shapes.add { damageableFixture.getShape() }
@@ -178,7 +178,9 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
         }
 
         (bodyFixture.rawShape as Rectangle).set(body)
-        (playerFixture.rawShape as Rectangle).set(body)
+
+        (playerFixture.rawShape as Rectangle).height =
+            (if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) 0.25f else 0.5f) * ConstVals.PPM
     })
 
     addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))

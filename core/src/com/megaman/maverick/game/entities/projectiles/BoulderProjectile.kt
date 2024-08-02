@@ -20,7 +20,6 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
-import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.updatables.UpdatablesComponent
@@ -77,10 +76,8 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
             mediumRegion = atlas.findRegion("Boulder/Medium")
             smallRegion = atlas.findRegion("Boulder/Small")
         }
-        addComponents(defineProjectileComponents())
+        super.init()
         addComponent(defineUpdatablesComponent())
-        addComponent(defineBodyComponent())
-        addComponent(defineSpritesComponent())
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
     }
 
@@ -201,7 +198,7 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
         spawnExplodeDelay.update(delta)
     })
 
-    private fun defineBodyComponent(): BodyComponent {
+    override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
 
@@ -226,7 +223,7 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun defineSpritesComponent(): SpritesComponent {
+    override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)

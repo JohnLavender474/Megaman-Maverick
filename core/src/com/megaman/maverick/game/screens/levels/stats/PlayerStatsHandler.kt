@@ -137,7 +137,7 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
         for (i in 0 until healthToAdd) {
             val time = i * DUR_PER_BIT
             timeMarkedRunnables.add(TimeMarkedRunnable(time) {
-                megaman.addHealth(1)
+                megaman.translateHealth(1)
                 audioMan.playSound(SoundAsset.ENERGY_FILL_SOUND)
             })
         }

@@ -54,13 +54,14 @@ import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
+import java.util.*
 import kotlin.reflect.KClass
 
 class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDirectionRotatable, IFaceable {
 
     companion object {
         const val TAG = "JetMet"
-        private const val STAND_DUR = 0.35f
+        private const val STAND_DUR = 0.15f
         private const val LIFTOFF_DUR = 0.1f
         private const val SHOOT_DELAY = 0.85f
         private const val JET_SPEED = 4f
@@ -115,10 +116,16 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        val target1 = spawnProps.get("${ConstKeys.TARGET}_1", RectangleMapObject::class)!!.rectangle.getCenter()
-        val target2 = spawnProps.get("${ConstKeys.TARGET}_2", RectangleMapObject::class)!!.rectangle.getCenter()
-        liftTarget =
-            if (megaman.body.getCenter().dst2(target1) < megaman.body.getCenter().dst2(target2)) target1 else target2
+        val targets = PriorityQueue { o1: Vector2, o2: Vector2 ->
+            val d1 = o1.dst2(megaman.body.getCenter())
+            val d2 = o2.dst2(megaman.body.getCenter())
+            d1.compareTo(d2)
+        }
+        spawnProps.forEach { key, value ->
+            if (key.toString().contains(ConstKeys.TARGET) && value is RectangleMapObject)
+                targets.add(value.rectangle.getCenter())
+        }
+        liftTarget = targets.poll()
 
         applyMovementScalarToBullet = spawnProps.getOrDefault(ConstKeys.APPLY_SCALAR_TO_CHILDREN, false, Boolean::class)
 

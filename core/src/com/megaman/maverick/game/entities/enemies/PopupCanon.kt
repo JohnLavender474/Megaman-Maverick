@@ -72,15 +72,16 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         REST, RISE, SHOOT, FALL
     }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(Bullet::class to dmgNeg(5),
+    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+        Bullet::class to dmgNeg(10),
         Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
         ChargedShot::class to dmgNeg {
             it as ChargedShot
-            if (it.fullyCharged) 15 else 10
+            if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
         },
         ChargedShotExplosion::class to dmgNeg {
             it as ChargedShotExplosion
-            if (it.fullyCharged) 5 else 3
+            if (it.fullyCharged) 10 else 5
         })
     override lateinit var facing: Facing
 

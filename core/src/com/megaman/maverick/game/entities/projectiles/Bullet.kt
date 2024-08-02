@@ -41,16 +41,9 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
         private var bulletRegion: TextureRegion? = null
     }
 
-    override var owner: IGameEntity? = null
     override lateinit var directionRotation: Direction
 
     private var bounced = 0
-
-    override fun init() {
-        addComponents(defineProjectileComponents())
-        addComponent(defineBodyComponent())
-        addComponent(defineSpritesCompoent())
-    }
 
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
@@ -126,7 +119,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
         game.engine.spawn(disintegration!!, props(ConstKeys.POSITION to body.getCenter()))
     }
 
-    private fun defineBodyComponent(): BodyComponent {
+    override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(.15f * ConstVals.PPM)
         body.physics.velocityClamp.set(CLAMP * ConstVals.PPM, CLAMP * ConstVals.PPM)
@@ -148,7 +141,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun defineSpritesCompoent(): SpritesComponent {
+    override fun defineSpritesComponent(): SpritesComponent {
         if (bulletRegion == null) bulletRegion =
             game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Bullet")
         val sprite = GameSprite(bulletRegion!!, DrawingPriority(DrawingSection.FOREGROUND, 5))

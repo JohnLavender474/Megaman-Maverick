@@ -24,7 +24,6 @@ import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.IGameEntity
-import com.engine.entities.contracts.IAudioEntity
 import com.engine.points.PointsComponent
 import com.engine.world.Body
 import com.engine.world.BodyComponent
@@ -37,13 +36,12 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
-
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import kotlin.reflect.KClass
 
-class Petal(game: MegamanMaverickGame) : AbstractProjectile(game), IAudioEntity, IHealthEntity, IDamager, IDamageable {
+class Petal(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity, IDamager, IDamageable {
 
     companion object {
         const val TAG = "Petal"
@@ -54,8 +52,6 @@ class Petal(game: MegamanMaverickGame) : AbstractProjectile(game), IAudioEntity,
 
     override val invincible = false
 
-    override var owner: IGameEntity? = null
-
     private val damageNegotiations =
         objectMapOf<KClass<out IDamager>, Int>(
             Bullet::class to 10,
@@ -63,16 +59,13 @@ class Petal(game: MegamanMaverickGame) : AbstractProjectile(game), IAudioEntity,
             ChargedShot::class to ConstVals.MAX_HEALTH,
             ChargedShotExplosion::class to ConstVals.MAX_HEALTH
         )
-
     private val damageTimer = Timer(DAMAGE_DURATION)
 
     override fun init() {
         if (region == null)
             region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Petal")
-        addComponents(defineProjectileComponents())
+        super<AbstractProjectile>.init()
         addComponent(AudioComponent(this))
-        addComponent(defineBodyComponent())
-        addComponent(defineSpriteComponent())
         addComponent(defineAnimationsComponent())
         addComponent(definePointsComponent())
     }
@@ -120,7 +113,7 @@ class Petal(game: MegamanMaverickGame) : AbstractProjectile(game), IAudioEntity,
         return pointsComponent
     }
 
-    private fun defineBodyComponent(): BodyComponent {
+    override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.9f * ConstVals.PPM)
 
@@ -145,7 +138,7 @@ class Petal(game: MegamanMaverickGame) : AbstractProjectile(game), IAudioEntity,
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun defineSpriteComponent(): SpritesComponent {
+    override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)

@@ -203,6 +203,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
                     )
                 )
             )
+            engine.forEachEntity { if (it is AbstractEnemy) it.kill() }
         }
         cameraManagerForRooms.continueTransition = { _ ->
             if (cameraManagerForRooms.delayJustFinished) systemsMap.get(AnimationsSystem::class.simpleName)?.on = true

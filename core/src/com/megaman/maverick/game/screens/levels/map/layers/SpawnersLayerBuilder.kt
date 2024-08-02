@@ -45,6 +45,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
             ConstKeys.BLOCKS -> EntityType.BLOCK
             ConstKeys.SPECIALS -> EntityType.SPECIAL
             ConstKeys.HAZARDS -> EntityType.HAZARD
+            ConstKeys.PROJECTILES -> EntityType.PROJECTILE
             else -> throw IllegalArgumentException("Unknown spawner type: ${layer.name}")
         }
         GameLogger.debug(TAG, "build(): Entity type: $entityType")
@@ -72,8 +73,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                     ?: throw IllegalStateException("Entity of type $entityType not found: ${it.name}")
                 Spawn(entity, spawnProps)
             }
-            val respawnable =
-                !spawnProps.containsKey(ConstKeys.RESPAWNABLE) || spawnProps.get(ConstKeys.RESPAWNABLE) as Boolean
+            val respawnable = spawnProps.getOrDefault(ConstKeys.RESPAWNABLE, true, Boolean::class)
 
             when (spawnType) {
                 SpawnType.SPAWN_ROOM -> {

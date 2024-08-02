@@ -20,7 +20,6 @@ import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IAnimatedEntity
-import com.engine.entities.contracts.ISpritesEntity
 import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -36,7 +35,7 @@ import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.getEntity
 
-class UFOBomb(game: MegamanMaverickGame): AbstractProjectile(game), ISpritesEntity, IAnimatedEntity {
+class UFOBomb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
 
     companion object {
         const val TAG = "UFOBomb"
@@ -49,9 +48,7 @@ class UFOBomb(game: MegamanMaverickGame): AbstractProjectile(game), ISpritesEnti
     override fun init() {
         if (region == null)
             region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "UFOBomb")
-        addComponents(defineProjectileComponents())
-        addComponent(defineBodyComponent())
-        addComponent(defineSpritesComponent())
+        super<AbstractProjectile>.init()
         addComponent(defineAnimationsComponent())
     }
 
@@ -70,14 +67,16 @@ class UFOBomb(game: MegamanMaverickGame): AbstractProjectile(game), ISpritesEnti
     override fun explodeAndDie(vararg params: Any?) {
         kill()
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
-        game.engine.spawn(explosion, props(
-            ConstKeys.POSITION to body.getCenter(),
-            ConstKeys.OWNER to owner,
-            ConstKeys.SOUND to SoundAsset.EXPLOSION_2_SOUND
-        ))
+        game.engine.spawn(
+            explosion, props(
+                ConstKeys.POSITION to body.getCenter(),
+                ConstKeys.OWNER to owner,
+                ConstKeys.SOUND to SoundAsset.EXPLOSION_2_SOUND
+            )
+        )
     }
 
-    private fun defineBodyComponent(): BodyComponent {
+    override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(1.25f * ConstVals.PPM)
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
@@ -93,7 +92,7 @@ class UFOBomb(game: MegamanMaverickGame): AbstractProjectile(game), ISpritesEnti
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun defineSpritesComponent(): SpritesComponent {
+    override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0))
         sprite.setSize(0.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)

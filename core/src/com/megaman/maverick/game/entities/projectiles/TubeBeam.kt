@@ -16,7 +16,7 @@ import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setCenter
-import com.engine.entities.IGameEntity
+import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.world.Body
 import com.engine.world.BodyComponent
 import com.engine.world.BodyType
@@ -30,23 +30,20 @@ import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
-class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRotatable {
+class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IDirectionRotatable {
 
     companion object {
         const val TAG = "TubeBeam"
         private var region: TextureRegion? = null
     }
 
-    override var owner: IGameEntity? = null
     override lateinit var directionRotation: Direction
 
     private lateinit var trajectory: Vector2
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "TubeBeam")
-        addComponents(defineProjectileComponents())
-        addComponent(defineBodyComponent())
-        addComponent(defineSpritesComponent())
+        super<AbstractProjectile>.init()
         addComponent(defineAnimationsComponent())
     }
 
@@ -60,7 +57,7 @@ class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IDirection
         trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
     }
 
-    private fun defineBodyComponent(): BodyComponent {
+    override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
         body.addFixture(damagerFixture)
@@ -72,7 +69,7 @@ class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IDirection
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun defineSpritesComponent(): SpritesComponent {
+    override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, 0))
         sprite.setSize(2f * ConstVals.PPM, 0.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)

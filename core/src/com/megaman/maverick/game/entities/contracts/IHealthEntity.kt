@@ -13,7 +13,7 @@ interface IHealthEntity : IPointsEntity {
 
     fun setHealth(health: Int) = getHealthPoints().set(health)
 
-    fun addHealth(health: Int) = getHealthPoints().set(getCurrentHealth() + health)
+    fun translateHealth(health: Int) = getHealthPoints().set(getCurrentHealth() + health)
 
     fun getMinHealth() = getHealthPoints().min
 

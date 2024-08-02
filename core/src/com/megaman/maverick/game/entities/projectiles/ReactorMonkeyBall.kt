@@ -40,9 +40,7 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
     override fun init() {
         if (region == null) region =
             game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Nuclear_Monkey_Ball")
-        addComponents(defineProjectileComponents())
-        addComponent(defineBodyComponent())
-        addComponent(defineSpritesComponent())
+        super.init()
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -68,7 +66,7 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         kill()
     }
 
-    private fun defineBodyComponent(): BodyComponent {
+    override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(2f * ConstVals.PPM)
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
@@ -87,7 +85,7 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun defineSpritesComponent(): SpritesComponent {
+    override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(region!!)
         sprite.setSize(2.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)
