@@ -60,13 +60,13 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimate
     companion object {
         const val TAG = "MoonHeadMiniBoss"
         private const val SHOOT_SPEED = 6f
-        private const val ASTEROID_OFFSET_Y = -0.55f
+        private const val ASTEROID_OFFSET_Y = -0.65f
         private const val ARC_SPEED = 6f
         private const val ARC_FACTOR = 0.5f
-        private const val DELAY = 0.25f
+        private const val DELAY = 0.5f
         private const val DARK_DUR = 0.5f
-        private const val AWAKEN_DUR = 1.5f
-        private const val SHOOT_INIT_DELAY = 0.5f
+        private const val AWAKEN_DUR = 1.75f
+        private const val SHOOT_INIT_DELAY = 0.25f
         private const val SHOOT_DELAY = 0.25f
         private const val SHOOT_DUR = 0.65f
         private const val CRUMBLE_DUR = 0.3f
