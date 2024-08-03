@@ -34,10 +34,7 @@ import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.bosses.Bospider
-import com.megaman.maverick.game.entities.bosses.PenguinMiniBoss
-import com.megaman.maverick.game.entities.bosses.ReactMan
-import com.megaman.maverick.game.entities.bosses.ReactorMonkeyMiniBoss
+import com.megaman.maverick.game.entities.bosses.*
 import com.megaman.maverick.game.entities.bosses.gutstank.GutsTankFist
 import com.megaman.maverick.game.entities.bosses.sigmarat.SigmaRat
 import com.megaman.maverick.game.entities.bosses.sigmarat.SigmaRatClaw
@@ -160,7 +157,7 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         Shotman::class to dmgNeg(2),
         Snowhead::class to dmgNeg(2),
         SnowheadThrower::class to dmgNeg(3),
-        Spiky::class to dmgNeg(3),
+        Spiky::class to dmgNeg(4),
         PenguinMiniBoss::class to dmgNeg(3),
         BabyPenguin::class to dmgNeg(2),
         UFOBomb::class to dmgNeg(3),
@@ -183,7 +180,8 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         LavaDrop::class to dmgNeg(6),
         PopupCanon::class to dmgNeg(3),
         Asteroid::class to dmgNeg(3),
-        AsteroidExplosion::class to dmgNeg(3)
+        AsteroidExplosion::class to dmgNeg(3),
+        MoonHeadMiniBoss::class to dmgNeg(3)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 

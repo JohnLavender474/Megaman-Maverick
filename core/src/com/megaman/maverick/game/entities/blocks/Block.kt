@@ -136,6 +136,8 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
         fixturesToRemove.clear()
     }
 
+    open fun hitByBody(bodyFixture: IFixture) {}
+
     open fun hitBySide(sideFixture: IFixture) {}
 
     open fun hitByFeet(feetFixture: IFixture) {}

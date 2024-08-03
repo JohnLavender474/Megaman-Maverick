@@ -23,6 +23,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val FIRST = "first"
     const val AREA = "area"
     const val PROJECTILES = "projectiles"
     const val APPLY_SCALAR_TO_CHILDREN = "apply_scalar_to_children"

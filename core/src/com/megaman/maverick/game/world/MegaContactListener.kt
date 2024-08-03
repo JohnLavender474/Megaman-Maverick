@@ -93,6 +93,20 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             if (entity is IDamageable && (instant || !entity.invincible)) otherFixture.depleteHealth()
         }
 
+        // block, body
+        else if (contact.fixturesMatch(FixtureType.BLOCK, FixtureType.BODY)) {
+            printDebugLog(contact, "beginContact(): Block-Body, contact = $contact")
+            val (blockFixture, bodyFixture) = contact.getFixturesInOrder(FixtureType.BLOCK, FixtureType.BODY)!!
+
+            if (blockFixture.hasFixtureLabel(FixtureLabel.NO_BODY_TOUCHIE)) return
+
+            val block = blockFixture.getEntity() as Block
+            block.hitByBody(bodyFixture)
+
+            val body = bodyFixture.getBody()
+            body.setBodySense(BodySense.BODY_TOUCHING_BLOCK, true)
+        }
+
         // block, side
         else if (contact.fixturesMatch(FixtureType.BLOCK, FixtureType.SIDE)) {
             printDebugLog(contact, "beginContact(): Block-Side, contact = $contact")
@@ -476,6 +490,17 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
             if (entity is IDamageable && (instant || !entity.invincible)) bodyFixture.depleteHealth()
         }
 
+        // block, body
+        else if (contact.fixturesMatch(FixtureType.BLOCK, FixtureType.BODY)) {
+            printDebugLog(contact, "beginContact(): Block-Body, contact = $contact")
+            val (blockFixture, bodyFixture) = contact.getFixturesInOrder(FixtureType.BLOCK, FixtureType.BODY)!!
+
+            if (blockFixture.hasFixtureLabel(FixtureLabel.NO_BODY_TOUCHIE)) return
+
+            val body = bodyFixture.getBody()
+            body.setBodySense(BodySense.BODY_TOUCHING_BLOCK, true)
+        }
+
         // feet, block
         else if (contact.fixturesMatch(FixtureType.FEET, FixtureType.BLOCK)) {
             val (feetFixture, blockFixture) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.BLOCK)!!
@@ -743,6 +768,15 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
 
             val body = head.getBody()
             body.setBodySense(BodySense.HEAD_TOUCHING_BLOCK, false)
+        }
+
+        // block, body
+        else if (contact.fixturesMatch(FixtureType.BLOCK, FixtureType.BODY)) {
+            printDebugLog(contact, "beginContact(): Block-Body, contact = $contact")
+            val (_, bodyFixture) = contact.getFixturesInOrder(FixtureType.BLOCK, FixtureType.BODY)!!
+
+            val body = bodyFixture.getBody()
+            body.setBodySense(BodySense.BODY_TOUCHING_BLOCK, false)
         }
 
         // feet, ladder

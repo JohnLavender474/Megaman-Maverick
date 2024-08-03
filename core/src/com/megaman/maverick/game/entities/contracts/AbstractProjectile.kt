@@ -44,6 +44,9 @@ abstract class AbstractProjectile(game: MegamanMaverickGame) : GameEntity(game),
 
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
+
+        owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
+
         onDamageInflictedTo = spawnProps.get(ConstKeys.ON_DAMAGE_INFLICTED_TO) as ((IDamageable) -> Unit)?
 
         val cullOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)

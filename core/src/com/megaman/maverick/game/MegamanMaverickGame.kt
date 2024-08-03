@@ -197,13 +197,13 @@ class MegamanMaverickGame : Game2D(), IEventListener {
         screens.put(ScreenEnum.SIMPLE_END_LEVEL_SUCCESSFULLY_SCREEN.name, SimpleEndLevelScreen(this))
         screens.put(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name, SimpleInitGameScreen(this))
 
-        // startLevelScreen(Level.MOON_MAN)
+        startLevelScreen(Level.MOON_MAN)
         // startLevelScreen(Level.INFERNO_MAN)
         // startLevelScreen(Level.REACTOR_MAN)
         // startLevelScreen(Level.FREEZE_MAN)
 
         // TEST LEVELS
-        startLevelScreen(Level.TEST1)
+        // startLevelScreen(Level.TEST1)
     }
 
     override fun onEvent(event: Event) {
@@ -293,7 +293,7 @@ class MegamanMaverickGame : Game2D(), IEventListener {
                     FixtureType.CONSUMER to objectSetOf(*FixtureType.values()),
                     FixtureType.PLAYER to objectSetOf(FixtureType.ITEM),
                     FixtureType.DAMAGEABLE to objectSetOf(FixtureType.DAMAGER),
-                    FixtureType.BODY to objectSetOf(FixtureType.FORCE, FixtureType.GRAVITY_CHANGE),
+                    FixtureType.BODY to objectSetOf(FixtureType.BLOCK, FixtureType.FORCE, FixtureType.GRAVITY_CHANGE),
                     FixtureType.DEATH to objectSetOf(
                         FixtureType.FEET, FixtureType.SIDE, FixtureType.HEAD, FixtureType.BODY
                     ),

@@ -6,6 +6,7 @@ import com.megaman.maverick.game.ConstKeys
 
 enum class FixtureLabel {
     NO_PROJECTILE_COLLISION,
+    NO_BODY_TOUCHIE,
     NO_SIDE_TOUCHIE
 }
 

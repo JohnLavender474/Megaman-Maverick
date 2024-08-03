@@ -47,10 +47,10 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEnt
 
     companion object {
         const val TAG = "Asteroid"
-        const val NORMAL = "Normal"
+        const val REGULAR = "Regular"
         const val BLUE = "Blue"
-        private const val MIN_ROTATION_SPEED = 0.5f
-        private const val MAX_ROTATION_SPEED = 1.5f
+        const val MIN_ROTATION_SPEED = 0.5f
+        const val MAX_ROTATION_SPEED = 1.5f
         private const val DAMAGE_DUR = 0.1f
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -69,7 +69,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEnt
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
-            regions.put(NORMAL, atlas.findRegion("$TAG/$NORMAL"))
+            regions.put(REGULAR, atlas.findRegion("$TAG/$REGULAR"))
             regions.put(BLUE, atlas.findRegion("$TAG/$BLUE"))
         }
         super<AbstractProjectile>.init()
@@ -89,12 +89,13 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEnt
         val impulse = spawnProps.getOrDefault(ConstKeys.IMPULSE, Vector2(), Vector2::class)
         body.physics.velocity.set(impulse)
 
-        rotationSpeed = getRandom(MIN_ROTATION_SPEED, MAX_ROTATION_SPEED)
+        rotationSpeed = spawnProps.getOrDefault(
+            "${ConstKeys.ROTATION}_${ConstKeys.SPEED}",
+            getRandom(MIN_ROTATION_SPEED, MAX_ROTATION_SPEED), Float::class
+        )
         damageTimer.setToEnd()
-
         setHealth(getMaxHealth())
-
-        type = spawnProps.getOrDefault(ConstKeys.TYPE, NORMAL, String::class)
+        type = spawnProps.getOrDefault(ConstKeys.TYPE, REGULAR, String::class)
     }
 
     override fun hitBlock(blockFixture: IFixture) {
