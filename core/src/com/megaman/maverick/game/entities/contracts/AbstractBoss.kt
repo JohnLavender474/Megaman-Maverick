@@ -50,8 +50,8 @@ abstract class AbstractBoss(
         private set
 
     override fun spawn(spawnProps: Properties) {
-        mini = spawnProps.getOrDefault(ConstKeys.MINI, false, Boolean::class)
         game.eventsMan.addListener(this)
+        mini = spawnProps.getOrDefault(ConstKeys.MINI, false, Boolean::class)
         spawnProps.put(ConstKeys.DROP_ITEM_ON_DEATH, false)
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
         ready = false
@@ -149,7 +149,8 @@ abstract class AbstractBoss(
                 explosion, props(
                     ConstKeys.SOUND to SoundAsset.EXPLOSION_2_SOUND,
                     ConstKeys.POSITION to body.getCenter().add(
-                        position.x * 0.75f * ConstVals.PPM, position.y * 0.75f * ConstVals.PPM
+                        (position.x - 1) * 0.75f * ConstVals.PPM,
+                        (position.y - 1) * 0.75f * ConstVals.PPM
                     )
                 )
             )

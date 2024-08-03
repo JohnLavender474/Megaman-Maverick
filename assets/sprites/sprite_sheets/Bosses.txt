@@ -1,46 +1,46 @@
 Bosses.png
 size: 1020, 1446
 format: RGBA8888
-filter: Linear,Linear
+filter: Nearest,Nearest
 repeat: none
 BluntMan/Damaged
   rotate: false
-  xy: 400, 0
+  xy: 560, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 BluntMan/Flaming
   rotate: false
-  xy: 464, 0
+  xy: 624, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 BluntMan/Flex
   rotate: false
-  xy: 528, 0
+  xy: 688, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 BluntMan/Jump
   rotate: false
-  xy: 592, 0
+  xy: 752, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 BluntMan/Slide
   rotate: false
-  xy: 624, 0
+  xy: 784, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 BluntMan/Stand
   rotate: false
-  xy: 656, 0
+  xy: 816, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
@@ -68,77 +68,77 @@ Bospider/Still
   index: -1
 CrewMan/Jump
   rotate: false
-  xy: 720, 0
+  xy: 880, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 CrewMan/Stand
   rotate: false
-  xy: 784, 0
+  xy: 944, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 CrewMan/StandHoldBlock
   rotate: false
-  xy: 816, 0
+  xy: 976, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 CrewMan/StandMouthOpen
   rotate: false
-  xy: 848, 0
+  xy: 0, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 CrewMan/Throw
   rotate: false
-  xy: 880, 0
+  xy: 32, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 DistributorMan/Damaged
   rotate: false
-  xy: 912, 0
+  xy: 64, 32
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 DistributorMan/Jump
   rotate: false
-  xy: 976, 0
+  xy: 128, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 DistributorMan/JumpShock
   rotate: false
-  xy: 0, 32
+  xy: 160, 32
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 DistributorMan/JustLand
   rotate: false
-  xy: 64, 32
+  xy: 224, 32
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 DistributorMan/Shock
   rotate: false
-  xy: 128, 32
+  xy: 288, 32
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 DistributorMan/Stand
   rotate: false
-  xy: 192, 32
+  xy: 352, 32
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
@@ -194,7 +194,7 @@ FreezerMan/StandOpenFridge
   index: -1
 GutsTank/Fist
   rotate: false
-  xy: 544, 32
+  xy: 704, 32
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -342,22 +342,29 @@ MoonHeadMiniBoss/Angry
 MoonHeadMiniBoss/Awaken
   rotate: false
   xy: 176, 0
-  size: 96, 27
-  orig: 96, 27
-  offset: 0, 0
-  index: -1
-MoonHeadMiniBoss/Blank
-  rotate: false
-  xy: 272, 0
-  size: 32, 27
-  orig: 32, 27
+  size: 224, 27
+  orig: 224, 27
   offset: 0, 0
   index: -1
 MoonHeadMiniBoss/Crumble
   rotate: false
-  xy: 304, 0
+  xy: 400, 0
   size: 96, 27
   orig: 96, 27
+  offset: 0, 0
+  index: -1
+MoonHeadMiniBoss/Dark
+  rotate: false
+  xy: 496, 0
+  size: 32, 27
+  orig: 32, 27
+  offset: 0, 0
+  index: -1
+MoonHeadMiniBoss/Shoot
+  rotate: false
+  xy: 528, 0
+  size: 32, 27
+  orig: 32, 27
   offset: 0, 0
   index: -1
 PenguinMiniBoss/PenguinMiniBoss
@@ -369,42 +376,42 @@ PenguinMiniBoss/PenguinMiniBoss
   index: -1
 PreciousMan/Jump
   rotate: false
-  xy: 592, 32
+  xy: 752, 32
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 PreciousMan/JumpFreeze
   rotate: false
-  xy: 688, 32
+  xy: 0, 80
   size: 192, 48
   orig: 192, 48
   offset: 0, 0
   index: -1
 PreciousMan/Run
   rotate: false
-  xy: 0, 80
+  xy: 192, 80
   size: 192, 48
   orig: 192, 48
   offset: 0, 0
   index: -1
 PreciousMan/Stand
   rotate: false
-  xy: 192, 80
+  xy: 384, 80
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 PreciousMan/StandFreeze
   rotate: false
-  xy: 288, 80
+  xy: 480, 80
   size: 144, 48
   orig: 144, 48
   offset: 0, 0
   index: -1
 PreciousMan/StandShoot
   rotate: false
-  xy: 432, 80
+  xy: 624, 80
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -418,14 +425,14 @@ ReactMan/Dance
   index: -1
 ReactMan/Die
   rotate: false
-  xy: 512, 32
+  xy: 672, 32
   size: 32, 40
   orig: 32, 40
   offset: 0, 0
   index: -1
 ReactMan/Jump
   rotate: false
-  xy: 480, 80
+  xy: 672, 80
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -439,14 +446,14 @@ ReactMan/Run
   index: -1
 ReactMan/Stand
   rotate: false
-  xy: 528, 80
+  xy: 720, 80
   size: 144, 48
   orig: 144, 48
   offset: 0, 0
   index: -1
 ReactMan/Throw
   rotate: false
-  xy: 672, 80
+  xy: 864, 80
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -544,42 +551,42 @@ RoasterMan/Wet
   index: -1
 RodentMan/Jump
   rotate: false
-  xy: 720, 80
+  xy: 0, 128
   size: 192, 48
   orig: 192, 48
   offset: 0, 0
   index: -1
 RodentMan/Run
   rotate: false
-  xy: 0, 128
+  xy: 192, 128
   size: 192, 48
   orig: 192, 48
   offset: 0, 0
   index: -1
 RodentMan/Shoot
   rotate: false
-  xy: 192, 128
+  xy: 384, 128
   size: 144, 48
   orig: 144, 48
   offset: 0, 0
   index: -1
 RodentMan/Slash
   rotate: false
-  xy: 336, 128
+  xy: 528, 128
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 RodentMan/Stand
   rotate: false
-  xy: 432, 128
+  xy: 624, 128
   size: 288, 48
   orig: 288, 48
   offset: 0, 0
   index: -1
 RodentMan/WallSlide
   rotate: false
-  xy: 720, 128
+  xy: 912, 128
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
@@ -635,21 +642,21 @@ SigmaRat/ClawOpen
   index: -1
 SigmaRat/ElectricBall
   rotate: false
-  xy: 256, 32
+  xy: 416, 32
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 SigmaRat/ElectricBallDissipate
   rotate: false
-  xy: 320, 32
+  xy: 480, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SigmaRat/ElectricBallForm
   rotate: false
-  xy: 352, 32
+  xy: 512, 32
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
@@ -663,7 +670,7 @@ SigmaRat/ElectricDissipate
   index: -1
 SigmaRat/ElectricPulse
   rotate: false
-  xy: 448, 32
+  xy: 608, 32
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
@@ -712,49 +719,49 @@ TimberWoman/Swing
   index: -1
 WintryMan/AboutToJump
   rotate: false
-  xy: 816, 128
+  xy: 0, 176
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 WintryMan/AirFreeze
   rotate: false
-  xy: 0, 176
+  xy: 48, 176
   size: 192, 48
   orig: 192, 48
   offset: 0, 0
   index: -1
 WintryMan/Jump
   rotate: false
-  xy: 192, 176
+  xy: 240, 176
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 WintryMan/Run
   rotate: false
-  xy: 240, 176
+  xy: 288, 176
   size: 192, 48
   orig: 192, 48
   offset: 0, 0
   index: -1
 WintryMan/Stand
   rotate: false
-  xy: 432, 176
+  xy: 480, 176
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 WintryMan/StandFreeze
   rotate: false
-  xy: 528, 176
+  xy: 576, 176
   size: 144, 48
   orig: 144, 48
   offset: 0, 0
   index: -1
 WintryMan/StandShoot
   rotate: false
-  xy: 672, 176
+  xy: 720, 176
   size: 48, 48
   orig: 48, 48
   offset: 0, 0

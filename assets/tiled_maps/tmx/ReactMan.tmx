@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="350" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="13" nextobjectid="357">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="350" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="13" nextobjectid="361">
  <tileset firstgid="1" source="../tsx/Reactor_Man_1.tsx"/>
  <tileset firstgid="961" source="../tsx/React_Man_2.tsx"/>
  <tileset firstgid="1201" source="../tsx/Tileset1.tsx"/>
@@ -465,8 +465,8 @@
   <object id="356" name="0" x="80" y="1344" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="12" name="temp" visible="0">
-  <object id="346" name="0" x="9600" y="1408" width="32" height="32"/>
-  <object id="347" name="1" x="10128" y="1408" width="32" height="32"/>
+  <object id="359" name="0" x="7456" y="1440" width="32" height="32"/>
+  <object id="360" name="1" x="8288" y="1440" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="5" name="game_rooms">
   <object id="27" name="room1" x="0" y="1120" width="1760" height="384"/>

@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.engine.common.GameLogger
-import com.engine.common.extensions.getTextureRegion
+import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.getRandom
 import com.engine.common.objects.Properties
@@ -18,6 +18,8 @@ import com.engine.damage.IDamageable
 import com.engine.damage.IDamager
 import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
+import com.engine.drawables.sorting.DrawingPriority
+import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setCenter
@@ -45,10 +47,12 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEnt
 
     companion object {
         const val TAG = "Asteroid"
+        const val NORMAL = "Normal"
+        const val BLUE = "Blue"
         private const val MIN_ROTATION_SPEED = 0.5f
         private const val MAX_ROTATION_SPEED = 1.5f
         private const val DAMAGE_DUR = 0.1f
-        private var region: TextureRegion? = null
+        private val regions = ObjectMap<String, TextureRegion>()
     }
 
     override val invincible: Boolean
@@ -58,11 +62,16 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEnt
         // TODO: Add damage negotiations
     )
     private val damageTimer = Timer(DAMAGE_DUR)
+    private lateinit var type: String
     private var rotation = 0f
     private var rotationSpeed = 0f
 
     override fun init() {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Asteroid")
+        if (regions.isEmpty) {
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
+            regions.put(NORMAL, atlas.findRegion("$TAG/$NORMAL"))
+            regions.put(BLUE, atlas.findRegion("$TAG/$BLUE"))
+        }
         super<AbstractProjectile>.init()
         addComponent(definePointsComponent())
     }
@@ -84,6 +93,8 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEnt
         damageTimer.setToEnd()
 
         setHealth(getMaxHealth())
+
+        type = spawnProps.getOrDefault(ConstKeys.TYPE, NORMAL, String::class)
     }
 
     override fun hitBlock(blockFixture: IFixture) {
@@ -158,10 +169,12 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEnt
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(region!!)
+        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
         sprite.setSize(1.15f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { delta, _sprite ->
+            val region = regions.get(type)
+            _sprite.setRegion(region)
             _sprite.setCenter(body.getCenter())
             rotation += rotationSpeed * ConstVals.PPM * delta
             _sprite.setOriginCenter()
@@ -172,7 +185,8 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEnt
 
     private fun definePointsComponent(): PointsComponent {
         val pointsComponent = PointsComponent(this)
-        pointsComponent.putPoints( ConstKeys.HEALTH,
+        pointsComponent.putPoints(
+            ConstKeys.HEALTH,
             max = MegamanValues.START_HEALTH,
             current = MegamanValues.START_HEALTH,
             min = ConstVals.MIN_HEALTH
