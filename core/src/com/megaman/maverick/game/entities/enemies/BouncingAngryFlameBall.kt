@@ -33,7 +33,12 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
+import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
+import com.megaman.maverick.game.entities.projectiles.Bullet
+import com.megaman.maverick.game.entities.projectiles.ChargedShot
+import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import kotlin.reflect.KClass
@@ -48,7 +53,17 @@ class BouncingAngryFlameBall(game: MegamanMaverickGame) : AbstractEnemy(game), I
         private var region: TextureRegion? = null
     }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>()
+    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+        Bullet::class to dmgNeg(3),
+        Fireball::class to dmgNeg(1),
+        ChargedShot::class to dmgNeg {
+            it as ChargedShot
+            if (it.fullyCharged) 10 else 5
+        },
+        ChargedShotExplosion::class to dmgNeg {
+            it as ChargedShotExplosion
+            if (it.fullyCharged) 5 else 3
+        })
     override lateinit var facing: Facing
 
     private val bounceDelayTimer = Timer(BOUNCE_DELAY)
@@ -61,8 +76,8 @@ class BouncingAngryFlameBall(game: MegamanMaverickGame) : AbstractEnemy(game), I
     }
 
     override fun spawn(spawnProps: Properties) {
+        spawnProps.put(ConstKeys.DEATH_FIXTURE, false)
         super.spawn(spawnProps)
-        putProperty(ConstKeys.DIE, false)
         spawnBounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.setCenter(spawnBounds.getCenter())
         bounceDelayTimer.reset()
@@ -85,6 +100,9 @@ class BouncingAngryFlameBall(game: MegamanMaverickGame) : AbstractEnemy(game), I
 
         val damagerRixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.5f * ConstVals.PPM))
         body.addFixture(damagerRixture)
+
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameCircle().setRadius(0.5f * ConstVals.PPM))
+        body.addFixture(damageableFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT) { delta ->
             body.physics.gravityOn = !body.overlaps(spawnBounds as Rectangle)

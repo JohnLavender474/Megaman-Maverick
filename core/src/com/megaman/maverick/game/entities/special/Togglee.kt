@@ -15,6 +15,7 @@ import com.engine.common.enums.Position
 import com.engine.common.extensions.equalsAny
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.getTextureAtlas
+import com.engine.common.extensions.objectSetOf
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
@@ -31,6 +32,8 @@ import com.engine.drawables.sprites.setSize
 import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.*
+import com.engine.events.Event
+import com.engine.events.IEventListener
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.Body
 import com.engine.world.BodyComponent
@@ -43,13 +46,15 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntitySuppliers
+import com.megaman.maverick.game.entities.utils.overlapsGameCamera
+import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.setHitByProjectileReceiver
 
 class Togglee(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
-    IFontsEntity, IAudioEntity, IDirectionRotatable, IDamager, IParentEntity {
+    IFontsEntity, IAudioEntity, IDirectionRotatable, IDamager, IParentEntity, IEventListener {
 
     enum class ToggleeState {
         TOGGLED_ON, TOGGLED_OFF, TOGGLING_TO_ON, TOGGLING_TO_OFF;
@@ -69,6 +74,7 @@ class Togglee(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISprit
 
     override var children = Array<IGameEntity>()
     override lateinit var directionRotation: Direction
+    override val eventKeyMask = objectSetOf<Any>(EventType.PLAYER_SPAWN)
 
     val moving: Boolean
         get() = toggleeState.equalsAny(ToggleeState.TOGGLING_TO_ON, ToggleeState.TOGGLING_TO_OFF)
@@ -110,6 +116,7 @@ class Togglee(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISprit
     }
 
     override fun spawn(spawnProps: Properties) {
+        game.eventsMan.addListener(this)
         super.spawn(spawnProps)
 
         type = spawnProps.get(ConstKeys.TYPE, String::class)!!
@@ -145,10 +152,20 @@ class Togglee(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISprit
 
     override fun onDestroy() {
         super<GameEntity>.onDestroy()
+        game.eventsMan.removeListener(this)
         children.forEach { it.kill() }
         children.clear()
         offEntitySuppliers.clear()
         onEntitySuppliers.clear()
+    }
+
+    override fun onEvent(event: Event) {
+        when (event.key) {
+            EventType.PLAYER_SPAWN -> {
+                spawnEntities(false)
+                toggleeState = ToggleeState.TOGGLED_OFF
+            }
+        }
     }
 
     override fun canDamage(damageable: IDamageable) = type == ENEMY_TYPE
@@ -162,7 +179,6 @@ class Togglee(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISprit
             val entity = it.first.invoke()
             val props = it.second
             game.engine.spawn(entity, props)
-
             children.add(entity)
         }
     }
@@ -170,7 +186,7 @@ class Togglee(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISprit
     private fun switchToggleeState() {
         toggleeState = if (on) ToggleeState.TOGGLING_TO_OFF else ToggleeState.TOGGLING_TO_ON
         switchTimer.reset()
-        requestToPlaySound(SoundAsset.SELECT_PING_SOUND, false)
+        if (overlapsGameCamera()) requestToPlaySound(SoundAsset.SELECT_PING_SOUND, false)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent(this, { delta ->
@@ -265,5 +281,4 @@ class Togglee(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISprit
         )
         return FontsComponent(this, ConstKeys.DEFAULT to font)
     }
-
 }

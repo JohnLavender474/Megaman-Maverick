@@ -26,6 +26,7 @@ import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.IGameEntity
+import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
@@ -44,7 +45,8 @@ import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.getEntity
 import kotlin.math.abs
 
-class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable, IDirectionRotatable {
+class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IFaceable,
+    IDirectionRotatable {
 
     companion object {
         private var fullyChargedRegion: TextureRegion? = null
@@ -62,11 +64,10 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceab
         if (fullyChargedRegion == null)
             fullyChargedRegion =
                 game.assMan.getTextureRegion(TextureAsset.MEGAMAN_CHARGED_SHOT.source, "Shoot")
-
         if (halfChargedRegion == null)
             halfChargedRegion =
                 game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "HalfChargedShot")
-
+        super<AbstractProjectile>.init()
         addComponent(defineAnimationsComponent())
         addComponent(defineUpdatablesComponent())
     }

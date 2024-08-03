@@ -228,7 +228,7 @@ public enum BossType {
             return timerPairs;
         }
     },
-    REACT_MAN("React Man", Level.REACT_MAN, Position.BOTTOM_RIGHT, TextureAsset.MICROWAVE_MAN) {
+    REACT_MAN("React Man", Level.REACTOR_MAN, Position.BOTTOM_RIGHT, TextureAsset.MICROWAVE_MAN) {
         @Override
         public Vector2 getSpriteSize() {
             return new Vector2(2.85f, 2.5f);

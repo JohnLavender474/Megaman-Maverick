@@ -399,6 +399,38 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Bosses/MoonHeadMiniBoss/Angry.png</key>
+            <key type="filename">../frames/Bosses/MoonHeadMiniBoss/Blank.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>8,7,16,13</rect>
+                <key>scale9Paddings</key>
+                <rect>8,7,16,13</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses/MoonHeadMiniBoss/Awaken.png</key>
+            <key type="filename">../frames/Bosses/MoonHeadMiniBoss/Crumble.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>24,7,48,13</rect>
+                <key>scale9Paddings</key>
+                <rect>24,7,48,13</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Bosses/PenguinMiniBoss/PenguinMiniBoss.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>

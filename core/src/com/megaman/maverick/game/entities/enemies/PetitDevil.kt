@@ -78,13 +78,13 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             greenRegion = atlas.findRegion("PetitDevil/LargeGreen")
         }
         addComponent(DrawableShapesComponent(this))
-        setDebugShapes(true)
+        isDebugShapes = true
         super<AbstractEnemy>.init()
         addComponent(defineAnimationsComponent())
     }
 
     override fun spawn(spawnProps: Properties) {
-        spawnProps.put(ConstKeys.DIE, false)
+        spawnProps.put(ConstKeys.DEATH_FIXTURE, false)
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
 
         super.spawn(spawnProps)
@@ -212,13 +212,12 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
         }
         addComponent(DrawableShapesComponent(this))
         addDebugShapeSupplier { rotatingLine.line }
-        setDebugShapes(true)
+        isDebugShapes = true
         super<AbstractEnemy>.init()
         addComponent(defineAnimationsComponent())
     }
 
     override fun spawn(spawnProps: Properties) {
-        spawnProps.put(ConstKeys.DIE, false)
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
         super.spawn(spawnProps)
         parent = spawnProps.get(ConstKeys.PARENT, IGameEntity::class)!!
@@ -253,13 +252,18 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.5f * ConstVals.PPM)
+
         addDebugShapeSupplier { body }
+
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
+
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().set(body))
         body.addFixture(damagerFixture)
+
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().set(body))
         body.addFixture(damageableFixture)
+
         return BodyComponentCreator.create(this, body)
     }
 

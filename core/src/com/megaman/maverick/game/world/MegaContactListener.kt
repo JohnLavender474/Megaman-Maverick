@@ -83,9 +83,12 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
                     FixtureType.FEET, FixtureType.SIDE, FixtureType.HEAD, FixtureType.BODY
                 )
             )!!
+
             val entity = otherFixture.getEntity()
-            val canDie = entity.getOrDefaultProperty(ConstKeys.DIE, true, Boolean::class)
+
+            val canDie = entity.getOrDefaultProperty(ConstKeys.DEATH_FIXTURE, true, Boolean::class)
             if (!canDie) return
+
             val instant = deathFixture.getProperty(ConstKeys.INSTANT, Boolean::class) ?: false
             if (entity is IDamageable && (instant || !entity.invincible)) otherFixture.depleteHealth()
         }
@@ -463,9 +466,12 @@ class MegaContactListener(private val game: MegamanMaverickGame, private val con
                     FixtureType.FEET, FixtureType.SIDE, FixtureType.HEAD, FixtureType.BODY
                 )
             )!!
+
             val entity = bodyFixture.getEntity()
-            val canDie = entity.getOrDefaultProperty(ConstKeys.DIE, true, Boolean::class)
+
+            val canDie = entity.getOrDefaultProperty(ConstKeys.DEATH_FIXTURE, true, Boolean::class)
             if (!canDie) return
+
             val instant = deathFixture.getProperty(ConstKeys.INSTANT, Boolean::class) ?: false
             if (entity is IDamageable && (instant || !entity.invincible)) bodyFixture.depleteHealth()
         }

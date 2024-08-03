@@ -54,7 +54,7 @@ object ConstKeys {
     const val JUMP = "jump"
     const val DECORATIONS = "decorations"
     const val FILTER = "filter"
-    const val DIE = "die"
+    const val DEATH_FIXTURE = "death_fixture"
     const val GREEN = "green"
     const val ORANGE = "orange"
     const val GRAVITY_CHANGEABLE = "gravity_changeable"

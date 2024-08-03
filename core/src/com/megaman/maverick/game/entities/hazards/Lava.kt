@@ -159,11 +159,7 @@ class Lava(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesE
                 GameLogger.debug(TAG, "Moving to target: $moveTarget. Current pos: ${body.getCenter()}")
                 val direction = moveTarget.cpy().sub(body.getCenter()).nor()
                 body.physics.velocity.set(direction.scl(SPEED * ConstVals.PPM))
-                deathFixture.active = false
-            } else {
-                body.physics.velocity.set(0f, 0f)
-                deathFixture.active = true
-            }
+            } else body.physics.velocity.set(0f, 0f)
 
             (deathFixture.rawShape as GameRectangle).set(body)
         }

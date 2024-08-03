@@ -51,12 +51,15 @@ class RollingBotShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAni
     override fun init() {
         if (region == null)
             region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "RollingBotShot")
+        super<AbstractProjectile>.init()
         addComponent(defineAnimationsComponent())
     }
 
     override fun explodeAndDie(vararg params: Any?) {
         kill()
+
         if (overlapsGameCamera()) playSoundNow(SoundAsset.ENEMY_DAMAGE_SOUND, false)
+
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.CHARGED_SHOT_EXPLOSION)!!
         game.engine.spawn(
             explosion, props(
