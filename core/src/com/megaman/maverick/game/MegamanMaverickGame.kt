@@ -53,7 +53,6 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.MegaControllerPoller
 import com.megaman.maverick.game.controllers.loadButtons
-import com.megaman.maverick.game.entities.enemies.TestEnemy
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
@@ -86,7 +85,7 @@ class MegamanMaverickGame : Game2D(), IEventListener {
         const val DEBUG_TEXT = false
         const val DEBUG_SHAPES = true
         const val DEFAULT_VOLUME = 0.5f
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(TestEnemy.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.FEET, FixtureType.BLOCK)
         }
@@ -285,11 +284,11 @@ class MegamanMaverickGame : Game2D(), IEventListener {
             AnimationsSystem(),
             BehaviorsSystem(),
             WorldSystem(
-                MegaContactListener(this, CONTACT_LISTENER_DEBUG_FILTER),
-                { getGraphMap() },
-                ConstVals.FIXED_TIME_STEP,
-                MegaCollisionHandler(this),
-                objectMapOf(
+                contactListener = MegaContactListener(this, CONTACT_LISTENER_DEBUG_FILTER),
+                worldGraphSupplier = { getGraphMap() },
+                fixedStep = ConstVals.FIXED_TIME_STEP,
+                collisionHandler = MegaCollisionHandler(this),
+                contactFilterMap = objectMapOf(
                     FixtureType.CONSUMER to objectSetOf(*FixtureType.values()),
                     FixtureType.PLAYER to objectSetOf(FixtureType.ITEM),
                     FixtureType.DAMAGEABLE to objectSetOf(FixtureType.DAMAGER),
@@ -302,7 +301,9 @@ class MegamanMaverickGame : Game2D(), IEventListener {
                     FixtureType.SIDE to objectSetOf(
                         FixtureType.ICE, FixtureType.GATE, FixtureType.BLOCK, FixtureType.BOUNCER
                     ),
-                    FixtureType.FEET to objectSetOf(FixtureType.ICE, FixtureType.BLOCK, FixtureType.BOUNCER),
+                    FixtureType.FEET to objectSetOf(
+                        FixtureType.ICE, FixtureType.BLOCK, FixtureType.BOUNCER, FixtureType.SAND
+                    ),
                     FixtureType.HEAD to objectSetOf(FixtureType.BLOCK, FixtureType.BOUNCER),
                     FixtureType.PROJECTILE to objectSetOf(
                         FixtureType.BODY,
@@ -318,7 +319,9 @@ class MegamanMaverickGame : Game2D(), IEventListener {
             CullablesSystem(),
             MotionSystem(),
             PathfindingSystem(
-                { Pathfinder(getGraphMap()!!, it.params) }, timeout = 10, timeoutUnit = TimeUnit.MILLISECONDS
+                pathfinderFactory = { Pathfinder(getGraphMap()!!, it.params) },
+                timeout = 10,
+                timeoutUnit = TimeUnit.MILLISECONDS
             ),
             PointsSystem(),
             UpdatablesSystem(),

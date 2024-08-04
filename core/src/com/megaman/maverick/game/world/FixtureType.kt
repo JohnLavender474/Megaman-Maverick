@@ -9,6 +9,7 @@ enum class FixtureType {
     SIDE,
     ITEM,
     ICE,
+    SAND,
     GATE,
     LASER,
     WATER,
