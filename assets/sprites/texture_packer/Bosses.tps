@@ -264,6 +264,10 @@
             <key type="filename">../frames/Bosses/MicrowaveMan/OpenDoor.png</key>
             <key type="filename">../frames/Bosses/MicrowaveMan/Shoot.png</key>
             <key type="filename">../frames/Bosses/MisterMan/Jump.png</key>
+            <key type="filename">../frames/Bosses/MoonMan/jump.png</key>
+            <key type="filename">../frames/Bosses/MoonMan/jump_shoot.png</key>
+            <key type="filename">../frames/Bosses/MoonMan/stand.png</key>
+            <key type="filename">../frames/Bosses/MoonMan/taunt.png</key>
             <key type="filename">../frames/Bosses/ReactorMonkeyMiniBoss/Nuclear_Monkey_Ball.png</key>
             <key type="filename">../frames/Bosses/RoasterMan/Aim.png</key>
             <key type="filename">../frames/Bosses/RoasterMan/RetractWings.png</key>
@@ -289,6 +293,7 @@
             <key type="filename">../frames/Bosses/MisterMan/Flex.png</key>
             <key type="filename">../frames/Bosses/MisterMan/Squirt.png</key>
             <key type="filename">../frames/Bosses/MisterMan/Stand.png</key>
+            <key type="filename">../frames/Bosses/MoonMan/chest_throw.png</key>
             <key type="filename">../frames/Bosses/RoasterMan/CoolPose.png</key>
             <key type="filename">../frames/Bosses/RoasterMan/FallingWithStyle.png</key>
             <key type="filename">../frames/Bosses/RoasterMan/FlyFlap.png</key>
@@ -311,6 +316,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Bosses/FreezerMan/Opening.png</key>
+            <key type="filename">../frames/Bosses/MoonMan/stand_shoot.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

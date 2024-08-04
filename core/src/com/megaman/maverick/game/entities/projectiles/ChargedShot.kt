@@ -153,13 +153,11 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     override fun explodeAndDie(vararg params: Any?) {
         kill()
-        val e = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.CHARGED_SHOT_EXPLOSION)
-
+        val e = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.CHARGED_SHOT_EXPLOSION)!!
         val direction =
             if (abs(trajectory.y) > abs(trajectory.x))
                 (if (trajectory.y > 0f) Direction.UP else Direction.DOWN)
             else if (trajectory.x > 0f) Direction.RIGHT else Direction.LEFT
-
         val props =
             props(
                 ConstKeys.POSITION to body.getCenter(),
@@ -167,7 +165,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
                 ConstKeys.DIRECTION to direction,
                 ConstKeys.BOOLEAN to fullyCharged,
             )
-        game.engine.spawn(e!!, props)
+        game.engine.spawn(e, props)
     }
 
     private fun defineUpdatablesComponent() =

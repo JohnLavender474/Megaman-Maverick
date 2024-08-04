@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.maps.objects.RectangleMapObject
+import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.Disposable
@@ -99,7 +100,8 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
         EventType.BOSS_DEAD,
         EventType.MINI_BOSS_DEAD,
         EventType.VICTORY_EVENT,
-        EventType.END_LEVEL
+        EventType.END_LEVEL,
+        EventType.EDIT_TILED_MAP
     )
 
     val megamanGame: MegamanMaverickGame
@@ -286,8 +288,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
         backgrounds = result.get(ConstKeys.BACKGROUNDS) as Array<Background>? ?: Array()
 
         val playerSpawns =
-            result.get("${ConstKeys.PLAYER}_${ConstKeys.SPAWNS}") as Array<RectangleMapObject>?
-                ?: Array()
+            result.get("${ConstKeys.PLAYER}_${ConstKeys.SPAWNS}") as Array<RectangleMapObject>? ?: Array()
         playerSpawnsMan.set(playerSpawns)
 
         cameraManagerForRooms.gameRooms =
@@ -488,6 +489,15 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
                 eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
                 val nextScreen = LevelCompletionMap.getNextScreen(level!!)
                 game.setCurrentScreen(nextScreen.name)
+            }
+
+            EventType.EDIT_TILED_MAP -> {
+                GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Edit tiled map")
+                val editor = event.getProperty(ConstKeys.EDIT)!! as (TiledMap) -> Unit
+                tiledMap?.let {
+                    GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Invoking editor")
+                    editor.invoke(it)
+                }
             }
         }
     }

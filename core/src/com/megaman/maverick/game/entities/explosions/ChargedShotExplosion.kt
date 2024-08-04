@@ -7,7 +7,6 @@ import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.common.CAUSE_OF_DEATH_MESSAGE
 import com.engine.common.enums.Direction
-import com.engine.common.enums.Position
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.extensions.objectMapOf
@@ -20,7 +19,7 @@ import com.engine.drawables.sorting.DrawingPriority
 import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setPosition
+import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IAnimatedEntity
@@ -35,7 +34,6 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
@@ -121,7 +119,7 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(body.getCenter(), Position.CENTER)
+            _sprite.setOriginCenter()
             val rotation =
                 when (direction) {
                     Direction.RIGHT -> 0f
@@ -129,8 +127,8 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
                     Direction.LEFT -> 180f
                     Direction.DOWN -> 270f
                 }
-            _sprite.setOriginCenter()
             _sprite.rotation = rotation
+            _sprite.setCenter(body.getCenter())
         }
         return spritesComponent
     }

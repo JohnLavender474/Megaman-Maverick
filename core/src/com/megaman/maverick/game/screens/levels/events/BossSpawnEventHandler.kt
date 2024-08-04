@@ -35,8 +35,7 @@ class BossSpawnEventHandler(private val game: MegamanMaverickGame) : Updatable {
             game.engine.spawn(boss, bossSpawnProps)
             game.eventsMan.submitEvent(
                 Event(
-                    EventType.BEGIN_BOSS_SPAWN,
-                    props(ConstKeys.BOSS to boss)
+                    EventType.BEGIN_BOSS_SPAWN, props(ConstKeys.BOSS to boss)
                 )
             )
         }
@@ -46,7 +45,11 @@ class BossSpawnEventHandler(private val game: MegamanMaverickGame) : Updatable {
             game.eventsMan.submitEvent(Event(EventType.END_BOSS_SPAWN, props(ConstKeys.MINI to isMini)))
 
             if (!isMini) {
-                val music = MusicAsset.valueOf(bossSpawnProps.get(ConstKeys.MUSIC, String::class)!!)
+                val music = MusicAsset.valueOf(
+                    bossSpawnProps.getOrDefault(
+                        ConstKeys.MUSIC, MusicAsset.FF7_BOSS_MUSIC.name, String::class
+                    ).uppercase()
+                )
                 game.audioMan.playMusic(music, true)
             }
         }

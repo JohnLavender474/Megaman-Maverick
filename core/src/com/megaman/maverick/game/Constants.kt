@@ -23,6 +23,10 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val RISE = "rise"
+    const val EDIT = "edit"
+    const val SHOW = "show"
+    const val HIDE = "hide"
     const val FIRST = "first"
     const val AREA = "area"
     const val PROJECTILES = "projectiles"
