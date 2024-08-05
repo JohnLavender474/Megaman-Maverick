@@ -9,10 +9,8 @@ import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimator
-import com.engine.common.enums.Facing
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.interfaces.UpdateFunction
-import com.engine.common.interfaces.isFacing
 import com.engine.common.objects.Matrix
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
@@ -67,11 +65,11 @@ class QuickSand(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpr
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
         body.fixtures.forEach { ((it.second as Fixture).rawShape as GameRectangle).set(bounds) }
+        defineDrawables(bounds.splitByCellSize(ConstVals.PPM.toFloat()))
     }
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-
         val debugShapes = Array<() -> IDrawableShape?>()
 
         val sandFixture = Fixture(body, FixtureType.SAND, GameRectangle())
@@ -80,7 +78,6 @@ class QuickSand(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpr
         debugShapes.add { sandFixture.getShape() }
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
-
         return BodyComponentCreator.create(this, body)
     }
 
@@ -99,30 +96,14 @@ class QuickSand(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpr
             updateFunctions.put(key, UpdateFunction { _, _sprite ->
                 _sprite.setCenter(bounds!!.getCenter())
             })
-        }
 
-        for (row in 0 until rows) {
-            for (col in 0 until cols) {
-                val sprite = GameSprite()
-                sprite.setSize(ConstVals.PPM.toFloat())
+            var regionKey = if (x % 3 == 0) "Left" else if (x % 3 == 2) "Right" else "Center"
+            if (y == cells.rows - 1) regionKey = "Top$regionKey"
 
-                val key = "lava_$${col}_${row}"
-                sprites.put(key, sprite)
-
-                updateFunctions.put(key, UpdateFunction { _, _sprite ->
-                    _sprite.setCenter(bounds.getCenter())
-                    _sprite.setOriginCenter()
-                    _sprite.rotation = directionRotation.rotation
-                    _sprite.setFlip(isFacing(Facing.LEFT), false)
-                    _sprite.priority.section = drawingSection
-                    _sprite.priority.value = spritePriorityValue
-                })
-
-                val region = regions.get(type)
-                val animation = Animation(region!!, 1, 3, 0.1f, true)
-                val animator = Animator(animation)
-                animators.add({ sprite } to animator)
-            }
+            val region = regions.get(regionKey)
+            val animation = Animation(region!!, 1, 2, 0.25f, true)
+            val animator = Animator(animation)
+            animators.add({ sprite } to animator)
         }
 
         addComponent(SpritesComponent(this, sprites, updateFunctions))

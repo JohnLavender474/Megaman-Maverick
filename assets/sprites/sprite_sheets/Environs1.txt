@@ -1,7 +1,7 @@
 Environs1.png
 size: 960, 192
 format: RGBA8888
-filter: Linear,Linear
+filter: Nearest,Nearest
 repeat: none
 Leaves/SpringLeaf
   rotate: false
