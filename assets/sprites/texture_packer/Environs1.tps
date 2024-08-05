@@ -189,21 +189,12 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Environs1/Trees/Tree1.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>25,40,49,80</rect>
-                <key>scale9Paddings</key>
-                <rect>25,40,49,80</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
+            <key type="filename">../frames/Environs1/QuickSand/Center.png</key>
+            <key type="filename">../frames/Environs1/QuickSand/Left.png</key>
+            <key type="filename">../frames/Environs1/QuickSand/Right.png</key>
+            <key type="filename">../frames/Environs1/QuickSand/TopCenter.png</key>
+            <key type="filename">../frames/Environs1/QuickSand/TopLeft.png</key>
+            <key type="filename">../frames/Environs1/QuickSand/TopRight.png</key>
             <key type="filename">../frames/Environs1/Water/Surface.png</key>
             <key type="filename">../frames/Environs1/Water/Under.png</key>
             <struct type="IndividualSpriteSettings">
@@ -217,6 +208,21 @@
                 <rect>16,8,32,16</rect>
                 <key>scale9Paddings</key>
                 <rect>16,8,32,16</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Environs1/Trees/Tree1.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>25,40,49,80</rect>
+                <key>scale9Paddings</key>
+                <rect>25,40,49,80</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

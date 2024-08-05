@@ -84,16 +84,16 @@ class PolygonWater(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, I
     private fun defineDrawables(cells: Matrix<GameRectangle>) {
         val sprites = OrderedMap<String, GameSprite>()
         val animators = Array<Pair<() -> GameSprite, IAnimator>>()
-        cells.forEach { x, y, gameRectangle ->
-            if (gameRectangle == null) return@forEach
+        cells.forEach { x, y, bounds ->
+            if (bounds == null) return@forEach
 
             val blueSprite = GameSprite(blueReg!!, DrawingPriority(DrawingSection.FOREGROUND, 10))
-            blueSprite.setBounds(gameRectangle.x, gameRectangle.y, gameRectangle.width, gameRectangle.height)
+            blueSprite.setBounds(bounds.x, bounds.y, bounds.width, bounds.height)
             blueSprite.setAlpha(WATER_ALPHA)
             sprites.put("blue_${x}_${y}", blueSprite)
 
             val waterSprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
-            waterSprite.setBounds(gameRectangle.x, gameRectangle.y, gameRectangle.width, gameRectangle.height)
+            waterSprite.setBounds(bounds.x, bounds.y, bounds.width, bounds.height)
             waterSprite.setAlpha(WATER_ALPHA)
             sprites.put("water_${x}_${y}", waterSprite)
 
