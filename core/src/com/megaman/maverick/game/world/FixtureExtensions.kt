@@ -2,10 +2,13 @@ package com.megaman.maverick.game.world
 
 import com.engine.common.enums.ProcessState
 import com.engine.entities.contracts.IBodyEntity
+import com.engine.world.Body
 import com.engine.world.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.utils.VelocityAlteration
+
+fun IFixture.getBody(): Body = getEntity().body
 
 fun IFixture.setEntity(entity: IBodyEntity): IFixture {
     properties.put(ConstKeys.ENTITY, entity)

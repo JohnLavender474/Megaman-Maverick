@@ -35,10 +35,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.VelocityAlterationType
 import com.megaman.maverick.game.utils.getMegamanMaverickGame
-import com.megaman.maverick.game.world.BodyComponentCreator
-import com.megaman.maverick.game.world.BodySense
-import com.megaman.maverick.game.world.FixtureType
-import com.megaman.maverick.game.world.isSensing
+import com.megaman.maverick.game.world.*
 import kotlin.reflect.KClass
 
 class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {

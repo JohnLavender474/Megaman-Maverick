@@ -37,10 +37,7 @@ import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
-import com.megaman.maverick.game.world.BodyComponentCreator
-import com.megaman.maverick.game.world.FixtureType
-import com.megaman.maverick.game.world.getEntity
-import com.megaman.maverick.game.world.hasBlockFilter
+import com.megaman.maverick.game.world.*
 import kotlin.reflect.KClass
 
 class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity, IDamageable {

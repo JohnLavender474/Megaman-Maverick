@@ -529,7 +529,7 @@ class MegaContactListener(
             val feetEntity = feetFixture.getEntity()
 
             val feetDirection = if (feetEntity is IDirectionRotatable) feetEntity.directionRotation else Direction.UP
-            val feetPoint = when (feetDirection) {
+            val feetPoint = when (feetDirection!!) {
                 Direction.UP -> feetFixture.getShape().getBoundingRectangle().getBottomCenterPoint()
                 Direction.DOWN -> feetFixture.getShape().getBoundingRectangle().getTopCenterPoint()
                 Direction.LEFT -> feetFixture.getShape().getBoundingRectangle().getCenterRightPoint()
@@ -548,7 +548,7 @@ class MegaContactListener(
             val headEntity = headFixture.getEntity()
 
             val headDirection = if (headEntity is IDirectionRotatable) headEntity.directionRotation else Direction.UP
-            val headPoint = when (headDirection) {
+            val headPoint = when (headDirection!!) {
                 Direction.UP -> headFixture.getShape().getBoundingRectangle().getTopCenterPoint()
                 Direction.DOWN -> headFixture.getShape().getBoundingRectangle().getBottomCenterPoint()
                 Direction.LEFT -> headFixture.getShape().getBoundingRectangle().getCenterLeftPoint()

@@ -39,6 +39,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
+import com.megaman.maverick.game.world.getBody
 
 class SigmaRatElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
 

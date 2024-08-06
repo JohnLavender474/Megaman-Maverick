@@ -74,15 +74,20 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
 
     override var facing = Facing.RIGHT
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(10), Fireball::class to dmgNeg(ConstVals.MAX_HEALTH), ChargedShot::class to dmgNeg {
+        Bullet::class to dmgNeg(10),
+        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class to dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
-        }, ChargedShotExplosion::class to dmgNeg(ConstVals.MAX_HEALTH)
+        },
+        ChargedShotExplosion::class to dmgNeg {
+            it as ChargedShotExplosion
+            if (it.fullyCharged) 15 else 5
+        }
     )
+    override var directionRotation: Direction? = Direction.UP
 
     val shooting: Boolean get() = !shootTimer.isFinished()
-
-    override var directionRotation = Direction.UP
 
     private val waitTimer = Timer(WAIT_DURATION)
     private val shootTimer = Timer(SHOOT_DURATION)
@@ -235,7 +240,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
     }
 
     private fun shoot() {
-        @Suppress("DuplicatedCode") val spawn = (when (directionRotation) {
+        @Suppress("DuplicatedCode") val spawn = (when (directionRotation!!) {
             Direction.UP -> Vector2(0.25f * facing.value, 0.15f)
             Direction.DOWN -> Vector2(0.25f * facing.value, -0.15f)
             Direction.LEFT -> Vector2(-0.2f, 0.25f * facing.value)
