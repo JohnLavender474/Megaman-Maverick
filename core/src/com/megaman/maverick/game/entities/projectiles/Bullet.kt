@@ -41,7 +41,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
         private var bulletRegion: TextureRegion? = null
     }
 
-    override lateinit var directionRotation: Direction
+    override var directionRotation: Direction? = null
 
     private var bounced = 0
 
@@ -89,8 +89,8 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
         val deflection = shieldFixture.getOrDefaultProperty(ConstKeys.DIRECTION, Direction.UP, Direction::class)
         when (deflection) {
             Direction.UP -> {
-                when (directionRotation) {
-                    Direction.UP -> trajectory.y = 5f * ConstVals.PPM
+                when (directionRotation!!) {
+                    Direction.UP, null -> trajectory.y = 5f * ConstVals.PPM
                     Direction.DOWN -> trajectory.y = -5f * ConstVals.PPM
                     Direction.LEFT -> trajectory.x = -5f * ConstVals.PPM
                     Direction.RIGHT -> trajectory.x = 5f * ConstVals.PPM
@@ -98,8 +98,8 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
             }
 
             Direction.DOWN -> {
-                when (directionRotation) {
-                    Direction.UP -> trajectory.y = -5f * ConstVals.PPM
+                when (directionRotation!!) {
+                    Direction.UP, null -> trajectory.y = -5f * ConstVals.PPM
                     Direction.DOWN -> trajectory.y = 5f * ConstVals.PPM
                     Direction.LEFT -> trajectory.x = 5f * ConstVals.PPM
                     Direction.RIGHT -> trajectory.x = -5f * ConstVals.PPM
@@ -149,7 +149,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getCenter(), Position.CENTER)
-            val rotation = if (directionRotation.isVertical()) 0f else 90f
+            val rotation = if (directionRotation?.isVertical() == true) 0f else 90f
             _sprite.setOriginCenter()
             _sprite.rotation = rotation
         }

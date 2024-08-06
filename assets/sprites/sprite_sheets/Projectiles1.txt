@@ -1,5 +1,5 @@
 Projectiles1.png
-size: 1632, 560
+size: 1656, 560
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -157,6 +157,13 @@ PreciousShot/Shoot
   orig: 108, 36
   offset: 0, 0
   index: -1
+Prickly
+  rotate: false
+  xy: 1112, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 PurpleBlast/Blast
   rotate: false
   xy: 432, 32
@@ -187,7 +194,7 @@ ReactManProjectile/Die
   index: -1
 ReactManProjectile/Small
   rotate: false
-  xy: 1112, 0
+  xy: 1144, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -201,49 +208,49 @@ RocketBomb
   index: -1
 RollingBotShot
   rotate: false
-  xy: 1144, 0
+  xy: 1176, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 Snowball
   rotate: false
-  xy: 1208, 0
+  xy: 1240, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SnowballForm
   rotate: false
-  xy: 1240, 0
+  xy: 1272, 0
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 SnowJoeball
   rotate: false
-  xy: 1336, 0
+  xy: 1368, 0
   size: 128, 32
   orig: 128, 32
   offset: 0, 0
   index: -1
 SpiderWeb/BlinkWhite
   rotate: false
-  xy: 1464, 0
+  xy: 1496, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 SpiderWeb/Gray
   rotate: false
-  xy: 1528, 0
+  xy: 1560, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SpiderWeb/White
   rotate: false
-  xy: 1560, 0
+  xy: 1592, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -257,7 +264,7 @@ ToxicGoopShot
   index: -1
 TubeBeam
   rotate: false
-  xy: 1592, 0
+  xy: 1624, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

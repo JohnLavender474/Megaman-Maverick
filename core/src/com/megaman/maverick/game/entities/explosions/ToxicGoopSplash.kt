@@ -52,7 +52,7 @@ class ToxicGoopSplash(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity
     }
 
     override var owner: IGameEntity? = null
-    override lateinit var directionRotation: Direction
+    override var directionRotation: Direction? = null
 
     private val splashTimer = Timer(SPLASH_DUR)
 
@@ -71,8 +71,8 @@ class ToxicGoopSplash(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity
         owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
         directionRotation = spawnProps.getOrDefaultNotNull(ConstKeys.DIRECTION, Direction.UP, Direction::class)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-        when (directionRotation) {
-            Direction.UP -> body.setBottomCenterToPoint(spawn)
+        when (directionRotation!!) {
+            Direction.UP, null -> body.setBottomCenterToPoint(spawn)
             Direction.DOWN -> body.setTopCenterToPoint(spawn)
             Direction.LEFT -> body.setCenterRightToPoint(spawn)
             Direction.RIGHT -> body.setCenterLeftToPoint(spawn)
@@ -107,7 +107,7 @@ class ToxicGoopSplash(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
             _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation.rotation
+            _sprite.rotation = directionRotation?.rotation ?: 0f
         }
         return spritesComponent
     }

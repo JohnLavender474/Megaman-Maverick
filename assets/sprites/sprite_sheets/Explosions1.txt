@@ -1,11 +1,11 @@
 Explosions1.png
-size: 880, 104
+size: 880, 194
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Linear,Linear
 repeat: none
 AsteroidExplosion
   rotate: false
-  xy: 832, 32
+  xy: 480, 0
   size: 48, 72
   orig: 48, 72
   offset: 0, 0
@@ -19,16 +19,23 @@ Disintegration
   index: -1
 Explosion
   rotate: false
-  xy: 0, 32
+  xy: 170, 72
   size: 704, 64
   orig: 704, 64
   offset: 0, 0
   index: -1
 ExplosionOrbs
   rotate: false
-  xy: 704, 32
+  xy: 752, 0
   size: 128, 64
   orig: 128, 64
+  offset: 0, 0
+  index: -1
+GreenExplosion
+  rotate: false
+  xy: 0, 72
+  size: 170, 122
+  orig: 170, 122
   offset: 0, 0
   index: -1
 HalfChargedShot
@@ -47,14 +54,14 @@ PreciousExplosion
   index: -1
 SmokePuff
   rotate: false
-  xy: 384, 0
+  xy: 528, 0
   size: 224, 32
   orig: 224, 32
   offset: 0, 0
   index: -1
 SnowballExplode
   rotate: false
-  xy: 608, 0
+  xy: 384, 0
   size: 96, 32
   orig: 96, 32
   offset: 0, 0

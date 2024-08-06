@@ -36,7 +36,6 @@ import com.megaman.maverick.game.entities.factories.impl.ItemsFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.utils.*
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.utils.getMegamanMaverickGame
 import com.megaman.maverick.game.utils.toGameRectangle
 import kotlin.reflect.KClass
 
@@ -73,10 +72,13 @@ abstract class AbstractEnemy(
         addComponent(defineSpritesComponent())
         addComponent(AudioComponent(this))
         addComponent(CullablesComponent(this))
+
         val updatablesComponent = UpdatablesComponent(this)
         defineUpdatablesComponent(updatablesComponent)
         addComponent(updatablesComponent)
+
         runnablesOnSpawn.add { setHealth(getMaxHealth()) }
+
         runnablesOnDestroy.add {
             if (hasDepletedHealth()) {
                 disintegrate()
@@ -105,6 +107,7 @@ abstract class AbstractEnemy(
                 }
             }
         }
+
         setStandardOnPortalHopperStartProp(this)
         setStandardOnPortalHopperEndProp(this)
     }
@@ -165,10 +168,14 @@ abstract class AbstractEnemy(
     override fun takeDamageFrom(damager: IDamager): Boolean {
         val damagerKey = damager::class
         if (!damageNegotiations.containsKey(damagerKey)) return false
+
         damageTimer.reset()
+
         val damage = damageNegotiations[damagerKey].get(damager)
         if (damage <= 0) return false
+
         translateHealth(-damage)
+
         requestToPlaySound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
         return true
     }
@@ -209,6 +216,5 @@ abstract class AbstractEnemy(
         return body.x < megaman.body.x && megaman.facing == Facing.LEFT || body.x > megaman.body.x && megaman.facing == Facing.RIGHT
     }
 
-    open fun isInGameCamBounds() =
-        getMegamanMaverickGame().getGameCamera().toGameRectangle().overlaps(body as Rectangle)
+    open fun isInGameCamBounds() = getGameCamera().toGameRectangle().overlaps(body as Rectangle)
 }

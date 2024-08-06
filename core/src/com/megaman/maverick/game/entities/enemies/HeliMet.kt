@@ -85,7 +85,7 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         ChargedShotExplosion::class to dmgNeg(ConstVals.MAX_HEALTH)
     )
 
-    override lateinit var directionRotation: Direction
+    override var directionRotation: Direction? = null
     override lateinit var facing: Facing
 
     private val popUpTimer = Timer(POP_UP_DUR)
@@ -133,7 +133,7 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
             else -> direction as Direction
         }
 
-        facing = when (directionRotation) {
+        facing = when (directionRotation!!) {
             Direction.UP -> if (target.x < body.x) Facing.LEFT else Facing.RIGHT
             Direction.DOWN -> if (target.x < body.x) Facing.RIGHT else Facing.LEFT
             Direction.LEFT -> if (target.y < body.y) Facing.LEFT else Facing.RIGHT
@@ -166,7 +166,7 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
                 }
 
                 FLY -> {
-                    facing = when (directionRotation) {
+                    facing = when (directionRotation!!) {
                         Direction.UP -> if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
                         Direction.DOWN -> if (megaman.body.x < body.x) Facing.RIGHT else Facing.LEFT
                         Direction.LEFT -> if (megaman.body.y < body.y) Facing.LEFT else Facing.RIGHT
@@ -175,7 +175,7 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
                     sideToSideTimer.update(delta)
 
-                    when (directionRotation) {
+                    when (directionRotation!!) {
                         Direction.UP -> {
                             val velocityX = SIDE_TO_SIDE_VEL * ConstVals.PPM * sideToSideTimer.getValue()
                             body.physics.velocity.x = velocityX
@@ -244,14 +244,14 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
             _sprite.hidden = damageBlink
             _sprite.setCenter(body.getCenter())
 
-            if (directionRotation.isVertical())
+            if (directionRotation!!.isVertical())
                 _sprite.setFlip(isFacing(Facing.LEFT), false)
             else _sprite.setFlip(false, isFacing(Facing.LEFT))
 
             _sprite.setOriginCenter()
             val rotation = if (state == SHIELD)
                 _sprite.rotation + (SHIELD_ROTATION_PER_SECOND * delta)
-            else directionRotation.rotation
+            else directionRotation?.rotation ?: 0f
             _sprite.rotation = rotation
         }
         return spritesComponent
@@ -275,7 +275,7 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     }
 
     private fun shoot() {
-        val spawn = when (directionRotation) {
+        val spawn = when (directionRotation!!) {
             Direction.UP -> body.getCenter()
                 .add(
                     (ConstVals.PPM / 64f) * facing.value, -0.25f * ConstVals.PPM

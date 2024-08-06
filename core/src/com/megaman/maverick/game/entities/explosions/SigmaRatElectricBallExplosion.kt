@@ -51,7 +51,7 @@ class SigmaRatElectricBallExplosion(game: MegamanMaverickGame) : GameEntity(game
         private var dissipateRegion: TextureRegion? = null
     }
 
-    override var directionRotation: Direction
+    override var directionRotation: Direction?
         get() = body.cardinalRotation
         set(value) {
             body.cardinalRotation = value
@@ -96,7 +96,7 @@ class SigmaRatElectricBallExplosion(game: MegamanMaverickGame) : GameEntity(game
         body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.rotatedBounds }
+        debugShapes.add { body.getBodyBounds() }
 
         val damagerFixture = Fixture(
             body, FixtureType.DAMAGER, GameRectangle().setSize(
@@ -120,7 +120,7 @@ class SigmaRatElectricBallExplosion(game: MegamanMaverickGame) : GameEntity(game
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
             _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation.rotation
+            _sprite.rotation = directionRotation?.rotation ?: 0f
         }
         return spritesComponent
     }
@@ -134,5 +134,4 @@ class SigmaRatElectricBallExplosion(game: MegamanMaverickGame) : GameEntity(game
         val animator = Animator(keySuppplier, animations)
         return AnimationsComponent(this, animator)
     }
-
 }

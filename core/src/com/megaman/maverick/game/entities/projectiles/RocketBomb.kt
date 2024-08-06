@@ -42,7 +42,7 @@ class RocketBomb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
         private var region: TextureRegion? = null
     }
 
-    override lateinit var directionRotation: Direction
+    override var directionRotation: Direction? = null
 
     override fun init() {
         if (region == null)
@@ -57,7 +57,7 @@ class RocketBomb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
         directionRotation = getSingleMostDirectionFromStartToTarget(spawn, getMegaman().body.getCenter())
-        body.physics.velocity = Vector2(0f, SPEED * ConstVals.PPM).rotateDeg(directionRotation.rotation)
+        body.physics.velocity = Vector2(0f, SPEED * ConstVals.PPM).rotateDeg(directionRotation?.rotation ?: 0f)
     }
 
     override fun hitBody(bodyFixture: IFixture) = explodeAndDie()
@@ -82,7 +82,7 @@ class RocketBomb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
         body.setSize(0.75f * ConstVals.PPM, 1.25f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.rotatedBounds }
+        debugShapes.add { body.getBodyBounds() }
 
         val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameRectangle(body))
         body.addFixture(projectileFixture)
@@ -103,7 +103,7 @@ class RocketBomb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())
             _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation.rotation
+            _sprite.rotation = directionRotation?.rotation ?: 0f
         }
         return spritesComponent
     }

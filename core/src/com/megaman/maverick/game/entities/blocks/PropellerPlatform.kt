@@ -40,7 +40,7 @@ class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity,
         EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.END_ROOM_TRANS
     )
 
-    override lateinit var directionRotation: Direction
+    override var directionRotation: Direction? = null
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "PropellerPlatform")
@@ -91,9 +91,9 @@ class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity,
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation.rotation
-            val position = when (directionRotation) {
-                Direction.UP -> Position.TOP_CENTER
+            _sprite.rotation = directionRotation?.rotation ?: 0f
+            val position = when (directionRotation!!) {
+                Direction.UP, null -> Position.TOP_CENTER
                 Direction.DOWN -> Position.BOTTOM_CENTER
                 Direction.LEFT -> Position.CENTER_LEFT
                 Direction.RIGHT -> Position.CENTER_RIGHT

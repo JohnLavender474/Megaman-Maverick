@@ -60,7 +60,7 @@ class Lava(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesE
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    override lateinit var directionRotation: Direction
+    override var directionRotation: Direction? = null
     override lateinit var facing: Facing
 
     private val moving: Boolean
@@ -186,7 +186,7 @@ class Lava(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesE
                     val bounds = bodyMatrix[col, row]!!
                     _sprite.setCenter(bounds.getCenter())
                     _sprite.setOriginCenter()
-                    _sprite.rotation = directionRotation.rotation
+                    _sprite.rotation = directionRotation?.rotation ?: 0f
                     _sprite.setFlip(isFacing(Facing.LEFT), false)
                     _sprite.priority.section = drawingSection
                     _sprite.priority.value = spritePriorityValue

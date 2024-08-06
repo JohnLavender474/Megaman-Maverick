@@ -66,7 +66,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
         ChargedShotExplosion::class to dmgNeg(ConstVals.MAX_HEALTH)
     )
 
-    override lateinit var directionRotation: Direction
+    override var directionRotation: Direction? = null
     override lateinit var facing: Facing
 
     private val behaviorTimer = Timer(CHANGE_BEHAV_DUR)
@@ -133,8 +133,8 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
 
             when (currentBehavior) {
                 DragonFlyBehavior.MOVE_UP -> {
-                    when (directionRotation) {
-                        Direction.UP -> {
+                    when (directionRotation!!) {
+                        Direction.UP, null -> {
                             body.physics.velocity.set(0f, VERT_SPEED * ConstVals.PPM)
                             oobScannerFixture.offsetFromBodyCenter.set(0f, VERT_SCANNER_OFFSET * ConstVals.PPM)
                         }
@@ -221,7 +221,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
             _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation.rotation
+            _sprite.rotation = directionRotation?.rotation ?: 0f
             _sprite.setPosition(body.getCenter(), Position.CENTER)
             if (currentBehavior == DragonFlyBehavior.MOVE_UP || currentBehavior == DragonFlyBehavior.MOVE_DOWN) {
                 facing = if (isMegamanLeft()) Facing.LEFT else Facing.RIGHT

@@ -80,7 +80,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
 
     override lateinit var facing: Facing
 
-    override var directionRotation: Direction
+    override var directionRotation: Direction?
         get() = body.cardinalRotation
         set(value) {
             body.cardinalRotation = value
@@ -148,7 +148,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
     private fun shoot() {
         GameLogger.debug(TAG, "Met is shooting")
 
-        val trajectory = (when (directionRotation) {
+        val trajectory = (when (directionRotation!!) {
             Direction.UP -> Vector2(BULLET_TRAJECTORY_X * facing.value, BULLET_TRAJECTORY_Y)
             Direction.DOWN -> Vector2(BULLET_TRAJECTORY_X * facing.value, -BULLET_TRAJECTORY_Y)
             Direction.LEFT -> Vector2(BULLET_TRAJECTORY_Y, BULLET_TRAJECTORY_X * facing.value)
@@ -173,7 +173,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
 
             when (behavior) {
                 MetBehavior.SHIELDING -> {
-                    when (directionRotation) {
+                    when (directionRotation!!) {
                         Direction.UP, Direction.DOWN -> body.physics.velocity.x = 0f
                         Direction.LEFT, Direction.RIGHT -> body.physics.velocity.y = 0f
                     }
@@ -188,7 +188,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
                         return@add
                     }
 
-                    facing = when (directionRotation) {
+                    facing = when (directionRotation!!) {
                         Direction.UP, Direction.DOWN -> if (megaman.body.x > body.x) Facing.RIGHT else Facing.LEFT
                         Direction.LEFT, Direction.RIGHT -> if (megaman.body.y > body.y) Facing.RIGHT else Facing.LEFT
                     }
@@ -210,7 +210,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
 
                     val runImpulse =
                         ConstVals.PPM * facing.value * if (body.isSensing(BodySense.IN_WATER)) (runSpeed / 2f) else runSpeed
-                    when (directionRotation) {
+                    when (directionRotation!!) {
                         Direction.UP, Direction.DOWN -> body.physics.velocity.x = runImpulse
                         Direction.LEFT, Direction.RIGHT -> body.physics.velocity.y = runImpulse
                     }
@@ -258,7 +258,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
                 else Vector2(VELOCITY_CLAMP_Y, VELOCITY_CLAMP_X)).scl(ConstVals.PPM.toFloat())
 
             val gravity = (if (body.isSensing(BodySense.FEET_ON_GROUND)) GRAVITY_ON_GROUND else GRAVITY_IN_AIR)
-            body.physics.gravity = (when (directionRotation) {
+            body.physics.gravity = (when (directionRotation!!) {
                 Direction.UP -> Vector2(0f, -gravity)
                 Direction.DOWN -> Vector2(0f, gravity)
                 Direction.LEFT -> Vector2(gravity, 0f)
@@ -288,7 +288,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
             val flipY = directionRotation == Direction.DOWN
             _sprite.setFlip(flipX, flipY)
 
-            val rotation = when (directionRotation) {
+            val rotation = when (directionRotation!!) {
                 Direction.UP, Direction.DOWN -> 0f
 
                 Direction.LEFT -> 90f
@@ -297,8 +297,8 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
             sprite.setOriginCenter()
             _sprite.rotation = rotation
 
-            val position = when (directionRotation) {
-                Direction.UP -> Position.BOTTOM_CENTER
+            val position = when (directionRotation!!) {
+                Direction.UP, null -> Position.BOTTOM_CENTER
                 Direction.DOWN -> Position.TOP_CENTER
                 Direction.LEFT -> Position.CENTER_RIGHT
                 Direction.RIGHT -> Position.CENTER_LEFT

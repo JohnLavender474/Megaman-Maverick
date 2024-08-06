@@ -83,7 +83,7 @@ class MegamanMaverickGame : Game2D(), IEventListener {
     companion object {
         const val TAG = "MegamanMaverickGame"
         const val DEBUG_TEXT = false
-        const val DEBUG_SHAPES = true
+        const val DEBUG_SHAPES = false
         const val DEFAULT_VOLUME = 0.5f
         val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
@@ -180,6 +180,8 @@ class MegamanMaverickGame : Game2D(), IEventListener {
         megaman.initialized = true
 
         megamanUpgradeHandler = MegamanUpgradeHandler(state, megaman)
+
+        // Megaman should have all upgrades at the start of the game
         megamanUpgradeHandler.add(MegaAbility.CHARGE_WEAPONS)
         megamanUpgradeHandler.add(MegaAbility.AIR_DASH)
         megamanUpgradeHandler.add(MegaAbility.GROUND_SLIDE)
@@ -196,13 +198,13 @@ class MegamanMaverickGame : Game2D(), IEventListener {
         screens.put(ScreenEnum.SIMPLE_END_LEVEL_SUCCESSFULLY_SCREEN.name, SimpleEndLevelScreen(this))
         screens.put(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name, SimpleInitGameScreen(this))
 
-        // startLevelScreen(Level.MOON_MAN)
+        startLevelScreen(Level.MOON_MAN)
         // startLevelScreen(Level.INFERNO_MAN)
         // startLevelScreen(Level.REACTOR_MAN)
         // startLevelScreen(Level.FREEZE_MAN)
 
         // TEST LEVELS
-        startLevelScreen(Level.TEST1)
+        // startLevelScreen(Level.TEST1)
     }
 
     override fun onEvent(event: Event) {

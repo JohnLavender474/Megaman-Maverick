@@ -58,7 +58,7 @@ class Imorm(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
     )
 
     override lateinit var facing: Facing
-    override lateinit var directionRotation: Direction
+    override var directionRotation: Direction? = null
 
     private val slitherTimer = Timer(SLITHER_DURATION)
     override fun init() {

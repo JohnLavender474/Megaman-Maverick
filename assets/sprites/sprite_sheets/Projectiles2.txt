@@ -1,0 +1,12 @@
+Projectiles2.png
+size: 35, 42
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+SmallGreenMissile
+  rotate: false
+  xy: 0, 0
+  size: 35, 42
+  orig: 35, 42
+  offset: 0, 0
+  index: -1

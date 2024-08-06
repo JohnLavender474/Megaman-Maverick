@@ -80,7 +80,7 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         ChargedShotExplosion::class to dmgNeg(ConstVals.MAX_HEALTH)
     )
 
-    override var directionRotation: Direction
+    override var directionRotation: Direction?
         get() = body.cardinalRotation
         set(value) {
             body.cardinalRotation = value
@@ -236,7 +236,7 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
             val flipY = directionRotation == Direction.DOWN
             _sprite.setFlip(flipX, flipY)
 
-            val rotation = when (directionRotation) {
+            val rotation = when (directionRotation!!) {
                 Direction.UP, Direction.DOWN -> 0f
 
                 Direction.LEFT -> 90f
@@ -245,7 +245,7 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
             sprite.setOriginCenter()
             _sprite.rotation = rotation
 
-            val position = when (directionRotation) {
+            val position = when (directionRotation!!) {
                 Direction.UP -> Position.BOTTOM_CENTER
                 Direction.DOWN -> Position.TOP_CENTER
                 Direction.LEFT -> Position.CENTER_RIGHT

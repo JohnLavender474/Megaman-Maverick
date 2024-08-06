@@ -1,7 +1,7 @@
 Enemies2.png
-size: 512, 1604
+size: 512, 1729
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Linear,Linear
 repeat: none
 Adamski/Blue
   rotate: false
@@ -26,7 +26,7 @@ Adamski/Purple
   index: -1
 AngryFlameBall
   rotate: false
-  xy: 132, 1144
+  xy: 132, 1269
   size: 366, 188
   orig: 366, 188
   offset: 0, 0
@@ -59,6 +59,13 @@ BigJumpingJoe/Stand
   orig: 64, 64
   offset: 0, 0
   index: -1
+Bomb Potton
+  rotate: false
+  xy: 240, 752
+  size: 148, 125
+  orig: 148, 125
+  offset: 0, 0
+  index: -1
 BulbBlaster/Dark
   rotate: false
   xy: 64, 32
@@ -89,14 +96,14 @@ CartinJoe/Shoot
   index: -1
 CaveRocker/Stand
   rotate: false
-  xy: 240, 752
+  xy: 0, 877
   size: 256, 128
   orig: 256, 128
   offset: 0, 0
   index: -1
 CaveRocker/Throw
   rotate: false
-  xy: 0, 880
+  xy: 0, 1005
   size: 384, 128
   orig: 384, 128
   offset: 0, 0
@@ -250,21 +257,21 @@ Imorm
   index: -1
 JetMet/Jet
   rotate: false
-  xy: 96, 1332
+  xy: 96, 1457
   size: 264, 272
   orig: 264, 272
   offset: 0, 0
   index: -1
 JetMet/Stand
   rotate: false
-  xy: 256, 1008
+  xy: 256, 1133
   size: 132, 136
   orig: 132, 136
   offset: 0, 0
   index: -1
 JetMet/TakeOff
   rotate: false
-  xy: 0, 1144
+  xy: 0, 1269
   size: 132, 136
   orig: 132, 136
   offset: 0, 0
@@ -299,21 +306,21 @@ RingRing/Red
   index: -1
 Robbit/Crouch
   rotate: false
-  xy: 384, 880
+  xy: 384, 1005
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 Robbit/Jump
   rotate: false
-  xy: 0, 1008
+  xy: 0, 1133
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 Robbit/Stand
   rotate: false
-  xy: 128, 1008
+  xy: 128, 1133
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
@@ -411,7 +418,7 @@ ToxicBarrelBot/Closed
   index: -1
 ToxicBarrelBot/OpenCenter
   rotate: false
-  xy: 0, 1332
+  xy: 0, 1457
   size: 96, 192
   orig: 96, 192
   offset: 0, 0

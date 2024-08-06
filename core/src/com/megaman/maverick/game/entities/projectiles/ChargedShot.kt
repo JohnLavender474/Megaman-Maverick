@@ -54,7 +54,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     }
 
     override var facing = Facing.RIGHT
-    override lateinit var directionRotation: Direction
+    override var directionRotation: Direction? = null
     var fullyCharged = false
         private set
 
@@ -91,7 +91,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         trajectory = spawnProps.get(ConstKeys.TRAJECTORY) as Vector2
 
         facing =
-            if (directionRotation.isVertical()) if (trajectory.x > 0f) Facing.RIGHT else Facing.LEFT
+            if (directionRotation?.isVertical() == true) if (trajectory.x > 0f) Facing.RIGHT else Facing.LEFT
             else if (trajectory.y > 0f) Facing.RIGHT else Facing.LEFT
 
         val spawn = spawnProps.get(ConstKeys.POSITION) as Vector2
@@ -109,12 +109,12 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         owner = shieldEntity
 
         swapFacing()
-        if (directionRotation.isVertical()) trajectory.x *= -1f else trajectory.y *= -1f
+        if (directionRotation?.isVertical() == true) trajectory.x *= -1f else trajectory.y *= -1f
 
         val deflection = shieldFixture.getOrDefaultProperty(ConstKeys.DIRECTION, Direction.UP, Direction::class)
         val newTrajectory =
-            when (directionRotation) {
-                Direction.UP -> {
+            when (directionRotation!!) {
+                Direction.UP, null -> {
                     when (deflection) {
                         Direction.UP -> Vector2(trajectory.x, 5f * ConstVals.PPM)
                         Direction.DOWN -> Vector2(trajectory.x, -5f * ConstVals.PPM)
@@ -206,10 +206,8 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
             _sprite.setPosition(body.getCenter(), Position.CENTER)
 
             val rotation =
-                when (directionRotation) {
-                    Direction.UP,
-                    Direction.DOWN -> 0f
-
+                when (directionRotation!!) {
+                    Direction.UP, Direction.DOWN, null -> 0f
                     Direction.LEFT -> 90f
                     Direction.RIGHT -> 270f
                 }

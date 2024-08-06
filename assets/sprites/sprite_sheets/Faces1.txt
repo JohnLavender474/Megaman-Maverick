@@ -10,16 +10,23 @@ Blunt Man
   orig: 32, 32
   offset: 0, 0
   index: -1
-Distributor Man
+DesertMan
   rotate: false
   xy: 32, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-Freezer Man
+Distributor Man
   rotate: false
   xy: 64, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Freezer Man
+  rotate: false
+  xy: 96, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

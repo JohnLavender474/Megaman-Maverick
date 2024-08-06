@@ -193,6 +193,7 @@
             <key type="filename">../frames/Projectiles1/Bullet.png</key>
             <key type="filename">../frames/Projectiles1/CannonBall.png</key>
             <key type="filename">../frames/Projectiles1/Fire/Fireball.png</key>
+            <key type="filename">../frames/Projectiles1/Prickly.png</key>
             <key type="filename">../frames/Projectiles1/ReactManProjectile/Small.png</key>
             <key type="filename">../frames/Projectiles1/Snowball.png</key>
             <key type="filename">../frames/Projectiles1/SpiderWeb/Gray.png</key>

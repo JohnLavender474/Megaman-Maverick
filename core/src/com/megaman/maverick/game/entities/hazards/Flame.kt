@@ -43,7 +43,7 @@ class Flame(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISprites
         private var region: TextureRegion? = null
     }
 
-    override lateinit var directionRotation: Direction
+    override var directionRotation: Direction? = null
 
     private lateinit var cullTimer: Timer
 
@@ -62,8 +62,8 @@ class Flame(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISprites
         super.spawn(spawnProps)
         directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-        when (directionRotation) {
-            Direction.UP -> body.setBottomCenterToPoint(spawn)
+        when (directionRotation!!) {
+            Direction.UP, null -> body.setBottomCenterToPoint(spawn)
             Direction.DOWN -> body.setTopCenterToPoint(spawn)
             Direction.LEFT -> body.setCenterRightToPoint(spawn)
             Direction.RIGHT -> body.setCenterLeftToPoint(spawn)
@@ -94,8 +94,8 @@ class Flame(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISprites
         sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
-            val position = when (directionRotation) {
-                Direction.UP -> Position.BOTTOM_CENTER
+            val position = when (directionRotation!!) {
+                Direction.UP, null -> Position.BOTTOM_CENTER
                 Direction.DOWN -> Position.TOP_CENTER
                 Direction.LEFT -> Position.CENTER_RIGHT
                 Direction.RIGHT -> Position.CENTER_LEFT
@@ -103,7 +103,7 @@ class Flame(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISprites
             val bodyPosition = body.getPositionPoint(position)
             _sprite.setPosition(bodyPosition, position)
             _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation.rotation
+            _sprite.rotation = directionRotation?.rotation ?: 0f
         }
         return spritesComponent
     }

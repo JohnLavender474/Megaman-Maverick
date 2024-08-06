@@ -32,6 +32,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
+import com.megaman.maverick.game.world.getBody
 
 class ToxicGoopShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
 
@@ -58,11 +59,11 @@ class ToxicGoopShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie(
-        getOverlapPushDirection(body.rotatedBounds, (damageable as IBodyEntity).body.rotatedBounds)
+        getOverlapPushDirection(body.getBodyBounds(), (damageable as IBodyEntity).body.getBodyBounds())
     )
 
     override fun hitBlock(blockFixture: IFixture) = explodeAndDie(
-        getOverlapPushDirection(body.rotatedBounds, blockFixture.getBody().rotatedBounds)
+        getOverlapPushDirection(body.getBodyBounds(), blockFixture.getBody().getBodyBounds())
     )
 
     override fun explodeAndDie(vararg params: Any?) {

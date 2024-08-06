@@ -43,7 +43,7 @@ class TubeBeamer(game: MegamanMaverickGame) : GameEntity(game), IAudioEntity, IB
         private const val DEFAULT_INITIAL_DELAY = 0f
     }
 
-    override lateinit var directionRotation: Direction
+    override var directionRotation: Direction? = null
 
     private val spawnTimer = Timer(SPAWN_DELAY)
     private lateinit var initialDelayTimer: Timer
@@ -67,7 +67,7 @@ class TubeBeamer(game: MegamanMaverickGame) : GameEntity(game), IAudioEntity, IB
 
     private fun beamTube() {
         val tubeBeam = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.TUBE_BEAM)!!
-        val trajectory = (when (directionRotation) {
+        val trajectory = (when (directionRotation!!) {
             Direction.RIGHT -> Vector2(VELOCITY, 0f)
             Direction.LEFT -> Vector2(-VELOCITY, 0f)
             Direction.UP -> Vector2(0f, VELOCITY)

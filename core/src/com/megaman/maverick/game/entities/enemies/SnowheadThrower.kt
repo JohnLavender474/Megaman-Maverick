@@ -154,7 +154,7 @@ class SnowheadThrower(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
         body.setSize(0.65f * ConstVals.PPM, ConstVals.PPM.toFloat())
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.rotatedBounds }
+        debugShapes.add { body.getBodyBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)

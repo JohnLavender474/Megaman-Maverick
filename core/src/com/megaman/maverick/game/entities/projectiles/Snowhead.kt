@@ -127,7 +127,7 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
         body.setSize(0.5f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.rotatedBounds }
+        debugShapes.add { body.getBodyBounds() }
 
         val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameRectangle().set(body))
         body.addFixture(projectileFixture)

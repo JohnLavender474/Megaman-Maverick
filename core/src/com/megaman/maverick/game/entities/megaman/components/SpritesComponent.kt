@@ -33,8 +33,7 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
         player.setFlip(flipX, flipY)
 
         val rotation = when (direction) {
-            Direction.UP, Direction.DOWN -> 0f
-
+            Direction.UP, Direction.DOWN, null -> 0f
             Direction.LEFT -> 90f
             Direction.RIGHT -> 270f
         }
@@ -42,7 +41,7 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
         player.setRotation(rotation)
 
         val position = when (direction) {
-            Direction.UP -> Position.BOTTOM_CENTER
+            Direction.UP, null -> Position.BOTTOM_CENTER
             Direction.DOWN -> Position.TOP_CENTER
             Direction.LEFT -> Position.CENTER_RIGHT
             Direction.RIGHT -> Position.CENTER_LEFT
@@ -51,11 +50,11 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
         player.setPosition(bodyPosition, position)
 
         val xTranslation = if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) when (direction) {
-            Direction.UP, Direction.DOWN -> 0f
+            Direction.UP, Direction.DOWN, null -> 0f
             Direction.LEFT -> 0.15f
             Direction.RIGHT -> -0.15f
         } else when (direction) {
-            Direction.UP, Direction.DOWN -> 0f
+            Direction.UP, Direction.DOWN, null -> 0f
             Direction.LEFT -> 0.425f
             Direction.RIGHT -> -0.425f
         }
@@ -76,12 +75,12 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
         }
 
         flame.setOriginCenter()
-        flame.setRotation(directionRotation.rotation)
+        flame.setRotation(directionRotation?.rotation ?: 0f)
 
         val verticalOffset = -0.25f * ConstVals.PPM
         val facingOffsetScaled = -0.45f * facing.value * ConstVals.PPM
-        val offset = when (directionRotation) {
-            Direction.UP -> floatArrayOf(facingOffsetScaled, verticalOffset)
+        val offset = when (directionRotation!!) {
+            Direction.UP, null -> floatArrayOf(facingOffsetScaled, verticalOffset)
             Direction.DOWN -> floatArrayOf(facingOffsetScaled, -verticalOffset)
             Direction.LEFT -> floatArrayOf(verticalOffset, facingOffsetScaled)
             Direction.RIGHT -> floatArrayOf(-verticalOffset, -facingOffsetScaled)

@@ -141,7 +141,7 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.rotatedBounds }
+        debugShapes.add { body.getBodyBounds() }
 
         val projectileFixture =
             Fixture(body, FixtureType.PROJECTILE, GameCircle().setRadius(0.25f * ConstVals.PPM))

@@ -205,7 +205,7 @@ class Electrocutie(game: MegamanMaverickGame) : GameEntity(game), IHazard, IBody
         body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.rotatedBounds }
+        debugShapes.add { body.getBodyBounds() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             children.forEach {

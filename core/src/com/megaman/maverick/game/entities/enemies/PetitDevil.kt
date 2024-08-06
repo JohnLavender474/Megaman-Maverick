@@ -82,8 +82,10 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             orangeRegion = atlas.findRegion("PetitDevil/LargeOrange")
             greenRegion = atlas.findRegion("PetitDevil/LargeGreen")
         }
+
         addComponent(DrawableShapesComponent(this))
         isDebugShapes = true
+
         super<AbstractEnemy>.init()
         addComponent(defineAnimationsComponent())
     }
@@ -144,6 +146,7 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
                 val child = iter.next()
                 if (child.dead) iter.remove()
             }
+
             facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
         }
     }
@@ -151,13 +154,18 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(ConstVals.PPM.toFloat())
+
         addDebugShapeSupplier { body }
+
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
+
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().set(body))
         body.addFixture(damagerFixture)
+
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().set(body))
         body.addFixture(damageableFixture)
+
         return BodyComponentCreator.create(this, body)
     }
 
@@ -213,6 +221,7 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
 
     private lateinit var rotatingLine: RotatingLine
     private lateinit var type: String
+
     private var scalar = START_SCALAR
 
     override fun init() {
@@ -221,20 +230,26 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
             greenRegion = atlas.findRegion("PetitDevil/SmallGreen")
             orangeRegion = atlas.findRegion("PetitDevil/SmallOrange")
         }
+
         addComponent(DrawableShapesComponent(this))
         addDebugShapeSupplier { rotatingLine.line }
         isDebugShapes = true
+
         super<AbstractEnemy>.init()
         addComponent(defineAnimationsComponent())
     }
 
     override fun spawn(spawnProps: Properties) {
+        spawnProps.put(ConstKeys.DEATH_FIXTURE, false)
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
         super.spawn(spawnProps)
+
         parent = spawnProps.get(ConstKeys.PARENT, IGameEntity::class)!!
+
         val origin = (parent as IBodyEntity).body.getCenter()
         val angle = spawnProps.get(ConstKeys.ANGLE, Float::class)!!
         rotatingLine = RotatingLine(origin, ConstVals.PPM.toFloat(), SPINNING_SPEED * ConstVals.PPM, angle)
+
         type = spawnProps.get(ConstKeys.TYPE, String::class)!!
         scalar = START_SCALAR
     }
@@ -251,11 +266,14 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
                 kill()
                 return@add
             }
+
             val origin = (parent as IBodyEntity).body.getCenter()
             rotatingLine.setOrigin(origin)
             rotatingLine.update(delta)
+
             scalar += OUT_SPEED * delta
             body.setCenter(rotatingLine.getScaledPosition(scalar))
+
             facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
         }
     }

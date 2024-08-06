@@ -47,7 +47,7 @@ class MegaCollisionHandler(private val game: MegamanMaverickGame) : ICollisionHa
                 if (dynamicBodyEntity is IDirectionRotatable) dynamicBodyEntity.directionRotation else Direction.UP
 
             when (dynamicBodyDirection) {
-                Direction.UP -> {
+                Direction.UP, null -> {
                     if (dynamicBody.isSensing(BodySense.FEET_ON_GROUND)) {
                         dynamicBody.setY(staticBody.getMaxY())
                         dynamicBody.physics.frictionOnSelf.x += staticBody.physics.frictionToApply.x

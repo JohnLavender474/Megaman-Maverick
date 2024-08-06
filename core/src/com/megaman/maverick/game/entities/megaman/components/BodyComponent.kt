@@ -36,7 +36,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     body.physics.takeFrictionFromOthers = true
 
     val shapes = Array<() -> IDrawableShape?>()
-    shapes.add { body.rotatedBounds }
+    shapes.add { body.getBodyBounds() }
 
     val playerFixture = Fixture(body, FixtureType.PLAYER, GameRectangle().setWidth(0.5f * ConstVals.PPM))
     body.addFixture(playerFixture)
@@ -118,14 +118,15 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
             else if (body.isSensing(BodySense.FEET_ON_GROUND)) groundGravity else gravity
         gravityValue *= gravityScalar
 
-        when (directionRotation) {
+        when (directionRotation!!) {
             Direction.UP,
             Direction.DOWN -> {
                 body.physics.gravity.set(0f, gravityValue * ConstVals.PPM)
                 body.physics.defaultFrictionOnSelf =
-                    when (directionRotation) {
+                    when (directionRotation!!) {
                         Direction.UP,
-                        Direction.DOWN -> Vector2(ConstVals.STANDARD_RESISTANCE_X, ConstVals.STANDARD_RESISTANCE_Y)
+                        Direction.DOWN,
+                        null -> Vector2(ConstVals.STANDARD_RESISTANCE_X, ConstVals.STANDARD_RESISTANCE_Y)
 
                         Direction.LEFT,
                         Direction.RIGHT -> Vector2(ConstVals.STANDARD_RESISTANCE_Y, ConstVals.STANDARD_RESISTANCE_X)

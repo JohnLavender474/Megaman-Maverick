@@ -37,7 +37,7 @@ class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         private var region: TextureRegion? = null
     }
 
-    override lateinit var directionRotation: Direction
+    override var directionRotation: Direction? = null
 
     private lateinit var trajectory: Vector2
 
@@ -50,7 +50,7 @@ class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
         directionRotation = spawnProps.get(ConstKeys.DIRECTION, Direction::class)!!
-        val size = if (directionRotation.isHorizontal()) Vector2(2f, 0.85f) else Vector2(0.85f, 2f)
+        val size = if (directionRotation?.isHorizontal() == true) Vector2(2f, 0.85f) else Vector2(0.85f, 2f)
         body.setSize(size.scl(ConstVals.PPM.toFloat()))
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
@@ -75,7 +75,7 @@ class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setOriginCenter()
-            _sprite.rotation = if (directionRotation.isHorizontal()) 0f else 90f
+            _sprite.rotation = if (directionRotation?.isHorizontal() == true) 0f else 90f
             _sprite.setCenter(body.getCenter())
         }
         return spritesComponent

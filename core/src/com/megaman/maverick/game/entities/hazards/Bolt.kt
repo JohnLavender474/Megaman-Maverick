@@ -49,7 +49,7 @@ class Bolt(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IHazard, 
 
     override var parent: IGameEntity? = null
 
-    override var directionRotation: Direction
+    override var directionRotation: Direction?
         get() = body.cardinalRotation
         set(value) {
             body.cardinalRotation = value
@@ -72,8 +72,8 @@ class Bolt(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IHazard, 
         body.setSize(BODY_SIZE.cpy().scl(scale))
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
-        when (directionRotation) {
-            Direction.UP -> body.setBottomCenterToPoint(spawn)
+        when (directionRotation!!) {
+            Direction.UP, null -> body.setBottomCenterToPoint(spawn)
             Direction.DOWN -> body.setTopCenterToPoint(spawn)
             Direction.LEFT -> body.setCenterRightToPoint(spawn)
             Direction.RIGHT -> body.setCenterLeftToPoint(spawn)
@@ -117,8 +117,8 @@ class Bolt(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IHazard, 
         spritesComponent.putUpdateFunction { _, _sprite ->
             sprite.setSize(ConstVals.PPM.toFloat() * scale)
             _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation.rotation
-            val position = when (directionRotation) {
+            _sprite.rotation = directionRotation?.rotation ?: 0f
+            val position = when (directionRotation!!) {
                 Direction.UP -> Position.BOTTOM_CENTER
                 Direction.DOWN -> Position.TOP_CENTER
                 Direction.LEFT -> Position.CENTER_RIGHT

@@ -236,7 +236,7 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
             sprites.get("megaman")!!.hidden = !field
         }
 
-    override var directionRotation: Direction
+    override var directionRotation: Direction?
         get() = body.cardinalRotation
         set(value) {
             GameLogger.debug(TAG, "directionRotation: value = $value")
@@ -245,7 +245,7 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
 
             body.cardinalRotation = value
             when (value) {
-                Direction.UP, Direction.RIGHT -> {
+                Direction.UP, Direction.RIGHT, null -> {
                     jumpVel = MegamanValues.JUMP_VEL
                     wallJumpVel = MegamanValues.WALL_JUMP_VEL
                     cartJumpVel = MegamanValues.CART_JUMP_VEL
@@ -497,8 +497,8 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         return true
     }
 
-    override fun getPosition() = when (directionRotation) {
-        Direction.UP -> body.getBottomCenterPoint()
+    override fun getPosition() = when (directionRotation!!) {
+        Direction.UP, null -> body.getBottomCenterPoint()
         Direction.DOWN -> body.getTopCenterPoint()
         Direction.LEFT -> body.getCenterRightPoint()
         Direction.RIGHT -> body.getCenterLeftPoint()

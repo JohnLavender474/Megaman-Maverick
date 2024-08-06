@@ -114,7 +114,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
             if (it.fullyCharged) 10 else 5
         }
     )
-    override var directionRotation: Direction
+    override var directionRotation: Direction?
         get() = body.cardinalRotation
         set(value) {
             body.cardinalRotation = value
@@ -243,11 +243,11 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
                 triggerFixture.rawShape = throwShieldTrigger!!
             } else triggerFixture.active = false
 
-            if (directionRotation.equalsAny(Direction.UP, Direction.DOWN)) body.physics.velocity.x = 0f
+            if (directionRotation!!.equalsAny(Direction.UP, Direction.DOWN)) body.physics.velocity.x = 0f
             else body.physics.velocity.y = 0f
 
             val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) -GROUND_GRAVITY else -GRAVITY
-            body.physics.gravity = (when (directionRotation) {
+            body.physics.gravity = (when (directionRotation!!) {
                 Direction.UP -> Vector2(0f, gravity)
                 Direction.DOWN -> Vector2(0f, -gravity)
                 Direction.LEFT -> Vector2(-gravity, 0f)
@@ -281,7 +281,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
             val flipY = directionRotation == Direction.DOWN
             _sprite.setFlip(flipX, flipY)
 
-            val rotation = when (directionRotation) {
+            val rotation = when (directionRotation!!) {
                 Direction.UP, Direction.DOWN -> 0f
 
                 Direction.LEFT -> 90f
@@ -290,7 +290,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
             sprite.setOriginCenter()
             _sprite.rotation = rotation
 
-            val position = when (directionRotation) {
+            val position = when (directionRotation!!) {
                 Direction.UP -> Position.BOTTOM_CENTER
                 Direction.DOWN -> Position.TOP_CENTER
                 Direction.LEFT -> Position.CENTER_RIGHT
@@ -308,7 +308,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            facing = when (directionRotation) {
+            facing = when (directionRotation!!) {
                 Direction.UP, Direction.DOWN -> if (megaman.body.x > body.x) Facing.RIGHT else Facing.LEFT
                 Direction.LEFT, Direction.RIGHT -> if (megaman.body.y > body.y) Facing.RIGHT else Facing.LEFT
             }
@@ -423,13 +423,13 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         )
     }
 
-    private fun shouldJump() = body.isSensing(BodySense.FEET_ON_GROUND) && (when (directionRotation) {
+    private fun shouldJump() = body.isSensing(BodySense.FEET_ON_GROUND) && (when (directionRotation!!) {
         Direction.UP, Direction.DOWN -> megaman.body.x >= body.x && megaman.body.getMaxX() <= body.getMaxX()
         Direction.LEFT, Direction.RIGHT -> megaman.body.y >= body.y && megaman.body.getMaxY() <= body.getMaxY()
     })
 
     private fun jump() {
-        val impulse = (when (directionRotation) {
+        val impulse = (when (directionRotation!!) {
             Direction.UP -> Vector2(0f, JUMP_IMPULSE)
             Direction.DOWN -> Vector2(0f, -JUMP_IMPULSE)
             Direction.LEFT -> Vector2(-JUMP_IMPULSE, 0f)
@@ -439,7 +439,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
     }
 
     private fun shoot() {
-        val spawn = (when (directionRotation) {
+        val spawn = (when (directionRotation!!) {
             Direction.UP -> Vector2(0.25f * facing.value, -0.15f)
             Direction.DOWN -> Vector2(0.25f * facing.value, 0.15f)
             Direction.LEFT -> Vector2(0.2f, 0.25f * facing.value)

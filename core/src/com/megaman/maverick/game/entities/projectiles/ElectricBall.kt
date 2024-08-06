@@ -84,7 +84,7 @@ class ElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val bounds = GameRectangle()
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.rotatedBounds }
+        debugShapes.add { body.getBodyBounds() }
 
         val projectileFixture = Fixture(body, FixtureType.PROJECTILE, bounds)
         body.addFixture(projectileFixture)

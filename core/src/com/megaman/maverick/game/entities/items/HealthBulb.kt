@@ -64,7 +64,7 @@ class HealthBulb(game: MegamanMaverickGame) : GameEntity(game), ItemEntity, ISpr
         private const val CLAMP = 5f
     }
 
-    override var directionRotation: Direction
+    override var directionRotation: Direction?
         get() = body.cardinalRotation
         set(value) {
             body.cardinalRotation = value
@@ -146,8 +146,8 @@ class HealthBulb(game: MegamanMaverickGame) : GameEntity(game), ItemEntity, ISpr
         debugShapes.add { feetFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
-            val gravity = when (directionRotation) {
-                Direction.LEFT -> Vector2(GRAVITY, 0f)
+            val gravity = when (directionRotation!!) {
+                Direction.LEFT, null -> Vector2(GRAVITY, 0f)
                 Direction.RIGHT -> Vector2(-GRAVITY, 0f)
                 Direction.UP -> Vector2(0f, -GRAVITY)
                 Direction.DOWN -> Vector2(0f, GRAVITY)
