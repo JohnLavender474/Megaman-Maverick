@@ -15,7 +15,6 @@ import com.engine.cullables.ICullable
 import com.engine.damage.IDamageable
 import com.engine.damage.IDamager
 import com.engine.drawables.sprites.SpritesComponent
-import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.IBodyEntity
@@ -25,9 +24,10 @@ import com.engine.world.BodyComponent
 import com.engine.world.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.events.EventType
 
-abstract class AbstractProjectile(game: MegamanMaverickGame) : GameEntity(game), IOwnable, IDamager, IBodyEntity,
+abstract class AbstractProjectile(game: MegamanMaverickGame) : MegaGameEntity(game), IOwnable, IDamager, IBodyEntity,
     ISpritesEntity, IAudioEntity, ICullableEntity {
 
     override var owner: IGameEntity? = null
@@ -36,7 +36,7 @@ abstract class AbstractProjectile(game: MegamanMaverickGame) : GameEntity(game),
     protected var movementScalar = 1f
 
     override fun init() {
-        super<GameEntity>.init()
+        super<MegaGameEntity>.init()
         addComponents(defineProjectileComponents())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
@@ -80,9 +80,7 @@ abstract class AbstractProjectile(game: MegamanMaverickGame) : GameEntity(game),
         return components
     }
 
-    fun removeCullOnEventCullable() {
-        removeCullable(ConstKeys.CULL_EVENTS)
-    }
+    fun removeCullOnEventCullable() = removeCullable(ConstKeys.CULL_EVENTS)
 
     fun getCullOnEventCullable(): ICullable {
         val cullEvents = objectSetOf<Any>(
@@ -91,9 +89,7 @@ abstract class AbstractProjectile(game: MegamanMaverickGame) : GameEntity(game),
         return CullableOnEvent({ cullEvents.contains(it.key) }, cullEvents)
     }
 
-    fun removeCullOnOutOfGameCam() {
-        removeCullable(ConstKeys.CULL_OUT_OF_BOUNDS)
-    }
+    fun removeCullOnOutOfGameCam() = removeCullable(ConstKeys.CULL_OUT_OF_BOUNDS)
 
     fun getCullOnOutOfGameCam() =
         CullableOnUncontained<Camera>(

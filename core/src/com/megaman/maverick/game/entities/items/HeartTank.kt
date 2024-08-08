@@ -15,7 +15,6 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
-import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.ISpritesEntity
 import com.engine.events.Event
@@ -27,16 +26,17 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.IUpsideDownable
 import com.megaman.maverick.game.entities.contracts.ItemEntity
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
-import com.megaman.maverick.game.entities.utils.getMegaman
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
-class HeartTank(game: MegamanMaverickGame) : GameEntity(game), ItemEntity, IBodyEntity, ISpritesEntity, IUpsideDownable {
+class HeartTank(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, IBodyEntity, ISpritesEntity,
+    IUpsideDownable {
 
     companion object {
         const val TAG = "HeartTank"
@@ -65,8 +65,8 @@ class HeartTank(game: MegamanMaverickGame) : GameEntity(game), ItemEntity, IBody
             kill(props(CAUSE_OF_DEATH_MESSAGE to "Already have this heart tank."))
 
         val spawn = if (spawnProps.containsKey(ConstKeys.BOUNDS))
-                spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
-            else spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+            spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        else spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
 
         body.setBottomCenterToPoint(spawn)
     }

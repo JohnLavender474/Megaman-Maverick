@@ -46,7 +46,7 @@ class BossSelectScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MEG
     private val bNameSet = ObjectSet<String>()
     private val bName: BitmapFontHandle
     private val slide = ScreenSlide(
-        castGame.getUiCamera(),
+        game.getUiCamera(),
         INTRO_BLOCKS_TRANS,
         CAM_POS.cpy().sub(INTRO_BLOCKS_TRANS),
         CAM_POS,
@@ -89,7 +89,7 @@ class BossSelectScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MEG
             })
             _menuButtons!!.put(BACK, object : IMenuButton {
                 override fun onSelect(delta: Float): Boolean {
-                    castGame.setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
+                    game.setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
                     return true
                 }
 
@@ -103,8 +103,8 @@ class BossSelectScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MEG
             for (boss in BossType.values()) {
                 _menuButtons!!.put(boss.name, object : IMenuButton {
                     override fun onSelect(delta: Float): Boolean {
-                        castGame.audioMan.playSound(SoundAsset.BEAM_OUT_SOUND, false)
-                        castGame.audioMan.stopMusic(null)
+                        game.audioMan.playSound(SoundAsset.BEAM_OUT_SOUND, false)
+                        game.audioMan.stopMusic(null)
                         bSelect = boss
                         outro = true
                         return true
@@ -143,7 +143,7 @@ class BossSelectScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MEG
             })
         }
         outTimer.setRunnables(outTimerRunnable)
-        val megamanFacesAtlas = castGame.assMan.get(TextureAsset.FACES_1.source, TextureAtlas::class.java)
+        val megamanFacesAtlas = game.assMan.get(TextureAsset.FACES_1.source, TextureAtlas::class.java)
         val megamanFaces: MutableMap<Position, TextureRegion> = EnumMap(Position::class.java)
         for (position in Position.values()) {
             val faceRegion: TextureRegion = megamanFacesAtlas.findRegion("Maverick/" + position.name)
@@ -153,9 +153,9 @@ class BossSelectScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MEG
             val boss = BossType.findByName(currentButtonKey) ?: return@Supplier megamanFaces[Position.CENTER]
             megamanFaces[boss.position]
         }
-        val megamanPane = BossPane(castGame, megamanFaceSupplier, MEGA_MAN, Position.CENTER)
+        val megamanPane = BossPane(game, megamanFaceSupplier, MEGA_MAN, Position.CENTER)
         bp.add(megamanPane)
-        for (boss in BossType.values()) bp.add(BossPane(castGame, boss))
+        for (boss in BossType.values()) bp.add(BossPane(game, boss))
         t.add(
             BitmapFontHandle(
                 "PRESS START",
@@ -175,12 +175,12 @@ class BossSelectScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MEG
         )
         bArrs.put(
             BACK, BlinkingArrow(
-                castGame.assMan, Vector2(
+                game.assMan, Vector2(
                     12f * ConstVals.PPM, .75f * ConstVals.PPM
                 )
             )
         )
-        val stageSelectAtlas = castGame.assMan.get(TextureAsset.UI_1.source, TextureAtlas::class.java)
+        val stageSelectAtlas = game.assMan.get(TextureAsset.UI_1.source, TextureAtlas::class.java)
         val bar: TextureRegion = stageSelectAtlas.findRegion("Bar")
         for (i in 0..5) {
             for (j in 0..2) {
@@ -195,7 +195,7 @@ class BossSelectScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MEG
                 bars.put(sprite, timedAnimation)
             }
         }
-        val colorsAtlas = castGame.assMan.get(TextureAsset.COLORS.source, TextureAtlas::class.java)
+        val colorsAtlas = game.assMan.get(TextureAsset.COLORS.source, TextureAtlas::class.java)
         val whiteReg: TextureRegion = colorsAtlas.findRegion("White")
         white.setRegion(whiteReg)
         white.setBounds(0f, 0f, ConstVals.VIEW_WIDTH * ConstVals.PPM, ConstVals.VIEW_HEIGHT * ConstVals.PPM)
@@ -209,7 +209,7 @@ class BossSelectScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MEG
         )
         bar2.setRegion(black)
         bar2.setBounds(0f, 0f, .25f * ConstVals.PPM, ConstVals.VIEW_HEIGHT * ConstVals.PPM)
-        val tilesAtlas = castGame.assMan.get(TextureAsset.PLATFORMS_1.source, TextureAtlas::class.java)
+        val tilesAtlas = game.assMan.get(TextureAsset.PLATFORMS_1.source, TextureAtlas::class.java)
         val blueBlockRegion: TextureRegion = tilesAtlas.findRegion("8bitBlueBlockTransBorder")
         val halfPPM = ConstVals.PPM / 2f
         var i = 0
@@ -241,23 +241,23 @@ class BossSelectScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MEG
         slide.init()
         outro = false
         outTimer.reset()
-        castGame.audioMan.playMusic(MusicAsset.STAGE_SELECT_MM3_MUSIC, true)
+        game.audioMan.playMusic(MusicAsset.STAGE_SELECT_MM3_MUSIC, true)
     }
 
     override fun onAnyMovement() {
-        castGame.audioMan.playSound(SoundAsset.CURSOR_MOVE_BLOOP_SOUND, false)
+        game.audioMan.playSound(SoundAsset.CURSOR_MOVE_BLOOP_SOUND, false)
     }
 
     override fun render(delta: Float) {
         super.render(delta)
-        val batch: Batch = castGame.batch
-        if (!castGame.paused) {
+        val batch: Batch = game.batch
+        if (!game.paused) {
             slide.update(delta)
             if (outro) outTimer.update(delta)
             if (outTimer.isFinished()) {
-                val bIntroScreen = castGame.screens.get(ScreenEnum.BOSS_INTRO_SCREEN.name) as BossIntroScreen
+                val bIntroScreen = game.screens.get(ScreenEnum.BOSS_INTRO_SCREEN.name) as BossIntroScreen
                 bIntroScreen.set(bSelect!!)
-                castGame.setCurrentScreen(ScreenEnum.BOSS_INTRO_SCREEN.name)
+                game.setCurrentScreen(ScreenEnum.BOSS_INTRO_SCREEN.name)
                 return
             }
             for (e in bars) {
@@ -272,7 +272,7 @@ class BossSelectScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MEG
             }
             if (bArrs.containsKey(currentButtonKey)) bArrs.get(currentButtonKey).update(delta)
         }
-        batch.projectionMatrix = castGame.getUiCamera().combined
+        batch.projectionMatrix = game.getUiCamera().combined
         batch.begin()
         if (outro && blink) white.draw(batch)
         for (b in bkgd) b.draw(batch)

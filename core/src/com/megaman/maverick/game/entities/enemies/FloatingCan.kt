@@ -39,7 +39,7 @@ import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.pathfinding.StandardPathfinderResultConsumer
-import com.megaman.maverick.game.utils.getMegamanMaverickGame
+
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import kotlin.reflect.KClass
@@ -151,7 +151,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
     private fun definePathfindingComponent(): PathfindingComponent {
         val params = PathfinderParams(startSupplier = { body.getCenter() },
-            targetSupplier = { getMegamanMaverickGame().megaman.body.getCenterPoint() },
+            targetSupplier = { game.megaman.body.getCenterPoint() },
             allowDiagonal = { true },
             filter = { _, objs ->
                 objs.none { it is Fixture && it.getFixtureType() == FixtureType.BLOCK }
@@ -166,7 +166,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
                 stopOnTargetReached = false,
                 stopOnTargetNull = false,
                 postProcess = { if (!spawnDelayTimer.isFinished()) body.physics.velocity.setZero() },
-                shapes = if (DEBUG_PATHFINDING) getMegamanMaverickGame().getShapes() else null
+                shapes = if (DEBUG_PATHFINDING) game.getShapes() else null
             )
         }, { true })
         pathfindingComponent.updateIntervalTimer = Timer(0.1f)

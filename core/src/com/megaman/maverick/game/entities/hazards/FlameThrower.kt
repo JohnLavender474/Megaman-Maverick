@@ -24,7 +24,6 @@ import com.engine.damage.IDamager
 import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.*
-import com.engine.entities.GameEntity
 import com.engine.entities.contracts.*
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.Body
@@ -36,15 +35,17 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.IHazard
-import com.megaman.maverick.game.entities.utils.overlapsGameCamera
+import com.megaman.maverick.game.entities.overlapsGameCamera
+
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.getOpposingPosition
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
-class FlameThrower(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     ICullableEntity, IAudioEntity, IDirectionRotatable, IDamager, IHazard {
 
     companion object {

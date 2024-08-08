@@ -3,6 +3,7 @@ package com.megaman.maverick.game.entities.enemies
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectMap
 import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
@@ -69,6 +70,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
     override var facing = Facing.RIGHT
 
     private val turnAroundTimer = Timer(TURN_AROUND_DUR)
+    private lateinit var animations: ObjectMap<String, IAnimation>
     private var min = 0f
     private var max = 0f
     private var vertical = false
@@ -85,7 +87,9 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
     override fun spawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.CULL_TIME, CULL_TIME)
         super.spawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
+
         vertical = spawnProps.getOrDefault(ConstKeys.VERTICAL, false, Boolean::class)
         if (vertical) {
             body.setSize(1.5f * ConstVals.PPM, 0.75f * ConstVals.PPM)
@@ -113,6 +117,10 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
             }
         }
         body.setCenter(spawn)
+
+        val frameDuration = spawnProps.getOrDefault(ConstKeys.FRAME, 0.1f, Float::class)
+        animations.forEach { it.value.setFrameDuration(frameDuration) }
+
         turnAroundTimer.reset()
     }
 
@@ -120,6 +128,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
         val body = Body(BodyType.ABSTRACT)
 
         val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body.getBodyBounds() }
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
         body.addFixture(damagerFixture)
@@ -188,7 +197,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
 
                 turnAroundTimer.update(it)
                 if (turnAroundTimer.isJustFinished()) {
-                    val y = X_VEL * ConstVals.PPM * (if (switch) -1 else 1)
+                    val y = X_VEL * ConstVals.PPM * (if (switch) -1 else 1) * movementScalar
                     body.physics.velocity.y = y
                     GameLogger.debug(TAG, "Turning around. New y vel: $y")
                 }
@@ -203,7 +212,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
 
                 turnAroundTimer.update(it)
                 if (turnAroundTimer.isJustFinished()) {
-                    val x = X_VEL * ConstVals.PPM * (if (switch) -1 else 1)
+                    val x = X_VEL * ConstVals.PPM * (if (switch) -1 else 1) * movementScalar
                     body.physics.velocity.x = x
                     GameLogger.debug(TAG, "Turning around. New x vel: $x")
                 }
@@ -227,7 +236,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String = { if (turningAround) "turn" else "attack" }
-        val animations = objectMapOf<String, IAnimation>(
+        animations = objectMapOf(
             "turn" to Animation(atlas!!.findRegion("ShieldAttacker/TurnAround"), 1, 5, 0.1f, false),
             "attack" to Animation(atlas!!.findRegion("ShieldAttacker/Attack"), 1, 2, 0.1f, true)
         )

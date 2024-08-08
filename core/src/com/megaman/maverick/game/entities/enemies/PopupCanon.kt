@@ -11,6 +11,7 @@ import com.engine.animations.Animator
 import com.engine.animations.IAnimation
 import com.engine.common.enums.Facing
 import com.engine.common.enums.Position
+import com.engine.common.enums.Size
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.objectMapOf
@@ -88,10 +89,20 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     private val loop = Loop(PopupCanonState.values().toGdxArray())
     private val timers = objectMapOf(
         "rest" to Timer(REST_DUR),
-        "trans" to Timer(TRANS_DUR),
+        "rise" to Timer(TRANS_DUR, gdxArrayOf(
+            TimeMarkedRunnable(0f) { transState = Size.SMALL },
+            TimeMarkedRunnable(0.25f) { transState = Size.MEDIUM },
+            TimeMarkedRunnable(0.5f) { transState = Size.LARGE }
+        )),
+        "fall" to Timer(TRANS_DUR, gdxArrayOf(
+            TimeMarkedRunnable(0f) { transState = Size.LARGE },
+            TimeMarkedRunnable(0.25f) { transState = Size.MEDIUM },
+            TimeMarkedRunnable(0.5f) { transState = Size.SMALL }
+        )),
         "shoot" to Timer(SHOOT_DUR, gdxArrayOf(TimeMarkedRunnable(0.25f) { shoot() }))
     )
     private var ballGravityScalar = DEFAULT_BALL_GRAVITY_SCALAR
+    private lateinit var transState: Size
 
     override fun init() {
         if (regions.isEmpty) {
@@ -106,16 +117,21 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
-        facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
+
         loop.reset()
         timers.values().forEach { it.reset() }
+
         ballGravityScalar = spawnProps.getOrDefault(
             "${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}",
             DEFAULT_BALL_GRAVITY_SCALAR,
             Float::class
         )
+
+        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        transState = Size.SMALL
     }
 
     private fun shoot() {
@@ -136,11 +152,12 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
+            facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
 
             val timerKey = when (loop.getCurrent()) {
                 PopupCanonState.REST -> "rest"
-                PopupCanonState.RISE, PopupCanonState.FALL -> "trans"
+                PopupCanonState.RISE -> "rise"
+                PopupCanonState.FALL -> "fall"
                 PopupCanonState.SHOOT -> "shoot"
             }
             val timer = timers.get(timerKey)
@@ -154,14 +171,15 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.85f * ConstVals.PPM)
+        body.setSize(1.15f * ConstVals.PPM, 1.5f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
+        // debugShapes.add { body.getBodyBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         body.addFixture(bodyFixture)
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setWidth(0.85f * ConstVals.PPM))
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setWidth(1.15f * ConstVals.PPM))
         body.addFixture(damagerFixture)
         damagerFixture.rawShape.color = Color.RED
         debugShapes.add { damagerFixture.getShape() }
@@ -169,15 +187,23 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle(body))
         body.addFixture(damageableFixture)
         damageableFixture.rawShape.color = Color.GREEN
-        debugShapes.add { if (damageableFixture.active) damageableFixture.getShape() else null }
+        // debugShapes.add { if (damageableFixture.active) damageableFixture.getShape() else null }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             val damageable = loop.getCurrent() != PopupCanonState.REST
             damageableFixture.active = damageable
 
-            val damager = loop.getCurrent() == PopupCanonState.SHOOT
-            (damagerFixture.rawShape as GameRectangle).height = (if (damager) 0.85f else 0.1f) * ConstVals.PPM
-            damagerFixture.offsetFromBodyCenter.y = if (damager) 0f else -0.375f * ConstVals.PPM
+            (damagerFixture.rawShape as GameRectangle).height = (
+                    when (transState) {
+                        Size.LARGE -> 1.5f
+                        Size.MEDIUM -> 1f
+                        Size.SMALL -> 0.25f
+                    }) * ConstVals.PPM
+            damagerFixture.offsetFromBodyCenter.y = (when (transState) {
+                Size.LARGE -> 0f
+                Size.MEDIUM -> -0.25f
+                Size.SMALL -> -0.525f
+            }) * ConstVals.PPM
         }
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
@@ -187,7 +213,7 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.15f * ConstVals.PPM)
+        sprite.setSize(1.65f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)

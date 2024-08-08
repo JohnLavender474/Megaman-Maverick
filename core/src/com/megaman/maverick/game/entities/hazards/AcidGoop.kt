@@ -20,7 +20,6 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
-import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.ICullableEntity
@@ -36,17 +35,19 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-import com.megaman.maverick.game.entities.utils.overlapsGameCamera
-import com.megaman.maverick.game.entities.utils.playSoundNow
+import com.megaman.maverick.game.entities.overlapsGameCamera
+
+
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.isSensing
 
-class AcidGoop(game: MegamanMaverickGame) : GameEntity(game), IDamager, IHazard, ISpritesEntity, IAnimatedEntity,
+class AcidGoop(game: MegamanMaverickGame) : MegaGameEntity(game), IDamager, IHazard, ISpritesEntity, IAnimatedEntity,
     IBodyEntity, ICullableEntity {
 
     companion object {

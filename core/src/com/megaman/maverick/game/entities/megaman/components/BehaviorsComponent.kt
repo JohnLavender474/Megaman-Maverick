@@ -23,7 +23,7 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.special.Cart
 import com.megaman.maverick.game.entities.special.Ladder
-import com.megaman.maverick.game.entities.utils.stopSoundNow
+
 import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.isSensing
 import com.megaman.maverick.game.world.isSensingAny

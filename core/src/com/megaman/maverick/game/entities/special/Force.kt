@@ -1,14 +1,13 @@
 package com.megaman.maverick.game.entities.special
 
-import com.badlogic.gdx.math.Vector2
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
-import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.VelocityAlterationType
@@ -17,7 +16,7 @@ import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.getEntity
 import com.megaman.maverick.game.world.setVelocityAlteration
 
-class Force(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity {
+class Force(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity {
 
     companion object {
         const val TAG = "Force"
@@ -35,7 +34,7 @@ class Force(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity {
     private var forceY = 0f
 
     override fun init() {
-        super<GameEntity>.init()
+        super<MegaGameEntity>.init()
         addComponent(defineBodyComponent())
     }
 

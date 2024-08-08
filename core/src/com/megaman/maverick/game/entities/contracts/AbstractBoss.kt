@@ -21,7 +21,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOSION_ORB_SPEED
-import com.megaman.maverick.game.entities.utils.playSoundNow
+
 import com.megaman.maverick.game.events.EventType
 
 abstract class AbstractBoss(

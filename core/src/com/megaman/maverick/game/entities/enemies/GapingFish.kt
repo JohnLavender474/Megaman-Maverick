@@ -42,7 +42,7 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.utils.getMegamanMaverickGame
+
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.FixtureType
@@ -162,7 +162,7 @@ class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
             chompTimer.update(it)
 
-            val megamanBody = getMegamanMaverickGame().megaman.body
+            val megamanBody = game.megaman.body
             if (body.x >= megamanBody.getMaxX()) facing = Facing.LEFT
             else if (body.getMaxX() <= megamanBody.x) facing = Facing.RIGHT
 

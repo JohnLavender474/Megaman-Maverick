@@ -110,7 +110,7 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            facing = if (megaman.body.x >= body.x) Facing.RIGHT else Facing.LEFT
+            facing = if (getMegaman().body.x >= body.x) Facing.RIGHT else Facing.LEFT
             waitTimer.update(it)
             if (waitTimer.isJustFinished()) {
                 throwRock()

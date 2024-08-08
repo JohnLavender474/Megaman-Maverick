@@ -20,7 +20,6 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
-import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.ISpritesEntity
 import com.engine.updatables.UpdatablesComponent
@@ -32,12 +31,13 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import kotlin.reflect.KClass
 
-class SnowballExplosion(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesEntity, IHazard, IDamager {
+class SnowballExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IHazard, IDamager {
 
     companion object {
         const val DURATION = 0.075f

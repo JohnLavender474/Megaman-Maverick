@@ -6,14 +6,14 @@ import com.engine.common.enums.Direction
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.screens.BaseScreen
 import com.engine.screens.menus.IMenuButton
-import com.megaman.maverick.game.controllers.ControllerButton
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.controllers.ControllerButton
 
-abstract class AbstractMenuScreen(game: MegamanMaverickGame, protected var firstButtonKey: String) : BaseScreen(game) {
+abstract class AbstractMenuScreen(protected val game: MegamanMaverickGame, protected var firstButtonKey: String) :
+    BaseScreen() {
 
     override val eventKeyMask = ObjectSet<Any>()
-
-    protected val castGame: MegamanMaverickGame = game
+    
     protected abstract val menuButtons: ObjectMap<String, IMenuButton>
     protected var selectionMade = false
         private set
@@ -71,18 +71,18 @@ abstract class AbstractMenuScreen(game: MegamanMaverickGame, protected var first
 
     override fun pause() {
         super.pause()
-        castGame.audioMan.pauseAllSound()
-        castGame.audioMan.pauseMusic()
+        game.audioMan.pauseAllSound()
+        game.audioMan.pauseMusic()
     }
 
     override fun resume() {
         super.resume()
-        castGame.audioMan.resumeAllSound()
-        castGame.audioMan.playMusic()
+        game.audioMan.resumeAllSound()
+        game.audioMan.playMusic()
     }
 
     override fun dispose() {
         super.dispose()
-        castGame.audioMan.stopMusic()
+        game.audioMan.stopMusic()
     }
 }

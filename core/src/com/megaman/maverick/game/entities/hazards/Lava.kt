@@ -28,7 +28,6 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
-import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.IBodyEntity
@@ -43,12 +42,14 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
-import com.megaman.maverick.game.entities.utils.overlapsGameCamera
+import com.megaman.maverick.game.entities.overlapsGameCamera
+
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
-class Lava(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     IAudioEntity, IDirectionRotatable, IFaceable {
 
     companion object {
@@ -126,7 +127,7 @@ class Lava(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesE
             moveBeforeKill()
         } else {
             GameLogger.debug(TAG, "Killing lava now.")
-            super<GameEntity>.kill(props)
+            super<MegaGameEntity>.kill(props)
         }
 
     private fun moveBeforeKill() {

@@ -14,7 +14,6 @@ import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
-import com.engine.damage.IDamageable
 import com.engine.damage.IDamager
 import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
@@ -22,7 +21,6 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
-import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.IBodyEntity
@@ -37,11 +35,12 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
-class CaveRockExplosion(game: MegamanMaverickGame) :
-    GameEntity(game), IDamager, IBodyEntity, IAudioEntity, ISpritesEntity, IAnimatedEntity {
+class CaveRockExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IDamager, IBodyEntity, IAudioEntity,
+    ISpritesEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "CaveRockExplosion"

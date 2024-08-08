@@ -123,7 +123,7 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableG
         super.spawn(spawnProps)
         val spawn = getProperty(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
-        facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
         waitTimer.reset()
         jumpDelayTimer.setToEnd()
         shootTimer.reset()
@@ -156,7 +156,7 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableG
                 jumpDelayTimer.reset()
                 return@add
             } else if (!waitTimer.isFinished() && body.isSensing(BodySense.FEET_ON_GROUND)) facing =
-                if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
+                if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
 
             jumpDelayTimer.update(it)
             if (jumpDelayTimer.isJustFinished()) {

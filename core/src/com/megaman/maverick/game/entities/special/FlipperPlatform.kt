@@ -18,7 +18,6 @@ import com.engine.cullables.CullablesComponent
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
-import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.ISpritesEntity
@@ -29,14 +28,15 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
-import com.megaman.maverick.game.utils.getMegamanMaverickGame
+
 import com.megaman.maverick.game.world.FixtureType
 
-class FlipperPlatform(game: MegamanMaverickGame) : GameEntity(game), ISpritesEntity, IAnimatedEntity, IAudioEntity {
+class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, IAudioEntity {
 
     companion object {
         const val TAG = "FlipperPlatform"
@@ -98,7 +98,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : GameEntity(game), ISpritesEnt
     }
 
     override fun onDestroy() {
-        super<GameEntity>.onDestroy()
+        super<MegaGameEntity>.onDestroy()
         block?.kill()
         block = null
     }
@@ -141,7 +141,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : GameEntity(game), ISpritesEnt
                 block!!.body.x -= 0.25f * ConstVals.PPM
                 block!!.body.y -= 0.3f * ConstVals.PPM
 
-                val megamanFeet = getMegamanMaverickGame().megaman.body.fixtures.first { pair ->
+                val megamanFeet = game.megaman.body.fixtures.first { pair ->
                     pair.second.getFixtureType() == FixtureType.FEET
                 }.second.getShape() as Rectangle
                 if (switchDelay.isFinished() && block!!.body.overlaps(megamanFeet)) {
@@ -157,7 +157,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : GameEntity(game), ISpritesEnt
                 block!!.body.x += 0.25f * ConstVals.PPM
                 block!!.body.y -= 0.3f * ConstVals.PPM
 
-                val megamanFeet = getMegamanMaverickGame().megaman.body.fixtures.first { pair ->
+                val megamanFeet = getMegaman().body.fixtures.first { pair ->
                     pair.second.getFixtureType() == FixtureType.FEET
                 }.second.getShape() as Rectangle
                 if (switchDelay.isFinished() && block!!.body.overlaps(megamanFeet)) {
@@ -169,7 +169,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : GameEntity(game), ISpritesEnt
     })
 
     private fun defineCullablesComponent(): CullablesComponent {
-        val gameCamera = getMegamanMaverickGame().getGameCamera()
+        val gameCamera = game.getGameCamera()
         val cullable = getGameCameraCullingLogic(gameCamera, { bounds })
         return CullablesComponent(this, objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullable))
     }

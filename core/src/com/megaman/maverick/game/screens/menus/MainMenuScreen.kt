@@ -62,7 +62,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
 
     private var screenSlide =
         ScreenSlide(
-            castGame.getUiCamera(),
+            game.getUiCamera(),
             SETTINGS_TRAJ,
             getDefaultCameraPosition(),
             getDefaultCameraPosition().add(SETTINGS_TRAJ),
@@ -129,7 +129,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
 
         fontHandles.add(
             BitmapFontHandle(
-                { (castGame.audioMan.musicVolume * 10f).toInt().toString() },
+                { (game.audioMan.musicVolume * 10f).toInt().toString() },
                 getDefaultFontSize(),
                 Vector2(25.2f * ConstVals.PPM, 10.45f * ConstVals.PPM),
                 centerX = true,
@@ -140,7 +140,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
 
         fontHandles.add(
             BitmapFontHandle(
-                { (castGame.audioMan.soundVolume * 10f).toInt().toString() },
+                { (game.audioMan.soundVolume * 10f).toInt().toString() },
                 getDefaultFontSize(),
                 Vector2(25.2f * ConstVals.PPM, 9.625f * ConstVals.PPM),
                 centerX = true,
@@ -181,8 +181,8 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
             MainScreenButton.START_NEW_GAME.text,
             object : IMenuButton {
                 override fun onSelect(delta: Float): Boolean {
-                    castGame.state.reset()
-                    castGame.setCurrentScreen(ScreenEnum.BOSS_SELECT_SCREEN.name)
+                    game.state.reset()
+                    game.setCurrentScreen(ScreenEnum.BOSS_SELECT_SCREEN.name)
                     return true
                 }
 
@@ -212,14 +212,14 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
             MainScreenButton.LOAD_SAVE_FILE.text,
             object : IMenuButton {
                 override fun onSelect(delta: Float): Boolean {
-                    if (castGame.hasSavedState() && castGame.loadSavedState()) {
+                    if (game.hasSavedState() && game.loadSavedState()) {
                         GameLogger.debug(TAG, "Loaded saved state")
-                        castGame.setCurrentScreen(ScreenEnum.BOSS_SELECT_SCREEN.name)
-                        castGame.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
+                        game.setCurrentScreen(ScreenEnum.BOSS_SELECT_SCREEN.name)
+                        game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
                         return true
                     } else {
                         GameLogger.error(TAG, "Failed to load saved state")
-                        castGame.audioMan.playSound(SoundAsset.ERROR_SOUND, false)
+                        game.audioMan.playSound(SoundAsset.ERROR_SOUND, false)
                         doNotPlayPing = true
                         return false
                     }
@@ -304,16 +304,16 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
 
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
                     Direction.LEFT -> {
-                        var volume = castGame.audioMan.musicVolume
+                        var volume = game.audioMan.musicVolume
                         volume = if (volume <= 0f) 1f else volume - 0.1f
-                        castGame.audioMan.musicVolume = volume
+                        game.audioMan.musicVolume = volume
                         null
                     }
 
                     Direction.RIGHT -> {
-                        var volume = castGame.audioMan.musicVolume
+                        var volume = game.audioMan.musicVolume
                         volume = if (volume >= 1f) 0f else volume + 0.1f
-                        castGame.audioMan.musicVolume = volume
+                        game.audioMan.musicVolume = volume
                         null
                     }
 
@@ -331,16 +331,16 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
 
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
                     Direction.LEFT -> {
-                        var volume = castGame.audioMan.soundVolume
+                        var volume = game.audioMan.soundVolume
                         volume = if (volume <= 0f) 1f else volume - 0.1f
-                        castGame.audioMan.soundVolume = volume
+                        game.audioMan.soundVolume = volume
                         null
                     }
 
                     Direction.RIGHT -> {
-                        var volume = castGame.audioMan.soundVolume
+                        var volume = game.audioMan.soundVolume
                         volume = if (volume >= 1f) 0f else volume + 0.1f
-                        castGame.audioMan.soundVolume = volume
+                        game.audioMan.soundVolume = volume
                         null
                     }
 
@@ -353,7 +353,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
             MainScreenSettingsButton.KEYBOARD_SETTINGS.text,
             object : IMenuButton {
                 override fun onSelect(delta: Float): Boolean {
-                    castGame.setCurrentScreen(ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name)
+                    game.setCurrentScreen(ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name)
                     return true
                 }
 
@@ -370,7 +370,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
                 override fun onSelect(delta: Float): Boolean {
                     if (!ControllerUtils.isControllerConnected()) {
                         GameLogger.debug(TAG, "No controller connected")
-                        castGame.audioMan.playSound(SoundAsset.ERROR_SOUND, false)
+                        game.audioMan.playSound(SoundAsset.ERROR_SOUND, false)
                         doNotPlayPing = true
                         return false
                     }
@@ -389,8 +389,8 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
     override fun show() {
         super.show()
         screenSlide.reset()
-        castGame.getUiCamera().setToDefaultPosition()
-        castGame.audioMan.playMusic(MusicAsset.MM_OMEGA_TITLE_THEME_MUSIC)
+        game.getUiCamera().setToDefaultPosition()
+        game.audioMan.playMusic(MusicAsset.MM_OMEGA_TITLE_THEME_MUSIC)
         GameLogger.debug(TAG, "Current button key: $currentButtonKey")
         GameLogger.debug(TAG, "Blinking arrows keys: ${blinkArrows.keys().toGdxArray()}")
     }
@@ -411,7 +411,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
         }
 
         val batch = game.batch
-        batch.projectionMatrix = castGame.getUiCamera().combined
+        batch.projectionMatrix = game.getUiCamera().combined
         batch.begin()
         blinkArrows.get(currentButtonKey).draw(batch)
         title.draw(batch)
@@ -425,14 +425,14 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
     override fun onAnyMovement() {
         super.onAnyMovement()
         GameLogger.debug(TAG, "Current button: $currentButtonKey")
-        castGame.audioMan.playSound(SoundAsset.CURSOR_MOVE_BLOOP_SOUND)
+        game.audioMan.playSound(SoundAsset.CURSOR_MOVE_BLOOP_SOUND)
     }
 
     override fun onAnySelection() {
         val allow = screenSlide.finished
         if (allow) {
             if (doNotPlayPing) doNotPlayPing = false
-            else castGame.audioMan.playSound(SoundAsset.SELECT_PING_SOUND)
+            else game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND)
         }
     }
 }

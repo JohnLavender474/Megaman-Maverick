@@ -20,7 +20,6 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
-import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.entities.contracts.IAudioEntity
@@ -32,13 +31,14 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.world.BodyLabel
 import com.megaman.maverick.game.world.FixtureLabel
 
-class RailTrack(game: MegamanMaverickGame) : GameEntity(game), ISpritesEntity, IAudioEntity {
+class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAudioEntity {
 
     companion object {
         const val TAG = "RailTrack"
@@ -127,7 +127,7 @@ class RailTrack(game: MegamanMaverickGame) : GameEntity(game), ISpritesEntity, I
     }
 
     override fun onDestroy() {
-        super<GameEntity>.onDestroy()
+        super<MegaGameEntity>.onDestroy()
         sprites.clear()
     }
 

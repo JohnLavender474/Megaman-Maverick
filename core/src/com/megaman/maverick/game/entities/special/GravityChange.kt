@@ -8,7 +8,6 @@ import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.cullables.CullablesComponent
 import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.world.Body
 import com.engine.world.BodyComponent
@@ -16,11 +15,12 @@ import com.engine.world.BodyType
 import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
-class GravityChange(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity {
+class GravityChange(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity {
 
     private lateinit var gravityChangeFixture: Fixture
 

@@ -21,7 +21,6 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
-import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.ISpritesEntity
@@ -34,6 +33,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.IOwnable
@@ -41,7 +41,7 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
-class SmokePuff(game: MegamanMaverickGame) : GameEntity(game), IHazard, IDamager, IOwnable, IBodyEntity,
+class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDamager, IOwnable, IBodyEntity,
     ISpritesEntity {
 
     companion object {

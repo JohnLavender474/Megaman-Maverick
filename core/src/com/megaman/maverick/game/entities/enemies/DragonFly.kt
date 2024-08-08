@@ -37,7 +37,7 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.utils.getMegamanMaverickGame
+
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import kotlin.reflect.KClass
@@ -94,7 +94,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
         currentBehavior = DragonFlyBehavior.MOVE_UP
         previousBehavior = DragonFlyBehavior.MOVE_UP
         behaviorTimer.reset()
-        facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -180,7 +180,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
 
             when (currentBehavior) {
                 DragonFlyBehavior.MOVE_UP -> {
-                    if (!getMegamanMaverickGame().getGameCamera().overlaps(oobScannerFixture.getShape() as Rectangle)) {
+                    if (!game.getGameCamera().overlaps(oobScannerFixture.getShape() as Rectangle)) {
                         changeBehavior(DragonFlyBehavior.MOVE_HORIZONTAL)
                         toLeftBounds = isMegamanLeft()
                     }
@@ -188,8 +188,8 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
 
                 DragonFlyBehavior.MOVE_DOWN -> {
                     if (megamanScannerFixture.getShape().contains(
-                            getMegamanMaverickGame().megaman.body.getCenter()
-                        ) || (!isMegamanBelow() && !getMegamanMaverickGame().getGameCamera()
+                            game.megaman.body.getCenter()
+                        ) || (!isMegamanBelow() && !game.getGameCamera()
                             .overlaps(oobScannerFixture.getShape() as Rectangle))
                     ) {
                         changeBehavior(DragonFlyBehavior.MOVE_HORIZONTAL)
@@ -199,7 +199,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
 
                 DragonFlyBehavior.MOVE_HORIZONTAL -> {
                     val doChange = (toLeftBounds && !isMegamanLeft()) || (!toLeftBounds && isMegamanLeft())
-                    if (doChange && !getMegamanMaverickGame().getGameCamera()
+                    if (doChange && !game.getGameCamera()
                             .overlaps(oobScannerFixture.getShape() as Rectangle)
                     ) {
                         changeBehavior(
@@ -243,7 +243,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
         behaviorTimer.reset()
     }
 
-    private fun isMegamanLeft() = getMegamanMaverickGame().megaman.body.getCenter().x < body.x
+    private fun isMegamanLeft() = game.megaman.body.getCenter().x < body.x
 
-    private fun isMegamanBelow() = getMegamanMaverickGame().megaman.body.getCenter().y < body.y
+    private fun isMegamanBelow() = game.megaman.body.getCenter().y < body.y
 }

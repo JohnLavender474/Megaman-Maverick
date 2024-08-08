@@ -100,7 +100,7 @@ class SnowheadThrower(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
         throwDelay.reset()
         standTimer.reset()
         throwing = false
-        facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
     }
 
     override fun onDestroy() {
@@ -138,7 +138,7 @@ class SnowheadThrower(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
                     throwing = false
                 }
             } else {
-                facing = if (megaman.body.getCenter().x < body.getCenter().x) Facing.LEFT else Facing.RIGHT
+                facing = if (getMegaman().body.getCenter().x < body.getCenter().x) Facing.LEFT else Facing.RIGHT
 
                 standTimer.update(delta)
                 if (standTimer.isFinished()) {

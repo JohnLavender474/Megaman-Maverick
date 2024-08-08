@@ -3,7 +3,6 @@ package com.megaman.maverick.game.entities.blocks
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
-import com.engine.IGame2D
 import com.engine.common.GameLogger
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.objects.Properties
@@ -11,15 +10,15 @@ import com.engine.common.shapes.GameRectangle
 import com.engine.cullables.CullablesComponent
 import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
-import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
-import com.megaman.maverick.game.entities.utils.isLoggingLifecyle
 import com.megaman.maverick.game.world.*
 
-open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
+open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity {
 
     companion object {
         const val TAG = "Block"
@@ -127,7 +126,7 @@ open class Block(game: IGame2D) : GameEntity(game), IBodyEntity {
 
     override fun onDestroy() {
         if (isLoggingLifecyle()) GameLogger.debug(TAG, "Destroyed: $properties")
-        super<GameEntity>.onDestroy()
+        super<MegaGameEntity>.onDestroy()
         val fixtureIter = body.fixtures.iterator()
         while (fixtureIter.hasNext()) {
             val (_, fixture) = fixtureIter.next()

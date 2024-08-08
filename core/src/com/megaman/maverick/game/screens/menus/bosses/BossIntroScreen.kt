@@ -21,7 +21,7 @@ import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
 import com.megaman.maverick.game.utils.getDefaultCameraPosition
 import java.util.*
 
-class BossIntroScreen(game: MegamanMaverickGame) : BaseScreen(game) {
+class BossIntroScreen(private val game: MegamanMaverickGame) : BaseScreen() {
 
     override val eventKeyMask = ObjectSet<Any>()
 
@@ -61,10 +61,7 @@ class BossIntroScreen(game: MegamanMaverickGame) : BaseScreen(game) {
         }
 
         for (i in 0 until STARS_N_BARS) scrollingStars.add(
-            ScrollingStars(
-                game as MegamanMaverickGame,
-                Vector2(0f, i * ConstVals.PPM * ConstVals.VIEW_HEIGHT / 4f)
-            )
+            ScrollingStars(game, Vector2(0f, i * ConstVals.PPM * ConstVals.VIEW_HEIGHT / 4f))
         )
 
         durTimer = Timer(DUR)
@@ -104,7 +101,7 @@ class BossIntroScreen(game: MegamanMaverickGame) : BaseScreen(game) {
         bLettersTimer.reset()
         bLettersDelay.reset()
         for (i in 0 until scrollingStars.size) scrollingStars[i] =
-            ScrollingStars(game as MegamanMaverickGame, Vector2(0f, i * ConstVals.PPM * ConstVals.VIEW_HEIGHT / 4f))
+            ScrollingStars(game, Vector2(0f, i * ConstVals.PPM * ConstVals.VIEW_HEIGHT / 4f))
         currBAnim!!.component1().setPosition(
             ((ConstVals.VIEW_WIDTH / 2f) - 1.5f) * ConstVals.PPM, ConstVals.VIEW_HEIGHT * ConstVals.PPM
         )
@@ -118,7 +115,7 @@ class BossIntroScreen(game: MegamanMaverickGame) : BaseScreen(game) {
 
     override fun render(delta: Float) {
         if (durTimer.isFinished()) {
-            (game as MegamanMaverickGame).startLevelScreen(b!!.level)
+            game.startLevelScreen(b!!.level)
             return
         }
         val bSprite = currBAnim!!.component1()

@@ -22,7 +22,6 @@ import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
-import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.entities.contracts.IBodyEntity
@@ -35,6 +34,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
@@ -44,7 +44,7 @@ import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.isSensing
 import kotlin.math.abs
 
-class Cart(game: MegamanMaverickGame) : GameEntity(game), IOwnable, IBodyEntity, ISpritesEntity, IAnimatedEntity {
+class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IOwnable, IBodyEntity, ISpritesEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "Cart"
@@ -80,7 +80,7 @@ class Cart(game: MegamanMaverickGame) : GameEntity(game), IOwnable, IBodyEntity,
     }
 
     override fun onDestroy() {
-        super<GameEntity>.onDestroy()
+        super<MegaGameEntity>.onDestroy()
         childBlock.kill(props(CAUSE_OF_DEATH_MESSAGE to "Parent entity cart destroyed"))
     }
 

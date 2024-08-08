@@ -54,7 +54,7 @@ class SaveGameScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, SAVE)
             dotRegion = atlas.findRegion("RedDot")
         }
 
-        password = GamePasswords.getGamePassword(castGame.state)
+        password = GamePasswords.getGamePassword(game.state)
 
         val saveFont = BitmapFontHandle(
             SAVE,
@@ -120,8 +120,8 @@ class SaveGameScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, SAVE)
                 }
 
             override fun onSelect(delta: Float): Boolean {
-                castGame.saveState()
-                castGame.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
+                game.saveState()
+                game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
                 return false
             }
         })
@@ -158,8 +158,8 @@ class SaveGameScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, SAVE)
     override fun show() {
         GameLogger.debug(TAG, "Showing...")
         super.show()
-        castGame.getUiCamera().setToDefaultPosition()
-        castGame.audioMan.playMusic(MusicAsset.MM2_PASSWORD_SCREEN_MUSIC)
+        game.getUiCamera().setToDefaultPosition()
+        game.audioMan.playMusic(MusicAsset.MM2_PASSWORD_SCREEN_MUSIC)
     }
 
     override fun render(delta: Float) {
@@ -179,7 +179,7 @@ class SaveGameScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, SAVE)
         arrow.update(delta)
 
         val batch = game.batch
-        batch.projectionMatrix = castGame.getUiCamera().combined
+        batch.projectionMatrix = game.getUiCamera().combined
         batch.begin()
         frames.draw(batch)
         dots.draw(batch)

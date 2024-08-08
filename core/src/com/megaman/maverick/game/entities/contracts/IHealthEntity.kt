@@ -1,13 +1,14 @@
 package com.megaman.maverick.game.entities.contracts
 
 import com.engine.entities.contracts.IPointsEntity
+import com.engine.points.Points
 import com.megaman.maverick.game.ConstKeys
 
 interface IHealthEntity : IPointsEntity {
 
     fun getHealthRatio() = getCurrentHealth().toFloat() / getMaxHealth().toFloat()
 
-    fun getHealthPoints() = getPoints(ConstKeys.HEALTH)
+    fun getHealthPoints(): Points = getPoints(ConstKeys.HEALTH)
 
     fun getCurrentHealth() = getHealthPoints().current
 

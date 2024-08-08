@@ -1,5 +1,6 @@
 package com.megaman.maverick.game
 
+import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.GL20
@@ -11,7 +12,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.ObjectSet
 import com.badlogic.gdx.utils.viewport.FitViewport
-import com.engine.Game2D
+import com.badlogic.gdx.utils.viewport.Viewport
 import com.engine.GameEngine
 import com.engine.IGameEngine
 import com.engine.animations.AnimationsSystem
@@ -22,9 +23,12 @@ import com.engine.common.GameLogger
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.extensions.objectSetOf
+import com.engine.common.interfaces.IPropertizable
 import com.engine.common.objects.MultiCollectionIterable
+import com.engine.common.objects.Properties
 import com.engine.controller.ControllerSystem
 import com.engine.controller.ControllerUtils
+import com.engine.controller.buttons.Buttons
 import com.engine.controller.polling.IControllerPoller
 import com.engine.cullables.CullablesSystem
 import com.engine.drawables.fonts.BitmapFontHandle
@@ -37,11 +41,13 @@ import com.engine.drawables.sprites.SpritesSystem
 import com.engine.events.Event
 import com.engine.events.EventsManager
 import com.engine.events.IEventListener
+import com.engine.events.IEventsManager
 import com.engine.graph.IGraphMap
 import com.engine.motion.MotionSystem
 import com.engine.pathfinding.Pathfinder
 import com.engine.pathfinding.PathfindingSystem
 import com.engine.points.PointsSystem
+import com.engine.screens.IScreen
 import com.engine.systems.IGameSystem
 import com.engine.updatables.UpdatablesSystem
 import com.engine.world.Contact
@@ -78,7 +84,7 @@ import com.megaman.maverick.game.world.MegaContactListener
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class MegamanMaverickGame : Game2D(), IEventListener {
+class MegamanMaverickGame : Game(), IEventListener, IPropertizable {
 
     companion object {
         const val TAG = "MegamanMaverickGame"
@@ -96,14 +102,55 @@ class MegamanMaverickGame : Game2D(), IEventListener {
         EventType.TURN_CONTROLLER_OFF
     )
 
-    lateinit var state: GameState
+    override val properties = Properties()
 
+    val viewports = ObjectMap<String, Viewport>()
+    val screens = ObjectMap<String, IScreen>()
+    val currentScreen: IScreen?
+        get() = currentScreenKey?.let { screens[it] }
+
+    lateinit var batch: SpriteBatch
+    lateinit var shapeRenderer: ShapeRenderer
+    lateinit var buttons: Buttons
+    lateinit var controllerPoller: IControllerPoller
+    lateinit var assMan: AssetManager
+    lateinit var eventsMan: IEventsManager
+    lateinit var engine: IGameEngine
+    lateinit var state: GameState
     lateinit var megaman: Megaman
     lateinit var megamanUpgradeHandler: MegamanUpgradeHandler
-
     lateinit var audioMan: MegaAudioManager
 
+    var paused = false
+
     private lateinit var debugText: BitmapFontHandle
+    private var currentScreenKey: String? = null
+
+    fun setCurrentScreen(key: String) {
+        GameLogger.debug(TAG, "setCurrentScreen: set to screen with key = $key")
+
+        // hide old screen and remove it from events manager
+        currentScreenKey
+            ?.let { screens[it] }
+            ?.let {
+                it.hide()
+                eventsMan.removeListener(it)
+            }
+
+        // set next screen key
+        currentScreenKey = key
+
+        // get next screen, and if present show it, resize it, add it as an events listener, and pause
+        // it if necessary
+        screens[key]?.let { nextScreen ->
+            nextScreen.show()
+            nextScreen.resize(Gdx.graphics.width, Gdx.graphics.height)
+
+            eventsMan.addListener(nextScreen)
+
+            if (paused) nextScreen.pause()
+        }
+    }
 
     fun startLevelScreen(level: Level) {
         val levelScreen = screens.get(ScreenEnum.LEVEL_SCREEN.name) as MegaLevelScreen
@@ -217,15 +264,46 @@ class MegamanMaverickGame : Game2D(), IEventListener {
     override fun render() {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT)
-        super.render()
+
         val delta = Gdx.graphics.deltaTime
+        controllerPoller.run()
+        eventsMan.run()
+        currentScreen?.render(delta)
+        viewports.values().forEach { it.apply() }
         audioMan.update(delta)
+
         if (DEBUG_TEXT) {
             batch.projectionMatrix = getUiCamera().combined
             batch.begin()
             debugText.draw(batch)
             batch.end()
         }
+    }
+
+    override fun resize(width: Int, height: Int) {
+        viewports.values().forEach { it.update(width, height) }
+        currentScreen?.resize(width, height)
+    }
+
+    override fun pause() {
+        GameLogger.debug(TAG, "pause()")
+        if (paused) return
+        paused = true
+        currentScreen?.pause()
+    }
+
+    override fun resume() {
+        GameLogger.debug(TAG, "resume()")
+        if (!paused) return
+        paused = false
+        currentScreen?.resume()
+    }
+
+    override fun dispose() {
+        GameLogger.debug(TAG, "dispose()")
+        batch.dispose()
+        shapeRenderer.dispose()
+        screens.values().forEach { it.dispose() }
     }
 
     fun saveState() {

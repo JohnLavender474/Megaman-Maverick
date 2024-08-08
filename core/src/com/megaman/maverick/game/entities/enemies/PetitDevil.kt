@@ -42,9 +42,11 @@ import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
+import com.megaman.maverick.game.entities.overlapsGameCamera
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import kotlin.reflect.KClass
@@ -110,15 +112,15 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             )
         }
 
-        facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
 
-        val trajectory = megaman.body.getCenter().sub(body.getCenter()).nor().scl(SPEED * ConstVals.PPM)
+        val trajectory = getMegaman().body.getCenter().sub(body.getCenter()).nor().scl(SPEED * ConstVals.PPM)
         body.physics.velocity = trajectory
 
         putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, object : ICullable {
             override fun shouldBeCulled(delta: Float): Boolean {
-                if (isInGameCamBounds()) return false
-                for (child in children) if ((child as AbstractEnemy).isInGameCamBounds()) return false
+                if (overlapsGameCamera()) return false
+                for (child in children) if ((child as AbstractEnemy).overlapsGameCamera()) return false
                 return true
             }
         })
@@ -147,7 +149,7 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
                 if (child.dead) iter.remove()
             }
 
-            facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
+            facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
         }
     }
 
@@ -274,7 +276,7 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
             scalar += OUT_SPEED * delta
             body.setCenter(rotatingLine.getScaledPosition(scalar))
 
-            facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
+            facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
         }
     }
 

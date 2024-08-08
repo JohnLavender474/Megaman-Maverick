@@ -10,7 +10,6 @@ import com.engine.common.extensions.objectMapOf
 import com.engine.common.objects.Properties
 import com.engine.cullables.CullablesComponent
 import com.engine.drawables.sprites.*
-import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.ISpritesEntity
@@ -22,10 +21,11 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.BodyComponentCreator
 
-class IceShard(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesEntity, IAudioEntity {
+class IceShard(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAudioEntity {
 
     companion object {
         const val TAG = "IceShard"
@@ -47,7 +47,7 @@ class IceShard(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpri
             val regions = region.splitAndFlatten(1, 5)
             regions.forEach { TEXTURES.add(it) }
         }
-        super<GameEntity>.init()
+        super<MegaGameEntity>.init()
         addComponent(defineBodyComponent())
         addComponent(defineCullablesComponent())
         addComponent(defineSpritesComponent())

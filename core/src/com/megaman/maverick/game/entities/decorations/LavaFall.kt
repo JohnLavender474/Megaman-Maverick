@@ -17,16 +17,16 @@ import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setBounds
-import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.entities.contracts.ISpritesEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.utils.splitIntoGameRectanglesBasedOnCenter
 
-class LavaFall(game: MegamanMaverickGame): GameEntity(game), ISpritesEntity, IAnimatedEntity {
+class LavaFall(game: MegamanMaverickGame): MegaGameEntity(game), ISpritesEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "LavaFall"

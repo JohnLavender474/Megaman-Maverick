@@ -54,9 +54,11 @@ import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.overlapsGameCamera
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+
 import com.megaman.maverick.game.world.*
 import kotlin.reflect.KClass
 
@@ -182,7 +184,9 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
 
         type = spawnProps.getOrDefault(ConstKeys.TYPE, DEFAULT_TYPE) as String
         state = SniperJoeState.WAITING_SHIELDED
-        directionRotation = Direction.UP
+        directionRotation = Direction.valueOf(
+            spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase()
+        )
 
         waitTimer.reset()
         shootTimer.setToEnd()
@@ -309,13 +313,13 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
             facing = when (directionRotation!!) {
-                Direction.UP, Direction.DOWN -> if (megaman.body.x > body.x) Facing.RIGHT else Facing.LEFT
-                Direction.LEFT, Direction.RIGHT -> if (megaman.body.y > body.y) Facing.RIGHT else Facing.LEFT
+                Direction.UP, Direction.DOWN -> if (getMegaman().body.x > body.x) Facing.RIGHT else Facing.LEFT
+                Direction.LEFT, Direction.RIGHT -> if (getMegaman().body.y > body.y) Facing.RIGHT else Facing.LEFT
             }
 
             if (canJump && shouldJump()) jump()
 
-            if (!isInGameCamBounds()) {
+            if (!overlapsGameCamera()) {
                 state = if (hasShield) SniperJoeState.WAITING_SHIELDED else SniperJoeState.WAITING_NO_SHIELD
                 waitTimer.reset()
                 return@add
@@ -417,15 +421,15 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         game.engine.spawn(
             shield, props(
                 ConstKeys.POSITION to body.getCenter(), ConstKeys.TRAJECTORY to normalizedTrajectory(
-                    body.getCenter(), megaman.body.getCenter(), SHIELD_VEL * ConstVals.PPM
+                    body.getCenter(), getMegaman().body.getCenter(), SHIELD_VEL * ConstVals.PPM
                 ), ConstKeys.OWNER to this
             )
         )
     }
 
     private fun shouldJump() = body.isSensing(BodySense.FEET_ON_GROUND) && (when (directionRotation!!) {
-        Direction.UP, Direction.DOWN -> megaman.body.x >= body.x && megaman.body.getMaxX() <= body.getMaxX()
-        Direction.LEFT, Direction.RIGHT -> megaman.body.y >= body.y && megaman.body.getMaxY() <= body.getMaxY()
+        Direction.UP, Direction.DOWN -> getMegaman().body.x >= body.x && getMegaman().body.getMaxX() <= body.getMaxX()
+        Direction.LEFT, Direction.RIGHT -> getMegaman().body.y >= body.y && getMegaman().body.getMaxY() <= body.getMaxY()
     })
 
     private fun jump() {

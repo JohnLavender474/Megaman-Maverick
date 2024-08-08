@@ -9,7 +9,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
 
-class SimpleEndLevelScreen(private val megamanGame: MegamanMaverickGame) : BaseScreen(megamanGame) {
+class SimpleEndLevelScreen(private val game: MegamanMaverickGame) : BaseScreen() {
 
     override val eventKeyMask = ObjectSet<Any>()
 
@@ -32,12 +32,12 @@ class SimpleEndLevelScreen(private val megamanGame: MegamanMaverickGame) : BaseS
 
     override fun show() {
         super.show()
-        megamanGame.audioMan.playSound(SoundAsset.MM1_VICTORY_SOUND, false)
+        game.audioMan.playSound(SoundAsset.MM1_VICTORY_SOUND, false)
     }
 
     override fun render(delta: Float) {
         super.render(delta)
-        game.batch.projectionMatrix = megamanGame.getUiCamera().combined
+        game.batch.projectionMatrix = game.getUiCamera().combined
         game.batch.begin()
         successText.draw(game.batch)
         game.batch.end()

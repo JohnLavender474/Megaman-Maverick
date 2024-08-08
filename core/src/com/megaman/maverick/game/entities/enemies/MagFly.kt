@@ -40,7 +40,7 @@ import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.VelocityAlteration
-import com.megaman.maverick.game.utils.getMegamanMaverickGame
+
 import com.megaman.maverick.game.world.*
 import kotlin.reflect.KClass
 
@@ -165,11 +165,10 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
                 forceFlashTimer.reset()
             }
 
-            val megaman = getMegamanMaverickGame().megaman
-            val slow = megaman.body.overlaps(forceFixture.getShape() as Rectangle)
+            val slow = getMegaman().body.overlaps(forceFixture.getShape() as Rectangle)
 
-            if (!slow && megaman.body.y < body.y && !facingAndMMDirMatch()) facing =
-                if (megaman.body.x > body.x) Facing.RIGHT else Facing.LEFT
+            if (!slow && getMegaman().body.y < body.y && !facingAndMMDirMatch()) facing =
+                if (getMegaman().body.x > body.x) Facing.RIGHT else Facing.LEFT
 
             if ((facing == Facing.LEFT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) || (facing == Facing.RIGHT && body.isSensing(
                     BodySense.SIDE_TOUCHING_BLOCK_RIGHT
@@ -186,5 +185,5 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     }
 
     private fun facingAndMMDirMatch() =
-        (getMegamanMaverickGame().megaman.body.x > body.x && facing == Facing.RIGHT) || (getMegamanMaverickGame().megaman.body.x < body.x && facing == Facing.LEFT)
+        (game.megaman.body.x > body.x && facing == Facing.RIGHT) || (game.megaman.body.x < body.x && facing == Facing.LEFT)
 }

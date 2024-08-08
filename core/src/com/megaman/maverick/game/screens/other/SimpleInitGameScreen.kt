@@ -13,12 +13,12 @@ import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.setToDefaultPosition
 
-class SimpleInitGameScreen(private val megamanGame: MegamanMaverickGame) : BaseScreen(megamanGame) {
+class SimpleInitGameScreen(private val game: MegamanMaverickGame) : BaseScreen() {
 
     override val eventKeyMask = ObjectSet<Any>()
 
     private lateinit var text: BitmapFontHandle
-    private val uiCamera = megamanGame.getUiCamera()
+    private val uiCamera = game.getUiCamera()
 
     override fun init() {
         text =
@@ -47,8 +47,8 @@ class SimpleInitGameScreen(private val megamanGame: MegamanMaverickGame) : BaseS
         text.draw(game.batch)
         game.batch.end()
         if (Gdx.input.isKeyJustPressed(Keys.ENTER)) {
-            megamanGame.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
-            megamanGame.setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
+            game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
+            game.setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
         }
     }
 }

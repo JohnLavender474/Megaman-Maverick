@@ -54,7 +54,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
-import com.megaman.maverick.game.utils.getMegamanMaverickGame
+
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import kotlin.reflect.KClass
@@ -147,7 +147,7 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
     override fun onDamageInflictedTo(damageable: IDamageable) = (parent as GutsTank).laugh()
 
     internal fun launch() {
-        facing = if (megaman.body.x < body.getCenter().x) Facing.LEFT else Facing.RIGHT
+        facing = if (getMegaman().body.x < body.getCenter().x) Facing.LEFT else Facing.RIGHT
         state = GutsTankFistState.LAUNCHED
         launchDelayTimer.reset()
     }
@@ -169,7 +169,7 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
                         return@add
                     }
                     if (launchDelayTimer.isJustFinished()) {
-                        target = getMegamanMaverickGame().megaman.body.getCenter()
+                        target = game.megaman.body.getCenter()
                         requestToPlaySound(SoundAsset.BURST_SOUND, false)
                     }
                     body.physics.velocity = target.cpy().sub(body.getCenter()).nor().scl(LAUNCH_SPEED * ConstVals.PPM)

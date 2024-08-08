@@ -137,7 +137,7 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimate
 
     private fun shoot() {
         val spawn = body.getCenter().add(0f, ASTEROID_OFFSET_Y * ConstVals.PPM)
-        val impulse = megaman.body.getCenter().sub(spawn).nor().scl(SHOOT_SPEED * ConstVals.PPM)
+        val impulse = getMegaman().body.getCenter().sub(spawn).nor().scl(SHOOT_SPEED * ConstVals.PPM)
         val asteroid = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.ASTEROID)!!
         game.engine.spawn(
             asteroid,
@@ -205,7 +205,7 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimate
 
                         arcMotion = ArcMotion(
                             startPosition = body.getCenter(),
-                            targetPosition = megaman.body.getCenter(),
+                            targetPosition = getMegaman().body.getCenter(),
                             speed = ARC_SPEED * ConstVals.PPM,
                             arcFactor = ARC_FACTOR * if (negativeArc) -1f else 1f,
                             continueBeyondTarget = true

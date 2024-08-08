@@ -1,10 +1,9 @@
 package com.megaman.maverick.game.entities.items
 
-import com.engine.entities.GameEntity
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.entities.MegaGameEntity
 
-class HealthTank(game: MegamanMaverickGame): GameEntity(game) {
-
+class HealthTank(game: MegamanMaverickGame) : MegaGameEntity(game) {
 
 
 }

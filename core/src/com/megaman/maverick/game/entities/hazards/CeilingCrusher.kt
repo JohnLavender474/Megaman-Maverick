@@ -22,7 +22,6 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
-import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.ICullableEntity
@@ -35,6 +34,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IHazard
@@ -46,7 +46,7 @@ import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.getEntity
 import com.megaman.maverick.game.world.setConsumer
 
-class CeilingCrusher(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesEntity, ICullableEntity,
+class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, ICullableEntity,
     IAudioEntity, IHazard, IDamager {
 
     companion object {
@@ -105,16 +105,18 @@ class CeilingCrusher(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity,
         }
         state = CeilingCrusherState.WAITING
         block = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.STANDARD) as Block
-        game.engine.spawn(block!!, props(
-            ConstKeys.BOUNDS to GameRectangle().setSize(2f * ConstVals.PPM, 0.5f * ConstVals.PPM),
-            ConstKeys.BLOCK_FILTERS to objectSetOf(TAG),
-            ConstKeys.CULL_OUT_OF_BOUNDS to false
-        ))
+        game.engine.spawn(
+            block!!, props(
+                ConstKeys.BOUNDS to GameRectangle().setSize(2f * ConstVals.PPM, 0.5f * ConstVals.PPM),
+                ConstKeys.BLOCK_FILTERS to objectSetOf(TAG),
+                ConstKeys.CULL_OUT_OF_BOUNDS to false
+            )
+        )
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "Destroying CeilingCrusher")
-        super<GameEntity>.onDestroy()
+        super<MegaGameEntity>.onDestroy()
         val keysToRemove = Array<String>()
         sprites.keys().forEach { if (it != SpritesComponent.SPRITE) keysToRemove.add(it) }
         keysToRemove.forEach { sprites.remove(it) }

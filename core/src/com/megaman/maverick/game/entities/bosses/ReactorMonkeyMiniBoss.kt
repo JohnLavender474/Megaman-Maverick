@@ -106,7 +106,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
         throwDelayTimer = Timer(MAX_THROW_DELAY)
         throwTimer.reset()
         state = ReactorMonkeyState.STAND
-        facing = if (megaman.body.x >= body.x) Facing.RIGHT else Facing.LEFT
+        facing = if (getMegaman().body.x >= body.x) Facing.RIGHT else Facing.LEFT
     }
 
     override fun onDestroy() {
@@ -135,7 +135,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
     fun hurlMonkeyBall() {
         monkeyBall!!.body.physics.gravityOn = true
         val impulse = MegaUtilMethods.calculateJumpImpulse(
-            body.getPosition(), megaman.body.getPosition(), HORIZONTAL_SCALAR,
+            body.getPosition(), getMegaman().body.getPosition(), HORIZONTAL_SCALAR,
             BALL_IMPULSE_Y * ConstVals.PPM, VERTICAL_SCALAR
         )
         monkeyBall!!.body.physics.velocity.set(impulse)
@@ -152,7 +152,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
             }
 
             ballCatchArea.setCenter(body.getTopCenterPoint().add(0f, 1.75f * ConstVals.PPM))
-            facing = if (megaman.body.x >= body.x) Facing.RIGHT else Facing.LEFT
+            facing = if (getMegaman().body.x >= body.x) Facing.RIGHT else Facing.LEFT
 
             if (state == ReactorMonkeyState.STAND) {
                 throwDelayTimer.update(delta)

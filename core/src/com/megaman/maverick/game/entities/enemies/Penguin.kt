@@ -36,7 +36,7 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.utils.getMegamanMaverickGame
+
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.FixtureType
@@ -168,8 +168,7 @@ class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     }
 
     private fun stand(delta: Float) {
-        val megaman = getMegamanMaverickGame().megaman
-        facing = if (megaman.body.x > body.x) Facing.RIGHT else Facing.LEFT
+        facing = if (getMegaman().body.x > body.x) Facing.RIGHT else Facing.LEFT
         standTimer.update(delta)
         if (body.isSensing(BodySense.FEET_ON_GROUND) && standTimer.isFinished()) jump()
     }

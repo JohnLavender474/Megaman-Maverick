@@ -24,7 +24,6 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
-import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.ICullableEntity
@@ -39,6 +38,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.ItemEntity
 import com.megaman.maverick.game.entities.megaman.Megaman
@@ -49,7 +49,7 @@ import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.isSensing
 
-class HealthBulb(game: MegamanMaverickGame) : GameEntity(game), ItemEntity, ISpritesEntity, IAnimatedEntity,
+class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, ISpritesEntity, IAnimatedEntity,
     IBodyEntity, ICullableEntity, IDirectionRotatable {
 
     companion object {

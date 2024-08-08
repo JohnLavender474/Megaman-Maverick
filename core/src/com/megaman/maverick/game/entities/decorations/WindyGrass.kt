@@ -13,15 +13,15 @@ import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setSize
-import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.entities.contracts.ISpritesEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.MegaGameEntity
 
-open class WindyGrass(game: MegamanMaverickGame) : GameEntity(game), ISpritesEntity, IAnimatedEntity {
+open class WindyGrass(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "AnimatedTile"
@@ -64,7 +64,7 @@ open class WindyGrass(game: MegamanMaverickGame) : GameEntity(game), ISpritesEnt
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
-        super<GameEntity>.onDestroy()
+        super<MegaGameEntity>.onDestroy()
         sprites.clear()
         animators.clear()
     }

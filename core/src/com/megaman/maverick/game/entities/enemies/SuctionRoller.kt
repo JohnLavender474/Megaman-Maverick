@@ -37,7 +37,7 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.utils.getMegamanMaverickGame
+
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.FixtureType
@@ -79,7 +79,7 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
         super.spawn(spawnProps)
         onWall = false
         wasOnWall = false
-        facing = if (getMegamanMaverickGame().megaman.body.x > body.x) Facing.RIGHT else Facing.LEFT
+        facing = if (game.megaman.body.x > body.x) Facing.RIGHT else Facing.LEFT
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.positionOnPoint(spawn, Position.BOTTOM_CENTER)
     }
@@ -87,7 +87,7 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            val megaman = getMegamanMaverickGame().megaman
+            val megaman = game.megaman
             if (megaman.dead) return@add
 
             wasOnWall = onWall
@@ -96,8 +96,8 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
                         (facing == Facing.RIGHT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
 
             if (body.isSensing(BodySense.FEET_ON_GROUND)) {
-                if (megaman.body.getBottomRightPoint().x < body.x) facing = Facing.LEFT
-                else if (megaman.body.x > body.getBottomRightPoint().x) facing = Facing.RIGHT
+                if (getMegaman().body.getBottomRightPoint().x < body.x) facing = Facing.LEFT
+                else if (getMegaman().body.x > body.getBottomRightPoint().x) facing = Facing.RIGHT
             }
         }
     }

@@ -149,7 +149,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
         state = SigmaRatClawState.LAUNCH
         launchPauseTimer.reset()
         reachedLaunchTarget = false
-        launchTarget = megaman.body.getCenter()
+        launchTarget = getMegaman().body.getCenter()
         GameLogger.debug(TAG, "Launch target: $launchTarget")
         returnTarget = body.getCenter()
         GameLogger.debug(TAG, "Return target: $returnTarget")
@@ -188,7 +188,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
         )
         requestToPlaySound(SoundAsset.BURST_SOUND, false)
 
-        shockBall!!.launch(megaman.body.getCenter().sub(body.getCenter()).nor().scl(SHOCK_VELOCITY_Y * ConstVals.PPM))
+        shockBall!!.launch(getMegaman().body.getCenter().sub(body.getCenter()).nor().scl(SHOCK_VELOCITY_Y * ConstVals.PPM))
         shockBall = null
         requestToPlaySound(SoundAsset.BLAST_SOUND, false)
     }
@@ -230,7 +230,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
                             launchTarget.cpy().sub(body.getCenter()).nor().scl(LAUNCH_SPEED * ConstVals.PPM)
                         body.physics.velocity = trajectory
                         if (body.getCenter().epsilonEquals(launchTarget, EPSILON * ConstVals.PPM) ||
-                            megaman.body.contains(body.getCenter()) ||
+                            getMegaman().body.contains(body.getCenter()) ||
                             body.getMaxY() >= maxY
                         ) {
                             launchPauseTimer.reset()

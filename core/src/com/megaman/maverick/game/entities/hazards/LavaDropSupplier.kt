@@ -8,7 +8,6 @@ import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
 import com.engine.cullables.CullablesComponent
 import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.ICullableEntity
 import com.engine.updatables.UpdatablesComponent
@@ -19,13 +18,14 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.HazardsFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.BodyComponentCreator
 
-class LavaDropSupplier(game: MegamanMaverickGame) : GameEntity(game), IHazard, IBodyEntity, ICullableEntity {
+class LavaDropSupplier(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IBodyEntity, ICullableEntity {
 
     companion object {
         const val TAG = "LavaDropSupplier"
@@ -49,7 +49,7 @@ class LavaDropSupplier(game: MegamanMaverickGame) : GameEntity(game), IHazard, I
     }
 
     override fun onDestroy() {
-        super<GameEntity>.onDestroy()
+        super<MegaGameEntity>.onDestroy()
         lavaDrop = null
     }
 

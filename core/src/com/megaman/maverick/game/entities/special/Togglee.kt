@@ -29,7 +29,6 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
-import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.*
 import com.engine.events.Event
@@ -44,16 +43,18 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
+import com.megaman.maverick.game.entities.overlapsGameCamera
 import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntitySuppliers
-import com.megaman.maverick.game.entities.utils.overlapsGameCamera
+
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.setHitByProjectileReceiver
 
-class Togglee(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     IFontsEntity, IAudioEntity, IDirectionRotatable, IDamager, IParentEntity, IEventListener {
 
     enum class ToggleeState {
@@ -151,7 +152,7 @@ class Togglee(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISprit
     }
 
     override fun onDestroy() {
-        super<GameEntity>.onDestroy()
+        super<MegaGameEntity>.onDestroy()
         game.eventsMan.removeListener(this)
         children.forEach { it.kill() }
         children.clear()

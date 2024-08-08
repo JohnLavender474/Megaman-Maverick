@@ -18,7 +18,7 @@ class AnimatedStars(
 
     companion object {
         private const val ROWS = 5
-        private const val COLS = 40
+        private const val COLS = 75
         private const val ANIM_ROWS = 1
         private const val ANIM_COLS = 3
         private const val ANIM_DUR = 0.5f

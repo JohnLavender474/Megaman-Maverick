@@ -23,6 +23,9 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val FRAME = "frame"
+    const val ROLL = "roll"
+    const val SHOOT = "shoot"
     const val RISE = "rise"
     const val EDIT = "edit"
     const val SHOW = "show"

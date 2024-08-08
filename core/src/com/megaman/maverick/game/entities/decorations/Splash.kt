@@ -17,7 +17,6 @@ import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
-import com.engine.entities.GameEntity
 import com.engine.entities.contracts.ISpritesEntity
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.Body
@@ -26,11 +25,12 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import kotlin.math.ceil
 
-class Splash(game: MegamanMaverickGame) : GameEntity(game), ISpritesEntity {
+class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
 
     companion object {
         const val TAG = "Splash"

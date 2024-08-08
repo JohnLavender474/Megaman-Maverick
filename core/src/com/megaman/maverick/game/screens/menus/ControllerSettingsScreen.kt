@@ -16,9 +16,9 @@ import com.engine.controller.buttons.Buttons
 import com.engine.drawables.fonts.BitmapFontHandle
 import com.engine.screens.menus.IMenuButton
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.controllers.ControllerButton
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.controllers.ControllerButton
 import com.megaman.maverick.game.controllers.getControllerPreferences
 import com.megaman.maverick.game.controllers.getKeyboardPreferences
 import com.megaman.maverick.game.controllers.resetToDefaults
@@ -163,7 +163,7 @@ class ControllerSettingsScreen(
         menuButtons.put(RESET_TO_DEFAULTS, object : IMenuButton {
             override fun onSelect(delta: Float): Boolean {
                 ControllerUtils.resetToDefaults(buttons, isKeyboardSettings)
-                castGame.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
+                game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
                 return false
             }
 
@@ -221,23 +221,23 @@ class ControllerSettingsScreen(
 
     override fun show() {
         super.show()
-        castGame.getUiCamera().setToDefaultPosition()
+        game.getUiCamera().setToDefaultPosition()
     }
 
     override fun onAnySelection() {
         super.onAnySelection()
-        castGame.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
+        game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
     }
 
     override fun onAnyMovement() {
         super.onAnyMovement()
-        castGame.audioMan.playSound(SoundAsset.CURSOR_MOVE_BLOOP_SOUND, false)
+        game.audioMan.playSound(SoundAsset.CURSOR_MOVE_BLOOP_SOUND, false)
     }
 
     override fun render(delta: Float) {
         if (!isKeyboardSettings && controller == null) {
             GameLogger.error(TAG, "No controller found")
-            castGame.audioMan.playSound(SoundAsset.ERROR_SOUND, false)
+            game.audioMan.playSound(SoundAsset.ERROR_SOUND, false)
             game.setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
             return
         }
@@ -256,7 +256,7 @@ class ControllerSettingsScreen(
         blinkingArrow.center = Vector2(2.5f * ConstVals.PPM, arrowY * ConstVals.PPM)
         blinkingArrow.update(delta)
 
-        game.batch.projectionMatrix = castGame.getUiCamera().combined
+        game.batch.projectionMatrix = game.getUiCamera().combined
         game.batch.begin()
         if (selectedButton != null) hintFontHandle.draw(game.batch)
         else {

@@ -20,7 +20,6 @@ import com.engine.common.time.TimeMarkedRunnable
 import com.engine.common.time.Timer
 import com.engine.damage.IDamageable
 import com.engine.damage.IDamager
-import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.*
 import com.engine.events.Event
@@ -34,6 +33,7 @@ import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.bosses.*
 import com.megaman.maverick.game.entities.bosses.gutstank.GutsTankFist
 import com.megaman.maverick.game.entities.bosses.sigmarat.SigmaRat
@@ -54,14 +54,13 @@ import com.megaman.maverick.game.entities.special.Togglee
 import com.megaman.maverick.game.entities.utils.setStandardOnPortalHopperContinueProp
 import com.megaman.maverick.game.entities.utils.standardOnPortalHopperEnd
 import com.megaman.maverick.game.entities.utils.standardOnPortalHopperStart
-import com.megaman.maverick.game.entities.utils.stopSoundNow
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.misc.StunType
 import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.isSensingAny
 import kotlin.reflect.KClass
 
-class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IEventListener, IFaceable, IDamageable,
+class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable, IEventListener, IFaceable, IDamageable,
     IDirectionRotatable, IBodyEntity, IHealthEntity, ISpritesEntity, IBehaviorsEntity, IPointsEntity, IAudioEntity,
     IAnimatedEntity, IScalableGravityEntity, IBoundsSupplier {
 
@@ -181,7 +180,9 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
         PopupCanon::class to dmgNeg(3),
         Asteroid::class to dmgNeg(3),
         AsteroidExplosion::class to dmgNeg(3),
-        MoonHeadMiniBoss::class to dmgNeg(3)
+        MoonHeadMiniBoss::class to dmgNeg(3),
+        BunbyRedRocket::class to dmgNeg(3),
+        BunbyTank::class to dmgNeg(3)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 
@@ -394,7 +395,7 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
 
-        super<GameEntity>.onDestroy()
+        super<MegaGameEntity>.onDestroy()
         body.physics.velocity.setZero()
 
         val eventsMan = game.eventsMan
@@ -498,7 +499,7 @@ class Megaman(game: MegamanMaverickGame) : GameEntity(game), IMegaUpgradable, IE
     }
 
     override fun getPosition() = when (directionRotation!!) {
-        Direction.UP, null -> body.getBottomCenterPoint()
+        Direction.UP -> body.getBottomCenterPoint()
         Direction.DOWN -> body.getTopCenterPoint()
         Direction.LEFT -> body.getCenterRightPoint()
         Direction.RIGHT -> body.getCenterLeftPoint()

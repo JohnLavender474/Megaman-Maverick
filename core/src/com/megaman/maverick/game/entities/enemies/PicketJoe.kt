@@ -45,9 +45,11 @@ import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.overlapsGameCamera
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import kotlin.math.abs
@@ -110,7 +112,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            facing = if (megaman.body.x >= body.x) Facing.RIGHT else Facing.LEFT
+            facing = if (getMegaman().body.x >= body.x) Facing.RIGHT else Facing.LEFT
             if (standing) {
                 standTimer.update(it)
                 if (standTimer.isFinished()) setToThrowingPickets()
@@ -118,7 +120,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
                 throwTimer.update(it)
                 if (throwTimer.isFinished()) setToStanding()
             }
-            if (throwTimer.isFinished()) facing = if (megaman.body.x >= body.x) Facing.RIGHT else Facing.LEFT
+            if (throwTimer.isFinished()) facing = if (getMegaman().body.x >= body.x) Facing.RIGHT else Facing.LEFT
         }
     }
 
@@ -217,16 +219,16 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     }
 
     private fun throwPicket() {
-        if (!isInGameCamBounds()) return
+        if (!overlapsGameCamera()) return
 
         val spawn = body.getCenter()
         spawn.x += 0.1f * ConstVals.PPM * facing.value
         spawn.y += 0.25f * ConstVals.PPM
 
         val picket = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.PICKET)!!
-        val xFactor = 1f - ((abs(megaman.body.y - body.y) / ConstVals.PPM) / 10f) + 0.2f
+        val xFactor = 1f - ((abs(getMegaman().body.y - body.y) / ConstVals.PPM) / 10f) + 0.2f
         GameLogger.debug(TAG, "throwPicket(): xFactor: $xFactor")
-        val impulseX = (megaman.body.x - body.x) * xFactor
+        val impulseX = (getMegaman().body.x - body.x) * xFactor
 
         game.engine.spawn(
             picket, props(

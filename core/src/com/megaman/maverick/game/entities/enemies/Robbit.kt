@@ -140,7 +140,7 @@ class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
             if (robbitLoop.getCurrent() != RobbitState.JUMPING)
-                facing = if (megaman.body.x >= body.x) Facing.RIGHT else Facing.LEFT
+                facing = if (getMegaman().body.x >= body.x) Facing.RIGHT else Facing.LEFT
 
             robbitTimer.update(it)
             if (robbitTimer.isJustFinished()) {

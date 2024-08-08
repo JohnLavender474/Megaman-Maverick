@@ -70,7 +70,7 @@ import com.megaman.maverick.game.screens.levels.stats.PlayerStatsHandler
 import com.megaman.maverick.game.utils.toProps
 import java.util.*
 
-class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), Initializable {
+class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScreen(game.batch), Initializable {
 
     companion object {
         const val TAG = "MegaLevelScreen"
@@ -103,21 +103,19 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
         EventType.END_LEVEL,
         EventType.EDIT_TILED_MAP
     )
-
-    val megamanGame: MegamanMaverickGame
-        get() = super.game as MegamanMaverickGame
+    
     val engine: GameEngine
         get() = game.engine as GameEngine
     val systemsMap: ObjectMap<String, IGameSystem>
-        get() = megamanGame.getSystems()
+        get() = game.getSystems()
     val megaman: Megaman
-        get() = megamanGame.megaman
+        get() = game.megaman
     val eventsMan: IEventsManager
-        get() = megamanGame.eventsMan
+        get() = game.eventsMan
     val audioMan: MegaAudioManager
-        get() = megamanGame.audioMan
+        get() = game.audioMan
     val controllerPoller: IControllerPoller
-        get() = megamanGame.controllerPoller
+        get() = game.controllerPoller
 
     var level: Level? = null
     var music: MusicAsset? = null
@@ -159,21 +157,21 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
     override fun init() {
         disposables = Array()
         spawnsMan = SpawnsManager()
-        levelStateHandler = LevelStateHandler(megamanGame)
-        endLevelEventHandler = EndLevelEventHandler(megamanGame)
-        drawables = megamanGame.getDrawables()
-        shapes = megamanGame.getShapes()
-        backgroundCamera = megamanGame.getBackgroundCamera()
-        gameCamera = megamanGame.getGameCamera()
-        foregroundCamera = megamanGame.getForegroundCamera()
-        uiCamera = megamanGame.getUiCamera()
+        levelStateHandler = LevelStateHandler(game)
+        endLevelEventHandler = EndLevelEventHandler(game)
+        drawables = game.getDrawables()
+        shapes = game.getShapes()
+        backgroundCamera = game.getBackgroundCamera()
+        gameCamera = game.getGameCamera()
+        foregroundCamera = game.getForegroundCamera()
+        uiCamera = game.getUiCamera()
         playerSpawnsMan = PlayerSpawnsManager(gameCamera)
         playerStatsHandler = PlayerStatsHandler(megaman)
         playerStatsHandler.init()
-        entityStatsHandler = EntityStatsHandler(megamanGame)
-        playerSpawnEventHandler = PlayerSpawnEventHandler(megamanGame)
-        playerDeathEventHandler = PlayerDeathEventHandler(megamanGame)
-        bossSpawnEventHandler = BossSpawnEventHandler(megamanGame)
+        entityStatsHandler = EntityStatsHandler(game)
+        playerSpawnEventHandler = PlayerSpawnEventHandler(game)
+        playerDeathEventHandler = PlayerDeathEventHandler(game)
+        bossSpawnEventHandler = BossSpawnEventHandler(game)
         cameraManagerForRooms = CameraManagerForRooms(gameCamera)
         cameraManagerForRooms.interpolate = INTERPOLATE_GAME_CAM
         cameraManagerForRooms.interpolationScalar = 5f
@@ -261,7 +259,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
         val worldGraphMap = QuadTreeGraphMap(0, 0, worldWidth, worldHeight, ConstVals.PPM, depth)
          */
         val worldGraphMap = SimpleNodeGraphMap(0, 0, worldWidth, worldHeight, ConstVals.PPM)
-        megamanGame.setGraphMap(worldGraphMap)
+        game.setGraphMap(worldGraphMap)
 
         playerSpawnEventHandler.init()
 
@@ -282,7 +280,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
     }
 
     override fun getLayerBuilders() =
-        MegaMapLayerBuilders(MegaMapLayerBuildersParams(game as MegamanMaverickGame, spawnsMan))
+        MegaMapLayerBuilders(MegaMapLayerBuildersParams(game, spawnsMan))
 
     override fun buildLevel(result: Properties) {
         backgrounds = result.get(ConstKeys.BACKGROUNDS) as Array<Background>? ?: Array()
@@ -334,6 +332,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
             }
 
             EventType.PLAYER_READY -> {
+                engine.forEachEntity { if (it is AbstractEnemy) it.kill() }
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Player ready")
                 eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
             }
@@ -545,7 +544,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
         backgroundCamera.position.x += gameCamDeltaX * backgroundParallaxFactor
         gameCameraPriorPosition.set(gameCamera.position)
 
-        val batch = megamanGame.batch
+        val batch = game.batch
         batch.begin()
 
         batch.projectionMatrix = backgroundCamera.combined
@@ -583,7 +582,7 @@ class MegaLevelScreen(game: MegamanMaverickGame) : TiledMapLevelScreen(game), In
         if (!playerSpawnEventHandler.finished) playerSpawnEventHandler.draw(batch)
         else if (!endLevelEventHandler.finished) endLevelEventHandler.draw(batch)
 
-        val shapeRenderer = megamanGame.shapeRenderer
+        val shapeRenderer = game.shapeRenderer
         shapeRenderer.projectionMatrix = gameCamera.combined
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line)

@@ -22,7 +22,6 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
-import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.ISpritesEntity
@@ -35,12 +34,13 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
-class SigmaRatElectricBallExplosion(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesEntity,
+class SigmaRatElectricBallExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity,
     IAnimatedEntity, IDamager, IHazard, IDirectionRotatable {
 
     companion object {
@@ -66,7 +66,7 @@ class SigmaRatElectricBallExplosion(game: MegamanMaverickGame) : GameEntity(game
             explosionRegion = atlas.findRegion("SigmaRat/ElectricPulse")
             dissipateRegion = atlas.findRegion("SigmaRat/ElectricDissipate")
         }
-        super<GameEntity>.init()
+        super<MegaGameEntity>.init()
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())

@@ -12,14 +12,14 @@ import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.ISpritesEntity
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.utils.toGameRectangle
 import com.megaman.maverick.game.utils.toProps
 
 fun getGameCameraCullingLogic(entity: IBodyEntity, timeToCull: Float = 1f) = CullableOnUncontained(
-    { (entity.game as MegamanMaverickGame).getGameCamera().toGameRectangle() },
+    { (entity as MegaGameEntity).game.getGameCamera().toGameRectangle() },
     { it.overlaps(entity.body as Rectangle) },
     timeToCull
 )

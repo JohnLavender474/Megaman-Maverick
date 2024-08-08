@@ -13,7 +13,6 @@ import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
 import com.engine.cullables.CullablesComponent
 import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.IParentEntity
@@ -22,15 +21,14 @@ import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.blocks.AnimatedBlock
 import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntitySuppliers
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
-import com.megaman.maverick.game.utils.getMegamanMaverickGame
 import com.megaman.maverick.game.utils.toGameRectangle
 import java.util.*
 
-class DisappearingBlocks(game: MegamanMaverickGame) :
-    GameEntity(game), IParentEntity, IAudioEntity {
+class DisappearingBlocks(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEntity, IAudioEntity {
 
     companion object {
         const val TAG = "DisappearingBlocks"
@@ -98,7 +96,7 @@ class DisappearingBlocks(game: MegamanMaverickGame) :
     }
 
     override fun onDestroy() {
-        super<GameEntity>.onDestroy()
+        super<MegaGameEntity>.onDestroy()
         children.forEach { it.kill(props(CAUSE_OF_DEATH_MESSAGE to "Culled by parent")) }
         children.clear()
     }
@@ -128,7 +126,7 @@ class DisappearingBlocks(game: MegamanMaverickGame) :
                         spriteBlock.body.fixtures.forEach { entry -> (entry.second as Fixture).active = on }
                         spriteBlock.hidden = !on
 
-                        val gameCamera = getMegamanMaverickGame().getGameCamera()
+                        val gameCamera = game.getGameCamera()
                         if (!soundRequested && gameCamera.toGameRectangle().overlaps(spriteBlock.body as Rectangle)) {
                             requestToPlaySound(SoundAsset.DISAPPEARING_BLOCK_SOUND, false)
                             soundRequested = true
@@ -142,7 +140,7 @@ class DisappearingBlocks(game: MegamanMaverickGame) :
     private fun defineCullablesComponent(): CullablesComponent {
         val cullablesComponent = CullablesComponent(this)
         val cullable =
-            getGameCameraCullingLogic((game as MegamanMaverickGame).getGameCamera(), { bounds })
+            getGameCameraCullingLogic(game.getGameCamera(), { bounds })
         cullablesComponent.put(ConstKeys.CULL_OUT_OF_BOUNDS, cullable)
         return cullablesComponent
     }

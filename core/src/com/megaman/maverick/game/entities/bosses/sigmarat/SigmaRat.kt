@@ -238,7 +238,7 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
     }
 
     private fun startAttack() {
-        if (megaman.body.getMaxY() >= body.getCenter().y) {
+        if (getMegaman().body.getMaxY() >= body.getCenter().y) {
             weightedAttackSelector.putItem(SigmaRatAttack.CLAW_SHOCK, HIGH_CHANCE)
             weightedAttackSelector.putItem(SigmaRatAttack.CLAW_LAUNCH, LOW_CHANCE)
             weightedAttackSelector.putItem(SigmaRatAttack.ELECTRIC_BALLS, LOW_CHANCE)
@@ -283,8 +283,8 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
                 val claw = if (leftClaw!!.shocking || leftClaw!!.launched) rightClaw
                 else if (rightClaw!!.shocking || rightClaw!!.launched) leftClaw
                 else {
-                    val distToLeft = megaman.body.getCenter().dst2(leftClaw!!.body.getCenter())
-                    val distToRight = megaman.body.getCenter().dst2(rightClaw!!.body.getCenter())
+                    val distToLeft = getMegaman().body.getCenter().dst2(leftClaw!!.body.getCenter())
+                    val distToRight = getMegaman().body.getCenter().dst2(rightClaw!!.body.getCenter())
                     if (distToLeft > distToRight) rightClaw else leftClaw
                 }
                 if (claw!!.shocking || claw.launched) return
@@ -295,8 +295,8 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
                 val claw = if (leftClaw!!.shocking || leftClaw!!.launched) rightClaw
                 else if (rightClaw!!.shocking || rightClaw!!.launched) leftClaw
                 else {
-                    val distToLeft = megaman.body.getCenter().dst2(leftClaw!!.body.getCenter())
-                    val distToRight = megaman.body.getCenter().dst2(rightClaw!!.body.getCenter())
+                    val distToLeft = getMegaman().body.getCenter().dst2(leftClaw!!.body.getCenter())
+                    val distToRight = getMegaman().body.getCenter().dst2(rightClaw!!.body.getCenter())
                     if (distToLeft > distToRight) leftClaw else rightClaw
                 }
                 if (claw!!.shocking || claw.launched) return
@@ -328,15 +328,15 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
                         val attack = weightedAttackSelector.getRandomItem()
                         when (attack) {
                             SigmaRatAttack.CLAW_SHOCK -> {
-                                val distToLeft = megaman.body.getCenter().dst2(leftClaw!!.body.getCenter())
-                                val distToRight = megaman.body.getCenter().dst2(rightClaw!!.body.getCenter())
+                                val distToLeft = getMegaman().body.getCenter().dst2(leftClaw!!.body.getCenter())
+                                val distToRight = getMegaman().body.getCenter().dst2(rightClaw!!.body.getCenter())
                                 val claw = if (distToLeft > distToRight) leftClaw else rightClaw
                                 if (!claw!!.shocking && !claw.launched) claw.enterShockState()
                             }
 
                             SigmaRatAttack.CLAW_LAUNCH -> {
-                                val distToLeft = megaman.body.getCenter().dst2(leftClaw!!.body.getCenter())
-                                val distToRight = megaman.body.getCenter().dst2(rightClaw!!.body.getCenter())
+                                val distToLeft = getMegaman().body.getCenter().dst2(leftClaw!!.body.getCenter())
+                                val distToRight = getMegaman().body.getCenter().dst2(rightClaw!!.body.getCenter())
                                 val claw = if (distToLeft > distToRight) leftClaw else rightClaw
                                 if (!claw!!.shocking && !claw.launched) claw.enterLaunchState()
                             }

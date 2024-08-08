@@ -48,7 +48,7 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.utils.getMegamanMaverickGame
+
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import kotlin.reflect.KClass
@@ -167,8 +167,7 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            val megaman = getMegamanMaverickGame().megaman
-            facing = if (megaman.body.x > body.x) Facing.RIGHT else Facing.LEFT
+            facing = if (getMegaman().body.x > body.x) Facing.RIGHT else Facing.LEFT
             settingTimer.update(it)
             if (settingTimer.isJustFinished()) {
                 val index = (setting.ordinal + 1) % SwinginJoeSetting.values().size

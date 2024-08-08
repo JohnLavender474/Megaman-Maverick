@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.contracts
 
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.ObjectMap
 import com.engine.audio.AudioComponent
 import com.engine.common.GameLogger
@@ -15,7 +14,6 @@ import com.engine.cullables.CullablesComponent
 import com.engine.damage.IDamageable
 import com.engine.damage.IDamager
 import com.engine.drawables.sprites.SpritesComponent
-import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.IBodyEntity
@@ -30,18 +28,20 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.factories.impl.ItemsFactory
-import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.utils.*
+import com.megaman.maverick.game.entities.overlapsGameCamera
+import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.entities.utils.setStandardOnPortalHopperEndProp
+import com.megaman.maverick.game.entities.utils.setStandardOnPortalHopperStartProp
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.utils.toGameRectangle
 import kotlin.reflect.KClass
 
 abstract class AbstractEnemy(
     game: MegamanMaverickGame, dmgDuration: Float = DEFAULT_DMG_DURATION, dmgBlinkDur: Float = DEFAULT_DMG_BLINK_DUR
-) : GameEntity(game), IDamager, IDamageable, IBodyEntity, IAudioEntity, IHealthEntity, ISpritesEntity, ICullableEntity {
+) : MegaGameEntity(game), IDamager, IDamageable, IBodyEntity, IAudioEntity, IHealthEntity, ISpritesEntity, ICullableEntity {
 
     companion object {
         const val TAG = "AbstractEnemy"
@@ -52,9 +52,6 @@ abstract class AbstractEnemy(
 
     override val invincible: Boolean
         get() = !damageTimer.isFinished()
-
-    protected val megaman: Megaman
-        get() = getMegaman()
 
     protected abstract val damageNegotiations: ObjectMap<KClass<out IDamager>, DamageNegotiation>
 
@@ -212,9 +209,7 @@ abstract class AbstractEnemy(
     }
 
     open fun isMegamanShootingAtMe(): Boolean {
-        if (!megaman.shooting) return false
-        return body.x < megaman.body.x && megaman.facing == Facing.LEFT || body.x > megaman.body.x && megaman.facing == Facing.RIGHT
+        if (!getMegaman().shooting) return false
+        return body.x < getMegaman().body.x && getMegaman().facing == Facing.LEFT || body.x > getMegaman().body.x && getMegaman().facing == Facing.RIGHT
     }
-
-    open fun isInGameCamBounds() = getGameCamera().toGameRectangle().overlaps(body as Rectangle)
 }

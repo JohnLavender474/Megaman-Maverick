@@ -6,7 +6,7 @@ import com.engine.world.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.entities.utils.getMegaman
+
 import com.megaman.maverick.game.world.FixtureType
 
 class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {

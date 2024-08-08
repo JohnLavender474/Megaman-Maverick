@@ -33,8 +33,9 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.utils.overlapsGameCamera
-import com.megaman.maverick.game.entities.utils.playSoundNow
+import com.megaman.maverick.game.entities.overlapsGameCamera
+
+
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.getEntity

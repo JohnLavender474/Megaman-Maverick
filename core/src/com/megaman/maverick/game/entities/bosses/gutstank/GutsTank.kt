@@ -352,7 +352,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
             if (fist?.dead == true) fist = null
             if (fist?.state == GutsTankFist.GutsTankFistState.ATTACHED) {
                 launchFistDelayTimer.update(delta)
-                if (launchFistDelayTimer.isFinished() && !fist!!.body.overlaps(megaman.body as Rectangle)) {
+                if (launchFistDelayTimer.isFinished() && !fist!!.body.overlaps(getMegaman().body as Rectangle)) {
                     launchFistDelayTimer.reset()
                     fist!!.launch()
                 }
@@ -365,8 +365,8 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                         requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
                         val bullet = EntityFactories.fetch(EntityType.PROJECTILE, "Bullet")!!
                         val position = body.getCenter().add(-1.65f * ConstVals.PPM, 1.85f * ConstVals.PPM)
-                        val xFactor = 1f - ((abs(megaman.body.y - position.y) / ConstVals.PPM) / 10f) + 0.2f
-                        val impulseX = (megaman.body.x - position.x) * xFactor
+                        val xFactor = 1f - ((abs(getMegaman().body.y - position.y) / ConstVals.PPM) / 10f) + 0.2f
+                        val impulseX = (getMegaman().body.x - position.x) * xFactor
                         game.engine.spawn(
                             bullet, props(
                                 ConstKeys.POSITION to position,

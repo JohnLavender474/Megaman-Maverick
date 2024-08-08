@@ -334,7 +334,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
     private fun shootWebs() {
         requestToPlaySound(SoundAsset.SPLASH_SOUND, false)
-        val centerTrajectory = megaman.body.getCenter().sub(body.getCenter()).nor()
+        val centerTrajectory = getMegaman().body.getCenter().sub(body.getCenter()).nor()
         val leftTrajectory = centerTrajectory.cpy().rotateDeg(-ANGLE_X)
         val rightTrajectory = centerTrajectory.cpy().rotateDeg(ANGLE_X)
         shootWeb(centerTrajectory)

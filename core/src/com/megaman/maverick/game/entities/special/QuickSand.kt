@@ -22,7 +22,6 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
-import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.ICullableEntity
@@ -35,10 +34,11 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
-class QuickSand(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+class QuickSand(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     ICullableEntity {
 
     companion object {
@@ -56,7 +56,7 @@ class QuickSand(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpr
             regions.put("Left", atlas.findRegion("$TAG/Left"))
             regions.put("Right", atlas.findRegion("$TAG/Right"))
         }
-        super<GameEntity>.init()
+        super<MegaGameEntity>.init()
         addComponent(defineBodyComponent())
     }
 

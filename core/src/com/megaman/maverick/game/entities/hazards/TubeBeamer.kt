@@ -26,6 +26,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -33,7 +34,7 @@ import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.BodyComponentCreator
 
-class TubeBeamer(game: MegamanMaverickGame) : GameEntity(game), IAudioEntity, IBodyEntity, ICullableEntity,
+class TubeBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IAudioEntity, IBodyEntity, ICullableEntity,
     IDirectionRotatable {
 
     companion object {

@@ -90,7 +90,7 @@ class SuicideBummer(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable,
         super.spawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
-        facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
         wasSideOnGround = false
     }
 
@@ -118,9 +118,9 @@ class SuicideBummer(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable,
             if (
                 (wasSideOnGround && !isSideOnGround) ||
                 (isSideOnGround &&
-                        megaman.body.getMaxX() >= body.x &&
-                        megaman.body.x <= body.getMaxX() &&
-                        megaman.body.getY() > body.getY())
+                        getMegaman().body.getMaxX() >= body.x &&
+                        getMegaman().body.x <= body.getMaxX() &&
+                        getMegaman().body.getY() > body.getY())
             ) jump()
             wasSideOnGround = isSideOnGround
         }

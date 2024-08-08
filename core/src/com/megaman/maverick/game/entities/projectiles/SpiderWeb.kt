@@ -101,7 +101,7 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
         trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2(), Vector2::class)
 
-        facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
         stuckToMegaman = false
         presses = 0
 
@@ -117,7 +117,7 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
                 stuckToMegaman = false
                 megaman.canMove = true
                 megaman.setAllBehaviorsAllowed(true)
-                megaman.body.physics.gravityOn = true
+                getMegaman().body.physics.gravityOn = true
             }
         }
     }
@@ -140,12 +140,12 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
     private fun stickToMegaman() {
         stuckToMegaman = true
 
-        body.setCenter(megaman.body.getCenter())
+        body.setCenter(getMegaman().body.getCenter())
         trajectory.setZero()
 
         megaman.setAllBehaviorsAllowed(false)
-        megaman.body.physics.velocity.setZero()
-        megaman.body.physics.gravityOn = false
+        getMegaman().body.physics.velocity.setZero()
+        getMegaman().body.physics.gravityOn = false
         megaman.canMove = false
 
         WEBS_STUCK_TO_MEGAMAN.add(this)
@@ -169,9 +169,9 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
 
     private fun defineUpdatablesComponent() = UpdatablesComponent(this, {
         blinkWhiteTimer.update(it)
-        if (!stuckToMegaman && !megaman.dead && body.overlaps(megaman.body as Rectangle)) stickToMegaman()
+        if (!stuckToMegaman && !megaman.dead && body.overlaps(getMegaman().body as Rectangle)) stickToMegaman()
         else if (stuckToMegaman) {
-            body.setCenter(megaman.body.getCenter())
+            body.setCenter(getMegaman().body.getCenter())
             if (game.controllerPoller.isAnyJustReleased(BUTTONS_TO_GET_UNSTUCK)) {
                 presses++
                 blinkWhiteTimer.reset()

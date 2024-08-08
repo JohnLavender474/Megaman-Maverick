@@ -44,7 +44,7 @@ class TestEnemy(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
         arcMotion = ArcMotion(
             startPosition = spawn,
-            targetPosition = megaman.body.getCenter(),
+            targetPosition = getMegaman().body.getCenter(),
             speed = 8f * ConstVals.PPM,
             arcFactor = -0.5f
         )

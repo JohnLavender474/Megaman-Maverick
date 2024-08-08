@@ -23,7 +23,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
-import com.megaman.maverick.game.utils.getMegamanMaverickGame
+
 import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.isSensing
@@ -117,8 +117,8 @@ class Lift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IDirectionR
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent(this, {
-        val megaman = getMegamanMaverickGame().megaman
-        val megamanOverlapping = !megaman.dead && megaman.body.fixtures.any {
+        val megaman = game.megaman
+        val megamanOverlapping = !megaman.dead && getMegaman().body.fixtures.any {
             it.second.getFixtureType().equalsAny(
                 FixtureType.SIDE, FixtureType.FEET
             ) && it.second.getShape().overlaps(body)

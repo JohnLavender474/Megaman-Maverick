@@ -35,7 +35,7 @@ import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.VelocityAlteration
-import com.megaman.maverick.game.utils.getMegamanMaverickGame
+
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.getEntity
@@ -122,7 +122,7 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            facing = if (getMegamanMaverickGame().megaman.body.x > body.x) Facing.RIGHT else Facing.LEFT
+            facing = if (game.megaman.body.x > body.x) Facing.RIGHT else Facing.LEFT
         }
     }
 

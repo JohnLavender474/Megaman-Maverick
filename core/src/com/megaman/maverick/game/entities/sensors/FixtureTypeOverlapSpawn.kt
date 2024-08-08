@@ -7,7 +7,6 @@ import com.engine.common.enums.ProcessState
 import com.engine.common.extensions.toOrderedSet
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
-import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.IParentEntity
@@ -15,12 +14,13 @@ import com.engine.updatables.UpdatablesComponent
 import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntitySuppliers
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.setConsumer
 
-class FixtureTypeOverlapSpawn(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IParentEntity {
+class FixtureTypeOverlapSpawn(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IParentEntity {
 
     companion object {
         const val TAG = "FixtureTypeOverlapSpawn"
@@ -56,7 +56,7 @@ class FixtureTypeOverlapSpawn(game: MegamanMaverickGame) : GameEntity(game), IBo
     }
 
     override fun onDestroy() {
-        super<GameEntity>.onDestroy()
+        super<MegaGameEntity>.onDestroy()
         fixturesConsumed.clear()
     }
 

@@ -14,7 +14,6 @@ import com.engine.common.time.Timer
 import com.engine.cullables.CullableOnEvent
 import com.engine.cullables.CullablesComponent
 import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.ICullableEntity
 import com.engine.entities.contracts.IDrawableShapesEntity
@@ -24,13 +23,13 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
-import com.megaman.maverick.game.entities.utils.getGameCamera
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
 
-class AsteroidsSpawner(game: MegamanMaverickGame) : GameEntity(game), IParentEntity, ICullableEntity,
+class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEntity, ICullableEntity,
     IDrawableShapesEntity {
 
     companion object {
@@ -71,7 +70,7 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : GameEntity(game), IParentEnt
     }
 
     override fun onDestroy() {
-        super<GameEntity>.onDestroy()
+        super<MegaGameEntity>.onDestroy()
         children.clear()
     }
 

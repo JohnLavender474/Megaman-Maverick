@@ -22,7 +22,6 @@ import com.engine.drawables.sorting.DrawingPriority
 import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
-import com.engine.entities.GameEntity
 import com.engine.entities.contracts.ISpritesEntity
 import com.engine.events.Event
 import com.engine.events.IEventListener
@@ -31,12 +30,13 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.utils.getMegamanMaverickGame
+
 import java.util.*
 
-class Darkness(game: MegamanMaverickGame) : GameEntity(game), ISpritesEntity, IEventListener {
+class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IEventListener {
 
     companion object {
         const val TAG = "BlackBackground"
@@ -136,7 +136,7 @@ class Darkness(game: MegamanMaverickGame) : GameEntity(game), ISpritesEntity, IE
     }
 
     override fun onDestroy() {
-        super<GameEntity>.onDestroy()
+        super<MegaGameEntity>.onDestroy()
         game.eventsMan.removeListener(this)
         sprites.clear()
     }
@@ -265,7 +265,7 @@ class Darkness(game: MegamanMaverickGame) : GameEntity(game), ISpritesEntity, IE
 
 
     private fun defineCullablesComponent(): CullablesComponent {
-        val cullable = getGameCameraCullingLogic(getMegamanMaverickGame().getGameCamera(), { bounds })
+        val cullable = getGameCameraCullingLogic(game.getGameCamera(), { bounds })
         return CullablesComponent(this, objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullable))
     }
 }

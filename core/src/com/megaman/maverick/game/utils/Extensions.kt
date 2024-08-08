@@ -27,8 +27,6 @@ import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import kotlin.math.roundToInt
 
-fun IGameEntity.getMegamanMaverickGame() = game as MegamanMaverickGame
-
 fun MapObject.convertToProps(): Properties = when (this) {
     is RectangleMapObject -> toProps()
     is PolygonMapObject -> toProps()

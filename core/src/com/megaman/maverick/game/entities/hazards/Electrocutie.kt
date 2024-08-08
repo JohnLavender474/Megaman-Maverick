@@ -14,7 +14,6 @@ import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
 import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
-import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.IParentEntity
@@ -27,14 +26,15 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.HazardsFactory
-import com.megaman.maverick.game.utils.getMegamanMaverickGame
+
 import com.megaman.maverick.game.world.BodyComponentCreator
 import kotlin.math.roundToInt
 
-class Electrocutie(game: MegamanMaverickGame) : GameEntity(game), IHazard, IBodyEntity, IParentEntity {
+class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IBodyEntity, IParentEntity {
 
     enum class ElectrocutieState {
         MOVE, CHARGE, SHOCK
@@ -152,7 +152,7 @@ class Electrocutie(game: MegamanMaverickGame) : GameEntity(game), IHazard, IBody
             val length = bounds.width.roundToInt() / ConstVals.PPM
             for (i in 0 until length) {
                 val position = body.getCenterLeftPoint().add(i * ConstVals.PPM.toFloat(), 0f)
-                val bolt = Bolt(getMegamanMaverickGame())
+                val bolt = Bolt(game)
                 game.engine.spawn(
                     bolt, props(
                         ConstKeys.POSITION to position,
@@ -167,7 +167,7 @@ class Electrocutie(game: MegamanMaverickGame) : GameEntity(game), IHazard, IBody
     }
 
     override fun onDestroy() {
-        super<GameEntity>.onDestroy()
+        super<MegaGameEntity>.onDestroy()
         children.forEach { it.kill() }
         children.clear()
     }

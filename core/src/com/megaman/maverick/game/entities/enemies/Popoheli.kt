@@ -102,7 +102,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        val megamanCenter = megaman.body.getCenter()
+        val megamanCenter = getMegaman().body.getCenter()
         val targets = PriorityQueue<Vector2> { target1, target2 ->
             target1.dst2(megamanCenter).compareTo(target2.dst2(megamanCenter))
         }

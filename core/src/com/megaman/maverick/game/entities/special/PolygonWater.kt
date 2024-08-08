@@ -21,7 +21,6 @@ import com.engine.drawables.sorting.DrawingPriority
 import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
-import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.ISpritesEntity
@@ -33,12 +32,13 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.splitIntoGameRectanglesBasedOnCenter
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
-class PolygonWater(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity {
+class PolygonWater(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "PolygonWater"
@@ -56,7 +56,7 @@ class PolygonWater(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, I
     private lateinit var waterFixture: Fixture
 
     override fun init() {
-        super<GameEntity>.init()
+        super<MegaGameEntity>.init()
         val atlas = game.assMan.getTextureAtlas(TextureAsset.ENVIRONS_1.source)
         if (blueReg == null) blueReg = atlas.findRegion(BLUE_REG)
         if (surfaceReg == null) surfaceReg = atlas.findRegion(SURFACE_REG)
@@ -78,7 +78,7 @@ class PolygonWater(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, I
 
     override fun onDestroy() {
         GameLogger.debug(Water.TAG, "Destroyed")
-        super<GameEntity>.onDestroy()
+        super<MegaGameEntity>.onDestroy()
     }
 
     private fun defineDrawables(cells: Matrix<GameRectangle>) {

@@ -22,7 +22,6 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
-import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.IDrawableShapesEntity
 import com.engine.entities.contracts.ISpritesEntity
@@ -37,12 +36,13 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import java.util.*
 
-class LaserBeamer(game: MegamanMaverickGame) : GameEntity(game), IHazard, ISpritesEntity, IBodyEntity,
+class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, ISpritesEntity, IBodyEntity,
     IDrawableShapesEntity, IDamager {
 
     companion object {

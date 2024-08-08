@@ -6,18 +6,18 @@ import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
-import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IParentEntity
 import com.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
 
-class FloatingCanHole(game: MegamanMaverickGame) : GameEntity(game), IHazard, IParentEntity {
+class FloatingCanHole(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IParentEntity {
 
     companion object {
         const val TAG = "FloatingCanHole"

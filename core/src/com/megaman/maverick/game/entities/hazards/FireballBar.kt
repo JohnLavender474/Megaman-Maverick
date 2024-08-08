@@ -8,7 +8,6 @@ import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.cullables.CullableOnEvent
 import com.engine.cullables.CullablesComponent
-import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IParentEntity
 import com.engine.motion.RotatingLine
@@ -17,12 +16,13 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.events.EventType
 
-class FireballBar(game: MegamanMaverickGame) : GameEntity(game), IParentEntity {
+class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEntity {
 
     companion object {
         const val TAG = "FireballBar"

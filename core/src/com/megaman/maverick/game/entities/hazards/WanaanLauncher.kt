@@ -12,7 +12,6 @@ import com.engine.common.shapes.GameRectangle
 import com.engine.common.shapes.toGameRectangle
 import com.engine.common.time.Timer
 import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.IDrawableShapesEntity
@@ -25,14 +24,15 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.enemies.Wanaan
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
 import com.megaman.maverick.game.entities.utils.getObjectProps
-import com.megaman.maverick.game.utils.getMegamanMaverickGame
+
 import com.megaman.maverick.game.world.BodyComponentCreator
 
-class WanaanLauncher(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IAudioEntity, IDrawableShapesEntity {
+class WanaanLauncher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudioEntity, IDrawableShapesEntity {
 
     companion object {
         const val TAG = "WanaanLauncher"
@@ -68,20 +68,20 @@ class WanaanLauncher(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity,
     }
 
     override fun onDestroy() {
-        super<GameEntity>.onDestroy()
+        super<MegaGameEntity>.onDestroy()
         wanaan?.kill()
         wanaan = null
         sensors.clear()
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent(this, { delta ->
-        val megaman = getMegamanMaverickGame().megaman
+        val megaman = game.megaman
         if (wanaan != null && wanaan!!.comingDown && body.contains(wanaan!!.cullPoint)) {
             wanaan!!.kill()
             wanaan = null
         }
         if (wanaan?.dead == true) wanaan = null
-        if (wanaan == null && sensors.any { it.overlaps(megaman.body as Rectangle) }) {
+        if (wanaan == null && sensors.any { it.overlaps(getMegaman().body as Rectangle) }) {
             timer.update(delta)
             if (timer.isFinished()) {
                 launchWanaan()

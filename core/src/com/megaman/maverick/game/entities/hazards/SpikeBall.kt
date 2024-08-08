@@ -3,12 +3,10 @@ package com.megaman.maverick.game.entities.hazards
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
-import com.engine.common.GameLogger
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameCircle
 import com.engine.common.shapes.GameRectangle
-import com.engine.damage.IDamageable
 import com.engine.damage.IDamager
 import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
@@ -18,7 +16,6 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
-import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.IDrawableShapesEntity
 import com.engine.entities.contracts.IMotionEntity
@@ -34,11 +31,12 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
-class SpikeBall(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpritesEntity, IMotionEntity,
+class SpikeBall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IMotionEntity,
     IDrawableShapesEntity, IDamager, IHazard {
 
     companion object {
@@ -98,7 +96,7 @@ class SpikeBall(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, ISpr
     }
 
     override fun onDestroy() {
-        super<GameEntity>.onDestroy()
+        super<MegaGameEntity>.onDestroy()
         clearMotionDefinitions()
         val spritesIter = sprites.iterator()
         while (spritesIter.hasNext) {

@@ -12,7 +12,6 @@ import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.cullables.CullablesComponent
 import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.entities.GameEntity
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.IDrawableShapesEntity
@@ -27,11 +26,12 @@ import com.engine.world.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntitySuppliers
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.BodyComponentCreator
 
-open class RotationAnchor(game: MegamanMaverickGame) : GameEntity(game), IBodyEntity, IParentEntity, IMotionEntity,
+open class RotationAnchor(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IParentEntity, IMotionEntity,
     IDrawableShapesEntity {
 
     companion object {
@@ -95,7 +95,7 @@ open class RotationAnchor(game: MegamanMaverickGame) : GameEntity(game), IBodyEn
     }
 
     override fun onDestroy() {
-        super<GameEntity>.onDestroy()
+        super<MegaGameEntity>.onDestroy()
         children.forEach { it.kill() }
         children.clear()
         clearMotionDefinitions()

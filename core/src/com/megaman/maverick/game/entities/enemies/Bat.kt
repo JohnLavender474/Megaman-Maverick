@@ -38,7 +38,7 @@ import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.pathfinding.StandardPathfinderResultConsumer
-import com.megaman.maverick.game.utils.getMegamanMaverickGame
+
 import com.megaman.maverick.game.world.*
 import kotlin.reflect.KClass
 
@@ -81,7 +81,6 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
     override fun init() {
         if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
         super<AbstractEnemy>.init()
-
         addComponent(defineAnimationsComponent())
         addComponent(definePathfindingComponent())
     }
@@ -98,8 +97,8 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
 
         type = spawnProps.getOrDefault(ConstKeys.TYPE, "", String::class)
 
-        val animDuration = spawnProps.getOrDefault("${ConstKeys.ANIMATION}_${ConstKeys.DURATION}", 0.1f, Float::class)
-        gdxArrayOf(animations.get("Fly"), animations.get("SnowFly")).forEach { it.setFrameDuration(animDuration) }
+        val frameDuration = spawnProps.getOrDefault(ConstKeys.FRAME, 0.1f, Float::class)
+        gdxArrayOf(animations.get("Fly"), animations.get("SnowFly")).forEach { it.setFrameDuration(frameDuration) }
 
         flyToAttackSpeed = spawnProps.getOrDefault(
             "${ConstKeys.ATTACK}_${ConstKeys.SPEED}", DEFAULT_FLY_TO_ATTACK_SPEED, Float::class
@@ -164,7 +163,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
 
         val scannerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.7f * ConstVals.PPM))
         val consumer: (IFixture) -> Unit = {
-            if (it.getFixtureType() == FixtureType.DAMAGEABLE && it.getEntity() == megaman) status =
+            if (it.getFixtureType() == FixtureType.DAMAGEABLE && it.getEntity() == getMegaman()) status =
                 BatStatus.FLYING_TO_RETREAT
         }
         scannerFixture.setConsumer { _, it -> consumer(it) }
@@ -214,7 +213,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
 
     private fun definePathfindingComponent(): PathfindingComponent {
         val params = PathfinderParams(startSupplier = { body.getCenter() },
-            targetSupplier = { megaman.body.getTopCenterPoint() },
+            targetSupplier = { getMegaman().body.getTopCenterPoint() },
             allowDiagonal = { true },
             filter = { _, objs ->
                 for (obj in objs) if (obj is Fixture && obj.getFixtureType() == FixtureType.BLOCK) return@PathfinderParams false
@@ -230,7 +229,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
                 body,
                 stopOnTargetReached = false,
                 stopOnTargetNull = false,
-                shapes = if (DEBUG_PATHFINDING) getMegamanMaverickGame().getShapes() else null
+                shapes = if (DEBUG_PATHFINDING) game.getShapes() else null
             )
         }, { status == BatStatus.FLYING_TO_ATTACK })
 
