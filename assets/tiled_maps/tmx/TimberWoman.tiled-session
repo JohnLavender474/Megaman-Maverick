@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "TimberWoman.tmx",
+    "activeFile": "InfernoMan.tmx",
     "expandedProjectPaths": [
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
@@ -68,7 +68,13 @@
         "/Users/johnlavender/IdeaProjects/Megaman-Maverick/assets/tiled_maps/tsx/SkyMan.tsx": {
             "scaleInDock": 1
         },
+        "/Users/johnlavender/IdeaProjects/Megaman-Maverick/assets/tiled_maps/tsx/StarManTileset-NoBlack.tsx": {
+            "scaleInDock": 1
+        },
         "/Users/johnlavender/IdeaProjects/Megaman-Maverick/assets/tiled_maps/tsx/Tileset1.tsx": {
+            "scaleInDock": 1
+        },
+        "/Users/johnlavender/IdeaProjects/Megaman-Maverick/assets/tiled_maps/tsx/mm10-final-stage-tileset.tsx": {
             "scaleInDock": 1
         },
         "/Users/johnlavender/IdeaProjects/Megaman-Maverick/assets/tiled_maps/tsx/mm9endless.tsx": {
@@ -118,11 +124,11 @@
             }
         },
         "InfernoMan.tmx": {
-            "scale": 0.6630208333333333,
-            "selectedLayer": 0,
+            "scale": 0.66,
+            "selectedLayer": 7,
             "viewCenter": {
-                "x": 480.37706205813043,
-                "y": 321.2568735271014
+                "x": 1390.909090909091,
+                "y": 612.8787878787879
             }
         },
         "MagnetMan.tmx": {
@@ -135,6 +141,14 @@
             "viewCenter": {
                 "x": 8000,
                 "y": 640
+            }
+        },
+        "MoonMan_v2.tmx": {
+            "scale": 0.33,
+            "selectedLayer": 5,
+            "viewCenter": {
+                "x": 13466.666666666668,
+                "y": 1392.4242424242423
             }
         },
         "MushroomMan.tmx": {
@@ -211,23 +225,25 @@
     "last.imagePath": "/Users/johnlavender/IdeaProjects/Megaman-Maverick/assets/tiled_maps/png",
     "map.lastUsedFormat": "tmx",
     "openFiles": [
-        "TimberWoman.tmx"
+        "InfernoMan.tmx",
+        "/Users/johnlavender/IdeaProjects/Megaman-Maverick/assets/tiled_maps/tsx/ShadowMan.tsx",
+        "/Users/johnlavender/IdeaProjects/Megaman-Maverick/assets/tiled_maps/tsx/MagmaMan.tsx"
     ],
     "project": "TimberWoman.tiled-project",
     "property.type": "string",
     "recentFiles": [
-        "/Users/johnlavender/IdeaProjects/Megaman-Maverick/assets/tiled_maps/tsx/MagmaManMap.tsx",
-        "/Users/johnlavender/IdeaProjects/Megaman-Maverick/assets/tiled_maps/tsx/MagmaMan.tsx",
+        "MoonMan_v2.tmx",
+        "InfernoMan.tmx",
         "/Users/johnlavender/IdeaProjects/Megaman-Maverick/assets/tiled_maps/tsx/ShadowMan.tsx",
+        "/Users/johnlavender/IdeaProjects/Megaman-Maverick/assets/tiled_maps/tsx/MagmaMan.tsx",
+        "/Users/johnlavender/IdeaProjects/Megaman-Maverick/assets/tiled_maps/tsx/MagmaManMap.tsx",
         "CrewMan.tmx",
         "SkyMan.tmx",
         "TimberWoman.tmx",
         "CaveMan.tmx",
         "MushroomMan.tmx",
         "/Users/johnlavender/IdeaProjects/Megaman-Maverick/assets/tiled_maps/tsx/pipe forest.tsx",
-        "/Users/johnlavender/IdeaProjects/RocketPartnersGame/assets/tiled_maps/tmx/Test1.tmx",
-        "OLD_TimberWoman.tmx",
-        "WilyStage3.tmx"
+        "/Users/johnlavender/IdeaProjects/RocketPartnersGame/assets/tiled_maps/tmx/Test1.tmx"
     ],
     "tileset.lastUsedFormat": "tsx"
 }

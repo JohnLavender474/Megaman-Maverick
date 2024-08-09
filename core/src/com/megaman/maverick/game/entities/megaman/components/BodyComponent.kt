@@ -125,8 +125,8 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
                 body.physics.defaultFrictionOnSelf =
                     when (directionRotation!!) {
                         Direction.UP,
-                        Direction.DOWN,
-                        null -> Vector2(ConstVals.STANDARD_RESISTANCE_X, ConstVals.STANDARD_RESISTANCE_Y)
+                        Direction.DOWN
+                        -> Vector2(ConstVals.STANDARD_RESISTANCE_X, ConstVals.STANDARD_RESISTANCE_Y)
 
                         Direction.LEFT,
                         Direction.RIGHT -> Vector2(ConstVals.STANDARD_RESISTANCE_Y, ConstVals.STANDARD_RESISTANCE_X)

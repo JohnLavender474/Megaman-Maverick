@@ -110,7 +110,7 @@ class Lift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IDirectionR
     }
 
     private fun aboveStopPoint() = when (directionRotation!!) {
-        Direction.UP, null -> body.getCenter().y > stopPoint.y
+        Direction.UP -> body.getCenter().y > stopPoint.y
         Direction.DOWN -> body.getCenter().y < stopPoint.y
         Direction.LEFT -> body.getCenter().x < stopPoint.x
         Direction.RIGHT -> body.getCenter().x > stopPoint.x
@@ -131,7 +131,7 @@ class Lift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IDirectionR
         when (currentState) {
             LiftState.LIFTING -> {
                 body.physics.velocity = when (directionRotation!!) {
-                    Direction.UP, null -> Vector2(0f, LIFT_SPEED * ConstVals.PPM)
+                    Direction.UP -> Vector2(0f, LIFT_SPEED * ConstVals.PPM)
                     Direction.DOWN -> Vector2(0f, -LIFT_SPEED * ConstVals.PPM)
                     Direction.LEFT -> Vector2(-LIFT_SPEED * ConstVals.PPM, 0f)
                     Direction.RIGHT -> Vector2(LIFT_SPEED * ConstVals.PPM, 0f)
@@ -140,7 +140,7 @@ class Lift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IDirectionR
 
             LiftState.FALLING -> {
                 body.physics.velocity = when (directionRotation!!) {
-                    Direction.UP, null -> Vector2(0f, -FALL_SPEED * ConstVals.PPM)
+                    Direction.UP -> Vector2(0f, -FALL_SPEED * ConstVals.PPM)
                     Direction.DOWN -> Vector2(0f, FALL_SPEED * ConstVals.PPM)
                     Direction.LEFT -> Vector2(FALL_SPEED * ConstVals.PPM, 0f)
                     Direction.RIGHT -> Vector2(-FALL_SPEED * ConstVals.PPM, 0f)

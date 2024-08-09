@@ -298,7 +298,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
             _sprite.rotation = rotation
 
             val position = when (directionRotation!!) {
-                Direction.UP, null -> Position.BOTTOM_CENTER
+                Direction.UP -> Position.BOTTOM_CENTER
                 Direction.DOWN -> Position.TOP_CENTER
                 Direction.LEFT -> Position.CENTER_RIGHT
                 Direction.RIGHT -> Position.CENTER_LEFT

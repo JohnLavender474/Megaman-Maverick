@@ -222,7 +222,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
         tankBlockOffset = tankBlockBounds.getCenter().sub(body.getCenter())
         bodyBlockOffset = bodyBlockBounds.getCenter().sub(body.getCenter())
 
-        fist = GutsTankFist(game as MegamanMaverickGame)
+        fist = GutsTankFist(game)
         game.engine.spawn(fist!!, props(ConstKeys.PARENT to this))
 
         frontPoint = spawnProps.get(ConstKeys.FRONT, RectangleMapObject::class)!!.rectangle.getPosition()

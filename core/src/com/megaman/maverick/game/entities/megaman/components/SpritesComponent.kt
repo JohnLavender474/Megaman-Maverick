@@ -80,7 +80,7 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
         val verticalOffset = -0.25f * ConstVals.PPM
         val facingOffsetScaled = -0.45f * facing.value * ConstVals.PPM
         val offset = when (directionRotation!!) {
-            Direction.UP, null -> floatArrayOf(facingOffsetScaled, verticalOffset)
+            Direction.UP -> floatArrayOf(facingOffsetScaled, verticalOffset)
             Direction.DOWN -> floatArrayOf(facingOffsetScaled, -verticalOffset)
             Direction.LEFT -> floatArrayOf(verticalOffset, facingOffsetScaled)
             Direction.RIGHT -> floatArrayOf(-verticalOffset, -facingOffsetScaled)

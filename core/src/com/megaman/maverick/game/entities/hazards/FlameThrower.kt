@@ -170,7 +170,7 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
             damagerBounds.color = if (damagerFixture.active) Color.RED else Color.YELLOW
 
             damagerFixture.offsetFromBodyCenter = (when (directionRotation!!) {
-                Direction.UP, null -> Vector2(0f, DAMAGER_FIXTURE_VERT_OFFSET)
+                Direction.UP -> Vector2(0f, DAMAGER_FIXTURE_VERT_OFFSET)
                 Direction.DOWN -> Vector2(0f, -DAMAGER_FIXTURE_VERT_OFFSET)
                 Direction.LEFT -> Vector2(-DAMAGER_FIXTURE_HORIZ_OFFSET, 0.1f)
                 Direction.RIGHT -> Vector2(DAMAGER_FIXTURE_HORIZ_OFFSET, 0.1f)
@@ -205,7 +205,7 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
             val position = directionRotation?.getOpposingPosition()
             val offset = (when (directionRotation!!) {
-                Direction.UP, null -> Vector2(0f, 1.15f)
+                Direction.UP -> Vector2(0f, 1.15f)
                 Direction.DOWN -> Vector2(0f, -0.85f)
                 Direction.LEFT -> Vector2(-FLAME_COLUMN_HORIZ_OFFSET, 0.2f)
                 Direction.RIGHT -> Vector2(FLAME_COLUMN_HORIZ_OFFSET, 0.2f)

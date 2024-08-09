@@ -163,8 +163,8 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
 
         leftClawSpawn = spawnProps.get(ConstKeys.LEFT, RectangleMapObject::class)!!.rectangle.getCenter()
         rightClawSpawn = spawnProps.get(ConstKeys.RIGHT, RectangleMapObject::class)!!.rectangle.getCenter()
-        leftClaw = SigmaRatClaw(game as MegamanMaverickGame)
-        rightClaw = SigmaRatClaw(game as MegamanMaverickGame)
+        leftClaw = SigmaRatClaw(game)
+        rightClaw = SigmaRatClaw(game)
         game.engine.spawn(
             leftClaw!! to props(
                 ConstKeys.PARENT to this,

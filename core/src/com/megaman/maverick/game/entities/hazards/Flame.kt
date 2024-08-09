@@ -63,7 +63,7 @@ class Flame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         when (directionRotation!!) {
-            Direction.UP, null -> body.setBottomCenterToPoint(spawn)
+            Direction.UP -> body.setBottomCenterToPoint(spawn)
             Direction.DOWN -> body.setTopCenterToPoint(spawn)
             Direction.LEFT -> body.setCenterRightToPoint(spawn)
             Direction.RIGHT -> body.setCenterLeftToPoint(spawn)
@@ -95,7 +95,7 @@ class Flame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         val spritesComponent = SpritesComponent(this, sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             val position = when (directionRotation!!) {
-                Direction.UP, null -> Position.BOTTOM_CENTER
+                Direction.UP -> Position.BOTTOM_CENTER
                 Direction.DOWN -> Position.TOP_CENTER
                 Direction.LEFT -> Position.CENTER_RIGHT
                 Direction.RIGHT -> Position.CENTER_LEFT

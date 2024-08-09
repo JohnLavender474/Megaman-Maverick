@@ -90,7 +90,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
         when (deflection) {
             Direction.UP -> {
                 when (directionRotation!!) {
-                    Direction.UP, null -> trajectory.y = 5f * ConstVals.PPM
+                    Direction.UP -> trajectory.y = 5f * ConstVals.PPM
                     Direction.DOWN -> trajectory.y = -5f * ConstVals.PPM
                     Direction.LEFT -> trajectory.x = -5f * ConstVals.PPM
                     Direction.RIGHT -> trajectory.x = 5f * ConstVals.PPM
@@ -99,7 +99,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
 
             Direction.DOWN -> {
                 when (directionRotation!!) {
-                    Direction.UP, null -> trajectory.y = -5f * ConstVals.PPM
+                    Direction.UP -> trajectory.y = -5f * ConstVals.PPM
                     Direction.DOWN -> trajectory.y = 5f * ConstVals.PPM
                     Direction.LEFT -> trajectory.x = 5f * ConstVals.PPM
                     Direction.RIGHT -> trajectory.x = -5f * ConstVals.PPM

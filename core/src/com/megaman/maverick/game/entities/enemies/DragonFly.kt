@@ -134,7 +134,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
             when (currentBehavior) {
                 DragonFlyBehavior.MOVE_UP -> {
                     when (directionRotation!!) {
-                        Direction.UP, null -> {
+                        Direction.UP -> {
                             body.physics.velocity.set(0f, VERT_SPEED * ConstVals.PPM)
                             oobScannerFixture.offsetFromBodyCenter.set(0f, VERT_SCANNER_OFFSET * ConstVals.PPM)
                         }

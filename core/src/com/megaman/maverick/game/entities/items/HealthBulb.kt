@@ -147,7 +147,7 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             val gravity = when (directionRotation!!) {
-                Direction.LEFT, null -> Vector2(GRAVITY, 0f)
+                Direction.LEFT -> Vector2(GRAVITY, 0f)
                 Direction.RIGHT -> Vector2(-GRAVITY, 0f)
                 Direction.UP -> Vector2(0f, -GRAVITY)
                 Direction.DOWN -> Vector2(0f, GRAVITY)

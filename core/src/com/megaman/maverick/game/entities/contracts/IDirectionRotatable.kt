@@ -27,7 +27,6 @@ interface IDirectionRotatable {
                 Direction.LEFT -> Direction.DOWN
                 Direction.DOWN -> Direction.RIGHT
                 Direction.RIGHT -> Direction.UP
-                null -> null
             }
     }
 
@@ -38,7 +37,6 @@ interface IDirectionRotatable {
                 Direction.RIGHT -> Direction.DOWN
                 Direction.DOWN -> Direction.LEFT
                 Direction.LEFT -> Direction.UP
-                null -> null
             }
     }
 
@@ -49,7 +47,6 @@ interface IDirectionRotatable {
                 Direction.RIGHT -> Direction.LEFT
                 Direction.DOWN -> Direction.UP
                 Direction.LEFT -> Direction.RIGHT
-                null -> null
             }
     }
 }

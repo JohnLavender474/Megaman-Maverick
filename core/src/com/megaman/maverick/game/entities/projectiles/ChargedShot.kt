@@ -114,7 +114,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         val deflection = shieldFixture.getOrDefaultProperty(ConstKeys.DIRECTION, Direction.UP, Direction::class)
         val newTrajectory =
             when (directionRotation!!) {
-                Direction.UP, null -> {
+                Direction.UP -> {
                     when (deflection) {
                         Direction.UP -> Vector2(trajectory.x, 5f * ConstVals.PPM)
                         Direction.DOWN -> Vector2(trajectory.x, -5f * ConstVals.PPM)
@@ -207,7 +207,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
             val rotation =
                 when (directionRotation!!) {
-                    Direction.UP, Direction.DOWN, null -> 0f
+                    Direction.UP, Direction.DOWN -> 0f
                     Direction.LEFT -> 90f
                     Direction.RIGHT -> 270f
                 }

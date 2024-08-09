@@ -73,7 +73,7 @@ class Bolt(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IHaza
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
         when (directionRotation!!) {
-            Direction.UP, null -> body.setBottomCenterToPoint(spawn)
+            Direction.UP -> body.setBottomCenterToPoint(spawn)
             Direction.DOWN -> body.setTopCenterToPoint(spawn)
             Direction.LEFT -> body.setCenterRightToPoint(spawn)
             Direction.RIGHT -> body.setCenterLeftToPoint(spawn)

@@ -14,7 +14,6 @@ import com.engine.drawables.sprites.SpritesSystem
 import com.engine.events.Event
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.drawables.sprites.BitsBar
 import com.megaman.maverick.game.entities.megaman.Megaman
@@ -36,7 +35,7 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
     private val engine = megaman.game.engine
     private val assMan = megaman.game.assMan
     private val eventsMan = megaman.game.eventsMan
-    private val audioMan = (megaman.game as MegamanMaverickGame).audioMan
+    private val audioMan = megaman.game.audioMan
 
     private val timerQueue = Queue<Timer>()
 
