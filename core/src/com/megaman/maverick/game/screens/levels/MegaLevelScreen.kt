@@ -197,8 +197,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
                 Event(
                     EventType.BEGIN_ROOM_TRANS,
                     props(
+                        ConstKeys.ROOM to cameraManagerForRooms.currentGameRoom,
                         ConstKeys.POSITION to cameraManagerForRooms.transitionInterpolation,
-                        ConstKeys.CURRENT to cameraManagerForRooms.currentGameRoom,
                         ConstKeys.PRIOR to cameraManagerForRooms.priorGameRoom
                     )
                 )

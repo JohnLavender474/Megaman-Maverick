@@ -182,7 +182,9 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         AsteroidExplosion::class to dmgNeg(3),
         MoonHeadMiniBoss::class to dmgNeg(3),
         BunbyRedRocket::class to dmgNeg(3),
-        BunbyTank::class to dmgNeg(3)
+        BunbyTank::class to dmgNeg(3),
+        FireMet::class to dmgNeg(3),
+        FireMetFlame::class to dmgNeg(3)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 

@@ -277,6 +277,22 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Hazards1/Flame3/Still.png</key>
+            <key type="filename">../frames/Hazards1/Flame3/Whoosh.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>25,8,50,17</rect>
+                <key>scale9Paddings</key>
+                <rect>25,8,50,17</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Hazards1/FlameColumn.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>

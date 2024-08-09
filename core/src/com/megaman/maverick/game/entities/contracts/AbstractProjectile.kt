@@ -61,7 +61,6 @@ abstract class AbstractProjectile(game: MegamanMaverickGame) : MegaGameEntity(ga
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) {
-        super.onDamageInflictedTo(damageable)
         onDamageInflictedTo?.invoke(damageable)
     }
 

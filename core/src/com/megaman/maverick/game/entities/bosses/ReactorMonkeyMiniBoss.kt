@@ -135,8 +135,10 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
     fun hurlMonkeyBall() {
         monkeyBall!!.body.physics.gravityOn = true
         val impulse = MegaUtilMethods.calculateJumpImpulse(
-            body.getPosition(), getMegaman().body.getPosition(), HORIZONTAL_SCALAR,
-            BALL_IMPULSE_Y * ConstVals.PPM, VERTICAL_SCALAR
+            body.getPosition(), getMegaman().body.getPosition(),
+            BALL_IMPULSE_Y * ConstVals.PPM,
+            HORIZONTAL_SCALAR,
+            VERTICAL_SCALAR
         )
         monkeyBall!!.body.physics.velocity.set(impulse)
         monkeyBall!!.firstSprite!!.hidden = false

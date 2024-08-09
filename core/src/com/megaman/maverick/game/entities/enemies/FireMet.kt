@@ -1,0 +1,409 @@
+package com.megaman.maverick.game.entities.enemies
+
+import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectMap
+import com.engine.animations.Animation
+import com.engine.animations.AnimationsComponent
+import com.engine.animations.Animator
+import com.engine.animations.IAnimation
+import com.engine.common.enums.Facing
+import com.engine.common.enums.Position
+import com.engine.common.extensions.coerceX
+import com.engine.common.extensions.getTextureAtlas
+import com.engine.common.extensions.objectMapOf
+import com.engine.common.extensions.vector2Of
+import com.engine.common.interfaces.IFaceable
+import com.engine.common.interfaces.isFacing
+import com.engine.common.objects.Properties
+import com.engine.common.objects.props
+import com.engine.common.shapes.GameCircle
+import com.engine.common.shapes.GameRectangle
+import com.engine.common.time.Timer
+import com.engine.damage.IDamageable
+import com.engine.damage.IDamager
+import com.engine.drawables.shapes.DrawableShapesComponent
+import com.engine.drawables.shapes.IDrawableShape
+import com.engine.drawables.sprites.GameSprite
+import com.engine.drawables.sprites.SpritesComponent
+import com.engine.drawables.sprites.setPosition
+import com.engine.drawables.sprites.setSize
+import com.engine.entities.contracts.IAnimatedEntity
+import com.engine.updatables.UpdatablesComponent
+import com.engine.world.*
+import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.ConstVals
+import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.damage.DamageNegotiation
+import com.megaman.maverick.game.damage.dmgNeg
+import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
+import com.megaman.maverick.game.entities.factories.EntityFactories
+import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.projectiles.Bullet
+import com.megaman.maverick.game.entities.projectiles.ChargedShot
+import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.MegaUtilMethods
+import com.megaman.maverick.game.world.*
+import kotlin.reflect.KClass
+
+class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
+
+    companion object {
+        const val TAG = "FireMet"
+        private const val CULL_TIME = 3f // since this enemy moves so slowly
+        private const val MOVE_SPEED = 3f
+        private const val JUMP_IMPULSE_Y = 7f
+        private const val GRAVITY = -0.15f
+        private const val GROUND_GRAVITY = -0.001f
+        private const val MOVE_DUR = 1.25f
+        private const val SHOOT_DUR = 0.25f
+        private val regions = ObjectMap<String, TextureRegion>()
+    }
+
+    private enum class FireMetState { MOVE, SHOOT }
+
+    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+        Bullet::class to dmgNeg(15),
+        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class to dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShotExplosion::class to dmgNeg(ConstVals.MAX_HEALTH)
+    )
+    override lateinit var facing: Facing
+
+    private val moveTimer = Timer(MOVE_DUR)
+    private val shootTimer = Timer(SHOOT_DUR)
+    private lateinit var state: FireMetState
+    private var flame: FireMetFlame? = null
+    private var onGround = false
+
+    override fun init() {
+        if (regions.isEmpty) {
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            regions.put("walk", atlas.findRegion("$TAG/Walk"))
+            regions.put("jump", atlas.findRegion("$TAG/Jump"))
+            regions.put("shoot", atlas.findRegion("$TAG/Shoot"))
+        }
+        super<AbstractEnemy>.init()
+        addComponent(defineAnimationsComponent())
+    }
+
+    override fun spawn(spawnProps: Properties) {
+        spawnProps.put(ConstKeys.CULL_TIME, CULL_TIME)
+        super.spawn(spawnProps)
+
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        body.setBottomCenterToPoint(spawn)
+
+        spawnFlame()
+
+        state = FireMetState.MOVE
+        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+
+        moveTimer.reset()
+        shootTimer.setToEnd()
+
+        onGround = false
+    }
+
+    override fun onDestroy() {
+        super<AbstractEnemy>.onDestroy()
+        flame?.kill()
+        flame = null
+    }
+
+    private fun spawnFlame() {
+        if (flame != null) throw IllegalStateException("Flame must be null before spawning new flame")
+
+        flame = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.FIRE_MET_FLAME) as FireMetFlame?
+        game.engine.spawn(
+            flame!!, props(
+                ConstKeys.OWNER to this, ConstKeys.POSITION to body.getTopCenterPoint()
+            )
+        )
+    }
+
+    override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
+        super.defineUpdatablesComponent(updatablesComponent)
+        updatablesComponent.add { delta ->
+            when (state) {
+                FireMetState.MOVE -> {
+                    flame!!.body?.setBottomCenterToPoint(body.getTopCenterPoint())
+                    flame!!.whooshing = !body.isSensing(BodySense.FEET_ON_GROUND)
+                    flame!!.facing = facing
+
+                    if (body.isSensing(BodySense.FEET_ON_GROUND)) {
+                        body.physics.velocity.x = MOVE_SPEED * facing.value * ConstVals.PPM
+                        moveTimer.update(delta)
+                        if (moveTimer.isFinished()) {
+                            facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+                            shoot()
+                            shootTimer.reset()
+                            state = FireMetState.SHOOT
+                        }
+                    }
+                }
+
+                FireMetState.SHOOT -> {
+                    body.physics.velocity.x = 0f
+                    shootTimer.update(delta)
+                    if (shootTimer.isJustFinished()) {
+                        spawnFlame()
+                        moveTimer.reset()
+                        state = FireMetState.MOVE
+                    }
+                }
+            }
+        }
+    }
+
+    private fun jump() {
+        body.physics.velocity = Vector2(MOVE_SPEED * facing.value, JUMP_IMPULSE_Y).scl(ConstVals.PPM.toFloat())
+    }
+
+    private fun shoot() {
+        val impulse = MegaUtilMethods.calculateJumpImpulse(
+            body.getPosition(),
+            getMegaman().body.getPosition(),
+            JUMP_IMPULSE_Y * ConstVals.PPM,
+        ).coerceX(-MOVE_SPEED * ConstVals.PPM, MOVE_SPEED * ConstVals.PPM)
+        flame!!.launch(impulse)
+        flame!!.body.physics.gravityOn = true
+        flame = null
+    }
+
+    override fun defineBodyComponent(): BodyComponent {
+        val body = Body(BodyType.DYNAMIC)
+        body.setSize(0.75f * ConstVals.PPM)
+
+        val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body.getBodyBounds() }
+
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
+        body.addFixture(bodyFixture)
+
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
+        body.addFixture(damagerFixture)
+
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle(body))
+        body.addFixture(damageableFixture)
+
+        val feetFixture = Fixture(
+            body, FixtureType.FEET, GameRectangle().setSize(
+                0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM
+            )
+        )
+        feetFixture.offsetFromBodyCenter.y = -0.375f * ConstVals.PPM
+        body.addFixture(feetFixture)
+        feetFixture.rawShape.color = Color.GREEN
+        debugShapes.add { feetFixture.getShape() }
+
+        val leftSideFixture = Fixture(
+            body, FixtureType.SIDE, GameRectangle().setSize(
+                0.1f * ConstVals.PPM, 0.25f * ConstVals.PPM
+            )
+        )
+        leftSideFixture.offsetFromBodyCenter.x = -0.375f * ConstVals.PPM
+        leftSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
+        leftSideFixture.putProperty(ConstKeys.DEATH_LISTENER, false)
+        body.addFixture(leftSideFixture)
+        leftSideFixture.rawShape.color = Color.YELLOW
+        debugShapes.add { leftSideFixture.getShape() }
+
+        val rightSideFixture = Fixture(
+            body, FixtureType.SIDE, GameRectangle().setSize(
+                0.1f * ConstVals.PPM, 0.25f * ConstVals.PPM
+            )
+        )
+        rightSideFixture.offsetFromBodyCenter.x = 0.375f * ConstVals.PPM
+        rightSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
+        rightSideFixture.putProperty(ConstKeys.DEATH_LISTENER, false)
+        body.addFixture(rightSideFixture)
+        rightSideFixture.rawShape.color = Color.YELLOW
+        debugShapes.add { rightSideFixture.getShape() }
+
+        val leftConsumerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
+        leftConsumerFixture.offsetFromBodyCenter = vector2Of(-0.5f * ConstVals.PPM)
+        leftConsumerFixture.setConsumer { _, fixture ->
+            when (fixture.getFixtureType()) {
+                FixtureType.DEATH -> leftConsumerFixture.putProperty(ConstKeys.DEATH, true)
+                FixtureType.BLOCK -> leftConsumerFixture.putProperty(ConstKeys.BLOCK, true)
+            }
+        }
+        body.addFixture(leftConsumerFixture)
+        leftConsumerFixture.rawShape.color = Color.ORANGE
+        debugShapes.add { leftConsumerFixture.getShape() }
+
+        val rightConsumerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.2f * ConstVals.PPM))
+        rightConsumerFixture.offsetFromBodyCenter = Vector2(0.5f * ConstVals.PPM, -0.5f * ConstVals.PPM)
+        rightConsumerFixture.setConsumer { _, fixture ->
+            when (fixture.getFixtureType()) {
+                FixtureType.DEATH -> rightConsumerFixture.putProperty(ConstKeys.DEATH, true)
+                FixtureType.BLOCK -> rightConsumerFixture.putProperty(ConstKeys.BLOCK, true)
+            }
+        }
+        body.addFixture(rightConsumerFixture)
+        rightConsumerFixture.rawShape.color = Color.ORANGE
+        debugShapes.add { rightConsumerFixture.getShape() }
+
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            body.physics.gravity.y =
+                (if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY) * ConstVals.PPM
+
+            leftConsumerFixture.putProperty(ConstKeys.DEATH, false)
+            leftConsumerFixture.putProperty(ConstKeys.BLOCK, false)
+            rightConsumerFixture.putProperty(ConstKeys.DEATH, false)
+            rightConsumerFixture.putProperty(ConstKeys.BLOCK, false)
+        }
+
+        body.postProcess.put(ConstKeys.DEFAULT) {
+            if (isFacing(Facing.LEFT)) {
+                if (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) ||
+                    leftConsumerFixture.isProperty(ConstKeys.DEATH, true)
+                ) facing = Facing.RIGHT
+                else if (state == FireMetState.MOVE &&
+                    body.isSensing(BodySense.FEET_ON_GROUND) &&
+                    leftConsumerFixture.isProperty(ConstKeys.BLOCK, false)
+                ) {
+                    jump()
+                    moveTimer.reset()
+                }
+            } else if (isFacing(Facing.RIGHT)) {
+                if (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) ||
+                    rightConsumerFixture.isProperty(ConstKeys.DEATH, true)
+                ) facing = Facing.LEFT
+                else if (state == FireMetState.MOVE &&
+                    body.isSensing(BodySense.FEET_ON_GROUND) &&
+                    rightConsumerFixture.isProperty(ConstKeys.BLOCK, false)
+                ) {
+                    jump()
+                    moveTimer.reset()
+                }
+            }
+        }
+
+        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+
+        return BodyComponentCreator.create(this, body)
+    }
+
+    override fun defineSpritesComponent(): SpritesComponent {
+        val sprite = GameSprite()
+        sprite.setSize(1.25f * ConstVals.PPM)
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            _sprite.setFlip(isFacing(Facing.LEFT), false)
+            _sprite.hidden = damageBlink
+        }
+        return spritesComponent
+    }
+
+    private fun defineAnimationsComponent(): AnimationsComponent {
+        val keySupplier: () -> String? = {
+            if (!body.isSensing(BodySense.FEET_ON_GROUND)) "jump"
+            else if (!shootTimer.isFinished()) "shoot"
+            else "walk"
+        }
+        val animations = objectMapOf<String, IAnimation>(
+            "walk" to Animation(regions["walk"], 2, 2, 0.1f, true),
+            "shoot" to Animation(regions["shoot"], 1, 2, 0.1f, false),
+            "jump" to Animation(regions["jump"], 1, 2, 0.1f, false)
+        )
+        val animator = Animator(keySupplier, animations)
+        return AnimationsComponent(this, animator)
+    }
+}
+
+class FireMetFlame(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IFaceable {
+
+    companion object {
+        const val TAG = "FireMetFlame"
+        private const val GRAVITY = -0.15f
+        private val regions = ObjectMap<String, TextureRegion>()
+    }
+
+    override lateinit var facing: Facing
+
+    internal var whooshing = false
+
+    override fun init() {
+        if (regions.isEmpty) {
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
+            regions.put("still", atlas.findRegion("Flame3/Still"))
+            regions.put("whoosh", atlas.findRegion("Flame3/Whoosh"))
+        }
+        super<AbstractProjectile>.init()
+        addComponent(defineAnimationsComponent())
+    }
+
+    override fun spawn(spawnProps: Properties) {
+        spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
+        super.spawn(spawnProps)
+        val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+        body.setBottomCenterToPoint(spawn)
+        body.physics.gravityOn = false
+        whooshing = false
+    }
+
+    override fun hitBlock(blockFixture: IFixture) = explodeAndDie()
+
+    override fun onDamageInflictedTo(damageable: IDamageable) {
+        super.onDamageInflictedTo(damageable)
+        explodeAndDie()
+    }
+
+    override fun explodeAndDie(vararg params: Any?) {
+        kill() // TODO: snuff out flame on timer
+    }
+
+    internal fun launch(impulse: Vector2) {
+        body.physics.velocity.set(impulse)
+    }
+
+    override fun defineBodyComponent(): BodyComponent {
+        val body = Body(BodyType.ABSTRACT)
+        body.setSize(0.5f * ConstVals.PPM)
+        body.physics.gravity.y = GRAVITY * ConstVals.PPM
+
+        val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body.getBodyBounds() }
+
+        val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameCircle().setRadius(0.25f * ConstVals.PPM))
+        body.addFixture(projectileFixture)
+        debugShapes.add { projectileFixture.getShape() }
+
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.25f * ConstVals.PPM))
+        body.addFixture(damagerFixture)
+
+        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+
+        return BodyComponentCreator.create(this, body)
+    }
+
+    override fun defineSpritesComponent(): SpritesComponent {
+        val sprite = GameSprite()
+        sprite.setSize(1.25f * ConstVals.PPM)
+        val spritesComponent = SpritesComponent(this, sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            _sprite.setFlip(isFacing(Facing.LEFT), false)
+        }
+        return spritesComponent
+    }
+
+    private fun defineAnimationsComponent(): AnimationsComponent {
+        val keySupplier: () -> String? = { if (whooshing) "whooshing" else "still" }
+        val animations = objectMapOf<String, IAnimation>(
+            "still" to Animation(regions["still"], 1, 3, 0.1f, true),
+            "whooshing" to Animation(regions["whoosh"], 1, 3, 0.1f, true)
+        )
+        val animator = Animator(keySupplier, animations)
+        return AnimationsComponent(this, animator)
+    }
+}

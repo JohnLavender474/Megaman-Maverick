@@ -76,7 +76,7 @@ class BouncingAngryFlameBall(game: MegamanMaverickGame) : AbstractEnemy(game), I
     }
 
     override fun spawn(spawnProps: Properties) {
-        spawnProps.put(ConstKeys.DEATH_FIXTURE, false)
+        spawnProps.put(ConstKeys.ENTITY_CAN_DIE, false)
         super.spawn(spawnProps)
         spawnBounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.setCenter(spawnBounds.getCenter())

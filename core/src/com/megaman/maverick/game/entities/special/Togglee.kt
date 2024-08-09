@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.special
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.engine.animations.Animation
@@ -49,13 +50,14 @@ import com.megaman.maverick.game.entities.overlapsGameCamera
 import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntitySuppliers
 
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.screens.levels.spawns.SpawnType.SPAWN_ROOM
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.setHitByProjectileReceiver
 
-class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
-    IFontsEntity, IAudioEntity, IDirectionRotatable, IDamager, IParentEntity, IEventListener {
+class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IParentEntity, ISpritesEntity,
+    IAnimatedEntity, IFontsEntity, IAudioEntity, IDirectionRotatable, IDamager, IEventListener {
 
     enum class ToggleeState {
         TOGGLED_ON, TOGGLED_OFF, TOGGLING_TO_ON, TOGGLING_TO_OFF;
@@ -75,7 +77,7 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IS
 
     override var children = Array<IGameEntity>()
     override var directionRotation: Direction? = null
-    override val eventKeyMask = objectSetOf<Any>(EventType.PLAYER_SPAWN)
+    override val eventKeyMask = objectSetOf<Any>(EventType.PLAYER_SPAWN, EventType.END_ROOM_TRANS)
 
     val moving: Boolean
         get() = toggleeState.equalsAny(ToggleeState.TOGGLING_TO_ON, ToggleeState.TOGGLING_TO_OFF)
@@ -93,6 +95,7 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IS
 
     private lateinit var switchTimer: Timer
     private lateinit var position: Position
+    private lateinit var spawnRoom: String
 
     override fun init() {
         if (regions.isEmpty) {
@@ -132,6 +135,8 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IS
         text = spawnProps.getOrDefault(ConstKeys.TEXT, "", String::class)
         getFont(ConstKeys.DEFAULT).position.set(body.getCenter().add(0f, 1.75f * ConstVals.PPM))
 
+        spawnRoom = spawnProps.get(SPAWN_ROOM, String::class)!!
+
         val childEntitySuppliers = convertObjectPropsToEntitySuppliers(spawnProps)
         GameLogger.debug(TAG, "Child entities: ${childEntitySuppliers.map { "${it.first}:${it.second} " }}")
         childEntitySuppliers.forEach {
@@ -162,9 +167,10 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IS
 
     override fun onEvent(event: Event) {
         when (event.key) {
-            EventType.PLAYER_SPAWN -> {
-                spawnEntities(false)
-                toggleeState = ToggleeState.TOGGLED_OFF
+            EventType.PLAYER_SPAWN -> kill() // this assumes that a player spawn is never in the same room as a Togglee
+            EventType.END_ROOM_TRANS -> {
+                val newRoom = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!.name
+                if (spawnRoom != newRoom) kill()
             }
         }
     }
@@ -207,6 +213,7 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IS
         val body = Body(BodyType.ABSTRACT)
 
         val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body.getBodyBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle())
         body.addFixture(bodyFixture)

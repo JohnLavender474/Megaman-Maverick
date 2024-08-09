@@ -173,7 +173,7 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">../frames/Projectiles2/BunbyRedRocket.png</key>
+            <key type="filename">../frames/Projectiles2/BunbuRedRocket.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

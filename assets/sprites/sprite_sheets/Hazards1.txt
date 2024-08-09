@@ -1,207 +1,221 @@
 Hazards1.png
-size: 1665, 1188
+size: 256, 720
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Linear,Linear
 repeat: none
 AcidGoop/Falling
   rotate: false
-  xy: 1484, 0
+  xy: 64, 259
   size: 144, 48
   orig: 144, 48
   offset: 0, 0
   index: -1
 AcidGoop/Landed
   rotate: false
-  xy: 1164, 0
+  xy: 128, 195
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 Bolt
   rotate: false
-  xy: 580, 0
+  xy: 0, 96
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 CeilingCrusher/Bar
   rotate: false
-  xy: 34, 0
+  xy: 115, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 CeilingCrusher/Crusher
   rotate: false
-  xy: 66, 0
+  xy: 147, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Electrocutie/Charge
   rotate: false
-  xy: 644, 0
+  xy: 64, 96
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 Electrocutie/Move
   rotate: false
-  xy: 98, 0
+  xy: 179, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Electrocutie/Shock
   rotate: false
-  xy: 130, 0
+  xy: 211, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Flame
   rotate: false
-  xy: 708, 0
+  xy: 0, 32
   size: 64, 16
   orig: 64, 16
   offset: 0, 0
   index: -1
 Flame2
   rotate: false
-  xy: 484, 0
+  xy: 4, 0
   size: 48, 16
   orig: 48, 16
   offset: 0, 0
   index: -1
+Flame3/Still
+  rotate: false
+  xy: 0, 128
+  size: 100, 33
+  orig: 100, 33
+  offset: 0, 0
+  index: -1
+Flame3/Whoosh
+  rotate: false
+  xy: 100, 128
+  size: 100, 33
+  orig: 100, 33
+  offset: 0, 0
+  index: -1
 FlameColumn
   rotate: false
-  xy: 1260, 0
+  xy: 128, 355
   size: 96, 236
   orig: 96, 236
   offset: 0, 0
   index: -1
 FlameThrower/Blink
   rotate: false
-  xy: 772, 0
+  xy: 128, 96
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 FlameThrower/Cool
   rotate: false
-  xy: 162, 0
+  xy: 64, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 FlameThrower/Hot
   rotate: false
-  xy: 194, 0
+  xy: 96, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 LaserBeamer
   rotate: false
-  xy: 226, 0
+  xy: 128, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Lava/Fall
   rotate: false
-  xy: 255, 236
-  size: 1410, 476
-  orig: 1410, 476
+  xy: 100, 161
+  size: 100, 34
+  orig: 100, 34
   offset: 0, 0
   index: -1
 Lava/Flow
   rotate: false
-  xy: 0, 712
-  size: 1428, 476
-  orig: 1428, 476
+  xy: 0, 161
+  size: 100, 33
+  orig: 100, 33
   offset: 0, 0
   index: -1
 LavaBeam
   rotate: false
-  xy: 836, 0
+  xy: 0, 259
   size: 64, 96
   orig: 64, 96
   offset: 0, 0
   index: -1
 LavaDrop/Falling
   rotate: false
-  xy: 1092, 0
+  xy: 145, 64
   size: 72, 24
   orig: 72, 24
   offset: 0, 0
   index: -1
 LavaDrop/Landed
   rotate: false
-  xy: 532, 0
+  xy: 97, 64
   size: 48, 24
   orig: 48, 24
   offset: 0, 0
   index: -1
 Saw
   rotate: false
-  xy: 0, 236
+  xy: 0, 591
   size: 255, 129
   orig: 255, 129
   offset: 0, 0
   index: -1
 Sea Mine/Blow
   rotate: false
-  xy: 900, 0
+  xy: 192, 96
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 Sea Mine/Wait
   rotate: false
-  xy: 258, 0
+  xy: 160, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Spike1
   rotate: false
-  xy: 418, 0
+  xy: 82, 0
   size: 33, 31
   orig: 33, 31
   offset: 0, 0
   index: -1
 Spike2
   rotate: false
-  xy: 4, 0
+  xy: 52, 0
   size: 30, 32
   orig: 30, 32
   offset: 0, 0
   index: -1
 Spike3
   rotate: false
-  xy: 451, 0
+  xy: 64, 64
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: -1
 Spike4
   rotate: false
-  xy: 290, 0
+  xy: 192, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Spike5
   rotate: false
-  xy: 322, 0
+  xy: 224, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Spike6
   rotate: false
-  xy: 354, 0
+  xy: 0, 64
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -215,28 +229,28 @@ SpikeBall/Chain
   index: -1
 SpikeBall/SpikeBall
   rotate: false
-  xy: 386, 0
+  xy: 32, 64
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SwingingAxe
   rotate: false
-  xy: 964, 0
+  xy: 0, 195
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 SwingingAxe_HandleEndCentered
   rotate: false
-  xy: 1356, 0
+  xy: 0, 355
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 SwingingAxe_UpsideDown
   rotate: false
-  xy: 1028, 0
+  xy: 64, 195
   size: 64, 64
   orig: 64, 64
   offset: 0, 0

@@ -89,8 +89,11 @@ class MegaContactListener(
 
             val entity = otherFixture.getEntity()
 
-            val canDie = entity.getOrDefaultProperty(ConstKeys.DEATH_FIXTURE, true, Boolean::class)
+            val canDie = entity.getOrDefaultProperty(ConstKeys.ENTITY_CAN_DIE, true, Boolean::class)
             if (!canDie) return
+
+            val deathListener = otherFixture.getOrDefaultProperty(ConstKeys.DEATH_LISTENER, true, Boolean::class)
+            if (!deathListener) return
 
             val instant = deathFixture.getProperty(ConstKeys.INSTANT, Boolean::class) ?: false
             if (entity is IDamageable && (instant || !entity.invincible)) otherFixture.depleteHealth()
@@ -477,19 +480,22 @@ class MegaContactListener(
                 )
             )
         ) {
-            val (deathFixture, bodyFixture) = contact.getFixtureSetsInOrder(
+            val (deathFixture, otherFixture) = contact.getFixtureSetsInOrder(
                 objectSetOf(FixtureType.DEATH), objectSetOf(
                     FixtureType.FEET, FixtureType.SIDE, FixtureType.HEAD, FixtureType.BODY
                 )
             )!!
 
-            val entity = bodyFixture.getEntity()
+            val entity = otherFixture.getEntity()
 
-            val canDie = entity.getOrDefaultProperty(ConstKeys.DEATH_FIXTURE, true, Boolean::class)
+            val canDie = entity.getOrDefaultProperty(ConstKeys.ENTITY_CAN_DIE, true, Boolean::class)
             if (!canDie) return
 
+            val deathListener = otherFixture.getOrDefaultProperty(ConstKeys.DEATH_LISTENER, true, Boolean::class)
+            if (!deathListener) return
+
             val instant = deathFixture.getProperty(ConstKeys.INSTANT, Boolean::class) ?: false
-            if (entity is IDamageable && (instant || !entity.invincible)) bodyFixture.depleteHealth()
+            if (entity is IDamageable && (instant || !entity.invincible)) otherFixture.depleteHealth()
         }
 
         // block, body

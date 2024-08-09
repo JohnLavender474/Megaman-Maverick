@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.entities.factories.impl
 
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.entities.enemies.FireMetFlame
 import com.megaman.maverick.game.entities.factories.EntityFactory
 import com.megaman.maverick.game.entities.factories.EntityPoolCreator
 import com.megaman.maverick.game.entities.projectiles.*
@@ -35,6 +36,7 @@ class ProjectilesFactory(private val game: MegamanMaverickGame) : EntityFactory(
         const val ASTEROID = "Asteroid"
         const val ROCKET_BOMB = "RocketBomb"
         const val BUNBY_RED_ROCKET = "BunbyRedRocket"
+        const val FIRE_MET_FLAME = "FireMetFlame"
     }
 
     override fun init() {
@@ -63,6 +65,7 @@ class ProjectilesFactory(private val game: MegamanMaverickGame) : EntityFactory(
         pools.put(ASTEROID, EntityPoolCreator.create { Asteroid(game) })
         pools.put(ROCKET_BOMB, EntityPoolCreator.create { RocketBomb(game) })
         pools.put(BUNBY_RED_ROCKET, EntityPoolCreator.create { BunbyRedRocket(game) })
+        pools.put(FIRE_MET_FLAME, EntityPoolCreator.create { FireMetFlame(game) })
     }
 
     override fun fetch(key: Any) = pools.get(if (key == "") BULLET else key)?.fetch()

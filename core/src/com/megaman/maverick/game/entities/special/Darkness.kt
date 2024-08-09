@@ -174,17 +174,13 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
             }
 
             EventType.BEGIN_ROOM_TRANS -> {
-                val newRoom = event.getProperty(
-                    ConstKeys.CURRENT, RectangleMapObject::class
-                )!!.name
+                val newRoom = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!.name
                 GameLogger.debug(TAG, "BEGIN_ROOM_TRANS: this room = $room, next room = $newRoom")
                 if (this.room != newRoom) lightEventQueue.add(LightEvent(LightEventType.LIGHT_UP_ALL))
             }
 
             EventType.END_ROOM_TRANS -> {
-                val newRoom = event.getProperty(
-                    ConstKeys.ROOM, RectangleMapObject::class
-                )!!.name
+                val newRoom = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!.name
                 GameLogger.debug(TAG, "END_ROOM_TRANS: this room = $room, next room = $newRoom")
                 if (this.room == newRoom) lightEventQueue.add(LightEvent(LightEventType.DARKEN_ALL))
             }

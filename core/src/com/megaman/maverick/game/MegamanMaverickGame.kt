@@ -89,7 +89,7 @@ class MegamanMaverickGame : Game(), IEventListener, IPropertizable {
     companion object {
         const val TAG = "MegamanMaverickGame"
         const val DEBUG_TEXT = false
-        const val DEBUG_SHAPES = false
+        const val DEBUG_SHAPES = true
         const val DEFAULT_VOLUME = 0.5f
         val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
@@ -246,12 +246,12 @@ class MegamanMaverickGame : Game(), IEventListener, IPropertizable {
         screens.put(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name, SimpleInitGameScreen(this))
 
         // startLevelScreen(Level.MOON_MAN)
-        startLevelScreen(Level.INFERNO_MAN)
+        // startLevelScreen(Level.INFERNO_MAN)
         // startLevelScreen(Level.REACTOR_MAN)
         // startLevelScreen(Level.FREEZE_MAN)
 
         // TEST LEVELS
-        // startLevelScreen(Level.TEST1)
+        startLevelScreen(Level.TEST1)
     }
 
     override fun onEvent(event: Event) {

@@ -17,9 +17,9 @@ object MegaUtilMethods {
     fun calculateJumpImpulse(
         source: Vector2,
         target: Vector2,
-        horizontalScalar: Float,
         verticalBaseImpulse: Float,
-        verticalScalar: Float
+        horizontalScalar: Float = 1f,
+        verticalScalar: Float = 1f
     ) = calculateJumpImpulse(
         source.x,
         source.y,

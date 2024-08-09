@@ -173,6 +173,37 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
+            <key type="filename">../frames/Enemies1/Arigock/Clapping.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>24,10,48,21</rect>
+                <key>scale9Paddings</key>
+                <rect>24,10,48,21</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies1/Arigock/Closed.png</key>
+            <key type="filename">../frames/Enemies1/Arigock/Open.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,10,24,21</rect>
+                <key>scale9Paddings</key>
+                <rect>12,10,24,21</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Enemies1/BabyPenguin.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -298,6 +329,37 @@
                 <rect>24,8,48,16</rect>
                 <key>scale9Paddings</key>
                 <rect>24,8,48,16</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies1/FireMet/Jump.png</key>
+            <key type="filename">../frames/Enemies1/FireMet/Shoot.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>25,13,50,25</rect>
+                <key>scale9Paddings</key>
+                <rect>25,13,50,25</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies1/FireMet/Walk.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>25,25,50,50</rect>
+                <key>scale9Paddings</key>
+                <rect>25,25,50,50</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

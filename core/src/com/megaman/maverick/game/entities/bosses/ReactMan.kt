@@ -244,9 +244,7 @@ class ReactMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         val impulse = MegaUtilMethods.calculateJumpImpulse(
             body.getPosition(),
             getMegaman().body.getPosition(),
-            HORIZONTAL_SCALAR,
-            JUMP_IMPULSE * ConstVals.PPM,
-            VERTICAL_SCALAR
+            JUMP_IMPULSE * ConstVals.PPM
         )
         body.physics.velocity.set(impulse)
     }
