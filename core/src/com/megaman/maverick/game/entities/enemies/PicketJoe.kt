@@ -8,9 +8,9 @@ import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
-import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
 import com.engine.common.enums.Facing
+import com.engine.common.extensions.coerceX
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.objectMapOf
@@ -49,10 +49,9 @@ import com.megaman.maverick.game.entities.overlapsGameCamera
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-
+import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
-import kotlin.math.abs
 import kotlin.reflect.KClass
 
 class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
@@ -60,8 +59,9 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     companion object {
         const val TAG = "PicketJoe"
         private var atlas: TextureAtlas? = null
-        private const val STAND_DUR = 0.5f
+        private const val STAND_DUR = 1f
         private const val THROW_DUR = 0.5f
+        private const val MAX_IMPULSE_X = 6f
         private const val PICKET_IMPULSE_Y = 10f
     }
 
@@ -225,19 +225,17 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         spawn.x += 0.1f * ConstVals.PPM * facing.value
         spawn.y += 0.25f * ConstVals.PPM
 
-        val picket = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.PICKET)!!
-        val xFactor = 1f - ((abs(getMegaman().body.y - body.y) / ConstVals.PPM) / 10f) + 0.2f
-        GameLogger.debug(TAG, "throwPicket(): xFactor: $xFactor")
-        val impulseX = (getMegaman().body.x - body.x) * xFactor
+        val impulse = MegaUtilMethods.calculateJumpImpulse(
+            spawn, getMegaman().body.getCenter(), PICKET_IMPULSE_Y * ConstVals.PPM
+        ).coerceX(-MAX_IMPULSE_X * ConstVals.PPM, MAX_IMPULSE_X * ConstVals.PPM)
 
+        val picket = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.PICKET)!!
         game.engine.spawn(
             picket, props(
                 ConstKeys.OWNER to this,
                 ConstKeys.POSITION to spawn,
-                ConstKeys.X to impulseX,
-                ConstKeys.Y to PICKET_IMPULSE_Y * ConstVals.PPM
+                ConstKeys.IMPULSE to impulse
             )
         )
     }
-
 }

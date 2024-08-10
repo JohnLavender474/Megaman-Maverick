@@ -349,6 +349,9 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Enemies1/FireMet/Walk.png</key>
+            <key type="filename">../frames/Enemies1/FireMetSpawner/Open.png</key>
+            <key type="filename">../frames/Enemies1/FireMetSpawner/Opening.png</key>
+            <key type="filename">../frames/Enemies1/FlameHeadThrower/Stand.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -360,6 +363,36 @@
                 <rect>25,25,50,50</rect>
                 <key>scale9Paddings</key>
                 <rect>25,25,50,50</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies1/FireMetSpawner/Closed.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>13,13,25,25</rect>
+                <key>scale9Paddings</key>
+                <rect>13,13,25,25</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies1/FlameHeadThrower/Throw.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>75,25,150,50</rect>
+                <key>scale9Paddings</key>
+                <rect>75,25,150,50</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

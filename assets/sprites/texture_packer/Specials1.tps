@@ -173,6 +173,37 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
+            <key type="filename">../frames/Specials1/CapsuleTeleporter/Active.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>25,26,50,51</rect>
+                <key>scale9Paddings</key>
+                <rect>25,26,50,51</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Specials1/CapsuleTeleporter/Frame.png</key>
+            <key type="filename">../frames/Specials1/CapsuleTeleporter/Inactive.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>13,26,25,51</rect>
+                <key>scale9Paddings</key>
+                <rect>13,26,25,51</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Specials1/Cart.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>

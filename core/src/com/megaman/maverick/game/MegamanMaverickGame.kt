@@ -376,7 +376,7 @@ class MegamanMaverickGame : Game(), IEventListener, IPropertizable {
                     FixtureType.DEATH to objectSetOf(
                         FixtureType.FEET, FixtureType.SIDE, FixtureType.HEAD, FixtureType.BODY
                     ),
-                    FixtureType.WATER_LISTENER to objectSetOf(FixtureType.WATER),
+                    FixtureType.WATER to objectSetOf(FixtureType.WATER_LISTENER),
                     FixtureType.LADDER to objectSetOf(FixtureType.HEAD, FixtureType.FEET),
                     FixtureType.SIDE to objectSetOf(
                         FixtureType.ICE, FixtureType.GATE, FixtureType.BLOCK, FixtureType.BOUNCER
@@ -392,7 +392,8 @@ class MegamanMaverickGame : Game(), IEventListener, IPropertizable {
                         FixtureType.WATER,
                         FixtureType.PROJECTILE
                     ),
-                    FixtureType.LASER to objectSetOf(FixtureType.BLOCK)
+                    FixtureType.LASER to objectSetOf(FixtureType.BLOCK),
+                    FixtureType.TELEPORTER to objectSetOf(FixtureType.TELEPORTER_LISTENER)
                 ),
                 debug = true
             ),

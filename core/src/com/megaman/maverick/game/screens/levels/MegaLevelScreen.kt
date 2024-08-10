@@ -332,7 +332,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
             }
 
             EventType.PLAYER_READY -> {
-                engine.forEachEntity { if (it is AbstractEnemy) it.kill() }
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Player ready")
                 eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
             }

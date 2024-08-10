@@ -9,7 +9,6 @@ import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
 import com.engine.common.GameLogger
-import com.engine.common.enums.Direction
 import com.engine.common.enums.Facing
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.objectMapOf
@@ -141,7 +140,6 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
         debugShapes.add { damageableFixture.getShape() }
 
         val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle())
-        shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
         body.addFixture(shieldFixture)
         shieldFixture.rawShape.color = Color.BLUE
         debugShapes.add { shieldFixture.rawShape }

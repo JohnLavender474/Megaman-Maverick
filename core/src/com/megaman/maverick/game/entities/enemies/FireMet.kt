@@ -56,12 +56,13 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
     companion object {
         const val TAG = "FireMet"
-        private const val CULL_TIME = 3f // since this enemy moves so slowly
-        private const val MOVE_SPEED = 3f
+        private const val MOVE_SPEED = 4f
+        private const val MAX_SHOOT_X = 8f
+        private const val MAX_SHOOT_Y = 2f
         private const val JUMP_IMPULSE_Y = 7f
         private const val GRAVITY = -0.15f
         private const val GROUND_GRAVITY = -0.001f
-        private const val MOVE_DUR = 1.25f
+        private const val MOVE_DUR = 0.75f
         private const val SHOOT_DUR = 0.25f
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -80,7 +81,6 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     private val shootTimer = Timer(SHOOT_DUR)
     private lateinit var state: FireMetState
     private var flame: FireMetFlame? = null
-    private var onGround = false
 
     override fun init() {
         if (regions.isEmpty) {
@@ -94,10 +94,12 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     }
 
     override fun spawn(spawnProps: Properties) {
-        spawnProps.put(ConstKeys.CULL_TIME, CULL_TIME)
         super.spawn(spawnProps)
 
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn =
+            if (spawnProps.containsKey(ConstKeys.BOUNDS)) spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+                .getBottomCenterPoint()
+            else spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setBottomCenterToPoint(spawn)
 
         spawnFlame()
@@ -107,8 +109,6 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
         moveTimer.reset()
         shootTimer.setToEnd()
-
-        onGround = false
     }
 
     override fun onDestroy() {
@@ -168,12 +168,12 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
     private fun shoot() {
         val impulse = MegaUtilMethods.calculateJumpImpulse(
-            body.getPosition(),
-            getMegaman().body.getPosition(),
-            JUMP_IMPULSE_Y * ConstVals.PPM,
-        ).coerceX(-MOVE_SPEED * ConstVals.PPM, MOVE_SPEED * ConstVals.PPM)
+            body.getCenter(), getMegaman().body.getCenter(), JUMP_IMPULSE_Y * ConstVals.PPM,
+        ).coerceX(-MAX_SHOOT_X * ConstVals.PPM, MAX_SHOOT_Y * ConstVals.PPM)
+
         flame!!.launch(impulse)
         flame!!.body.physics.gravityOn = true
+
         flame = null
     }
 
@@ -263,23 +263,29 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
         body.postProcess.put(ConstKeys.DEFAULT) {
             if (isFacing(Facing.LEFT)) {
-                if (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) ||
-                    leftConsumerFixture.isProperty(ConstKeys.DEATH, true)
+                if (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) || leftConsumerFixture.isProperty(
+                        ConstKeys.DEATH,
+                        true
+                    )
                 ) facing = Facing.RIGHT
-                else if (state == FireMetState.MOVE &&
-                    body.isSensing(BodySense.FEET_ON_GROUND) &&
-                    leftConsumerFixture.isProperty(ConstKeys.BLOCK, false)
+                else if (state == FireMetState.MOVE && body.isSensing(BodySense.FEET_ON_GROUND) && leftConsumerFixture.isProperty(
+                        ConstKeys.BLOCK,
+                        false
+                    )
                 ) {
                     jump()
                     moveTimer.reset()
                 }
             } else if (isFacing(Facing.RIGHT)) {
-                if (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) ||
-                    rightConsumerFixture.isProperty(ConstKeys.DEATH, true)
+                if (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) || rightConsumerFixture.isProperty(
+                        ConstKeys.DEATH,
+                        true
+                    )
                 ) facing = Facing.LEFT
-                else if (state == FireMetState.MOVE &&
-                    body.isSensing(BodySense.FEET_ON_GROUND) &&
-                    rightConsumerFixture.isProperty(ConstKeys.BLOCK, false)
+                else if (state == FireMetState.MOVE && body.isSensing(BodySense.FEET_ON_GROUND) && rightConsumerFixture.isProperty(
+                        ConstKeys.BLOCK,
+                        false
+                    )
                 ) {
                     jump()
                     moveTimer.reset()

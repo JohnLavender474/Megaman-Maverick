@@ -75,7 +75,7 @@ class MegaContactListener(
         }
 
         // death, feet / side / head / body
-        else if (contact.fixturesMatch(
+        else if (contact.fixtureSetsMatch(
                 objectSetOf(FixtureType.DEATH), objectSetOf(
                     FixtureType.FEET, FixtureType.SIDE, FixtureType.HEAD, FixtureType.BODY
                 )
@@ -433,19 +433,18 @@ class MegaContactListener(
             }
         }
 
-        // player, teleporter
-        else if (contact.fixturesMatch(FixtureType.PLAYER, FixtureType.TELEPORTER)) {
-            printDebugLog(contact, "beginContact(): Player-Teleporter, contact = $contact")
-            val (playerFixture, teleporterFixture) = contact.getFixturesInOrder(
-                FixtureType.PLAYER, FixtureType.TELEPORTER
+        // teleporter listener, teleporter
+        else if (contact.fixturesMatch(FixtureType.TELEPORTER_LISTENER, FixtureType.TELEPORTER)) {
+            printDebugLog(contact, "beginContact(): TeleporterListener-Teleporter, contact = $contact")
+            val (teleporterListenerFixture, teleporterFixture) = contact.getFixturesInOrder(
+                FixtureType.TELEPORTER_LISTENER, FixtureType.TELEPORTER
             )!!
-            val playerEntity = playerFixture.getEntity()
 
-            val playerBody = playerEntity.body
-            playerBody.setBodySense(BodySense.TELEPORTING, true)
+            val teleporterListener = teleporterListenerFixture.getEntity()
+            teleporterListener.body.setBodySense(BodySense.TELEPORTING, true)
 
             val teleporterEntity = teleporterFixture.getEntity() as ITeleporterEntity
-            teleporterEntity.teleportEntity(playerEntity)
+            teleporterEntity.teleportEntity(teleporterListener)
         }
     }
 
@@ -682,10 +681,7 @@ class MegaContactListener(
         }
 
         // laser, block
-        else if (contact.fixturesMatch(
-                FixtureType.LASER, FixtureType.BLOCK
-            )
-        ) {
+        else if (contact.fixturesMatch(FixtureType.LASER, FixtureType.BLOCK)) {
             printDebugLog(contact, "continueContact(): Laser-Block, contact = $contact")
             val (laser, block) = contact.getFixturesInOrder(FixtureType.LASER, FixtureType.BLOCK)!!
 
@@ -866,14 +862,14 @@ class MegaContactListener(
             }
         }
 
-        // player, teleporter
-        else if (contact.fixturesMatch(FixtureType.PLAYER, FixtureType.TELEPORTER)) {
-            printDebugLog(contact, "beginContact(): Player-Teleporter, contact = $contact")
-            val (playerFixture, _) = contact.getFixturesInOrder(
-                FixtureType.PLAYER, FixtureType.TELEPORTER
+        // teleporter listener, teleporter
+        else if (contact.fixturesMatch(FixtureType.TELEPORTER_LISTENER, FixtureType.TELEPORTER)) {
+            printDebugLog(contact, "beginContact(): TeleporterListener-Teleporter, contact = $contact")
+            val (teleporterListenerFixture, _) = contact.getFixturesInOrder(
+                FixtureType.TELEPORTER_LISTENER,
+                FixtureType.TELEPORTER
             )!!
-            val playerBody = playerFixture.getBody()
-            playerBody.setBodySense(BodySense.TELEPORTING, false)
+            teleporterListenerFixture.getBody().setBodySense(BodySense.TELEPORTING, false)
         }
     }
 }

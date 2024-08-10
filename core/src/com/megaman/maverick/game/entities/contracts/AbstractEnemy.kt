@@ -41,7 +41,8 @@ import kotlin.reflect.KClass
 
 abstract class AbstractEnemy(
     game: MegamanMaverickGame, dmgDuration: Float = DEFAULT_DMG_DURATION, dmgBlinkDur: Float = DEFAULT_DMG_BLINK_DUR
-) : MegaGameEntity(game), IDamager, IDamageable, IBodyEntity, IAudioEntity, IHealthEntity, ISpritesEntity, ICullableEntity {
+) : MegaGameEntity(game), IDamager, IDamageable, IBodyEntity, IAudioEntity, IHealthEntity, ISpritesEntity,
+    ICullableEntity {
 
     companion object {
         const val TAG = "AbstractEnemy"
@@ -129,14 +130,15 @@ abstract class AbstractEnemy(
                 EventType.GAME_OVER, EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING
             )
             val cullOnEvents = CullableOnEvent({ eventsToCullOn.contains(it.key) }, eventsToCullOn)
-            runnablesOnSpawn.add {
-                game.eventsMan.addListener(cullOnEvents)
-                GameLogger.debug(TAG, "Added CullableOnEvent from EventsManager")
-            }
+
+            game.eventsMan.addListener(cullOnEvents)
+            GameLogger.debug(TAG, "Added CullableOnEvent from EventsManager")
+
             runnablesOnDestroy.add {
                 game.eventsMan.removeListener(cullOnEvents)
                 GameLogger.debug(TAG, "Removed CullableOnEvent from EventsManager")
             }
+
             putCullable(ConstKeys.CULL_EVENTS, cullOnEvents)
         } else removeCullable(ConstKeys.CULL_EVENTS)
 

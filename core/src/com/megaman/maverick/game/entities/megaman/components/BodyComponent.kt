@@ -53,22 +53,14 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     }
 
     val feetFixture =
-        Fixture(
-            body,
-            FixtureType.FEET,
-            GameRectangle().setWidth(0.6f * ConstVals.PPM).setHeight(0.15f * ConstVals.PPM)
-        )
+        Fixture(body, FixtureType.FEET, GameRectangle().setWidth(0.6f * ConstVals.PPM).setHeight(0.15f * ConstVals.PPM))
     feetFixture.setRunnable(onBounce)
     body.addFixture(feetFixture)
     feetFixture.rawShape.color = Color.GREEN
     shapes.add { feetFixture.getShape() }
 
     val headFixture =
-        Fixture(
-            body,
-            FixtureType.HEAD,
-            GameRectangle().setWidth(0.6f * ConstVals.PPM).setHeight(0.15f * ConstVals.PPM)
-        )
+        Fixture(body, FixtureType.HEAD, GameRectangle().setWidth(0.6f * ConstVals.PPM).setHeight(0.15f * ConstVals.PPM))
     headFixture.setRunnable(onBounce)
     headFixture.setConsumer { state, fixture ->
         if (state == ProcessState.BEGIN && fixture.getFixtureType() == FixtureType.BLOCK)
@@ -99,13 +91,16 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     shapes.add { damageableFixture.getShape() }
 
     val waterListenerFixture =
-        Fixture(
-            body,
-            FixtureType.WATER_LISTENER,
-            GameRectangle().setSize(.8f * ConstVals.PPM, ConstVals.PPM / 4f)
-        )
+        Fixture(body, FixtureType.WATER_LISTENER, GameRectangle().setSize(0.8f * ConstVals.PPM, ConstVals.PPM / 4f))
     body.addFixture(waterListenerFixture)
     waterListenerFixture.rawShape.color = Color.PURPLE
+    shapes.add { waterListenerFixture.getShape() }
+
+    val teleporterListenerFixture =
+        Fixture(body, FixtureType.TELEPORTER_LISTENER, GameRectangle().setWidth(0.5f * ConstVals.PPM))
+    body.addFixture(teleporterListenerFixture)
+    teleporterListenerFixture.rawShape.color = Color.CYAN
+    shapes.add { teleporterListenerFixture.getShape() }
 
     body.preProcess.put(ConstKeys.DEFAULT, Updatable {
         val wallSlidingOnIce =
@@ -168,20 +163,21 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
             body.height = 0.45f * ConstVals.PPM
             headFixture.offsetFromBodyCenter.y = ConstVals.PPM / 4f
             feetFixture.offsetFromBodyCenter.y = -ConstVals.PPM / 4f
-            (leftFixture.rawShape as Rectangle).setHeight(.25f * ConstVals.PPM)
-            (rightFixture.rawShape as Rectangle).setHeight(.25f * ConstVals.PPM)
+            (leftFixture.rawShape as Rectangle).setHeight(0.25f * ConstVals.PPM)
+            (rightFixture.rawShape as Rectangle).setHeight(0.25f * ConstVals.PPM)
         } else {
             body.height = 0.95f * ConstVals.PPM
             headFixture.offsetFromBodyCenter.y = ConstVals.PPM / 2f
             feetFixture.offsetFromBodyCenter.y = -ConstVals.PPM / 2f
-            (leftFixture.rawShape as Rectangle).setHeight(.6f * ConstVals.PPM)
-            (rightFixture.rawShape as Rectangle).setHeight(.6f * ConstVals.PPM)
+            (leftFixture.rawShape as Rectangle).setHeight(0.6f * ConstVals.PPM)
+            (rightFixture.rawShape as Rectangle).setHeight(0.6f * ConstVals.PPM)
         }
 
         (bodyFixture.rawShape as Rectangle).set(body)
 
-        (playerFixture.rawShape as Rectangle).height =
-            (if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) 0.25f else 0.5f) * ConstVals.PPM
+        val playerFixtureHeight = (if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) 0.25f else 0.5f) * ConstVals.PPM
+        (playerFixture.rawShape as Rectangle).height = playerFixtureHeight
+        (teleporterListenerFixture.rawShape as Rectangle).height = playerFixtureHeight
     })
 
     addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))

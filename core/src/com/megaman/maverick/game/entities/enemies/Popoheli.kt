@@ -43,6 +43,7 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
+import com.megaman.maverick.game.entities.overlapsGameCamera
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
@@ -134,7 +135,10 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
                 PopoheliState.ATTACKING -> {
                     attackDelayTimer.update(delta)
                     if (!attackDelayTimer.isFinished()) return@add
-                    if (attackDelayTimer.isJustFinished()) requestToPlaySound(SoundAsset.ATOMIC_FIRE_SOUND, false)
+                    if (attackDelayTimer.isJustFinished() && overlapsGameCamera()) requestToPlaySound(
+                        SoundAsset.ATOMIC_FIRE_SOUND,
+                        false
+                    )
 
                     attackTimer.update(delta)
                     if (attackTimer.isFinished()) state = PopoheliState.FLEEING

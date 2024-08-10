@@ -42,11 +42,12 @@ class Picket(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEnt
 
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
-        val impulseX = spawnProps.get(ConstKeys.X, Float::class)!!
-        val impulseY = spawnProps.get(ConstKeys.Y, Float::class)!!
-        body.physics.velocity.set(impulseX, impulseY)
+
+        val impulse = spawnProps.get(ConstKeys.IMPULSE, Vector2::class)!!
+        body.physics.velocity.set(impulse)
     }
 
     override fun hitBlock(blockFixture: IFixture) {
@@ -59,18 +60,19 @@ class Picket(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEnt
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
 
         val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body.getBodyBounds() }
 
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(0.5f * ConstVals.PPM))
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         body.addFixture(bodyFixture)
 
         val projectileFixture =
-            Fixture(body, FixtureType.PROJECTILE, GameRectangle().setSize(0.5f * ConstVals.PPM))
+            Fixture(body, FixtureType.PROJECTILE, GameRectangle(body))
         body.addFixture(projectileFixture)
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.4f * ConstVals.PPM))
         body.addFixture(damagerFixture)
 
-        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(0.5f * ConstVals.PPM))
+        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle(body))
         body.addFixture(shieldFixture)
 
         addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))

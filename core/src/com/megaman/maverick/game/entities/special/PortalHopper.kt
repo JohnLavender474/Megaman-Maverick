@@ -113,19 +113,6 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         }
     }
 
-    override fun teleportEntity(entity: IBodyEntity) {
-        GameLogger.debug(TAG, "thisKey=$thisKey, teleportEntity(): entity=$entity")
-        game.eventsMan.submitEvent(
-            Event(
-                EventType.TELEPORT, props(
-                    ConstKeys.ENTITY to entity,
-                    ConstKeys.KEY to nextKey,
-                    ConstKeys.DIRECTION to nextDirection
-                )
-            )
-        )
-    }
-
     private fun receiveEntity(entity: IBodyEntity, direction: Direction) {
         GameLogger.debug(TAG, "thisKey=$thisKey, receiveEntity(): entity=$entity")
 
@@ -150,6 +137,19 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
         hopQueue.add(entity to Timer(PORTAL_HOP_DELAY))
         GameLogger.debug(TAG, "teleportEntity(): thisKey=$thisKey, entity=$entity, hopPoint=$hopPoint")
+    }
+
+    override fun teleportEntity(entity: IBodyEntity) {
+        GameLogger.debug(TAG, "thisKey=$thisKey, teleportEntity(): entity=$entity")
+        game.eventsMan.submitEvent(
+            Event(
+                EventType.TELEPORT, props(
+                    ConstKeys.ENTITY to entity,
+                    ConstKeys.KEY to nextKey,
+                    ConstKeys.DIRECTION to nextDirection
+                )
+            )
+        )
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent(this, { delta ->
