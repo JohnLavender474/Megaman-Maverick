@@ -154,14 +154,14 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         damagerFixture.rawShape.color = Color.RED
         debugShapes.add { damagerFixture.getShape() }
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { delta, _sprite ->
             val size = if (burst) 0.85f else 1.65f
             _sprite.setSize(size * ConstVals.PPM)
@@ -186,7 +186,7 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
     }
 
     private fun defineUpdatablesComponent(): UpdatablesComponent {
-        val updatablesComponent = UpdatablesComponent(this)
+        val updatablesComponent = UpdatablesComponent()
         updatablesComponent.add {
             if (burst) {
                 body.physics.velocity.setZero()

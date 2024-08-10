@@ -124,7 +124,7 @@ class UpNDown(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAnim
             body.physics.velocity.y = VEL_Y * ConstVals.PPM * if (up) 1 else -1
         }
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -132,7 +132,7 @@ class UpNDown(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAnim
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(0.5f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction{ _, _sprite ->
             _sprite.hidden = damageBlink
             _sprite.setCenter(body.getCenter())

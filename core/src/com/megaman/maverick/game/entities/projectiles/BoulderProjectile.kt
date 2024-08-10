@@ -78,7 +78,7 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
         }
         super.init()
         addComponent(defineUpdatablesComponent())
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -194,7 +194,7 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
         }
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, { delta ->
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         spawnExplodeDelay.update(delta)
     })
 
@@ -226,7 +226,7 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { delta, _sprite ->
             val region = when (size) {
                 Size.LARGE -> largeRegion

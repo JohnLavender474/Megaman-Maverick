@@ -62,7 +62,7 @@ class Bolt(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IHaza
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
-        addComponent(CullablesComponent(this))
+        addComponent(CullablesComponent())
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -106,14 +106,14 @@ class Bolt(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IHaza
             (damagerFixture.rawShape as GameRectangle).set(body)
         }
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             sprite.setSize(ConstVals.PPM.toFloat() * scale)
             _sprite.setOriginCenter()

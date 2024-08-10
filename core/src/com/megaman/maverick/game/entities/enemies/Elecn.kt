@@ -157,7 +157,7 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         )
         body.addFixture(sideFixture)
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             if (isFacing(Facing.LEFT)) {
@@ -187,7 +187,7 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
             _sprite.setCenter(body.getCenter())

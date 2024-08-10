@@ -93,7 +93,7 @@ class SigmaRatElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game)
         requestToPlaySound(SoundAsset.BLAST_SOUND, false)
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, { delta ->
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         if (hit) {
             hitTimer.update(delta)
             if (hitTimer.isFinished()) {
@@ -133,7 +133,7 @@ class SigmaRatElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game)
         damagerFixture.rawShape.color = Color.RED
         debugShapes.add { damagerFixture.getShape() }
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -141,7 +141,7 @@ class SigmaRatElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game)
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 3))
         sprite.setSize(1.5f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())
         }

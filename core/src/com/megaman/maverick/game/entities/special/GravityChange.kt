@@ -74,12 +74,12 @@ class GravityChange(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         body.color = Color.BROWN
         gravityChangeFixture = Fixture(body, FixtureType.GRAVITY_CHANGE, GameRectangle())
         body.addFixture(gravityChangeFixture)
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
         return BodyComponentCreator.create(this, body)
     }
 
     private fun createCullablesComponent(): CullablesComponent {
         val cullOnOutOfBounds = getGameCameraCullingLogic(this)
-        return CullablesComponent(this, objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullOnOutOfBounds))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullOnOutOfBounds))
     }
 }

@@ -136,7 +136,7 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().set(body))
         body.addFixture(damagerFixture)
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -145,7 +145,7 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
         val sprite = GameSprite()
         sprite.setRegion(region!!)
         sprite.setSize(1.25f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setFlip(isFacing(Facing.RIGHT), false)
             _sprite.setCenter(body.getCenter())

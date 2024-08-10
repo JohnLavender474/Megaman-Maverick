@@ -7,7 +7,7 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 
 internal fun Megaman.definePointsComponent(): PointsComponent {
-    val pointsComponent = PointsComponent(this)
+    val pointsComponent = PointsComponent()
     pointsComponent.putPoints(
         ConstKeys.HEALTH,
         max = MegamanValues.START_HEALTH,

@@ -93,7 +93,7 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
-        addComponent(AudioComponent(this))
+        addComponent(AudioComponent())
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -179,7 +179,7 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
         incomingBodies.put(entity, Timer(RECEIVE_DELAY))
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, { delta ->
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         val sendIter = outgoingBodies.iterator()
         while (sendIter.hasNext) {
             val entry = sendIter.next()
@@ -200,8 +200,7 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
 
                 game.eventsMan.submitEvent(
                     Event(
-                        EventType.TELEPORT,
-                        props(ConstKeys.ENTITY to entity, ConstKeys.KEY to nextKey)
+                        EventType.TELEPORT, props(ConstKeys.ENTITY to entity, ConstKeys.KEY to nextKey)
                     )
                 )
 
@@ -261,7 +260,7 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
             teleporterFixture.rawShape = teleporterBounds!!
         }
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -274,18 +273,13 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
         val glassSprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 2))
         glassSprite.setSize(2f * ConstVals.PPM, 4f * ConstVals.PPM)
 
-        return SpritesComponent(this,
-            orderedMapOf(
-                "frame" to frameSprite, "glass" to glassSprite
-            ),
-            objectMapOf(
-                "frame" to UpdateFunction { _, _sprite ->
-                    _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
-                }, "glass" to UpdateFunction { _, _sprite ->
-                    _sprite.setCenter(body.getCenter())
-                }
-            )
-        )
+        return SpritesComponent(orderedMapOf(
+            "frame" to frameSprite, "glass" to glassSprite
+        ), objectMapOf("frame" to UpdateFunction { _, _sprite ->
+            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+        }, "glass" to UpdateFunction { _, _sprite ->
+            _sprite.setCenter(body.getCenter())
+        }))
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
@@ -296,6 +290,6 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
             "inactive" to Animation(regions["inactive"]!!)
         )
         val animator = Animator(keySupplier, animations)
-        return AnimationsComponent(this, gdxArrayOf({ sprites["glass"] } to animator))
+        return AnimationsComponent(gdxArrayOf({ sprites["glass"] } to animator))
     }
 }

@@ -54,7 +54,7 @@ class BunbyRedRocket(game: MegamanMaverickGame) : AbstractProjectile(game), IAni
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
         super<AbstractProjectile>.init()
         addComponent(defineAnimationsComponent())
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body.getBodyBounds() }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBodyBounds() }), debug = true))
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -112,7 +112,7 @@ class BunbyRedRocket(game: MegamanMaverickGame) : AbstractProjectile(game), IAni
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(0.85f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setFlip(isFacing(Facing.LEFT), false)
             _sprite.setOriginCenter()

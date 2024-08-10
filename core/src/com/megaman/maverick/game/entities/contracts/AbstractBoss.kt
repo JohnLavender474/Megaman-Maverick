@@ -120,7 +120,7 @@ abstract class AbstractBoss(
     }
 
     override fun definePointsComponent(): PointsComponent {
-        val pointsComponent = PointsComponent(this)
+        val pointsComponent = PointsComponent()
         pointsComponent.putPoints(
             ConstKeys.HEALTH, max = ConstVals.MAX_HEALTH, current = ConstVals.MAX_HEALTH, min = ConstVals.MIN_HEALTH
         )

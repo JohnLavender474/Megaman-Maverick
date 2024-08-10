@@ -79,7 +79,7 @@ class Adamski(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
             orangeRegion = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, "Adamski/Orange")
         }
         super<AbstractEnemy>.init()
-        addComponent(MotionComponent(this))
+        addComponent(MotionComponent())
         addComponent(defineAnimationsComponent())
     }
 
@@ -133,7 +133,7 @@ class Adamski(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         damageableFixture.getShape().color = Color.PURPLE
         debugShapes.add { damageableFixture.getShape() }
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -141,7 +141,7 @@ class Adamski(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.25f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
             _sprite.setCenter(body.getCenter())

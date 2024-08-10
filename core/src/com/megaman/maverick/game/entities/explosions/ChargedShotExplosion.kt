@@ -56,12 +56,10 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
     private lateinit var direction: Direction
 
     override fun init() {
-        if (fullyChargedRegion == null)
-            fullyChargedRegion =
-                game.assMan.getTextureRegion(TextureAsset.MEGAMAN_CHARGED_SHOT.source, "Collide")
-        if (halfChargedRegion == null)
-            halfChargedRegion =
-                game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "HalfChargedShot")
+        if (fullyChargedRegion == null) fullyChargedRegion =
+            game.assMan.getTextureRegion(TextureAsset.MEGAMAN_CHARGED_SHOT.source, "Collide")
+        if (halfChargedRegion == null) halfChargedRegion =
+            game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "HalfChargedShot")
         super<AbstractProjectile>.init()
         addComponent(defineAnimationsComponent())
         addComponent(defineUpdatablesComponent())
@@ -76,8 +74,7 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
         fullyCharged = spawnProps.get(ConstKeys.BOOLEAN) as Boolean
 
         val duration = spawnProps.getOrDefault(
-            ConstKeys.DURATION,
-            if (fullyCharged) FULLY_CHARGED_DURATION else HALF_CHARGED_DURATION, Float::class
+            ConstKeys.DURATION, if (fullyCharged) FULLY_CHARGED_DURATION else HALF_CHARGED_DURATION, Float::class
         )
         durationTimer = Timer(duration)
 
@@ -88,25 +85,22 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
         (firstSprite as GameSprite).setSize(spriteDimension)
     }
 
-    private fun defineUpdatablesComponent() =
-        UpdatablesComponent(
-            this,
-            {
-                durationTimer.update(it)
-                if (durationTimer.isFinished()) kill(props(CAUSE_OF_DEATH_MESSAGE to "Duration timer finished"))
+    private fun defineUpdatablesComponent() = UpdatablesComponent({
+        durationTimer.update(it)
+        if (durationTimer.isFinished()) kill(props(CAUSE_OF_DEATH_MESSAGE to "Duration timer finished"))
 
-                soundTimer.update(it)
-                if (soundTimer.isFinished()) {
-                    requestToPlaySound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
-                    soundTimer.reset()
-                }
-            })
+        soundTimer.update(it)
+        if (soundTimer.isFinished()) {
+            requestToPlaySound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
+            soundTimer.reset()
+        }
+    })
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
         body.addFixture(damagerFixture)
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
         body.preProcess.put(ConstKeys.DEFAULT) {
             val size = if (fullyCharged) 1.5f * ConstVals.PPM else ConstVals.PPM.toFloat()
             body.setSize(size)
@@ -117,16 +111,15 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setOriginCenter()
-            val rotation =
-                when (direction) {
-                    Direction.RIGHT -> 0f
-                    Direction.UP -> 90f
-                    Direction.LEFT -> 180f
-                    Direction.DOWN -> 270f
-                }
+            val rotation = when (direction) {
+                Direction.RIGHT -> 0f
+                Direction.UP -> 90f
+                Direction.LEFT -> 180f
+                Direction.DOWN -> 270f
+            }
             _sprite.rotation = rotation
             _sprite.setCenter(body.getCenter())
         }
@@ -136,11 +129,10 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
     private fun defineAnimationsComponent(): AnimationsComponent {
         val chargedAnimation = Animation(fullyChargedRegion!!, 1, 3, .05f, true)
         val halfChargedAnimation = Animation(halfChargedRegion!!, 1, 3, .05f, true)
-        val animator =
-            Animator(
-                { if (fullyCharged) "charged" else "halfCharged" },
-                objectMapOf("charged" to chargedAnimation, "halfCharged" to halfChargedAnimation)
-            )
+        val animator = Animator(
+            { if (fullyCharged) "charged" else "halfCharged" },
+            objectMapOf("charged" to chargedAnimation, "halfCharged" to halfChargedAnimation)
+        )
         return AnimationsComponent(this, animator)
     }
 }

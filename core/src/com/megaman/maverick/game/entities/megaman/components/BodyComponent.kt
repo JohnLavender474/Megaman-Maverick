@@ -180,7 +180,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
         (teleporterListenerFixture.rawShape as Rectangle).height = playerFixtureHeight
     })
 
-    addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
+    addComponent(DrawableShapesComponent(debugShapeSuppliers = shapes, debug = true))
 
     return BodyComponentCreator.create(this, body)
 }

@@ -207,7 +207,7 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
         shieldFixture1.rawShape.color = Color.BLUE
         debugShapes.add { shieldFixture1.getShape() }
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         val damageableFixtures = gdxArrayOf(damageableFixture1, damageableFixture2)
         body.preProcess.put(ConstKeys.DEFAULT) {
@@ -231,7 +231,7 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(3f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
             val position = body.getBottomCenterPoint()

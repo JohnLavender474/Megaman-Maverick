@@ -77,7 +77,7 @@ class DropperLift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAni
         blockFixture.active = active
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, { delta ->
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         when (currentState) {
             DropperLiftState.CLOSED -> {
                 setActive(true)
@@ -115,7 +115,7 @@ class DropperLift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAni
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -1))
         sprite.setSize(ConstVals.PPM * 1.5f, ConstVals.PPM.toFloat())
 
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getTopCenterPoint(), Position.TOP_CENTER)
         }

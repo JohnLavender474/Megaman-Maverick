@@ -13,6 +13,6 @@ object BodyComponentCreator {
         body.preProcess.put(ConstKeys.DELTA) {
             body.putProperty(ConstKeys.PRIOR, body.getPosition().cpy())
         }
-        return BodyComponent(entity, body)
+        return BodyComponent(body)
     }
 }

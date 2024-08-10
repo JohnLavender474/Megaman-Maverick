@@ -107,7 +107,7 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(ConstVals.PPM.toFloat()))
         body.addFixture(damagerFixture)
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             body.physics.gravity.y = ConstVals.PPM * (if (body.isSensing(BodySense.FEET_ON_GROUND)) G_GRAV else GRAV)
@@ -135,7 +135,7 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM, 1.75f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)

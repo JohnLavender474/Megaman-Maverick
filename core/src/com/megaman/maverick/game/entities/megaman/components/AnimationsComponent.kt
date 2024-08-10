@@ -150,7 +150,7 @@ internal fun Megaman.defineAnimationsComponent(): AnimationsComponent {
         { sprites.get("jetpackFlame") } to jetpackFlameAnimator
     )
 
-    return AnimationsComponent(this, animatorSpritePairs)
+    return AnimationsComponent(animatorSpritePairs)
 }
 
 private val animationKeys = gdxArrayOf(

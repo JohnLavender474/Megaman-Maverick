@@ -39,8 +39,8 @@ open class WindyGrass(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
             rightRegion = atlas.findRegion("WindyGrass/Right")
             middleRegion = atlas.findRegion("WindyGrass/Middle")
         }
-        addComponent(SpritesComponent(this))
-        addComponent(AnimationsComponent(this))
+        addComponent(SpritesComponent())
+        addComponent(AnimationsComponent())
     }
 
     override fun spawn(spawnProps: Properties) {

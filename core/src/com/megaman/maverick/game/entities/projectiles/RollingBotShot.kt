@@ -91,7 +91,7 @@ class RollingBotShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAni
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.75f * ConstVals.PPM, 0.35f * ConstVals.PPM)
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
@@ -108,7 +108,7 @@ class RollingBotShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAni
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(0.75f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())
             _sprite.setFlip(isFacing(Facing.LEFT), false)

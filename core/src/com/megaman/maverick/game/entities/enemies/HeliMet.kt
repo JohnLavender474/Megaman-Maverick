@@ -231,7 +231,7 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
             shieldFixture.active = state == SHIELD
         }
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -239,7 +239,7 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 4))
         sprite.setSize(1.5f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { delta, _sprite ->
             _sprite.hidden = damageBlink
             _sprite.setCenter(body.getCenter())

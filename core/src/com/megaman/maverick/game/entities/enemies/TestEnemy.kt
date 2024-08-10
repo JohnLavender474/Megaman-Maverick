@@ -74,13 +74,13 @@ class TestEnemy(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
         val debugShapes = gdxArrayOf<() -> IDrawableShape?>({ body })
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        return SpritesComponent(this, TAG to sprite)
+        return SpritesComponent(TAG to sprite)
     }
 }

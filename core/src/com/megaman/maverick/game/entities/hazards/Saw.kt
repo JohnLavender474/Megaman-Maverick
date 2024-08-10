@@ -60,7 +60,7 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
         addComponent(defineBodyComponent())
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
-        addComponent(MotionComponent(this))
+        addComponent(MotionComponent())
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -115,7 +115,7 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
         circle2.color = Color.DARK_GRAY
         shapes.add { circle2.setCenter(body.getCenter()) }
 
-        addComponent(DrawableShapesComponent(this, shapes))
+        addComponent(DrawableShapesComponent(shapes))
     }
 
     private fun setToRotation(bounds: GameRectangle, spawnProps: Properties) {
@@ -156,7 +156,7 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
         circle2.shapeType = ShapeRenderer.ShapeType.Filled
         shapes.add { circle2.setCenter(body.getCenter()) }
 
-        addComponent(DrawableShapesComponent(this, shapes))
+        addComponent(DrawableShapesComponent(shapes))
     }
 
     private fun setToTrajectory(bounds: GameRectangle, trajectoryDefinition: String) {
@@ -194,7 +194,7 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getCenter(), Position.CENTER)
         }

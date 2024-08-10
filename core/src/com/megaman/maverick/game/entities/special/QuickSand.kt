@@ -77,7 +77,7 @@ class QuickSand(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
         sandFixture.rawShape.color = Color.RED
         debugShapes.add { sandFixture.getShape() }
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
         return BodyComponentCreator.create(this, body)
     }
 
@@ -106,7 +106,7 @@ class QuickSand(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
             animators.add({ sprite } to animator)
         }
 
-        addComponent(SpritesComponent(this, sprites, updateFunctions))
-        addComponent(AnimationsComponent(this, animators))
+        addComponent(SpritesComponent(sprites, updateFunctions))
+        addComponent(AnimationsComponent(animators))
     }
 }

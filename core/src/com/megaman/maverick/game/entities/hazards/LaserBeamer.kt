@@ -84,12 +84,12 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
         contactGlow.shapeType = Filled
 
         addComponent(
-            DrawableShapesComponent(this, prodShapeSuppliers = gdxArrayOf({ contactGlow }))
+            DrawableShapesComponent(prodShapeSuppliers = gdxArrayOf({ contactGlow }))
         )
         addComponent(defineBodyComponent())
         addComponent(defineSpritesCompoent())
         addComponent(defineUpdatablesComponent())
-        addComponent(MotionComponent(this))
+        addComponent(MotionComponent())
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -159,7 +159,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
         sprite.setRegion(region!!)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(rotatingLine.getOrigin(), Position.BOTTOM_CENTER)
             _sprite.translateY(-0.06f * ConstVals.PPM)
@@ -167,7 +167,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
         return spritesComponent
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, {
+    private fun defineUpdatablesComponent() = UpdatablesComponent({
         contactTimer.update(it)
         if (contactTimer.isFinished()) {
             contactIndex++

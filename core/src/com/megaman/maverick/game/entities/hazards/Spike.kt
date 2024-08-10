@@ -106,7 +106,7 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
         sprite.setSize(ConstVals.PPM.toFloat())
 
-        val spriteComponent = SpritesComponent(this, sprite)
+        val spriteComponent = SpritesComponent(sprite)
         spriteComponent.putUpdateFunction { _, _sprite ->
             _sprite.rotation = spriteRotation
 

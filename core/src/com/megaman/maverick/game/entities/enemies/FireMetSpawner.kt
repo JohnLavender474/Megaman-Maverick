@@ -106,7 +106,7 @@ class FireMetSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParentE
         children.add(fireMet)
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, { delta ->
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         val iter = children.iterator()
         while (iter.hasNext()) {
             val child = iter.next()
@@ -140,13 +140,13 @@ class FireMetSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParentE
             EventType.GAME_OVER, EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING
         )
         val cullOnEvents = CullableOnEvent({ eventsToCullOn.contains(it.key) }, eventsToCullOn)
-        return CullablesComponent(this, objectMapOf(ConstKeys.CULL_EVENTS to cullOnEvents))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS to cullOnEvents))
     }
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
         sprite.setSize(1.5f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getTopCenterPoint(), Position.TOP_CENTER)
         }

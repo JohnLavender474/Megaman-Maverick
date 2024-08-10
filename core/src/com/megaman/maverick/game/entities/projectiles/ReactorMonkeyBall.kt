@@ -80,7 +80,7 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(ConstVals.PPM.toFloat()))
         body.addFixture(damagerFixture)
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -88,7 +88,7 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(region!!)
         sprite.setSize(2.5f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())
         }

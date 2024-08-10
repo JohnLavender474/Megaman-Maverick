@@ -39,7 +39,7 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity 
         addComponent(defineBodyComponent())
         debugShapeSuppliers.add { body }
         addComponent(
-            DrawableShapesComponent(this, debugShapeSuppliers = debugShapeSuppliers, debug = true)
+            DrawableShapesComponent(debugShapeSuppliers = debugShapeSuppliers, debug = true)
         )
     }
 
@@ -50,16 +50,16 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity 
         val cullOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
         if (cullOutOfBounds) addComponent(
             CullablesComponent(
-                this, objectMapOf(
+                objectMapOf(
                     ConstKeys.CULL_OUT_OF_BOUNDS to getGameCameraCullingLogic(this, TIME_TO_CULL)
                 )
             )
         ) else removeComponent(CullablesComponent::class)
 
-        body.physics.frictionToApply.x = if (spawnProps.containsKey(ConstKeys.FRICTION_X))
-            spawnProps.get(ConstKeys.FRICTION_X) as Float else STANDARD_FRICTION_X
-        body.physics.frictionToApply.y = if (spawnProps.containsKey(ConstKeys.FRICTION_Y))
-            spawnProps.get(ConstKeys.FRICTION_Y) as Float else STANDARD_FRICTION_Y
+        body.physics.frictionToApply.x =
+            if (spawnProps.containsKey(ConstKeys.FRICTION_X)) spawnProps.get(ConstKeys.FRICTION_X) as Float else STANDARD_FRICTION_X
+        body.physics.frictionToApply.y =
+            if (spawnProps.containsKey(ConstKeys.FRICTION_Y)) spawnProps.get(ConstKeys.FRICTION_Y) as Float else STANDARD_FRICTION_Y
         body.physics.gravityOn = spawnProps.getOrDefault(ConstKeys.GRAVITY_ON, false, Boolean::class)
         body.physics.takeFrictionFromOthers = spawnProps.getOrDefault(ConstKeys.RESIST_ON, true, Boolean::class)
 

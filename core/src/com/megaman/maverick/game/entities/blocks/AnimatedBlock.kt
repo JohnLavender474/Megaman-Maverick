@@ -2,7 +2,6 @@ package com.megaman.maverick.game.entities.blocks
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.utils.Array
 import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
@@ -40,8 +39,8 @@ open class AnimatedBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntit
     override fun init() {
         super<Block>.init()
         addComponent(defineSpritesComponent())
-        addComponent(AnimationsComponent(this, Array()))
-        val updateablesComponent = UpdatablesComponent(this)
+        addComponent(AnimationsComponent())
+        val updateablesComponent = UpdatablesComponent()
         defineUpdateablesComponent(updateablesComponent)
     }
 
@@ -77,7 +76,7 @@ open class AnimatedBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntit
 
     protected open fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setSize(spriteSize.x, spriteSize.y)
             _sprite.setCenter(body.getCenter())

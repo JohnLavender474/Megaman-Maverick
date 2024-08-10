@@ -58,7 +58,7 @@ class SwinginPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, I
 
     override fun init() {
         super<Block>.init()
-        addComponent(MotionComponent(this))
+        addComponent(MotionComponent())
         addComponent(defineUpdatablesComponent())
         addComponent(defineSpritesComponent())
     }
@@ -136,7 +136,7 @@ class SwinginPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, I
         addDebugShapeSupplier { circle2.setCenter(pendulum.getMotionValue()) }
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, {
+    private fun defineUpdatablesComponent() = UpdatablesComponent({
         if (enemyToSpawn != null) {
             timeToSpawnEnemyTimer.update(it)
             if (timeToSpawnEnemyTimer.isJustFinished()) {
@@ -175,7 +175,7 @@ class SwinginPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, I
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM, 1f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())
         }

@@ -68,10 +68,10 @@ abstract class AbstractEnemy(
         addComponent(definePointsComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
-        addComponent(AudioComponent(this))
-        addComponent(CullablesComponent(this))
+        addComponent(AudioComponent())
+        addComponent(CullablesComponent())
 
-        val updatablesComponent = UpdatablesComponent(this)
+        val updatablesComponent = UpdatablesComponent()
         defineUpdatablesComponent(updatablesComponent)
         addComponent(updatablesComponent)
 
@@ -147,7 +147,7 @@ abstract class AbstractEnemy(
     }
 
     protected open fun definePointsComponent(): PointsComponent {
-        val pointsComponent = PointsComponent(this)
+        val pointsComponent = PointsComponent()
         pointsComponent.putPoints(
             ConstKeys.HEALTH, max = ConstVals.MAX_HEALTH, current = ConstVals.MAX_HEALTH, min = ConstVals.MIN_HEALTH
         )

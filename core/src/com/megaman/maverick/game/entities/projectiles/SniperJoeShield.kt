@@ -110,7 +110,7 @@ class SniperJoeShield(game: MegamanMaverickGame) : AbstractProjectile(game), IFa
         if (shieldFixture.getEntity() != owner) explodeAndDie()
     }
 
-    private fun defineUpdatablesComponent(): UpdatablesComponent = UpdatablesComponent(this, {
+    private fun defineUpdatablesComponent(): UpdatablesComponent = UpdatablesComponent({
         rotationTimer.update(it)
         if (rotationTimer.isFinished()) {
             thrownRotations.next()
@@ -122,7 +122,7 @@ class SniperJoeShield(game: MegamanMaverickGame) : AbstractProjectile(game), IFa
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.5f * ConstVals.PPM, ConstVals.PPM.toFloat())
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
 
         val bodyShapes = Array<IGameShape2D>()
         bodyShapes.add(body)
@@ -158,7 +158,7 @@ class SniperJoeShield(game: MegamanMaverickGame) : AbstractProjectile(game), IFa
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(ConstVals.PPM.toFloat())
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setRegion(
                 when (type) {

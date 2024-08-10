@@ -260,7 +260,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
             }
         }
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -268,7 +268,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.15f * ConstVals.PPM, 1.85f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setFlip(isFacing(Facing.RIGHT), false)
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)

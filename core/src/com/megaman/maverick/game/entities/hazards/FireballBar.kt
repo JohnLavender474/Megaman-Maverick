@@ -67,7 +67,7 @@ class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEnti
         children.clear()
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, { delta ->
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         rotatingLine.update(delta)
         for (i in 0 until BALLS) {
             val child = children.get(i) as Fireball
@@ -81,6 +81,6 @@ class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEnti
             EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING
         )
         val cullOnEvents = CullableOnEvent({ cullEvents.contains(it.key) }, cullEvents)
-        return CullablesComponent(this, objectMapOf(ConstKeys.CULL_EVENTS to cullOnEvents))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS to cullOnEvents))
     }
 }

@@ -61,7 +61,7 @@ class FloatingCanHole(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         children.clear()
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, { delta ->
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         val iter = children.iterator()
         while (iter.hasNext()) {
             val child = iter.next()
@@ -86,6 +86,6 @@ class FloatingCanHole(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
 
     private fun defineCullablesComponent(): CullablesComponent {
         val camCullable = getGameCameraCullingLogic(this)
-        return CullablesComponent(this, objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to camCullable))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to camCullable))
     }
 }

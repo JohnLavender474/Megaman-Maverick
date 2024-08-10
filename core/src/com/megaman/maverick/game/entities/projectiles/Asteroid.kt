@@ -161,7 +161,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEnt
             damageableFixture.active = !invincible
         }
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -169,7 +169,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEnt
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
         sprite.setSize(1.15f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { delta, _sprite ->
             val region = regions.get(type)
             _sprite.setRegion(region)
@@ -182,7 +182,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEnt
     }
 
     private fun definePointsComponent(): PointsComponent {
-        val pointsComponent = PointsComponent(this)
+        val pointsComponent = PointsComponent()
         pointsComponent.putPoints(
             ConstKeys.HEALTH,
             max = MegamanValues.START_HEALTH,

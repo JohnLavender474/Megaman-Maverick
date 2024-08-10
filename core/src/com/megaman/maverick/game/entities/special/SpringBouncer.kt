@@ -55,7 +55,7 @@ class SpringBouncer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesE
 
     override fun init() {
         if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)
-        addComponent(AudioComponent(this))
+        addComponent(AudioComponent())
         addComponent(defineBodyComponent())
         addComponent(defineUpdatablesComponent())
         addComponent(defineSpritesCompoent())
@@ -89,13 +89,13 @@ class SpringBouncer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesE
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, { bounceTimer.update(it) })
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ bounceTimer.update(it) })
 
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(SPRITE_DIM * ConstVals.PPM)
         sprite.setOriginCenter()
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.rotation =
                 when (direction) {

@@ -107,7 +107,7 @@ class Snowball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND,  10))
         sprite.setSize(0.85f * ConstVals.PPM)
         sprite.setRegion(region!!)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())
         }

@@ -140,7 +140,7 @@ class Peat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
         body.setSize(0.35f * ConstVals.PPM)
 
         addComponent(
-            DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true)
+            DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true)
         )
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(0.25f * ConstVals.PPM))
@@ -158,7 +158,7 @@ class Peat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.25f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
             _sprite.setCenter(body.getCenter())

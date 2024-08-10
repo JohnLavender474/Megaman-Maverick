@@ -126,7 +126,7 @@ class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(1.5f * ConstVals.PPM))
         body.addFixture(damagerFixture)
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             body.physics.gravity.y =
@@ -163,7 +163,7 @@ class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(4f * ConstVals.PPM, 3.5f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)

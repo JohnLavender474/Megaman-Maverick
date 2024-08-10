@@ -85,9 +85,9 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
         }
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
-        addComponent(SpritesComponent(this))
-        addComponent(AnimationsComponent(this))
-        addComponent(AudioComponent(this))
+        addComponent(SpritesComponent())
+        addComponent(AnimationsComponent())
+        addComponent(AudioComponent())
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -139,7 +139,7 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
         moveTarget.add(targetOffset)
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, {
+    private fun defineUpdatablesComponent() = UpdatablesComponent({
         bodyMatrix = body.splitByCellSize(ConstVals.PPM.toFloat())
         if (movingBeforeKill && !moving) kill()
     })
@@ -165,7 +165,7 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
             (deathFixture.rawShape as GameRectangle).set(body)
         }
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -200,7 +200,7 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
             }
         }
 
-        addComponent(SpritesComponent(this, sprites, updateFunctions))
-        addComponent(AnimationsComponent(this, animators))
+        addComponent(SpritesComponent(sprites, updateFunctions))
+        addComponent(AnimationsComponent(animators))
     }
 }

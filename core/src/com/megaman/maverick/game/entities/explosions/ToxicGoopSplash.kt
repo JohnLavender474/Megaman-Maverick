@@ -63,7 +63,7 @@ class ToxicGoopSplash(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
-        addComponent(AudioComponent(this))
+        addComponent(AudioComponent())
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -83,7 +83,7 @@ class ToxicGoopSplash(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
 
     override fun canDamage(damageable: IDamageable) = damageable != owner
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, { delta ->
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         splashTimer.update(delta)
         if (splashTimer.isFinished()) kill()
     })
@@ -95,7 +95,7 @@ class ToxicGoopSplash(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().set(body))
         body.addFixture(damagerFixture)
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -103,7 +103,7 @@ class ToxicGoopSplash(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.25f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
             _sprite.setOriginCenter()

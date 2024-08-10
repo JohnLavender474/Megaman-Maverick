@@ -132,7 +132,7 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             body.physics.gravity.y = (if (body.isSensing(BodySense.FEET_ON_GROUND)) G_GRAV else GRAV) * ConstVals.PPM
         })
 
-        addComponent(DrawableShapesComponent(this, shapes))
+        addComponent(DrawableShapesComponent(shapes))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -140,7 +140,7 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(ConstVals.PPM * 2.25f, ConstVals.PPM * 1.85f)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)

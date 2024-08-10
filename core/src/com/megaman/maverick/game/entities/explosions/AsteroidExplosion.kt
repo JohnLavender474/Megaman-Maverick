@@ -57,7 +57,7 @@ class AsteroidExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "AsteroidExplosion")
-        addComponent(AudioComponent(this))
+        addComponent(AudioComponent())
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
@@ -77,7 +77,7 @@ class AsteroidExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.BLAST_SOUND, false)
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, { delta ->
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         timer.update(delta)
         if (timer.isFinished()) kill()
     })
@@ -93,7 +93,7 @@ class AsteroidExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
         damagerFixture.rawShape.color = Color.RED
         debugShapes.add { damagerFixture.getShape() }
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -101,7 +101,7 @@ class AsteroidExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.15f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())
         }

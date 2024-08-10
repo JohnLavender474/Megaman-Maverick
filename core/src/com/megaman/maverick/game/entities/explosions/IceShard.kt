@@ -51,7 +51,7 @@ class IceShard(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         addComponent(defineBodyComponent())
         addComponent(defineCullablesComponent())
         addComponent(defineSpritesComponent())
-        addComponent(AudioComponent(this))
+        addComponent(AudioComponent())
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -74,14 +74,14 @@ class IceShard(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
 
     private fun defineCullablesComponent(): CullablesComponent {
         val cullOnOutOfBounds = getGameCameraCullingLogic(this)
-        return CullablesComponent(this, objectMapOf(ConstKeys.CULL to cullOnOutOfBounds))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL to cullOnOutOfBounds))
     }
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(ConstVals.PPM.toFloat())
         sprite.setAlpha(0.75f)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())
         }

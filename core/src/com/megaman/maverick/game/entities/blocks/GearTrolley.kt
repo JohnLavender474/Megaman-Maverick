@@ -49,7 +49,7 @@ class GearTrolley(game: MegamanMaverickGame) : Block(game), IMotionEntity, ISpri
 
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
-        addComponent(MotionComponent(this))
+        addComponent(MotionComponent())
 
         runnablesOnDestroy.add { game.eventsMan.removeListener(this) }
     }
@@ -88,7 +88,7 @@ class GearTrolley(game: MegamanMaverickGame) : Block(game), IMotionEntity, ISpri
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -1))
         sprite.setSize(1.5f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getCenter(), Position.CENTER)
             _sprite.translateY(-ConstVals.PPM / 16f)

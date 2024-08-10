@@ -75,7 +75,7 @@ class Picket(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEnt
         val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle(body))
         body.addFixture(shieldFixture)
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -83,7 +83,7 @@ class Picket(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEnt
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())
         }

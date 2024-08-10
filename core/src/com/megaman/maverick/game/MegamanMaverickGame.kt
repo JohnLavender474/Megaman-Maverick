@@ -246,12 +246,12 @@ class MegamanMaverickGame : Game(), IEventListener, IPropertizable {
         screens.put(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name, SimpleInitGameScreen(this))
 
         // startLevelScreen(Level.MOON_MAN)
-        // startLevelScreen(Level.INFERNO_MAN)
+        startLevelScreen(Level.INFERNO_MAN)
         // startLevelScreen(Level.REACTOR_MAN)
         // startLevelScreen(Level.FREEZE_MAN)
 
         // TEST LEVELS
-        startLevelScreen(Level.TEST1)
+        // startLevelScreen(Level.TEST1)
     }
 
     override fun onEvent(event: Event) {

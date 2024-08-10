@@ -76,7 +76,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
         addComponent(defineCullablesComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
-        addComponent(AudioComponent(this))
+        addComponent(AudioComponent())
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -103,7 +103,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
         block = null
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, { delta ->
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         block!!.setSize(ConstVals.PPM.toFloat(), 0.25f * ConstVals.PPM)
 
         switchDelay.update(delta)
@@ -171,13 +171,13 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
     private fun defineCullablesComponent(): CullablesComponent {
         val gameCamera = game.getGameCamera()
         val cullable = getGameCameraCullingLogic(gameCamera, { bounds })
-        return CullablesComponent(this, objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullable))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullable))
     }
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(2.6875f * ConstVals.PPM, 1.875f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(bounds.getTopCenterPoint(), Position.TOP_CENTER)
         }

@@ -78,7 +78,7 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.COLORS.source, "Black")
-        addComponent(SpritesComponent(this))
+        addComponent(SpritesComponent())
         addComponent(defineCullablesComponent())
         addComponent(defineUpdatablesComponent())
     }
@@ -187,7 +187,7 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
         }
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, {
+    private fun defineUpdatablesComponent() = UpdatablesComponent({
         tiles.forEach { it.set = false }
 
         while (!lightEventQueue.isEmpty()) {
@@ -262,6 +262,6 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
 
     private fun defineCullablesComponent(): CullablesComponent {
         val cullable = getGameCameraCullingLogic(game.getGameCamera(), { bounds })
-        return CullablesComponent(this, objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullable))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullable))
     }
 }

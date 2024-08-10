@@ -72,7 +72,7 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
             waitRegion = atlas.findRegion("PortalHopper/Wait")
             launchRegion = atlas.findRegion("PortalHopper/Launch")
         }
-        addComponent(AudioComponent(this))
+        addComponent(AudioComponent())
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
@@ -152,7 +152,7 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         )
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, { delta ->
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         if (hopQueue.isEmpty) {
             launch = false
             return@UpdatablesComponent
@@ -200,7 +200,7 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(ConstVals.PPM.toFloat())
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())
             _sprite.setOriginCenter()

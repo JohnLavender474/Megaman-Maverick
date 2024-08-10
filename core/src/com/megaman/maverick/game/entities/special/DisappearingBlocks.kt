@@ -45,10 +45,10 @@ class DisappearingBlocks(game: MegamanMaverickGame) : MegaGameEntity(game), IPar
 
     override fun init() {
         addComponent(defineUpdatablesComponent())
-        addComponent(AudioComponent(this))
+        addComponent(AudioComponent())
         addComponent(defineCullablesComponent())
         addComponent(
-            DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ bounds }), debug = true)
+            DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ bounds }), debug = true)
         )
     }
 
@@ -74,13 +74,11 @@ class DisappearingBlocks(game: MegamanMaverickGame) : MegaGameEntity(game), IPar
         childrenPropsArray.forEach { (child, props) ->
             child as AnimatedBlock
             children.add(child)
-            props.put(
-                ConstKeys.RUN_ON_SPAWN,
-                Runnable {
-                    child.body.physics.collisionOn = false
-                    child.body.fixtures.forEach { entry -> (entry.second as Fixture).active = false }
-                    child.hidden = true
-                })
+            props.put(ConstKeys.RUN_ON_SPAWN, Runnable {
+                child.body.physics.collisionOn = false
+                child.body.fixtures.forEach { entry -> (entry.second as Fixture).active = false }
+                child.hidden = true
+            })
             game.engine.spawn(child, props)
 
             val thisKey = props.get(ConstKeys.KEY, String::class)!!
@@ -101,46 +99,42 @@ class DisappearingBlocks(game: MegamanMaverickGame) : MegaGameEntity(game), IPar
         children.clear()
     }
 
-    private fun defineUpdatablesComponent() =
-        UpdatablesComponent(
-            this,
-            {
-                timer.update(it)
-                if (timer.isFinished()) {
-                    val next = loop.next()
-                    GameLogger.debug(TAG, "defineUpdatablesComponent(): next = $next")
+    private fun defineUpdatablesComponent() = UpdatablesComponent({
+        timer.update(it)
+        if (timer.isFinished()) {
+            val next = loop.next()
+            GameLogger.debug(TAG, "defineUpdatablesComponent(): next = $next")
 
-                    keysToRender.add(next)
-                    if (keysToRender.size > 2) keysToRender.poll()
-                    GameLogger.debug(TAG, "defineUpdatablesComponent(): keysToRender = $keysToRender")
+            keysToRender.add(next)
+            if (keysToRender.size > 2) keysToRender.poll()
+            GameLogger.debug(TAG, "defineUpdatablesComponent(): keysToRender = $keysToRender")
 
-                    var soundRequested = false
-                    children.forEach { spriteBlock ->
-                        spriteBlock as AnimatedBlock
+            var soundRequested = false
+            children.forEach { spriteBlock ->
+                spriteBlock as AnimatedBlock
 
-                        val blockKey = spriteBlock.properties.get(ConstKeys.KEY, String::class)!!
-                        val on = keysToRender.contains(blockKey)
+                val blockKey = spriteBlock.properties.get(ConstKeys.KEY, String::class)!!
+                val on = keysToRender.contains(blockKey)
 
-                        if (blockKey == next) spriteBlock.reset()
-                        spriteBlock.body.physics.collisionOn = on
-                        spriteBlock.body.fixtures.forEach { entry -> (entry.second as Fixture).active = on }
-                        spriteBlock.hidden = !on
+                if (blockKey == next) spriteBlock.reset()
+                spriteBlock.body.physics.collisionOn = on
+                spriteBlock.body.fixtures.forEach { entry -> (entry.second as Fixture).active = on }
+                spriteBlock.hidden = !on
 
-                        val gameCamera = game.getGameCamera()
-                        if (!soundRequested && gameCamera.toGameRectangle().overlaps(spriteBlock.body as Rectangle)) {
-                            requestToPlaySound(SoundAsset.DISAPPEARING_BLOCK_SOUND, false)
-                            soundRequested = true
-                        }
-                    }
-
-                    timer.reset()
+                val gameCamera = game.getGameCamera()
+                if (!soundRequested && gameCamera.toGameRectangle().overlaps(spriteBlock.body as Rectangle)) {
+                    requestToPlaySound(SoundAsset.DISAPPEARING_BLOCK_SOUND, false)
+                    soundRequested = true
                 }
-            })
+            }
+
+            timer.reset()
+        }
+    })
 
     private fun defineCullablesComponent(): CullablesComponent {
-        val cullablesComponent = CullablesComponent(this)
-        val cullable =
-            getGameCameraCullingLogic(game.getGameCamera(), { bounds })
+        val cullablesComponent = CullablesComponent()
+        val cullable = getGameCameraCullingLogic(game.getGameCamera(), { bounds })
         cullablesComponent.put(ConstKeys.CULL_OUT_OF_BOUNDS, cullable)
         return cullablesComponent
     }

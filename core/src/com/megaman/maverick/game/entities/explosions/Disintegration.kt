@@ -37,10 +37,9 @@ class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
     private val durationTimer = Timer(DURATION)
 
     override fun init() {
-        if (disintegrationRegion == null)
-            disintegrationRegion =
-                game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "Disintegration")
-        addComponent(AudioComponent(this))
+        if (disintegrationRegion == null) disintegrationRegion =
+            game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "Disintegration")
+        addComponent(AudioComponent())
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
         addComponent(defineUpdatablesComponent())
@@ -54,20 +53,17 @@ class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
         requestToPlaySound(SoundAsset.THUMP_SOUND, false)
     }
 
-    private fun defineUpdatablesComponent() =
-        UpdatablesComponent(
-            this,
-            {
-                durationTimer.update(it)
-                if (durationTimer.isFinished()) {
-                    kill(props(CAUSE_OF_DEATH_MESSAGE to "Duration timer finished"))
-                }
-            })
+    private fun defineUpdatablesComponent() = UpdatablesComponent({
+        durationTimer.update(it)
+        if (durationTimer.isFinished()) {
+            kill(props(CAUSE_OF_DEATH_MESSAGE to "Duration timer finished"))
+        }
+    })
 
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
-        return SpritesComponent(this, sprite)
+        return SpritesComponent(sprite)
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

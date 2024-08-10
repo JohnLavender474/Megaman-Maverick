@@ -186,7 +186,7 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
             }
         })
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = shapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -195,7 +195,7 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
         sprite.setOriginCenter()
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setFlip(facing == Facing.RIGHT, false)
             _sprite.hidden = damageBlink

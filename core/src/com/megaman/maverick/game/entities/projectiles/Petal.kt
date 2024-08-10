@@ -65,7 +65,7 @@ class Petal(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity
         if (region == null)
             region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Petal")
         super<AbstractProjectile>.init()
-        addComponent(AudioComponent(this))
+        addComponent(AudioComponent())
         addComponent(defineAnimationsComponent())
         addComponent(definePointsComponent())
     }
@@ -105,7 +105,7 @@ class Petal(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity
     }
 
     private fun definePointsComponent(): PointsComponent {
-        val pointsComponent = PointsComponent(this)
+        val pointsComponent = PointsComponent()
         pointsComponent.putPoints(ConstKeys.HEALTH, ConstVals.MAX_HEALTH)
         pointsComponent.putListener(ConstKeys.HEALTH) {
             if (it.current <= 0) kill(props(CAUSE_OF_DEATH_MESSAGE to "Health depleted"))
@@ -133,7 +133,7 @@ class Petal(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity
             Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.4f * ConstVals.PPM))
         body.addFixture(damageableFixture)
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -141,7 +141,7 @@ class Petal(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.25f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())
         }

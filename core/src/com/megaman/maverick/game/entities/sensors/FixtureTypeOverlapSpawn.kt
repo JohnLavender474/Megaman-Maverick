@@ -73,7 +73,7 @@ class FixtureTypeOverlapSpawn(game: MegamanMaverickGame) : MegaGameEntity(game),
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, {
+    private fun defineUpdatablesComponent() = UpdatablesComponent({
         if (spawned) return@UpdatablesComponent
 
         for (mask in spawnMask) {

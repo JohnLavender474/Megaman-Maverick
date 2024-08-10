@@ -44,11 +44,11 @@ open class RotationAnchor(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
     private val childTargets = ObjectMap<IGameEntity, Vector2>()
 
     override fun init() {
-        addComponent(MotionComponent(this))
+        addComponent(MotionComponent())
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
         addComponent(defineCullablesComponent())
-        addComponent(DrawableShapesComponent(this))
+        addComponent(DrawableShapesComponent())
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -101,7 +101,7 @@ open class RotationAnchor(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
         clearMotionDefinitions()
     }
 
-    protected open fun defineUpdatablesComponent() = UpdatablesComponent(this, {
+    protected open fun defineUpdatablesComponent() = UpdatablesComponent({
         children = children.processAndFilter({ child ->
             if (child.dead) {
                 val childKey = child.getProperty(ConstKeys.CHILD_KEY)!!
@@ -125,7 +125,7 @@ open class RotationAnchor(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
 
     protected open fun defineCullablesComponent(): CullablesComponent {
         val cullable = getGameCameraCullingLogic(this)
-        return CullablesComponent(this, objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullable))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullable))
     }
 
 }

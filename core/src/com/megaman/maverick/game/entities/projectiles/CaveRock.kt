@@ -113,7 +113,7 @@ class CaveRock(game: MegamanMaverickGame) : AbstractProjectile(game) {
             trajectory?.let { body.physics.velocity = it }
         })
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -122,7 +122,7 @@ class CaveRock(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val sprite = GameSprite()
         sprite.setSize(2.5f * ConstVals.PPM)
         sprite.setRegion(rockRegion!!)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())
         }

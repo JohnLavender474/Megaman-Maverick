@@ -137,7 +137,7 @@ class UFOBombBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         body.addFixture(damageableFixture)
 
         val drawables = gdxArrayOf<() -> IDrawableShape?>({ body })
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = drawables, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = drawables, debug = true))
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.velocity.x = if (dropping) 0f else X_VEL * ConstVals.PPM * facing.value
@@ -149,7 +149,7 @@ class UFOBombBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
         sprite.setSize(1.5f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())
             _sprite.setFlip(isFacing(Facing.RIGHT), false)

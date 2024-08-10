@@ -106,8 +106,8 @@ class PolygonWater(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
             val animator = Animator(animation)
             animators.add({ waterSprite } to animator)
         }
-        addComponent(SpritesComponent(this, sprites))
-        addComponent(AnimationsComponent(this, animators))
+        addComponent(SpritesComponent(sprites))
+        addComponent(AnimationsComponent(animators))
     }
 
     private fun defineBodyComponent(): BodyComponent {
@@ -117,12 +117,12 @@ class PolygonWater(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         waterFixture.attachedToBody = false
         body.addFixture(waterFixture)
         shapes.add { waterFixture.getShape() }
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = shapes, debug = true))
         return BodyComponentCreator.create(this, body)
     }
 
     private fun defineCullablesComponent(): CullablesComponent {
         val cullable = getGameCameraCullingLogic(this)
-        return CullablesComponent(this, objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullable))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullable))
     }
 }

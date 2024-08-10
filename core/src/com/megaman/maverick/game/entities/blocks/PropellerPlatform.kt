@@ -47,7 +47,7 @@ class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity,
         super<Block>.init()
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
-        addComponent(MotionComponent(this))
+        addComponent(MotionComponent())
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -88,7 +88,7 @@ class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity,
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setOriginCenter()
             _sprite.rotation = directionRotation?.rotation ?: 0f

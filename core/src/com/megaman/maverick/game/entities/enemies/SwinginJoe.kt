@@ -146,7 +146,7 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             } else damageableFixture.offsetFromBodyCenter.x = 0f
         })
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = shapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -154,7 +154,7 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(2.25f * ConstVals.PPM)
-        val SpritesComponent = SpritesComponent(this, sprite)
+        val SpritesComponent = SpritesComponent(sprite)
         SpritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)

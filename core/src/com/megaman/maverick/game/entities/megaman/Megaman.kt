@@ -330,7 +330,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
     internal var applyMovementScalarToBullet = false
 
     override fun init() {
-        addComponent(AudioComponent(this))
+        addComponent(AudioComponent())
         addComponent(defineUpdatablesComponent())
         addComponent(definePointsComponent())
         addComponent(defineBodyComponent())

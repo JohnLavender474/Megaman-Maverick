@@ -84,7 +84,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
         addComponent(defineUpdatablesComponent())
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
-        addComponent(AudioComponent(this))
+        addComponent(AudioComponent())
         runnablesOnDestroy.add { game.eventsMan.removeListener(this) }
     }
 
@@ -148,7 +148,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
     private fun stateIsOfOpenType() =
         state == GateState.OPENABLE || state == GateState.OPENING || state == GateState.OPEN
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, {
+    private fun defineUpdatablesComponent() = UpdatablesComponent({
         if (state == GateState.OPENING) {
             timer.update(it)
             if (timer.isFinished()) {
@@ -208,14 +208,14 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
                 Direction.RIGHT -> gateShape.setCenterRightToPoint(body.getCenterRightPoint())
             }
         })
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
         return BodyComponentCreator.create(this, body)
     }
 
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(ConstVals.PPM.toFloat(), 3f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden =
                 state == GateState.OPEN || (state.equalsAny(GateState.CLOSING, GateState.CLOSED) && !showCloseEvent)

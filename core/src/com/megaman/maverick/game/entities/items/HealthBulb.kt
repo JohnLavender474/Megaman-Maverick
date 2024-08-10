@@ -155,7 +155,7 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
             body.physics.gravity = gravity.scl(ConstVals.PPM.toFloat())
         })
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -163,7 +163,7 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(0.75f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())
             _sprite.hidden = blink
@@ -184,10 +184,10 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
     private fun defineCullablesComponent(): CullablesComponent {
         val eventsToCullOn = objectSetOf<Any>(EventType.GAME_OVER)
         val cullOnEvent = CullableOnEvent({ eventsToCullOn.contains(it.key) }, eventsToCullOn)
-        return CullablesComponent(this, objectMapOf(ConstKeys.CULL_EVENTS to cullOnEvent))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS to cullOnEvent))
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, {
+    private fun defineUpdatablesComponent() = UpdatablesComponent({
         if (body.isSensing(BodySense.FEET_ON_GROUND)) {
             body.physics.gravityOn = false
             body.physics.velocity.setZero()

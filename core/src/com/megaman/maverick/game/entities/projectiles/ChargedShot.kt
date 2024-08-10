@@ -169,7 +169,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     }
 
     private fun defineUpdatablesComponent() =
-        UpdatablesComponent(this, { body.physics.velocity.set(trajectory) })
+        UpdatablesComponent({ body.physics.velocity.set(trajectory) })
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
@@ -181,7 +181,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         body.addFixture(damagerFixture)
 
         addComponent(
-            DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true)
+            DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true)
         )
 
         return BodyComponentCreator.create(this, body)
@@ -200,7 +200,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setFlip(isFacing(Facing.LEFT), false)
             _sprite.setPosition(body.getCenter(), Position.CENTER)

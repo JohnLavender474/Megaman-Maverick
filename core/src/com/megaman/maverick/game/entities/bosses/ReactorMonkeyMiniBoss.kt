@@ -135,7 +135,8 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
     fun hurlMonkeyBall() {
         monkeyBall!!.body.physics.gravityOn = true
         val impulse = MegaUtilMethods.calculateJumpImpulse(
-            body.getPosition(), getMegaman().body.getPosition(),
+            body.getPosition(),
+            getMegaman().body.getPosition(),
             BALL_IMPULSE_Y * ConstVals.PPM,
             HORIZONTAL_SCALAR,
             VERTICAL_SCALAR
@@ -195,7 +196,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
 
         addComponent(
             DrawableShapesComponent(
-                this, debugShapeSuppliers = gdxArrayOf({ body }, { ballCatchArea }), debug = true
+                debugShapeSuppliers = gdxArrayOf({ body }, { ballCatchArea }), debug = true
             )
         )
 
@@ -205,7 +206,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
         sprite.setSize(6.25f * ConstVals.PPM, 6.5f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
             _sprite.setFlip(isFacing(Facing.RIGHT), false)

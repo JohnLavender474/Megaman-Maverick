@@ -51,7 +51,7 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
     override fun init() {
         addComponent(defineUpdatablesComponent())
         addComponent(defineCullablesComponent())
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ bounds }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ bounds }), debug = true))
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -97,7 +97,7 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
         GameLogger.debug(TAG, "Spawned asteroid. Size of children: ${children.size}")
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, { delta ->
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         children.removeAll { it.dead }
         if (children.size >= MAX_CHILDREN) return@UpdatablesComponent
 
@@ -115,6 +115,6 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
             EventType.GATE_INIT_OPENING
         )
         val cullEvents = CullableOnEvent({ cullEventsSet.contains(it) }, cullEventsSet)
-        return CullablesComponent(this, objectMapOf(ConstKeys.CULL_EVENTS to cullEvents))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS to cullEvents))
     }
 }

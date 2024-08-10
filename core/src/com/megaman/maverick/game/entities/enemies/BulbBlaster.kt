@@ -70,7 +70,7 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IEventListen
         }
         super<AbstractEnemy>.init()
         addComponent(defineAnimationsComponent())
-        addComponent(MotionComponent(this))
+        addComponent(MotionComponent())
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -147,7 +147,7 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IEventListen
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(ConstVals.PPM.toFloat())
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
             _sprite.setCenter(body.getCenter())

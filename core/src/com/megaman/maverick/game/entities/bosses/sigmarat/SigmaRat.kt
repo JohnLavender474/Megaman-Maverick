@@ -398,7 +398,7 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
         shieldFixture.rawShape.color = Color.CYAN
         debugShapes.add { shieldFixture.getShape() }
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -406,7 +406,7 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0))
         sprite.setSize(10f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
             _sprite.hidden = damageBlink || !ready

@@ -161,7 +161,7 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
             }
         })
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = shapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -188,7 +188,7 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.35f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
             val position = if (upsideDown) Position.TOP_CENTER else Position.BOTTOM_CENTER

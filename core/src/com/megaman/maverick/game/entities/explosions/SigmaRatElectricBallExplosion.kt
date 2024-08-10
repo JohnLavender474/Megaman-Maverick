@@ -82,7 +82,7 @@ class SigmaRatElectricBallExplosion(game: MegamanMaverickGame) : MegaGameEntity(
         dissipateTimer.reset()
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, { delta ->
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         shockTimer.update(delta)
         if (shockTimer.isFinished()) {
             dissipateTimer.update(delta)
@@ -108,7 +108,7 @@ class SigmaRatElectricBallExplosion(game: MegamanMaverickGame) : MegaGameEntity(
         damagerFixture.rawShape.color = Color.RED
         debugShapes.add { damagerFixture.getShape() }
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -116,7 +116,7 @@ class SigmaRatElectricBallExplosion(game: MegamanMaverickGame) : MegaGameEntity(
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(ConstVals.PPM.toFloat())
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
             _sprite.setOriginCenter()

@@ -80,7 +80,7 @@ class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDam
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
         body.addFixture(damagerFixture)
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -94,7 +94,7 @@ class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDam
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 3))
         sprite.setSize(0.85f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
         }
@@ -102,7 +102,7 @@ class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDam
     }
 
     private fun defineUpdatablesComponent() =
-        UpdatablesComponent(this, {
+        UpdatablesComponent({
             if (animation.isFinished()) kill()
         })
 }

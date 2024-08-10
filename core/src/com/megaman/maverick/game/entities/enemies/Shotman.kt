@@ -81,7 +81,7 @@ class Shotman(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity 
         }
         super<AbstractEnemy>.init()
         addComponent(defineAnimationsComponent())
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -156,7 +156,7 @@ class Shotman(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.25f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
             val bodyPosition = body.getBottomCenterPoint()

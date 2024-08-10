@@ -82,7 +82,7 @@ class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         addComponent(defineBodyComponent())
         addComponent(defineUpdatablesComponent())
         addComponent(defineSpritesComponent())
-        addComponent(AudioComponent(this))
+        addComponent(AudioComponent())
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -205,12 +205,12 @@ class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
             block!!.body.setBottomCenterToPoint(body.getBottomCenterPoint())
         }
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, { delta ->
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         when (state) {
             CeilingCrusherState.WAITING -> {
                 body.setBottomCenterToPoint(start)
@@ -240,7 +240,7 @@ class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         val sprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, 0))
         sprite.setRegion(crusherRegion!!)
         sprite.setSize(2.25f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
         }

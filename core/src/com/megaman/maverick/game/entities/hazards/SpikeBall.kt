@@ -52,7 +52,7 @@ class SpikeBall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
             spikeRegion = atlas.findRegion("SpikeBall/SpikeBall")
             chainRegion = atlas.findRegion("SpikeBall/Chain")
         }
-        addComponent(MotionComponent(this))
+        addComponent(MotionComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
     }
@@ -116,7 +116,7 @@ class SpikeBall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
         damagerFixture.getShape().color = Color.RED
         debugShapes.add { damagerFixture.getShape() }
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -125,7 +125,7 @@ class SpikeBall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
         val spikeSprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
         spikeSprite.setSize(2f * ConstVals.PPM)
         spikeSprite.setRegion(spikeRegion!!)
-        val spritesComponent = SpritesComponent(this, spikeSprite)
+        val spritesComponent = SpritesComponent(spikeSprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())
         }

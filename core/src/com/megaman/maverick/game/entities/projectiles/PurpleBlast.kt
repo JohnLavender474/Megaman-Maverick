@@ -72,7 +72,7 @@ class PurpleBlast(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         chargeDelayTimer.reset()
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, { delta ->
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         chargeDelayTimer.update(delta)
     })
 
@@ -89,7 +89,7 @@ class PurpleBlast(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameRectangle().setSize(0.5f * ConstVals.PPM))
         body.addFixture(projectileFixture)
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -97,7 +97,7 @@ class PurpleBlast(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 15))
         sprite.setSize(1f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())
             _sprite.setFlip(isFacing(Facing.LEFT), false)

@@ -51,10 +51,9 @@ class CaveRockExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IDama
     private val timer = Timer(DURATION)
 
     override fun init() {
-        if (burstRegion == null)
-            burstRegion =
-                game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "CaveRock/Burst")
-        addComponent(AudioComponent(this))
+        if (burstRegion == null) burstRegion =
+            game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "CaveRock/Burst")
+        addComponent(AudioComponent())
         addComponent(defineBodyComponent())
         addComponent(defineUpdatablesComponent())
         addComponent(defineSpritesComponent())
@@ -80,23 +79,20 @@ class CaveRockExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IDama
         damagerFixture.rawShape.color = Color.RED
         debugShapes.add { damagerFixture.getShape() }
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun defineUpdatablesComponent() =
-        UpdatablesComponent(
-            this,
-            {
-                timer.update(it)
-                if (timer.isFinished()) kill(props(CAUSE_OF_DEATH_MESSAGE to "Duration ended"))
-            })
+    private fun defineUpdatablesComponent() = UpdatablesComponent({
+        timer.update(it)
+        if (timer.isFinished()) kill(props(CAUSE_OF_DEATH_MESSAGE to "Duration ended"))
+    })
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(2.5f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())
         }

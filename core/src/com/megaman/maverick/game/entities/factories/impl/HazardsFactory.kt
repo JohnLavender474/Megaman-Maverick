@@ -27,6 +27,7 @@ class HazardsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         const val LAVA_DROP = "LavaDrop"
         const val LAVA_DROP_SUPPLIER = "LavaDropSupplier"
         const val ASTEROIDS_SPAWNER = "AsteroidsSpawner"
+        const val LAVA_BEAM = "LavaBeam"
     }
 
     override fun init() {
@@ -49,6 +50,7 @@ class HazardsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(LAVA_DROP, EntityPoolCreator.create { LavaDrop(game) })
         pools.put(LAVA_DROP_SUPPLIER, EntityPoolCreator.create { LavaDropSupplier(game) })
         pools.put(ASTEROIDS_SPAWNER, EntityPoolCreator.create { AsteroidsSpawner(game) })
+        pools.put(LAVA_BEAM, EntityPoolCreator.create { LavaBeam(game) })
     }
 
     override fun fetch(key: Any) = pools.get(key)?.fetch()

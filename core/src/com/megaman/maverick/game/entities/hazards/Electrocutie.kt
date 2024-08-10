@@ -172,7 +172,7 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
         children.clear()
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, { delta ->
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         val currentPosition = if (vertical) body.getCenter().x else body.getCenter().y
 
         if (left && currentPosition <= minPosition) left = false
@@ -215,7 +215,7 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
             }
         }
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }

@@ -13,7 +13,6 @@ import com.engine.common.time.Timer
 import com.engine.cullables.CullableOnEvent
 import com.engine.cullables.CullablesComponent
 import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.entities.GameEntity
 import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.ICullableEntity
@@ -50,7 +49,7 @@ class TubeBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IAudioEntity
     private lateinit var initialDelayTimer: Timer
 
     override fun init() {
-        addComponent(AudioComponent(this))
+        addComponent(AudioComponent())
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
         addComponent(defineCullablesComponent())
@@ -84,7 +83,7 @@ class TubeBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IAudioEntity
         requestToPlaySound(SoundAsset.BURST_SOUND, false)
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, { delta ->
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         initialDelayTimer.update(delta)
         if (!initialDelayTimer.isFinished()) return@UpdatablesComponent
 
@@ -98,7 +97,7 @@ class TubeBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IAudioEntity
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(ConstVals.PPM.toFloat())
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
         return BodyComponentCreator.create(this, body)
     }
 
@@ -108,9 +107,8 @@ class TubeBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IAudioEntity
             objectSetOf<Any>(EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING, EventType.PLAYER_SPAWN)
         val cullableOnEvents = CullableOnEvent({ cullEvents.contains(it) }, cullEvents)
         return CullablesComponent(
-            this, objectMapOf(
-                ConstKeys.CULL_OUT_OF_BOUNDS to cullableOutOfBounds,
-                ConstKeys.CULL_EVENTS to cullableOnEvents
+            objectMapOf(
+                ConstKeys.CULL_OUT_OF_BOUNDS to cullableOutOfBounds, ConstKeys.CULL_EVENTS to cullableOnEvents
             )
         )
     }

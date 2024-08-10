@@ -139,7 +139,7 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         damagerFixture.rawShape.color = Color.RED
         shapes.add { damagerFixture.getShape() }
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = shapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -147,7 +147,7 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
-        val SpritesComponent = SpritesComponent(this, sprite)
+        val SpritesComponent = SpritesComponent(sprite)
         SpritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
             _sprite.setCenter(body.getCenter())

@@ -163,11 +163,11 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
                 body.setCenter(oldCenter)
             }
         }
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, {
+    private fun defineUpdatablesComponent() = UpdatablesComponent({
         blinkWhiteTimer.update(it)
         if (!stuckToMegaman && !megaman.dead && body.overlaps(getMegaman().body as Rectangle)) stickToMegaman()
         else if (stuckToMegaman) {
@@ -183,7 +183,7 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 5))
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setSize(body.width, body.height)
             _sprite.setCenter(body.getCenter())

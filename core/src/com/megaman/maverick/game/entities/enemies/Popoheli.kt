@@ -204,7 +204,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
             shieldFixture.offsetFromBodyCenter.x = 0.2f * ConstVals.PPM * facing.value
         }
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -235,7 +235,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
             }
         }
 
-        return SpritesComponent(this, sprites, updateFunctions)
+        return SpritesComponent(sprites, updateFunctions)
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
@@ -251,6 +251,6 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
             animators.add({ sprites.get("flame_$i") } to flameAnimator)
         }
 
-        return AnimationsComponent(this, animators)
+        return AnimationsComponent(animators)
     }
 }

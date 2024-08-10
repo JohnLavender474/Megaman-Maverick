@@ -201,7 +201,7 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableG
                 ConstVals.PPM * (if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY) * gravityScalar
         }
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -209,7 +209,7 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableG
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(2.75f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
             val position = body.getBottomCenterPoint()

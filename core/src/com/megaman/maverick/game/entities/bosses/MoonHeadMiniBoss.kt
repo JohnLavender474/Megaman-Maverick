@@ -258,7 +258,7 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimate
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(3f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())
             _sprite.hidden = damageBlink || loop.getCurrent() == MoonHeadState.DELAY

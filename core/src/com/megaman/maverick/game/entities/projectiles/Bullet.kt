@@ -135,7 +135,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
         body.addFixture(damagerFixture)
 
         addComponent(
-            DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true)
+            DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true)
         )
 
         return BodyComponentCreator.create(this, body)
@@ -146,7 +146,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
             game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Bullet")
         val sprite = GameSprite(bulletRegion!!, DrawingPriority(DrawingSection.FOREGROUND, 5))
         sprite.setSize(1.25f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getCenter(), Position.CENTER)
             val rotation = if (directionRotation?.isVertical() == true) 0f else 90f

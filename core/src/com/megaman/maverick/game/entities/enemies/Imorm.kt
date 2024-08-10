@@ -137,7 +137,7 @@ class Imorm(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
         rightFixture.getShape().color = Color.YELLOW
         debugShapes.add { rightFixture.getShape() }
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             val width = if (slitherTimer.time <= 0.15f) 0.375f * ConstVals.PPM
@@ -159,7 +159,7 @@ class Imorm(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
             _sprite.setFlip(isFacing(Facing.LEFT), false)

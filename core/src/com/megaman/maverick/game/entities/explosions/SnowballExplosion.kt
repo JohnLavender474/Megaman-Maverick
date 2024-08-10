@@ -37,7 +37,8 @@ import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import kotlin.reflect.KClass
 
-class SnowballExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IHazard, IDamager {
+class SnowballExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IHazard,
+    IDamager {
 
     companion object {
         const val DURATION = 0.075f
@@ -48,8 +49,7 @@ class SnowballExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
     private val timer = Timer(DURATION)
 
     override fun init() {
-        if (region == null)
-            region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "SnowballExplode")
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "SnowballExplode")
         addComponent(defineAnimationsComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
@@ -60,9 +60,10 @@ class SnowballExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
         super.spawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
-        damageMask =
-            spawnProps.getOrDefault(ConstKeys.MASK, ObjectSet<KClass<out IDamageable>>())
-                    as ObjectSet<KClass<out IDamageable>>
+        damageMask = spawnProps.getOrDefault(
+            ConstKeys.MASK,
+            ObjectSet<KClass<out IDamageable>>()
+        ) as ObjectSet<KClass<out IDamageable>>
         timer.reset()
     }
 
@@ -77,7 +78,6 @@ class SnowballExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
 
         addComponent(
             DrawableShapesComponent(
-                this,
                 debugShapeSuppliers = gdxArrayOf({ damagerFixture.getShape() }),
                 debug = true
             )
@@ -89,7 +89,7 @@ class SnowballExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(2.5f * ConstVals.PPM)
-        val spriteComponent = SpritesComponent(this, sprite)
+        val spriteComponent = SpritesComponent(sprite)
         spriteComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())
         }
@@ -102,11 +102,8 @@ class SnowballExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
         return AnimationsComponent(this, animator)
     }
 
-    private fun defineUpdatablesComponent() =
-        UpdatablesComponent(
-            this,
-            {
-                timer.update(it)
-                if (timer.isFinished()) kill(props(CAUSE_OF_DEATH_MESSAGE to "Timer finished"))
-            })
+    private fun defineUpdatablesComponent() = UpdatablesComponent({
+        timer.update(it)
+        if (timer.isFinished()) kill(props(CAUSE_OF_DEATH_MESSAGE to "Timer finished"))
+    })
 }

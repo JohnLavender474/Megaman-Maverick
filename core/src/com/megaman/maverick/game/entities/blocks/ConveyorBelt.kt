@@ -98,7 +98,7 @@ class ConveyorBelt(game: MegamanMaverickGame) : ISpritesEntity, IDrawableShapesE
             animators.add({ sprite } to Animator(animation))
         }
 
-        addComponent(SpritesComponent(this, sprites))
-        addComponent(AnimationsComponent(this, animators))
+        addComponent(SpritesComponent(sprites))
+        addComponent(AnimationsComponent(animators))
     }
 }

@@ -66,10 +66,9 @@ abstract class AbstractProjectile(game: MegamanMaverickGame) : MegaGameEntity(ga
 
     open fun defineProjectileComponents(): Array<IGameComponent> {
         val components = Array<IGameComponent>()
-        components.add(AudioComponent(this))
+        components.add(AudioComponent())
         components.add(
             CullablesComponent(
-                this,
                 objectMapOf(
                     ConstKeys.CULL_EVENTS to getCullOnEventCullable(),
                     ConstKeys.CULL_OUT_OF_BOUNDS to getCullOnOutOfGameCam()
@@ -91,10 +90,8 @@ abstract class AbstractProjectile(game: MegamanMaverickGame) : MegaGameEntity(ga
     fun removeCullOnOutOfGameCam() = removeCullable(ConstKeys.CULL_OUT_OF_BOUNDS)
 
     fun getCullOnOutOfGameCam() =
-        CullableOnUncontained<Camera>(
-            containerSupplier = { game.viewports.get(ConstKeys.GAME).camera },
-            containable = { it.overlaps(body) }
-        )
+        CullableOnUncontained<Camera>(containerSupplier = { game.viewports.get(ConstKeys.GAME).camera },
+            containable = { it.overlaps(body) })
 
     override fun canDamage(damageable: IDamageable) = damageable != owner
 

@@ -154,7 +154,7 @@ class BabySpider(game: MegamanMaverickGame) : AbstractEnemy(game) {
         damageableFixture.getShape().color = Color.PURPLE
         debugShapes.add { damageableFixture.getShape() }
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             val isLeftTouchingBlock = body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)
@@ -202,7 +202,7 @@ class BabySpider(game: MegamanMaverickGame) : AbstractEnemy(game) {
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
             _sprite.setCenter(body.getCenter())

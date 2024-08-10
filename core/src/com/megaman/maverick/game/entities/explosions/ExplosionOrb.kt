@@ -37,9 +37,8 @@ class ExplosionOrb(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEn
     private lateinit var trajectory: Vector2
 
     override fun init() {
-        if (textureRegion == null)
-            textureRegion =
-                game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "ExplosionOrbs")
+        if (textureRegion == null) textureRegion =
+            game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "ExplosionOrbs")
 
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
@@ -57,7 +56,7 @@ class ExplosionOrb(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEn
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 2))
         sprite.setSize(3f * ConstVals.PPM)
-        return SpritesComponent(this, sprite)
+        return SpritesComponent(sprite)
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
@@ -66,24 +65,18 @@ class ExplosionOrb(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEn
         return AnimationsComponent(this, animator)
     }
 
-    private fun defineUpdatablesComponent() =
-        UpdatablesComponent(
-            this,
-            {
-                firstSprite!!.translate(
-                    trajectory.x * ConstVals.PPM * it, trajectory.y * ConstVals.PPM * it
-                )
-            })
+    private fun defineUpdatablesComponent() = UpdatablesComponent({
+        firstSprite!!.translate(
+            trajectory.x * ConstVals.PPM * it, trajectory.y * ConstVals.PPM * it
+        )
+    })
 
     private fun defineCullablesComponent(): CullablesComponent {
-        val cullable = CullablesComponent(this)
+        val cullable = CullablesComponent()
 
         cullable.put(
-            ConstKeys.CULL_OUT_OF_BOUNDS,
-            getGameCameraCullingLogic(
-                game.getGameCamera(),
-                { (firstSprite as Sprite).boundingRectangle },
-                0.5f
+            ConstKeys.CULL_OUT_OF_BOUNDS, getGameCameraCullingLogic(
+                game.getGameCamera(), { (firstSprite as Sprite).boundingRectangle }, 0.5f
             )
         )
 

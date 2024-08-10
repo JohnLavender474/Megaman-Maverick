@@ -84,7 +84,7 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
-        addComponent(AudioComponent(this))
+        addComponent(AudioComponent())
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -112,7 +112,7 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         flameThrowTimer.setToEnd()
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, { delta ->
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         initDelayTimer.update(delta)
         if (!initDelayTimer.isFinished()) return@UpdatablesComponent
 
@@ -147,7 +147,7 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     private fun defineCullablesComponent(): CullablesComponent {
         val cullEvents = objectSetOf<Any>(EventType.BEGIN_ROOM_TRANS)
         val cullOnEvent = CullableOnEvent({ cullEvents.contains(it) })
-        return CullablesComponent(this, objectMapOf(ConstKeys.CULL_EVENTS to cullOnEvent))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS to cullOnEvent))
     }
 
     private fun defineBodyComponent(): BodyComponent {
@@ -177,7 +177,7 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
             }).scl(ConstVals.PPM.toFloat())
         }
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -193,7 +193,7 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         flameColumnSprite.setSize(0.75f * ConstVals.PPM, 3.5f * ConstVals.PPM)
         sprites.put("flameColumn", flameColumnSprite)
 
-        val spritesComponent = SpritesComponent(this, sprites)
+        val spritesComponent = SpritesComponent(sprites)
         spritesComponent.putUpdateFunction("thrower") { _, _sprite ->
             _sprite.setOriginCenter()
             _sprite.rotation = directionRotation?.rotation ?: 0f
@@ -233,7 +233,7 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         )
         val throwerAnimator = Animator(throwerKeySupplier, throwerAnims)
 
-        return AnimationsComponent(this, gdxArrayOf(
+        return AnimationsComponent(gdxArrayOf(
             { sprites.get("flameColumn") } to flameColumnAnimator,
             { sprites.get("thrower") } to throwerAnimator
         ))

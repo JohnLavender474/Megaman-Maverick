@@ -295,7 +295,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
             damageableFixture.rawShape.color = if (swiping) Color.PURPLE else Color.GRAY
         }
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -303,7 +303,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(2.25f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getTopCenterPoint(), Position.TOP_CENTER)
             _sprite.translateY(0.35f * ConstVals.PPM)

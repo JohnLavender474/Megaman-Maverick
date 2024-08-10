@@ -107,7 +107,7 @@ class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         hidden = true
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, { delta ->
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         if (hidden) {
             elapseTimer.update(delta)
             if (elapseTimer.isFinished()) {
@@ -135,7 +135,7 @@ class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(ConstVals.PPM.toFloat())
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, gameSprite ->
             gameSprite.setCenter(currentPosition)
             gameSprite.hidden = hidden
@@ -154,6 +154,6 @@ class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
     private fun defineDrawableShapesComponent(): DrawableShapesComponent {
         val shapes = Array<() -> IDrawableShape?>()
         shapes.add { firstSprite.boundingRectangle.toGameRectangle() }
-        return DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true)
+        return DrawableShapesComponent(debugShapeSuppliers = shapes, debug = true)
     }
 }

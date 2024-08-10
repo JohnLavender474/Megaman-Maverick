@@ -50,7 +50,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
     override fun init() {
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
-        addComponent(AudioComponent(this))
+        addComponent(AudioComponent())
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -74,7 +74,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         sensors.clear()
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, { delta ->
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         val megaman = game.megaman
         if (wanaan != null && wanaan!!.comingDown && body.contains(wanaan!!.cullPoint)) {
             wanaan!!.kill()
@@ -93,7 +93,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(1f * ConstVals.PPM)
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
         return BodyComponentCreator.create(this, body)
     }
 

@@ -35,7 +35,7 @@ const val MEGAMAN_AIR_DASH_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: AirDashB
 const val MEGAMAN_GROUND_SLIDE_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: GroundSlideBehavior"
 
 internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
-    val behaviorsComponent = BehaviorsComponent(this)
+    val behaviorsComponent = BehaviorsComponent()
 
     val wallSlide = Behavior(evaluate = {
         if (!ready || !canMove || !has(MegaAbility.WALL_SLIDE) || isBehaviorActive(BehaviorType.JETPACKING))

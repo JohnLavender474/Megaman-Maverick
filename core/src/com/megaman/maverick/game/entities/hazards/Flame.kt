@@ -74,7 +74,7 @@ class Flame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         } else perpetual = true
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, { delta ->
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         if (!perpetual) {
             cullTimer.update(delta)
             if (cullTimer.isFinished()) kill()
@@ -92,7 +92,7 @@ class Flame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(ConstVals.PPM.toFloat())
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             val position = when (directionRotation!!) {
                 Direction.UP -> Position.BOTTOM_CENTER

@@ -226,7 +226,7 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game) {
             damageableFixture.active = fixturesOn
         })
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -234,7 +234,7 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game) {
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.25f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
             val position = body.getBottomCenterPoint()

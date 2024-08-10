@@ -56,10 +56,10 @@ class SwinginAxe(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         if (textureRegion == null) textureRegion = game.assMan.getTextureRegion(
             TextureAsset.HAZARDS_1.source, "SwingingAxe_HandleEndCentered"
         )
-        addComponent(DrawableShapesComponent(this, debug = true))
+        addComponent(DrawableShapesComponent(debug = true))
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
-        addComponent(MotionComponent(this))
+        addComponent(MotionComponent())
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -98,7 +98,7 @@ class SwinginAxe(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         val sprite = GameSprite()
         sprite.setSize(8f * ConstVals.PPM)
         sprite.setRegion(textureRegion!!)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { delta, _sprite ->
             val center = pendulum.anchor
             _sprite.setCenter(center)

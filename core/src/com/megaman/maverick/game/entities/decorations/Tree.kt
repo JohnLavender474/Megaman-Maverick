@@ -39,7 +39,7 @@ class Tree(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(3f * ConstVals.PPM, 6f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setRegion(region!!)
             _sprite.setPosition(bounds.getPosition())

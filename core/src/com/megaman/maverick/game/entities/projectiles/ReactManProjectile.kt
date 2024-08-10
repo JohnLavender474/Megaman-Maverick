@@ -151,7 +151,7 @@ class ReactManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game), 
         }
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, { delta ->
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         if (dying) {
             dyingTimer.update(delta)
             if (dyingTimer.isFinished()) kill()
@@ -177,7 +177,7 @@ class ReactManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game), 
             }
         }
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -185,7 +185,7 @@ class ReactManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game), 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 2))
         sprite.setSize(0.85f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())
         }

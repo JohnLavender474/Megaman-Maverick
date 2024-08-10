@@ -85,7 +85,7 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             greenRegion = atlas.findRegion("PetitDevil/LargeGreen")
         }
 
-        addComponent(DrawableShapesComponent(this))
+        addComponent(DrawableShapesComponent())
         isDebugShapes = true
 
         super<AbstractEnemy>.init()
@@ -174,7 +174,7 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.25f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
             _sprite.setCenter(body.getCenter())
@@ -233,7 +233,7 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
             orangeRegion = atlas.findRegion("PetitDevil/SmallOrange")
         }
 
-        addComponent(DrawableShapesComponent(this))
+        addComponent(DrawableShapesComponent())
         addDebugShapeSupplier { rotatingLine.line }
         isDebugShapes = true
 
@@ -301,7 +301,7 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(ConstVals.PPM.toFloat())
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
             _sprite.setCenter(body.getCenter())

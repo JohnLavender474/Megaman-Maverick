@@ -89,7 +89,7 @@ class HeartTank(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, I
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
-        val SpritesComponent = SpritesComponent(this, sprite)
+        val SpritesComponent = SpritesComponent(sprite)
         SpritesComponent.putUpdateFunction { _, _sprite ->
             val position = if (upsideDown) Position.TOP_CENTER else Position.BOTTOM_CENTER
             val bodyPosition = body.getPositionPoint(position)

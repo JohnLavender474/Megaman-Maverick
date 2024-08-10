@@ -120,7 +120,6 @@ class BouncingAngryFlameBall(game: MegamanMaverickGame) : AbstractEnemy(game), I
 
         addComponent(
             DrawableShapesComponent(
-                this,
                 debugShapeSuppliers = gdxArrayOf({ bodyFixture.getShape() }),
                 debug = true
             )
@@ -132,7 +131,7 @@ class BouncingAngryFlameBall(game: MegamanMaverickGame) : AbstractEnemy(game), I
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.15f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())
             _sprite.setFlip(isFacing(Facing.RIGHT), false)

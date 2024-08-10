@@ -127,7 +127,7 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IOwnable, IBodyEnt
                 ConstVals.PPM * if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
         })
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -135,7 +135,7 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IOwnable, IBodyEnt
     private fun defineSpriteComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(2.45f * ConstVals.PPM, 1.85f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             val position = body.getBottomCenterPoint()
             _sprite.setPosition(position, Position.BOTTOM_CENTER)
@@ -163,7 +163,7 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IOwnable, IBodyEnt
 
     private fun defineCullablesComponent(): CullablesComponent {
         val cullable = getGameCameraCullingLogic(this)
-        return CullablesComponent(this, objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullable))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullable))
     }
 
 }

@@ -94,14 +94,14 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         val waterFixture = Fixture(body, FixtureType.WATER, GameRectangle())
         body.addFixture(waterFixture)
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = shapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
 
     private fun defineCullablesComponent(): CullablesComponent {
         val cullable = getGameCameraCullingLogic(this)
-        return CullablesComponent(this, objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullable))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullable))
     }
 
     private fun defineDrawables(bounds: GameRectangle) {
@@ -135,7 +135,7 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
             }
         }
 
-        addComponent(SpritesComponent(this, sprites))
-        addComponent(AnimationsComponent(this, animators))
+        addComponent(SpritesComponent(sprites))
+        addComponent(AnimationsComponent(animators))
     }
 }

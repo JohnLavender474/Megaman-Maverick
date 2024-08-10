@@ -97,7 +97,7 @@ class ExplodingBall(game: MegamanMaverickGame) : AbstractProjectile(game), IScal
         }
 
         addComponent(
-            DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true)
+            DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true)
         )
 
         return BodyComponentCreator.create(this, body)
@@ -106,7 +106,7 @@ class ExplodingBall(game: MegamanMaverickGame) : AbstractProjectile(game), IScal
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
         sprite.setSize(1.25f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())
         }

@@ -61,7 +61,7 @@ class Explosion(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IOwn
         addComponent(defineBodyComponent())
         addComponent(defineAnimationsComponent())
         addComponent(defineUpdatablesComponent())
-        addComponent(AudioComponent(this))
+        addComponent(AudioComponent())
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -78,7 +78,7 @@ class Explosion(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IOwn
 
     override fun canDamage(damageable: IDamageable) = damageable != owner
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, {
+    private fun defineUpdatablesComponent() = UpdatablesComponent({
         durationTimer.update(it)
         if (durationTimer.isFinished()) kill()
     })
@@ -92,7 +92,7 @@ class Explosion(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IOwn
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
         sprite.setSize(2.5f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())
         }
@@ -106,9 +106,7 @@ class Explosion(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IOwn
         body.addFixture(damagerFixture)
         addComponent(
             DrawableShapesComponent(
-                this,
-                debugShapeSuppliers = gdxArrayOf({ damagerFixture.getShape() }),
-                debug = true
+                debugShapeSuppliers = gdxArrayOf({ damagerFixture.getShape() }), debug = true
             )
         )
         return BodyComponentCreator.create(this, body)

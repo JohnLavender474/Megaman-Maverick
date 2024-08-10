@@ -325,14 +325,14 @@ class ReactMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
             body.physics.gravity.y = gravity * ConstVals.PPM
         }
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             val size = if (defeated || state == ReactManState.DANCE) 1.5f else 2f
             _sprite.setSize(size * ConstVals.PPM)

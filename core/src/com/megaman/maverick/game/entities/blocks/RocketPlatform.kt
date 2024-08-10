@@ -50,7 +50,7 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, IS
         super<Block>.init()
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
-        addComponent(MotionComponent(this))
+        addComponent(MotionComponent())
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -120,7 +120,7 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, IS
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.PLAYGROUND, -1))
         sprite.setSize(4f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getTopCenterPoint(), Position.TOP_CENTER)
             _sprite.translateY(ConstVals.PPM / 16f)

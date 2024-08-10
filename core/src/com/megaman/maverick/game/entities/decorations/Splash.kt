@@ -44,8 +44,7 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
             GameLogger.debug(TAG, "Generating splash for splasher [$splasher] and water [$water]")
             val numSplashes = ceil(splasher.width / ConstVals.PPM).toInt()
             for (i in 0 until numSplashes) {
-                val spawn =
-                    Vector2(splasher.x + ConstVals.PPM / 2f + i * ConstVals.PPM, water.y + water.height)
+                val spawn = Vector2(splasher.x + ConstVals.PPM / 2f + i * ConstVals.PPM, water.y + water.height)
                 val s = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SPLASH)
                 game.engine.spawn(s!!, props(ConstKeys.POSITION to spawn))
             }
@@ -55,9 +54,8 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
     private lateinit var animation: IAnimation
 
     override fun init() {
-        if (splashRegion == null)
-            splashRegion =
-                game.assMan.getTextureRegion(TextureAsset.ENVIRONS_1.source, SPLASH_REGION_KEY)
+        if (splashRegion == null) splashRegion =
+            game.assMan.getTextureRegion(TextureAsset.ENVIRONS_1.source, SPLASH_REGION_KEY)
 
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
@@ -70,12 +68,9 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
         (firstSprite as GameSprite).setPosition(spawn, Position.BOTTOM_CENTER)
     }
 
-    private fun defineUpdatablesComponent() =
-        UpdatablesComponent(
-            this,
-            {
-                if (animation.isFinished()) kill(props(CAUSE_OF_DEATH_MESSAGE to "Animation finished"))
-            })
+    private fun defineUpdatablesComponent() = UpdatablesComponent({
+        if (animation.isFinished()) kill(props(CAUSE_OF_DEATH_MESSAGE to "Animation finished"))
+    })
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         animation = Animation(splashRegion!!, 1, 5, 0.075f, false)
@@ -85,6 +80,6 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -1))
         sprite.setAlpha(ALPHA)
-        return SpritesComponent(this, sprite)
+        return SpritesComponent(sprite)
     }
 }

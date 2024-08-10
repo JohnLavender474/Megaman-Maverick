@@ -117,7 +117,7 @@ class ElectrocutieChild(game: MegamanMaverickGame) : MegaGameEntity(game), IHaza
             }
         }
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -125,7 +125,7 @@ class ElectrocutieChild(game: MegamanMaverickGame) : MegaGameEntity(game), IHaza
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.25f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setOriginCenter()
             _sprite.rotation = direction.rotation

@@ -35,8 +35,8 @@ class LavaFall(game: MegamanMaverickGame): MegaGameEntity(game), ISpritesEntity,
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, "Lava")
-        addComponent(SpritesComponent(this))
-        addComponent(AnimationsComponent(this))
+        addComponent(SpritesComponent())
+        addComponent(AnimationsComponent())
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -60,7 +60,7 @@ class LavaFall(game: MegamanMaverickGame): MegaGameEntity(game), ISpritesEntity,
             val animator = Animator(animation)
             animators.add({ lavaSprite } to animator)
         }
-        addComponent(SpritesComponent(this, sprites))
-        addComponent(AnimationsComponent(this, animators))
+        addComponent(SpritesComponent(sprites))
+        addComponent(AnimationsComponent(animators))
     }
 }

@@ -111,7 +111,7 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
             regions.put("${LEVER_TYPE}/on", leverAtlas.findRegion("$TAG/Left"))
             regions.put("${LEVER_TYPE}/off", leverAtlas.findRegion("$TAG/Right"))
         }
-        addComponent(AudioComponent(this))
+        addComponent(AudioComponent())
         addComponent(defineBodyComponent())
         addComponent(defineUpdatablesComponent())
         addComponent(defineSpritesComponent())
@@ -196,7 +196,7 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.SELECT_PING_SOUND, false)
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, { delta ->
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         switchTimer.update(delta)
         if (switchTimer.isJustFinished()) {
             toggleeState = if (toggleeState == ToggleeState.TOGGLING_TO_OFF) {
@@ -243,14 +243,14 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
             if (switchTimer.isFinished()) switchToggleeState()
         }
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             val size = if (type == ENEMY_TYPE) 2f else 0.5f
             _sprite.setSize(size * ConstVals.PPM)
@@ -287,6 +287,6 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
         val font = BitmapFontHandle(
             { text }, MegaUtilMethods.getDefaultFontSize(), fontSource = ConstVals.MEGAMAN_MAVERICK_FONT
         )
-        return FontsComponent(this, ConstKeys.DEFAULT to font)
+        return FontsComponent(ConstKeys.DEFAULT to font)
     }
 }

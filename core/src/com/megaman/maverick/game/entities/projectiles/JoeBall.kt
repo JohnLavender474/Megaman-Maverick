@@ -118,7 +118,7 @@ class JoeBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEn
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.25f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setFlip(trajectory.x < 0f, false)
             _sprite.setCenter(body.getCenter())

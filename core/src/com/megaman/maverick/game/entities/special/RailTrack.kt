@@ -65,8 +65,8 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntit
             dropTrackRegion = atlas.findRegion("RailTrack/Drop")
         }
         addComponent(defineUpdatablesComponent())
-        addComponent(SpritesComponent(this))
-        addComponent(AudioComponent(this))
+        addComponent(SpritesComponent())
+        addComponent(AudioComponent())
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -131,7 +131,7 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntit
         sprites.clear()
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, {
+    private fun defineUpdatablesComponent() = UpdatablesComponent({
         platform!!.body.setCenterY(bounds.getCenter().y + 0.35f * ConstVals.PPM)
         if (platformRight && platform!!.pivot.getMaxX() >= bounds.getMaxX() - 0.5f * ConstVals.PPM) {
             platform!!.body.physics.velocity.x = PLATFORM_SPEED * ConstVals.PPM * -1f
@@ -173,7 +173,7 @@ class RailTrackPlatform(game: MegamanMaverickGame) : Block(game), IChildEntity, 
         addComponent(defineUpdatablesComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -203,14 +203,14 @@ class RailTrackPlatform(game: MegamanMaverickGame) : Block(game), IChildEntity, 
         body.physics.collisionOn = true
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, {
+    private fun defineUpdatablesComponent() = UpdatablesComponent({
         pivot.setPosition(body.getPosition())
     })
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
         sprite.setSize(2f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             val position = body.getTopCenterPoint()
             position.y += 0.1f * ConstVals.PPM

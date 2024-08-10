@@ -242,7 +242,7 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
                     (if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY)
         }
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -250,7 +250,7 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setFlip(isFacing(Facing.RIGHT), false)
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)

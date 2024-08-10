@@ -37,11 +37,7 @@ class Ladder(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity {
         val ladderFixture = Fixture(body, FixtureType.LADDER, ladderRectangle)
         body.addFixture(ladderFixture)
 
-        addComponent(
-            DrawableShapesComponent(
-                this, debugShapeSuppliers = gdxArrayOf({ ladderRectangle }), debug = true
-            )
-        )
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ ladderRectangle }), debug = true))
 
         return BodyComponentCreator.create(this, body)
     }

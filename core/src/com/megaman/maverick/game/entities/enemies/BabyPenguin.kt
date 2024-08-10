@@ -136,7 +136,7 @@ class BabyPenguin(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
             body.physics.gravity.y = gravity * ConstVals.PPM
         }
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -144,7 +144,7 @@ class BabyPenguin(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
         sprite.setSize(0.65f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
             _sprite.setFlip(isFacing(Facing.RIGHT), false)

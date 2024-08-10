@@ -178,7 +178,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
         })
 
         addComponent(
-            DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true)
+            DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true)
         )
 
         return BodyComponentCreator.create(this, body)
@@ -187,7 +187,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
             _sprite.setPosition(body.getCenter(), Position.CENTER)
@@ -220,7 +220,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
                 return@PathfinderParams true
             })
 
-        val pathfindingComponent = PathfindingComponent(this, params, {
+        val pathfindingComponent = PathfindingComponent(params, {
             StandardPathfinderResultConsumer.consume(
                 it,
                 body,

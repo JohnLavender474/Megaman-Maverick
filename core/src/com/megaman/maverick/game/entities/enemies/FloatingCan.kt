@@ -125,7 +125,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
         body.addFixture(damagerFixture)
         shapes.add { damageableFixture.getShape() }
 
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = shapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = shapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -133,7 +133,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(this, sprite)
+        val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
             _sprite.setPosition(body.getCenter(), Position.CENTER)
@@ -156,7 +156,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
             filter = { _, objs ->
                 objs.none { it is Fixture && it.getFixtureType() == FixtureType.BLOCK }
             })
-        val pathfindingComponent = PathfindingComponent(this, params, {
+        val pathfindingComponent = PathfindingComponent(params, {
             StandardPathfinderResultConsumer.consume(
                 it,
                 body,

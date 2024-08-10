@@ -66,7 +66,7 @@ class AcidGoopSupplier(game: MegamanMaverickGame) : MegaGameEntity(game), IHazar
 
     private fun dropAcidGoop() = acidGoop!!.setToFall()
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(this, { delta ->
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         if (acidGoop == null) {
             spawnDelayTimer.update(delta)
             if (spawnDelayTimer.isFinished()) {
@@ -87,12 +87,12 @@ class AcidGoopSupplier(game: MegamanMaverickGame) : MegaGameEntity(game), IHazar
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(ConstVals.PPM.toFloat())
-        addComponent(DrawableShapesComponent(this, debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
         return BodyComponentCreator.create(this, body)
     }
 
     private fun defineCullablesComponent() = CullablesComponent(
-        this, objectMapOf(
+        objectMapOf(
             ConstKeys.CULL_OUT_OF_BOUNDS to getGameCameraCullingLogic(this)
         )
     )
