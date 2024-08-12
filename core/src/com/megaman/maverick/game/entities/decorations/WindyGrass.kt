@@ -51,7 +51,7 @@ open class WindyGrass(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
         for (i in 0 until tiles) {
             val positionX = bounds.x + (i * ConstVals.PPM)
             val positionY = bounds.y
-            val grassSprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
+            val grassSprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, 1))
             grassSprite.setSize(ConstVals.PPM.toFloat())
             grassSprite.setPosition(positionX, positionY)
             sprites.put("grass_$i", grassSprite)

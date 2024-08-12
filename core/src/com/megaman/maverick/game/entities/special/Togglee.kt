@@ -10,7 +10,6 @@ import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
 import com.engine.audio.AudioComponent
-import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
 import com.engine.common.enums.Position
 import com.engine.common.extensions.equalsAny
@@ -48,7 +47,6 @@ import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.overlapsGameCamera
 import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntitySuppliers
-
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType.SPAWN_ROOM
 import com.megaman.maverick.game.utils.MegaUtilMethods
@@ -138,7 +136,6 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
         spawnRoom = spawnProps.get(SPAWN_ROOM, String::class)!!
 
         val childEntitySuppliers = convertObjectPropsToEntitySuppliers(spawnProps)
-        GameLogger.debug(TAG, "Child entities: ${childEntitySuppliers.map { "${it.first}:${it.second} " }}")
         childEntitySuppliers.forEach {
             val childType = it.second.getOrDefault(TOGGLEE_ON_ENTITY, true, Boolean::class)
             if (childType) onEntitySuppliers.add(it) else offEntitySuppliers.add(it)

@@ -56,25 +56,30 @@ class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         private const val STAND_DUR = 1f
         private const val CROUCH_DUR = 0.2f
         private const val JUMP_DUR = 0.25f
-        private const val G_GRAV = -0.0015f
-        private const val GRAV = -0.375f
-        private const val JUMP_X = 6f
-        private const val JUMP_Y = 12f
+        private const val G_GRAV = -0.001f
+        private const val GRAV = -0.15f
+        private const val JUMP_X = 3f
+        private const val JUMP_Y = 10f
     }
 
-    enum class RobbitState {
+    private enum class RobbitState {
         STANDING,
         CROUCHING,
         JUMPING
     }
 
     override var facing = Facing.RIGHT
-
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(10), Fireball::class to dmgNeg(ConstVals.MAX_HEALTH), ChargedShot::class to dmgNeg {
+        Bullet::class to dmgNeg(10),
+        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class to dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
-        }, ChargedShotExplosion::class to dmgNeg(15)
+        },
+        ChargedShotExplosion::class to dmgNeg {
+            it as ChargedShotExplosion
+            if (it.fullyCharged) 15 else 10
+        }
     )
 
     private val robbitLoop = Loop(RobbitState.values().toGdxArray())
@@ -106,6 +111,7 @@ class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         body.setSize(1.5f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body.getBodyBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(1.5f * ConstVals.PPM))
         body.addFixture(bodyFixture)

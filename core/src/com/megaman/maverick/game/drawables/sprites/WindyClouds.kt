@@ -6,7 +6,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 
 class WindyClouds(game: MegamanMaverickGame, start: Vector2, width: Float, height: Float) : ScrollingBackground(
-    game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_1.source, "BKG04"),
+    game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_2.source, "BKG04"),
     start, start.cpy().sub(width, 0f), DUR, width, height, ROWS, COLS
 ) {
 

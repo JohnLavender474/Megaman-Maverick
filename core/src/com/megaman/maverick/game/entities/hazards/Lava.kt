@@ -11,7 +11,6 @@ import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimator
 import com.engine.audio.AudioComponent
-import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
 import com.engine.common.enums.Facing
 import com.engine.common.extensions.getTextureAtlas
@@ -45,7 +44,6 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.overlapsGameCamera
-
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
@@ -91,7 +89,6 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
     }
 
     override fun spawn(spawnProps: Properties) {
-        GameLogger.debug(TAG, "spawn props = $spawnProps")
         super.spawn(spawnProps)
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
@@ -106,7 +103,7 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
         directionRotation =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
         facing = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, "right", String::class).uppercase())
-        spritePriorityValue = spawnProps.getOrDefault(ConstKeys.PRIORITY, if (type == FALL) 1 else 0, Int::class)
+        spritePriorityValue = spawnProps.getOrDefault(ConstKeys.PRIORITY, if (type == FALL) 2 else 1, Int::class)
 
         val lavaStartX = spawnProps.getOrDefault("${ConstKeys.MOVE}_${ConstKeys.X}", 0f, Float::class)
         val lavaStartY = spawnProps.getOrDefault("${ConstKeys.MOVE}_${ConstKeys.Y}", 0f, Float::class)
@@ -122,16 +119,10 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
     }
 
     override fun kill(props: Properties?) =
-        if (moveBeforeKill && !movingBeforeKill) {
-            GameLogger.debug(TAG, "Moving to target before killing lava.")
-            moveBeforeKill()
-        } else {
-            GameLogger.debug(TAG, "Killing lava now.")
-            super<MegaGameEntity>.kill(props)
-        }
+        if (moveBeforeKill && !movingBeforeKill) moveBeforeKill() else super<MegaGameEntity>.kill(props)
+
 
     private fun moveBeforeKill() {
-        GameLogger.debug(TAG, "Moving before killing lava.")
         movingBeforeKill = true
         val moveBeforeKillTargetRaw = getProperty(MOVE_BEFORE_KILL, String::class)!!
             .split(",").map { it.toFloat() }
@@ -157,7 +148,6 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             if (moving) {
-                GameLogger.debug(TAG, "Moving to target: $moveTarget. Current pos: ${body.getCenter()}")
                 val direction = moveTarget.cpy().sub(body.getCenter()).nor()
                 body.physics.velocity.set(direction.scl(SPEED * ConstVals.PPM))
             } else body.physics.velocity.set(0f, 0f)

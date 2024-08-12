@@ -36,6 +36,7 @@ import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
@@ -44,6 +45,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
+import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
@@ -365,7 +367,14 @@ class FireMetFlame(game: MegamanMaverickGame) : AbstractProjectile(game), IAnima
     }
 
     override fun explodeAndDie(vararg params: Any?) {
-        kill() // TODO: snuff out flame on timer
+        kill()
+
+        // TODO: replace smoke puff with something better
+
+        val smokePuff = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SMOKE_PUFF)!!
+        game.engine.spawn(smokePuff, props(ConstKeys.POSITION to body.getBottomCenterPoint(), ConstKeys.OWNER to owner))
+
+        playSoundNow(SoundAsset.WHOOSH_SOUND, false)
     }
 
     internal fun launch(impulse: Vector2) {

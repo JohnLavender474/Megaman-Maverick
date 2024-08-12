@@ -5,6 +5,8 @@ import com.engine.common.GameLogger
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
+import com.engine.drawables.sorting.DrawingPriority
+import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
@@ -37,7 +39,7 @@ class Tree(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
     }
 
     private fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite()
+        val sprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, 0))
         sprite.setSize(3f * ConstVals.PPM, 6f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->

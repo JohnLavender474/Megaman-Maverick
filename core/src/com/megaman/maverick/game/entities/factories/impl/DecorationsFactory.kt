@@ -3,7 +3,7 @@ package com.megaman.maverick.game.entities.factories.impl
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.decorations.*
 import com.megaman.maverick.game.entities.factories.EntityFactory
-import com.megaman.maverick.game.entities.factories.EntityPoolCreator
+import com.megaman.maverick.game.entities.factories.GameEntityPoolCreator
 
 class DecorationsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
 
@@ -14,15 +14,17 @@ class DecorationsFactory(private val game: MegamanMaverickGame) : EntityFactory(
         const val FALLING_LEAF = "FallingLeaf"
         const val TREE = "Tree"
         const val LAVA_FALL = "LavaFall"
+        const val PIPI_EGG_SHATTER = "PipiEggShatter"
     }
 
     override fun init() {
-        pools.put(SPLASH, EntityPoolCreator.create { Splash(game) })
-        pools.put(FORCE, EntityPoolCreator.create { ForceDecoration(game) })
-        pools.put(WINDY_GRASS, EntityPoolCreator.create { WindyGrass(game) })
-        pools.put(FALLING_LEAF, EntityPoolCreator.create { FallingLeaf(game) })
-        pools.put(TREE, EntityPoolCreator.create { Tree(game) })
-        pools.put(LAVA_FALL, EntityPoolCreator.create { LavaFall(game) })
+        pools.put(SPLASH, GameEntityPoolCreator.create { Splash(game) })
+        pools.put(FORCE, GameEntityPoolCreator.create { ForceDecoration(game) })
+        pools.put(WINDY_GRASS, GameEntityPoolCreator.create { WindyGrass(game) })
+        pools.put(FALLING_LEAF, GameEntityPoolCreator.create { FallingLeaf(game) })
+        pools.put(TREE, GameEntityPoolCreator.create { Tree(game) })
+        pools.put(LAVA_FALL, GameEntityPoolCreator.create { LavaFall(game) })
+        pools.put(PIPI_EGG_SHATTER, GameEntityPoolCreator.create { PipiEggShatter(game) })
     }
 
     override fun fetch(key: Any) = pools.get(key)?.fetch()

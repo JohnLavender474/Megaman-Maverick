@@ -58,11 +58,9 @@ class Peat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
         ChargedShot::class to dmgNeg(ConstVals.MAX_HEALTH),
         ChargedShotExplosion::class to dmgNeg(ConstVals.MAX_HEALTH)
     )
-
     override lateinit var facing: Facing
 
     private val delayTimer = Timer(DELAY_DUR)
-
     private var startPosition: Vector2? = null
     private var targetPosition: Vector2? = null
     private var midPoint: Vector2? = null

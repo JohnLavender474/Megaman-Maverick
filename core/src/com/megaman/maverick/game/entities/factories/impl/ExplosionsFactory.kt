@@ -5,7 +5,7 @@ import com.engine.entities.IGameEntity
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.explosions.*
 import com.megaman.maverick.game.entities.factories.EntityFactory
-import com.megaman.maverick.game.entities.factories.EntityPoolCreator
+import com.megaman.maverick.game.entities.factories.GameEntityPoolCreator
 
 class ExplosionsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
 
@@ -26,19 +26,19 @@ class ExplosionsFactory(private val game: MegamanMaverickGame) : EntityFactory()
     }
 
     override fun init() {
-        pools.put(EXPLOSION, EntityPoolCreator.create { Explosion(game) })
-        pools.put(SNOWBALL_EXPLOSION, EntityPoolCreator.create { SnowballExplosion(game) })
-        pools.put(DISINTEGRATION, EntityPoolCreator.create { Disintegration(game) })
-        pools.put(CHARGED_SHOT_EXPLOSION, EntityPoolCreator.create { ChargedShotExplosion(game) })
-        pools.put(EXPLOSION_ORB, EntityPoolCreator.create { ExplosionOrb(game) })
-        pools.put(CAVE_ROCK_EXPLOSION, EntityPoolCreator.create { CaveRockExplosion(game) })
+        pools.put(EXPLOSION, GameEntityPoolCreator.create { Explosion(game) })
+        pools.put(SNOWBALL_EXPLOSION, GameEntityPoolCreator.create { SnowballExplosion(game) })
+        pools.put(DISINTEGRATION, GameEntityPoolCreator.create { Disintegration(game) })
+        pools.put(CHARGED_SHOT_EXPLOSION, GameEntityPoolCreator.create { ChargedShotExplosion(game) })
+        pools.put(EXPLOSION_ORB, GameEntityPoolCreator.create { ExplosionOrb(game) })
+        pools.put(CAVE_ROCK_EXPLOSION, GameEntityPoolCreator.create { CaveRockExplosion(game) })
         pools.put(
             SIGMA_RAT_ELECTRIC_BALL_EXPLOSION,
-            EntityPoolCreator.create { SigmaRatElectricBallExplosion(game) })
-        pools.put(ICE_SHARD, EntityPoolCreator.create { IceShard(game) })
-        pools.put(TOXIC_GOOP_SPLASH, EntityPoolCreator.create { ToxicGoopSplash(game) })
-        pools.put(SMOKE_PUFF, EntityPoolCreator.create { SmokePuff(game) })
-        pools.put(ASTEROID_EXPLOSION, EntityPoolCreator.create { AsteroidExplosion(game) })
+            GameEntityPoolCreator.create { SigmaRatElectricBallExplosion(game) })
+        pools.put(ICE_SHARD, GameEntityPoolCreator.create { IceShard(game) })
+        pools.put(TOXIC_GOOP_SPLASH, GameEntityPoolCreator.create { ToxicGoopSplash(game) })
+        pools.put(SMOKE_PUFF, GameEntityPoolCreator.create { SmokePuff(game) })
+        pools.put(ASTEROID_EXPLOSION, GameEntityPoolCreator.create { AsteroidExplosion(game) })
     }
 
     override fun fetch(key: Any): IGameEntity? {

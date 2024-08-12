@@ -1,7 +1,7 @@
 Hazards1.png
 size: 255, 860
 format: RGBA8888
-filter: Linear,Linear
+filter: Nearest,Nearest
 repeat: none
 AcidGoop/Falling
   rotate: false
@@ -143,6 +143,13 @@ LavaBeam
   orig: 150, 134
   offset: 0, 0
   index: -1
+LavaBeamer
+  rotate: false
+  xy: 128, 279
+  size: 64, 88
+  orig: 64, 88
+  offset: 0, 0
+  index: -1
 LavaBeamer/Off
   rotate: false
   xy: 0, 187
@@ -159,7 +166,7 @@ LavaBeamer/On
   index: -1
 LavaBeamer/SwitchingOn
   rotate: false
-  xy: 128, 279
+  xy: 0, 367
   size: 64, 88
   orig: 64, 88
   offset: 0, 0
@@ -264,7 +271,7 @@ SwingingAxe
   index: -1
 SwingingAxe_HandleEndCentered
   rotate: false
-  xy: 0, 367
+  xy: 64, 367
   size: 128, 128
   orig: 128, 128
   offset: 0, 0

@@ -89,7 +89,7 @@ class MegamanMaverickGame : Game(), IEventListener, IPropertizable {
     companion object {
         const val TAG = "MegamanMaverickGame"
         const val DEBUG_TEXT = false
-        const val DEBUG_SHAPES = true
+        const val DEBUG_SHAPES = false
         const val DEFAULT_VOLUME = 0.5f
         val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
@@ -249,6 +249,7 @@ class MegamanMaverickGame : Game(), IEventListener, IPropertizable {
         startLevelScreen(Level.INFERNO_MAN)
         // startLevelScreen(Level.REACTOR_MAN)
         // startLevelScreen(Level.FREEZE_MAN)
+        // startLevelScreen(Level.TIMBER_WOMAN)
 
         // TEST LEVELS
         // startLevelScreen(Level.TEST1)

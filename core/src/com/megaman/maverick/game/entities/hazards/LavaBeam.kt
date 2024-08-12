@@ -8,8 +8,10 @@ import com.engine.animations.Animator
 import com.engine.common.enums.Direction
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.getTextureRegion
+import com.engine.common.extensions.objectMapOf
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
+import com.engine.cullables.CullablesComponent
 import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.sorting.DrawingPriority
 import com.engine.drawables.sorting.DrawingSection
@@ -18,6 +20,7 @@ import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setCenter
 import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.entities.contracts.IBodyEntity
+import com.engine.entities.contracts.ICullableEntity
 import com.engine.entities.contracts.ISpritesEntity
 import com.engine.world.Body
 import com.engine.world.BodyComponent
@@ -30,11 +33,12 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.IHazard
+import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
-class LavaBeam(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity, IHazard,
-    IDirectionRotatable {
+class LavaBeam(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+    ICullableEntity, IHazard, IDirectionRotatable {
 
     companion object {
         const val TAG = "LavaBeam"
@@ -53,6 +57,7 @@ class LavaBeam(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
+        addComponent(defineCullablesComponent())
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -65,7 +70,13 @@ class LavaBeam(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
             Direction.LEFT -> body.setCenterLeftToPoint(spawn)
             Direction.RIGHT -> body.setCenterRightToPoint(spawn)
         }
-        val trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
+        val speed = spawnProps.get(ConstKeys.SPEED, Float::class)!!
+        val trajectory = when (directionRotation!!) {
+            Direction.UP -> Vector2(0f, speed)
+            Direction.DOWN -> Vector2(0f, -speed)
+            Direction.LEFT -> Vector2(-speed, 0f)
+            Direction.RIGHT -> Vector2(speed, 0f)
+        }
         body.physics.velocity.set(trajectory)
     }
 
@@ -86,7 +97,7 @@ class LavaBeam(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
     }
 
     private fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, 0))
+        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
         sprite.setSize(2f * ConstVals.PPM, 5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
@@ -101,5 +112,10 @@ class LavaBeam(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         val animation = Animation(region!!, 1, 3, 0.1f, true)
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
+    }
+
+    private fun defineCullablesComponent(): CullablesComponent {
+        val cullOutOfBounds = getGameCameraCullingLogic(this)
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullOutOfBounds))
     }
 }
