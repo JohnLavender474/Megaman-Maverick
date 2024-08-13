@@ -371,7 +371,7 @@ class MegamanMaverickGame : Game(), IEventListener, IPropertizable {
                 collisionHandler = MegaCollisionHandler(this),
                 contactFilterMap = objectMapOf(
                     FixtureType.CONSUMER to objectSetOf(*FixtureType.values()),
-                    FixtureType.PLAYER to objectSetOf(FixtureType.ITEM),
+                    FixtureType.PLAYER to objectSetOf(FixtureType.BODY, FixtureType.ITEM),
                     FixtureType.DAMAGEABLE to objectSetOf(FixtureType.DAMAGER),
                     FixtureType.BODY to objectSetOf(FixtureType.BLOCK, FixtureType.FORCE, FixtureType.GRAVITY_CHANGE),
                     FixtureType.DEATH to objectSetOf(

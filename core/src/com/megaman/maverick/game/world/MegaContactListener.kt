@@ -331,8 +331,8 @@ class MegaContactListener(
                     bodyFixture.properties.getOrDefault(ConstKeys.GRAVITY_ROTATABLE, true, Boolean::class)
                 if (canChangeGravityRotation) {
                     val direction = gravityChangeFixture.getProperty(ConstKeys.DIRECTION, Direction::class) ?: return
-                    if (entity is IDirectionRotatable && entity.directionRotation != direction) entity.directionRotation =
-                        direction
+                    if (entity is IDirectionRotatable && entity.directionRotation != direction)
+                        entity.directionRotation = direction
                 }
             }
         }
@@ -353,6 +353,15 @@ class MegaContactListener(
                 blockBody.physics.frictionToApply.x = blockBody.physics.frictionToApply.y
                 blockBody.physics.frictionToApply.y = frictionX
             }
+        }
+
+        // body, player
+        else if (contact.fixturesMatch(FixtureType.BODY, FixtureType.PLAYER)) {
+            printDebugLog(contact, "beginContact(): Body-Player, contact = $contact")
+            val (bodyFixture, playerFixture) = contact.getFixturesInOrder(FixtureType.BODY, FixtureType.PLAYER)!!
+
+            if (bodyFixture.getBody().hasHitByPlayerReceiver()) bodyFixture.getBody()
+                .getHitByPlayer(playerFixture.getEntity() as Megaman)
         }
 
         // projectile, block or body or shield or water or projectile

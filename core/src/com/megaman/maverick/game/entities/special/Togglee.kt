@@ -3,6 +3,7 @@ package com.megaman.maverick.game.entities.special
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.engine.animations.Animation
@@ -12,10 +13,7 @@ import com.engine.animations.IAnimation
 import com.engine.audio.AudioComponent
 import com.engine.common.enums.Direction
 import com.engine.common.enums.Position
-import com.engine.common.extensions.equalsAny
-import com.engine.common.extensions.gdxArrayOf
-import com.engine.common.extensions.getTextureAtlas
-import com.engine.common.extensions.objectSetOf
+import com.engine.common.extensions.*
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
@@ -52,6 +50,7 @@ import com.megaman.maverick.game.screens.levels.spawns.SpawnType.SPAWN_ROOM
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
+import com.megaman.maverick.game.world.setHitByPlayerReceiver
 import com.megaman.maverick.game.world.setHitByProjectileReceiver
 
 class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IParentEntity, ISpritesEntity,
@@ -67,9 +66,12 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
         const val TAG = "Togglee"
         const val ENEMY_TYPE = "enemy"
         const val LEVER_TYPE = "lever"
+        const val SWITCHAROO_ARROW_TYPE = "switcharoo_arrow"
         const val TOGGLEE_ON_ENTITY = "togglee_on_entity"
-        private const val ENEMY_SWITCH_DURATION = 0.45f
-        private const val LEVER_SWITCH_DURATION = 0.25f
+        private const val ENEMY_SWITCH_DUR = 0.45f
+        private const val LEVER_SWITCH_DUR = 0.25f
+        private const val SWITCHAROO_ARROW_SWITCH_DUR = 0.1f
+        private const val SWITCHAROO_ARROW_BLINK_DUR = 0.1f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -91,9 +93,13 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
     private val offEntitySuppliers = Array<Pair<() -> IGameEntity, Properties>>()
     private val onEntitySuppliers = Array<Pair<() -> IGameEntity, Properties>>()
 
+    private val switcharooArrowBlinkTimer = Timer(SWITCHAROO_ARROW_BLINK_DUR)
+
     private lateinit var switchTimer: Timer
     private lateinit var position: Position
     private lateinit var spawnRoom: String
+
+    private var switcharooAlpha = 1f
 
     override fun init() {
         if (regions.isEmpty) {
@@ -105,9 +111,12 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
                 "${ENEMY_TYPE}/${ToggleeState.TOGGLING_TO_OFF.name}", enemyAtlas.findRegion("$TAG/SwitchToRight")
             )
 
-            val leverAtlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)
-            regions.put("${LEVER_TYPE}/on", leverAtlas.findRegion("$TAG/Left"))
-            regions.put("${LEVER_TYPE}/off", leverAtlas.findRegion("$TAG/Right"))
+            val specialsAtlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)
+
+            regions.put("${LEVER_TYPE}/on", specialsAtlas.findRegion("$TAG/Left"))
+            regions.put("${LEVER_TYPE}/off", specialsAtlas.findRegion("$TAG/Right"))
+
+            regions.put(SWITCHAROO_ARROW_TYPE, specialsAtlas.findRegion("SwitcharooArrow"))
         }
         addComponent(AudioComponent())
         addComponent(defineBodyComponent())
@@ -122,6 +131,14 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
         super.spawn(spawnProps)
 
         type = spawnProps.get(ConstKeys.TYPE, String::class)!!
+
+        val size = when (type) {
+            ENEMY_TYPE -> Vector2(2f, 2f)
+            LEVER_TYPE -> Vector2(1f, 2f)
+            SWITCHAROO_ARROW_TYPE -> Vector2(3f, 6f)
+            else -> throw IllegalStateException("Invalid type: $type")
+        }.scl(ConstVals.PPM.toFloat())
+        body.setSize(size)
 
         position = Position.valueOf(spawnProps.getOrDefault(ConstKeys.POSITION, "center", String::class).uppercase())
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(position)
@@ -144,13 +161,17 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
         toggleeState = ToggleeState.TOGGLED_OFF
 
         val switchDuration = when (type) {
-            ENEMY_TYPE -> ENEMY_SWITCH_DURATION
-            LEVER_TYPE -> LEVER_SWITCH_DURATION
+            ENEMY_TYPE -> ENEMY_SWITCH_DUR
+            LEVER_TYPE -> LEVER_SWITCH_DUR
+            SWITCHAROO_ARROW_TYPE -> SWITCHAROO_ARROW_SWITCH_DUR
             else -> throw IllegalArgumentException("Invalid type: $type")
         }
         switchTimer = Timer(switchDuration).setToEnd()
 
         spawnEntities(false)
+
+        if (type == SWITCHAROO_ARROW_TYPE) switcharooArrowBlinkTimer.reset()
+        switcharooAlpha = 1f
     }
 
     override fun onDestroy() {
@@ -217,27 +238,22 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
         bodyFixture.getShape().color = Color.GRAY
         debugShapes.add { bodyFixture.getShape() }
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(ConstVals.PPM.toFloat()))
         body.addFixture(damagerFixture)
         damagerFixture.getShape().color = Color.RED
         debugShapes.add { if (damagerFixture.active) damagerFixture.getShape() else null }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            val size = if (type == ENEMY_TYPE) 2f else 0.5f
-            body.setSize(size * ConstVals.PPM)
-
             (bodyFixture.rawShape as GameRectangle).set(body)
-            (damagerFixture.rawShape as GameRectangle).setSize((if (type == ENEMY_TYPE) 1f else 0.5f) * ConstVals.PPM)
-
             damagerFixture.active = type == ENEMY_TYPE && !moving
-            if (type == ENEMY_TYPE) {
-                val fixtureOffsetX = if (on) 0.5f * ConstVals.PPM else -0.5f * ConstVals.PPM
-                damagerFixture.offsetFromBodyCenter.x = fixtureOffsetX
-            } else damagerFixture.offsetFromBodyCenter.x = 0f
+            damagerFixture.offsetFromBodyCenter.x =
+                if (type == ENEMY_TYPE) (if (on) 0.5f else -0.5f) * ConstVals.PPM else 0f
         }
-
         body.setHitByProjectileReceiver {
-            if (switchTimer.isFinished()) switchToggleeState()
+            if (type != SWITCHAROO_ARROW_TYPE && switchTimer.isFinished()) switchToggleeState()
+        }
+        body.setHitByPlayerReceiver {
+            if (type == SWITCHAROO_ARROW_TYPE && switchTimer.isFinished()) switchToggleeState()
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -248,34 +264,71 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            val size = if (type == ENEMY_TYPE) 2f else 0.5f
-            _sprite.setSize(size * ConstVals.PPM)
+        spritesComponent.putUpdateFunction { delta, _sprite ->
+            val size = when (type) {
+                LEVER_TYPE -> vector2Of(0.5f)
+                ENEMY_TYPE -> vector2Of(2f)
+                SWITCHAROO_ARROW_TYPE -> vector2Of(6f)
+                else -> throw IllegalStateException("Unknown type: $type")
+            }.scl(ConstVals.PPM.toFloat())
+            _sprite.setSize(size)
             _sprite.setPosition(body.getPositionPoint(position), position)
+            _sprite.setFlip(false, type == SWITCHAROO_ARROW_TYPE && on)
+            if (type == SWITCHAROO_ARROW_TYPE) {
+                switcharooArrowBlinkTimer.update(delta)
+                if (switcharooArrowBlinkTimer.isFinished()) {
+                    switcharooAlpha -= 0.1f
+                    if (switcharooAlpha < 0f) switcharooAlpha = 1f
+                    switcharooArrowBlinkTimer.reset()
+                }
+            }
+            _sprite.setAlpha(if (type == SWITCHAROO_ARROW_TYPE) switcharooAlpha else 1f)
         }
         return spritesComponent
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = {
-            if (type == ENEMY_TYPE) "${type}/${toggleeState.name}" else "${type}/${if (on) "on" else "off"}"
+            when (type) {
+                ENEMY_TYPE -> "${type}/${toggleeState.name}"
+                LEVER_TYPE -> "${type}/${if (on) "on" else "off"}"
+                SWITCHAROO_ARROW_TYPE -> SWITCHAROO_ARROW_TYPE
+                else -> throw IllegalStateException("Invalid type: $type")
+            }
         }
+
         val animations = ObjectMap<String, IAnimation>()
+
         regions.forEach { entry ->
+            if (entry.key == SWITCHAROO_ARROW_TYPE) {
+                animations.put(entry.key, Animation(entry.value))
+                return@forEach
+            }
+
             val keyParts = entry.key.split("/")
             val type = keyParts[0]
+
             val region = entry.value
-            val animation = if (type == ENEMY_TYPE) {
-                val state = ToggleeState.valueOf(keyParts[1])
-                if (state.isToggling()) Animation(region, 1, 3, 0.1f, false)
-                else Animation(region, 1, 2, gdxArrayOf(1f, 0.15f), true)
-            } else {
-                val state = keyParts[1]
-                if (state == "on") Animation(regions.get("$type/on"))
-                else Animation(regions.get("$type/off"))
+
+            val animation = when (type) {
+                ENEMY_TYPE -> {
+                    val state = ToggleeState.valueOf(keyParts[1])
+                    if (state.isToggling()) Animation(region, 1, 3, 0.1f, false)
+                    else Animation(region, 1, 2, gdxArrayOf(1f, 0.15f), true)
+                }
+
+                LEVER_TYPE -> {
+                    val state = keyParts[1]
+                    if (state == "on") Animation(regions.get("$type/on"))
+                    else Animation(regions.get("$type/off"))
+                }
+
+                else -> throw IllegalStateException("Invalid type: $type")
             }
+
             animations.put(entry.key, animation)
         }
+
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }

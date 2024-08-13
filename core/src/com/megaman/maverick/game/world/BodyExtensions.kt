@@ -6,6 +6,7 @@ import com.engine.entities.contracts.IBodyEntity
 import com.engine.world.Body
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.megaman.Megaman
 
 fun Body.setEntity(entity: IBodyEntity) {
     fixtures.forEach { (_, fixture) -> fixture.setEntity(entity) }
@@ -34,6 +35,15 @@ fun Body.addBlockFilter(key: String) = getBlockFilters().add(key)
 fun Body.hasBlockFilter(key: String) = getBlockFilters().contains(key)
 
 fun Body.clearBlockFilters() = putProperty(ConstKeys.BLOCK_FILTERS, ObjectSet<String>())
+
+fun Body.setHitByPlayerReceiver(receiver: (Megaman) -> Unit) {
+    putProperty(ConstKeys.HIT_BY_PLAYER, receiver)
+}
+
+fun Body.hasHitByPlayerReceiver() = getProperty(ConstKeys.HIT_BY_PLAYER) != null
+
+fun Body.getHitByPlayer(player: Megaman) =
+    (getProperty(ConstKeys.HIT_BY_PLAYER) as (Megaman) -> Unit).invoke(player)
 
 fun Body.setHitByProjectileReceiver(receiver: (AbstractProjectile) -> Unit) {
     putProperty(ConstKeys.HIT_BY_PROJECTILE, receiver)

@@ -1,25 +1,25 @@
 Specials1.png
-size: 448, 246
+size: 456, 246
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 CapsuleTeleporter/Active
   rotate: false
-  xy: 192, 144
+  xy: 256, 144
   size: 100, 102
   orig: 100, 102
   offset: 0, 0
   index: -1
 CapsuleTeleporter/Frame
   rotate: false
-  xy: 292, 144
+  xy: 356, 144
   size: 50, 102
   orig: 50, 102
   offset: 0, 0
   index: -1
 CapsuleTeleporter/Inactive
   rotate: false
-  xy: 342, 144
+  xy: 406, 144
   size: 50, 102
   orig: 50, 102
   offset: 0, 0
@@ -127,6 +127,13 @@ SpringBounceStill
   xy: 320, 80
   size: 64, 56
   orig: 64, 56
+  offset: 0, 0
+  index: -1
+SwitcharooArrow
+  rotate: false
+  xy: 192, 144
+  size: 64, 64
+  orig: 64, 64
   offset: 0, 0
   index: -1
 Togglee/Left
