@@ -60,7 +60,8 @@ import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.isSensingAny
 import kotlin.reflect.KClass
 
-class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable, IEventListener, IFaceable, IDamageable,
+class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable, IEventListener, IFaceable,
+    IDamageable,
     IDirectionRotatable, IBodyEntity, IHealthEntity, ISpritesEntity, IBehaviorsEntity, IPointsEntity, IAudioEntity,
     IAnimatedEntity, IScalableGravityEntity, IBoundsSupplier {
 
@@ -358,7 +359,8 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         val bounds = properties.get(ConstKeys.BOUNDS) as GameRectangle
         body.positionOnPoint(bounds.getBottomCenterPoint(), Position.BOTTOM_CENTER)
 
-        facing = Facing.RIGHT
+        facing = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, "right", String::class).uppercase())
+
         aButtonTask = AButtonTask.JUMP
         currentWeapon = MegamanWeapon.BUSTER
         directionRotation = Direction.UP

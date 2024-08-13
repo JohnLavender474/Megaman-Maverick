@@ -79,6 +79,9 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             regions.put(FLOW, atlas.findRegion("Lava/${FLOW}"))
+            regions.put("${FLOW}1", atlas.findRegion("Lava/${FLOW}1"))
+            regions.put("${FLOW}2", atlas.findRegion("Lava/${FLOW}2"))
+            regions.put("${FLOW}3", atlas.findRegion("Lava/${FLOW}3"))
             regions.put(FALL, atlas.findRegion("Lava/${FALL}"))
         }
         addComponent(defineUpdatablesComponent())
@@ -183,8 +186,12 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
                     _sprite.priority.value = spritePriorityValue
                 })
 
-                val region = regions.get(type)
-                val animation = Animation(region!!, 1, 3, 0.1f, true)
+                val region = if (type == FLOW) {
+                    val index = ((row + col) % 3) + 1
+                    regions.get("${FLOW}$index")
+                } else regions.get(FALL)
+
+                val animation = Animation(region!!, 3, 1, 0.1f, true)
                 val animator = Animator(animation)
                 animators.add({ sprite } to animator)
             }

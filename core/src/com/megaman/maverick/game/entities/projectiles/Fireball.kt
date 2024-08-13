@@ -101,9 +101,7 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         burstDirection = Direction.UP
     }
 
-
     override fun onDamageInflictedTo(damageable: IDamageable) {
-        super.onDamageInflictedTo(damageable)
         if (burstOnDamageInflicted) explodeAndDie()
     }
 

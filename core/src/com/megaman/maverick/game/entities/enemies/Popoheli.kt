@@ -67,17 +67,16 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
     enum class PopoheliState { APPROACHING, ATTACKING, FLEEING }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(15),
+    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(Bullet::class to dmgNeg(15),
         Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
         ChargedShot::class to dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
-        }, ChargedShotExplosion::class to dmgNeg {
+        },
+        ChargedShotExplosion::class to dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
-        }
-    )
+        })
     override lateinit var facing: Facing
 
     private val attackDelayTimer = Timer(ATTACK_DELAY)
@@ -87,6 +86,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
     private lateinit var state: PopoheliState
     private lateinit var target: Vector2
+    private lateinit var faceOnEnd: Facing
 
     override fun init() {
         if (heliRegion == null || flameRegion == null) {
@@ -113,6 +113,9 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
         state = PopoheliState.APPROACHING
         facing = if (target.x < body.x) Facing.LEFT else Facing.RIGHT
+        faceOnEnd = if (spawnProps.containsKey("face_on_end")) Facing.valueOf(
+            spawnProps.get(ConstKeys.FACING, String::class)!!.uppercase()
+        ) else facing
 
         attackTimer.reset()
         attackDelayTimer.reset()
@@ -129,6 +132,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
                     if (body.getCenter().epsilonEquals(target, 0.1f * ConstVals.PPM)) {
                         body.physics.velocity.setZero()
                         state = PopoheliState.ATTACKING
+                        facing = faceOnEnd
                     }
                 }
 
@@ -136,8 +140,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
                     attackDelayTimer.update(delta)
                     if (!attackDelayTimer.isFinished()) return@add
                     if (attackDelayTimer.isJustFinished() && overlapsGameCamera()) requestToPlaySound(
-                        SoundAsset.ATOMIC_FIRE_SOUND,
-                        false
+                        SoundAsset.ATOMIC_FIRE_SOUND, false
                     )
 
                     attackTimer.update(delta)
@@ -159,13 +162,11 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         body.addFixture(bodyFixture)
-        bodyFixture.rawShape.color = Color.GRAY
-        // debugShapes.add { bodyFixture.getShape() }
+        bodyFixture.rawShape.color = Color.GRAY // debugShapes.add { bodyFixture.getShape() }
 
         val damagerFixture1 = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
         body.addFixture(damagerFixture1)
-        damagerFixture1.rawShape.color = Color.RED
-        // debugShapes.add { damagerFixture1.getShape() }
+        damagerFixture1.rawShape.color = Color.RED // debugShapes.add { damagerFixture1.getShape() }
 
         val damagerFixture2 = Fixture(
             body, FixtureType.DAMAGER, GameRectangle().setSize(

@@ -245,8 +245,8 @@ class MegamanMaverickGame : Game(), IEventListener, IPropertizable {
         screens.put(ScreenEnum.SIMPLE_END_LEVEL_SUCCESSFULLY_SCREEN.name, SimpleEndLevelScreen(this))
         screens.put(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name, SimpleInitGameScreen(this))
 
-        // startLevelScreen(Level.MOON_MAN)
-        startLevelScreen(Level.INFERNO_MAN)
+        startLevelScreen(Level.MOON_MAN)
+        // startLevelScreen(Level.INFERNO_MAN)
         // startLevelScreen(Level.REACTOR_MAN)
         // startLevelScreen(Level.FREEZE_MAN)
         // startLevelScreen(Level.TIMBER_WOMAN)
