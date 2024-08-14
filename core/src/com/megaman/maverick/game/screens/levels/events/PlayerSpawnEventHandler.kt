@@ -23,15 +23,14 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.events.EventType
 import java.util.*
 
-class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) :
-    Initializable, Updatable, IDrawable<Batch> {
+class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializable, Updatable, IDrawable<Batch> {
 
     companion object {
         const val TAG = "PlayerSpawnEventHandler"
         private const val PRE_BEAM_DUR = 1f
-        private const val BEAM_DOWN_DUR = .5f
-        private const val BEAM_TRANS_DUR = .2f
-        private const val BLINK_READY_DUR = .125f
+        private const val BEAM_DOWN_DUR = 0.5f
+        private const val BEAM_TRANS_DUR = 0.2f
+        private const val BLINK_READY_DUR = 0.125f
     }
 
     val finished: Boolean

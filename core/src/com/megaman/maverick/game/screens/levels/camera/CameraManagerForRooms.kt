@@ -18,17 +18,19 @@ import com.engine.common.interpolate
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.shapes.toGameRectangle
 import com.engine.common.time.Timer
-import com.megaman.maverick.game.ConstVals
 import kotlin.math.min
 
-class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable {
+class CameraManagerForRooms(
+    val camera: Camera,
+    var distanceOnTransition: Float,
+    var interpolationScalar: Float,
+    var transitionScannerDimensions: Vector2
+) : Updatable, Resettable {
 
     companion object {
         const val TAG = "CameraManagerForRooms"
-        const val DELAY_DURATION = .35f
+        const val DELAY_DURATION = 0.35f
         const val TRANS_DURATION = 1f
-        const val DISTANCE_ON_TRANSITION = 1.5f
-        const val DEFAULT_INTERPOLATION_SCALAR = 10f
     }
 
     private val delayTimer = Timer(DELAY_DURATION)
@@ -41,10 +43,8 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
     private val focusTarget = Vector2()
 
     var interpolate = true
-    var interpolationScalar = DEFAULT_INTERPOLATION_SCALAR
 
     var gameRooms: Array<RectangleMapObject>? = null
-
     var focus: IBoundsSupplier? = null
         set(value) {
             GameLogger.debug(TAG, "set focus to $value")
@@ -58,10 +58,8 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
 
     var priorGameRoom: RectangleMapObject? = null
         private set
-
     var currentGameRoom: RectangleMapObject? = null
         private set
-
     private val currentGameRoomKey: String?
         get() = currentGameRoom?.name
 
@@ -70,15 +68,13 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
 
     val transitioning: Boolean
         get() = transitionState != null
-
     val transitionInterpolation: Vector2?
-        get() =
-            if (transitionState == null) null
-            else {
-                val startCopy = focusStart.cpy()
-                val targetCopy = focusTarget.cpy()
-                interpolate(startCopy, targetCopy, transitionTimerRatio)
-            }
+        get() = if (transitionState == null) null
+        else {
+            val startCopy = focusStart.cpy()
+            val targetCopy = focusTarget.cpy()
+            interpolate(startCopy, targetCopy, transitionTimerRatio)
+        }
 
     val delayJustFinished: Boolean
         get() = delayTimer.isJustFinished()
@@ -110,16 +106,13 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
     }
 
     fun transitionToRoom(roomName: String): Boolean {
-        if (currentGameRoom == null)
-            throw IllegalStateException(
-                "Cannot transition to room $roomName because the current game room is null"
-            )
+        if (currentGameRoom == null) throw IllegalStateException(
+            "Cannot transition to room $roomName because the current game room is null"
+        )
         val nextGameRoom = gameRooms?.first { it.name == roomName } ?: return false
-        transitionDirection =
-            getSingleMostDirectionFromStartToTarget(
-                currentGameRoom!!.rectangle.getCenter(Vector2()),
-                nextGameRoom.rectangle.getCenter(Vector2())
-            )
+        transitionDirection = getSingleMostDirectionFromStartToTarget(
+            currentGameRoom!!.rectangle.getCenter(Vector2()), nextGameRoom.rectangle.getCenter(Vector2())
+        )
         GameLogger.debug(TAG, "transitionToRoom(): transition direction = $transitionDirection")
         setTransitionValues(nextGameRoom.rectangle)
         priorGameRoom = currentGameRoom
@@ -137,23 +130,22 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
         when (transitionDirection) {
             Direction.LEFT -> {
                 transitionTarget.x = (next.x + next.width) - min(next.width / 2f, camera.viewportWidth / 2f)
-                focusTarget.x = (next.x + next.width) - DISTANCE_ON_TRANSITION * ConstVals.PPM
+                focusTarget.x = (next.x + next.width) - distanceOnTransition
             }
 
             Direction.RIGHT -> {
                 transitionTarget.x = next.x + min(next.width / 2f, camera.viewportWidth / 2f)
-                focusTarget.x = next.x + DISTANCE_ON_TRANSITION * ConstVals.PPM
+                focusTarget.x = next.x + distanceOnTransition
             }
 
             Direction.UP -> {
                 transitionTarget.y = next.y + min(next.height / 2f, camera.viewportHeight / 2f)
-                focusTarget.y = next.y + DISTANCE_ON_TRANSITION * ConstVals.PPM
+                focusTarget.y = next.y + distanceOnTransition
             }
 
             Direction.DOWN -> {
-                transitionTarget.y =
-                    (next.y + next.height) - min(next.height / 2f, camera.viewportHeight / 2f)
-                focusTarget.y = (next.y + next.height) - DISTANCE_ON_TRANSITION * ConstVals.PPM
+                transitionTarget.y = (next.y + next.height) - min(next.height / 2f, camera.viewportHeight / 2f)
+                focusTarget.y = (next.y + next.height) - distanceOnTransition
             }
 
             null -> {}
@@ -172,25 +164,19 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
         }
 
         if (focus == null) return
-        if (currentGameRoom != null && !currentGameRoom!!.rectangle.overlaps(focus!!.getBounds()))
-            currentGameRoom = null
+        if (currentGameRoom != null && !currentGameRoom!!.rectangle.overlaps(focus!!.getBounds())) currentGameRoom =
+            null
         val currentRoomBounds = currentGameRoom?.rectangle?.toGameRectangle() ?: return
         if (currentRoomBounds.overlaps(focus!!.getBounds() as Rectangle)) {
             setCameraToFocusable(delta)
-            if (camera.position.y >
-                (currentRoomBounds.y + currentRoomBounds.height) - camera.viewportHeight / 2f
-            ) {
-                camera.position.y =
-                    (currentRoomBounds.y + currentRoomBounds.height) - camera.viewportHeight / 2f
+            if (camera.position.y > (currentRoomBounds.y + currentRoomBounds.height) - camera.viewportHeight / 2f) {
+                camera.position.y = (currentRoomBounds.y + currentRoomBounds.height) - camera.viewportHeight / 2f
             }
             if (camera.position.y < currentRoomBounds.y + camera.viewportHeight / 2f) {
                 camera.position.y = currentRoomBounds.y + camera.viewportHeight / 2f
             }
-            if (camera.position.x >
-                (currentRoomBounds.x + currentRoomBounds.width) - camera.viewportWidth / 2f
-            ) {
-                camera.position.x =
-                    (currentRoomBounds.x + currentRoomBounds.width) - camera.viewportWidth / 2f
+            if (camera.position.x > (currentRoomBounds.x + currentRoomBounds.width) - camera.viewportWidth / 2f) {
+                camera.position.x = (currentRoomBounds.x + currentRoomBounds.width) - camera.viewportWidth / 2f
             }
             if (camera.position.x < currentRoomBounds.x + camera.viewportWidth / 2f) {
                 camera.position.x = currentRoomBounds.x + camera.viewportWidth / 2f
@@ -199,11 +185,9 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
 
         for (room in gameRooms!!) {
             if (room.rectangle.overlaps(focus!!.getBounds()) && room.name != currentGameRoomKey) {
-                val width = 5f * ConstVals.PPM
-                val height = 5f * ConstVals.PPM
-                val boundingBox = GameRectangle().setSize(width, height).setCenter(focus!!.getBounds().getCenter())
-                transitionDirection =
-                    getOverlapPushDirection(boundingBox, currentRoomBounds, Rectangle())
+                val boundingBox = GameRectangle().setSize(transitionScannerDimensions.x, transitionScannerDimensions.y)
+                    .setCenter(focus!!.getBounds().getCenter())
+                transitionDirection = getOverlapPushDirection(boundingBox, currentRoomBounds, Rectangle())
                 GameLogger.debug(TAG, "transitionToRoom(): transition direction = $transitionDirection")
                 priorGameRoom = currentGameRoom
                 currentGameRoom = room
@@ -255,8 +239,7 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
                 endTransition?.invoke()
             }
 
-            ProcessState.BEGIN,
-            ProcessState.CONTINUE -> {
+            ProcessState.BEGIN, ProcessState.CONTINUE -> {
                 if (transitionState == ProcessState.BEGIN) {
                     beginTransition?.invoke()
                     GameLogger.debug(TAG, "onTransition(): transition start = $transitionStart")
@@ -296,10 +279,12 @@ class CameraManagerForRooms(private val camera: Camera) : Updatable, Resettable 
     private fun setCameraToFocusable(delta: Float) {
         focus?.let {
             val focusPos = it.getBounds().getCenter()
-            val cameraPos =
-                if (interpolate && !reset)
-                    interpolate(camera.position.toVector2(), focusPos, delta * interpolationScalar)
-                else focusPos
+            val cameraPos = if (interpolate && !reset) interpolate(
+                camera.position.toVector2(),
+                focusPos,
+                delta * interpolationScalar
+            )
+            else focusPos
             camera.position.x = cameraPos.x
             camera.position.y = cameraPos.y
         }

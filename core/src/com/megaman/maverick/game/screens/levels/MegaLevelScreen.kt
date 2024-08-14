@@ -18,6 +18,7 @@ import com.engine.common.GameLogger
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.isAny
 import com.engine.common.extensions.objectSetOf
+import com.engine.common.extensions.vector2Of
 import com.engine.common.interfaces.Initializable
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
@@ -71,6 +72,9 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
     companion object {
         const val TAG = "MegaLevelScreen"
         const val MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG = "MegaLevelScreenEventListener"
+        private const val ROOM_DISTANCE_ON_TRANSITION = 2f
+        private const val ROOM_INTERPOLATION_SCALAR = 10f
+        private const val TRANSITION_SCANNER_SIZE = 5f
         private const val INTERPOLATE_GAME_CAM = true
         private const val DEFAULT_BACKGROUND_PARALLAX_FACTOR = 0.5f
         private const val DEFAULT_FOREGROUND_PARALLAX_FACTOR = 2f
@@ -169,7 +173,12 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
         playerSpawnEventHandler = PlayerSpawnEventHandler(game)
         playerDeathEventHandler = PlayerDeathEventHandler(game)
         bossSpawnEventHandler = BossSpawnEventHandler(game)
-        cameraManagerForRooms = CameraManagerForRooms(gameCamera)
+        cameraManagerForRooms = CameraManagerForRooms(
+            gameCamera,
+            ROOM_DISTANCE_ON_TRANSITION * ConstVals.PPM,
+            ROOM_INTERPOLATION_SCALAR * ConstVals.PPM,
+            vector2Of(TRANSITION_SCANNER_SIZE * ConstVals.PPM)
+        )
         cameraManagerForRooms.interpolate = INTERPOLATE_GAME_CAM
         cameraManagerForRooms.interpolationScalar = 5f
         cameraManagerForRooms.focus = megaman
@@ -207,6 +216,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
                 )
             )
             engine.forEachEntity { if (it is AbstractEnemy) it.kill() }
+
+            game.putProperty(ConstKeys.ROOM_TRANSITION, true)
         }
         cameraManagerForRooms.continueTransition = { _ ->
             if (cameraManagerForRooms.delayJustFinished) systemsMap.get(AnimationsSystem::class.simpleName)?.on = true
@@ -243,6 +254,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
                 systemsMap.get(it.simpleName).on = true
             }
             */
+
+            game.putProperty(ConstKeys.ROOM_TRANSITION, false)
         }
     }
 
@@ -333,6 +346,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
                 engine.forEachEntity { if (it is AbstractEnemy) it.kill() }
                 engine.spawn(megaman, playerSpawnsMan.currentSpawnProps!!)
                 entityStatsHandler.unset()
+                game.putProperty(ConstKeys.ROOM_TRANSITION, false)
             }
 
             EventType.PLAYER_READY -> {
@@ -636,6 +650,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
             playerSpawnsMan.reset()
             cameraManagerForRooms.reset()
         }
+        game.putProperty(ConstKeys.ROOM_TRANSITION, false)
     }
 
     override fun pause() = levelStateHandler.pause()

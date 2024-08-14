@@ -71,8 +71,8 @@ class DisappearingBlocks(game: MegamanMaverickGame) : MegaGameEntity(game), IPar
 
         val keyArray = Array<String>()
         var currentKey: String? = null
-        childrenPropsArray.forEach { (child, props) ->
-            child as AnimatedBlock
+        childrenPropsArray.forEach { (childSupplier, props) ->
+            val child = childSupplier() as AnimatedBlock
             children.add(child)
             props.put(ConstKeys.RUN_ON_SPAWN, Runnable {
                 child.body.physics.collisionOn = false

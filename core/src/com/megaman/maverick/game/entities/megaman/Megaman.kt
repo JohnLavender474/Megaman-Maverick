@@ -61,9 +61,8 @@ import com.megaman.maverick.game.world.isSensingAny
 import kotlin.reflect.KClass
 
 class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable, IEventListener, IFaceable,
-    IDamageable,
-    IDirectionRotatable, IBodyEntity, IHealthEntity, ISpritesEntity, IBehaviorsEntity, IPointsEntity, IAudioEntity,
-    IAnimatedEntity, IScalableGravityEntity, IBoundsSupplier {
+    IDamageable, IDirectionRotatable, IBodyEntity, IHealthEntity, ISpritesEntity, IBehaviorsEntity, IPointsEntity,
+    IAudioEntity, IAnimatedEntity, IScalableGravityEntity, IBoundsSupplier {
 
     companion object {
         const val TAG = "Megaman"
@@ -207,6 +206,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
     override val eventKeyMask = objectSetOf<Any>(
         EventType.BEGIN_ROOM_TRANS,
         EventType.CONTINUE_ROOM_TRANS,
+        EventType.END_ROOM_TRANS,
         EventType.GATE_INIT_OPENING,
         EventType.STUN_PLAYER
     )
@@ -406,11 +406,14 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         GameLogger.debug(TAG, "onDestroy()")
 
         super<MegaGameEntity>.onDestroy()
+
         body.physics.velocity.setZero()
+        body.removeProperty(ConstKeys.VELOCITY)
 
         val eventsMan = game.eventsMan
         eventsMan.removeListener(this)
         eventsMan.submitEvent(Event(EventType.PLAYER_JUST_DIED))
+
         stopSoundNow(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
 
         if (getCurrentHealth() > 0) return
@@ -442,13 +445,41 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
                 GameLogger.debug(
                     MEGAMAN_EVENT_LISTENER_TAG, "BEGIN/CONTINUE ROOM TRANS: position = $position"
                 )
+
                 body.setCenter(position)
+                body.physics.gravityOn = false
+                if (event.key == EventType.BEGIN_ROOM_TRANS && !body.hasProperty(ConstKeys.VELOCITY))
+                    body.putProperty(ConstKeys.VELOCITY, body.physics.velocity.cpy())
+                body.physics.velocity.setZero()
+
                 stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
+            }
+
+            EventType.END_ROOM_TRANS -> {
+                if (!isAnyBehaviorActive(
+                        BehaviorType.CLIMBING,
+                        BehaviorType.JETPACKING,
+                        BehaviorType.RIDING_CART,
+                        BehaviorType.SWIMMING
+                    )
+                ) {
+                    val velocity = body.getProperty(ConstKeys.VELOCITY, Vector2::class)
+                    velocity?.let { body.physics.velocity.set(it) }
+                }
+                body.physics.gravityOn = !isBehaviorActive(BehaviorType.CLIMBING)
+                body.removeProperty(ConstKeys.VELOCITY)
             }
 
             EventType.GATE_INIT_OPENING -> {
                 GameLogger.debug(MEGAMAN_EVENT_LISTENER_TAG, "GATE_INIT_OPENING")
+
+                body.physics.gravityOn = false
+                if (!body.hasProperty(ConstKeys.VELOCITY)) body.putProperty(
+                    ConstKeys.VELOCITY,
+                    body.physics.velocity.cpy()
+                )
                 body.physics.velocity.setZero()
+
                 stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
             }
 

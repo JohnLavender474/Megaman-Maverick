@@ -23,6 +23,8 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val VELOCITY = "velocity"
+    const val ROOM_TRANSITION = "room_transition"
     const val BOSS_ROOM = "boss_room"
     const val RETURN = "return"
     const val SPOT = "spot"

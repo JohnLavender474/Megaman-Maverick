@@ -56,7 +56,7 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         private var fireballAtlas: TextureAtlas? = null
         private var flameAtlas: TextureAtlas? = null
         private const val ROTATION = 720f
-        private const val BURST_CULL_DUR = 1f
+        private const val BURST_CULL_DUR = 0.5f
     }
 
     private lateinit var burstCullTimer: Timer
@@ -101,6 +101,13 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         burstDirection = Direction.UP
     }
 
+
+    override fun explodeAndDie(vararg params: Any?) {
+        burst = true
+        body.physics.gravity.setZero()
+        if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ATOMIC_FIRE_SOUND, false)
+    }
+
     override fun onDamageInflictedTo(damageable: IDamageable) {
         if (burstOnDamageInflicted) explodeAndDie()
     }
@@ -121,17 +128,41 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun hitShield(shieldFixture: IFixture) {
         body.physics.velocity.x *= -1f
-        burstDirection = getOverlapPushDirection(body, shieldFixture.getShape()) ?: Direction.UP
         requestToPlaySound(SoundAsset.DINK_SOUND, false)
     }
 
     override fun hitWater(waterFixture: IFixture) {
+        kill()
         val smokePuff = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SMOKE_PUFF)!!
         val spawn = Vector2(body.getCenter().x, waterFixture.getShape().getMaxY())
         game.engine.spawn(smokePuff, props(ConstKeys.POSITION to spawn, ConstKeys.OWNER to owner))
         playSoundNow(SoundAsset.WHOOSH_SOUND, false)
-        kill()
     }
+
+    private fun defineUpdatablesComponent() = UpdatablesComponent({
+        if (burst) {
+            body.physics.velocity.setZero()
+            burstCullTimer.update(it)
+        }
+        if (burstCullTimer.isFinished()) {
+            kill()
+
+            val smokePuff = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SMOKE_PUFF)!!
+            val position = when (burstDirection) {
+                Direction.UP -> body.getBottomCenterPoint()
+                Direction.DOWN -> body.getTopCenterPoint()
+                Direction.LEFT -> body.getCenterRightPoint()
+                Direction.RIGHT -> body.getCenterLeftPoint()
+            }
+            game.engine.spawn(
+                smokePuff, props(
+                    ConstKeys.OWNER to owner,
+                    ConstKeys.POSITION to position,
+                    ConstKeys.DIRECTION to burstDirection
+                )
+            )
+        }
+    })
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
@@ -161,13 +192,14 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { delta, _sprite ->
+            _sprite.setOriginCenter()
+            _sprite.rotation = if (burst) burstDirection.rotation else _sprite.rotation + ROTATION * delta
+
             val size = if (burst) 0.85f else 1.65f
             _sprite.setSize(size * ConstVals.PPM)
             val position = if (burst) Position.BOTTOM_CENTER else Position.CENTER
             val bodyPosition = body.getPositionPoint(position)
             _sprite.setPosition(bodyPosition, position)
-            _sprite.setOriginCenter()
-            _sprite.rotation = if (burst) burstDirection.rotation else _sprite.rotation + ROTATION * delta
         }
         return spritesComponent
     }
@@ -181,22 +213,5 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
             )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
-    }
-
-    private fun defineUpdatablesComponent(): UpdatablesComponent {
-        val updatablesComponent = UpdatablesComponent()
-        updatablesComponent.add {
-            if (burst) {
-                body.physics.velocity.setZero()
-                burstCullTimer.update(it)
-            }
-            if (burstCullTimer.isFinished()) kill()
-        }
-        return updatablesComponent
-    }
-
-    override fun explodeAndDie(vararg params: Any?) {
-        burst = true
-        if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ATOMIC_FIRE_SOUND, false)
     }
 }

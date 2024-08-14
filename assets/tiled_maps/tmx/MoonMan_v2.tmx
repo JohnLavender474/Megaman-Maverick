@@ -286,7 +286,7 @@
   <object id="494" name="room11" x="14048" y="1056" width="512" height="384"/>
   <object id="493" name="room10" x="13536" y="1056" width="512" height="384"/>
   <object id="492" name="room9" x="12800" y="1056" width="512" height="384"/>
-  <object id="491" name="mini_boss_room" x="12288" y="1056" width="512" height="384">
+  <object id="491" name="mini_boss_room" x="9792" y="160" width="512" height="384">
    <properties>
     <property name="event" value="boss"/>
     <property name="object" type="object" value="354"/>
@@ -487,6 +487,25 @@
    </properties>
   </object>
  </objectgroup>
+ <objectgroup id="10" name="backgrounds">
+  <object id="55" name="AnimatedStars" x="0" y="2688" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup id="11" name="decorations"/>
+ <objectgroup id="12" name="children">
+  <object id="71" name="Target1" x="4464" y="1376" width="32" height="32"/>
+  <object id="72" name="Target2" x="4592" y="1376" width="32" height="32"/>
+  <object id="146" name="Target" x="7024" y="272" width="32" height="32"/>
+  <object id="355" name="Area" x="9888" y="288" width="320" height="160"/>
+  <object id="356" name="FirstSpawn" x="10176" y="256" width="32" height="32"/>
+  <object id="354" name="MoonFaceMiniBoss" x="10032" y="192" width="32" height="32">
+   <properties>
+    <property name="area" type="object" value="355"/>
+    <property name="first" type="object" value="356"/>
+    <property name="mini" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="357" name="MoonMan" x="14976" y="1344" width="32" height="32"/>
+ </objectgroup>
  <objectgroup id="6" name="player">
   <object id="496" name="1" x="4080" y="1440" width="32" height="32">
    <properties>
@@ -530,25 +549,6 @@
     <property name="movement_scalar" type="float" value="0.75"/>
    </properties>
   </object>
- </objectgroup>
- <objectgroup id="10" name="backgrounds">
-  <object id="55" name="AnimatedStars" x="0" y="2688" width="32" height="32"/>
- </objectgroup>
- <objectgroup id="11" name="decorations"/>
- <objectgroup id="12" name="children">
-  <object id="71" name="Target1" x="4464" y="1376" width="32" height="32"/>
-  <object id="72" name="Target2" x="4592" y="1376" width="32" height="32"/>
-  <object id="146" name="Target" x="7024" y="272" width="32" height="32"/>
-  <object id="355" name="Area" x="12384" y="1184" width="288" height="96"/>
-  <object id="356" name="FirstSpawn" x="12640" y="1184" width="32" height="32"/>
-  <object id="354" name="MoonFaceMiniBoss" x="12528" y="1120" width="32" height="32">
-   <properties>
-    <property name="area" type="object" value="355"/>
-    <property name="first" type="object" value="356"/>
-    <property name="mini" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="357" name="MoonMan" x="14976" y="1344" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="13" name="temp"/>
  <objectgroup id="14" name="projectiles">
@@ -660,7 +660,7 @@
   </object>
   <object id="115" x="6464" y="416" width="64" height="64"/>
   <object id="116" x="6656" y="416" width="128" height="64"/>
-  <object id="118" x="6944" y="136" width="192" height="120"/>
+  <object id="118" x="6944" y="160" width="192" height="96"/>
   <object id="119" x="6880" y="352" width="320" height="64"/>
   <object id="120" x="7296" y="320" width="64" height="32"/>
   <object id="121" x="7584" y="448" width="1216" height="224"/>
@@ -742,8 +742,8 @@
   <object id="316" x="12128" y="1376" width="1216" height="160"/>
   <object id="317" x="11488" y="1056" width="64" height="480"/>
   <object id="318" x="9664" y="992" width="3680" height="96"/>
-  <object id="319" x="12256" y="1056" width="64" height="480"/>
-  <object id="320" x="12768" y="1056" width="64" height="480"/>
+  <object id="319" x="9792" y="128" width="64" height="448"/>
+  <object id="320" x="12264" y="512" width="64" height="480"/>
   <object id="321" x="10720" y="1376" width="32" height="32"/>
   <object id="322" x="13280" y="992" width="64" height="544"/>
   <object id="323" x="12192" y="1056" width="96" height="224"/>
@@ -801,7 +801,7 @@
   </object>
   <object id="106" name="Death" x="5504" y="224" width="32" height="1152"/>
   <object id="107" name="Death" x="5888" y="384" width="32" height="1056"/>
-  <object id="361" name="Gate" x="12256" y="1280" width="64" height="96">
+  <object id="361" name="Gate" x="9792" y="384" width="64" height="96">
    <properties>
     <property name="reset" type="bool" value="true"/>
     <property name="room" value="mini_boss_room"/>

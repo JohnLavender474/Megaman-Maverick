@@ -46,7 +46,6 @@ class Flame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
     override var directionRotation: Direction? = null
 
     private lateinit var cullTimer: Timer
-
     private var perpetual = true
 
     override fun init() {
