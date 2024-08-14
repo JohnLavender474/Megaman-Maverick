@@ -17,6 +17,7 @@ class BossesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         const val PENGUIN_MINI_BOSS = "PenguinMiniBoss"
         const val REACTOR_MONKEY_MINI_BOSS = "ReactorMonkeyMiniBoss"
         const val MOON_FACE_MINI_BOSS = "MoonFaceMiniBoss"
+        const val MECHA_DRAGON_MINI_BOSS = "MechaDragonMiniBoss"
     }
 
     override fun init() {
@@ -27,6 +28,7 @@ class BossesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(PENGUIN_MINI_BOSS, GameEntityPoolCreator.create { PenguinMiniBoss(game) })
         pools.put(REACTOR_MONKEY_MINI_BOSS, GameEntityPoolCreator.create { ReactorMonkeyMiniBoss(game) })
         pools.put(MOON_FACE_MINI_BOSS, GameEntityPoolCreator.create { MoonHeadMiniBoss(game) })
+        pools.put(MECHA_DRAGON_MINI_BOSS, GameEntityPoolCreator.create { MechaDragonMiniBoss(game) })
     }
 
     override fun fetch(key: Any) = pools.get(key)?.fetch()

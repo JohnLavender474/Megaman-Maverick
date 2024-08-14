@@ -1,19 +1,26 @@
 Projectiles2.png
-size: 195, 320
+size: 50, 206
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-BunbyRedRocket
+BunbuRedRocket
   rotate: false
   xy: 0, 0
-  size: 160, 320
-  orig: 160, 320
+  size: 32, 64
+  orig: 32, 64
   offset: 0, 0
   index: -1
 SmallGreenMissile
   rotate: false
-  xy: 160, 0
+  xy: 0, 64
   size: 35, 42
   orig: 35, 42
+  offset: 0, 0
+  index: -1
+SpitFireball
+  rotate: false
+  xy: 0, 106
+  size: 50, 100
+  orig: 50, 100
   offset: 0, 0
   index: -1

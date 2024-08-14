@@ -23,6 +23,9 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val BOSS_ROOM = "boss_room"
+    const val RETURN = "return"
+    const val SPOT = "spot"
     const val FRAME = "frame"
     const val ROLL = "roll"
     const val SHOOT = "shoot"
@@ -196,6 +199,7 @@ object ConstKeys {
     const val BOOLEAN = "boolean"
     const val BODY_LABELS = "body_labels"
     const val SPAWNS = "spawns"
+    const val SPAWN = "spawn"
     const val ROOM = "room"
     const val BOSS = "boss"
     const val ATLAS = "atlas"

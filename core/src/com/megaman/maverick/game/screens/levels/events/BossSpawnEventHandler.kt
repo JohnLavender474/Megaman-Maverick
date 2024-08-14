@@ -33,15 +33,10 @@ class BossSpawnEventHandler(private val game: MegamanMaverickGame) : Updatable {
             val boss = EntityFactories.fetch(EntityType.BOSS, bossName)!! as AbstractBoss
             boss.ready = false
             game.engine.spawn(boss, bossSpawnProps)
-            game.eventsMan.submitEvent(
-                Event(
-                    EventType.BEGIN_BOSS_SPAWN, props(ConstKeys.BOSS to boss)
-                )
-            )
+            game.eventsMan.submitEvent(Event(EventType.BEGIN_BOSS_SPAWN, props(ConstKeys.BOSS to boss)))
         }
 
         spawnTimer.runOnFinished = {
-            game.engine.systems.forEach { it.on = true }
             game.eventsMan.submitEvent(Event(EventType.END_BOSS_SPAWN, props(ConstKeys.MINI to isMini)))
 
             if (!isMini) {

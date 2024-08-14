@@ -189,7 +189,9 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         Robbit::class to dmgNeg(3),
         Pipi::class to dmgNeg(3),
         PipiEgg::class to dmgNeg(3),
-        Copipi::class to dmgNeg(3)
+        Copipi::class to dmgNeg(3),
+        MechaDragonMiniBoss::class to dmgNeg(3),
+        SpitFireball::class to dmgNeg(3)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 

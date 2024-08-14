@@ -1,8 +1,10 @@
 package com.megaman.maverick.game.entities.bosses
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
@@ -22,6 +24,8 @@ import com.engine.common.shapes.getCenter
 import com.engine.common.shapes.toGameRectangle
 import com.engine.common.time.Timer
 import com.engine.damage.IDamager
+import com.engine.drawables.shapes.DrawableShapesComponent
+import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setCenter
@@ -235,14 +239,23 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimate
         val body = Body(BodyType.ABSTRACT)
         body.setSize(2.85f * ConstVals.PPM)
 
+        val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body.getBodyBounds() }
+
         val bodyFixture = Fixture(body, FixtureType.BODY, GameCircle().setRadius(1.35f * ConstVals.PPM))
         body.addFixture(bodyFixture)
+        bodyFixture.rawShape.color = Color.GRAY
+        debugShapes.add { bodyFixture.getShape() }
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(1.425f * ConstVals.PPM))
         body.addFixture(damagerFixture)
+        damagerFixture.rawShape.color = Color.RED
+        debugShapes.add { damagerFixture.getShape() }
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameCircle().setRadius(1.425f * ConstVals.PPM))
         body.addFixture(damageableFixture)
+        damageableFixture.rawShape.color = Color.PURPLE
+        debugShapes.add { damageableFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.fixtures.forEach {
@@ -251,6 +264,8 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimate
                 )
             }
         }
+
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
