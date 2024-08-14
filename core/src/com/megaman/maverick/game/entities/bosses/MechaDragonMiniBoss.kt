@@ -54,7 +54,6 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
-import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import kotlin.reflect.KClass
@@ -86,11 +85,10 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(2),
-        Fireball::class to dmgNeg(3),
+        Bullet::class to dmgNeg(1),
         ChargedShot::class to dmgNeg {
             it as ChargedShot
-            if (it.fullyCharged) 3 else 2
+            if (it.fullyCharged) 2 else 1
         },
         ChargedShotExplosion::class to dmgNeg {
             it as ChargedShotExplosion
@@ -170,6 +168,11 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         chargeDelayTimer.reset()
 
         loop.reset()
+    }
+
+    override fun triggerDefeat() {
+        super.triggerDefeat()
+        body.physics.velocity.setZero()
     }
 
     private fun fire() {
