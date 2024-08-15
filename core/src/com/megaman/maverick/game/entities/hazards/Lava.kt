@@ -14,12 +14,16 @@ import com.engine.audio.AudioComponent
 import com.engine.common.enums.Direction
 import com.engine.common.enums.Facing
 import com.engine.common.extensions.getTextureAtlas
+import com.engine.common.extensions.objectMapOf
+import com.engine.common.extensions.objectSetOf
 import com.engine.common.interfaces.IFaceable
 import com.engine.common.interfaces.UpdateFunction
 import com.engine.common.interfaces.isFacing
 import com.engine.common.objects.Matrix
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.GameRectangle
+import com.engine.cullables.CullableOnEvent
+import com.engine.cullables.CullablesComponent
 import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sorting.DrawingSection
@@ -27,10 +31,7 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
-import com.engine.entities.contracts.IAnimatedEntity
-import com.engine.entities.contracts.IAudioEntity
-import com.engine.entities.contracts.IBodyEntity
-import com.engine.entities.contracts.ISpritesEntity
+import com.engine.entities.contracts.*
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.Body
 import com.engine.world.BodyComponent
@@ -44,18 +45,19 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.overlapsGameCamera
+import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
-class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
-    IAudioEntity, IDirectionRotatable, IFaceable {
+class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity, ISpritesEntity,
+    IAnimatedEntity, IAudioEntity, IDirectionRotatable, IFaceable {
 
     companion object {
         const val TAG = "Lava"
         const val FLOW = "Flow"
         const val FALL = "Fall"
+        const val TOP = "Top"
         const val MOVE_BEFORE_KILL = "move_before_kill"
-        private const val SPEED = 10f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -70,6 +72,7 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
     private lateinit var moveTarget: Vector2
     private lateinit var bodyMatrix: Matrix<GameRectangle>
 
+    private var speed = 0f
     private var spritePriorityValue = 0
 
     private var moveBeforeKill = false
@@ -78,14 +81,18 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
-            regions.put(FLOW, atlas.findRegion("Lava/${FLOW}"))
-            regions.put("${FLOW}1", atlas.findRegion("Lava/${FLOW}1"))
-            regions.put("${FLOW}2", atlas.findRegion("Lava/${FLOW}2"))
-            regions.put("${FLOW}3", atlas.findRegion("Lava/${FLOW}3"))
-            regions.put(FALL, atlas.findRegion("Lava/${FALL}"))
+            regions.put(FLOW, atlas.findRegion("$TAG/${FLOW}"))
+            regions.put("${TOP}${FLOW}1", atlas.findRegion("$TAG/${TOP}${FLOW}1"))
+            regions.put("${TOP}${FLOW}2", atlas.findRegion("$TAG/${TOP}${FLOW}2"))
+            regions.put("${TOP}${FLOW}3", atlas.findRegion("$TAG/${TOP}${FLOW}3"))
+            regions.put("${FLOW}1", atlas.findRegion("$TAG/${FLOW}1"))
+            regions.put("${FLOW}2", atlas.findRegion("$TAG/${FLOW}2"))
+            regions.put("${FLOW}3", atlas.findRegion("$TAG/${FLOW}3"))
+            regions.put(FALL, atlas.findRegion("$TAG/${FALL}"))
         }
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
+        addComponent(defineCullablesComponent())
         addComponent(SpritesComponent())
         addComponent(AnimationsComponent())
         addComponent(AudioComponent())
@@ -112,6 +119,8 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
         val lavaStartY = spawnProps.getOrDefault("${ConstKeys.MOVE}_${ConstKeys.Y}", 0f, Float::class)
         moveTarget = body.getCenter().add(lavaStartX * ConstVals.PPM, lavaStartY * ConstVals.PPM)
 
+        speed = spawnProps.getOrDefault(ConstKeys.SPEED, 0f, Float::class)
+
         val dimensions = bounds.getSplitDimensions(ConstVals.PPM.toFloat())
         defineDrawables(dimensions.first, dimensions.second)
 
@@ -123,7 +132,6 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
 
     override fun kill(props: Properties?) =
         if (moveBeforeKill && !movingBeforeKill) moveBeforeKill() else super<MegaGameEntity>.kill(props)
-
 
     private fun moveBeforeKill() {
         movingBeforeKill = true
@@ -152,7 +160,7 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
         body.preProcess.put(ConstKeys.DEFAULT) {
             if (moving) {
                 val direction = moveTarget.cpy().sub(body.getCenter()).nor()
-                body.physics.velocity.set(direction.scl(SPEED * ConstVals.PPM))
+                body.physics.velocity.set(direction.scl(speed * ConstVals.PPM))
             } else body.physics.velocity.set(0f, 0f)
 
             (deathFixture.rawShape as GameRectangle).set(body)
@@ -161,6 +169,14 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
+    }
+
+    private fun defineCullablesComponent() : CullablesComponent {
+        val cullEvents = objectSetOf<Any>(EventType.BEGIN_ROOM_TRANS, EventType.PLAYER_SPAWN)
+        val cullOnEvents = CullableOnEvent({ cullEvents.contains(it) }, cullEvents)
+        runnablesOnSpawn.add { game.eventsMan.addListener(cullOnEvents) }
+        runnablesOnDestroy.add { game.eventsMan.removeListener(cullOnEvents) }
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS to cullOnEvents))
     }
 
     private fun defineDrawables(rows: Int, cols: Int) {
@@ -173,10 +189,10 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
                 val sprite = GameSprite()
                 sprite.setSize(ConstVals.PPM.toFloat())
 
-                val key = "lava_$${col}_${row}"
-                sprites.put(key, sprite)
+                val spriteKey = "lava_$${col}_${row}"
+                sprites.put(spriteKey, sprite)
 
-                updateFunctions.put(key, UpdateFunction { _, _sprite ->
+                updateFunctions.put(spriteKey, UpdateFunction { _, _sprite ->
                     val bounds = bodyMatrix[col, row]!!
                     _sprite.setCenter(bounds.getCenter())
                     _sprite.setOriginCenter()
@@ -188,7 +204,9 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
 
                 val region = if (type == FLOW) {
                     val index = ((row + col) % 3) + 1
-                    regions.get("${FLOW}$index")
+                    var regionKey = "$FLOW$index"
+                    if (row == rows - 1) regionKey = "$TOP$regionKey"
+                    regions.get(regionKey)
                 } else regions.get(FALL)
 
                 val animation = Animation(region!!, 3, 1, 0.1f, true)

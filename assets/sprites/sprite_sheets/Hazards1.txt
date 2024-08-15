@@ -1,5 +1,5 @@
 Hazards1.png
-size: 256, 826
+size: 255, 922
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -89,7 +89,7 @@ Flame3/Whoosh
   index: -1
 FlameColumn
   rotate: false
-  xy: 150, 590
+  xy: 150, 686
   size: 96, 236
   orig: 96, 236
   offset: 0, 0
@@ -124,7 +124,7 @@ LaserBeamer
   index: -1
 Lava/Fall
   rotate: false
-  xy: 0, 333
+  xy: 64, 333
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
@@ -138,28 +138,49 @@ Lava/Flow
   index: -1
 Lava/Flow1
   rotate: false
-  xy: 32, 333
+  xy: 96, 333
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
   index: -1
 Lava/Flow2
   rotate: false
-  xy: 64, 333
+  xy: 128, 333
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
   index: -1
 Lava/Flow3
   rotate: false
-  xy: 96, 333
+  xy: 160, 333
+  size: 32, 96
+  orig: 32, 96
+  offset: 0, 0
+  index: -1
+Lava/TopFlow1
+  rotate: false
+  xy: 192, 333
+  size: 32, 96
+  orig: 32, 96
+  offset: 0, 0
+  index: -1
+Lava/TopFlow2
+  rotate: false
+  xy: 0, 429
+  size: 32, 96
+  orig: 32, 96
+  offset: 0, 0
+  index: -1
+Lava/TopFlow3
+  rotate: false
+  xy: 32, 429
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
   index: -1
 LavaBeam
   rotate: false
-  xy: 0, 590
+  xy: 0, 686
   size: 150, 134
   orig: 150, 134
   offset: 0, 0
@@ -187,7 +208,7 @@ LavaBeamer/On
   index: -1
 LavaBeamer/SwitchingOn
   rotate: false
-  xy: 192, 245
+  xy: 0, 333
   size: 64, 88
   orig: 64, 88
   offset: 0, 0
@@ -208,7 +229,7 @@ LavaDrop/Landed
   index: -1
 Saw
   rotate: false
-  xy: 0, 461
+  xy: 0, 557
   size: 255, 129
   orig: 255, 129
   offset: 0, 0
@@ -292,7 +313,7 @@ SwingingAxe
   index: -1
 SwingingAxe_HandleEndCentered
   rotate: false
-  xy: 128, 333
+  xy: 64, 429
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
