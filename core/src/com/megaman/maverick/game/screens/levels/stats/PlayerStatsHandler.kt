@@ -26,10 +26,8 @@ import com.megaman.maverick.game.events.EventType
 class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatable, IDrawable<Batch> {
 
     companion object {
-        private const val BAR_X: Float = 0.75f * ConstVals.PPM
-        private const val BAR_Y: Float = 7f * ConstVals.PPM
-        private const val SPECIAL_ITEM_DUR = .35f
-        private const val DUR_PER_BIT = .1f
+        private const val SPECIAL_ITEM_DUR = 0.35f
+        private const val DUR_PER_BIT = 0.1f
     }
 
     private val engine = megaman.game.engine
@@ -52,8 +50,8 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
 
         healthBar = BitsBar(assMan,
             "Bit",
-            BAR_X,
-            BAR_Y,
+            ConstVals.HEALTH_BAR_X * ConstVals.PPM,
+            ConstVals.STATS_BAR_Y * ConstVals.PPM,
             { megaman.getHealthPoints().current },
             { megaman.getHealthPoints().max })
         healthBar.init()
@@ -70,8 +68,8 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
 
             val weaponBar = BitsBar(assMan,
                 bitSource,
-                BAR_X + ConstVals.PPM,
-                BAR_Y,
+                ConstVals.WEAPON_BAR_X * ConstVals.PPM,
+                ConstVals.STATS_BAR_Y * ConstVals.PPM,
                 { megaman.ammo },
                 { MegamanValues.MAX_WEAPON_AMMO })
 

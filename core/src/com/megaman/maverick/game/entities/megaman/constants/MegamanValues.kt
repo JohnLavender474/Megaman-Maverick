@@ -2,7 +2,7 @@ package com.megaman.maverick.game.entities.megaman.constants
 
 object MegamanValues {
     const val MAX_WEAPON_AMMO = 30
-    const val START_HEALTH = 14
+    const val START_HEALTH = 30 // 14
 
     const val CART_RIDE_MAX_SPEED = 8f
     const val CART_JUMP_VEL = 18f
@@ -22,37 +22,37 @@ object MegamanValues {
     const val WALL_JUMP_VEL = 42f
 
     const val WALL_JUMP_HORIZONTAL = 8f
-    const val WALL_JUMP_IMPETUS_TIME = .1f
+    const val WALL_JUMP_IMPETUS_TIME = 0.1f
 
-    const val GROUND_GRAVITY = -.0015f
-    const val GRAVITY = -.375f
-    const val ICE_GRAVITY = -.5f
-    const val WATER_GRAVITY = -.25f
-    const val WATER_ICE_GRAVITY = -.4f
+    const val GROUND_GRAVITY = -0.0015f
+    const val GRAVITY = -0.375f
+    const val ICE_GRAVITY = -0.5f
+    const val WATER_GRAVITY = -0.25f
+    const val WATER_ICE_GRAVITY = -0.4f
 
     const val AIR_DASH_VEL = 12f
     const val AIR_DASH_END_BUMP = 3f
     const val WATER_AIR_DASH_VEL = 6f
     const val WATER_AIR_DASH_END_BUMP = 2f
-    const val MAX_AIR_DASH_TIME = .25f
+    const val MAX_AIR_DASH_TIME = 0.25f
 
     const val JETPACK_Y_IMPULSE = 2f
     const val JETPACK_TIME_PER_BIT = 0.25f
 
     const val GROUND_SLIDE_VEL = 12f
     const val WATER_GROUND_SLIDE_VEL = 6f
-    const val MAX_GROUND_SLIDE_TIME = .35f
+    const val MAX_GROUND_SLIDE_TIME = 0.35f
 
     const val CLIMB_VEL = 2.5f
 
     const val DAMAGE_DURATION = .75f
     const val DAMAGE_RECOVERY_TIME = 1.5f
-    const val DAMAGE_FLASH_DURATION = .05f
+    const val DAMAGE_FLASH_DURATION = 0.05f
 
-    const val TIME_TO_HALFWAY_CHARGED = .5f
+    const val TIME_TO_HALFWAY_CHARGED = 0.5f
     const val TIME_TO_FULLY_CHARGED = 1.25f
 
-    const val SHOOT_ANIM_TIME = .3f
+    const val SHOOT_ANIM_TIME = 0.3f
 
     const val DMG_X = 8f
     const val DMG_Y = 5f

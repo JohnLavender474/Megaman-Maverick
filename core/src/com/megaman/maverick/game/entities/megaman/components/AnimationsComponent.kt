@@ -26,7 +26,8 @@ private lateinit var lastAnimationKey: String
 
 internal fun Megaman.defineAnimationsComponent(): AnimationsComponent {
     val megamanAnimationKeySupplier = {
-        if (game.getProperty(ConstKeys.ROOM_TRANSITION) == true) lastAnimationKey
+        if (!roomTransPauseTimer.isFinished()) null
+        else if (game.isProperty(ConstKeys.ROOM_TRANSITION, true)) lastAnimationKey
         else {
             lastAnimationKey =
                 if (isBehaviorActive(BehaviorType.JETPACKING)) {

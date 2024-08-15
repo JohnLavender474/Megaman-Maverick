@@ -62,7 +62,6 @@ import com.megaman.maverick.game.controllers.loadButtons
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
-import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_CLIMB_BEHAVIOR_TAG
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.ScreenEnum
@@ -84,6 +83,8 @@ import com.megaman.maverick.game.world.MegaCollisionHandler
 import com.megaman.maverick.game.world.MegaContactListener
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.reflect.KClass
+import kotlin.reflect.cast
 
 class MegamanMaverickGame : Game(), IEventListener, IPropertizable {
 
@@ -92,7 +93,7 @@ class MegamanMaverickGame : Game(), IEventListener, IPropertizable {
         const val DEBUG_TEXT = false
         const val DEBUG_SHAPES = false
         const val DEFAULT_VOLUME = 0.5f
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(MEGAMAN_CLIMB_BEHAVIOR_TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.FEET, FixtureType.BLOCK)
         }
@@ -102,7 +103,6 @@ class MegamanMaverickGame : Game(), IEventListener, IPropertizable {
         EventType.TURN_CONTROLLER_ON,
         EventType.TURN_CONTROLLER_OFF
     )
-
     override val properties = Properties()
 
     val viewports = ObjectMap<String, Viewport>()
@@ -177,6 +177,8 @@ class MegamanMaverickGame : Game(), IEventListener, IPropertizable {
     fun getSystems(): ObjectMap<String, IGameSystem> =
         properties.get(ConstKeys.SYSTEMS) as ObjectMap<String, IGameSystem>
 
+    fun <T : IGameSystem> getSystem(clazz: KClass<T>) = clazz.cast(getSystems()[clazz.simpleName]!!)
+
     fun setGraphMap(graphMap: IGraphMap) = properties.put(ConstKeys.WORLD_GRAPH_MAP, graphMap)
 
     fun getGraphMap(): IGraphMap? = properties.get(ConstKeys.WORLD_GRAPH_MAP) as IGraphMap?
@@ -247,20 +249,39 @@ class MegamanMaverickGame : Game(), IEventListener, IPropertizable {
         screens.put(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name, SimpleInitGameScreen(this))
 
         // startLevelScreen(Level.MOON_MAN)
-        // startLevelScreen(Level.INFERNO_MAN)
+        startLevelScreen(Level.INFERNO_MAN)
         // startLevelScreen(Level.REACTOR_MAN)
         // startLevelScreen(Level.FREEZE_MAN)
         // startLevelScreen(Level.TIMBER_WOMAN)
 
         // TEST LEVELS
         // startLevelScreen(Level.TEST1)
-        startLevelScreen(Level.TEST2)
+        // startLevelScreen(Level.TEST2)
     }
 
     override fun onEvent(event: Event) {
         when (event.key) {
-            EventType.TURN_CONTROLLER_OFF -> controllerPoller.on = false
-            EventType.TURN_CONTROLLER_ON -> controllerPoller.on = true
+            EventType.TURN_CONTROLLER_OFF -> {
+                controllerPoller.on = false
+                val turnSystemOff =
+                    event.getOrDefaultProperty(
+                        "${ConstKeys.CONTROLLER}_${ConstKeys.SYSTEM}_${ConstKeys.OFF}",
+                        true,
+                        Boolean::class
+                    )
+                if (turnSystemOff) getSystem(ControllerSystem::class).on = false
+            }
+
+            EventType.TURN_CONTROLLER_ON -> {
+                controllerPoller.on = true
+                val turnSystemOn =
+                    event.getOrDefaultProperty(
+                        "${ConstKeys.CONTROLLER}_${ConstKeys.SYSTEM}_${ConstKeys.ON}",
+                        true,
+                        Boolean::class
+                    )
+                if (turnSystemOn) getSystem(ControllerSystem::class).on = true
+            }
         }
     }
 

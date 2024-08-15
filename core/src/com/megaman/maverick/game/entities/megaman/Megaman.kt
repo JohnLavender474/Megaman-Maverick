@@ -215,7 +215,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
 
     val weaponHandler = MegamanWeaponHandler(this)
 
-    private val canChargeCurrentWeapon: Boolean
+    val canChargeCurrentWeapon: Boolean
         get() = weaponHandler.isChargeable(currentWeapon)
 
     val chargeStatus: MegaChargeStatus
@@ -336,6 +336,8 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
 
     internal var applyMovementScalarToBullet = false
 
+    internal val roomTransPauseTimer = Timer(ConstVals.ROOM_TRANS_DELAY_DURATION)
+
     override fun init() {
         addComponent(AudioComponent())
         addComponent(defineUpdatablesComponent())
@@ -400,6 +402,8 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         gravityScalar = spawnProps.getOrDefault("${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}", 1f, Float::class)
         movementScalar = spawnProps.getOrDefault("${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}", 1f, Float::class)
         applyMovementScalarToBullet = spawnProps.getOrDefault(ConstKeys.APPLY_SCALAR_TO_CHILDREN, false, Boolean::class)
+
+        roomTransPauseTimer.setToEnd()
     }
 
     override fun onDestroy() {
@@ -441,6 +445,8 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
     override fun onEvent(event: Event) {
         when (event.key) {
             EventType.BEGIN_ROOM_TRANS, EventType.CONTINUE_ROOM_TRANS -> {
+                if (event.key == EventType.BEGIN_ROOM_TRANS) roomTransPauseTimer.reset()
+
                 val position = event.properties.get(ConstKeys.POSITION) as Vector2
                 GameLogger.debug(
                     MEGAMAN_EVENT_LISTENER_TAG, "BEGIN/CONTINUE ROOM TRANS: position = $position"

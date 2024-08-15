@@ -34,6 +34,7 @@ internal fun Megaman.defineUpdatablesComponent() = UpdatablesComponent({ delta -
 
     shootAnimTimer.update(delta)
     wallJumpTimer.update(delta)
+    roomTransPauseTimer.update(delta)
 
     GameLogger.debug(MEGAMAN_UPDATE_COMPONENT_TAG, buildString {
         append("Body: $body\n")

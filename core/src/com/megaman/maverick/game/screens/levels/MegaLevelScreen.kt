@@ -36,7 +36,6 @@ import com.engine.screens.levels.tiledmap.TiledMapLevelScreen
 import com.engine.spawns.ISpawner
 import com.engine.spawns.Spawn
 import com.engine.spawns.SpawnsManager
-import com.engine.systems.IGameSystem
 import com.engine.world.WorldSystem
 import com.megaman.maverick.game.ConstFuncs
 import com.megaman.maverick.game.ConstKeys
@@ -107,8 +106,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
 
     val engine: GameEngine
         get() = game.engine as GameEngine
-    val systemsMap: ObjectMap<String, IGameSystem>
-        get() = game.getSystems()
     val megaman: Megaman
         get() = game.megaman
     val eventsMan: IEventsManager
@@ -177,7 +174,9 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
             gameCamera,
             ROOM_DISTANCE_ON_TRANSITION * ConstVals.PPM,
             ROOM_INTERPOLATION_SCALAR * ConstVals.PPM,
-            vector2Of(TRANSITION_SCANNER_SIZE * ConstVals.PPM)
+            vector2Of(TRANSITION_SCANNER_SIZE * ConstVals.PPM),
+            ConstVals.ROOM_TRANS_DELAY_DURATION,
+            ConstVals.ROOM_TRANS_DURATION
         )
         cameraManagerForRooms.interpolate = INTERPOLATE_GAME_CAM
         cameraManagerForRooms.interpolationScalar = 5f
@@ -220,7 +219,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
             game.putProperty(ConstKeys.ROOM_TRANSITION, true)
         }
         cameraManagerForRooms.continueTransition = { _ ->
-            if (cameraManagerForRooms.delayJustFinished) systemsMap.get(AnimationsSystem::class.simpleName)?.on = true
+            if (cameraManagerForRooms.delayJustFinished) game.getSystem(AnimationsSystem::class).on = true
             eventsMan.submitEvent(
                 Event(
                     EventType.CONTINUE_ROOM_TRANS,
@@ -410,11 +409,11 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
                     "onEvent(): Gate init opening --> start room transition"
                 )
                 val systemsToTurnOff = gdxArrayOf(
-                    MotionSystem::class.simpleName,
-                    BehaviorsSystem::class.simpleName,
-                    WorldSystem::class.simpleName
+                    MotionSystem::class,
+                    BehaviorsSystem::class,
+                    WorldSystem::class,
                 )
-                systemsToTurnOff.forEach { systemsMap.get(it).on = false }
+                systemsToTurnOff.forEach { game.getSystem(it).on = false }
                 megaman.body.physics.velocity.setZero()
                 eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
             }
@@ -422,11 +421,11 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
             EventType.GATE_INIT_CLOSING -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Gate init closing")
                 val systemsToTurnOn = gdxArrayOf(
-                    MotionSystem::class.simpleName,
-                    BehaviorsSystem::class.simpleName,
-                    WorldSystem::class.simpleName
+                    MotionSystem::class,
+                    BehaviorsSystem::class,
+                    WorldSystem::class
                 )
-                systemsToTurnOn.forEach { systemsMap.get(it).on = true }
+                systemsToTurnOn.forEach { game.getSystem(it).on = true }
 
                 val roomName = cameraManagerForRooms.currentGameRoom?.name
                 if (roomName != null && roomName != ConstKeys.BOSS_ROOM && !roomName.contains(ConstKeys.MINI))
@@ -462,19 +461,12 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
             EventType.BOSS_DEFEATED -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Boss defeated")
                 val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
-
                 if (!boss.mini) audioMan.unsetMusic()
-
                 engine.forEachEntity { if (it.isAny(IDamager::class, IHazard::class) && it != boss) it.kill() }
-
-                /*
-                val systemsToSwitch = gdxArrayOf(MotionSystem::class, BehaviorsSystem::class)
-                engine.systems.forEach { if (systemsToSwitch.contains(it::class)) it.on = false }
-                 */
-
-                eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
+                eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF, props(
+                    "${ConstKeys.CONTROLLER}_${ConstKeys.SYSTEM}_${ConstKeys.OFF}" to false
+                )))
                 megaman.canBeDamaged = false
-
                 entityStatsHandler.unset()
             }
 

@@ -17,6 +17,7 @@ import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.interfaces.IFaceable
 import com.engine.common.interfaces.isFacing
+import com.engine.common.interfaces.swapFacing
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
@@ -90,7 +91,8 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
     private val shootTimer = Timer(SHOOT_DUR, TimeMarkedRunnable(SHOOT_TIME) { shoot() })
     private val afterShootDelayTimer = Timer(AFTER_SHOOT_DELAY)
-    private val scanner = GameRectangle()
+    private val shootScanner = GameRectangle()
+    private val turnAroundScanner = GameRectangle()
     private lateinit var animations: ObjectMap<String, IAnimation>
 
     override fun init() {
@@ -102,7 +104,10 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         }
         super<AbstractEnemy>.init()
         addComponent(defineAnimationsComponent())
-        addDebugShapeSupplier { scanner }
+        shootScanner.color = Color.BLUE
+        addDebugShapeSupplier { shootScanner }
+        turnAroundScanner.color = Color.GREEN
+        addDebugShapeSupplier { turnAroundScanner }
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -177,11 +182,10 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                 return@add
             }
 
-            scanner.setSize(
-                (if (directionRotation!!.isVertical()) Vector2(5f, 0.75f)
-                else Vector2(0.75f, 5f)).scl(ConstVals.PPM.toFloat())
-            )
-
+            val size = (if (directionRotation!!.isVertical()) Vector2(5f, 0.75f)
+            else Vector2(0.75f, 5f)).scl(ConstVals.PPM.toFloat())
+            shootScanner.setSize(size)
+            turnAroundScanner.setSize(size)
 
             val position = when (directionRotation!!) {
                 Direction.UP -> if (isFacing(Facing.LEFT)) Position.CENTER_RIGHT else Position.CENTER_LEFT
@@ -189,14 +193,16 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                 Direction.LEFT -> if (isFacing(Facing.LEFT)) Position.TOP_CENTER else Position.BOTTOM_CENTER
                 Direction.RIGHT -> if (isFacing(Facing.LEFT)) Position.BOTTOM_CENTER else Position.TOP_CENTER
             }
-            val bodyPosition = body.getPositionPoint(position)
-            scanner.positionOnPoint(bodyPosition, position)
+            val shootScannerPosition = body.getPositionPoint(position)
+            shootScanner.positionOnPoint(shootScannerPosition, position)
+            val turnAroundScannerPosition = body.getPositionPoint(position.opposite())
+            turnAroundScanner.positionOnPoint(turnAroundScannerPosition, position.opposite())
 
-            if (getMegaman().body.overlaps(scanner as Rectangle)) {
+            if (getMegaman().body.overlaps(shootScanner as Rectangle)) {
                 body.physics.velocity.setZero()
                 shootTimer.reset()
                 return@add
-            }
+            } else if (getMegaman().body.overlaps(turnAroundScanner as Rectangle)) swapFacing()
 
             body.physics.velocity = (when (directionRotation!!) {
                 Direction.UP -> Vector2(MOVE_SPEED * facing.value, 0f)

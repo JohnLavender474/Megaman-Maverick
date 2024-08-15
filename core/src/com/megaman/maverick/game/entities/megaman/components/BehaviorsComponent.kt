@@ -423,7 +423,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 Direction.LEFT, Direction.RIGHT -> body.setCenterY(ladder.body.getCenter().y)
             }
 
-            if (shooting || game.getProperty(ConstKeys.ROOM_TRANSITION) == true) {
+            if (shooting || game.isProperty(ConstKeys.ROOM_TRANSITION, true)) {
                 GameLogger.debug(MEGAMAN_CLIMB_BEHAVIOR_TAG, "Shooting or room transition")
                 body.physics.velocity.setZero()
                 return

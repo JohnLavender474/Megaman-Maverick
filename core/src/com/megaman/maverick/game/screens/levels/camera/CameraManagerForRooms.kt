@@ -24,25 +24,27 @@ class CameraManagerForRooms(
     val camera: Camera,
     var distanceOnTransition: Float,
     var interpolationScalar: Float,
-    var transitionScannerDimensions: Vector2
+    var transitionScannerDimensions: Vector2,
+    transDelay: Float,
+    transDuration: Float,
+    var interpolate: Boolean = true,
+    var beginTransition: (() -> Unit)? = null,
+    var continueTransition: ((Float) -> Unit)? = null,
+    var endTransition: (() -> Unit)? = null
 ) : Updatable, Resettable {
 
     companion object {
         const val TAG = "CameraManagerForRooms"
-        const val DELAY_DURATION = 0.35f
-        const val TRANS_DURATION = 1f
     }
 
-    private val delayTimer = Timer(DELAY_DURATION)
-    private val transTimer = Timer(TRANS_DURATION)
+    private val delayTimer = Timer(transDelay)
+    private val transTimer = Timer(transDuration)
 
     private val transitionStart = Vector2()
     private val transitionTarget = Vector2()
 
     private val focusStart = Vector2()
     private val focusTarget = Vector2()
-
-    var interpolate = true
 
     var gameRooms: Array<RectangleMapObject>? = null
     var focus: IBoundsSupplier? = null
@@ -81,10 +83,6 @@ class CameraManagerForRooms(
 
     private val transitionTimerRatio: Float
         get() = transTimer.getRatio()
-
-    var beginTransition: (() -> Unit)? = null
-    var continueTransition: ((Float) -> Unit)? = null
-    var endTransition: (() -> Unit)? = null
 
     private var reset = false
 

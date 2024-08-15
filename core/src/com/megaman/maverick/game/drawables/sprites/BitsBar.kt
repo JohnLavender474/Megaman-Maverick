@@ -17,14 +17,8 @@ class BitsBar(
     private val x: Float,
     private val y: Float,
     private val countSupplier: () -> Int,
-    private val maxSupplier: () -> Int = { STANDARD_MAX_BITS },
+    private val maxSupplier: () -> Int = { ConstVals.STANDARD_MAX_STAT_BITS },
 ) : Initializable, IDrawable<Batch> {
-
-    companion object {
-        private const val STANDARD_MAX_BITS = 30
-        private const val BIT_WIDTH = ConstVals.PPM / 2f
-        private const val BIT_HEIGHT = ConstVals.PPM / 8f
-    }
 
     private lateinit var blackBackground: Sprite
     private val bitSprites = Array<Sprite>()
@@ -34,10 +28,10 @@ class BitsBar(
     override fun init() {
         if (initialized) return
 
-        for (i in 0 until STANDARD_MAX_BITS) {
+        for (i in 0 until ConstVals.STANDARD_MAX_STAT_BITS) {
             val bit = Sprite(assMan.getTextureRegion(TextureAsset.UI_1.source, bitRegion))
-            bit.setSize(BIT_WIDTH, BIT_HEIGHT)
-            bit.setPosition(x, y + i * BIT_HEIGHT)
+            bit.setSize(ConstVals.STAT_BIT_WIDTH * ConstVals.PPM, ConstVals.STAT_BIT_HEIGHT * ConstVals.PPM)
+            bit.setPosition(x, y + i * ConstVals.STAT_BIT_HEIGHT * ConstVals.PPM)
             bitSprites.add(bit)
         }
 
@@ -48,7 +42,7 @@ class BitsBar(
     }
 
     override fun draw(drawer: Batch) {
-        blackBackground.setSize(BIT_WIDTH, maxSupplier() * BIT_HEIGHT)
+        blackBackground.setSize(ConstVals.STAT_BIT_WIDTH * ConstVals.PPM, maxSupplier() * ConstVals.STAT_BIT_HEIGHT * ConstVals.PPM)
         blackBackground.draw(drawer)
 
         for (i in 0 until min(countSupplier(), maxSupplier())) bitSprites.get(i).draw(drawer)

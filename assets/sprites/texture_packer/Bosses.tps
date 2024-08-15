@@ -390,6 +390,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Bosses/MechaDragonMiniBoss/Defeated.png</key>
             <key type="filename">../frames/Bosses/MechaDragonMiniBoss/Fly.png</key>
             <key type="filename">../frames/Bosses/MechaDragonMiniBoss/Shoot.png</key>
             <struct type="IndividualSpriteSettings">
@@ -423,6 +424,7 @@
             </struct>
             <key type="filename">../frames/Bosses/MoonHeadMiniBoss/Angry.png</key>
             <key type="filename">../frames/Bosses/MoonHeadMiniBoss/Dark.png</key>
+            <key type="filename">../frames/Bosses/MoonHeadMiniBoss/Defeated.png</key>
             <key type="filename">../frames/Bosses/MoonHeadMiniBoss/Shoot.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>

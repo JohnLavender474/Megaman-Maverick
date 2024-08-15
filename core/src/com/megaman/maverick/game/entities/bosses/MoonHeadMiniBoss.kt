@@ -71,8 +71,8 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimate
         private const val DARK_DUR = 0.5f
         private const val AWAKEN_DUR = 1.75f
         private const val SHOOT_INIT_DELAY = 0.25f
-        private const val SHOOT_DELAY = 0.15f
-        private const val SHOOT_DUR = 0.65f
+        private const val SHOOT_DELAY = 0.25f
+        private const val SHOOT_DUR = 0.75f
         private const val CRUMBLE_DUR = 0.3f
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -107,8 +107,6 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimate
 
     private lateinit var area: GameRectangle
     private lateinit var arcMotion: ArcMotion
-
-    private var negativeArc = false
     private var firstSpawn: Vector2? = null
 
     override fun init() {
@@ -119,6 +117,7 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimate
             regions.put("angry", atlas.findRegion("$TAG/Angry"))
             regions.put("shoot", atlas.findRegion("$TAG/Shoot"))
             regions.put("crumble", atlas.findRegion("$TAG/Crumble"))
+            regions.put("defeated", atlas.findRegion("$TAG/Defeated"))
         }
         super<AbstractBoss>.init()
         addComponent(defineAnimationsComponent())
@@ -129,7 +128,6 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimate
         area = spawnProps.get(ConstKeys.AREA, RectangleMapObject::class)!!.rectangle.toGameRectangle()
         loop.reset()
         timers.values().forEach { it.reset() }
-        negativeArc = false
         firstSpawn = spawnProps.get(ConstKeys.FIRST, RectangleMapObject::class)!!.rectangle.getCenter()
     }
 
@@ -211,10 +209,9 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimate
                             startPosition = body.getCenter(),
                             targetPosition = getMegaman().body.getCenter(),
                             speed = ARC_SPEED * ConstVals.PPM,
-                            arcFactor = ARC_FACTOR * if (negativeArc) -1f else 1f,
+                            arcFactor = ARC_FACTOR * (if (getMegaman().body.getMaxY() > body.y) -1f else 1f),
                             continueBeyondTarget = true
                         )
-                        negativeArc = !negativeArc
 
                         loop.next()
                         return@add
@@ -283,7 +280,8 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimate
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = {
-            when (loop.getCurrent()) {
+            if (defeated) "defeated"
+            else when (loop.getCurrent()) {
                 MoonHeadState.DELAY, MoonHeadState.DARK -> "dark"
                 MoonHeadState.AWAKEN -> "awaken"
                 MoonHeadState.SHOOT -> "shoot"
@@ -296,7 +294,8 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimate
             "awaken" to Animation(regions.get("awaken"), 5, 2, 0.1f, false),
             "shoot" to Animation(regions.get("shoot")),
             "angry" to Animation(regions.get("angry")),
-            "crumble" to Animation(regions.get("crumble"), 1, 3, 0.1f, false)
+            "crumble" to Animation(regions.get("crumble"), 1, 3, 0.1f, false),
+            "defeated" to Animation(regions.get("defeated"))
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

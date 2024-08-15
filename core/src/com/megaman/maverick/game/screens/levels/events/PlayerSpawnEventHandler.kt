@@ -10,7 +10,6 @@ import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.interfaces.Initializable
 import com.engine.common.interfaces.Updatable
 import com.engine.common.time.Timer
-import com.engine.controller.ControllerSystem
 import com.engine.drawables.IDrawable
 import com.engine.drawables.fonts.BitmapFontHandle
 import com.engine.drawables.sprites.setSize
@@ -154,7 +153,6 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
 
         if (beamTransitionTimer.isJustFinished()) {
             GameLogger.debug(TAG, "Beam transition timer just finished")
-            game.getSystems().get(ControllerSystem::class.simpleName).on = true
 
             megaman.body.physics.gravityOn = true
             megaman.canBeDamaged = true
