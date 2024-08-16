@@ -1,7 +1,5 @@
 package com.megaman.maverick.game.screens.levels
 
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
@@ -92,7 +90,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
         EventType.GATE_INIT_OPENING,
         EventType.NEXT_ROOM_REQ,
         EventType.GATE_INIT_CLOSING,
-        EventType.REQ_SHAKE_CAM,
+        EventType.SHAKE_CAM,
         EventType.ENTER_BOSS_ROOM,
         EventType.BEGIN_BOSS_SPAWN,
         EventType.END_BOSS_SPAWN,
@@ -176,34 +174,15 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
             ROOM_INTERPOLATION_SCALAR * ConstVals.PPM,
             vector2Of(TRANSITION_SCANNER_SIZE * ConstVals.PPM),
             ConstVals.ROOM_TRANS_DELAY_DURATION,
-            ConstVals.ROOM_TRANS_DURATION
+            ConstVals.ROOM_TRANS_DURATION,
         )
         cameraManagerForRooms.interpolate = INTERPOLATE_GAME_CAM
         cameraManagerForRooms.interpolationScalar = 5f
         cameraManagerForRooms.focus = megaman
-        cameraShaker = CameraShaker(gameCamera)
-
-        /*
-        val systemsToSwitch =
-            gdxArrayOf(
-                AnimationsSystem::class,
-                ControllerSystem::class,
-                MotionSystem::class,
-                UpdatablesSystem::class,
-                BehaviorsSystem::class,
-                WorldSystem::class,
-                AudioSystem::class
-            )
-         */
         cameraManagerForRooms.beginTransition = {
             GameLogger.debug(TAG, "Begin transition logic for camera manager")
+
             eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
-            /*
-            systemsToSwitch.forEach {
-                GameLogger.debug(TAG, "Turning off system: ${it.simpleName}")
-                systemsMap.get(it.simpleName).on = false
-            }
-             */
             eventsMan.submitEvent(
                 Event(
                     EventType.BEGIN_ROOM_TRANS,
@@ -214,12 +193,14 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
                     )
                 )
             )
+
             engine.forEachEntity { if (it is AbstractEnemy) it.kill() }
 
             game.putProperty(ConstKeys.ROOM_TRANSITION, true)
         }
         cameraManagerForRooms.continueTransition = { _ ->
             if (cameraManagerForRooms.delayJustFinished) game.getSystem(AnimationsSystem::class).on = true
+
             eventsMan.submitEvent(
                 Event(
                     EventType.CONTINUE_ROOM_TRANS,
@@ -248,14 +229,21 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
                     }
 
                 eventsMan.submitEvent(Event(roomEvent, props))
-            } else eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON)) /* systemsToSwitch.forEach {
-                GameLogger.debug(TAG, "Turning on system: ${it::class.simpleName}")
-                systemsMap.get(it.simpleName).on = true
-            }
-            */
+            } else eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
 
             game.putProperty(ConstKeys.ROOM_TRANSITION, false)
         }
+        cameraManagerForRooms.onSetToRoomNoTrans = {
+            GameLogger.debug(TAG, "On set to room no trans")
+            eventsMan.submitEvent(
+                Event(
+                    EventType.SET_TO_ROOM_NO_TRANS,
+                    props(ConstKeys.ROOM to cameraManagerForRooms.currentGameRoom)
+                )
+            )
+        }
+
+        cameraShaker = CameraShaker(gameCamera)
     }
 
     override fun show() {
@@ -463,9 +451,13 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
                 val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
                 if (!boss.mini) audioMan.unsetMusic()
                 engine.forEachEntity { if (it.isAny(IDamager::class, IHazard::class) && it != boss) it.kill() }
-                eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF, props(
-                    "${ConstKeys.CONTROLLER}_${ConstKeys.SYSTEM}_${ConstKeys.OFF}" to false
-                )))
+                eventsMan.submitEvent(
+                    Event(
+                        EventType.TURN_CONTROLLER_OFF, props(
+                            "${ConstKeys.CONTROLLER}_${ConstKeys.SYSTEM}_${ConstKeys.OFF}" to false
+                        )
+                    )
+                )
                 megaman.canBeDamaged = false
                 entityStatsHandler.unset()
             }
@@ -492,7 +484,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
                 endLevelEventHandler.init()
             }
 
-            EventType.REQ_SHAKE_CAM -> {
+            EventType.SHAKE_CAM -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Req shake cam")
                 if (cameraShaker.isFinished) {
                     val duration = event.properties.get(ConstKeys.DURATION, Float::class)!!
@@ -612,17 +604,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
         }
         shapeRenderer.end()
 
-        if (Gdx.app.input.isKeyJustPressed(Keys.G)) eventsMan.submitEvent(
-            Event(
-                EventType.REQ_SHAKE_CAM, props(
-                    ConstKeys.DURATION to 1f,
-                    ConstKeys.INTERVAL to 0.1f,
-                    ConstKeys.X to 0.25f,
-                    ConstKeys.Y to 0.25f
-                )
-            )
-        )
-        if (!cameraShaker.isFinished) cameraShaker.update(delta)
+        if (!game.paused && !cameraShaker.isFinished) cameraShaker.update(delta)
     }
 
     override fun hide() = dispose()

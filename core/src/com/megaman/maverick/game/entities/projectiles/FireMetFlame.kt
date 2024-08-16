@@ -35,6 +35,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.entities.overlapsGameCamera
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
@@ -78,17 +79,13 @@ class FireMetFlame(game: MegamanMaverickGame) : AbstractProjectile(game), IAnima
     override fun explodeAndDie(vararg params: Any?) {
         kill()
 
-        // TODO: replace smoke puff with something better
-
         val smokePuff = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SMOKE_PUFF)!!
         game.engine.spawn(smokePuff, props(ConstKeys.POSITION to body.getBottomCenterPoint(), ConstKeys.OWNER to owner))
 
-        playSoundNow(SoundAsset.WHOOSH_SOUND, false)
+        if (overlapsGameCamera()) playSoundNow(SoundAsset.WHOOSH_SOUND, false)
     }
 
-    internal fun launch(impulse: Vector2) {
-        body.physics.velocity.set(impulse)
-    }
+    internal fun launch(impulse: Vector2) = body.physics.velocity.set(impulse)
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)

@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.hazards
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
@@ -72,6 +73,8 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
     private lateinit var moveTarget: Vector2
     private lateinit var bodyMatrix: Matrix<GameRectangle>
 
+    private var spawnRoom: String? = null
+
     private var speed = 0f
     private var spritePriorityValue = 0
 
@@ -109,15 +112,14 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         drawingSection = DrawingSection.valueOf(
             spawnProps.getOrDefault(ConstKeys.SECTION, "foreground", String::class).uppercase()
         )
-
+        spritePriorityValue = spawnProps.getOrDefault(ConstKeys.PRIORITY, if (type == FALL) 2 else 1, Int::class)
         directionRotation =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
         facing = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, "right", String::class).uppercase())
-        spritePriorityValue = spawnProps.getOrDefault(ConstKeys.PRIORITY, if (type == FALL) 2 else 1, Int::class)
 
-        val lavaStartX = spawnProps.getOrDefault("${ConstKeys.MOVE}_${ConstKeys.X}", 0f, Float::class)
-        val lavaStartY = spawnProps.getOrDefault("${ConstKeys.MOVE}_${ConstKeys.Y}", 0f, Float::class)
-        moveTarget = body.getCenter().add(lavaStartX * ConstVals.PPM, lavaStartY * ConstVals.PPM)
+        val moveX = spawnProps.getOrDefault("${ConstKeys.MOVE}_${ConstKeys.X}", 0f, Float::class)
+        val moveY = spawnProps.getOrDefault("${ConstKeys.MOVE}_${ConstKeys.Y}", 0f, Float::class)
+        moveTarget = body.getCenter().add(moveX * ConstVals.PPM, moveY * ConstVals.PPM)
 
         speed = spawnProps.getOrDefault(ConstKeys.SPEED, 0f, Float::class)
 
@@ -126,6 +128,8 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
 
         moveBeforeKill = spawnProps.containsKey(MOVE_BEFORE_KILL)
         movingBeforeKill = false
+
+        spawnRoom = spawnProps.get("${ConstKeys.SPAWN}_${ConstKeys.ROOM}", String::class)
 
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ATOMIC_FIRE_SOUND, false)
     }
@@ -171,11 +175,20 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun defineCullablesComponent() : CullablesComponent {
-        val cullEvents = objectSetOf<Any>(EventType.BEGIN_ROOM_TRANS, EventType.PLAYER_SPAWN)
-        val cullOnEvents = CullableOnEvent({ cullEvents.contains(it) }, cullEvents)
+    private fun defineCullablesComponent(): CullablesComponent {
+        val cullEvents = objectSetOf<Any>(
+            EventType.BEGIN_ROOM_TRANS, EventType.PLAYER_SPAWN, EventType.SET_TO_ROOM_NO_TRANS
+        )
+        val cullOnEvents = CullableOnEvent({ event ->
+            if (event.key == EventType.SET_TO_ROOM_NO_TRANS) {
+                val roomName = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!.name
+                spawnRoom != roomName
+            } else cullEvents.contains(event.key)
+        }, cullEvents)
+
         runnablesOnSpawn.add { game.eventsMan.addListener(cullOnEvents) }
         runnablesOnDestroy.add { game.eventsMan.removeListener(cullOnEvents) }
+
         return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS to cullOnEvents))
     }
 
