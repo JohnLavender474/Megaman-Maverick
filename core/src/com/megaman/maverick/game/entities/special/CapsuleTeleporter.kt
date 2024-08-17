@@ -152,7 +152,7 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
             return
         }
 
-        val onPortalStart = entity.getProperty(ConstKeys.ON_PORTAL_HOPPER_START) as? () -> Unit
+        val onPortalStart = entity.getProperty(ConstKeys.ON_TELEPORT_START) as? () -> Unit
         onPortalStart?.invoke()
 
         outgoingBodies.put(entity, Timer(SEND_DELAY))
@@ -191,7 +191,7 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
                 continue
             }
 
-            val onPortalContinue = entity.getProperty(ConstKeys.ON_PORTAL_HOPPER_CONTINUE) as? () -> Unit
+            val onPortalContinue = entity.getProperty(ConstKeys.ON_TELEPORT_CONTINUE) as? () -> Unit
             onPortalContinue?.invoke()
 
             timer.update(delta)
@@ -219,7 +219,7 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
                 continue
             }
 
-            val onPortalContinue = entity.getProperty(ConstKeys.ON_PORTAL_HOPPER_CONTINUE) as? () -> Unit
+            val onPortalContinue = entity.getProperty(ConstKeys.ON_TELEPORT_CONTINUE) as? () -> Unit
             onPortalContinue?.invoke()
 
             timer.update(delta)
@@ -228,7 +228,7 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
 
                 requestToPlaySound(SoundAsset.TELEPORT_SOUND, false)
 
-                val onPortalEnd = entity.getProperty(ConstKeys.ON_PORTAL_HOPPER_END) as? () -> Unit
+                val onPortalEnd = entity.getProperty(ConstKeys.ON_TELEPORT_END) as? () -> Unit
                 onPortalEnd?.invoke()
 
                 ignoredBodies.add(entity)

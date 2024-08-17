@@ -51,9 +51,9 @@ import com.megaman.maverick.game.entities.megaman.extensions.stopCharging
 import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.entities.projectiles.SniperJoeShield
 import com.megaman.maverick.game.entities.special.Togglee
-import com.megaman.maverick.game.entities.utils.setStandardOnPortalHopperContinueProp
-import com.megaman.maverick.game.entities.utils.standardOnPortalHopperEnd
-import com.megaman.maverick.game.entities.utils.standardOnPortalHopperStart
+import com.megaman.maverick.game.entities.utils.setStandardOnTeleportContinueProp
+import com.megaman.maverick.game.entities.utils.standardOnTeleportEnd
+import com.megaman.maverick.game.entities.utils.standardOnTeleportStart
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.misc.StunType
 import com.megaman.maverick.game.world.BodySense
@@ -384,18 +384,20 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         chargingTimer.reset()
         airDashTimer.reset()
 
-        putProperty(ConstKeys.ON_PORTAL_HOPPER_START, {
-            standardOnPortalHopperStart(this)
+        putProperty(ConstKeys.ON_TELEPORT_START, {
+            standardOnTeleportStart(this)
             stopCharging()
             if (isBehaviorActive(BehaviorType.AIR_DASHING)) forceQuitBehavior(BehaviorType.AIR_DASHING)
             teleporting = true
+            canBeDamaged = false
         })
-        setStandardOnPortalHopperContinueProp(this)
-        putProperty(ConstKeys.ON_PORTAL_HOPPER_END, {
-            standardOnPortalHopperEnd(this)
+        setStandardOnTeleportContinueProp(this)
+        putProperty(ConstKeys.ON_TELEPORT_END, {
+            standardOnTeleportEnd(this)
             stopCharging()
             aButtonTask = AButtonTask.AIR_DASH
             teleporting = false
+            canBeDamaged = true
         })
 
         teleporting = false

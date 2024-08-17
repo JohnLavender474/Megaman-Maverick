@@ -62,8 +62,8 @@ fun convertObjectPropsToEntitySuppliers(props: Properties): Array<Pair<() -> IGa
     return childEntitySuppliers
 }
 
-fun standardOnPortalHopperStart(entity: IGameEntity) {
-    GameLogger.debug("standardOnPortalHopperStart()", "entity=$entity")
+fun standardOnTeleportStart(entity: IGameEntity) {
+    GameLogger.debug("standardOnTeleportStart()", "entity=$entity")
     if (entity is IBodyEntity) {
         val body = entity.body
         body.physics.velocity.setZero()
@@ -73,16 +73,16 @@ fun standardOnPortalHopperStart(entity: IGameEntity) {
     if (entity is ISpritesEntity) entity.sprites.forEach { it.value.hidden = true }
 }
 
-fun setStandardOnPortalHopperStartProp(entity: IGameEntity) {
-    entity.putProperty(ConstKeys.ON_PORTAL_HOPPER_START, { standardOnPortalHopperStart(entity) })
+fun setStandardOnTeleportStartProp(entity: IGameEntity) {
+    entity.putProperty(ConstKeys.ON_TELEPORT_START, { standardOnTeleportStart(entity) })
 }
 
-fun setStandardOnPortalHopperContinueProp(entity: IGameEntity) {
-    entity.putProperty(ConstKeys.ON_PORTAL_HOPPER_CONTINUE, { standardOnPortalHopperStart(entity) })
+fun setStandardOnTeleportContinueProp(entity: IGameEntity) {
+    entity.putProperty(ConstKeys.ON_TELEPORT_CONTINUE, { standardOnTeleportStart(entity) })
 }
 
-fun standardOnPortalHopperEnd(entity: IGameEntity) {
-    GameLogger.debug("standardOnPortalHopperEnd()", "entity=$entity")
+fun standardOnTeleportEnd(entity: IGameEntity) {
+    GameLogger.debug("standardOnTeleportEnd()", "entity=$entity")
     if (entity is IBodyEntity) {
         val body = entity.body
         body.physics.velocity.setZero()
@@ -92,6 +92,6 @@ fun standardOnPortalHopperEnd(entity: IGameEntity) {
     if (entity is ISpritesEntity) entity.sprites.forEach { it.value.hidden = false }
 }
 
-fun setStandardOnPortalHopperEndProp(entity: IGameEntity) {
-    entity.putProperty(ConstKeys.ON_PORTAL_HOPPER_END, { standardOnPortalHopperEnd(entity) })
+fun setStandardOnTeleportEndProp(entity: IGameEntity) {
+    entity.putProperty(ConstKeys.ON_TELEPORT_END, { standardOnTeleportEnd(entity) })
 }

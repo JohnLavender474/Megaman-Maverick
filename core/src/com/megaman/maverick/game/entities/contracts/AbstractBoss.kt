@@ -101,6 +101,7 @@ abstract class AbstractBoss(
         updatablesComponent.add { delta ->
             if (defeated) {
                 defeatTimer.update(delta)
+                onDefeated(delta)
 
                 damageBlinkTimer.update(delta)
                 if (damageBlinkTimer.isFinished()) {
@@ -139,6 +140,8 @@ abstract class AbstractBoss(
         defeatTimer.reset()
         defeated = true
     }
+
+    protected open fun onDefeated(delta: Float) {}
 
     protected open fun explodeOnDefeat(delta: Float) {
         explosionTimer.update(delta)

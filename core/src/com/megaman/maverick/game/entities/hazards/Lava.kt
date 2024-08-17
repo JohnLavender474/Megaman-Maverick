@@ -12,6 +12,7 @@ import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimator
 import com.engine.audio.AudioComponent
+import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
 import com.engine.common.enums.Facing
 import com.engine.common.extensions.getTextureAtlas
@@ -81,6 +82,8 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
     private var moveBeforeKill = false
     private var movingBeforeKill = false
 
+    private var doCull = false
+
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
@@ -129,9 +132,12 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         moveBeforeKill = spawnProps.containsKey(MOVE_BEFORE_KILL)
         movingBeforeKill = false
 
+        doCull = spawnProps.getOrDefault(ConstKeys.CULL, false, Boolean::class)
+
         spawnRoom = spawnProps.get("${ConstKeys.SPAWN}_${ConstKeys.ROOM}", String::class)
 
-        if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ATOMIC_FIRE_SOUND, false)
+        val playSound = spawnProps.getOrDefault(ConstKeys.SOUND, false, Boolean::class)
+        if (playSound && overlapsGameCamera()) requestToPlaySound(SoundAsset.ATOMIC_FIRE_SOUND, false)
     }
 
     override fun kill(props: Properties?) =
@@ -177,13 +183,22 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
 
     private fun defineCullablesComponent(): CullablesComponent {
         val cullEvents = objectSetOf<Any>(
-            EventType.BEGIN_ROOM_TRANS, EventType.PLAYER_SPAWN, EventType.SET_TO_ROOM_NO_TRANS
+            EventType.BEGIN_ROOM_TRANS,
+            EventType.PLAYER_SPAWN,
+            EventType.SET_TO_ROOM_NO_TRANS
         )
         val cullOnEvents = CullableOnEvent({ event ->
-            if (event.key == EventType.SET_TO_ROOM_NO_TRANS) {
+            if (!doCull) false
+            else if (event.key == EventType.SET_TO_ROOM_NO_TRANS) {
                 val roomName = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!.name
-                spawnRoom != roomName
-            } else cullEvents.contains(event.key)
+                val doKill = spawnRoom != roomName
+                GameLogger.debug(TAG, "Room: $roomName, Spawn Room: $spawnRoom, Do Kill: $doKill")
+                doKill
+            } else {
+                val doKill = cullEvents.contains(event.key)
+                GameLogger.debug(TAG, "Event: ${event.key}, Do Kill: $doKill")
+                doKill
+            }
         }, cullEvents)
 
         runnablesOnSpawn.add { game.eventsMan.addListener(cullOnEvents) }

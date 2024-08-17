@@ -132,7 +132,7 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
             Direction.RIGHT -> entity.body.setCenterLeftToPoint(hopPoint)
         }
 
-        val onPortalStart = entity.getProperty(ConstKeys.ON_PORTAL_HOPPER_START) as? () -> Unit
+        val onPortalStart = entity.getProperty(ConstKeys.ON_TELEPORT_START) as? () -> Unit
         onPortalStart?.invoke()
 
         hopQueue.add(entity to Timer(PORTAL_HOP_DELAY))
@@ -163,7 +163,7 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
             val (entity, timer) = iter.next()
             timer.update(delta)
 
-            val onPortalContinue = entity.getProperty(ConstKeys.ON_PORTAL_HOPPER_CONTINUE) as? () -> Unit
+            val onPortalContinue = entity.getProperty(ConstKeys.ON_TELEPORT_CONTINUE) as? () -> Unit
             onPortalContinue?.invoke()
 
             if (timer.isFinished()) {
@@ -171,7 +171,7 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
                 requestToPlaySound(SoundAsset.TELEPORT_SOUND, false)
 
-                val onPortalEnd = entity.getProperty(ConstKeys.ON_PORTAL_HOPPER_END) as? () -> Unit
+                val onPortalEnd = entity.getProperty(ConstKeys.ON_TELEPORT_END) as? () -> Unit
                 onPortalEnd?.invoke()
 
                 val impulse = (when (thisDirection) {

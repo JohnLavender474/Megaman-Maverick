@@ -67,7 +67,8 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
     enum class PopoheliState { APPROACHING, ATTACKING, FLEEING }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(Bullet::class to dmgNeg(15),
+    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+        Bullet::class to dmgNeg(15),
         Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
         ChargedShot::class to dmgNeg {
             it as ChargedShot
@@ -113,8 +114,11 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
         state = PopoheliState.APPROACHING
         facing = if (target.x < body.x) Facing.LEFT else Facing.RIGHT
-        faceOnEnd = if (spawnProps.containsKey("face_on_end")) Facing.valueOf(
-            spawnProps.get(ConstKeys.FACING, String::class)!!.uppercase()
+        faceOnEnd = if (spawnProps.containsKey("${ConstKeys.FACE}_${ConstKeys.ON}_${ConstKeys.END}")) Facing.valueOf(
+            spawnProps.get(
+                "${ConstKeys.FACE}_${ConstKeys.ON}_${ConstKeys.END}",
+                String::class
+            )!!.uppercase()
         ) else facing
 
         attackTimer.reset()

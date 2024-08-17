@@ -9,9 +9,12 @@ import com.engine.common.extensions.getTextureRegion
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.objects.Properties
 import com.engine.common.shapes.getPosition
+import com.engine.drawables.sorting.DrawingPriority
+import com.engine.drawables.sorting.DrawingSection
 import com.engine.screens.levels.tiledmap.builders.ITiledMapLayerBuilder
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.assets.TEXTURE_ASSET_PREFIX
+import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.drawables.sprites.*
 import com.megaman.maverick.game.utils.toProps
 
@@ -40,6 +43,18 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
             ScrollingStars(
                 params.game,
                 it.rectangle.getPosition()
+            )
+        },
+        "ForestBKG" to {
+            Background(
+                it.rectangle.x,
+                it.rectangle.y,
+                params.game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_3.source, "ForestBKG"),
+                it.rectangle.width,
+                it.rectangle.height,
+                it.properties.get(ConstKeys.ROWS) as Int,
+                it.properties.get(ConstKeys.COLUMNS) as Int,
+                DrawingPriority(DrawingSection.BACKGROUND, 1)
             )
         }
     )

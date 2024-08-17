@@ -34,8 +34,8 @@ import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.factories.impl.ItemsFactory
 import com.megaman.maverick.game.entities.overlapsGameCamera
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
-import com.megaman.maverick.game.entities.utils.setStandardOnPortalHopperEndProp
-import com.megaman.maverick.game.entities.utils.setStandardOnPortalHopperStartProp
+import com.megaman.maverick.game.entities.utils.setStandardOnTeleportEndProp
+import com.megaman.maverick.game.entities.utils.setStandardOnTeleportStartProp
 import com.megaman.maverick.game.events.EventType
 import kotlin.reflect.KClass
 
@@ -106,8 +106,8 @@ abstract class AbstractEnemy(
             }
         }
 
-        setStandardOnPortalHopperStartProp(this)
-        setStandardOnPortalHopperEndProp(this)
+        setStandardOnTeleportStartProp(this)
+        setStandardOnTeleportEndProp(this)
     }
 
     override fun spawn(spawnProps: Properties) {

@@ -31,6 +31,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val FACE = "face"
     const val CONTROLLER = "controller"
     const val SYSTEM = "system"
     const val VELOCITY = "velocity"
@@ -123,9 +124,9 @@ object ConstKeys {
     const val FLIP = "flip"
     const val NEXT = "next"
     const val STOP = "stop"
-    const val ON_PORTAL_HOPPER_START = "on_portal_start"
-    const val ON_PORTAL_HOPPER_CONTINUE = "on_portal_continue"
-    const val ON_PORTAL_HOPPER_END = "on_portal_end"
+    const val ON_TELEPORT_START = "on_teleport_start"
+    const val ON_TELEPORT_CONTINUE = "on_teleport_continue"
+    const val ON_TELEPORT_END = "on_teleport_end"
     const val COLOR = "color"
     const val DRAW_LINE = "draw_line"
     const val CHILD_KEY = "child_key"

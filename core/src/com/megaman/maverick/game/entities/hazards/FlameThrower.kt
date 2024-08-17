@@ -59,9 +59,7 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    enum class FlameThrowerState {
-        COOL, BLINK, HOT
-    }
+    enum class FlameThrowerState { COOL, BLINK, HOT }
 
     override var directionRotation: Direction? = null
 
@@ -95,8 +93,7 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
         body.setSize(
             (if (directionRotation?.isHorizontal() == true) Vector2(1f, 0.75f)
-            else Vector2(0.75f, 1f))
-                .scl(ConstVals.PPM.toFloat())
+            else Vector2(0.75f, 1f)).scl(ConstVals.PPM.toFloat())
         )
 
         val position = directionRotation!!.getOpposingPosition()
@@ -107,9 +104,10 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         initDelayTimer.resetDuration(initDelay)
 
         loop.reset()
+
         coolTimer.reset()
-        blinkTimer.setToEnd()
-        flameThrowTimer.setToEnd()
+        blinkTimer.reset()
+        flameThrowTimer.reset()
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
@@ -146,7 +144,9 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     private fun defineCullablesComponent(): CullablesComponent {
         val cullEvents = objectSetOf<Any>(EventType.BEGIN_ROOM_TRANS)
-        val cullOnEvent = CullableOnEvent({ cullEvents.contains(it) })
+        val cullOnEvent = CullableOnEvent({ cullEvents.contains(it) }, cullEvents)
+        runnablesOnSpawn.add { game.eventsMan.addListener(cullOnEvent) }
+        runnablesOnDestroy.add { game.eventsMan.removeListener(cullOnEvent) }
         return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS to cullOnEvent))
     }
 
@@ -162,8 +162,7 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
             val damagerBounds = damagerFixture.rawShape as GameRectangle
             damagerBounds.setSize(
                 (if (directionRotation?.isHorizontal() == true) Vector2(3f, 0.75f)
-                else Vector2(0.75f, 3f))
-                    .scl(ConstVals.PPM.toFloat())
+                else Vector2(0.75f, 3f)).scl(ConstVals.PPM.toFloat())
             )
 
             damagerFixture.active = loop.getCurrent() == FlameThrowerState.HOT
@@ -223,9 +222,7 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         val flameColumnAnim = Animation(regions.get("flame_column"), 2, 3, 0.05f, true)
         val flameColumnAnimator = Animator(flameColumnAnim)
 
-        val throwerKeySupplier: () -> String? = {
-            loop.getCurrent().name
-        }
+        val throwerKeySupplier: () -> String? = { loop.getCurrent().name }
         val throwerAnims = objectMapOf<String, IAnimation>(
             FlameThrowerState.COOL.name to Animation(regions.get("cool_thrower")),
             FlameThrowerState.BLINK.name to Animation(regions.get("blink_thrower"), 1, 2, 0.1f, true),

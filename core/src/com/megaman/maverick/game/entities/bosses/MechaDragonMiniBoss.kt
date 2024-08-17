@@ -176,9 +176,14 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         loop.reset()
     }
 
-    override fun triggerDefeat() {
-        super.triggerDefeat()
-        body.physics.velocity.setZero()
+    override fun onDefeated(delta: Float) {
+        super.onDefeated(delta)
+        if (body.getCenter().epsilonEquals(roomCenter, 0.1f * ConstVals.PPM)) {
+            body.physics.velocity.setZero()
+            return
+        }
+        val velocity = roomCenter.cpy().sub(body.getCenter()).nor().scl(HOVER_SPEED * ConstVals.PPM)
+        body.physics.velocity = velocity
     }
 
     private fun fire() {

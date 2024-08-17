@@ -1,5 +1,5 @@
 Backgrounds3.png
-size: 1400, 400
+size: 856, 624
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -26,29 +26,36 @@ BKG19
   index: -1
 BKG20
   rotate: false
-  xy: 600, 0
+  xy: 0, 224
   size: 200, 400
   orig: 200, 400
   offset: 0, 0
   index: -1
 BKG21
   rotate: false
-  xy: 800, 0
+  xy: 200, 224
   size: 200, 400
   orig: 200, 400
   offset: 0, 0
   index: -1
 BKG22
   rotate: false
-  xy: 1000, 0
+  xy: 400, 224
   size: 200, 400
   orig: 200, 400
   offset: 0, 0
   index: -1
 BKG23
   rotate: false
-  xy: 1200, 0
+  xy: 600, 224
   size: 200, 400
   orig: 200, 400
+  offset: 0, 0
+  index: -1
+ForestBKG
+  rotate: false
+  xy: 600, 0
+  size: 256, 224
+  orig: 256, 224
   offset: 0, 0
   index: -1
