@@ -18,6 +18,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntity
 
 class ForceDecoration(game: MegamanMaverickGame): MegaGameEntity(game), ISpritesEntity, IAnimatedEntity {
@@ -29,6 +30,8 @@ class ForceDecoration(game: MegamanMaverickGame): MegaGameEntity(game), ISprites
 
     private var rotation = 0f
     private lateinit var center: Vector2
+
+    override fun getEntityType() = EntityType.DECORATION
 
     override fun init() {
         if (region == null)

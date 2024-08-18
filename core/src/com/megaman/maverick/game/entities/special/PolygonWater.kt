@@ -32,6 +32,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.splitIntoGameRectanglesBasedOnCenter
@@ -54,6 +55,8 @@ class PolygonWater(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     var splashSound = false
 
     private lateinit var waterFixture: Fixture
+
+    override fun getEntityType() = EntityType.SPECIAL
 
     override fun init() {
         super<MegaGameEntity>.init()

@@ -45,6 +45,8 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaGameEntitiesMap
+import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -67,6 +69,7 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimate
         private const val ASTEROID_OFFSET_Y = -0.65f
         private const val ARC_SPEED = 8f
         private const val ARC_FACTOR = 0.5f
+        private const val ARC_FACTOR_CALCULATIONS = 5
         private const val DELAY = 0.5f
         private const val DARK_DUR = 0.5f
         private const val AWAKEN_DUR = 1.75f
@@ -153,6 +156,49 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimate
         )
     }
 
+    private fun calculateBestArcMotion(): ArcMotion {
+        // positive arc factor
+        val arcMotion1 = ArcMotion(
+            startPosition = body.getCenter(),
+            targetPosition = getMegaman().body.getCenter(),
+            speed = ARC_SPEED * ConstVals.PPM,
+            arcFactor = ARC_FACTOR,
+            continueBeyondTarget = true
+        )
+        // negative arc factor
+        val arcMotion2 = arcMotion1.copy()
+        arcMotion2.arcFactor *= -1f
+
+        val blocks = MegaGameEntitiesMap.get(EntityType.BLOCK).map { it as Block }
+
+        val totalDistance = body.getCenter().dst(getMegaman().body.getCenter())
+        var distance = 0f
+
+        var winningArcMotion = arcMotion1
+        var distFromMegaman = Float.MAX_VALUE
+
+        for (i in 0 until ARC_FACTOR_CALCULATIONS) {
+            distance += totalDistance / ARC_FACTOR_CALCULATIONS
+
+            val position1 = arcMotion1.compute(distance)
+            val position2 = arcMotion2.compute(distance)
+            if (blocks.any { it.blockFixture.getShape().contains(position1) }) return arcMotion2
+            else if (blocks.any { it.blockFixture.getShape().contains(position2) }) return arcMotion1
+
+            val dist1 = position1.dst(getMegaman().body.getCenter())
+            val dist2 = position2.dst(getMegaman().body.getCenter())
+            if (dist1 < distFromMegaman) {
+                distFromMegaman = dist1
+                winningArcMotion = arcMotion1
+            } else if (dist2 < distFromMegaman) {
+                distFromMegaman = dist2
+                winningArcMotion = arcMotion2
+            }
+        }
+
+        return winningArcMotion
+    }
+
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
@@ -205,13 +251,7 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimate
                         shootInitTimer.reset()
                         shootDelayTimer.reset()
 
-                        arcMotion = ArcMotion(
-                            startPosition = body.getCenter(),
-                            targetPosition = getMegaman().body.getCenter(),
-                            speed = ARC_SPEED * ConstVals.PPM,
-                            arcFactor = ARC_FACTOR * (if (getMegaman().body.getMaxY() > body.y) -1f else 1f),
-                            continueBeyondTarget = true
-                        )
+                        arcMotion = calculateBestArcMotion()
 
                         loop.next()
                         return@add

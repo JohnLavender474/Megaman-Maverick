@@ -22,6 +22,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
@@ -35,6 +36,8 @@ class ExplosionOrb(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEn
     }
 
     private lateinit var trajectory: Vector2
+
+    override fun getEntityType() = EntityType.EXPLOSION
 
     override fun init() {
         if (textureRegion == null) textureRegion =

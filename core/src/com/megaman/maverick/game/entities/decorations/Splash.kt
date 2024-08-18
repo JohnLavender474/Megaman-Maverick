@@ -53,6 +53,8 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
 
     private lateinit var animation: IAnimation
 
+    override fun getEntityType() = EntityType.DECORATION
+
     override fun init() {
         if (splashRegion == null) splashRegion =
             game.assMan.getTextureRegion(TextureAsset.ENVIRONS_1.source, SPLASH_REGION_KEY)

@@ -41,6 +41,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.overlapsGameCamera
@@ -100,6 +101,8 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
     private lateinit var spawnRoom: String
 
     private var switcharooAlpha = 1f
+
+    override fun getEntityType() = EntityType.SPECIAL
 
     override fun init() {
         if (regions.isEmpty) {

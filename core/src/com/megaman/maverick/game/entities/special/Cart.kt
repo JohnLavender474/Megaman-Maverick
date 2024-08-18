@@ -34,6 +34,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.IOwnable
@@ -56,6 +57,8 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IOwnable, IBodyEnt
     override var owner: IGameEntity? = null
 
     lateinit var childBlock: Block
+
+    override fun getEntityType() = EntityType.SPECIAL
 
     override fun init() {
         if (region == null)

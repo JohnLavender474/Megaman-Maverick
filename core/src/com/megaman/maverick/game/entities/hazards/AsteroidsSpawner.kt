@@ -48,6 +48,8 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
     private lateinit var bounds: GameRectangle
     private lateinit var spawnTimer: Timer
 
+    override fun getEntityType() = EntityType.HAZARD
+
     override fun init() {
         addComponent(defineUpdatablesComponent())
         addComponent(defineCullablesComponent())

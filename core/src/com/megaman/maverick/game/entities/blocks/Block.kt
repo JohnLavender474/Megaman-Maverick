@@ -14,6 +14,7 @@ import com.engine.entities.contracts.IBodyEntity
 import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.*
@@ -33,6 +34,8 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity 
     protected val debugShapeSuppliers = Array<() -> IDrawableShape?>()
 
     private val fixturesToRemove = ObjectSet<Fixture>()
+
+    override fun getEntityType() = EntityType.BLOCK
 
     override fun init() {
         GameLogger.debug(TAG, "init(): Initializing Block entity.")

@@ -37,6 +37,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.ITeleporterEntity
 import com.megaman.maverick.game.events.EventType
@@ -65,6 +66,8 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     private var nextKey = -1
     private var launch = false
     private var rotation = 0f
+
+    override fun getEntityType() = EntityType.SPECIAL
 
     override fun init() {
         if (waitRegion == null || launchRegion == null) {

@@ -34,6 +34,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
@@ -45,6 +46,8 @@ class QuickSand(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
         const val TAG = "QuickSand"
         private val regions = ObjectMap<String, TextureRegion>()
     }
+
+    override fun getEntityType() = EntityType.SPECIAL
 
     override fun init() {
         if (regions.isEmpty) {

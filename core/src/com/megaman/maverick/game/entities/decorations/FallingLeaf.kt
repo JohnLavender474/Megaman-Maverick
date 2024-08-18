@@ -25,6 +25,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntity
 
 class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity {
@@ -58,6 +59,8 @@ class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
     private var maxElapseDuration = DEFAULT_MAX_ELAPSE_DURATION
 
     private var hidden = true
+
+    override fun getEntityType() = EntityType.DECORATION
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENVIRONS_1.source, "Wood/FallingLeaf")

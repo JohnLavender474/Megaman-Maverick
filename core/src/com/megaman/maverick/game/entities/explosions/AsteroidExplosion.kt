@@ -34,6 +34,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.IOwnable
@@ -54,6 +55,8 @@ class AsteroidExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
     override var owner: IGameEntity? = null
 
     private val timer = Timer(EXPLOSION_DUR)
+
+    override fun getEntityType() = EntityType.EXPLOSION
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "AsteroidExplosion")

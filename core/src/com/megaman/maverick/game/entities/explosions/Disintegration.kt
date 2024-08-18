@@ -25,6 +25,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntity
 
 class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAudioEntity {
@@ -35,6 +36,8 @@ class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
     }
 
     private val durationTimer = Timer(DURATION)
+
+    override fun getEntityType() = EntityType.EXPLOSION
 
     override fun init() {
         if (disintegrationRegion == null) disintegrationRegion =

@@ -23,6 +23,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.utils.splitIntoGameRectanglesBasedOnCenter
 
@@ -32,6 +33,8 @@ class LavaFall(game: MegamanMaverickGame): MegaGameEntity(game), ISpritesEntity,
         const val TAG = "LavaFall"
         private var region: TextureRegion? = null
     }
+
+    override fun getEntityType() = EntityType.DECORATION
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, "Lava")

@@ -1,5 +1,5 @@
 Projectiles2.png
-size: 50, 206
+size: 128, 220
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -10,16 +10,30 @@ BunbyRedRocket
   orig: 32, 64
   offset: 0, 0
   index: -1
+MoonMan/crescent
+  rotate: false
+  xy: 0, 100
+  size: 64, 120
+  orig: 64, 120
+  offset: 0, 0
+  index: -1
+MoonMan/star
+  rotate: false
+  xy: 64, 100
+  size: 64, 120
+  orig: 64, 120
+  offset: 0, 0
+  index: -1
 SmallGreenMissile
   rotate: false
-  xy: 0, 64
+  xy: 32, 0
   size: 35, 42
   orig: 35, 42
   offset: 0, 0
   index: -1
 SpitFireball
   rotate: false
-  xy: 0, 106
+  xy: 67, 0
   size: 50, 100
   orig: 50, 100
   offset: 0, 0

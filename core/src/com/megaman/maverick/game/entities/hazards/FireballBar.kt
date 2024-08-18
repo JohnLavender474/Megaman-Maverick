@@ -35,6 +35,8 @@ class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEnti
 
     private lateinit var rotatingLine: RotatingLine
 
+    override fun getEntityType() = EntityType.HAZARD
+
     override fun init() {
         addComponent(defineUpdatablesComponent())
         addComponent(defineCullablesComponent())

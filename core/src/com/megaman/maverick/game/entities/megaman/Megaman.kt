@@ -338,6 +338,8 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
 
     internal val roomTransPauseTimer = Timer(ConstVals.ROOM_TRANS_DELAY_DURATION)
 
+    override fun getEntityType() = EntityType.MEGAMAN
+
     override fun init() {
         addComponent(AudioComponent())
         addComponent(defineUpdatablesComponent())

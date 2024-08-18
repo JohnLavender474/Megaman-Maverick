@@ -15,6 +15,7 @@ import com.engine.world.BodyType
 import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.BodyComponentCreator
@@ -23,6 +24,8 @@ import com.megaman.maverick.game.world.FixtureType
 class GravityChange(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity {
 
     private lateinit var gravityChangeFixture: Fixture
+
+    override fun getEntityType() = EntityType.SPECIAL
 
     override fun init() {
         addComponent(defineBodyComponent())

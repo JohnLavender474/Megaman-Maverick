@@ -35,6 +35,8 @@ class LavaDropSupplier(game: MegamanMaverickGame) : MegaGameEntity(game), IHazar
     private val dropDelayTimer = Timer(DROP_DELAY)
     private var lavaDrop: LavaDrop? = null
 
+    override fun getEntityType() = EntityType.HAZARD
+
     override fun init() {
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())

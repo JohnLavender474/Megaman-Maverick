@@ -35,6 +35,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
@@ -49,6 +50,8 @@ class CaveRockExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IDama
     }
 
     private val timer = Timer(DURATION)
+
+    override fun getEntityType() = EntityType.EXPLOSION
 
     override fun init() {
         if (burstRegion == null) burstRegion =

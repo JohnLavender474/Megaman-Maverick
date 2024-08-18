@@ -61,6 +61,8 @@ class LavaDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IDamager, IHaz
     private val dissipateTimer = Timer(DISSIPATE_DUR)
     private var dissipating = false
 
+    override fun getEntityType() = EntityType.HAZARD
+
     override fun init() {
         if (fallingRegion == null || splatRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)

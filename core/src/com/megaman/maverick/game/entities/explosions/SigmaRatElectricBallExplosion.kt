@@ -34,6 +34,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.IHazard
@@ -59,6 +60,8 @@ class SigmaRatElectricBallExplosion(game: MegamanMaverickGame) : MegaGameEntity(
 
     private val shockTimer = Timer(SHOCK_DUR)
     private val dissipateTimer = Timer(DISSIPATE_DUR)
+
+    override fun getEntityType() = EntityType.EXPLOSION
 
     override fun init() {
         if (explosionRegion == null || dissipateRegion == null) {

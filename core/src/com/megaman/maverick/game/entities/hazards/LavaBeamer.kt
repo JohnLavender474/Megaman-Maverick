@@ -77,6 +77,8 @@ class LavaBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
     )
     private lateinit var cullOnEvents: CullableOnEvent
 
+    override fun getEntityType() = EntityType.HAZARD
+
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)

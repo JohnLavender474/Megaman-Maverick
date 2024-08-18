@@ -34,6 +34,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.world.BodyComponentCreator
@@ -58,6 +59,8 @@ class ElectrocutieChild(game: MegamanMaverickGame) : MegaGameEntity(game), IHaza
     private lateinit var direction: Direction
     private lateinit var spawn: Vector2
     private var resetBodyPosition = true
+
+    override fun getEntityType() = EntityType.HAZARD
 
     override fun init() {
         if (moveRegion == null || chargeRegion == null || shockRegion == null) {

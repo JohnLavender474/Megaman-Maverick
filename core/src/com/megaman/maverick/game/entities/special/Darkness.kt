@@ -30,6 +30,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
@@ -75,6 +76,8 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
 
     private var key = -1
     private var darkMode = false
+
+    override fun getEntityType() = EntityType.SPECIAL
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.COLORS.source, "Black")

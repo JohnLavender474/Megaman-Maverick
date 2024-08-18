@@ -49,6 +49,8 @@ abstract class AbstractBoss(
     var defeated = false
         private set
 
+    override fun getEntityType() = EntityType.BOSS
+
     override fun spawn(spawnProps: Properties) {
         game.eventsMan.addListener(this)
         mini = spawnProps.getOrDefault(ConstKeys.MINI, false, Boolean::class)

@@ -15,6 +15,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntity
 
 class Tree(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
@@ -25,6 +26,8 @@ class Tree(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
     }
 
     private lateinit var bounds: GameRectangle
+
+    override fun getEntityType() = EntityType.DECORATION
 
     override fun init() {
         if (region == null)

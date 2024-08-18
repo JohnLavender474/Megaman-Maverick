@@ -14,6 +14,7 @@ import com.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.events.EventType
 
@@ -40,6 +41,8 @@ class RoomShaker(game: MegamanMaverickGame) : MegaGameEntity(game), IEventListen
     private var x = 0f
     private var y = 0f
     private var run = false
+
+    override fun getEntityType() = EntityType.SPECIAL
 
     override fun init() {
         super<MegaGameEntity>.init()

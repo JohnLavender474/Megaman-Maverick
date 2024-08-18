@@ -42,10 +42,10 @@ class WanaanLauncher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
 
     private val timer = Timer(TIMER_DURATION)
     private val sensors = Array<GameRectangle>()
-
     private lateinit var direction: Direction
-
     private var wanaan: Wanaan? = null
+
+    override fun getEntityType() = EntityType.HAZARD
 
     override fun init() {
         addComponent(defineUpdatablesComponent())

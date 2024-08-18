@@ -41,6 +41,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.events.EventType
@@ -79,6 +80,8 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
     private var resettable = false
     private var transitionFinished = false
     private var showCloseEvent = true
+
+    override fun getEntityType() = EntityType.SENSOR
 
     override fun init() {
         if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.GATES.source)

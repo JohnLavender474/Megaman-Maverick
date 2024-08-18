@@ -38,12 +38,40 @@ public enum BossType {
             Map<String, Animation> anims = getAnims(textureAtlas);
             Queue<Pair<Animation, Timer>> timerPairs = new LinkedList<>();
             timerPairs.add(new Pair<>(anims.get("Jump"), new Timer(ConstVals.BOSS_DROP_DOWN_DURATION)));
-            timerPairs.add(new Pair<>(anims.get("JustLand"), new Timer(.5f)));
+            timerPairs.add(new Pair<>(anims.get("JustLand"), new Timer(0.5f)));
             timerPairs.add(new Pair<>(anims.get("Stand"), new Timer(1.75f)));
             timerPairs.add(new Pair<>(anims.get("Swing"), new Timer(4f)));
             return timerPairs;
         }
     },
+
+    MOON_MAN("Moon Man", Level.MOON_MAN, Position.TOP_CENTER, TextureAsset.BOSSES) {
+        @Override
+        public Vector2 getSpriteSize() {
+            return new Vector2(4.25f, 3.5f);
+        }
+
+        @Override
+        public Map<String, Animation> getAnims(TextureAtlas textureAtlas) {
+            Map<String, Animation> anims = new HashMap<>();
+            anims.put("jump", new Animation(textureAtlas.findRegion("MoonMan_v2/jump")));
+            anims.put("chest_throw", new Animation(textureAtlas.findRegion("MoonMan_v2/throw"), 2, 2, 0.1f, false));
+            anims.put("stand", new Animation(textureAtlas.findRegion("MoonMan_v2/taunt")));
+            return anims;
+        }
+
+        @Override
+        public Queue<Pair<Animation, Timer>> getIntroAnimsQ(TextureAtlas textureAtlas) {
+            Map<String, Animation> anims = getAnims(textureAtlas);
+            Queue<Pair<Animation, Timer>> timerPairs = new LinkedList<>();
+            timerPairs.add(new Pair<>(anims.get("jump"), new Timer(ConstVals.BOSS_DROP_DOWN_DURATION)));
+            timerPairs.add(new Pair<>(anims.get("stand"), new Timer(0.5f)));
+            timerPairs.add(new Pair<>(anims.get("throw"), new Timer(4f)));
+            return timerPairs;
+        }
+    },
+
+    /*
     DISTRIBUTOR_MAN("Distributor Man", Level.TEST1, Position.TOP_CENTER, TextureAsset.DISTRIBUTOR_MAN) {
         @Override
         public Vector2 getSpriteSize() {
@@ -74,6 +102,8 @@ public enum BossType {
             return timerPairs;
         }
     },
+     */
+
     ROASTER_MAN("Roaster Man", Level.TEST1, Position.TOP_RIGHT, TextureAsset.ROASTER_MAN) {
         @Override
         public Vector2 getSpriteSize() {
@@ -166,7 +196,6 @@ public enum BossType {
         }
     },
 
-    // TODO: change to precious man texture asset
     PRECIOUS_MAN("Precious Man", Level.TEST1, Position.BOTTOM_LEFT, TextureAsset.PRECIOUS_MAN) {
         @Override
         public Vector2 getSpriteSize() {
@@ -228,7 +257,7 @@ public enum BossType {
             return timerPairs;
         }
     },
-    REACT_MAN("React Man", Level.REACTOR_MAN, Position.BOTTOM_RIGHT, TextureAsset.MICROWAVE_MAN) {
+    REACTOR_MAN("Reactor Man", Level.REACTOR_MAN, Position.BOTTOM_RIGHT, TextureAsset.MICROWAVE_MAN) {
         @Override
         public Vector2 getSpriteSize() {
             return new Vector2(2.85f, 2.5f);

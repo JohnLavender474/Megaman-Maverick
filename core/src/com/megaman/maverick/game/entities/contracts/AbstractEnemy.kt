@@ -64,6 +64,8 @@ abstract class AbstractEnemy(
     protected var dropItemOnDeath = true
     protected var onDamageInflictedTo: ((IDamageable) -> Unit)? = null
 
+    override fun getEntityType() = EntityType.ENEMY
+
     override fun init() {
         addComponent(definePointsComponent())
         addComponent(defineBodyComponent())

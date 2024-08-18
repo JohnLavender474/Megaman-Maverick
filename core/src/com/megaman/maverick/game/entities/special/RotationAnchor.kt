@@ -26,6 +26,7 @@ import com.engine.world.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntitySuppliers
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
@@ -42,6 +43,8 @@ open class RotationAnchor(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
     override var children = Array<IGameEntity>()
 
     private val childTargets = ObjectMap<IGameEntity, Vector2>()
+
+    override fun getEntityType() = EntityType.SPECIAL
 
     override fun init() {
         addComponent(MotionComponent())

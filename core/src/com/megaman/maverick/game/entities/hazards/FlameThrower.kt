@@ -35,6 +35,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.IHazard
@@ -68,6 +69,8 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     private val coolTimer = Timer(COOL_DUR)
     private val blinkTimer = Timer(BLINK_DUR)
     private val flameThrowTimer = Timer(FLAME_THROW_DUR)
+
+    override fun getEntityType() = EntityType.HAZARD
 
     override fun init() {
         if (regions.isEmpty) {

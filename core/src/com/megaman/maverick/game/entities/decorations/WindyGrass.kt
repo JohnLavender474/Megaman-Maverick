@@ -19,6 +19,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntity
 
 open class WindyGrass(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity {
@@ -31,6 +32,8 @@ open class WindyGrass(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
     }
 
     private lateinit var bounds: GameRectangle
+
+    override fun getEntityType() = EntityType.DECORATION
 
     override fun init() {
         if (leftRegion == null || rightRegion == null || middleRegion == null) {

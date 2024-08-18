@@ -38,6 +38,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.ItemEntity
@@ -78,6 +79,8 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
     private var timeCull = false
     private var blink = false
     private var warning = false
+
+    override fun getEntityType() = EntityType.ITEM
 
     override fun init() {
         if (textureAtlas == null) textureAtlas = game.assMan.getTextureAtlas(TextureAsset.ITEMS_1.source)

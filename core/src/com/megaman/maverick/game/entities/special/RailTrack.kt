@@ -56,6 +56,8 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntit
     private var platform: RailTrackPlatform? = null
     private var platformRight = false
 
+    override fun getEntityType() = EntityType.SPECIAL
+
     override fun init() {
         if (leftTrackRegion == null || rightTrackRegion == null || middleTrackRegion == null || dropTrackRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)

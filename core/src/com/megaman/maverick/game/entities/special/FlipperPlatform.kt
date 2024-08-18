@@ -62,6 +62,8 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
 
     private var block: Block? = null
 
+    override fun getEntityType() = EntityType.SPECIAL
+
     override fun init() {
         if (leftRegion == null || rightRegion == null || flipToRightRegion == null || flipToLeftRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)

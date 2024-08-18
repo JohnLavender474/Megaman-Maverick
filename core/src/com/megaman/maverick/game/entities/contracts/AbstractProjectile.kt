@@ -24,6 +24,7 @@ import com.engine.world.BodyComponent
 import com.engine.world.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.events.EventType
 
@@ -34,6 +35,8 @@ abstract class AbstractProjectile(game: MegamanMaverickGame) : MegaGameEntity(ga
 
     protected var onDamageInflictedTo: ((IDamageable) -> Unit)? = null
     protected var movementScalar = 1f
+
+    override fun getEntityType() = EntityType.PROJECTILE
 
     override fun init() {
         super<MegaGameEntity>.init()

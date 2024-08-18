@@ -7,6 +7,7 @@ import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.utils.VelocityAlteration
@@ -32,6 +33,8 @@ class Force(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity {
     private lateinit var actionY: VelocityAlterationType
     private var forceX = 0f
     private var forceY = 0f
+
+    override fun getEntityType() = EntityType.SPECIAL
 
     override fun init() {
         super<MegaGameEntity>.init()

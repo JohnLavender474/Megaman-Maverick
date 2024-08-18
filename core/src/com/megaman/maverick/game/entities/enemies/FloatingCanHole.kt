@@ -40,6 +40,8 @@ class FloatingCanHole(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
     private val spawnDelayTimer = Timer(SPAWN_DELAY)
     private var maxToSpawn = DEFAULT_MAX_SPAWNED
 
+    override fun getEntityType() = EntityType.HAZARD
+
     override fun init() {
         super<MegaGameEntity>.init()
         addComponent(defineBodyComponent())

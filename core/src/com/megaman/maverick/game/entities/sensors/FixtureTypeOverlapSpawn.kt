@@ -14,6 +14,7 @@ import com.engine.updatables.UpdatablesComponent
 import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntitySuppliers
 import com.megaman.maverick.game.world.BodyComponentCreator
@@ -30,10 +31,10 @@ class FixtureTypeOverlapSpawn(game: MegamanMaverickGame) : MegaGameEntity(game),
 
     private lateinit var entitySuppliers: Array<Pair<() -> IGameEntity, Properties>>
     private lateinit var spawnMask: OrderedSet<FixtureType>
-
     private val fixturesConsumed = ObjectSet<FixtureType>()
-
     private var spawned = false
+
+    override fun getEntityType() = EntityType.SENSOR
 
     override fun init() {
         addComponent(defineBodyComponent())

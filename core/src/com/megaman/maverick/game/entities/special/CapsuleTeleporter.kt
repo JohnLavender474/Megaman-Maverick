@@ -81,6 +81,8 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
     private var thisKey = -1
     private var nextKey = -1
 
+    override fun getEntityType() = EntityType.SPECIAL
+
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)
