@@ -5,6 +5,9 @@
 *.ear
 hs_err_pid*
 
+/desktop/out
+/core/out
+
 ## Robovm
 /ios/robovm-build/
 
