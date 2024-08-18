@@ -178,6 +178,7 @@
             <key type="filename">../frames/Faces1/Freezer Man.png</key>
             <key type="filename">../frames/Faces1/Microwave Man.png</key>
             <key type="filename">../frames/Faces1/Mister Man.png</key>
+            <key type="filename">../frames/Faces1/Moon Man.png</key>
             <key type="filename">../frames/Faces1/Nuke Man.png</key>
             <key type="filename">../frames/Faces1/Precious Man.png</key>
             <key type="filename">../frames/Faces1/Roaster Man.png</key>

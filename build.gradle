@@ -58,6 +58,7 @@ project(":desktop") {
                 because("Default jamepad version 2.0.14.1 is missing macOS arm64 binaries.")
             }
         }
+        implementation 'com.beust:jcommander:1.82'
     }
 }
 

@@ -2,6 +2,7 @@ package com.megaman.maverick.game
 
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
@@ -87,12 +88,16 @@ import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 import kotlin.reflect.cast
 
-class MegamanMaverickGame : Game(), IEventListener, IPropertizable {
+class MegamanMaverickGameParams {
+    var debug: Boolean = false
+    var startScreen: String? = null
+    var startLevel: Level? = null
+}
+
+class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEventListener, IPropertizable {
 
     companion object {
         const val TAG = "MegamanMaverickGame"
-        const val DEBUG_TEXT = false
-        const val DEBUG_SHAPES = false
         const val DEFAULT_VOLUME = 0.5f
         val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(Lava.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
@@ -249,18 +254,8 @@ class MegamanMaverickGame : Game(), IEventListener, IPropertizable {
         screens.put(ScreenEnum.SIMPLE_END_LEVEL_SUCCESSFULLY_SCREEN.name, SimpleEndLevelScreen(this))
         screens.put(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name, SimpleInitGameScreen(this))
 
-        // FINAL BOSSES
-        startLevelScreen(Level.MOON_MAN)
-        // startLevelScreen(Level.INFERNO_MAN)
-        // startLevelScreen(Level.TIMBER_WOMAN)
-        // startLevelScreen(Level.REACTOR_MAN)
-
-        // EXTRA BOSSES
-        // startLevelScreen(Level.FREEZE_MAN)
-
-        // TEST LEVELS
-        // startLevelScreen(Level.TEST1)
-        // startLevelScreen(Level.TEST2)
+        if (params.debug && params.startScreen == "level") startLevelScreen(params.startLevel!!)
+        else setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
     }
 
     override fun onEvent(event: Event) {
@@ -290,6 +285,8 @@ class MegamanMaverickGame : Game(), IEventListener, IPropertizable {
     }
 
     override fun render() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) Gdx.app.exit()
+
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
@@ -300,7 +297,7 @@ class MegamanMaverickGame : Game(), IEventListener, IPropertizable {
         viewports.values().forEach { it.apply() }
         audioMan.update(delta)
 
-        if (DEBUG_TEXT) {
+        if (params.debug) {
             batch.projectionMatrix = getUiCamera().combined
             batch.begin()
             debugText.draw(batch)
@@ -436,7 +433,7 @@ class MegamanMaverickGame : Game(), IEventListener, IPropertizable {
             UpdatablesSystem(),
             FontsSystem { font -> drawables.get(font.priority.section).add(font) },
             SpritesSystem { sprite -> drawables.get(sprite.priority.section).add(sprite) },
-            DrawableShapesSystem({ shapes.add(it) }, DEBUG_SHAPES),
+            DrawableShapesSystem({ shapes.add(it) }, params.debug),
             AudioSystem({ audioMan.playSound(it.source, it.loop) },
                 { audioMan.playMusic(it.source, it.loop) },
                 { audioMan.stopSound(it) },

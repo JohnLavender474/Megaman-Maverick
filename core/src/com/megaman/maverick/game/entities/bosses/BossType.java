@@ -16,6 +16,9 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
+import static com.engine.common.extensions.ArrayExtensionsKt.gdxArrayOf;
+import static com.engine.common.extensions.Vector2ExtensionsKt.vector2Of;
+
 public enum BossType {
     TIMBER_WOMAN("Timber Woman", Level.TIMBER_WOMAN, Position.TOP_LEFT, TextureAsset.TIMBER_WOMAN) {
         @Override
@@ -48,15 +51,15 @@ public enum BossType {
     MOON_MAN("Moon Man", Level.MOON_MAN, Position.TOP_CENTER, TextureAsset.BOSSES) {
         @Override
         public Vector2 getSpriteSize() {
-            return new Vector2(4.25f, 3.5f);
+            return vector2Of(2.5f);
         }
 
         @Override
         public Map<String, Animation> getAnims(TextureAtlas textureAtlas) {
             Map<String, Animation> anims = new HashMap<>();
             anims.put("jump", new Animation(textureAtlas.findRegion("MoonMan_v2/jump")));
-            anims.put("chest_throw", new Animation(textureAtlas.findRegion("MoonMan_v2/throw"), 2, 2, 0.1f, false));
-            anims.put("stand", new Animation(textureAtlas.findRegion("MoonMan_v2/taunt")));
+            anims.put("throw", new Animation(textureAtlas.findRegion("MoonMan_v2/throw"), 2, 2, 0.1f, false));
+            anims.put("stand", new Animation(textureAtlas.findRegion("MoonMan_v2/stand"), 2, 1, gdxArrayOf(1.5f, 0.15f), true));
             return anims;
         }
 

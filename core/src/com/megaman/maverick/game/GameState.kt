@@ -28,6 +28,6 @@ data class GameState(
         bossesDefeated.clear()
         heartTanksCollected.clear()
         healthTanksCollected.clear()
-        abilitiesAttained.clear()
+        // abilitiesAttained.clear()
     }
 }

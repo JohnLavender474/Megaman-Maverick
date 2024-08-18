@@ -33,189 +33,196 @@ Freezer Man
   index: -1
 Maverick/BOTTOM_CENTER
   rotate: false
-  xy: 0, 32
+  xy: 0, 96
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
 Maverick/BOTTOM_LEFT
   rotate: false
-  xy: 36, 32
+  xy: 36, 96
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
 Maverick/BOTTOM_RIGHT
   rotate: false
-  xy: 72, 32
+  xy: 72, 96
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
 Maverick/CENTER
   rotate: false
-  xy: 0, 68
+  xy: 0, 132
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
 Maverick/CENTER_LEFT
   rotate: false
-  xy: 36, 68
+  xy: 36, 132
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
 Maverick/CENTER_RIGHT
   rotate: false
-  xy: 72, 68
+  xy: 72, 132
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
 Maverick/TOP_CENTER
   rotate: false
-  xy: 0, 104
+  xy: 0, 168
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
 Maverick/TOP_LEFT
   rotate: false
-  xy: 36, 104
+  xy: 36, 168
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
 Maverick/TOP_RIGHT
   rotate: false
-  xy: 72, 104
+  xy: 72, 168
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
 Megaman/BOTTOM_CENTER
   rotate: false
-  xy: 0, 140
+  xy: 0, 204
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
 Megaman/BOTTOM_LEFT
   rotate: false
-  xy: 36, 140
+  xy: 36, 204
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
 Megaman/BOTTOM_RIGHT
   rotate: false
-  xy: 72, 140
+  xy: 72, 204
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
 Megaman/CENTER
   rotate: false
-  xy: 0, 176
+  xy: 0, 240
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
 Megaman/CENTER_LEFT
   rotate: false
-  xy: 36, 176
+  xy: 36, 240
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
 Megaman/CENTER_RIGHT
   rotate: false
-  xy: 72, 176
+  xy: 72, 240
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
 Megaman/TOP_CENTER
   rotate: false
-  xy: 0, 212
+  xy: 0, 276
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
 Megaman/TOP_LEFT
   rotate: false
-  xy: 36, 212
+  xy: 36, 276
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
 Megaman/TOP_RIGHT
   rotate: false
-  xy: 72, 212
+  xy: 72, 276
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
 Microwave Man
   rotate: false
-  xy: 0, 248
+  xy: 0, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Mister Man
   rotate: false
-  xy: 32, 248
+  xy: 32, 32
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Moon Man
+  rotate: false
+  xy: 64, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Nuke Man
   rotate: false
-  xy: 64, 248
+  xy: 96, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Precious Man
   rotate: false
-  xy: 96, 248
+  xy: 0, 64
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Roaster Man
   rotate: false
-  xy: 0, 280
+  xy: 32, 64
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Rodent Man
   rotate: false
-  xy: 32, 280
-  size: 32, 32
-  orig: 32, 32
+  xy: 0, 312
+  size: 48, 48
+  orig: 48, 48
   offset: 0, 0
   index: -1
 Timber Woman
   rotate: false
-  xy: 64, 280
+  xy: 64, 64
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Unknown
   rotate: false
-  xy: 0, 312
+  xy: 48, 312
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Wintry Man
   rotate: false
-  xy: 64, 312
+  xy: 96, 64
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

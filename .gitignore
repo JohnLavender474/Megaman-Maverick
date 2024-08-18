@@ -8,6 +8,8 @@ hs_err_pid*
 /desktop/out
 /core/out
 
+/build-run-desktop-debug.sh
+
 ## Robovm
 /ios/robovm-build/
 
