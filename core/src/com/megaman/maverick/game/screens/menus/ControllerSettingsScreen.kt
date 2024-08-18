@@ -7,9 +7,9 @@ import com.badlogic.gdx.controllers.ControllerAdapter
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
-import com.badlogic.gdx.utils.ObjectSet
 import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
+import com.engine.common.interfaces.Initializable
 import com.engine.common.time.Timer
 import com.engine.controller.ControllerUtils
 import com.engine.controller.buttons.Buttons
@@ -28,8 +28,10 @@ import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
 import com.megaman.maverick.game.utils.setToDefaultPosition
 
 class ControllerSettingsScreen(
-    game: MegamanMaverickGame, private val buttons: Buttons, var isKeyboardSettings: Boolean
-) : AbstractMenuScreen(game, BACK) {
+    game: MegamanMaverickGame,
+    private val buttons: Buttons,
+    var isKeyboardSettings: Boolean
+) : AbstractMenuScreen(game, BACK), Initializable {
 
     companion object {
         const val TAG = "ControllerSettingsScreen"
@@ -39,7 +41,6 @@ class ControllerSettingsScreen(
     }
 
     override val menuButtons = ObjectMap<String, IMenuButton>()
-    override val eventKeyMask = ObjectSet<Any>()
 
     private val delayOnChangeTimer = Timer(DELAY_ON_CHANGE)
     private val controller: Controller?
@@ -50,8 +51,12 @@ class ControllerSettingsScreen(
     private lateinit var buttonListener: ControllerAdapter
     private lateinit var hintFontHandle: BitmapFontHandle
     private lateinit var blinkingArrow: BlinkingArrow
+    private var initialized = false
 
     override fun init() {
+        if (initialized) return
+        initialized = true
+
         keyboardListener = object : InputAdapter() {
             override fun keyDown(keycode: Int): Boolean {
                 if (selectedButton == null) return true
@@ -220,6 +225,7 @@ class ControllerSettingsScreen(
     }
 
     override fun show() {
+        if (!initialized) init()
         super.show()
         game.getUiCamera().setToDefaultPosition()
     }

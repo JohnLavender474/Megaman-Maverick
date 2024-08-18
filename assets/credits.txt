@@ -1,0 +1,55 @@
+# Pixel Art
+
+## Bosses
+
+Timber Woman - oldlavygenes
+Rodent Man - oldlavygenes
+Reactor Man - Balloon Cart
+Moon Man - boberatu
+Naval Man - boberatu
+Inferno Man - boberatu
+Polarity Man - pharos04
+Desert Man - rcrdcat
+Bospider - Capcom
+Guts Tank - Capcom
+Sigma Rat Machine - Capcom
+Mecha Dragon - Capcom
+Moon Head - oldlavygenes
+Penguin Machine - Capcom
+React Monkey - Balloon Cart
+
+## Tilesets
+
+Reactor Man - Balloon Cart
+Naval Man - Balloon Cart
+MegaBot - ansimuz
+All others - Capcom
+
+--------------------------------------------
+
+# Music
+
+World Revolution - TrojanHorse711
+Duel of the Fates - Chips 'N Cellos
+FF7 Let the Battles Begin - Bulby
+MM11 Blast Man - 8-Bit Alchemy
+MM Omega Title Theme - 8-Bit Alchemy
+MMX2 Hunter State - Famitard
+MMX3 Intro Stage - Famitard
+MMX5 Dark Necrobat - Famitard
+MMX6 Blaze Heatnix - Famitard
+MMX6 Sigma 2 - Famitard
+Xenoblade Gaur Plains - Bulby
+MMX Stage Select - Walley Chantek
+
+--------------------------------------------
+
+# Sound Effects
+
+All sounds by Capcom
+
+--------------------------------------------
+
+# Game Design
+
+All levels by oldlavygenes

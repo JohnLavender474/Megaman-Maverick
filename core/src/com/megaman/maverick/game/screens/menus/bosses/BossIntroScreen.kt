@@ -5,8 +5,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
-import com.badlogic.gdx.utils.ObjectSet
 import com.engine.animations.Animation
+import com.engine.common.interfaces.Initializable
 import com.engine.common.time.Timer
 import com.engine.drawables.fonts.BitmapFontHandle
 import com.engine.screens.BaseScreen
@@ -21,9 +21,7 @@ import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
 import com.megaman.maverick.game.utils.getDefaultCameraPosition
 import java.util.*
 
-class BossIntroScreen(private val game: MegamanMaverickGame) : BaseScreen() {
-
-    override val eventKeyMask = ObjectSet<Any>()
+class BossIntroScreen(private val game: MegamanMaverickGame) : BaseScreen(), Initializable {
 
     private val uiCam = game.getUiCamera()
     private val audioMan = game.audioMan
@@ -44,8 +42,12 @@ class BossIntroScreen(private val game: MegamanMaverickGame) : BaseScreen() {
     private var b: BossType? = null
     private var currBAnim: Pair<Sprite, Queue<Pair<Animation, Timer>?>>? = null
 
+    private var initialized = true
+
     override fun init() {
-        super.init()
+        if (initialized) return
+        initialized = true
+
         val barReg: TextureRegion = game.assMan
             .get(TextureAsset.UI_1.source, TextureAtlas::class.java).findRegion("Bar")
         barAnim = Animation(barReg, 1, 4, Array.with(.3f, .15f, .15f, .15f), true)
@@ -94,6 +96,7 @@ class BossIntroScreen(private val game: MegamanMaverickGame) : BaseScreen() {
     }
 
     override fun show() {
+        if (!initialized) init()
         super.show()
         bText.textSupplier = { "" }
         durTimer.reset()

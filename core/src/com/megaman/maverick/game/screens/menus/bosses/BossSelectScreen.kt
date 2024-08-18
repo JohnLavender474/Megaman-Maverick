@@ -239,7 +239,7 @@ class BossSelectScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MEG
         slide.init()
         outro = false
         outTimer.reset()
-        game.audioMan.playMusic(MusicAsset.STAGE_SELECT_MM3_MUSIC, true)
+        game.audioMan.playMusic(MusicAsset.MMX_LEVEL_SELECT_SCREEN_MUSIC, true)
     }
 
     override fun onAnyMovement() {

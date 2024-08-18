@@ -471,7 +471,7 @@
   </object>
   <object id="579" name="Death" x="6624" y="800" width="736" height="32"/>
   <object id="580" name="Death" x="6656" y="736" width="32" height="96"/>
-  <object id="597" name="Death" x="7072" y="200" width="32" height="120"/>
+  <object id="597" name="Death" x="7072" y="192" width="32" height="128"/>
   <object id="598" name="Death" x="7136" y="288" width="128" height="32"/>
   <object id="599" name="Death" x="7296" y="288" width="320" height="32"/>
   <object id="616" name="Gate" x="8320" y="352" width="64" height="96">

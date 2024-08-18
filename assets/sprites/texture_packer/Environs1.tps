@@ -212,6 +212,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Environs1/Trees/Tree1.png</key>
+            <key type="filename">../frames/Environs1/Trees/TreeStump.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

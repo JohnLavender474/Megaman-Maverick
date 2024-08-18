@@ -27,6 +27,7 @@ import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sorting.IComparableDrawable
 import com.engine.events.Event
+import com.engine.events.IEventListener
 import com.engine.events.IEventsManager
 import com.engine.graph.SimpleNodeGraphMap
 import com.engine.motion.MotionSystem
@@ -64,7 +65,8 @@ import com.megaman.maverick.game.screens.levels.stats.PlayerStatsHandler
 import com.megaman.maverick.game.utils.toProps
 import java.util.*
 
-class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScreen(game.batch), Initializable {
+class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScreen(game.batch), Initializable,
+    IEventListener {
 
     companion object {
         const val TAG = "MegaLevelScreen"
@@ -150,7 +152,12 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
 
     private val spawns = Array<Spawn>()
 
+    private var initialized = false
+
     override fun init() {
+        if (initialized) return
+        initialized = true
+
         disposables = Array()
         spawnsMan = SpawnsManager()
         levelStateHandler = LevelStateHandler(game)
@@ -249,6 +256,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
     override fun show() {
         dispose()
         EntityFactories.init()
+        if (!initialized) init()
         super.show()
         eventsMan.addListener(this)
         engine.systems.forEach { it.on = true }

@@ -129,7 +129,7 @@
   <object id="25" x="1280" y="832" width="32" height="192"/>
   <object id="26" x="1152" y="968" width="1312" height="56"/>
   <object id="28" x="1568" y="896" width="352" height="128"/>
-  <object id="34" x="0" y="608" width="2464" height="40"/>
+  <object id="34" x="0" y="544" width="2464" height="104"/>
  </objectgroup>
  <objectgroup id="3" name="player">
   <object id="7" name="0" x="96" y="896" width="32" height="32"/>

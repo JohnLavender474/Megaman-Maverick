@@ -1,7 +1,6 @@
 package com.megaman.maverick.game.screens.other
 
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.utils.ObjectSet
 import com.engine.drawables.fonts.BitmapFontHandle
 import com.engine.screens.BaseScreen
 import com.megaman.maverick.game.ConstVals
@@ -11,11 +10,10 @@ import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
 
 class SimpleEndLevelScreen(private val game: MegamanMaverickGame) : BaseScreen() {
 
-    override val eventKeyMask = ObjectSet<Any>()
-
     private lateinit var successText: BitmapFontHandle
 
-    override fun init() {
+    override fun show() {
+        super.show()
         successText =
             BitmapFontHandle(
                 "LEVEL COMPLETE!",
@@ -28,10 +26,6 @@ class SimpleEndLevelScreen(private val game: MegamanMaverickGame) : BaseScreen()
                 centerY = true,
                 fontSource = ConstVals.MEGAMAN_MAVERICK_FONT
             )
-    }
-
-    override fun show() {
-        super.show()
         game.audioMan.playSound(SoundAsset.MM1_VICTORY_SOUND, false)
     }
 

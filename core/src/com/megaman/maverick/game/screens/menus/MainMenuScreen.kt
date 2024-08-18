@@ -12,6 +12,7 @@ import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.extensions.toGdxArray
+import com.engine.common.interfaces.Initializable
 import com.engine.common.time.Timer
 import com.engine.controller.ControllerUtils
 import com.engine.drawables.fonts.BitmapFontHandle
@@ -29,7 +30,8 @@ import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
 import com.megaman.maverick.game.utils.getDefaultCameraPosition
 import com.megaman.maverick.game.utils.setToDefaultPosition
 
-class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainScreenButton.START_NEW_GAME.text) {
+class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainScreenButton.START_NEW_GAME.text),
+    Initializable {
 
     enum class MainScreenButton(val text: String) {
         START_NEW_GAME("START NEW GAME"),
@@ -79,7 +81,12 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
     private var settingsArrowBlink = false
     private var doNotPlayPing = false
 
+    private var initialized = false
+
     override fun init() {
+        if (initialized) return
+        initialized = true
+
         var row = 4.75f
 
         MainScreenButton.values().forEach {
@@ -253,8 +260,8 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
             MainScreenButton.CREDITS.text,
             object : IMenuButton {
                 override fun onSelect(delta: Float): Boolean {
-                    // TODO: show credits
-                    return false
+                    game.setCurrentScreen(ScreenEnum.CREDITS.name)
+                    return true
                 }
 
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
@@ -387,6 +394,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
     }
 
     override fun show() {
+        if (!initialized) init()
         super.show()
         screenSlide.reset()
         game.getUiCamera().setToDefaultPosition()

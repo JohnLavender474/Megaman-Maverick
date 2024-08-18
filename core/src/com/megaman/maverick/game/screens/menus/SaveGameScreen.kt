@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.ObjectMap
 import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
 import com.engine.common.extensions.getTextureAtlas
+import com.engine.common.interfaces.Initializable
 import com.engine.drawables.fonts.BitmapFontHandle
 import com.engine.drawables.sorting.DrawingPriority
 import com.engine.drawables.sorting.DrawingSection
@@ -23,7 +24,7 @@ import com.megaman.maverick.game.screens.utils.BlinkingArrow
 import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
 import com.megaman.maverick.game.utils.setToDefaultPosition
 
-class SaveGameScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, SAVE) {
+class SaveGameScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, SAVE), Initializable {
 
     companion object {
         const val TAG = "SaveScreen"
@@ -43,10 +44,13 @@ class SaveGameScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, SAVE)
     private lateinit var arrow: BlinkingArrow
     private lateinit var frames: SpriteMatrix
     private lateinit var dots: SpriteMatrix
+    private var initialized = false
 
     override fun init() {
+        if (initialized) return
+        initialized = true
+
         GameLogger.debug(TAG, "Initializing...")
-        super.init()
 
         if (frameRegion == null || dotRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.UI_1.source)
@@ -156,6 +160,7 @@ class SaveGameScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, SAVE)
     }
 
     override fun show() {
+        if (!initialized) init()
         GameLogger.debug(TAG, "Showing...")
         super.show()
         game.getUiCamera().setToDefaultPosition()

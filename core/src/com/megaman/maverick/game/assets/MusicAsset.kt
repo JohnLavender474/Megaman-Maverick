@@ -7,6 +7,7 @@ const val MUSIC_ASSET_PREFIX = "music/"
 
 enum class MusicAsset(src: String) : IAsset {
     DUEL_OF_THE_FATES_MUSIC("duel_of_the_fates.mp3"),
+    MM_OMEGA_SLUDGE_MAN("Megaman_Omega_SludgeMan.mp3"),
     XENOBLADE_GAUR_PLAINS_MUSIC("Xenoblade_GaurPlains.wav"),
     MM11_WILY_STAGE_MUSIC("MM11_Wily_Stage.mp3"),
     FF7_BOSS_MUSIC("FF7_LetTheBattlesBegin.mp3"),
@@ -37,7 +38,8 @@ enum class MusicAsset(src: String) : IAsset {
     CHRONO_TRIGGER_WORLD_REVOLUTION_MUSIC("ChronoTrigger_WorldRevolution.mp3"),
     MM3_MAGNET_MAN_MUSIC("MM3_Magnet_Man.mp3"),
     MM2_PASSWORD_SCREEN_MUSIC("MM2_PasswordScreen.mp3"),
-    MMX6_BLAZE_HEATNIX("MMX6_BlazeHeatnix.mp3");
+    MMX6_BLAZE_HEATNIX_MUSIC("MMX6_BlazeHeatnix.mp3"),
+    MM2_CREDITS_MUSIC("MM2_Credits.mp3");
 
     companion object {
         fun valuesAsIAssetArray(): Array<IAsset> {

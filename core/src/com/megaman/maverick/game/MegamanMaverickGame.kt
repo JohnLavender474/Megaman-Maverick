@@ -75,6 +75,7 @@ import com.megaman.maverick.game.screens.menus.MainMenuScreen
 import com.megaman.maverick.game.screens.menus.SaveGameScreen
 import com.megaman.maverick.game.screens.menus.bosses.BossIntroScreen
 import com.megaman.maverick.game.screens.menus.bosses.BossSelectScreen
+import com.megaman.maverick.game.screens.other.CreditsScreen
 import com.megaman.maverick.game.screens.other.SimpleEndLevelScreen
 import com.megaman.maverick.game.screens.other.SimpleInitGameScreen
 import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
@@ -135,26 +136,11 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
 
     fun setCurrentScreen(key: String) {
         GameLogger.debug(TAG, "setCurrentScreen: set to screen with key = $key")
-
-        // hide old screen and remove it from events manager
-        currentScreenKey
-            ?.let { screens[it] }
-            ?.let {
-                it.hide()
-                eventsMan.removeListener(it)
-            }
-
-        // set next screen key
+        currentScreenKey?.let { screens[it] }?.hide()
         currentScreenKey = key
-
-        // get next screen, and if present show it, resize it, add it as an events listener, and pause
-        // it if necessary
         screens[key]?.let { nextScreen ->
             nextScreen.show()
             nextScreen.resize(Gdx.graphics.width, Gdx.graphics.height)
-
-            eventsMan.addListener(nextScreen)
-
             if (paused) nextScreen.pause()
         }
     }
@@ -253,6 +239,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
         screens.put(ScreenEnum.BOSS_INTRO_SCREEN.name, BossIntroScreen(this))
         screens.put(ScreenEnum.SIMPLE_END_LEVEL_SUCCESSFULLY_SCREEN.name, SimpleEndLevelScreen(this))
         screens.put(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name, SimpleInitGameScreen(this))
+        screens.put(ScreenEnum.CREDITS.name, CreditsScreen(this))
 
         if (params.debug && params.startScreen == "level") startLevelScreen(params.startLevel!!)
         else setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)

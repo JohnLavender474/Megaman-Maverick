@@ -12,7 +12,11 @@ object MegaUtilMethods {
         return Vector2(x, y)
     }
 
+    fun getSmallFontSize() = Math.round(ConstVals.PPM / 3f)
+
     fun getDefaultFontSize() = Math.round(ConstVals.PPM / 2f)
+
+    fun getLargeFontSize() = Math.round(ConstVals.PPM / 1.5f)
 
     fun calculateJumpImpulse(
         source: Vector2,

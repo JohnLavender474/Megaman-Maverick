@@ -17,8 +17,4 @@ class LoadPasswordScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, M
     override val menuButtons = ObjectMap<String, IMenuButton>()
 
     private val fontHandles = Array<BitmapFontHandle>()
-
-    override fun init() {
-        // TODO: blinking arrow should disappear when cursor is on the password table
-    }
 }
