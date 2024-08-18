@@ -6,6 +6,10 @@ This game uses a mix of assets made my myself, Capcom, and fan artists. Currentl
 the README or in-game. In the `assets` folder, you can find for some of the assets`.txt` files that contains links to 
 the sources of assets. I will be adding comprehensive credits to the README and in-game credits soon.
 
+## CREDITS
+
+See the [credits](./assets/credits.txt) file for a list of artists and their work used in this game.
+
 ### TODO
 - [ ] Give credit to myself, Capcom, and other artists for their work used in this game (music, sprites, etc.)
   - [ ] Create a credits screen
