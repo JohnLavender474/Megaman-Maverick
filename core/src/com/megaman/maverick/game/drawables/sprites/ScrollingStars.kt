@@ -15,10 +15,10 @@ class ScrollingStars(
     ) {
 
     companion object {
-        private const val ROWS = 1
-        private const val COLS = 6
-        private const val DUR = 10f
-        private const val WIDTH = ConstVals.VIEW_WIDTH / 3f
-        private const val HEIGHT = ConstVals.VIEW_HEIGHT / 4f
+        const val ROWS = 8
+        const val COLS = 8
+        const val DUR = 10f
+        const val WIDTH = 5f
+        const val HEIGHT = 3f
     }
 }

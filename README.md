@@ -34,12 +34,12 @@ See the [credits](./assets/credits.txt) file for a list of artists and their wor
   - [ ] Wreckage Man level
   - [ ] React Man level
 
+## THE GAME
+
 <img src="img/MainScreen.png" width="600px"/>
 <hr/>
 <img src="img/BossScreen.png" width="600px"/>
 <hr/>
-
-## THE PROJECT
 
 A simple fan game I'm working on in my spare time. Written in Kotlin using
 my custom-made <a href="https://github.com/JohnLavender474/2D-Game-Engine">2D Game Engine</a> and built upon the

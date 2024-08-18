@@ -115,7 +115,7 @@ public enum BossType {
     MOON_MAN("Moon Man", Level.MOON_MAN, Position.CENTER_LEFT, TextureAsset.BOSSES) {
         @Override
         public Vector2 getSpriteSize() {
-            return vector2Of(2.5f);
+            return vector2Of(1.75f);
         }
 
         @Override
@@ -234,18 +234,19 @@ public enum BossType {
     RODENT_MAN("Rodent Man", Level.CREW_MAN, Position.BOTTOM_CENTER, TextureAsset.RODENT_MAN) {
         @Override
         public Vector2 getSpriteSize() {
-            return new Vector2(2.5f, 2f);
+            return new Vector2(2.25f, 1.85f);
         }
 
         @Override
         public Map<String, Animation> getAnims(TextureAtlas textureAtlas) {
             Map<String, Animation> map = new HashMap<>();
-            map.put("Jump", new Animation(textureAtlas.findRegion("Jump"), 1, 4, .15f, true));
-            map.put("Run", new Animation(textureAtlas.findRegion("Run"), 1, 4, .15f, true));
-            map.put("Shoot", new Animation(textureAtlas.findRegion("Shoot"), 1, 3, .15f, false));
-            map.put("Slash", new Animation(textureAtlas.findRegion("Slash"), 1, 2, .15f, false));
-            map.put("Stand", new Animation(textureAtlas.findRegion("Stand"), 1, 6, .15f, true));
-            map.put("WallSlide", new Animation(textureAtlas.findRegion("WallSlide"), 1, 2, .15f, true));
+            map.put("Jump", new Animation(textureAtlas.findRegion("Jump"), 1, 4, 0.15f, true));
+            map.put("Run", new Animation(textureAtlas.findRegion("Run"), 1, 4, 0.15f, true));
+            map.put("Shoot", new Animation(textureAtlas.findRegion("Shoot"), 1, 3, 0.15f, false));
+            map.put("Slash", new Animation(textureAtlas.findRegion("Slash"), 1, 2, 0.15f, false));
+            map.put("Stand", new Animation(textureAtlas.findRegion("Stand"), 1, 6, 0.15f, true));
+            map.put("StandStill", new Animation(textureAtlas.findRegion("StandStill")));
+            map.put("WallSlide", new Animation(textureAtlas.findRegion("WallSlide"), 1, 2, 0.15f, true));
             return map;
         }
 
@@ -255,10 +256,10 @@ public enum BossType {
             Queue<Pair<Animation, Timer>> timerPairs = new LinkedList<>();
             timerPairs.add(new Pair<>(anims.get("Jump"), new Timer(ConstVals.BOSS_DROP_DOWN_DURATION)));
             timerPairs.add(new Pair<>(anims.get("Stand"), new Timer(2f)));
-            timerPairs.add(new Pair<>(anims.get("Run"), new Timer(.6f)));
-            timerPairs.add(new Pair<>(anims.get("Slash"), new Timer(.45f)));
-            timerPairs.add(new Pair<>(anims.get("Slash"), new Timer(.45f)));
-            timerPairs.add(new Pair<>(anims.get("Stand"), new Timer(3f)));
+            timerPairs.add(new Pair<>(anims.get("Run"), new Timer(0.6f)));
+            timerPairs.add(new Pair<>(anims.get("Slash"), new Timer(0.45f)));
+            timerPairs.add(new Pair<>(anims.get("Slash"), new Timer(0.45f)));
+            timerPairs.add(new Pair<>(anims.get("StandStill"), new Timer(3f)));
             return timerPairs;
         }
     },

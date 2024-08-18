@@ -337,6 +337,7 @@
             <key type="filename">../frames/Bosses/ReactMan/Jump.png</key>
             <key type="filename">../frames/Bosses/ReactMan/Stand.png</key>
             <key type="filename">../frames/Bosses/ReactMan/Throw.png</key>
+            <key type="filename">../frames/Bosses/RodentMan/StandStill.png</key>
             <key type="filename">../frames/Bosses/WintryMan/AboutToJump.png</key>
             <key type="filename">../frames/Bosses/WintryMan/Jump.png</key>
             <key type="filename">../frames/Bosses/WintryMan/StandShoot.png</key>
