@@ -75,8 +75,8 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
 
-        owner = spawnProps.get(ConstKeys.OWNER) as IGameEntity?
-        fullyCharged = spawnProps.get(ConstKeys.BOOLEAN) as Boolean
+        owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
+        fullyCharged = spawnProps.get(ConstKeys.BOOLEAN, Boolean::class)!!
         directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
 
         var bodyDimension = 0.75f * ConstVals.PPM
@@ -88,13 +88,13 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         body.setSize(bodyDimension)
         body.fixtures.forEach { ((it.second as Fixture).rawShape as GameRectangle).setSize(bodyDimension) }
 
-        trajectory = spawnProps.get(ConstKeys.TRAJECTORY) as Vector2
+        trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
 
         facing =
             if (directionRotation?.isVertical() == true) if (trajectory.x > 0f) Facing.RIGHT else Facing.LEFT
             else if (trajectory.y > 0f) Facing.RIGHT else Facing.LEFT
 
-        val spawn = spawnProps.get(ConstKeys.POSITION) as Vector2
+        val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
     }
 
@@ -111,7 +111,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         swapFacing()
         if (directionRotation?.isVertical() == true) trajectory.x *= -1f else trajectory.y *= -1f
 
-        val deflection = shieldFixture.getOrDefaultProperty(ConstKeys.DIRECTION, Direction.UP, Direction::class)
+        val deflection = shieldFixture.getProperty(ConstKeys.DIRECTION, Direction::class)
         val newTrajectory =
             when (directionRotation!!) {
                 Direction.UP -> {

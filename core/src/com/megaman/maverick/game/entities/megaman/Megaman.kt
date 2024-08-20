@@ -195,7 +195,8 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         SmallGreenMissile::class to dmgNeg(3),
         GreenExplosion::class to dmgNeg(3),
         Arigock::class to dmgNeg(3),
-        ArigockBall::class to dmgNeg(3)
+        ArigockBall::class to dmgNeg(3),
+        TotemPolem::class to dmgNeg(3)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 

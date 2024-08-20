@@ -17,7 +17,6 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
-import com.engine.entities.IGameEntity
 import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -48,9 +47,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
 
-        owner = spawnProps.get(ConstKeys.OWNER) as IGameEntity?
-
-        val spawn = spawnProps.get(ConstKeys.POSITION) as Vector2
+        val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
 
         directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)

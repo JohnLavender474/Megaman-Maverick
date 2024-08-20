@@ -410,6 +410,12 @@
             </struct>
             <key type="filename">../frames/Enemies2/Elecn/Elecn1.png</key>
             <key type="filename">../frames/Enemies2/Elecn/Elecn3.png</key>
+            <key type="filename">../frames/Enemies2/TotemPolem/eyes_closed.png</key>
+            <key type="filename">../frames/Enemies2/TotemPolem/eyes_open.png</key>
+            <key type="filename">../frames/Enemies2/TotemPolem/shoot1.png</key>
+            <key type="filename">../frames/Enemies2/TotemPolem/shoot2.png</key>
+            <key type="filename">../frames/Enemies2/TotemPolem/shoot3.png</key>
+            <key type="filename">../frames/Enemies2/TotemPolem/shoot4.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -642,6 +648,21 @@
                 <rect>40,8,80,16</rect>
                 <key>scale9Paddings</key>
                 <rect>40,8,80,16</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies2/TotemPolem/eyes_closing.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>24,72,48,144</rect>
+                <key>scale9Paddings</key>
+                <rect>24,72,48,144</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
