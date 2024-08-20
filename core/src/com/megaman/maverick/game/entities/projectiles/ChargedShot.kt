@@ -153,6 +153,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     override fun explodeAndDie(vararg params: Any?) {
         kill()
+
         val e = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.CHARGED_SHOT_EXPLOSION)!!
         val direction =
             if (abs(trajectory.y) > abs(trajectory.x))

@@ -53,6 +53,7 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
 
     private var durationTimer = Timer(FULLY_CHARGED_DURATION)
     private val soundTimer = Timer(SOUND_INTERVAL)
+    private lateinit var damagerFixture: Fixture
     private lateinit var direction: Direction
 
     override fun init() {
@@ -71,14 +72,18 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
 
         owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
         direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
-        fullyCharged = spawnProps.get(ConstKeys.BOOLEAN) as Boolean
+        fullyCharged = spawnProps.get(ConstKeys.BOOLEAN, Boolean::class)!!
 
         val duration = spawnProps.getOrDefault(
             ConstKeys.DURATION, if (fullyCharged) FULLY_CHARGED_DURATION else HALF_CHARGED_DURATION, Float::class
         )
         durationTimer = Timer(duration)
 
-        val spawn = spawnProps.get(ConstKeys.POSITION) as Vector2
+        val size = if (fullyCharged) 1.5f * ConstVals.PPM else ConstVals.PPM.toFloat()
+        body.setSize(size)
+        (damagerFixture.rawShape as GameRectangle).setSize(size)
+
+        val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
 
         val spriteDimension = (if (fullyCharged) 1.75f else 1.25f) * ConstVals.PPM
@@ -98,14 +103,12 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
+
+        damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
         body.addFixture(damagerFixture)
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
-        body.preProcess.put(ConstKeys.DEFAULT) {
-            val size = if (fullyCharged) 1.5f * ConstVals.PPM else ConstVals.PPM.toFloat()
-            body.setSize(size)
-            (damagerFixture.rawShape as GameRectangle).setSize(size)
-        }
+
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBodyBounds() }), debug = true))
+
         return BodyComponentCreator.create(this, body)
     }
 
