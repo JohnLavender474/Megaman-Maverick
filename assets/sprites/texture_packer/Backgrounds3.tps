@@ -209,6 +209,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Backgrounds3/ForestBKG.png</key>
+            <key type="filename">../frames/Backgrounds3/SprBGTomahawk.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

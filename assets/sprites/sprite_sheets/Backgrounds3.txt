@@ -1,5 +1,5 @@
 Backgrounds3.png
-size: 856, 624
+size: 456, 1624
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -19,42 +19,49 @@ BKG18
   index: -1
 BKG19
   rotate: false
-  xy: 400, 0
+  xy: 0, 200
   size: 200, 200
   orig: 200, 200
   offset: 0, 0
   index: -1
 BKG20
   rotate: false
-  xy: 0, 224
+  xy: 200, 200
   size: 200, 400
   orig: 200, 400
   offset: 0, 0
   index: -1
 BKG21
   rotate: false
-  xy: 200, 224
+  xy: 0, 600
   size: 200, 400
   orig: 200, 400
   offset: 0, 0
   index: -1
 BKG22
   rotate: false
-  xy: 400, 224
+  xy: 200, 600
   size: 200, 400
   orig: 200, 400
   offset: 0, 0
   index: -1
 BKG23
   rotate: false
-  xy: 600, 224
+  xy: 0, 1000
   size: 200, 400
   orig: 200, 400
   offset: 0, 0
   index: -1
 ForestBKG
   rotate: false
-  xy: 600, 0
+  xy: 200, 1000
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+SprBGTomahawk
+  rotate: false
+  xy: 0, 1400
   size: 256, 224
   orig: 256, 224
   offset: 0, 0

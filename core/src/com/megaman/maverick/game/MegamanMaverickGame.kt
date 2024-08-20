@@ -89,9 +89,13 @@ import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 import kotlin.reflect.cast
 
+enum class StartScreenOption {
+    MAIN, LEVEL
+}
+
 class MegamanMaverickGameParams {
     var debug: Boolean = false
-    var startScreen: String? = null
+    var startScreen: StartScreenOption = StartScreenOption.MAIN
     var startLevel: Level? = null
 }
 
@@ -204,7 +208,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
         viewports.put(ConstKeys.UI, uiViewport)
 
         debugText = BitmapFontHandle(
-            { "VEL_X: ${(megaman.body.physics.velocity.x / ConstVals.PPM).toInt()}" }, getDefaultFontSize(), Vector2(
+            { "FPS: ${Gdx.graphics.framesPerSecond}" }, getDefaultFontSize(), Vector2(
                 (ConstVals.VIEW_WIDTH - 2) * ConstVals.PPM, (ConstVals.VIEW_HEIGHT - 1) * ConstVals.PPM
             ), centerX = true, centerY = true, fontSource = ConstVals.MEGAMAN_MAVERICK_FONT
         )
@@ -241,7 +245,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
         screens.put(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name, SimpleInitGameScreen(this))
         screens.put(ScreenEnum.CREDITS.name, CreditsScreen(this))
 
-        if (params.debug && params.startScreen == "level") startLevelScreen(params.startLevel!!)
+        if (params.startScreen == StartScreenOption.LEVEL) startLevelScreen(params.startLevel!!)
         else setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
     }
 

@@ -277,7 +277,9 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Enemies2/Bomb Potton.png</key>
+            <key type="filename">../frames/Enemies2/BombChute/down.png</key>
+            <key type="filename">../frames/Enemies2/BombChute/up.png</key>
+            <key type="filename">../frames/Enemies2/BombPotton.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -286,9 +288,24 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>37,31,74,63</rect>
+                <rect>8,16,16,32</rect>
                 <key>scale9Paddings</key>
-                <rect>37,31,74,63</rect>
+                <rect>8,16,16,32</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies2/BombChute/turn.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>8,24,16,48</rect>
+                <key>scale9Paddings</key>
+                <rect>8,24,16,48</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

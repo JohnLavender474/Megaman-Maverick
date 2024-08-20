@@ -173,7 +173,7 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">../frames/Enemies1/Arigock/Clapping.png</key>
+            <key type="filename">../frames/Enemies1/Arigock/closed.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -182,14 +182,13 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>24,10,48,21</rect>
+                <rect>12,10,24,21</rect>
                 <key>scale9Paddings</key>
-                <rect>24,10,48,21</rect>
+                <rect>12,10,24,21</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Enemies1/Arigock/Closed.png</key>
-            <key type="filename">../frames/Enemies1/Arigock/Open.png</key>
+            <key type="filename">../frames/Enemies1/Arigock/shooting.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -198,9 +197,9 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>12,10,24,21</rect>
+                <rect>12,21,24,41</rect>
                 <key>scale9Paddings</key>
-                <rect>12,10,24,21</rect>
+                <rect>12,21,24,41</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

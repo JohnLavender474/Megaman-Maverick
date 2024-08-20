@@ -177,7 +177,7 @@ abstract class AbstractEnemy(
 
         translateHealth(-damage)
 
-        requestToPlaySound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
+        if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
         return true
     }
 
@@ -206,7 +206,7 @@ abstract class AbstractEnemy(
     }
 
     protected open fun explode(explosionProps: Properties? = null) {
-        playSoundNow(SoundAsset.ENEMY_DAMAGE_SOUND, false)
+        if (overlapsGameCamera()) playSoundNow(SoundAsset.ENEMY_DAMAGE_SOUND, false)
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)
         val props = explosionProps ?: props(ConstKeys.POSITION to body.getCenter())
         game.engine.spawn(explosion!!, props)

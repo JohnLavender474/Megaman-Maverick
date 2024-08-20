@@ -45,22 +45,19 @@ public class DesktopLauncher {
         public boolean vsync = DEFAULT_VSYNC;
 
         @Parameter(names = {"--debug"}, description =
-                "Enable debugging mode which turns on DEBUG-level logging, debug text rendering, " +
-                        "debug shape rendering, and the ability to specify the startup screen. Default value = " +
-                        DEFAULT_DEBUG + ".")
+                "Enable debugging mode which turns on debug text rendering and debug shape rendering. Default " +
+                        "value = " + DEFAULT_DEBUG + ".")
         public boolean debug = DEFAULT_DEBUG;
 
         @Parameter(names = {"--startScreen"}, description =
-                "The screen to start the game app on. This option only works if debugging is enabled. " +
-                        "Options: \"main\", \"level\". Options not case sensitive. Default value = " +
-                        DEFAULT_START_SCREEN + ".")
+                "The screen to start the game app on. Options: \"main\", \"level\". Options not case sensitive. " +
+                        "Default value = " + DEFAULT_START_SCREEN + ".")
         public String startScreen = DEFAULT_START_SCREEN;
 
         @Parameter(names = {"--level"}, description =
-                "The level to start the game app on. This option only works if debugging is enabled and \"level\" has" +
-                        " been selected as the start screen. Choose the name of the level from the Level enum class " +
-                        "(not case sensitive). No default value. If the level is not found, the game will start on " +
-                        "the main screen.")
+                "The level to start the game app on. This option only works if \"level\" has been selected as the " +
+                        "start screen. Choose the name of the level from the Level enum class (not case sensitive). " +
+                        "No default value. If the level is not found, an exception is thrown.")
         public String level = DEFAULT_LEVEL;
     }
 
@@ -87,11 +84,23 @@ public class DesktopLauncher {
 
         MegamanMaverickGameParams params = new MegamanMaverickGameParams();
         params.setDebug(appArgs.debug);
-        if (appArgs.debug) {
-            params.setStartScreen(appArgs.startScreen.toLowerCase());
-            if (appArgs.startScreen.equalsIgnoreCase("level")) {
-                params.setStartLevel(Level.valueOf(appArgs.level.toUpperCase()));
-            }
+
+        StartScreenOption startScreenOption;
+        if (appArgs.startScreen.isBlank() || appArgs.startScreen.equalsIgnoreCase("main")) {
+            startScreenOption = StartScreenOption.MAIN;
+        } else if (appArgs.startScreen.equalsIgnoreCase("level")) {
+            startScreenOption = StartScreenOption.LEVEL;
+        } else {
+            System.err.println("[Application] Error in main method: Invalid start screen option.");
+            jCommander.usage();
+            Gdx.app.exit();
+            return;
+        }
+        params.setStartScreen(startScreenOption);
+
+        if (startScreenOption.equals(StartScreenOption.LEVEL)) {
+            Level level = Level.valueOf(appArgs.level.toUpperCase());
+            params.setStartLevel(level);
         }
 
         Game game = new MegamanMaverickGame(params);

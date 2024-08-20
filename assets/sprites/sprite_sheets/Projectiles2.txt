@@ -1,39 +1,46 @@
 Projectiles2.png
-size: 128, 220
+size: 64, 528
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-BunbyRedRocket
+ArigockBall
   rotate: false
   xy: 0, 0
+  size: 48, 82
+  orig: 48, 82
+  offset: 0, 0
+  index: -1
+BunbyRedRocket
+  rotate: false
+  xy: 0, 82
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 MoonMan/crescent
   rotate: false
-  xy: 0, 100
+  xy: 0, 146
   size: 64, 120
   orig: 64, 120
   offset: 0, 0
   index: -1
 MoonMan/star
   rotate: false
-  xy: 64, 100
+  xy: 0, 266
   size: 64, 120
   orig: 64, 120
   offset: 0, 0
   index: -1
 SmallGreenMissile
   rotate: false
-  xy: 32, 0
+  xy: 0, 386
   size: 35, 42
   orig: 35, 42
   offset: 0, 0
   index: -1
 SpitFireball
   rotate: false
-  xy: 67, 0
+  xy: 0, 428
   size: 50, 100
   orig: 50, 100
   offset: 0, 0

@@ -23,6 +23,7 @@ React Monkey - Balloon Cart
 Reactor Man - Balloon Cart
 Naval Man - Balloon Cart
 MegaBot - ansimuz
+Mega 8-Bit - Super Icon Ltd
 All others - Capcom
 
 --------------------------------------------
@@ -41,6 +42,7 @@ MMX6 Blaze Heatnix - Famitard
 MMX6 Sigma 2 - Famitard
 Xenoblade Gaur Plains - Bulby
 MMX Stage Select - Walley Chantek
+MMX7 Vanish. Gung. - Famitard
 
 --------------------------------------------
 
