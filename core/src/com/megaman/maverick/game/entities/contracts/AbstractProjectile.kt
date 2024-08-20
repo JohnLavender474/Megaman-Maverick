@@ -108,6 +108,8 @@ abstract class AbstractProjectile(game: MegamanMaverickGame) : MegaGameEntity(ga
 
     open fun hitWater(waterFixture: IFixture) {}
 
+    open fun hitSand(sandFixture: IFixture) {}
+
     open fun hitProjectile(projectileFixture: IFixture) {}
 
     protected abstract fun defineBodyComponent(): BodyComponent

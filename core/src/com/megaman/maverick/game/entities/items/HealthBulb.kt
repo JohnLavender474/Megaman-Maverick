@@ -48,7 +48,7 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.FixtureType
-import com.megaman.maverick.game.world.isSensing
+import com.megaman.maverick.game.world.isSensingAny
 
 class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, ISpritesEntity, IAnimatedEntity,
     IBodyEntity, ICullableEntity, IDirectionRotatable {
@@ -191,7 +191,7 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
-        if (body.isSensing(BodySense.FEET_ON_GROUND)) {
+        if (body.isSensingAny(BodySense.FEET_ON_GROUND, BodySense.FEET_ON_SAND)) {
             body.physics.gravityOn = false
             body.physics.velocity.setZero()
         } else body.physics.gravityOn = true

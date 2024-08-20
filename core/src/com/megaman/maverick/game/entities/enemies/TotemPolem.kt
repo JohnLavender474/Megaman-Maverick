@@ -172,19 +172,31 @@ class TotemPolem(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.65f * ConstVals.PPM, 3.25f * ConstVals.PPM)
+        body.setSize(0.85f * ConstVals.PPM, 3.25f * ConstVals.PPM)
         body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBodyBounds() }
 
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
+        val bodyFixture = Fixture(
+            body, FixtureType.BODY, GameRectangle().setSize(
+                0.65f * ConstVals.PPM, 3.25f * ConstVals.PPM
+            )
+        )
         body.addFixture(bodyFixture)
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
+        val damagerFixture = Fixture(
+            body, FixtureType.DAMAGER, GameRectangle().setSize(
+                0.65f * ConstVals.PPM, 3.25f * ConstVals.PPM
+            )
+        )
         body.addFixture(damagerFixture)
 
-        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle(body))
+        val shieldFixture = Fixture(
+            body, FixtureType.SHIELD, GameRectangle().setSize(
+                0.65f * ConstVals.PPM, 3.25f * ConstVals.PPM
+            )
+        )
         body.addFixture(shieldFixture)
 
         val damageableFixtures = Array<Fixture>()
@@ -209,7 +221,7 @@ class TotemPolem(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             for (i in 0 until damageableFixtures.size) {
                 val d = damageableFixtures[i]
                 d.offsetFromBodyCenter.x = 0.25f * ConstVals.PPM * facing.value
-                d.active = eyesOpen && shootPositionIndex == i
+                d.active = eyesOpen
             }
         }
 

@@ -11,14 +11,12 @@ import com.engine.common.getOverlapPushDirection
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
-import com.engine.damage.IDamageable
 import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
-import com.engine.entities.contracts.IBodyEntity
 import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -66,9 +64,7 @@ class SmallGreenMissile(game: MegamanMaverickGame) : AbstractProjectile(game), I
 
     override fun hitBlock(blockFixture: IFixture) = explodeAndDie(blockFixture.getShape() as GameRectangle)
 
-    override fun onDamageInflictedTo(damageable: IDamageable) {
-        if (damageable is IBodyEntity) explodeAndDie(damageable.body)
-    }
+    override fun hitSand(sandFixture: IFixture) = explodeAndDie(sandFixture.getShape() as GameRectangle)
 
     override fun explodeAndDie(vararg params: Any?) {
         kill()
@@ -126,7 +122,7 @@ class SmallGreenMissile(game: MegamanMaverickGame) : AbstractProjectile(game), I
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(0.5f * ConstVals.PPM)
+        sprite.setSize(0.35f * ConstVals.PPM)
         sprite.setRegion(region!!)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->

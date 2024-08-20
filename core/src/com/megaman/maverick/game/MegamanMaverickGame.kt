@@ -406,6 +406,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
                         FixtureType.BLOCK,
                         FixtureType.SHIELD,
                         FixtureType.WATER,
+                        FixtureType.SAND,
                         FixtureType.PROJECTILE
                     ),
                     FixtureType.LASER to objectSetOf(FixtureType.BLOCK),

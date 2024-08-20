@@ -68,6 +68,8 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
         if (entity != owner && entity is IDamageable && !entity.canBeDamagedBy(this)) explodeAndDie()
     }
 
+    override fun hitSand(sandFixture: IFixture) = explodeAndDie()
+
     override fun hitBlock(blockFixture: IFixture) = explodeAndDie()
 
     override fun hitShield(shieldFixture: IFixture) {

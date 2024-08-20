@@ -56,9 +56,13 @@ class ArigockBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     override fun hitBlock(blockFixture: IFixture) = explodeAndDie()
 
+    override fun hitSand(sandFixture: IFixture) = explodeAndDie()
+
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
     override fun explodeAndDie(vararg params: Any?) {
+        kill()
+
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
         game.engine.spawn(explosion, props(
             ConstKeys.OWNER to owner,

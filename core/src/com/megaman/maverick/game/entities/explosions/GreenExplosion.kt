@@ -47,7 +47,7 @@ class GreenExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
 
     companion object {
         const val TAG = "GreenExplosion"
-        private const val DURATION = 0.325f
+        private const val DURATION = 0.3f
         private var region: TextureRegion? = null
     }
 
@@ -78,7 +78,7 @@ class GreenExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
             },
             TimeMarkedRunnable(0.25f) {
                 width = 0.5f
-                damagerOffset = 1.25f
+                damagerOffset = 1.5f
             },
         )
     )

@@ -102,6 +102,8 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     override fun hitBlock(blockFixture: IFixture) = explodeAndDie()
 
+    override fun hitSand(sandFixture: IFixture) = explodeAndDie()
+
     override fun hitShield(shieldFixture: IFixture) {
         val shieldEntity = shieldFixture.getEntity()
         if (shieldEntity == owner) return

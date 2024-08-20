@@ -331,8 +331,8 @@ class MegaContactListener(
                     bodyFixture.properties.getOrDefault(ConstKeys.GRAVITY_ROTATABLE, true, Boolean::class)
                 if (canChangeGravityRotation) {
                     val direction = gravityChangeFixture.getProperty(ConstKeys.DIRECTION, Direction::class) ?: return
-                    if (entity is IDirectionRotatable && entity.directionRotation != direction)
-                        entity.directionRotation = direction
+                    if (entity is IDirectionRotatable && entity.directionRotation != direction) entity.directionRotation =
+                        direction
                 }
             }
         }
@@ -367,7 +367,12 @@ class MegaContactListener(
         // projectile, block or body or shield or water or projectile
         else if (contact.fixtureSetsMatch(
                 objectSetOf(FixtureType.PROJECTILE), objectSetOf(
-                    FixtureType.BLOCK, FixtureType.BODY, FixtureType.SHIELD, FixtureType.WATER, FixtureType.PROJECTILE
+                    FixtureType.BLOCK,
+                    FixtureType.BODY,
+                    FixtureType.SHIELD,
+                    FixtureType.WATER,
+                    FixtureType.SAND,
+                    FixtureType.PROJECTILE
                 )
             )
         ) {
@@ -376,7 +381,12 @@ class MegaContactListener(
             )
             val (projectileFixture, otherFixture) = contact.getFixtureSetsInOrder(
                 objectSetOf(FixtureType.PROJECTILE), objectSetOf(
-                    FixtureType.BLOCK, FixtureType.BODY, FixtureType.SHIELD, FixtureType.WATER, FixtureType.PROJECTILE
+                    FixtureType.BLOCK,
+                    FixtureType.BODY,
+                    FixtureType.SHIELD,
+                    FixtureType.WATER,
+                    FixtureType.SAND,
+                    FixtureType.PROJECTILE
                 )
             )!!
 
@@ -407,6 +417,11 @@ class MegaContactListener(
                 FixtureType.WATER -> {
                     printDebugLog(contact, "beginContact(): Projectile-Water, contact = $contact")
                     projectile.hitWater(otherFixture)
+                }
+
+                FixtureType.SAND -> {
+                    printDebugLog(contact, "beginContact(): Projectile-Sand, contact = $contact")
+                    projectile.hitSand(otherFixture)
                 }
 
                 FixtureType.PROJECTILE -> {
@@ -875,8 +890,7 @@ class MegaContactListener(
         else if (contact.fixturesMatch(FixtureType.TELEPORTER_LISTENER, FixtureType.TELEPORTER)) {
             printDebugLog(contact, "beginContact(): TeleporterListener-Teleporter, contact = $contact")
             val (teleporterListenerFixture, _) = contact.getFixturesInOrder(
-                FixtureType.TELEPORTER_LISTENER,
-                FixtureType.TELEPORTER
+                FixtureType.TELEPORTER_LISTENER, FixtureType.TELEPORTER
             )!!
             teleporterListenerFixture.getBody().setBodySense(BodySense.TELEPORTING, false)
         }
