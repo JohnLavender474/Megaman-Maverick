@@ -28,14 +28,21 @@ import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
+import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
+import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.overlapsGameCamera
+import com.megaman.maverick.game.entities.projectiles.Bullet
+import com.megaman.maverick.game.entities.projectiles.ChargedShot
+import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.projectiles.ReactManProjectile
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
@@ -48,12 +55,23 @@ class TurnBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IDirectionRo
         private const val MAX_ANGLE_OFFSET = 45f
         private const val TURN_SPEED = 90f
         private const val AIM_DUR = 2f
-        private const val SHOOT_DELAY = 0.5f
+        private const val SHOOT_DELAY = 0.25f
         private const val ORB_SPEED = 8f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>()
+    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+        Bullet::class to dmgNeg(10),
+        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class to dmgNeg {
+            it as ChargedShot
+            if (it.fullyCharged) 15 else 10
+        },
+        ChargedShotExplosion::class to dmgNeg {
+            it as ChargedShotExplosion
+            if (it.fullyCharged) 10 else 5
+        }
+    )
     override var directionRotation: Direction?
         get() = body.cardinalRotation
         set(value) {
@@ -97,7 +115,7 @@ class TurnBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IDirectionRo
     private fun spawnOrb() {
         orb =
             EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.REACT_MAN_PROJECTILE) as AbstractProjectile
-        val offset = Vector2(0f, 0.5f * ConstVals.PPM).rotateDeg(directionRotation!!.rotation + angleOffset)
+        val offset = Vector2(0f, 0.65f * ConstVals.PPM).rotateDeg(directionRotation!!.rotation + angleOffset)
         val position = body.getCenter().add(offset)
         game.engine.spawn(orb!!, props(ConstKeys.OWNER to this, ConstKeys.POSITION to position, ConstKeys.BIG to false))
     }
@@ -107,6 +125,7 @@ class TurnBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IDirectionRo
         rOrb.active = true
         rOrb.setTrajectory(Vector2(0f, ORB_SPEED * ConstVals.PPM).rotateDeg(directionRotation!!.rotation + angleOffset))
         orb = null
+        if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {

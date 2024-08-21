@@ -45,7 +45,7 @@ class ReactManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game), 
     companion object {
         const val TAG = "ReactManProjectile"
         private const val GRAVITY = -0.15f
-        private const val DIE_DUR = 0.1f
+        private const val DIE_DUR = 0.05f
         private val shatterTrajectories = objectMapOf(
             Direction.UP to gdxArrayOf(
                 Vector2(5f, 9f),
