@@ -169,10 +169,12 @@ class MegaContactListener(
                 return
             }
 
-            val posDelta = blockFixture.getBody().getPositionDelta()
-
-            body.x += posDelta.x
-            body.y += posDelta.y
+            val stickToBlock = feetFixture.getOrDefaultProperty(ConstKeys.STICK_TO_BLOCK, true, Boolean::class)
+            if (stickToBlock) {
+                val posDelta = blockFixture.getBody().getPositionDelta()
+                body.x += posDelta.x
+                body.y += posDelta.y
+            }
 
             val entity = feetFixture.getEntity()
             if (entity is Megaman) entity.aButtonTask = AButtonTask.JUMP
@@ -542,10 +544,12 @@ class MegaContactListener(
                 return
             }
 
-            val posDelta = blockFixture.getBody().getPositionDelta()
-
-            body.x += posDelta.x
-            body.y += posDelta.y
+            val stickToBlock = feetFixture.getOrDefaultProperty(ConstKeys.STICK_TO_BLOCK, true, Boolean::class)
+            if (stickToBlock) {
+                val posDelta = blockFixture.getBody().getPositionDelta()
+                body.x += posDelta.x
+                body.y += posDelta.y
+            }
 
             val entity = feetFixture.getEntity()
             if (entity is Megaman) entity.aButtonTask = AButtonTask.JUMP

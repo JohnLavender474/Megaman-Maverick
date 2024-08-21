@@ -12,6 +12,7 @@ import com.engine.common.getOverlapPushDirection
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
+import com.engine.damage.IDamageable
 import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
 import com.engine.drawables.sorting.DrawingPriority
@@ -20,6 +21,7 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
+import com.engine.entities.contracts.IBodyEntity
 import com.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -80,6 +82,10 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
         firstSprite!!.setRegion(region)
 
         explosionType = spawnProps.getOrDefault(ConstKeys.EXPLOSION, DEFAULT_EXPLOSION, String::class)
+    }
+
+    override fun onDamageInflictedTo(damageable: IDamageable) {
+        if (damageable is IBodyEntity) explodeAndDie(damageable.body as GameRectangle)
     }
 
     override fun hitBlock(blockFixture: IFixture) = explodeAndDie(blockFixture.getShape() as GameRectangle)

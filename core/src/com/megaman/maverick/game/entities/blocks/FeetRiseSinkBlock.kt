@@ -2,12 +2,10 @@ package com.megaman.maverick.game.entities.blocks
 
 import com.engine.common.objects.Properties
 import com.engine.world.BodyComponent
-import com.engine.world.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
-
-import com.megaman.maverick.game.world.FixtureType
+import com.megaman.maverick.game.entities.megaman.components.feetFixture
 
 class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {
 
@@ -15,11 +13,8 @@ class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {
         const val TAG = "FeetRiseSinkBlock"
     }
 
-    private lateinit var megamanFeet: IFixture
-
     private var maxY = 0f
     private var minY = 0f
-
     private var fallingSpeed = 0f
     private var risingSpeed = 0f
 
@@ -34,14 +29,12 @@ class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {
 
         fallingSpeed = spawnProps.getOrDefault(ConstKeys.FALL, 0f, Float::class)
         risingSpeed = spawnProps.getOrDefault(ConstKeys.RISE, 0f, Float::class)
-
-        megamanFeet = getMegaman().body.fixtures.first { it.second.getFixtureType() == FixtureType.FEET }.second
     }
 
     override fun defineBodyComponent(): BodyComponent {
         val bodyComponent = super.defineBodyComponent()
         bodyComponent.body.preProcess.put(ConstKeys.MOVE) {
-            if (megamanFeet.getShape().overlaps(body)) {
+            if (getMegaman().feetFixture.getShape().overlaps(body)) {
                 if (body.y > minY) body.physics.velocity.y = fallingSpeed * ConstVals.PPM
                 else body.physics.velocity.y = 0f
             } else if (body.getMaxY() < maxY) body.physics.velocity.y = risingSpeed * ConstVals.PPM

@@ -13,6 +13,8 @@ import com.engine.common.extensions.*
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
+import com.engine.cullables.CullableOnEvent
+import com.engine.cullables.CullablesComponent
 import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.sorting.DrawingPriority
 import com.engine.drawables.sorting.DrawingSection
@@ -20,10 +22,9 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
-import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.entities.contracts.IAudioEntity
-import com.engine.entities.contracts.IChildEntity
+import com.engine.entities.contracts.ICullableEntity
 import com.engine.entities.contracts.ISpritesEntity
 import com.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
@@ -37,10 +38,11 @@ import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.entities.overlapsGameCamera
+import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.BodyLabel
 import com.megaman.maverick.game.world.FixtureLabel
 
-class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAudioEntity {
+class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntity, ISpritesEntity, IAudioEntity {
 
     companion object {
         const val TAG = "RailTrack"
@@ -69,6 +71,7 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntit
             dropTrackRegion = atlas.findRegion("RailTrack/Drop")
         }
         addComponent(defineUpdatablesComponent())
+        addComponent(defineCullablesComponent())
         addComponent(SpritesComponent())
         addComponent(AudioComponent())
     }
@@ -122,7 +125,6 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntit
         game.engine.spawn(
             platform!!,
             props(
-                ConstKeys.PARENT to this,
                 ConstKeys.POSITION to Vector2(spawn.x + platformSpawn * ConstVals.PPM, spawn.y),
                 ConstKeys.CULL_OUT_OF_BOUNDS to false,
                 ConstKeys.TRAJECTORY to PLATFORM_SPEED * ConstVals.PPM * if (platformRight) 1 else -1
@@ -134,6 +136,8 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntit
 
     override fun onDestroy() {
         super.onDestroy()
+        platform?.kill()
+        platform = null
         sprites.clear()
     }
 
@@ -153,12 +157,17 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntit
         else if (!platform!!.dropped && drops.any { drop -> pivot.x >= drop.x && pivot.getMaxX() <= drop.getMaxX() })
             platform!!.drop()
     })
+
+    private fun defineCullablesComponent(): CullablesComponent {
+        val cullEvents = objectSetOf<Any>(EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS)
+        val cullOnEvents = CullableOnEvent({ cullEvents.contains(it) }, cullEvents)
+        runnablesOnSpawn.add { game.eventsMan.addListener(cullOnEvents) }
+        runnablesOnDestroy.add { game.eventsMan.removeListener(cullOnEvents) }
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS to cullOnEvents))
+    }
 }
 
-class RailTrackPlatform(game: MegamanMaverickGame) : Block(game), IChildEntity, ISpritesEntity, IAnimatedEntity,
-    IAudioEntity {
-
-    override var parent: IGameEntity? = null
+class RailTrackPlatform(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity, IAudioEntity {
 
     companion object {
         const val TAG = "RailTrackPlatform"
@@ -196,8 +205,9 @@ class RailTrackPlatform(game: MegamanMaverickGame) : Block(game), IChildEntity, 
             ConstKeys.FIXTURE_LABELS,
             objectSetOf(FixtureLabel.NO_SIDE_TOUCHIE, FixtureLabel.NO_PROJECTILE_COLLISION)
         )
+
         super.spawn(spawnProps)
-        parent = spawnProps.get(ConstKeys.PARENT, IGameEntity::class)!!
+
         val trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Float::class)!!
         body.physics.velocity.x = trajectory
         body.physics.collisionOn = true

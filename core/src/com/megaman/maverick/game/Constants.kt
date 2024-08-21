@@ -31,6 +31,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val STICK_TO_BLOCK = "stick_to_block"
     const val FEET = "feet"
     const val CONDITIONAL = "conditional"
     const val DEBUG = "debug"

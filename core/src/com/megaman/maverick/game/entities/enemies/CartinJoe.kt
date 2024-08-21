@@ -66,7 +66,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
         private const val VEL_X = 5f
         private const val GROUND_GRAVITY = -0.0015f
         private const val GRAVITY = -0.5f
-        private const val WAIT_DURATION = 1f
+        private const val WAIT_DURATION = 0.5f
         private const val SHOOT_DURATION = 0.25f
         private const val BULLET_SPEED = 10f
     }

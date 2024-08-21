@@ -45,10 +45,7 @@ import com.megaman.maverick.game.entities.contracts.ItemEntity
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.world.BodyComponentCreator
-import com.megaman.maverick.game.world.BodySense
-import com.megaman.maverick.game.world.FixtureType
-import com.megaman.maverick.game.world.isSensingAny
+import com.megaman.maverick.game.world.*
 
 class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, ISpritesEntity, IAnimatedEntity,
     IBodyEntity, ICullableEntity, IDirectionRotatable {
@@ -156,6 +153,8 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
                 Direction.DOWN -> Vector2(0f, GRAVITY)
             }
             body.physics.gravity = gravity.scl(ConstVals.PPM.toFloat())
+
+            feetFixture.putProperty(ConstKeys.STICK_TO_BLOCK, !body.isSensing(BodySense.FEET_ON_SAND))
         })
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

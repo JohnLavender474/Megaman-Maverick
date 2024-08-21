@@ -46,7 +46,7 @@ class CactusMissile(game: MegamanMaverickGame): AbstractProjectile(game), IHealt
 
     companion object {
         const val TAG = "CactusMissile"
-        private const val SPEED = 3.5f
+        private const val SPEED = 4f
         private const val UP_DUR = 0.25f
         private const val RECALC_DELAY = 0.5f
         private const val DAMAGE_DURATION = 0.25f
