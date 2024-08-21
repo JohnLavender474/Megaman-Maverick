@@ -4,12 +4,14 @@ package com.megaman.maverick.game.entities.special
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
 import com.engine.common.CAUSE_OF_DEATH_MESSAGE
+import com.engine.common.GameLogger
 import com.engine.common.enums.Position
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.extensions.objectMapOf
@@ -27,6 +29,7 @@ import com.engine.drawables.sprites.setPosition
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.entities.contracts.IBodyEntity
+import com.engine.entities.contracts.ICullableEntity
 import com.engine.entities.contracts.ISpritesEntity
 import com.engine.world.Body
 import com.engine.world.BodyComponent
@@ -37,6 +40,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaGameEntitiesMap
 import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.IOwnable
@@ -44,17 +48,15 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.BodyComponentCreator
-import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.FixtureType
-import com.megaman.maverick.game.world.isSensing
 import kotlin.math.abs
 
-class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IOwnable, IBodyEntity, ISpritesEntity, IAnimatedEntity {
+class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity, ISpritesEntity,
+    IAnimatedEntity, IOwnable {
 
     companion object {
         const val TAG = "Cart"
         private var region: TextureRegion? = null
-        private const val GROUND_GRAVITY = -0.001f
         private const val GRAVITY = -0.5f
     }
 
@@ -66,15 +68,23 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IOwnable, IBodyEnt
     override fun getEntityType() = EntityType.SPECIAL
 
     override fun init() {
-        if (region == null)
-            region = game.assMan.getTextureRegion(TextureAsset.SPECIALS_1.source, "Cart")
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.SPECIALS_1.source, "Cart")
         addComponent(defineBodyComponent())
         addComponent(defineSpriteComponent())
         addComponent(defineAnimationsComponent())
         addComponent(defineCullablesComponent())
     }
 
+    override fun canSpawn(): Boolean {
+        val specials = MegaGameEntitiesMap.get(getEntityType())
+        val otherCart = specials.find { it is Cart && it != this }
+        val canSpawn = otherCart == null
+        GameLogger.debug(TAG, "Can spawn = $canSpawn. This = ${this.hashCode()}. Other = ${otherCart.hashCode()}")
+        return canSpawn
+    }
+
     override fun spawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "Spawn cart. Hashcode = ${this.hashCode()}. Props = $spawnProps")
         super.spawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
@@ -96,6 +106,8 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IOwnable, IBodyEnt
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
         body.setSize(1.25f * ConstVals.PPM, 0.75f * ConstVals.PPM)
+        body.physics.gravity.y = GRAVITY * ConstVals.PPM
+        body.physics.defaultFrictionOnSelf = Vector2(ConstVals.STANDARD_RESISTANCE_X, ConstVals.STANDARD_RESISTANCE_Y)
         body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
@@ -136,9 +148,9 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IOwnable, IBodyEnt
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             childBlock!!.body.setBottomCenterToPoint(body.getBottomCenterPoint())
-            body.physics.gravity.y =
-                ConstVals.PPM * if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
         })
+
+        body.fixtures.forEach { it.second.putProperty(ConstKeys.DEATH_LISTENER, false) }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 

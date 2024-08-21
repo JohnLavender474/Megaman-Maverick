@@ -31,6 +31,8 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val FEET = "feet"
+    const val CONDITIONAL = "conditional"
     const val DEBUG = "debug"
     const val EXPLOSION = "explosion"
     const val FACE = "face"

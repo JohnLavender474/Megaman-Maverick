@@ -61,6 +61,7 @@ class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     companion object {
         const val TAG = "ColtonJoe"
         private const val SHOOT_DUR = 1.5f
+        private const val SHOOT_DELAY = 0.25f
         private const val BULLET_SPEED = 8f
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -80,6 +81,7 @@ class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     override lateinit var facing: Facing
 
     private val shootTimer = Timer(SHOOT_DUR)
+    private val shootDelayTimer = Timer(SHOOT_DELAY)
     private lateinit var scanner: GameRectangle
 
     override fun init() {
@@ -88,7 +90,7 @@ class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             regions.put("stand", atlas.findRegion("$TAG/stand"))
             regions.put("shoot", atlas.findRegion("$TAG/shoot"))
         }
-        super<AbstractEnemy>.init()
+        super.init()
         addComponent(defineAnimationsComponent())
         addDebugShapeSupplier { scanner }
     }
@@ -99,6 +101,7 @@ class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         body.setBottomCenterToPoint(spawn)
         scanner = GameRectangle().setSize(8f * ConstVals.PPM, ConstVals.PPM.toFloat())
         shootTimer.setToEnd()
+        shootDelayTimer.setToEnd()
         facing = if (body.x < getMegaman().body.x) Facing.RIGHT else Facing.LEFT
     }
 
@@ -129,10 +132,14 @@ class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             val position = if (isFacing(Facing.LEFT)) Position.CENTER_RIGHT else Position.CENTER_LEFT
             scanner.positionOnPoint(body.getCenter(), position)
 
-            if (scanner.overlaps(getMegaman().body as Rectangle)) {
-                shoot()
-                shootTimer.reset()
-                return@add
+            if (shootDelayTimer.isFinished() && scanner.overlaps(getMegaman().body as Rectangle)) shootDelayTimer.reset()
+
+            if (!shootDelayTimer.isFinished()) {
+                shootDelayTimer.update(delta)
+                if (shootDelayTimer.isJustFinished()) {
+                    shoot()
+                    shootTimer.reset()
+                }
             }
 
             facing = if (body.x < getMegaman().body.x) Facing.RIGHT else Facing.LEFT

@@ -8,7 +8,6 @@ import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
-import com.engine.common.CAUSE_OF_DEATH_MESSAGE
 import com.engine.common.GameLogger
 import com.engine.common.enums.Direction
 import com.engine.common.enums.Facing
@@ -74,7 +73,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
 
     override var facing = Facing.RIGHT
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(10),
+        Bullet::class to dmgNeg(15),
         Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
         ChargedShot::class to dmgNeg {
             it as ChargedShot
@@ -93,7 +92,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
     private val shootTimer = Timer(SHOOT_DURATION)
 
     override fun init() {
-        super<AbstractEnemy>.init()
+        super.init()
         if (moveRegion == null || shootRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             moveRegion = atlas.findRegion("$TAG/Move")
@@ -113,7 +112,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
     }
 
     override fun onDestroy() {
-        super<AbstractEnemy>.onDestroy()
+        super.onDestroy()
         if (hasDepletedHealth()) explode()
     }
 
@@ -129,16 +128,14 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
                 shootTimer.reset()
             }
 
-            if (body.isSensingAny(BodySense.SIDE_TOUCHING_BLOCK_LEFT, BodySense.SIDE_TOUCHING_BLOCK_RIGHT)) {
-                kill(props(CAUSE_OF_DEATH_MESSAGE to "Side touching block"))
-                explode()
-            }
+            if ((isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
+                (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))) swapFacing()
         }
     }
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(ConstVals.PPM * 1.25f)
+        body.setSize(1.25f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
@@ -149,8 +146,8 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
         bodyFixture.getShape().color = Color.GRAY
 
         val shieldFixture =
-            Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(1.25f * ConstVals.PPM, 0.75f * ConstVals.PPM))
-        shieldFixture.offsetFromBodyCenter.y = -0.25f * ConstVals.PPM
+            Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(0.85f, 0.65f * ConstVals.PPM))
+        shieldFixture.offsetFromBodyCenter.y = -0.275f * ConstVals.PPM
         body.addFixture(shieldFixture)
         shieldFixture.getShape().color = Color.BLUE
         debugShapes.add { shieldFixture.getShape() }
@@ -210,6 +207,8 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
             body.physics.velocity.x = VEL_X * ConstVals.PPM * facing.value
         })
 
+        body.fixtures.forEach { it.second.putProperty(ConstKeys.DEATH_LISTENER, false) }
+
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
@@ -241,8 +240,8 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
 
     private fun shoot() {
         val spawn = (when (directionRotation!!) {
-            Direction.UP -> Vector2(0.25f * facing.value, 0.2f)
-            Direction.DOWN -> Vector2(0.25f * facing.value, -0.2f)
+            Direction.UP -> Vector2(0.25f * facing.value, 0.25f)
+            Direction.DOWN -> Vector2(0.25f * facing.value, -0.25f)
             Direction.LEFT -> Vector2(-0.2f, 0.25f * facing.value)
             Direction.RIGHT -> Vector2(0.2f, 0.25f * facing.value)
         }).scl(ConstVals.PPM.toFloat()).add(body.getCenter())

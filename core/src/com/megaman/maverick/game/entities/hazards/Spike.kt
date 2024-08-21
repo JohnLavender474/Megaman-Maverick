@@ -2,7 +2,6 @@ package com.megaman.maverick.game.entities.hazards
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.math.Vector2
-import com.engine.common.enums.Position
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.interfaces.Updatable
 import com.engine.common.objects.Properties
@@ -11,8 +10,7 @@ import com.engine.drawables.sorting.DrawingPriority
 import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setPosition
-import com.engine.drawables.sprites.setSize
+import com.engine.drawables.sprites.setCenter
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.IChildEntity
@@ -40,18 +38,15 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
     override var parent: IGameEntity? = null
 
     private lateinit var bodyOffset: Vector2
-
     private var spriteRotation = 0f
-    private var spriteRegion = ""
-    private lateinit var spritePosition: Position
-    private lateinit var spriteOffset: Vector2
 
     override fun getEntityType() = EntityType.HAZARD
 
     override fun init() {
         if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
+        super.init()
         addComponent(defineBodyComponent())
-        addComponent(defineSpriteComponent())
+        addComponent(SpritesComponent())
     }
 
     override fun spawn(spawnProps: Properties) {
@@ -69,20 +64,28 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
 
         spriteRotation = spawnProps.getOrDefault(ConstKeys.ROTATION, 0f) as Float
 
-        spriteRegion = spawnProps.get(ConstKeys.REGION, String::class)!!
-        val textureRegion = atlas!!.findRegion(spriteRegion)
-        firstSprite!!.setRegion(textureRegion)
+        val regionKey = spawnProps.get(ConstKeys.REGION, String::class)!!
+        val textureRegion = atlas!!.findRegion(regionKey)
 
-        spritePosition =
-            Position.valueOf(spawnProps.getOrDefault(ConstKeys.POSITION, "BOTTOM_CENTER") as String)
+        val cells = bounds.splitByCellSize(ConstVals.PPM.toFloat())
+        cells.forEach { x, y, r ->
+            val width = spawnProps.getOrDefault(ConstKeys.WIDTH, 1f, Float::class)
+            val height = spawnProps.getOrDefault(ConstKeys.HEIGHT, 1f, Float::class)
+            val offsetX = spawnProps.getOrDefault(ConstKeys.OFFSET_X, 0f, Float::class)
+            val offsetY = spawnProps.getOrDefault(ConstKeys.OFFSET_Y, 0f, Float::class)
 
-        spriteOffset = Vector2()
-        spriteOffset.x = spawnProps.getOrDefault(ConstKeys.OFFSET_X, 0f) as Float
-        spriteOffset.y = spawnProps.getOrDefault(ConstKeys.OFFSET_Y, 0f) as Float
+            val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
+            sprite.setSize(width * ConstVals.PPM, height * ConstVals.PPM)
+            sprite.setCenter(r!!.getCenter())
+            sprite.translate(offsetX, offsetY)
+            sprite.setRegion(textureRegion)
+
+            sprites.put("${x}_$y", sprite)
+        }
     }
 
     override fun onDestroy() {
-        super<MegaGameEntity>.onDestroy()
+        super.onDestroy()
         parent = null
     }
 
@@ -103,22 +106,5 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
         })
 
         return BodyComponentCreator.create(this, body)
-    }
-
-    private fun defineSpriteComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
-        sprite.setSize(ConstVals.PPM.toFloat())
-
-        val spriteComponent = SpritesComponent(sprite)
-        spriteComponent.putUpdateFunction { _, _sprite ->
-            _sprite.rotation = spriteRotation
-
-            val position = body.getPositionPoint(spritePosition)
-            _sprite.setPosition(position, spritePosition)
-
-            _sprite.translate(spriteOffset.x * ConstVals.PPM, spriteOffset.y * ConstVals.PPM)
-        }
-
-        return spriteComponent
     }
 }

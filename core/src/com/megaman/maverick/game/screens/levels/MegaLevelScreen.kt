@@ -44,8 +44,9 @@ import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.ControllerButton
 import com.megaman.maverick.game.drawables.sprites.Background
+import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaGameEntitiesMap
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
-import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
@@ -201,7 +202,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
                 )
             )
 
-            engine.forEachEntity { if (it is AbstractEnemy) it.kill() }
+            MegaGameEntitiesMap.get(EntityType.ENEMY).forEach { it.kill() }
 
             game.putProperty(ConstKeys.ROOM_TRANSITION, true)
         }
@@ -333,14 +334,19 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
                     "onEvent(): Player spawn --> reset camera manager for rooms and spawn megaman"
                 )
                 cameraManagerForRooms.reset()
+
                 GameLogger.debug(
                     TAG,
                     "onEvent(): Player spawn --> spawn Megaman: ${playerSpawnsMan.currentSpawnProps!!}"
                 )
+
+                MegaGameEntitiesMap.get(EntityType.ENEMY).forEach { it.kill() }
+
                 engine.systems.forEach { it.on = true }
-                engine.forEachEntity { if (it is AbstractEnemy) it.kill() }
                 engine.spawn(megaman, playerSpawnsMan.currentSpawnProps!!)
+
                 entityStatsHandler.unset()
+
                 game.putProperty(ConstKeys.ROOM_TRANSITION, false)
             }
 
@@ -456,9 +462,12 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
 
             EventType.BOSS_DEFEATED -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Boss defeated")
+
                 val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
                 if (!boss.mini) audioMan.unsetMusic()
-                engine.forEachEntity { if (it.isAny(IDamager::class, IHazard::class) && it != boss) it.kill() }
+
+                MegaGameEntitiesMap.forEachEntity { if (it.isAny(IDamager::class, IHazard::class)) it.kill() }
+
                 eventsMan.submitEvent(
                     Event(
                         EventType.TURN_CONTROLLER_OFF, props(
@@ -466,7 +475,9 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
                         )
                     )
                 )
+
                 megaman.canBeDamaged = false
+
                 entityStatsHandler.unset()
             }
 

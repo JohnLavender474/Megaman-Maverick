@@ -36,6 +36,7 @@ import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
+import com.megaman.maverick.game.entities.overlapsGameCamera
 import com.megaman.maverick.game.world.BodyLabel
 import com.megaman.maverick.game.world.FixtureLabel
 
@@ -128,11 +129,11 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntit
             )
         )
 
-        requestToPlaySound(SoundAsset.CONVEYOR_LIFT_SOUND, false)
+        // requestToPlaySound(SoundAsset.CONVEYOR_LIFT_SOUND, false)
     }
 
     override fun onDestroy() {
-        super<MegaGameEntity>.onDestroy()
+        super.onDestroy()
         sprites.clear()
     }
 
@@ -154,7 +155,8 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntit
     })
 }
 
-class RailTrackPlatform(game: MegamanMaverickGame) : Block(game), IChildEntity, ISpritesEntity, IAnimatedEntity {
+class RailTrackPlatform(game: MegamanMaverickGame) : Block(game), IChildEntity, ISpritesEntity, IAnimatedEntity,
+    IAudioEntity {
 
     override var parent: IGameEntity? = null
 
@@ -174,7 +176,8 @@ class RailTrackPlatform(game: MegamanMaverickGame) : Block(game), IChildEntity, 
             platformRegion = atlas.findRegion("RailTrack/Platform")
             platformDropRegion = atlas.findRegion("RailTrack/PlatformDrop")
         }
-        super<Block>.init()
+        super.init()
+        addComponent(AudioComponent())
         addComponent(defineUpdatablesComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
@@ -202,6 +205,7 @@ class RailTrackPlatform(game: MegamanMaverickGame) : Block(game), IChildEntity, 
 
     internal fun drop() {
         body.physics.collisionOn = false
+        if (overlapsGameCamera()) requestToPlaySound(SoundAsset.SWIM_SOUND, false)
     }
 
     internal fun raise() {

@@ -15,7 +15,6 @@ import com.badlogic.gdx.utils.ObjectSet
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.engine.GameEngine
-import com.engine.IGameEngine
 import com.engine.animations.AnimationsSystem
 import com.engine.audio.AudioSystem
 import com.engine.behaviors.BehaviorsSystem
@@ -64,6 +63,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
+import com.megaman.maverick.game.entities.special.Cart
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
@@ -103,7 +103,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
     companion object {
         const val TAG = "MegamanMaverickGame"
         const val DEFAULT_VOLUME = 0.5f
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(Cart.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.FEET, FixtureType.BLOCK)
         }
@@ -126,7 +126,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
     lateinit var controllerPoller: IControllerPoller
     lateinit var assMan: AssetManager
     lateinit var eventsMan: IEventsManager
-    lateinit var engine: IGameEngine
+    lateinit var engine: GameEngine
     lateinit var state: GameState
     lateinit var megaman: Megaman
     lateinit var megamanUpgradeHandler: MegamanUpgradeHandler
@@ -366,7 +366,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
             assMan.load(it.source, it.assClass)
         }
 
-    private fun createGameEngine(): IGameEngine {
+    private fun createGameEngine(): GameEngine {
         val drawables = ObjectMap<DrawingSection, PriorityQueue<IComparableDrawable<Batch>>>()
         DrawingSection.values().forEach { section -> drawables.put(section, PriorityQueue()) }
         properties.put(ConstKeys.DRAWABLES, drawables)

@@ -172,13 +172,16 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
     private fun shock() {
         val shocks = EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.BOLT, 2)
         game.engine.spawn(
-            shocks[0] to props(
+            shocks[0], props(
                 ConstKeys.PARENT to this,
                 ConstKeys.POSITION to body.getCenter(),
                 ConstKeys.DIRECTION to Direction.UP,
                 ConstKeys.TRAJECTORY to Vector2(0f, SHOCK_VELOCITY_Y * ConstVals.PPM),
                 ConstKeys.SCALE to SHOCK_BOLT_SCALE
-            ), shocks[1] to props(
+            )
+        )
+        game.engine.spawn(
+            shocks[1], props(
                 ConstKeys.PARENT to this,
                 ConstKeys.POSITION to body.getCenter(),
                 ConstKeys.DIRECTION to Direction.DOWN,
@@ -188,7 +191,9 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
         )
         requestToPlaySound(SoundAsset.BURST_SOUND, false)
 
-        shockBall!!.launch(getMegaman().body.getCenter().sub(body.getCenter()).nor().scl(SHOCK_VELOCITY_Y * ConstVals.PPM))
+        shockBall!!.launch(
+            getMegaman().body.getCenter().sub(body.getCenter()).nor().scl(SHOCK_VELOCITY_Y * ConstVals.PPM)
+        )
         shockBall = null
         requestToPlaySound(SoundAsset.BLAST_SOUND, false)
     }

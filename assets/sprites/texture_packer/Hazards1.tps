@@ -204,6 +204,24 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Hazards1/Bolt.png</key>
+            <key type="filename">../frames/Hazards1/Electrocutie/Charge.png</key>
+            <key type="filename">../frames/Hazards1/FlameThrower/Blink.png</key>
+            <key type="filename">../frames/Hazards1/Sea Mine/Blow.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,8,32,16</rect>
+                <key>scale9Paddings</key>
+                <rect>16,8,32,16</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Hazards1/CactusSpike.png</key>
             <key type="filename">../frames/Hazards1/CeilingCrusher/Bar.png</key>
             <key type="filename">../frames/Hazards1/CeilingCrusher/Crusher.png</key>
             <key type="filename">../frames/Hazards1/Electrocutie/Move.png</key>
@@ -227,23 +245,6 @@
                 <rect>8,8,16,16</rect>
                 <key>scale9Paddings</key>
                 <rect>8,8,16,16</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Hazards1/Electrocutie/Charge.png</key>
-            <key type="filename">../frames/Hazards1/FlameThrower/Blink.png</key>
-            <key type="filename">../frames/Hazards1/Sea Mine/Blow.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>16,8,32,16</rect>
-                <key>scale9Paddings</key>
-                <rect>16,8,32,16</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -279,6 +280,7 @@
             </struct>
             <key type="filename">../frames/Hazards1/Flame3/Still.png</key>
             <key type="filename">../frames/Hazards1/Flame3/Whoosh.png</key>
+            <key type="filename">../frames/Hazards1/Lava/Flow.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -302,45 +304,16 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>30,28,60,55</rect>
+                <rect>24,59,48,118</rect>
                 <key>scale9Paddings</key>
-                <rect>30,28,60,55</rect>
+                <rect>24,59,48,118</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
             <key type="filename">../frames/Hazards1/Lava/Fall.png</key>
-            <key type="filename">../frames/Hazards1/Lava/Flow.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>357,119,714,238</rect>
-                <key>scale9Paddings</key>
-                <rect>357,119,714,238</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
             <key type="filename">../frames/Hazards1/Lava/Flow1.png</key>
             <key type="filename">../frames/Hazards1/Lava/Flow2.png</key>
             <key type="filename">../frames/Hazards1/Lava/Flow3.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>119,357,238,714</rect>
-                <key>scale9Paddings</key>
-                <rect>119,357,238,714</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
             <key type="filename">../frames/Hazards1/Lava/TopFlow1.png</key>
             <key type="filename">../frames/Hazards1/Lava/TopFlow2.png</key>
             <key type="filename">../frames/Hazards1/Lava/TopFlow3.png</key>
@@ -367,9 +340,9 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>16,24,32,48</rect>
+                <rect>38,34,75,67</rect>
                 <key>scale9Paddings</key>
-                <rect>16,24,32,48</rect>
+                <rect>38,34,75,67</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -406,7 +379,6 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Hazards1/LavaDrop/Falling.png</key>
-            <key type="filename">../frames/Hazards1/LavaDrop/Landed.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -418,6 +390,21 @@
                 <rect>18,6,36,12</rect>
                 <key>scale9Paddings</key>
                 <rect>18,6,36,12</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Hazards1/LavaDrop/Landed.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,6,24,12</rect>
+                <key>scale9Paddings</key>
+                <rect>12,6,24,12</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

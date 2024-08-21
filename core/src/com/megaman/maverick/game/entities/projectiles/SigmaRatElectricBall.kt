@@ -63,7 +63,7 @@ class SigmaRatElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game)
             ballRegion = atlas.findRegion("SigmaRat/ElectricBall")
             hitRegion = atlas.findRegion("SigmaRat/ElectricBallDissipate")
         }
-        super<AbstractProjectile>.init()
+        super.init()
         addComponent(defineUpdatablesComponent())
         addComponent(defineAnimationsComponent())
     }
@@ -108,7 +108,7 @@ class SigmaRatElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game)
             EntityType.EXPLOSION, ExplosionsFactory.SIGMA_RAT_ELECTRIC_BALL_EXPLOSION
         )
         game.engine.spawn(
-            explosion!! to props(
+            explosion!!, props(
                 ConstKeys.POSITION to body.getBottomCenterPoint(),
                 ConstKeys.DIRECTION to (explosionDirection ?: Direction.UP)
             )

@@ -163,6 +163,7 @@ class MegaContactListener(
             printDebugLog(contact, "beginContact(): Feet-Block, contact = $contact")
             val (feetFixture, blockFixture) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.BLOCK)!!
             val body = feetFixture.getBody()
+
             if (!blockFixture.getBody().physics.collisionOn) {
                 body.setBodySense(BodySense.FEET_ON_GROUND, false)
                 return

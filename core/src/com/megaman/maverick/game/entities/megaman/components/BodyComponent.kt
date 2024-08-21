@@ -10,7 +10,10 @@ import com.engine.common.interfaces.Updatable
 import com.engine.common.shapes.GameRectangle
 import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
-import com.engine.world.*
+import com.engine.world.Body
+import com.engine.world.BodyComponent
+import com.engine.world.BodyType
+import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.SoundAsset
@@ -21,13 +24,20 @@ import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.world.*
 
-val Megaman.feet: IFixture
-    get() {
-        for (entry in body.fixtures) {
-            if (entry.first == FixtureType.FEET) return entry.second
-        }
-        throw IllegalStateException("Cannot find Megaman's feet")
-    }
+val Megaman.feetFixture: Fixture
+    get() = body.getProperty(ConstKeys.FEET) as Fixture
+
+val Megaman.leftSideFixture: Fixture
+    get() = body.getProperty("${ConstKeys.LEFT}_${ConstKeys.SIDE}", Fixture::class)!!
+
+val Megaman.rightSideFixture: Fixture
+    get() = body.getProperty("${ConstKeys.RIGHT}_${ConstKeys.SIDE}", Fixture::class)!!
+
+val Megaman.headFixture: Fixture
+    get() = body.getProperty(ConstKeys.HEAD, Fixture::class)!!
+
+val Megaman.bodyFixture: Fixture
+    get() = body.getProperty(ConstKeys.BODY, Fixture::class)!!
 
 internal fun Megaman.defineBodyComponent(): BodyComponent {
     val body = Body(BodyType.DYNAMIC)
@@ -47,6 +57,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     body.addFixture(bodyFixture)
     bodyFixture.rawShape.color = Color.BLUE
     shapes.add { bodyFixture.getShape() }
+    body.putProperty(ConstKeys.BODY, bodyFixture)
 
     val onBounce = {
         if (!body.isSensing(BodySense.IN_WATER) && has(MegaAbility.AIR_DASH)) aButtonTask = AButtonTask.AIR_DASH
@@ -58,6 +69,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     body.addFixture(feetFixture)
     feetFixture.rawShape.color = Color.GREEN
     shapes.add { feetFixture.getShape() }
+    body.putProperty(ConstKeys.FEET, feetFixture)
 
     val headFixture =
         Fixture(body, FixtureType.HEAD, GameRectangle().setWidth(0.6f * ConstVals.PPM).setHeight(0.15f * ConstVals.PPM))
@@ -69,6 +81,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     body.addFixture(headFixture)
     headFixture.rawShape.color = Color.RED
     shapes.add { headFixture.getShape() }
+    body.putProperty(ConstKeys.HEAD, headFixture)
 
     val leftFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setWidth(0.2f * ConstVals.PPM))
     leftFixture.setRunnable(onBounce)
@@ -76,6 +89,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     body.addFixture(leftFixture)
     leftFixture.rawShape.color = Color.YELLOW
     shapes.add { leftFixture.getShape() }
+    body.putProperty("${ConstKeys.LEFT}_${ConstKeys.SIDE}", leftFixture)
 
     val rightFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setWidth(0.2f * ConstVals.PPM))
     rightFixture.setRunnable(onBounce)
@@ -83,6 +97,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     body.addFixture(rightFixture)
     rightFixture.rawShape.color = Color.BLUE
     shapes.add { rightFixture.getShape() }
+    body.putProperty("${ConstKeys.RIGHT}_${ConstKeys.SIDE}", rightFixture)
 
     val damageableFixture =
         Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.8f * ConstVals.PPM))

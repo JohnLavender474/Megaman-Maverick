@@ -46,8 +46,8 @@ class CactusMissile(game: MegamanMaverickGame): AbstractProjectile(game), IHealt
 
     companion object {
         const val TAG = "CactusMissile"
-        private const val SPEED = 2.5f
-        private const val UP_DUR = 0.5f
+        private const val SPEED = 3.5f
+        private const val UP_DUR = 0.25f
         private const val RECALC_DELAY = 0.5f
         private const val DAMAGE_DURATION = 0.25f
         private var region: TextureRegion? = null
@@ -69,7 +69,7 @@ class CactusMissile(game: MegamanMaverickGame): AbstractProjectile(game), IHealt
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
-        super<AbstractProjectile>.init()
+        super.init()
         addComponent(defineUpdatablesComponent())
         addComponent(definePointsComponent())
         addComponent(defineAnimationsComponent())
@@ -86,7 +86,7 @@ class CactusMissile(game: MegamanMaverickGame): AbstractProjectile(game), IHealt
     }
 
     override fun onDestroy() {
-        super<AbstractProjectile>.onDestroy()
+        super.onDestroy()
         if (hasDepletedHealth()) explode()
     }
 
@@ -127,6 +127,8 @@ class CactusMissile(game: MegamanMaverickGame): AbstractProjectile(game), IHealt
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+        damageTimer.update(delta)
+
         if (!upTimer.isFinished()) {
             upTimer.update(delta)
             body.physics.velocity = Vector2(0f, SPEED * ConstVals.PPM)

@@ -54,7 +54,7 @@ class CactusLauncher(game: MegamanMaverickGame): AbstractEnemy(game), IParentEnt
 
     companion object {
         const val TAG = "CactusLauncher"
-        private const val WAIT_DUR = 1.5f
+        private const val WAIT_DUR = 1f
         private const val FIRE_DUR = 0.5f
         private const val RELOAD_DUR = 0.5f
         private const val MAX_CHILDREN = 2
@@ -106,7 +106,7 @@ class CactusLauncher(game: MegamanMaverickGame): AbstractEnemy(game), IParentEnt
     }
 
     override fun onDestroy() {
-        super<AbstractEnemy>.onDestroy()
+        super.onDestroy()
         children.clear()
     }
 

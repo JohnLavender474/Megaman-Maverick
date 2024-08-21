@@ -166,12 +166,15 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
         leftClaw = SigmaRatClaw(game)
         rightClaw = SigmaRatClaw(game)
         game.engine.spawn(
-            leftClaw!! to props(
+            leftClaw!!, props(
                 ConstKeys.PARENT to this,
                 ConstKeys.SPEED to CLAW_ROTATION_SPEED,
                 ConstKeys.POSITION to leftClawSpawn,
                 ConstKeys.MAX_Y to headPosition.y
-            ), rightClaw!! to props(
+            )
+        )
+        game.engine.spawn(
+            rightClaw!!, props(
                 ConstKeys.PARENT to this,
                 ConstKeys.SPEED to -CLAW_ROTATION_SPEED,
                 ConstKeys.POSITION to rightClawSpawn,
@@ -196,9 +199,12 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
         super.triggerDefeat()
         val explosions = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION, 2)
         game.engine.spawn(
-            explosions[0] to props(
+            explosions[0], props(
                 ConstKeys.POSITION to leftClaw!!.body.getCenter(), ConstKeys.SOUND to SoundAsset.EXPLOSION_1_SOUND
-            ), explosions[1] to props(
+            )
+        )
+        game.engine.spawn(
+            explosions[1], props(
                 ConstKeys.POSITION to rightClaw!!.body.getCenter(), ConstKeys.SOUND to SoundAsset.EXPLOSION_1_SOUND
             )
         )
