@@ -39,6 +39,8 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntity
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.IOwnable
+import com.megaman.maverick.game.entities.factories.EntityFactories
+import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.BodySense
@@ -51,7 +53,7 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IOwnable, IBodyEnt
     companion object {
         const val TAG = "Cart"
         private var region: TextureRegion? = null
-        private const val GROUND_GRAVITY = -0.0015f
+        private const val GROUND_GRAVITY = -0.01f
         private const val GRAVITY = -0.5f
     }
 
@@ -63,7 +65,6 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IOwnable, IBodyEnt
     override fun init() {
         if (region == null)
             region = game.assMan.getTextureRegion(TextureAsset.SPECIALS_1.source, "Cart")
-        childBlock = Block(game)
         addComponent(defineBodyComponent())
         addComponent(defineSpriteComponent())
         addComponent(defineAnimationsComponent())
@@ -74,6 +75,7 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IOwnable, IBodyEnt
         super.spawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
+        childBlock = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.STANDARD) as Block
         game.engine.spawn(
             childBlock!!, props(
                 ConstKeys.BOUNDS to GameRectangle().setSize(0.9f * ConstVals.PPM, 0.75f * ConstVals.PPM),

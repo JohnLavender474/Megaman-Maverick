@@ -39,7 +39,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
     val behaviorsComponent = BehaviorsComponent()
 
     val wallSlide = Behavior(evaluate = {
-        if (!ready || !canMove || !has(MegaAbility.WALL_SLIDE) || isBehaviorActive(BehaviorType.JETPACKING))
+        if (dead || !ready || !canMove || !has(MegaAbility.WALL_SLIDE) || isBehaviorActive(BehaviorType.JETPACKING))
             return@Behavior false
 
         if ((body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && game.controllerPoller.isPressed(
@@ -92,7 +92,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
     val swim = Behavior(
         evaluate = {
-            if (!ready || !canMove) return@Behavior false
+            if (dead || !ready || !canMove) return@Behavior false
 
             if (damaged || isBehaviorActive(BehaviorType.RIDING_CART) || !body.isSensing(BodySense.IN_WATER) ||
                 body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)
@@ -125,7 +125,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
     val jump = Behavior(
         evaluate = {
-            if (!ready || !canMove || damaged || teleporting || isAnyBehaviorActive(
+            if (dead || !ready || !canMove || damaged || teleporting || isAnyBehaviorActive(
                     BehaviorType.SWIMMING,
                     BehaviorType.CLIMBING, BehaviorType.JETPACKING
                 ) || body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) ||
@@ -186,7 +186,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         private val impulse = Vector2()
 
         override fun evaluate(delta: Float): Boolean {
-            if (!ready || !canMove || damaged || teleporting || airDashTimer.isFinished() ||
+            if (dead || !ready || !canMove || damaged || teleporting || airDashTimer.isFinished() ||
                 !has(MegaAbility.AIR_DASH) || body.isSensingAny(BodySense.FEET_ON_GROUND, BodySense.TELEPORTING) ||
                 isAnyBehaviorActive(
                     BehaviorType.WALL_SLIDING, BehaviorType.CLIMBING, BehaviorType.RIDING_CART,
@@ -260,7 +260,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         private var directionOnInit: Direction? = null
 
         override fun evaluate(delta: Float): Boolean {
-            if (!ready || !canMove || !has(MegaAbility.GROUND_SLIDE)) return false
+            if (dead || !ready || !canMove || !has(MegaAbility.GROUND_SLIDE)) return false
 
             if (isBehaviorActive(BehaviorType.GROUND_SLIDING) && body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)) return true
 
@@ -339,7 +339,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         private lateinit var ladder: Ladder
 
         override fun evaluate(delta: Float): Boolean {
-            if (!ready || !canMove) return false
+            if (dead || !ready || !canMove) return false
 
             if (damaged || isAnyBehaviorActive(
                     BehaviorType.JUMPING,
@@ -472,7 +472,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         private lateinit var cart: Cart
 
         override fun evaluate(delta: Float) =
-            ready /* && canMove */ && body.isSensing(BodySense.TOUCHING_CART) &&
+            !dead && ready /* && canMove */ && body.isSensing(BodySense.TOUCHING_CART) &&
                     !game.controllerPoller.areAllPressed(gdxArrayOf(ControllerButton.A, ControllerButton.UP))
 
         override fun init() {
@@ -523,7 +523,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         private val timePerBitTimer = Timer(MegamanValues.JETPACK_TIME_PER_BIT)
 
         override fun evaluate(delta: Float): Boolean {
-            if (!ready || !canMove || damaged || teleporting || currentWeapon != MegamanWeapon.RUSH_JETPACK ||
+            if (dead || !ready || !canMove || damaged || teleporting || currentWeapon != MegamanWeapon.RUSH_JETPACK ||
                 !game.controllerPoller.areAllPressed(gdxArrayOf(ControllerButton.A, ControllerButton.UP)) ||
                 body.isSensing(BodySense.FEET_ON_GROUND) || weaponHandler.isDepleted(MegamanWeapon.RUSH_JETPACK) ||
                 isAnyBehaviorActive(BehaviorType.WALL_SLIDING, BehaviorType.AIR_DASHING, BehaviorType.GROUND_SLIDING)
