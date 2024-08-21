@@ -13,6 +13,7 @@ import com.engine.common.CAUSE_OF_DEATH_MESSAGE
 import com.engine.common.enums.Position
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.extensions.objectMapOf
+import com.engine.common.extensions.objectSetOf
 import com.engine.common.interfaces.Updatable
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
@@ -53,12 +54,14 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IOwnable, IBodyEnt
     companion object {
         const val TAG = "Cart"
         private var region: TextureRegion? = null
-        private const val GROUND_GRAVITY = -0.01f
+        private const val GROUND_GRAVITY = -0.001f
         private const val GRAVITY = -0.5f
     }
 
     override var owner: IGameEntity? = null
     var childBlock: Block? = null
+
+    override fun getTag() = TAG
 
     override fun getEntityType() = EntityType.SPECIAL
 
@@ -79,13 +82,13 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IOwnable, IBodyEnt
         game.engine.spawn(
             childBlock!!, props(
                 ConstKeys.BOUNDS to GameRectangle().setSize(0.9f * ConstVals.PPM, 0.75f * ConstVals.PPM),
-                ConstKeys.PARENT to this
+                ConstKeys.BLOCK_FILTERS to objectSetOf(TAG)
             )
         )
     }
 
     override fun onDestroy() {
-        super<MegaGameEntity>.onDestroy()
+        super.onDestroy()
         childBlock?.kill(props(CAUSE_OF_DEATH_MESSAGE to "Parent entity cart destroyed"))
         childBlock = null
     }
@@ -175,5 +178,4 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IOwnable, IBodyEnt
         val cullable = getGameCameraCullingLogic(this)
         return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullable))
     }
-
 }

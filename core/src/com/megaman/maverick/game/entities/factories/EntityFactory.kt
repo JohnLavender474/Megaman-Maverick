@@ -6,10 +6,11 @@ import com.engine.common.interfaces.Initializable
 import com.engine.common.objects.Pool
 import com.engine.entities.IGameEntity
 import com.engine.factories.IFactory
+import com.megaman.maverick.game.entities.MegaGameEntity
 
 abstract class EntityFactory : IFactory<IGameEntity>, Initializable, IClearable {
 
-    protected val pools = ObjectMap<Any, Pool<IGameEntity>>()
+    protected val pools = ObjectMap<Any, Pool<MegaGameEntity>>()
 
     override fun clear() = pools.clear()
 }

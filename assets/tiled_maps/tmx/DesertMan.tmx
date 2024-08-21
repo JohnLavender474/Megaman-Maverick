@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="300" height="155" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="109">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="300" height="155" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="110">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/tomahawk_man_stage_tileset.tsx"/>
  <objectgroup id="7" name="game_rooms">

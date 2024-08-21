@@ -260,7 +260,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         set(value) {
             GameLogger.debug(TAG, "directionRotation: value = $value")
 
-            forceQuitBehavior(BehaviorType.JETPACKING)
+            resetBehavior(BehaviorType.JETPACKING)
 
             body.cardinalRotation = value
             when (value) {
@@ -371,7 +371,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
 
         game.eventsMan.addListener(this)
 
-        val bounds = properties.get(ConstKeys.BOUNDS) as GameRectangle
+        val bounds = spawnProps.get(ConstKeys.BOUNDS) as GameRectangle
         body.positionOnPoint(bounds.getBottomCenterPoint(), Position.BOTTOM_CENTER)
 
         facing = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, "right", String::class).uppercase())
@@ -398,7 +398,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         putProperty(ConstKeys.ON_TELEPORT_START, {
             standardOnTeleportStart(this)
             stopCharging()
-            if (isBehaviorActive(BehaviorType.AIR_DASHING)) forceQuitBehavior(BehaviorType.AIR_DASHING)
+            if (isBehaviorActive(BehaviorType.AIR_DASHING)) resetBehavior(BehaviorType.AIR_DASHING)
             teleporting = true
             canBeDamaged = false
         })
@@ -422,7 +422,9 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
 
-        super<MegaGameEntity>.onDestroy()
+        super.onDestroy()
+
+        behaviors.forEach { if (isBehaviorActive(it.key)) it.value.end() }
 
         body.physics.velocity.setZero()
         body.removeProperty(ConstKeys.VELOCITY)
