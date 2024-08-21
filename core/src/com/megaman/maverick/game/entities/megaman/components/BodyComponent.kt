@@ -48,7 +48,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     val shapes = Array<() -> IDrawableShape?>()
     shapes.add { body.getBodyBounds() }
 
-    val playerFixture = Fixture(body, FixtureType.PLAYER, GameRectangle().setWidth(0.5f * ConstVals.PPM))
+    val playerFixture = Fixture(body, FixtureType.PLAYER, GameRectangle().setWidth(0.75f * ConstVals.PPM))
     body.addFixture(playerFixture)
     playerFixture.rawShape.color = Color.WHITE
     shapes.add { playerFixture.getShape() }
@@ -176,12 +176,14 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
 
         if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) {
             body.height = 0.45f * ConstVals.PPM
+            (playerFixture.rawShape as GameRectangle).height = 0.45f * ConstVals.PPM
             headFixture.offsetFromBodyCenter.y = ConstVals.PPM / 4f
             feetFixture.offsetFromBodyCenter.y = -ConstVals.PPM / 4f
             (leftFixture.rawShape as Rectangle).setHeight(0.25f * ConstVals.PPM)
             (rightFixture.rawShape as Rectangle).setHeight(0.25f * ConstVals.PPM)
         } else {
             body.height = 0.95f * ConstVals.PPM
+            (playerFixture.rawShape as GameRectangle).height = 0.95f * ConstVals.PPM
             headFixture.offsetFromBodyCenter.y = ConstVals.PPM / 2f
             feetFixture.offsetFromBodyCenter.y = -ConstVals.PPM / 2f
             (leftFixture.rawShape as Rectangle).setHeight(0.6f * ConstVals.PPM)

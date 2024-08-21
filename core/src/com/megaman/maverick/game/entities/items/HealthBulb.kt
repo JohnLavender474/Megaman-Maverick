@@ -20,6 +20,8 @@ import com.engine.cullables.CullableOnEvent
 import com.engine.cullables.CullablesComponent
 import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
+import com.engine.drawables.sorting.DrawingPriority
+import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setCenter
@@ -146,13 +148,19 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
         debugShapes.add { feetFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
-            val gravity = when (directionRotation!!) {
-                Direction.LEFT -> Vector2(GRAVITY, 0f)
-                Direction.RIGHT -> Vector2(-GRAVITY, 0f)
-                Direction.UP -> Vector2(0f, -GRAVITY)
-                Direction.DOWN -> Vector2(0f, GRAVITY)
+            if (body.isSensingAny(BodySense.FEET_ON_GROUND, BodySense.FEET_ON_SAND)) {
+                body.physics.gravityOn = false
+                body.physics.velocity.setZero()
+            } else {
+                body.physics.gravityOn = true
+                val gravity = when (directionRotation!!) {
+                    Direction.LEFT -> Vector2(GRAVITY, 0f)
+                    Direction.RIGHT -> Vector2(-GRAVITY, 0f)
+                    Direction.UP -> Vector2(0f, -GRAVITY)
+                    Direction.DOWN -> Vector2(0f, GRAVITY)
+                }
+                body.physics.gravity = gravity.scl(ConstVals.PPM.toFloat())
             }
-            body.physics.gravity = gravity.scl(ConstVals.PPM.toFloat())
 
             feetFixture.putProperty(ConstKeys.STICK_TO_BLOCK, !body.isSensing(BodySense.FEET_ON_SAND))
         })
@@ -163,7 +171,7 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
     }
 
     private fun defineSpritesCompoent(): SpritesComponent {
-        val sprite = GameSprite()
+        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
         sprite.setSize(0.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
@@ -190,11 +198,6 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
-        if (body.isSensingAny(BodySense.FEET_ON_GROUND, BodySense.FEET_ON_SAND)) {
-            body.physics.gravityOn = false
-            body.physics.velocity.setZero()
-        } else body.physics.gravityOn = true
-
         if (!timeCull) return@UpdatablesComponent
 
         if (warning) {
