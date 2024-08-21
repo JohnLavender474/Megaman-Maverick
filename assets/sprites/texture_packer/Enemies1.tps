@@ -291,6 +291,9 @@
             <key type="filename">../frames/Enemies1/SnowMet/PopUp.png</key>
             <key type="filename">../frames/Enemies1/SpringHead/Compressed.png</key>
             <key type="filename">../frames/Enemies1/SwimmingMet/LayDown.png</key>
+            <key type="filename">../frames/Enemies1/TurnBlaster/base.png</key>
+            <key type="filename">../frames/Enemies1/TurnBlaster/dial.png</key>
+            <key type="filename">../frames/Enemies1/TurnBlaster/tube.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

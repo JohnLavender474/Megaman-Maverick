@@ -39,8 +39,10 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
         val impulse = if (body.isSensing(BodySense.FEET_ON_ICE)) MegamanValues.ICE_RUN_IMPULSE
         else MegamanValues.RUN_IMPULSE
 
-        if (isDirectionRotatedVertically() && body.physics.velocity.x > -threshold) body.physics.velocity.x -= impulse * delta * movementScalar * ConstVals.PPM
-        else if (isDirectionRotatedHorizontally() && body.physics.velocity.y > -threshold) body.physics.velocity.y -= impulse * delta * movementScalar * ConstVals.PPM
+        if (isDirectionRotatedVertically() && body.physics.velocity.x > -threshold)
+            body.physics.velocity.x -= impulse * delta * movementScalar * ConstVals.PPM
+        else if (isDirectionRotatedHorizontally() && body.physics.velocity.y > -threshold)
+            body.physics.velocity.y -= impulse * delta * movementScalar * ConstVals.PPM
     }, onJustReleased = { poller ->
         GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "left actuator just released")
         if (!poller.isPressed(ControllerButton.RIGHT)) running = false

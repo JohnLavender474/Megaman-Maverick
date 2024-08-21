@@ -4,8 +4,10 @@ object MegamanValues {
     const val MAX_WEAPON_AMMO = 30
     const val START_HEALTH = 30 // 14
 
-    const val CART_RIDE_MAX_SPEED = 8f
-    const val CART_JUMP_VEL = 18f
+    const val CART_RIDE_MAX_SPEED = 12f
+    const val CART_RIDE_ACCELERATION = 1f
+    const val CART_JUMP_ACCELERATION = 0.35f
+    const val CART_JUMP_VEL = 25f
 
     const val CLAMP_X = 25f
     const val CLAMP_Y = 50f

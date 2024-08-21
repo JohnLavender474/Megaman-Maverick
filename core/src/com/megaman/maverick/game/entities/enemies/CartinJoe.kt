@@ -30,7 +30,6 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
-import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.entities.contracts.ISpritesEntity
 import com.engine.updatables.UpdatablesComponent
@@ -51,6 +50,7 @@ import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.overlapsGameCamera
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
@@ -96,8 +96,8 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
         super<AbstractEnemy>.init()
         if (moveRegion == null || shootRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-            moveRegion = atlas.findRegion("CartinJoe/Move")
-            shootRegion = atlas.findRegion("CartinJoe/Shoot")
+            moveRegion = atlas.findRegion("$TAG/Move")
+            shootRegion = atlas.findRegion("$TAG/Shoot")
         }
         addComponent(defineAnimationsComponent())
     }
@@ -240,9 +240,9 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
     }
 
     private fun shoot() {
-        @Suppress("DuplicatedCode") val spawn = (when (directionRotation!!) {
-            Direction.UP -> Vector2(0.25f * facing.value, 0.15f)
-            Direction.DOWN -> Vector2(0.25f * facing.value, -0.15f)
+        val spawn = (when (directionRotation!!) {
+            Direction.UP -> Vector2(0.25f * facing.value, 0.2f)
+            Direction.DOWN -> Vector2(0.25f * facing.value, -0.2f)
             Direction.LEFT -> Vector2(-0.2f, 0.25f * facing.value)
             Direction.RIGHT -> Vector2(0.2f, 0.25f * facing.value)
         }).scl(ConstVals.PPM.toFloat()).add(body.getCenter())
@@ -258,10 +258,9 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
             ConstKeys.DIRECTION to directionRotation
         )
 
-        val entity: IGameEntity = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
-
-        requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
-
+        val entity = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
         game.engine.spawn(entity, props)
+
+        if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
     }
 }

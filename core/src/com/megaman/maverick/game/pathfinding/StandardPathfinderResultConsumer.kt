@@ -25,6 +25,7 @@ object StandardPathfinderResultConsumer {
         stopOnTargetReached: Boolean = true,
         stopOnTargetNull: Boolean = true,
         preProcess: (() -> Unit)? = null,
+        trajectoryConsumer: (Vector2) -> Unit = { body.physics.velocity.set(it) },
         postProcess: (() -> Unit)? = null,
         shapes: MutableCollection<IDrawableShape>? = null
     ) = consume(
@@ -36,6 +37,7 @@ object StandardPathfinderResultConsumer {
         stopOnTargetReached,
         stopOnTargetNull,
         preProcess,
+        trajectoryConsumer,
         postProcess,
         shapes
     )
@@ -49,6 +51,7 @@ object StandardPathfinderResultConsumer {
         stopOnTargetReached: Boolean = true,
         stopOnTargetNull: Boolean = true,
         preProcess: (() -> Unit)? = null,
+        trajectoryConsumer: (Vector2) -> Unit = { body.physics.velocity.set(it) },
         postProcess: (() -> Unit)? = null,
         shapes: MutableCollection<IDrawableShape>? = null
     ): Boolean {
@@ -96,7 +99,7 @@ object StandardPathfinderResultConsumer {
         val angle = MathUtils.atan2(target.y - start.y, target.x - start.x)
         val trajectory = Vector2(MathUtils.cos(angle), MathUtils.sin(angle)).scl(speed())
         val scaledTrajectory = trajectory.scl(ConstVals.PPM.toFloat())
-        body.physics.velocity.set(scaledTrajectory)
+        trajectoryConsumer.invoke(scaledTrajectory)
 
         GameLogger.debug(TAG, "Body is moving with velocity ${body.physics.velocity}. Body: $body")
 

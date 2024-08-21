@@ -472,7 +472,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         private lateinit var cart: Cart
 
         override fun evaluate(delta: Float) =
-            ready && canMove && body.isSensing(BodySense.TOUCHING_CART) &&
+            ready /* && canMove */ && body.isSensing(BodySense.TOUCHING_CART) &&
                     !game.controllerPoller.areAllPressed(gdxArrayOf(ControllerButton.A, ControllerButton.UP))
 
         override fun init() {
@@ -482,8 +482,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             cart = body.getProperty(ConstKeys.CART, Cart::class)!!
             cart.body.physics.gravityOn = false
 
-            cart.childBlock.body.physics.collisionOn = false
-            cart.childBlock.body.fixtures.forEach { (it.second as Fixture).active = false }
+            cart.childBlock!!.body.physics.collisionOn = false
+            cart.childBlock!!.body.fixtures.forEach { (it.second as Fixture).active = false }
 
             body.setBottomCenterToPoint(cart.body.getBottomCenterPoint())
             body.preProcess.put(ConstKeys.CART, Updatable {
@@ -494,10 +494,12 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         }
 
         override fun act(delta: Float) {
-            body.physics.velocity.x =
-                if ((body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) && isFacing(Facing.RIGHT)) ||
-                    (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && isFacing(Facing.LEFT))
-                ) 0f else MegamanValues.CART_RIDE_MAX_SPEED * ConstVals.PPM * facing.value
+            if ((body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) && isFacing(Facing.RIGHT)) ||
+                (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && isFacing(Facing.LEFT))
+            ) body.physics.velocity.x = 0f
+            else if (!body.isSensing(BodySense.FEET_ON_GROUND))
+                body.physics.velocity.x += MegamanValues.CART_JUMP_ACCELERATION * facing.value * ConstVals.PPM
+            else body.physics.velocity.x += MegamanValues.CART_RIDE_ACCELERATION * facing.value * ConstVals.PPM
         }
 
         override fun end() {
@@ -507,8 +509,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             cart.sprites.values().forEach { it.hidden = false }
 
-            cart.childBlock.body.physics.collisionOn = true
-            cart.childBlock.body.fixtures.forEach { (it.second as Fixture).active = true }
+            cart.childBlock!!.body.physics.collisionOn = true
+            cart.childBlock!!.body.fixtures.forEach { (it.second as Fixture).active = true }
 
             body.translation(0f, ConstVals.PPM / 1.75f)
             body.physics.velocity.y = MegamanValues.JUMP_VEL * ConstVals.PPM
@@ -522,13 +524,9 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
         override fun evaluate(delta: Float): Boolean {
             if (!ready || !canMove || damaged || teleporting || currentWeapon != MegamanWeapon.RUSH_JETPACK ||
-                weaponHandler.isDepleted(MegamanWeapon.RUSH_JETPACK) ||
                 !game.controllerPoller.areAllPressed(gdxArrayOf(ControllerButton.A, ControllerButton.UP)) ||
-                body.isSensing(BodySense.FEET_ON_GROUND) || isAnyBehaviorActive(
-                    BehaviorType.WALL_SLIDING,
-                    BehaviorType.AIR_DASHING,
-                    BehaviorType.GROUND_SLIDING,
-                )
+                body.isSensing(BodySense.FEET_ON_GROUND) || weaponHandler.isDepleted(MegamanWeapon.RUSH_JETPACK) ||
+                isAnyBehaviorActive(BehaviorType.WALL_SLIDING, BehaviorType.AIR_DASHING, BehaviorType.GROUND_SLIDING)
             ) return false
 
             return if (isBehaviorActive(BehaviorType.JETPACKING)) game.controllerPoller.areAllPressed(

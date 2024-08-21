@@ -2,6 +2,7 @@
 
 package com.megaman.maverick.game.entities.special
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
 import com.engine.animations.Animation
@@ -55,8 +56,7 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IOwnable, IBodyEnt
     }
 
     override var owner: IGameEntity? = null
-
-    lateinit var childBlock: Block
+    var childBlock: Block? = null
 
     override fun getEntityType() = EntityType.SPECIAL
 
@@ -75,7 +75,7 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IOwnable, IBodyEnt
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
         game.engine.spawn(
-            childBlock, props(
+            childBlock!!, props(
                 ConstKeys.BOUNDS to GameRectangle().setSize(0.9f * ConstVals.PPM, 0.75f * ConstVals.PPM),
                 ConstKeys.PARENT to this
             )
@@ -84,20 +84,25 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IOwnable, IBodyEnt
 
     override fun onDestroy() {
         super<MegaGameEntity>.onDestroy()
-        childBlock.kill(props(CAUSE_OF_DEATH_MESSAGE to "Parent entity cart destroyed"))
+        childBlock?.kill(props(CAUSE_OF_DEATH_MESSAGE to "Parent entity cart destroyed"))
+        childBlock = null
     }
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
         body.setSize(1.25f * ConstVals.PPM, 0.75f * ConstVals.PPM)
+        body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body.getBodyBounds() }
 
         val cartFixture =
             Fixture(body, FixtureType.CART, GameRectangle().setSize(0.75f * ConstVals.PPM, 1.5f * ConstVals.PPM))
         cartFixture.offsetFromBodyCenter.y = -0.25f * ConstVals.PPM
         cartFixture.putProperty(ConstKeys.ENTITY, this)
         body.addFixture(cartFixture)
+        cartFixture.rawShape.color = Color.BLUE
+        debugShapes.add { cartFixture.getShape() }
 
         val bodyFixture =
             Fixture(body, FixtureType.BODY, GameRectangle().setSize(1.25f * ConstVals.PPM, 0.75f * ConstVals.PPM))
@@ -125,7 +130,7 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IOwnable, IBodyEnt
         body.addFixture(feetFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
-            childBlock.body.setBottomCenterToPoint(body.getBottomCenterPoint())
+            childBlock!!.body.setBottomCenterToPoint(body.getBottomCenterPoint())
             body.physics.gravity.y =
                 ConstVals.PPM * if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
         })

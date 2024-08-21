@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.Array
 import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
+import com.engine.common.enums.Direction
 import com.engine.common.enums.Facing
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.extensions.objectMapOf
@@ -46,6 +47,7 @@ import com.megaman.maverick.game.entities.overlapsGameCamera
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.entities.projectiles.SmallMissile
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import kotlin.reflect.KClass
@@ -123,11 +125,13 @@ class BombPotton(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     }
 
     private fun launchBomb() {
-        val greenBomb = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SMALL_GREEN_MISSILE)!!
+        val greenBomb = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SMALL_MISSILE)!!
         game.engine.spawn(
             greenBomb, props(
                 ConstKeys.POSITION to body.getBottomCenterPoint(),
-                ConstKeys.OWNER to this
+                ConstKeys.OWNER to this,
+                ConstKeys.DIRECTION to Direction.DOWN,
+                ConstKeys.EXPLOSION to SmallMissile.WAVE_EXPLOSION
             )
         )
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.MARIO_FIREBALL_SOUND, false)

@@ -216,7 +216,8 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
             targetSupplier = { getMegaman().body.getTopCenterPoint() },
             allowDiagonal = { true },
             filter = { _, objs ->
-                for (obj in objs) if (obj is Fixture && obj.getFixtureType() == FixtureType.BLOCK) return@PathfinderParams false
+                for (obj in objs) if (obj is Fixture && obj.getFixtureType() == FixtureType.BLOCK)
+                    return@PathfinderParams false
                 return@PathfinderParams true
             })
 

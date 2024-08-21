@@ -70,6 +70,10 @@ class EnemiesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         const val ARIGOCK = "Arigock"
         const val BOMB_CHUTE = "BombChute"
         const val TOTEM_POLEM = "TotemPolem"
+        const val CARRI_CARRY = "CarriCarry"
+        const val CACTUS_LAUNCHER = "CactusLauncher"
+        const val COLTON_JOE = "ColtonJoe"
+        const val TURN_BLASTER = "TurnBlaster"
     }
 
     override fun init() {
@@ -132,6 +136,10 @@ class EnemiesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(ARIGOCK, GameEntityPoolCreator.create { Arigock(game) })
         pools.put(BOMB_CHUTE, GameEntityPoolCreator.create { BombChute(game) })
         pools.put(TOTEM_POLEM, GameEntityPoolCreator.create { TotemPolem(game) })
+        pools.put(CARRI_CARRY, GameEntityPoolCreator.create { CarriCarry(game) })
+        pools.put(CACTUS_LAUNCHER, GameEntityPoolCreator.create { CactusLauncher(game) })
+        pools.put(COLTON_JOE, GameEntityPoolCreator.create { ColtonJoe(game) })
+        pools.put(TURN_BLASTER, GameEntityPoolCreator.create { TurnBlaster(game) })
     }
 
     override fun fetch(key: Any): IGameEntity? {

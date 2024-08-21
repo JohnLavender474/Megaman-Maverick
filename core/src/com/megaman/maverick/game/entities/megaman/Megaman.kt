@@ -192,11 +192,14 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         MechaDragonMiniBoss::class to dmgNeg(3),
         SpitFireball::class to dmgNeg(3),
         BombPotton::class to dmgNeg(3),
-        SmallGreenMissile::class to dmgNeg(3),
+        SmallMissile::class to dmgNeg(3),
         GreenExplosion::class to dmgNeg(3),
         Arigock::class to dmgNeg(3),
         ArigockBall::class to dmgNeg(3),
-        TotemPolem::class to dmgNeg(3)
+        TotemPolem::class to dmgNeg(3),
+        CactusLauncher::class to dmgNeg(3),
+        CactusMissile::class to dmgNeg(3),
+        ColtonJoe::class to dmgNeg(3)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 
@@ -562,7 +565,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         Direction.RIGHT -> body.getCenterLeftPoint()
     }
 
-    override fun getBounds() = body
+    override fun getBounds(): GameRectangle = body
 
     override fun getTag() = TAG
 }

@@ -168,7 +168,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
                 postProcess = { if (!spawnDelayTimer.isFinished()) body.physics.velocity.setZero() },
                 shapes = if (DEBUG_PATHFINDING) game.getShapes() else null
             )
-        }, { true })
+        })
         pathfindingComponent.updateIntervalTimer = Timer(0.1f)
         return pathfindingComponent
     }

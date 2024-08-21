@@ -29,6 +29,7 @@ import com.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntity
@@ -126,6 +127,8 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntit
                 ConstKeys.TRAJECTORY to PLATFORM_SPEED * ConstVals.PPM * if (platformRight) 1 else -1
             )
         )
+
+        requestToPlaySound(SoundAsset.CONVEYOR_LIFT_SOUND, false)
     }
 
     override fun onDestroy() {

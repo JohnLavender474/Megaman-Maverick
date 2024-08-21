@@ -50,7 +50,8 @@ class Petal(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity
         private const val DAMAGE_DURATION = 0.25f
     }
 
-    override val invincible = false
+    override val invincible: Boolean
+        get() = !damageTimer.isFinished()
 
     private val damageNegotiations =
         objectMapOf<KClass<out IDamager>, Int>(
@@ -82,6 +83,8 @@ class Petal(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity
         body.physics.velocity.set(trajectory.scl(ConstVals.PPM.toFloat() * SPEED))
 
         owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
+
+        damageTimer.setToEnd()
     }
 
     override fun onDestroy() {
@@ -99,7 +102,7 @@ class Petal(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity
         damageTimer.reset()
 
         val damage = damageNegotiations[damagerKey]
-        getHealthPoints().translate(-damage)
+        translateHealth(-damage)
         requestToPlaySound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
         return true
     }

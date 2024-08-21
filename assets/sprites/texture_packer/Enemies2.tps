@@ -280,6 +280,8 @@
             <key type="filename">../frames/Enemies2/BombChute/down.png</key>
             <key type="filename">../frames/Enemies2/BombChute/up.png</key>
             <key type="filename">../frames/Enemies2/BombPotton.png</key>
+            <key type="filename">../frames/Enemies2/CactusLauncher/fire.png</key>
+            <key type="filename">../frames/Enemies2/CactusLauncher/reload.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -359,6 +361,55 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Enemies2/CactusLauncher/wait.png</key>
+            <key type="filename">../frames/Enemies2/Shotman/Launch.png</key>
+            <key type="filename">../frames/Enemies2/SnowheadThrower/Snowhead.png</key>
+            <key type="filename">../frames/Enemies2/Taketenko/Fly.png</key>
+            <key type="filename">../frames/Enemies2/Taketenko/Spin.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>8,8,16,16</rect>
+                <key>scale9Paddings</key>
+                <rect>8,8,16,16</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies2/CarriCarry/ride.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>9,9,18,18</rect>
+                <key>scale9Paddings</key>
+                <rect>9,9,18,18</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies2/CarriCarry/shake.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>9,18,18,36</rect>
+                <key>scale9Paddings</key>
+                <rect>9,18,18,36</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Enemies2/CartinJoe/Move.png</key>
             <key type="filename">../frames/Enemies2/CartinJoe/Shoot.png</key>
             <struct type="IndividualSpriteSettings">
@@ -376,6 +427,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Enemies2/CaveRocker/Stand.png</key>
+            <key type="filename">../frames/Enemies2/ColtonJoe/shoot.png</key>
             <key type="filename">../frames/Enemies2/Robbit/Crouch.png</key>
             <key type="filename">../frames/Enemies2/Robbit/Stand.png</key>
             <struct type="IndividualSpriteSettings">
@@ -405,6 +457,21 @@
                 <rect>64,32,128,64</rect>
                 <key>scale9Paddings</key>
                 <rect>64,32,128,64</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies2/ColtonJoe/stand.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,32,32,64</rect>
+                <key>scale9Paddings</key>
+                <rect>16,32,32,64</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -615,24 +682,6 @@
                 <rect>32,8,64,16</rect>
                 <key>scale9Paddings</key>
                 <rect>32,8,64,16</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Enemies2/Shotman/Launch.png</key>
-            <key type="filename">../frames/Enemies2/SnowheadThrower/Snowhead.png</key>
-            <key type="filename">../frames/Enemies2/Taketenko/Fly.png</key>
-            <key type="filename">../frames/Enemies2/Taketenko/Spin.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>8,8,16,16</rect>
-                <key>scale9Paddings</key>
-                <rect>8,8,16,16</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

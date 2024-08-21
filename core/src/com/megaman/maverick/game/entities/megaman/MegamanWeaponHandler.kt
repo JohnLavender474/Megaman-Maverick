@@ -54,30 +54,29 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
             val spawnCenter = Vector2(megaman.body.getCenter())
 
             if (megaman.isDirectionRotatedVertically()) {
-                spawnCenter.x += ConstVals.PPM * megaman.facing.value * if (megaman.isBehaviorActive(BehaviorType.RIDING_CART)) 1.5f else 0.85f
+                spawnCenter.x += ConstVals.PPM * megaman.facing.value *
+                        if (megaman.isBehaviorActive(BehaviorType.RIDING_CART)) 0.95f else 0.85f
 
                 var yOffset: Float = ConstVals.PPM / 16f
-                if (megaman.isBehaviorActive(BehaviorType.RIDING_CART)) yOffset += .35f * ConstVals.PPM
-                else if (megaman.isAnyBehaviorActive(
-                        BehaviorType.CLIMBING, BehaviorType.WALL_SLIDING
-                    )
-                ) yOffset += .15f * ConstVals.PPM
-                else if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) yOffset -= .05f * ConstVals.PPM
-                else yOffset += .25f * ConstVals.PPM
+                if (megaman.isBehaviorActive(BehaviorType.RIDING_CART)) yOffset += 0.325f * ConstVals.PPM
+                else if (megaman.isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.WALL_SLIDING))
+                    yOffset += 0.15f * ConstVals.PPM
+                else if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) yOffset -= 0.05f * ConstVals.PPM
+                else yOffset += 0.25f * ConstVals.PPM
 
                 spawnCenter.y += if (megaman.isDirectionRotatedDown()) -yOffset else yOffset
             } else {
                 var xOffset = ConstVals.PPM / 16f
-                xOffset += if (megaman.isBehaviorActive(BehaviorType.RIDING_CART)) .25f * ConstVals.PPM
+                xOffset += if (megaman.isBehaviorActive(BehaviorType.RIDING_CART)) 0.25f * ConstVals.PPM
                 else if (megaman.isAnyBehaviorActive(
                         BehaviorType.CLIMBING, BehaviorType.WALL_SLIDING
                     )
-                ) .15f * ConstVals.PPM
-                else if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) -.05f * ConstVals.PPM
-                else .05f * ConstVals.PPM
+                ) 0.15f * ConstVals.PPM
+                else if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) -0.05f * ConstVals.PPM
+                else 0.05f * ConstVals.PPM
                 spawnCenter.x += if (megaman.isDirectionRotatedLeft()) -xOffset else xOffset
 
-                val yOffset: Float = ConstVals.PPM * .85f * megaman.facing.value
+                val yOffset: Float = ConstVals.PPM * 0.85f * megaman.facing.value
                 spawnCenter.y += yOffset
             }
 

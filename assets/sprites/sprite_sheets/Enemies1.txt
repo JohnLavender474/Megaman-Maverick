@@ -801,9 +801,30 @@ SwinginJoe/ThrowBall
   orig: 48, 48
   offset: 0, 0
   index: -1
-WispyWasp/BabyWasp
+TurnBlaster/base
   rotate: false
   xy: 320, 320
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+TurnBlaster/dial
+  rotate: false
+  xy: 352, 320
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+TurnBlaster/tube
+  rotate: false
+  xy: 384, 320
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+WispyWasp/BabyWasp
+  rotate: false
+  xy: 416, 320
   size: 64, 32
   orig: 64, 32
   offset: 0, 0

@@ -103,23 +103,58 @@ BulbBlaster/Light
   index: -1
 BunbyTank/Roll
   rotate: false
-  xy: 695, 576
+  xy: 823, 576
   size: 88, 176
   orig: 88, 176
   offset: 0, 0
   index: -1
 BunbyTank/Shoot
   rotate: false
-  xy: 360, 768
+  xy: 424, 768
   size: 175, 525
   orig: 175, 525
   offset: 0, 0
   index: -1
 BunbyTank/Still
   rotate: false
-  xy: 520, 576
+  xy: 648, 576
   size: 175, 175
   orig: 175, 175
+  offset: 0, 0
+  index: -1
+CactusLauncher/fire
+  rotate: false
+  xy: 64, 128
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1
+CactusLauncher/reload
+  rotate: false
+  xy: 96, 128
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1
+CactusLauncher/wait
+  rotate: false
+  xy: 776, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+CarriCarry/ride
+  rotate: false
+  xy: 608, 256
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
+CarriCarry/shake
+  rotate: false
+  xy: 656, 256
+  size: 48, 96
+  orig: 48, 96
   offset: 0, 0
   index: -1
 CartinJoe/Move
@@ -150,23 +185,37 @@ CaveRocker/Throw
   orig: 384, 128
   offset: 0, 0
   index: -1
+ColtonJoe/shoot
+  rotate: false
+  xy: 360, 768
+  size: 64, 320
+  orig: 64, 320
+  offset: 0, 0
+  index: -1
+ColtonJoe/stand
+  rotate: false
+  xy: 840, 448
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
 Elecn/Elecn1
   rotate: false
-  xy: 608, 256
+  xy: 704, 256
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 Elecn/Elecn2
   rotate: false
-  xy: 704, 256
+  xy: 800, 256
   size: 192, 96
   orig: 192, 96
   offset: 0, 0
   index: -1
 Elecn/Elecn3
   rotate: false
-  xy: 896, 256
+  xy: 0, 352
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
@@ -194,35 +243,35 @@ Eyee/OpeningEyes
   index: -1
 Gachappan/Open
   rotate: false
-  xy: 64, 128
+  xy: 128, 128
   size: 192, 64
   orig: 192, 64
   offset: 0, 0
   index: -1
 Gachappan/Shoot
   rotate: false
-  xy: 256, 128
+  xy: 320, 128
   size: 192, 64
   orig: 192, 64
   offset: 0, 0
   index: -1
 Gachappan/Wait
   rotate: false
-  xy: 448, 128
+  xy: 512, 128
   size: 192, 64
   orig: 192, 64
   offset: 0, 0
   index: -1
 Hanabiran/1PetalSpin
   rotate: false
-  xy: 640, 128
+  xy: 704, 128
   size: 256, 64
   orig: 256, 64
   offset: 0, 0
   index: -1
 Hanabiran/1PetalStand
   rotate: false
-  xy: 896, 128
+  xy: 960, 128
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -306,21 +355,21 @@ JetMet/Jet
   index: -1
 JetMet/Stand
   rotate: false
-  xy: 256, 576
+  xy: 384, 576
   size: 132, 136
   orig: 132, 136
   offset: 0, 0
   index: -1
 JetMet/TakeOff
   rotate: false
-  xy: 388, 576
+  xy: 516, 576
   size: 132, 136
   orig: 132, 136
   offset: 0, 0
   index: -1
 Peat
   rotate: false
-  xy: 776, 0
+  xy: 808, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
@@ -334,7 +383,7 @@ RedTiggerSquirt
   index: -1
 RingRing/Pink
   rotate: false
-  xy: 840, 0
+  xy: 872, 0
   size: 128, 32
   orig: 128, 32
   offset: 0, 0
@@ -348,21 +397,21 @@ RingRing/Red
   index: -1
 Robbit/Crouch
   rotate: false
-  xy: 840, 448
+  xy: 0, 576
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 Robbit/Jump
   rotate: false
-  xy: 0, 576
+  xy: 128, 576
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 Robbit/Stand
   rotate: false
-  xy: 128, 576
+  xy: 256, 576
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
@@ -453,7 +502,7 @@ Togglee/SwitchToRight
   index: -1
 TotemPolem/eyes_closed
   rotate: false
-  xy: 0, 352
+  xy: 96, 352
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
@@ -467,56 +516,56 @@ TotemPolem/eyes_closing
   index: -1
 TotemPolem/eyes_open
   rotate: false
-  xy: 96, 352
+  xy: 192, 352
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 TotemPolem/shoot1
   rotate: false
-  xy: 192, 352
+  xy: 288, 352
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 TotemPolem/shoot2
   rotate: false
-  xy: 288, 352
+  xy: 384, 352
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 TotemPolem/shoot3
   rotate: false
-  xy: 384, 352
+  xy: 480, 352
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 TotemPolem/shoot4
   rotate: false
-  xy: 480, 352
+  xy: 576, 352
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 ToxicBarrelBot/Closed
   rotate: false
-  xy: 576, 352
+  xy: 672, 352
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 ToxicBarrelBot/OpenCenter
   rotate: false
-  xy: 783, 576
+  xy: 911, 576
   size: 96, 192
   orig: 96, 192
   offset: 0, 0
   index: -1
 ToxicBarrelBot/OpenTop
   rotate: false
-  xy: 624, 352
+  xy: 720, 352
   size: 240, 96
   orig: 240, 96
   offset: 0, 0

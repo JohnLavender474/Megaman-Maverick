@@ -442,16 +442,16 @@ class MegaContactListener(
             if (playerEntity is Megaman && itemEntity is ItemEntity) itemEntity.contactWithPlayer(playerEntity)
         }
 
-        // player, cart
+        // player feet, cart
         else if (contact.fixturesMatch(FixtureType.FEET, FixtureType.CART)) {
             printDebugLog(contact, "beginContact(): Feet-Cart, contact = $contact")
             val (feet, cart) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.CART)!!
 
             val feetEntity = feet.getEntity()
             val cartEntity = cart.getEntity() as IOwnable
-            cartEntity.owner = feetEntity
 
             if (feetEntity is Megaman && cartEntity is Cart) {
+                cartEntity.owner = feetEntity
                 feetEntity.body.setBodySense(BodySense.TOUCHING_CART, true)
                 feetEntity.body.putProperty(ConstKeys.CART, cartEntity)
             }
@@ -871,7 +871,7 @@ class MegaContactListener(
             if (listenerEntity is Megaman) listenerEntity.gravityScalar = 1f
         }
 
-        // player, cart
+        // player feet, cart
         else if (contact.fixturesMatch(FixtureType.FEET, FixtureType.CART)) {
             printDebugLog(contact, "beginContact(): Feet-Cart, contact = $contact")
             val (feet, cart) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.CART)!!
