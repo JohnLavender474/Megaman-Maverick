@@ -154,7 +154,10 @@ abstract class AbstractEnemy(
             ConstKeys.HEALTH, max = ConstVals.MAX_HEALTH, current = ConstVals.MAX_HEALTH, min = ConstVals.MIN_HEALTH
         )
         pointsComponent.putListener(ConstKeys.HEALTH) {
-            if (it.current <= ConstVals.MIN_HEALTH) kill()
+            if (it.current <= ConstVals.MIN_HEALTH) {
+                GameLogger.debug(TAG, "Kill enemy due to depleted health")
+                kill()
+            }
         }
         return pointsComponent
     }

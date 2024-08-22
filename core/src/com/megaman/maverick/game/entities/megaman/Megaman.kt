@@ -199,7 +199,9 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         TotemPolem::class to dmgNeg(3),
         CactusLauncher::class to dmgNeg(3),
         CactusMissile::class to dmgNeg(3),
-        ColtonJoe::class to dmgNeg(3)
+        ColtonJoe::class to dmgNeg(3),
+        SphinxBall::class to dmgNeg(3),
+        SphinxMiniBoss::class to dmgNeg(3)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 

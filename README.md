@@ -10,6 +10,10 @@ the sources of assets. I will be adding comprehensive credits to the README and 
 
 See the [credits](./assets/credits.txt) file for a list of artists and their work used in this game.
 
+The following list is currently incomplete and will be updated soon.
+
+Sphinx Miniboss - [Mister Mike](https://www.spriters-resource.com/custom_edited/megamancustoms/sheet/108177/)
+
 ### TODO
 - [ ] Give credit to myself, Capcom, and other artists for their work used in this game (music, sprites, etc.)
   - [ ] Create a credits screen

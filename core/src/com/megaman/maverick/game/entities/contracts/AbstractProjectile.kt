@@ -39,7 +39,7 @@ abstract class AbstractProjectile(game: MegamanMaverickGame) : MegaGameEntity(ga
     override fun getEntityType() = EntityType.PROJECTILE
 
     override fun init() {
-        super<MegaGameEntity>.init()
+        super.init()
         addComponents(defineProjectileComponents())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())

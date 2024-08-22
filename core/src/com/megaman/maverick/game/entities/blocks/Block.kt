@@ -47,7 +47,7 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity 
     }
 
     override fun spawn(spawnProps: Properties) {
-        if (isLoggingLifecyle()) GameLogger.debug(TAG, "Spawned: $spawnProps")
+        GameLogger.debug(TAG, "Spawned: $spawnProps")
         super.spawn(spawnProps)
 
         val cullOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
@@ -128,8 +128,7 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity 
     }
 
     override fun onDestroy() {
-        if (isLoggingLifecyle()) GameLogger.debug(TAG, "Destroyed: $properties")
-
+        GameLogger.debug(TAG, "Destroyed: $properties")
         super.onDestroy()
 
         val fixtureIter = body.fixtures.iterator()

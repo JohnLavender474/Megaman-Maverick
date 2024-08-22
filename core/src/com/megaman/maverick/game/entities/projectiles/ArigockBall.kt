@@ -42,16 +42,21 @@ class ArigockBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, "ArigockBall")
-        super<AbstractProjectile>.init()
+        super.init()
         addComponent(defineAnimationsComponent())
     }
 
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
+
         val impulse = spawnProps.get(ConstKeys.IMPULSE, Vector2::class)!!
         body.physics.velocity.set(impulse)
+
+        val gravityOn = spawnProps.getOrDefault(ConstKeys.GRAVITY_ON, true, Boolean::class)
+        body.physics.gravityOn = gravityOn
     }
 
     override fun hitBlock(blockFixture: IFixture) = explodeAndDie()

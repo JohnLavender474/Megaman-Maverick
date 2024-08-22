@@ -66,6 +66,7 @@ abstract class AbstractBoss(
         GameLogger.debug(TAG, "onDestroy()")
         game.eventsMan.removeListener(this)
         ready = false
+
         super.onDestroy()
 
         if (getCurrentHealth() > 0) return
@@ -92,6 +93,7 @@ abstract class AbstractBoss(
     }
 
     override fun onEvent(event: Event) {
+        GameLogger.debug(TAG, "Boss received event: $event")
         when (event.key) {
             EventType.END_BOSS_SPAWN -> onReady()
             EventType.PLAYER_SPAWN -> kill()
@@ -138,6 +140,7 @@ abstract class AbstractBoss(
     }
 
     protected open fun triggerDefeat() {
+        GameLogger.debug(TAG, "Trigger defeat")
         game.eventsMan.submitEvent(Event(EventType.BOSS_DEFEATED, props(ConstKeys.BOSS to this)))
         defeatTimer.reset()
         defeated = true

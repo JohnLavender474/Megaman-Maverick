@@ -17,6 +17,7 @@ Mecha Dragon - Capcom
 Moon Head - oldlavygenes
 Penguin Machine - Capcom
 React Monkey - Balloon Cart
+Sphinx Miniboss - Mister Mike
 
 ## Tilesets
 

@@ -466,7 +466,9 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
                 val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
                 if (!boss.mini) audioMan.unsetMusic()
 
-                MegaGameEntitiesMap.forEachEntity { if (it.isAny(IDamager::class, IHazard::class)) it.kill() }
+                MegaGameEntitiesMap.forEachEntity {
+                    if (it.isAny(IDamager::class, IHazard::class) && it != boss) it.kill()
+                }
 
                 eventsMan.submitEvent(
                     Event(

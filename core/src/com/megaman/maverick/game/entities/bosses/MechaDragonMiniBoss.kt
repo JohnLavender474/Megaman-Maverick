@@ -96,7 +96,8 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
             }, ChargedShotExplosion::class to dmgNeg {
                 it as ChargedShotExplosion
                 if (it.fullyCharged) 2 else 1
-            })
+            }
+        )
     override lateinit var facing: Facing
 
     private val loop = Loop(
@@ -136,7 +137,7 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
             regions.put("shoot", atlas.findRegion("$TAG/Shoot"))
             regions.put("defeated", atlas.findRegion("$TAG/Defeated"))
         }
-        super<AbstractBoss>.init()
+        super.init()
         addComponent(defineAnimationsComponent())
     }
 
