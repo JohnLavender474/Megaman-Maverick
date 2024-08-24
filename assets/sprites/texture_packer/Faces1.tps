@@ -174,11 +174,14 @@
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
             <key type="filename">../frames/Faces1/Blunt Man.png</key>
+            <key type="filename">../frames/Faces1/Desert Man.png</key>
             <key type="filename">../frames/Faces1/Distributor Man.png</key>
             <key type="filename">../frames/Faces1/Freezer Man.png</key>
+            <key type="filename">../frames/Faces1/Inferno Man.png</key>
             <key type="filename">../frames/Faces1/Microwave Man.png</key>
             <key type="filename">../frames/Faces1/Mister Man.png</key>
             <key type="filename">../frames/Faces1/Moon Man.png</key>
+            <key type="filename">../frames/Faces1/Naval Man.png</key>
             <key type="filename">../frames/Faces1/Nuke Man.png</key>
             <key type="filename">../frames/Faces1/Precious Man.png</key>
             <key type="filename">../frames/Faces1/Reactor Man.png</key>
@@ -197,21 +200,6 @@
                 <rect>8,8,16,16</rect>
                 <key>scale9Paddings</key>
                 <rect>8,8,16,16</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Faces1/DesertMan.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>32,32,64,63</rect>
-                <key>scale9Paddings</key>
-                <rect>32,32,64,63</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

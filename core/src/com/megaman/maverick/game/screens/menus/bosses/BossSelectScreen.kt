@@ -144,7 +144,7 @@ class BossSelectScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MEG
         val megamanFacesAtlas = game.assMan.get(TextureAsset.FACES_1.source, TextureAtlas::class.java)
         val megamanFaces: MutableMap<Position, TextureRegion> = EnumMap(Position::class.java)
         for (position in Position.values()) {
-            val faceRegion: TextureRegion = megamanFacesAtlas.findRegion("Maverick/" + position.name)
+            val faceRegion: TextureRegion = megamanFacesAtlas.findRegion("Megaman/" + position.name)
             megamanFaces[position] = faceRegion
         }
         val megamanFaceSupplier = Supplier {

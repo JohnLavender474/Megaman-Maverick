@@ -16,6 +16,7 @@ import com.engine.common.interfaces.Initializable
 import com.engine.common.time.Timer
 import com.engine.controller.ControllerUtils
 import com.engine.drawables.fonts.BitmapFontHandle
+import com.engine.drawables.sprites.setSize
 import com.engine.screens.menus.IMenuButton
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.ConstVals.UI_ARROW_BLINK_DUR
@@ -52,15 +53,22 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
 
     companion object {
         const val TAG = "MainScreen"
+        private const val MAIN_MENU_TEXT_START_ROW = 6f
+        private const val SETTINGS_TEXT_START_ROW = 11f
+        private const val TEXT_ROW_DECREMENT = 0.025f
+        private const val ARROW_CENTER_ROW_DECREMENT = 0.25f
         private const val SETTINGS_TRANS_DUR = 0.5f
         private val SETTINGS_TRAJ = Vector3(15f * ConstVals.PPM, 0f, 0f)
     }
 
     override val menuButtons = objectMapOf<String, IMenuButton>()
 
+    private lateinit var background: Sprite
+    /*
     private val pose = Sprite()
     private val title = Sprite()
     private val subtitle = Sprite()
+     */
 
     private var screenSlide =
         ScreenSlide(
@@ -87,7 +95,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
         if (initialized) return
         initialized = true
 
-        var row = 4.75f
+        var row = MAIN_MENU_TEXT_START_ROW
 
         MainScreenButton.values().forEach {
             val fontHandle =
@@ -100,12 +108,12 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
                     fontSource = "Megaman10Font.ttf"
                 )
             fontHandles.add(fontHandle)
-            val arrowCenter = Vector2(1.5f * ConstVals.PPM, (row - 0.25f) * ConstVals.PPM)
+            val arrowCenter = Vector2(1.5f * ConstVals.PPM, (row - ARROW_CENTER_ROW_DECREMENT) * ConstVals.PPM)
             blinkArrows.put(it.text, BlinkingArrow(game.assMan, arrowCenter))
-            row -= 0.025f * ConstVals.PPM
+            row -= TEXT_ROW_DECREMENT * ConstVals.PPM
         }
 
-        row = 11f
+        row = SETTINGS_TEXT_START_ROW
 
         MainScreenSettingsButton.values().forEach {
             val fontHandle =
@@ -118,9 +126,9 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
                     fontSource = "Megaman10Font.ttf"
                 )
             fontHandles.add(fontHandle)
-            val arrowCenter = Vector2(16.5f * ConstVals.PPM, (row - 0.25f) * ConstVals.PPM)
+            val arrowCenter = Vector2(16.5f * ConstVals.PPM, (row - ARROW_CENTER_ROW_DECREMENT) * ConstVals.PPM)
             blinkArrows.put(it.text, BlinkingArrow(game.assMan, arrowCenter))
-            row -= ConstVals.PPM * .025f
+            row -= TEXT_ROW_DECREMENT * ConstVals.PPM
         }
 
         fontHandles.add(
@@ -172,6 +180,10 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
         }
 
         val atlas = game.assMan.getTextureAtlas(TextureAsset.UI_1.source)
+        background = Sprite(atlas.findRegion("TitleScreenBackground"))
+        background.setSize(ConstVals.VIEW_HEIGHT * ConstVals.PPM)
+        background.setCenter( ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f, ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f)
+        /*
         title.setRegion(atlas.findRegion("MegamanTitle"))
         title.setBounds(
             ConstVals.PPM.toFloat(), 6.25f * ConstVals.PPM, 13.25f * ConstVals.PPM, 5f * ConstVals.PPM
@@ -183,6 +195,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
         )
         pose.setRegion(atlas.findRegion("MegamanMaverick"))
         pose.setBounds(9f * ConstVals.PPM, -ConstVals.PPM / 12f, 6f * ConstVals.PPM, 6f * ConstVals.PPM)
+         */
 
         menuButtons.put(
             MainScreenButton.START_NEW_GAME.text,
@@ -422,9 +435,12 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
         batch.projectionMatrix = game.getUiCamera().combined
         batch.begin()
         blinkArrows.get(currentButtonKey).draw(batch)
+        background.draw(batch)
+        /*
         title.draw(batch)
         pose.draw(batch)
         subtitle.draw(batch)
+         */
         fontHandles.forEach { it.draw(batch) }
         if (settingsArrowBlink) settingsArrows.forEach { it.draw(batch) }
         batch.end()

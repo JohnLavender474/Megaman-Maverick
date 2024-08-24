@@ -499,6 +499,9 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             }
 
             requestToPlaySound(SoundAsset.CONVEYOR_LIFT_SOUND, true)
+
+            doOffsetBoundsSupplier = true
+            boundsSupplierOffset.x = MegamanValues.CART_CAMERA_OFFSET_X * ConstVals.PPM * cart.offset.value
         }
 
         override fun act(delta: Float) {
@@ -531,6 +534,9 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             }
 
             stopSoundNow(SoundAsset.CONVEYOR_LIFT_SOUND)
+
+            doOffsetBoundsSupplier = false
+            boundsSupplierOffset.x = 0f
         }
     }
 

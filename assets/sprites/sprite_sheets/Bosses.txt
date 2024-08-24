@@ -47,21 +47,21 @@ BluntMan/Stand
   index: -1
 Bospider/Climb
   rotate: false
-  xy: 720, 96
+  xy: 768, 96
   size: 320, 64
   orig: 320, 64
   offset: 0, 0
   index: -1
 Bospider/OpenEye
   rotate: false
-  xy: 1040, 96
+  xy: 1088, 96
   size: 256, 64
   orig: 256, 64
   offset: 0, 0
   index: -1
 Bospider/Still
   rotate: false
-  xy: 1296, 96
+  xy: 1344, 96
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -145,35 +145,35 @@ DistributorMan/Stand
   index: -1
 FreezerMan/GiveTheHand
   rotate: false
-  xy: 1360, 96
+  xy: 1408, 96
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 FreezerMan/Jump
   rotate: false
-  xy: 1424, 96
+  xy: 1472, 96
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 FreezerMan/JumpOpenFreezer
   rotate: false
-  xy: 1488, 96
+  xy: 1536, 96
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
   index: -1
 FreezerMan/Opening
   rotate: false
-  xy: 1616, 96
+  xy: 1664, 96
   size: 192, 64
   orig: 192, 64
   offset: 0, 0
   index: -1
 FreezerMan/StandLookDown
   rotate: false
-  xy: 1808, 96
+  xy: 1856, 96
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
@@ -479,6 +479,62 @@ MoonMan_v2/throw
   orig: 192, 180
   offset: 0, 0
   index: -1
+NavalMan/jump
+  rotate: false
+  xy: 1616, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+NavalMan/jump_shoot_harpoon
+  rotate: false
+  xy: 864, 304
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
+NavalMan/stand_empty
+  rotate: false
+  xy: 1664, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+NavalMan/stand_shoot_anchor
+  rotate: false
+  xy: 912, 304
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+NavalMan/stand_shoot_harpoon
+  rotate: false
+  xy: 1504, 400
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: -1
+NavalMan/stand_shoot_two_harpoons
+  rotate: false
+  xy: 1008, 304
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
+NavalMan/stand_shoot_two_harpoons_up
+  rotate: false
+  xy: 1056, 304
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
+NavalMan/stand_two_harpoons
+  rotate: false
+  xy: 1712, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
 PenguinMiniBoss/PenguinMiniBoss
   rotate: false
   xy: 0, 304
@@ -488,42 +544,42 @@ PenguinMiniBoss/PenguinMiniBoss
   index: -1
 PreciousMan/Jump
   rotate: false
-  xy: 1616, 0
+  xy: 1760, 0
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 PreciousMan/JumpFreeze
   rotate: false
-  xy: 1712, 0
+  xy: 0, 48
   size: 192, 48
   orig: 192, 48
   offset: 0, 0
   index: -1
 PreciousMan/Run
   rotate: false
-  xy: 0, 48
+  xy: 192, 48
   size: 192, 48
   orig: 192, 48
   offset: 0, 0
   index: -1
 PreciousMan/Stand
   rotate: false
-  xy: 192, 48
+  xy: 384, 48
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 PreciousMan/StandFreeze
   rotate: false
-  xy: 288, 48
+  xy: 480, 48
   size: 144, 48
   orig: 144, 48
   offset: 0, 0
   index: -1
 PreciousMan/StandShoot
   rotate: false
-  xy: 432, 48
+  xy: 624, 48
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -544,28 +600,28 @@ ReactMan/Die
   index: -1
 ReactMan/Jump
   rotate: false
-  xy: 480, 48
+  xy: 672, 48
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 ReactMan/Run
   rotate: false
-  xy: 864, 304
+  xy: 1104, 304
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 ReactMan/Stand
   rotate: false
-  xy: 528, 48
+  xy: 720, 48
   size: 144, 48
   orig: 144, 48
   offset: 0, 0
   index: -1
 ReactMan/Throw
   rotate: false
-  xy: 672, 48
+  xy: 864, 48
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -663,63 +719,63 @@ RoasterMan/Wet
   index: -1
 RodentMan/Jump
   rotate: false
-  xy: 720, 48
+  xy: 912, 48
   size: 192, 48
   orig: 192, 48
   offset: 0, 0
   index: -1
 RodentMan/Run
   rotate: false
-  xy: 912, 48
+  xy: 1104, 48
   size: 192, 48
   orig: 192, 48
   offset: 0, 0
   index: -1
 RodentMan/Shoot
   rotate: false
-  xy: 1104, 48
+  xy: 1296, 48
   size: 144, 48
   orig: 144, 48
   offset: 0, 0
   index: -1
 RodentMan/Slash
   rotate: false
-  xy: 1248, 48
+  xy: 1440, 48
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 RodentMan/Stand
   rotate: false
-  xy: 1344, 48
+  xy: 1536, 48
   size: 288, 48
   orig: 288, 48
   offset: 0, 0
   index: -1
 RodentMan/StandStill
   rotate: false
-  xy: 1632, 48
+  xy: 1824, 48
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 RodentMan/WallSlide
   rotate: false
-  xy: 1680, 48
+  xy: 1872, 48
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 SigmaRat/Body
   rotate: false
-  xy: 1504, 400
+  xy: 1552, 400
   size: 148, 148
   orig: 148, 148
   offset: 0, 0
   index: -1
 SigmaRat/BodyDamaged
   rotate: false
-  xy: 1652, 400
+  xy: 1700, 400
   size: 296, 148
   orig: 296, 148
   offset: 0, 0
@@ -817,14 +873,14 @@ SphinxMiniBoss/wait
   index: -1
 TimberWoman/Damaged
   rotate: false
-  xy: 960, 304
+  xy: 1200, 304
   size: 192, 96
   orig: 192, 96
   offset: 0, 0
   index: -1
 TimberWoman/Jump
   rotate: false
-  xy: 1152, 304
+  xy: 1392, 304
   size: 384, 96
   orig: 384, 96
   offset: 0, 0
@@ -859,49 +915,49 @@ TimberWoman/Swing
   index: -1
 WintryMan/AboutToJump
   rotate: false
-  xy: 1776, 48
+  xy: 0, 96
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 WintryMan/AirFreeze
   rotate: false
-  xy: 0, 96
+  xy: 48, 96
   size: 192, 48
   orig: 192, 48
   offset: 0, 0
   index: -1
 WintryMan/Jump
   rotate: false
-  xy: 192, 96
+  xy: 240, 96
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 WintryMan/Run
   rotate: false
-  xy: 240, 96
+  xy: 288, 96
   size: 192, 48
   orig: 192, 48
   offset: 0, 0
   index: -1
 WintryMan/Stand
   rotate: false
-  xy: 432, 96
+  xy: 480, 96
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 WintryMan/StandFreeze
   rotate: false
-  xy: 528, 96
+  xy: 576, 96
   size: 144, 48
   orig: 144, 48
   offset: 0, 0
   index: -1
 WintryMan/StandShoot
   rotate: false
-  xy: 672, 96
+  xy: 720, 96
   size: 48, 48
   orig: 48, 48
   offset: 0, 0

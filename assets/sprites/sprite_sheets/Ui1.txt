@@ -1,5 +1,5 @@
 Ui1.png
-size: 2032, 1648
+size: 2032, 1634
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -54,7 +54,7 @@ BorderBlock
   index: -1
 Canvas
   rotate: false
-  xy: 800, 578
+  xy: 1100, 564
   size: 512, 480
   orig: 512, 480
   offset: 0, 0
@@ -68,7 +68,7 @@ EmptyBit
   index: -1
 MegamanHelmet
   rotate: false
-  xy: 1590, 294
+  xy: 0, 564
   size: 300, 284
   orig: 300, 284
   offset: 0, 0
@@ -89,14 +89,14 @@ MegamanPose
   index: -1
 MegamanSubtitle
   rotate: false
-  xy: 512, 294
+  xy: 762, 294
   size: 1078, 270
   orig: 1078, 270
   offset: 0, 0
   index: -1
 MegamanTitle
   rotate: false
-  xy: 0, 1058
+  xy: 0, 1044
   size: 1982, 590
   orig: 1982, 590
   offset: 0, 0
@@ -159,14 +159,14 @@ StageSelectBox_Blinking
   index: -1
 StageSelectBox_Highlighted
   rotate: false
-  xy: 0, 578
+  xy: 300, 564
   size: 400, 400
   orig: 400, 400
   offset: 0, 0
   index: -1
 StageSelectBox_Unhighlighted
   rotate: false
-  xy: 400, 578
+  xy: 700, 564
   size: 400, 400
   orig: 400, 400
   offset: 0, 0
@@ -218,6 +218,13 @@ Subtitle8bit
   xy: 1230, 102
   size: 145, 145
   orig: 145, 145
+  offset: 0, 0
+  index: -1
+TitleScreenBackground
+  rotate: false
+  xy: 512, 294
+  size: 250, 262
+  orig: 250, 262
   offset: 0, 0
   index: -1
 WhiteFrameBlackPane

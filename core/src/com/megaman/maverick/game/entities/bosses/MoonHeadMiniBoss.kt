@@ -122,7 +122,7 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimate
             regions.put("crumble", atlas.findRegion("$TAG/Crumble"))
             regions.put("defeated", atlas.findRegion("$TAG/Defeated"))
         }
-        super<AbstractBoss>.init()
+        super.init()
         addComponent(defineAnimationsComponent())
     }
 
@@ -170,20 +170,23 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimate
         arcMotion2.arcFactor *= -1f
 
         val blocks = MegaGameEntitiesMap.get(EntityType.BLOCK).map { it as Block }
+        val mockBody = GameRectangle(body)
 
         val totalDistance = body.getCenter().dst(getMegaman().body.getCenter())
         var distance = 0f
+        var distFromMegaman = Float.MAX_VALUE
 
         var winningArcMotion = arcMotion1
-        var distFromMegaman = Float.MAX_VALUE
 
         for (i in 0 until ARC_FACTOR_CALCULATIONS) {
             distance += totalDistance / ARC_FACTOR_CALCULATIONS
 
             val position1 = arcMotion1.compute(distance)
             val position2 = arcMotion2.compute(distance)
-            if (blocks.any { it.blockFixture.getShape().contains(position1) }) return arcMotion2
-            else if (blocks.any { it.blockFixture.getShape().contains(position2) }) return arcMotion1
+            if (blocks.any { it.blockFixture.getShape().overlaps(mockBody.setCenter(position1)) })
+                return arcMotion2
+            else if (blocks.any { it.blockFixture.getShape().overlaps(mockBody.setCenter(position2)) })
+                return arcMotion1
 
             val dist1 = position1.dst(getMegaman().body.getCenter())
             val dist2 = position2.dst(getMegaman().body.getCenter())

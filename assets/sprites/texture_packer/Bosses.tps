@@ -333,6 +333,9 @@
             </struct>
             <key type="filename">../frames/Bosses/GutsTank/Fist.png</key>
             <key type="filename">../frames/Bosses/MoonMan/damaged.png</key>
+            <key type="filename">../frames/Bosses/NavalMan/jump.png</key>
+            <key type="filename">../frames/Bosses/NavalMan/stand_empty.png</key>
+            <key type="filename">../frames/Bosses/NavalMan/stand_two_harpoons.png</key>
             <key type="filename">../frames/Bosses/PreciousMan/StandShoot.png</key>
             <key type="filename">../frames/Bosses/ReactMan/Jump.png</key>
             <key type="filename">../frames/Bosses/ReactMan/Stand.png</key>
@@ -505,6 +508,54 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Bosses/NavalMan/jump_shoot_harpoon.png</key>
+            <key type="filename">../frames/Bosses/NavalMan/stand_shoot_two_harpoons.png</key>
+            <key type="filename">../frames/Bosses/NavalMan/stand_shoot_two_harpoons_up.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,24,24,48</rect>
+                <key>scale9Paddings</key>
+                <rect>12,24,24,48</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses/NavalMan/stand_shoot_anchor.png</key>
+            <key type="filename">../frames/Bosses/ReactMan/Run.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>24,24,48,48</rect>
+                <key>scale9Paddings</key>
+                <rect>24,24,48,48</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses/NavalMan/stand_shoot_harpoon.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,36,24,72</rect>
+                <key>scale9Paddings</key>
+                <rect>12,36,24,72</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Bosses/PenguinMiniBoss/PenguinMiniBoss.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -584,21 +635,6 @@
                 <rect>8,10,16,20</rect>
                 <key>scale9Paddings</key>
                 <rect>8,10,16,20</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Bosses/ReactMan/Run.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>24,24,48,48</rect>
-                <key>scale9Paddings</key>
-                <rect>24,24,48,48</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

@@ -8,6 +8,7 @@ object MegamanValues {
     const val CART_RIDE_ACCELERATION = 1.15f
     const val CART_JUMP_ACCELERATION = 0.35f
     const val CART_JUMP_VEL = 22f
+    const val CART_CAMERA_OFFSET_X = 2f
 
     const val CLAMP_X = 25f
     const val CLAMP_Y = 50f

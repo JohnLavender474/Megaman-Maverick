@@ -12,6 +12,7 @@ import com.engine.animations.Animator
 import com.engine.animations.IAnimation
 import com.engine.common.CAUSE_OF_DEATH_MESSAGE
 import com.engine.common.GameLogger
+import com.engine.common.enums.Facing
 import com.engine.common.enums.Position
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.extensions.objectMapOf
@@ -61,7 +62,10 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
     }
 
     override var owner: IGameEntity? = null
+
     var childBlock: Block? = null
+
+    lateinit var offset: Facing
 
     override fun getTag() = TAG
 
@@ -95,6 +99,7 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
                 ConstKeys.BLOCK_FILTERS to objectSetOf(TAG)
             )
         )
+        offset = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, "right", String::class).uppercase())
     }
 
     override fun onDestroy() {

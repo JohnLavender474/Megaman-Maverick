@@ -349,6 +349,9 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
 
     internal val roomTransPauseTimer = Timer(ConstVals.ROOM_TRANS_DELAY_DURATION)
 
+    internal val boundsSupplierOffset = Vector2()
+    internal var doOffsetBoundsSupplier = false
+
     override fun getEntityType() = EntityType.MEGAMAN
 
     override fun init() {
@@ -419,6 +422,9 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         applyMovementScalarToBullet = spawnProps.getOrDefault(ConstKeys.APPLY_SCALAR_TO_CHILDREN, false, Boolean::class)
 
         roomTransPauseTimer.setToEnd()
+
+        boundsSupplierOffset.setZero()
+        doOffsetBoundsSupplier = false
     }
 
     override fun onDestroy() {
@@ -562,14 +568,14 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         return true
     }
 
-    override fun getPosition() = when (directionRotation!!) {
-        Direction.UP -> body.getBottomCenterPoint()
-        Direction.DOWN -> body.getTopCenterPoint()
-        Direction.LEFT -> body.getCenterRightPoint()
-        Direction.RIGHT -> body.getCenterLeftPoint()
+    override fun getBounds(): GameRectangle {
+        return if (!doOffsetBoundsSupplier) body
+        else {
+            val bounds = GameRectangle(body)
+            bounds.translation(boundsSupplierOffset)
+            bounds
+        }
     }
-
-    override fun getBounds(): GameRectangle = body
 
     override fun getTag() = TAG
 }
