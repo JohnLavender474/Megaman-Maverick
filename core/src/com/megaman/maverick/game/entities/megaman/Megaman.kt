@@ -201,7 +201,11 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         CactusMissile::class to dmgNeg(3),
         ColtonJoe::class to dmgNeg(3),
         SphinxBall::class to dmgNeg(3),
-        SphinxMiniBoss::class to dmgNeg(3)
+        SphinxMiniBoss::class to dmgNeg(3),
+        SpikeBot::class to dmgNeg(3),
+        Needle::class to dmgNeg(3),
+        JetpackIceBlaster::class to dmgNeg(3),
+        TeardropBlast::class to dmgNeg(3)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 

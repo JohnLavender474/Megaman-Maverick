@@ -22,6 +22,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
 
     companion object {
         const val TAG = "BackgroundLayerBuilder"
+        const val ANIMATED_BACKGROUND = "AnimatedBackground"
     }
 
     private val presetBGMap: ObjectMap<String, (RectangleMapObject) -> Background> = objectMapOf(
@@ -69,7 +70,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
 
             GameLogger.debug(TAG, "Building background ${o.name} with props ${o.properties.toProps()}")
 
-            if (presetBGMap.containsKey(o.name)) {
+            if (o.name != null && presetBGMap.containsKey(o.name)) {
                 GameLogger.debug(TAG, "Building preset background ${o.name}")
                 val supplier = presetBGMap[o.name]!!
                 val background = supplier.invoke(o)
@@ -81,13 +82,13 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
 
             val backgroundRegion =
                 params.game.assMan.getTextureRegion(
-                    TEXTURE_ASSET_PREFIX + o.properties.get(ConstKeys.ATLAS) as String,
-                    o.properties.get(ConstKeys.REGION) as String
+                    TEXTURE_ASSET_PREFIX + o.properties.get(ConstKeys.ATLAS, String::class.java),
+                    o.properties.get(ConstKeys.REGION, String::class.java)
                 )
             val rows = o.properties.get(ConstKeys.ROWS) as Int
             val columns = o.properties.get(ConstKeys.COLUMNS) as Int
 
-            val background = if (o.name == "AnimatedBackground") {
+            val background = if (o.name == ANIMATED_BACKGROUND) {
                 val animRows = o.properties.get("${ConstKeys.ANIMATION}_${ConstKeys.ROWS}") as Int
                 val animColumns = o.properties.get("${ConstKeys.ANIMATION}_${ConstKeys.COLUMNS}") as Int
                 val duration = o.properties.get(ConstKeys.DURATION) as Float

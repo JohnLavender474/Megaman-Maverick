@@ -166,12 +166,10 @@ class BossIntroScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
             assert(bAnimQ.peek() != null)
 
             val t = bAnimQ.peek()!!.component2()
-
             if (bAnimQ.size > 1 && t.isFinished()) {
                 bAnimQ.peek()!!.component1().reset()
                 bAnimQ.poll()
             }
-
             t.update(delta)
 
             val bAnim = bAnimQ.peek()!!.component1()

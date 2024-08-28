@@ -206,7 +206,7 @@ class BossSelectScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MEG
             2f * ConstVals.PPM
         )
         bar2.setRegion(black)
-        bar2.setBounds(0f, 0f, .25f * ConstVals.PPM, ConstVals.VIEW_HEIGHT * ConstVals.PPM)
+        bar2.setBounds(0f, 0f, 0.25f * ConstVals.PPM, (ConstVals.VIEW_HEIGHT + 1) * ConstVals.PPM)
         val tilesAtlas = game.assMan.get(TextureAsset.PLATFORMS_1.source, TextureAtlas::class.java)
         val blueBlockRegion: TextureRegion = tilesAtlas.findRegion("8bitBlueBlockTransBorder")
         val halfPPM = ConstVals.PPM / 2f

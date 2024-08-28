@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.3.0</string>
+        <string>7.4.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -197,6 +197,12 @@
             <key type="filename">../frames/Platforms1/BreakableIce/2.png</key>
             <key type="filename">../frames/Platforms1/BreakableIce/3.png</key>
             <key type="filename">../frames/Platforms1/Brick2.png</key>
+            <key type="filename">../frames/Platforms1/ConveyorBelt/LeftPart-MoveLeft-Green.png</key>
+            <key type="filename">../frames/Platforms1/ConveyorBelt/LeftPart-MoveRight-Green.png</key>
+            <key type="filename">../frames/Platforms1/ConveyorBelt/MiddlePart-MoveLeft-Green.png</key>
+            <key type="filename">../frames/Platforms1/ConveyorBelt/MiddlePart-MoveRight-Green.png</key>
+            <key type="filename">../frames/Platforms1/ConveyorBelt/RightPart-MoveLeft-Green.png</key>
+            <key type="filename">../frames/Platforms1/ConveyorBelt/RightPart-MoveRight-Green.png</key>
             <key type="filename">../frames/Platforms1/TrackBlock.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>

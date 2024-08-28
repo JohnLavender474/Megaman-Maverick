@@ -44,12 +44,12 @@ class BreakableIce(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity, 
             region2 = atlas.findRegion("BreakableIce/2")
             region3 = atlas.findRegion("BreakableIce/3")
         }
-        super<IceBlock>.init()
+        super.init()
         addComponent(defineSpritesComponent())
         addComponent(AudioComponent())
     }
 
-    override fun spawn(spawnProps: Properties) { // spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
+    override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
         index = 1
     }

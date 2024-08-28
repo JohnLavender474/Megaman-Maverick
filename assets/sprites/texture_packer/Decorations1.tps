@@ -173,6 +173,21 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
+            <key type="filename">../frames/Decorations1/BreathBubbles.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>4,12,8,24</rect>
+                <key>scale9Paddings</key>
+                <rect>4,12,8,24</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Decorations1/JetpackFlame.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -200,6 +215,21 @@
                 <rect>130,65,260,130</rect>
                 <key>scale9Paddings</key>
                 <rect>130,65,260,130</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Decorations1/MuzzleFlash.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,4,24,8</rect>
+                <key>scale9Paddings</key>
+                <rect>12,4,24,8</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

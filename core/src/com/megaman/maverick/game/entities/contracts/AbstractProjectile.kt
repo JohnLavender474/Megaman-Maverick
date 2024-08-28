@@ -31,6 +31,10 @@ import com.megaman.maverick.game.events.EventType
 abstract class AbstractProjectile(game: MegamanMaverickGame) : MegaGameEntity(game), IOwnable, IDamager, IBodyEntity,
     ISpritesEntity, IAudioEntity, ICullableEntity {
 
+    companion object {
+        const val DEFAULT_PROJECTILE_CULL_TIME = 0.5f
+    }
+
     override var owner: IGameEntity? = null
 
     protected var onDamageInflictedTo: ((IDamageable) -> Unit)? = null
@@ -49,8 +53,8 @@ abstract class AbstractProjectile(game: MegamanMaverickGame) : MegaGameEntity(ga
         super.spawn(spawnProps)
 
         owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
-
         onDamageInflictedTo = spawnProps.get(ConstKeys.ON_DAMAGE_INFLICTED_TO) as ((IDamageable) -> Unit)?
+        movementScalar = spawnProps.getOrDefault("${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}", 1f, Float::class)
 
         val cullOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
         if (cullOutOfBounds) putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, getCullOnOutOfGameCam())
@@ -59,8 +63,6 @@ abstract class AbstractProjectile(game: MegamanMaverickGame) : MegaGameEntity(ga
         val cullOnEvents = spawnProps.getOrDefault(ConstKeys.CULL_EVENTS, true, Boolean::class)
         if (cullOnEvents) putCullable(ConstKeys.CULL_EVENTS, getCullOnEventCullable())
         else removeCullOnEventCullable()
-
-        movementScalar = spawnProps.getOrDefault("${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}", 1f, Float::class)
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) {
@@ -93,8 +95,11 @@ abstract class AbstractProjectile(game: MegamanMaverickGame) : MegaGameEntity(ga
     fun removeCullOnOutOfGameCam() = removeCullable(ConstKeys.CULL_OUT_OF_BOUNDS)
 
     fun getCullOnOutOfGameCam() =
-        CullableOnUncontained<Camera>(containerSupplier = { game.viewports.get(ConstKeys.GAME).camera },
-            containable = { it.overlaps(body) })
+        CullableOnUncontained<Camera>(
+            containerSupplier = { game.getGameCamera() },
+            containable = { it.overlaps(body) },
+            timeToCull = DEFAULT_PROJECTILE_CULL_TIME
+        )
 
     override fun canDamage(damageable: IDamageable) = damageable != owner
 

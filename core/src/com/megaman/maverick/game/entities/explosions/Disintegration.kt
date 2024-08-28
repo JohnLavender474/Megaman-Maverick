@@ -17,6 +17,7 @@ import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
+import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.ISpritesEntity
 import com.engine.updatables.UpdatablesComponent
@@ -28,7 +29,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntity
 
-class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAudioEntity {
+class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, IAudioEntity {
 
     companion object {
         private const val DURATION = .275f

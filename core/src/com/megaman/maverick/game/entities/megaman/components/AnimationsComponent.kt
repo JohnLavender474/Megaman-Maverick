@@ -1,15 +1,18 @@
 package com.megaman.maverick.game.entities.megaman.components
 
-import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.engine.animations.*
 import com.engine.common.GameLogger
 import com.engine.common.enums.Facing
-import com.engine.common.extensions.*
+import com.engine.common.extensions.gdxArrayOf
+import com.engine.common.extensions.getTextureAtlas
+import com.engine.common.extensions.getTextureRegion
+import com.engine.common.extensions.objectMapOf
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.containsRegion
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
+import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman
@@ -259,19 +262,6 @@ private val animationKeys = gdxArrayOf(
     "Jetpack",
     "JetpackShoot"
 )
-
-internal data class AnimationDef(
-    internal val rows: Int,
-    internal val cols: Int,
-    internal val durations: Array<Float>,
-) {
-
-    internal constructor(
-        rows: Int = 1,
-        cols: Int = 1,
-        duration: Float = 1f,
-    ) : this(rows, cols, gdxFilledArrayOf(rows * cols, duration))
-}
 
 private val animationDefMap = objectMapOf(
     "Jetpack" to AnimationDef(1, 2, 0.1f),

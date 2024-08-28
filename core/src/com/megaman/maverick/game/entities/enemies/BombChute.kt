@@ -84,7 +84,7 @@ class BombChute(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             regions.put("turn", atlas.findRegion("$TAG/turn"))
             regions.put("down", atlas.findRegion("$TAG/down"))
         }
-        super<AbstractEnemy>.init()
+        super.init()
         addComponent(defineAnimationsComponent())
     }
 

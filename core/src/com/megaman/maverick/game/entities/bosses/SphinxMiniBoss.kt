@@ -112,6 +112,7 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES.source)
+            regions.put("defeated", atlas.findRegion("$TAG/defeated"))
             regions.put("wait", atlas.findRegion("$TAG/wait"))
             regions.put("open", atlas.findRegion("$TAG/open"))
             regions.put("laugh", atlas.findRegion("$TAG/laugh"))
@@ -285,9 +286,9 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        // TODO: make animations more robust by adding extra frames
         val keySupplier: () -> String? = {
-            if (!timers["laugh"].isFinished()) "laugh"
+            if (defeated) "defeated"
+            else if (!timers["laugh"].isFinished()) "laugh"
             else when (loop.getCurrent()) {
                 SphinxMiniBossState.WAIT -> "wait"
                 SphinxMiniBossState.OPENING, SphinxMiniBossState.LAUNCH_BALL, SphinxMiniBossState.SHOOT_ORBS -> "open"
@@ -298,7 +299,8 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
             "wait" to Animation(regions["wait"], 2, 1, gdxArrayOf(1f, 0.15f), true),
             "open" to Animation(regions["open"], 3, 1, 0.1f, false),
             "close" to Animation(regions["open"], 3, 1, 0.1f, false).reversed(),
-            "laugh" to Animation(regions["laugh"], 2, 1, 0.1f, true)
+            "laugh" to Animation(regions["laugh"], 2, 1, 0.1f, true),
+            "defeated" to Animation(regions["defeated"])
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

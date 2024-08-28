@@ -17,6 +17,7 @@ import com.engine.common.enums.Position
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.extensions.objectSetOf
+import com.engine.common.interfaces.IFaceable
 import com.engine.common.interfaces.Updatable
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
@@ -53,7 +54,7 @@ import com.megaman.maverick.game.world.FixtureType
 import kotlin.math.abs
 
 class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity, ISpritesEntity,
-    IAnimatedEntity, IOwnable {
+    IAnimatedEntity, IOwnable, IFaceable {
 
     companion object {
         const val TAG = "Cart"
@@ -62,10 +63,8 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
     }
 
     override var owner: IGameEntity? = null
-
+    override lateinit var facing: Facing
     var childBlock: Block? = null
-
-    lateinit var offset: Facing
 
     override fun getTag() = TAG
 
@@ -99,7 +98,7 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
                 ConstKeys.BLOCK_FILTERS to objectSetOf(TAG)
             )
         )
-        offset = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, "right", String::class).uppercase())
+        facing = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, "right", String::class).uppercase())
     }
 
     override fun onDestroy() {

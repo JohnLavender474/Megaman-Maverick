@@ -297,6 +297,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Enemies2/BombChute/turn.png</key>
+            <key type="filename">../frames/Enemies2/UnderwaterPenguinBot.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -653,6 +654,73 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Enemies2/JetpackIceBlaster/far_fall.png</key>
+            <key type="filename">../frames/Enemies2/JetpackIceBlaster/far_thrust.png</key>
+            <key type="filename">../frames/Enemies2/JetpackIceBlaster/mid_fall.png</key>
+            <key type="filename">../frames/Enemies2/JetpackIceBlaster/mid_thrust.png</key>
+            <key type="filename">../frames/Enemies2/JetpackIceBlaster/under_fall.png</key>
+            <key type="filename">../frames/Enemies2/JetpackIceBlaster/under_thrust.png</key>
+            <key type="filename">../frames/Enemies2/PenguinBot/fly.png</key>
+            <key type="filename">../frames/Enemies2/PenguinBot/rise.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>10,20,20,40</rect>
+                <key>scale9Paddings</key>
+                <rect>10,20,20,40</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies2/OmniDirectionalBlasterBot.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>18,6,36,12</rect>
+                <key>scale9Paddings</key>
+                <rect>18,6,36,12</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies2/PenguinBot/throw_bomb.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>10,30,20,60</rect>
+                <key>scale9Paddings</key>
+                <rect>10,30,20,60</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies2/PenguinBot/waddle.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>20,20,40,40</rect>
+                <key>scale9Paddings</key>
+                <rect>20,20,40,40</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Enemies2/RedTiggerSquirt.png</key>
             <key type="filename">../frames/Enemies2/YellowTiggerSquirt.png</key>
             <struct type="IndividualSpriteSettings">
@@ -697,6 +765,37 @@
                 <rect>40,8,80,16</rect>
                 <key>scale9Paddings</key>
                 <rect>40,8,80,16</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies2/SpikeBot/shoot.png</key>
+            <key type="filename">../frames/Enemies2/SpikeBot/walk.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,16,24,32</rect>
+                <key>scale9Paddings</key>
+                <rect>12,16,24,32</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies2/SpikeBot/stand.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>6,8,12,16</rect>
+                <key>scale9Paddings</key>
+                <rect>6,8,12,16</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -803,6 +902,53 @@
                 <rect>8,4,16,8</rect>
                 <key>scale9Paddings</key>
                 <rect>8,4,16,8</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies2/WalrusBot/after_shoot.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,40,32,80</rect>
+                <key>scale9Paddings</key>
+                <rect>16,40,32,80</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies2/WalrusBot/jet.png</key>
+            <key type="filename">../frames/Enemies2/WalrusBot/shoot.png</key>
+            <key type="filename">../frames/Enemies2/WalrusBot/slide.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>32,20,64,40</rect>
+                <key>scale9Paddings</key>
+                <rect>32,20,64,40</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies2/WalrusBot/stand.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,10,32,20</rect>
+                <key>scale9Paddings</key>
+                <rect>16,10,32,20</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

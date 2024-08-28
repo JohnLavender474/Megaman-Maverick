@@ -99,7 +99,7 @@ class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         super.spawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
-        scanner = GameRectangle().setSize(8f * ConstVals.PPM, ConstVals.PPM.toFloat())
+        scanner = GameRectangle().setSize(10f * ConstVals.PPM, ConstVals.PPM.toFloat())
         shootTimer.setToEnd()
         shootDelayTimer.setToEnd()
         facing = if (body.x < getMegaman().body.x) Facing.RIGHT else Facing.LEFT

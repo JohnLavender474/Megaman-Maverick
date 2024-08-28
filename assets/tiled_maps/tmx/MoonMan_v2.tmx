@@ -1026,7 +1026,7 @@
    <properties>
     <property name="frame" type="float" value="0.2"/>
     <property name="movement_scalar" type="float" value="0.75"/>
-    <property name="value" type="float" value="6"/>
+    <property name="value" type="float" value="4"/>
    </properties>
   </object>
  </objectgroup>

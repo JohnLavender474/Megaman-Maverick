@@ -1,75 +1,131 @@
 Projectiles2.png
-size: 226, 184
+size: 64, 766
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 ArigockBall
   rotate: false
-  xy: 0, 64
+  xy: 0, 344
   size: 48, 82
   orig: 48, 82
   offset: 0, 0
   index: -1
 BunbyRedRocket
   rotate: false
-  xy: 154, 0
+  xy: 0, 216
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 CactusMissile
   rotate: false
-  xy: 186, 0
+  xy: 32, 216
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
+DeathBomb/tick
+  rotate: false
+  xy: 0, 280
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1
+DeathBomb/wait
+  rotate: false
+  xy: 32, 280
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1
+FallingIcicle/shake
+  rotate: false
+  xy: 0, 16
+  size: 24, 32
+  orig: 24, 32
+  offset: 0, 0
+  index: -1
+FallingIcicle/shatter
+  rotate: false
+  xy: 24, 16
+  size: 24, 32
+  orig: 24, 32
+  offset: 0, 0
+  index: -1
+FallingIcicle/still
+  rotate: false
+  xy: 12, 0
+  size: 24, 16
+  orig: 24, 16
+  offset: 0, 0
+  index: -1
+Harpoon
+  rotate: false
+  xy: 0, 0
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: -1
 MoonMan/crescent
   rotate: false
-  xy: 98, 64
+  xy: 0, 526
   size: 64, 120
   orig: 64, 120
   offset: 0, 0
   index: -1
 MoonMan/star
   rotate: false
-  xy: 162, 64
+  xy: 0, 646
   size: 64, 120
   orig: 64, 120
   offset: 0, 0
   index: -1
+Needle
+  rotate: false
+  xy: 36, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
 Pebble
   rotate: false
-  xy: 0, 0
+  xy: 0, 48
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
 SmallGreenMissile
   rotate: false
-  xy: 36, 0
+  xy: 0, 84
   size: 35, 42
   orig: 35, 42
   offset: 0, 0
   index: -1
 SmallPurpleMissile
   rotate: false
-  xy: 71, 0
+  xy: 0, 126
   size: 35, 42
   orig: 35, 42
   offset: 0, 0
   index: -1
 SphinxBall
   rotate: false
-  xy: 106, 0
+  xy: 0, 168
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 SpitFireball
   rotate: false
-  xy: 48, 64
+  xy: 0, 426
   size: 50, 100
   orig: 50, 100
+  offset: 0, 0
+  index: -1
+TeardropBlast
+  rotate: false
+  xy: 48, 16
+  size: 16, 32
+  orig: 16, 32
   offset: 0, 0
   index: -1

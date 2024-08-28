@@ -177,12 +177,14 @@
             <key type="filename">../frames/Faces1/Desert Man.png</key>
             <key type="filename">../frames/Faces1/Distributor Man.png</key>
             <key type="filename">../frames/Faces1/Freezer Man.png</key>
+            <key type="filename">../frames/Faces1/Glacier Man.png</key>
             <key type="filename">../frames/Faces1/Inferno Man.png</key>
             <key type="filename">../frames/Faces1/Microwave Man.png</key>
             <key type="filename">../frames/Faces1/Mister Man.png</key>
             <key type="filename">../frames/Faces1/Moon Man.png</key>
             <key type="filename">../frames/Faces1/Naval Man.png</key>
             <key type="filename">../frames/Faces1/Nuke Man.png</key>
+            <key type="filename">../frames/Faces1/Polarity Man.png</key>
             <key type="filename">../frames/Faces1/Precious Man.png</key>
             <key type="filename">../frames/Faces1/Reactor Man.png</key>
             <key type="filename">../frames/Faces1/Roaster Man.png</key>

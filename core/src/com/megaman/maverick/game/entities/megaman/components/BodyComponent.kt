@@ -39,24 +39,27 @@ val Megaman.headFixture: Fixture
 val Megaman.bodyFixture: Fixture
     get() = body.getProperty(ConstKeys.BODY, Fixture::class)!!
 
+val Megaman.damageableFixture: Fixture
+    get() = body.getProperty(ConstKeys.DAMAGEABLE, Fixture::class)!!
+
 internal fun Megaman.defineBodyComponent(): BodyComponent {
     val body = Body(BodyType.DYNAMIC)
     body.color = Color.BROWN
     body.width = 0.75f * ConstVals.PPM
     body.physics.takeFrictionFromOthers = true
 
-    val shapes = Array<() -> IDrawableShape?>()
-    shapes.add { body.getBodyBounds() }
+    val debugShapes = Array<() -> IDrawableShape?>()
+    debugShapes.add { body.getBodyBounds() }
 
     val playerFixture = Fixture(body, FixtureType.PLAYER, GameRectangle().setWidth(0.75f * ConstVals.PPM))
     body.addFixture(playerFixture)
     playerFixture.rawShape.color = Color.WHITE
-    shapes.add { playerFixture.getShape() }
+    debugShapes.add { playerFixture.getShape() }
 
     val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setWidth(0.8f * ConstVals.PPM))
     body.addFixture(bodyFixture)
     bodyFixture.rawShape.color = Color.BLUE
-    shapes.add { bodyFixture.getShape() }
+    debugShapes.add { bodyFixture.getShape() }
     body.putProperty(ConstKeys.BODY, bodyFixture)
 
     val onBounce = {
@@ -68,7 +71,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     feetFixture.setRunnable(onBounce)
     body.addFixture(feetFixture)
     feetFixture.rawShape.color = Color.GREEN
-    shapes.add { feetFixture.getShape() }
+    debugShapes.add { feetFixture.getShape() }
     body.putProperty(ConstKeys.FEET, feetFixture)
 
     val headFixture =
@@ -80,7 +83,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     }
     body.addFixture(headFixture)
     headFixture.rawShape.color = Color.RED
-    shapes.add { headFixture.getShape() }
+    debugShapes.add { headFixture.getShape() }
     body.putProperty(ConstKeys.HEAD, headFixture)
 
     val leftFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setWidth(0.2f * ConstVals.PPM))
@@ -88,7 +91,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
     body.addFixture(leftFixture)
     leftFixture.rawShape.color = Color.YELLOW
-    shapes.add { leftFixture.getShape() }
+    debugShapes.add { leftFixture.getShape() }
     body.putProperty("${ConstKeys.LEFT}_${ConstKeys.SIDE}", leftFixture)
 
     val rightFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setWidth(0.2f * ConstVals.PPM))
@@ -96,26 +99,27 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
     body.addFixture(rightFixture)
     rightFixture.rawShape.color = Color.BLUE
-    shapes.add { rightFixture.getShape() }
+    debugShapes.add { rightFixture.getShape() }
     body.putProperty("${ConstKeys.RIGHT}_${ConstKeys.SIDE}", rightFixture)
 
     val damageableFixture =
         Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.8f * ConstVals.PPM))
     body.addFixture(damageableFixture)
     damageableFixture.rawShape.color = Color.RED
-    shapes.add { damageableFixture.getShape() }
+    debugShapes.add { damageableFixture.getShape() }
+    body.putProperty(ConstKeys.DAMAGEABLE, damageableFixture)
 
     val waterListenerFixture =
         Fixture(body, FixtureType.WATER_LISTENER, GameRectangle().setSize(0.8f * ConstVals.PPM, ConstVals.PPM / 4f))
     body.addFixture(waterListenerFixture)
     waterListenerFixture.rawShape.color = Color.PURPLE
-    shapes.add { waterListenerFixture.getShape() }
+    debugShapes.add { waterListenerFixture.getShape() }
 
     val teleporterListenerFixture =
         Fixture(body, FixtureType.TELEPORTER_LISTENER, GameRectangle().setWidth(0.5f * ConstVals.PPM))
     body.addFixture(teleporterListenerFixture)
     teleporterListenerFixture.rawShape.color = Color.CYAN
-    shapes.add { teleporterListenerFixture.getShape() }
+    debugShapes.add { teleporterListenerFixture.getShape() }
 
     body.preProcess.put(ConstKeys.DEFAULT, Updatable {
         val wallSlidingOnIce =
@@ -197,7 +201,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
         (teleporterListenerFixture.rawShape as Rectangle).height = playerFixtureHeight
     })
 
-    addComponent(DrawableShapesComponent(debugShapeSuppliers = shapes, debug = true))
+    addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
     return BodyComponentCreator.create(this, body)
 }
