@@ -72,7 +72,7 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
 
         private const val FLY_TO_TARGET_SPEED = 6f
         private const val FLY_TO_TARGET_MAX_DUR = 1.25f
-        private const val SHOOT_DUR = 0.5f
+        private const val SHOOT_DUR = 1f
         private const val BLAST_SPEED = 12f
 
         private const val STRAIGHT_LINE_OF_SIGHT_ANGLE = 90f
@@ -276,7 +276,7 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
                 body.physics.velocity.setZero()
                 return@add
             }
-            
+
             when (loop.getCurrent()) {
                 JetpackIceShooterState.FLY_TO_TARGET -> {
                     flyToTargetTimer.update(delta)

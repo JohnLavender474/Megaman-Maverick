@@ -43,8 +43,8 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
+import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
@@ -95,6 +95,7 @@ class Tropish(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
         state = TropishState.WAIT
         body.physics.gravityOn = false
+        body.fixtures.forEach { (it.second as Fixture).active = false }
 
         facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
     }
@@ -107,6 +108,7 @@ class Tropish(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
         val speed = SWIM_SPEED * ConstVals.PPM * facing.value
         body.physics.velocity.x = speed
+        body.fixtures.forEach { (it.second as Fixture).active = true }
     }
 
     private fun hitNose() {
