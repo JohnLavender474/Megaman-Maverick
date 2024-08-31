@@ -68,8 +68,13 @@ class MegaContactListener(
             val damager = damagerFixture.getEntity() as IDamager
             val damageable = damageableFixture.getEntity() as IDamageable
 
-            if (damageable.canBeDamagedBy(damager) && damager.canDamage(damageable)) {
-                damageable.takeDamageFrom(damager)
+            val canBeDamaged = damageable.canBeDamagedBy(damager)
+            printDebugLog(contact, "canBeDamaged=$canBeDamaged")
+            val canDamage = damager.canDamage(damageable)
+            printDebugLog(contact, "canDamage=$canDamage")
+            if (canBeDamaged && canDamage) {
+                val takeDamageFrom = damageable.takeDamageFrom(damager)
+                printDebugLog(contact, "takeDamageFrom=$takeDamageFrom")
                 damager.onDamageInflictedTo(damageable)
             }
         }
@@ -407,7 +412,7 @@ class MegaContactListener(
 
             if (otherFixture.hasFixtureLabel(FixtureLabel.NO_PROJECTILE_COLLISION)) return
 
-            val projectile = projectileFixture.getEntity() as AbstractProjectile
+            val projectile = projectileFixture.getEntity() as IProjectileEntity
 
             if (otherFixture.hasHitByProjectileReceiver()) otherFixture.getHitByProjectile(projectile)
 

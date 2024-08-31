@@ -6,8 +6,8 @@ import com.engine.world.Body
 import com.engine.world.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.blocks.Block
-import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
+import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.utils.VelocityAlteration
 
@@ -82,11 +82,11 @@ fun IFixture.hasHitByPlayerReceiver() = hasProperty(ConstKeys.HIT_BY_PLAYER)
 fun IFixture.getHitByPlayer(player: Megaman) =
     (getProperty(ConstKeys.HIT_BY_PLAYER) as (Megaman) -> Unit).invoke(player)
 
-fun IFixture.setHitByProjectileReceiver(receiver: (AbstractProjectile) -> Unit) {
+fun IFixture.setHitByProjectileReceiver(receiver: (IProjectileEntity) -> Unit) {
     putProperty(ConstKeys.HIT_BY_PROJECTILE, receiver)
 }
 
 fun IFixture.hasHitByProjectileReceiver() = hasProperty(ConstKeys.HIT_BY_PROJECTILE)
 
-fun IFixture.getHitByProjectile(projectile: AbstractProjectile) =
-    (getProperty(ConstKeys.HIT_BY_PROJECTILE) as (AbstractProjectile) -> Unit).invoke(projectile)
+fun IFixture.getHitByProjectile(projectile: IProjectileEntity) =
+    (getProperty(ConstKeys.HIT_BY_PROJECTILE) as (IProjectileEntity) -> Unit).invoke(projectile)

@@ -30,8 +30,12 @@ import com.megaman.maverick.game.entities.utils.setStandardOnTeleportEndProp
 import com.megaman.maverick.game.entities.utils.setStandardOnTeleportStartProp
 import com.megaman.maverick.game.events.EventType
 
-abstract class AbstractEnemy(game: MegamanMaverickGame) : AbstractHealthEntity(game), IDamager, IBodyEntity,
-    IAudioEntity, ISpritesEntity, ICullableEntity {
+abstract class AbstractEnemy(
+    game: MegamanMaverickGame,
+    dmgDuration: Float = DEFAULT_DMG_DURATION,
+    dmgBlinkBlur: Float = DEFAULT_DMG_BLINK_DUR
+) : AbstractHealthEntity(game, dmgDuration, dmgBlinkBlur), IDamager, IBodyEntity, IAudioEntity, ISpritesEntity,
+    ICullableEntity {
 
     companion object {
         const val TAG = "AbstractEnemy"

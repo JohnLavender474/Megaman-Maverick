@@ -39,14 +39,16 @@ abstract class AbstractHealthEntity(
         val updatablesComponent = UpdatablesComponent()
         addComponent(updatablesComponent)
         defineUpdatablesComponent(updatablesComponent)
-        runnablesOnSpawn.add { setHealth(getMaxHealth()) }
     }
 
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
+        setHealth(ConstVals.MAX_HEALTH)
         damageTimer.setToEnd()
         damageBlinkTimer.setToEnd()
     }
+
+    override fun canBeDamagedBy(damager: IDamager) = !invincible && damageNegotiations.containsKey(damager::class)
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
         val damagerKey = damager::class
