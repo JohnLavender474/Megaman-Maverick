@@ -53,7 +53,7 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
     companion object {
         const val TAG = "Sealion"
-        private const val WAIT_DUR = 1f
+        private const val WAIT_DUR = 0.25f
         private const val TAUNT_DUR = 0.5f
         private const val BEFORE_THROW_BALL_DELAY = 0.25f
         private const val POUT_SINK_DELAY = 1f
@@ -170,15 +170,17 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
                 }
 
                 SealionState.THROW -> {
-                    val beforeThrowBallDelayTimer = timers["before_throw_ball_delay"]
-                    beforeThrowBallDelayTimer.update(delta)
-                    if (!beforeThrowBallDelayTimer.isFinished()) return@add
-                    if (beforeThrowBallDelayTimer.isJustFinished()) throwBall()
-
-                    if (!ballInHands && canCatchBall()) {
+                    if (ballInHands) {
+                        val beforeThrowBallDelayTimer = timers["before_throw_ball_delay"]
+                        beforeThrowBallDelayTimer.update(delta)
+                        if (!beforeThrowBallDelayTimer.isFinished()) return@add
+                        if (beforeThrowBallDelayTimer.isJustFinished()) {
+                            beforeThrowBallDelayTimer.reset()
+                            throwBall()
+                        }
+                    } else if (canCatchBall()) {
                         catchBall()
                         state = SealionState.WAIT
-                        beforeThrowBallDelayTimer.reset()
                         GameLogger.debug(TAG, "Catch ball, set state to WAIT")
                     }
                 }

@@ -65,6 +65,7 @@ class SealionBall(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
         super.init()
+        addComponents(defineProjectileComponents())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
     }
@@ -77,10 +78,7 @@ class SealionBall(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
         catchBall()
     }
 
-    override fun onDamageInflictedTo(damageable: IDamageable) {
-        onDamageInflictedTo(damageable)
-        (owner as Sealion).onBallDamagedInflicted()
-    }
+    override fun onDamageInflictedTo(damageable: IDamageable) = (owner as Sealion).onBallDamagedInflicted()
 
     fun throwBall() {
         ballInHand = false

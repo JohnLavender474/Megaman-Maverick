@@ -256,7 +256,7 @@
   <object id="417" x="4768" y="0" width="32" height="968"/>
   <object id="419" x="4416" y="416" width="32" height="32"/>
   <object id="423" x="4544" y="544" width="32" height="128"/>
-  <object id="424" x="4576" y="544" width="40" height="192"/>
+  <object id="424" x="4576" y="544" width="32" height="192"/>
   <object id="425" x="4352" y="544" width="256" height="64"/>
   <object id="426" x="4352" y="544" width="32" height="224"/>
   <object id="430" x="3936" y="768" width="320" height="32"/>

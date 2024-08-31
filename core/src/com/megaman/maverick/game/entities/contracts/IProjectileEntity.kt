@@ -14,6 +14,7 @@ import com.engine.cullables.ICullable
 import com.engine.damage.IDamageable
 import com.engine.damage.IDamager
 import com.engine.drawables.sprites.SpritesComponent
+import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.ICullableEntity
 import com.engine.world.BodyComponent
@@ -23,7 +24,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile.Companion.DEFAULT_PROJECTILE_CULL_TIME
 import com.megaman.maverick.game.events.EventType
 
-interface IProjectileEntity : IMegaGameEntity, IBodyEntity, ICullableEntity, IOwnable, IDamager {
+interface IProjectileEntity : IMegaGameEntity, IBodyEntity, IAudioEntity, ICullableEntity, IOwnable, IDamager {
 
     override fun getEntityType() = EntityType.PROJECTILE
 

@@ -33,7 +33,6 @@ import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.bosses.*
 import com.megaman.maverick.game.entities.bosses.gutstank.GutsTankFist
 import com.megaman.maverick.game.entities.bosses.sigmarat.SigmaRat
@@ -210,7 +209,9 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         FragileIceCube::class to dmgNeg(1),
         UnderwaterFan::class to dmgNeg(5),
         Tropish::class to dmgNeg(3),
-        SeaMine::class to dmgNeg(3)
+        SeaMine::class to dmgNeg(3),
+        Sealion::class to dmgNeg(3),
+        SealionBall::class to dmgNeg(3)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 
@@ -546,7 +547,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
     override fun canBeDamagedBy(damager: IDamager) =
         !invincible && dmgNegotations.containsKey(damager::class) &&
                 (damager is AbstractEnemy || damager is IHazard ||
-                        (damager is AbstractProjectile && damager.owner != this))
+                        (damager is IProjectileEntity && damager.owner != this))
 
     fun stunBounce(bounceOriginX: Float) {
         body.physics.velocity.x =

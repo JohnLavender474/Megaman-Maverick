@@ -49,12 +49,12 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.megaman.components.damageableFixture
-import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
@@ -72,7 +72,7 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
 
         private const val FLY_TO_TARGET_SPEED = 6f
         private const val FLY_TO_TARGET_MAX_DUR = 1.25f
-        private const val SHOOT_DUR = 0.75f
+        private const val SHOOT_DUR = 0.5f
         private const val BLAST_SPEED = 12f
 
         private const val STRAIGHT_LINE_OF_SIGHT_ANGLE = 90f
@@ -272,6 +272,11 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            if (getMegaman().dead) {
+                body.physics.velocity.setZero()
+                return@add
+            }
+            
             when (loop.getCurrent()) {
                 JetpackIceShooterState.FLY_TO_TARGET -> {
                     flyToTargetTimer.update(delta)

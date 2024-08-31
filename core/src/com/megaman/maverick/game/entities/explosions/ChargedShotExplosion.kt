@@ -23,6 +23,7 @@ import com.engine.drawables.sprites.setCenter
 import com.engine.drawables.sprites.setSize
 import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IAnimatedEntity
+import com.engine.entities.contracts.IAudioEntity
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.Body
 import com.engine.world.BodyComponent
@@ -61,7 +62,7 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
             game.assMan.getTextureRegion(TextureAsset.MEGAMAN_CHARGED_SHOT.source, "Collide")
         if (halfChargedRegion == null) halfChargedRegion =
             game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "HalfChargedShot")
-        super<AbstractProjectile>.init()
+        super.init()
         addComponent(defineAnimationsComponent())
         addComponent(defineUpdatablesComponent())
     }

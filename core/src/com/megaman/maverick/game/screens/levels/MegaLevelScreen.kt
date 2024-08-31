@@ -76,7 +76,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
         private const val ROOM_INTERPOLATION_SCALAR = 10f
         private const val TRANSITION_SCANNER_SIZE = 5f
         private const val INTERPOLATE_GAME_CAM = true
-        private const val DEFAULT_BACKGROUND_PARALLAX_FACTOR = 0.5f
+        private const val DEFAULT_BACKGROUND_PARALLAX_FACTOR_X = 0.5f
+        private const val DEFAULT_BACKGROUND_PARALLAX_FACTOR_Y = 0f
         private const val DEFAULT_FOREGROUND_PARALLAX_FACTOR = 2f
         private const val FADE_OUT_MUSIC_ON_BOSS_SPAWN = 1f
     }
@@ -147,7 +148,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
 
     private val gameCameraPriorPosition = Vector3()
 
-    private var backgroundParallaxFactor = DEFAULT_BACKGROUND_PARALLAX_FACTOR
+    private var backgroundParallaxFactorX = DEFAULT_BACKGROUND_PARALLAX_FACTOR_X
+    private var backgroundParallaxFactorY = DEFAULT_BACKGROUND_PARALLAX_FACTOR_Y
     private var foregroundParallaxFactor = DEFAULT_FOREGROUND_PARALLAX_FACTOR
     private var camerasSetToGameCamera = false
 
@@ -277,9 +279,13 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
         playerSpawnEventHandler.init()
 
         val mapProps = map.properties.toProps()
-        backgroundParallaxFactor = mapProps.getOrDefault(
-            ConstKeys.BACKGROUND_PARALLAX_FACTOR,
-            DEFAULT_BACKGROUND_PARALLAX_FACTOR, Float::class
+        backgroundParallaxFactorX = mapProps.getOrDefault(
+            ConstKeys.BACKGROUND_PARALLAX_FACTOR_X,
+            DEFAULT_BACKGROUND_PARALLAX_FACTOR_X, Float::class
+        )
+        backgroundParallaxFactorY = mapProps.getOrDefault(
+            ConstKeys.BACKGROUND_PARALLAX_FACTOR_Y,
+            DEFAULT_BACKGROUND_PARALLAX_FACTOR_Y, Float::class
         )
         foregroundParallaxFactor = mapProps.getOrDefault(
             ConstKeys.FOREGROUND_PARALLAX_FACTOR,
@@ -574,7 +580,9 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
         }
 
         val gameCamDeltaX = gameCamera.position.x - gameCameraPriorPosition.x
-        backgroundCamera.position.x += gameCamDeltaX * backgroundParallaxFactor
+        val gameCamDeltaY = gameCamera.position.y - gameCameraPriorPosition.y
+        backgroundCamera.position.x += gameCamDeltaX * backgroundParallaxFactorX
+        backgroundCamera.position.y += gameCamDeltaY * backgroundParallaxFactorY
         gameCameraPriorPosition.set(gameCamera.position)
 
         val batch = game.batch

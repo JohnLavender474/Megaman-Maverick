@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="700" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="18" nextobjectid="325">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="700" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="18" nextobjectid="326">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/tomahawk_man_stage_tileset.tsx"/>
  <layer id="2" name="tiles3" width="700" height="100">
@@ -368,12 +368,6 @@
    </properties>
   </object>
   <object id="96" name="ColtonJoe" x="6144" y="376" width="8" height="8"/>
-  <object id="97" name="Eyee" x="5504" y="464" width="32" height="32">
-   <properties>
-    <property name="x" type="float" value="4"/>
-    <property name="y" type="float" value="0"/>
-   </properties>
-  </object>
   <object id="108" name="CartinJoe" x="8200" y="376" width="8" height="8">
    <properties>
     <property name="left" type="bool" value="true"/>
@@ -441,6 +435,7 @@
   <object id="311" name="Bat" x="19976" y="1120" width="16" height="16"/>
   <object id="312" name="Bat" x="20024" y="1088" width="16" height="16"/>
   <object id="319" name="Arigock" x="18952" y="400" width="16" height="16"/>
+  <object id="325" name="ColtonJoe" x="5600" y="600" width="8" height="8"/>
  </objectgroup>
  <objectgroup id="10" name="children">
   <object id="11" name="Start" x="800" y="864" width="32" height="32"/>

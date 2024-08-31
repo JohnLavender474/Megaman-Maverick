@@ -266,23 +266,28 @@ class MegaContactListener(
         // water listener, water
         else if (contact.fixturesMatch(FixtureType.WATER_LISTENER, FixtureType.WATER)) {
             printDebugLog(contact, "beginContact(): WaterListener-Water, contact = $contact")
-            val (listener, water) = contact.getFixturesInOrder(FixtureType.WATER_LISTENER, FixtureType.WATER)!!
+            val (listenerFixture, waterFixture) = contact.getFixturesInOrder(
+                FixtureType.WATER_LISTENER,
+                FixtureType.WATER
+            )!!
 
-            val body = listener.getBody()
+            val body = listenerFixture.getBody()
             body.setBodySense(BodySense.IN_WATER, true)
 
-            val entity = listener.getEntity()
-            if (entity is Megaman && !entity.body.isSensing(BodySense.FEET_ON_GROUND) && !entity.isBehaviorActive(
-                    BehaviorType.WALL_SLIDING
-                )
+            val entity = listenerFixture.getEntity()
+            if (entity is Megaman && !entity.body.isSensing(BodySense.FEET_ON_GROUND) &&
+                !entity.isBehaviorActive(BehaviorType.WALL_SLIDING)
             ) entity.aButtonTask = AButtonTask.SWIM
 
-            Splash.generate(game, listener.getBody(), water.getBody())
+            Splash.generate(game, listenerFixture.getBody(), waterFixture.getBody())
 
-            val waterEntity = water.getEntity()
-            if ((entity is Megaman || entity is AbstractEnemy) && ((waterEntity is Water && waterEntity.splashSound) || (waterEntity is PolygonWater && waterEntity.splashSound))) {
-                game.audioMan.playSound(SoundAsset.SPLASH_SOUND, false)
-                if (entity is Megaman) entity.gravityScalar = MegamanValues.WATER_GRAVITY_SCALAR
+            if (entity is Megaman) {
+                entity.gravityScalar = MegamanValues.WATER_GRAVITY_SCALAR
+
+                val water = waterFixture.getEntity()
+                if ((water is Water && water.splashSound) ||
+                    (water is PolygonWater && water.splashSound)
+                ) game.audioMan.playSound(SoundAsset.SPLASH_SOUND, false)
             }
         }
 

@@ -3,13 +3,11 @@ package com.megaman.maverick.game.entities.contracts
 import com.engine.common.objects.Properties
 import com.engine.damage.IDamageable
 import com.engine.entities.IGameEntity
-import com.engine.entities.contracts.IAudioEntity
 import com.engine.entities.contracts.ISpritesEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 
-abstract class AbstractProjectile(game: MegamanMaverickGame) : MegaGameEntity(game), IProjectileEntity, ISpritesEntity,
-    IAudioEntity {
+abstract class AbstractProjectile(game: MegamanMaverickGame) : MegaGameEntity(game), IProjectileEntity, ISpritesEntity {
 
     companion object {
         const val DEFAULT_PROJECTILE_CULL_TIME = 0.5f

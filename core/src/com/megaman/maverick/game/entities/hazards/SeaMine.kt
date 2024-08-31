@@ -8,7 +8,6 @@ import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
-import com.engine.audio.AudioComponent
 import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.extensions.objectSetOf
@@ -38,11 +37,10 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.IHazard
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.BodyComponentCreator
@@ -51,7 +49,7 @@ import com.megaman.maverick.game.world.setHitByBodyReceiver
 import com.megaman.maverick.game.world.setHitByProjectileReceiver
 
 class SeaMine(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
-    ICullableEntity, IDrawableShapesEntity, IAudioEntity, IDamager, IHazard {
+    ICullableEntity, IDrawableShapesEntity, IDamager, IHazard {
 
     companion object {
         const val TAG = "SeaMine"
@@ -80,7 +78,6 @@ class SeaMine(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IS
         addComponent(defineCullablesComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
-        addComponent(AudioComponent())
         addDebugShapeSupplier { sensor }
     }
 
@@ -98,13 +95,14 @@ class SeaMine(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IS
 
     private fun explodeAndDie() {
         kill()
-        val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)
+        val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
         game.engine.spawn(
-            explosion!!, props(
-                ConstKeys.OWNER to this, ConstKeys.POSITION to body.getCenter()
+            explosion, props(
+                ConstKeys.OWNER to this,
+                ConstKeys.POSITION to body.getCenter(),
+                ConstKeys.SOUND to SoundAsset.EXPLOSION_2_SOUND
             )
         )
-        if (overlapsGameCamera()) requestToPlaySound(SoundAsset.EXPLOSION_2_SOUND, false)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
