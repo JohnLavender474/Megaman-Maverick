@@ -19,9 +19,7 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
 
     val megamanSprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
     megamanSprite.setSize(2.475f * ConstVals.PPM, 1.875f * ConstVals.PPM)
-
     spritesComponent.sprites.put("megaman", megamanSprite)
-
     spritesComponent.putUpdateFunction("megaman") { _, player ->
         val direction = if (isBehaviorActive(BehaviorType.AIR_DASHING)) getProperty(
             MegamanKeys.DIRECTION_ON_AIR_DASH, Direction::class
@@ -64,9 +62,7 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
 
     val jetpackFlameSprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0), false)
     jetpackFlameSprite.setSize(ConstVals.PPM.toFloat())
-
     spritesComponent.sprites.put("jetpackFlame", jetpackFlameSprite)
-
     spritesComponent.putUpdateFunction("jetpackFlame") { _, flame ->
         val hidden = !isBehaviorActive(BehaviorType.JETPACKING)
         flame.hidden = hidden

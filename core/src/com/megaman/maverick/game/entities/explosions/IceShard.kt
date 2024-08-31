@@ -22,7 +22,8 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.BodyComponentCreator
 
@@ -50,7 +51,7 @@ class IceShard(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
             val regions = region.splitAndFlatten(1, 5)
             regions.forEach { TEXTURES.add(it) }
         }
-        super<MegaGameEntity>.init()
+        super.init()
         addComponent(defineBodyComponent())
         addComponent(defineCullablesComponent())
         addComponent(defineSpritesComponent())
@@ -59,13 +60,17 @@ class IceShard(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
 
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
+
         val index = spawnProps.get(ConstKeys.INDEX, Int::class)!!
         body.physics.velocity = TRAJECTORIES[index].cpy().scl(ConstVals.PPM.toFloat())
+
         val region = TEXTURES[index]
         firstSprite!!.setRegion(region)
-        requestToPlaySound(SoundAsset.ICE_SHARD_2_SOUND, false)
+
+        if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ICE_SHARD_2_SOUND, false)
     }
 
     private fun defineBodyComponent(): BodyComponent {

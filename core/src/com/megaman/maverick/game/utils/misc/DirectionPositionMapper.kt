@@ -1,0 +1,33 @@
+package com.megaman.maverick.game.utils.misc
+
+import com.badlogic.gdx.utils.ObjectMap
+import com.engine.common.enums.Direction
+import com.engine.common.enums.Position
+import com.engine.common.extensions.objectMapOf
+
+object DirectionPositionMapper {
+
+    private val directionToPosition = objectMapOf(
+        Direction.UP to Position.TOP_CENTER,
+        Direction.DOWN to Position.BOTTOM_CENTER,
+        Direction.LEFT to Position.CENTER_LEFT,
+        Direction.RIGHT to Position.CENTER_RIGHT
+    )
+    private val positionToDirection = ObjectMap<Position, Direction>()
+
+    init {
+        directionToPosition.forEach { entry ->
+            positionToDirection.put(entry.value, entry.key)
+        }
+    }
+
+    fun getPosition(direction: Direction): Position {
+        if (!directionToPosition.containsKey(direction)) throw IllegalArgumentException("Illegal parameter: $direction")
+        return directionToPosition[direction]
+    }
+
+    fun getDirection(position: Position): Direction {
+        if (!positionToDirection.containsKey(position)) throw IllegalArgumentException("Illegal parameter: $position")
+        return positionToDirection[position]
+    }
+}

@@ -42,9 +42,9 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
-import com.megaman.maverick.game.entities.overlapsGameCamera
+import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntitySuppliers
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType.SPAWN_ROOM
@@ -237,6 +237,12 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
         debugShapes.add { body.getBodyBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle())
+        bodyFixture.setHitByPlayerReceiver {
+            if (type == SWITCHAROO_ARROW_TYPE && switchTimer.isFinished()) switchToggleeState()
+        }
+        bodyFixture.setHitByProjectileReceiver {
+            if (type != SWITCHAROO_ARROW_TYPE && switchTimer.isFinished()) switchToggleeState()
+        }
         body.addFixture(bodyFixture)
         bodyFixture.getShape().color = Color.GRAY
         debugShapes.add { bodyFixture.getShape() }
@@ -251,12 +257,6 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
             damagerFixture.active = type == ENEMY_TYPE && !moving
             damagerFixture.offsetFromBodyCenter.x =
                 if (type == ENEMY_TYPE) (if (on) 0.5f else -0.5f) * ConstVals.PPM else 0f
-        }
-        body.setHitByProjectileReceiver {
-            if (type != SWITCHAROO_ARROW_TYPE && switchTimer.isFinished()) switchToggleeState()
-        }
-        body.setHitByPlayerReceiver {
-            if (type == SWITCHAROO_ARROW_TYPE && switchTimer.isFinished()) switchToggleeState()
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

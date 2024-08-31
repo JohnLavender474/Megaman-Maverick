@@ -101,8 +101,10 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         when (state) {
             FallingIcicleState.STILL -> {
-                if (getMegaman().body.getMaxX() > body.x && getMegaman().body.x < body.getMaxX())
-                    state = FallingIcicleState.SHAKE
+                if (getMegaman().body.y < body.getMaxY() &&
+                    getMegaman().body.getMaxX() > body.x &&
+                    getMegaman().body.x < body.getMaxX()
+                ) state = FallingIcicleState.SHAKE
             }
 
             FallingIcicleState.SHAKE -> {

@@ -6,6 +6,7 @@ import com.engine.common.enums.Direction
 import com.engine.common.enums.Position
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.getTextureRegion
+import com.engine.common.extensions.set
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
@@ -120,17 +121,17 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(.15f * ConstVals.PPM)
-        body.physics.velocityClamp.set(CLAMP * ConstVals.PPM, CLAMP * ConstVals.PPM)
+        body.setSize(0.15f * ConstVals.PPM)
+        body.physics.velocityClamp.set(CLAMP * ConstVals.PPM)
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         bodyFixture.putProperty(ConstKeys.GRAVITY_ROTATABLE, false)
         body.addFixture(bodyFixture)
 
-        val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameRectangle().setSize(.2f * ConstVals.PPM))
+        val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameRectangle().setSize(0.2f * ConstVals.PPM))
         body.addFixture(projectileFixture)
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(.2f * ConstVals.PPM))
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.2f * ConstVals.PPM))
         body.addFixture(damagerFixture)
 
         addComponent(

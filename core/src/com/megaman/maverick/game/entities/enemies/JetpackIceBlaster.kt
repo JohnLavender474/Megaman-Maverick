@@ -43,14 +43,21 @@ import com.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
+import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.megaman.components.damageableFixture
+import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
+import com.megaman.maverick.game.entities.projectiles.Bullet
+import com.megaman.maverick.game.entities.projectiles.ChargedShot
+import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.BodySense
 import com.megaman.maverick.game.world.FixtureType
@@ -64,15 +71,16 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
         const val TAG = "JetpackIceBlaster"
 
         private const val FLY_TO_TARGET_SPEED = 6f
-        private const val FLY_TO_TARGET_MAX_DUR = 0.75f
+        private const val FLY_TO_TARGET_MAX_DUR = 1.25f
         private const val SHOOT_DUR = 0.75f
         private const val BLAST_SPEED = 12f
 
+        private const val STRAIGHT_LINE_OF_SIGHT_ANGLE = 90f
         private const val FAR_LINE_OF_SIGHT_ANGLE = 120f
         private const val MID_LINE_OF_SIGHT_ANGLE = 135f
         private const val UNDER_LINE_OF_SIGHT_ANGLE = 180f
 
-        private const val MAX_Y_AIM_ADJUSTMENT = 1f
+        private const val MAX_Y_AIM_ADJUSTMENT = 3f
 
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -82,10 +90,24 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
     }
 
     private enum class DistanceType(val angle: Float) {
-        FAR(FAR_LINE_OF_SIGHT_ANGLE), MID(MID_LINE_OF_SIGHT_ANGLE), UNDER(UNDER_LINE_OF_SIGHT_ANGLE)
+        STRAIGHT(STRAIGHT_LINE_OF_SIGHT_ANGLE),
+        FAR(FAR_LINE_OF_SIGHT_ANGLE),
+        MID(MID_LINE_OF_SIGHT_ANGLE),
+        UNDER(UNDER_LINE_OF_SIGHT_ANGLE)
     }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>()
+    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+        Bullet::class to dmgNeg(5),
+        Fireball::class to dmgNeg(15),
+        ChargedShot::class to dmgNeg {
+            it as ChargedShot
+            if (it.fullyCharged) 15 else 10
+        },
+        ChargedShotExplosion::class to dmgNeg {
+            it as ChargedShotExplosion
+            if (it.fullyCharged) 10 else 5
+        }
+    )
     override lateinit var facing: Facing
 
     private val loop = Loop(JetpackIceShooterState.values().toGdxArray())
@@ -148,13 +170,14 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
 
     private fun shoot() {
         val blast = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.TEARDROP_BLAST)!!
-        val originOffsetX = calculateAimLineOriginOffsetX(distanceType) + (when (distanceType) {
-            DistanceType.FAR -> 0.5f
+        val originOffsetX = (calculateAimLineOriginOffset(distanceType).x + when (distanceType) {
+            DistanceType.STRAIGHT, DistanceType.FAR -> 0.5f
             DistanceType.MID -> 0.35f
             DistanceType.UNDER -> 0.05f
-        } * facing.value)
+        }) * facing.value
         val originOffsetY = when (distanceType) {
-            DistanceType.FAR -> -0.15f
+            DistanceType.STRAIGHT -> 0.15f
+            DistanceType.FAR -> -0.1f
             DistanceType.MID -> -0.25f
             DistanceType.UNDER -> -0.5f
         }
@@ -170,20 +193,25 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
 
         val muzzleFlash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.MUZZLE_FLASH)!!
         game.engine.spawn(muzzleFlash, props(ConstKeys.POSITION to spawn))
+
+        if (overlapsGameCamera()) requestToPlaySound(SoundAsset.BLAST_SOUND, false)
     }
 
-    private fun calculateAimLineOriginOffsetX(distanceType: DistanceType) =
+    private fun calculateAimLineOriginOffset(distanceType: DistanceType) =
         when (distanceType) {
-            DistanceType.FAR -> 0.15f
-            DistanceType.MID -> 0.1f
-            DistanceType.UNDER -> 0.075f
-        } * facing.value
+            DistanceType.STRAIGHT -> Vector2(0.25f, -0.1f)
+            DistanceType.FAR -> Vector2(0.15f, 0f)
+            DistanceType.MID -> Vector2(0.1f, 0f)
+            DistanceType.UNDER -> Vector2(0.075f, 0f)
+        }
 
     private fun calculateAimLine(distanceType: DistanceType): GameLine {
         val line = GameLine(body.getCenter(), body.getCenter().add(0f, 10f * ConstVals.PPM))
 
-        val originOffsetX = calculateAimLineOriginOffsetX(distanceType)
-        line.setOrigin(body.getCenter().add(originOffsetX * ConstVals.PPM, 0f))
+        val originOffset = calculateAimLineOriginOffset(distanceType)
+        line.setOrigin(
+            body.getCenter().add(originOffset.x * facing.value * ConstVals.PPM, originOffset.y * ConstVals.PPM)
+        )
 
         var angle = distanceType.angle
         if (isFacing(Facing.RIGHT)) angle = 360 - angle
@@ -289,7 +317,7 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
     }
 
     override fun defineBodyComponent(): BodyComponent {
-        val body = Body(BodyType.ABSTRACT)
+        val body = Body(BodyType.DYNAMIC)
         body.setSize(1.15f * ConstVals.PPM, 1.5f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()

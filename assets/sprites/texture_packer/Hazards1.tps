@@ -206,7 +206,7 @@
             <key type="filename">../frames/Hazards1/Bolt.png</key>
             <key type="filename">../frames/Hazards1/Electrocutie/Charge.png</key>
             <key type="filename">../frames/Hazards1/FlameThrower/Blink.png</key>
-            <key type="filename">../frames/Hazards1/Sea Mine/Blow.png</key>
+            <key type="filename">../frames/Hazards1/SeaMine/blow.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -229,7 +229,7 @@
             <key type="filename">../frames/Hazards1/FlameThrower/Cool.png</key>
             <key type="filename">../frames/Hazards1/FlameThrower/Hot.png</key>
             <key type="filename">../frames/Hazards1/LaserBeamer.png</key>
-            <key type="filename">../frames/Hazards1/Sea Mine/Wait.png</key>
+            <key type="filename">../frames/Hazards1/SeaMine/wait.png</key>
             <key type="filename">../frames/Hazards1/Spike4.png</key>
             <key type="filename">../frames/Hazards1/Spike5.png</key>
             <key type="filename">../frames/Hazards1/Spike6.png</key>
@@ -307,6 +307,21 @@
                 <rect>24,59,48,118</rect>
                 <key>scale9Paddings</key>
                 <rect>24,59,48,118</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Hazards1/IceCubeMaker.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>32,20,64,40</rect>
+                <key>scale9Paddings</key>
+                <rect>32,20,64,40</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -511,6 +526,21 @@
                 <rect>32,32,64,64</rect>
                 <key>scale9Paddings</key>
                 <rect>32,32,64,64</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Hazards1/UnderwaterFan.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>20,21,40,42</rect>
+                <key>scale9Paddings</key>
+                <rect>20,21,40,42</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

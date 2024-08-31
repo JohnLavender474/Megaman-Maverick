@@ -248,7 +248,7 @@
   <object id="231" name="Child" x="27040" y="320" width="24" height="64"/>
   <object id="242" name="Start" x="29024" y="32" width="32" height="32"/>
   <object id="247" name="Target" x="28624" y="240" width="32" height="32"/>
-  <object id="277" name="Target1" x="32352" y="256" width="32" height="32"/>
+  <object id="277" name="Target1" x="32352" y="376" width="32" height="32"/>
   <object id="278" name="Target2" x="32544" y="256" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="9" name="sensors">

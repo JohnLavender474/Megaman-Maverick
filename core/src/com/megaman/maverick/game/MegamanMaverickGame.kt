@@ -59,11 +59,11 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.MegaControllerPoller
 import com.megaman.maverick.game.controllers.loadButtons
+import com.megaman.maverick.game.entities.decorations.UnderWaterBubble
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
-import com.megaman.maverick.game.entities.projectiles.FallingIcicle
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
@@ -103,7 +103,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
     companion object {
         const val TAG = "MegamanMaverickGame"
         const val DEFAULT_VOLUME = 0.5f
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(FallingIcicle.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(UnderWaterBubble.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.FEET, FixtureType.BLOCK)
         }

@@ -25,7 +25,6 @@ import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
 import com.engine.drawables.sprites.setSize
-import com.engine.entities.IGameEntity
 import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.*
@@ -67,7 +66,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         if (halfChargedRegion == null)
             halfChargedRegion =
                 game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "HalfChargedShot")
-        super<AbstractProjectile>.init()
+        super.init()
         addComponent(defineAnimationsComponent())
         addComponent(defineUpdatablesComponent())
     }
@@ -75,7 +74,6 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
 
-        owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
         fullyCharged = spawnProps.get(ConstKeys.BOOLEAN, Boolean::class)!!
         directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
 
@@ -183,9 +181,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
         body.addFixture(damagerFixture)
 
-        addComponent(
-            DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true)
-        )
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
 
         return BodyComponentCreator.create(this, body)
     }

@@ -1,18 +1,18 @@
 Enemies1.png
-size: 480, 914
+size: 480, 974
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 Arigock/closed
   rotate: false
-  xy: 0, 714
+  xy: 0, 774
   size: 48, 82
   orig: 48, 82
   offset: 0, 0
   index: -1
 Arigock/shooting
   rotate: false
-  xy: 48, 714
+  xy: 48, 774
   size: 48, 82
   orig: 48, 82
   offset: 0, 0
@@ -124,7 +124,7 @@ FireMet/Shoot
   index: -1
 FireMet/Walk
   rotate: false
-  xy: 192, 714
+  xy: 192, 774
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
@@ -145,21 +145,21 @@ FireMetSpawner/Open
   index: -1
 FireMetSpawner/Opening
   rotate: false
-  xy: 292, 714
+  xy: 292, 774
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 FlameHeadThrower/Stand
   rotate: false
-  xy: 0, 814
+  xy: 0, 874
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 FlameHeadThrower/Throw
   rotate: false
-  xy: 100, 814
+  xy: 100, 874
   size: 300, 100
   orig: 300, 100
   offset: 0, 0
@@ -362,7 +362,7 @@ PicketJoe/Throw
   index: -1
 Pipi/Copipi
   rotate: false
-  xy: 100, 634
+  xy: 96, 694
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
@@ -383,14 +383,14 @@ Pipi/EggShatter
   index: -1
 Pipi/Pipi
   rotate: false
-  xy: 96, 714
+  xy: 96, 774
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 Pipi/PipiWithEgg
   rotate: false
-  xy: 144, 714
+  xy: 144, 774
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
@@ -411,7 +411,7 @@ PopupCanon/Down
   index: -1
 PopupCanon/Rise
   rotate: false
-  xy: 132, 634
+  xy: 128, 694
   size: 96, 64
   orig: 96, 64
   offset: 0, 0
@@ -502,7 +502,7 @@ RollerBot/Open
   index: -1
 RollerBot/Roll
   rotate: false
-  xy: 260, 634
+  xy: 256, 694
   size: 192, 80
   orig: 192, 80
   offset: 0, 0
@@ -512,6 +512,55 @@ RollerBot/Shoot
   xy: 288, 392
   size: 48, 40
   orig: 48, 40
+  offset: 0, 0
+  index: -1
+Sealion/after_throw_ball
+  rotate: false
+  xy: 100, 634
+  size: 48, 60
+  orig: 48, 60
+  offset: 0, 0
+  index: -1
+Sealion/before_throw_ball
+  rotate: false
+  xy: 148, 634
+  size: 48, 60
+  orig: 48, 60
+  offset: 0, 0
+  index: -1
+Sealion/pout
+  rotate: false
+  xy: 196, 634
+  size: 96, 60
+  orig: 96, 60
+  offset: 0, 0
+  index: -1
+Sealion/taunt_no_ball
+  rotate: false
+  xy: 292, 634
+  size: 96, 60
+  orig: 96, 60
+  offset: 0, 0
+  index: -1
+Sealion/taunt_with_ball
+  rotate: false
+  xy: 388, 634
+  size: 48, 60
+  orig: 48, 60
+  offset: 0, 0
+  index: -1
+Sealion/wait_no_ball
+  rotate: false
+  xy: 0, 694
+  size: 48, 60
+  orig: 48, 60
+  offset: 0, 0
+  index: -1
+Sealion/wait_with_ball
+  rotate: false
+  xy: 48, 694
+  size: 48, 60
+  orig: 48, 60
   offset: 0, 0
   index: -1
 ShieldAttacker/Attack
@@ -705,7 +754,7 @@ SnowSeal/Stand
   index: -1
 Spiky
   rotate: false
-  xy: 228, 634
+  xy: 224, 694
   size: 32, 64
   orig: 32, 64
   offset: 0, 0

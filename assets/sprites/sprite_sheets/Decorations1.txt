@@ -1,5 +1,5 @@
 Decorations1.png
-size: 1720, 260
+size: 1752, 260
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -29,5 +29,12 @@ MuzzleFlash
   xy: 1672, 0
   size: 48, 16
   orig: 48, 16
+  offset: 0, 0
+  index: -1
+UnderWaterBubble
+  rotate: false
+  xy: 1720, 0
+  size: 32, 16
+  orig: 32, 16
   offset: 0, 0
   index: -1

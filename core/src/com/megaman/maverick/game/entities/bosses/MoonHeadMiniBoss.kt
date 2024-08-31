@@ -15,6 +15,7 @@ import com.engine.common.extensions.getTextureAtlas
 import com.engine.common.extensions.objectMapOf
 import com.engine.common.extensions.toGdxArray
 import com.engine.common.getRandom
+import com.engine.common.getRandomValue
 import com.engine.common.objects.Loop
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
@@ -173,20 +174,19 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimate
         val mockBody = GameRectangle(body)
 
         val totalDistance = body.getCenter().dst(getMegaman().body.getCenter())
-        var distance = 0f
         var distFromMegaman = Float.MAX_VALUE
-
         var winningArcMotion = arcMotion1
 
-        for (i in 0 until ARC_FACTOR_CALCULATIONS) {
-            distance += totalDistance / ARC_FACTOR_CALCULATIONS
-
+        for (i in 0..ARC_FACTOR_CALCULATIONS) {
+            val distance = i * (totalDistance / ARC_FACTOR_CALCULATIONS)
             val position1 = arcMotion1.compute(distance)
             val position2 = arcMotion2.compute(distance)
-            if (blocks.any { it.blockFixture.getShape().overlaps(mockBody.setCenter(position1)) })
-                return arcMotion2
-            else if (blocks.any { it.blockFixture.getShape().overlaps(mockBody.setCenter(position2)) })
-                return arcMotion1
+
+            val pos1HitsBlock = blocks.any { it.blockFixture.getShape().overlaps(mockBody.setCenter(position1)) }
+            val pos2HitsBlock = blocks.any { it.blockFixture.getShape().overlaps(mockBody.setCenter(position2)) }
+            if (pos1HitsBlock && pos2HitsBlock) return getRandomValue({ arcMotion1 }, { arcMotion2 })
+            else if (pos1HitsBlock) return arcMotion2
+            else if (pos2HitsBlock) return arcMotion1
 
             val dist1 = position1.dst(getMegaman().body.getCenter())
             val dist2 = position2.dst(getMegaman().body.getCenter())

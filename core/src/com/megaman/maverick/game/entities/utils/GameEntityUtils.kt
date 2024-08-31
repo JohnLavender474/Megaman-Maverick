@@ -13,7 +13,7 @@ import com.engine.entities.contracts.IBodyEntity
 import com.engine.entities.contracts.ISpritesEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.utils.toGameRectangle
 import com.megaman.maverick.game.utils.toProps

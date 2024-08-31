@@ -1,12 +1,25 @@
 package com.megaman.maverick.game.entities.megaman.components
 
 import com.engine.common.GameLogger
+import com.engine.common.objects.props
+import com.engine.common.time.Timer
 import com.engine.updatables.UpdatablesComponent
+import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
+import com.megaman.maverick.game.behaviors.BehaviorType
+import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.factories.EntityFactories
+import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.extensions.stopCharging
+import com.megaman.maverick.game.world.BodySense
+import com.megaman.maverick.game.world.isSensing
 
 const val MEGAMAN_UPDATE_COMPONENT_TAG = "MegamanUpdateComponentTag"
+
+private const val UNDER_WATER_BUBBLE_DELAY = 2f
+
+private val underWaterBubbleTimer = Timer(UNDER_WATER_BUBBLE_DELAY)
 
 internal fun Megaman.defineUpdatablesComponent() = UpdatablesComponent({ delta ->
     if (body.x < -10 * ConstVals.PPM || body.y < -10 * ConstVals.PPM) {
@@ -35,4 +48,20 @@ internal fun Megaman.defineUpdatablesComponent() = UpdatablesComponent({ delta -
     shootAnimTimer.update(delta)
     wallJumpTimer.update(delta)
     roomTransPauseTimer.update(delta)
+
+    if (body.isSensing(BodySense.IN_WATER)) {
+        underWaterBubbleTimer.update(delta)
+        if (underWaterBubbleTimer.isFinished()) {
+            spawnBubbles()
+            underWaterBubbleTimer.reset()
+        }
+    }
 })
+
+private fun Megaman.spawnBubbles() {
+    val bubbles = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.UNDER_WATER_BUBBLE)!!
+    val offsetY = if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) 0.05f else 0.1f
+    val offsetX = 0.2f * facing.value
+    val spawn = body.getCenter().add(offsetX * ConstVals.PPM, offsetY * ConstVals.PPM)
+    game.engine.spawn(bubbles, props(ConstKeys.POSITION to spawn))
+}

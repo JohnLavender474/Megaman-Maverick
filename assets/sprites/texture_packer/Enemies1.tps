@@ -593,6 +593,41 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Enemies1/Sealion/after_throw_ball.png</key>
+            <key type="filename">../frames/Enemies1/Sealion/before_throw_ball.png</key>
+            <key type="filename">../frames/Enemies1/Sealion/taunt_with_ball.png</key>
+            <key type="filename">../frames/Enemies1/Sealion/wait_no_ball.png</key>
+            <key type="filename">../frames/Enemies1/Sealion/wait_with_ball.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,15,24,30</rect>
+                <key>scale9Paddings</key>
+                <rect>12,15,24,30</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies1/Sealion/pout.png</key>
+            <key type="filename">../frames/Enemies1/Sealion/taunt_no_ball.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>24,15,48,30</rect>
+                <key>scale9Paddings</key>
+                <rect>24,15,48,30</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Enemies1/ShieldAttacker/TurnAround.png</key>
             <key type="filename">../frames/Enemies1/SuctionRoller.png</key>
             <key type="filename">../frames/Enemies1/SwimmingMet/Swim.png</key>

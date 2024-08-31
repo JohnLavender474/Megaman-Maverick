@@ -6,7 +6,7 @@ import com.engine.common.interfaces.Initializable
 import com.engine.common.objects.Pool
 import com.engine.entities.IGameEntity
 import com.engine.factories.IFactory
-import com.megaman.maverick.game.entities.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 
 abstract class EntityFactory : IFactory<IGameEntity>, Initializable, IClearable {
 

@@ -1,7 +1,7 @@
 package com.megaman.maverick.game.entities.factories
 
 import com.engine.common.objects.Pool
-import com.megaman.maverick.game.entities.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 
 object GameEntityPoolCreator {
 

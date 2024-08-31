@@ -45,9 +45,9 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
-import com.megaman.maverick.game.entities.overlapsGameCamera
+import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
@@ -133,10 +133,11 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         defineDrawables(dimensions.first, dimensions.second)
 
         moveBeforeKill = spawnProps.containsKey(MOVE_BEFORE_KILL)
+        removeProperty(MOVE_BEFORE_KILL)
+        if (moveBeforeKill) putProperty(MOVE_BEFORE_KILL, spawnProps.get(MOVE_BEFORE_KILL))
         movingBeforeKill = false
 
         doCull = spawnProps.getOrDefault(ConstKeys.CULL, false, Boolean::class)
-
         spawnRoom = spawnProps.get("${ConstKeys.SPAWN}_${ConstKeys.ROOM}", String::class)
 
         val playSound = spawnProps.getOrDefault(ConstKeys.SOUND, false, Boolean::class)
@@ -144,7 +145,7 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
     }
 
     override fun kill(props: Properties?) =
-        if (moveBeforeKill && !movingBeforeKill) moveBeforeKill() else super<MegaGameEntity>.kill(props)
+        if (moveBeforeKill && !movingBeforeKill) moveBeforeKill() else super.kill(props)
 
     private fun moveBeforeKill() {
         movingBeforeKill = true

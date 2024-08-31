@@ -21,6 +21,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.world.getEntity
@@ -40,9 +41,9 @@ class BreakableIce(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity, 
     override fun init() {
         if (region1 == null || region2 == null || region3 == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
-            region1 = atlas.findRegion("BreakableIce/1")
-            region2 = atlas.findRegion("BreakableIce/2")
-            region3 = atlas.findRegion("BreakableIce/3")
+            region1 = atlas.findRegion("$TAG/1")
+            region2 = atlas.findRegion("$TAG/2")
+            region3 = atlas.findRegion("$TAG/3")
         }
         super.init()
         addComponent(defineSpritesComponent())
@@ -71,7 +72,8 @@ class BreakableIce(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity, 
 
     private fun hit(increment: Int = 1) {
         index += increment
-        if (index == BREAK_INDEX) explodeAndDie() else requestToPlaySound(SoundAsset.ICE_SHARD_1_SOUND, false)
+        if (index == BREAK_INDEX) explodeAndDie()
+        else if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ICE_SHARD_1_SOUND, false)
     }
 
     private fun explodeAndDie() {

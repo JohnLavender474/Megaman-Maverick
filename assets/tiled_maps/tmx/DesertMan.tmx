@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="700" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="18" nextobjectid="323">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="700" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="18" nextobjectid="325">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/tomahawk_man_stage_tileset.tsx"/>
  <layer id="2" name="tiles3" width="700" height="100">
@@ -332,14 +332,14 @@
   <object id="277" name="room9" x="19648" y="896" width="544" height="384"/>
   <object id="286" name="room10" x="15360" y="1280" width="4832" height="1272"/>
  </objectgroup>
- <objectgroup id="8" name="temp">
+ <objectgroup id="8" name="player">
   <object id="89" name="0" x="96" y="1152" width="32" height="32"/>
   <object id="105" name="1" x="3904" y="1088" width="32" height="32"/>
   <object id="161" name="2" x="10464" y="448" width="32" height="32"/>
   <object id="217" name="3" x="16976" y="480" width="32" height="32"/>
   <object id="244" name="4" x="17856" y="448" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="16" name="player">
+ <objectgroup id="16" name="temp">
   <object id="287" name="0" x="17088" y="480" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="9" name="enemies">
@@ -804,12 +804,22 @@
     <property name="room" value="room7"/>
    </properties>
   </object>
-  <object id="259" name="Death" x="18336" y="560" width="768" height="112">
+  <object id="259" name="Death" x="18312" y="560" width="824" height="112">
    <properties>
     <property name="instant" type="bool" value="true"/>
    </properties>
   </object>
   <object id="316" name="Death" x="19424" y="1728" width="480" height="32"/>
+  <object id="323" name="Death" x="11040" y="632" width="5536" height="144">
+   <properties>
+    <property name="instant" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="324" name="Death" x="16352" y="1936" width="3840" height="144">
+   <properties>
+    <property name="instant" type="bool" value="true"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="4" name="hazards"/>
 </map>

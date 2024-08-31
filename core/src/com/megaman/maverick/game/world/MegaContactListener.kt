@@ -103,17 +103,27 @@ class MegaContactListener(
         else if (contact.fixturesMatch(FixtureType.BLOCK, FixtureType.BODY)) {
             printDebugLog(contact, "beginContact(): Block-Body, contact = $contact")
             val (blockFixture, bodyFixture) = contact.getFixturesInOrder(FixtureType.BLOCK, FixtureType.BODY)!!
-
             if (blockFixture.hasFixtureLabel(FixtureLabel.NO_BODY_TOUCHIE)) return
 
             val block = blockFixture.getEntity() as Block
             block.hitByBody(bodyFixture)
 
+            if (bodyFixture.hasHitByBlockReceiver()) bodyFixture.getHitByBlock(block)
+
             val body = bodyFixture.getBody()
             body.setBodySense(BodySense.BODY_TOUCHING_BLOCK, true)
         }
 
-        // block, side
+        // body, body
+        else if (contact.fixturesMatch(FixtureType.BODY, FixtureType.BODY)) {
+            printDebugLog(contact, "beginContact(): Body-Body, contact = $contact")
+            val (bodyFixture1, bodyFixture2) = contact.getFixturesInOrder(FixtureType.BODY, FixtureType.BODY)!!
+
+            if (bodyFixture1.hasHitByBodyReceiver()) bodyFixture1.getHitByBody(bodyFixture2.getEntity())
+            if (bodyFixture2.hasHitByBodyReceiver()) bodyFixture2.getHitByBody(bodyFixture1.getEntity())
+        }
+
+        // side, block
         else if (contact.fixturesMatch(FixtureType.BLOCK, FixtureType.SIDE)) {
             printDebugLog(contact, "beginContact(): Block-Side, contact = $contact")
             val (blockFixture, sideFixture) = contact.getFixturesInOrder(FixtureType.BLOCK, FixtureType.SIDE)!!
@@ -128,6 +138,8 @@ class MegaContactListener(
 
             val block = blockFixture.getEntity() as Block
             block.hitBySide(sideFixture)
+
+            if (sideFixture.hasHitByBlockReceiver()) sideFixture.getHitByBlock(block)
         }
 
         // side / feet / head, gate
@@ -183,6 +195,8 @@ class MegaContactListener(
 
             val block = blockFixture.getEntity() as Block
             block.hitByFeet(feetFixture)
+
+            if (feetFixture.hasHitByBlockReceiver()) feetFixture.getHitByBlock(block)
         }
 
         // feet, ice
@@ -362,9 +376,7 @@ class MegaContactListener(
         else if (contact.fixturesMatch(FixtureType.BODY, FixtureType.PLAYER)) {
             printDebugLog(contact, "beginContact(): Body-Player, contact = $contact")
             val (bodyFixture, playerFixture) = contact.getFixturesInOrder(FixtureType.BODY, FixtureType.PLAYER)!!
-
-            if (bodyFixture.getBody().hasHitByPlayerReceiver()) bodyFixture.getBody()
-                .getHitByPlayer(playerFixture.getEntity() as Megaman)
+            if (bodyFixture.hasHitByPlayerReceiver()) bodyFixture.getHitByPlayer(playerFixture.getEntity() as Megaman)
         }
 
         // projectile, block or body or shield or water or projectile
@@ -397,8 +409,7 @@ class MegaContactListener(
 
             val projectile = projectileFixture.getEntity() as AbstractProjectile
 
-            val otherBody = otherFixture.getBody()
-            if (otherBody.hasHitByProjectileReceiver()) otherBody.getHitByProjectile(projectile)
+            if (otherFixture.hasHitByProjectileReceiver()) otherFixture.getHitByProjectile(projectile)
 
             when (otherFixture.getFixtureType()) {
                 FixtureType.BLOCK -> {
