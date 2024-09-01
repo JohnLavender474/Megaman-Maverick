@@ -41,7 +41,7 @@ class SealionBall(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
 
     companion object {
         const val TAG = "SealionBall"
-        private const val VELOCITY_Y = 15f
+        private const val VELOCITY_Y = 12f
         private const val GRAVITY = -0.1f
         private const val OUT_OF_BOUNDS_CULL_TIME = 1f
         private var region: TextureRegion? = null
@@ -105,22 +105,22 @@ class SealionBall(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.85f * ConstVals.PPM)
+        body.setSize(0.65f * ConstVals.PPM)
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
         body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBodyBounds() }
 
-        val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameCircle().setRadius(0.425f * ConstVals.PPM))
+        val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameCircle().setRadius(0.325f * ConstVals.PPM))
         body.addFixture(projectileFixture)
         projectileFixture.rawShape.color = Color.RED
         debugShapes.add { projectileFixture.getShape() }
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.425f * ConstVals.PPM))
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.325f * ConstVals.PPM))
         body.addFixture(damagerFixture)
 
-        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameCircle().setRadius(0.425f * ConstVals.PPM))
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameCircle().setRadius(0.325f * ConstVals.PPM))
         body.addFixture(damageableFixture)
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

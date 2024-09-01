@@ -56,11 +56,11 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
     companion object {
         const val TAG = "SpikeBot"
-        private const val STAND_DUR = 0.25f
-        private const val SHOOT_DUR = 0.5f
+        private const val STAND_DUR = 0.35f
+        private const val SHOOT_DUR = 0.65f
         private const val SHOOT_TIME = 0.3f
-        private const val WALK_DUR = 0.25f
-        private const val WALK_SPEED = 5f
+        private const val WALK_DUR = 0.75f
+        private const val WALK_SPEED = 4f
         private const val NEEDLES = 3
         private const val Y_OFFSET = 0.1f
         private const val NEEDLE_SPEED = 10f

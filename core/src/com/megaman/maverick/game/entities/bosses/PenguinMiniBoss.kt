@@ -66,11 +66,7 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
         private var region: TextureRegion? = null
     }
 
-    enum class PenguinMiniBossState {
-        IDLE,
-        LAUNCH_PENGUINS,
-        SHOOT_SNOWBALLS
-    }
+    private enum class PenguinMiniBossState { IDLE, LAUNCH_PENGUINS, SHOOT_SNOWBALLS }
 
     private val idleTimer = Timer(IDLE_DUR)
     private val launchPenguinsTimer = Timer(LAUNCH_PENGUINS_DUR)
@@ -96,7 +92,7 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
     override fun init() {
         if (region == null)
             region = game.assMan.getTextureRegion(TextureAsset.BOSSES.source, "PenguinMiniBoss/PenguinMiniBoss")
-        super<AbstractBoss>.init()
+        super.init()
         addComponent(defineAnimationsComponent())
     }
 
@@ -112,7 +108,7 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
     }
 
     override fun onDestroy() {
-        super<AbstractBoss>.onDestroy()
+        super.onDestroy()
         children.forEach { it.kill() }
         children.clear()
     }
@@ -221,7 +217,7 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
         debugShapes.add { bodyFixture.getShape() }
 
         val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(2f * ConstVals.PPM))
-        shieldFixture.offsetFromBodyCenter.y = -0.25f * ConstVals.PPM
+        shieldFixture.offsetFromBodyCenter.y = -0.3f * ConstVals.PPM
         body.addFixture(shieldFixture)
         shieldFixture.rawShape.color = Color.BLUE
         debugShapes.add { shieldFixture.getShape() }

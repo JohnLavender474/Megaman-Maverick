@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.blocks
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
@@ -40,10 +41,9 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity 
     override fun init() {
         GameLogger.debug(TAG, "init(): Initializing Block entity.")
         addComponent(defineBodyComponent())
-        debugShapeSuppliers.add { body }
-        addComponent(
-            DrawableShapesComponent(debugShapeSuppliers = debugShapeSuppliers, debug = true)
-        )
+        body.color = Color.GRAY
+        debugShapeSuppliers.add { body.getBodyBounds() }
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapeSuppliers, debug = true))
     }
 
     override fun spawn(spawnProps: Properties) {

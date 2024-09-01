@@ -17,6 +17,7 @@ import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
+import com.engine.drawables.sprites.setSize
 import com.engine.entities.contracts.ISpritesEntity
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.Body
@@ -34,19 +35,17 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
 
     companion object {
         const val TAG = "Splash"
-
         private const val SPLASH_REGION_KEY = "Water/Splash"
-        private const val ALPHA = .5f
-
+        private const val ALPHA = 0.5f
         private var splashRegion: TextureRegion? = null
 
         fun generate(game: MegamanMaverickGame, splasher: Body, water: Body) {
             GameLogger.debug(TAG, "Generating splash for splasher [$splasher] and water [$water]")
             val numSplashes = ceil(splasher.width / ConstVals.PPM).toInt()
             for (i in 0 until numSplashes) {
+                val splash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SPLASH)!!
                 val spawn = Vector2(splasher.x + ConstVals.PPM / 2f + i * ConstVals.PPM, water.y + water.height)
-                val s = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SPLASH)
-                game.engine.spawn(s!!, props(ConstKeys.POSITION to spawn))
+                game.engine.spawn(splash, props(ConstKeys.POSITION to spawn))
             }
         }
     }
@@ -58,7 +57,6 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
     override fun init() {
         if (splashRegion == null) splashRegion =
             game.assMan.getTextureRegion(TextureAsset.ENVIRONS_1.source, SPLASH_REGION_KEY)
-
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
         addComponent(defineUpdatablesComponent())
@@ -67,7 +65,7 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
     override fun spawn(spawnProps: Properties) {
         super.spawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.POSITION) as Vector2
-        (firstSprite as GameSprite).setPosition(spawn, Position.BOTTOM_CENTER)
+        firstSprite!!.setPosition(spawn, Position.BOTTOM_CENTER)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
@@ -81,6 +79,7 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
 
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -1))
+        sprite.setSize(ConstVals.PPM.toFloat())
         sprite.setAlpha(ALPHA)
         return SpritesComponent(sprite)
     }

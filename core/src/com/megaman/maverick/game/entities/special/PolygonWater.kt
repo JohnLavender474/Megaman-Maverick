@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.special
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.OrderedMap
@@ -59,7 +60,7 @@ class PolygonWater(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     override fun getEntityType() = EntityType.SPECIAL
 
     override fun init() {
-        super<MegaGameEntity>.init()
+        super.init()
         val atlas = game.assMan.getTextureAtlas(TextureAsset.ENVIRONS_1.source)
         if (blueReg == null) blueReg = atlas.findRegion(BLUE_REG)
         if (surfaceReg == null) surfaceReg = atlas.findRegion(SURFACE_REG)
@@ -71,17 +72,23 @@ class PolygonWater(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     override fun spawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "spawn(): spawnProps = $spawnProps")
         super.spawn(spawnProps)
+
         val polygon = spawnProps.get(ConstKeys.POLYGON, GamePolygon::class)!!
-        val bounds = polygon.getBoundingRectangle()
-        body.set(bounds)
+        body.set(polygon.getBoundingRectangle())
         waterFixture.rawShape = polygon
-        defineDrawables(polygon.splitIntoGameRectanglesBasedOnCenter(ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat()))
+        GameLogger.debug(TAG, "Body = ${body.getBodyBounds()}")
+        GameLogger.debug(TAG, "Polygon = $polygon")
+
+        val matrix = polygon.splitIntoGameRectanglesBasedOnCenter(ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
+        GameLogger.debug(TAG, "Sprites matrix = $matrix")
+        defineDrawables(matrix)
+
         splashSound = spawnProps.getOrDefault(ConstKeys.SPLASH, true, Boolean::class)
     }
 
     override fun onDestroy() {
         GameLogger.debug(Water.TAG, "Destroyed")
-        super<MegaGameEntity>.onDestroy()
+        super.onDestroy()
     }
 
     private fun defineDrawables(cells: Matrix<GameRectangle>) {
@@ -105,6 +112,7 @@ class PolygonWater(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
             } catch (e: IndexOutOfBoundsException) {
                 true
             }
+
             val animation = Animation(if (isSurface) surfaceReg!! else underReg!!, 1, 2, 0.15f, true)
             val animator = Animator(animation)
             animators.add({ waterSprite } to animator)
@@ -115,12 +123,18 @@ class PolygonWater(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        val shapes = Array<() -> IDrawableShape?>()
-        waterFixture = Fixture(body, FixtureType.WATER, GamePolygon())
+        body.color = Color.GRAY
+
+        val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body.getBodyBounds() }
+
+        waterFixture = Fixture(body, FixtureType.WATER)
         waterFixture.attachedToBody = false
         body.addFixture(waterFixture)
-        shapes.add { waterFixture.getShape() }
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = shapes, debug = true))
+        debugShapes.add { waterFixture.getShape() }
+
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
+
         return BodyComponentCreator.create(this, body)
     }
 

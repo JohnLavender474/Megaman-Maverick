@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.special
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -86,18 +87,22 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
     }
 
     override fun onDestroy() {
-        super<MegaGameEntity>.onDestroy()
+        super.onDestroy()
         GameLogger.debug(TAG, "Destroyed")
     }
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        val shapes = Array<() -> IDrawableShape?>()
+        body.color = Color.GRAY
 
-        val waterFixture = Fixture(body, FixtureType.WATER, GameRectangle())
+        val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body.getBodyBounds() }
+
+        val waterFixture = Fixture(body, FixtureType.WATER)
         body.addFixture(waterFixture)
+        debugShapes.add { waterFixture.getShape() }
 
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = shapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }

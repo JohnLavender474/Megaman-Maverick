@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="1200" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="13" nextobjectid="284">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="1200" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="13" nextobjectid="288">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/Gravity Man Stage.tsx"/>
  <tileset firstgid="4609" source="../tsx/MM3Wily1.tsx"/>
@@ -210,6 +210,7 @@
    </properties>
   </object>
   <object id="280" name="SpikeBot" x="32064" y="288" width="32" height="32"/>
+  <object id="284" name="YellowTiggerSquirt" x="31728" y="272" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="10" name="children">
   <object id="97" name="GravityChange" x="11936" y="96" width="384" height="320">
@@ -307,10 +308,6 @@
     <property name="gravity" type="float" value="1"/>
    </properties>
   </object>
-  <object id="185" name="PolygonWater" x="22176" y="352">
-   <polygon points="0,0 0,-96 32,-96 32,-128 160,-128 160,-64 480,-64 480,64 352,0 224,0 224,64 64,64 64,0"/>
-  </object>
-  <object id="187" name="Water" x="22688" y="224" width="128" height="168"/>
   <object id="192" name="QuickSand" x="24064" y="352" width="480" height="96"/>
   <object id="228" name="CapsuleTeleporter" x="26784" y="288" width="64" height="128">
    <properties>
@@ -336,9 +333,12 @@
    </properties>
   </object>
   <object id="256" name="Cart" x="29728" y="384" width="32" height="32"/>
+  <object id="287" name="PolygonWater" x="22112" y="192">
+   <polygon points="0,0 0,224 160,224 160,96 352,96 352,0"/>
+  </object>
  </objectgroup>
  <objectgroup id="4" name="player">
-  <object id="275" name="0" x="31776" y="384" width="32" height="32"/>
+  <object id="285" name="0" x="22008" y="384" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="8" name="hazards">
   <object id="65" name="SwinginAxe" x="256" y="160" width="32" height="32"/>

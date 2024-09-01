@@ -211,7 +211,8 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         Tropish::class to dmgNeg(3),
         SeaMine::class to dmgNeg(3),
         Sealion::class to dmgNeg(3),
-        SealionBall::class to dmgNeg(3)
+        SealionBall::class to dmgNeg(3),
+        YellowTiggerSquirt::class to dmgNeg(3)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 

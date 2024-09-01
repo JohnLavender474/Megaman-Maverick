@@ -15,6 +15,7 @@ import com.engine.common.objects.Properties
 import com.engine.common.objects.props
 import com.engine.common.shapes.GameRectangle
 import com.engine.common.time.Timer
+import com.engine.damage.IDamageable
 import com.engine.damage.IDamager
 import com.engine.drawables.shapes.DrawableShapesComponent
 import com.engine.drawables.shapes.IDrawableShape
@@ -126,6 +127,8 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
         timers.values().forEach { it.reset() }
     }
+
+    override fun canDamage(damageable: IDamageable) = state != SealionState.POUT
 
     fun onBallDamagedInflicted() {
         GameLogger.debug(TAG, "On ball damaged inflicted")

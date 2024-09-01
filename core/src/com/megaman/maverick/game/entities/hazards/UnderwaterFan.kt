@@ -28,9 +28,9 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.IHazard
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
@@ -103,7 +103,7 @@ class UnderwaterFan(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setOriginCenter()
             _sprite.rotation = directionRotation!!.rotation
-            val position = DirectionPositionMapper.getPosition(directionRotation!!)
+            val position = DirectionPositionMapper.getInvertedPosition(directionRotation!!)
             _sprite.setPosition(body.getPositionPoint(position), position)
         }
         return spritesComponent

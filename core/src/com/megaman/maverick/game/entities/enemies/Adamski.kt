@@ -77,7 +77,7 @@ class Adamski(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
             blueRegion = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, "Adamski/Blue")
             orangeRegion = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, "Adamski/Orange")
         }
-        super<AbstractEnemy>.init()
+        super.init()
         addComponent(MotionComponent())
         addComponent(defineAnimationsComponent())
     }
