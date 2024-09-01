@@ -42,7 +42,8 @@ class SealionBall(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
     companion object {
         const val TAG = "SealionBall"
         private const val VELOCITY_Y = 15f
-        private const val GRAVITY = -0.15f
+        private const val GRAVITY = -0.1f
+        private const val OUT_OF_BOUNDS_CULL_TIME = 1f
         private var region: TextureRegion? = null
     }
 
@@ -65,7 +66,7 @@ class SealionBall(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
         super.init()
-        addComponents(defineProjectileComponents())
+        addComponents(defineProjectileComponents(OUT_OF_BOUNDS_CULL_TIME))
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
     }

@@ -21,21 +21,22 @@ import com.engine.world.BodyComponent
 import com.engine.world.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.AbstractProjectile.Companion.DEFAULT_PROJECTILE_CULL_TIME
 import com.megaman.maverick.game.events.EventType
+
+const val PROJECTILE_DEFAULT_CULL_TIME = 0.5f
 
 interface IProjectileEntity : IMegaGameEntity, IBodyEntity, IAudioEntity, ICullableEntity, IOwnable, IDamager {
 
     override fun getEntityType() = EntityType.PROJECTILE
 
-    fun defineProjectileComponents(): Array<IGameComponent> {
+    fun defineProjectileComponents(outOfBoundsCullTime: Float = PROJECTILE_DEFAULT_CULL_TIME): Array<IGameComponent> {
         val components = Array<IGameComponent>()
         components.add(AudioComponent())
         components.add(
             CullablesComponent(
                 objectMapOf(
                     ConstKeys.CULL_EVENTS to getCullOnEventCullable(),
-                    ConstKeys.CULL_OUT_OF_BOUNDS to getCullOnOutOfGameCam()
+                    ConstKeys.CULL_OUT_OF_BOUNDS to getCullOnOutOfGameCam(outOfBoundsCullTime)
                 )
             )
         )
@@ -53,11 +54,11 @@ interface IProjectileEntity : IMegaGameEntity, IBodyEntity, IAudioEntity, ICulla
 
     fun removeCullOnOutOfGameCam() = removeCullable(ConstKeys.CULL_OUT_OF_BOUNDS)
 
-    fun getCullOnOutOfGameCam() =
+    fun getCullOnOutOfGameCam(outOfBoundsCullTime: Float = PROJECTILE_DEFAULT_CULL_TIME) =
         CullableOnUncontained<Camera>(
             containerSupplier = { game.getGameCamera() },
             containable = { it.overlaps(body) },
-            timeToCull = DEFAULT_PROJECTILE_CULL_TIME
+            timeToCull = outOfBoundsCullTime
         )
 
     override fun canDamage(damageable: IDamageable) = damageable != owner

@@ -72,8 +72,6 @@ class ReactMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         private const val RUN_DUR = 0.5f
         private const val RUN_SPEED = 6f
         private const val JUMP_IMPULSE = 10.5f
-        private const val HORIZONTAL_SCALAR = 1f
-        private const val VERTICAL_SCALAR = 1f
         private const val THROW_DELAY = 0.25f
         private const val PROJECTILE_SPEED = 10f
         private val regions = ObjectMap<String, TextureRegion>()
@@ -116,7 +114,7 @@ class ReactMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
             }
             regions.put("Die", atlas.findRegion("ReactMan/Die"))
         }
-        super<AbstractBoss>.init()
+        super.init()
         addComponent(defineAnimationsComponent())
     }
 
@@ -139,7 +137,7 @@ class ReactMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
     }
 
     override fun onDestroy() {
-        super<AbstractBoss>.onDestroy()
+        super.onDestroy()
         projectile?.kill()
         projectile = null
     }

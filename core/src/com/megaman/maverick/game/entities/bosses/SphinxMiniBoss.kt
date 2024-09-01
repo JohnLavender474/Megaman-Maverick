@@ -9,6 +9,7 @@ import com.engine.animations.Animation
 import com.engine.animations.AnimationsComponent
 import com.engine.animations.Animator
 import com.engine.animations.IAnimation
+import com.engine.common.GameLogger
 import com.engine.common.enums.Position
 import com.engine.common.extensions.gdxArrayOf
 import com.engine.common.extensions.getTextureAtlas
@@ -47,6 +48,7 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.SphinxBall
+import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import kotlin.reflect.KClass
@@ -61,10 +63,10 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
         private const val LAUGH_DUR = 0.5f
         private const val BALL_SPEED = 3f
         private const val ORB_SPEED = 8f
+        private const val MAX_CHUNK_ORB_IMPULSE = 10f
+        private const val CHUNK_X_SCALAR = 1.25f
         private val chinOffsets = gdxArrayOf(
-            Vector2(-2.75f, 0.7f),
-            Vector2(-2.75f, 0.1f),
-            Vector2(-2.75f, -0.5f)
+            Vector2(-2.75f, 0.7f), Vector2(-2.75f, 0.1f), Vector2(-2.75f, -0.5f)
         )
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -73,41 +75,36 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
         WAIT, OPENING, LAUNCH_BALL, SHOOT_ORBS, CLOSING
     }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(1),
-        ChargedShot::class to dmgNeg {
+    override val damageNegotiations =
+        objectMapOf<KClass<out IDamager>, DamageNegotiation>(Bullet::class to dmgNeg(1), ChargedShot::class to dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 2 else 1
         }, ChargedShotExplosion::class to dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 2 else 1
-        }
-    )
+        })
 
     private val loop = Loop(SphinxMiniBossState.values().toGdxArray())
     private val timers = objectMapOf(
-        "wait" to Timer(WAIT_DUR),
-        "opening" to Timer(OPEN_DUR, gdxArrayOf(
-            TimeMarkedRunnable(0f) { activeChinIndex = 0 },
-            TimeMarkedRunnable(0.1f) { activeChinIndex = 1 },
-            TimeMarkedRunnable(0.2f) { activeChinIndex = 2 }
-        )),
-        "shoot_orbs" to Timer(SHOOT_ORBS_DUR, gdxArrayOf(
-            TimeMarkedRunnable(0.5f) { shootOrb() },
-            TimeMarkedRunnable(1f) { shootOrb() },
-            TimeMarkedRunnable(1.5f) { shootOrb() },
-            TimeMarkedRunnable(2f) { shootOrb() }
-        )),
-        "closing" to Timer(OPEN_DUR, gdxArrayOf(
-            TimeMarkedRunnable(0f) { activeChinIndex = 2 },
-            TimeMarkedRunnable(0.1f) { activeChinIndex = 1 },
-            TimeMarkedRunnable(0.2f) { activeChinIndex = 0 }
-        )),
-        "laugh" to Timer(LAUGH_DUR)
+        "wait" to Timer(WAIT_DUR), "opening" to Timer(
+            OPEN_DUR, gdxArrayOf(TimeMarkedRunnable(0f) { activeChinIndex = 0 },
+                TimeMarkedRunnable(0.1f) { activeChinIndex = 1 },
+                TimeMarkedRunnable(0.2f) { activeChinIndex = 2 })
+        ), "shoot_orbs" to Timer(
+            SHOOT_ORBS_DUR, gdxArrayOf(TimeMarkedRunnable(0.5f) { shootOrb() },
+                TimeMarkedRunnable(1f) { shootOrb() },
+                TimeMarkedRunnable(1.5f) { shootOrb() },
+                TimeMarkedRunnable(2f) { shootOrb() })
+        ), "closing" to Timer(
+            OPEN_DUR, gdxArrayOf(TimeMarkedRunnable(0f) { activeChinIndex = 2 },
+                TimeMarkedRunnable(0.1f) { activeChinIndex = 1 },
+                TimeMarkedRunnable(0.2f) { activeChinIndex = 0 })
+        ), "laugh" to Timer(LAUGH_DUR)
     )
     private val chinBounds = GameRectangle().setSize(1.5f * ConstVals.PPM, 0.5f * ConstVals.PPM)
     private var activeChinIndex = 0
     private var sphinxBall: SphinxBall? = null
+    private var chunkOrbs = false
 
     override fun init() {
         if (regions.isEmpty) {
@@ -124,18 +121,17 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
     }
 
     override fun spawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "spawnProps=$spawnProps")
         super.spawn(spawnProps)
-
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomRightPoint()
         body.setBottomRightToPoint(spawn)
-
         loop.reset()
         timers.forEach {
             if (it.key == "laugh") it.value.setToEnd()
             else it.value.reset()
         }
-
         activeChinIndex = 0
+        chunkOrbs = false
     }
 
     override fun onDestroy() {
@@ -159,13 +155,13 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
 
     private fun shootOrb() {
         val arigockBall = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.ARIGOCK_BALL)!!
-        val spawn = chinBounds.getTopCenterPoint().add(0.75f * ConstVals.PPM, 1f * ConstVals.PPM)
-        val impulse = getMegaman().body.getCenter().sub(spawn).nor().scl(ORB_SPEED * ConstVals.PPM)
+        val spawn = chinBounds.getTopCenterPoint().add(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat())
+        val impulse = if (chunkOrbs) MegaUtilMethods.calculateJumpImpulse(
+            spawn, getMegaman().body.getCenter(), MAX_CHUNK_ORB_IMPULSE * ConstVals.PPM, CHUNK_X_SCALAR
+        ) else getMegaman().body.getCenter().sub(spawn).nor().scl(ORB_SPEED * ConstVals.PPM)
         game.engine.spawn(
             arigockBall, props(
-                ConstKeys.POSITION to spawn,
-                ConstKeys.IMPULSE to impulse,
-                ConstKeys.GRAVITY_ON to false
+                ConstKeys.POSITION to spawn, ConstKeys.IMPULSE to impulse, ConstKeys.GRAVITY_ON to chunkOrbs
             )
         )
     }
@@ -204,7 +200,11 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
                     if (timer.isFinished()) {
                         timer.reset()
                         loop.next()
-                        if (loop.getCurrent() == SphinxMiniBossState.LAUNCH_BALL) launchBall()
+                        if (loop.getCurrent() == SphinxMiniBossState.LAUNCH_BALL) {
+                            launchBall()
+                            chunkOrbs = !chunkOrbs
+                            GameLogger.debug(TAG, "Will chunk orbs: $chunkOrbs")
+                        }
                     }
                 }
             }

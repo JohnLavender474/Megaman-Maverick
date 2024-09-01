@@ -54,7 +54,7 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     companion object {
         const val TAG = "Sealion"
         private const val WAIT_DUR = 0.25f
-        private const val TAUNT_DUR = 0.5f
+        private const val TAUNT_DUR = 1f
         private const val BEFORE_THROW_BALL_DELAY = 0.25f
         private const val POUT_SINK_DELAY = 1f
         private const val POUT_FADE_OUT_DUR = 2.5f
@@ -267,7 +267,7 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
             "wait_with_ball" to Animation(regions["wait_with_ball"], 2, 1, 0.1f, true),
             "wait_no_ball" to Animation(regions["wait_no_ball"], 2, 1, 0.1f, true),
             "taunt_with_ball" to Animation(regions["taunt_with_ball"], 2, 1, 0.1f, true),
-            "taunt_no_ball" to Animation(regions["taunt_no_ball"], 2, 2, 0.1f, true),
+            "taunt_no_ball" to Animation(regions["taunt_no_ball"], 2, 2, 0.05f, true),
             "before_throw_ball" to Animation(regions["before_throw_ball"], 2, 1, 0.1f, true),
             "after_throw_ball" to Animation(regions["after_throw_ball"], 2, 1, 0.1f, true),
             "pout" to Animation(regions["pout"], 2, 2, 0.2f, true)
