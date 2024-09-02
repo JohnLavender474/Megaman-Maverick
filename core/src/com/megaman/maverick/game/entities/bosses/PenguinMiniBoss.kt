@@ -11,7 +11,6 @@ import com.engine.common.enums.Facing
 import com.engine.common.enums.Position
 import com.engine.common.extensions.getTextureRegion
 import com.engine.common.extensions.objectMapOf
-import com.engine.common.getRandomBool
 import com.engine.common.interfaces.IFaceable
 import com.engine.common.objects.Properties
 import com.engine.common.objects.props
@@ -89,9 +88,10 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
     override var children = Array<IGameEntity>()
     override lateinit var facing: Facing
 
+    private var launchPenguins = false
+
     override fun init() {
-        if (region == null)
-            region = game.assMan.getTextureRegion(TextureAsset.BOSSES.source, "PenguinMiniBoss/PenguinMiniBoss")
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.BOSSES.source, "$TAG/$TAG")
         super.init()
         addComponent(defineAnimationsComponent())
     }
@@ -105,6 +105,7 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
         val left = spawnProps.getOrDefault(ConstKeys.LEFT, true, Boolean::class)
         facing = if (left) Facing.LEFT else Facing.RIGHT
         snowballsLaunched = 0
+        launchPenguins = false
     }
 
     override fun onDestroy() {
@@ -139,9 +140,9 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
                     idleTimer.update(delta)
                     if (idleTimer.isFinished()) {
                         idleTimer.reset()
-                        val randomBool = getRandomBool()
                         penguinMiniBossState =
-                            if (randomBool) PenguinMiniBossState.LAUNCH_PENGUINS else PenguinMiniBossState.SHOOT_SNOWBALLS
+                            if (launchPenguins) PenguinMiniBossState.LAUNCH_PENGUINS else PenguinMiniBossState.SHOOT_SNOWBALLS
+                        launchPenguins = !launchPenguins
                     }
                 }
 
@@ -208,8 +209,10 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(2.5f * ConstVals.PPM, 3f * ConstVals.PPM)
+        body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body.getBodyBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
@@ -217,7 +220,7 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
         debugShapes.add { bodyFixture.getShape() }
 
         val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(2f * ConstVals.PPM))
-        shieldFixture.offsetFromBodyCenter.y = -0.3f * ConstVals.PPM
+        shieldFixture.offsetFromBodyCenter.y = -0.35f * ConstVals.PPM
         body.addFixture(shieldFixture)
         shieldFixture.rawShape.color = Color.BLUE
         debugShapes.add { shieldFixture.getShape() }
@@ -228,7 +231,7 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
         debugShapes.add { damagerFixture.getShape() }
 
         val damageableFixture =
-            Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.65f * ConstVals.PPM, 0.25f * ConstVals.PPM))
+            Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.35f * ConstVals.PPM))
         damageableFixture.offsetFromBodyCenter.y = 1.25f * ConstVals.PPM
         body.addFixture(damageableFixture)
         damageableFixture.rawShape.color = Color.PURPLE

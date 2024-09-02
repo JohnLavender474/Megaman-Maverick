@@ -51,14 +51,13 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
+import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
-import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-
 import com.megaman.maverick.game.world.*
 import kotlin.reflect.KClass
 
@@ -152,13 +151,10 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
                 }
             }
         }
-
         super.init()
-
         val shootRunnables = Array<TimeMarkedRunnable>()
         TIMES_TO_SHOOT.forEach { shootRunnables.add(TimeMarkedRunnable(it) { shoot() }) }
         shootTimer.setRunnables(shootRunnables)
-
         addComponent(defineAnimationsComponent())
     }
 
@@ -182,7 +178,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
 
         canJump = spawnProps.getOrDefault(ConstKeys.JUMP, true, Boolean::class)
 
-        type = spawnProps.getOrDefault(ConstKeys.TYPE, DEFAULT_TYPE) as String
+        type = spawnProps.getOrDefault(ConstKeys.TYPE, DEFAULT_TYPE, String::class)
         state = SniperJoeState.WAITING_SHIELDED
         directionRotation = Direction.valueOf(
             spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase()

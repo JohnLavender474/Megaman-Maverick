@@ -23,7 +23,6 @@ import com.engine.drawables.sorting.DrawingSection
 import com.engine.drawables.sprites.GameSprite
 import com.engine.drawables.sprites.SpritesComponent
 import com.engine.drawables.sprites.setPosition
-import com.engine.drawables.sprites.setSize
 import com.engine.entities.contracts.IAnimatedEntity
 import com.engine.updatables.UpdatablesComponent
 import com.engine.world.Body
@@ -96,9 +95,11 @@ class BabyPenguin(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(0.5f * ConstVals.PPM)
+        body.setSize(0.75f * ConstVals.PPM)
+        body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body.getBodyBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
@@ -112,21 +113,21 @@ class BabyPenguin(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
         body.addFixture(damageableFixture)
 
         val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyCenter.y = -0.25f * ConstVals.PPM
+        feetFixture.offsetFromBodyCenter.y = -0.375f * ConstVals.PPM
         body.addFixture(feetFixture)
         feetFixture.rawShape.color = Color.GREEN
         debugShapes.add { feetFixture.getShape() }
 
         val leftFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
-        leftFixture.offsetFromBodyCenter.x = -0.25f * ConstVals.PPM
+        leftFixture.offsetFromBodyCenter.x = -0.375f * ConstVals.PPM
         body.addFixture(leftFixture)
         leftFixture.rawShape.color = Color.YELLOW
         debugShapes.add { leftFixture.getShape() }
 
         val rightFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
-        rightFixture.offsetFromBodyCenter.x = 0.25f * ConstVals.PPM
+        rightFixture.offsetFromBodyCenter.x = 0.375f * ConstVals.PPM
         body.addFixture(rightFixture)
         rightFixture.rawShape.color = Color.YELLOW
         debugShapes.add { rightFixture.getShape() }
@@ -143,7 +144,7 @@ class BabyPenguin(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
-        sprite.setSize(0.65f * ConstVals.PPM)
+        sprite.setSize(ConstVals.PPM.toFloat(), 0.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)

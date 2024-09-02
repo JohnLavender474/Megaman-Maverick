@@ -111,7 +111,6 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
     override lateinit var facing: Facing
 
     private val loop = Loop(JetpackIceShooterState.values().toGdxArray())
-
     private val flyToTargetTimer = Timer(FLY_TO_TARGET_MAX_DUR)
     private val shootTimer = Timer(SHOOT_DUR, gdxArrayOf(TimeMarkedRunnable(0.25f) { shoot() }))
 
