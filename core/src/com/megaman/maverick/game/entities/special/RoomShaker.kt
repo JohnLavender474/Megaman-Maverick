@@ -1,16 +1,16 @@
 package com.megaman.maverick.game.entities.special
 
 import com.badlogic.gdx.maps.objects.RectangleMapObject
-import com.engine.audio.AudioComponent
-import com.engine.common.GameLogger
-import com.engine.common.extensions.objectSetOf
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.time.Timer
-import com.engine.entities.contracts.IAudioEntity
-import com.engine.events.Event
-import com.engine.events.IEventListener
-import com.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.audio.AudioComponent
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.entities.contracts.IAudioEntity
+import com.mega.game.engine.events.Event
+import com.mega.game.engine.events.IEventListener
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
@@ -45,14 +45,13 @@ class RoomShaker(game: MegamanMaverickGame) : MegaGameEntity(game), IEventListen
     override fun getEntityType() = EntityType.SPECIAL
 
     override fun init() {
-        super<MegaGameEntity>.init()
         addComponent(defineUpdatablesComponent())
         addComponent(AudioComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
+    override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "Spawning RoomShake entity")
-        super.spawn(spawnProps)
+        super.onSpawn(spawnProps)
 
         game.eventsMan.addListener(this)
 
@@ -75,7 +74,7 @@ class RoomShaker(game: MegamanMaverickGame) : MegaGameEntity(game), IEventListen
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "Destroying RoomShake entity")
-        super<MegaGameEntity>.onDestroy()
+        super.onDestroy()
         game.eventsMan.removeListener(this)
     }
 
@@ -87,6 +86,7 @@ class RoomShaker(game: MegamanMaverickGame) : MegaGameEntity(game), IEventListen
                 GameLogger.debug(TAG, "Room transition started")
                 run = false
             }
+
             EventType.END_ROOM_TRANS -> {
                 GameLogger.debug(TAG, "Room transition ended")
                 val room = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!.name
@@ -96,6 +96,7 @@ class RoomShaker(game: MegamanMaverickGame) : MegaGameEntity(game), IEventListen
                     delayTimer.reset()
                 }
             }
+
             EventType.SET_TO_ROOM_NO_TRANS -> {
                 GameLogger.debug(TAG, "Setting to room without transition")
                 val room = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!.name

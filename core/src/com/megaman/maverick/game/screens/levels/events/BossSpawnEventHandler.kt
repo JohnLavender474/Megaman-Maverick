@@ -1,11 +1,11 @@
 package com.megaman.maverick.game.screens.levels.events
 
 import com.badlogic.gdx.utils.Queue
-import com.engine.common.interfaces.Updatable
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.time.Timer
-import com.engine.events.Event
+import com.mega.game.engine.common.interfaces.Updatable
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.events.Event
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
@@ -32,7 +32,7 @@ class BossSpawnEventHandler(private val game: MegamanMaverickGame) : Updatable {
         spawnTimer.runOnFirstUpdate = {
             val boss = EntityFactories.fetch(EntityType.BOSS, bossName)!! as AbstractBoss
             boss.ready = false
-            game.engine.spawn(boss, bossSpawnProps)
+            boss.spawn(bossSpawnProps)
             game.eventsMan.submitEvent(Event(EventType.BEGIN_BOSS_SPAWN, props(ConstKeys.BOSS to boss)))
         }
 

@@ -1,8 +1,8 @@
 package com.megaman.maverick.game
 
-import com.engine.common.extensions.gdxArrayOf
-import com.engine.common.extensions.toGdxArray
-import com.engine.common.objects.MultiCollectionIterable
+import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.extensions.toGdxArray
+import com.mega.game.engine.common.objects.MultiCollectionIterable
 import com.megaman.maverick.game.entities.bosses.BossType
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank

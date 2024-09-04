@@ -1,7 +1,7 @@
 package com.megaman.maverick.game.screens.levels.stats
 
 import com.badlogic.gdx.graphics.g2d.Batch
-import com.engine.drawables.IDrawable
+import com.mega.game.engine.drawables.IDrawable
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.drawables.sprites.BitsBar

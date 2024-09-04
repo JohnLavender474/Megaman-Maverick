@@ -2,46 +2,46 @@ package com.megaman.maverick.game.entities.hazards
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
-import com.engine.audio.AudioComponent
-import com.engine.common.GameLogger
-import com.engine.common.enums.Position
-import com.engine.common.extensions.getTextureAtlas
-import com.engine.common.extensions.objectMapOf
-import com.engine.common.extensions.objectSetOf
-import com.engine.common.extensions.set
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameRectangle
-import com.engine.cullables.CullableOnEvent
-import com.engine.cullables.CullablesComponent
-import com.engine.damage.IDamageable
-import com.engine.damage.IDamager
-import com.engine.drawables.sorting.DrawingPriority
-import com.engine.drawables.sorting.DrawingSection
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setPosition
-import com.engine.drawables.sprites.setSize
-import com.engine.entities.contracts.IAudioEntity
-import com.engine.entities.contracts.IBodyEntity
-import com.engine.entities.contracts.ICullableEntity
-import com.engine.entities.contracts.ISpritesEntity
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
-import com.engine.world.Fixture
+import com.mega.game.engine.audio.AudioComponent
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.extensions.set
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.cullables.CullableOnEvent
+import com.mega.game.engine.cullables.CullablesComponent
+import com.mega.game.engine.damage.IDamageable
+import com.mega.game.engine.damage.IDamager
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setPosition
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.contracts.IAudioEntity
+import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.entities.contracts.ICullableEntity
+import com.mega.game.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.world.Body
+import com.mega.game.engine.world.BodyComponent
+import com.mega.game.engine.world.BodyType
+import com.mega.game.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.blocks.BreakableIce
 import com.megaman.maverick.game.entities.contracts.IHazard
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.*
@@ -70,15 +70,14 @@ class FragileIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
             region1 = atlas.findRegion("${BreakableIce.TAG}/1")
             region2 = atlas.findRegion("${BreakableIce.TAG}/3")
         }
-        super.init()
         addComponent(defineBodyComponent())
         addComponent(defineCullablesComponent())
         addComponent(defineSpritesComponent())
         addComponent(AudioComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
         hitBlockTimes = 0
@@ -87,13 +86,13 @@ class FragileIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
     override fun onDamageInflictedTo(damageable: IDamageable) = shatterAndDie()
 
     private fun shatterAndDie() {
-        kill()
+        destroy()
         for (i in 0 until 5) {
             val iceShard = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.ICE_SHARD)!!
-            game.engine.spawn(iceShard, props(ConstKeys.POSITION to body.getCenter(), ConstKeys.INDEX to i))
+            iceShard.spawn(props(ConstKeys.POSITION to body.getCenter(), ConstKeys.INDEX to i))
         }
     }
-    
+
     private fun getHitByBlock() {
         GameLogger.debug(TAG, "Hit by block")
         hitBlockTimes++

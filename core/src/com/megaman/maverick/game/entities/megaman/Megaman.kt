@@ -1,30 +1,30 @@
 package com.megaman.maverick.game.entities.megaman
 
 import com.badlogic.gdx.math.Vector2
-import com.engine.animations.Animator
-import com.engine.audio.AudioComponent
-import com.engine.common.GameLogger
-import com.engine.common.enums.Direction
-import com.engine.common.enums.Facing
-import com.engine.common.enums.Position
-import com.engine.common.enums.Size
-import com.engine.common.extensions.gdxArrayOf
-import com.engine.common.extensions.objectMapOf
-import com.engine.common.extensions.objectSetOf
-import com.engine.common.interfaces.IBoundsSupplier
-import com.engine.common.interfaces.IFaceable
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameRectangle
-import com.engine.common.time.TimeMarkedRunnable
-import com.engine.common.time.Timer
-import com.engine.damage.IDamageable
-import com.engine.damage.IDamager
-import com.engine.entities.IGameEntity
-import com.engine.entities.contracts.*
-import com.engine.events.Event
-import com.engine.events.IEventListener
-import com.engine.world.BodyComponent
+import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.audio.AudioComponent
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.enums.Facing
+import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.enums.Size
+import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.interfaces.IBoundsSupplier
+import com.mega.game.engine.common.interfaces.IFaceable
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.time.TimeMarkedRunnable
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamageable
+import com.mega.game.engine.damage.IDamager
+import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.contracts.*
+import com.mega.game.engine.events.Event
+import com.mega.game.engine.events.IEventListener
+import com.mega.game.engine.world.BodyComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -366,6 +366,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
     override fun getEntityType() = EntityType.MEGAMAN
 
     override fun init() {
+        GameLogger.debug(TAG, "init")
         addComponent(AudioComponent())
         addComponent(defineUpdatablesComponent())
         addComponent(definePointsComponent())
@@ -378,9 +379,9 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         weaponHandler.putWeapon(MegamanWeapon.RUSH_JETPACK)
     }
 
-    override fun spawn(spawnProps: Properties) {
+    override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "spawn(): spawnProps = $spawnProps")
-        super.spawn(spawnProps)
+        super.onSpawn(spawnProps)
 
         setHealth(getMaxHealth())
         weaponHandler.setAllToMaxAmmo()
@@ -440,7 +441,6 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
-
         super.onDestroy()
 
         behaviors.forEach { if (isBehaviorActive(it.key)) it.value.end() }
@@ -468,11 +468,9 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         )
         explosionOrbTrajectories.forEach { trajectory ->
             val explosionOrb = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION_ORB)
-            explosionOrb?.let { orb ->
-                game.engine.spawn(
-                    orb, props(ConstKeys.TRAJECTORY to trajectory, ConstKeys.POSITION to body.getCenter())
-                )
-            }
+            explosionOrb?.spawn(
+                props(ConstKeys.TRAJECTORY to trajectory, ConstKeys.POSITION to body.getCenter())
+            )
         }
     }
 
@@ -565,7 +563,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
     override fun takeDamageFrom(damager: IDamager): Boolean {
         if (canMove && !isBehaviorActive(BehaviorType.RIDING_CART) &&
             !noDmgBounce.contains(damager::class) &&
-            damager is IGameEntity &&
+            damager is GameEntity &&
             damager.hasComponent(BodyComponent::class)
         ) {
             val enemyBody = damager.getComponent(BodyComponent::class)!!.body
@@ -579,14 +577,13 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         return true
     }
 
-    override fun getBounds(): GameRectangle {
-        return if (!doOffsetBoundsSupplier) body
+    override fun getBounds(): GameRectangle =
+        if (!doOffsetBoundsSupplier) body
         else {
             val bounds = GameRectangle(body)
             bounds.translation(boundsSupplierOffset)
             bounds
         }
-    }
 
     override fun getTag() = TAG
 }

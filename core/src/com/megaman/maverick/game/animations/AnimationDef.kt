@@ -1,7 +1,7 @@
 package com.megaman.maverick.game.animations
 
 import com.badlogic.gdx.utils.Array
-import com.engine.common.extensions.gdxFilledArrayOf
+import com.mega.game.engine.common.extensions.gdxFilledArrayOf
 
 data class AnimationDef(
     internal val rows: Int,

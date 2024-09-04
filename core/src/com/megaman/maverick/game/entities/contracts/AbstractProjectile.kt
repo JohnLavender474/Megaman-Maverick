@@ -1,34 +1,29 @@
 package com.megaman.maverick.game.entities.contracts
 
-import com.engine.common.objects.Properties
-import com.engine.damage.IDamageable
-import com.engine.entities.IGameEntity
-import com.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.damage.IDamageable
+import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 
 abstract class AbstractProjectile(game: MegamanMaverickGame) : MegaGameEntity(game), IProjectileEntity, ISpritesEntity {
 
-    companion object {
-        const val DEFAULT_PROJECTILE_CULL_TIME = 0.5f
-    }
-
-    override var owner: IGameEntity? = null
+    override var owner: GameEntity? = null
 
     protected var onDamageInflictedTo: ((IDamageable) -> Unit)? = null
     protected var movementScalar = 1f
 
     override fun init() {
-        super.init()
         addComponents(defineProjectileComponents())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
 
-        owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
+        owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
         onDamageInflictedTo = spawnProps.get(ConstKeys.ON_DAMAGE_INFLICTED_TO) as ((IDamageable) -> Unit)?
         movementScalar = spawnProps.getOrDefault("${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}", 1f, Float::class)
 

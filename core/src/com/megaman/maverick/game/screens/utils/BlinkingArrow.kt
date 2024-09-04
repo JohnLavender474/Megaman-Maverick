@@ -3,13 +3,13 @@ package com.megaman.maverick.game.screens.utils
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Vector2
-import com.engine.common.extensions.getTextureRegion
-import com.engine.common.interfaces.Updatable
-import com.engine.common.time.Timer
-import com.engine.drawables.IDrawable
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.setCenter
-import com.engine.drawables.sprites.setSize
+import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.interfaces.Updatable
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.drawables.IDrawable
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.setCenter
+import com.mega.game.engine.drawables.sprites.setSize
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.TextureAsset
 

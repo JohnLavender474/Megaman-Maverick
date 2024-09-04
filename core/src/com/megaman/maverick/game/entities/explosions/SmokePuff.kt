@@ -2,44 +2,40 @@ package com.megaman.maverick.game.entities.explosions
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
-import com.engine.animations.Animation
-import com.engine.animations.AnimationsComponent
-import com.engine.animations.Animator
-import com.engine.animations.IAnimation
-import com.engine.common.enums.Direction
-import com.engine.common.enums.Position
-import com.engine.common.extensions.gdxArrayOf
-import com.engine.common.extensions.getTextureRegion
-import com.engine.common.extensions.isAny
-import com.engine.common.objects.Properties
-import com.engine.common.shapes.GameRectangle
-import com.engine.damage.IDamageable
-import com.engine.damage.IDamager
-import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.drawables.sorting.DrawingPriority
-import com.engine.drawables.sorting.DrawingSection
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setPosition
-import com.engine.drawables.sprites.setSize
-import com.engine.entities.IGameEntity
-import com.engine.entities.contracts.IBodyEntity
-import com.engine.entities.contracts.ISpritesEntity
-import com.engine.updatables.UpdatablesComponent
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
-import com.engine.world.Fixture
+import com.mega.game.engine.animations.Animation
+import com.mega.game.engine.animations.AnimationsComponent
+import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.extensions.isAny
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.damage.IDamageable
+import com.mega.game.engine.damage.IDamager
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setPosition
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.world.Body
+import com.mega.game.engine.world.BodyComponent
+import com.mega.game.engine.world.BodyType
+import com.mega.game.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
-import com.megaman.maverick.game.entities.contracts.IHazard
-import com.megaman.maverick.game.entities.contracts.IOwnable
+import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
@@ -51,7 +47,7 @@ class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDam
         private var smokePuffRegion: TextureRegion? = null
     }
 
-    override var owner: IGameEntity? = null
+    override var owner: GameEntity? = null
     override var directionRotation: Direction?
         get() = body.cardinalRotation
         set(value) {
@@ -72,9 +68,9 @@ class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDam
         addComponent(defineUpdatablesComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
-        owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
+        owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
         directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         val position = when (directionRotation!!) {
@@ -92,7 +88,9 @@ class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDam
                 (damageable.isAny(AbstractEnemy::class, IHazard::class) && owner is Megaman)
 
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent({ if (animation.isFinished()) kill() })
+    private fun defineUpdatablesComponent() = UpdatablesComponent({
+        if (animation.isFinished()) destroy()
+    })
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
@@ -119,7 +117,7 @@ class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDam
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setOriginCenter()
             _sprite.rotation = directionRotation!!.rotation
-            val position = when(directionRotation!!) {
+            val position = when (directionRotation!!) {
                 Direction.UP -> Position.BOTTOM_CENTER
                 Direction.DOWN -> Position.TOP_CENTER
                 Direction.LEFT -> Position.CENTER_RIGHT

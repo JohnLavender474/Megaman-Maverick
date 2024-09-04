@@ -2,19 +2,20 @@ package com.megaman.maverick.game.world
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
-import com.engine.common.GameLogger
-import com.engine.common.enums.Direction
-import com.engine.common.enums.Facing
-import com.engine.common.enums.ProcessState
-import com.engine.common.extensions.objectSetOf
-import com.engine.common.interfaces.isFacing
-import com.engine.common.shapes.GameLine
-import com.engine.common.shapes.GameRectangle
-import com.engine.common.shapes.ShapeUtils
-import com.engine.damage.IDamageable
-import com.engine.damage.IDamager
-import com.engine.world.Contact
-import com.engine.world.IContactListener
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.enums.Facing
+import com.mega.game.engine.common.enums.ProcessState
+import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.interfaces.isFacing
+import com.mega.game.engine.common.shapes.GameLine
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.shapes.ShapeUtils
+import com.mega.game.engine.damage.IDamageable
+import com.mega.game.engine.damage.IDamager
+import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.world.Contact
+import com.mega.game.engine.world.IContactListener
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
@@ -124,8 +125,8 @@ class MegaContactListener(
             printDebugLog(contact, "beginContact(): Body-Body, contact = $contact")
             val (bodyFixture1, bodyFixture2) = contact.getFixturesInOrder(FixtureType.BODY, FixtureType.BODY)!!
 
-            if (bodyFixture1.hasHitByBodyReceiver()) bodyFixture1.getHitByBody(bodyFixture2.getEntity())
-            if (bodyFixture2.hasHitByBodyReceiver()) bodyFixture2.getHitByBody(bodyFixture1.getEntity())
+            if (bodyFixture1.hasHitByBodyReceiver()) bodyFixture1.getHitByBody(bodyFixture2.getEntity() as IBodyEntity)
+            if (bodyFixture2.hasHitByBodyReceiver()) bodyFixture2.getHitByBody(bodyFixture1.getEntity() as IBodyEntity)
         }
 
         // side, block
@@ -486,7 +487,7 @@ class MegaContactListener(
                 FixtureType.TELEPORTER_LISTENER, FixtureType.TELEPORTER
             )!!
 
-            val teleporterListener = teleporterListenerFixture.getEntity()
+            val teleporterListener = teleporterListenerFixture.getEntity() as IBodyEntity
             teleporterListener.body.setBodySense(BodySense.TELEPORTING, true)
 
             val teleporterEntity = teleporterFixture.getEntity() as ITeleporterEntity

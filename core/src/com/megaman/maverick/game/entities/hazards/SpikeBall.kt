@@ -3,37 +3,37 @@ package com.megaman.maverick.game.entities.hazards
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
-import com.engine.common.extensions.getTextureAtlas
-import com.engine.common.objects.Properties
-import com.engine.common.shapes.GameCircle
-import com.engine.common.shapes.GameRectangle
-import com.engine.damage.IDamager
-import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.drawables.shapes.IDrawableShape
-import com.engine.drawables.sorting.DrawingPriority
-import com.engine.drawables.sorting.DrawingSection
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setCenter
-import com.engine.drawables.sprites.setSize
-import com.engine.entities.contracts.IBodyEntity
-import com.engine.entities.contracts.IDrawableShapesEntity
-import com.engine.entities.contracts.IMotionEntity
-import com.engine.entities.contracts.ISpritesEntity
-import com.engine.motion.MotionComponent
-import com.engine.motion.MotionComponent.MotionDefinition
-import com.engine.motion.Pendulum
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
-import com.engine.world.Fixture
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.shapes.GameCircle
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.damage.IDamager
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setCenter
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.entities.contracts.IDrawableShapesEntity
+import com.mega.game.engine.entities.contracts.IMotionEntity
+import com.mega.game.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.motion.MotionComponent
+import com.mega.game.engine.motion.MotionComponent.MotionDefinition
+import com.mega.game.engine.motion.Pendulum
+import com.mega.game.engine.world.Body
+import com.mega.game.engine.world.BodyComponent
+import com.mega.game.engine.world.BodyType
+import com.mega.game.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.IHazard
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
@@ -60,8 +60,8 @@ class SpikeBall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
         addComponent(defineSpritesComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         val length = spawnProps.get(ConstKeys.LENGTH, Float::class)!!
         val gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, PENDULUM_GRAVITY, Float::class)
@@ -99,7 +99,7 @@ class SpikeBall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
     }
 
     override fun onDestroy() {
-        super<MegaGameEntity>.onDestroy()
+        super.onDestroy()
         clearMotionDefinitions()
         val spritesIter = sprites.iterator()
         while (spritesIter.hasNext) {

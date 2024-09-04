@@ -1,7 +1,7 @@
 package com.megaman.maverick.game.utils
 
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
 import com.megaman.maverick.game.entities.EntityType
 
 object StringTo_EntityType_EntityName_Props_Parser {

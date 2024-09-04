@@ -1,14 +1,14 @@
 package com.megaman.maverick.game.entities.factories
 
-import com.engine.common.interfaces.IClearable
-import com.engine.common.interfaces.Initializable
-import com.engine.entities.IGameEntity
-import com.engine.factories.Factories
+import com.mega.game.engine.common.interfaces.IClearable
+import com.mega.game.engine.common.interfaces.Initializable
+import com.mega.game.engine.factories.Factories
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.impl.*
 
-object EntityFactories : Factories<IGameEntity>(), Initializable, IClearable {
+object EntityFactories : Factories<MegaGameEntity>(), Initializable, IClearable {
 
     fun initialize(game: MegamanMaverickGame) {
         factories.put(EntityType.BLOCK, BlocksFactory(game))

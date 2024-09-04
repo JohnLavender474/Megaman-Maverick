@@ -6,44 +6,44 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
-import com.engine.animations.Animation
-import com.engine.animations.AnimationsComponent
-import com.engine.animations.Animator
-import com.engine.animations.IAnimation
-import com.engine.audio.AudioComponent
-import com.engine.common.enums.Direction
-import com.engine.common.enums.Position
-import com.engine.common.extensions.*
-import com.engine.common.objects.Properties
-import com.engine.common.shapes.GameRectangle
-import com.engine.common.time.Timer
-import com.engine.damage.IDamageable
-import com.engine.damage.IDamager
-import com.engine.drawables.fonts.BitmapFontHandle
-import com.engine.drawables.fonts.FontsComponent
-import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.drawables.shapes.IDrawableShape
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setPosition
-import com.engine.drawables.sprites.setSize
-import com.engine.entities.IGameEntity
-import com.engine.entities.contracts.*
-import com.engine.events.Event
-import com.engine.events.IEventListener
-import com.engine.updatables.UpdatablesComponent
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
-import com.engine.world.Fixture
+import com.mega.game.engine.animations.Animation
+import com.mega.game.engine.animations.AnimationsComponent
+import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.audio.AudioComponent
+import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.extensions.*
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamageable
+import com.mega.game.engine.damage.IDamager
+import com.mega.game.engine.drawables.fonts.BitmapFontHandle
+import com.mega.game.engine.drawables.fonts.FontsComponent
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setPosition
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.contracts.*
+import com.mega.game.engine.events.Event
+import com.mega.game.engine.events.IEventListener
+import com.mega.game.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.world.Body
+import com.mega.game.engine.world.BodyComponent
+import com.mega.game.engine.world.BodyType
+import com.mega.game.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntitySuppliers
 import com.megaman.maverick.game.events.EventType
@@ -76,7 +76,7 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    override var children = Array<IGameEntity>()
+    override var children = Array<GameEntity>()
     override var directionRotation: Direction? = null
     override val eventKeyMask = objectSetOf<Any>(EventType.PLAYER_SPAWN, EventType.END_ROOM_TRANS)
 
@@ -91,8 +91,8 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
     lateinit var text: String
         private set
 
-    private val offEntitySuppliers = Array<Pair<() -> IGameEntity, Properties>>()
-    private val onEntitySuppliers = Array<Pair<() -> IGameEntity, Properties>>()
+    private val offEntitySuppliers = Array<Pair<() -> GameEntity, Properties>>()
+    private val onEntitySuppliers = Array<Pair<() -> GameEntity, Properties>>()
 
     private val switcharooArrowBlinkTimer = Timer(SWITCHAROO_ARROW_BLINK_DUR)
 
@@ -129,9 +129,9 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
         addComponent(defineFontsComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
+    override fun onSpawn(spawnProps: Properties) {
         game.eventsMan.addListener(this)
-        super.spawn(spawnProps)
+        super.onSpawn(spawnProps)
 
         type = spawnProps.get(ConstKeys.TYPE, String::class)!!
 
@@ -178,9 +178,9 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
     }
 
     override fun onDestroy() {
-        super<MegaGameEntity>.onDestroy()
+        super.onDestroy()
         game.eventsMan.removeListener(this)
-        children.forEach { it.kill() }
+        children.forEach { it.destroy() }
         children.clear()
         offEntitySuppliers.clear()
         onEntitySuppliers.clear()
@@ -188,10 +188,10 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
 
     override fun onEvent(event: Event) {
         when (event.key) {
-            EventType.PLAYER_SPAWN -> kill() // this assumes that a player spawn is never in the same room as a Togglee
+            EventType.PLAYER_SPAWN -> destroy() // this assumes that a player spawn is never in the same room as a Togglee
             EventType.END_ROOM_TRANS -> {
                 val newRoom = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!.name
-                if (spawnRoom != newRoom) kill()
+                if (spawnRoom != newRoom) destroy()
             }
         }
     }
@@ -199,14 +199,14 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
     override fun canDamage(damageable: IDamageable) = type == ENEMY_TYPE
 
     private fun spawnEntities(on: Boolean) {
-        children.forEach { it.kill() }
+        children.forEach { it.destroy() }
         children.clear()
 
         val entitiesToSpawn = if (on) onEntitySuppliers else offEntitySuppliers
         entitiesToSpawn.forEach {
             val entity = it.first.invoke()
             val props = it.second
-            game.engine.spawn(entity, props)
+            entity.spawn(props)
             children.add(entity)
         }
     }

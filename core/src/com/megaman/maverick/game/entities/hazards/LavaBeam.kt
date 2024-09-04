@@ -2,38 +2,38 @@ package com.megaman.maverick.game.entities.hazards
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
-import com.engine.animations.Animation
-import com.engine.animations.AnimationsComponent
-import com.engine.animations.Animator
-import com.engine.common.enums.Direction
-import com.engine.common.extensions.gdxArrayOf
-import com.engine.common.extensions.getTextureRegion
-import com.engine.common.extensions.objectMapOf
-import com.engine.common.objects.Properties
-import com.engine.common.shapes.GameRectangle
-import com.engine.cullables.CullablesComponent
-import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.drawables.sorting.DrawingPriority
-import com.engine.drawables.sorting.DrawingSection
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setCenter
-import com.engine.entities.contracts.IAnimatedEntity
-import com.engine.entities.contracts.IBodyEntity
-import com.engine.entities.contracts.ICullableEntity
-import com.engine.entities.contracts.ISpritesEntity
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
-import com.engine.world.Fixture
+import com.mega.game.engine.animations.Animation
+import com.mega.game.engine.animations.AnimationsComponent
+import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.cullables.CullablesComponent
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setCenter
+import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.entities.contracts.ICullableEntity
+import com.mega.game.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.world.Body
+import com.mega.game.engine.world.BodyComponent
+import com.mega.game.engine.world.BodyType
+import com.mega.game.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.IHazard
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
@@ -55,7 +55,6 @@ class LavaBeam(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
     override fun getEntityType() = EntityType.HAZARD
 
     override fun init() {
-        super<MegaGameEntity>.init()
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, "LavaBeam")
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
@@ -63,8 +62,8 @@ class LavaBeam(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         addComponent(defineCullablesComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
         directionRotation = spawnProps.get(ConstKeys.DIRECTION, Direction::class)!!
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         when (directionRotation!!) {

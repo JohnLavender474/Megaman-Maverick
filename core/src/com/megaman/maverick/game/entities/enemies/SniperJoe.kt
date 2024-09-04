@@ -6,40 +6,40 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
-import com.engine.animations.Animation
-import com.engine.animations.AnimationsComponent
-import com.engine.animations.Animator
-import com.engine.animations.IAnimation
-import com.engine.common.enums.Direction
-import com.engine.common.enums.Facing
-import com.engine.common.enums.Position
-import com.engine.common.enums.ProcessState
-import com.engine.common.extensions.equalsAny
-import com.engine.common.extensions.gdxArrayOf
-import com.engine.common.extensions.getTextureAtlas
-import com.engine.common.extensions.objectMapOf
-import com.engine.common.interfaces.IFaceable
-import com.engine.common.interfaces.Updatable
-import com.engine.common.normalizedTrajectory
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameRectangle
-import com.engine.common.shapes.toGameRectangle
-import com.engine.common.time.TimeMarkedRunnable
-import com.engine.common.time.Timer
-import com.engine.damage.IDamager
-import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.drawables.shapes.IDrawableShape
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setPosition
-import com.engine.drawables.sprites.setSize
-import com.engine.entities.IGameEntity
-import com.engine.updatables.UpdatablesComponent
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
-import com.engine.world.Fixture
+import com.mega.game.engine.animations.Animation
+import com.mega.game.engine.animations.AnimationsComponent
+import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.enums.Facing
+import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.enums.ProcessState
+import com.mega.game.engine.common.extensions.equalsAny
+import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.interfaces.IFaceable
+import com.mega.game.engine.common.interfaces.Updatable
+import com.mega.game.engine.common.normalizedTrajectory
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.shapes.toGameRectangle
+import com.mega.game.engine.common.time.TimeMarkedRunnable
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamager
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setPosition
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.world.Body
+import com.mega.game.engine.world.BodyComponent
+import com.mega.game.engine.world.BodyType
+import com.mega.game.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -158,8 +158,8 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         addComponent(defineAnimationsComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
 
         val spawn =
             if (spawnProps.containsKey(ConstKeys.BOUNDS)) spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
@@ -414,8 +414,8 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
 
     private fun throwShield() {
         val shield = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SNIPER_JOE_SHIELD)!!
-        game.engine.spawn(
-            shield, props(
+        shield.spawn(
+            props(
                 ConstKeys.POSITION to body.getCenter(), ConstKeys.TRAJECTORY to normalizedTrajectory(
                     body.getCenter(), getMegaman().body.getCenter(), SHIELD_VEL * ConstVals.PPM
                 ), ConstKeys.OWNER to this
@@ -455,7 +455,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
             ConstKeys.DIRECTION to directionRotation
         )
 
-        val entity: IGameEntity = if (type == SNOW_TYPE) {
+        val entity: GameEntity = if (type == SNOW_TYPE) {
             trajectory.x = SNOWBALL_X * ConstVals.PPM * facing.value
             trajectory.y = SNOWBALL_Y * ConstVals.PPM
 
@@ -474,6 +474,6 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
             EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
         }
 
-        game.engine.spawn(entity, props)
+        entity.spawn(props)
     }
 }

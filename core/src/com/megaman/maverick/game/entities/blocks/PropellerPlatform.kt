@@ -1,26 +1,26 @@
 package com.megaman.maverick.game.entities.blocks
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.engine.animations.Animation
-import com.engine.animations.AnimationsComponent
-import com.engine.animations.Animator
-import com.engine.common.enums.Direction
-import com.engine.common.enums.Position
-import com.engine.common.extensions.getTextureRegion
-import com.engine.common.extensions.objectSetOf
-import com.engine.common.objects.Properties
-import com.engine.common.shapes.GameRectangle
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setPosition
-import com.engine.drawables.sprites.setSize
-import com.engine.entities.contracts.IAnimatedEntity
-import com.engine.entities.contracts.IMotionEntity
-import com.engine.entities.contracts.ISpritesEntity
-import com.engine.events.Event
-import com.engine.events.IEventListener
-import com.engine.motion.MotionComponent
-import com.engine.motion.Trajectory
+import com.mega.game.engine.animations.Animation
+import com.mega.game.engine.animations.AnimationsComponent
+import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setPosition
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.entities.contracts.IMotionEntity
+import com.mega.game.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.events.Event
+import com.mega.game.engine.events.IEventListener
+import com.mega.game.engine.motion.MotionComponent
+import com.mega.game.engine.motion.Trajectory
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -44,16 +44,16 @@ class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity,
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "PropellerPlatform")
-        super<Block>.init()
+        super.init()
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
         addComponent(MotionComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
+    override fun onSpawn(spawnProps: Properties) {
         game.eventsMan.addListener(this)
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
-        super.spawn(spawnProps)
+        super.onSpawn(spawnProps)
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         if (spawnProps.containsKey(ConstKeys.DIRECTION)) {
             var direction = spawnProps.get(ConstKeys.DIRECTION)
@@ -68,7 +68,7 @@ class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity,
     }
 
     override fun onDestroy() {
-        super<Block>.onDestroy()
+        super.onDestroy()
         game.eventsMan.removeListener(this)
         clearMotionDefinitions()
     }
@@ -93,7 +93,7 @@ class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity,
             _sprite.setOriginCenter()
             _sprite.rotation = directionRotation?.rotation ?: 0f
             val position = when (directionRotation!!) {
-                Direction.UP, null -> Position.TOP_CENTER
+                Direction.UP -> Position.TOP_CENTER
                 Direction.DOWN -> Position.BOTTOM_CENTER
                 Direction.LEFT -> Position.CENTER_LEFT
                 Direction.RIGHT -> Position.CENTER_RIGHT

@@ -3,34 +3,33 @@ package com.megaman.maverick.game.entities.hazards
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
-import com.engine.common.GameLogger
-import com.engine.common.enums.Direction
-import com.engine.common.extensions.objectMapOf
-import com.engine.common.extensions.toGdxArray
-import com.engine.common.objects.Loop
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameRectangle
-import com.engine.common.time.Timer
-import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.drawables.shapes.IDrawableShape
-import com.engine.entities.IGameEntity
-import com.engine.entities.contracts.IBodyEntity
-import com.engine.entities.contracts.IParentEntity
-import com.engine.updatables.UpdatablesComponent
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
-import com.engine.world.Fixture
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.toGdxArray
+import com.mega.game.engine.common.objects.Loop
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.entities.contracts.IParentEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.world.Body
+import com.mega.game.engine.world.BodyComponent
+import com.mega.game.engine.world.BodyType
+import com.mega.game.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.IHazard
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.HazardsFactory
-
 import com.megaman.maverick.game.world.BodyComponentCreator
 import kotlin.math.roundToInt
 
@@ -48,7 +47,7 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
         const val SHOCK_DURATION = 0.5f
     }
 
-    override var children = Array<IGameEntity>()
+    override var children = Array<GameEntity>()
 
     val currentState: ElectrocutieState
         get() = loop.getCurrent()
@@ -72,10 +71,10 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
         addComponent(defineBodyComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
+    override fun onSpawn(spawnProps: Properties) {
         if (!children.isEmpty) throw IllegalStateException("Children array should be empty when spawning ElectrocutieParent")
         GameLogger.debug(TAG, "spawn(): spawnProps = $spawnProps")
-        super.spawn(spawnProps)
+        super.onSpawn(spawnProps)
 
         loop.reset()
         timers.values().forEach { it.reset() }
@@ -100,7 +99,7 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
             )
             val bottomElectrocutieChild =
                 EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.ELECTROCUTIE_CHILD)!! as ElectrocutieChild
-            game.engine.spawn(bottomElectrocutieChild, bottomElectrocutieChildProps)
+            bottomElectrocutieChild.spawn(bottomElectrocutieChildProps)
             children.add(bottomElectrocutieChild)
 
             val topElectrocutieProps = props(
@@ -110,15 +109,15 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
             )
             val topElectrocutieChild =
                 EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.ELECTROCUTIE_CHILD)!! as ElectrocutieChild
-            game.engine.spawn(topElectrocutieChild, topElectrocutieProps)
+            topElectrocutieChild.spawn(topElectrocutieProps)
             children.add(topElectrocutieChild)
 
             val length = bounds.height.roundToInt() / ConstVals.PPM
             for (i in 0 until length) {
                 val position = body.getBottomCenterPoint().add(0f, i * ConstVals.PPM.toFloat())
                 val bolt = EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.BOLT)!! as Bolt
-                game.engine.spawn(
-                    bolt, props(
+                bolt.spawn(
+                    props(
                         ConstKeys.POSITION to position,
                         ConstKeys.DIRECTION to Direction.UP,
                         ConstKeys.PARENT to this,
@@ -138,7 +137,7 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
             )
             val bottomElectrocutieChild =
                 EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.ELECTROCUTIE_CHILD)!! as ElectrocutieChild
-            game.engine.spawn(bottomElectrocutieChild, bottomElectrocutieProps)
+            bottomElectrocutieChild.spawn(bottomElectrocutieProps)
             children.add(bottomElectrocutieChild)
 
             val topElectrocutieProps = props(
@@ -148,15 +147,15 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
             )
             val topElectrocutieChild =
                 EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.ELECTROCUTIE_CHILD)!! as ElectrocutieChild
-            game.engine.spawn(topElectrocutieChild, topElectrocutieProps)
+            topElectrocutieChild.spawn(topElectrocutieProps)
             children.add(topElectrocutieChild)
 
             val length = bounds.width.roundToInt() / ConstVals.PPM
             for (i in 0 until length) {
                 val position = body.getCenterLeftPoint().add(i * ConstVals.PPM.toFloat(), 0f)
                 val bolt = Bolt(game)
-                game.engine.spawn(
-                    bolt, props(
+                bolt.spawn(
+                    props(
                         ConstKeys.POSITION to position,
                         ConstKeys.DIRECTION to Direction.RIGHT,
                         ConstKeys.PARENT to this,
@@ -169,8 +168,8 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
     }
 
     override fun onDestroy() {
-        super<MegaGameEntity>.onDestroy()
-        children.forEach { it.kill() }
+        super.onDestroy()
+        children.forEach { it.destroy() }
         children.clear()
     }
 

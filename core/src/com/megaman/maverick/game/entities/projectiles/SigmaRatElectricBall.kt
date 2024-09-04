@@ -4,30 +4,30 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
-import com.engine.animations.Animation
-import com.engine.animations.AnimationsComponent
-import com.engine.animations.Animator
-import com.engine.animations.IAnimation
-import com.engine.common.enums.Direction
-import com.engine.common.extensions.getTextureAtlas
-import com.engine.common.extensions.objectMapOf
-import com.engine.common.getOverlapPushDirection
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameRectangle
-import com.engine.common.time.Timer
-import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.drawables.shapes.IDrawableShape
-import com.engine.drawables.sorting.DrawingPriority
-import com.engine.drawables.sorting.DrawingSection
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setCenter
-import com.engine.drawables.sprites.setSize
-import com.engine.entities.IGameEntity
-import com.engine.entities.contracts.IAnimatedEntity
-import com.engine.updatables.UpdatablesComponent
-import com.engine.world.*
+import com.mega.game.engine.animations.Animation
+import com.mega.game.engine.animations.AnimationsComponent
+import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.getOverlapPushDirection
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setCenter
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -50,7 +50,7 @@ class SigmaRatElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game)
         private var hitRegion: TextureRegion? = null
     }
 
-    override var owner: IGameEntity? = null
+    override var owner: GameEntity? = null
 
     private val hitTimer = Timer(HIT_DUR)
 
@@ -68,9 +68,9 @@ class SigmaRatElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game)
         addComponent(defineAnimationsComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
-        owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
+        owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
         val trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2(), Vector2::class)
@@ -98,7 +98,7 @@ class SigmaRatElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game)
             hitTimer.update(delta)
             if (hitTimer.isFinished()) {
                 spawnExplosion()
-                kill()
+                destroy()
             }
         }
     })
@@ -107,8 +107,8 @@ class SigmaRatElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game)
         val explosion = EntityFactories.fetch(
             EntityType.EXPLOSION, ExplosionsFactory.SIGMA_RAT_ELECTRIC_BALL_EXPLOSION
         )
-        game.engine.spawn(
-            explosion!!, props(
+        explosion!!.spawn(
+            props(
                 ConstKeys.POSITION to body.getBottomCenterPoint(),
                 ConstKeys.DIRECTION to (explosionDirection ?: Direction.UP)
             )

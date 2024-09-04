@@ -1,9 +1,9 @@
 package com.megaman.maverick.game.entities.special
 
-import com.engine.common.objects.Properties
-import com.engine.common.shapes.GameRectangle
-import com.engine.entities.contracts.IBodyEntity
-import com.engine.world.*
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -36,13 +36,14 @@ class Force(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity {
 
     override fun getEntityType() = EntityType.SPECIAL
 
+    override fun getTag(): String = TAG
+
     override fun init() {
-        super<MegaGameEntity>.init()
         addComponent(defineBodyComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)

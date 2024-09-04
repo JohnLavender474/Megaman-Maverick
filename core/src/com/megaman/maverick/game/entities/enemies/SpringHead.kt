@@ -2,30 +2,30 @@ package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.math.Rectangle
-import com.engine.animations.Animation
-import com.engine.animations.AnimationsComponent
-import com.engine.animations.Animator
-import com.engine.animations.IAnimation
-import com.engine.common.enums.Direction
-import com.engine.common.enums.Facing
-import com.engine.common.enums.Position
-import com.engine.common.extensions.getTextureAtlas
-import com.engine.common.extensions.objectMapOf
-import com.engine.common.interfaces.IFaceable
-import com.engine.common.interfaces.isFacing
-import com.engine.common.objects.Properties
-import com.engine.common.shapes.GameRectangle
-import com.engine.common.time.Timer
-import com.engine.damage.IDamager
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setPosition
-import com.engine.drawables.sprites.setSize
-import com.engine.updatables.UpdatablesComponent
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
-import com.engine.world.Fixture
+import com.mega.game.engine.animations.Animation
+import com.mega.game.engine.animations.AnimationsComponent
+import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.enums.Facing
+import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.interfaces.IFaceable
+import com.mega.game.engine.common.interfaces.isFacing
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamager
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setPosition
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.world.Body
+import com.mega.game.engine.world.BodyComponent
+import com.mega.game.engine.world.BodyType
+import com.mega.game.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -79,8 +79,8 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         addComponent(defineAnimationsComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
         bounceTimer.setToEnd()
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
@@ -157,7 +157,8 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
             body.physics.velocity.x =
                 if ((isFacing(Facing.LEFT) && !body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
-                    (isFacing(Facing.RIGHT) && !body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))) 0f
+                    (isFacing(Facing.RIGHT) && !body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
+                ) 0f
                 else (if (getMegaman().body.overlaps(speedUpScanner)) SPEED_SUPER else SPEED_NORMAL) * ConstVals.PPM * facing.value
         }
     }

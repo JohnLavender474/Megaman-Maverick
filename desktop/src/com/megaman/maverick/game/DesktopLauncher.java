@@ -1,7 +1,6 @@
 package com.megaman.maverick.game;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowAdapter;
@@ -69,7 +68,7 @@ public class DesktopLauncher {
         } catch (ParameterException e) {
             System.err.println("[Application] Error in main method while parsing parameters: " + e.getMessage());
             jCommander.usage();
-            Gdx.app.exit();
+            System.exit(1);
         }
 
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
@@ -93,7 +92,7 @@ public class DesktopLauncher {
         } else {
             System.err.println("[Application] Error in main method: Invalid start screen option.");
             jCommander.usage();
-            Gdx.app.exit();
+            System.exit(1);
             return;
         }
         params.setStartScreen(startScreenOption);

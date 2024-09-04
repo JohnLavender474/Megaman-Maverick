@@ -1,9 +1,9 @@
 package com.megaman.maverick.game.controllers
 
-import com.engine.common.GameLogger
-import com.engine.controller.ControllerUtils
-import com.engine.controller.buttons.Buttons
-import com.engine.controller.polling.ControllerPoller
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.controller.ControllerUtils
+import com.mega.game.engine.controller.buttons.Buttons
+import com.mega.game.engine.controller.polling.ControllerPoller
 
 class MegaControllerPoller(buttons: Buttons) : ControllerPoller(buttons) {
 

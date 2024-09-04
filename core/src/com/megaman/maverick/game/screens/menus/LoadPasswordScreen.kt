@@ -2,8 +2,8 @@ package com.megaman.maverick.game.screens.menus
 
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
-import com.engine.drawables.fonts.BitmapFontHandle
-import com.engine.screens.menus.IMenuButton
+import com.mega.game.engine.drawables.fonts.BitmapFontHandle
+import com.mega.game.engine.screens.menus.IMenuButton
 import com.megaman.maverick.game.MegamanMaverickGame
 
 class LoadPasswordScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MAIN_MENU) {

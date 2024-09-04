@@ -1,6 +1,6 @@
 package com.megaman.maverick.game.screens.levels
 
-import com.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.objectMapOf
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.screens.ScreenEnum
 

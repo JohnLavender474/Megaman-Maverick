@@ -7,40 +7,40 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.OrderedSet
-import com.engine.animations.Animation
-import com.engine.animations.AnimationsComponent
-import com.engine.animations.Animator
-import com.engine.animations.IAnimation
-import com.engine.common.enums.Direction
-import com.engine.common.enums.Facing
-import com.engine.common.enums.Position
-import com.engine.common.extensions.gdxArrayOf
-import com.engine.common.extensions.getTextureAtlas
-import com.engine.common.extensions.objectMapOf
-import com.engine.common.extensions.objectSetOf
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameRectangle
-import com.engine.common.shapes.getCenter
-import com.engine.common.shapes.getPosition
-import com.engine.common.shapes.toGameRectangle
-import com.engine.common.time.Timer
-import com.engine.damage.IDamageable
-import com.engine.damage.IDamager
-import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.drawables.shapes.IDrawableShape
-import com.engine.drawables.sorting.DrawingPriority
-import com.engine.drawables.sorting.DrawingSection
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setPosition
-import com.engine.drawables.sprites.setSize
-import com.engine.entities.contracts.IAnimatedEntity
-import com.engine.updatables.UpdatablesComponent
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
-import com.engine.world.Fixture
+import com.mega.game.engine.animations.Animation
+import com.mega.game.engine.animations.AnimationsComponent
+import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.enums.Facing
+import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.shapes.getCenter
+import com.mega.game.engine.common.shapes.getPosition
+import com.mega.game.engine.common.shapes.toGameRectangle
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamageable
+import com.mega.game.engine.damage.IDamager
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setPosition
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.world.Body
+import com.mega.game.engine.world.BodyComponent
+import com.mega.game.engine.world.BodyType
+import com.mega.game.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -175,12 +175,12 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
             mouthOpenRegion = atlas.findRegion("GutsTank/MouthOpen")
             mouthClosedRegion = atlas.findRegion("GutsTank/MouthClosed")
         }
-        super<AbstractBoss>.init()
+        super.init()
         addComponent(defineAnimationsComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomLeftPoint()
         body.setSize(BODY_WIDTH * ConstVals.PPM, BODY_HEIGHT * ConstVals.PPM)
@@ -191,8 +191,8 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
         tankBlock = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.STANDARD)!! as Block
         val tankBlockBounds =
             GameRectangle(spawn.x, spawn.y, BODY_WIDTH * ConstVals.PPM, TANK_BLOCK_HEIGHT * ConstVals.PPM)
-        game.engine.spawn(
-            tankBlock!!, props(
+        tankBlock!!.spawn(
+            props(
                 ConstKeys.CULL_OUT_OF_BOUNDS to false,
                 ConstKeys.BOUNDS to tankBlockBounds,
                 ConstKeys.FIXTURE_LABELS to objectSetOf(FixtureLabel.NO_PROJECTILE_COLLISION),
@@ -206,8 +206,8 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
         val bodyBlockBounds = GameRectangle().setSize(
             BODY_BLOCK_WIDTH * ConstVals.PPM, BODY_BLOCK_HEIGHT * ConstVals.PPM
         ).setBottomRightToPoint(tankBlockBounds.getBottomRightPoint())
-        game.engine.spawn(
-            bodyBlock!!, props(
+        bodyBlock!!.spawn(
+            props(
                 ConstKeys.CULL_OUT_OF_BOUNDS to false,
                 ConstKeys.BOUNDS to bodyBlockBounds,
                 ConstKeys.FIXTURE_LABELS to objectSetOf(
@@ -223,7 +223,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
         bodyBlockOffset = bodyBlockBounds.getCenter().sub(body.getCenter())
 
         fist = GutsTankFist(game)
-        game.engine.spawn(fist!!, props(ConstKeys.PARENT to this))
+        fist!!.spawn(props(ConstKeys.PARENT to this))
 
         frontPoint = spawnProps.get(ConstKeys.FRONT, RectangleMapObject::class)!!.rectangle.getPosition()
         backPoint = spawnProps.get(ConstKeys.BACK, RectangleMapObject::class)!!.rectangle.getPosition()
@@ -258,16 +258,16 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
     }
 
     override fun onDestroy() {
-        super<AbstractBoss>.onDestroy()
-        runningMetsSet.forEach { it.kill() }
+        super.onDestroy()
+        runningMetsSet.forEach { it.destroy() }
         runningMetsSet.clear()
-        flyingMetsSet.forEach { it.kill() }
+        flyingMetsSet.forEach { it.destroy() }
         flyingMetsSet.clear()
-        fist?.kill()
+        fist?.destroy()
         fist = null
-        tankBlock?.kill()
+        tankBlock?.destroy()
         tankBlock = null
-        bodyBlock?.kill()
+        bodyBlock?.destroy()
         bodyBlock = null
     }
 
@@ -280,9 +280,9 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
         flyingMetsSet.clear()
         fist?.setHealth(0)
         fist = null
-        tankBlock?.kill()
+        tankBlock?.destroy()
         tankBlock = null
-        bodyBlock?.kill()
+        bodyBlock?.destroy()
         bodyBlock = null
     }
 
@@ -318,14 +318,14 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
             val runningMetIter = runningMetsSet.iterator()
             while (runningMetIter.hasNext()) {
                 val met = runningMetIter.next()
-                if (met.body.getMaxX() <= killerWall.getMaxX()) met.kill()
-                if (met.dead) runningMetIter.remove()
+                if (met.body.getMaxX() <= killerWall.getMaxX()) met.destroy()
+                if (!met.spawned) runningMetIter.remove()
             }
 
             val flyingMetIter = flyingMetsSet.iterator()
             while (flyingMetIter.hasNext()) {
                 val met = flyingMetIter.next()
-                if (met.dead) flyingMetIter.remove()
+                if (!met.spawned) flyingMetIter.remove()
             }
 
             if (!tankBlock!!.body.getCenter()
@@ -349,7 +349,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                 }
             }
 
-            if (fist?.dead == true) fist = null
+            if (fist != null && !fist!!.spawned) fist = null
             if (fist?.state == GutsTankFist.GutsTankFistState.ATTACHED) {
                 launchFistDelayTimer.update(delta)
                 if (launchFistDelayTimer.isFinished() && !fist!!.body.overlaps(getMegaman().body as Rectangle)) {
@@ -367,8 +367,8 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                         val position = body.getCenter().add(-1.65f * ConstVals.PPM, 1.85f * ConstVals.PPM)
                         val xFactor = 1f - ((abs(getMegaman().body.y - position.y) / ConstVals.PPM) / 10f) + 0.2f
                         val impulseX = (getMegaman().body.x - position.x) * xFactor
-                        game.engine.spawn(
-                            bullet, props(
+                        bullet.spawn(
+                            props(
                                 ConstKeys.POSITION to position,
                                 ConstKeys.TRAJECTORY to Vector2(impulseX, CHUNKED_BULLET_VELOCITY_Y * ConstVals.PPM),
                                 ConstKeys.GRAVITY to Vector2(0f, CHUNKED_BULLET_GRAVITY * ConstVals.PPM),
@@ -392,8 +392,8 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                         val blast = EntityFactories.fetch(EntityType.PROJECTILE, "PurpleBlast")!!
                         val angle = BLAST_ANGLES.random()
                         val trajectory = Vector2(BLAST_VELOCITY * ConstVals.PPM, 0f).setAngleDeg(angle)
-                        game.engine.spawn(
-                            blast, props(
+                        blast.spawn(
+                            props(
                                 ConstKeys.POSITION to body.getCenter().add(
                                     -1.65f * ConstVals.PPM, 1.5f * ConstVals.PPM
                                 ),
@@ -416,8 +416,8 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                         if (runningMetDelayTimer.isFinished()) {
                             requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
                             val runningMet = EntityFactories.fetch(EntityType.ENEMY, "Met")!!
-                            game.engine.spawn(
-                                runningMet, props(
+                            runningMet.spawn(
+                                props(
                                     ConstKeys.POSITION to Vector2(
                                         bodyBlock!!.body.x - (0.75f * ConstVals.PPM),
                                         tankBlock!!.body.getMaxY() + (0.25f * ConstVals.PPM)
@@ -448,8 +448,8 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                             requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
                             val flyingMet = EntityFactories.fetch(EntityType.ENEMY, "HeliMet")!! as HeliMet
                             val target = flyingMetTargets.get(flyingMetsSet.size)
-                            game.engine.spawn(
-                                flyingMet, props(
+                            flyingMet.spawn(
+                                props(
                                     ConstKeys.POSITION to Vector2(
                                         bodyBlock!!.body.x - (0.75f * ConstVals.PPM),
                                         tankBlock!!.body.getMaxY() + (0.65f * ConstVals.PPM)

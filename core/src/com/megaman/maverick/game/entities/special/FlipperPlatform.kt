@@ -2,38 +2,37 @@ package com.megaman.maverick.game.entities.special
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Rectangle
-import com.engine.animations.Animation
-import com.engine.animations.AnimationsComponent
-import com.engine.animations.Animator
-import com.engine.animations.IAnimation
-import com.engine.audio.AudioComponent
-import com.engine.common.enums.Position
-import com.engine.common.extensions.getTextureAtlas
-import com.engine.common.extensions.objectMapOf
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameRectangle
-import com.engine.common.time.Timer
-import com.engine.cullables.CullablesComponent
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setPosition
-import com.engine.entities.contracts.IAnimatedEntity
-import com.engine.entities.contracts.IAudioEntity
-import com.engine.entities.contracts.ISpritesEntity
-import com.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.animations.Animation
+import com.mega.game.engine.animations.AnimationsComponent
+import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.audio.AudioComponent
+import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.cullables.CullablesComponent
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setPosition
+import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.entities.contracts.IAudioEntity
+import com.mega.game.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.blocks.Block
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
-
 import com.megaman.maverick.game.world.FixtureType
 
 class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, IAudioEntity {
@@ -81,8 +80,8 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
         addComponent(AudioComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
 
         switchTimer.reset()
         switchDelay.setToEnd()
@@ -91,8 +90,8 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
         bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
 
         block = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.STANDARD)!! as Block
-        game.engine.spawn(
-            block!!, props(
+        block!!.spawn(
+            props(
                 ConstKeys.BOUNDS to GameRectangle().setSize(1.1875f * ConstVals.PPM, 0.25f * ConstVals.PPM)
                     .setX(-100f * ConstVals.PPM), ConstKeys.CULL_OUT_OF_BOUNDS to false
             )
@@ -100,8 +99,8 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
     }
 
     override fun onDestroy() {
-        super<MegaGameEntity>.onDestroy()
-        block?.kill()
+        super.onDestroy()
+        block?.destroy()
         block = null
     }
 
@@ -187,12 +186,14 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { when (state) {
-            FlipperPlatformState.LEFT -> if (switchDelay.isFinished()) "left" else "leftDelay"
-            FlipperPlatformState.RIGHT -> if (switchDelay.isFinished()) "right" else "rightDelay"
-            FlipperPlatformState.FLIP_TO_RIGHT -> "flipToRight"
-            FlipperPlatformState.FLIP_TO_LEFT -> "flipToLeft"
-        } }
+        val keySupplier: () -> String? = {
+            when (state) {
+                FlipperPlatformState.LEFT -> if (switchDelay.isFinished()) "left" else "leftDelay"
+                FlipperPlatformState.RIGHT -> if (switchDelay.isFinished()) "right" else "rightDelay"
+                FlipperPlatformState.FLIP_TO_RIGHT -> "flipToRight"
+                FlipperPlatformState.FLIP_TO_LEFT -> "flipToLeft"
+            }
+        }
         val animations = objectMapOf<String, IAnimation>(
             "left" to Animation(leftRegion!!),
             "right" to Animation(rightRegion!!),

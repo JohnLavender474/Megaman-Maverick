@@ -31,6 +31,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val DECISION = "decision"
     const val HIT_BY_BODY = "hit_by_body"
     const val FOOT = "foot"
     const val HIT_BY_BLOCK = "hit_by_block"

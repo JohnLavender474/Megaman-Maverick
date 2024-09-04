@@ -49,6 +49,7 @@ enum class TextureAsset(src: String) : IAsset {
 
     // OFFICIAL BOSSES
     TIMBER_WOMAN("TimberWoman.txt"),
+
     // MOON_MAN("MoonMan.txt"),
     RODENT_MAN("RodentMan.txt"),
     GUTS_TANK("GutsTank.txt"),

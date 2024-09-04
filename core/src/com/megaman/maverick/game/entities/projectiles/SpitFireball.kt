@@ -4,29 +4,29 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
-import com.engine.animations.Animation
-import com.engine.animations.AnimationsComponent
-import com.engine.animations.Animator
-import com.engine.common.enums.Direction
-import com.engine.common.extensions.gdxArrayOf
-import com.engine.common.extensions.getTextureRegion
-import com.engine.common.getOverlapPushDirection
-import com.engine.common.getSingleMostDirectionFromStartToTarget
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameRectangle
-import com.engine.damage.IDamageable
-import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.drawables.shapes.IDrawableShape
-import com.engine.drawables.sorting.DrawingPriority
-import com.engine.drawables.sorting.DrawingSection
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setCenter
-import com.engine.drawables.sprites.setSize
-import com.engine.entities.contracts.IAnimatedEntity
-import com.engine.entities.contracts.IBodyEntity
-import com.engine.world.*
+import com.mega.game.engine.animations.Animation
+import com.mega.game.engine.animations.AnimationsComponent
+import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.getOverlapPushDirection
+import com.mega.game.engine.common.getSingleMostDirectionFromStartToTarget
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.damage.IDamageable
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setCenter
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -60,12 +60,12 @@ class SpitFireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnima
             angles.put(Direction.DOWN, gdxArrayOf(135f, 225f))
             angles.put(Direction.RIGHT, gdxArrayOf(225f, 315f))
         }
-        super<AbstractProjectile>.init()
+        super.init()
         addComponent(defineAnimationsComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
         val trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
@@ -80,7 +80,7 @@ class SpitFireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnima
     }
 
     override fun explodeAndDie(vararg params: Any?) {
-        kill()
+        destroy()
 
         val bounds = params[0] as GameRectangle
         val direction = getOverlapPushDirection(body, bounds) ?: getSingleMostDirectionFromStartToTarget(
@@ -98,8 +98,8 @@ class SpitFireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnima
                 Direction.LEFT -> body.getCenterLeftPoint()
                 Direction.RIGHT -> body.getCenterRightPoint()
             }
-            game.engine.spawn(
-                fireball, props(
+            fireball.spawn(
+                props(
                     ConstKeys.OWNER to owner,
                     ConstKeys.POSITION to position,
                     ConstKeys.TRAJECTORY to trajectory,

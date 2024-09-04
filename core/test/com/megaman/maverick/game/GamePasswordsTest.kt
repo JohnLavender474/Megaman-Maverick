@@ -1,7 +1,7 @@
 package com.megaman.maverick.game
 
-import com.engine.common.extensions.objectMapOf
-import com.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.objectSetOf
 import com.megaman.maverick.game.entities.bosses.BossType
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank

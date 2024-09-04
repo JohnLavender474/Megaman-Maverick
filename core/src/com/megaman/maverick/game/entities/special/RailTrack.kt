@@ -3,41 +3,41 @@ package com.megaman.maverick.game.entities.special
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
-import com.engine.animations.Animation
-import com.engine.animations.AnimationsComponent
-import com.engine.animations.Animator
-import com.engine.animations.IAnimation
-import com.engine.audio.AudioComponent
-import com.engine.common.enums.Position
-import com.engine.common.extensions.*
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameRectangle
-import com.engine.cullables.CullableOnEvent
-import com.engine.cullables.CullablesComponent
-import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.drawables.sorting.DrawingPriority
-import com.engine.drawables.sorting.DrawingSection
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setPosition
-import com.engine.drawables.sprites.setSize
-import com.engine.entities.contracts.IAnimatedEntity
-import com.engine.entities.contracts.IAudioEntity
-import com.engine.entities.contracts.ICullableEntity
-import com.engine.entities.contracts.ISpritesEntity
-import com.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.animations.Animation
+import com.mega.game.engine.animations.AnimationsComponent
+import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.audio.AudioComponent
+import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.extensions.*
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.cullables.CullableOnEvent
+import com.mega.game.engine.cullables.CullablesComponent
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setPosition
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.entities.contracts.IAudioEntity
+import com.mega.game.engine.entities.contracts.ICullableEntity
+import com.mega.game.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.blocks.Block
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
-import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.BodyLabel
 import com.megaman.maverick.game.world.FixtureLabel
@@ -76,8 +76,8 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEnti
         addComponent(AudioComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
 
         bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         val spawn = bounds.getCenterLeftPoint()
@@ -122,8 +122,7 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEnti
         platform = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.RAIL_TRACK_PLATFORM)!! as RailTrackPlatform
         val platformSpawn = spawnProps.get(ConstKeys.CHILD, Int::class)!!
         platformRight = spawnProps.get(ConstKeys.RIGHT, Boolean::class)!!
-        game.engine.spawn(
-            platform!!,
+        platform!!.spawn(
             props(
                 ConstKeys.POSITION to Vector2(spawn.x + platformSpawn * ConstVals.PPM, spawn.y),
                 ConstKeys.CULL_OUT_OF_BOUNDS to false,
@@ -136,7 +135,7 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEnti
 
     override fun onDestroy() {
         super.onDestroy()
-        platform?.kill()
+        platform?.let { it.destroy() }
         platform = null
         sprites.clear()
     }
@@ -193,7 +192,7 @@ class RailTrackPlatform(game: MegamanMaverickGame) : Block(game), ISpritesEntity
         addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
     }
 
-    override fun spawn(spawnProps: Properties) {
+    override fun onSpawn(spawnProps: Properties) {
         val position = spawnProps.remove(ConstKeys.POSITION) as Vector2
         val bounds = GameRectangle()
             .setSize(2f * ConstVals.PPM, 0.1f * ConstVals.PPM)
@@ -206,7 +205,7 @@ class RailTrackPlatform(game: MegamanMaverickGame) : Block(game), ISpritesEntity
             objectSetOf(FixtureLabel.NO_SIDE_TOUCHIE, FixtureLabel.NO_PROJECTILE_COLLISION)
         )
 
-        super.spawn(spawnProps)
+        super.onSpawn(spawnProps)
 
         val trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Float::class)!!
         body.physics.velocity.x = trajectory

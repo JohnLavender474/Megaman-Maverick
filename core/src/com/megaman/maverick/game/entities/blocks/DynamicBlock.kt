@@ -1,18 +1,18 @@
 package com.megaman.maverick.game.entities.blocks
 
 import com.badlogic.gdx.math.Vector2
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameRectangle
-import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.entities.contracts.IBodyEntity
-import com.engine.entities.contracts.IDrawableShapesEntity
-import com.engine.entities.contracts.IUpdatableEntity
-import com.engine.updatables.UpdatablesComponent
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
-import com.engine.world.Fixture
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.entities.contracts.IDrawableShapesEntity
+import com.mega.game.engine.entities.contracts.IUpdatableEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.world.Body
+import com.mega.game.engine.world.BodyComponent
+import com.mega.game.engine.world.BodyType
+import com.mega.game.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
@@ -34,14 +34,13 @@ open class DynamicBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
     override fun getEntityType() = EntityType.SPECIAL
 
     override fun init() {
-        super<MegaGameEntity>.init()
         addComponent(DrawableShapesComponent(debug = true))
         addComponent(defineUpdatablesComponennt())
         addComponent(defineBodyComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
@@ -64,15 +63,15 @@ open class DynamicBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
             ConstKeys.FRICTION_Y,
             spawnProps.get(ConstKeys.FRICTION_Y)
         )
-        game.engine.spawn(staticInnerBlock!!, staticInnerBlockProps)
+        staticInnerBlock!!.spawn(staticInnerBlockProps)
 
         val gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, Vector2(), Vector2::class)
         body.physics.gravity.set(gravity)
     }
 
     override fun onDestroy() {
-        super<MegaGameEntity>.onDestroy()
-        staticInnerBlock?.kill()
+        super.onDestroy()
+        staticInnerBlock?.destroy()
         staticInnerBlock = null
     }
 

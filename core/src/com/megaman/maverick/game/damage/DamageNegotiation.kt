@@ -1,6 +1,6 @@
 package com.megaman.maverick.game.damage
 
-import com.engine.damage.IDamager
+import com.mega.game.engine.damage.IDamager
 
 class DamageNegotiation(var negotation: (IDamager) -> Int) {
 

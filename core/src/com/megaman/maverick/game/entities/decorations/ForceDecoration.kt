@@ -2,18 +2,18 @@ package com.megaman.maverick.game.entities.decorations
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
-import com.engine.animations.Animation
-import com.engine.animations.AnimationsComponent
-import com.engine.animations.Animator
-import com.engine.common.extensions.getTextureRegion
-import com.engine.common.objects.Properties
-import com.engine.common.shapes.GameRectangle
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setCenter
-import com.engine.drawables.sprites.setSize
-import com.engine.entities.contracts.IAnimatedEntity
-import com.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.animations.Animation
+import com.mega.game.engine.animations.AnimationsComponent
+import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setCenter
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -21,7 +21,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 
-class ForceDecoration(game: MegamanMaverickGame): MegaGameEntity(game), ISpritesEntity, IAnimatedEntity {
+class ForceDecoration(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "ForceDecoration"
@@ -36,13 +36,12 @@ class ForceDecoration(game: MegamanMaverickGame): MegaGameEntity(game), ISprites
     override fun init() {
         if (region == null)
             region = game.assMan.getTextureRegion(TextureAsset.SPECIALS_1.source, "Force")
-        super<MegaGameEntity>.init()
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
         center = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         rotation = spawnProps.getOrDefault(ConstKeys.ROTATION, 0f, Float::class)
     }

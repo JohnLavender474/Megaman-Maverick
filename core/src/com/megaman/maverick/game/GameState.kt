@@ -2,8 +2,8 @@ package com.megaman.maverick.game
 
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.ObjectSet
-import com.engine.common.interfaces.Resettable
-import com.engine.points.Points
+import com.mega.game.engine.common.interfaces.Resettable
+import com.mega.game.engine.points.Points
 import com.megaman.maverick.game.entities.bosses.BossType
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank

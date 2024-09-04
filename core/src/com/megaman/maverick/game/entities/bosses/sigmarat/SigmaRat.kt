@@ -6,33 +6,33 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.Queue
-import com.engine.animations.Animation
-import com.engine.animations.AnimationsComponent
-import com.engine.animations.Animator
-import com.engine.animations.IAnimation
-import com.engine.common.enums.Position
-import com.engine.common.extensions.*
-import com.engine.common.getRandomBool
-import com.engine.common.objects.Properties
-import com.engine.common.objects.WeightedRandomSelector
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameRectangle
-import com.engine.common.shapes.getCenter
-import com.engine.common.time.Timer
-import com.engine.damage.IDamager
-import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.drawables.shapes.IDrawableShape
-import com.engine.drawables.sorting.DrawingPriority
-import com.engine.drawables.sorting.DrawingSection
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setPosition
-import com.engine.drawables.sprites.setSize
-import com.engine.updatables.UpdatablesComponent
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
-import com.engine.world.Fixture
+import com.mega.game.engine.animations.Animation
+import com.mega.game.engine.animations.AnimationsComponent
+import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.extensions.*
+import com.mega.game.engine.common.getRandomBool
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.WeightedRandomSelector
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.shapes.getCenter
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamager
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setPosition
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.world.Body
+import com.mega.game.engine.world.BodyComponent
+import com.mega.game.engine.world.BodyType
+import com.mega.game.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -153,8 +153,8 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
         addComponent(defineAnimationsComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
@@ -165,16 +165,16 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
         rightClawSpawn = spawnProps.get(ConstKeys.RIGHT, RectangleMapObject::class)!!.rectangle.getCenter()
         leftClaw = SigmaRatClaw(game)
         rightClaw = SigmaRatClaw(game)
-        game.engine.spawn(
-            leftClaw!!, props(
+        leftClaw!!.spawn(
+            props(
                 ConstKeys.PARENT to this,
                 ConstKeys.SPEED to CLAW_ROTATION_SPEED,
                 ConstKeys.POSITION to leftClawSpawn,
                 ConstKeys.MAX_Y to headPosition.y
             )
         )
-        game.engine.spawn(
-            rightClaw!!, props(
+        rightClaw!!.spawn(
+            props(
                 ConstKeys.PARENT to this,
                 ConstKeys.SPEED to -CLAW_ROTATION_SPEED,
                 ConstKeys.POSITION to rightClawSpawn,
@@ -188,29 +188,29 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
 
     override fun onDestroy() {
         super.onDestroy()
-        leftClaw?.kill()
+        leftClaw?.destroy()
         leftClaw = null
-        rightClaw?.kill()
+        rightClaw?.destroy()
         rightClaw = null
-        while (!electricBalls.isEmpty) electricBalls.removeFirst().kill()
+        while (!electricBalls.isEmpty) electricBalls.removeFirst().destroy()
     }
 
     override fun triggerDefeat() {
         super.triggerDefeat()
         val explosions = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION, 2)
-        game.engine.spawn(
-            explosions[0], props(
+        explosions[0].spawn(
+            props(
                 ConstKeys.POSITION to leftClaw!!.body.getCenter(), ConstKeys.SOUND to SoundAsset.EXPLOSION_1_SOUND
             )
         )
-        game.engine.spawn(
-            explosions[1], props(
+        explosions[1].spawn(
+            props(
                 ConstKeys.POSITION to rightClaw!!.body.getCenter(), ConstKeys.SOUND to SoundAsset.EXPLOSION_1_SOUND
             )
         )
-        leftClaw!!.kill()
+        leftClaw!!.destroy()
         leftClaw = null
-        rightClaw!!.kill()
+        rightClaw!!.destroy()
         rightClaw = null
     }
 
@@ -223,12 +223,12 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
                 return@add
             }
 
-            if (leftClaw?.dead == true) {
-                leftClaw?.kill()
+            if (leftClaw != null && !leftClaw!!.spawned) {
+                leftClaw?.destroy()
                 leftClaw = null
             }
-            if (rightClaw?.dead == true) {
-                rightClaw?.kill()
+            if (rightClaw != null && !rightClaw!!.spawned) {
+                rightClaw?.destroy()
                 rightClaw = null
             }
 
@@ -263,7 +263,7 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
                 for (i in 0 until ELECTRIC_BALL_ANGLES.size) {
                     val electricBall =
                         EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SIGMA_RAT_ELECTRIC_BALL)!!
-                    game.engine.spawn(electricBall, props(ConstKeys.POSITION to headPosition))
+                    electricBall.spawn(props(ConstKeys.POSITION to headPosition))
                     electricBalls.addLast(electricBall as SigmaRatElectricBall)
                 }
                 electricBallsClockwise = getRandomBool()
@@ -276,8 +276,8 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
                 for (angle in angles) {
                     val fireball =
                         EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.FIREBALL)!! as Fireball
-                    game.engine.spawn(
-                        fireball, props(
+                    fireball.spawn(
+                        props(
                             ConstKeys.POSITION to headPosition, ConstKeys.CULL_TIME to FIREBALL_CULL_TIME
                         )
                     )

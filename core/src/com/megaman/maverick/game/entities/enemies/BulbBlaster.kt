@@ -4,32 +4,32 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectSet
-import com.engine.animations.Animation
-import com.engine.animations.AnimationsComponent
-import com.engine.animations.Animator
-import com.engine.animations.IAnimation
-import com.engine.common.extensions.*
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameRectangle
-import com.engine.common.time.Timer
-import com.engine.damage.IDamager
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setCenter
-import com.engine.drawables.sprites.setSize
-import com.engine.entities.contracts.IAnimatedEntity
-import com.engine.entities.contracts.IMotionEntity
-import com.engine.events.Event
-import com.engine.events.IEventListener
-import com.engine.motion.MotionComponent
-import com.engine.motion.MotionComponent.MotionDefinition
-import com.engine.motion.Trajectory
-import com.engine.updatables.UpdatablesComponent
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
-import com.engine.world.Fixture
+import com.mega.game.engine.animations.Animation
+import com.mega.game.engine.animations.AnimationsComponent
+import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.extensions.*
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamager
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setCenter
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.entities.contracts.IMotionEntity
+import com.mega.game.engine.events.Event
+import com.mega.game.engine.events.IEventListener
+import com.mega.game.engine.motion.MotionComponent
+import com.mega.game.engine.motion.MotionComponent.MotionDefinition
+import com.mega.game.engine.motion.Trajectory
+import com.mega.game.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.world.Body
+import com.mega.game.engine.world.BodyComponent
+import com.mega.game.engine.world.BodyType
+import com.mega.game.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -68,14 +68,14 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IEventListen
             lightRegion = atlas.findRegion("BulbBlaster/Light")
             darkRegion = atlas.findRegion("BulbBlaster/Dark")
         }
-        super<AbstractEnemy>.init()
+        super.init()
         addComponent(defineAnimationsComponent())
         addComponent(MotionComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
+    override fun onSpawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
-        super.spawn(spawnProps)
+        super.onSpawn(spawnProps)
 
         game.eventsMan.addListener(this)
 
@@ -102,7 +102,7 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IEventListen
     }
 
     override fun onDestroy() {
-        super<AbstractEnemy>.onDestroy()
+        super.onDestroy()
         game.eventsMan.removeListener(this)
         clearMotionDefinitions()
         light = false
@@ -113,7 +113,7 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IEventListen
         when (event.key) {
             EventType.END_ROOM_TRANS -> {
                 val room = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!.name
-                if (room != spawnRoom) kill()
+                if (room != spawnRoom) destroy()
             }
         }
     }

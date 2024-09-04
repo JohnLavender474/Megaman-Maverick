@@ -1,7 +1,7 @@
 package com.megaman.maverick.game.entities.blocks
 
-import com.engine.common.objects.Properties
-import com.engine.world.BodyComponent
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.world.BodyComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -18,8 +18,8 @@ class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {
     private var fallingSpeed = 0f
     private var risingSpeed = 0f
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
 
         val max = spawnProps.getOrDefault(ConstKeys.MAX, 0f, Float::class)
         maxY = body.getMaxY() + (max * ConstVals.PPM)

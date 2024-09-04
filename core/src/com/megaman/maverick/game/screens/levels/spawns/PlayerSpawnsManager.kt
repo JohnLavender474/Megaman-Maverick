@@ -2,10 +2,10 @@ package com.megaman.maverick.game.screens.levels.spawns
 
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.maps.objects.RectangleMapObject
-import com.engine.common.extensions.overlaps
-import com.engine.common.interfaces.Resettable
-import com.engine.common.objects.Properties
-import com.engine.common.shapes.toGameRectangle
+import com.mega.game.engine.common.extensions.overlaps
+import com.mega.game.engine.common.interfaces.Resettable
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.shapes.toGameRectangle
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.utils.toProps
 import java.util.*

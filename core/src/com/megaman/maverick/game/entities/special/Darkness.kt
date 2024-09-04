@@ -4,28 +4,28 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectSet
-import com.engine.common.GameLogger
-import com.engine.common.extensions.getTextureRegion
-import com.engine.common.extensions.objectMapOf
-import com.engine.common.extensions.objectSetOf
-import com.engine.common.interfaces.IPropertizable
-import com.engine.common.interpolate
-import com.engine.common.objects.Matrix
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameCircle
-import com.engine.common.shapes.GameRectangle
-import com.engine.common.shapes.toGameRectangle
-import com.engine.common.time.Timer
-import com.engine.cullables.CullablesComponent
-import com.engine.drawables.sorting.DrawingPriority
-import com.engine.drawables.sorting.DrawingSection
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.entities.contracts.ISpritesEntity
-import com.engine.events.Event
-import com.engine.events.IEventListener
-import com.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.interfaces.IPropertizable
+import com.mega.game.engine.common.interpolate
+import com.mega.game.engine.common.objects.Matrix
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameCircle
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.shapes.toGameRectangle
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.cullables.CullablesComponent
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.events.Event
+import com.mega.game.engine.events.IEventListener
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -79,6 +79,8 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
 
     override fun getEntityType() = EntityType.SPECIAL
 
+    override fun getTag(): String = TAG
+
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.COLORS.source, "Black")
         addComponent(SpritesComponent())
@@ -86,8 +88,8 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
         addComponent(defineUpdatablesComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
         game.eventsMan.addListener(this)
 
         key = spawnProps.get(ConstKeys.KEY, Int::class)!!
@@ -139,7 +141,7 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
     }
 
     override fun onDestroy() {
-        super<MegaGameEntity>.onDestroy()
+        super.onDestroy()
         game.eventsMan.removeListener(this)
         sprites.clear()
     }

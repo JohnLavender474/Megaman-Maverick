@@ -3,21 +3,21 @@ package com.megaman.maverick.game.entities.explosions
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
-import com.engine.animations.Animation
-import com.engine.animations.AnimationsComponent
-import com.engine.animations.Animator
-import com.engine.common.extensions.getTextureRegion
-import com.engine.common.extensions.objectSetOf
-import com.engine.common.objects.Properties
-import com.engine.cullables.CullableOnEvent
-import com.engine.cullables.CullablesComponent
-import com.engine.drawables.sorting.DrawingPriority
-import com.engine.drawables.sorting.DrawingSection
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setSize
-import com.engine.entities.contracts.ISpritesEntity
-import com.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.animations.Animation
+import com.mega.game.engine.animations.AnimationsComponent
+import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.cullables.CullableOnEvent
+import com.mega.game.engine.cullables.CullablesComponent
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -49,8 +49,8 @@ class ExplosionOrb(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEn
         addComponent(defineCullablesComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         firstSprite!!.setCenter(spawn.x, spawn.y)
         trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!

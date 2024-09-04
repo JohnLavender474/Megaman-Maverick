@@ -4,28 +4,28 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
-import com.engine.animations.Animation
-import com.engine.animations.AnimationsComponent
-import com.engine.animations.Animator
-import com.engine.animations.IAnimation
-import com.engine.common.enums.Facing
-import com.engine.common.enums.Position
-import com.engine.common.extensions.getTextureAtlas
-import com.engine.common.extensions.objectMapOf
-import com.engine.common.interfaces.IFaceable
-import com.engine.common.interfaces.isFacing
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameCircle
-import com.engine.damage.IDamageable
-import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.drawables.shapes.IDrawableShape
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setPosition
-import com.engine.drawables.sprites.setSize
-import com.engine.entities.contracts.IAnimatedEntity
-import com.engine.world.*
+import com.mega.game.engine.animations.Animation
+import com.mega.game.engine.animations.AnimationsComponent
+import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.enums.Facing
+import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.interfaces.IFaceable
+import com.mega.game.engine.common.interfaces.isFacing
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameCircle
+import com.mega.game.engine.damage.IDamageable
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setPosition
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -33,9 +33,9 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 
@@ -56,13 +56,13 @@ class FireMetFlame(game: MegamanMaverickGame) : AbstractProjectile(game), IAnima
             regions.put("still", atlas.findRegion("Flame3/Still"))
             regions.put("whoosh", atlas.findRegion("Flame3/Whoosh"))
         }
-        super<AbstractProjectile>.init()
+        super.init()
         addComponent(defineAnimationsComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
+    override fun onSpawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
-        super.spawn(spawnProps)
+        super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setBottomCenterToPoint(spawn)
         body.physics.gravityOn = false
@@ -77,10 +77,10 @@ class FireMetFlame(game: MegamanMaverickGame) : AbstractProjectile(game), IAnima
     }
 
     override fun explodeAndDie(vararg params: Any?) {
-        kill()
+        destroy()
 
         val smokePuff = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SMOKE_PUFF)!!
-        game.engine.spawn(smokePuff, props(ConstKeys.POSITION to body.getBottomCenterPoint(), ConstKeys.OWNER to owner))
+        smokePuff.spawn(props(ConstKeys.POSITION to body.getBottomCenterPoint(), ConstKeys.OWNER to owner))
 
         if (overlapsGameCamera()) playSoundNow(SoundAsset.WHOOSH_SOUND, false)
     }

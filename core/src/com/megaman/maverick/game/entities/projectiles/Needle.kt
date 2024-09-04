@@ -4,18 +4,18 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
-import com.engine.common.extensions.getTextureRegion
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameCircle
-import com.engine.damage.IDamageable
-import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.drawables.shapes.IDrawableShape
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setCenter
-import com.engine.drawables.sprites.setSize
-import com.engine.world.*
+import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameCircle
+import com.mega.game.engine.damage.IDamageable
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setCenter
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -39,8 +39,8 @@ class Needle(game: MegamanMaverickGame) : AbstractProjectile(game) {
         super.init()
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
         val trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
@@ -52,9 +52,9 @@ class Needle(game: MegamanMaverickGame) : AbstractProjectile(game) {
     override fun hitBlock(blockFixture: IFixture) = explodeAndDie()
 
     override fun explodeAndDie(vararg params: Any?) {
-        kill()
+        destroy()
         val muzzleFlash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.MUZZLE_FLASH)!!
-        game.engine.spawn(muzzleFlash, props(ConstKeys.POSITION to body.getCenter()))
+        muzzleFlash.spawn(props(ConstKeys.POSITION to body.getCenter()))
     }
 
     override fun defineBodyComponent(): BodyComponent {

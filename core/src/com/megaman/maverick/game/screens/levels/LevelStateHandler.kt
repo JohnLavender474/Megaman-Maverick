@@ -1,14 +1,14 @@
 package com.megaman.maverick.game.screens.levels
 
 import com.badlogic.gdx.utils.OrderedMap
-import com.engine.drawables.sprites.SpritesSystem
-import com.engine.systems.IGameSystem
+import com.mega.game.engine.drawables.sprites.SpritesSystem
+import com.mega.game.engine.systems.GameSystem
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 
 class LevelStateHandler(private val game: MegamanMaverickGame) {
 
-    private val systemsOnPause = OrderedMap<IGameSystem, Boolean>()
+    private val systemsOnPause = OrderedMap<GameSystem, Boolean>()
 
     fun pause() {
         systemsOnPause.clear()

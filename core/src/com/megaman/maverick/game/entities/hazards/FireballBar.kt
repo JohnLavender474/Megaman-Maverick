@@ -1,17 +1,17 @@
 package com.megaman.maverick.game.entities.hazards
 
 import com.badlogic.gdx.utils.Array
-import com.engine.common.extensions.objectMapOf
-import com.engine.common.extensions.objectSetOf
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameRectangle
-import com.engine.cullables.CullableOnEvent
-import com.engine.cullables.CullablesComponent
-import com.engine.entities.IGameEntity
-import com.engine.entities.contracts.IParentEntity
-import com.engine.motion.RotatingLine
-import com.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.cullables.CullableOnEvent
+import com.mega.game.engine.cullables.CullablesComponent
+import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.contracts.IParentEntity
+import com.mega.game.engine.motion.RotatingLine
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -31,7 +31,7 @@ class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEnti
         private const val DEFAULT_SPEED = 4f
     }
 
-    override var children = Array<IGameEntity>()
+    override var children = Array<GameEntity>()
 
     private lateinit var rotatingLine: RotatingLine
 
@@ -42,8 +42,8 @@ class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEnti
         addComponent(defineCullablesComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         var speed = spawnProps.getOrDefault(ConstKeys.SPEED, DEFAULT_SPEED, Float::class)
         val flip = spawnProps.getOrDefault(ConstKeys.FLIP, false, Boolean::class)
@@ -51,8 +51,8 @@ class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEnti
         rotatingLine = RotatingLine(spawn, RADIUS * ConstVals.PPM, speed * ConstVals.PPM)
         for (i in 0 until BALLS) {
             val fireball = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.FIREBALL)!!
-            game.engine.spawn(
-                fireball, props(
+            fireball.spawn(
+                props(
                     ConstKeys.OWNER to this,
                     ConstKeys.CULL_OUT_OF_BOUNDS to false,
                     ConstKeys.CULL_EVENTS to false,
@@ -65,7 +65,7 @@ class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEnti
 
     override fun onDestroy() {
         super.onDestroy()
-        children.forEach { it.kill() }
+        children.forEach { it.destroy() }
         children.clear()
     }
 

@@ -1,10 +1,10 @@
 package com.megaman.maverick.game.screens.levels.events
 
-import com.engine.common.GameLogger
-import com.engine.common.interfaces.Initializable
-import com.engine.common.interfaces.Updatable
-import com.engine.common.time.Timer
-import com.engine.events.Event
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.interfaces.Initializable
+import com.mega.game.engine.common.interfaces.Updatable
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.events.Event
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.events.EventType

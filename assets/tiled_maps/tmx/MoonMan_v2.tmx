@@ -506,7 +506,7 @@
   </object>
   <object id="357" name="MoonMan" x="13760" y="1344" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="6" name="temp">
+ <objectgroup id="6" name="player">
   <object id="496" name="1" x="4080" y="1440" width="32" height="32">
    <properties>
     <property name="apply_scalar_to_children" type="bool" value="true"/>
@@ -550,7 +550,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="13" name="player">
+ <objectgroup id="13" name="temp">
   <object id="530" name="0" x="9360" y="448" width="32" height="32">
    <properties>
     <property name="apply_scalar_to_children" type="bool" value="true"/>

@@ -5,35 +5,35 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
-import com.engine.animations.Animation
-import com.engine.animations.AnimationsComponent
-import com.engine.animations.Animator
-import com.engine.animations.IAnimation
-import com.engine.common.GameLogger
-import com.engine.common.enums.Position
-import com.engine.common.extensions.gdxArrayOf
-import com.engine.common.extensions.getTextureAtlas
-import com.engine.common.extensions.objectMapOf
-import com.engine.common.extensions.toGdxArray
-import com.engine.common.objects.Loop
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameRectangle
-import com.engine.common.time.TimeMarkedRunnable
-import com.engine.common.time.Timer
-import com.engine.damage.IDamager
-import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.drawables.shapes.IDrawableShape
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setPosition
-import com.engine.entities.contracts.IAnimatedEntity
-import com.engine.entities.contracts.IDrawableShapesEntity
-import com.engine.updatables.UpdatablesComponent
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
-import com.engine.world.Fixture
+import com.mega.game.engine.animations.Animation
+import com.mega.game.engine.animations.AnimationsComponent
+import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.toGdxArray
+import com.mega.game.engine.common.objects.Loop
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.time.TimeMarkedRunnable
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamager
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setPosition
+import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.entities.contracts.IDrawableShapesEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.world.Body
+import com.mega.game.engine.world.BodyComponent
+import com.mega.game.engine.world.BodyType
+import com.mega.game.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -120,9 +120,9 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
         addDebugShapeSupplier { chinBounds }
     }
 
-    override fun spawn(spawnProps: Properties) {
+    override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "spawnProps=$spawnProps")
-        super.spawn(spawnProps)
+        super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomRightPoint()
         body.setBottomRightToPoint(spawn)
         loop.reset()
@@ -136,14 +136,14 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
 
     override fun onDestroy() {
         super.onDestroy()
-        sphinxBall?.kill()
+        sphinxBall?.let { it.destroy() }
         sphinxBall = null
     }
 
     private fun launchBall() {
         sphinxBall = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SPHINX_BALL)!! as SphinxBall
-        game.engine.spawn(
-            sphinxBall!!, props(
+        sphinxBall!!.spawn(
+            props(
                 ConstKeys.OWNER to this,
                 ConstKeys.POSITION to chinBounds.getTopCenterPoint(),
                 ConstKeys.X to -BALL_SPEED,
@@ -159,8 +159,8 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
         val impulse = if (chunkOrbs) MegaUtilMethods.calculateJumpImpulse(
             spawn, getMegaman().body.getCenter(), MAX_CHUNK_ORB_IMPULSE * ConstVals.PPM, CHUNK_X_SCALAR
         ) else getMegaman().body.getCenter().sub(spawn).nor().scl(ORB_SPEED * ConstVals.PPM)
-        game.engine.spawn(
-            arigockBall, props(
+        arigockBall.spawn(
+            props(
                 ConstKeys.POSITION to spawn, ConstKeys.IMPULSE to impulse, ConstKeys.GRAVITY_ON to chunkOrbs
             )
         )

@@ -4,40 +4,40 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
-import com.engine.audio.AudioComponent
-import com.engine.common.GameLogger
-import com.engine.common.enums.Position
-import com.engine.common.extensions.getTextureAtlas
-import com.engine.common.extensions.objectSetOf
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameRectangle
-import com.engine.common.time.Timer
-import com.engine.damage.IDamager
-import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.drawables.shapes.IDrawableShape
-import com.engine.drawables.sorting.DrawingPriority
-import com.engine.drawables.sorting.DrawingSection
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setPosition
-import com.engine.drawables.sprites.setSize
-import com.engine.entities.contracts.IAudioEntity
-import com.engine.entities.contracts.IBodyEntity
-import com.engine.entities.contracts.ICullableEntity
-import com.engine.entities.contracts.ISpritesEntity
-import com.engine.updatables.UpdatablesComponent
-import com.engine.world.*
+import com.mega.game.engine.audio.AudioComponent
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamager
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setPosition
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.contracts.IAudioEntity
+import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.entities.contracts.ICullableEntity
+import com.mega.game.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IHazard
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
@@ -87,9 +87,9 @@ class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         addComponent(AudioComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
+    override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "Spawn props = $spawnProps")
-        super.spawn(spawnProps)
+        super.onSpawn(spawnProps)
         height = spawnProps.getOrDefault(ConstKeys.HEIGHT, 1, Int::class)
         body.setSize(0.75f * ConstVals.PPM, height * 2.25f * ConstVals.PPM)
         start = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
@@ -107,8 +107,8 @@ class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         }
         state = CeilingCrusherState.WAITING
         block = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.STANDARD) as Block
-        game.engine.spawn(
-            block!!, props(
+        block!!.spawn(
+            props(
                 ConstKeys.BOUNDS to GameRectangle().setSize(2f * ConstVals.PPM, 0.5f * ConstVals.PPM),
                 ConstKeys.BLOCK_FILTERS to objectSetOf(TAG),
                 ConstKeys.CULL_OUT_OF_BOUNDS to false
@@ -118,11 +118,11 @@ class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "Destroying CeilingCrusher")
-        super<MegaGameEntity>.onDestroy()
+        super.onDestroy()
         val keysToRemove = Array<String>()
         sprites.keys().forEach { if (it != SpritesComponent.SPRITE) keysToRemove.add(it) }
         keysToRemove.forEach { sprites.remove(it) }
-        block?.kill()
+        block?.let { it.destroy() }
         block = null
     }
 

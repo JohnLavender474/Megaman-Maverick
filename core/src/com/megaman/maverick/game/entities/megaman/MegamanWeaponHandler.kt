@@ -3,11 +3,11 @@ package com.megaman.maverick.game.entities.megaman
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
-import com.engine.common.extensions.equalsAny
-import com.engine.common.interfaces.Resettable
-import com.engine.common.interfaces.Updatable
-import com.engine.common.objects.Properties
-import com.engine.common.time.Timer
+import com.mega.game.engine.common.extensions.equalsAny
+import com.mega.game.engine.common.interfaces.Resettable
+import com.mega.game.engine.common.interfaces.Updatable
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.time.Timer
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.SoundAsset

@@ -4,15 +4,15 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
-import com.engine.common.GameLogger
-import com.engine.common.enums.Direction
-import com.engine.common.extensions.getTextureAtlas
-import com.engine.common.interfaces.Initializable
-import com.engine.drawables.fonts.BitmapFontHandle
-import com.engine.drawables.sorting.DrawingPriority
-import com.engine.drawables.sorting.DrawingSection
-import com.engine.drawables.sprites.SpriteMatrix
-import com.engine.screens.menus.IMenuButton
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.interfaces.Initializable
+import com.mega.game.engine.drawables.fonts.BitmapFontHandle
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
+import com.mega.game.engine.drawables.sprites.SpriteMatrix
+import com.mega.game.engine.screens.menus.IMenuButton
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.GamePasswords
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -117,7 +117,7 @@ class SaveGameScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, SAVE)
 
         menuButtons.put(SAVE, object : IMenuButton {
             override fun onNavigate(direction: Direction, delta: Float) =
-                when(direction) {
+                when (direction) {
                     Direction.UP -> MAIN_MENU
                     Direction.DOWN -> CONTINUE
                     else -> null

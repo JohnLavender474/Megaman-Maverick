@@ -1,7 +1,7 @@
 package com.megaman.maverick.game.drawables.sprites
 
 import com.badlogic.gdx.math.Vector2
-import com.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.extensions.getTextureRegion
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 

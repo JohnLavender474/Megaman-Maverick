@@ -6,6 +6,9 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 
 class HealthTank(game: MegamanMaverickGame) : MegaGameEntity(game) {
 
+    override fun init() {
+        TODO("Not yet implemented")
+    }
 
     override fun getEntityType() = EntityType.ITEM
 }

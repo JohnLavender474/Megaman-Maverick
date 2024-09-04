@@ -1,13 +1,13 @@
 package com.megaman.maverick.game.entities.contracts
 
 import com.badlogic.gdx.utils.ObjectMap
-import com.engine.common.GameLogger
-import com.engine.common.objects.Properties
-import com.engine.common.time.Timer
-import com.engine.damage.IDamageable
-import com.engine.damage.IDamager
-import com.engine.points.PointsComponent
-import com.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamageable
+import com.mega.game.engine.damage.IDamager
+import com.mega.game.engine.points.PointsComponent
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -34,15 +34,14 @@ abstract class AbstractHealthEntity(
     protected var damageBlink = false
 
     override fun init() {
-        super.init()
         addComponent(definePointsComponent())
         val updatablesComponent = UpdatablesComponent()
         addComponent(updatablesComponent)
         defineUpdatablesComponent(updatablesComponent)
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
         setHealth(ConstVals.MAX_HEALTH)
         damageTimer.setToEnd()
         damageBlinkTimer.setToEnd()
@@ -73,7 +72,7 @@ abstract class AbstractHealthEntity(
         pointsComponent.putListener(ConstKeys.HEALTH) {
             if (it.current <= ConstVals.MIN_HEALTH) {
                 GameLogger.debug(AbstractEnemy.TAG, "Kill enemy due to depleted health")
-                kill()
+                destroy()
             }
         }
         return pointsComponent

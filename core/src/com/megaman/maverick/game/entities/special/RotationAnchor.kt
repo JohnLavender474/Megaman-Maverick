@@ -4,25 +4,25 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
-import com.engine.common.GameLogger
-import com.engine.common.calculateAngleDegrees
-import com.engine.common.extensions.objectMapOf
-import com.engine.common.extensions.processAndFilter
-import com.engine.common.objects.Properties
-import com.engine.common.shapes.GameRectangle
-import com.engine.cullables.CullablesComponent
-import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.entities.IGameEntity
-import com.engine.entities.contracts.IBodyEntity
-import com.engine.entities.contracts.IDrawableShapesEntity
-import com.engine.entities.contracts.IMotionEntity
-import com.engine.entities.contracts.IParentEntity
-import com.engine.motion.MotionComponent
-import com.engine.motion.RotatingLine
-import com.engine.updatables.UpdatablesComponent
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.calculateAngleDegrees
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.processAndFilter
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.cullables.CullablesComponent
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.entities.contracts.IDrawableShapesEntity
+import com.mega.game.engine.entities.contracts.IMotionEntity
+import com.mega.game.engine.entities.contracts.IParentEntity
+import com.mega.game.engine.motion.MotionComponent
+import com.mega.game.engine.motion.RotatingLine
+import com.mega.game.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.world.Body
+import com.mega.game.engine.world.BodyComponent
+import com.mega.game.engine.world.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -40,9 +40,9 @@ open class RotationAnchor(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
         private const val DEFAULT_ROTATION_SPEED = 2f
     }
 
-    override var children = Array<IGameEntity>()
+    override var children = Array<GameEntity>()
 
-    private val childTargets = ObjectMap<IGameEntity, Vector2>()
+    private val childTargets = ObjectMap<GameEntity, Vector2>()
 
     override fun getEntityType() = EntityType.SPECIAL
 
@@ -54,8 +54,8 @@ open class RotationAnchor(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
         addComponent(DrawableShapesComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
@@ -91,26 +91,26 @@ open class RotationAnchor(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
                     childTargets.put(child, target)
                 })
             )
-
-            game.engine.spawn(child, childProps)
+            child.spawn(childProps)
             children.add(child)
         }
     }
 
     override fun onDestroy() {
-        super<MegaGameEntity>.onDestroy()
-        children.forEach { it.kill() }
+        super.onDestroy()
+        children.forEach { it.destroy() }
         children.clear()
         clearMotionDefinitions()
     }
 
     protected open fun defineUpdatablesComponent() = UpdatablesComponent({
         children = children.processAndFilter({ child ->
+            child as MegaGameEntity
             if (child.dead) {
                 val childKey = child.getProperty(ConstKeys.CHILD_KEY)!!
                 removeMotionDefinition(childKey)
             }
-        }, { child -> !child.dead })
+        }, { child -> !(child as MegaGameEntity).dead })
     })
 
     protected open fun defineBodyComponent(): BodyComponent {

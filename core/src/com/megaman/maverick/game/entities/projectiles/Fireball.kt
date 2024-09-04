@@ -4,32 +4,32 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
-import com.engine.animations.Animation
-import com.engine.animations.AnimationsComponent
-import com.engine.animations.Animator
-import com.engine.animations.IAnimation
-import com.engine.common.enums.Direction
-import com.engine.common.enums.Position
-import com.engine.common.extensions.getTextureAtlas
-import com.engine.common.extensions.objectMapOf
-import com.engine.common.getOverlapPushDirection
-import com.engine.common.mask
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameCircle
-import com.engine.common.time.Timer
-import com.engine.damage.IDamageable
-import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.drawables.shapes.IDrawableShape
-import com.engine.drawables.sorting.DrawingPriority
-import com.engine.drawables.sorting.DrawingSection
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setPosition
-import com.engine.drawables.sprites.setSize
-import com.engine.entities.GameEntity
-import com.engine.updatables.UpdatablesComponent
-import com.engine.world.*
+import com.mega.game.engine.animations.Animation
+import com.mega.game.engine.animations.AnimationsComponent
+import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.getOverlapPushDirection
+import com.mega.game.engine.common.mask
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameCircle
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamageable
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setPosition
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -38,10 +38,10 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.world.BodyComponentCreator
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.getEntity
@@ -76,8 +76,8 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         addComponent(defineUpdatablesComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
 
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
 
@@ -132,10 +132,10 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
     }
 
     override fun hitWater(waterFixture: IFixture) {
-        kill()
+        destroy()
         val smokePuff = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SMOKE_PUFF)!!
         val spawn = Vector2(body.getCenter().x, waterFixture.getShape().getMaxY())
-        game.engine.spawn(smokePuff, props(ConstKeys.POSITION to spawn, ConstKeys.OWNER to owner))
+        smokePuff.spawn(props(ConstKeys.POSITION to spawn, ConstKeys.OWNER to owner))
         playSoundNow(SoundAsset.WHOOSH_SOUND, false)
     }
 
@@ -145,7 +145,7 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
             burstCullTimer.update(it)
         }
         if (burstCullTimer.isFinished()) {
-            kill()
+            destroy()
 
             val smokePuff = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SMOKE_PUFF)!!
             val position = when (burstDirection) {
@@ -154,8 +154,8 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
                 Direction.LEFT -> body.getCenterRightPoint()
                 Direction.RIGHT -> body.getCenterLeftPoint()
             }
-            game.engine.spawn(
-                smokePuff, props(
+            smokePuff.spawn(
+                props(
                     ConstKeys.OWNER to owner,
                     ConstKeys.POSITION to position,
                     ConstKeys.DIRECTION to burstDirection

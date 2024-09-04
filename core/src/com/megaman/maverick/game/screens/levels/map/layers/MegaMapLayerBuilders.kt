@@ -2,13 +2,13 @@ package com.megaman.maverick.game.screens.levels.map.layers
 
 import com.badlogic.gdx.maps.MapLayers
 import com.badlogic.gdx.utils.OrderedMap
-import com.engine.common.interfaces.Initializable
-import com.engine.common.objects.Properties
-import com.engine.screens.levels.tiledmap.builders.ITiledMapLayerBuilder
-import com.engine.screens.levels.tiledmap.builders.TiledMapLayerBuilders
-import com.engine.spawns.SpawnsManager
+import com.mega.game.engine.common.interfaces.Initializable
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.screens.levels.tiledmap.builders.ITiledMapLayerBuilder
+import com.mega.game.engine.screens.levels.tiledmap.builders.TiledMapLayerBuilders
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.spawns.SpawnsManager
 
 data class MegaMapLayerBuildersParams(
     val game: MegamanMaverickGame, val spawnsManager: SpawnsManager
@@ -33,7 +33,7 @@ class MegaMapLayerBuilders(private val params: MegaMapLayerBuildersParams) : Til
         layerBuilders.put(ConstKeys.FOREGROUNDS, ForegroundLayerBuilder(params))
         layerBuilders.put(ConstKeys.HAZARDS, SpawnersLayerBuilder(params))
         layerBuilders.put(ConstKeys.SPECIALS, SpawnersLayerBuilder(params))
-        layerBuilders.put(ConstKeys.SENSORS, SensorsLayerBuilder(params.game))
+        layerBuilders.put(ConstKeys.SENSORS, SensorsLayerBuilder())
         layerBuilders.put(ConstKeys.DECORATIONS, SpawnersLayerBuilder(params))
         layerBuilders.put(ConstKeys.PROJECTILES, SpawnersLayerBuilder(params))
     }

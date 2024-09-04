@@ -4,32 +4,32 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
-import com.engine.animations.Animation
-import com.engine.animations.AnimationsComponent
-import com.engine.animations.Animator
-import com.engine.common.enums.Facing
-import com.engine.common.enums.Position
-import com.engine.common.extensions.getTextureRegion
-import com.engine.common.extensions.objectMapOf
-import com.engine.common.interfaces.IFaceable
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameRectangle
-import com.engine.common.time.Timer
-import com.engine.damage.IDamager
-import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.drawables.shapes.IDrawableShape
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setPosition
-import com.engine.entities.IGameEntity
-import com.engine.entities.contracts.IAnimatedEntity
-import com.engine.entities.contracts.IParentEntity
-import com.engine.updatables.UpdatablesComponent
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
-import com.engine.world.Fixture
+import com.mega.game.engine.animations.Animation
+import com.mega.game.engine.animations.AnimationsComponent
+import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.common.enums.Facing
+import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.interfaces.IFaceable
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamager
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setPosition
+import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.entities.contracts.IParentEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.world.Body
+import com.mega.game.engine.world.BodyComponent
+import com.mega.game.engine.world.BodyType
+import com.mega.game.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -39,6 +39,7 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.enemies.BabyPenguin
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -85,7 +86,7 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
             if (it.fullyCharged) 2 else 1
         }
     )
-    override var children = Array<IGameEntity>()
+    override var children = Array<GameEntity>()
     override lateinit var facing: Facing
 
     private var launchPenguins = false
@@ -96,9 +97,9 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
         addComponent(defineAnimationsComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
+    override fun onSpawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.MINI, true)
-        super.spawn(spawnProps)
+        super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
         penguinMiniBossState = PenguinMiniBossState.IDLE
@@ -110,13 +111,13 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
 
     override fun onDestroy() {
         super.onDestroy()
-        children.forEach { it.kill() }
+        children.forEach { it.destroy() }
         children.clear()
     }
 
     override fun triggerDefeat() {
         super.triggerDefeat()
-        children.forEach { it.kill() }
+        children.forEach { it.destroy() }
         children.clear()
     }
 
@@ -132,7 +133,7 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
             val iter = children.iterator()
             while (iter.hasNext()) {
                 val child = iter.next()
-                if (child.dead) iter.remove()
+                if (!(child as MegaGameEntity).spawned) iter.remove()
             }
 
             when (penguinMiniBossState) {
@@ -182,8 +183,8 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
         val impulseY = SNOWBALL_IMPULSE_Y * ConstVals.PPM
         val trajectory = Vector2(impulseX, impulseY)
         val gravity = Vector2(0f, SNOWBALL_GRAVITY * ConstVals.PPM)
-        game.engine.spawn(
-            snowball, props(
+        snowball.spawn(
+            props(
                 ConstKeys.POSITION to spawn,
                 ConstKeys.TRAJECTORY to trajectory,
                 ConstKeys.GRAVITY_ON to true,
@@ -197,8 +198,8 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
     private fun launchBabyPenguin() {
         val penguin = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.BABY_PENGUIN)!! as BabyPenguin
         val spawn = body.getBottomCenterPoint().add(0f, 0.15f * ConstVals.PPM)
-        game.engine.spawn(
-            penguin, props(
+        penguin.spawn(
+            props(
                 ConstKeys.POSITION to spawn,
                 ConstKeys.LEFT to (facing == Facing.LEFT)
             )

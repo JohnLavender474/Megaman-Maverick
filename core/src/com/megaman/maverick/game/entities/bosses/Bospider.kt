@@ -7,36 +7,36 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.Queue
-import com.engine.animations.Animation
-import com.engine.animations.AnimationsComponent
-import com.engine.animations.Animator
-import com.engine.animations.IAnimation
-import com.engine.common.GameLogger
-import com.engine.common.extensions.equalsAny
-import com.engine.common.extensions.getTextureAtlas
-import com.engine.common.extensions.objectMapOf
-import com.engine.common.extensions.toGdxArray
-import com.engine.common.objects.Loop
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameRectangle
-import com.engine.common.shapes.toGameRectangle
-import com.engine.common.time.Timer
-import com.engine.damage.IDamager
-import com.engine.drawables.sorting.DrawingPriority
-import com.engine.drawables.sorting.DrawingSection
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setCenter
-import com.engine.drawables.sprites.setSize
-import com.engine.entities.IGameEntity
-import com.engine.entities.contracts.IAnimatedEntity
-import com.engine.entities.contracts.IParentEntity
-import com.engine.updatables.UpdatablesComponent
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
-import com.engine.world.Fixture
+import com.mega.game.engine.animations.Animation
+import com.mega.game.engine.animations.AnimationsComponent
+import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.extensions.equalsAny
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.toGdxArray
+import com.mega.game.engine.common.objects.Loop
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.shapes.toGameRectangle
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamager
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setCenter
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.entities.contracts.IParentEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.world.Body
+import com.mega.game.engine.world.BodyComponent
+import com.mega.game.engine.world.BodyType
+import com.mega.game.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -46,6 +46,7 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
@@ -82,7 +83,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         SPAWN, CLIMB, OPEN_EYE, CLOSE_EYE, RETREAT
     }
 
-    override var children = Array<IGameEntity>()
+    override var children = Array<GameEntity>()
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
         Bullet::class to dmgNeg(1),
         Fireball::class to dmgNeg(2),
@@ -118,12 +119,12 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
             stillRegion = atlas.findRegion("Bospider/Still")
             openEyeRegion = atlas.findRegion("Bospider/OpenEye")
         }
-        super<AbstractBoss>.init()
+        super.init()
         addComponent(defineAnimationsComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
 
         spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn.x, spawn.y + START_POINT_OFFSET * ConstVals.PPM)
@@ -146,8 +147,8 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
     }
 
     override fun onDestroy() {
-        super<AbstractBoss>.onDestroy()
-        children.forEach { it.kill() }
+        super.onDestroy()
+        children.forEach { it.destroy() }
         children.clear()
         paths.clear()
     }
@@ -176,7 +177,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
             val childIter = children.iterator()
             while (childIter.hasNext()) {
                 val child = childIter.next()
-                if (child.dead) childIter.remove()
+                if (!(child as MegaGameEntity).spawned) childIter.remove()
             }
 
             when (stateLoop.getCurrent()) {
@@ -200,7 +201,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
                             val spawnProps = spawnRectObject.properties.toProps()
                             spawnProps.put(ConstKeys.BOUNDS, spawnRectObject.rectangle.toGameRectangle())
                             val babySpider = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.BABY_SPIDER)!!
-                            game.engine.spawn(babySpider, spawnProps)
+                            babySpider.spawn(spawnProps)
                             children.add(babySpider)
                         }
 
@@ -258,7 +259,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
     override fun triggerDefeat() {
         super.triggerDefeat()
-        children.forEach { it.kill() }
+        children.forEach { it.destroy() }
         children.clear()
     }
 
@@ -350,7 +351,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
             ConstKeys.TRAJECTORY to scaledTrajectory,
             ConstKeys.OWNER to this
         )
-        game.engine.spawn(web, props)
+        web.spawn(props)
     }
 
 }

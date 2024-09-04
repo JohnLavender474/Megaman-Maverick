@@ -2,16 +2,17 @@ package com.megaman.maverick.game.world
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectSet
-import com.engine.entities.contracts.IBodyEntity
-import com.engine.world.Body
+import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.world.Body
 import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 
 fun Body.setEntity(entity: IBodyEntity) {
     fixtures.forEach { (_, fixture) -> fixture.setEntity(entity) }
     putProperty(ConstKeys.ENTITY, entity)
 }
 
-fun Body.getEntity(): IBodyEntity = getProperty(ConstKeys.ENTITY) as IBodyEntity
+fun Body.getEntity(): MegaGameEntity = getProperty(ConstKeys.ENTITY) as MegaGameEntity
 
 fun Body.getPositionDelta(): Vector2 {
     val prior = getProperty(ConstKeys.PRIOR, Vector2::class)!!

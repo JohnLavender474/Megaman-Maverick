@@ -2,31 +2,31 @@ package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
-import com.engine.animations.Animation
-import com.engine.animations.AnimationsComponent
-import com.engine.animations.Animator
-import com.engine.animations.IAnimation
-import com.engine.common.enums.Position
-import com.engine.common.extensions.gdxArrayOf
-import com.engine.common.extensions.getTextureAtlas
-import com.engine.common.extensions.objectMapOf
-import com.engine.common.objects.Loop
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameRectangle
-import com.engine.common.time.Timer
-import com.engine.damage.IDamager
-import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setPosition
-import com.engine.drawables.sprites.setSize
-import com.engine.entities.contracts.IAnimatedEntity
-import com.engine.updatables.UpdatablesComponent
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
-import com.engine.world.Fixture
+import com.mega.game.engine.animations.Animation
+import com.mega.game.engine.animations.AnimationsComponent
+import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.objects.Loop
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamager
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setPosition
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.world.Body
+import com.mega.game.engine.world.BodyComponent
+import com.mega.game.engine.world.BodyType
+import com.mega.game.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -82,13 +82,13 @@ class Shotman(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity 
             shootRegion = atlas.findRegion("Shotman/Shoot")
             launchRegion = atlas.findRegion("Shotman/Launch")
         }
-        super<AbstractEnemy>.init()
+        super.init()
         addComponent(defineAnimationsComponent())
         addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
         shootLoop.reset()
@@ -120,8 +120,8 @@ class Shotman(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity 
         val xFactor = 1f - ((abs(getMegaman().body.y - body.y) / ConstVals.PPM) / 10f) + 0.2f
         val impulseX = (getMegaman().body.x - body.x) * xFactor
 
-        game.engine.spawn(
-            bullet, props(
+        bullet.spawn(
+            props(
                 ConstKeys.OWNER to this,
                 ConstKeys.POSITION to spawn,
                 ConstKeys.GRAVITY to Vector2(0f, LAUNCH_GRAVITY * ConstVals.PPM),
@@ -134,9 +134,10 @@ class Shotman(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity 
         val offsetX = if (getMegaman().body.x > body.x) 0.5f else -0.5f
         val spawn = body.getCenter().add(offsetX * ConstVals.PPM, 0.2f * ConstVals.PPM)
         val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
-        val impulseX = if (getMegaman().body.x > body.x) SHOOT_SPEED_X * ConstVals.PPM else -SHOOT_SPEED_X * ConstVals.PPM
-        game.engine.spawn(
-            bullet, props(
+        val impulseX =
+            if (getMegaman().body.x > body.x) SHOOT_SPEED_X * ConstVals.PPM else -SHOOT_SPEED_X * ConstVals.PPM
+        bullet.spawn(
+            props(
                 ConstKeys.OWNER to this,
                 ConstKeys.POSITION to spawn,
                 ConstKeys.TRAJECTORY to Vector2(impulseX, 0f)

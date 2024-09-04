@@ -2,25 +2,24 @@ package com.megaman.maverick.game.entities.decorations
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
-import com.engine.animations.Animation
-import com.engine.animations.AnimationsComponent
-import com.engine.animations.Animator
-import com.engine.animations.IAnimation
-import com.engine.common.CAUSE_OF_DEATH_MESSAGE
-import com.engine.common.GameLogger
-import com.engine.common.enums.Position
-import com.engine.common.extensions.getTextureRegion
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.drawables.sorting.DrawingPriority
-import com.engine.drawables.sorting.DrawingSection
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setPosition
-import com.engine.drawables.sprites.setSize
-import com.engine.entities.contracts.ISpritesEntity
-import com.engine.updatables.UpdatablesComponent
-import com.engine.world.Body
+import com.mega.game.engine.animations.Animation
+import com.mega.game.engine.animations.AnimationsComponent
+import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setPosition
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.world.Body
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -45,7 +44,7 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
             for (i in 0 until numSplashes) {
                 val splash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SPLASH)!!
                 val spawn = Vector2(splasher.x + ConstVals.PPM / 2f + i * ConstVals.PPM, water.y + water.height)
-                game.engine.spawn(splash, props(ConstKeys.POSITION to spawn))
+                splash.spawn(props(ConstKeys.POSITION to spawn))
             }
         }
     }
@@ -62,14 +61,14 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
         addComponent(defineUpdatablesComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.POSITION) as Vector2
         firstSprite!!.setPosition(spawn, Position.BOTTOM_CENTER)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
-        if (animation.isFinished()) kill(props(CAUSE_OF_DEATH_MESSAGE to "Animation finished"))
+        if (animation.isFinished()) destroy()
     })
 
     private fun defineAnimationsComponent(): AnimationsComponent {

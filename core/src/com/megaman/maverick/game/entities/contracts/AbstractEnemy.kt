@@ -1,23 +1,23 @@
 package com.megaman.maverick.game.entities.contracts
 
-import com.engine.audio.AudioComponent
-import com.engine.common.GameLogger
-import com.engine.common.enums.Facing
-import com.engine.common.extensions.objectSetOf
-import com.engine.common.getRandom
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.cullables.CullableOnEvent
-import com.engine.cullables.CullablesComponent
-import com.engine.damage.IDamageable
-import com.engine.damage.IDamager
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.entities.IGameEntity
-import com.engine.entities.contracts.IAudioEntity
-import com.engine.entities.contracts.IBodyEntity
-import com.engine.entities.contracts.ICullableEntity
-import com.engine.entities.contracts.ISpritesEntity
-import com.engine.world.BodyComponent
+import com.mega.game.engine.audio.AudioComponent
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.Facing
+import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.getRandom
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.cullables.CullableOnEvent
+import com.mega.game.engine.cullables.CullablesComponent
+import com.mega.game.engine.damage.IDamageable
+import com.mega.game.engine.damage.IDamager
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.contracts.IAudioEntity
+import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.entities.contracts.ICullableEntity
+import com.mega.game.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.world.BodyComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
@@ -60,7 +60,7 @@ abstract class AbstractEnemy(
                 if (dropItemOnDeath) {
                     val randomInt = getRandom(0, 10)
                     val props = props(ConstKeys.POSITION to body.getCenter())
-                    val entity: IGameEntity? = when (randomInt) {
+                    val entity: GameEntity? = when (randomInt) {
                         0, 1, 2 -> {
                             props.put(ConstKeys.LARGE, randomInt == 1)
                             EntityFactories.fetch(EntityType.ITEM, ItemsFactory.HEALTH_BULB)
@@ -78,7 +78,7 @@ abstract class AbstractEnemy(
 
                         else -> null
                     }
-                    entity?.let { game.engine.spawn(it, props) }
+                    entity?.spawn(props)
                 }
             }
         }
@@ -86,8 +86,8 @@ abstract class AbstractEnemy(
         setStandardOnTeleportEndProp(this)
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
 
         onDamageInflictedTo = spawnProps.get(ConstKeys.ON_DAMAGE_INFLICTED_TO) as ((IDamageable) -> Unit)?
         dropItemOnDeath = spawnProps.getOrDefault(ConstKeys.DROP_ITEM_ON_DEATH, true, Boolean::class)
@@ -137,14 +137,14 @@ abstract class AbstractEnemy(
         if (overlapsGameCamera()) playSoundNow(SoundAsset.ENEMY_DAMAGE_SOUND, false)
         val disintegration = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)
         val props = disintegrationProps ?: props(ConstKeys.POSITION to body.getCenter())
-        game.engine.spawn(disintegration!!, props)
+        disintegration!!.spawn(props)
     }
 
     protected open fun explode(explosionProps: Properties? = null) {
         if (overlapsGameCamera()) playSoundNow(SoundAsset.ENEMY_DAMAGE_SOUND, false)
-        val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)
+        val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
         val props = explosionProps ?: props(ConstKeys.OWNER to this, ConstKeys.POSITION to body.getCenter())
-        game.engine.spawn(explosion!!, props)
+        explosion.spawn(props)
     }
 
     open fun isMegamanShootingAtMe(): Boolean {

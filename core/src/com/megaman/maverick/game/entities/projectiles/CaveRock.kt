@@ -4,22 +4,21 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
-import com.engine.common.CAUSE_OF_DEATH_MESSAGE
-import com.engine.common.GameLogger
-import com.engine.common.extensions.getTextureRegion
-import com.engine.common.interfaces.Updatable
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameRectangle
-import com.engine.damage.IDamageable
-import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.drawables.shapes.IDrawableShape
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setCenter
-import com.engine.drawables.sprites.setSize
-import com.engine.entities.IGameEntity
-import com.engine.world.*
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.interfaces.Updatable
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.damage.IDamageable
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setCenter
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -50,14 +49,14 @@ class CaveRock(game: MegamanMaverickGame) : AbstractProjectile(game) {
         super.init()
     }
 
-    override fun spawn(spawnProps: Properties) {
+    override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "Spawn with props = $spawnProps")
-        super.spawn(spawnProps)
+        super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
 
-        owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
+        owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
         passThroughBlocks = spawnProps.getOrDefault(ConstKeys.PASS_THROUGH, false, Boolean::class)
 
         if (spawnProps.containsKey(ConstKeys.IMPULSE)) {
@@ -131,10 +130,9 @@ class CaveRock(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun explodeAndDie(vararg params: Any?) {
         GameLogger.debug(TAG, "burst()")
-        kill(props(CAUSE_OF_DEATH_MESSAGE to "Burst"))
-
+        destroy()
         val caveRockExplosion =
             EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.CAVE_ROCK_EXPLOSION)!!
-        game.engine.spawn(caveRockExplosion, props(ConstKeys.POSITION to body.getCenter()))
+        caveRockExplosion.spawn(props(ConstKeys.POSITION to body.getCenter()))
     }
 }

@@ -2,23 +2,23 @@ package com.megaman.maverick.game.entities.hazards
 
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Array
-import com.engine.audio.AudioComponent
-import com.engine.common.GameLogger
-import com.engine.common.enums.Direction
-import com.engine.common.extensions.gdxArrayOf
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameRectangle
-import com.engine.common.shapes.toGameRectangle
-import com.engine.common.time.Timer
-import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.entities.contracts.IAudioEntity
-import com.engine.entities.contracts.IBodyEntity
-import com.engine.entities.contracts.IDrawableShapesEntity
-import com.engine.updatables.UpdatablesComponent
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
+import com.mega.game.engine.audio.AudioComponent
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.shapes.toGameRectangle
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.entities.contracts.IAudioEntity
+import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.entities.contracts.IDrawableShapesEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.world.Body
+import com.mega.game.engine.world.BodyComponent
+import com.mega.game.engine.world.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -32,7 +32,8 @@ import com.megaman.maverick.game.entities.utils.getObjectProps
 
 import com.megaman.maverick.game.world.BodyComponentCreator
 
-class WanaanLauncher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudioEntity, IDrawableShapesEntity {
+class WanaanLauncher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudioEntity,
+    IDrawableShapesEntity {
 
     companion object {
         const val TAG = "WanaanLauncher"
@@ -53,8 +54,8 @@ class WanaanLauncher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         addComponent(AudioComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
         val children = getObjectProps(spawnProps)
@@ -68,8 +69,8 @@ class WanaanLauncher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
     }
 
     override fun onDestroy() {
-        super<MegaGameEntity>.onDestroy()
-        wanaan?.kill()
+        super.onDestroy()
+        wanaan?.let { it.destroy() }
         wanaan = null
         sensors.clear()
     }
@@ -77,7 +78,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         val megaman = game.megaman
         if (wanaan != null && wanaan!!.comingDown && body.contains(wanaan!!.cullPoint)) {
-            wanaan!!.kill()
+            wanaan!!.destroy()
             wanaan = null
         }
         if (wanaan?.dead == true) wanaan = null
@@ -99,9 +100,9 @@ class WanaanLauncher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
 
     private fun launchWanaan() {
         GameLogger.debug(TAG, "Launching Wanaan")
-        wanaan = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.WANAAN) as Wanaan?
-        game.engine.spawn(
-            wanaan!!, props(
+        wanaan = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.WANAAN) as Wanaan
+        wanaan!!.spawn(
+            props(
                 ConstKeys.POSITION to body.getTopCenterPoint(),
                 ConstKeys.DIRECTION to direction,
                 ConstKeys.IMPULSE to WANAAN_IMPULSE * ConstVals.PPM

@@ -3,8 +3,8 @@ package com.megaman.maverick.game.screens.levels.map.layers
 import com.badlogic.gdx.maps.MapLayer
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.utils.Array
-import com.engine.common.objects.Properties
-import com.engine.screens.levels.tiledmap.builders.ITiledMapLayerBuilder
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.screens.levels.tiledmap.builders.ITiledMapLayerBuilder
 import com.megaman.maverick.game.ConstKeys
 
 /** This class is responsible for building the player spawns layer. */

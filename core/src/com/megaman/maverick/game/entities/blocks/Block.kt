@@ -4,15 +4,15 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
-import com.engine.common.GameLogger
-import com.engine.common.extensions.objectMapOf
-import com.engine.common.objects.Properties
-import com.engine.common.shapes.GameRectangle
-import com.engine.cullables.CullablesComponent
-import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.drawables.shapes.IDrawableShape
-import com.engine.entities.contracts.IBodyEntity
-import com.engine.world.*
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.cullables.CullablesComponent
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
@@ -38,6 +38,8 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity 
 
     override fun getEntityType() = EntityType.BLOCK
 
+    override fun getTag() = TAG
+
     override fun init() {
         GameLogger.debug(TAG, "init(): Initializing Block entity.")
         addComponent(defineBodyComponent())
@@ -46,9 +48,9 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapeSuppliers, debug = true))
     }
 
-    override fun spawn(spawnProps: Properties) {
+    override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "Spawned: $spawnProps")
-        super.spawn(spawnProps)
+        super.onSpawn(spawnProps)
 
         val cullOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
         if (cullOutOfBounds) addComponent(

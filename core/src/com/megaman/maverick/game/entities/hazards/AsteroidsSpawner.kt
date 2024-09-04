@@ -2,23 +2,23 @@ package com.megaman.maverick.game.entities.hazards
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
-import com.engine.common.GameLogger
-import com.engine.common.extensions.gdxArrayOf
-import com.engine.common.extensions.objectMapOf
-import com.engine.common.extensions.objectSetOf
-import com.engine.common.getRandom
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameRectangle
-import com.engine.common.time.Timer
-import com.engine.cullables.CullableOnEvent
-import com.engine.cullables.CullablesComponent
-import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.entities.IGameEntity
-import com.engine.entities.contracts.ICullableEntity
-import com.engine.entities.contracts.IDrawableShapesEntity
-import com.engine.entities.contracts.IParentEntity
-import com.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.getRandom
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.cullables.CullableOnEvent
+import com.mega.game.engine.cullables.CullablesComponent
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.contracts.ICullableEntity
+import com.mega.game.engine.entities.contracts.IDrawableShapesEntity
+import com.mega.game.engine.entities.contracts.IParentEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -43,7 +43,7 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
         private const val MAX_CHILDREN = 5
     }
 
-    override var children = Array<IGameEntity>()
+    override var children = Array<GameEntity>()
 
     private lateinit var bounds: GameRectangle
     private lateinit var spawnTimer: Timer
@@ -56,8 +56,8 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
         addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ bounds }), debug = true))
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
 
         bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
 
@@ -72,7 +72,7 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
     }
 
     override fun onDestroy() {
-        super<MegaGameEntity>.onDestroy()
+        super.onDestroy()
         children.clear()
     }
 
@@ -88,8 +88,8 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
         val posX = getRandom(bounds.x, bounds.getMaxX())
         val posY = bounds.getMaxY()
         val asteroid = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.ASTEROID)!!
-        game.engine.spawn(
-            asteroid, props(
+        asteroid.spawn(
+            props(
                 ConstKeys.POSITION to Vector2(posX, posY),
                 ConstKeys.IMPULSE to impulse
             )
@@ -100,7 +100,7 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        children.removeAll { it.dead }
+        children.removeAll { !(it as MegaGameEntity).spawned }
         if (children.size >= MAX_CHILDREN) return@UpdatablesComponent
 
         spawnTimer.update(delta)

@@ -1,8 +1,8 @@
 package com.megaman.maverick.game.entities.factories.impl
 
-import com.engine.common.GameLogger
-import com.engine.entities.IGameEntity
+import com.mega.game.engine.common.GameLogger
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.explosions.*
 import com.megaman.maverick.game.entities.factories.EntityFactory
 import com.megaman.maverick.game.entities.factories.GameEntityPoolCreator
@@ -43,7 +43,7 @@ class ExplosionsFactory(private val game: MegamanMaverickGame) : EntityFactory()
         pools.put(GREEN_EXPLOSION, GameEntityPoolCreator.create { GreenExplosion(game) })
     }
 
-    override fun fetch(key: Any): IGameEntity? {
+    override fun fetch(key: Any): MegaGameEntity? {
         GameLogger.debug(TAG, "Spawning Explosion: key = $key")
         return pools.get(if (key == "") EXPLOSION else key)?.fetch()
     }

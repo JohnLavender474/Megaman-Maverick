@@ -1,20 +1,20 @@
 package com.megaman.maverick.game.entities.decorations
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.engine.animations.Animation
-import com.engine.animations.AnimationsComponent
-import com.engine.animations.Animator
-import com.engine.common.GameLogger
-import com.engine.common.extensions.getTextureAtlas
-import com.engine.common.objects.Properties
-import com.engine.common.shapes.GameRectangle
-import com.engine.drawables.sorting.DrawingPriority
-import com.engine.drawables.sorting.DrawingSection
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setSize
-import com.engine.entities.contracts.IAnimatedEntity
-import com.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.animations.Animation
+import com.mega.game.engine.animations.AnimationsComponent
+import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -46,9 +46,9 @@ open class WindyGrass(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
         addComponent(AnimationsComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
+    override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "spawn(): spawnProps = $spawnProps")
-        super.spawn(spawnProps)
+        super.onSpawn(spawnProps)
         bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         val tiles = bounds.width.toInt() / ConstVals.PPM
         for (i in 0 until tiles) {
@@ -67,7 +67,7 @@ open class WindyGrass(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
-        super<MegaGameEntity>.onDestroy()
+        super.onDestroy()
         sprites.clear()
         animators.clear()
     }

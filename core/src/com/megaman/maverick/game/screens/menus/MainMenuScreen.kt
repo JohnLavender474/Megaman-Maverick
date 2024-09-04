@@ -6,18 +6,18 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
-import com.engine.common.GameLogger
-import com.engine.common.enums.Direction
-import com.engine.common.extensions.getTextureAtlas
-import com.engine.common.extensions.getTextureRegion
-import com.engine.common.extensions.objectMapOf
-import com.engine.common.extensions.toGdxArray
-import com.engine.common.interfaces.Initializable
-import com.engine.common.time.Timer
-import com.engine.controller.ControllerUtils
-import com.engine.drawables.fonts.BitmapFontHandle
-import com.engine.drawables.sprites.setSize
-import com.engine.screens.menus.IMenuButton
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.toGdxArray
+import com.mega.game.engine.common.interfaces.Initializable
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.controller.ControllerUtils
+import com.mega.game.engine.drawables.fonts.BitmapFontHandle
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.screens.menus.IMenuButton
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.ConstVals.UI_ARROW_BLINK_DUR
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -182,7 +182,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
         val atlas = game.assMan.getTextureAtlas(TextureAsset.UI_1.source)
         background = Sprite(atlas.findRegion("TitleScreenBackground"))
         background.setSize(ConstVals.VIEW_HEIGHT * ConstVals.PPM)
-        background.setCenter( ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f, ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f)
+        background.setCenter(ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f, ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f)
         /*
         title.setRegion(atlas.findRegion("MegamanTitle"))
         title.setBounds(

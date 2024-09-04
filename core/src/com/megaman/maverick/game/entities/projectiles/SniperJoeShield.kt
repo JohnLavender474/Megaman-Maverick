@@ -3,27 +3,27 @@ package com.megaman.maverick.game.entities.projectiles
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
-import com.engine.common.GameLogger
-import com.engine.common.enums.Facing
-import com.engine.common.extensions.equalsAny
-import com.engine.common.extensions.gdxArrayOf
-import com.engine.common.extensions.getTextureAtlas
-import com.engine.common.interfaces.IFaceable
-import com.engine.common.objects.Loop
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameRectangle
-import com.engine.common.shapes.IGameShape2D
-import com.engine.common.time.Timer
-import com.engine.damage.IDamageable
-import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setCenter
-import com.engine.drawables.sprites.setSize
-import com.engine.entities.IGameEntity
-import com.engine.updatables.UpdatablesComponent
-import com.engine.world.*
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.Facing
+import com.mega.game.engine.common.extensions.equalsAny
+import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.interfaces.IFaceable
+import com.mega.game.engine.common.objects.Loop
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.shapes.IGameShape2D
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamageable
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setCenter
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -40,7 +40,7 @@ import com.megaman.maverick.game.world.getEntity
 
 class SniperJoeShield(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable {
 
-    override var owner: IGameEntity? = null
+    override var owner: GameEntity? = null
 
     companion object {
         const val TAG = "SniperJoeShield"
@@ -69,16 +69,16 @@ class SniperJoeShield(game: MegamanMaverickGame) : AbstractProjectile(game), IFa
         addComponent(defineUpdatablesComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
+    override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "Spawn props = $spawnProps")
-        super.spawn(spawnProps)
+        super.onSpawn(spawnProps)
         val spawn =
             if (spawnProps.containsKey(ConstKeys.BOUNDS)) spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
                 .getCenter()
             else spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
         trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
-        owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)!!
+        owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)!!
         type = spawnProps.getOrDefault(ConstKeys.TYPE, ORANGE_TYPE, String::class)
         facing = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, "left", String::class).uppercase())
         rotationTimer.reset()
@@ -86,11 +86,9 @@ class SniperJoeShield(game: MegamanMaverickGame) : AbstractProjectile(game), IFa
     }
 
     override fun explodeAndDie(vararg params: Any?) {
-        kill()
+        destroy()
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
-        game.engine.spawn(
-            explosion, props(ConstKeys.POSITION to body.getCenter(), ConstKeys.SOUND to SoundAsset.EXPLOSION_2_SOUND)
-        )
+        explosion.spawn(props(ConstKeys.POSITION to body.getCenter(), ConstKeys.SOUND to SoundAsset.EXPLOSION_2_SOUND))
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()

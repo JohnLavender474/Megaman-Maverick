@@ -1,16 +1,16 @@
 package com.megaman.maverick.game.screens.menus
 
 import com.badlogic.gdx.utils.ObjectMap
-import com.engine.common.enums.Direction
-import com.engine.common.extensions.gdxArrayOf
-import com.engine.screens.BaseScreen
-import com.engine.screens.menus.IMenuButton
+import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.screens.BaseScreen
+import com.mega.game.engine.screens.menus.IMenuButton
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.controllers.ControllerButton
 
 abstract class AbstractMenuScreen(protected val game: MegamanMaverickGame, protected var firstButtonKey: String) :
     BaseScreen() {
-    
+
     protected abstract val menuButtons: ObjectMap<String, IMenuButton>
     protected var selectionMade = false
         private set

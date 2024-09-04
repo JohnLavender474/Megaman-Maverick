@@ -1,6 +1,6 @@
 package com.megaman.maverick.game.utils
 
-import com.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.Properties
 
 object StringToPropertiesParser {
 

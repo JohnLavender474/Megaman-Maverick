@@ -5,9 +5,9 @@ import com.badlogic.gdx.Input
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.Queue
-import com.engine.common.time.Timer
-import com.engine.drawables.fonts.BitmapFontHandle
-import com.engine.screens.BaseScreen
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.drawables.fonts.BitmapFontHandle
+import com.mega.game.engine.screens.BaseScreen
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset

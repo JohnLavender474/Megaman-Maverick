@@ -3,9 +3,9 @@ package com.megaman.maverick.game.entities.bosses;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.engine.animations.Animation;
-import com.engine.common.enums.Position;
-import com.engine.common.time.Timer;
+import com.mega.game.engine.animations.Animation;
+import com.mega.game.engine.common.enums.Position;
+import com.mega.game.engine.common.time.Timer;
 import com.megaman.maverick.game.ConstVals;
 import com.megaman.maverick.game.assets.TextureAsset;
 import com.megaman.maverick.game.screens.levels.Level;
@@ -16,8 +16,8 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
-import static com.engine.common.extensions.ArrayExtensionsKt.gdxArrayOf;
-import static com.engine.common.extensions.Vector2ExtensionsKt.vector2Of;
+import static com.mega.game.engine.common.extensions.ArrayExtensionsKt.gdxArrayOf;
+import static com.mega.game.engine.common.extensions.Vector2ExtensionsKt.vector2Of;
 
 public enum BossType {
     TIMBER_WOMAN("Timber Woman", Level.TIMBER_WOMAN, Position.TOP_LEFT, TextureAsset.TIMBER_WOMAN) {
@@ -288,7 +288,8 @@ public enum BossType {
             timerPairs.add(new Pair<>(anims.get("StandStill"), new Timer(3f)));
             return timerPairs;
         }
-    },;
+    },
+    ;
 
     public final String name;
     public final Level level;

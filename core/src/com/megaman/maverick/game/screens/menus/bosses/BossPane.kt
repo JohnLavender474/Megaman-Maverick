@@ -4,11 +4,11 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.engine.animations.Animation
-import com.engine.common.enums.Position
-import com.engine.common.interfaces.Initializable
-import com.engine.common.interfaces.Updatable
-import com.engine.drawables.IDrawable
+import com.mega.game.engine.animations.Animation
+import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.interfaces.Initializable
+import com.mega.game.engine.common.interfaces.Updatable
+import com.mega.game.engine.drawables.IDrawable
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset

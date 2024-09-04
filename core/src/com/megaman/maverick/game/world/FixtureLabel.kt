@@ -1,7 +1,7 @@
 package com.megaman.maverick.game.world
 
 import com.badlogic.gdx.utils.ObjectSet
-import com.engine.world.IFixture
+import com.mega.game.engine.world.IFixture
 import com.megaman.maverick.game.ConstKeys
 
 enum class FixtureLabel {

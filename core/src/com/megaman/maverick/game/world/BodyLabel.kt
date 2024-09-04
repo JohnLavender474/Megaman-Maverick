@@ -1,7 +1,7 @@
 package com.megaman.maverick.game.world
 
 import com.badlogic.gdx.utils.ObjectSet
-import com.engine.world.Body
+import com.mega.game.engine.world.Body
 import com.megaman.maverick.game.ConstKeys
 
 enum class BodyLabel {

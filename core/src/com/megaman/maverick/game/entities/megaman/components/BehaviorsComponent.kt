@@ -1,18 +1,18 @@
 package com.megaman.maverick.game.entities.megaman.components
 
 import com.badlogic.gdx.math.Vector2
-import com.engine.behaviors.AbstractBehaviorImpl
-import com.engine.behaviors.BehaviorsComponent
-import com.engine.behaviors.FunctionalBehaviorImpl
-import com.engine.common.GameLogger
-import com.engine.common.enums.Direction
-import com.engine.common.enums.Facing
-import com.engine.common.extensions.gdxArrayOf
-import com.engine.common.extensions.objectMapOf
-import com.engine.common.interfaces.isFacing
-import com.engine.common.time.Timer
-import com.engine.controller.buttons.ButtonStatus
-import com.engine.world.Fixture
+import com.mega.game.engine.behaviors.AbstractBehaviorImpl
+import com.mega.game.engine.behaviors.BehaviorsComponent
+import com.mega.game.engine.behaviors.FunctionalBehaviorImpl
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.enums.Facing
+import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.interfaces.isFacing
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.controller.buttons.ButtonStatus
+import com.mega.game.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.SoundAsset
@@ -360,7 +360,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             val center = body.getCenter()
 
             if (isBehaviorActive(BehaviorType.CLIMBING)) {
-                4
                 if (isDirectionRotatedVertically()) {
                     if (!body.isSensing(BodySense.HEAD_TOUCHING_LADDER)) {
                         if (isDirectionRotatedDown() && center.y + 0.25f * ConstVals.PPM < ladder.body.y) return false

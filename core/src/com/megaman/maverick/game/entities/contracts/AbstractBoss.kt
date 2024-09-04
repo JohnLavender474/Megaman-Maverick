@@ -1,18 +1,18 @@
 package com.megaman.maverick.game.entities.contracts
 
 import com.badlogic.gdx.math.Vector2
-import com.engine.common.GameLogger
-import com.engine.common.enums.Position
-import com.engine.common.extensions.gdxArrayOf
-import com.engine.common.extensions.objectSetOf
-import com.engine.common.extensions.toGdxArray
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.time.Timer
-import com.engine.events.Event
-import com.engine.events.IEventListener
-import com.engine.points.PointsComponent
-import com.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.extensions.toGdxArray
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.events.Event
+import com.mega.game.engine.events.IEventListener
+import com.mega.game.engine.points.PointsComponent
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -51,7 +51,7 @@ abstract class AbstractBoss(
 
     override fun getEntityType() = EntityType.BOSS
 
-    override fun spawn(spawnProps: Properties) {
+    override fun onSpawn(spawnProps: Properties) {
         game.eventsMan.addListener(this)
         mini = spawnProps.getOrDefault(ConstKeys.MINI, false, Boolean::class)
         spawnProps.put(ConstKeys.DROP_ITEM_ON_DEATH, false)
@@ -59,7 +59,7 @@ abstract class AbstractBoss(
         ready = false
         defeated = false
         defeatTimer.setToEnd()
-        super.spawn(spawnProps)
+        super.onSpawn(spawnProps)
     }
 
     override fun onDestroy() {
@@ -84,11 +84,7 @@ abstract class AbstractBoss(
         )
         explosionOrbTrajectories.forEach { trajectory ->
             val explosionOrb = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION_ORB)
-            explosionOrb?.let { orb ->
-                game.engine.spawn(
-                    orb, props(ConstKeys.TRAJECTORY to trajectory, ConstKeys.POSITION to body.getCenter())
-                )
-            }
+            explosionOrb?.spawn(props(ConstKeys.TRAJECTORY to trajectory, ConstKeys.POSITION to body.getCenter()))
         }
     }
 
@@ -96,7 +92,7 @@ abstract class AbstractBoss(
         GameLogger.debug(TAG, "Boss received event: $event")
         when (event.key) {
             EventType.END_BOSS_SPAWN -> onReady()
-            EventType.PLAYER_SPAWN -> kill()
+            EventType.PLAYER_SPAWN -> destroy()
         }
     }
 
@@ -118,7 +114,7 @@ abstract class AbstractBoss(
                     game.eventsMan.submitEvent(
                         Event(EventType.BOSS_DEAD, props(ConstKeys.BOSS to this))
                     )
-                    kill()
+                    destroy()
                 }
             }
         }
@@ -153,12 +149,10 @@ abstract class AbstractBoss(
         if (explosionTimer.isFinished()) {
             val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
             val position = Position.values().toGdxArray().random()
-            game.engine.spawn(
-                explosion, props(
-                    ConstKeys.SOUND to SoundAsset.EXPLOSION_2_SOUND,
-                    ConstKeys.POSITION to body.getCenter().add(
-                        (position.x - 1) * 0.75f * ConstVals.PPM,
-                        (position.y - 1) * 0.75f * ConstVals.PPM
+            explosion.spawn(
+                props(
+                    ConstKeys.SOUND to SoundAsset.EXPLOSION_2_SOUND, ConstKeys.POSITION to body.getCenter().add(
+                        (position.x - 1) * 0.75f * ConstVals.PPM, (position.y - 1) * 0.75f * ConstVals.PPM
                     )
                 )
             )

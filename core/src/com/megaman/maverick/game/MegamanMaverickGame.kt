@@ -9,49 +9,47 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
-import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.ObjectSet
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
-import com.engine.GameEngine
-import com.engine.animations.AnimationsSystem
-import com.engine.audio.AudioSystem
-import com.engine.behaviors.BehaviorsSystem
-import com.engine.common.GameLogLevel
-import com.engine.common.GameLogger
-import com.engine.common.extensions.gdxArrayOf
-import com.engine.common.extensions.objectMapOf
-import com.engine.common.extensions.objectSetOf
-import com.engine.common.interfaces.IPropertizable
-import com.engine.common.objects.MultiCollectionIterable
-import com.engine.common.objects.Properties
-import com.engine.controller.ControllerSystem
-import com.engine.controller.ControllerUtils
-import com.engine.controller.buttons.Buttons
-import com.engine.controller.polling.IControllerPoller
-import com.engine.cullables.CullablesSystem
-import com.engine.drawables.fonts.BitmapFontHandle
-import com.engine.drawables.fonts.FontsSystem
-import com.engine.drawables.shapes.DrawableShapesSystem
-import com.engine.drawables.shapes.IDrawableShape
-import com.engine.drawables.sorting.DrawingSection
-import com.engine.drawables.sorting.IComparableDrawable
-import com.engine.drawables.sprites.SpritesSystem
-import com.engine.events.Event
-import com.engine.events.EventsManager
-import com.engine.events.IEventListener
-import com.engine.events.IEventsManager
-import com.engine.graph.IGraphMap
-import com.engine.motion.MotionSystem
-import com.engine.pathfinding.Pathfinder
-import com.engine.pathfinding.PathfindingSystem
-import com.engine.points.PointsSystem
-import com.engine.screens.IScreen
-import com.engine.systems.IGameSystem
-import com.engine.updatables.UpdatablesSystem
-import com.engine.world.Contact
-import com.engine.world.WorldSystem
+import com.mega.game.engine.GameEngine
+import com.mega.game.engine.animations.AnimationsSystem
+import com.mega.game.engine.audio.AudioSystem
+import com.mega.game.engine.behaviors.BehaviorsSystem
+import com.mega.game.engine.common.GameLogLevel
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.interfaces.IPropertizable
+import com.mega.game.engine.common.objects.MultiCollectionIterable
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.controller.ControllerSystem
+import com.mega.game.engine.controller.ControllerUtils
+import com.mega.game.engine.controller.buttons.Buttons
+import com.mega.game.engine.controller.polling.IControllerPoller
+import com.mega.game.engine.cullables.CullablesSystem
+import com.mega.game.engine.drawables.IDrawable
+import com.mega.game.engine.drawables.fonts.FontsSystem
+import com.mega.game.engine.drawables.shapes.DrawableShapesSystem
+import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.drawables.sorting.DrawingSection
+import com.mega.game.engine.drawables.sorting.IComparableDrawable
+import com.mega.game.engine.drawables.sprites.SpritesSystem
+import com.mega.game.engine.events.Event
+import com.mega.game.engine.events.EventsManager
+import com.mega.game.engine.events.IEventListener
+import com.mega.game.engine.graph.IGraphMap
+import com.mega.game.engine.motion.MotionSystem
+import com.mega.game.engine.pathfinding.Pathfinder
+import com.mega.game.engine.pathfinding.PathfindingSystem
+import com.mega.game.engine.points.PointsSystem
+import com.mega.game.engine.screens.IScreen
+import com.mega.game.engine.systems.GameSystem
+import com.mega.game.engine.updatables.UpdatablesSystem
+import com.mega.game.engine.world.Contact
+import com.mega.game.engine.world.WorldSystem
 import com.megaman.maverick.game.assets.IAsset
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
@@ -59,11 +57,11 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.MegaControllerPoller
 import com.megaman.maverick.game.controllers.loadButtons
+import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
-import com.megaman.maverick.game.entities.special.PolygonWater
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
@@ -77,7 +75,7 @@ import com.megaman.maverick.game.screens.menus.bosses.BossSelectScreen
 import com.megaman.maverick.game.screens.other.CreditsScreen
 import com.megaman.maverick.game.screens.other.SimpleEndLevelScreen
 import com.megaman.maverick.game.screens.other.SimpleInitGameScreen
-import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
+import com.megaman.maverick.game.spawns.SpawnerFactory
 import com.megaman.maverick.game.utils.getMusics
 import com.megaman.maverick.game.utils.getSounds
 import com.megaman.maverick.game.world.FixtureType
@@ -103,7 +101,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
     companion object {
         const val TAG = "MegamanMaverickGame"
         const val DEFAULT_VOLUME = 0.5f
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(PolygonWater.TAG, MegaContactListener.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.WATER, FixtureType.WATER_LISTENER)
         }
@@ -125,7 +123,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
     lateinit var buttons: Buttons
     lateinit var controllerPoller: IControllerPoller
     lateinit var assMan: AssetManager
-    lateinit var eventsMan: IEventsManager
+    lateinit var eventsMan: EventsManager
     lateinit var engine: GameEngine
     lateinit var state: GameState
     lateinit var megaman: Megaman
@@ -134,7 +132,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
 
     var paused = false
 
-    private lateinit var debugText: BitmapFontHandle
+    private lateinit var debugText: IDrawable<Batch>
     private var currentScreenKey: String? = null
 
     fun setCurrentScreen(key: String) {
@@ -169,10 +167,10 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
 
     fun getShapes() = properties.get(ConstKeys.SHAPES) as PriorityQueue<IDrawableShape>
 
-    fun getSystems(): ObjectMap<String, IGameSystem> =
-        properties.get(ConstKeys.SYSTEMS) as ObjectMap<String, IGameSystem>
+    fun getSystems(): ObjectMap<String, GameSystem> =
+        properties.get(ConstKeys.SYSTEMS) as ObjectMap<String, GameSystem>
 
-    fun <T : IGameSystem> getSystem(clazz: KClass<T>) = clazz.cast(getSystems()[clazz.simpleName]!!)
+    fun <T : GameSystem> getSystem(clazz: KClass<T>) = clazz.cast(getSystems()[clazz.simpleName]!!)
 
     fun setGraphMap(graphMap: IGraphMap) = properties.put(ConstKeys.WORLD_GRAPH_MAP, graphMap)
 
@@ -191,9 +189,11 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
         assMan = AssetManager()
         loadAssets(assMan)
         assMan.finishLoading()
-        engine = createGameEngine()
         eventsMan = EventsManager()
         eventsMan.addListener(this)
+
+        engine = createGameEngine()
+        SpawnerFactory.engine = engine
 
         val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
         val screenHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
@@ -206,11 +206,8 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
         val uiViewport = FitViewport(screenWidth, screenHeight)
         viewports.put(ConstKeys.UI, uiViewport)
 
-        debugText = BitmapFontHandle(
-            { "FPS: ${Gdx.graphics.framesPerSecond}" }, getDefaultFontSize(), Vector2(
-                (ConstVals.VIEW_WIDTH - 2) * ConstVals.PPM, (ConstVals.VIEW_HEIGHT - 1) * ConstVals.PPM
-            ), centerX = true, centerY = true, fontSource = ConstVals.MEGAMAN_MAVERICK_FONT
-        )
+        // debugText = MegaFontHandle({ "FPS: ${Gdx.graphics.framesPerSecond}" })
+        debugText = MegaFontHandle({ "Count: ${engine.getSpawnedEntities().size}" })
 
         audioMan = MegaAudioManager(assMan.getSounds(), assMan.getMusics())
         audioMan.musicVolume = DEFAULT_VOLUME
@@ -221,8 +218,9 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
         state = GameState()
 
         megaman = Megaman(this)
+        // manually call init and set initialized to true before megaman is set to be spawned in the game engine
         megaman.init()
-        megaman.initialized = true
+        megaman.gameEntityState.initialized = true
 
         megamanUpgradeHandler = MegamanUpgradeHandler(state, megaman)
 
@@ -374,7 +372,8 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
         val shapes = PriorityQueue<IDrawableShape> { s1, s2 -> s1.shapeType.ordinal - s2.shapeType.ordinal }
         properties.put(ConstKeys.SHAPES, shapes)
 
-        val engine = GameEngine(
+        val engine = GameEngine()
+        engine.systems.addAll(
             ControllerSystem(controllerPoller),
             AnimationsSystem(),
             BehaviorsSystem(),
@@ -387,7 +386,11 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
                     FixtureType.CONSUMER to objectSetOf(*FixtureType.values()),
                     FixtureType.PLAYER to objectSetOf(FixtureType.BODY, FixtureType.ITEM),
                     FixtureType.DAMAGEABLE to objectSetOf(FixtureType.DAMAGER),
-                    FixtureType.BODY to objectSetOf(FixtureType.BLOCK, FixtureType.FORCE, FixtureType.GRAVITY_CHANGE),
+                    FixtureType.BODY to objectSetOf(
+                        FixtureType.BLOCK,
+                        FixtureType.FORCE,
+                        FixtureType.GRAVITY_CHANGE
+                    ),
                     FixtureType.DEATH to objectSetOf(
                         FixtureType.FEET, FixtureType.SIDE, FixtureType.HEAD, FixtureType.BODY
                     ),
@@ -413,7 +416,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
                 ),
                 debug = true
             ),
-            CullablesSystem(),
+            CullablesSystem(engine),
             MotionSystem(),
             PathfindingSystem(
                 pathfinderFactory = { Pathfinder(getGraphMap()!!, it.params) },
@@ -431,7 +434,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
                 { audioMan.stopMusic(it) })
         )
 
-        val systems = ObjectMap<String, IGameSystem>()
+        val systems = ObjectMap<String, GameSystem>()
         engine.systems.forEach { systems.put(it::class.simpleName, it) }
         properties.put(ConstKeys.SYSTEMS, systems)
 

@@ -1,8 +1,8 @@
 package com.megaman.maverick.game.entities.blocks
 
-import com.engine.common.objects.Properties
-import com.engine.common.shapes.GameRectangle
-import com.engine.world.Fixture
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.world.Fixture
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.world.FixtureType
 import com.megaman.maverick.game.world.setEntity
@@ -22,8 +22,8 @@ open class IceBlock(game: MegamanMaverickGame) : Block(game) {
         body.addFixture(ice)
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
         (ice.rawShape as GameRectangle).set(body)
     }
 }

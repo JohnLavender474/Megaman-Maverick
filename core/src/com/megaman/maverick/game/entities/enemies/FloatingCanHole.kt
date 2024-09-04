@@ -1,26 +1,26 @@
 package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.utils.Array
-import com.engine.common.extensions.objectMapOf
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameRectangle
-import com.engine.common.time.Timer
-import com.engine.cullables.CullablesComponent
-import com.engine.entities.IGameEntity
-import com.engine.entities.contracts.IBodyEntity
-import com.engine.entities.contracts.ICullableEntity
-import com.engine.entities.contracts.IParentEntity
-import com.engine.updatables.UpdatablesComponent
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.cullables.CullablesComponent
+import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.entities.contracts.ICullableEntity
+import com.mega.game.engine.entities.contracts.IParentEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.world.Body
+import com.mega.game.engine.world.BodyComponent
+import com.mega.game.engine.world.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.IHazard
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
@@ -35,7 +35,7 @@ class FloatingCanHole(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         private const val DEFAULT_MAX_SPAWNED = 3
     }
 
-    override var children = Array<IGameEntity>()
+    override var children = Array<GameEntity>()
 
     private val spawnDelayTimer = Timer(SPAWN_DELAY)
     private var maxToSpawn = DEFAULT_MAX_SPAWNED
@@ -43,14 +43,13 @@ class FloatingCanHole(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
     override fun getEntityType() = EntityType.HAZARD
 
     override fun init() {
-        super<MegaGameEntity>.init()
         addComponent(defineBodyComponent())
         addComponent(defineUpdatablesComponent())
         addComponent(defineCullablesComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
         maxToSpawn = spawnProps.getOrDefault(ConstKeys.MAX, DEFAULT_MAX_SPAWNED, Int::class)
@@ -58,8 +57,7 @@ class FloatingCanHole(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
     }
 
     override fun onDestroy() {
-        super<MegaGameEntity>.onDestroy()
-        // children.forEach { it.kill() }
+        super.onDestroy()
         children.clear()
     }
 
@@ -67,13 +65,13 @@ class FloatingCanHole(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         val iter = children.iterator()
         while (iter.hasNext()) {
             val child = iter.next()
-            if (child.dead) iter.remove()
+            if (!child.gameEntityState.spawned) iter.remove()
         }
         if (children.size < maxToSpawn) {
             spawnDelayTimer.update(delta)
             if (spawnDelayTimer.isFinished()) {
                 val floatingCan = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.FLOATING_CAN)!!
-                game.engine.spawn(floatingCan, props(ConstKeys.POSITION to body.getCenter()))
+                floatingCan.spawn(props(ConstKeys.POSITION to body.getCenter()))
                 children.add(floatingCan)
                 spawnDelayTimer.reset()
             }

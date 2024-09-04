@@ -1,17 +1,18 @@
 package com.megaman.maverick.game.world
 
-import com.engine.common.enums.ProcessState
-import com.engine.entities.contracts.IBodyEntity
-import com.engine.world.Body
-import com.engine.world.IFixture
+import com.mega.game.engine.common.enums.ProcessState
+import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.world.Body
+import com.mega.game.engine.world.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.utils.VelocityAlteration
 
-fun IFixture.getBody(): Body = getEntity().body
+fun IFixture.getBody(): Body = (getEntity() as IBodyEntity).body
 
 fun IFixture.setEntity(entity: IBodyEntity): IFixture {
     properties.put(ConstKeys.ENTITY, entity)
@@ -20,7 +21,7 @@ fun IFixture.setEntity(entity: IBodyEntity): IFixture {
 
 fun IFixture.hasFixtureType(fixtureType: Any) = fixtureType == getFixtureType()
 
-fun IFixture.getEntity() = properties.get(ConstKeys.ENTITY) as IBodyEntity
+fun IFixture.getEntity() = properties.get(ConstKeys.ENTITY) as MegaGameEntity
 
 fun IFixture.depleteHealth(): Boolean {
     val entity = getEntity()
@@ -37,9 +38,9 @@ fun IFixture.setVelocityAlteration(alteration: (IFixture, Float) -> VelocityAlte
 
 fun IFixture.getVelocityAlteration(alterableBodyFixture: IFixture, delta: Float) =
     (properties.get(ConstKeys.VELOCITY_ALTERATION) as (IFixture, Float) -> VelocityAlteration).invoke(
-            alterableBodyFixture,
-            delta
-        )
+        alterableBodyFixture,
+        delta
+    )
 
 fun IFixture.setRunnable(runnable: () -> Unit): IFixture {
     properties.put(ConstKeys.RUNNABLE, runnable)
@@ -63,7 +64,8 @@ fun IFixture.setHitByBodyReceiver(receiver: (IBodyEntity) -> Unit) {
 
 fun IFixture.hasHitByBodyReceiver() = hasProperty(ConstKeys.HIT_BY_BODY)
 
-fun IFixture.getHitByBody(body: IBodyEntity) = (getProperty(ConstKeys.HIT_BY_BODY) as (IBodyEntity) -> Unit).invoke(body)
+fun IFixture.getHitByBody(body: IBodyEntity) =
+    (getProperty(ConstKeys.HIT_BY_BODY) as (IBodyEntity) -> Unit).invoke(body)
 
 fun IFixture.setHitByBlockReceiver(receiver: (Block) -> Unit) {
     putProperty(ConstKeys.HIT_BY_BLOCK, receiver)

@@ -3,32 +3,30 @@ package com.megaman.maverick.game.entities.projectiles
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
-import com.engine.animations.Animation
-import com.engine.animations.AnimationsComponent
-import com.engine.animations.Animator
-import com.engine.audio.AudioComponent
-import com.engine.common.CAUSE_OF_DEATH_MESSAGE
-import com.engine.common.GameLogger
-import com.engine.common.extensions.getTextureRegion
-import com.engine.common.extensions.objectMapOf
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameRectangle
-import com.engine.common.time.Timer
-import com.engine.damage.IDamageable
-import com.engine.damage.IDamager
-import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.drawables.shapes.IDrawableShape
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setCenter
-import com.engine.drawables.sprites.setSize
-import com.engine.entities.IGameEntity
-import com.engine.points.PointsComponent
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
-import com.engine.world.Fixture
+import com.mega.game.engine.animations.Animation
+import com.mega.game.engine.animations.AnimationsComponent
+import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.audio.AudioComponent
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamageable
+import com.mega.game.engine.damage.IDamager
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setCenter
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.points.PointsComponent
+import com.mega.game.engine.world.Body
+import com.mega.game.engine.world.BodyComponent
+import com.mega.game.engine.world.BodyType
+import com.mega.game.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -65,14 +63,14 @@ class Petal(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity
     override fun init() {
         if (region == null)
             region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Petal")
-        super<AbstractProjectile>.init()
+        super.init()
         addComponent(AudioComponent())
         addComponent(defineAnimationsComponent())
         addComponent(definePointsComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
         setHealth(ConstVals.MAX_HEALTH)
         GameLogger.debug(TAG, "Health: ${getCurrentHealth()}. Spawn props: $spawnProps.")
 
@@ -82,13 +80,13 @@ class Petal(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity
         val trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
         body.physics.velocity.set(trajectory.scl(ConstVals.PPM.toFloat() * SPEED))
 
-        owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
+        owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
 
         damageTimer.setToEnd()
     }
 
     override fun onDestroy() {
-        super<AbstractProjectile>.onDestroy()
+        super.onDestroy()
         GameLogger.debug(TAG, "Petal destroyed")
     }
 
@@ -110,9 +108,7 @@ class Petal(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity
     private fun definePointsComponent(): PointsComponent {
         val pointsComponent = PointsComponent()
         pointsComponent.putPoints(ConstKeys.HEALTH, ConstVals.MAX_HEALTH)
-        pointsComponent.putListener(ConstKeys.HEALTH) {
-            if (it.current <= 0) kill(props(CAUSE_OF_DEATH_MESSAGE to "Health depleted"))
-        }
+        pointsComponent.putListener(ConstKeys.HEALTH) { if (it.current <= 0) destroy() }
         return pointsComponent
     }
 
@@ -121,6 +117,7 @@ class Petal(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity
         body.setSize(0.9f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body.getBodyBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(0.4f * ConstVals.PPM))
         body.addFixture(bodyFixture)

@@ -5,27 +5,27 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
-import com.engine.common.GameLogger
-import com.engine.common.extensions.getTextureAtlas
-import com.engine.common.extensions.objectMapOf
-import com.engine.common.getRandom
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameCircle
-import com.engine.common.shapes.GameRectangle
-import com.engine.common.time.Timer
-import com.engine.damage.IDamageable
-import com.engine.damage.IDamager
-import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.drawables.shapes.IDrawableShape
-import com.engine.drawables.sorting.DrawingPriority
-import com.engine.drawables.sorting.DrawingSection
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setCenter
-import com.engine.drawables.sprites.setSize
-import com.engine.points.PointsComponent
-import com.engine.world.*
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.getRandom
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameCircle
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamageable
+import com.mega.game.engine.damage.IDamager
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setCenter
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.points.PointsComponent
+import com.mega.game.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -69,13 +69,13 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEnt
             regions.put(REGULAR, atlas.findRegion("$TAG/$REGULAR"))
             regions.put(BLUE, atlas.findRegion("$TAG/$BLUE"))
         }
-        super<AbstractProjectile>.init()
+        super.init()
         addComponent(definePointsComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
+    override fun onSpawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
-        super.spawn(spawnProps)
+        super.onSpawn(spawnProps)
 
         val spawn =
             if (spawnProps.containsKey(ConstKeys.BOUNDS))
@@ -111,9 +111,9 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEnt
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
     override fun explodeAndDie(vararg params: Any?) {
-        kill()
+        destroy()
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.ASTEROID_EXPLOSION)!!
-        game.engine.spawn(explosion, props(ConstKeys.POSITION to body.getCenter()))
+        explosion.spawn(props(ConstKeys.POSITION to body.getCenter()))
     }
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
@@ -192,7 +192,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEnt
         pointsComponent.putListener(ConstKeys.HEALTH) {
             if (it.current <= ConstVals.MIN_HEALTH) {
                 GameLogger.debug(TAG, "Asteroid has died due to health reaching zero.")
-                kill()
+                destroy()
             }
         }
         return pointsComponent

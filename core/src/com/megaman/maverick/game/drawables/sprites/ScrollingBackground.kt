@@ -2,10 +2,10 @@ package com.megaman.maverick.game.drawables.sprites
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
-import com.engine.common.interpolate
-import com.engine.common.time.Timer
-import com.engine.drawables.sorting.DrawingPriority
-import com.engine.drawables.sorting.DrawingSection
+import com.mega.game.engine.common.interpolate
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
 
 open class ScrollingBackground(
     region: TextureRegion,

@@ -2,23 +2,23 @@ package com.megaman.maverick.game.entities.blocks
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Rectangle
-import com.engine.animations.Animation
-import com.engine.animations.AnimationsComponent
-import com.engine.animations.Animator
-import com.engine.animations.IAnimation
-import com.engine.common.enums.Position
-import com.engine.common.extensions.*
-import com.engine.common.objects.Loop
-import com.engine.common.objects.Properties
-import com.engine.common.time.Timer
-import com.engine.drawables.sorting.DrawingPriority
-import com.engine.drawables.sorting.DrawingSection
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setPosition
-import com.engine.entities.contracts.IAnimatedEntity
-import com.engine.entities.contracts.ISpritesEntity
-import com.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.animations.Animation
+import com.mega.game.engine.animations.AnimationsComponent
+import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.extensions.*
+import com.mega.game.engine.common.objects.Loop
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setPosition
+import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -48,7 +48,7 @@ class DropperLift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAni
     private val timer = Timer(DURATION)
 
     override fun init() {
-        super<Block>.init()
+        super.init()
         if (closedRegion == null || openingRegion == null || openRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
             closedRegion = atlas.findRegion("DropperLift/Closed")
@@ -60,15 +60,16 @@ class DropperLift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAni
         addComponent(defineAnimationsComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
+    override fun onSpawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.BODY_LABELS, objectSetOf(BodyLabel.COLLIDE_DOWN_ONLY))
-        super.spawn(spawnProps)
+        super.onSpawn(spawnProps)
         loop.reset()
         timer.reset()
     }
 
     private fun isMegamanOverlapping(): Boolean {
-        val megamanFeet = getMegaman().body.fixtures.map { it.second }.find { it.getFixtureType() == FixtureType.FEET }!!
+        val megamanFeet =
+            getMegaman().body.fixtures.map { it.second }.find { it.getFixtureType() == FixtureType.FEET }!!
         return megamanFeet.getShape().overlaps(body) || getMegaman().body.overlaps(body as Rectangle)
     }
 

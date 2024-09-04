@@ -1,6 +1,6 @@
 package com.megaman.maverick.game.entities.megaman.components
 
-import com.engine.points.PointsComponent
+import com.mega.game.engine.points.PointsComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.entities.megaman.Megaman
@@ -15,7 +15,7 @@ internal fun Megaman.definePointsComponent(): PointsComponent {
         min = ConstVals.MIN_HEALTH
     )
     pointsComponent.putListener(ConstKeys.HEALTH) {
-        if (it.current <= ConstVals.MIN_HEALTH) kill()
+        if (it.current <= ConstVals.MIN_HEALTH) destroy()
     }
     return pointsComponent
 }

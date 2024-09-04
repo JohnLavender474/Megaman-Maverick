@@ -2,18 +2,18 @@ package com.megaman.maverick.game.entities.projectiles
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
-import com.engine.common.extensions.gdxArrayOf
-import com.engine.common.extensions.getTextureRegion
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameCircle
-import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setCenter
-import com.engine.drawables.sprites.setSize
-import com.engine.entities.IGameEntity
-import com.engine.world.*
+import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameCircle
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setCenter
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -35,7 +35,7 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         private var region: TextureRegion? = null
     }
 
-    override var owner: IGameEntity? = null
+    override var owner: GameEntity? = null
 
     override fun init() {
         if (region == null) region =
@@ -43,9 +43,9 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         super.init()
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
-        owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
+        owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
         body.physics.gravityOn = true
@@ -56,14 +56,14 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
     override fun hitBlock(blockFixture: IFixture) = explodeAndDie()
 
     override fun explodeAndDie(vararg params: Any?) {
-        val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)
+        val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
         val props = props(
             ConstKeys.POSITION to body.getCenter(),
             ConstKeys.SOUND to SoundAsset.EXPLOSION_2_SOUND,
             ConstKeys.OWNER to owner
         )
-        game.engine.spawn(explosion!!, props)
-        kill()
+        explosion.spawn(props)
+        destroy()
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -80,7 +80,7 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(ConstVals.PPM.toFloat()))
         body.addFixture(damagerFixture)
 
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBodyBounds() }), debug = true))
 
         return BodyComponentCreator.create(this, body)
     }

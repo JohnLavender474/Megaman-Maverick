@@ -20,7 +20,6 @@ allprojects {
 
     version = '1.0'
     ext {
-        gameEngineVersion = '1.0'
         appName = "Megaman Maverick"
         gdxVersion = '1.12.1'
         roboVMVersion = '2.3.16'
@@ -47,7 +46,6 @@ project(":desktop") {
 
     dependencies {
         implementation project(":core")
-        /* implementation "com.github.JohnLavender474:2D-Game-Engine:$gameEngineVersion" */
         api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         api "com.badlogicgames.gdx-controllers:gdx-controllers-desktop:$gdxControllersVersion"
@@ -72,7 +70,6 @@ project(":core") {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx-controllers:gdx-controllers-core:$gdxControllersVersion"
         api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        /* implementation "com.github.JohnLavender474:2D-Game-Engine:$gameEngineVersion" */
         api fileTree(dir: 'libs', include: '*.jar')
         testImplementation "com.badlogicgames.gdx:gdx:$gdxVersion"
         testImplementation "io.kotest:kotest-runner-junit5-jvm:4.6.0"

@@ -9,33 +9,30 @@ import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.ObjectMap
-import com.engine.GameEngine
-import com.engine.animations.AnimationsSystem
-import com.engine.behaviors.BehaviorsSystem
-import com.engine.common.GameLogger
-import com.engine.common.extensions.gdxArrayOf
-import com.engine.common.extensions.isAny
-import com.engine.common.extensions.objectSetOf
-import com.engine.common.extensions.vector2Of
-import com.engine.common.interfaces.Initializable
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.toGameRectangle
-import com.engine.controller.polling.IControllerPoller
-import com.engine.damage.IDamager
-import com.engine.drawables.shapes.IDrawableShape
-import com.engine.drawables.sorting.DrawingSection
-import com.engine.drawables.sorting.IComparableDrawable
-import com.engine.events.Event
-import com.engine.events.IEventListener
-import com.engine.events.IEventsManager
-import com.engine.graph.SimpleNodeGraphMap
-import com.engine.motion.MotionSystem
-import com.engine.screens.levels.tiledmap.TiledMapLevelScreen
-import com.engine.spawns.ISpawner
-import com.engine.spawns.Spawn
-import com.engine.spawns.SpawnsManager
-import com.engine.world.WorldSystem
+import com.mega.game.engine.GameEngine
+import com.mega.game.engine.animations.AnimationsSystem
+import com.mega.game.engine.behaviors.BehaviorsSystem
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.extensions.isAny
+import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.extensions.vector2Of
+import com.mega.game.engine.common.interfaces.Initializable
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.toGameRectangle
+import com.mega.game.engine.controller.polling.IControllerPoller
+import com.mega.game.engine.damage.IDamager
+import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.drawables.sorting.DrawingSection
+import com.mega.game.engine.drawables.sorting.IComparableDrawable
+import com.mega.game.engine.events.Event
+import com.mega.game.engine.events.EventsManager
+import com.mega.game.engine.events.IEventListener
+import com.mega.game.engine.graph.SimpleNodeGraphMap
+import com.mega.game.engine.motion.MotionSystem
+import com.mega.game.engine.screens.levels.tiledmap.TiledMapLevelScreen
+import com.mega.game.engine.world.WorldSystem
 import com.megaman.maverick.game.ConstFuncs
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -63,6 +60,9 @@ import com.megaman.maverick.game.screens.levels.map.layers.MegaMapLayerBuildersP
 import com.megaman.maverick.game.screens.levels.spawns.PlayerSpawnsManager
 import com.megaman.maverick.game.screens.levels.stats.EntityStatsHandler
 import com.megaman.maverick.game.screens.levels.stats.PlayerStatsHandler
+import com.megaman.maverick.game.spawns.ISpawner
+import com.megaman.maverick.game.spawns.Spawn
+import com.megaman.maverick.game.spawns.SpawnsManager
 import com.megaman.maverick.game.utils.toProps
 import java.util.*
 
@@ -107,10 +107,10 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
     )
 
     val engine: GameEngine
-        get() = game.engine as GameEngine
+        get() = game.engine
     val megaman: Megaman
         get() = game.megaman
-    val eventsMan: IEventsManager
+    val eventsMan: EventsManager
         get() = game.eventsMan
     val audioMan: MegaAudioManager
         get() = game.audioMan
@@ -204,7 +204,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
                 )
             )
 
-            MegaGameEntitiesMap.get(EntityType.ENEMY).forEach { it.kill() }
+            MegaGameEntitiesMap.getEntitiesOfType(EntityType.ENEMY).forEach { game.engine.destroy(it) }
 
             game.putProperty(ConstKeys.ROOM_TRANSITION, true)
         }
@@ -346,7 +346,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
                     "onEvent(): Player spawn --> spawn Megaman: ${playerSpawnsMan.currentSpawnProps!!}"
                 )
 
-                MegaGameEntitiesMap.get(EntityType.ENEMY).forEach { it.kill() }
+                MegaGameEntitiesMap.getEntitiesOfType(EntityType.ENEMY).forEach { game.engine.destroy(it) }
 
                 engine.systems.forEach { it.on = true }
                 engine.spawn(megaman, playerSpawnsMan.currentSpawnProps!!)
@@ -473,7 +473,11 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
                 if (!boss.mini) audioMan.unsetMusic()
 
                 MegaGameEntitiesMap.forEachEntity {
-                    if (it.isAny(IDamager::class, IHazard::class) && it != boss) it.kill()
+                    if (it.isAny(
+                            IDamager::class,
+                            IHazard::class
+                        ) && it != boss
+                    ) it.destroy()
                 }
 
                 eventsMan.submitEvent(

@@ -2,31 +2,31 @@ package com.megaman.maverick.game.entities.projectiles
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
-import com.engine.animations.Animation
-import com.engine.animations.AnimationsComponent
-import com.engine.animations.Animator
-import com.engine.animations.IAnimation
-import com.engine.common.enums.Direction
-import com.engine.common.extensions.gdxArrayOf
-import com.engine.common.extensions.getTextureAtlas
-import com.engine.common.extensions.objectMapOf
-import com.engine.common.getOverlapPushDirection
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameRectangle
-import com.engine.common.shapes.IGameShape2D
-import com.engine.common.time.Timer
-import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.drawables.sorting.DrawingPriority
-import com.engine.drawables.sorting.DrawingSection
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setCenter
-import com.engine.drawables.sprites.setSize
-import com.engine.entities.IGameEntity
-import com.engine.entities.contracts.IAnimatedEntity
-import com.engine.updatables.UpdatablesComponent
-import com.engine.world.*
+import com.mega.game.engine.animations.Animation
+import com.mega.game.engine.animations.AnimationsComponent
+import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.getOverlapPushDirection
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.shapes.IGameShape2D
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setCenter
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -86,15 +86,15 @@ class ReactManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game), 
             smallRegion = atlas.findRegion("ReactManProjectile/Small")
             dyingRegion = atlas.findRegion("ReactManProjectile/Die")
         }
-        super<AbstractProjectile>.init()
+        super.init()
         addComponent(defineUpdatablesComponent())
         addComponent(defineAnimationsComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
 
-        owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
+        owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
         big = spawnProps.get(ConstKeys.BIG, Boolean::class)!!
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
@@ -122,10 +122,12 @@ class ReactManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game), 
         explodeAndDie()
     }
 
-    override fun explodeAndDie(vararg params: Any?) = if (big) kill() else {
-        body.physics.velocity.setZero()
-        body.physics.gravityOn = false
-        dying = true
+    override fun explodeAndDie(vararg params: Any?) {
+        if (big) destroy() else {
+            body.physics.velocity.setZero()
+            body.physics.gravityOn = false
+            dying = true
+        }
     }
 
     private fun shatter(shape: IGameShape2D) {
@@ -133,8 +135,8 @@ class ReactManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game), 
         val direction = getOverlapPushDirection(body, shape) ?: Direction.UP
         shatterTrajectories.get(direction).forEach { trajectory ->
             val projectile = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.REACT_MAN_PROJECTILE)!!
-            game.engine.spawn(
-                projectile, props(
+            projectile.spawn(
+                props(
                     ConstKeys.POSITION to when (direction) {
                         Direction.UP -> body.getTopCenterPoint()
                         Direction.DOWN -> body.getBottomCenterPoint()
@@ -154,7 +156,7 @@ class ReactManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game), 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         if (dying) {
             dyingTimer.update(delta)
-            if (dyingTimer.isFinished()) kill()
+            if (dyingTimer.isFinished()) destroy()
         }
     })
 

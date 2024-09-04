@@ -1,11 +1,11 @@
 package com.megaman.maverick.game.drawables.sprites
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.engine.animations.Animation
-import com.engine.common.GameLogger
-import com.engine.common.objects.Matrix
-import com.engine.drawables.sorting.DrawingPriority
-import com.engine.drawables.sorting.DrawingSection
+import com.mega.game.engine.animations.Animation
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.objects.Matrix
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
 
 open class AnimatedBackground(
     startX: Float,
@@ -19,7 +19,7 @@ open class AnimatedBackground(
     animColumns: Int,
     duration: Float,
     priority: DrawingPriority = DrawingPriority(DrawingSection.BACKGROUND, 0)
-): Background(startX, startY, model, modelWidth, modelHeight, rows, columns, priority) {
+) : Background(startX, startY, model, modelWidth, modelHeight, rows, columns, priority) {
 
     companion object {
         const val TAG = "AnimatedBackground"

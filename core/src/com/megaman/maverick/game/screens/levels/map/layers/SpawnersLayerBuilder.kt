@@ -5,17 +5,17 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.ObjectSet
-import com.engine.common.GameLogger
-import com.engine.common.objects.Properties
-import com.engine.common.shapes.toGameRectangle
-import com.engine.screens.levels.tiledmap.builders.ITiledMapLayerBuilder
-import com.engine.spawns.ISpawner
-import com.engine.spawns.Spawn
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.shapes.toGameRectangle
+import com.mega.game.engine.screens.levels.tiledmap.builders.ITiledMapLayerBuilder
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
+import com.megaman.maverick.game.spawns.ISpawner
+import com.megaman.maverick.game.spawns.Spawn
 import com.megaman.maverick.game.spawns.SpawnerFactory
 import com.megaman.maverick.game.utils.convertToProps
 import com.megaman.maverick.game.utils.getShape
@@ -56,7 +56,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                 val entity = EntityFactories.fetch(entityType, it.name) ?: throw IllegalStateException(
                     "Entity of type $entityType not found: ${it.name}"
                 )
-                game.engine.spawn(entity, spawnProps)
+                entity.spawn(spawnProps)
                 return@forEach
             }
 

@@ -2,17 +2,16 @@ package com.megaman.maverick.game.screens.levels.map.layers
 
 import com.badlogic.gdx.maps.MapLayer
 import com.badlogic.gdx.maps.objects.RectangleMapObject
-import com.engine.common.objects.Properties
-import com.engine.common.shapes.toGameRectangle
-import com.engine.screens.levels.tiledmap.builders.ITiledMapLayerBuilder
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.shapes.toGameRectangle
+import com.mega.game.engine.screens.levels.tiledmap.builders.ITiledMapLayerBuilder
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.SensorsFactory
 import com.megaman.maverick.game.utils.toProps
 
-class SensorsLayerBuilder(private val game: MegamanMaverickGame) : ITiledMapLayerBuilder {
+class SensorsLayerBuilder : ITiledMapLayerBuilder {
 
     override fun build(layer: MapLayer, returnProps: Properties) {
         layer.objects.forEach { mapObject ->
@@ -24,12 +23,12 @@ class SensorsLayerBuilder(private val game: MegamanMaverickGame) : ITiledMapLaye
                 when (name) {
                     "Death" -> {
                         val death = EntityFactories.fetch(EntityType.SENSOR, SensorsFactory.DEATH)!!
-                        game.engine.spawn(death, props)
+                        death.spawn(props)
                     }
 
                     "Gate" -> {
                         val gate = EntityFactories.fetch(EntityType.SENSOR, SensorsFactory.GATE)!!
-                        game.engine.spawn(gate, props)
+                        gate.spawn(props)
                     }
 
                     else -> throw IllegalArgumentException("Unknown sensor type: $name")

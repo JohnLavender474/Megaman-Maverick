@@ -1,9 +1,9 @@
 package com.megaman.maverick.game.entities.megaman.components
 
-import com.engine.common.GameLogger
-import com.engine.common.objects.props
-import com.engine.common.time.Timer
-import com.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.behaviors.BehaviorType
@@ -24,7 +24,7 @@ private val underWaterBubbleTimer = Timer(UNDER_WATER_BUBBLE_DELAY)
 internal fun Megaman.defineUpdatablesComponent() = UpdatablesComponent({ delta ->
     if (body.x < -10 * ConstVals.PPM || body.y < -10 * ConstVals.PPM) {
         GameLogger.error(MEGAMAN_UPDATE_COMPONENT_TAG, "Megaman is below game bounds, killing him")
-        kill()
+        destroy()
     }
 
     if (!weaponHandler.isChargeable(currentWeapon)) stopCharging()
@@ -63,5 +63,5 @@ private fun Megaman.spawnBubbles() {
     val offsetY = if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) 0.05f else 0.1f
     val offsetX = 0.2f * facing.value
     val spawn = body.getCenter().add(offsetX * ConstVals.PPM, offsetY * ConstVals.PPM)
-    game.engine.spawn(bubbles, props(ConstKeys.POSITION to spawn))
+    bubbles.spawn(props(ConstKeys.POSITION to spawn))
 }

@@ -4,13 +4,13 @@ import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Array
-import com.engine.common.GameLogger
-import com.engine.common.objects.Properties
-import com.engine.common.shapes.toGameRectangle
-import com.engine.cullables.CullableOnUncontained
-import com.engine.entities.IGameEntity
-import com.engine.entities.contracts.IBodyEntity
-import com.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.shapes.toGameRectangle
+import com.mega.game.engine.cullables.CullableOnUncontained
+import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -33,8 +33,8 @@ fun getObjectProps(props: Properties): Array<RectangleMapObject> {
     return objectProps
 }
 
-fun convertObjectPropsToEntitySuppliers(props: Properties): Array<Pair<() -> IGameEntity, Properties>> {
-    val childEntitySuppliers = Array<Pair<() -> IGameEntity, Properties>>()
+fun convertObjectPropsToEntitySuppliers(props: Properties): Array<Pair<() -> GameEntity, Properties>> {
+    val childEntitySuppliers = Array<Pair<() -> GameEntity, Properties>>()
 
     props.forEach { key, value ->
         if (value is RectangleMapObject) {
@@ -43,7 +43,7 @@ fun convertObjectPropsToEntitySuppliers(props: Properties): Array<Pair<() -> IGa
                 val entityTypeString = childProps.get(ConstKeys.ENTITY_TYPE) as String
                 val entityType = EntityType.valueOf(entityTypeString.uppercase())
 
-                val childEntitySupplier: () -> IGameEntity = {
+                val childEntitySupplier: () -> GameEntity = {
                     EntityFactories.fetch(entityType, value.name)!!
                 }
 
@@ -62,7 +62,7 @@ fun convertObjectPropsToEntitySuppliers(props: Properties): Array<Pair<() -> IGa
     return childEntitySuppliers
 }
 
-fun standardOnTeleportStart(entity: IGameEntity) {
+fun standardOnTeleportStart(entity: GameEntity) {
     GameLogger.debug("standardOnTeleportStart()", "entity=$entity")
     if (entity is IBodyEntity) {
         val body = entity.body
@@ -73,15 +73,15 @@ fun standardOnTeleportStart(entity: IGameEntity) {
     if (entity is ISpritesEntity) entity.sprites.forEach { it.value.hidden = true }
 }
 
-fun setStandardOnTeleportStartProp(entity: IGameEntity) {
+fun setStandardOnTeleportStartProp(entity: GameEntity) {
     entity.putProperty(ConstKeys.ON_TELEPORT_START, { standardOnTeleportStart(entity) })
 }
 
-fun setStandardOnTeleportContinueProp(entity: IGameEntity) {
+fun setStandardOnTeleportContinueProp(entity: GameEntity) {
     entity.putProperty(ConstKeys.ON_TELEPORT_CONTINUE, { standardOnTeleportStart(entity) })
 }
 
-fun standardOnTeleportEnd(entity: IGameEntity) {
+fun standardOnTeleportEnd(entity: GameEntity) {
     GameLogger.debug("standardOnTeleportEnd()", "entity=$entity")
     if (entity is IBodyEntity) {
         val body = entity.body
@@ -92,6 +92,6 @@ fun standardOnTeleportEnd(entity: IGameEntity) {
     if (entity is ISpritesEntity) entity.sprites.forEach { it.value.hidden = false }
 }
 
-fun setStandardOnTeleportEndProp(entity: IGameEntity) {
+fun setStandardOnTeleportEndProp(entity: GameEntity) {
     entity.putProperty(ConstKeys.ON_TELEPORT_END, { standardOnTeleportEnd(entity) })
 }

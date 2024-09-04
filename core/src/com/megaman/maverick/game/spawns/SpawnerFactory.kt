@@ -2,16 +2,16 @@ package com.megaman.maverick.game.spawns
 
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.utils.ObjectSet
-import com.engine.common.GameLogger
-import com.engine.common.shapes.IGameShape2D
-import com.engine.spawns.Spawn
-import com.engine.spawns.SpawnerForBoundsEntered
-import com.engine.spawns.SpawnerForEvent
+import com.mega.game.engine.GameEngine
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.shapes.IGameShape2D
 import com.megaman.maverick.game.utils.toGameRectangle
 
 object SpawnerFactory {
 
     const val TAG = "SpawnerFactory"
+
+    lateinit var engine: GameEngine
 
     fun spawnerForWhenInCamera(
         camera: Camera,
@@ -21,7 +21,7 @@ object SpawnerFactory {
     ): SpawnerForBoundsEntered {
         GameLogger.debug(TAG, "spawnerForWhenEnteringCamera(): Creating spawner for camera: $camera")
         return SpawnerForBoundsEntered(
-            spawnSupplier, { spawnShape }, { camera.toGameRectangle() }, respawnable = respawnable
+            engine, spawnSupplier, { spawnShape }, { camera.toGameRectangle() }, respawnable = respawnable
         )
     }
 
@@ -32,10 +32,7 @@ object SpawnerFactory {
     ): SpawnerForEvent {
         GameLogger.debug(TAG, "spawnerForWhenEventCalled(): Creating spawner for events: $events")
         return SpawnerForEvent(
-            { events.contains(it.key) },
-            spawnSupplier,
-            eventKeyMask = events,
-            respawnable = respawnable
+            engine, { events.contains(it.key) }, spawnSupplier, eventKeyMask = events, respawnable = respawnable
         )
     }
 }

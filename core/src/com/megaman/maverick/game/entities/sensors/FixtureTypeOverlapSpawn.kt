@@ -3,15 +3,15 @@ package com.megaman.maverick.game.entities.sensors
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
 import com.badlogic.gdx.utils.OrderedSet
-import com.engine.common.enums.ProcessState
-import com.engine.common.extensions.toOrderedSet
-import com.engine.common.objects.Properties
-import com.engine.common.shapes.GameRectangle
-import com.engine.entities.IGameEntity
-import com.engine.entities.contracts.IBodyEntity
-import com.engine.entities.contracts.IParentEntity
-import com.engine.updatables.UpdatablesComponent
-import com.engine.world.*
+import com.mega.game.engine.common.enums.ProcessState
+import com.mega.game.engine.common.extensions.toOrderedSet
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.entities.contracts.IParentEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
@@ -27,12 +27,12 @@ class FixtureTypeOverlapSpawn(game: MegamanMaverickGame) : MegaGameEntity(game),
         const val TAG = "FixtureTypeOverlapSpawn"
     }
 
-    override var children = Array<IGameEntity>()
+    override var children = Array<GameEntity>()
 
-    private lateinit var entitySuppliers: Array<Pair<() -> IGameEntity, Properties>>
+    private lateinit var entitySuppliers: Array<Pair<() -> GameEntity, Properties>>
     private lateinit var spawnMask: OrderedSet<FixtureType>
     private val fixturesConsumed = ObjectSet<FixtureType>()
-    private var spawned = false
+    private var objectSpawned = false
 
     override fun getEntityType() = EntityType.SENSOR
 
@@ -41,8 +41,8 @@ class FixtureTypeOverlapSpawn(game: MegamanMaverickGame) : MegaGameEntity(game),
         addComponent(defineUpdatablesComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
@@ -53,11 +53,11 @@ class FixtureTypeOverlapSpawn(game: MegamanMaverickGame) : MegaGameEntity(game),
         val mask = spawnProps.get(ConstKeys.MASK, String::class)!!.split(",")
         spawnMask = (mask.map { FixtureType.valueOf(it.uppercase()) }).toOrderedSet()
 
-        spawned = false
+        objectSpawned = false
     }
 
     override fun onDestroy() {
-        super<MegaGameEntity>.onDestroy()
+        super.onDestroy()
         fixturesConsumed.clear()
     }
 
@@ -75,16 +75,16 @@ class FixtureTypeOverlapSpawn(game: MegamanMaverickGame) : MegaGameEntity(game),
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
-        if (spawned) return@UpdatablesComponent
+        if (objectSpawned) return@UpdatablesComponent
 
         for (mask in spawnMask) {
             if (fixturesConsumed.contains(mask)) {
                 entitySuppliers.forEach { (entitySupplier, props) ->
                     val entity = entitySupplier.invoke()
-                    game.engine.spawn(entity, props)
+                    entity.spawn(props)
                     children.add(entity)
                 }
-                spawned = true
+                objectSpawned = true
                 break
             }
         }

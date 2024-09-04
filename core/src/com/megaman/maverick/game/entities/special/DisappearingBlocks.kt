@@ -2,28 +2,26 @@ package com.megaman.maverick.game.entities.special
 
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Array
-import com.engine.audio.AudioComponent
-import com.engine.common.CAUSE_OF_DEATH_MESSAGE
-import com.engine.common.GameLogger
-import com.engine.common.extensions.gdxArrayOf
-import com.engine.common.objects.Loop
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameRectangle
-import com.engine.common.time.Timer
-import com.engine.cullables.CullablesComponent
-import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.entities.IGameEntity
-import com.engine.entities.contracts.IAudioEntity
-import com.engine.entities.contracts.IParentEntity
-import com.engine.updatables.UpdatablesComponent
-import com.engine.world.Fixture
+import com.mega.game.engine.audio.AudioComponent
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.objects.Loop
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.cullables.CullablesComponent
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.contracts.IAudioEntity
+import com.mega.game.engine.entities.contracts.IParentEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.blocks.AnimatedBlock
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntitySuppliers
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.toGameRectangle
@@ -36,7 +34,7 @@ class DisappearingBlocks(game: MegamanMaverickGame) : MegaGameEntity(game), IPar
         private const val DEFAULT_DURATION = 1.15f
     }
 
-    override var children = Array<IGameEntity>()
+    override var children = Array<GameEntity>()
 
     private val keysToRender = LinkedList<String>()
 
@@ -45,6 +43,8 @@ class DisappearingBlocks(game: MegamanMaverickGame) : MegaGameEntity(game), IPar
     private lateinit var timer: Timer
 
     override fun getEntityType() = EntityType.SPECIAL
+
+    override fun getTag(): String = TAG
 
     override fun init() {
         addComponent(defineUpdatablesComponent())
@@ -55,8 +55,8 @@ class DisappearingBlocks(game: MegamanMaverickGame) : MegaGameEntity(game), IPar
         )
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
 
         bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
 
@@ -82,7 +82,7 @@ class DisappearingBlocks(game: MegamanMaverickGame) : MegaGameEntity(game), IPar
                 child.body.fixtures.forEach { entry -> (entry.second as Fixture).active = false }
                 child.hidden = true
             })
-            game.engine.spawn(child, props)
+            child.spawn(props)
 
             val thisKey = props.get(ConstKeys.KEY, String::class)!!
             GameLogger.debug(TAG, "spawn(): thisKey = $thisKey")
@@ -97,8 +97,8 @@ class DisappearingBlocks(game: MegamanMaverickGame) : MegaGameEntity(game), IPar
     }
 
     override fun onDestroy() {
-        super<MegaGameEntity>.onDestroy()
-        children.forEach { it.kill(props(CAUSE_OF_DEATH_MESSAGE to "Culled by parent")) }
+        super.onDestroy()
+        children.forEach { (it as MegaGameEntity).destroy() }
         children.clear()
     }
 

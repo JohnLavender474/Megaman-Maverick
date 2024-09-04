@@ -1,8 +1,8 @@
 package com.megaman.maverick.game.entities.factories.impl
 
-import com.engine.common.GameLogger
-import com.engine.entities.IGameEntity
+import com.mega.game.engine.common.GameLogger
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.enemies.*
 import com.megaman.maverick.game.entities.factories.EntityFactory
 import com.megaman.maverick.game.entities.factories.GameEntityPoolCreator
@@ -79,6 +79,8 @@ class EnemiesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         const val TROPISH = "Tropish"
         const val SEALION = "Sealion"
         const val YELLOW_TIGGER_SQUIRT = "YellowTiggerSquirt"
+        const val UNDERWATER_PENGUIN_BOT = "UnderwaterPenguinBot"
+        const val BOMB_PENGUIN_BOT = "BombPenguinBot"
     }
 
     override fun init() {
@@ -150,9 +152,10 @@ class EnemiesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(TROPISH, GameEntityPoolCreator.create { Tropish(game) })
         pools.put(SEALION, GameEntityPoolCreator.create { Sealion(game) })
         pools.put(YELLOW_TIGGER_SQUIRT, GameEntityPoolCreator.create { YellowTiggerSquirt(game) })
+        pools.put(UNDERWATER_PENGUIN_BOT, GameEntityPoolCreator.create { UnderwaterPenguinBot(game) })
     }
 
-    override fun fetch(key: Any): IGameEntity? {
+    override fun fetch(key: Any): MegaGameEntity? {
         GameLogger.debug(TAG, "Spawning Enemy: key = $key")
         return pools.get(key)?.fetch()
     }

@@ -4,9 +4,9 @@ import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.utils.Array
-import com.engine.common.extensions.getTextureRegion
-import com.engine.common.interfaces.Initializable
-import com.engine.drawables.IDrawable
+import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.interfaces.Initializable
+import com.mega.game.engine.drawables.IDrawable
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.TextureAsset
 import kotlin.math.min
@@ -42,7 +42,10 @@ class BitsBar(
     }
 
     override fun draw(drawer: Batch) {
-        blackBackground.setSize(ConstVals.STAT_BIT_WIDTH * ConstVals.PPM, maxSupplier() * ConstVals.STAT_BIT_HEIGHT * ConstVals.PPM)
+        blackBackground.setSize(
+            ConstVals.STAT_BIT_WIDTH * ConstVals.PPM,
+            maxSupplier() * ConstVals.STAT_BIT_HEIGHT * ConstVals.PPM
+        )
         blackBackground.draw(drawer)
 
         for (i in 0 until min(countSupplier(), maxSupplier())) bitSprites.get(i).draw(drawer)

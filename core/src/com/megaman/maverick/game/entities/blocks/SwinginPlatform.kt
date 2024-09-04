@@ -4,34 +4,34 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
-import com.engine.common.GameLogger
-import com.engine.common.extensions.getTextureRegion
-import com.engine.common.extensions.objectSetOf
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameCircle
-import com.engine.common.shapes.GameLine
-import com.engine.common.shapes.GameRectangle
-import com.engine.common.time.Timer
-import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setCenter
-import com.engine.entities.IGameEntity
-import com.engine.entities.contracts.IDrawableShapesEntity
-import com.engine.entities.contracts.IMotionEntity
-import com.engine.entities.contracts.IParentEntity
-import com.engine.entities.contracts.ISpritesEntity
-import com.engine.events.Event
-import com.engine.events.IEventListener
-import com.engine.motion.MotionComponent
-import com.engine.motion.Pendulum
-import com.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameCircle
+import com.mega.game.engine.common.shapes.GameLine
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setCenter
+import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.contracts.IDrawableShapesEntity
+import com.mega.game.engine.entities.contracts.IMotionEntity
+import com.mega.game.engine.entities.contracts.IParentEntity
+import com.mega.game.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.events.Event
+import com.mega.game.engine.events.IEventListener
+import com.mega.game.engine.motion.MotionComponent
+import com.mega.game.engine.motion.Pendulum
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
 import com.megaman.maverick.game.events.EventType
@@ -49,7 +49,7 @@ class SwinginPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, I
     override val eventKeyMask = objectSetOf<Any>(
         EventType.PLAYER_SPAWN
     )
-    override var children = Array<IGameEntity>()
+    override var children = Array<GameEntity>()
 
     private lateinit var pendulum: Pendulum
     private val timeToSpawnEnemyTimer = Timer(TIME_TO_SPAWN_ENEMY)
@@ -57,15 +57,15 @@ class SwinginPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, I
     private var enemyToSpawn: String? = null
 
     override fun init() {
-        super<Block>.init()
+        super.init()
         addComponent(MotionComponent())
         addComponent(defineUpdatablesComponent())
         addComponent(defineSpritesComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
+    override fun onSpawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
-        super.spawn(spawnProps)
+        super.onSpawn(spawnProps)
 
         clearMotionDefinitions()
         val bounds = spawnProps.get(ConstKeys.BOUNDS) as GameRectangle
@@ -93,8 +93,8 @@ class SwinginPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, I
     }
 
     override fun onDestroy() {
-        super<Block>.onDestroy()
-        children.forEach { it.kill() }
+        super.onDestroy()
+        children.forEach { it.destroy() }
         children.clear()
         enemyToSpawn = null
         game.eventsMan.removeListener(this)
@@ -144,8 +144,8 @@ class SwinginPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, I
                     "PicketJoe" -> {
                         val picketJoe = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.PICKET_JOE)!!
                         children.add(picketJoe)
-                        game.engine.spawn(
-                            picketJoe, props(
+                        picketJoe.spawn(
+                            props(
                                 ConstKeys.POSITION to body.getTopCenterPoint(), ConstKeys.CULL_OUT_OF_BOUNDS to false
                             )
                         )
@@ -154,12 +154,11 @@ class SwinginPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, I
                     "SniperJoe" -> {
                         val sniperJoe = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.SNIPER_JOE)!!
                         children.add(sniperJoe)
-                        game.engine.spawn(
-                            sniperJoe, props(
+                        sniperJoe.spawn(
+                            props(
                                 ConstKeys.POSITION to body.getTopCenterPoint(), ConstKeys.CULL_OUT_OF_BOUNDS to false
                             )
                         )
-
                     }
                 }
             }
@@ -168,7 +167,7 @@ class SwinginPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, I
         val iter = children.iterator()
         while (iter.hasNext()) {
             val child = iter.next()
-            if (child.dead) iter.remove()
+            if (!(child as MegaGameEntity).spawned) iter.remove()
         }
     })
 

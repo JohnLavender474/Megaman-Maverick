@@ -1,8 +1,8 @@
 package com.megaman.maverick.game.screens.levels.map.layers
 
 import com.badlogic.gdx.maps.MapLayer
-import com.engine.common.objects.Properties
-import com.engine.screens.levels.tiledmap.builders.ITiledMapLayerBuilder
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.screens.levels.tiledmap.builders.ITiledMapLayerBuilder
 
 class ForegroundLayerBuilder(private val params: MegaMapLayerBuildersParams) :
     ITiledMapLayerBuilder {

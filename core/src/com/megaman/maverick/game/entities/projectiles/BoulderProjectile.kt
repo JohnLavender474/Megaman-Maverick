@@ -3,27 +3,27 @@ package com.megaman.maverick.game.entities.projectiles
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
-import com.engine.common.GameLogger
-import com.engine.common.enums.Size
-import com.engine.common.extensions.gdxArrayOf
-import com.engine.common.extensions.getTextureAtlas
-import com.engine.common.getOverlapPushDirection
-import com.engine.common.getRandom
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameRectangle
-import com.engine.common.shapes.IGameShape2D
-import com.engine.common.time.Timer
-import com.engine.damage.IDamageable
-import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setCenter
-import com.engine.drawables.sprites.setSize
-import com.engine.entities.IGameEntity
-import com.engine.entities.contracts.IBodyEntity
-import com.engine.updatables.UpdatablesComponent
-import com.engine.world.*
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.Size
+import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.getOverlapPushDirection
+import com.mega.game.engine.common.getRandom
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.shapes.IGameShape2D
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamageable
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setCenter
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -62,7 +62,7 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
         private var smallRegion: TextureRegion? = null
     }
 
-    override var owner: IGameEntity? = null
+    override var owner: GameEntity? = null
 
     lateinit var size: Size
         private set
@@ -81,9 +81,9 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
         addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
     }
 
-    override fun spawn(spawnProps: Properties) {
+    override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "Spawn props = $spawnProps")
-        super.spawn(spawnProps)
+        super.onSpawn(spawnProps)
         size = spawnProps.getOrDefault(ConstKeys.SIZE, Size.LARGE, Size::class)
         body.setSize(
             when (size) {
@@ -100,9 +100,9 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
     }
 
     override fun explodeAndDie(vararg params: Any?) {
-        kill()
+        destroy()
         val disintegration = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)
-        game.engine.spawn(disintegration!!, props(ConstKeys.POSITION to body.getCenter()))
+        disintegration!!.spawn(props(ConstKeys.POSITION to body.getCenter()))
         if (size == Size.SMALL) requestToPlaySound(SoundAsset.THUMP_SOUND, false)
     }
 
@@ -134,8 +134,8 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
         trajectories.forEach { trajectory ->
             val rotatedTrajectory = trajectory.rotateDeg(direction.rotation)
             val boulder = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BOULDER_PROJECTILE)
-            game.engine.spawn(
-                boulder!!, props(
+            boulder!!.spawn(
+                props(
                     ConstKeys.POSITION to body.getCenter(),
                     ConstKeys.SIZE to (if (size == Size.LARGE) Size.MEDIUM else Size.SMALL),
                     ConstKeys.TRAJECTORY to rotatedTrajectory

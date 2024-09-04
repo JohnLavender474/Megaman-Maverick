@@ -4,12 +4,12 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
-import com.engine.common.GameLogger
-import com.engine.common.shapes.GameLine
-import com.engine.common.shapes.GameRectangle
-import com.engine.drawables.shapes.IDrawableShape
-import com.engine.pathfinding.PathfinderResult
-import com.engine.world.Body
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.shapes.GameLine
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.pathfinding.PathfinderResult
+import com.mega.game.engine.world.Body
 import com.megaman.maverick.game.ConstVals
 
 object StandardPathfinderResultConsumer {

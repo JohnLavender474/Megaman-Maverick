@@ -3,22 +3,22 @@ package com.megaman.maverick.game.entities.decorations
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.OrderedMap
-import com.engine.animations.Animation
-import com.engine.animations.AnimationsComponent
-import com.engine.animations.Animator
-import com.engine.animations.IAnimator
-import com.engine.common.extensions.getTextureRegion
-import com.engine.common.objects.Matrix
-import com.engine.common.objects.Properties
-import com.engine.common.shapes.GamePolygon
-import com.engine.common.shapes.GameRectangle
-import com.engine.drawables.sorting.DrawingPriority
-import com.engine.drawables.sorting.DrawingSection
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setBounds
-import com.engine.entities.contracts.IAnimatedEntity
-import com.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.animations.Animation
+import com.mega.game.engine.animations.AnimationsComponent
+import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.animations.IAnimator
+import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.objects.Matrix
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.shapes.GamePolygon
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setBounds
+import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -27,7 +27,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.utils.splitIntoGameRectanglesBasedOnCenter
 
-class LavaFall(game: MegamanMaverickGame): MegaGameEntity(game), ISpritesEntity, IAnimatedEntity {
+class LavaFall(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "LavaFall"
@@ -42,8 +42,8 @@ class LavaFall(game: MegamanMaverickGame): MegaGameEntity(game), ISpritesEntity,
         addComponent(AnimationsComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
         val polygon = spawnProps.get(ConstKeys.POLYGON, GamePolygon::class)!!
         val cells = polygon.splitIntoGameRectanglesBasedOnCenter(3f * ConstVals.PPM, ConstVals.PPM.toFloat())
         defineDrawables(cells)

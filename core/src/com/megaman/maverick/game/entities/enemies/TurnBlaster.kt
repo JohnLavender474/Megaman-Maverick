@@ -4,27 +4,27 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.OrderedMap
-import com.engine.common.GameLogger
-import com.engine.common.enums.Direction
-import com.engine.common.enums.Position
-import com.engine.common.extensions.getTextureAtlas
-import com.engine.common.extensions.objectMapOf
-import com.engine.common.extensions.vector2Of
-import com.engine.common.interfaces.UpdateFunction
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameRectangle
-import com.engine.common.time.Timer
-import com.engine.damage.IDamager
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setCenter
-import com.engine.drawables.sprites.setSize
-import com.engine.updatables.UpdatablesComponent
-import com.engine.world.Body
-import com.engine.world.BodyComponent
-import com.engine.world.BodyType
-import com.engine.world.Fixture
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.vector2Of
+import com.mega.game.engine.common.interfaces.UpdateFunction
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamager
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setCenter
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.world.Body
+import com.mega.game.engine.world.BodyComponent
+import com.mega.game.engine.world.BodyType
+import com.mega.game.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -36,10 +36,10 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
+import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
-import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
@@ -94,8 +94,8 @@ class TurnBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IDirectionRo
         super.init()
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
         directionRotation =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
         val position = when (directionRotation!!) {
@@ -117,7 +117,7 @@ class TurnBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IDirectionRo
             EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.REACT_MAN_PROJECTILE) as AbstractProjectile
         val offset = Vector2(0f, 0.65f * ConstVals.PPM).rotateDeg(directionRotation!!.rotation + angleOffset)
         val position = body.getCenter().add(offset)
-        game.engine.spawn(orb!!, props(ConstKeys.OWNER to this, ConstKeys.POSITION to position, ConstKeys.BIG to false))
+        orb!!.spawn(props(ConstKeys.OWNER to this, ConstKeys.POSITION to position, ConstKeys.BIG to false))
     }
 
     private fun shootOrb() {
@@ -152,7 +152,7 @@ class TurnBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IDirectionRo
             else if (angleDiff < 0f) angleOffset -= TURN_SPEED * delta
 
             angleOffset = angleOffset.coerceIn(-MAX_ANGLE_OFFSET, MAX_ANGLE_OFFSET)
-            if (debug) GameLogger.debug(TAG,"new angleOffset: $angleOffset")
+            if (debug) GameLogger.debug(TAG, "new angleOffset: $angleOffset")
 
             aimTimer.update(delta)
             if (aimTimer.isFinished()) {

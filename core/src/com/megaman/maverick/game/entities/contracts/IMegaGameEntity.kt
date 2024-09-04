@@ -1,12 +1,12 @@
 package com.megaman.maverick.game.entities.contracts
 
-import com.engine.common.extensions.overlaps
-import com.engine.entities.IGameEntity
-import com.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.common.extensions.overlaps
+import com.mega.game.engine.common.interfaces.ITaggable
+import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 
-interface IMegaGameEntity: IGameEntity {
+interface IMegaGameEntity : ITaggable {
 
     val game: MegamanMaverickGame
 

@@ -1,7 +1,7 @@
 package com.megaman.maverick.game.entities.contracts
 
-import com.engine.entities.contracts.IPointsEntity
-import com.engine.points.Points
+import com.mega.game.engine.entities.contracts.IPointsEntity
+import com.mega.game.engine.points.Points
 import com.megaman.maverick.game.ConstKeys
 
 interface IHealthEntity : IPointsEntity {

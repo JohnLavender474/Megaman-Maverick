@@ -1,19 +1,29 @@
 package com.megaman.maverick.game.entities.contracts
 
-import com.engine.common.objects.Properties
-import com.engine.entities.GameEntity
+import com.badlogic.gdx.utils.Array
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.entities.GameEntity
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.MegaGameEntitiesMap
 
-abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEntity(), IMegaGameEntity {
+abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEntity(game.engine), IMegaGameEntity {
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
-        MegaGameEntitiesMap.add(getEntityType(), this)
+    val spawned: Boolean
+        get() = gameEntityState.spawned
+    val dead: Boolean
+        get() = !spawned
+    val runnablesOnSpawn = Array<() -> Unit>()
+    val runnablesOnDestroy = Array<() -> Unit>()
+
+    override fun onSpawn(spawnProps: Properties) {
+        MegaGameEntitiesMap.add(this)
+        runnablesOnSpawn.forEach { it.invoke() }
     }
 
     override fun onDestroy() {
-        super.onDestroy()
-        MegaGameEntitiesMap.remove(getEntityType(), this)
+        MegaGameEntitiesMap.remove(this)
+        runnablesOnDestroy.forEach { it.invoke() }
     }
+
+    override fun getTag(): String = TAG
 }

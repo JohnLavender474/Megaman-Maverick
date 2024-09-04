@@ -1,15 +1,15 @@
 package com.megaman.maverick.game.entities.megaman.components
 
 import com.badlogic.gdx.utils.ObjectMap
-import com.engine.animations.*
-import com.engine.common.GameLogger
-import com.engine.common.enums.Facing
-import com.engine.common.extensions.gdxArrayOf
-import com.engine.common.extensions.getTextureAtlas
-import com.engine.common.extensions.getTextureRegion
-import com.engine.common.extensions.objectMapOf
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.containsRegion
+import com.mega.game.engine.animations.*
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.Facing
+import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.containsRegion
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.animations.AnimationDef

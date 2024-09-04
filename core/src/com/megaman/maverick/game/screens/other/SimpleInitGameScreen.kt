@@ -3,9 +3,9 @@ package com.megaman.maverick.game.screens.other
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.math.Vector2
-import com.engine.common.interfaces.Initializable
-import com.engine.drawables.fonts.BitmapFontHandle
-import com.engine.screens.BaseScreen
+import com.mega.game.engine.common.interfaces.Initializable
+import com.mega.game.engine.drawables.fonts.BitmapFontHandle
+import com.mega.game.engine.screens.BaseScreen
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset

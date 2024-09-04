@@ -4,20 +4,20 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
-import com.engine.common.extensions.getTextureAtlas
-import com.engine.common.extensions.randomVector2
-import com.engine.common.getRandom
-import com.engine.common.objects.Properties
-import com.engine.common.objects.props
-import com.engine.common.shapes.GameCircle
-import com.engine.damage.IDamageable
-import com.engine.drawables.shapes.DrawableShapesComponent
-import com.engine.drawables.shapes.IDrawableShape
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setCenter
-import com.engine.drawables.sprites.setSize
-import com.engine.world.*
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.randomVector2
+import com.mega.game.engine.common.getRandom
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameCircle
+import com.mega.game.engine.damage.IDamageable
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setCenter
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -62,8 +62,8 @@ class PipiEgg(game: MegamanMaverickGame) : AbstractProjectile(game) {
         super.init()
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
         body.physics.gravityOn = true
@@ -77,7 +77,7 @@ class PipiEgg(game: MegamanMaverickGame) : AbstractProjectile(game) {
         playSoundNow(SoundAsset.THUMP_SOUND, false)
         spawnBabyBirdies()
         spawnEggShatters()
-        kill()
+        destroy()
     }
 
     private fun spawnBabyBirdies() {
@@ -95,17 +95,15 @@ class PipiEgg(game: MegamanMaverickGame) : AbstractProjectile(game) {
             if (getMegaman().body.x < body.getMaxX()) trajectory.x *= -1f
 
             val babyBirdie = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.COPIPI)!!
-            game.engine.spawn(
-                babyBirdie, props(ConstKeys.POSITION to randomSpawnPosition, ConstKeys.TRAJECTORY to trajectory)
-            )
+            babyBirdie.spawn(props(ConstKeys.POSITION to randomSpawnPosition, ConstKeys.TRAJECTORY to trajectory))
         }
     }
 
     private fun spawnEggShatters() {
         for (i in 0 until eggShatterImpulses.size) {
             val eggShatter = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.PIPI_EGG_SHATTER)!!
-            game.engine.spawn(
-                eggShatter, props(
+            eggShatter.spawn(
+                props(
                     ConstKeys.POSITION to body.getCenter(),
                     ConstKeys.IMPULSE to eggShatterImpulses[i].cpy().scl(ConstVals.PPM.toFloat()),
                     ConstKeys.TYPE to i

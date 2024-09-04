@@ -2,13 +2,13 @@ package com.megaman.maverick.game.drawables.sprites
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.engine.common.GameLogger
-import com.engine.common.interfaces.Updatable
-import com.engine.drawables.IDrawable
-import com.engine.drawables.sorting.DrawingPriority
-import com.engine.drawables.sorting.DrawingSection
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpriteMatrix
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.interfaces.Updatable
+import com.mega.game.engine.drawables.IDrawable
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpriteMatrix
 
 open class Background(
     startX: Float,

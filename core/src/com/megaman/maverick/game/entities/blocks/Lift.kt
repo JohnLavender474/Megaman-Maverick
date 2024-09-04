@@ -3,21 +3,21 @@ package com.megaman.maverick.game.entities.blocks
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
-import com.engine.common.enums.Direction
-import com.engine.common.extensions.equalsAny
-import com.engine.common.extensions.getTextureRegion
-import com.engine.common.objects.Properties
-import com.engine.common.shapes.GameRectangle
-import com.engine.drawables.sorting.DrawingPriority
-import com.engine.drawables.sorting.DrawingSection
-import com.engine.drawables.sprites.GameSprite
-import com.engine.drawables.sprites.SpritesComponent
-import com.engine.drawables.sprites.setCenter
-import com.engine.drawables.sprites.setSize
-import com.engine.entities.contracts.ISpritesEntity
-import com.engine.updatables.UpdatablesComponent
-import com.engine.world.BodyComponent
-import com.engine.world.Fixture
+import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.extensions.equalsAny
+import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setCenter
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.world.BodyComponent
+import com.mega.game.engine.world.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -52,14 +52,14 @@ class Lift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IDirectionR
     private lateinit var stopPoint: Vector2
 
     override fun init() {
-        super<Block>.init()
+        super.init()
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "Lift")
         addComponent(defineSpritesComponent())
         addComponent(defineUpdatablesComponent())
     }
 
-    override fun spawn(spawnProps: Properties) {
-        super.spawn(spawnProps)
+    override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps)
         currentState = LiftState.STOPPED
         stopPoint = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(stopPoint)
@@ -118,7 +118,7 @@ class Lift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IDirectionR
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
         val megaman = game.megaman
-        val megamanOverlapping = !megaman.dead && getMegaman().body.fixtures.any {
+        val megamanOverlapping = megaman.spawned && getMegaman().body.fixtures.any {
             it.second.getFixtureType().equalsAny(
                 FixtureType.SIDE, FixtureType.FEET
             ) && it.second.getShape().overlaps(body)
