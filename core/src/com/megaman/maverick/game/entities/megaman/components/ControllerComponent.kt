@@ -15,8 +15,8 @@ import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.megaman.extensions.shoot
 import com.megaman.maverick.game.entities.megaman.extensions.stopCharging
-import com.megaman.maverick.game.world.BodySense
-import com.megaman.maverick.game.world.isSensing
+import com.megaman.maverick.game.world.body.BodySense
+import com.megaman.maverick.game.world.body.isSensing
 
 const val MEGAMAN_CONTROLLER_COMPONENT_TAG = "MegamanControllerComponent"
 

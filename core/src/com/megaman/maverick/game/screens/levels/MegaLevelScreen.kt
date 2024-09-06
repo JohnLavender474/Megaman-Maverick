@@ -29,10 +29,10 @@ import com.mega.game.engine.drawables.sorting.IComparableDrawable
 import com.mega.game.engine.events.Event
 import com.mega.game.engine.events.EventsManager
 import com.mega.game.engine.events.IEventListener
-import com.mega.game.engine.graph.SimpleNodeGraphMap
 import com.mega.game.engine.motion.MotionSystem
 import com.mega.game.engine.screens.levels.tiledmap.TiledMapLevelScreen
 import com.mega.game.engine.world.WorldSystem
+import com.mega.game.engine.world.container.SimpleGridWorldContainer
 import com.megaman.maverick.game.ConstFuncs
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -266,15 +266,11 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
         music?.let { audioMan.playMusic(it, true) }
         if (tiledMapLoadResult == null)
             throw IllegalStateException("No tiled map load result found in level screen")
-        val (map, _, worldWidth, worldHeight) = tiledMapLoadResult!!
+        game.setTiledMapLoadResult(tiledMapLoadResult!!)
+        val (map) = tiledMapLoadResult!!
 
-        // TODO: should use quad tree graph map instead of simple node graph map
-        /*
-        val depth = (worldWidth).coerceAtLeast(worldHeight) / ConstVals.PPM
-        val worldGraphMap = QuadTreeGraphMap(0, 0, worldWidth, worldHeight, ConstVals.PPM, depth)
-         */
-        val worldGraphMap = SimpleNodeGraphMap(0, 0, worldWidth, worldHeight, ConstVals.PPM)
-        game.setGraphMap(worldGraphMap)
+        val worldContainer = SimpleGridWorldContainer(ConstVals.PPM)
+        game.setWorldContainer(worldContainer)
 
         playerSpawnEventHandler.init()
 

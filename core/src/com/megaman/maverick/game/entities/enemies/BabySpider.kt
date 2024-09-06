@@ -19,10 +19,10 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
-import com.mega.game.engine.world.Body
-import com.mega.game.engine.world.BodyComponent
-import com.mega.game.engine.world.BodyType
-import com.mega.game.engine.world.Fixture
+import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -34,10 +34,10 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.world.BodyComponentCreator
-import com.megaman.maverick.game.world.BodySense
-import com.megaman.maverick.game.world.FixtureType
-import com.megaman.maverick.game.world.isSensing
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.BodySense
+import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.isSensing
 import kotlin.reflect.KClass
 
 class BabySpider(game: MegamanMaverickGame) : AbstractEnemy(game) {
@@ -62,7 +62,7 @@ class BabySpider(game: MegamanMaverickGame) : AbstractEnemy(game) {
         }, ChargedShotExplosion::class to dmgNeg(15)
     )
 
-    private lateinit var state: BabySpiderState
+    private lateinit var babySpiderState: BabySpiderState
 
     private var landed = false
     private var leftOnLand = false
@@ -91,7 +91,7 @@ class BabySpider(game: MegamanMaverickGame) : AbstractEnemy(game) {
         body.setCenter(spawn)
         body.physics.gravity.y = GRAVITY_BEFORE_LAND * ConstVals.PPM
 
-        state = BabySpiderState.FALLING
+        babySpiderState = BabySpiderState.FALLING
         leftOnLand = spawnProps.get(ConstKeys.LEFT, Boolean::class)!!
         slow = spawnProps.getOrDefault(ConstKeys.SLOW, false, Boolean::class)
         landed = false
@@ -163,24 +163,24 @@ class BabySpider(game: MegamanMaverickGame) : AbstractEnemy(game) {
             val isFeetTouchingBlock = body.isSensing(BodySense.FEET_ON_GROUND)
 
             if (!wasLeftTouchingBlock && isLeftTouchingBlock) {
-                state = BabySpiderState.SCALING_WALL_LEFT
-                GameLogger.debug(TAG, "Change state to $state")
+                babySpiderState = BabySpiderState.SCALING_WALL_LEFT
+                GameLogger.debug(TAG, "Change state to $babySpiderState")
             } else if (!wasRightTouchingBlock && isRightTouchingBlock) {
-                state = BabySpiderState.SCALING_WALL_RIGHT
-                GameLogger.debug(TAG, "Change state to $state")
+                babySpiderState = BabySpiderState.SCALING_WALL_RIGHT
+                GameLogger.debug(TAG, "Change state to $babySpiderState")
             } else if (!wasHeadTouchingBlock && isHeadTouchingBlock) {
-                state = BabySpiderState.RUNNING_ON_CEILING
-                GameLogger.debug(TAG, "Change state to $state")
+                babySpiderState = BabySpiderState.RUNNING_ON_CEILING
+                GameLogger.debug(TAG, "Change state to $babySpiderState")
             } else if (!wasFeetTouchingBlock && isFeetTouchingBlock) {
-                state = BabySpiderState.RUNNING_ON_GROUND
-                GameLogger.debug(TAG, "Change state to $state")
+                babySpiderState = BabySpiderState.RUNNING_ON_GROUND
+                GameLogger.debug(TAG, "Change state to $babySpiderState")
             } else if (!isLeftTouchingBlock && !isRightTouchingBlock && !isHeadTouchingBlock && !isFeetTouchingBlock) {
-                state = BabySpiderState.FALLING
-                GameLogger.debug(TAG, "Change state to $state")
+                babySpiderState = BabySpiderState.FALLING
+                GameLogger.debug(TAG, "Change state to $babySpiderState")
             }
 
             val speed = ConstVals.PPM * if (slow) SLOW_SPEED else FAST_SPEED * if (leftOnLand) -1f else 1f
-            when (state) {
+            when (babySpiderState) {
                 BabySpiderState.FALLING -> body.physics.velocity.x = 0f
                 BabySpiderState.RUNNING_ON_GROUND -> body.physics.velocity.set(speed, 0f)
                 BabySpiderState.RUNNING_ON_CEILING -> body.physics.velocity.set(-speed, 0f)
@@ -188,7 +188,7 @@ class BabySpider(game: MegamanMaverickGame) : AbstractEnemy(game) {
                 BabySpiderState.SCALING_WALL_RIGHT -> body.physics.velocity.set(0f, speed)
             }
 
-            body.physics.gravity.y = if (state == BabySpiderState.FALLING) GRAVITY_BEFORE_LAND * ConstVals.PPM else 0f
+            body.physics.gravity.y = if (babySpiderState == BabySpiderState.FALLING) GRAVITY_BEFORE_LAND * ConstVals.PPM else 0f
 
             wasLeftTouchingBlock = isLeftTouchingBlock
             wasRightTouchingBlock = isRightTouchingBlock
@@ -207,7 +207,7 @@ class BabySpider(game: MegamanMaverickGame) : AbstractEnemy(game) {
             _sprite.hidden = damageBlink
             _sprite.setCenter(body.getCenter())
             _sprite.setOriginCenter()
-            val rotation = when (state) {
+            val rotation = when (babySpiderState) {
                 BabySpiderState.FALLING, BabySpiderState.RUNNING_ON_GROUND -> 0f
                 BabySpiderState.RUNNING_ON_CEILING -> 180f
                 BabySpiderState.SCALING_WALL_LEFT -> 270f
@@ -220,7 +220,7 @@ class BabySpider(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = {
-            when (state) {
+            when (babySpiderState) {
                 BabySpiderState.FALLING -> "still"
                 else -> "running"
             }

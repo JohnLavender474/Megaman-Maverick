@@ -1,5 +1,10 @@
 package com.megaman.maverick.game.entities.contracts
 
+import com.mega.game.engine.world.body.*;
+import com.mega.game.engine.world.collisions.*;
+import com.mega.game.engine.world.contacts.*;
+import com.mega.game.engine.world.pathfinding.*;
+
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.audio.AudioComponent
@@ -17,8 +22,8 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.entities.contracts.IAudioEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
-import com.mega.game.engine.world.BodyComponent
-import com.mega.game.engine.world.IFixture
+import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.events.EventType

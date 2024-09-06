@@ -1,5 +1,10 @@
 package com.megaman.maverick.game.entities
 
+import com.mega.game.engine.world.body.*;
+import com.mega.game.engine.world.collisions.*;
+import com.mega.game.engine.world.contacts.*;
+import com.mega.game.engine.world.pathfinding.*;
+
 import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.OrderedSet
 import com.mega.game.engine.common.extensions.putIfAbsentAndGet

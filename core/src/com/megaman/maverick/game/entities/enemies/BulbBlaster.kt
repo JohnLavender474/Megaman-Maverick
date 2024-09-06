@@ -26,10 +26,10 @@ import com.mega.game.engine.motion.MotionComponent
 import com.mega.game.engine.motion.MotionComponent.MotionDefinition
 import com.mega.game.engine.motion.Trajectory
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.Body
-import com.mega.game.engine.world.BodyComponent
-import com.mega.game.engine.world.BodyType
-import com.mega.game.engine.world.Fixture
+import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -38,8 +38,8 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
-import com.megaman.maverick.game.world.BodyComponentCreator
-import com.megaman.maverick.game.world.FixtureType
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.FixtureType
 import kotlin.reflect.KClass
 
 class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IEventListener, IAnimatedEntity, IMotionEntity {

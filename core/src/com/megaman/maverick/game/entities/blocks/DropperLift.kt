@@ -23,9 +23,8 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
-
-import com.megaman.maverick.game.world.BodyLabel
-import com.megaman.maverick.game.world.FixtureType
+import com.megaman.maverick.game.world.body.BodyLabel
+import com.megaman.maverick.game.world.body.FixtureType
 
 class DropperLift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity {
 

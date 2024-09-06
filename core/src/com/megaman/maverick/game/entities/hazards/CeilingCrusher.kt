@@ -1,5 +1,7 @@
 package com.megaman.maverick.game.entities.hazards
 
+import com.mega.game.engine.world.body.*;
+
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
@@ -27,7 +29,6 @@ import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -41,10 +42,10 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.world.BodyComponentCreator
-import com.megaman.maverick.game.world.FixtureType
-import com.megaman.maverick.game.world.getEntity
-import com.megaman.maverick.game.world.setConsumer
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getEntity
+import com.megaman.maverick.game.world.body.setConsumer
 
 class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, ICullableEntity,
     IAudioEntity, IHazard, IDamager {
@@ -67,7 +68,7 @@ class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
     private val raiseDelayTimer = Timer(RAISE_DELAY)
     private var block: Block? = null
     private lateinit var start: Vector2
-    private lateinit var state: CeilingCrusherState
+    private lateinit var ceilingCrusherState: CeilingCrusherState
 
     private var height = 0
 
@@ -105,7 +106,7 @@ class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
                 _sprite.setPosition(Vector2(centerX, bottomY), Position.BOTTOM_CENTER)
             }
         }
-        state = CeilingCrusherState.WAITING
+        ceilingCrusherState = CeilingCrusherState.WAITING
         block = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.STANDARD) as Block
         block!!.spawn(
             props(
@@ -122,7 +123,7 @@ class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         val keysToRemove = Array<String>()
         sprites.keys().forEach { if (it != SpritesComponent.SPRITE) keysToRemove.add(it) }
         keysToRemove.forEach { sprites.remove(it) }
-        block?.let { it.destroy() }
+        block?.destroy()
         block = null
     }
 
@@ -130,7 +131,7 @@ class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         val entity = fixture.getEntity()
         if (entity is Megaman || entity is AbstractEnemy) {
             GameLogger.debug(TAG, "setToCrushIfTarget: entity = $entity")
-            state = CeilingCrusherState.DROPPING
+            ceilingCrusherState = CeilingCrusherState.DROPPING
             dropDelayTimer.reset()
         }
     }
@@ -138,7 +139,7 @@ class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
     private fun setToStopIfBlock(fixture: IFixture) {
         if (fixture.getEntity() != block && fixture.getFixtureType() == FixtureType.BLOCK) {
             GameLogger.debug(TAG, "setToStopIfBlock: fixture = $fixture")
-            state = CeilingCrusherState.RAISING
+            ceilingCrusherState = CeilingCrusherState.RAISING
             body.physics.velocity.setZero()
             raiseDelayTimer.reset()
             requestToPlaySound(SoundAsset.TIME_STOPPER_SOUND, false)
@@ -190,14 +191,14 @@ class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
             (bodyFixture.rawShape as GameRectangle).setSize(0.5f * ConstVals.PPM, body.height)
             (shieldFixture.rawShape as GameRectangle).setSize(0.5f * ConstVals.PPM, body.height)
 
-            bottomFixture.active = state == CeilingCrusherState.DROPPING
+            bottomFixture.active = ceilingCrusherState == CeilingCrusherState.DROPPING
 
-            consumerFixture.active = state == CeilingCrusherState.WAITING
+            consumerFixture.active = ceilingCrusherState == CeilingCrusherState.WAITING
             val consumer = consumerFixture.rawShape as GameRectangle
             consumer.setSize(2f * ConstVals.PPM, 2.25f * ConstVals.PPM * height)
             consumer.setTopCenterToPoint(body.getBottomCenterPoint())
 
-            crusherFixture.active = state == CeilingCrusherState.DROPPING
+            crusherFixture.active = ceilingCrusherState == CeilingCrusherState.DROPPING
             val crusher = crusherFixture.rawShape as GameRectangle
             crusher.setCenter(body.getBottomCenterPoint())
 
@@ -213,7 +214,7 @@ class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        when (state) {
+        when (ceilingCrusherState) {
             CeilingCrusherState.WAITING -> {
                 body.setBottomCenterToPoint(start)
                 body.physics.velocity.setZero()
@@ -231,7 +232,7 @@ class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
                     if (body.getBottomCenterPoint().y >= start.y) {
                         GameLogger.debug(TAG, "Crusher raised to start")
                         body.setBottomCenterToPoint(start)
-                        state = CeilingCrusherState.WAITING
+                        ceilingCrusherState = CeilingCrusherState.WAITING
                     }
                 }
             }

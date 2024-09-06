@@ -11,7 +11,7 @@ import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAudioEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
-import com.mega.game.engine.world.IFixture
+import com.mega.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -24,7 +24,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
-import com.megaman.maverick.game.world.getEntity
+import com.megaman.maverick.game.world.body.getEntity
 
 class BreakableIce(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity, IAudioEntity {
 
@@ -72,7 +72,7 @@ class BreakableIce(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity, 
 
     private fun hit(increment: Int = 1) {
         index += increment
-        if (index == BREAK_INDEX) explodeAndDie()
+        if (index >= BREAK_INDEX) explodeAndDie()
         else if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ICE_SHARD_1_SOUND, false)
     }
 
@@ -94,8 +94,7 @@ class BreakableIce(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity, 
                 when (index) {
                     1 -> region1
                     2 -> region2
-                    3 -> region3
-                    else -> throw IllegalStateException("Invalid index: $index")
+                    else -> region3
                 }
             )
         }

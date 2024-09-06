@@ -70,6 +70,11 @@ Sounds belong to Capcom (Megaman-ripped sound effects) and Nintendo (Mario-rippe
   - [x] Thoroughly give credits to each artist and their work, provide links to their work
 - [ ] Add steps to run game in README
   - [ ] Use `JPacker` to package assets into JAR so that game can be run without IDE or local JRE
+
+import com.mega.game.engine.world.body.*;
+import com.mega.game.engine.world.collisions.*;
+import com.mega.game.engine.world.contacts.*;
+import com.mega.game.engine.world.pathfinding.*;
   - [ ] Add instructions on how to run game locally for development
 - [ ] Add explanation for the architecture of the game (so that others can learn to contribute if anyone wants to)
 - [ ] Remove outdated bosses from boss select screen

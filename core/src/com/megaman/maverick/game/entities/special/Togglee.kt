@@ -32,10 +32,10 @@ import com.mega.game.engine.entities.contracts.*
 import com.mega.game.engine.events.Event
 import com.mega.game.engine.events.IEventListener
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.Body
-import com.mega.game.engine.world.BodyComponent
-import com.mega.game.engine.world.BodyType
-import com.mega.game.engine.world.Fixture
+import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -49,10 +49,10 @@ import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntitySuppli
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType.SPAWN_ROOM
 import com.megaman.maverick.game.utils.MegaUtilMethods
-import com.megaman.maverick.game.world.BodyComponentCreator
-import com.megaman.maverick.game.world.FixtureType
-import com.megaman.maverick.game.world.setHitByPlayerReceiver
-import com.megaman.maverick.game.world.setHitByProjectileReceiver
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.setHitByPlayerReceiver
+import com.megaman.maverick.game.world.body.setHitByProjectileReceiver
 
 class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IParentEntity, ISpritesEntity,
     IAnimatedEntity, IFontsEntity, IAudioEntity, IDirectionRotatable, IDamager, IEventListener {
@@ -315,14 +315,14 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
 
             val animation = when (type) {
                 ENEMY_TYPE -> {
-                    val state = ToggleeState.valueOf(keyParts[1])
-                    if (state.isToggling()) Animation(region, 1, 3, 0.1f, false)
+                    val toggleeState = ToggleeState.valueOf(keyParts[1])
+                    if (toggleeState.isToggling()) Animation(region, 1, 3, 0.1f, false)
                     else Animation(region, 1, 2, gdxArrayOf(1f, 0.15f), true)
                 }
 
                 LEVER_TYPE -> {
-                    val state = keyParts[1]
-                    if (state == "on") Animation(regions.get("$type/on"))
+                    val toggleeState = keyParts[1]
+                    if (toggleeState == "on") Animation(regions.get("$type/on"))
                     else Animation(regions.get("$type/off"))
                 }
 

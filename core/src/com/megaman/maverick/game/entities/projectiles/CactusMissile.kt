@@ -1,5 +1,7 @@
 package com.megaman.maverick.game.entities.projectiles
 
+import com.mega.game.engine.world.body.*;
+
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.MathUtils
@@ -25,7 +27,6 @@ import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.points.PointsComponent
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -37,8 +38,8 @@ import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-import com.megaman.maverick.game.world.BodyComponentCreator
-import com.megaman.maverick.game.world.FixtureType
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.FixtureType
 import kotlin.reflect.KClass
 
 class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity, IAnimatedEntity, IDamageable {

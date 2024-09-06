@@ -24,7 +24,7 @@ import com.mega.game.engine.entities.GameEntity
 import com.mega.game.engine.entities.contracts.*
 import com.mega.game.engine.events.Event
 import com.mega.game.engine.events.IEventListener
-import com.mega.game.engine.world.BodyComponent
+import com.mega.game.engine.world.body.BodyComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -55,8 +55,8 @@ import com.megaman.maverick.game.entities.utils.standardOnTeleportEnd
 import com.megaman.maverick.game.entities.utils.standardOnTeleportStart
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.misc.StunType
-import com.megaman.maverick.game.world.BodySense
-import com.megaman.maverick.game.world.isSensingAny
+import com.megaman.maverick.game.world.body.BodySense
+import com.megaman.maverick.game.world.body.isSensingAny
 import kotlin.reflect.KClass
 
 class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable, IEventListener, IFaceable,

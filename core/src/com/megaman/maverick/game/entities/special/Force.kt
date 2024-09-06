@@ -1,9 +1,10 @@
 package com.megaman.maverick.game.entities.special
 
+import com.mega.game.engine.world.body.*;
+
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.entities.contracts.IBodyEntity
-import com.mega.game.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -12,10 +13,10 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.VelocityAlterationType
-import com.megaman.maverick.game.world.BodyComponentCreator
-import com.megaman.maverick.game.world.FixtureType
-import com.megaman.maverick.game.world.getEntity
-import com.megaman.maverick.game.world.setVelocityAlteration
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getEntity
+import com.megaman.maverick.game.world.body.setVelocityAlteration
 
 class Force(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity {
 

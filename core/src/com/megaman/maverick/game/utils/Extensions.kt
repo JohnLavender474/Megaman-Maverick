@@ -10,20 +10,50 @@ import com.badlogic.gdx.maps.objects.CircleMapObject
 import com.badlogic.gdx.maps.objects.PolygonMapObject
 import com.badlogic.gdx.maps.objects.PolylineMapObject
 import com.badlogic.gdx.maps.objects.RectangleMapObject
+import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getMusic
 import com.mega.game.engine.common.extensions.getSound
+import com.mega.game.engine.common.objects.IntPair
 import com.mega.game.engine.common.objects.Matrix
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
+import kotlin.math.abs
 import kotlin.math.roundToInt
+
+fun IntPair.isNeighborOf(coordinate: IntPair, allowDiagonal: Boolean = true): Boolean {
+    val dx = abs(this.x - coordinate.x)
+    val dy = abs(this.y - coordinate.y)
+    return if (!allowDiagonal) (dx == 1 && dy == 0) || (dx == 0 && dy == 1)
+    else (dx <= 1 && dy <= 1) && !(dx == 0 && dy == 0)
+}
+
+fun IntPair.getNeighbors(includeDiagonal: Boolean = true) = if (includeDiagonal) gdxArrayOf(
+    x - 1 pairTo y,
+    x + 1 pairTo y,
+    x pairTo y - 1,
+    x pairTo y + 1,
+    x - 1 pairTo y - 1,
+    x + 1 pairTo y + 1,
+    x - 1 pairTo y + 1,
+    x + 1 pairTo y - 1
+) else gdxArrayOf(
+    x - 1 pairTo y, x + 1 pairTo y, x pairTo y - 1, x pairTo y + 1
+)
+
+fun Vector2.toGridCoordinate() = IntPair(MathUtils.floor(x / ConstVals.PPM), MathUtils.floor(y / ConstVals.PPM))
+
+fun IntPair.toWorldCoordinate() = Vector2(x * ConstVals.PPM.toFloat(), y * ConstVals.PPM.toFloat())
 
 fun MapObject.convertToProps(): Properties = when (this) {
     is RectangleMapObject -> toProps()
@@ -36,8 +66,7 @@ fun MapObject.convertToProps(): Properties = when (this) {
 fun MapObject.getShape(): IGameShape2D = when (this) {
     is RectangleMapObject -> rectangle.toGameRectangle()
     is PolygonMapObject -> polygon.toGamePolygon()
-    is CircleMapObject -> circle.toGameCircle()
-    // TODO: support polyline map object
+    is CircleMapObject -> circle.toGameCircle() // TODO: support polyline map object
     else -> throw IllegalArgumentException("Unknown map object type: $this")
 }
 
@@ -70,8 +99,7 @@ fun CircleMapObject.toProps(): Properties {
 
 fun PolylineMapObject.toProps(): Properties {
     val props = Properties()
-    props.put(ConstKeys.NAME, name)
-    // TODO: props.put(ConstKeys.LINES, getShape())
+    props.put(ConstKeys.NAME, name) // TODO: props.put(ConstKeys.LINES, getShape())
     props.put(ConstKeys.LINES, polyline.toGameLines())
     val objProps = properties.toProps()
     props.putAll(objProps)

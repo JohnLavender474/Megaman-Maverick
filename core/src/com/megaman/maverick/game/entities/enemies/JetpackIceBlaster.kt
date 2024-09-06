@@ -36,10 +36,10 @@ import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.IDrawableShapesEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.Body
-import com.mega.game.engine.world.BodyComponent
-import com.mega.game.engine.world.BodyType
-import com.mega.game.engine.world.Fixture
+import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -58,10 +58,10 @@ import com.megaman.maverick.game.entities.megaman.components.damageableFixture
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.world.BodyComponentCreator
-import com.megaman.maverick.game.world.BodySense
-import com.megaman.maverick.game.world.FixtureType
-import com.megaman.maverick.game.world.isSensing
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.BodySense
+import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.isSensing
 import kotlin.reflect.KClass
 
 class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDrawableShapesEntity,
@@ -271,7 +271,7 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (!getMegaman().gameEntityState.spawned) {
+            if (!getMegaman().state.spawned) {
                 body.physics.velocity.setZero()
                 return@add
             }

@@ -1,4 +1,4 @@
-package com.megaman.maverick.game.world
+package com.megaman.maverick.game.world.body
 
 enum class FixtureType {
     BLOCK,

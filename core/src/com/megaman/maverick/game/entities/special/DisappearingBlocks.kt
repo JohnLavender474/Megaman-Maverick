@@ -1,5 +1,10 @@
 package com.megaman.maverick.game.entities.special
 
+import com.mega.game.engine.world.body.*;
+import com.mega.game.engine.world.collisions.*;
+import com.mega.game.engine.world.contacts.*;
+import com.mega.game.engine.world.pathfinding.*;
+
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.audio.AudioComponent
@@ -15,7 +20,7 @@ import com.mega.game.engine.entities.GameEntity
 import com.mega.game.engine.entities.contracts.IAudioEntity
 import com.mega.game.engine.entities.contracts.IParentEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.Fixture
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset

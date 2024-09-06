@@ -1,18 +1,25 @@
 package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.ObjectMap
+import com.badlogic.gdx.utils.ObjectSet
+import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.toObjectSet
 import com.mega.game.engine.common.interfaces.Updatable
+import com.mega.game.engine.common.objects.IntPair
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
@@ -24,22 +31,26 @@ import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.pathfinding.PathfinderParams
 import com.mega.game.engine.pathfinding.PathfindingComponent
+import com.mega.game.engine.pathfinding.heuristics.EuclideanHeuristic
+import com.mega.game.engine.pathfinding.heuristics.IHeuristic
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.*
+import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.pathfinding.StandardPathfinderResultConsumer
-
-import com.megaman.maverick.game.world.*
+import com.megaman.maverick.game.utils.isNeighborOf
+import com.megaman.maverick.game.utils.toGridCoordinate
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
@@ -50,12 +61,36 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
     }
 
     companion object {
+        const val TAG = "Bat"
         private var atlas: TextureAtlas? = null
-        private const val DEBUG_PATHFINDING = false
+        private const val DEBUG_PATHFINDING = true
+        private const val DEBUG_PATHFINDING_DURATION = 1f
         private const val HANG_DURATION = 1.75f
         private const val RELEASE_FROM_PERCH_DURATION = 0.25f
         private const val DEFAULT_FLY_TO_ATTACK_SPEED = 3f
         private const val DEFAULT_FLY_TO_RETREAT_SPEED = 8f
+        private const val PATHFINDING_UPDATE_INTERVAL = 0.05f
+    }
+
+    private class BatHeuristic(private val game: MegamanMaverickGame) : IHeuristic {
+
+        companion object {
+            private const val CONTAINS_BLOCK_SCALAR = 5
+        }
+
+        private val defaultHeuristic = EuclideanHeuristic()
+
+        private fun containsBlock(x: Int, y: Int): Boolean {
+            val bodies = game.getWorldContainer().getBodies(x, y)
+            for (body in bodies) if (body.getEntity().getEntityType() == EntityType.BLOCK) return true
+            return false
+        }
+
+        override fun calculate(x1: Int, y1: Int, x2: Int, y2: Int): Int {
+            var cost = defaultHeuristic.calculate(x1, y1, x2, y2)
+            if (containsBlock(x2, y2)) cost *= CONTAINS_BLOCK_SCALAR
+            return cost
+        }
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -72,11 +107,15 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
 
     private val hangTimer = Timer(HANG_DURATION)
     private val releasePerchTimer = Timer(RELEASE_FROM_PERCH_DURATION)
+    private val debugPathfindingTimer = Timer(DEBUG_PATHFINDING_DURATION)
     private lateinit var type: String
     private lateinit var status: BatStatus
     private lateinit var animations: ObjectMap<String, IAnimation>
     private var flyToAttackSpeed = DEFAULT_FLY_TO_ATTACK_SPEED
     private var flyToRetreatSpeed = DEFAULT_FLY_TO_RETREAT_SPEED
+
+    @Volatile
+    private var printDebugFilter = false
 
     override fun init() {
         if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
@@ -106,14 +145,36 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
         flyToRetreatSpeed = spawnProps.getOrDefault(
             "${ConstKeys.RETREAT}_${ConstKeys.SPEED}", DEFAULT_FLY_TO_RETREAT_SPEED, Float::class
         )
+
+        debugPathfindingTimer.reset()
+        printDebugFilter = DEBUG_PATHFINDING
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
-        updatablesComponent.add {
+        updatablesComponent.add { delta ->
+            if (DEBUG_PATHFINDING) {
+                debugPathfindingTimer.update(delta)
+                if (debugPathfindingTimer.isFinished()) {
+                    printDebugFilter = true
+                    val coordinate = body.getCenter().toGridCoordinate()
+                    val surroundingEntityTypes = OrderedMap<IntPair, ObjectSet<EntityType>>()
+                    for (i in -1..1) {
+                        for (j in -1..1) {
+                            val entityTypes = game.getWorldContainer().getBodies(coordinate.x + i, coordinate.y + j)
+                                .map { body -> body.getEntity().getEntityType() }.toObjectSet()
+                            surroundingEntityTypes.put(IntPair(coordinate.x + i, coordinate.y + j), entityTypes)
+                        }
+                    }
+                    GameLogger.debug(TAG, "Current coordinate: $coordinate")
+                    GameLogger.debug(TAG, "Surrounding coordinates: $surroundingEntityTypes")
+                    debugPathfindingTimer.reset()
+                }
+            }
+
             when (status) {
                 BatStatus.HANGING -> {
-                    hangTimer.update(it)
+                    hangTimer.update(delta)
                     if (hangTimer.isFinished() || !body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)) {
                         status = BatStatus.OPEN_EYES
                         hangTimer.reset()
@@ -121,7 +182,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
                 }
 
                 BatStatus.OPEN_EYES, BatStatus.OPEN_WINGS -> {
-                    releasePerchTimer.update(it)
+                    releasePerchTimer.update(delta)
                     if (releasePerchTimer.isFinished()) {
                         if (status == BatStatus.OPEN_EYES) {
                             status = BatStatus.OPEN_WINGS
@@ -212,30 +273,48 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
     }
 
     private fun definePathfindingComponent(): PathfindingComponent {
-        val params = PathfinderParams(startSupplier = { body.getCenter() },
-            targetSupplier = { getMegaman().body.getTopCenterPoint() },
+        val params = PathfinderParams(
+            startCoordinateSupplier = { body.getCenter().toGridCoordinate() },
+            targetCoordinateSupplier = { getMegaman().body.getTopCenterPoint().toGridCoordinate() },
             allowDiagonal = { true },
-            filter = { _, objs ->
-                for (obj in objs) if (obj is Fixture && obj.getFixtureType() == FixtureType.BLOCK)
-                    return@PathfinderParams false
-                return@PathfinderParams true
-            })
+            filter = { coordinate ->
+                val bodies = game.getWorldContainer().getBodies(coordinate.x, coordinate.y)
+                var passable = true
+                var blockingBody: Body? = null
 
+                for (otherBody in bodies) if (otherBody.getEntity().getEntityType() == EntityType.BLOCK) {
+                    passable = false
+                    blockingBody = otherBody
+                    break
+                }
+
+                if (!passable && coordinate.isNeighborOf(
+                        body.getCenter().toGridCoordinate()
+                    )
+                ) blockingBody?.let { passable = !body.overlaps(it as Rectangle) }
+
+                if (printDebugFilter) {
+                    GameLogger.debug(TAG, "Can pass $coordinate: $passable")
+                    printDebugFilter = false
+                }
+
+                passable
+            },
+            properties = props(ConstKeys.HEURISTIC to BatHeuristic(game))
+        )
         val pathfindingComponent = PathfindingComponent(params, {
             StandardPathfinderResultConsumer.consume(
                 it,
                 body,
                 body.getCenter(),
-                { flyToAttackSpeed },
+                { flyToAttackSpeed * ConstVals.PPM },
                 body,
                 stopOnTargetReached = false,
                 stopOnTargetNull = false,
                 shapes = if (DEBUG_PATHFINDING) game.getShapes() else null
             )
-        }, { status == BatStatus.FLYING_TO_ATTACK })
-
-        pathfindingComponent.updateIntervalTimer = Timer(0.1f)
-
+        }, { status == BatStatus.FLYING_TO_ATTACK }, intervalTimer = Timer(PATHFINDING_UPDATE_INTERVAL)
+        )
         return pathfindingComponent
     }
 }

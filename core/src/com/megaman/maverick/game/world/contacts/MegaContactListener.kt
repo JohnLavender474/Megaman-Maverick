@@ -1,4 +1,4 @@
-package com.megaman.maverick.game.world
+package com.megaman.maverick.game.world.contacts
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -14,8 +14,8 @@ import com.mega.game.engine.common.shapes.ShapeUtils
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.entities.contracts.IBodyEntity
-import com.mega.game.engine.world.Contact
-import com.mega.game.engine.world.IContactListener
+import com.mega.game.engine.world.contacts.Contact
+import com.mega.game.engine.world.contacts.IContactListener
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
@@ -32,6 +32,7 @@ import com.megaman.maverick.game.entities.special.Cart
 import com.megaman.maverick.game.entities.special.PolygonWater
 import com.megaman.maverick.game.entities.special.Water
 import com.megaman.maverick.game.utils.VelocityAlterator
+import com.megaman.maverick.game.world.body.*
 
 class MegaContactListener(
     private val game: MegamanMaverickGame, private val contactDebugFilter: (Contact) -> Boolean
@@ -160,7 +161,7 @@ class MegaContactListener(
             val entity = other.getEntity()
             if (entity is Megaman) {
                 val gate = gateFixture.getEntity() as Gate
-                if (gate.state == GateState.OPENABLE) gate.trigger()
+                if (gate.gateState == GateState.OPENABLE) gate.trigger()
             }
         }
 

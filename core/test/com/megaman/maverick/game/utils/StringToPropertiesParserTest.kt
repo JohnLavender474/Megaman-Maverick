@@ -1,5 +1,10 @@
 package com.megaman.maverick.game.utils
 
+import com.mega.game.engine.world.body.*;
+import com.mega.game.engine.world.collisions.*;
+import com.mega.game.engine.world.contacts.*;
+import com.mega.game.engine.world.pathfinding.*;
+
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe

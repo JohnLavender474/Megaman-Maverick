@@ -39,8 +39,8 @@ import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.world.BodyLabel
-import com.megaman.maverick.game.world.FixtureLabel
+import com.megaman.maverick.game.world.body.BodyLabel
+import com.megaman.maverick.game.world.body.FixtureLabel
 
 class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntity, ISpritesEntity, IAudioEntity {
 

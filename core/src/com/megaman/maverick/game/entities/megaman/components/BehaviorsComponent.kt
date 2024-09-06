@@ -12,7 +12,7 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.isFacing
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.controller.buttons.ButtonStatus
-import com.mega.game.engine.world.Fixture
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.SoundAsset
@@ -22,9 +22,9 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.special.Cart
 import com.megaman.maverick.game.entities.special.Ladder
-import com.megaman.maverick.game.world.BodySense
-import com.megaman.maverick.game.world.isSensing
-import com.megaman.maverick.game.world.isSensingAny
+import com.megaman.maverick.game.world.body.BodySense
+import com.megaman.maverick.game.world.body.isSensing
+import com.megaman.maverick.game.world.body.isSensingAny
 
 const val MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: WallSlideBehavior"
 const val MEGAMAN_SWIM_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: SwimBehavior"

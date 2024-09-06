@@ -1,9 +1,9 @@
-package com.megaman.maverick.game.world
+package com.megaman.maverick.game.world.body
 
 import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.entities.contracts.IBodyEntity
-import com.mega.game.engine.world.Body
-import com.mega.game.engine.world.IFixture
+import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.IHealthEntity

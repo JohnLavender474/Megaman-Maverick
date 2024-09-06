@@ -25,10 +25,10 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.Body
-import com.mega.game.engine.world.BodyComponent
-import com.mega.game.engine.world.BodyType
-import com.mega.game.engine.world.Fixture
+import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -43,8 +43,8 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.world.BodyComponentCreator
-import com.megaman.maverick.game.world.FixtureType
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.FixtureType
 import kotlin.reflect.KClass
 
 class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game) {
@@ -74,7 +74,7 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game) {
     private val petalTimer = Timer(PETAL_DURATION)
 
     private var petalCount = 4
-    private lateinit var state: HanabiranState
+    private lateinit var hanabiranState: HanabiranState
 
     override val damageNegotiations =
         objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -94,7 +94,7 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game) {
         super.onSpawn(spawnProps)
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.setBottomCenterToPoint(bounds.getBottomCenterPoint())
-        state = HanabiranState.SLEEPING
+        hanabiranState = HanabiranState.SLEEPING
     }
 
     private fun shoot() {
@@ -119,12 +119,12 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game) {
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            when (state) {
+            when (hanabiranState) {
                 HanabiranState.SLEEPING -> {
                     sleepTimer.update(it)
                     if (sleepTimer.isJustFinished()) {
                         sleepTimer.reset()
-                        state = HanabiranState.RISING
+                        hanabiranState = HanabiranState.RISING
                     }
                 }
 
@@ -133,7 +133,7 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game) {
                     if (riseDropTimer.isJustFinished()) {
                         riseDropTimer.reset()
                         petalCount = 4
-                        state = HanabiranState.PETAL_4
+                        hanabiranState = HanabiranState.PETAL_4
                     }
                 }
 
@@ -145,7 +145,7 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game) {
                     petalTimer.update(it)
                     if (petalTimer.isJustFinished()) {
                         petalCount--
-                        state =
+                        hanabiranState =
                             if (petalCount < 0) {
                                 HanabiranState.DROPPING
                             } else {
@@ -160,7 +160,7 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game) {
                     riseDropTimer.update(it)
                     if (riseDropTimer.isJustFinished()) {
                         riseDropTimer.reset()
-                        state = HanabiranState.SLEEPING
+                        hanabiranState = HanabiranState.SLEEPING
                     }
                 }
             }
@@ -192,7 +192,7 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             fixturesRectangle.setSize(
-                (when (state) {
+                (when (hanabiranState) {
                     HanabiranState.SLEEPING -> Vector2.Zero
                     HanabiranState.RISING -> {
                         if (riseDropTimer.time >= 0.3f) Vector2(0.75f, 0.75f)
@@ -218,7 +218,7 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game) {
             fixturesRectangle.positionOnPoint(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
 
             val fixturesOn =
-                !state.equalsAny(HanabiranState.SLEEPING, HanabiranState.RISING, HanabiranState.DROPPING)
+                !hanabiranState.equalsAny(HanabiranState.SLEEPING, HanabiranState.RISING, HanabiranState.DROPPING)
             bodyFixture.active = fixturesOn
             damagerFixture.active = fixturesOn
             damageableFixture.active = fixturesOn
@@ -237,14 +237,14 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game) {
             _sprite.hidden = damageBlink
             val position = body.getBottomCenterPoint()
             _sprite.setPosition(position, Position.BOTTOM_CENTER)
-            _sprite.hidden = state == HanabiranState.SLEEPING
+            _sprite.hidden = hanabiranState == HanabiranState.SLEEPING
         }
         return spritesComponent
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = {
-            when (state) {
+            when (hanabiranState) {
                 HanabiranState.RISING -> "Rise"
                 HanabiranState.DROPPING -> "Drop"
                 HanabiranState.PETAL_4 -> "4PetalsSpin"

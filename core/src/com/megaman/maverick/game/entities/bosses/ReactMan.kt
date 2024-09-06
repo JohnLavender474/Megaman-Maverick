@@ -31,10 +31,10 @@ import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.Body
-import com.mega.game.engine.world.BodyComponent
-import com.mega.game.engine.world.BodyType
-import com.mega.game.engine.world.Fixture
+import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -51,10 +51,10 @@ import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.projectiles.ReactManProjectile
 import com.megaman.maverick.game.utils.MegaUtilMethods
-import com.megaman.maverick.game.world.BodyComponentCreator
-import com.megaman.maverick.game.world.BodySense
-import com.megaman.maverick.game.world.FixtureType
-import com.megaman.maverick.game.world.isSensing
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.BodySense
+import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.isSensing
 import kotlin.reflect.KClass
 
 class ReactMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, IFaceable {
@@ -103,7 +103,7 @@ class ReactMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
     private var jumped = false
     private var throwOnJump = true
 
-    private lateinit var state: ReactManState
+    private lateinit var reactManState: ReactManState
 
     override fun init() {
         if (regions.isEmpty) {
@@ -132,7 +132,7 @@ class ReactMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         jumped = false
         throwOnJump = true
 
-        state = ReactManState.DANCE
+        reactManState = ReactManState.DANCE
         facing = if (getMegaman().body.x <= body.x) Facing.LEFT else Facing.RIGHT
     }
 
@@ -153,13 +153,13 @@ class ReactMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
             projectile?.body?.setCenter(projectilePosition)
 
-            when (state) {
+            when (reactManState) {
                 ReactManState.DANCE -> {
                     body.physics.velocity.setZero()
                     danceTimer.update(delta)
                     if (danceTimer.isFinished()) {
                         danceTimer.reset()
-                        state = ReactManState.STAND
+                        reactManState = ReactManState.STAND
                     }
                 }
 
@@ -174,7 +174,7 @@ class ReactMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
                     standTimer.update(delta)
                     if (standTimer.isFinished()) {
                         standTimer.reset()
-                        state = ReactManState.JUMP
+                        reactManState = ReactManState.JUMP
                     }
                 }
 
@@ -197,7 +197,7 @@ class ReactMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
                     if (body.isSensing(BodySense.FEET_ON_GROUND) && body.physics.velocity.y <= 0f) {
                         jumped = false
                         throwTimer.reset()
-                        state = if (throwOnJump) ReactManState.RUN else ReactManState.THROW
+                        reactManState = if (throwOnJump) ReactManState.RUN else ReactManState.THROW
                     }
                 }
 
@@ -213,7 +213,7 @@ class ReactMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
                         if (getMegaman().body.x <= body.x) facing = Facing.LEFT
                         else if (getMegaman().body.getMaxX() >= body.getMaxX()) facing = Facing.RIGHT
 
-                        state = ReactManState.RUN
+                        reactManState = ReactManState.RUN
                     }
                 }
 
@@ -222,13 +222,13 @@ class ReactMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
                         (getMegaman().body.getMaxX() >= body.x && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
                     ) {
                         runTimer.reset()
-                        state = ReactManState.STAND
+                        reactManState = ReactManState.STAND
                     }
 
                     runTimer.update(delta)
                     if (runTimer.isFinished()) {
                         runTimer.reset()
-                        state = ReactManState.STAND
+                        reactManState = ReactManState.STAND
                         return@add
                     }
 
@@ -332,7 +332,7 @@ class ReactMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
-            val size = if (defeated || state == ReactManState.DANCE) 1.5f else 2f
+            val size = if (defeated || reactManState == ReactManState.DANCE) 1.5f else 2f
             _sprite.setSize(size * ConstVals.PPM)
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
             _sprite.setFlip(isFacing(Facing.RIGHT), false)
@@ -344,8 +344,8 @@ class ReactMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = {
             if (defeated) "Die"
-            else if (state == ReactManState.JUMP && throwOnJump && throwTimer.isFinished()) ReactManState.THROW.name
-            else state.name
+            else if (reactManState == ReactManState.JUMP && throwOnJump && throwTimer.isFinished()) ReactManState.THROW.name
+            else reactManState.name
         }
         val animations = objectMapOf<String, IAnimation>(
             ReactManState.STAND.name to Animation(

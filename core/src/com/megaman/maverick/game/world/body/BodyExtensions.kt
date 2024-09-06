@@ -1,9 +1,9 @@
-package com.megaman.maverick.game.world
+package com.megaman.maverick.game.world.body
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.entities.contracts.IBodyEntity
-import com.mega.game.engine.world.Body
+import com.mega.game.engine.world.body.Body
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 

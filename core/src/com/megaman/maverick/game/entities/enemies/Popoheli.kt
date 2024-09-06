@@ -30,10 +30,10 @@ import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.*
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.Body
-import com.mega.game.engine.world.BodyComponent
-import com.mega.game.engine.world.BodyType
-import com.mega.game.engine.world.Fixture
+import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -47,8 +47,8 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.world.BodyComponentCreator
-import com.megaman.maverick.game.world.FixtureType
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.FixtureType
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -83,9 +83,9 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
     private val attackDelayTimer = Timer(ATTACK_DELAY)
     private val attackTimer = Timer(ATTACK_DUR)
     private val attacking: Boolean
-        get() = state == PopoheliState.ATTACKING && attackDelayTimer.isFinished()
+        get() = popoheliState == PopoheliState.ATTACKING && attackDelayTimer.isFinished()
 
-    private lateinit var state: PopoheliState
+    private lateinit var popoheliState: PopoheliState
     private lateinit var target: Vector2
     private lateinit var faceOnEnd: Facing
 
@@ -112,7 +112,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
             .forEach { targets.add((it.second as RectangleMapObject).rectangle.getCenter()) }
         target = targets.poll()
 
-        state = PopoheliState.APPROACHING
+        popoheliState = PopoheliState.APPROACHING
         facing = if (target.x < body.x) Facing.LEFT else Facing.RIGHT
         faceOnEnd = if (spawnProps.containsKey("${ConstKeys.FACE}_${ConstKeys.ON}_${ConstKeys.END}")) Facing.valueOf(
             spawnProps.get(
@@ -128,14 +128,14 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            when (state) {
+            when (popoheliState) {
                 PopoheliState.APPROACHING -> {
                     val trajectory = target.cpy().sub(body.getCenter()).nor().scl(SPEED * ConstVals.PPM)
                     body.physics.velocity = trajectory
 
                     if (body.getCenter().epsilonEquals(target, 0.1f * ConstVals.PPM)) {
                         body.physics.velocity.setZero()
-                        state = PopoheliState.ATTACKING
+                        popoheliState = PopoheliState.ATTACKING
                         facing = faceOnEnd
                     }
                 }
@@ -148,7 +148,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
                     )
 
                     attackTimer.update(delta)
-                    if (attackTimer.isFinished()) state = PopoheliState.FLEEING
+                    if (attackTimer.isFinished()) popoheliState = PopoheliState.FLEEING
                 }
 
                 PopoheliState.FLEEING -> {

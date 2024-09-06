@@ -1,5 +1,10 @@
 package com.megaman.maverick.game.entities.contracts
 
+import com.mega.game.engine.world.body.*;
+import com.mega.game.engine.world.collisions.*;
+import com.mega.game.engine.world.contacts.*;
+import com.mega.game.engine.world.pathfinding.*;
+
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.entities.GameEntity
@@ -9,7 +14,7 @@ import com.megaman.maverick.game.entities.MegaGameEntitiesMap
 abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEntity(game.engine), IMegaGameEntity {
 
     val spawned: Boolean
-        get() = gameEntityState.spawned
+        get() = state.spawned
     val dead: Boolean
         get() = !spawned
     val runnablesOnSpawn = Array<() -> Unit>()

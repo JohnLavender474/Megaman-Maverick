@@ -1,5 +1,7 @@
 package com.megaman.maverick.game.entities.projectiles
 
+import com.mega.game.engine.world.body.*;
+
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
@@ -24,7 +26,6 @@ import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -33,8 +34,8 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-import com.megaman.maverick.game.world.BodyComponentCreator
-import com.megaman.maverick.game.world.FixtureType
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.FixtureType
 
 
 class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
@@ -53,7 +54,7 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
 
     private val shakeTimer = Timer(SHAKE_DUR)
     private val shatterTimer = Timer(SHATTER_DUR)
-    private lateinit var state: FallingIcicleState
+    private lateinit var fallingIcicleState: FallingIcicleState
 
     override fun init() {
         if (regions.isEmpty) {
@@ -74,7 +75,7 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
 
         body.physics.gravityOn = false
 
-        state = FallingIcicleState.STILL
+        fallingIcicleState = FallingIcicleState.STILL
 
         shakeTimer.reset()
         shatterTimer.reset()
@@ -99,19 +100,19 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        when (state) {
+        when (fallingIcicleState) {
             FallingIcicleState.STILL -> {
                 if (getMegaman().body.y < body.getMaxY() &&
                     getMegaman().body.getMaxX() > body.x &&
                     getMegaman().body.x < body.getMaxX()
-                ) state = FallingIcicleState.SHAKE
+                ) fallingIcicleState = FallingIcicleState.SHAKE
             }
 
             FallingIcicleState.SHAKE -> {
                 shakeTimer.update(delta)
                 if (shakeTimer.isFinished()) {
                     body.physics.gravityOn = true
-                    state = FallingIcicleState.FALL
+                    fallingIcicleState = FallingIcicleState.FALL
                 }
             }
 
@@ -152,7 +153,7 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String = {
-            when (state) {
+            when (fallingIcicleState) {
                 FallingIcicleState.STILL, FallingIcicleState.FALL -> "still"
                 FallingIcicleState.SHAKE -> "shake"
             }

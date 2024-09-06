@@ -12,8 +12,8 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.extensions.stopCharging
-import com.megaman.maverick.game.world.BodySense
-import com.megaman.maverick.game.world.isSensing
+import com.megaman.maverick.game.world.body.BodySense
+import com.megaman.maverick.game.world.body.isSensing
 
 const val MEGAMAN_UPDATE_COMPONENT_TAG = "MegamanUpdateComponentTag"
 

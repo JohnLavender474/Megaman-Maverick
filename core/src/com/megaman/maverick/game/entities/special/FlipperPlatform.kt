@@ -33,7 +33,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
-import com.megaman.maverick.game.world.FixtureType
+import com.megaman.maverick.game.world.body.FixtureType
 
 class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, IAudioEntity {
 
@@ -56,7 +56,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
     private val switchDelay = Timer(SWITCH_DELAY)
     private val switchTimer = Timer(SWITCH_DURATION)
 
-    private lateinit var state: FlipperPlatformState
+    private lateinit var flipperPlatformState: FlipperPlatformState
     private lateinit var bounds: GameRectangle
 
     private var block: Block? = null
@@ -86,7 +86,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
         switchTimer.reset()
         switchDelay.setToEnd()
 
-        state = FlipperPlatformState.LEFT
+        flipperPlatformState = FlipperPlatformState.LEFT
         bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
 
         block = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.STANDARD)!! as Block
@@ -110,19 +110,19 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
         switchDelay.update(delta)
         if (switchDelay.isJustFinished()) {
             switchTimer.reset()
-            state = when (state) {
+            flipperPlatformState = when (flipperPlatformState) {
                 FlipperPlatformState.LEFT -> FlipperPlatformState.FLIP_TO_RIGHT
                 FlipperPlatformState.RIGHT -> FlipperPlatformState.FLIP_TO_LEFT
-                else -> throw IllegalStateException("Invalid state during switch delay: $state")
+                else -> throw IllegalStateException("Invalid state during switch delay: $flipperPlatformState")
             }
         }
 
-        when (state) {
+        when (flipperPlatformState) {
             FlipperPlatformState.FLIP_TO_RIGHT -> {
                 block!!.body.setCenterX(-100f * ConstVals.PPM)
                 switchTimer.update(delta)
                 if (switchTimer.isFinished()) {
-                    state = FlipperPlatformState.RIGHT
+                    flipperPlatformState = FlipperPlatformState.RIGHT
                     switchTimer.reset()
                 }
             }
@@ -131,7 +131,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
                 block!!.body.setCenterX(-100f * ConstVals.PPM)
                 switchTimer.update(delta)
                 if (switchTimer.isFinished()) {
-                    state = FlipperPlatformState.LEFT
+                    flipperPlatformState = FlipperPlatformState.LEFT
                     switchTimer.reset()
                 }
             }
@@ -187,7 +187,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = {
-            when (state) {
+            when (flipperPlatformState) {
                 FlipperPlatformState.LEFT -> if (switchDelay.isFinished()) "left" else "leftDelay"
                 FlipperPlatformState.RIGHT -> if (switchDelay.isFinished()) "right" else "rightDelay"
                 FlipperPlatformState.FLIP_TO_RIGHT -> "flipToRight"

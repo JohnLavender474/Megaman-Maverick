@@ -19,7 +19,7 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.IDrawableShapesEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
-import com.mega.game.engine.world.Fixture
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -27,9 +27,9 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.VelocityAlterationType
-import com.megaman.maverick.game.world.FixtureType
-import com.megaman.maverick.game.world.setEntity
-import com.megaman.maverick.game.world.setVelocityAlteration
+import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.setEntity
+import com.megaman.maverick.game.world.body.setVelocityAlteration
 
 class ConveyorBelt(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity, IDrawableShapesEntity {
 

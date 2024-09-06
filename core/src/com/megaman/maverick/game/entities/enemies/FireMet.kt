@@ -30,10 +30,10 @@ import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.Body
-import com.mega.game.engine.world.BodyComponent
-import com.mega.game.engine.world.BodyType
-import com.mega.game.engine.world.Fixture
+import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -49,7 +49,7 @@ import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.FireMetFlame
 import com.megaman.maverick.game.utils.MegaUtilMethods
-import com.megaman.maverick.game.world.*
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
@@ -78,7 +78,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
     private val moveTimer = Timer(MOVE_DUR)
     private val shootTimer = Timer(SHOOT_DUR)
-    private lateinit var state: FireMetState
+    private lateinit var fireMetState: FireMetState
     private var flame: FireMetFlame? = null
 
     override fun init() {
@@ -103,7 +103,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
         spawnFlame()
 
-        state = FireMetState.MOVE
+        fireMetState = FireMetState.MOVE
         facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
 
         moveTimer.reset()
@@ -130,7 +130,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            when (state) {
+            when (fireMetState) {
                 FireMetState.MOVE -> {
                     flame!!.body?.setBottomCenterToPoint(body.getTopCenterPoint())
                     flame!!.whooshing = !body.isSensing(BodySense.FEET_ON_GROUND)
@@ -143,7 +143,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
                             facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
                             shoot()
                             shootTimer.reset()
-                            state = FireMetState.SHOOT
+                            fireMetState = FireMetState.SHOOT
                         }
                     }
                 }
@@ -154,7 +154,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
                     if (shootTimer.isJustFinished()) {
                         spawnFlame()
                         moveTimer.reset()
-                        state = FireMetState.MOVE
+                        fireMetState = FireMetState.MOVE
                     }
                 }
             }
@@ -267,7 +267,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
                         true
                     )
                 ) facing = Facing.RIGHT
-                else if (state == FireMetState.MOVE && body.isSensing(BodySense.FEET_ON_GROUND) && leftConsumerFixture.isProperty(
+                else if (fireMetState == FireMetState.MOVE && body.isSensing(BodySense.FEET_ON_GROUND) && leftConsumerFixture.isProperty(
                         ConstKeys.BLOCK,
                         false
                     )
@@ -281,7 +281,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
                         true
                     )
                 ) facing = Facing.LEFT
-                else if (state == FireMetState.MOVE && body.isSensing(BodySense.FEET_ON_GROUND) && rightConsumerFixture.isProperty(
+                else if (fireMetState == FireMetState.MOVE && body.isSensing(BodySense.FEET_ON_GROUND) && rightConsumerFixture.isProperty(
                         ConstKeys.BLOCK,
                         false
                     )

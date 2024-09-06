@@ -17,8 +17,8 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
-import com.megaman.maverick.game.world.BodySense
-import com.megaman.maverick.game.world.isSensing
+import com.megaman.maverick.game.world.body.BodySense
+import com.megaman.maverick.game.world.body.isSensing
 import kotlin.math.abs
 
 const val MEGAMAN_ANIMATIONS_COMPONENT_TAG = "MegamanAnimationsComponent"

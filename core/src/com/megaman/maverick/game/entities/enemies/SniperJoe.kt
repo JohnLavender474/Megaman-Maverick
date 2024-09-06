@@ -36,10 +36,10 @@ import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.GameEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.Body
-import com.mega.game.engine.world.BodyComponent
-import com.mega.game.engine.world.BodyType
-import com.mega.game.engine.world.Fixture
+import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -58,7 +58,7 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.world.*
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravityEntity, IFaceable,
@@ -124,14 +124,14 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
     override var gravityScalar = 1f
 
     private lateinit var type: String
-    private lateinit var state: SniperJoeState
+    private lateinit var sniperJoeState: SniperJoeState
 
     private var throwShieldTrigger: GameRectangle? = null
 
     private val shielded: Boolean
-        get() = state == SniperJoeState.WAITING_SHIELDED
+        get() = sniperJoeState == SniperJoeState.WAITING_SHIELDED
     private val hasShield: Boolean
-        get() = state == SniperJoeState.WAITING_SHIELDED || state == SniperJoeState.SHOOTING_WITH_SHIELD
+        get() = sniperJoeState == SniperJoeState.WAITING_SHIELDED || sniperJoeState == SniperJoeState.SHOOTING_WITH_SHIELD
 
     private val waitTimer = Timer(SHIELD_DUR)
     private val shootTimer = Timer(SHOOT_DUR)
@@ -179,7 +179,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         canJump = spawnProps.getOrDefault(ConstKeys.JUMP, true, Boolean::class)
 
         type = spawnProps.getOrDefault(ConstKeys.TYPE, DEFAULT_TYPE, String::class)
-        state = SniperJoeState.WAITING_SHIELDED
+        sniperJoeState = SniperJoeState.WAITING_SHIELDED
         directionRotation = Direction.valueOf(
             spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase()
         )
@@ -316,23 +316,23 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
             if (canJump && shouldJump()) jump()
 
             if (!overlapsGameCamera()) {
-                state = if (hasShield) SniperJoeState.WAITING_SHIELDED else SniperJoeState.WAITING_NO_SHIELD
+                sniperJoeState = if (hasShield) SniperJoeState.WAITING_SHIELDED else SniperJoeState.WAITING_NO_SHIELD
                 waitTimer.reset()
                 return@add
             }
 
-            when (state) {
+            when (sniperJoeState) {
                 SniperJoeState.WAITING_SHIELDED -> {
                     if (setToThrowShield) {
                         throwShield()
                         throwShieldTimer.reset()
-                        state = SniperJoeState.THROWING_SHIELD
+                        sniperJoeState = SniperJoeState.THROWING_SHIELD
                         setToThrowShield = false
                     } else if (body.isSensing(BodySense.FEET_ON_GROUND)) {
                         waitTimer.update(it)
                         if (waitTimer.isJustFinished()) {
                             shootTimer.reset()
-                            state = SniperJoeState.SHOOTING_WITH_SHIELD
+                            sniperJoeState = SniperJoeState.SHOOTING_WITH_SHIELD
                         }
                     }
                 }
@@ -341,7 +341,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
                     shootTimer.update(it)
                     if (shootTimer.isJustFinished()) {
                         waitTimer.reset()
-                        state = SniperJoeState.WAITING_SHIELDED
+                        sniperJoeState = SniperJoeState.WAITING_SHIELDED
                     }
                 }
 
@@ -349,7 +349,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
                     throwShieldTimer.update(it)
                     if (throwShieldTimer.isJustFinished()) {
                         waitTimer.reset()
-                        state = SniperJoeState.WAITING_NO_SHIELD
+                        sniperJoeState = SniperJoeState.WAITING_NO_SHIELD
                     }
                 }
 
@@ -357,7 +357,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
                     waitTimer.update(it)
                     if (waitTimer.isJustFinished()) {
                         shootTimer.reset()
-                        state = SniperJoeState.SHOOTING_NO_SHIELD
+                        sniperJoeState = SniperJoeState.SHOOTING_NO_SHIELD
                     }
                 }
 
@@ -365,7 +365,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
                     shootTimer.update(it)
                     if (shootTimer.isJustFinished()) {
                         waitTimer.reset()
-                        state = SniperJoeState.WAITING_NO_SHIELD
+                        sniperJoeState = SniperJoeState.WAITING_NO_SHIELD
                     }
                 }
             }
@@ -374,7 +374,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String = {
-            val regionKey = when (state) {
+            val regionKey = when (sniperJoeState) {
                 SniperJoeState.WAITING_SHIELDED -> {
                     if (body.isSensing(BodySense.FEET_ON_GROUND)) "StandShielded"
                     else "JumpWithShield"

@@ -32,10 +32,10 @@ import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.IDrawableShapesEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.Body
-import com.mega.game.engine.world.BodyComponent
-import com.mega.game.engine.world.BodyType
-import com.mega.game.engine.world.Fixture
+import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -52,8 +52,8 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.world.BodyComponentCreator
-import com.megaman.maverick.game.world.FixtureType
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.FixtureType
 import kotlin.reflect.KClass
 
 class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAnimatedEntity, IDrawableShapesEntity {
@@ -211,8 +211,8 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
 
         val damageableFixtures = gdxArrayOf(damageableFixture1, damageableFixture2)
         body.preProcess.put(ConstKeys.DEFAULT) {
-            val (state, _) = loop.getCurrent()
-            val active = state == GachappanState.SHOOT
+            val (gachappanState, _) = loop.getCurrent()
+            val active = gachappanState == GachappanState.SHOOT
             damageableFixtures.forEach {
                 it.active = active
                 it.getShape().color = if (active) Color.PURPLE else Color.CLEAR
@@ -243,8 +243,8 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String = {
-            val (state, _) = loop.getCurrent()
-            state.name
+            val (gachappanState, _) = loop.getCurrent()
+            gachappanState.name
         }
         val animations = objectMapOf<String, IAnimation>(
             GachappanState.WAIT.name to Animation(waitRegion!!, 1, 3, 0.1f, false),

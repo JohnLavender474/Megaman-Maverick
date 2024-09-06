@@ -1,9 +1,13 @@
 package com.megaman.maverick.game
 
+import com.mega.game.engine.world.body.*;
+import com.mega.game.engine.world.collisions.*;
+import com.mega.game.engine.world.contacts.*;
+import com.mega.game.engine.world.pathfinding.*;
+
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.megaman.maverick.game.entities.bosses.BossType
-import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import io.kotest.core.spec.style.DescribeSpec
@@ -27,7 +31,6 @@ class GamePasswordsTest : DescribeSpec({
             // if
             val state = GameState()
             state.bossesDefeated.addAll(
-                BossType.BLUNT_MAN,
                 BossType.RODENT_MAN
             )
             state.heartTanksCollected.addAll(
@@ -38,10 +41,6 @@ class GamePasswordsTest : DescribeSpec({
                     MegaHealthTank.A to 0,
                     MegaHealthTank.C to 0
                 )
-            )
-            state.abilitiesAttained.addAll(
-                MegaAbility.WALL_SLIDE,
-                MegaAbility.AIR_DASH
             )
 
             // when
@@ -58,10 +57,8 @@ class GamePasswordsTest : DescribeSpec({
             // if
             val state = GameState()
             state.bossesDefeated.addAll(
-                BossType.BLUNT_MAN,
                 BossType.RODENT_MAN,
                 BossType.REACTOR_MAN,
-                BossType.ROASTER_MAN,
                 BossType.TIMBER_WOMAN
             )
             state.heartTanksCollected.addAll(
@@ -78,12 +75,6 @@ class GamePasswordsTest : DescribeSpec({
                     MegaHealthTank.D to 0
                 )
             )
-            state.abilitiesAttained.addAll(
-                MegaAbility.WALL_SLIDE,
-                MegaAbility.AIR_DASH,
-                MegaAbility.GROUND_SLIDE,
-                MegaAbility.CHARGE_WEAPONS
-            )
 
             // when
             val password = GamePasswords.getGamePassword(state)
@@ -97,10 +88,9 @@ class GamePasswordsTest : DescribeSpec({
 
         it("should load game password - 3") {
             // if
-            // bosses defeated = Timber Woman, Rodent Man --> 0, 6 : 8, 17
+            // bosses defeated = Timber Woman, Reactor Man --> 0, 6 : 8, 17
             // heart tanks collected = A, C --> 8, 10 : 7, 35
             // health tanks collected = B --> 18 : 14
-            // abilities collected = wall slide, air dash --> 20, 21 : 28, 10
             // indices set to true: 8, 17, 7, 35, 5, 28, 10
             val setIndices = objectSetOf(8, 17, 7, 35, 14, 28, 10)
             val password = IntArray(36) { if (it in setIndices) 1 else 0 }
@@ -110,10 +100,9 @@ class GamePasswordsTest : DescribeSpec({
             GamePasswords.loadGamePassword(state, password)
 
             // then
-            state.bossesDefeated shouldBe objectSetOf(BossType.TIMBER_WOMAN, BossType.RODENT_MAN)
+            state.bossesDefeated shouldBe objectSetOf(BossType.TIMBER_WOMAN, BossType.REACTOR_MAN)
             state.heartTanksCollected shouldBe objectSetOf(MegaHeartTank.A, MegaHeartTank.C)
             state.healthTanksCollected shouldBe objectMapOf(MegaHealthTank.B to 0)
-            state.abilitiesAttained shouldBe objectSetOf(MegaAbility.WALL_SLIDE, MegaAbility.AIR_DASH)
         }
     }
 })

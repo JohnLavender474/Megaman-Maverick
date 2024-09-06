@@ -31,10 +31,10 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.Body
-import com.mega.game.engine.world.BodyComponent
-import com.mega.game.engine.world.BodyType
-import com.mega.game.engine.world.Fixture
+import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -48,7 +48,7 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.world.*
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class Tropish(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
@@ -70,7 +70,7 @@ class Tropish(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     )
     override lateinit var facing: Facing
 
-    private lateinit var state: TropishState
+    private lateinit var tropishState: TropishState
     private lateinit var triggerBox: GameRectangle
     private lateinit var startPosition: Vector2
 
@@ -93,17 +93,17 @@ class Tropish(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         triggerBox = spawnProps.get(ConstKeys.TRIGGER, RectangleMapObject::class)!!.rectangle.toGameRectangle()
         startPosition = spawnProps.get(ConstKeys.START, RectangleMapObject::class)!!.rectangle.getCenter()
 
-        state = TropishState.WAIT
+        tropishState = TropishState.WAIT
         body.physics.gravityOn = false
         body.fixtures.forEach { (it.second as Fixture).active = false }
 
         facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
     }
 
-    override fun canDamage(damageable: IDamageable) = state != TropishState.WAIT
+    override fun canDamage(damageable: IDamageable) = tropishState != TropishState.WAIT
 
     private fun startSwim() {
-        state = TropishState.SWIM
+        tropishState = TropishState.SWIM
         body.setCenter(startPosition)
         facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
         val speed = SWIM_SPEED * ConstVals.PPM * facing.value
@@ -112,7 +112,7 @@ class Tropish(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     }
 
     private fun hitNose() {
-        state = TropishState.BENT
+        tropishState = TropishState.BENT
         body.physics.velocity.setZero()
         body.physics.gravityOn = true
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.MARIO_FIREBALL_SOUND, false)
@@ -127,8 +127,8 @@ class Tropish(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            if (state == TropishState.WAIT && getMegaman().body.overlaps(triggerBox as Rectangle)) startSwim()
-            else if (state == TropishState.BENT && body.isSensing(BodySense.FEET_ON_GROUND)) explodeAndDie()
+            if (tropishState == TropishState.WAIT && getMegaman().body.overlaps(triggerBox as Rectangle)) startSwim()
+            else if (tropishState == TropishState.BENT && body.isSensing(BodySense.FEET_ON_GROUND)) explodeAndDie()
         }
     }
 
@@ -151,7 +151,7 @@ class Tropish(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
         val noseFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
         noseFixture.setConsumer { processState, fixture ->
-            if (state == TropishState.SWIM &&
+            if (tropishState == TropishState.SWIM &&
                 processState == ProcessState.BEGIN &&
                 fixture.getFixtureType() == FixtureType.BLOCK
             ) hitNose()
@@ -183,13 +183,13 @@ class Tropish(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
             _sprite.setFlip(isFacing(Facing.RIGHT), false)
             val position = if (isFacing(Facing.LEFT)) Position.CENTER_LEFT else Position.CENTER_RIGHT
             _sprite.setPosition(body.getPositionPoint(position), position)
-            _sprite.hidden = damageBlink || state == TropishState.WAIT
+            _sprite.hidden = damageBlink || tropishState == TropishState.WAIT
         }
         return spritesComponent
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { if (state == TropishState.WAIT) null else state.name.lowercase() }
+        val keySupplier: () -> String? = { if (tropishState == TropishState.WAIT) null else tropishState.name.lowercase() }
         val animations = objectMapOf<String, IAnimation>(
             "swim" to Animation(regions["swim"], 2, 1, 0.1f, true),
             "bent" to Animation(regions["bent"], 2, 1, 0.25f, true)

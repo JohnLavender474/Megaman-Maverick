@@ -32,10 +32,10 @@ import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.Body
-import com.mega.game.engine.world.BodyComponent
-import com.mega.game.engine.world.BodyType
-import com.mega.game.engine.world.Fixture
+import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -52,8 +52,8 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.world.BodyComponentCreator
-import com.megaman.maverick.game.world.FixtureType
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.FixtureType
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -93,7 +93,7 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
     private val shootTimer = Timer(SHOOT_DELAY)
 
     private lateinit var animations: ObjectMap<String, IAnimation>
-    private lateinit var state: JetMetState
+    private lateinit var jetMetState: JetMetState
     private lateinit var liftTarget: Vector2
 
     private var applyMovementScalarToBullet = false
@@ -137,7 +137,7 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         liftoffTimer.reset()
         shootTimer.reset()
 
-        state = JetMetState.STAND
+        jetMetState = JetMetState.STAND
         facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
 
         targetReached = false
@@ -149,15 +149,15 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            when (state) {
+            when (jetMetState) {
                 JetMetState.STAND -> {
                     standTimer.update(delta)
-                    if (standTimer.isFinished()) state = JetMetState.LIFT_OFF
+                    if (standTimer.isFinished()) jetMetState = JetMetState.LIFT_OFF
                 }
 
                 JetMetState.LIFT_OFF -> {
                     liftoffTimer.update(delta)
-                    if (liftoffTimer.isFinished()) state = JetMetState.JET
+                    if (liftoffTimer.isFinished()) jetMetState = JetMetState.JET
                 }
 
                 JetMetState.JET -> {
@@ -261,7 +261,7 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = {
-            when (state) {
+            when (jetMetState) {
                 JetMetState.STAND -> "stand"
                 JetMetState.LIFT_OFF -> "take_off"
                 JetMetState.JET -> "jet"

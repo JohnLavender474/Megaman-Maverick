@@ -16,18 +16,17 @@ import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.BodyComponent
-import com.mega.game.engine.world.Fixture
+import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
-
-import com.megaman.maverick.game.world.BodySense
-import com.megaman.maverick.game.world.FixtureType
-import com.megaman.maverick.game.world.isSensing
-import com.megaman.maverick.game.world.setEntity
+import com.megaman.maverick.game.world.body.BodySense
+import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.isSensing
+import com.megaman.maverick.game.world.body.setEntity
 
 class Lift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IDirectionRotatable {
 

@@ -32,10 +32,10 @@ import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.events.Event
 import com.mega.game.engine.events.IEventListener
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.Body
-import com.mega.game.engine.world.BodyComponent
-import com.mega.game.engine.world.BodyType
-import com.mega.game.engine.world.Fixture
+import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -45,8 +45,8 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.world.BodyComponentCreator
-import com.megaman.maverick.game.world.FixtureType
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.FixtureType
 
 class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudioEntity, ISpritesEntity, IEventListener,
     Resettable {
@@ -66,7 +66,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
 
     val center = Vector2()
 
-    lateinit var state: GateState
+    lateinit var gateState: GateState
         private set
     lateinit var direction: Direction
         private set
@@ -143,24 +143,24 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
     override fun reset() {
         timer.reset()
         transitionFinished = false
-        state = GateState.OPENABLE
+        gateState = GateState.OPENABLE
     }
 
     fun trigger() {
         if (!triggerable) return
 
-        state = GateState.OPENING
+        gateState = GateState.OPENING
         playSoundNow(SoundAsset.BOSS_DOOR_SOUND, false)
         game.eventsMan.submitEvent(Event(EventType.GATE_INIT_OPENING))
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
-        if (state == GateState.OPENING) {
+        if (gateState == GateState.OPENING) {
             timer.update(it)
             if (timer.isFinished()) {
                 GameLogger.debug(TAG, "Set gate to OPENED")
                 timer.reset()
-                state = GateState.OPEN
+                gateState = GateState.OPEN
                 game.eventsMan.submitEvent(Event(EventType.GATE_FINISH_OPENING))
                 game.eventsMan.submitEvent(
                     Event(EventType.NEXT_ROOM_REQ, props(ConstKeys.ROOM to nextRoomKey))
@@ -168,22 +168,22 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
             }
         }
 
-        if (state == GateState.OPEN) {
+        if (gateState == GateState.OPEN) {
             if (transitionFinished) {
                 GameLogger.debug(TAG, "Set gate to CLOSING")
                 transitionFinished = false
-                state = GateState.CLOSING
+                gateState = GateState.CLOSING
                 if (showCloseEvent) requestToPlaySound(SoundAsset.BOSS_DOOR_SOUND, false)
                 game.eventsMan.submitEvent(Event(EventType.GATE_INIT_CLOSING))
             }
         }
 
-        if (state == GateState.CLOSING) {
+        if (gateState == GateState.CLOSING) {
             timer.update(it)
             if (timer.isFinished()) {
                 GameLogger.debug(TAG, "Set gate to CLOSED")
                 timer.reset()
-                state = GateState.CLOSED
+                gateState = GateState.CLOSED
                 game.eventsMan.submitEvent(Event(EventType.GATE_FINISH_CLOSING))
             }
         }
@@ -230,7 +230,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden =
-                state == GateState.OPEN || (state.equalsAny(GateState.CLOSING, GateState.CLOSED) && !showCloseEvent)
+                gateState == GateState.OPEN || (gateState.equalsAny(GateState.CLOSING, GateState.CLOSED) && !showCloseEvent)
             _sprite.setOriginCenter()
             _sprite.rotation = when (direction) {
                 Direction.UP, Direction.DOWN -> 90f
@@ -243,7 +243,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier = {
-            when (state) {
+            when (gateState) {
                 GateState.OPENABLE, GateState.CLOSED -> "closed"
                 GateState.OPENING -> "opening"
                 GateState.OPEN -> null

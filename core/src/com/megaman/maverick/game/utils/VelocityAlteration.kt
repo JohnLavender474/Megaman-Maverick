@@ -1,7 +1,7 @@
 package com.megaman.maverick.game.utils
 
 import com.badlogic.gdx.math.Vector2
-import com.mega.game.engine.world.Body
+import com.mega.game.engine.world.body.Body
 
 enum class VelocityAlterationType {
     SET,

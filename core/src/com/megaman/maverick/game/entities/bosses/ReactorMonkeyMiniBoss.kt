@@ -27,10 +27,10 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.Body
-import com.mega.game.engine.world.BodyComponent
-import com.mega.game.engine.world.BodyType
-import com.mega.game.engine.world.Fixture
+import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -47,8 +47,8 @@ import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.projectiles.ReactorMonkeyBall
 import com.megaman.maverick.game.utils.MegaUtilMethods
-import com.megaman.maverick.game.world.BodyComponentCreator
-import com.megaman.maverick.game.world.FixtureType
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.FixtureType
 import kotlin.reflect.KClass
 
 class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, IFaceable {
@@ -84,7 +84,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
 
     private val throwTimer = Timer(THROW_DUR)
     private lateinit var throwDelayTimer: Timer
-    private lateinit var state: ReactorMonkeyState
+    private lateinit var reactorMonkeyState: ReactorMonkeyState
     private var monkeyBall: ReactorMonkeyBall? = null
     private val ballCatchArea = GameCircle().setRadius(BALL_CATCH_RADIUS * ConstVals.PPM)
 
@@ -105,7 +105,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
         body.setBottomCenterToPoint(spawn)
         throwDelayTimer = Timer(MAX_THROW_DELAY)
         throwTimer.reset()
-        state = ReactorMonkeyState.STAND
+        reactorMonkeyState = ReactorMonkeyState.STAND
         facing = if (getMegaman().body.x >= body.x) Facing.RIGHT else Facing.LEFT
     }
 
@@ -157,13 +157,13 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
             ballCatchArea.setCenter(body.getTopCenterPoint().add(0f, 1.75f * ConstVals.PPM))
             facing = if (getMegaman().body.x >= body.x) Facing.RIGHT else Facing.LEFT
 
-            if (state == ReactorMonkeyState.STAND) {
+            if (reactorMonkeyState == ReactorMonkeyState.STAND) {
                 throwDelayTimer.update(delta)
                 if (throwDelayTimer.isFinished()) {
                     if (monkeyBall == null) spawnNewMonkeyBall()
                     else if (monkeyBall!!.body != null && ballCatchArea.contains(monkeyBall!!.body.getCenter())) {
                         catchMonkeyBall()
-                        state = ReactorMonkeyState.THROW
+                        reactorMonkeyState = ReactorMonkeyState.THROW
                         throwDelayTimer.resetDuration(MIN_THROW_DELAY + (MAX_THROW_DELAY - MIN_THROW_DELAY) * getHealthRatio())
                     }
                 }
@@ -174,7 +174,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
                     monkeyBall = null
                 }
                 if (throwTimer.isFinished()) {
-                    state = ReactorMonkeyState.STAND
+                    reactorMonkeyState = ReactorMonkeyState.STAND
                     throwTimer.reset()
                 }
             }
@@ -216,7 +216,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { state.name }
+        val keySupplier: () -> String? = { reactorMonkeyState.name }
         val animations = objectMapOf<String, IAnimation>(
             ReactorMonkeyState.STAND.name to Animation(standRegion!!, 1, 2, gdxArrayOf(1f, 0.1f), true),
             ReactorMonkeyState.THROW.name to Animation(throwRegion!!, 1, 3, 0.1f, false)

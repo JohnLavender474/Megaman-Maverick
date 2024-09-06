@@ -1,14 +1,15 @@
-package com.megaman.maverick.game.world
+package com.megaman.maverick.game.world.collisions
 
 import com.mega.game.engine.common.enums.Direction
-import com.mega.game.engine.world.Body
-import com.mega.game.engine.world.BodyType
-import com.mega.game.engine.world.ICollisionHandler
-import com.mega.game.engine.world.StandardCollisionHandler
+import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.collisions.ICollisionHandler
+import com.mega.game.engine.world.collisions.StandardCollisionHandler
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.ControllerButton
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
+import com.megaman.maverick.game.world.body.*
 
 class MegaCollisionHandler(private val game: MegamanMaverickGame) : ICollisionHandler {
 

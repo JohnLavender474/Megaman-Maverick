@@ -26,10 +26,10 @@ import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.Body
-import com.mega.game.engine.world.BodyComponent
-import com.mega.game.engine.world.BodyType
-import com.mega.game.engine.world.Fixture
+import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -45,10 +45,10 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.world.BodyComponentCreator
-import com.megaman.maverick.game.world.BodySense
-import com.megaman.maverick.game.world.FixtureType
-import com.megaman.maverick.game.world.isSensing
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.BodySense
+import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.isSensing
 import kotlin.reflect.KClass
 
 class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
@@ -89,7 +89,7 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     private val rollTimer = Timer(ROLL_DURATION)
     private val openTimer = Timer(OPEN_DELAY)
     private val shootTimer = Timer(SHOOT_DELAY)
-    private lateinit var state: RollingBotState
+    private lateinit var rollingBotState: RollingBotState
     private var bulletsShot = 0
 
     override fun init() {
@@ -112,7 +112,7 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         rollTimer.reset()
         openTimer.reset()
         shootTimer.reset()
-        state = RollingBotState.ROLLING
+        rollingBotState = RollingBotState.ROLLING
         bulletsShot = 0
     }
 
@@ -134,13 +134,13 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            when (state) {
+            when (rollingBotState) {
                 RollingBotState.ROLLING -> {
                     body.physics.velocity.x = X_VEL * facing.value * ConstVals.PPM
                     rollTimer.update(delta)
                     if (rollTimer.isFinished()) {
                         rollTimer.reset()
-                        state = RollingBotState.OPENING
+                        rollingBotState = RollingBotState.OPENING
                     }
                 }
 
@@ -149,7 +149,7 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
                     openTimer.update(delta)
                     if (openTimer.isFinished()) {
                         openTimer.reset()
-                        state = RollingBotState.SHOOTING
+                        rollingBotState = RollingBotState.SHOOTING
                     }
                 }
 
@@ -164,7 +164,7 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
                         shootTimer.reset()
                         if (bulletsShot >= BULLETS_TO_SHOOT) {
                             bulletsShot = 0
-                            state = RollingBotState.CLOSING
+                            rollingBotState = RollingBotState.CLOSING
                         }
                     }
                 }
@@ -174,7 +174,7 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
                     openTimer.update(delta)
                     if (openTimer.isFinished()) {
                         openTimer.reset()
-                        state = RollingBotState.ROLLING
+                        rollingBotState = RollingBotState.ROLLING
                     }
                 }
             }
@@ -207,7 +207,7 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             var feetFixtureOffset = 0f
-            when (state) {
+            when (rollingBotState) {
                 RollingBotState.ROLLING -> {
                     body.setSize(0.5f * ConstVals.PPM)
                     feetFixtureOffset = -0.25f * ConstVals.PPM
@@ -230,9 +230,9 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
                 }
 
                 if (fixture.type == FixtureType.SHIELD)
-                    fixture.active = state != RollingBotState.SHOOTING
+                    fixture.active = rollingBotState != RollingBotState.SHOOTING
                 if (fixture.type == FixtureType.DAMAGEABLE)
-                    fixture.active = state == RollingBotState.SHOOTING
+                    fixture.active = rollingBotState == RollingBotState.SHOOTING
 
                 val fixtureShape = fixture.rawShape as GameRectangle
                 fixtureShape.set(body)
@@ -260,7 +260,7 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier = { state.name }
+        val keySupplier = { rollingBotState.name }
         val animations = objectMapOf<String, IAnimation>(
             RollingBotState.ROLLING.name to Animation(rollRegion!!, 2, 4, 0.1f, true),
             RollingBotState.OPENING.name to Animation(openRegion!!, 1, 3, 0.1f, false),

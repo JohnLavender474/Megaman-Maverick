@@ -1,5 +1,10 @@
 package com.megaman.maverick.game.controllers
 
+import com.mega.game.engine.world.body.*;
+import com.mega.game.engine.world.collisions.*;
+import com.mega.game.engine.world.contacts.*;
+import com.mega.game.engine.world.pathfinding.*;
+
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.controller.ControllerUtils
 import com.mega.game.engine.controller.buttons.Buttons

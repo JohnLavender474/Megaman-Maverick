@@ -28,9 +28,9 @@ import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.GameEntity
 import com.mega.game.engine.entities.contracts.*
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.Body
-import com.mega.game.engine.world.BodyComponent
-import com.mega.game.engine.world.BodyType
+import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -41,7 +41,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.world.BodyComponentCreator
+import com.megaman.maverick.game.world.body.BodyComponentCreator
 
 class FireMetSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEntity, IBodyEntity, ICullableEntity,
     ISpritesEntity, IAnimatedEntity, IHazard {
@@ -115,8 +115,8 @@ class FireMetSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParentE
         }
 
         if (children.size < maxToSpawn) {
-            val state = loop.getCurrent()
-            val timer = when (state) {
+            val fireMetSpawnerState = loop.getCurrent()
+            val timer = when (fireMetSpawnerState) {
                 FireMetSpawnerState.CLOSED -> closedTimer
                 FireMetSpawnerState.OPENING, FireMetSpawnerState.CLOSING -> transTimer
                 FireMetSpawnerState.SPAWNING -> openTimer

@@ -28,10 +28,10 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.Body
-import com.mega.game.engine.world.BodyComponent
-import com.mega.game.engine.world.BodyType
-import com.mega.game.engine.world.Fixture
+import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -47,8 +47,8 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.world.BodyComponentCreator
-import com.megaman.maverick.game.world.FixtureType
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.FixtureType
 import kotlin.reflect.KClass
 
 class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
@@ -86,7 +86,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
     private val closedTimer = Timer(CLOSED_DUR)
     private val transTimer = Timer(TRANS_DUR)
     private val openTimer = Timer(OPEN_DUR)
-    private lateinit var state: ToxicBarrelBotState
+    private lateinit var toxicBarrelBotState: ToxicBarrelBotState
     private lateinit var position: Vector2
     private var shot = false
 
@@ -108,7 +108,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         closedTimer.reset()
         transTimer.reset()
         openTimer.reset()
-        state = ToxicBarrelBotState.CLOSED
+        toxicBarrelBotState = ToxicBarrelBotState.CLOSED
         facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
         shot = false
     }
@@ -116,13 +116,14 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            when (state) {
+            when (toxicBarrelBotState) {
                 ToxicBarrelBotState.CLOSED -> {
                     facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
                     closedTimer.update(delta)
                     if (closedTimer.isFinished()) {
                         val openingTop = getRandomBool()
-                        state = if (openingTop) ToxicBarrelBotState.OPENING_TOP else ToxicBarrelBotState.OPENING_CENTER
+                        toxicBarrelBotState =
+                            if (openingTop) ToxicBarrelBotState.OPENING_TOP else ToxicBarrelBotState.OPENING_CENTER
                         closedTimer.reset()
                     }
                 }
@@ -130,8 +131,9 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
                 ToxicBarrelBotState.OPENING_TOP, ToxicBarrelBotState.OPENING_CENTER -> {
                     transTimer.update(delta)
                     if (transTimer.isFinished()) {
-                        state = if (state == ToxicBarrelBotState.OPENING_TOP) ToxicBarrelBotState.OPEN_TOP
-                        else ToxicBarrelBotState.OPEN_CENTER
+                        toxicBarrelBotState =
+                            if (toxicBarrelBotState == ToxicBarrelBotState.OPENING_TOP) ToxicBarrelBotState.OPEN_TOP
+                            else ToxicBarrelBotState.OPEN_CENTER
                         transTimer.reset()
                     }
                 }
@@ -143,8 +145,9 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
                         shot = true
                     }
                     if (openTimer.isFinished()) {
-                        state = if (state == ToxicBarrelBotState.OPEN_TOP) ToxicBarrelBotState.CLOSING_TOP
-                        else ToxicBarrelBotState.CLOSING_CENTER
+                        toxicBarrelBotState =
+                            if (toxicBarrelBotState == ToxicBarrelBotState.OPEN_TOP) ToxicBarrelBotState.CLOSING_TOP
+                            else ToxicBarrelBotState.CLOSING_CENTER
                         openTimer.reset()
                     }
                 }
@@ -152,7 +155,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
                 ToxicBarrelBotState.CLOSING_TOP, ToxicBarrelBotState.CLOSING_CENTER -> {
                     transTimer.update(delta)
                     if (transTimer.isFinished()) {
-                        state = ToxicBarrelBotState.CLOSED
+                        toxicBarrelBotState = ToxicBarrelBotState.CLOSED
                         transTimer.reset()
                         shot = false
                     }
@@ -162,7 +165,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
     }
 
     private fun shoot() {
-        if (state == ToxicBarrelBotState.OPEN_CENTER) {
+        if (toxicBarrelBotState == ToxicBarrelBotState.OPEN_CENTER) {
             val spawn = body.getCenter().add(0.5f * ConstVals.PPM * facing.value, -0.05f * ConstVals.PPM)
             val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
             bullet.spawn(
@@ -222,7 +225,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         debugShapes.add { shieldFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            body.height = if (state.equalsAny(
+            body.height = if (toxicBarrelBotState.equalsAny(
                     ToxicBarrelBotState.OPENING_TOP,
                     ToxicBarrelBotState.OPEN_TOP,
                     ToxicBarrelBotState.CLOSING_TOP
@@ -237,7 +240,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
                 when (fixture.type) {
                     FixtureType.DAMAGEABLE -> {
                         val center: Vector2
-                        if (state.equalsAny(
+                        if (toxicBarrelBotState.equalsAny(
                                 ToxicBarrelBotState.OPENING_TOP,
                                 ToxicBarrelBotState.OPEN_TOP,
                                 ToxicBarrelBotState.CLOSING_TOP
@@ -251,7 +254,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
                         }
                         center.x += 0.2f * ConstVals.PPM * facing.value
                         bounds.setCenter(center)
-                        fixture.active = state != ToxicBarrelBotState.CLOSED
+                        fixture.active = toxicBarrelBotState != ToxicBarrelBotState.CLOSED
                     }
 
                     FixtureType.SHIELD -> bounds.setBottomCenterToPoint(body.getBottomCenterPoint())
@@ -280,7 +283,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier = {
-            when (state) {
+            when (toxicBarrelBotState) {
                 ToxicBarrelBotState.CLOSED -> "closed"
                 ToxicBarrelBotState.OPENING_TOP, ToxicBarrelBotState.OPEN_TOP -> "open_top"
                 ToxicBarrelBotState.CLOSING_TOP -> "closing_top"

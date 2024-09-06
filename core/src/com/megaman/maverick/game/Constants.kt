@@ -28,9 +28,19 @@ object ConstVals {
     const val STANDARD_MAX_STAT_BITS = 30
     const val STAT_BIT_WIDTH = 0.5f
     const val STAT_BIT_HEIGHT = 0.125f
+    const val DEFAULT_PATHFINDING_MAX_ITERATIONS = 100
+    const val DEFAULT_PATHFINDING_MAX_DISTANCE = 100
+    const val DEFAULT_RETURN_BEST_PATH = true
 }
 
 object ConstKeys {
+    const val DISTANCE = "distance"
+    const val ITERATIONS = "iterations"
+    const val HEURISTIC = "heuristic"
+    const val BODY_FILTER = "body_filter"
+    const val FIXTURE_FILTER = "fixture_filter"
+    const val ALLOW_OUT_OF_BOUNDS = "allow_out_of_bounds"
+    const val TILED_MAP_LOAD_RESULT = "tiled_map_load_result"
     const val DECISION = "decision"
     const val HIT_BY_BODY = "hit_by_body"
     const val FOOT = "foot"
@@ -241,7 +251,7 @@ object ConstKeys {
     const val POSITION = "position"
     const val CURRENT = "current"
     const val PRIOR = "prior"
-    const val WORLD_GRAPH_MAP = "world_graph_map"
+    const val WORLD_CONTAINER = "world_graph_map"
     const val DRAWABLES = "drawables"
     const val SHAPES = "shapes"
     const val PLAYER = "player"

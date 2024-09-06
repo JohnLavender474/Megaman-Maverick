@@ -32,10 +32,10 @@ import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.IChildEntity
 import com.mega.game.engine.motion.RotatingLine
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.Body
-import com.mega.game.engine.world.BodyComponent
-import com.mega.game.engine.world.BodyType
-import com.mega.game.engine.world.Fixture
+import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -50,10 +50,10 @@ import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.entities.factories.impl.HazardsFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.SigmaRatElectricBall
-import com.megaman.maverick.game.world.BodyComponentCreator
-import com.megaman.maverick.game.world.BodyLabel
-import com.megaman.maverick.game.world.FixtureLabel
-import com.megaman.maverick.game.world.FixtureType
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.BodyLabel
+import com.megaman.maverick.game.world.body.FixtureLabel
+import com.megaman.maverick.game.world.body.FixtureType
 import kotlin.reflect.KClass
 
 class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntity, IAnimatedEntity {
@@ -81,13 +81,13 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
 
     override var parent: GameEntity? = null
 
-    lateinit var state: SigmaRatClawState
+    lateinit var clawState: SigmaRatClawState
         private set
 
     val shocking: Boolean
-        get() = state == SigmaRatClawState.SHOCK
+        get() = clawState == SigmaRatClawState.SHOCK
     val launched: Boolean
-        get() = state == SigmaRatClawState.LAUNCH
+        get() = clawState == SigmaRatClawState.LAUNCH
 
     private val launchPauseTimer = Timer(LAUNCH_PAUSE_DUR)
     private val shockPauseTimer = Timer(SHOCK_PAUSE_DUR)
@@ -135,7 +135,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
             )
         )
 
-        state = SigmaRatClawState.ROTATE
+        clawState = SigmaRatClawState.ROTATE
         maxY = spawnProps.get(ConstKeys.MAX_Y, Float::class)!!
     }
 
@@ -146,7 +146,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
     }
 
     internal fun enterLaunchState() {
-        state = SigmaRatClawState.LAUNCH
+        clawState = SigmaRatClawState.LAUNCH
         launchPauseTimer.reset()
         reachedLaunchTarget = false
         launchTarget = getMegaman().body.getCenter()
@@ -156,7 +156,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
     }
 
     internal fun enterShockState() {
-        state = SigmaRatClawState.SHOCK
+        clawState = SigmaRatClawState.SHOCK
         shockPauseTimer.reset()
         shocked = false
         shockBall = EntityFactories.fetch(
@@ -201,7 +201,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            when (state) {
+            when (clawState) {
                 SigmaRatClawState.ROTATE -> {
                     rotatingLine.update(delta)
                     body.setCenter(rotatingLine.getMotionValue())
@@ -210,7 +210,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
                 SigmaRatClawState.SHOCK -> {
                     shockPauseTimer.update(delta)
                     if (shockPauseTimer.isJustFinished()) {
-                        if (shocked) state = SigmaRatClawState.ROTATE
+                        if (shocked) clawState = SigmaRatClawState.ROTATE
                         else {
                             shock()
                             shocked = true
@@ -227,7 +227,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
                             returnTarget.cpy().sub(body.getCenter()).nor().scl(RETURN_SPEED * ConstVals.PPM)
                         body.physics.velocity = trajectory
                         if (body.getCenter().epsilonEquals(returnTarget, EPSILON * ConstVals.PPM)) {
-                            state = SigmaRatClawState.ROTATE
+                            clawState = SigmaRatClawState.ROTATE
                             body.physics.velocity.setZero()
                         }
                     } else {
@@ -291,7 +291,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
             val diff = target.sub(current)
             block!!.body.physics.velocity = diff.scl(1f / delta)
 
-            val swiping = state == SigmaRatClawState.LAUNCH/*
+            val swiping = clawState == SigmaRatClawState.LAUNCH/*
             TODO: shield fixture?
             shieldFixture.active = !swiping
             shieldFixture.rawShape.color = if (!swiping) Color.BLUE else Color.GRAY
@@ -319,7 +319,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = {
-            when (state) {
+            when (clawState) {
                 SigmaRatClawState.ROTATE, SigmaRatClawState.TITTY_GRAB -> "closed"
                 SigmaRatClawState.LAUNCH -> "open"
                 SigmaRatClawState.SHOCK -> if (shocked) "open" else "shock"

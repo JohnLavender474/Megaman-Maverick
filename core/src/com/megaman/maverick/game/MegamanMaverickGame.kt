@@ -40,16 +40,22 @@ import com.mega.game.engine.drawables.sprites.SpritesSystem
 import com.mega.game.engine.events.Event
 import com.mega.game.engine.events.EventsManager
 import com.mega.game.engine.events.IEventListener
-import com.mega.game.engine.graph.IGraphMap
 import com.mega.game.engine.motion.MotionSystem
-import com.mega.game.engine.pathfinding.Pathfinder
-import com.mega.game.engine.pathfinding.PathfindingSystem
+import com.mega.game.engine.pathfinding.AsyncPathfindingSystem
+import com.mega.game.engine.pathfinding.IPathfinder
+import com.mega.game.engine.pathfinding.IPathfinderFactory
+import com.mega.game.engine.pathfinding.PathfinderParams
+import com.mega.game.engine.pathfinding.heuristics.EuclideanHeuristic
+import com.mega.game.engine.pathfinding.heuristics.IHeuristic
 import com.mega.game.engine.points.PointsSystem
 import com.mega.game.engine.screens.IScreen
+import com.mega.game.engine.screens.levels.tiledmap.TiledMapLoadResult
 import com.mega.game.engine.systems.GameSystem
 import com.mega.game.engine.updatables.UpdatablesSystem
-import com.mega.game.engine.world.Contact
 import com.mega.game.engine.world.WorldSystem
+import com.mega.game.engine.world.contacts.Contact
+import com.mega.game.engine.world.container.IWorldContainer
+import com.mega.game.engine.world.pathfinding.WorldPathfinder
 import com.megaman.maverick.game.assets.IAsset
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
@@ -78,11 +84,10 @@ import com.megaman.maverick.game.screens.other.SimpleInitGameScreen
 import com.megaman.maverick.game.spawns.SpawnerFactory
 import com.megaman.maverick.game.utils.getMusics
 import com.megaman.maverick.game.utils.getSounds
-import com.megaman.maverick.game.world.FixtureType
-import com.megaman.maverick.game.world.MegaCollisionHandler
-import com.megaman.maverick.game.world.MegaContactListener
+import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.collisions.MegaCollisionHandler
+import com.megaman.maverick.game.world.contacts.MegaContactListener
 import java.util.*
-import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 import kotlin.reflect.cast
 
@@ -172,9 +177,14 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
 
     fun <T : GameSystem> getSystem(clazz: KClass<T>) = clazz.cast(getSystems()[clazz.simpleName]!!)
 
-    fun setGraphMap(graphMap: IGraphMap) = properties.put(ConstKeys.WORLD_GRAPH_MAP, graphMap)
+    fun setWorldContainer(worldContainer: IWorldContainer) = properties.put(ConstKeys.WORLD_CONTAINER, worldContainer)
 
-    fun getGraphMap(): IGraphMap? = properties.get(ConstKeys.WORLD_GRAPH_MAP) as IGraphMap?
+    fun getWorldContainer(): IWorldContainer = properties.get(ConstKeys.WORLD_CONTAINER) as IWorldContainer
+
+    fun setTiledMapLoadResult(tiledMapLoadResult: TiledMapLoadResult) =
+        properties.put(ConstKeys.TILED_MAP_LOAD_RESULT, tiledMapLoadResult)
+
+    fun getTiledMapLoadResult() = properties.get(ConstKeys.TILED_MAP_LOAD_RESULT) as TiledMapLoadResult
 
     override fun create() {
         GameLogger.set(GameLogLevel.ERROR)
@@ -207,7 +217,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
         viewports.put(ConstKeys.UI, uiViewport)
 
         // debugText = MegaFontHandle({ "FPS: ${Gdx.graphics.framesPerSecond}" })
-        debugText = MegaFontHandle({ "Count: ${engine.getSpawnedEntities().size}" })
+        debugText = MegaFontHandle({ "Count: ${engine.getEntities().size}" })
 
         audioMan = MegaAudioManager(assMan.getSounds(), assMan.getMusics())
         audioMan.musicVolume = DEFAULT_VOLUME
@@ -220,7 +230,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
         megaman = Megaman(this)
         // manually call init and set initialized to true before megaman is set to be spawned in the game engine
         megaman.init()
-        megaman.gameEntityState.initialized = true
+        megaman.state.initialized = true
 
         megamanUpgradeHandler = MegamanUpgradeHandler(state, megaman)
 
@@ -378,9 +388,10 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
             AnimationsSystem(),
             BehaviorsSystem(),
             WorldSystem(
-                contactListener = MegaContactListener(this, CONTACT_LISTENER_DEBUG_FILTER),
-                worldGraphSupplier = { getGraphMap() },
+                ppm = ConstVals.PPM,
                 fixedStep = ConstVals.FIXED_TIME_STEP,
+                worldContainerSupplier = { getWorldContainer() },
+                contactListener = MegaContactListener(this, CONTACT_LISTENER_DEBUG_FILTER),
                 collisionHandler = MegaCollisionHandler(this),
                 contactFilterMap = objectMapOf(
                     FixtureType.CONSUMER to objectSetOf(*FixtureType.values()),
@@ -413,15 +424,49 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
                     ),
                     FixtureType.LASER to objectSetOf(FixtureType.BLOCK),
                     FixtureType.TELEPORTER to objectSetOf(FixtureType.TELEPORTER_LISTENER)
-                ),
-                debug = true
+                )
             ),
             CullablesSystem(engine),
             MotionSystem(),
-            PathfindingSystem(
-                pathfinderFactory = { Pathfinder(getGraphMap()!!, it.params) },
-                timeout = 10,
-                timeoutUnit = TimeUnit.MILLISECONDS
+            AsyncPathfindingSystem(
+                factory = object : IPathfinderFactory {
+                    override fun getPathfinder(params: PathfinderParams): IPathfinder {
+                        val tiledMapResult = getTiledMapLoadResult()
+                        return WorldPathfinder(
+                            start = params.startCoordinateSupplier(),
+                            target = params.targetCoordinateSupplier(),
+                            worldWidth = tiledMapResult.worldWidth,
+                            worldHeight = tiledMapResult.worldHeight,
+                            allowDiagonal = params.allowDiagonal(),
+                            allowOutOfWorldBounds = params.getOrDefaultProperty(
+                                ConstKeys.ALLOW_OUT_OF_BOUNDS,
+                                true,
+                                Boolean::class
+                            ),
+                            filter = params.filter,
+                            heuristic = params.getOrDefaultProperty(
+                                ConstKeys.HEURISTIC,
+                                EuclideanHeuristic(),
+                                IHeuristic::class
+                            ),
+                            maxIterations = params.getOrDefaultProperty(
+                                ConstKeys.ITERATIONS,
+                                ConstVals.DEFAULT_PATHFINDING_MAX_ITERATIONS,
+                                Int::class
+                            ),
+                            maxDistance = params.getOrDefaultProperty(
+                                ConstKeys.DISTANCE,
+                                ConstVals.DEFAULT_PATHFINDING_MAX_DISTANCE,
+                                Int::class
+                            ),
+                            returnBestPathOnFailure = params.getOrDefaultProperty(
+                                ConstKeys.DEFAULT,
+                                ConstVals.DEFAULT_RETURN_BEST_PATH,
+                                Boolean::class
+                            )
+                        )
+                    }
+                }
             ),
             PointsSystem(),
             UpdatablesSystem(),

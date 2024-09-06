@@ -1,5 +1,7 @@
 package com.megaman.maverick.game.entities.sensors
 
+import com.mega.game.engine.world.body.*;
+
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
 import com.badlogic.gdx.utils.OrderedSet
@@ -11,15 +13,14 @@ import com.mega.game.engine.entities.GameEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.IParentEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntitySuppliers
-import com.megaman.maverick.game.world.BodyComponentCreator
-import com.megaman.maverick.game.world.FixtureType
-import com.megaman.maverick.game.world.setConsumer
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.setConsumer
 
 class FixtureTypeOverlapSpawn(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IParentEntity {
 

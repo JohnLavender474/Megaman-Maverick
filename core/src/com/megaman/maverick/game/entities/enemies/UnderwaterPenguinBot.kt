@@ -31,10 +31,10 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.Body
-import com.mega.game.engine.world.BodyComponent
-import com.mega.game.engine.world.BodyType
-import com.mega.game.engine.world.Fixture
+import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -48,7 +48,7 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.world.*
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class UnderwaterPenguinBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
@@ -70,7 +70,7 @@ class UnderwaterPenguinBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAn
     )
     override lateinit var facing: Facing
 
-    private lateinit var state: UnderwaterPenguinBotState
+    private lateinit var underwaterPenguinBotState: UnderwaterPenguinBotState
     private lateinit var triggerBox: GameRectangle
     private lateinit var startPosition: Vector2
 
@@ -93,17 +93,17 @@ class UnderwaterPenguinBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAn
         triggerBox = spawnProps.get(ConstKeys.TRIGGER, RectangleMapObject::class)!!.rectangle.toGameRectangle()
         startPosition = spawnProps.get(ConstKeys.START, RectangleMapObject::class)!!.rectangle.getCenter()
 
-        state = UnderwaterPenguinBotState.WAIT
+        underwaterPenguinBotState = UnderwaterPenguinBotState.WAIT
         body.physics.gravityOn = false
         body.fixtures.forEach { (it.second as Fixture).active = false }
 
         facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
     }
 
-    override fun canDamage(damageable: IDamageable) = state != UnderwaterPenguinBotState.WAIT
+    override fun canDamage(damageable: IDamageable) = underwaterPenguinBotState != UnderwaterPenguinBotState.WAIT
 
     private fun startSwim() {
-        state = UnderwaterPenguinBotState.SWIM
+        underwaterPenguinBotState = UnderwaterPenguinBotState.SWIM
         body.setCenter(startPosition)
         facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
         val speed = SWIM_SPEED * ConstVals.PPM * facing.value
@@ -112,7 +112,7 @@ class UnderwaterPenguinBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAn
     }
 
     private fun hitNose() {
-        state = UnderwaterPenguinBotState.BENT
+        underwaterPenguinBotState = UnderwaterPenguinBotState.BENT
         body.physics.velocity.setZero()
         body.physics.gravityOn = true
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.MARIO_FIREBALL_SOUND, false)
@@ -127,8 +127,8 @@ class UnderwaterPenguinBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAn
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            if (state == UnderwaterPenguinBotState.WAIT && getMegaman().body.overlaps(triggerBox as Rectangle)) startSwim()
-            else if (state == UnderwaterPenguinBotState.BENT && body.isSensing(BodySense.FEET_ON_GROUND)) explodeAndDie()
+            if (underwaterPenguinBotState == UnderwaterPenguinBotState.WAIT && getMegaman().body.overlaps(triggerBox as Rectangle)) startSwim()
+            else if (underwaterPenguinBotState == UnderwaterPenguinBotState.BENT && body.isSensing(BodySense.FEET_ON_GROUND)) explodeAndDie()
         }
     }
 
@@ -151,7 +151,7 @@ class UnderwaterPenguinBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAn
 
         val noseFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
         noseFixture.setConsumer { processState, fixture ->
-            if (state == UnderwaterPenguinBotState.SWIM &&
+            if (underwaterPenguinBotState == UnderwaterPenguinBotState.SWIM &&
                 processState == ProcessState.BEGIN &&
                 fixture.getFixtureType() == FixtureType.BLOCK
             ) hitNose()
@@ -183,14 +183,14 @@ class UnderwaterPenguinBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAn
             _sprite.setFlip(isFacing(Facing.LEFT), false)
             val position = if (isFacing(Facing.LEFT)) Position.CENTER_LEFT else Position.CENTER_RIGHT
             _sprite.setPosition(body.getPositionPoint(position), position)
-            _sprite.hidden = damageBlink || state == UnderwaterPenguinBotState.WAIT
+            _sprite.hidden = damageBlink || underwaterPenguinBotState == UnderwaterPenguinBotState.WAIT
         }
         return spritesComponent
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? =
-            { if (state == UnderwaterPenguinBotState.WAIT) null else state.name.lowercase() }
+            { if (underwaterPenguinBotState == UnderwaterPenguinBotState.WAIT) null else underwaterPenguinBotState.name.lowercase() }
         val animations = objectMapOf<String, IAnimation>(
             "swim" to Animation(regions["swim"], 3, 1, 0.1f, true),
             "bent" to Animation(regions["bent"])

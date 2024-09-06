@@ -1,6 +1,6 @@
-package com.megaman.maverick.game.world
+package com.megaman.maverick.game.world.body
 
-import com.mega.game.engine.world.Body
+import com.mega.game.engine.world.body.Body
 
 enum class BodySense {
     IN_WATER,

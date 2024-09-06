@@ -1,8 +1,8 @@
-package com.megaman.maverick.game.world
+package com.megaman.maverick.game.world.body
 
 import com.mega.game.engine.entities.contracts.IBodyEntity
-import com.mega.game.engine.world.Body
-import com.mega.game.engine.world.BodyComponent
+import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.BodyComponent
 import com.megaman.maverick.game.ConstKeys
 
 object BodyComponentCreator {
