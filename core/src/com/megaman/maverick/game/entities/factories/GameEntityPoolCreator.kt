@@ -6,6 +6,7 @@ import com.mega.game.engine.world.contacts.*;
 import com.mega.game.engine.world.pathfinding.*;
 
 import com.mega.game.engine.common.objects.Pool
+import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 
 object GameEntityPoolCreator {
@@ -16,7 +17,7 @@ object GameEntityPoolCreator {
 
     fun create(supplier: () -> MegaGameEntity, startAmount: Int): Pool<MegaGameEntity> {
         val pool = Pool(startAmount, supplier)
-        pool.onSupplyNew = { e -> e.runnablesOnDestroy.add { pool.pool(e) } }
+        pool.onSupplyNew = { e -> e.runnablesOnDestroy.put(ConstKeys.POOL) { pool.pool(e) } }
         return pool
     }
 }

@@ -64,12 +64,12 @@ import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.MegaControllerPoller
 import com.megaman.maverick.game.controllers.loadButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
-import com.megaman.maverick.game.entities.enemies.RollingBot
-import com.megaman.maverick.game.entities.enemies.UFOhNoBot
+import com.megaman.maverick.game.entities.blocks.PropellerPlatform
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
+import com.megaman.maverick.game.entities.special.EventTrigger
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
@@ -110,7 +110,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
 
     companion object {
         const val TAG = "MegamanMaverickGame"
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(RollingBot.TAG, UFOhNoBot.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(PropellerPlatform.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.WATER, FixtureType.WATER_LISTENER)
         }
@@ -183,7 +183,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
 
     fun setWorldContainer(worldContainer: IWorldContainer) = properties.put(ConstKeys.WORLD_CONTAINER, worldContainer)
 
-    fun getWorldContainer(): IWorldContainer = properties.get(ConstKeys.WORLD_CONTAINER) as IWorldContainer
+    fun getWorldContainer(): IWorldContainer? = properties.get(ConstKeys.WORLD_CONTAINER) as IWorldContainer?
 
     fun setTiledMapLoadResult(tiledMapLoadResult: TiledMapLoadResult) =
         properties.put(ConstKeys.TILED_MAP_LOAD_RESULT, tiledMapLoadResult)
@@ -327,10 +327,15 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
     }
 
     override fun dispose() {
-        GameLogger.debug(TAG, "dispose()")
-        batch.dispose()
-        shapeRenderer.dispose()
-        screens.values().forEach { it.dispose() }
+        try {
+            GameLogger.debug(TAG, "dispose()")
+            batch.dispose()
+            shapeRenderer.dispose()
+            screens.values().forEach { it.dispose() }
+            engine.dispose()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     fun saveState() {

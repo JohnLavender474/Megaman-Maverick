@@ -17,7 +17,6 @@ import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
-import com.mega.game.engine.common.interfaces.isFacing
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
@@ -55,7 +54,9 @@ import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.isSensing
 import kotlin.reflect.KClass
 
 class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
@@ -102,21 +103,23 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        spawnProps.getAllMatching { it.toString().contains(ConstKeys.TRIGGER) }.forEach {
-            val trigger = (it.second as RectangleMapObject).rectangle.toGameRectangle()
-            triggers.add(trigger)
-        }
-        start = spawnProps.get(ConstKeys.START, RectangleMapObject::class)!!.rectangle.getCenter()
-        target = spawnProps.get(ConstKeys.TARGET, RectangleMapObject::class)!!.rectangle.getCenter()
-
-        dropDurationTimer.reset()
-
         facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
-        waiting = true
+        waiting = spawnProps.getOrDefault(ConstKeys.WAIT, true, Boolean::class)
         dropped = false
         rising = false
 
-        body.fixtures.forEach { (it.second as Fixture).active = false }
+        if (waiting) {
+            spawnProps.getAllMatching { it.toString().contains(ConstKeys.TRIGGER) }.forEach {
+                val trigger = (it.second as RectangleMapObject).rectangle.toGameRectangle()
+                triggers.add(trigger)
+            }
+            start = spawnProps.get(ConstKeys.START, RectangleMapObject::class)!!.rectangle.getCenter()
+            target = spawnProps.get(ConstKeys.TARGET, RectangleMapObject::class)!!.rectangle.getCenter()
+
+            dropDurationTimer.reset()
+
+            body.fixtures.forEach { (it.second as Fixture).active = false }
+        } else setToHover()
     }
 
     override fun onDestroy() {
@@ -131,6 +134,19 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         val bomb = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.UFO_BOMB)!!
         val spawn = body.getBottomCenterPoint().sub(0f, 0.6f * ConstVals.PPM)
         bomb.spawn(props(ConstKeys.POSITION to spawn, ConstKeys.OWNER to this))
+    }
+
+    private fun setToHover() {
+        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        val xVel = X_VEL * ConstVals.PPM * facing.value
+        body.physics.velocity.set(xVel, 0f)
+    }
+
+    override fun swapFacing() {
+        super.swapFacing()
+        GameLogger.debug(TAG, "swapFacing(): new facing = $facing")
+        val xVel = X_VEL * ConstVals.PPM * facing.value
+        body.physics.velocity.set(xVel, 0f)
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -156,10 +172,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             if (rising) {
                 if (body.getCenter().epsilonEquals(target, 0.1f * ConstVals.PPM)) {
                     rising = false
-                    facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
-
-                    val xVel = X_VEL * ConstVals.PPM * facing.value
-                    body.physics.velocity.set(xVel, 0f)
+                    setToHover()
                 } else return@add
             }
 
@@ -167,7 +180,6 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                 dropBomb()
                 dropped = true
                 dropDurationTimer.reset()
-
                 body.physics.velocity.setZero()
             }
 
@@ -182,7 +194,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     }
 
     override fun defineBodyComponent(): BodyComponent {
-        val body = Body(BodyType.ABSTRACT)
+        val body = Body(BodyType.DYNAMIC)
         body.setSize(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat())
         body.color = Color.GRAY
 
@@ -194,13 +206,43 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         bodyFixture.rawShape.color = Color.RED
         debugShapes.add { bodyFixture.getShape() }
 
+        val shieldFixture =
+            Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(0.15f * ConstVals.PPM, 0.75f * ConstVals.PPM))
+        shieldFixture.offsetFromBodyCenter.y = -0.5f * ConstVals.PPM
+        body.addFixture(shieldFixture)
+        shieldFixture.rawShape.color = Color.BLUE
+        debugShapes.add { shieldFixture.getShape() }
+
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.4f * ConstVals.PPM))
         body.addFixture(damagerFixture)
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameCircle().setRadius(0.4f * ConstVals.PPM))
         body.addFixture(damageableFixture)
 
+        val leftSideFixture =
+            Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM))
+        leftSideFixture.offsetFromBodyCenter.x = -0.375f * ConstVals.PPM
+        leftSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
+        body.addFixture(leftSideFixture)
+        leftSideFixture.rawShape.color = Color.YELLOW
+        debugShapes.add { leftSideFixture.getShape() }
+
+        val rightSideFixture =
+            Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM))
+        rightSideFixture.offsetFromBodyCenter.x = 0.375f * ConstVals.PPM
+        rightSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
+        body.addFixture(rightSideFixture)
+        rightSideFixture.rawShape.color = Color.YELLOW
+        debugShapes.add { rightSideFixture.getShape() }
+
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
+
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            if (!waiting && !rising &&
+                ((isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
+                        (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)))
+            ) swapFacing()
+        }
 
         return BodyComponentCreator.create(this, body)
     }

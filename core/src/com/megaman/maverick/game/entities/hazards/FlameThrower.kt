@@ -147,8 +147,8 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     private fun defineCullablesComponent(): CullablesComponent {
         val cullEvents = objectSetOf<Any>(EventType.BEGIN_ROOM_TRANS)
         val cullOnEvent = CullableOnEvent({ cullEvents.contains(it) }, cullEvents)
-        runnablesOnSpawn.add { game.eventsMan.addListener(cullOnEvent) }
-        runnablesOnDestroy.add { game.eventsMan.removeListener(cullOnEvent) }
+        runnablesOnSpawn.put(ConstKeys.CULL_EVENTS) { game.eventsMan.addListener(cullOnEvent) }
+        runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvent) }
         return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS to cullOnEvent))
     }
 

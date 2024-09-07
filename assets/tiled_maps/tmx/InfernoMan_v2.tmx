@@ -211,7 +211,7 @@
   <object id="300" x="1504" y="736" width="96" height="32"/>
   <object id="306" x="1216" y="736" width="192" height="32"/>
   <object id="307" x="1152" y="768" width="96" height="352"/>
-  <object id="309" x="992" y="576" width="96" height="736"/>
+  <object id="309" x="992" y="520" width="96" height="792"/>
   <object id="313" x="992" y="1248" width="448" height="64"/>
   <object id="316" x="1520" y="1248" width="208" height="32"/>
   <object id="317" x="1760" y="1248" width="208" height="32"/>

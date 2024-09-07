@@ -1,10 +1,5 @@
 package com.megaman.maverick.game.entities.decorations
 
-import com.mega.game.engine.world.body.*;
-import com.mega.game.engine.world.collisions.*;
-import com.mega.game.engine.world.contacts.*;
-import com.mega.game.engine.world.pathfinding.*;
-
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.animations.Animation
@@ -72,8 +67,8 @@ class MuzzleFlash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         val cullEvents =
             objectSetOf<Any>(EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING)
         val cullOnEvents = CullableOnEvent({ cullEvents.contains(it) }, cullEvents)
-        runnablesOnSpawn.add { game.eventsMan.addListener(cullOnEvents) }
-        runnablesOnDestroy.add { game.eventsMan.removeListener(cullOnEvents) }
+        runnablesOnSpawn.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
+        runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
 
         val cullOutOfBounds =
             getGameCameraCullingLogic(game.getGameCamera(), { firstSprite!!.boundingRectangle.toGameRectangle() })

@@ -45,6 +45,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
+import com.megaman.maverick.game.entities.hazards.Lava
 import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntitySuppliers
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType.SPAWN_ROOM
@@ -199,7 +200,9 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
     override fun canDamage(damageable: IDamageable) = type == ENEMY_TYPE
 
     private fun spawnEntities(on: Boolean) {
-        children.forEach { it.destroy() }
+        children.forEach {
+            if (it is Lava && it.moveBeforeKill && !it.movingBeforeKill) it.moveBeforeKill() else it.destroy()
+        }
         children.clear()
 
         val entitiesToSpawn = if (on) onEntitySuppliers else offEntitySuppliers

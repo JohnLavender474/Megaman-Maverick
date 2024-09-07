@@ -31,14 +31,16 @@ class FloatingCanHole(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
 
     companion object {
         const val TAG = "FloatingCanHole"
-        private const val SPAWN_DELAY = 2.5f
+        private const val SPAWN_DELAY = 1.5f
         private const val DEFAULT_MAX_SPAWNED = 3
+        private const val DEFAULT_DROP_ITEM_ON_DEATH = true
     }
 
     override var children = Array<GameEntity>()
 
     private val spawnDelayTimer = Timer(SPAWN_DELAY)
     private var maxToSpawn = DEFAULT_MAX_SPAWNED
+    private var dropItemOnDeath = DEFAULT_DROP_ITEM_ON_DEATH
 
     override fun getEntityType() = EntityType.HAZARD
 
@@ -54,11 +56,24 @@ class FloatingCanHole(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         body.setCenter(spawn)
         maxToSpawn = spawnProps.getOrDefault(ConstKeys.MAX, DEFAULT_MAX_SPAWNED, Int::class)
         spawnDelayTimer.reset()
+        dropItemOnDeath =
+            spawnProps.getOrDefault(ConstKeys.DROP_ITEM_ON_DEATH, DEFAULT_DROP_ITEM_ON_DEATH, Boolean::class)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         children.clear()
+    }
+
+    private fun spawnFloatingCan() {
+        val floatingCan = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.FLOATING_CAN)!!
+        floatingCan.spawn(
+            props(
+                ConstKeys.POSITION to body.getCenter(),
+                ConstKeys.DROP_ITEM_ON_DEATH to dropItemOnDeath
+            )
+        )
+        children.add(floatingCan)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
@@ -70,9 +85,7 @@ class FloatingCanHole(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         if (children.size < maxToSpawn) {
             spawnDelayTimer.update(delta)
             if (spawnDelayTimer.isFinished()) {
-                val floatingCan = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.FLOATING_CAN)!!
-                floatingCan.spawn(props(ConstKeys.POSITION to body.getCenter()))
-                children.add(floatingCan)
+                spawnFloatingCan()
                 spawnDelayTimer.reset()
             }
         }

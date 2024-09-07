@@ -1,10 +1,5 @@
 package com.megaman.maverick.game.entities.contracts
 
-import com.mega.game.engine.world.body.*;
-import com.mega.game.engine.world.collisions.*;
-import com.mega.game.engine.world.contacts.*;
-import com.mega.game.engine.world.pathfinding.*;
-
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
@@ -59,7 +54,7 @@ abstract class AbstractEnemy(
         addComponent(defineSpritesComponent())
         addComponent(AudioComponent())
         addComponent(CullablesComponent())
-        runnablesOnDestroy.add {
+        runnablesOnDestroy.put(ConstKeys.ITEMS) {
             if (hasDepletedHealth()) {
                 disintegrate()
                 if (dropItemOnDeath) {
@@ -115,7 +110,7 @@ abstract class AbstractEnemy(
             game.eventsMan.addListener(cullOnEvents)
             GameLogger.debug(TAG, "Added CullableOnEvent from EventsManager")
 
-            runnablesOnDestroy.add {
+            runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) {
                 game.eventsMan.removeListener(cullOnEvents)
                 GameLogger.debug(TAG, "Removed CullableOnEvent from EventsManager")
             }

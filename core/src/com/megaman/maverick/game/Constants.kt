@@ -34,6 +34,9 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val POOL = "pool"
+    const val BALL = "ball"
+    const val WAIT = "wait"
     const val DISTANCE = "distance"
     const val ITERATIONS = "iterations"
     const val HEURISTIC = "heuristic"

@@ -148,6 +148,11 @@ public class DesktopLauncher {
             }
         });
 
-        new Lwjgl3Application(game, config);
+        try {
+            new Lwjgl3Application(game, config);
+        } catch (Exception e) {
+            System.err.println("Exception while running game: " + e.getMessage());
+            game.dispose();
+        }
     }
 }

@@ -43,5 +43,6 @@ enum class EventType {
     TURN_CONTROLLER_ON,
     TURN_CONTROLLER_OFF,
 
-    EDIT_TILED_MAP
+    EDIT_TILED_MAP,
+    SHOW_BACKGROUND
 }

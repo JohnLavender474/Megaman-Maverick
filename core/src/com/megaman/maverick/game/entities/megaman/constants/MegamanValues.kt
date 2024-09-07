@@ -1,13 +1,10 @@
 package com.megaman.maverick.game.entities.megaman.constants
 
-import com.mega.game.engine.world.body.*;
-import com.mega.game.engine.world.collisions.*;
-import com.mega.game.engine.world.contacts.*;
-import com.mega.game.engine.world.pathfinding.*;
-
 object MegamanValues {
     const val MAX_WEAPON_AMMO = 30
-    const val START_HEALTH = 30 // 14
+    const val START_HEALTH = 14
+
+    const val WALL_SLIDE_FRICTION_TO_APPLY = 1.5f
 
     const val CART_RIDE_MAX_SPEED = 14f
     const val CART_RIDE_ACCELERATION = 1.15f

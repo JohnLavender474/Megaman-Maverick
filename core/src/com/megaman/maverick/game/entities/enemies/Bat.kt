@@ -62,7 +62,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
     companion object {
         const val TAG = "Bat"
         private var atlas: TextureAtlas? = null
-        private const val DEBUG_PATHFINDING = true
+        private const val DEBUG_PATHFINDING = false
         private const val DEBUG_PATHFINDING_DURATION = 1f
         private const val HANG_DURATION = 1.75f
         private const val RELEASE_FROM_PERCH_DURATION = 0.25f
@@ -139,7 +139,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
                     val surroundingEntityTypes = OrderedMap<IntPair, ObjectSet<EntityType>>()
                     for (i in -1..1) {
                         for (j in -1..1) {
-                            val entityTypes = game.getWorldContainer().getBodies(coordinate.x + i, coordinate.y + j)
+                            val entityTypes = game.getWorldContainer()!!.getBodies(coordinate.x + i, coordinate.y + j)
                                 .map { body -> body.getEntity().getEntityType() }.toObjectSet()
                             surroundingEntityTypes.put(IntPair(coordinate.x + i, coordinate.y + j), entityTypes)
                         }
@@ -256,7 +256,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
             targetCoordinateSupplier = { getMegaman().body.getTopCenterPoint().toGridCoordinate() },
             allowDiagonal = { true },
             filter = { coordinate ->
-                val bodies = game.getWorldContainer().getBodies(coordinate.x, coordinate.y)
+                val bodies = game.getWorldContainer()!!.getBodies(coordinate.x, coordinate.y)
                 var passable = true
                 var blockingBody: Body? = null
 

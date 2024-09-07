@@ -7,7 +7,7 @@ import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.objectSetOf
-import com.mega.game.engine.common.interfaces.isFacing
+
 import com.mega.game.engine.common.shapes.GameLine
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.ShapeUtils

@@ -16,7 +16,7 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
-import com.mega.game.engine.common.interfaces.isFacing
+
 import com.mega.game.engine.common.normalizedTrajectory
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties

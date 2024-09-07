@@ -143,8 +143,8 @@ class SeaMine(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IS
         val cullEvents =
             objectSetOf<Any>(EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING)
         val cullOnEvents = CullableOnEvent({ cullEvents.contains(it) }, cullEvents)
-        runnablesOnSpawn.add { game.eventsMan.addListener(cullOnEvents) }
-        runnablesOnDestroy.add { game.eventsMan.removeListener(cullOnEvents) }
+        runnablesOnSpawn.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
+        runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
         val cullOutOfBounds = getGameCameraCullingLogic(this, CULL_TIME)
         return CullablesComponent(
             objectMapOf(

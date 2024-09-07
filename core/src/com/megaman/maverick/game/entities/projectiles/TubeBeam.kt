@@ -10,6 +10,7 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
@@ -17,6 +18,7 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
@@ -34,16 +36,19 @@ class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
     companion object {
         const val TAG = "TubeBeam"
+        private const val CULL_TIME = 1f
         private var region: TextureRegion? = null
     }
 
     override var directionRotation: Direction? = null
 
+    private val cullTimer = Timer(CULL_TIME)
     private lateinit var trajectory: Vector2
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "TubeBeam")
         super.init()
+        addComponent(defineUpdatablesComponent())
         addComponent(defineAnimationsComponent())
     }
 
@@ -55,7 +60,13 @@ class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
         trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
+        cullTimer.reset()
     }
+
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+        cullTimer.update(delta)
+        if (cullTimer.isFinished()) destroy()
+    })
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)

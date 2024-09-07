@@ -12,7 +12,7 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
-import com.mega.game.engine.common.interfaces.isFacing
+
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
@@ -53,12 +53,11 @@ import kotlin.reflect.KClass
 
 class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, IFaceable {
 
-    enum class ReactorMonkeyState {
-        STAND, THROW
-    }
+    enum class ReactorMonkeyState { STAND, THROW }
 
     companion object {
         const val TAG = "ReactorMonkeyMiniBoss"
+        const val BALL_SPAWN_Y_KEY = "${ConstKeys.BALL}_${ConstKeys.SPAWN}_${ConstKeys.Y}"
         private const val MIN_THROW_DELAY = 0.5f
         private const val MAX_THROW_DELAY = 2f
         private const val THROW_DUR = 0.3f
@@ -66,6 +65,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
         private const val BALL_IMPULSE_Y = 6.5f
         private const val HORIZONTAL_SCALAR = 1.1f
         private const val VERTICAL_SCALAR = 0.75f
+        private const val DEFAULT_BALL_SPAWN_Y = 5f
         private var standRegion: TextureRegion? = null
         private var throwRegion: TextureRegion? = null
     }
@@ -83,10 +83,11 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
     override lateinit var facing: Facing
 
     private val throwTimer = Timer(THROW_DUR)
+    private val ballCatchArea = GameCircle().setRadius(BALL_CATCH_RADIUS * ConstVals.PPM)
     private lateinit var throwDelayTimer: Timer
     private lateinit var reactorMonkeyState: ReactorMonkeyState
     private var monkeyBall: ReactorMonkeyBall? = null
-    private val ballCatchArea = GameCircle().setRadius(BALL_CATCH_RADIUS * ConstVals.PPM)
+    private var ballSpawnY = DEFAULT_BALL_SPAWN_Y
 
     override fun init() {
         if (standRegion == null || throwRegion == null) {
@@ -107,11 +108,12 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
         throwTimer.reset()
         reactorMonkeyState = ReactorMonkeyState.STAND
         facing = if (getMegaman().body.x >= body.x) Facing.RIGHT else Facing.LEFT
+        ballSpawnY = spawnProps.getOrDefault(BALL_SPAWN_Y_KEY, DEFAULT_BALL_SPAWN_Y, Float::class)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        monkeyBall?.let { it.destroy() }
+        monkeyBall?.destroy()
         monkeyBall = null
     }
 
@@ -119,11 +121,8 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
         if (monkeyBall != null) throw IllegalStateException("Monkey ball should be null when a new one is spawned")
         monkeyBall =
             EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.REACTOR_MONKEY_BALL)!! as ReactorMonkeyBall
-        monkeyBall!!.spawn(
-            props(
-                ConstKeys.POSITION to body.getTopCenterPoint().add(0f, 4f * ConstVals.PPM), ConstKeys.OWNER to this
-            )
-        )
+        val spawn = body.getTopCenterPoint().add(0f, ballSpawnY * ConstVals.PPM)
+        monkeyBall!!.spawn(props(ConstKeys.POSITION to spawn, ConstKeys.OWNER to this))
     }
 
     fun catchMonkeyBall() {

@@ -103,7 +103,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
         EventType.MINI_BOSS_DEAD,
         EventType.VICTORY_EVENT,
         EventType.END_LEVEL,
-        EventType.EDIT_TILED_MAP
+        EventType.EDIT_TILED_MAP,
+        EventType.SHOW_BACKGROUND
     )
 
     val engine: GameEngine
@@ -116,7 +117,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
         get() = game.audioMan
     val controllerPoller: IControllerPoller
         get() = game.controllerPoller
-
     var level: Level? = null
     var music: MusicAsset? = null
 
@@ -124,38 +124,29 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
     private lateinit var playerSpawnsMan: PlayerSpawnsManager
     private lateinit var playerStatsHandler: PlayerStatsHandler
     private lateinit var entityStatsHandler: EntityStatsHandler
-
     private lateinit var levelStateHandler: LevelStateHandler
     private lateinit var endLevelEventHandler: EndLevelEventHandler
     private lateinit var cameraManagerForRooms: CameraManagerForRooms
     private lateinit var cameraShaker: CameraShaker
-
     private lateinit var playerSpawnEventHandler: PlayerSpawnEventHandler
     private lateinit var playerDeathEventHandler: PlayerDeathEventHandler
-
     private lateinit var bossSpawnEventHandler: BossSpawnEventHandler
-
     private lateinit var drawables: ObjectMap<DrawingSection, PriorityQueue<IComparableDrawable<Batch>>>
     private lateinit var shapes: PriorityQueue<IDrawableShape>
     private lateinit var backgrounds: Array<Background>
-
     private lateinit var backgroundCamera: OrthographicCamera
     private lateinit var gameCamera: OrthographicCamera
     private lateinit var foregroundCamera: OrthographicCamera
     private lateinit var uiCamera: OrthographicCamera
-
     private lateinit var disposables: Array<Disposable>
-
     private val gameCameraPriorPosition = Vector3()
-
     private var backgroundParallaxFactorX = DEFAULT_BACKGROUND_PARALLAX_FACTOR_X
     private var backgroundParallaxFactorY = DEFAULT_BACKGROUND_PARALLAX_FACTOR_Y
     private var foregroundParallaxFactor = DEFAULT_FOREGROUND_PARALLAX_FACTOR
     private var camerasSetToGameCamera = false
-
     private val spawns = Array<Spawn>()
-
     private var initialized = false
+    private var showBackgrounds = true
 
     override fun init() {
         if (initialized) return
@@ -292,6 +283,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
         gameCamera.position.set(ConstFuncs.getCamInitPos())
         foregroundCamera.position.set(ConstFuncs.getCamInitPos())
         uiCamera.position.set(ConstFuncs.getCamInitPos())
+        showBackgrounds = true
     }
 
     override fun getLayerBuilders() =
@@ -537,6 +529,11 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
                     editor.invoke(it)
                 }
             }
+
+            EventType.SHOW_BACKGROUND -> {
+                GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Show background")
+                showBackgrounds = event.getProperty(ConstKeys.SHOW, Boolean::class)!!
+            }
         }
     }
 
@@ -589,7 +586,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
         batch.begin()
 
         batch.projectionMatrix = backgroundCamera.combined
-        backgrounds.forEach { it.draw(batch) }
+        if (showBackgrounds) backgrounds.forEach { it.draw(batch) }
 
         batch.projectionMatrix = gameCamera.combined
 

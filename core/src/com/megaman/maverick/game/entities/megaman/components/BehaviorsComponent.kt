@@ -9,7 +9,7 @@ import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.interfaces.isFacing
+
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.controller.buttons.ButtonStatus
 import com.mega.game.engine.world.body.Fixture
@@ -84,8 +84,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "Init method called")
         },
         act = {
-            if (isDirectionRotatedVertically()) body.physics.frictionOnSelf.y += 1.15f
-            else body.physics.frictionOnSelf.x += 1.15f
+            if (isDirectionRotatedVertically()) body.physics.frictionOnSelf.y += MegamanValues.WALL_SLIDE_FRICTION_TO_APPLY
+            else body.physics.frictionOnSelf.x += MegamanValues.WALL_SLIDE_FRICTION_TO_APPLY
         },
         end = {
             if (!body.isSensing(BodySense.IN_WATER)) aButtonTask = AButtonTask.AIR_DASH

@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureRegion
@@ -39,10 +40,10 @@ class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity,
     override val eventKeyMask = objectSetOf<Any>(
         EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.END_ROOM_TRANS
     )
-
     override var directionRotation: Direction? = null
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "PropellerPlatform")
         super.init()
         addComponent(defineSpritesComponent())
@@ -51,15 +52,20 @@ class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity,
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         game.eventsMan.addListener(this)
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
+
         super.onSpawn(spawnProps)
+
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+
         if (spawnProps.containsKey(ConstKeys.DIRECTION)) {
             var direction = spawnProps.get(ConstKeys.DIRECTION)
             if (direction is String) direction = Direction.valueOf(direction.uppercase())
             directionRotation = direction as Direction
         } else directionRotation = Direction.UP
+
         val trajectory = Trajectory(spawnProps.get(ConstKeys.TRAJECTORY) as String, ConstVals.PPM)
         val motionDefinition = MotionComponent.MotionDefinition(motion = trajectory,
             function = { value, _ -> body.physics.velocity.set(value) },
@@ -68,6 +74,7 @@ class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity,
     }
 
     override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
         game.eventsMan.removeListener(this)
         clearMotionDefinitions()
@@ -87,7 +94,7 @@ class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity,
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1f * ConstVals.PPM)
+        sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setOriginCenter()

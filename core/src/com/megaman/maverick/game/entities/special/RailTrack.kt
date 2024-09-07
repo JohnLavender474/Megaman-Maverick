@@ -160,8 +160,8 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEnti
     private fun defineCullablesComponent(): CullablesComponent {
         val cullEvents = objectSetOf<Any>(EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS)
         val cullOnEvents = CullableOnEvent({ cullEvents.contains(it) }, cullEvents)
-        runnablesOnSpawn.add { game.eventsMan.addListener(cullOnEvents) }
-        runnablesOnDestroy.add { game.eventsMan.removeListener(cullOnEvents) }
+        runnablesOnSpawn.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
+        runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
         return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS to cullOnEvents))
     }
 }

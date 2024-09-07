@@ -20,7 +20,7 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.interfaces.UpdateFunction
-import com.mega.game.engine.common.interfaces.isFacing
+
 import com.mega.game.engine.common.objects.Matrix
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -67,22 +67,20 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
     override var directionRotation: Direction? = null
     override lateinit var facing: Facing
 
+    var moveBeforeKill = false
+        private set
+    var movingBeforeKill = false
+        private set
+
     private val moving: Boolean
         get() = !body.getCenter().epsilonEquals(moveTarget, 0.1f * ConstVals.PPM)
-
     private lateinit var drawingSection: DrawingSection
     private lateinit var type: String
     private lateinit var moveTarget: Vector2
     private lateinit var bodyMatrix: Matrix<GameRectangle>
-
     private var spawnRoom: String? = null
-
     private var speed = 0f
     private var spritePriorityValue = 0
-
-    private var moveBeforeKill = false
-    private var movingBeforeKill = false
-
     private var doCull = false
 
     override fun getEntityType() = EntityType.HAZARD
@@ -144,12 +142,7 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         if (playSound && overlapsGameCamera()) requestToPlaySound(SoundAsset.ATOMIC_FIRE_SOUND, false)
     }
 
-    override fun destroy(): Boolean = if (moveBeforeKill && !movingBeforeKill) {
-        moveBeforeKill()
-        false
-    } else super.destroy()
-
-    private fun moveBeforeKill() {
+    fun moveBeforeKill() {
         movingBeforeKill = true
         val moveBeforeKillTargetRaw = getProperty(MOVE_BEFORE_KILL, String::class)!!.split(",").map { it.toFloat() }
         val targetOffset = Vector2(moveBeforeKillTargetRaw[0], moveBeforeKillTargetRaw[1]).scl(ConstVals.PPM.toFloat())
@@ -204,8 +197,8 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
             }
         }, cullEvents)
 
-        runnablesOnSpawn.add { game.eventsMan.addListener(cullOnEvents) }
-        runnablesOnDestroy.add { game.eventsMan.removeListener(cullOnEvents) }
+        runnablesOnSpawn.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
+        runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
 
         return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS to cullOnEvents))
     }

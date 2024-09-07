@@ -57,9 +57,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
         private const val DURATION = 0.5f
     }
 
-    enum class GateState {
-        OPENABLE, OPENING, OPEN, CLOSING, CLOSED
-    }
+    enum class GateState { OPENABLE, OPENING, OPEN, CLOSING, CLOSED }
 
     override val eventKeyMask =
         objectSetOf<Any>(EventType.PLAYER_SPAWN, EventType.END_ROOM_TRANS, EventType.MINI_BOSS_DEAD)

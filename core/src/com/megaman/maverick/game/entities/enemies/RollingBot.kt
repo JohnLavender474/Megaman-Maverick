@@ -13,7 +13,7 @@ import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
-import com.mega.game.engine.common.interfaces.isFacing
+
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -140,7 +140,7 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
                 RollingBotState.ROLLING -> {
                     body.physics.velocity.x = X_VEL * facing.value * ConstVals.PPM
                     rollTimer.update(delta)
-                    if (rollTimer.isFinished()) {
+                    if (body.isSensing(BodySense.FEET_ON_GROUND) && rollTimer.isFinished()) {
                         rollTimer.reset()
                         rollingBotState = RollingBotState.OPENING
                     }
@@ -187,7 +187,7 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         val body = Body(BodyType.DYNAMIC)
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body }
+        debugShapes.add { body.getBodyBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle())
         body.addFixture(bodyFixture)

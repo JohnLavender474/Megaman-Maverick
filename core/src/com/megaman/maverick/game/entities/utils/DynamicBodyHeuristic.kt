@@ -15,7 +15,7 @@ class DynamicBodyHeuristic(private val game: MegamanMaverickGame) : IHeuristic {
     private val defaultHeuristic = EuclideanHeuristic()
 
     private fun containsBlock(x: Int, y: Int): Boolean {
-        val bodies = game.getWorldContainer().getBodies(x, y)
+        val bodies = game.getWorldContainer()!!.getBodies(x, y)
         for (body in bodies) if (body.getEntity().getEntityType() == EntityType.BLOCK) return true
         return false
     }

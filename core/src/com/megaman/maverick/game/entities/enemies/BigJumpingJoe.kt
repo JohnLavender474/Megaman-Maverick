@@ -106,7 +106,7 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableG
             jumpRegion = atlas.findRegion("BigJumpingJoe/Jump")
         }
         addComponent(defineAnimationsComponent())
-        runnablesOnDestroy.add {
+        runnablesOnDestroy.put(ConstKeys.CHILD) {
             if (hasDepletedHealth()) {
                 val sniperJoe = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.SNIPER_JOE)!!
                 val spawnProps = props(

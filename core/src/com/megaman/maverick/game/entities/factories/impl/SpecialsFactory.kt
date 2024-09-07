@@ -1,10 +1,5 @@
 package com.megaman.maverick.game.entities.factories.impl
 
-import com.mega.game.engine.world.body.*;
-import com.mega.game.engine.world.collisions.*;
-import com.mega.game.engine.world.contacts.*;
-import com.mega.game.engine.world.pathfinding.*;
-
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.factories.EntityFactory
 import com.megaman.maverick.game.entities.factories.GameEntityPoolCreator
@@ -32,6 +27,7 @@ class SpecialsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         const val QUICK_SAND = "QuickSand"
         const val CAPSULE_TELEPORTER = "CapsuleTeleporter"
         const val ROOM_SHAKER = "RoomShaker"
+        const val EVENT_TRIGGER = "EventTrigger"
     }
 
     override fun init() {
@@ -53,6 +49,7 @@ class SpecialsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(QUICK_SAND, GameEntityPoolCreator.create { QuickSand(game) })
         pools.put(CAPSULE_TELEPORTER, GameEntityPoolCreator.create { CapsuleTeleporter(game) })
         pools.put(ROOM_SHAKER, GameEntityPoolCreator.create { RoomShaker(game) })
+        pools.put(EVENT_TRIGGER, GameEntityPoolCreator.create { EventTrigger(game) })
     }
 
     override fun fetch(key: Any) = pools.get(key)?.fetch()

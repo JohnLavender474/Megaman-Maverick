@@ -27,6 +27,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
@@ -82,7 +83,7 @@ class TubeBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IAudioEntity
                 ConstKeys.TRAJECTORY to trajectory
             )
         )
-        requestToPlaySound(SoundAsset.BURST_SOUND, false)
+        if (overlapsGameCamera()) requestToPlaySound(SoundAsset.BURST_SOUND, false)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->

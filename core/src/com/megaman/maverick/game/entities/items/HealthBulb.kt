@@ -98,8 +98,8 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
             if (spawnProps.containsKey(ConstKeys.BOUNDS))
                 spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
             else spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-        large = spawnProps.getOrDefault(ConstKeys.LARGE, true) as Boolean
-        timeCull = !spawnProps.containsKey(ConstKeys.TIMED) || spawnProps.get(ConstKeys.TIMED, Boolean::class)!!
+        large = spawnProps.getOrDefault(ConstKeys.LARGE, true, Boolean::class)
+        timeCull = spawnProps.getOrDefault(ConstKeys.TIMED, true, Boolean::class)
 
         val cullOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
         if (cullOutOfBounds) putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, getGameCameraCullingLogic(this, 0.25f))
@@ -197,18 +197,18 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
         return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS to cullOnEvent))
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent({
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         if (!timeCull) return@UpdatablesComponent
 
         if (warning) {
-            blinkTimer.update(it)
-            if (blinkTimer.isJustFinished()) {
+            blinkTimer.update(delta)
+            if (blinkTimer.isFinished()) {
                 blinkTimer.reset()
                 blink = !blink
             }
         }
 
-        cullTimer.update(it)
+        cullTimer.update(delta)
         if (cullTimer.isFinished()) destroy()
     })
 }

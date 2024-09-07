@@ -124,10 +124,10 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
 
-        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(.75f * ConstVals.PPM))
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.75f * ConstVals.PPM))
         body.addFixture(damageableFixture)
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(.75f * ConstVals.PPM))
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.75f * ConstVals.PPM))
         body.addFixture(damagerFixture)
         shapes.add { damageableFixture.getShape() }
 
@@ -161,7 +161,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
             targetCoordinateSupplier = { getMegaman().body.getCenter().toGridCoordinate() },
             allowDiagonal = { true },
             filter = { coordinate ->
-                val bodies = game.getWorldContainer().getBodies(coordinate.x, coordinate.y)
+                val bodies = game.getWorldContainer()!!.getBodies(coordinate.x, coordinate.y)
                 var passable = true
                 var blockingBody: Body? = null
 
@@ -171,50 +171,26 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
                     break
                 }
 
-                if (!passable && coordinate.isNeighborOf(
-                        body.getCenter().toGridCoordinate()
-                    )
-                ) blockingBody?.let { passable = !body.overlaps(it as Rectangle) }
+                if (!passable && coordinate.isNeighborOf(body.getCenter().toGridCoordinate()))
+                    blockingBody?.let { passable = !body.overlaps(it as Rectangle) }
 
                 passable
             },
             properties = props(ConstKeys.HEURISTIC to DynamicBodyHeuristic(game))
         )
         val pathfindingComponent = PathfindingComponent(params, {
-            StandardPathfinderResultConsumer.consume(
-                it,
-                body,
-                body.getCenter(),
-                { FLY_SPEED * ConstVals.PPM },
-                body,
-                stopOnTargetReached = false,
-                stopOnTargetNull = false
-            )
-        })
+            if (spawnDelayTimer.isFinished())
+                StandardPathfinderResultConsumer.consume(
+                    it,
+                    body,
+                    body.getCenter(),
+                    { FLY_SPEED * ConstVals.PPM },
+                    body,
+                    stopOnTargetReached = false,
+                    stopOnTargetNull = false
+                )
+            else body.physics.velocity.setZero()
+        }, { spawnDelayTimer.isFinished() })
         return pathfindingComponent
-        /*
-        val params = PathfinderParams(startSupplier = { body.getCenter() },
-            targetSupplier = { game.megaman.body.getCenterPoint() },
-            allowDiagonal = { true },
-            filter = { _, objs ->
-                objs.none { it is Fixture && it.getFixtureType() == FixtureType.BLOCK }
-            })
-        val pathfindingComponent = PathfindingComponent(params, {
-            StandardPathfinderResultConsumer.consume(
-                it,
-                body,
-                body.getCenter(),
-                FLY_SPEED,
-                body.fixtures.find { pair -> pair.first == FixtureType.DAMAGER }!!.second.getShape() as GameRectangle,
-                stopOnTargetReached = false,
-                stopOnTargetNull = false,
-                postProcess = { if (!spawnDelayTimer.isFinished()) body.physics.velocity.setZero() },
-                shapes = if (DEBUG_PATHFINDING) game.getShapes() else null
-            )
-        })
-        pathfindingComponent.updateIntervalTimer = Timer(0.1f)
-        return pathfindingComponent
-
-         */
     }
 }
