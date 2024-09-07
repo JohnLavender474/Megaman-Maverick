@@ -16,6 +16,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.megaman.components.slipSliding
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
@@ -53,31 +54,32 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
         get() {
             val spawnCenter = Vector2(megaman.body.getCenter())
 
+            val xOffset = ConstVals.PPM * megaman.facing.value *
+                    if (megaman.isBehaviorActive(BehaviorType.RIDING_CART) &&
+                        megaman.body.isSensing(BodySense.FEET_ON_GROUND)
+                    ) 1.25f else if (!megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.85f
+                    else if (megaman.slipSliding) 0.75f else 1.05f
+
+            var yOffset = 2.01f
+
+            if (!megaman.body.isSensing(BodySense.FEET_ON_GROUND) &&
+                !megaman.isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.WALL_SLIDING)
+            ) yOffset += 0.15f * ConstVals.PPM
+
+            yOffset += if (megaman.isBehaviorActive(BehaviorType.JETPACKING)) 0.065f * ConstVals.PPM
+            else if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING)) 0.1f * ConstVals.PPM
+            else if (megaman.isBehaviorActive(BehaviorType.RIDING_CART)) 0.325f * ConstVals.PPM
+            else if (megaman.isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.WALL_SLIDING))
+                0.15f * ConstVals.PPM
+            else if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) -0.05f * ConstVals.PPM
+            else 0.05f * ConstVals.PPM
+
             if (megaman.isDirectionRotatedVertically()) {
-                spawnCenter.x += ConstVals.PPM * megaman.facing.value *
-                        if (megaman.isBehaviorActive(BehaviorType.RIDING_CART)) 1.25f else 0.85f
-
-                var yOffset: Float = ConstVals.PPM / 16f
-                if (megaman.isBehaviorActive(BehaviorType.RIDING_CART)) yOffset += 0.325f * ConstVals.PPM
-                else if (megaman.isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.WALL_SLIDING))
-                    yOffset += 0.15f * ConstVals.PPM
-                else if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) yOffset -= 0.05f * ConstVals.PPM
-                else yOffset += 0.25f * ConstVals.PPM
-
+                spawnCenter.x += xOffset
                 spawnCenter.y += if (megaman.isDirectionRotatedDown()) -yOffset else yOffset
             } else {
-                var xOffset = ConstVals.PPM / 16f
-                xOffset += if (megaman.isBehaviorActive(BehaviorType.RIDING_CART)) 0.25f * ConstVals.PPM
-                else if (megaman.isAnyBehaviorActive(
-                        BehaviorType.CLIMBING, BehaviorType.WALL_SLIDING
-                    )
-                ) 0.15f * ConstVals.PPM
-                else if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) -0.05f * ConstVals.PPM
-                else 0.05f * ConstVals.PPM
-                spawnCenter.x += if (megaman.isDirectionRotatedLeft()) -xOffset else xOffset
-
-                val yOffset: Float = ConstVals.PPM * 0.85f * megaman.facing.value
-                spawnCenter.y += yOffset
+                spawnCenter.x += if (megaman.isDirectionRotatedLeft()) -yOffset else yOffset
+                spawnCenter.y += xOffset
             }
 
             return spawnCenter
@@ -210,13 +212,6 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
         }
 
         val s = spawnCenter
-        if (megaman.isBehaviorActive(BehaviorType.JETPACKING)) s.y += 0.065f * ConstVals.PPM
-        else if (megaman.isAnyBehaviorActive(BehaviorType.GROUND_SLIDING)) s.y += 0.1f * ConstVals.PPM
-        else if (megaman.isDirectionRotatedDown()) s.y -= .05f * ConstVals.PPM
-        else if (!megaman.body.isSensing(BodySense.FEET_ON_GROUND) &&
-            !megaman.isAnyBehaviorActive(BehaviorType.WALL_SLIDING, BehaviorType.CLIMBING)
-        ) s.y -= .15f * ConstVals.PPM
-
         props.put(ConstKeys.POSITION, s)
         engine.spawn(megaBusterShot, props)
 

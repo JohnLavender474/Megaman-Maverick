@@ -42,8 +42,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     BehaviorType.JETPACKING,
                     BehaviorType.RIDING_CART
                 ) || body.isSensing(BodySense.FEET_ON_SAND)
-            )
-                return@FunctionalBehaviorImpl false
+            ) return@FunctionalBehaviorImpl false
 
             if ((body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && game.controllerPoller.isPressed(
                     if (isDirectionRotatedDown() || isDirectionRotatedRight()) ControllerButton.RIGHT
@@ -85,8 +84,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "Init method called")
         },
         act = {
-            if (isDirectionRotatedVertically()) body.physics.frictionOnSelf.y += 1.2f
-            else body.physics.frictionOnSelf.x += 1.2f
+            if (isDirectionRotatedVertically()) body.physics.frictionOnSelf.y += 1.15f
+            else body.physics.frictionOnSelf.x += 1.15f
         },
         end = {
             if (!body.isSensing(BodySense.IN_WATER)) aButtonTask = AButtonTask.AIR_DASH
@@ -536,6 +535,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             doOffsetBoundsSupplier = false
             boundsSupplierOffset.x = 0f
+
+            aButtonTask = AButtonTask.AIR_DASH
         }
     }
 

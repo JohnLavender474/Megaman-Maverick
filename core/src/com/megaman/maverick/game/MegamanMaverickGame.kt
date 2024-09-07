@@ -64,6 +64,8 @@ import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.MegaControllerPoller
 import com.megaman.maverick.game.controllers.loadButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
+import com.megaman.maverick.game.entities.enemies.RollingBot
+import com.megaman.maverick.game.entities.enemies.UFOhNoBot
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
@@ -99,14 +101,16 @@ class MegamanMaverickGameParams {
     var debug: Boolean = false
     var startScreen: StartScreenOption = StartScreenOption.MAIN
     var startLevel: Level? = null
+    var fixedStepScalar: Float = 1f
+    var musicVolume: Float = 0.5f
+    var soundVolume: Float = 0.5f
 }
 
 class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEventListener, IPropertizable {
 
     companion object {
         const val TAG = "MegamanMaverickGame"
-        const val DEFAULT_VOLUME = 0.5f
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(RollingBot.TAG, UFOhNoBot.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.WATER, FixtureType.WATER_LISTENER)
         }
@@ -220,8 +224,8 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
         debugText = MegaFontHandle({ "Count: ${engine.getEntities().size}" })
 
         audioMan = MegaAudioManager(assMan.getSounds(), assMan.getMusics())
-        audioMan.musicVolume = DEFAULT_VOLUME
-        audioMan.soundVolume = DEFAULT_VOLUME
+        audioMan.musicVolume = params.musicVolume
+        audioMan.soundVolume = params.soundVolume
 
         EntityFactories.initialize(this)
 
@@ -424,7 +428,8 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
                     ),
                     FixtureType.LASER to objectSetOf(FixtureType.BLOCK),
                     FixtureType.TELEPORTER to objectSetOf(FixtureType.TELEPORTER_LISTENER)
-                )
+                ),
+                fixedStepScalar = params.fixedStepScalar
             ),
             CullablesSystem(engine),
             MotionSystem(),

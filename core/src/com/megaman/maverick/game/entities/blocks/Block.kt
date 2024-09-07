@@ -24,8 +24,7 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity 
 
     companion object {
         const val TAG = "Block"
-        const val STANDARD_FRICTION_X = 0.035f
-        const val STANDARD_FRICTION_Y = 0f
+        const val STANDARD_FRICTION = 0.035f
         const val TIME_TO_CULL = 3f
     }
 
@@ -62,9 +61,9 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity 
         ) else removeComponent(CullablesComponent::class)
 
         body.physics.frictionToApply.x =
-            if (spawnProps.containsKey(ConstKeys.FRICTION_X)) spawnProps.get(ConstKeys.FRICTION_X) as Float else STANDARD_FRICTION_X
+            if (spawnProps.containsKey(ConstKeys.FRICTION_X)) spawnProps.get(ConstKeys.FRICTION_X) as Float else STANDARD_FRICTION
         body.physics.frictionToApply.y =
-            if (spawnProps.containsKey(ConstKeys.FRICTION_Y)) spawnProps.get(ConstKeys.FRICTION_Y) as Float else STANDARD_FRICTION_Y
+            if (spawnProps.containsKey(ConstKeys.FRICTION_Y)) spawnProps.get(ConstKeys.FRICTION_Y) as Float else STANDARD_FRICTION
         body.physics.gravityOn = spawnProps.getOrDefault(ConstKeys.GRAVITY_ON, false, Boolean::class)
         body.physics.takeFrictionFromOthers = spawnProps.getOrDefault(ConstKeys.RESIST_ON, true, Boolean::class)
 

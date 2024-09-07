@@ -25,6 +25,12 @@ const val MEGAMAN_ANIMATIONS_COMPONENT_TAG = "MegamanAnimationsComponent"
 
 lateinit var animations: ObjectMap<String, IAnimation>
 
+val Megaman.slipSliding: Boolean
+    get() = body.isSensing(BodySense.FEET_ON_GROUND) && abs(
+        if (isDirectionRotatedVertically()) body.physics.velocity.x
+        else body.physics.velocity.y
+    ) > ConstVals.PPM / 16f
+
 private lateinit var lastAnimationKey: String
 
 internal fun Megaman.defineAnimationsComponent(): AnimationsComponent {
@@ -88,11 +94,7 @@ internal fun Megaman.defineAnimationsComponent(): AnimationsComponent {
                 } else if (body.isSensing(BodySense.FEET_ON_GROUND) && running) {
                     if (shooting) "RunShoot"
                     else if (fullyCharged) "RunCharging" else if (halfCharged) "RunHalfCharging" else "Run"
-                } else if (body.isSensing(BodySense.FEET_ON_GROUND) && abs(
-                        if (isDirectionRotatedVertically()) body.physics.velocity.x
-                        else body.physics.velocity.y
-                    ) > ConstVals.PPM / 16f
-                ) {
+                } else if (slipSliding) {
                     if (shooting) "SlipSlideShoot"
                     else if (fullyCharged) "SlipSlideCharging"
                     else if (halfCharged) "SlipSlideHalfCharging" else "SlipSlide"

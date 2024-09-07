@@ -1,10 +1,5 @@
 package com.megaman.maverick.game.entities.factories.impl
 
-import com.mega.game.engine.world.body.*;
-import com.mega.game.engine.world.collisions.*;
-import com.mega.game.engine.world.contacts.*;
-import com.mega.game.engine.world.pathfinding.*;
-
 import com.mega.game.engine.common.GameLogger
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -85,7 +80,7 @@ class EnemiesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         const val SEALION = "Sealion"
         const val YELLOW_TIGGER_SQUIRT = "YellowTiggerSquirt"
         const val UNDERWATER_PENGUIN_BOT = "UnderwaterPenguinBot"
-        const val BOMB_PENGUIN_BOT = "BombPenguinBot"
+        const val UF_OH_NO_BOT = "UFOhNoBot"
     }
 
     override fun init() {
@@ -131,7 +126,7 @@ class EnemiesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(SNOWHEAD_THROWER, GameEntityPoolCreator.create { SnowheadThrower(game) })
         pools.put(SPIKY, GameEntityPoolCreator.create { Spiky(game) })
         pools.put(BABY_PENGUIN, GameEntityPoolCreator.create { BabyPenguin(game) })
-        pools.put(UFO_BOMB_BOT, GameEntityPoolCreator.create { UFOBombBot(game) })
+        pools.put(UFO_BOMB_BOT, GameEntityPoolCreator.create { OLD_UFOBombBot(game) })
         pools.put(ROLLING_BOT, GameEntityPoolCreator.create { RollingBot(game) })
         pools.put(TOXIC_BARREL_BOT, GameEntityPoolCreator.create { ToxicBarrelBot(game) })
         pools.put(BOUNCING_ANGRY_FLAME_BALL, GameEntityPoolCreator.create { BouncingAngryFlameBall(game) })
@@ -158,6 +153,7 @@ class EnemiesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(SEALION, GameEntityPoolCreator.create { Sealion(game) })
         pools.put(YELLOW_TIGGER_SQUIRT, GameEntityPoolCreator.create { YellowTiggerSquirt(game) })
         pools.put(UNDERWATER_PENGUIN_BOT, GameEntityPoolCreator.create { UnderwaterPenguinBot(game) })
+        pools.put(UF_OH_NO_BOT, GameEntityPoolCreator.create { UFOhNoBot(game) })
     }
 
     override fun fetch(key: Any): MegaGameEntity? {

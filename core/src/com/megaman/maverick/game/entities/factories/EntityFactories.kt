@@ -1,10 +1,5 @@
 package com.megaman.maverick.game.entities.factories
 
-import com.mega.game.engine.world.body.*;
-import com.mega.game.engine.world.collisions.*;
-import com.mega.game.engine.world.contacts.*;
-import com.mega.game.engine.world.pathfinding.*;
-
 import com.mega.game.engine.common.interfaces.IClearable
 import com.mega.game.engine.common.interfaces.Initializable
 import com.mega.game.engine.factories.Factories

@@ -31,8 +31,6 @@ import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.pathfinding.PathfinderParams
 import com.mega.game.engine.pathfinding.PathfindingComponent
-import com.mega.game.engine.pathfinding.heuristics.EuclideanHeuristic
-import com.mega.game.engine.pathfinding.heuristics.IHeuristic
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
@@ -47,6 +45,7 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.entities.utils.DynamicBodyHeuristic
 import com.megaman.maverick.game.pathfinding.StandardPathfinderResultConsumer
 import com.megaman.maverick.game.utils.isNeighborOf
 import com.megaman.maverick.game.utils.toGridCoordinate
@@ -70,27 +69,6 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
         private const val DEFAULT_FLY_TO_ATTACK_SPEED = 3f
         private const val DEFAULT_FLY_TO_RETREAT_SPEED = 8f
         private const val PATHFINDING_UPDATE_INTERVAL = 0.05f
-    }
-
-    private class BatHeuristic(private val game: MegamanMaverickGame) : IHeuristic {
-
-        companion object {
-            private const val CONTAINS_BLOCK_SCALAR = 5
-        }
-
-        private val defaultHeuristic = EuclideanHeuristic()
-
-        private fun containsBlock(x: Int, y: Int): Boolean {
-            val bodies = game.getWorldContainer().getBodies(x, y)
-            for (body in bodies) if (body.getEntity().getEntityType() == EntityType.BLOCK) return true
-            return false
-        }
-
-        override fun calculate(x1: Int, y1: Int, x2: Int, y2: Int): Int {
-            var cost = defaultHeuristic.calculate(x1, y1, x2, y2)
-            if (containsBlock(x2, y2)) cost *= CONTAINS_BLOCK_SCALAR
-            return cost
-        }
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -300,7 +278,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
 
                 passable
             },
-            properties = props(ConstKeys.HEURISTIC to BatHeuristic(game))
+            properties = props(ConstKeys.HEURISTIC to DynamicBodyHeuristic(game))
         )
         val pathfindingComponent = PathfindingComponent(params, {
             StandardPathfinderResultConsumer.consume(
@@ -313,8 +291,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
                 stopOnTargetNull = false,
                 shapes = if (DEBUG_PATHFINDING) game.getShapes() else null
             )
-        }, { status == BatStatus.FLYING_TO_ATTACK }, intervalTimer = Timer(PATHFINDING_UPDATE_INTERVAL)
-        )
+        }, { status == BatStatus.FLYING_TO_ATTACK }, intervalTimer = Timer(PATHFINDING_UPDATE_INTERVAL))
         return pathfindingComponent
     }
 }

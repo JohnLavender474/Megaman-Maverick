@@ -159,7 +159,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         PenguinMiniBoss::class to dmgNeg(3),
         BabyPenguin::class to dmgNeg(2),
         UFOBomb::class to dmgNeg(3),
-        UFOBombBot::class to dmgNeg(2),
+        OLD_UFOBombBot::class to dmgNeg(2),
         RollingBot::class to dmgNeg(3),
         RollingBotShot::class to dmgNeg(3),
         AcidGoop::class to dmgNeg(3),
@@ -392,20 +392,18 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         body.positionOnPoint(bounds.getBottomCenterPoint(), Position.BOTTOM_CENTER)
 
         facing = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, "right", String::class).uppercase())
+        directionRotation = Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
 
         aButtonTask = AButtonTask.JUMP
         currentWeapon = MegamanWeapon.BUSTER
-        directionRotation = Direction.UP
         running = false
         damageFlash = false
+        canMove = true
+        canBeDamaged = true
 
         damageTimer.setToEnd()
         damageRecoveryTimer.setToEnd()
         damageFlashTimer.reset()
-
-        canMove = true
-        canBeDamaged = true
-
         shootAnimTimer.reset()
         groundSlideTimer.reset()
         wallJumpTimer.reset()

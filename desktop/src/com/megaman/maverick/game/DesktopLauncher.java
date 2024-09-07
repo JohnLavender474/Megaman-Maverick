@@ -1,10 +1,5 @@
 package com.megaman.maverick.game;
 
-import com.mega.game.engine.world.body.*;
-import com.mega.game.engine.world.collisions.*;
-import com.mega.game.engine.world.contacts.*;
-import com.mega.game.engine.world.pathfinding.*;
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
@@ -23,6 +18,9 @@ public class DesktopLauncher {
     private static final boolean DEFAULT_FULLSCREEN = false;
     private static final boolean DEFAULT_VSYNC = false;
     private static final boolean DEFAULT_DEBUG = false;
+    private static final float DEFAULT_FIXED_STEP_SCALAR = 1.0f;
+    private static final float DEFAULT_MUSIC_VOLUME = 0.5f;
+    private static final float DEFAULT_SOUND_VOLUME = 0.5f;
     private static final String DEFAULT_START_SCREEN = "main";
     private static final String DEFAULT_LEVEL = "null";
     private static final String TITLE = "Megaman Maverick";
@@ -32,8 +30,8 @@ public class DesktopLauncher {
                 "Frames per second: min of 30 and max of 90. Default value = " + DEFAULT_FPS + ".")
         public int fps = DEFAULT_FPS;
 
-        @Parameter(names = {"--width"}, description =
-                "Window width: min of 600. Default value = " + DEFAULT_WIDTH + ".")
+        @Parameter(names = {"--width"}, description = "Window width: min of 600. Default value = " + DEFAULT_WIDTH +
+                ".")
         public int width = DEFAULT_WIDTH;
 
         @Parameter(names = {"--height"}, description =
@@ -44,25 +42,35 @@ public class DesktopLauncher {
                 "Enable fullscreen. Default value = " + DEFAULT_FULLSCREEN + ".")
         public boolean fullScreen = DEFAULT_FULLSCREEN;
 
-        @Parameter(names = {"--vsync"}, description =
-                "Enable vsync. Default value = " + DEFAULT_VSYNC + ".")
+        @Parameter(names = {"--vsync"}, description = "Enable vsync. Default value = " + DEFAULT_VSYNC + ".")
         public boolean vsync = DEFAULT_VSYNC;
 
-        @Parameter(names = {"--debug"}, description =
-                "Enable debugging mode which turns on debug text rendering and debug shape rendering. Default " +
-                        "value = " + DEFAULT_DEBUG + ".")
+        @Parameter(names = {"--debug"}, description = "Enable debugging mode which turns on debug text rendering and " +
+                "debug shape rendering. Default value = " + DEFAULT_DEBUG + ".")
         public boolean debug = DEFAULT_DEBUG;
 
-        @Parameter(names = {"--startScreen"}, description =
-                "The screen to start the game app on. Options: \"main\", \"level\". Options not case sensitive. " +
-                        "Default value = " + DEFAULT_START_SCREEN + ".")
+        @Parameter(names = {"--startScreen"}, description = "The screen to start the game app on. Options: \"main\", " +
+                "\"level\". Options not case sensitive. Default value = " + DEFAULT_START_SCREEN + ".")
         public String startScreen = DEFAULT_START_SCREEN;
 
-        @Parameter(names = {"--level"}, description =
-                "The level to start the game app on. This option only works if \"level\" has been selected as the " +
-                        "start screen. Choose the name of the level from the Level enum class (not case sensitive). " +
-                        "No default value. If the level is not found, an exception is thrown.")
+        @Parameter(names = {"--level"}, description = "The level to start the game app on. This option only works if " +
+                "\"level\" has been selected as the start screen. Choose the name of the level from the Level " +
+                "enum class (not case sensitive). No default value. If the level is not found, an exception is " +
+                "thrown.")
         public String level = DEFAULT_LEVEL;
+
+        @Parameter(names = {"--fixedStepScalar"}, description = "Sets the world fixed step scalar, useful for " +
+                "debugging. Default value is " + DEFAULT_FIXED_STEP_SCALAR + ". Should be default value if not " +
+                "debugging")
+        public float fixedStepScalar = DEFAULT_FIXED_STEP_SCALAR;
+
+        @Parameter(names = {"--musicVolume"}, description = "Sets the music volume. Must be between 0 and 1. Default " +
+                "value is " + DEFAULT_MUSIC_VOLUME)
+        public float musicVolume = DEFAULT_MUSIC_VOLUME;
+
+        @Parameter(names = {"--soundVolume"}, description = "Sets the sound volume. Must be between 0 and 1. Default " +
+                "value is " + DEFAULT_SOUND_VOLUME)
+        public float soundVolume = DEFAULT_SOUND_VOLUME;
     }
 
     public static void main(String[] args) {
@@ -76,6 +84,17 @@ public class DesktopLauncher {
             System.exit(1);
         }
 
+        System.out.println("Game loaded with arguments:");
+        System.out.println("- FPS: " + appArgs.fps);
+        System.out.println("- Width: " + appArgs.width);
+        System.out.println("- Height: " + appArgs.height);
+        System.out.println("- Fullscreen: " + appArgs.fullScreen);
+        System.out.println("- Vsync: " + appArgs.vsync);
+        System.out.println("- Debug: " + appArgs.debug);
+        System.out.println("- Start Screen: " + appArgs.startScreen);
+        System.out.println("- Level: " + appArgs.level);
+        System.out.println("- Fixed step Scalar: " + appArgs.fixedStepScalar);
+
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle(TITLE);
         config.useVsync(appArgs.vsync);
@@ -88,6 +107,9 @@ public class DesktopLauncher {
 
         MegamanMaverickGameParams params = new MegamanMaverickGameParams();
         params.setDebug(appArgs.debug);
+        params.setFixedStepScalar(appArgs.fixedStepScalar);
+        params.setMusicVolume(appArgs.musicVolume);
+        params.setSoundVolume(appArgs.soundVolume);
 
         StartScreenOption startScreenOption;
         if (appArgs.startScreen.isBlank() || appArgs.startScreen.equalsIgnoreCase("main")) {

@@ -53,6 +53,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
 
             val spawnType = spawnProps.get(ConstKeys.SPAWN_TYPE) as String?
             if (spawnType == SpawnType.SPAWN_NOW) {
+                if (it.name == null) throw IllegalStateException("Entity name not found for spawn now")
                 val entity = EntityFactories.fetch(entityType, it.name) ?: throw IllegalStateException(
                     "Entity of type $entityType not found: ${it.name}"
                 )

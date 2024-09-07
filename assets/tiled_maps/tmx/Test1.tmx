@@ -354,7 +354,11 @@
   </object>
  </objectgroup>
  <objectgroup id="4" name="player">
-  <object id="299" name="0" x="23008" y="384" width="32" height="32"/>
+  <object id="299" name="0" x="21600" y="384" width="32" height="32">
+   <properties>
+    <property name="direction" value="up"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="8" name="hazards">
   <object id="65" name="SwinginAxe" x="256" y="160" width="32" height="32"/>
