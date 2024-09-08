@@ -227,16 +227,23 @@ Snowball
   orig: 32, 32
   offset: 0, 0
   index: -1
-SnowballForm
+Snowball2
   rotate: false
   xy: 264, 388
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+SnowballForm
+  rotate: false
+  xy: 280, 388
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 SnowJoeball
   rotate: false
-  xy: 360, 388
+  xy: 376, 388
   size: 128, 32
   orig: 128, 32
   offset: 0, 0

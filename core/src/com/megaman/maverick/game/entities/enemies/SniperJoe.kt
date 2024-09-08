@@ -462,14 +462,14 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
             props.put(ConstKeys.GRAVITY_ON, true)
             props.put(ConstKeys.GRAVITY, Vector2(0f, -SNOWBALL_GRAV * ConstVals.PPM))
 
-            requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
+            if (overlapsGameCamera()) requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
 
             EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SNOWBALL)!!
         } else {
             if (isDirectionRotatedVertically()) trajectory.set(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
             else trajectory.set(0f, BULLET_SPEED * ConstVals.PPM * facing.value)
 
-            requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
+            if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
 
             EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
         }

@@ -1,7 +1,5 @@
 package com.megaman.maverick.game.entities.projectiles
 
-import com.mega.game.engine.world.body.*;
-
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
@@ -12,7 +10,6 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.getOverlapPushDirection
 import com.mega.game.engine.common.interfaces.IFaceable
-
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -24,6 +21,7 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -45,7 +43,7 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
     companion object {
         const val TAG = "Snowhead"
         private const val GRAVITY = -0.15f
-        private val BULLET_TRAJECTORIES = gdxArrayOf(
+        private val SNOWBALL_TRAJECTORIES = gdxArrayOf(
             Vector2(-7f, 5f),
             Vector2(-3f, 7f),
             Vector2(3f, 7f),
@@ -75,7 +73,7 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
     }
 
     private fun bounceBullets(collisionShape: IGameShape2D) {
-        val bullets = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET, BULLET_TRAJECTORIES.size)
+        val snowballs = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SNOWBALL, SNOWBALL_TRAJECTORIES.size)
         val direction = getOverlapPushDirection(body, collisionShape) ?: Direction.UP
         val spawn = when (direction) {
             Direction.UP -> body.getTopCenterPoint().add(0f, 0.1f * ConstVals.PPM)
@@ -83,14 +81,15 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
             Direction.LEFT -> body.getCenterLeftPoint().sub(0.1f * ConstVals.PPM, 0f)
             Direction.RIGHT -> body.getCenterRightPoint().add(0.1f * ConstVals.PPM, 0f)
         }
-        for (i in 0 until bullets.size) {
-            val trajectory = BULLET_TRAJECTORIES[i].cpy()
+        for (i in 0 until snowballs.size) {
+            val trajectory = SNOWBALL_TRAJECTORIES[i].cpy()
             trajectory.rotateDeg(direction.rotation)
-            bullets[i].spawn(
+            snowballs[i].spawn(
                 props(
                     ConstKeys.POSITION to spawn,
                     ConstKeys.TRAJECTORY to trajectory.scl(ConstVals.PPM.toFloat()),
                     ConstKeys.GRAVITY to Vector2(0f, GRAVITY * ConstVals.PPM),
+                    ConstKeys.GRAVITY_ON to true,
                     ConstKeys.OWNER to owner
                 )
             )

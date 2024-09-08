@@ -56,6 +56,7 @@ class Copipi(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, "Pipi/Copipi")
         super.init()
         addComponent(defineAnimationsComponent())
+        putProperty(ConstKeys.ENTITY_CAN_DIE, false)
     }
 
     override fun onSpawn(spawnProps: Properties) {

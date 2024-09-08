@@ -10,7 +10,9 @@ import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.special.Water
 import com.megaman.maverick.game.utils.VelocityAlteration
+import com.megaman.maverick.game.utils.VelocityAlterator
 
 fun IFixture.getBody(): Body = (getEntity() as IBodyEntity).body
 
@@ -57,6 +59,31 @@ fun IFixture.setConsumer(consumer: (ProcessState, IFixture) -> Unit): IFixture {
 }
 
 fun IFixture.getConsumer() = properties.get(ConstKeys.CONSUMER) as ((ProcessState, IFixture) -> Unit)?
+
+fun IFixture.setHitWaterByReceiver(receiver: (Water) -> Unit) {
+    putProperty(ConstKeys.HIT_WATER, receiver)
+}
+
+fun IFixture.hasForceAlterationForState(processState: ProcessState) =
+    hasProperty("${processState.name.lowercase()}_${ConstKeys.FORCE}_${ConstKeys.VELOCITY_ALTERATION}")
+
+fun IFixture.setForceAlterationListener(processState: ProcessState, listener: (VelocityAlteration, Float) -> Unit) {
+    putProperty("${processState.name.lowercase()}_${ConstKeys.FORCE}_${ConstKeys.VELOCITY_ALTERATION}", listener)
+}
+
+fun IFixture.applyForceAlteration(processState: ProcessState, alteration: VelocityAlteration, delta: Float) {
+    if (hasForceAlterationForState(processState)) {
+        val runnable = getProperty(
+            "${processState.name.lowercase()}_${ConstKeys.FORCE}_${ConstKeys.VELOCITY_ALTERATION}"
+        ) as (VelocityAlteration, Float) -> Unit
+        runnable.invoke(alteration, delta)
+    } else VelocityAlterator.alterate(getBody(), alteration, delta)
+}
+
+fun IFixture.hasHitByWaterByReceiver() = hasProperty(ConstKeys.HIT_WATER)
+
+fun IFixture.getHitByWater(water: Water) =
+    (getProperty(ConstKeys.HIT_WATER) as (Water) -> Unit).invoke(water)
 
 fun IFixture.setHitByBodyReceiver(receiver: (IBodyEntity) -> Unit) {
     putProperty(ConstKeys.HIT_BY_BODY, receiver)

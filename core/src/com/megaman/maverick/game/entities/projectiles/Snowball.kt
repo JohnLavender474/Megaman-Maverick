@@ -1,7 +1,5 @@
 package com.megaman.maverick.game.entities.projectiles
 
-import com.mega.game.engine.world.body.*;
-
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.common.extensions.getTextureRegion
@@ -17,6 +15,7 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -24,7 +23,6 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
@@ -42,8 +40,7 @@ class Snowball(game: MegamanMaverickGame) : AbstractProjectile(game) {
     }
 
     override fun init() {
-        if (region == null)
-            region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Snowball")
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Snowball2")
         super.init()
     }
 
@@ -105,7 +102,7 @@ class Snowball(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
-        sprite.setSize(0.85f * ConstVals.PPM)
+        sprite.setSize(0.5f * ConstVals.PPM)
         sprite.setRegion(region!!)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->

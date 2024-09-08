@@ -71,11 +71,6 @@ abstract class AbstractEnemy(
                             null
                         }
 
-                        6, 7, 8, 9, 10 -> {
-                            GameLogger.debug(TAG, "No item dropped")
-                            null
-                        }
-
                         else -> null
                     }
                     entity?.spawn(props)

@@ -44,6 +44,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.ItemEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.decorations.Splash
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
@@ -61,7 +62,9 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
         private const val BLINK_DUR = 0.01f
         private const val CULL_DUR = 3.5f
         private const val GRAVITY = 0.25f
-        private const val CLAMP = 5f
+        private const val WATER_GRAVITY = 0.1f
+        private const val VEL_CLAMP = 5f
+        private const val WATER_VEL_CLAMP = 1.5f
     }
 
     override var directionRotation: Direction?
@@ -73,11 +76,14 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
     private val blinkTimer = Timer(BLINK_DUR)
     private val cullTimer = Timer(CULL_DUR)
     private lateinit var itemFixture: Fixture
+    private lateinit var waterListenerFixture: Fixture
     private lateinit var feetFixture: Fixture
     private var large = false
     private var timeCull = false
     private var blink = false
     private var warning = false
+    private var gravity = GRAVITY
+    private var velClamp = VEL_CLAMP
 
     override fun getEntityType() = EntityType.ITEM
 
@@ -109,6 +115,7 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
         body.setCenter(spawn)
 
         (itemFixture.rawShape as GameRectangle).set(body)
+        (waterListenerFixture.rawShape as GameRectangle).set(body)
         feetFixture.offsetFromBodyCenter.y = (if (large) -0.25f else -0.125f) * ConstVals.PPM
 
         warning = false
@@ -117,6 +124,8 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
         cullTimer.reset()
 
         directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
+        gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, GRAVITY, Float::class)
+        velClamp = spawnProps.getOrDefault(ConstKeys.CLAMP, VEL_CLAMP, Float::class)
     }
 
     override fun contactWithPlayer(megaman: Megaman) {
@@ -130,8 +139,6 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.physics.velocityClamp.set(CLAMP * ConstVals.PPM)
-
         val debugShapes = Array<() -> IDrawableShape?>()
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
@@ -146,20 +153,30 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
         body.addFixture(feetFixture)
         feetFixture.rawShape.color = Color.GREEN
         debugShapes.add { feetFixture.getShape() }
+        
+        waterListenerFixture = Fixture(body, FixtureType.WATER_LISTENER, GameRectangle())
+        waterListenerFixture.setHitWaterByReceiver { 
+            body.physics.velocity.setZero()
+            gravity = WATER_GRAVITY
+            velClamp = WATER_VEL_CLAMP
+            Splash.generate(body, it.body)
+        }
+        body.addFixture(waterListenerFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
+            body.physics.velocityClamp.set(velClamp * ConstVals.PPM)
+
             if (body.isSensingAny(BodySense.FEET_ON_GROUND, BodySense.FEET_ON_SAND)) {
                 body.physics.gravityOn = false
                 body.physics.velocity.setZero()
             } else {
                 body.physics.gravityOn = true
-                val gravity = when (directionRotation!!) {
-                    Direction.LEFT -> Vector2(GRAVITY, 0f)
-                    Direction.RIGHT -> Vector2(-GRAVITY, 0f)
-                    Direction.UP -> Vector2(0f, -GRAVITY)
-                    Direction.DOWN -> Vector2(0f, GRAVITY)
-                }
-                body.physics.gravity = gravity.scl(ConstVals.PPM.toFloat())
+                body.physics.gravity = when (directionRotation!!) {
+                    Direction.LEFT -> Vector2(gravity, 0f)
+                    Direction.RIGHT -> Vector2(-gravity, 0f)
+                    Direction.UP -> Vector2(0f, -gravity)
+                    Direction.DOWN -> Vector2(0f, gravity)
+                }.scl(ConstVals.PPM.toFloat())
             }
 
             feetFixture.putProperty(ConstKeys.STICK_TO_BLOCK, !body.isSensing(BodySense.FEET_ON_SAND))

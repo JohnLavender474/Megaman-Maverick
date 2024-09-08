@@ -1,11 +1,11 @@
 package com.megaman.maverick.game.entities.projectiles
 
-import com.mega.game.engine.world.body.*;
-
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.set
@@ -20,6 +20,7 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -30,13 +31,16 @@ import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.utils.VelocityAlterator
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getEntity
+import com.megaman.maverick.game.world.body.setForceAlterationListener
 
 class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRotatable {
 
     companion object {
+        const val TAG = "Bullet"
         private const val CLAMP = 10f
         private const val BOUNCE_LIMIT = 3
         private var bulletRegion: TextureRegion? = null
@@ -127,6 +131,18 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         bodyFixture.putProperty(ConstKeys.GRAVITY_ROTATABLE, false)
+        bodyFixture.setForceAlterationListener(ProcessState.BEGIN) { alteration, delta ->
+            val startVelocity = body.physics.velocity.cpy()
+            GameLogger.debug(TAG, "start force alteration: startVel=$startVelocity")
+            body.putProperty("${ConstKeys.START}_${ConstKeys.VELOCITY}", startVelocity)
+            VelocityAlterator.alterate(body, alteration, delta)
+        }
+        bodyFixture.setForceAlterationListener(ProcessState.END) { _, _ ->
+            val newVelocity = body.getProperty("${ConstKeys.START}_${ConstKeys.VELOCITY}", Vector2::class)
+            GameLogger.debug(TAG, "end force alteration: newVel=$newVelocity")
+            newVelocity?.let { body.physics.velocity.set(it) }
+            body.removeProperty("${ConstKeys.START}_${ConstKeys.VELOCITY}")
+        }
         body.addFixture(bodyFixture)
 
         val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameRectangle().setSize(0.2f * ConstVals.PPM))

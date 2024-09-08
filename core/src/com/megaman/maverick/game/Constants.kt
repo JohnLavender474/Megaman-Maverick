@@ -34,6 +34,10 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val FORCE = "force"
+    const val CLAMP = "clamp"
+    const val HIT_WATER = "hit_water"
+    const val WATER = "water"
     const val POOL = "pool"
     const val BALL = "ball"
     const val WAIT = "wait"

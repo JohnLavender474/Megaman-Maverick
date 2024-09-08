@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="1200" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="303">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="1200" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="304">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/Gravity Man Stage.tsx"/>
  <tileset firstgid="4609" source="../tsx/MM3Wily1.tsx"/>
@@ -144,8 +144,8 @@
   </object>
   <object id="164" name="Shotman" x="18176" y="384" width="32" height="32"/>
   <object id="168" name="TestEnemy" x="19072" y="192" width="32" height="32"/>
-  <object id="174" name="PetitDevil" x="20888" y="288" width="32" height="32"/>
-  <object id="175" name="Shotman" x="20896" y="384" width="32" height="32"/>
+  <object id="174" name="PetitDevil" x="20672" y="192" width="32" height="32"/>
+  <object id="175" name="Shotman" x="20672" y="384" width="32" height="32"/>
   <object id="182" name="Spiky" x="21696" y="192" width="32" height="32">
    <properties>
     <property name="facing" value="left"/>
@@ -225,6 +225,7 @@
   <object id="296" name="Bat" x="24128" y="192" width="32" height="32"/>
   <object id="297" name="Bat" x="23360" y="160" width="32" height="32"/>
   <object id="302" name="TankBot" x="21600" y="384" width="32" height="32"/>
+  <object id="303" name="WalrusBot" x="21248" y="384" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="10" name="children">
   <object id="97" name="GravityChange" x="11936" y="96" width="384" height="320">
@@ -355,7 +356,7 @@
   </object>
  </objectgroup>
  <objectgroup id="4" name="player">
-  <object id="299" name="0" x="21216" y="384" width="32" height="32">
+  <object id="299" name="0" x="21024" y="384" width="32" height="32">
    <properties>
     <property name="direction" value="up"/>
    </properties>

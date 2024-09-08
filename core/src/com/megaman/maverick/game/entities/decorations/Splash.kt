@@ -1,10 +1,5 @@
 package com.megaman.maverick.game.entities.decorations
 
-import com.mega.game.engine.world.body.*;
-import com.mega.game.engine.world.collisions.*;
-import com.mega.game.engine.world.contacts.*;
-import com.mega.game.engine.world.pathfinding.*;
-
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.animations.Animation
@@ -16,6 +11,7 @@ import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -24,7 +20,6 @@ import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.body.Body
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -43,7 +38,7 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
         private const val ALPHA = 0.5f
         private var splashRegion: TextureRegion? = null
 
-        fun generate(game: MegamanMaverickGame, splasher: Body, water: Body) {
+        fun generate(splasher: GameRectangle, water: GameRectangle) {
             GameLogger.debug(TAG, "Generating splash for splasher [$splasher] and water [$water]")
             val numSplashes = ceil(splasher.width / ConstVals.PPM).toInt()
             for (i in 0 until numSplashes) {

@@ -3,6 +3,7 @@ package com.megaman.maverick.game.world.body
 import com.mega.game.engine.world.body.Body
 
 enum class BodySense {
+    FORCE_APPLIED,
     IN_WATER,
     BODY_TOUCHING_BLOCK,
     FEET_ON_GROUND,

@@ -48,6 +48,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import kotlin.reflect.KClass
 
+@Deprecated("Should use UFOhNoBot instead")
 class OLD_UFOBombBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
 
     companion object {

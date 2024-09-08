@@ -82,6 +82,7 @@ class EnemiesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         const val UNDERWATER_PENGUIN_BOT = "UnderwaterPenguinBot"
         const val UF_OH_NO_BOT = "UFOhNoBot"
         const val TANK_BOT = "TankBot"
+        const val WALRUS_BOT = "WalrusBot"
     }
 
     override fun init() {
@@ -156,6 +157,7 @@ class EnemiesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(UNDERWATER_PENGUIN_BOT, GameEntityPoolCreator.create { UnderwaterPenguinBot(game) })
         pools.put(UF_OH_NO_BOT, GameEntityPoolCreator.create { UFOhNoBot(game) })
         pools.put(TANK_BOT, GameEntityPoolCreator.create { TankBot(game) })
+        pools.put(WALRUS_BOT, GameEntityPoolCreator.create { WalrusBot(game) })
     }
 
     override fun fetch(key: Any): MegaGameEntity? {
