@@ -53,20 +53,16 @@ class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     companion object {
         const val TAG = "Robbit"
         private var atlas: TextureAtlas? = null
-        private const val STAND_DUR = 1f
+        private const val STAND_DUR = 0.85f
         private const val CROUCH_DUR = 0.2f
         private const val JUMP_DUR = 0.25f
         private const val G_GRAV = -0.001f
         private const val GRAV = -0.15f
-        private const val JUMP_X = 3f
-        private const val JUMP_Y = 10f
+        private const val JUMP_X = 4f
+        private const val JUMP_Y = 7f
     }
 
-    private enum class RobbitState {
-        STANDING,
-        CROUCHING,
-        JUMPING
-    }
+    private enum class RobbitState { STANDING, CROUCHING, JUMPING }
 
     override var facing = Facing.RIGHT
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -180,17 +176,18 @@ class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = {
-            when (robbitLoop.getCurrent()) {
-                RobbitState.STANDING -> "Stand"
-                RobbitState.CROUCHING -> "Crouch"
-                RobbitState.JUMPING -> "Jump"
+            if (!body.isSensing(BodySense.FEET_ON_GROUND)) "jump"
+            else when (robbitLoop.getCurrent()) {
+                RobbitState.STANDING -> "stand"
+                RobbitState.CROUCHING -> "crouch"
+                RobbitState.JUMPING -> "jump"
             }
         }
         val animations =
             objectMapOf<String, IAnimation>(
-                "Stand" to Animation(atlas!!.findRegion("Robbit/Stand")),
-                "Crouch" to Animation(atlas!!.findRegion("Robbit/Crouch")),
-                "Jump" to Animation(atlas!!.findRegion("Robbit/Jump"))
+                "stand" to Animation(atlas!!.findRegion("Robbit/Stand")),
+                "crouch" to Animation(atlas!!.findRegion("Robbit/Crouch")),
+                "jump" to Animation(atlas!!.findRegion("Robbit/Jump"))
             )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

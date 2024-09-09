@@ -21,6 +21,7 @@ import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
+import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
@@ -29,43 +30,46 @@ import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.world.body.*
 
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodySense
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.isSensing
 import kotlin.reflect.KClass
 
 class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     companion object {
-        const val STAND_DUR = .5f
-        const val FLY_DUR = 1.5f
-        const val FLY_VEL = 10f
-        const val GRAV = -.2f
-        const val G_GRAV = -.015f
+        const val STAND_DUR = 0.75f
+        const val FLY_DUR = 2f
+        const val FLY_VEL = 6f
+        const val GRAV = -0.2f
+        const val G_GRAV = -0.015f
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(5), Fireball::class to dmgNeg(10), ChargedShot::class to dmgNeg {
+        Bullet::class to dmgNeg(5),
+        Fireball::class to dmgNeg(10),
+        ChargedShot::class to dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 15 else 10
-        }, ChargedShotExplosion::class to dmgNeg(5)
+        }, ChargedShotExplosion::class to dmgNeg {
+            it as ChargedShotExplosion
+            if (it.fullyCharged) 10 else 5
+        }
     )
 
     override var facing = Facing.RIGHT
 
     val flying: Boolean
         get() = !flyTimer.isFinished()
-
     val standing: Boolean
         get() = !standTimer.isFinished()
 
@@ -94,24 +98,30 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val body = Body(BodyType.DYNAMIC)
         body.setSize(ConstVals.PPM.toFloat(), ConstVals.PPM * 2f)
 
-        val shapes = Array<() -> IDrawableShape?>()
+        val debugShapes = Array<() -> IDrawableShape?>()
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
         bodyFixture.rawShape.color = Color.BLUE
-        shapes.add { bodyFixture.getShape() }
+        debugShapes.add { bodyFixture.getShape() }
 
         val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(ConstVals.PPM * 0.5f))
+        feetFixture.setHitByBlockReceiver {
+            if (overlapsGameCamera()) requestToPlaySound(
+                SoundAsset.MARIO_FIREBALL_SOUND,
+                false
+            )
+        }
         feetFixture.offsetFromBodyCenter.y = -ConstVals.PPM.toFloat()
         body.addFixture(feetFixture)
         feetFixture.rawShape.color = Color.GREEN
-        shapes.add { feetFixture.getShape() }
+        debugShapes.add { feetFixture.getShape() }
 
         val headFixture = Fixture(body, FixtureType.HEAD, GameRectangle().setSize(ConstVals.PPM * 0.5f))
         headFixture.offsetFromBodyCenter.y = ConstVals.PPM.toFloat()
         body.addFixture(headFixture)
         headFixture.rawShape.color = Color.ORANGE
-        shapes.add { headFixture.getShape() }
+        debugShapes.add { headFixture.getShape() }
 
         val damagerFixture = Fixture(
             body,
@@ -120,26 +130,26 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         )
         body.addFixture(damagerFixture)
         damagerFixture.rawShape.color = Color.RED
-        shapes.add { damagerFixture.getShape() }
+        debugShapes.add { damagerFixture.getShape() }
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().set(body))
         body.addFixture(damageableFixture)
         damageableFixture.rawShape.color = Color.PURPLE
-        shapes.add { damageableFixture.getShape() }
+        debugShapes.add { damageableFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             body.physics.gravityOn = standing
             body.physics.gravity.y = (if (body.isSensing(BodySense.FEET_ON_GROUND)) G_GRAV else GRAV) * ConstVals.PPM
         })
 
-        addComponent(DrawableShapesComponent(shapes))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(ConstVals.PPM * 2.25f, ConstVals.PPM * 1.85f)
+        sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
@@ -175,7 +185,7 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     private fun defineAnimationsComponent(): AnimationsComponent {
         val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
         val animations = objectMapOf<String, IAnimation>(
-            "fly" to Animation(atlas.findRegion("FlyBoy/Fly"), 1, 4, 0.05f),
+            "fly" to Animation(atlas.findRegion("FlyBoy/Fly"), 1, 4, 0.1f),
             "stand" to Animation(atlas.findRegion("FlyBoy/Stand"))
         )
         val keySupplier = { if (flying) "fly" else "stand" }

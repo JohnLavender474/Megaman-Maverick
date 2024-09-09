@@ -258,9 +258,20 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
         if (tiledMapLoadResult == null)
             throw IllegalStateException("No tiled map load result found in level screen")
         game.setTiledMapLoadResult(tiledMapLoadResult!!)
-        val (map) = tiledMapLoadResult!!
+        val (map, _, worldWidth, worldHeight) = tiledMapLoadResult!!
 
         val worldContainer = SimpleGridWorldContainer(ConstVals.PPM)
+        /*
+        QuadtreeWorldContainer(
+            ConstVals.PPM,
+            0,
+            0,
+            worldWidth,
+            worldHeight,
+            10,
+            10
+        )
+        */
         game.setWorldContainer(worldContainer)
 
         playerSpawnEventHandler.init()
@@ -632,8 +643,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
 
         if (!game.paused && !cameraShaker.isFinished) cameraShaker.update(delta)
     }
-
-    override fun hide() = dispose()
 
     override fun dispose() {
         GameLogger.debug(TAG, "dispose(): Disposing level screen")

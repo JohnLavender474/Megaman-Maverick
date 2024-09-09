@@ -1,24 +1,22 @@
 package com.megaman.maverick.game.entities.decorations
 
-import com.mega.game.engine.world.body.*;
-import com.mega.game.engine.world.collisions.*;
-import com.mega.game.engine.world.contacts.*;
-import com.mega.game.engine.world.pathfinding.*;
-
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -26,11 +24,13 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 
-open class WindyGrass(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity {
+open class WindyGrass(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity,
+    ICullableEntity {
 
     companion object {
-        const val TAG = "AnimatedTile"
+        const val TAG = "WindyGrass"
         private var leftRegion: TextureRegion? = null
         private var rightRegion: TextureRegion? = null
         private var middleRegion: TextureRegion? = null
@@ -43,12 +43,13 @@ open class WindyGrass(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
     override fun init() {
         if (leftRegion == null || rightRegion == null || middleRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENVIRONS_1.source)
-            leftRegion = atlas.findRegion("WindyGrass/Left")
-            rightRegion = atlas.findRegion("WindyGrass/Right")
-            middleRegion = atlas.findRegion("WindyGrass/Middle")
+            leftRegion = atlas.findRegion("$TAG/Left")
+            rightRegion = atlas.findRegion("$TAG/Right")
+            middleRegion = atlas.findRegion("$TAG/Middle")
         }
         addComponent(SpritesComponent())
         addComponent(AnimationsComponent())
+        addComponent(defineCullablesComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -75,5 +76,10 @@ open class WindyGrass(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
         super.onDestroy()
         sprites.clear()
         animators.clear()
+    }
+
+    private fun defineCullablesComponent(): CullablesComponent {
+        val cullOutOfBounds = getGameCameraCullingLogic(game.getGameCamera(), { bounds }, 0f)
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullOutOfBounds))
     }
 }

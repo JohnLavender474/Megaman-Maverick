@@ -145,7 +145,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
 
     fun setCurrentScreen(key: String) {
         GameLogger.debug(TAG, "setCurrentScreen: set to screen with key = $key")
-        currentScreenKey?.let { screens[it] }?.hide()
+        currentScreenKey?.let { screens[it] }?.dispose()
         currentScreenKey = key
         screens[key]?.let { nextScreen ->
             nextScreen.show()

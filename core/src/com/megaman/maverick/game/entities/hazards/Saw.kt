@@ -44,12 +44,11 @@ import com.megaman.maverick.game.world.body.FixtureType
 class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IMotionEntity {
 
     companion object {
-        const val PENDULUM_TYPE = "P"
-        const val ROTATION_TYPE = "R"
-        const val TRAJECTORY_TYPE = "T"
-
+        const val TAG = "Saw"
+        const val PENDULUM_TYPE = "p"
+        const val ROTATION_TYPE = "r"
+        const val TRAJECTORY_TYPE = "t"
         private var region: TextureRegion? = null
-
         private const val LENGTH = 3f
         private const val ROTATION_SPEED = 2f
         private const val PENDULUM_GRAVITY = 10f
@@ -58,8 +57,7 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
     override fun getEntityType() = EntityType.HAZARD
 
     override fun init() {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, "Saw")
-
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
         addComponent(defineBodyComponent())
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
@@ -74,7 +72,7 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
         val bounds = spawnProps.get(ConstKeys.BOUNDS) as GameRectangle
         val type = spawnProps.get(ConstKeys.TYPE) as String
 
-        when (type.uppercase()) {
+        when (type.lowercase()) {
             PENDULUM_TYPE -> setToPendulum(bounds)
             ROTATION_TYPE -> setToRotation(bounds, spawnProps)
             TRAJECTORY_TYPE -> {

@@ -64,9 +64,7 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    private enum class SealionState {
-        WAIT, THROW, TAUNT, POUT
-    }
+    private enum class SealionState { WAIT, THROW, TAUNT, POUT }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
         Bullet::class to dmgNeg(15),
