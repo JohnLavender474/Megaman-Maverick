@@ -35,7 +35,8 @@ private lateinit var lastAnimationKey: String
 
 internal fun Megaman.defineAnimationsComponent(): AnimationsComponent {
     val megamanAnimationKeySupplier = {
-        if (!roomTransPauseTimer.isFinished()) null
+        if (!ready) "Stand"
+        else if (!roomTransPauseTimer.isFinished()) null
         else if (game.isProperty(ConstKeys.ROOM_TRANSITION, true)) lastAnimationKey
         else {
             lastAnimationKey =
@@ -88,12 +89,14 @@ internal fun Megaman.defineAnimationsComponent(): AnimationsComponent {
                 } else if (isBehaviorActive(BehaviorType.SWIMMING)) {
                     if (shooting) "SwimShoot"
                     else if (fullyCharged) "SwimCharging" else if (halfCharged) "SwimHalfCharging" else "Swim"
-                } else if (isBehaviorActive(BehaviorType.JUMPING) || !body.isSensing(BodySense.FEET_ON_GROUND)) {
-                    if (shooting) "JumpShoot"
-                    else if (fullyCharged) "JumpCharging" else if (halfCharged) "JumpHalfCharging" else "Jump"
                 } else if (body.isSensing(BodySense.FEET_ON_GROUND) && running) {
                     if (shooting) "RunShoot"
                     else if (fullyCharged) "RunCharging" else if (halfCharged) "RunHalfCharging" else "Run"
+                } else if (isBehaviorActive(BehaviorType.JUMPING) ||
+                    (!body.isSensing(BodySense.FEET_ON_GROUND) && abs(body.physics.velocity.y) > 0.5f * ConstVals.PPM)
+                ) {
+                    if (shooting) "JumpShoot"
+                    else if (fullyCharged) "JumpCharging" else if (halfCharged) "JumpHalfCharging" else "Jump"
                 } else if (slipSliding) {
                     if (shooting) "SlipSlideShoot"
                     else if (fullyCharged) "SlipSlideCharging"

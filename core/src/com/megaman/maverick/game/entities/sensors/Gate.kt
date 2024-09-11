@@ -74,10 +74,11 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
     private lateinit var nextRoomKey: String
 
     private var triggerable = true
-    private var miniBossGate = false
     private var resettable = false
     private var transitionFinished = false
     private var showCloseEvent = true
+    private var miniBossGate = false
+    private lateinit var thisBossKey: String
 
     override fun getEntityType() = EntityType.SENSOR
 
@@ -92,21 +93,19 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-
         game.eventsMan.addListener(this)
-        center.set((spawnProps.get(ConstKeys.BOUNDS) as GameRectangle).getCenter())
 
-        nextRoomKey = spawnProps.get(ConstKeys.ROOM) as String
+        center.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter())
 
+        nextRoomKey = spawnProps.get(ConstKeys.ROOM, String::class)!!
         val directionString = spawnProps.getOrDefault(ConstKeys.DIRECTION, "left", String::class)
         direction = Direction.valueOf(directionString.uppercase())
-
-        triggerable = spawnProps.getOrDefault(ConstKeys.TRIGGER, true, Boolean::class)
-        resettable = spawnProps.getOrDefault(ConstKeys.RESET, false, Boolean::class)
-        showCloseEvent = spawnProps.getOrDefault(ConstKeys.CLOSE, true, Boolean::class)
-
         miniBossGate = spawnProps.getOrDefault("${ConstKeys.MINI}_${ConstKeys.BOSS}", false, Boolean::class)
-        if (miniBossGate) triggerable = false
+        thisBossKey = if (miniBossGate)
+            spawnProps.get("${ConstKeys.BOSS}_${ConstKeys.KEY}", String::class)!! else "NO_BOSS_KEY_FOR_GATE"
+        triggerable = spawnProps.getOrDefault(ConstKeys.TRIGGER, !miniBossGate, Boolean::class)
+        resettable = spawnProps.getOrDefault(ConstKeys.RESET, true, Boolean::class)
+        showCloseEvent = spawnProps.getOrDefault(ConstKeys.CLOSE, true, Boolean::class)
 
         reset()
     }
@@ -119,7 +118,6 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
     override fun onEvent(event: Event) {
         when (event.key) {
             EventType.PLAYER_SPAWN -> if (resettable) reset()
-            EventType.GAME_OVER -> reset()
             EventType.END_ROOM_TRANS -> {
                 val room = event.getProperty(ConstKeys.ROOM) as RectangleMapObject
                 if (nextRoomKey == room.name) transitionFinished = true
@@ -127,12 +125,9 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
 
             EventType.MINI_BOSS_DEAD -> {
                 if (miniBossGate) {
-                    val thisBossKey = getOrDefaultProperty("${ConstKeys.BOSS}_${ConstKeys.KEY}", "1", String::class)
                     val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
-                    val otherBossKey =
-                        boss.getOrDefaultProperty("${ConstKeys.BOSS}_${ConstKeys.KEY}", "1", String::class)
-                    GameLogger.debug(TAG, "This boss key: $thisBossKey. Other boss key: $otherBossKey")
-                    if (thisBossKey == otherBossKey) triggerable = true
+                    GameLogger.debug(TAG, "This boss key: $thisBossKey. Other boss key: ${boss.bossKey}")
+                    if (thisBossKey == boss.bossKey) triggerable = true
                 }
             }
         }
@@ -142,11 +137,11 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
         timer.reset()
         transitionFinished = false
         gateState = GateState.OPENABLE
+        triggerable = !miniBossGate
     }
 
     fun trigger() {
         if (!triggerable) return
-
         gateState = GateState.OPENING
         playSoundNow(SoundAsset.BOSS_DOOR_SOUND, false)
         game.eventsMan.submitEvent(Event(EventType.GATE_INIT_OPENING))
@@ -160,9 +155,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
                 timer.reset()
                 gateState = GateState.OPEN
                 game.eventsMan.submitEvent(Event(EventType.GATE_FINISH_OPENING))
-                game.eventsMan.submitEvent(
-                    Event(EventType.NEXT_ROOM_REQ, props(ConstKeys.ROOM to nextRoomKey))
-                )
+                game.eventsMan.submitEvent(Event(EventType.NEXT_ROOM_REQ, props(ConstKeys.ROOM to nextRoomKey)))
             }
         }
 
@@ -228,7 +221,10 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden =
-                gateState == GateState.OPEN || (gateState.equalsAny(GateState.CLOSING, GateState.CLOSED) && !showCloseEvent)
+                gateState == GateState.OPEN || (gateState.equalsAny(
+                    GateState.CLOSING,
+                    GateState.CLOSED
+                ) && !showCloseEvent)
             _sprite.setOriginCenter()
             _sprite.rotation = when (direction) {
                 Direction.UP, Direction.DOWN -> 90f

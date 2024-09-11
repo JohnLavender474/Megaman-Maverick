@@ -22,7 +22,8 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.body.*
 
-open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity, IDrawableShapesEntity {
+open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity,
+    IDrawableShapesEntity {
 
     companion object {
         const val TAG = "Block"
@@ -64,9 +65,9 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         ) else removeComponent(CullablesComponent::class)
 
         body.physics.frictionToApply.x =
-            if (spawnProps.containsKey(ConstKeys.FRICTION_X)) spawnProps.get(ConstKeys.FRICTION_X) as Float else STANDARD_FRICTION_X
+            spawnProps.getOrDefault(ConstKeys.FRICTION_X, STANDARD_FRICTION_X, Float::class)
         body.physics.frictionToApply.y =
-            if (spawnProps.containsKey(ConstKeys.FRICTION_Y)) spawnProps.get(ConstKeys.FRICTION_Y) as Float else STANDARD_FRICTION_Y
+            spawnProps.getOrDefault(ConstKeys.FRICTION_Y, STANDARD_FRICTION_Y, Float::class)
         body.physics.gravityOn = spawnProps.getOrDefault(ConstKeys.GRAVITY_ON, false, Boolean::class)
         body.physics.takeFrictionFromOthers = spawnProps.getOrDefault(ConstKeys.RESIST_ON, true, Boolean::class)
 

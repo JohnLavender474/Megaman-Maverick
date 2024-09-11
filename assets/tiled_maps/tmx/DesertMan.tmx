@@ -452,6 +452,7 @@
   <object id="163" name="Start" x="12128" y="128" width="32" height="32"/>
   <object id="233" name="SphinxMiniBoss" x="17648" y="480" width="32" height="32">
    <properties>
+    <property name="boss_key" value="1"/>
     <property name="mini" type="bool" value="true"/>
    </properties>
   </object>
@@ -800,7 +801,6 @@
   <object id="195" name="Death" x="14496" y="448" width="96" height="32"/>
   <object id="216" name="Gate" x="17216" y="416" width="64" height="96">
    <properties>
-    <property name="reset" type="bool" value="true"/>
     <property name="room" value="mini_boss_room"/>
    </properties>
   </object>
@@ -811,8 +811,8 @@
   </object>
   <object id="243" name="Gate" x="17728" y="384" width="64" height="96">
    <properties>
+    <property name="boss_key" value="1"/>
     <property name="mini_boss" type="bool" value="true"/>
-    <property name="reset" type="bool" value="true"/>
     <property name="room" value="room7"/>
    </properties>
   </object>
@@ -834,7 +834,6 @@
   </object>
   <object id="335" name="Gate" x="20672" y="1056" width="64" height="96">
    <properties>
-    <property name="reset" type="bool" value="true"/>
     <property name="room" value="boss_room"/>
    </properties>
   </object>

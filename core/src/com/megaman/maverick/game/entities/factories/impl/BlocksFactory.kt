@@ -24,6 +24,7 @@ class BlocksFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         const val BREAKABLE_ICE = "BreakableIce"
         const val BREAKABLE_BLOCK = "BreakableBlock"
         const val FEET_RISE_SINK_BLOCK = "FeetRiseSinkBlock"
+        const val LADDER_TOP = "LadderTop"
     }
 
     override fun init() {
@@ -41,6 +42,7 @@ class BlocksFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(BREAKABLE_ICE, GameEntityPoolCreator.create { BreakableIce(game) })
         pools.put(BREAKABLE_BLOCK, GameEntityPoolCreator.create { BreakableBlock(game) })
         pools.put(FEET_RISE_SINK_BLOCK, GameEntityPoolCreator.create { FeetRiseSinkBlock(game) })
+        pools.put(LADDER_TOP, GameEntityPoolCreator.create { LadderTop(game) })
     }
 
     override fun fetch(key: Any) =

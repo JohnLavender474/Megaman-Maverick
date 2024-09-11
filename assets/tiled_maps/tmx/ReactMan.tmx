@@ -524,7 +524,6 @@
    <properties>
     <property name="boss_key" value="1"/>
     <property name="mini_boss" type="bool" value="true"/>
-    <property name="reset" type="bool" value="true"/>
     <property name="room" value="room5"/>
    </properties>
   </object>
@@ -542,7 +541,6 @@
    <properties>
     <property name="boss_key" value="2"/>
     <property name="mini_boss" type="bool" value="true"/>
-    <property name="reset" type="bool" value="true"/>
     <property name="room" value="room9"/>
    </properties>
   </object>

@@ -1,10 +1,5 @@
 package com.megaman.maverick.game.entities.contracts
 
-import com.mega.game.engine.world.body.*;
-import com.mega.game.engine.world.collisions.*;
-import com.mega.game.engine.world.contacts.*;
-import com.mega.game.engine.world.pathfinding.*;
-
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Position
@@ -26,7 +21,6 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOSION_ORB_SPEED
-
 import com.megaman.maverick.game.events.EventType
 
 abstract class AbstractBoss(
@@ -53,6 +47,8 @@ abstract class AbstractBoss(
         private set
     var defeated = false
         private set
+    var bossKey = ""
+        private set
 
     override fun getEntityType() = EntityType.BOSS
 
@@ -64,11 +60,18 @@ abstract class AbstractBoss(
         ready = false
         defeated = false
         defeatTimer.setToEnd()
+        bossKey = spawnProps.getOrDefault(
+            "${ConstKeys.BOSS}_${ConstKeys.KEY}",
+            "NO_BOSS_KEY_FOR_ABSTRACT_BOSS",
+            String::class
+        )
         super.onSpawn(spawnProps)
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
+
+        removeProperty("${ConstKeys.BOSS}_${ConstKeys.KEY}")
         game.eventsMan.removeListener(this)
         ready = false
 

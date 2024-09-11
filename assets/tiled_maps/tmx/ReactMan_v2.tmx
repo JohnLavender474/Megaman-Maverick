@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="450" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="20" nextobjectid="454">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="450" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="20" nextobjectid="456">
  <tileset firstgid="1" source="../tsx/React_Man_2.tsx"/>
  <tileset firstgid="241" source="../tsx/Reactor_Man_1.tsx"/>
  <tileset firstgid="1201" source="../tsx/Tileset1.tsx"/>
@@ -272,12 +272,7 @@
     <property name="friction_y" type="float" value="0"/>
    </properties>
   </object>
-  <object id="15" x="472" y="2752" width="48" height="8">
-   <properties>
-    <property name="body_labels" value="collide_down_only"/>
-    <property name="fixture_labels" value="no_side_touchie,no_projectile_collision"/>
-   </properties>
-  </object>
+  <object id="15" name="LadderTop" x="480" y="2752" width="32" height="8"/>
   <object id="17" name="Standard" x="0" y="2560" width="2144" height="72">
    <properties>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
@@ -528,7 +523,6 @@
   </object>
   <object id="119" name="TankBot" x="3080" y="2224" width="16" height="16"/>
   <object id="121" name="Bat" x="3080" y="2080" width="16" height="16"/>
-  <object id="133" name="DragonFly" x="3584" y="1672" width="16" height="16"/>
   <object id="134" name="ToxicBarrelBot" x="3392" y="1840" width="16" height="16"/>
   <object id="135" name="RollingBot" x="3616" y="1840" width="16" height="16"/>
   <object id="139" name="FloatingCanHole" x="2944" y="2464" width="32" height="32">
@@ -537,7 +531,6 @@
    </properties>
   </object>
   <object id="141" name="DragonFly" x="4160" y="1680" width="16" height="16"/>
-  <object id="142" name="TankBot" x="3856" y="1840" width="16" height="16"/>
   <object id="146" name="DragonFly" x="4544" y="1680" width="16" height="16"/>
   <object id="148" name="UFOhNoBot" x="4960" y="1792" width="32" height="32">
    <properties>
@@ -581,6 +574,7 @@
     <property name="wait" type="bool" value="false"/>
    </properties>
   </object>
+  <object id="454" name="DragonFly" x="4968" y="1680" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="9" name="specials">
   <object id="14" name="Ladder" x="480" y="2752" width="32" height="160"/>
@@ -717,7 +711,6 @@
   <object id="94" name="Gate" x="4064" y="2304" width="64" height="96">
    <properties>
     <property name="direction" value="right"/>
-    <property name="reset" type="bool" value="true"/>
     <property name="room" value="mini_boss_room_1"/>
    </properties>
   </object>
@@ -726,7 +719,6 @@
     <property name="boss_key" value="1"/>
     <property name="direction" value="right"/>
     <property name="mini_boss" type="bool" value="true"/>
-    <property name="reset" type="bool" value="true"/>
     <property name="room" value="room4"/>
    </properties>
   </object>
@@ -741,14 +733,12 @@
    <properties>
     <property name="boss_key" value="2"/>
     <property name="mini_boss" type="bool" value="true"/>
-    <property name="reset" type="bool" value="true"/>
     <property name="room" value="room7"/>
    </properties>
   </object>
   <object id="266" name="Gate" x="7008" y="1888" width="64" height="96">
    <properties>
     <property name="close" type="bool" value="false"/>
-    <property name="reset" type="bool" value="true"/>
     <property name="room" value="mini_boss_room_2"/>
    </properties>
   </object>
@@ -757,7 +747,6 @@
   <object id="340" name="Gate" x="9600" y="2688" width="64" height="96">
    <properties>
     <property name="close" type="bool" value="false"/>
-    <property name="reset" type="bool" value="true"/>
     <property name="room" value="mini_boss_room_3"/>
    </properties>
   </object>
@@ -768,7 +757,6 @@
   </object>
   <object id="431" name="Gate" x="12320" y="2656" width="64" height="96">
    <properties>
-    <property name="reset" type="bool" value="true"/>
     <property name="room" value="boss_room"/>
    </properties>
   </object>
@@ -781,7 +769,6 @@
    <properties>
     <property name="boss_key" value="3"/>
     <property name="mini_boss" type="bool" value="true"/>
-    <property name="reset" type="bool" value="true"/>
     <property name="room" value="room11"/>
    </properties>
   </object>
@@ -803,7 +790,7 @@
   </object>
  </objectgroup>
  <objectgroup id="13" name="temp">
-  <object id="451" name="0" x="3488" y="2528" width="32" height="32"/>
+  <object id="455" name="0" x="4232" y="2368" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="5" name="player">
   <object id="107" name="1" x="2304" y="2816" width="32" height="32"/>

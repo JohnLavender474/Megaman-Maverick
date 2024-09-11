@@ -500,6 +500,7 @@
   <object id="354" name="MoonFaceMiniBoss" x="10032" y="192" width="32" height="32">
    <properties>
     <property name="area" type="object" value="355"/>
+    <property name="boss_key" value="1"/>
     <property name="first" type="object" value="356"/>
     <property name="mini" type="bool" value="true"/>
    </properties>
@@ -805,13 +806,11 @@
   <object id="107" name="Death" x="5888" y="384" width="32" height="1056"/>
   <object id="361" name="Gate" x="9792" y="384" width="64" height="96">
    <properties>
-    <property name="reset" type="bool" value="true"/>
     <property name="room" value="mini_boss_room"/>
    </properties>
   </object>
   <object id="364" name="Gate" x="13312" y="1280" width="64" height="96">
    <properties>
-    <property name="reset" type="bool" value="true"/>
     <property name="room" value="boss_room"/>
    </properties>
   </object>
@@ -837,8 +836,8 @@
   <object id="508" name="Death" x="11808" y="1088" width="64" height="288"/>
   <object id="514" name="Gate" x="10304" y="384" width="64" height="96">
    <properties>
+    <property name="boss_key" value="1"/>
     <property name="mini_boss" type="bool" value="true"/>
-    <property name="reset" type="bool" value="true"/>
     <property name="room" value="room8"/>
    </properties>
   </object>

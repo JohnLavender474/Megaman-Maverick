@@ -116,6 +116,11 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     debugShapes.add { teleporterListenerFixture.getShape() }
 
     body.preProcess.put(ConstKeys.DEFAULT, Updatable {
+        if (!ready) {
+            body.physics.velocity.setZero()
+            return@Updatable
+        }
+
         val wallSlidingOnIce =
             isBehaviorActive(BehaviorType.WALL_SLIDING) &&
                     (body.isSensingAny(BodySense.SIDE_TOUCHING_ICE_LEFT, BodySense.SIDE_TOUCHING_ICE_RIGHT))
