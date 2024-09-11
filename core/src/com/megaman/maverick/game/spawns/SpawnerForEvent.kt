@@ -2,19 +2,17 @@ package com.megaman.maverick.game.spawns
 
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
-import com.mega.game.engine.GameEngine
 import com.mega.game.engine.events.Event
 import com.mega.game.engine.events.IEventListener
 
 class SpawnerForEvent(
-    engine: GameEngine,
     private val predicate: (Event) -> Boolean,
     private val spawnSupplier: () -> Spawn,
     override val eventKeyMask: ObjectSet<Any> = ObjectSet(),
     shouldBeCulled: (Float) -> Boolean = { false },
     onCull: () -> Unit = {},
     respawnable: Boolean = true
-) : Spawner(engine, shouldBeCulled, onCull, respawnable), IEventListener {
+) : Spawner(shouldBeCulled, onCull, respawnable), IEventListener {
 
     private val events = Array<Event>()
 

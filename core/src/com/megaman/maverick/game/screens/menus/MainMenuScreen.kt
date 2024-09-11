@@ -10,7 +10,6 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.getTextureRegion
-import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.interfaces.Initializable
 import com.mega.game.engine.common.time.Timer
@@ -31,7 +30,7 @@ import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
 import com.megaman.maverick.game.utils.getDefaultCameraPosition
 import com.megaman.maverick.game.utils.setToDefaultPosition
 
-class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainScreenButton.START_NEW_GAME.text),
+class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScreenButton.START_NEW_GAME.text),
     Initializable {
 
     enum class MainScreenButton(val text: String) {
@@ -60,8 +59,6 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
         private const val SETTINGS_TRANS_DUR = 0.5f
         private val SETTINGS_TRAJ = Vector3(15f * ConstVals.PPM, 0f, 0f)
     }
-
-    override val menuButtons = objectMapOf<String, IMenuButton>()
 
     private lateinit var background: Sprite
     /*
@@ -197,7 +194,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
         pose.setBounds(9f * ConstVals.PPM, -ConstVals.PPM / 12f, 6f * ConstVals.PPM, 6f * ConstVals.PPM)
          */
 
-        menuButtons.put(
+        buttons.put(
             MainScreenButton.START_NEW_GAME.text,
             object : IMenuButton {
                 override fun onSelect(delta: Float): Boolean {
@@ -213,7 +210,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
                 }
             })
 
-        menuButtons.put(
+        buttons.put(
             MainScreenButton.LOAD_PASSWORD.text,
             object : IMenuButton {
                 override fun onSelect(delta: Float): Boolean {
@@ -228,7 +225,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
                 }
             })
 
-        menuButtons.put(
+        buttons.put(
             MainScreenButton.LOAD_SAVE_FILE.text,
             object : IMenuButton {
                 override fun onSelect(delta: Float): Boolean {
@@ -253,7 +250,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
             }
         )
 
-        menuButtons.put(
+        buttons.put(
             MainScreenButton.SETTINGS.text,
             object : IMenuButton {
                 override fun onSelect(delta: Float): Boolean {
@@ -269,7 +266,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
                 }
             })
 
-        menuButtons.put(
+        buttons.put(
             MainScreenButton.CREDITS.text,
             object : IMenuButton {
                 override fun onSelect(delta: Float): Boolean {
@@ -284,7 +281,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
                 }
             })
 
-        menuButtons.put(
+        buttons.put(
             MainScreenButton.EXIT.text,
             object : IMenuButton {
                 override fun onSelect(delta: Float): Boolean {
@@ -299,7 +296,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
                 }
             })
 
-        menuButtons.put(
+        buttons.put(
             MainScreenSettingsButton.BACK.text,
             object : IMenuButton {
                 override fun onSelect(delta: Float): Boolean {
@@ -315,7 +312,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
                 }
             })
 
-        menuButtons.put(
+        buttons.put(
             MainScreenSettingsButton.MUSIC_VOLUME.text,
             object : IMenuButton {
                 override fun onSelect(delta: Float): Boolean {
@@ -342,7 +339,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
                 }
             })
 
-        menuButtons.put(
+        buttons.put(
             MainScreenSettingsButton.EFFECTS_VOLUME.text,
             object : IMenuButton {
                 override fun onSelect(delta: Float): Boolean {
@@ -369,7 +366,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
                 }
             })
 
-        menuButtons.put(
+        buttons.put(
             MainScreenSettingsButton.KEYBOARD_SETTINGS.text,
             object : IMenuButton {
                 override fun onSelect(delta: Float): Boolean {
@@ -384,7 +381,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MainS
                 }
             })
 
-        menuButtons.put(
+        buttons.put(
             MainScreenSettingsButton.CONTROLLER_SETTINGS.text,
             object : IMenuButton {
                 override fun onSelect(delta: Float): Boolean {

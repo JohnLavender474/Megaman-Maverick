@@ -13,6 +13,7 @@ import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
+import com.mega.game.engine.entities.contracts.IDrawableShapesEntity
 import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -21,7 +22,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.body.*
 
-open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity {
+open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity, IDrawableShapesEntity {
 
     companion object {
         const val TAG = "Block"

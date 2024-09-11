@@ -17,7 +17,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
-import com.megaman.maverick.game.controllers.ControllerButton
+import com.megaman.maverick.game.controllers.MegaControllerButtons
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.special.Cart
@@ -45,11 +45,11 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             ) return@FunctionalBehaviorImpl false
 
             if ((body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && game.controllerPoller.isPressed(
-                    if (isDirectionRotatedDown() || isDirectionRotatedRight()) ControllerButton.RIGHT
-                    else ControllerButton.LEFT
+                    if (isDirectionRotatedDown() || isDirectionRotatedRight()) MegaControllerButtons.RIGHT
+                    else MegaControllerButtons.LEFT
                 )) || body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) && game.controllerPoller.isPressed(
-                    if (isDirectionRotatedDown() || isDirectionRotatedRight()) ControllerButton.LEFT
-                    else ControllerButton.RIGHT
+                    if (isDirectionRotatedDown() || isDirectionRotatedRight()) MegaControllerButtons.LEFT
+                    else MegaControllerButtons.RIGHT
                 )
             ) {
                 if (damaged) {
@@ -107,7 +107,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 Direction.RIGHT -> body.physics.velocity.x > 0f
             }
             else {
-                val aButtonJustPressed = game.controllerPoller.isJustPressed(ControllerButton.A)
+                val aButtonJustPressed = game.controllerPoller.isJustPressed(MegaControllerButtons.A)
                 val doSwim = aButtonJustPressed && aButtonTask == AButtonTask.SWIM
                 doSwim
             }
@@ -130,8 +130,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             if (dead || !ready || !canMove || damaged || teleporting || isAnyBehaviorActive(
                     BehaviorType.SWIMMING, BehaviorType.CLIMBING, BehaviorType.JETPACKING
                 ) || body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) ||
-                !game.controllerPoller.isPressed(ControllerButton.A) ||
-                game.controllerPoller.isPressed(ControllerButton.DOWN)
+                !game.controllerPoller.isPressed(MegaControllerButtons.A) ||
+                game.controllerPoller.isPressed(MegaControllerButtons.DOWN)
             ) return@FunctionalBehaviorImpl false
 
             return@FunctionalBehaviorImpl if (isBehaviorActive(BehaviorType.JUMPING)) {
@@ -142,7 +142,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     Direction.LEFT -> velocity.x < 0f
                     Direction.RIGHT -> velocity.x > 0f
                 }
-            } else aButtonTask == AButtonTask.JUMP && game.controllerPoller.isJustPressed(ControllerButton.A) &&
+            } else aButtonTask == AButtonTask.JUMP && game.controllerPoller.isJustPressed(MegaControllerButtons.A) &&
                     (body.isSensing(BodySense.FEET_ON_GROUND) || isBehaviorActive(BehaviorType.WALL_SLIDING))
         },
         init = {
@@ -195,11 +195,11 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 )
             ) return false
 
-            return if (isBehaviorActive(BehaviorType.AIR_DASHING)) game.controllerPoller.isPressed(ControllerButton.A)
+            return if (isBehaviorActive(BehaviorType.AIR_DASHING)) game.controllerPoller.isPressed(MegaControllerButtons.A)
             else aButtonTask == AButtonTask.AIR_DASH && game.controllerPoller.allMatch(
                 objectMapOf(
-                    ControllerButton.A to ButtonStatus.JUST_PRESSED,
-                    ControllerButton.UP to ButtonStatus.RELEASED
+                    MegaControllerButtons.A to ButtonStatus.JUST_PRESSED,
+                    MegaControllerButtons.UP to ButtonStatus.RELEASED
                 )
             )
         }
@@ -271,12 +271,12 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     BehaviorType.RIDING_CART,
                     BehaviorType.JETPACKING
                 ) || !body.isSensing(BodySense.FEET_ON_GROUND) ||
-                !game.controllerPoller.isPressed(ControllerButton.DOWN)
+                !game.controllerPoller.isPressed(MegaControllerButtons.DOWN)
             ) return false
 
             return if (isBehaviorActive(BehaviorType.GROUND_SLIDING))
-                game.controllerPoller.isPressed(ControllerButton.A) && directionOnInit == directionRotation
-            else game.controllerPoller.isJustPressed(ControllerButton.A)
+                game.controllerPoller.isPressed(MegaControllerButtons.A) && directionOnInit == directionRotation
+            else game.controllerPoller.isJustPressed(MegaControllerButtons.A)
         }
 
         override fun init() {
@@ -381,17 +381,17 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     }
                 }
 
-                if (game.controllerPoller.isJustPressed(ControllerButton.A)) return false
+                if (game.controllerPoller.isJustPressed(MegaControllerButtons.A)) return false
 
                 return true
             }
 
             if (body.isSensing(BodySense.FEET_TOUCHING_LADDER) &&
-                game.controllerPoller.isPressed(ControllerButton.DOWN)
+                game.controllerPoller.isPressed(MegaControllerButtons.DOWN)
             ) return true
 
             if (body.isSensing(BodySense.HEAD_TOUCHING_LADDER) &&
-                game.controllerPoller.isPressed(ControllerButton.UP)
+                game.controllerPoller.isPressed(MegaControllerButtons.UP)
             ) return true
 
             return false
@@ -433,30 +433,30 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             }
 
             body.physics.velocity = (when (directionRotation!!) {
-                Direction.UP -> if (game.controllerPoller.isPressed(ControllerButton.UP))
+                Direction.UP -> if (game.controllerPoller.isPressed(MegaControllerButtons.UP))
                     Vector2(0f, MegamanValues.CLIMB_VEL)
-                else if (game.controllerPoller.isPressed(ControllerButton.DOWN))
+                else if (game.controllerPoller.isPressed(MegaControllerButtons.DOWN))
                     Vector2(0f, MegamanValues.CLIMB_VEL * -1f)
                 else Vector2()
 
-                Direction.DOWN -> if (game.controllerPoller.isPressed(ControllerButton.DOWN))
+                Direction.DOWN -> if (game.controllerPoller.isPressed(MegaControllerButtons.DOWN))
                     Vector2(0f, MegamanValues.CLIMB_VEL)
-                else if (game.controllerPoller.isPressed(ControllerButton.UP))
+                else if (game.controllerPoller.isPressed(MegaControllerButtons.UP))
                     Vector2(0f, MegamanValues.CLIMB_VEL * -1f)
                 else Vector2()
 
                 Direction.LEFT -> {
-                    if (game.controllerPoller.isPressed(ControllerButton.UP))
+                    if (game.controllerPoller.isPressed(MegaControllerButtons.UP))
                         Vector2(MegamanValues.CLIMB_VEL * -1f, 0f)
-                    else if (game.controllerPoller.isPressed(ControllerButton.DOWN))
+                    else if (game.controllerPoller.isPressed(MegaControllerButtons.DOWN))
                         Vector2(MegamanValues.CLIMB_VEL, 0f)
                     else Vector2()
                 }
 
                 Direction.RIGHT -> {
-                    if (game.controllerPoller.isPressed(ControllerButton.UP))
+                    if (game.controllerPoller.isPressed(MegaControllerButtons.UP))
                         Vector2(MegamanValues.CLIMB_VEL, 0f)
-                    else if (game.controllerPoller.isPressed(ControllerButton.DOWN))
+                    else if (game.controllerPoller.isPressed(MegaControllerButtons.DOWN))
                         Vector2(MegamanValues.CLIMB_VEL * -1f, 0f)
                     else Vector2()
                 }
@@ -476,7 +476,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
         override fun evaluate(delta: Float) =
             !dead && ready && body.isSensing(BodySense.TOUCHING_CART) &&
-                    !game.controllerPoller.areAllPressed(gdxArrayOf(ControllerButton.A, ControllerButton.UP))
+                    !game.controllerPoller.areAllPressed(gdxArrayOf(MegaControllerButtons.A, MegaControllerButtons.UP))
 
         override fun init() {
             body.physics.velocity.setZero()
@@ -546,18 +546,18 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
         override fun evaluate(delta: Float): Boolean {
             if (dead || !ready || !canMove || damaged || teleporting || currentWeapon != MegamanWeapon.RUSH_JETPACK ||
-                !game.controllerPoller.areAllPressed(gdxArrayOf(ControllerButton.A, ControllerButton.UP)) ||
+                !game.controllerPoller.areAllPressed(gdxArrayOf(MegaControllerButtons.A, MegaControllerButtons.UP)) ||
                 body.isSensing(BodySense.FEET_ON_GROUND) || weaponHandler.isDepleted(MegamanWeapon.RUSH_JETPACK) ||
                 isAnyBehaviorActive(BehaviorType.WALL_SLIDING, BehaviorType.AIR_DASHING, BehaviorType.GROUND_SLIDING)
             ) return false
 
             return if (isBehaviorActive(BehaviorType.JETPACKING)) game.controllerPoller.areAllPressed(
-                gdxArrayOf(ControllerButton.A, ControllerButton.UP)
+                gdxArrayOf(MegaControllerButtons.A, MegaControllerButtons.UP)
             )
             else game.controllerPoller.allMatch(
                 objectMapOf(
-                    ControllerButton.UP to ButtonStatus.PRESSED,
-                    ControllerButton.A to ButtonStatus.JUST_PRESSED
+                    MegaControllerButtons.UP to ButtonStatus.PRESSED,
+                    MegaControllerButtons.A to ButtonStatus.JUST_PRESSED
                 )
             )
         }

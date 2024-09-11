@@ -7,7 +7,7 @@ import com.mega.game.engine.world.collisions.ICollisionHandler
 import com.mega.game.engine.world.collisions.StandardCollisionHandler
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.behaviors.BehaviorType
-import com.megaman.maverick.game.controllers.ControllerButton
+import com.megaman.maverick.game.controllers.MegaControllerButtons
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.world.body.*
 
@@ -32,7 +32,7 @@ class MegaCollisionHandler(private val game: MegamanMaverickGame) : ICollisionHa
         if (staticBody.hasBlockFilter(dynamicBody.getEntity().getTag())) return true
 
         if (staticBody.hasBodyLabel(BodyLabel.PRESS_UP_FALL_THRU) && dynamicBody == megaman.body &&
-            megaman.isBehaviorActive(BehaviorType.CLIMBING) && game.controllerPoller.isJustPressed(ControllerButton.UP)
+            megaman.isBehaviorActive(BehaviorType.CLIMBING) && game.controllerPoller.isJustPressed(MegaControllerButtons.UP)
         ) {
             dynamicBody.setMaxY(staticBody.getMaxY())
             return true

@@ -8,19 +8,21 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
-import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameLine
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
-import com.mega.game.engine.drawables.sprites.GameSprite
-import com.mega.game.engine.drawables.sprites.SpritesComponent
-import com.mega.game.engine.drawables.sprites.setPosition
-import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
+import com.mega.game.engine.drawables.sprites.*
 import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.IMotionEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.motion.MotionComponent
@@ -41,23 +43,34 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 
-class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IMotionEntity {
+class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IMotionEntity,
+    ICullableEntity, IFaceable {
 
     companion object {
         const val TAG = "Saw"
         const val PENDULUM_TYPE = "p"
         const val ROTATION_TYPE = "r"
         const val TRAJECTORY_TYPE = "t"
-        private var region: TextureRegion? = null
+        private var sawRegion: TextureRegion? = null
+        private var ringRegion: TextureRegion? = null
         private const val LENGTH = 3f
         private const val ROTATION_SPEED = 2f
         private const val PENDULUM_GRAVITY = 10f
+        private const val RING_COUNT = 6
     }
+
+    override lateinit var facing: Facing
+
+    override fun getTag() = TAG
 
     override fun getEntityType() = EntityType.HAZARD
 
     override fun init() {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
+        if (sawRegion == null || ringRegion == null) {
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
+            sawRegion = atlas.findRegion("$TAG/saw")
+            ringRegion = atlas.findRegion("$TAG/ring")
+        }
         addComponent(defineBodyComponent())
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
@@ -66,12 +79,9 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-
         clearMotionDefinitions()
-
         val bounds = spawnProps.get(ConstKeys.BOUNDS) as GameRectangle
         val type = spawnProps.get(ConstKeys.TYPE) as String
-
         when (type.lowercase()) {
             PENDULUM_TYPE -> setToPendulum(bounds)
             ROTATION_TYPE -> setToRotation(bounds, spawnProps)
@@ -80,6 +90,7 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
                 setToTrajectory(bounds, trajectory)
             }
         }
+        facing = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, "left", String::class).uppercase())
     }
 
     private fun setToPendulum(bounds: GameRectangle) {
@@ -94,9 +105,16 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
             })
         )
 
-        val shapes = Array<() -> IDrawableShape?>()
+        for (i in 0..RING_COUNT) putUpdateFunction("ring_$i") { _, _sprite ->
+            val distance = (i.toFloat() / RING_COUNT.toFloat()) * pendulum.length
+            val center = pendulum.getPointFromAnchor(distance)
+            _sprite.setCenter(center)
+            _sprite.hidden = false
+        }
 
-        shapes.add {
+        val debugShapes = Array<() -> IDrawableShape?>()
+
+        debugShapes.add {
             val line = GameLine(pendulum.anchor, body.getCenter())
             line.color = Color.DARK_GRAY
             line.shapeType = ShapeRenderer.ShapeType.Filled
@@ -108,15 +126,15 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
         circle1.setRadius(ConstVals.PPM / 8f)
         circle1.shapeType = ShapeRenderer.ShapeType.Filled
         circle1.color = Color.DARK_GRAY
-        shapes.add { circle1.setCenter(pendulum.anchor) }
+        debugShapes.add { circle1.setCenter(pendulum.anchor) }
 
         val circle2 = GameCircle()
         circle2.setRadius(ConstVals.PPM / 4f)
         circle2.shapeType = ShapeRenderer.ShapeType.Filled
         circle2.color = Color.DARK_GRAY
-        shapes.add { circle2.setCenter(body.getCenter()) }
+        debugShapes.add { circle2.setCenter(body.getCenter()) }
 
-        addComponent(DrawableShapesComponent(shapes))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
     }
 
     private fun setToRotation(bounds: GameRectangle, spawnProps: Properties) {
@@ -130,14 +148,19 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
             )
         putMotionDefinition(
             ConstKeys.ROTATION,
-            MotionDefinition(motion = rotation, function = { value, _ ->
-                body.setCenter(value)
-            })
+            MotionDefinition(motion = rotation, function = { value, _ -> body.setCenter(value) })
         )
 
-        val shapes = Array<() -> IDrawableShape?>()
+        for (i in 0..RING_COUNT) putUpdateFunction("ring_$i") { _, _sprite ->
+            val scale = i.toFloat() / RING_COUNT.toFloat()
+            val center = rotation.getScaledPosition(scale)
+            _sprite.setCenter(center)
+            _sprite.hidden = false
+        }
 
-        shapes.add {
+        val debugShapes = Array<() -> IDrawableShape?>()
+
+        debugShapes.add {
             val line = GameLine(rotation.getOrigin(), body.getCenter())
             line.color = Color.DARK_GRAY
             line.shapeType = ShapeRenderer.ShapeType.Filled
@@ -149,15 +172,15 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
         circle1.setRadius(ConstVals.PPM / 8f)
         circle1.color = Color.DARK_GRAY
         circle1.shapeType = ShapeRenderer.ShapeType.Filled
-        shapes.add { circle1.setCenter(rotation.getOrigin()) }
+        debugShapes.add { circle1.setCenter(rotation.getOrigin()) }
 
         val circle2 = GameCircle()
         circle2.setRadius(ConstVals.PPM / 4f)
         circle2.color = Color.DARK_GRAY
         circle2.shapeType = ShapeRenderer.ShapeType.Filled
-        shapes.add { circle2.setCenter(body.getCenter()) }
+        debugShapes.add { circle2.setCenter(body.getCenter()) }
 
-        addComponent(DrawableShapesComponent(shapes))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
     }
 
     private fun setToTrajectory(bounds: GameRectangle, trajectoryDefinition: String) {
@@ -172,6 +195,8 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
                 function = { value, _ -> body.setCenter(value) },
                 onReset = { body.setCenter(spawn) })
         )
+
+        for (i in 0..RING_COUNT) putUpdateFunction("ring_$i") { _, _sprite -> _sprite.hidden = true }
     }
 
     private fun defineBodyComponent(): BodyComponent {
@@ -193,17 +218,27 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
     }
 
     private fun defineSpritesCompoent(): SpritesComponent {
-        val sprite = GameSprite()
-        sprite.setSize(2f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
+        val spritesComponent = SpritesComponent()
+
+        val sawSprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
+        sawSprite.setSize(2f * ConstVals.PPM)
+        spritesComponent.sprites.put("saw", sawSprite)
+        spritesComponent.putUpdateFunction("saw") { _, _sprite ->
             _sprite.setPosition(body.getCenter(), Position.CENTER)
+            _sprite.setFlip(isFacing(Facing.LEFT), false)
         }
+
+        for (i in 0..RING_COUNT) {
+            val ringSprite = GameSprite(ringRegion!!, DrawingPriority(DrawingSection.FOREGROUND, 1))
+            ringSprite.setSize(0.5f * ConstVals.PPM)
+            spritesComponent.sprites.put("ring_$i", ringSprite)
+        }
+
         return spritesComponent
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val animation = Animation(region!!, 1, 2, 0.1f, true)
+        val animation = Animation(sawRegion!!, 1, 2, 0.1f, true)
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }

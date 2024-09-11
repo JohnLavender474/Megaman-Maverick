@@ -176,8 +176,8 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
             val childIter = children.iterator()
             while (childIter.hasNext()) {
-                val child = childIter.next()
-                if (!(child as MegaGameEntity).spawned) childIter.remove()
+                val child = childIter.next() as MegaGameEntity
+                if (child.dead) childIter.remove()
             }
 
             when (stateLoop.getCurrent()) {

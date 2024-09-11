@@ -151,7 +151,12 @@ public class DesktopLauncher {
         try {
             new Lwjgl3Application(game, config);
         } catch (Exception e) {
-            System.err.println("Exception while running game: " + e.getMessage());
+            System.err.println("Exception while running game!");
+            System.err.println("Exception message: " + e.getMessage());
+            System.err.println("Exception cause: " + e.getCause());
+            System.err.println("Exception stacktrace: ");
+            //noinspection CallToPrintStackTrace
+            e.printStackTrace();
             game.dispose();
         }
     }

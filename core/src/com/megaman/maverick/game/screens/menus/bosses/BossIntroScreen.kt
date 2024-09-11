@@ -199,8 +199,6 @@ class BossIntroScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
         audioMan.playMusic(null, true)
     }
 
-    override fun dispose() {
-        audioMan.stopMusic(null)
-    }
+    override fun hide() = audioMan.stopMusic(null)
 }
 

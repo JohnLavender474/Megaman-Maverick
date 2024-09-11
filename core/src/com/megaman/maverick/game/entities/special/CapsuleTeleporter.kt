@@ -135,9 +135,9 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
 
         game.eventsMan.removeListener(this)
 
-        upperBlock?.let { it.destroy() }
+        upperBlock?.destroy()
         upperBlock = null
-        lowerBlock?.let { it.destroy() }
+        lowerBlock?.destroy()
         lowerBlock = null
 
         outgoingBodies.clear()

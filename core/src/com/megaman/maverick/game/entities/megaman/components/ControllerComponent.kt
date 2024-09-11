@@ -7,7 +7,7 @@ import com.mega.game.engine.controller.buttons.ButtonActuator
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.behaviors.BehaviorType
-import com.megaman.maverick.game.controllers.ControllerButton
+import com.megaman.maverick.game.controllers.MegaControllerButtons
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
@@ -24,8 +24,8 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
     val left = ButtonActuator(onJustPressed = { _ ->
         GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "left actuator just pressed")
     }, onPressContinued = { poller, delta ->
-        if (!canMove || !ready || damaged || poller.isPressed(ControllerButton.RIGHT) || teleporting) {
-            if (!poller.isPressed(ControllerButton.RIGHT)) running = false
+        if (!canMove || !ready || damaged || poller.isPressed(MegaControllerButtons.RIGHT) || teleporting) {
+            if (!poller.isPressed(MegaControllerButtons.RIGHT)) running = false
             return@ButtonActuator
         }
 
@@ -45,16 +45,16 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
             body.physics.velocity.y -= impulse * delta * movementScalar * ConstVals.PPM
     }, onJustReleased = { poller ->
         GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "left actuator just released")
-        if (!poller.isPressed(ControllerButton.RIGHT)) running = false
+        if (!poller.isPressed(MegaControllerButtons.RIGHT)) running = false
     }, onReleaseContinued = { poller, _ ->
-        if (!poller.isPressed(ControllerButton.RIGHT)) running = false
+        if (!poller.isPressed(MegaControllerButtons.RIGHT)) running = false
     })
 
     val right = ButtonActuator(onJustPressed = { _ ->
         GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "right actuator just pressed")
     }, onPressContinued = { poller, delta ->
-        if (!canMove || !ready || damaged || poller.isPressed(ControllerButton.LEFT) || teleporting) {
-            if (!poller.isPressed(ControllerButton.LEFT)) running = false
+        if (!canMove || !ready || damaged || poller.isPressed(MegaControllerButtons.LEFT) || teleporting) {
+            if (!poller.isPressed(MegaControllerButtons.LEFT)) running = false
             return@ButtonActuator
         }
 
@@ -72,9 +72,9 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
         else if (isDirectionRotatedHorizontally() && body.physics.velocity.y < threshold) body.physics.velocity.y += impulse * delta * movementScalar * ConstVals.PPM
     }, onJustReleased = { poller ->
         GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "right actuator just released")
-        if (!poller.isPressed(ControllerButton.LEFT)) running = false
+        if (!poller.isPressed(MegaControllerButtons.LEFT)) running = false
     }, onReleaseContinued = { poller, _ ->
-        if (!poller.isPressed(ControllerButton.LEFT)) running = false
+        if (!poller.isPressed(MegaControllerButtons.LEFT)) running = false
     })
 
     val attack = ButtonActuator(
@@ -106,8 +106,8 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
         setToNextWeapon()
     })
 
-    return ControllerComponent(ControllerButton.LEFT to { left },
-        ControllerButton.RIGHT to { right },
-        ControllerButton.B to { attack },
-        ControllerButton.SELECT to { changeWeapon })
+    return ControllerComponent(MegaControllerButtons.LEFT to { left },
+        MegaControllerButtons.RIGHT to { right },
+        MegaControllerButtons.B to { attack },
+        MegaControllerButtons.SELECT to { changeWeapon })
 }

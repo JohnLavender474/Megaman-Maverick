@@ -39,7 +39,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.controllers.ControllerButton
+import com.megaman.maverick.game.controllers.MegaControllerButtons
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -55,12 +55,12 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         private const val BLINK_WHITE_DUR = 0.3f
         private const val SIZE_INCREASE_PER_SECOND = 0.5f
         private val BUTTONS_TO_GET_UNSTUCK = gdxArrayOf<Any>(
-            ControllerButton.UP,
-            ControllerButton.DOWN,
-            ControllerButton.LEFT,
-            ControllerButton.RIGHT,
-            ControllerButton.A,
-            ControllerButton.B
+            MegaControllerButtons.UP,
+            MegaControllerButtons.DOWN,
+            MegaControllerButtons.LEFT,
+            MegaControllerButtons.RIGHT,
+            MegaControllerButtons.A,
+            MegaControllerButtons.B
         )
         private val WEBS_STUCK_TO_MEGAMAN = ObjectSet<SpiderWeb>()
         private var blinkWhiteRegion: TextureRegion? = null

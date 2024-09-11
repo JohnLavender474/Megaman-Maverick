@@ -1,16 +1,11 @@
 package com.megaman.maverick.game.controllers
 
-import com.mega.game.engine.world.body.*;
-import com.mega.game.engine.world.collisions.*;
-import com.mega.game.engine.world.contacts.*;
-import com.mega.game.engine.world.pathfinding.*;
-
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.controller.ControllerUtils
-import com.mega.game.engine.controller.buttons.Buttons
+import com.mega.game.engine.controller.buttons.ControllerButtons
 import com.mega.game.engine.controller.polling.ControllerPoller
 
-class MegaControllerPoller(buttons: Buttons) : ControllerPoller(buttons) {
+class MegaControllerPoller(controllerButtons: ControllerButtons) : ControllerPoller(controllerButtons) {
 
     companion object {
         const val TAG = "MegaControllerPoller"
@@ -25,9 +20,9 @@ class MegaControllerPoller(buttons: Buttons) : ControllerPoller(buttons) {
             val controller = ControllerUtils.getController()
             if (controller != null) {
                 controllerConnected = true
-                buttons.forEach {
+                controllerButtons.forEach {
                     it.value.controllerCode = ControllerUtils.getControllerCode(
-                        controller, it.key as ControllerButton
+                        controller, it.key as MegaControllerButtons
                     )
                 }
             }
@@ -35,7 +30,7 @@ class MegaControllerPoller(buttons: Buttons) : ControllerPoller(buttons) {
 
         if (controllerConnected && !ControllerUtils.isControllerConnected()) {
             controllerConnected = false
-            buttons.forEach { it.value.controllerCode = null }
+            controllerButtons.forEach { it.value.controllerCode = null }
         }
 
         super.run()

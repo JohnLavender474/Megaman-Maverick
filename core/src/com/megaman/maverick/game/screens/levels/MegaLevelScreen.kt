@@ -18,6 +18,7 @@ import com.mega.game.engine.common.extensions.isAny
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.extensions.vector2Of
 import com.mega.game.engine.common.interfaces.Initializable
+import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.toGameRectangle
@@ -39,7 +40,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
-import com.megaman.maverick.game.controllers.ControllerButton
+import com.megaman.maverick.game.controllers.MegaControllerButtons
 import com.megaman.maverick.game.drawables.sprites.Background
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntitiesMap
@@ -67,7 +68,7 @@ import com.megaman.maverick.game.utils.toProps
 import java.util.*
 
 class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScreen(game.batch), Initializable,
-    IEventListener {
+    IEventListener, Resettable {
 
     companion object {
         const val TAG = "MegaLevelScreen"
@@ -248,7 +249,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
     }
 
     override fun show() {
-        dispose()
         EntityFactories.init()
         if (!initialized) init()
         super.show()
@@ -549,7 +549,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
     }
 
     override fun render(delta: Float) {
-        if (controllerPoller.isJustPressed(ControllerButton.START) &&
+        if (controllerPoller.isJustPressed(MegaControllerButtons.START) &&
             playerStatsHandler.finished &&
             playerSpawnEventHandler.finished &&
             playerDeathEventHandler.finished &&
@@ -644,25 +644,37 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
         if (!game.paused && !cameraShaker.isFinished) cameraShaker.update(delta)
     }
 
-    override fun dispose() {
-        GameLogger.debug(TAG, "dispose(): Disposing level screen")
-        super.dispose()
+    override fun hide() {
+        super.hide()
+        pause()
+    }
+
+    override fun reset() {
+        GameLogger.debug(TAG, "reset(): Resetting level screen")
         EntityFactories.clear()
+        engine.reset()
+        eventsMan.removeListener(this)
         spawns.clear()
-        if (initialized) {
-            disposables.forEach { it.dispose() }
-            disposables.clear()
-            engine.reset()
-            audioMan.stopMusic()
-            eventsMan.removeListener(this)
-            spawnsMan.reset()
-            playerSpawnsMan.reset()
-            cameraManagerForRooms.reset()
-        }
+        spawnsMan.reset()
+        playerSpawnsMan.reset()
+        cameraManagerForRooms.reset()
         game.putProperty(ConstKeys.ROOM_TRANSITION, false)
     }
 
-    override fun pause() = levelStateHandler.pause()
+    override fun dispose() {
+        GameLogger.debug(TAG, "dispose(): Disposing level screen")
+        super.dispose()
+        disposables.forEach { it.dispose() }
+        disposables.clear()
+    }
 
-    override fun resume() = levelStateHandler.resume()
+    override fun pause() {
+        audioMan.pauseMusic()
+        levelStateHandler.pause()
+    }
+
+    override fun resume() {
+        audioMan.playMusic()
+        levelStateHandler.resume()
+    }
 }

@@ -319,13 +319,13 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
             while (runningMetIter.hasNext()) {
                 val met = runningMetIter.next()
                 if (met.body.getMaxX() <= killerWall.getMaxX()) met.destroy()
-                if (!met.spawned) runningMetIter.remove()
+                if (met.dead) runningMetIter.remove()
             }
 
             val flyingMetIter = flyingMetsSet.iterator()
             while (flyingMetIter.hasNext()) {
                 val met = flyingMetIter.next()
-                if (!met.spawned) flyingMetIter.remove()
+                if (met.dead) flyingMetIter.remove()
             }
 
             if (!tankBlock!!.body.getCenter()
@@ -349,7 +349,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                 }
             }
 
-            if (fist != null && !fist!!.spawned) fist = null
+            if (fist != null && fist!!.dead) fist = null
             if (fist?.fistState == GutsTankFist.GutsTankFistState.ATTACHED) {
                 launchFistDelayTimer.update(delta)
                 if (launchFistDelayTimer.isFinished() && !fist!!.body.overlaps(getMegaman().body as Rectangle)) {

@@ -117,7 +117,7 @@ class Lift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IDirectionR
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
         val megaman = game.megaman
-        val megamanOverlapping = megaman.spawned && getMegaman().body.fixtures.any {
+        val megamanOverlapping = !megaman.dead && getMegaman().body.fixtures.any {
             it.second.getFixtureType().equalsAny(
                 FixtureType.SIDE, FixtureType.FEET
             ) && it.second.getShape().overlaps(body)

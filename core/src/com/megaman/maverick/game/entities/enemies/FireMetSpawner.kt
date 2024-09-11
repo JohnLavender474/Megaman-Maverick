@@ -110,8 +110,8 @@ class FireMetSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParentE
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         val iter = children.iterator()
         while (iter.hasNext()) {
-            val child = iter.next()
-            if (!(child as MegaGameEntity).spawned) iter.remove()
+            val child = iter.next() as MegaGameEntity
+            if (child.dead) iter.remove()
         }
 
         if (children.size < maxToSpawn) {

@@ -13,6 +13,7 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Position.Companion.get
+import com.mega.game.engine.common.interfaces.Initializable
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.fonts.BitmapFontHandle
@@ -24,7 +25,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.bosses.BossType
 import com.megaman.maverick.game.screens.ScreenEnum
-import com.megaman.maverick.game.screens.menus.AbstractMenuScreen
+import com.megaman.maverick.game.screens.menus.MegaMenuScreen
 import com.megaman.maverick.game.screens.utils.BlinkingArrow
 import com.megaman.maverick.game.screens.utils.ScreenSlide
 import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
@@ -32,7 +33,7 @@ import com.megaman.maverick.game.utils.getDefaultCameraPosition
 import java.util.*
 import java.util.function.Supplier
 
-class BossSelectScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MEGA_MAN) {
+class BossSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MEGA_MAN), Initializable {
 
     companion object {
         private val INTRO_BLOCKS_TRANS = Vector3(15f * ConstVals.PPM, 0f, 0f)
@@ -42,7 +43,6 @@ class BossSelectScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MEG
     }
 
     private val bNameSet = ObjectSet<String>()
-    private val bName: BitmapFontHandle
     private val slide = ScreenSlide(
         game.getUiCamera(),
         INTRO_BLOCKS_TRANS,
@@ -60,79 +60,73 @@ class BossSelectScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MEG
     private val bkgd = Array<Sprite>()
     private val bars = ObjectMap<Sprite, Animation>()
     private val bArrs = ObjectMap<String, BlinkingArrow>()
-
+    private lateinit var bName: BitmapFontHandle
     private var outro = false
     private var blink = false
     private var bSelect: BossType? = null
+    private var initialized = false
 
-    private var _menuButtons: ObjectMap<String, IMenuButton>? = null
+    override fun init() {
+        if (initialized) return
 
-    override val menuButtons: ObjectMap<String, IMenuButton>
-        get() {
-            if (_menuButtons != null) return _menuButtons!!
+        buttons.put(MEGA_MAN, object : IMenuButton {
 
-            _menuButtons = ObjectMap()
-            _menuButtons!!.put(MEGA_MAN, object : IMenuButton {
+            override fun onSelect(delta: Float) = false
 
-                override fun onSelect(delta: Float) = false
-
-                override fun onNavigate(direction: Direction, delta: Float): String? {
-                    return when (direction) {
-                        Direction.UP -> BossType.findByPos(1, 2).name
-                        Direction.DOWN -> BossType.findByPos(1, 0).name
-                        Direction.LEFT -> BossType.findByPos(0, 1).name
-                        Direction.RIGHT -> BossType.findByPos(2, 1).name
-                    }
+            override fun onNavigate(direction: Direction, delta: Float): String? {
+                return when (direction) {
+                    Direction.UP -> BossType.findByPos(1, 2).name
+                    Direction.DOWN -> BossType.findByPos(1, 0).name
+                    Direction.LEFT -> BossType.findByPos(0, 1).name
+                    Direction.RIGHT -> BossType.findByPos(2, 1).name
                 }
-            })
-            _menuButtons!!.put(BACK, object : IMenuButton {
+            }
+        })
+        buttons.put(BACK, object : IMenuButton {
+            override fun onSelect(delta: Float): Boolean {
+                game.setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
+                return true
+            }
+
+            override fun onNavigate(direction: Direction, delta: Float): String? {
+                return when (direction) {
+                    Direction.UP, Direction.LEFT, Direction.RIGHT -> BossType.findByPos(2, 0).name
+                    Direction.DOWN -> BossType.findByPos(2, 2).name
+                }
+            }
+        })
+        for (boss in BossType.values()) {
+            buttons.put(boss.name, object : IMenuButton {
                 override fun onSelect(delta: Float): Boolean {
-                    game.setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
+                    game.audioMan.playSound(SoundAsset.BEAM_OUT_SOUND, false)
+                    game.audioMan.stopMusic(null)
+                    bSelect = boss
+                    outro = true
                     return true
                 }
 
                 override fun onNavigate(direction: Direction, delta: Float): String? {
-                    return when (direction) {
-                        Direction.UP, Direction.LEFT, Direction.RIGHT -> BossType.findByPos(2, 0).name
-                        Direction.DOWN -> BossType.findByPos(2, 2).name
+                    var x = boss.position.x
+                    var y = boss.position.y
+                    when (direction) {
+                        Direction.UP -> y += 1
+                        Direction.DOWN -> y -= 1
+                        Direction.LEFT -> x -= 1
+                        Direction.RIGHT -> x += 1
+                    }
+                    if (y < 0 || y > 2) return BACK
+                    if (x < 0) x = 2
+                    if (x > 2) x = 0
+                    val position = get(x, y)
+                    return when (position) {
+                        null -> throw IllegalStateException()
+                        Position.CENTER -> MEGA_MAN
+                        else -> BossType.findByPos(x, y).name
                     }
                 }
             })
-            for (boss in BossType.values()) {
-                _menuButtons!!.put(boss.name, object : IMenuButton {
-                    override fun onSelect(delta: Float): Boolean {
-                        game.audioMan.playSound(SoundAsset.BEAM_OUT_SOUND, false)
-                        game.audioMan.stopMusic(null)
-                        bSelect = boss
-                        outro = true
-                        return true
-                    }
-
-                    override fun onNavigate(direction: Direction, delta: Float): String? {
-                        var x = boss.position.x
-                        var y = boss.position.y
-                        when (direction) {
-                            Direction.UP -> y += 1
-                            Direction.DOWN -> y -= 1
-                            Direction.LEFT -> x -= 1
-                            Direction.RIGHT -> x += 1
-                        }
-                        if (y < 0 || y > 2) return BACK
-                        if (x < 0) x = 2
-                        if (x > 2) x = 0
-                        val position = get(x, y)
-                        return when (position) {
-                            null -> throw IllegalStateException()
-                            Position.CENTER -> MEGA_MAN
-                            else -> BossType.findByPos(x, y).name
-                        }
-                    }
-                })
-            }
-            return _menuButtons!!
         }
 
-    init {
         for (b in BossType.values()) bNameSet.add(b.name)
         val outTimerRunnable = Array<TimeMarkedRunnable>()
         for (i in 1..10) {
@@ -235,6 +229,10 @@ class BossSelectScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MEG
     }
 
     override fun show() {
+        if (!initialized) {
+            init()
+            initialized = true
+        }
         super.show()
         slide.init()
         outro = false
@@ -281,7 +279,7 @@ class BossSelectScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, MEG
         if (bArrs.containsKey(currentButtonKey)) bArrs.get(currentButtonKey).draw(batch)
         for (text in t) text.draw(batch)
         if (MEGA_MAN == currentButtonKey || bNameSet.contains(currentButtonKey)) {
-            bName.textSupplier = { currentButtonKey.uppercase(Locale.getDefault()) }
+            bName.textSupplier = { currentButtonKey!!.uppercase(Locale.getDefault()) }
             bName.draw(batch)
         }
         batch.end()

@@ -214,7 +214,8 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         SealionBall::class to dmgNeg(3),
         YellowTiggerSquirt::class to dmgNeg(3),
         UFOhNoBot::class to dmgNeg(3),
-        TankBot::class to dmgNeg(3)
+        TankBot::class to dmgNeg(3),
+        Darspider::class to dmgNeg(3)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 
@@ -382,7 +383,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        GameLogger.debug(TAG, "spawn(): spawnProps = $spawnProps")
+        GameLogger.debug(TAG, "onSpawn(): spawnProps = $spawnProps")
         super.onSpawn(spawnProps)
 
         setHealth(getMaxHealth())

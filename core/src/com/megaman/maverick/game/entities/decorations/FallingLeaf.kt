@@ -19,6 +19,7 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
@@ -28,7 +29,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 
-class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity {
+class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, ICullableEntity {
 
     companion object {
         const val TAG = "FallingLeaf"

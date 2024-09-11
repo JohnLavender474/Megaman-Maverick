@@ -27,9 +27,10 @@ import com.mega.game.engine.common.objects.MultiCollectionIterable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.controller.ControllerSystem
 import com.mega.game.engine.controller.ControllerUtils
-import com.mega.game.engine.controller.buttons.Buttons
+import com.mega.game.engine.controller.buttons.ControllerButtons
 import com.mega.game.engine.controller.polling.IControllerPoller
 import com.mega.game.engine.cullables.CullablesSystem
+import com.mega.game.engine.cullables.GameEntityCuller
 import com.mega.game.engine.drawables.IDrawable
 import com.mega.game.engine.drawables.fonts.FontsSystem
 import com.mega.game.engine.drawables.shapes.DrawableShapesSystem
@@ -37,6 +38,8 @@ import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sorting.IComparableDrawable
 import com.mega.game.engine.drawables.sprites.SpritesSystem
+import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.events.Event
 import com.mega.game.engine.events.EventsManager
 import com.mega.game.engine.events.IEventListener
@@ -64,11 +67,12 @@ import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.MegaControllerPoller
 import com.megaman.maverick.game.controllers.loadButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
+import com.megaman.maverick.game.entities.hazards.Saw
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
-import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
@@ -82,7 +86,7 @@ import com.megaman.maverick.game.screens.menus.bosses.BossSelectScreen
 import com.megaman.maverick.game.screens.other.CreditsScreen
 import com.megaman.maverick.game.screens.other.SimpleEndLevelScreen
 import com.megaman.maverick.game.screens.other.SimpleInitGameScreen
-import com.megaman.maverick.game.spawns.SpawnerFactory
+import com.megaman.maverick.game.spawns.debugFilterByEntityTag
 import com.megaman.maverick.game.utils.getMusics
 import com.megaman.maverick.game.utils.getSounds
 import com.megaman.maverick.game.world.body.FixtureType
@@ -109,7 +113,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
 
     companion object {
         const val TAG = "MegamanMaverickGame"
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(Bullet.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.WATER, FixtureType.WATER_LISTENER)
         }
@@ -128,7 +132,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
 
     lateinit var batch: SpriteBatch
     lateinit var shapeRenderer: ShapeRenderer
-    lateinit var buttons: Buttons
+    lateinit var buttons: ControllerButtons
     lateinit var controllerPoller: IControllerPoller
     lateinit var assMan: AssetManager
     lateinit var eventsMan: EventsManager
@@ -145,7 +149,10 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
 
     fun setCurrentScreen(key: String) {
         GameLogger.debug(TAG, "setCurrentScreen: set to screen with key = $key")
-        currentScreenKey?.let { screens[it] }?.dispose()
+        currentScreenKey?.let { screens[it] }?.let {
+            it.hide()
+            it.reset()
+        }
         currentScreenKey = key
         screens[key]?.let { nextScreen ->
             nextScreen.show()
@@ -194,6 +201,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
         GameLogger.filterByTag = true
         GameLogger.tagsToLog.addAll(TAGS_TO_LOG)
         GameLogger.debug(TAG, "create()")
+        debugFilterByEntityTag.addAll(Saw.TAG)
 
         shapeRenderer = ShapeRenderer()
         shapeRenderer.setAutoShapeType(true)
@@ -206,7 +214,6 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
         eventsMan.addListener(this)
 
         engine = createGameEngine()
-        SpawnerFactory.engine = engine
 
         val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
         val screenHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
@@ -219,8 +226,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
         val uiViewport = FitViewport(screenWidth, screenHeight)
         viewports.put(ConstKeys.UI, uiViewport)
 
-        // debugText = MegaFontHandle({ "FPS: ${Gdx.graphics.framesPerSecond}" })
-        debugText = MegaFontHandle({ "Count: ${engine.getEntities().size}" })
+        debugText = MegaFontHandle({ "FPS: ${Gdx.graphics.framesPerSecond}" })
 
         audioMan = MegaAudioManager(assMan.getSounds(), assMan.getMusics())
         audioMan.musicVolume = params.musicVolume
@@ -233,7 +239,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
         megaman = Megaman(this)
         // manually call init and set initialized to true before megaman is set to be spawned in the game engine
         megaman.init()
-        megaman.state.initialized = true
+        megaman.initialized = true
 
         megamanUpgradeHandler = MegamanUpgradeHandler(state, megaman)
 
@@ -326,15 +332,11 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
     }
 
     override fun dispose() {
-        try {
-            GameLogger.debug(TAG, "dispose()")
-            batch.dispose()
-            shapeRenderer.dispose()
-            screens.values().forEach { it.dispose() }
-            engine.dispose()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        GameLogger.debug(TAG, "dispose()")
+        batch.dispose()
+        shapeRenderer.dispose()
+        engine.dispose()
+        screens.values().forEach { it.dispose() }
     }
 
     fun saveState() {
@@ -390,102 +392,109 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
         val shapes = PriorityQueue<IDrawableShape> { s1, s2 -> s1.shapeType.ordinal - s2.shapeType.ordinal }
         properties.put(ConstKeys.SHAPES, shapes)
 
-        val engine = GameEngine()
-        engine.systems.addAll(
-            ControllerSystem(controllerPoller),
-            AnimationsSystem(),
-            BehaviorsSystem(),
-            WorldSystem(
-                ppm = ConstVals.PPM,
-                fixedStep = ConstVals.FIXED_TIME_STEP,
-                worldContainerSupplier = { getWorldContainer() },
-                contactListener = MegaContactListener(this, CONTACT_LISTENER_DEBUG_FILTER),
-                collisionHandler = MegaCollisionHandler(this),
-                contactFilterMap = objectMapOf(
-                    FixtureType.CONSUMER to objectSetOf(*FixtureType.values()),
-                    FixtureType.PLAYER to objectSetOf(FixtureType.BODY, FixtureType.ITEM),
-                    FixtureType.DAMAGEABLE to objectSetOf(FixtureType.DAMAGER),
-                    FixtureType.BODY to objectSetOf(
-                        FixtureType.BLOCK,
-                        FixtureType.FORCE,
-                        FixtureType.GRAVITY_CHANGE
+        val engine = GameEngine(
+            systems = gdxArrayOf(
+                ControllerSystem(controllerPoller),
+                AnimationsSystem(),
+                BehaviorsSystem(),
+                WorldSystem(
+                    ppm = ConstVals.PPM,
+                    fixedStep = ConstVals.FIXED_TIME_STEP,
+                    worldContainerSupplier = { getWorldContainer() },
+                    contactListener = MegaContactListener(this, CONTACT_LISTENER_DEBUG_FILTER),
+                    collisionHandler = MegaCollisionHandler(this),
+                    contactFilterMap = objectMapOf(
+                        FixtureType.CONSUMER to objectSetOf(*FixtureType.values()),
+                        FixtureType.PLAYER to objectSetOf(FixtureType.BODY, FixtureType.ITEM),
+                        FixtureType.DAMAGEABLE to objectSetOf(FixtureType.DAMAGER),
+                        FixtureType.BODY to objectSetOf(
+                            FixtureType.BLOCK,
+                            FixtureType.FORCE,
+                            FixtureType.GRAVITY_CHANGE
+                        ),
+                        FixtureType.DEATH to objectSetOf(
+                            FixtureType.FEET, FixtureType.SIDE, FixtureType.HEAD, FixtureType.BODY
+                        ),
+                        FixtureType.WATER to objectSetOf(FixtureType.WATER_LISTENER),
+                        FixtureType.LADDER to objectSetOf(FixtureType.HEAD, FixtureType.FEET),
+                        FixtureType.SIDE to objectSetOf(
+                            FixtureType.ICE, FixtureType.GATE, FixtureType.BLOCK, FixtureType.BOUNCER
+                        ),
+                        FixtureType.FEET to objectSetOf(
+                            FixtureType.ICE, FixtureType.BLOCK, FixtureType.BOUNCER, FixtureType.SAND, FixtureType.CART
+                        ),
+                        FixtureType.HEAD to objectSetOf(FixtureType.BLOCK, FixtureType.BOUNCER),
+                        FixtureType.PROJECTILE to objectSetOf(
+                            FixtureType.BODY,
+                            FixtureType.BLOCK,
+                            FixtureType.WATER,
+                            FixtureType.SHIELD,
+                            FixtureType.SAND,
+                            FixtureType.PROJECTILE
+                        ),
+                        FixtureType.LASER to objectSetOf(FixtureType.BLOCK),
+                        FixtureType.TELEPORTER to objectSetOf(FixtureType.TELEPORTER_LISTENER)
                     ),
-                    FixtureType.DEATH to objectSetOf(
-                        FixtureType.FEET, FixtureType.SIDE, FixtureType.HEAD, FixtureType.BODY
-                    ),
-                    FixtureType.WATER to objectSetOf(FixtureType.WATER_LISTENER),
-                    FixtureType.LADDER to objectSetOf(FixtureType.HEAD, FixtureType.FEET),
-                    FixtureType.SIDE to objectSetOf(
-                        FixtureType.ICE, FixtureType.GATE, FixtureType.BLOCK, FixtureType.BOUNCER
-                    ),
-                    FixtureType.FEET to objectSetOf(
-                        FixtureType.ICE, FixtureType.BLOCK, FixtureType.BOUNCER, FixtureType.SAND, FixtureType.CART
-                    ),
-                    FixtureType.HEAD to objectSetOf(FixtureType.BLOCK, FixtureType.BOUNCER),
-                    FixtureType.PROJECTILE to objectSetOf(
-                        FixtureType.BODY,
-                        FixtureType.BLOCK,
-                        FixtureType.WATER,
-                        FixtureType.SHIELD,
-                        FixtureType.SAND,
-                        FixtureType.PROJECTILE
-                    ),
-                    FixtureType.LASER to objectSetOf(FixtureType.BLOCK),
-                    FixtureType.TELEPORTER to objectSetOf(FixtureType.TELEPORTER_LISTENER)
+                    fixedStepScalar = params.fixedStepScalar
                 ),
-                fixedStepScalar = params.fixedStepScalar
-            ),
-            CullablesSystem(engine),
-            MotionSystem(),
-            AsyncPathfindingSystem(
-                factory = object : IPathfinderFactory {
-                    override fun getPathfinder(params: PathfinderParams): IPathfinder {
-                        val tiledMapResult = getTiledMapLoadResult()
-                        return WorldPathfinder(
-                            start = params.startCoordinateSupplier(),
-                            target = params.targetCoordinateSupplier(),
-                            worldWidth = tiledMapResult.worldWidth,
-                            worldHeight = tiledMapResult.worldHeight,
-                            allowDiagonal = params.allowDiagonal(),
-                            allowOutOfWorldBounds = params.getOrDefaultProperty(
-                                ConstKeys.ALLOW_OUT_OF_BOUNDS,
-                                true,
-                                Boolean::class
-                            ),
-                            filter = params.filter,
-                            heuristic = params.getOrDefaultProperty(
-                                ConstKeys.HEURISTIC,
-                                EuclideanHeuristic(),
-                                IHeuristic::class
-                            ),
-                            maxIterations = params.getOrDefaultProperty(
-                                ConstKeys.ITERATIONS,
-                                ConstVals.DEFAULT_PATHFINDING_MAX_ITERATIONS,
-                                Int::class
-                            ),
-                            maxDistance = params.getOrDefaultProperty(
-                                ConstKeys.DISTANCE,
-                                ConstVals.DEFAULT_PATHFINDING_MAX_DISTANCE,
-                                Int::class
-                            ),
-                            returnBestPathOnFailure = params.getOrDefaultProperty(
-                                ConstKeys.DEFAULT,
-                                ConstVals.DEFAULT_RETURN_BEST_PATH,
-                                Boolean::class
-                            )
-                        )
+                CullablesSystem(object : GameEntityCuller {
+                    override fun cull(entity: IGameEntity) {
+                        (entity as GameEntity).destroy()
                     }
-                }
+                }),
+                MotionSystem(),
+                AsyncPathfindingSystem(
+                    factory = object : IPathfinderFactory {
+                        override fun getPathfinder(params: PathfinderParams): IPathfinder {
+                            val tiledMapResult = getTiledMapLoadResult()
+                            return WorldPathfinder(
+                                start = params.startCoordinateSupplier(),
+                                target = params.targetCoordinateSupplier(),
+                                worldWidth = tiledMapResult.worldWidth,
+                                worldHeight = tiledMapResult.worldHeight,
+                                allowDiagonal = params.allowDiagonal(),
+                                allowOutOfWorldBounds = params.getOrDefaultProperty(
+                                    ConstKeys.ALLOW_OUT_OF_BOUNDS,
+                                    true,
+                                    Boolean::class
+                                ),
+                                filter = params.filter,
+                                heuristic = params.getOrDefaultProperty(
+                                    ConstKeys.HEURISTIC,
+                                    EuclideanHeuristic(),
+                                    IHeuristic::class
+                                ),
+                                maxIterations = params.getOrDefaultProperty(
+                                    ConstKeys.ITERATIONS,
+                                    ConstVals.DEFAULT_PATHFINDING_MAX_ITERATIONS,
+                                    Int::class
+                                ),
+                                maxDistance = params.getOrDefaultProperty(
+                                    ConstKeys.DISTANCE,
+                                    ConstVals.DEFAULT_PATHFINDING_MAX_DISTANCE,
+                                    Int::class
+                                ),
+                                returnBestPathOnFailure = params.getOrDefaultProperty(
+                                    ConstKeys.DEFAULT,
+                                    ConstVals.DEFAULT_RETURN_BEST_PATH,
+                                    Boolean::class
+                                )
+                            )
+                        }
+                    }
+                ),
+                PointsSystem(),
+                UpdatablesSystem(),
+                FontsSystem { font -> drawables.get(font.priority.section).add(font) },
+                SpritesSystem { sprite -> drawables.get(sprite.priority.section).add(sprite) },
+                DrawableShapesSystem({ shapes.add(it) }, params.debug),
+                AudioSystem({ audioMan.playSound(it.source, it.loop) },
+                    { audioMan.playMusic(it.source, it.loop) },
+                    { audioMan.stopSound(it) },
+                    { audioMan.stopMusic(it) })
             ),
-            PointsSystem(),
-            UpdatablesSystem(),
-            FontsSystem { font -> drawables.get(font.priority.section).add(font) },
-            SpritesSystem { sprite -> drawables.get(sprite.priority.section).add(sprite) },
-            DrawableShapesSystem({ shapes.add(it) }, params.debug),
-            AudioSystem({ audioMan.playSound(it.source, it.loop) },
-                { audioMan.playMusic(it.source, it.loop) },
-                { audioMan.stopSound(it) },
-                { audioMan.stopMusic(it) })
+            onQueueToSpawn = { (it as MegaGameEntity).dead = false },
+            onQueueToDestroy = { (it as MegaGameEntity).dead = true }
         )
 
         val systems = ObjectMap<String, GameSystem>()

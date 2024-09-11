@@ -132,8 +132,8 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
 
             val iter = children.iterator()
             while (iter.hasNext()) {
-                val child = iter.next()
-                if (!(child as MegaGameEntity).spawned) iter.remove()
+                val child = iter.next() as MegaGameEntity
+                if (child.dead) iter.remove()
             }
 
             when (penguinMiniBossState) {

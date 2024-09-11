@@ -271,7 +271,7 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (!getMegaman().state.spawned) {
+            if (getMegaman().dead) {
                 body.physics.velocity.setZero()
                 return@add
             }

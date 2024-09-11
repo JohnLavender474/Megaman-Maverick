@@ -64,7 +64,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
         private var atlas: TextureAtlas? = null
         private const val DEBUG_PATHFINDING = false
         private const val DEBUG_PATHFINDING_DURATION = 1f
-        private const val HANG_DURATION = 1.75f
+        private const val HANG_DURATION = 1.25f
         private const val RELEASE_FROM_PERCH_DURATION = 0.25f
         private const val DEFAULT_FLY_TO_ATTACK_SPEED = 3f
         private const val DEFAULT_FLY_TO_RETREAT_SPEED = 8f

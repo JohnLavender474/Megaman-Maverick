@@ -3,7 +3,6 @@ package com.megaman.maverick.game.screens.menus
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
-import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.getTextureAtlas
@@ -24,7 +23,7 @@ import com.megaman.maverick.game.screens.utils.BlinkingArrow
 import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
 import com.megaman.maverick.game.utils.setToDefaultPosition
 
-class SaveGameScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, SAVE), Initializable {
+class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), Initializable {
 
     companion object {
         const val TAG = "SaveScreen"
@@ -36,8 +35,6 @@ class SaveGameScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, SAVE)
         private var frameRegion: TextureRegion? = null
         private var dotRegion: TextureRegion? = null
     }
-
-    override val menuButtons = ObjectMap<String, IMenuButton>()
 
     private val fontHandles = Array<BitmapFontHandle>()
     private lateinit var password: IntArray
@@ -115,7 +112,7 @@ class SaveGameScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, SAVE)
         )
         dots.setPosition(FRAMES_X * ConstVals.PPM, FRAMES_Y * ConstVals.PPM)
 
-        menuButtons.put(SAVE, object : IMenuButton {
+        buttons.put(SAVE, object : IMenuButton {
             override fun onNavigate(direction: Direction, delta: Float) =
                 when (direction) {
                     Direction.UP -> MAIN_MENU
@@ -130,7 +127,7 @@ class SaveGameScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, SAVE)
             }
         })
 
-        menuButtons.put(CONTINUE, object : IMenuButton {
+        buttons.put(CONTINUE, object : IMenuButton {
             override fun onNavigate(direction: Direction, delta: Float) =
                 when (direction) {
                     Direction.UP -> SAVE
@@ -144,7 +141,7 @@ class SaveGameScreen(game: MegamanMaverickGame) : AbstractMenuScreen(game, SAVE)
             }
         })
 
-        menuButtons.put(MAIN_MENU, object : IMenuButton {
+        buttons.put(MAIN_MENU, object : IMenuButton {
             override fun onNavigate(direction: Direction, delta: Float) =
                 when (direction) {
                     Direction.UP -> CONTINUE

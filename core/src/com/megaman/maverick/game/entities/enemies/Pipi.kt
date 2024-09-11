@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
@@ -43,7 +44,9 @@ import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.isSensing
 import kotlin.reflect.KClass
 
 class Pipi(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
@@ -103,7 +106,7 @@ class Pipi(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
     }
 
     override fun defineBodyComponent(): BodyComponent {
-        val body = Body(BodyType.ABSTRACT)
+        val body = Body(BodyType.DYNAMIC)
         body.setSize(0.35f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
@@ -117,6 +120,26 @@ class Pipi(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle(body))
         body.addFixture(damageableFixture)
+
+        val leftSideFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
+        leftSideFixture.offsetFromBodyCenter.x = -0.125f * ConstVals.PPM
+        leftSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
+        body.addFixture(leftSideFixture)
+        leftSideFixture.rawShape.color = Color.YELLOW
+        debugShapes.add { leftSideFixture.getShape() }
+
+        val rightSideFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
+        rightSideFixture.offsetFromBodyCenter.x = 0.125f * ConstVals.PPM
+        rightSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
+        body.addFixture(rightSideFixture)
+        rightSideFixture.rawShape.color = Color.YELLOW
+        debugShapes.add { rightSideFixture.getShape() }
+
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            if ((isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
+                (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
+            ) swapFacing()
+        }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 

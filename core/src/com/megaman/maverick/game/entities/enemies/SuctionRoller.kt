@@ -88,7 +88,7 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
             val megaman = game.megaman
-            if (!megaman.spawned) return@add
+            if (megaman.dead) return@add
 
             wasOnWall = onWall
             onWall =

@@ -87,10 +87,10 @@ class MegaAudioManager(
 
     override fun playMusic(key: Any?, loop: Boolean) {
         if (key == null) {
-            currentMusic?.play()
+            if (currentMusic?.isPlaying != true) currentMusic?.play()
             return
         }
-        currentMusic?.stop()
+        if (currentMusic?.isPlaying == true) currentMusic?.stop()
         currentMusic = music.get(key as MusicAsset)
         fadeOutMusicTimer = null
         currentMusic!!.isLooping = loop
@@ -100,18 +100,18 @@ class MegaAudioManager(
     }
 
     fun unsetMusic() {
-        currentMusic?.stop()
+        if (currentMusic?.isPlaying == true) currentMusic?.stop()
         currentMusic = null
     }
 
     override fun stopMusic(key: Any?) {
-        currentMusic?.stop()
+        if (currentMusic?.isPlaying == true) currentMusic?.stop()
         fadeOutMusicTimer = null
         musicPaused = true
     }
 
     override fun pauseMusic(key: Any?) {
-        currentMusic?.pause()
+        if (currentMusic?.isPlaying == true) currentMusic?.pause()
         musicPaused = true
     }
 
@@ -120,17 +120,11 @@ class MegaAudioManager(
         playSound(SoundRequest(key, loop))
     }
 
-    fun playSound(soundRequest: SoundRequest) {
-        soundQueue.add(soundRequest)
-    }
+    fun playSound(soundRequest: SoundRequest) = soundQueue.add(soundRequest)
 
-    override fun stopSound(key: Any?) {
-        sounds.get(key as SoundAsset).stop()
-    }
+    override fun stopSound(key: Any?) = sounds.get(key as SoundAsset).stop()
 
-    override fun pauseSound(key: Any?) {
-        sounds.get(key as SoundAsset).pause()
-    }
+    override fun pauseSound(key: Any?) = sounds.get(key as SoundAsset).pause()
 
     fun stopAllLoopingSounds() {
         playingSounds.filter { it.loop }.forEach {
@@ -140,13 +134,9 @@ class MegaAudioManager(
         }
     }
 
-    fun pauseAllSound() {
-        sounds.values().forEach { it.pause() }
-    }
+    fun pauseAllSound() = sounds.values().forEach { it.pause() }
 
-    fun resumeAllSound() {
-        sounds.values().forEach { it.resume() }
-    }
+    fun resumeAllSound() = sounds.values().forEach { it.resume() }
 
     fun isSoundPlaying(sound: SoundAsset) = playingSounds.any { it.ass == sound }
 

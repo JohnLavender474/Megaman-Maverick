@@ -105,7 +105,7 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        children.removeAll { !(it as MegaGameEntity).spawned }
+        children.removeAll { (it as MegaGameEntity).dead }
         if (children.size >= MAX_CHILDREN) return@UpdatablesComponent
 
         spawnTimer.update(delta)

@@ -145,8 +145,8 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         updatablesComponent.add {
             val iter = children.iterator()
             while (iter.hasNext()) {
-                val child = iter.next()
-                if (!(child as MegaGameEntity).spawned) iter.remove()
+                val child = iter.next() as MegaGameEntity
+                if (child.dead) iter.remove()
             }
 
             facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
@@ -254,6 +254,8 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
 
         type = spawnProps.get(ConstKeys.TYPE, String::class)!!
         scalar = START_SCALAR
+
+        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
     }
 
     internal fun disintegrateAndDie() {
@@ -264,7 +266,7 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (parent == null || !(parent as MegaGameEntity).spawned) {
+            if (parent == null || (parent as MegaGameEntity).dead) {
                 destroy()
                 return@add
             }
