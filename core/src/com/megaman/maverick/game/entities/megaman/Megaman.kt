@@ -215,7 +215,8 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         YellowTiggerSquirt::class to dmgNeg(3),
         UFOhNoBot::class to dmgNeg(3),
         TankBot::class to dmgNeg(3),
-        Darspider::class to dmgNeg(3)
+        Darspider::class to dmgNeg(3),
+        WalrusBot::class to dmgNeg(3)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 

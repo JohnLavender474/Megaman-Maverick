@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="300" height="35" tilewidth="32" tileheight="32" infinite="0" nextlayerid="13" nextobjectid="186">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="300" height="35" tilewidth="32" tileheight="32" infinite="0" nextlayerid="13" nextobjectid="187">
  <tileset firstgid="1" source="../tsx/ForestTiles.tsx"/>
  <tileset firstgid="337" source="../tsx/Tileset1.tsx"/>
  <layer id="10" name="tiles2" width="300" height="35">
@@ -136,6 +136,7 @@
   <object id="169" name="FallingLeaf" x="3456" y="280" width="32" height="32"/>
   <object id="170" name="FallingLeaf" x="3480" y="272" width="32" height="32"/>
   <object id="171" name="FallingLeaf" x="3480" y="312" width="32" height="32"/>
+  <object id="186" name="WindyGrass" x="3360" y="320" width="160" height="32"/>
  </objectgroup>
  <objectgroup id="2" name="blocks">
   <object id="4" x="0" y="928" width="1184" height="96"/>
@@ -255,7 +256,7 @@
    </properties>
   </object>
   <object id="162" name="Bat" x="3608" y="160" width="16" height="16"/>
-  <object id="172" name="SniperJoe" x="3872" y="320" width="32" height="32"/>
+  <object id="172" name="SniperJoe" x="3808" y="320" width="32" height="32"/>
   <object id="179" name="Pipi" x="5040" y="224" width="32" height="32"/>
   <object id="180" name="SniperJoe" x="5040" y="320" width="32" height="32"/>
  </objectgroup>
