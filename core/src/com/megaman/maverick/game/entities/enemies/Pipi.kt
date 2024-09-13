@@ -73,6 +73,8 @@ class Pipi(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
 
     private var hasEgg = true
 
+    override fun getTag() = TAG
+
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
@@ -88,13 +90,13 @@ class Pipi(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
         facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
-        body.physics.velocity.x = FLY_SPEED * ConstVals.PPM * facing.value
         hasEgg = true
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
+            body.physics.velocity.x = FLY_SPEED * ConstVals.PPM * facing.value
             if (hasEgg && getMegaman().body.x <= body.getMaxX() && getMegaman().body.getMaxX() >= body.x) dropEgg()
         }
     }

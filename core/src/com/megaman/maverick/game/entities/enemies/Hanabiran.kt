@@ -8,6 +8,7 @@ import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.extensions.getTextureAtlas
@@ -24,6 +25,7 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
@@ -37,17 +39,19 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import kotlin.reflect.KClass
 
-class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game) {
+class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDirectionRotatable {
 
     enum class HanabiranState {
         SLEEPING,
@@ -69,10 +73,15 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game) {
         private const val ANIMATION_FRAME_DURATION = 0.15f
     }
 
+    override var directionRotation: Direction?
+        get() = body.cardinalRotation
+        set(value) {
+            body.cardinalRotation = value
+        }
+
     private val sleepTimer = Timer(SLEEP_DURATION)
     private val riseDropTimer = Timer(RISE_DROP_DURATION)
     private val petalTimer = Timer(PETAL_DURATION)
-
     private var petalCount = 4
     private lateinit var hanabiranState: HanabiranState
 
@@ -95,6 +104,8 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game) {
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.setBottomCenterToPoint(bounds.getBottomCenterPoint())
         hanabiranState = HanabiranState.SLEEPING
+        directionRotation =
+            Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
     }
 
     private fun shoot() {
@@ -172,6 +183,7 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game) {
         body.setSize(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat())
 
         val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body.getBodyBounds() }
 
         val fixturesRectangle = GameRectangle()
 
@@ -234,10 +246,11 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game) {
         sprite.setSize(1.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.hidden = damageBlink
-            val position = body.getBottomCenterPoint()
-            _sprite.setPosition(position, Position.BOTTOM_CENTER)
-            _sprite.hidden = hanabiranState == HanabiranState.SLEEPING
+            _sprite.setOriginCenter()
+            _sprite.rotation = directionRotation!!.rotation
+            val position = DirectionPositionMapper.getPosition(directionRotation!!).opposite()
+            _sprite.setPosition(body.getPositionPoint(position), position)
+            _sprite.hidden = hanabiranState == HanabiranState.SLEEPING || damageBlink
         }
         return spritesComponent
     }

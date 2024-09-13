@@ -29,7 +29,7 @@ class MegaCollisionHandler(private val game: MegamanMaverickGame) : ICollisionHa
             dynamicBody = body1
         } else return false
 
-        if (staticBody.hasBlockFilter(dynamicBody.getEntity().getTag())) return true
+        if (staticBody.hasBlockFilter(dynamicBody.getEntity().getTag().uppercase())) return true
 
         if (staticBody.hasBodyLabel(BodyLabel.PRESS_UP_FALL_THRU) && dynamicBody == megaman.body &&
             megaman.isBehaviorActive(BehaviorType.CLIMBING) && game.controllerPoller.isJustPressed(MegaControllerButtons.UP)

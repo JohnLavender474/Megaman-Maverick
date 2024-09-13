@@ -42,6 +42,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.controllers.MegaControllerButtons
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.events.EventType
@@ -175,7 +176,7 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
             if (game.controllerPoller.isAnyJustReleased(BUTTONS_TO_GET_UNSTUCK)) {
                 presses++
                 blinkWhiteTimer.reset()
-                requestToPlaySound(SoundAsset.THUMP_SOUND, false)
+                if (overlapsGameCamera()) requestToPlaySound(SoundAsset.THUMP_SOUND, false)
                 if (presses >= PRESSES_TO_GET_UNSTUCK) destroy()
             }
         }

@@ -52,6 +52,8 @@ class Copipi(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
     )
     override lateinit var facing: Facing
 
+    override fun getTag() = TAG
+
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, "Pipi/Copipi")
         super.init()

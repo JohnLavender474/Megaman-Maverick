@@ -12,6 +12,8 @@ import com.mega.game.engine.common.shapes.GameLine
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
@@ -35,11 +37,11 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 
-class SwinginAxe(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IBodyEntity, IMotionEntity,
+class SwingingAxe(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IBodyEntity, IMotionEntity,
     IDrawableShapesEntity {
 
     companion object {
-        const val TAG = "SwinginAxe"
+        const val TAG = "SwingingAxe"
         private var textureRegion: TextureRegion? = null
         private const val DEBUG_SWING_ROTATION = false
         private const val LENGTH = 2.25f
@@ -80,14 +82,15 @@ class SwinginAxe(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         val shapesComponent = getComponent(DrawableShapesComponent::class)!!
 
         deathCircle = GameCircle()
-        deathCircle.setRadius(ConstVals.PPM.toFloat())
+        deathCircle.setRadius(0.85f * ConstVals.PPM)
         val deathFixture = Fixture(body, FixtureType.DEATH, deathCircle)
+        deathFixture.putProperty(ConstKeys.INSTANT, true)
         deathFixture.attachedToBody = false
         body.addFixture(deathFixture)
         shapesComponent.debugShapeSuppliers.add { deathCircle }
 
         shieldCircle = GameCircle()
-        shieldCircle.setRadius(ConstVals.PPM.toFloat())
+        shieldCircle.setRadius(0.85f * ConstVals.PPM)
         val shieldFixture = Fixture(body, FixtureType.SHIELD, shieldCircle)
         shieldFixture.attachedToBody = false
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
@@ -98,7 +101,7 @@ class SwinginAxe(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
     }
 
     private fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite()
+        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
         sprite.setSize(8f * ConstVals.PPM)
         sprite.setRegion(textureRegion!!)
         val spritesComponent = SpritesComponent(sprite)

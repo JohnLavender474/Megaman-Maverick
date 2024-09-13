@@ -63,15 +63,15 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(10),
+        Bullet::class to dmgNeg(15),
         Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
         ChargedShot::class to dmgNeg {
             it as ChargedShot
-            if (it.fullyCharged) 15 else 10
+            if (it.fullyCharged) ConstVals.MAX_HEALTH else 20
         },
         ChargedShotExplosion::class to dmgNeg {
             it as ChargedShotExplosion
-            if (it.fullyCharged) 10 else 5
+            if (it.fullyCharged) 15 else 10
         }
     )
     override var directionRotation: Direction?
@@ -104,18 +104,28 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         spawnProps.put(ConstKeys.CULL_TIME, CULL_TIME)
         super.onSpawn(spawnProps)
 
-        facing = if (getMegaman().body.x < body.x) Facing.RIGHT else Facing.LEFT
-        directionRotation = Direction.DOWN
-        onCeiling = true
+        onCeiling = spawnProps.getOrDefault(ConstKeys.ON, true, Boolean::class)
+        directionRotation =
+            Direction.valueOf(
+                spawnProps.getOrDefault(ConstKeys.DIRECTION, if (onCeiling) "down" else "up", String::class).uppercase()
+            )
+        facing = when (directionRotation!!) {
+            Direction.DOWN -> if (getMegaman().body.x < body.x) Facing.RIGHT else Facing.LEFT
+            else -> if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        }
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
             .getPositionPoint(DirectionPositionMapper.getPosition(directionRotation!!).opposite())
         body.positionOnPoint(spawn, DirectionPositionMapper.getPosition(directionRotation!!).opposite())
 
-        minXOnCeiling = spawn.x - spawnProps.get("${ConstKeys.ON}_${ConstKeys.MIN}", Float::class)!! * ConstVals.PPM
-        maxXOnCeiling = spawn.x + spawnProps.get("${ConstKeys.ON}_${ConstKeys.MAX}", Float::class)!! * ConstVals.PPM
-        minXOffCeiling = spawn.x - spawnProps.get("${ConstKeys.OFF}_${ConstKeys.MIN}", Float::class)!! * ConstVals.PPM
-        maxXOffCeiling = spawn.x + spawnProps.get("${ConstKeys.OFF}_${ConstKeys.MAX}", Float::class)!! * ConstVals.PPM
+        minXOnCeiling =
+            spawn.x - spawnProps.getOrDefault("${ConstKeys.ON}_${ConstKeys.MIN}", 0f, Float::class) * ConstVals.PPM
+        maxXOnCeiling =
+            spawn.x + spawnProps.getOrDefault("${ConstKeys.ON}_${ConstKeys.MAX}", 0f, Float::class) * ConstVals.PPM
+        minXOffCeiling =
+            spawn.x - spawnProps.getOrDefault("${ConstKeys.OFF}_${ConstKeys.MIN}", 0f, Float::class) * ConstVals.PPM
+        maxXOffCeiling =
+            spawn.x + spawnProps.getOrDefault("${ConstKeys.OFF}_${ConstKeys.MAX}", 0f, Float::class) * ConstVals.PPM
 
         stillTimer.reset()
     }
@@ -142,8 +152,7 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             }
 
             body.physics.velocity.x = if (body.isSensing(BodySense.FEET_ON_GROUND))
-                CRAWL_SPEED * ConstVals.PPM * facing.value
-            else 0f
+                CRAWL_SPEED * ConstVals.PPM * facing.value else 0f
 
             if (onCeiling &&
                 ((isFacing(Facing.RIGHT) && body.getCenter().x >= maxXOnCeiling) ||

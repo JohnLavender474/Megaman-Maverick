@@ -1,10 +1,5 @@
 package com.megaman.maverick.game.entities.megaman.components
 
-import com.mega.game.engine.world.body.*;
-import com.mega.game.engine.world.collisions.*;
-import com.mega.game.engine.world.contacts.*;
-import com.mega.game.engine.world.pathfinding.*;
-
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
@@ -41,7 +36,7 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
             Direction.RIGHT -> 270f
         }
         player.setOriginCenter()
-        player.setRotation(rotation)
+        player.rotation = rotation
 
         val position = when (direction) {
             Direction.UP, null -> Position.BOTTOM_CENTER
@@ -76,7 +71,7 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
         }
 
         flame.setOriginCenter()
-        flame.setRotation(directionRotation?.rotation ?: 0f)
+        flame.rotation = directionRotation?.rotation ?: 0f
 
         val verticalOffset = -0.25f * ConstVals.PPM
         val facingOffsetScaled = -0.45f * facing.value * ConstVals.PPM

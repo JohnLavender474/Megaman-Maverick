@@ -1,7 +1,5 @@
 package com.megaman.maverick.game.entities.special
 
-import com.mega.game.engine.world.body.*;
-
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
@@ -23,6 +21,7 @@ import com.mega.game.engine.entities.contracts.IAudioEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame

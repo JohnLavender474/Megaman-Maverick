@@ -564,19 +564,28 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
                     !playerDeathEventHandler.finished)
         ) game.resume()
 
+        if (!game.paused) {
+            spawnsMan.update(delta / 2f)
+            spawns.addAll(spawnsMan.getSpawnsAndClear())
+            if (playerSpawnEventHandler.finished && !cameraManagerForRooms.transitioning) {
+                spawns.forEach { spawn -> engine.spawn(spawn.entity, spawn.properties) }
+                spawns.clear()
+            }
+        }
+
         engine.update(delta)
 
         if (!game.paused) {
-            backgrounds.forEach { it.update(delta) }
-            cameraManagerForRooms.update(delta)
-
-            spawnsMan.update(delta)
+            spawnsMan.update(delta / 2f)
             spawns.addAll(spawnsMan.getSpawnsAndClear())
             if (playerSpawnEventHandler.finished && !cameraManagerForRooms.transitioning) {
                 playerSpawnsMan.run()
                 spawns.forEach { spawn -> engine.spawn(spawn.entity, spawn.properties) }
                 spawns.clear()
             }
+
+            backgrounds.forEach { it.update(delta) }
+            cameraManagerForRooms.update(delta)
 
             if (!bossSpawnEventHandler.finished) bossSpawnEventHandler.update(delta)
 

@@ -108,19 +108,18 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
         )
         body.addFixture(damageableFixture)
 
-        val damagerFixture = Fixture(
-            body, FixtureType.DAMAGER, GameRectangle().setSize(0.75f * ConstVals.PPM.toFloat())
-        )
+        val damagerFixture =
+            Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.75f * ConstVals.PPM.toFloat()))
         body.addFixture(damagerFixture)
 
         val megamanScannerFixture = Fixture(
-            body, FixtureType.CUSTOM, GameRectangle().setSize(32f * ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
+            body,
+            FixtureType.CUSTOM,
+            GameRectangle().setSize(32f * ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
         )
         body.addFixture(megamanScannerFixture)
 
-        val oobScannerFixture = Fixture(
-            body, FixtureType.CUSTOM, GameRectangle().setSize(ConstVals.PPM / 2f)
-        )
+        val oobScannerFixture = Fixture(body, FixtureType.CUSTOM, GameRectangle().setSize(ConstVals.PPM / 2f))
         body.addFixture(oobScannerFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
@@ -187,10 +186,8 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
                 }
 
                 DragonFlyBehavior.MOVE_DOWN -> {
-                    if (megamanScannerFixture.getShape().contains(
-                            game.megaman.body.getCenter()
-                        ) || (!isMegamanBelow() && !game.getGameCamera()
-                            .overlaps(oobScannerFixture.getShape() as Rectangle))
+                    if (megamanScannerFixture.getShape().contains(game.megaman.body.getCenter()) ||
+                        (!isMegamanBelow() && !game.getGameCamera().overlaps(oobScannerFixture.getShape() as Rectangle))
                     ) {
                         changeBehavior(DragonFlyBehavior.MOVE_HORIZONTAL)
                         toLeftBounds = isMegamanLeft()

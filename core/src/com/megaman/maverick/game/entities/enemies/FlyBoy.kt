@@ -22,6 +22,7 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
@@ -44,7 +45,7 @@ import com.megaman.maverick.game.world.body.*
 
 import kotlin.reflect.KClass
 
-class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
+class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
 
     companion object {
         const val STAND_DUR = 0.75f
@@ -65,7 +66,6 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             if (it.fullyCharged) 10 else 5
         }
     )
-
     override var facing = Facing.RIGHT
 
     val flying: Boolean
@@ -75,6 +75,8 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     private val flyTimer = Timer(FLY_DUR)
     private val standTimer = Timer(STAND_DUR)
+
+    override fun getTag() = TAG
 
     override fun init() {
         super.init()

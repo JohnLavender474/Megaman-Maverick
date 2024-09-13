@@ -83,7 +83,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         private const val THROW_SHIELD_DUR = 0.5f
         private const val SHIELD_VEL = 10f
 
-        private const val GROUND_GRAVITY = 0.015f
+        private const val GROUND_GRAVITY = 0.001f
         private const val GRAVITY = 0.375f
 
         private val regions = ObjectMap<String, TextureRegion>()
@@ -140,6 +140,8 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
     private var canJump = true
     private var canThrowShield = false
     private var setToThrowShield = false
+
+    override fun getTag() = TAG
 
     override fun init() {
         if (regions.isEmpty) {

@@ -46,6 +46,7 @@ class Petal(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity
         private var region: TextureRegion? = null
         private const val SPEED = 10f
         private const val DAMAGE_DURATION = 0.25f
+        private const val CULL_TIME = 0.25f
     }
 
     override val invincible: Boolean
@@ -67,21 +68,19 @@ class Petal(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity
         addComponent(AudioComponent())
         addComponent(defineAnimationsComponent())
         addComponent(definePointsComponent())
+        putProperty(ConstKeys.ENTITY_CAN_DIE, false)
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        spawnProps.put(ConstKeys.CULL_TIME, CULL_TIME)
         super.onSpawn(spawnProps)
         setHealth(ConstVals.MAX_HEALTH)
         GameLogger.debug(TAG, "Health: ${getCurrentHealth()}. Spawn props: $spawnProps.")
-
         val center = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(center)
-
         val trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
         body.physics.velocity.set(trajectory.scl(ConstVals.PPM.toFloat() * SPEED))
-
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
-
         damageTimer.setToEnd()
     }
 

@@ -1,28 +1,24 @@
 package com.megaman.maverick.game.entities.special
 
-import com.mega.game.engine.world.body.*;
-
+import com.badlogic.gdx.utils.ObjectSet
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.VelocityAlterationType
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getEntity
-import com.megaman.maverick.game.world.body.setVelocityAlteration
+import com.megaman.maverick.game.world.body.*
 
 class Force(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity {
 
     companion object {
         const val TAG = "Force"
-        const val FILTER_MEGAMAN = "filter_megaman"
         const val ACTION_X = "action_x"
         const val ACTION_Y = "action_y"
         const val FORCE_X = "force_x"
@@ -49,10 +45,26 @@ class Force(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity {
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
 
-        val filter = spawnProps.get(ConstKeys.FILTER, String::class)
-        when (filter) {
-            FILTER_MEGAMAN -> this.filter = { fixture, _ -> fixture.getEntity() is Megaman }
-            else -> this.filter = { _, _ -> true }
+        val filterByTagSet = ObjectSet<String>()
+        spawnProps.get("${ConstKeys.TAG}_${ConstKeys.FILTER}", String::class)?.split(",")!!.forEach {
+            GameLogger.debug(TAG, "Adding tag to force filter: ${it.uppercase()}")
+            filterByTagSet.add(it.uppercase())
+        }
+        val filterByNotBodySenseSet = ObjectSet<BodySense>()
+        spawnProps.get("${ConstKeys.NOT}_${ConstKeys.BODY}_${ConstKeys.SENSE}_${ConstKeys.FILTER}", String::class)
+            ?.split(",")!!.forEach {
+                val bodySense = BodySense.valueOf(it.uppercase())
+                GameLogger.debug(TAG, "Adding body sense to force filter: $bodySense")
+                filterByNotBodySenseSet.add(bodySense)
+            }
+        filter = { fixture, _ ->
+            val tagFiltered = filterByTagSet.contains(fixture.getEntity().getTag().uppercase())
+            val bodySenseFiltered = !fixture.getBody().isSensingAny(filterByNotBodySenseSet)
+            if (tagFiltered && bodySenseFiltered) GameLogger.debug(
+                TAG,
+                "Force applied to ${fixture.getEntity().getTag()}"
+            )
+            tagFiltered && bodySenseFiltered
         }
 
         if (spawnProps.containsKey(ACTION_X)) {
@@ -73,20 +85,14 @@ class Force(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity {
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-
         val forceFixture = Fixture(body, FixtureType.FORCE, GameRectangle())
         forceFixture.setVelocityAlteration { fixture, delta ->
             if (filter(fixture, delta)) VelocityAlteration(
-                forceX,
-                forceY,
-                actionX,
-                actionY
+                forceX, forceY, actionX, actionY
             ) else VelocityAlteration.addNone()
         }
         body.addFixture(forceFixture)
-
         body.preProcess.put(ConstKeys.DEFAULT) { (forceFixture.rawShape as GameRectangle).set(body) }
-
         return BodyComponentCreator.create(this, body)
     }
 }

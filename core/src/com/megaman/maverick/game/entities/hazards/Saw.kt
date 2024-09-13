@@ -203,14 +203,11 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
         val body = Body(BodyType.ABSTRACT)
         body.setSize(2f * ConstVals.PPM)
 
-        val deathCircle = GameCircle()
-        deathCircle.setRadius(ConstVals.PPM.toFloat())
-        val deathFixture = Fixture(body, FixtureType.DEATH, deathCircle)
+        val deathFixture = Fixture(body, FixtureType.DEATH, GameCircle().setRadius(0.85f * ConstVals.PPM))
+        deathFixture.putProperty(ConstKeys.INSTANT, true)
         body.addFixture(deathFixture)
 
-        val shieldCircle = GameCircle()
-        shieldCircle.setRadius(ConstVals.PPM.toFloat())
-        val shieldFixture = Fixture(body, FixtureType.SHIELD, shieldCircle)
+        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameCircle().setRadius(0.85f * ConstVals.PPM))
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
         body.addFixture(shieldFixture)
 
@@ -220,7 +217,7 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
     private fun defineSpritesCompoent(): SpritesComponent {
         val spritesComponent = SpritesComponent()
 
-        val sawSprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
+        val sawSprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
         sawSprite.setSize(2f * ConstVals.PPM)
         spritesComponent.sprites.put("saw", sawSprite)
         spritesComponent.putUpdateFunction("saw") { _, _sprite ->
@@ -229,7 +226,7 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
         }
 
         for (i in 0..RING_COUNT) {
-            val ringSprite = GameSprite(ringRegion!!, DrawingPriority(DrawingSection.FOREGROUND, 1))
+            val ringSprite = GameSprite(ringRegion!!, DrawingPriority(DrawingSection.FOREGROUND, 2))
             ringSprite.setSize(0.5f * ConstVals.PPM)
             spritesComponent.sprites.put("ring_$i", ringSprite)
         }

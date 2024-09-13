@@ -222,7 +222,7 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, 
         }
 
         for (i in 0..RING_COUNT) {
-            val ringSprite = GameSprite(regions["ring"], DrawingPriority(DrawingSection.FOREGROUND, 1))
+            val ringSprite = GameSprite(regions["ring"], DrawingPriority(DrawingSection.FOREGROUND, 2))
             ringSprite.setSize(0.25f * ConstVals.PPM)
             spritesComponent.sprites.put("ring_$i", ringSprite)
             spritesComponent.putUpdateFunction("ring_$i") { _, _sprite ->

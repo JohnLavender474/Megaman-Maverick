@@ -46,9 +46,9 @@ class Peat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
 
     companion object {
         const val TAG = "Peat"
-        private const val DELAY_DUR = 1f
+        private const val DELAY_DUR = 0.5f
         private const val SPEED = 8f
-        private const val MIN_SPEED = 1.5f
+        private const val MIN_SPEED = 2f
         private var region: TextureRegion? = null
     }
 

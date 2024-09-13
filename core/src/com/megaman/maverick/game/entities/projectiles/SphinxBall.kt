@@ -5,7 +5,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -15,6 +17,7 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
@@ -23,11 +26,12 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodySense
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.isSensingAny
+import com.megaman.maverick.game.entities.factories.EntityFactories
+import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
+import com.megaman.maverick.game.world.body.*
 
 class SphinxBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
@@ -43,30 +47,51 @@ class SphinxBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         private set
     var spinning = true
 
+    private var block: Block? = null
     private val spinDelayTimer = Timer(SPIN_DELAY)
     private var xSpeed = 0f
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
         super.init()
+        addComponent(defineUpdatablesComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setBottomCenterToPoint(spawn)
-
         xSpeed = spawnProps.getOrDefault(ConstKeys.X, 0f, Float::class)
         body.physics.velocity.set(xSpeed * ConstVals.PPM, 0f)
-
         val gravityOn = spawnProps.getOrDefault(ConstKeys.GRAVITY_ON, false, Boolean::class)
         body.physics.gravityOn = gravityOn
-
         spinning = spawnProps.getOrDefault(ConstKeys.SPIN, true, Boolean::class)
-
         spinDelayTimer.reset()
+        block = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.STANDARD)!! as Block
+        block!!.spawn(
+            props(
+                ConstKeys.BOUNDS to GameRectangle().setSize(1.35f * ConstVals.PPM, 0.1f * ConstVals.PPM),
+                ConstKeys.BODY_LABELS to objectSetOf(BodyLabel.COLLIDE_DOWN_ONLY),
+                ConstKeys.FIXTURE_LABELS to objectSetOf(
+                    FixtureLabel.NO_SIDE_TOUCHIE,
+                    FixtureLabel.NO_PROJECTILE_COLLISION
+                )
+            )
+        )
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        block?.destroy()
+        block = null
+    }
+
+    private fun defineUpdatablesComponent() = UpdatablesComponent({
+        if (!spinning) {
+            block?.destroy()
+            block = null
+        }
+    })
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
@@ -82,7 +107,7 @@ class SphinxBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         body.addFixture(projectileFixture)
         debugShapes.add { projectileFixture.getShape() }
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.675f * ConstVals.PPM))
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.6f * ConstVals.PPM))
         body.addFixture(damagerFixture)
 
         val shieldFixture = Fixture(body, FixtureType.SHIELD, GameCircle().setRadius(0.675f * ConstVals.PPM))
@@ -124,6 +149,7 @@ class SphinxBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         debugShapes.add { rightFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
+            block?.body!!.setTopCenterToPoint(body.getTopCenterPoint())
             body.physics.gravityOn = !body.isSensingAny(BodySense.FEET_ON_GROUND, BodySense.FEET_ON_SAND)
             if (body.isSensingAny(BodySense.SIDE_TOUCHING_BLOCK_LEFT, BodySense.SIDE_TOUCHING_BLOCK_RIGHT)) {
                 body.physics.velocity.set(0f, -SINK_SPEED * ConstVals.PPM)

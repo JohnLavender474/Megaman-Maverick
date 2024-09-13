@@ -1,10 +1,5 @@
 package com.megaman.maverick.game.entities.factories.impl
 
-import com.mega.game.engine.world.body.*;
-import com.mega.game.engine.world.collisions.*;
-import com.mega.game.engine.world.contacts.*;
-import com.mega.game.engine.world.pathfinding.*;
-
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.factories.EntityFactory
 import com.megaman.maverick.game.entities.factories.GameEntityPoolCreator
@@ -15,7 +10,7 @@ class HazardsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
     companion object {
         const val SAW = "Saw"
         const val LASER_BEAMER = "LaserBeamer"
-        const val SWINGIN_AXE = "SwinginAxe"
+        const val SWINGING_AXE = "SwingingAxe"
         const val SPIKE = "Spike"
         const val BOLT = "Bolt"
         const val ELECTROCUTIE = "Electrocutie"
@@ -43,7 +38,7 @@ class HazardsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
     override fun init() {
         pools.put(SAW, GameEntityPoolCreator.create { Saw(game) })
         pools.put(LASER_BEAMER, GameEntityPoolCreator.create { LaserBeamer(game) })
-        pools.put(SWINGIN_AXE, GameEntityPoolCreator.create { SwinginAxe(game) })
+        pools.put(SWINGING_AXE, GameEntityPoolCreator.create { SwingingAxe(game) })
         pools.put(SPIKE, GameEntityPoolCreator.create { Spike(game) })
         pools.put(BOLT, GameEntityPoolCreator.create { Bolt(game) })
         pools.put(ELECTROCUTIE, GameEntityPoolCreator.create { Electrocutie(game) })

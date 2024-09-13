@@ -34,6 +34,9 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val SENSE = "sense"
+    const val NOT = "not"
+    const val TAG = "tag"
     const val FORCE = "force"
     const val CLAMP = "clamp"
     const val HIT_WATER = "hit_water"

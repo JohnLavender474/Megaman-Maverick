@@ -9,6 +9,8 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullablesComponent
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
@@ -52,13 +54,14 @@ class ForceDecoration(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
     }
 
     private fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite()
+        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 2))
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(bounds.getCenter())
             _sprite.setOriginCenter()
             _sprite.rotation = rotation
+            _sprite.setAlpha(0.5f)
         }
         return spritesComponent
     }

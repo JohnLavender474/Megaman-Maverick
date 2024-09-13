@@ -1,10 +1,5 @@
 package com.megaman.maverick.game.drawables.sprites
 
-import com.mega.game.engine.world.body.*;
-import com.mega.game.engine.world.collisions.*;
-import com.mega.game.engine.world.contacts.*;
-import com.mega.game.engine.world.pathfinding.*;
-
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -16,8 +11,8 @@ class WindyClouds(game: MegamanMaverickGame, start: Vector2, width: Float, heigh
 ) {
 
     companion object {
-        private const val ROWS = 2
-        private const val COLS = 20
+        private const val ROWS = 1
+        private const val COLS = 30
         private const val DUR = 10f
     }
 }

@@ -85,7 +85,6 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
         set(value) {
             body.cardinalRotation = value
         }
-
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
         Bullet::class to dmgNeg(15),
         Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
@@ -98,9 +97,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
         MetBehavior.POP_UP to Timer(POP_UP_DURATION),
         MetBehavior.RUNNING to Timer(RUNNING_DURATION)
     )
-
     private lateinit var type: String
-
     private var behavior: MetBehavior = MetBehavior.SHIELDING
         set(value) {
             field = value
@@ -109,6 +106,8 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
     private var runOnly = false
     private var runningAllowed = false
     private var runSpeed = RUN_SPEED
+
+    override fun getTag() = TAG
 
     override fun init() {
         super.init()
@@ -142,8 +141,6 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
         GameLogger.debug(TAG, "Destroying Met")
         super.onDestroy()
     }
-
-    override fun getTag() = TAG
 
     private fun shoot() {
         GameLogger.debug(TAG, "Met is shooting")

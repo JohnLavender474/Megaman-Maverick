@@ -29,14 +29,11 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         const val TAG = "Block"
         const val STANDARD_FRICTION_X = 0.035f
         const val STANDARD_FRICTION_Y = 0f
-        const val TIME_TO_CULL = 3f
     }
 
     lateinit var blockFixture: Fixture
         private set
-
     protected val debugShapeSuppliers = Array<() -> IDrawableShape?>()
-
     private val fixturesToRemove = ObjectSet<Fixture>()
 
     override fun getEntityType() = EntityType.BLOCK
@@ -52,14 +49,15 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        GameLogger.debug(TAG, "Spawned: $spawnProps")
+        GameLogger.debug(TAG, "Spawned:` $spawnProps")
         super.onSpawn(spawnProps)
 
+        // TODO: if the bug where blocks do not always spawn persists, then the default value here can be set to false
         val cullOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
         if (cullOutOfBounds) addComponent(
             CullablesComponent(
                 objectMapOf(
-                    ConstKeys.CULL_OUT_OF_BOUNDS to getGameCameraCullingLogic(this, TIME_TO_CULL)
+                    ConstKeys.CULL_OUT_OF_BOUNDS to getGameCameraCullingLogic(this)
                 )
             )
         ) else removeComponent(CullablesComponent::class)
@@ -124,10 +122,10 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
             val filters = spawnProps.get(ConstKeys.BLOCK_FILTERS)
             if (filters is String) {
                 val filterStrings = filters.replace("\\s+", "").split(",")
-                filterStrings.forEach { body.addBlockFilter(it) }
+                filterStrings.forEach { body.addBlockFilter(it.uppercase()) }
             } else {
                 filters as ObjectSet<String>
-                filters.forEach { body.addBlockFilter(it) }
+                filters.forEach { body.addBlockFilter(it.uppercase()) }
             }
         }
     }

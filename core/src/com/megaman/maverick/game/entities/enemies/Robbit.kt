@@ -53,13 +53,13 @@ class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     companion object {
         const val TAG = "Robbit"
         private var atlas: TextureAtlas? = null
-        private const val STAND_DUR = 0.85f
-        private const val CROUCH_DUR = 0.2f
+        private const val STAND_DUR = 0.75f
+        private const val CROUCH_DUR = 0.25f
         private const val JUMP_DUR = 0.25f
         private const val G_GRAV = -0.001f
         private const val GRAV = -0.15f
-        private const val JUMP_X = 4f
-        private const val JUMP_Y = 7f
+        private const val JUMP_X = 5f
+        private const val JUMP_Y = 8f
     }
 
     private enum class RobbitState { STANDING, CROUCHING, JUMPING }
@@ -88,6 +88,8 @@ class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     private val robbitTimer: Timer
         get() = robbitTimers[robbitLoop.getCurrent()]!!
 
+    override fun getTag() = TAG
+
     override fun init() {
         super.init()
         if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
@@ -115,7 +117,7 @@ class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         debugShapes.add { bodyFixture.getShape() }
 
         val feetFixture =
-            Fixture(body, FixtureType.FEET, GameRectangle().setSize(ConstVals.PPM / 4f, 0.2f * ConstVals.PPM))
+            Fixture(body, FixtureType.FEET, GameRectangle().setSize(1.35f * ConstVals.PPM, 0.2f * ConstVals.PPM))
         feetFixture.offsetFromBodyCenter.y = -0.75f * ConstVals.PPM
         body.addFixture(feetFixture)
         feetFixture.rawShape.color = Color.GREEN

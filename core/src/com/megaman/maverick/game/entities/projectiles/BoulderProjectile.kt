@@ -31,6 +31,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -103,7 +104,7 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
         destroy()
         val disintegration = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)
         disintegration!!.spawn(props(ConstKeys.POSITION to body.getCenter()))
-        if (size == Size.SMALL) requestToPlaySound(SoundAsset.THUMP_SOUND, false)
+        if (overlapsGameCamera() && size == Size.SMALL) requestToPlaySound(SoundAsset.THUMP_SOUND, false)
     }
 
     private fun breakApart(shape: IGameShape2D) {
