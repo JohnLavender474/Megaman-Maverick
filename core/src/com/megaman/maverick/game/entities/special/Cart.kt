@@ -50,7 +50,6 @@ import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
-import kotlin.math.abs
 
 class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity, ISpritesEntity,
     IAnimatedEntity, IOwnable, IFaceable {
@@ -70,7 +69,7 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
     override fun getEntityType() = EntityType.SPECIAL
 
     override fun init() {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.SPECIALS_1.source, "Cart")
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.SPECIALS_1.source, TAG)
         addComponent(defineBodyComponent())
         addComponent(defineSpriteComponent())
         addComponent(defineAnimationsComponent())
@@ -152,7 +151,6 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             childBlock!!.body.setBottomCenterToPoint(body.getBottomCenterPoint())
         })
-
         body.fixtures.forEach { it.second.putProperty(ConstKeys.DEATH_LISTENER, false) }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -172,18 +170,22 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = {
+        val keySupplier: () -> String? = { "idle"
+            /*
             val vel = abs(body.physics.velocity.x)
             if (vel > 0.5f * ConstVals.PPM) "moving_fast"
             else if (vel > 0.1f * ConstVals.PPM) "moving_slow"
             else if (vel > 0.05f * ConstVals.PPM) "moving_slowest"
             else "idle"
+             */
         }
         val animations = objectMapOf<String, IAnimation>(
+            /*
             "moving_fast" to Animation(region!!, 1, 2, 0.1f, true),
             "moving_slow" to Animation(region!!, 1, 2, 0.25f, true),
             "moving_slowest" to Animation(region!!, 1, 2, 0.35f, true),
-            "idle" to Animation(region!!, 1, 2, 0.5f, false)
+             */
+            "idle" to Animation(region!!)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

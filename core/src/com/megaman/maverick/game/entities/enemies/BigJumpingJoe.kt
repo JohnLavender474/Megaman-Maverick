@@ -121,7 +121,7 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableG
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        val spawn = getProperty(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
         facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
         waitTimer.reset()

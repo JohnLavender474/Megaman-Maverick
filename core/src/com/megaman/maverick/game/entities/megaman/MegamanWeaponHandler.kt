@@ -157,7 +157,7 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
 
         val projectile = when (weapon) {
             MegamanWeapon.BUSTER, MegamanWeapon.RUSH_JETPACK -> fireMegaBuster(_stat)
-            MegamanWeapon.FLAME_TOSS -> fireFlameToss(_stat)
+            // TODO: MegamanWeapon.FLAME_TOSS -> fireFlameToss(_stat)
         }
 
         weaponEntry.spawned.add(projectile)
@@ -170,6 +170,7 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
     private fun getWeaponEntry(weapon: MegamanWeapon) = when (weapon) {
         MegamanWeapon.BUSTER -> MegaWeaponEntry(.01f)
         MegamanWeapon.RUSH_JETPACK -> MegaWeaponEntry(cooldownDur = 0.1f, chargeable = { false })
+        /* TODO:
         MegamanWeapon.FLAME_TOSS -> {
             val e = MegaWeaponEntry(.5f)
             e.normalCost = { 3 }
@@ -179,6 +180,7 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
             e.canFireWeapon = { !megaman.body.isSensing(BodySense.IN_WATER) && e.spawned.size == 0 }
             e
         }
+         */
     }
 
     private fun fireMegaBuster(stat: MegaChargeStatus): AbstractProjectile {

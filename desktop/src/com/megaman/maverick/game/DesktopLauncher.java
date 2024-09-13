@@ -15,7 +15,7 @@ public class DesktopLauncher {
     private static final int DEFAULT_FPS = 60;
     private static final int DEFAULT_WIDTH = 1920;
     private static final int DEFAULT_HEIGHT = 1080;
-    private static final boolean DEFAULT_FULLSCREEN = false;
+    private static final boolean DEFAULT_FULLSCREEN = true;
     private static final boolean DEFAULT_VSYNC = false;
     private static final boolean DEFAULT_DEBUG = false;
     private static final float DEFAULT_FIXED_STEP_SCALAR = 1.0f;

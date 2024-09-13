@@ -196,12 +196,11 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             ) return false
 
             return if (isBehaviorActive(BehaviorType.AIR_DASHING)) game.controllerPoller.isPressed(MegaControllerButtons.A)
-            else aButtonTask == AButtonTask.AIR_DASH && game.controllerPoller.allMatch(
-                objectMapOf(
-                    MegaControllerButtons.A to ButtonStatus.JUST_PRESSED,
-                    MegaControllerButtons.UP to ButtonStatus.RELEASED
-                )
-            )
+            else aButtonTask == AButtonTask.AIR_DASH &&
+                    game.controllerPoller.isJustPressed(MegaControllerButtons.A) &&
+                    game.controllerPoller.isReleased(MegaControllerButtons.DOWN) &&
+                    (if (currentWeapon == MegamanWeapon.RUSH_JETPACK)
+                        game.controllerPoller.isReleased(MegaControllerButtons.UP) else true)
         }
 
         override fun init() {

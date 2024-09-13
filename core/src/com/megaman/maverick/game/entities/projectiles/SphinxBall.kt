@@ -149,7 +149,7 @@ class SphinxBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         debugShapes.add { rightFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            block?.body!!.setTopCenterToPoint(body.getTopCenterPoint())
+            block?.body?.setTopCenterToPoint(body.getTopCenterPoint())
             body.physics.gravityOn = !body.isSensingAny(BodySense.FEET_ON_GROUND, BodySense.FEET_ON_SAND)
             if (body.isSensingAny(BodySense.SIDE_TOUCHING_BLOCK_LEFT, BodySense.SIDE_TOUCHING_BLOCK_RIGHT)) {
                 body.physics.velocity.set(0f, -SINK_SPEED * ConstVals.PPM)
