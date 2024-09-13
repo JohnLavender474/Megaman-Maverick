@@ -270,7 +270,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
             MainScreenButton.CREDITS.text,
             object : IMenuButton {
                 override fun onSelect(delta: Float): Boolean {
-                    game.setCurrentScreen(ScreenEnum.CREDITS.name)
+                    game.setCurrentScreen(ScreenEnum.CREDITS_SCREEN.name)
                     return true
                 }
 
@@ -443,8 +443,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         batch.end()
     }
 
-    override fun onAnyMovement() {
-        super.onAnyMovement()
+    override fun onAnyMovement(direction: Direction) {
         GameLogger.debug(TAG, "Current button: $currentButtonKey")
         game.audioMan.playSound(SoundAsset.CURSOR_MOVE_BLOOP_SOUND)
     }

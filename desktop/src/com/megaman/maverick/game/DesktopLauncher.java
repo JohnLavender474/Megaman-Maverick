@@ -21,7 +21,7 @@ public class DesktopLauncher {
     private static final float DEFAULT_FIXED_STEP_SCALAR = 1.0f;
     private static final float DEFAULT_MUSIC_VOLUME = 0.5f;
     private static final float DEFAULT_SOUND_VOLUME = 0.5f;
-    private static final String DEFAULT_START_SCREEN = "main";
+    private static final String DEFAULT_START_SCREEN = "simple";
     private static final String DEFAULT_LEVEL = "null";
     private static final String TITLE = "Megaman Maverick";
 
@@ -50,7 +50,7 @@ public class DesktopLauncher {
         public boolean debug = DEFAULT_DEBUG;
 
         @Parameter(names = {"--startScreen"}, description = "The screen to start the game app on. Options: \"main\", " +
-                "\"level\". Options not case sensitive. Default value = " + DEFAULT_START_SCREEN + ".")
+                "\"level\", \"simple\". Options not case sensitive. Default value = " + DEFAULT_START_SCREEN + ".")
         public String startScreen = DEFAULT_START_SCREEN;
 
         @Parameter(names = {"--level"}, description = "The level to start the game app on. This option only works if " +
@@ -116,6 +116,8 @@ public class DesktopLauncher {
             startScreenOption = StartScreenOption.MAIN;
         } else if (appArgs.startScreen.equalsIgnoreCase("level")) {
             startScreenOption = StartScreenOption.LEVEL;
+        } else if (appArgs.startScreen.equalsIgnoreCase("simple")) {
+            startScreenOption = StartScreenOption.SIMPLE;
         } else {
             System.err.println("[Application] Error in main method: Invalid start screen option.");
             jCommander.usage();

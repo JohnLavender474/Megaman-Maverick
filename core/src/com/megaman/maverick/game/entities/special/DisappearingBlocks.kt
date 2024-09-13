@@ -1,10 +1,5 @@
 package com.megaman.maverick.game.entities.special
 
-import com.mega.game.engine.world.body.*;
-import com.mega.game.engine.world.collisions.*;
-import com.mega.game.engine.world.contacts.*;
-import com.mega.game.engine.world.pathfinding.*;
-
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.audio.AudioComponent
@@ -42,7 +37,6 @@ class DisappearingBlocks(game: MegamanMaverickGame) : MegaGameEntity(game), IPar
     override var children = Array<GameEntity>()
 
     private val keysToRender = LinkedList<String>()
-
     private lateinit var bounds: GameRectangle
     private lateinit var loop: Loop<String>
     private lateinit var timer: Timer
@@ -55,9 +49,7 @@ class DisappearingBlocks(game: MegamanMaverickGame) : MegaGameEntity(game), IPar
         addComponent(defineUpdatablesComponent())
         addComponent(AudioComponent())
         addComponent(defineCullablesComponent())
-        addComponent(
-            DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ bounds }), debug = true)
-        )
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ bounds }), debug = true))
     }
 
     override fun onSpawn(spawnProps: Properties) {

@@ -100,7 +100,7 @@ class MegaAudioManager(
     }
 
     fun unsetMusic() {
-        if (currentMusic?.isPlaying == true) currentMusic?.stop()
+        currentMusic?.stop()
         currentMusic = null
     }
 

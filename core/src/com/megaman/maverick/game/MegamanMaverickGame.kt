@@ -2,7 +2,6 @@ package com.megaman.maverick.game
 
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.Input
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
@@ -77,10 +76,7 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
-import com.megaman.maverick.game.screens.menus.ControllerSettingsScreen
-import com.megaman.maverick.game.screens.menus.LoadPasswordScreen
-import com.megaman.maverick.game.screens.menus.MainMenuScreen
-import com.megaman.maverick.game.screens.menus.SaveGameScreen
+import com.megaman.maverick.game.screens.menus.*
 import com.megaman.maverick.game.screens.menus.bosses.BossIntroScreen
 import com.megaman.maverick.game.screens.menus.bosses.BossSelectScreen
 import com.megaman.maverick.game.screens.other.CreditsScreen
@@ -97,7 +93,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.cast
 
 enum class StartScreenOption {
-    MAIN, LEVEL
+    MAIN, SIMPLE, LEVEL
 }
 
 class MegamanMaverickGameParams {
@@ -149,16 +145,16 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
 
     fun setCurrentScreen(key: String) {
         GameLogger.debug(TAG, "setCurrentScreen: set to screen with key = $key")
-        currentScreenKey?.let { screens[it] }?.let {
+        currentScreen?.let {
             it.hide()
             it.reset()
         }
         currentScreenKey = key
-        screens[key]?.let { nextScreen ->
-            nextScreen.show()
-            nextScreen.resize(Gdx.graphics.width, Gdx.graphics.height)
-            if (paused) nextScreen.pause()
+        currentScreen?.let {
+            it.show()
+            it.resize(Gdx.graphics.width, Gdx.graphics.height)
         }
+        if (paused) resume()
     }
 
     fun startLevelScreen(level: Level) {
@@ -249,7 +245,10 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
         megamanUpgradeHandler.add(MegaAbility.GROUND_SLIDE)
         megamanUpgradeHandler.add(MegaAbility.WALL_SLIDE)
 
-        screens.put(ScreenEnum.LEVEL_SCREEN.name, MegaLevelScreen(this))
+        screens.put(
+            ScreenEnum.LEVEL_SCREEN.name,
+            // TODO: should set current screen to main menu screen when escape is pressed (after confirmation)
+            MegaLevelScreen(this) { setCurrentScreen(ScreenEnum.SIMPLE_SELECT_LEVEL_SCREEN.name) })
         screens.put(ScreenEnum.MAIN_MENU_SCREEN.name, MainMenuScreen(this))
         screens.put(ScreenEnum.SAVE_GAME_SCREEN.name, SaveGameScreen(this))
         screens.put(ScreenEnum.LOAD_PASSWORD_SCREEN.name, LoadPasswordScreen(this))
@@ -257,12 +256,16 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
         screens.put(ScreenEnum.CONTROLLER_SETTINGS_SCREEN.name, ControllerSettingsScreen(this, buttons, false))
         screens.put(ScreenEnum.BOSS_SELECT_SCREEN.name, BossSelectScreen(this))
         screens.put(ScreenEnum.BOSS_INTRO_SCREEN.name, BossIntroScreen(this))
-        screens.put(ScreenEnum.SIMPLE_END_LEVEL_SUCCESSFULLY_SCREEN.name, SimpleEndLevelScreen(this))
         screens.put(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name, SimpleInitGameScreen(this))
-        screens.put(ScreenEnum.CREDITS.name, CreditsScreen(this))
+        screens.put(ScreenEnum.SIMPLE_SELECT_LEVEL_SCREEN.name, SimpleSelectLevelScreen(this))
+        screens.put(ScreenEnum.SIMPLE_END_LEVEL_SUCCESSFULLY_SCREEN.name, SimpleEndLevelScreen(this))
+        screens.put(ScreenEnum.CREDITS_SCREEN.name, CreditsScreen(this))
 
-        if (params.startScreen == StartScreenOption.LEVEL) startLevelScreen(params.startLevel!!)
-        else setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
+        when (params.startScreen) {
+            StartScreenOption.LEVEL -> startLevelScreen(params.startLevel!!)
+            StartScreenOption.SIMPLE -> setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name)
+            else -> setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
+        }
     }
 
     override fun onEvent(event: Event) {
@@ -292,7 +295,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
     }
 
     override fun render() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) Gdx.app.exit()
+        // if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) Gdx.app.exit()
 
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT)

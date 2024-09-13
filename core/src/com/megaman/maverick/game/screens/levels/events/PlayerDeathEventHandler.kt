@@ -2,6 +2,7 @@ package com.megaman.maverick.game.screens.levels.events
 
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.interfaces.Initializable
+import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.events.Event
@@ -9,7 +10,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.events.EventType
 
-class PlayerDeathEventHandler(private val game: MegamanMaverickGame) : Initializable, Updatable {
+class PlayerDeathEventHandler(private val game: MegamanMaverickGame) : Initializable, Updatable, Resettable {
 
     companion object {
         const val TAG = "PlayerDeathEventHandler"
@@ -37,5 +38,9 @@ class PlayerDeathEventHandler(private val game: MegamanMaverickGame) : Initializ
             GameLogger.debug(TAG, "Player death timer just finished")
             game.eventsMan.submitEvent(Event(EventType.PLAYER_DONE_DYIN))
         }
+    }
+
+    override fun reset() {
+        deathTimer.setToEnd(allowJustFinished = false)
     }
 }

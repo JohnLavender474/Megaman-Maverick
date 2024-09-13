@@ -38,3 +38,5 @@ fun Body.setBodySense(vararg bodySenses: BodySense, value: Boolean) =
 
 fun Body.setBodySense(vararg bodySenses: Pair<BodySense, Boolean>) =
     bodySenses.forEach { setBodySense(it.first, it.second) }
+
+fun Body.resetBodySenses() = BodySense.values().forEach { putProperty(it.toString(), false) }

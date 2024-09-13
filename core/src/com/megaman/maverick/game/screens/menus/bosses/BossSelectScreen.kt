@@ -240,9 +240,8 @@ class BossSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MEGA_MA
         game.audioMan.playMusic(MusicAsset.MMX_LEVEL_SELECT_SCREEN_MUSIC, true)
     }
 
-    override fun onAnyMovement() {
+    override fun onAnyMovement(direction: Direction) =
         game.audioMan.playSound(SoundAsset.CURSOR_MOVE_BLOOP_SOUND, false)
-    }
 
     override fun render(delta: Float) {
         super.render(delta)

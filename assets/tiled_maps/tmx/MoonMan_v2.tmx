@@ -533,7 +533,7 @@
    <properties>
     <property name="apply_scalar_to_children" type="bool" value="true"/>
     <property name="gravity_scalar" type="float" value="0.25"/>
-    <property name="movement_scalar" type="float" value="0.75"/>
+    <property name="movement_scalar" type="float" value="0.85"/>
    </properties>
   </object>
   <object id="518" name="2" x="9408" y="448" width="32" height="32">

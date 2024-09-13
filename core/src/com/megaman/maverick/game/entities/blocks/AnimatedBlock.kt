@@ -59,6 +59,7 @@ open class AnimatedBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntit
             val runOnSpawn = spawnProps.get(ConstKeys.RUN_ON_SPAWN, Runnable::class)!!
             runOnSpawn.run()
         }
+        if (spawnProps.containsKey(ConstKeys.KEY)) putProperty(ConstKeys.KEY, spawnProps.get(ConstKeys.KEY))
     }
 
     protected open fun defineUpdateablesComponent(updateablesComponent: UpdatablesComponent) {

@@ -35,9 +35,7 @@ import kotlin.math.roundToInt
 
 class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IBodyEntity, IParentEntity {
 
-    enum class ElectrocutieState {
-        MOVE, CHARGE, SHOCK
-    }
+    enum class ElectrocutieState { MOVE, CHARGE, SHOCK }
 
     companion object {
         const val TAG = "ElectrocutieParent"
@@ -48,7 +46,6 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
     }
 
     override var children = Array<GameEntity>()
-
     val currentState: ElectrocutieState
         get() = loop.getCurrent()
 
@@ -58,13 +55,14 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
         ElectrocutieState.CHARGE to Timer(CHARGE_DURATION),
         ElectrocutieState.SHOCK to Timer(SHOCK_DURATION)
     )
-
     private var vertical = true
     private var left = true
     private var minPosition = 0f
     private var maxPosition = 0f
 
     override fun getEntityType() = EntityType.HAZARD
+
+    override fun getTag() = TAG
 
     override fun init() {
         addComponent(defineUpdatablesComponent())

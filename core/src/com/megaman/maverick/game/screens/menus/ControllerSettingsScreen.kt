@@ -29,7 +29,11 @@ import com.megaman.maverick.game.utils.setToDefaultPosition
 class ControllerSettingsScreen(
     game: MegamanMaverickGame,
     private val controllerButtons: ControllerButtons,
-    var isKeyboardSettings: Boolean
+    var isKeyboardSettings: Boolean,
+    var backAction: () -> Boolean = {
+        game.setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
+        true
+    }
 ) : MegaMenuScreen(game, BACK), Initializable {
 
     companion object {
@@ -62,7 +66,8 @@ class ControllerSettingsScreen(
                 GameLogger.debug(TAG, "Setting [$selectedButton] keycode from [${button.keyboardCode}] to [$keycode]")
 
                 // if any buttons match the keycode, then switch them
-                controllerButtons.values().forEach { if (it.keyboardCode == keycode) it.keyboardCode = button.keyboardCode }
+                controllerButtons.values()
+                    .forEach { if (it.keyboardCode == keycode) it.keyboardCode = button.keyboardCode }
                 button.keyboardCode = keycode
 
                 // save the keyboard codes to preferences
@@ -139,10 +144,8 @@ class ControllerSettingsScreen(
         fontHandles.add(backFontHandle)
 
         buttons.put(BACK, object : IMenuButton {
-            override fun onSelect(delta: Float): Boolean {
-                game.setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
-                return true
-            }
+
+            override fun onSelect(delta: Float) = backAction.invoke()
 
             override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
                 Direction.UP -> MegaControllerButtons.B.name
@@ -227,22 +230,17 @@ class ControllerSettingsScreen(
         game.getUiCamera().setToDefaultPosition()
     }
 
-
-    override fun onAnySelection() {
-        super.onAnySelection()
+    override fun onAnySelection() =
         game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
-    }
 
-    override fun onAnyMovement() {
-        super.onAnyMovement()
+    override fun onAnyMovement(direction: Direction) =
         game.audioMan.playSound(SoundAsset.CURSOR_MOVE_BLOOP_SOUND, false)
-    }
 
     override fun render(delta: Float) {
         if (!isKeyboardSettings && controller == null) {
             GameLogger.error(TAG, "No controller found")
             game.audioMan.playSound(SoundAsset.ERROR_SOUND, false)
-            game.setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
+            backAction.invoke()
             return
         }
 
@@ -257,7 +255,8 @@ class ControllerSettingsScreen(
                 RESET_TO_DEFAULTS -> 9.6f
                 else -> 9.6f - (MegaControllerButtons.valueOf(currentButtonKey!!).ordinal + 1)
             }
-        blinkingArrow.center = Vector2(2.5f * ConstVals.PPM, arrowY * ConstVals.PPM)
+        blinkingArrow.centerX = 2.5f * ConstVals.PPM
+        blinkingArrow.centerY = arrowY * ConstVals.PPM
         blinkingArrow.update(delta)
 
         game.batch.projectionMatrix = game.getUiCamera().combined

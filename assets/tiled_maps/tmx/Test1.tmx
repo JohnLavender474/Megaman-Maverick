@@ -310,7 +310,7 @@
     <property name="direction" value="up"/>
    </properties>
   </object>
-  <object id="123" name="BlackBackground" x="13896" y="64" width="3384" height="416">
+  <object id="123" name="Darkness" x="13896" y="64" width="3384" height="416">
    <properties>
     <property name="hidden" type="bool" value="true"/>
     <property name="key" type="int" value="1"/>

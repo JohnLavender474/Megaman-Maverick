@@ -1,5 +1,7 @@
 package com.megaman.maverick.game.screens.levels
 
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
@@ -67,8 +69,10 @@ import com.megaman.maverick.game.spawns.SpawnsManager
 import com.megaman.maverick.game.utils.toProps
 import java.util.*
 
-class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScreen(game.batch), Initializable,
-    IEventListener, Resettable {
+class MegaLevelScreen(
+    private val game: MegamanMaverickGame,
+    private val onEscapePressed: () -> Unit = {},
+) : TiledMapLevelScreen(game.batch), Initializable, IEventListener, Resettable {
 
     companion object {
         const val TAG = "MegaLevelScreen"
@@ -139,7 +143,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
     private lateinit var gameCamera: OrthographicCamera
     private lateinit var foregroundCamera: OrthographicCamera
     private lateinit var uiCamera: OrthographicCamera
-    private lateinit var disposables: Array<Disposable>
+    private val disposables = Array<Disposable>()
     private val gameCameraPriorPosition = Vector3()
     private var backgroundParallaxFactorX = DEFAULT_BACKGROUND_PARALLAX_FACTOR_X
     private var backgroundParallaxFactorY = DEFAULT_BACKGROUND_PARALLAX_FACTOR_Y
@@ -153,7 +157,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
         if (initialized) return
         initialized = true
 
-        disposables = Array()
         spawnsMan = SpawnsManager()
         levelStateHandler = LevelStateHandler(game)
         endLevelEventHandler = EndLevelEventHandler(game)
@@ -290,6 +293,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
             DEFAULT_FOREGROUND_PARALLAX_FACTOR, Float::class
         )
         camerasSetToGameCamera = false
+        gameCameraPriorPosition.setZero()
         backgroundCamera.position.set(ConstFuncs.getCamInitPos())
         gameCamera.position.set(ConstFuncs.getCamInitPos())
         foregroundCamera.position.set(ConstFuncs.getCamInitPos())
@@ -651,11 +655,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
         shapeRenderer.end()
 
         if (!game.paused && !cameraShaker.isFinished) cameraShaker.update(delta)
-    }
 
-    override fun hide() {
-        super.hide()
-        pause()
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) onEscapePressed.invoke()
     }
 
     override fun reset() {
@@ -666,8 +667,11 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) : TiledMapLevelScre
         spawns.clear()
         spawnsMan.reset()
         playerSpawnsMan.reset()
+        playerDeathEventHandler.reset()
         cameraManagerForRooms.reset()
+        audioMan.unsetMusic()
         game.putProperty(ConstKeys.ROOM_TRANSITION, false)
+        game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
     }
 
     override fun dispose() {

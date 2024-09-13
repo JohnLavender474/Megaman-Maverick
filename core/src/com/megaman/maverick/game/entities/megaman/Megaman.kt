@@ -444,18 +444,11 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-
-        behaviors.forEach { if (isBehaviorActive(it.key)) it.value.end() }
-
-        body.physics.velocity.setZero()
         body.removeProperty(ConstKeys.VELOCITY)
-
         val eventsMan = game.eventsMan
         eventsMan.removeListener(this)
         eventsMan.submitEvent(Event(EventType.PLAYER_JUST_DIED))
-
         stopSoundNow(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
-
         if (getCurrentHealth() > 0) return
 
         val explosionOrbTrajectories = gdxArrayOf(

@@ -39,7 +39,10 @@ object CreditsLoader {
     }
 }
 
-class CreditsScreen(private val game: MegamanMaverickGame) : BaseScreen() {
+class CreditsScreen(
+    private val game: MegamanMaverickGame,
+    var onCompletion: () -> Unit = { game.setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name) }
+) : BaseScreen() {
 
     companion object {
         const val TAG = "CreditsScreen"
@@ -111,6 +114,6 @@ class CreditsScreen(private val game: MegamanMaverickGame) : BaseScreen() {
     private fun handleFadeout(delta: Float) {
         fadeOutTimer.update(delta)
         // TODO: update alpha of background images
-        if (fadeOutTimer.isFinished()) game.setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
+        if (fadeOutTimer.isFinished()) onCompletion.invoke()
     }
 }

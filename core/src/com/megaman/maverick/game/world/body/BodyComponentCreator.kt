@@ -11,6 +11,7 @@ object BodyComponentCreator {
         body.fixtures.forEach { (_, fixture) -> fixture.setEntity(entity) }
         body.setEntity(entity)
         body.preProcess.put(ConstKeys.DELTA) { body.putProperty(ConstKeys.PRIOR, body.getPosition().cpy()) }
+        body.onReset = { body.resetBodySenses() }
         return BodyComponent(body)
     }
 }
