@@ -30,11 +30,13 @@ import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -54,7 +56,7 @@ class Shotman(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity 
         private const val CROUCH_TIME = 0.2f
         private const val LAUNCH_IMPULSE_Y = 10f
         private const val LAUNCH_GRAVITY = -0.15f
-        private const val SHOOT_SPEED_X = 5f
+        private const val SHOOT_SPEED_X = 10f
         private var shootRegion: TextureRegion? = null
         private var launchRegion: TextureRegion? = null
     }
@@ -128,6 +130,7 @@ class Shotman(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity 
                 ConstKeys.TRAJECTORY to Vector2(impulseX, LAUNCH_IMPULSE_Y * ConstVals.PPM)
             )
         )
+        if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
     }
 
     private fun shootBullet() {
@@ -143,6 +146,7 @@ class Shotman(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity 
                 ConstKeys.TRAJECTORY to Vector2(impulseX, 0f)
             )
         )
+        if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -175,9 +179,7 @@ class Shotman(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity 
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = {
-            if (crouchTimer.isFinished()) "shoot" else "launch"
-        }
+        val keySupplier: () -> String? = { if (crouchTimer.isFinished()) "shoot" else "launch" }
         val animations = objectMapOf<String, IAnimation>(
             "shoot" to Animation(shootRegion!!, 1, 2, 0.1f, true),
             "launch" to Animation(launchRegion!!)

@@ -48,7 +48,7 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
 
     companion object {
         private var textureRegion: TextureRegion? = null
-        private const val GRAVITY = -.15f
+        private const val GRAVITY = -0.1f
         private const val VEL_X = 2.5f
         private const val VEL_Y = 2.5f
     }
@@ -91,7 +91,6 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
         updatablesComponent.add {
             val megaman = game.megaman
             if (megaman.dead) return@add
-
             wasOnWall = onWall
             onWall =
                 (facing == Facing.LEFT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
@@ -109,6 +108,7 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
         body.setSize(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat())
 
         val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body.getBodyBounds() }
 
         val bodyFixture =
             Fixture(

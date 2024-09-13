@@ -93,7 +93,13 @@ internal fun Megaman.defineAnimationsComponent(): AnimationsComponent {
                     if (shooting) "RunShoot"
                     else if (fullyCharged) "RunCharging" else if (halfCharged) "RunHalfCharging" else "Run"
                 } else if (isBehaviorActive(BehaviorType.JUMPING) ||
-                    (!body.isSensing(BodySense.FEET_ON_GROUND) && abs(body.physics.velocity.y) > 0.5f * ConstVals.PPM)
+                    !body.isSensing(BodySense.FEET_ON_GROUND)
+                    /*
+                    (!body.isSensing(BodySense.FEET_ON_GROUND) && abs(
+                        if (directionRotation!!.isVertical()) body.physics.velocity.y
+                        else body.physics.velocity.x
+                    ) > 0.1f * ConstVals.PPM)
+                     */
                 ) {
                     if (shooting) "JumpShoot"
                     else if (fullyCharged) "JumpCharging" else if (halfCharged) "JumpHalfCharging" else "Jump"

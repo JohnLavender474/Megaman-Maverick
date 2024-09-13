@@ -47,7 +47,7 @@ import kotlin.reflect.KClass
 class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     companion object {
-        private const val FORCE_FLASH_DURATION = .1f
+        private const val FORCE_FLASH_DURATION = 0.1f
         private const val X_VEL_NORMAL = 3f
         private const val X_VEL_SLOW = 1f
         private const val PULL_FORCE_X = 6f
@@ -62,7 +62,6 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         ChargedShot::class to dmgNeg(ConstVals.MAX_HEALTH),
         ChargedShotExplosion::class to dmgNeg(ConstVals.MAX_HEALTH)
     )
-
     override var facing = Facing.RIGHT
 
     private val forceFlashTimer = Timer(FORCE_FLASH_DURATION)
@@ -85,28 +84,26 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val body = Body(BodyType.DYNAMIC)
         body.setSize(ConstVals.PPM.toFloat())
 
-        val shapes = Array<() -> IDrawableShape?>()
+        val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body.getBodyBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(ConstVals.PPM.toFloat()))
         body.addFixture(bodyFixture)
-
-        shapes.add { bodyFixture.getShape() }
+        debugShapes.add { bodyFixture.getShape() }
 
         val leftFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         leftFixture.offsetFromBodyCenter.x = -0.6f * ConstVals.PPM
         leftFixture.offsetFromBodyCenter.y = 0.4f * ConstVals.PPM
         body.addFixture(leftFixture)
-
-        shapes.add { leftFixture.getShape() }
+        debugShapes.add { leftFixture.getShape() }
 
         val rightFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         rightFixture.offsetFromBodyCenter.x = 0.6f * ConstVals.PPM
         rightFixture.offsetFromBodyCenter.y = 0.4f * ConstVals.PPM
         body.addFixture(rightFixture)
-
-        shapes.add { rightFixture.getShape() }
+        debugShapes.add { rightFixture.getShape() }
 
         forceFixture = Fixture(
             body,
@@ -125,21 +122,20 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             return@setVelocityAlteration VelocityAlteration.add(x, y)
         }
         body.addFixture(forceFixture)
-
         forceFixture.rawShape.color = Color.YELLOW
-        shapes.add { forceFixture.getShape() }
+        debugShapes.add { forceFixture.getShape() }
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(ConstVals.PPM.toFloat()))
         body.addFixture(damageableFixture)
         damageableFixture.rawShape.color = Color.PURPLE
-        shapes.add { damageableFixture.getShape() }
+        debugShapes.add { damageableFixture.getShape() }
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.85f * ConstVals.PPM))
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.95f * ConstVals.PPM))
         body.addFixture(damagerFixture)
         damagerFixture.rawShape.color = Color.RED
-        shapes.add { damagerFixture.getShape() }
+        debugShapes.add { damagerFixture.getShape() }
 
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = shapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -147,13 +143,13 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
-        val SpritesComponent = SpritesComponent(sprite)
-        SpritesComponent.putUpdateFunction { _, _sprite ->
+        val spritesComponent = SpritesComponent(sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
             _sprite.setCenter(body.getCenter())
             _sprite.setFlip(facing == Facing.LEFT, false)
         }
-        return SpritesComponent
+        return spritesComponent
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
