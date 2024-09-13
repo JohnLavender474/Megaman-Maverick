@@ -532,7 +532,7 @@ class MegaLevelScreen(
             EventType.END_LEVEL -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): End level")
                 eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
-                val nextScreen = LevelCompletionMap.getNextScreen(level!!)
+                val nextScreen = LevelCompletionMap.getNextScreen(level!!, game.params.startScreen)
                 game.setCurrentScreen(nextScreen.name)
             }
 

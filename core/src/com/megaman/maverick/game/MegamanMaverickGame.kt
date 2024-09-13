@@ -2,6 +2,7 @@ package com.megaman.maverick.game
 
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
@@ -92,9 +93,7 @@ import java.util.*
 import kotlin.reflect.KClass
 import kotlin.reflect.cast
 
-enum class StartScreenOption {
-    MAIN, SIMPLE, LEVEL
-}
+enum class StartScreenOption { MAIN, SIMPLE, LEVEL }
 
 class MegamanMaverickGameParams {
     var debug: Boolean = false
@@ -115,10 +114,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
         }
     }
 
-    override val eventKeyMask = objectSetOf<Any>(
-        EventType.TURN_CONTROLLER_ON,
-        EventType.TURN_CONTROLLER_OFF
-    )
+    override val eventKeyMask = objectSetOf<Any>(EventType.TURN_CONTROLLER_ON, EventType.TURN_CONTROLLER_OFF)
     override val properties = Properties()
 
     val viewports = ObjectMap<String, Viewport>()
@@ -239,7 +235,9 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
 
         megamanUpgradeHandler = MegamanUpgradeHandler(state, megaman)
 
-        // Megaman should have all upgrades at the start of the game
+        // Megaman should have all upgrades at the start of the game.
+        // This can be changed so that Megaman must earn each ability,
+        // but doing so will require reworking level designs and certains parts of the codebase
         megamanUpgradeHandler.add(MegaAbility.CHARGE_WEAPONS)
         megamanUpgradeHandler.add(MegaAbility.AIR_DASH)
         megamanUpgradeHandler.add(MegaAbility.GROUND_SLIDE)
@@ -247,8 +245,12 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
 
         screens.put(
             ScreenEnum.LEVEL_SCREEN.name,
-            // TODO: should set current screen to main menu screen when escape is pressed (after confirmation)
-            MegaLevelScreen(this) { setCurrentScreen(ScreenEnum.SIMPLE_SELECT_LEVEL_SCREEN.name) })
+            MegaLevelScreen(this) {
+                when (params.startScreen) {
+                    StartScreenOption.MAIN, StartScreenOption.LEVEL -> Gdx.app.exit()
+                    StartScreenOption.SIMPLE -> setCurrentScreen(ScreenEnum.SIMPLE_SELECT_LEVEL_SCREEN.name)
+                }
+            })
         screens.put(ScreenEnum.MAIN_MENU_SCREEN.name, MainMenuScreen(this))
         screens.put(ScreenEnum.SAVE_GAME_SCREEN.name, SaveGameScreen(this))
         screens.put(ScreenEnum.LOAD_PASSWORD_SCREEN.name, LoadPasswordScreen(this))
@@ -274,9 +276,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
                 controllerPoller.on = false
                 val turnSystemOff =
                     event.getOrDefaultProperty(
-                        "${ConstKeys.CONTROLLER}_${ConstKeys.SYSTEM}_${ConstKeys.OFF}",
-                        true,
-                        Boolean::class
+                        "${ConstKeys.CONTROLLER}_${ConstKeys.SYSTEM}_${ConstKeys.OFF}", true, Boolean::class
                     )
                 if (turnSystemOff) getSystem(ControllerSystem::class).on = false
             }
@@ -285,9 +285,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
                 controllerPoller.on = true
                 val turnSystemOn =
                     event.getOrDefaultProperty(
-                        "${ConstKeys.CONTROLLER}_${ConstKeys.SYSTEM}_${ConstKeys.ON}",
-                        true,
-                        Boolean::class
+                        "${ConstKeys.CONTROLLER}_${ConstKeys.SYSTEM}_${ConstKeys.ON}", true, Boolean::class
                     )
                 if (turnSystemOn) getSystem(ControllerSystem::class).on = true
             }
@@ -295,7 +293,8 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
     }
 
     override fun render() {
-        // if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) Gdx.app.exit()
+        if (params.startScreen != StartScreenOption.SIMPLE && Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
+            Gdx.app.exit()
 
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT)
@@ -336,9 +335,9 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
 
     override fun dispose() {
         GameLogger.debug(TAG, "dispose()")
-        batch.dispose()
-        shapeRenderer.dispose()
-        engine.dispose()
+        if (this::batch.isInitialized) batch.dispose()
+        if (this::shapeRenderer.isInitialized) shapeRenderer.dispose()
+        if (this::engine.isInitialized) engine.dispose()
         screens.values().forEach { it.dispose() }
     }
 
