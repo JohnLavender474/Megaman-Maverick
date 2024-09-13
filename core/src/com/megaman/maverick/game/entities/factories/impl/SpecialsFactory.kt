@@ -28,6 +28,7 @@ class SpecialsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         const val CAPSULE_TELEPORTER = "CapsuleTeleporter"
         const val ROOM_SHAKER = "RoomShaker"
         const val EVENT_TRIGGER = "EventTrigger"
+        const val DECORATED_FORCE_GRAVITY = "DecoratedForceGravity"
     }
 
     override fun init() {
@@ -50,6 +51,7 @@ class SpecialsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(CAPSULE_TELEPORTER, GameEntityPoolCreator.create { CapsuleTeleporter(game) })
         pools.put(ROOM_SHAKER, GameEntityPoolCreator.create { RoomShaker(game) })
         pools.put(EVENT_TRIGGER, GameEntityPoolCreator.create { EventTrigger(game) })
+        pools.put(DECORATED_FORCE_GRAVITY, GameEntityPoolCreator.create { DecoratedGravityForce(game) })
     }
 
     override fun fetch(key: Any) = pools.get(key)?.fetch()

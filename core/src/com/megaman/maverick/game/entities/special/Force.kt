@@ -2,20 +2,24 @@ package com.megaman.maverick.game.entities.special
 
 import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.VelocityAlterationType
 import com.megaman.maverick.game.world.body.*
 
-class Force(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity {
+class Force(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity {
 
     companion object {
         const val TAG = "Force"
@@ -81,6 +85,9 @@ class Force(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity {
 
         forceX = spawnProps.getOrDefault(FORCE_X, 0f, Float::class) * ConstVals.PPM
         forceY = spawnProps.getOrDefault(FORCE_Y, 0f, Float::class) * ConstVals.PPM
+
+        val cull = spawnProps.getOrDefault(ConstKeys.CULL, true, Boolean::class)
+        if (cull) addComponent(createCullablesComponent()) else removeComponent(CullablesComponent::class)
     }
 
     private fun defineBodyComponent(): BodyComponent {
@@ -94,5 +101,10 @@ class Force(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity {
         body.addFixture(forceFixture)
         body.preProcess.put(ConstKeys.DEFAULT) { (forceFixture.rawShape as GameRectangle).set(body) }
         return BodyComponentCreator.create(this, body)
+    }
+
+    private fun createCullablesComponent(): CullablesComponent {
+        val cullOnOutOfBounds = getGameCameraCullingLogic(this)
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullOnOutOfBounds))
     }
 }

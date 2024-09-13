@@ -1,10 +1,5 @@
 package com.megaman.maverick.game.entities.factories.impl
 
-import com.mega.game.engine.world.body.*;
-import com.mega.game.engine.world.collisions.*;
-import com.mega.game.engine.world.contacts.*;
-import com.mega.game.engine.world.pathfinding.*;
-
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.decorations.*
 import com.megaman.maverick.game.entities.factories.EntityFactory
@@ -14,7 +9,7 @@ class DecorationsFactory(private val game: MegamanMaverickGame) : EntityFactory(
 
     companion object {
         const val SPLASH = "Splash"
-        const val FORCE = "ForceDecoration"
+        const val FORCE_DECORATION = "ForceDecoration"
         const val WINDY_GRASS = "WindyGrass"
         const val FALLING_LEAF = "FallingLeaf"
         const val TREE = "Tree"
@@ -27,7 +22,7 @@ class DecorationsFactory(private val game: MegamanMaverickGame) : EntityFactory(
 
     override fun init() {
         pools.put(SPLASH, GameEntityPoolCreator.create { Splash(game) })
-        pools.put(FORCE, GameEntityPoolCreator.create { ForceDecoration(game) })
+        pools.put(FORCE_DECORATION, GameEntityPoolCreator.create { ForceDecoration(game) })
         pools.put(WINDY_GRASS, GameEntityPoolCreator.create { WindyGrass(game) })
         pools.put(FALLING_LEAF, GameEntityPoolCreator.create { FallingLeaf(game) })
         pools.put(TREE, GameEntityPoolCreator.create { Tree(game) })

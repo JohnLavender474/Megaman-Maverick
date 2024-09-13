@@ -44,13 +44,14 @@ class ForceDecoration(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
             region = game.assMan.getTextureRegion(TextureAsset.SPECIALS_1.source, "Force")
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
-        addComponent(defineCullablesComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
         bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         rotation = spawnProps.getOrDefault(ConstKeys.ROTATION, 0f, Float::class)
+        val cull = spawnProps.getOrDefault(ConstKeys.CULL, true, Boolean::class)
+        if (cull) addComponent(createCullablesComponent()) else removeComponent(CullablesComponent::class)
     }
 
     private fun defineSpritesComponent(): SpritesComponent {
@@ -58,21 +59,21 @@ class ForceDecoration(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setCenter(bounds.getCenter())
             _sprite.setOriginCenter()
             _sprite.rotation = rotation
+            _sprite.setCenter(bounds.getCenter())
             _sprite.setAlpha(0.5f)
         }
         return spritesComponent
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val animation = Animation(region!!, 1, 4, 0.1f, true)
+        val animation = Animation(region!!, 2, 2, 0.1f, true)
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }
 
-    private fun defineCullablesComponent(): CullablesComponent {
+    private fun createCullablesComponent(): CullablesComponent {
         val cullOutOfBounds = getGameCameraCullingLogic(game.getGameCamera(), { bounds }, 0f)
         return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullOutOfBounds))
     }

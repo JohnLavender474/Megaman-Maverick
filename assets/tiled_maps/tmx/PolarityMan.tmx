@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="100" height="59" tilewidth="32" tileheight="32" infinite="0" nextlayerid="13" nextobjectid="94">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="100" height="59" tilewidth="32" tileheight="32" infinite="0" nextlayerid="13" nextobjectid="107">
  <tileset firstgid="1" source="../tsx/Magnetman.tsx"/>
  <tileset firstgid="113" source="../tsx/MagnetMan2.tsx"/>
  <tileset firstgid="21617" source="../tsx/Tileset1.tsx"/>
@@ -129,26 +129,25 @@
 22402,22403,22403,22403,22403,22403,22403,22403,22404,22402,22403,22403,22403,22404,22338,22339,22339,22339,22339,22339,22339,22339,22339,22339,22339,22339,22340,22402,22403,22403,22403,22403,22403,22403,22403,22403,22403,22403,22403,22404,62,13655,13655,13655,13655,13655,13655,13655,13655,13655,13655,13655,13655,62,20982,20983,20984,20985,20986,20987,22370,22403,22403,22403,22403,22403,22403,22403,22403,22403,22403,22403,22403,22403,22403,22403,22403,22403,22403,22371,22371,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="4" name="game_rooms">
+ <objectgroup id="4" name="game_rooms" visible="0">
   <object id="16" name="room1" x="0" y="1504" width="1120" height="384"/>
   <object id="17" name="room2" x="1120" y="1504" width="1472" height="384"/>
   <object id="52" name="room3" x="800" y="1120" width="1792" height="384"/>
  </objectgroup>
  <objectgroup id="2" name="children"/>
  <objectgroup id="3" name="player">
-  <object id="92" name="0" x="2232" y="1216" width="32" height="32"/>
+  <object id="105" name="0" x="936" y="1728" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="5" name="enemies">
   <object id="42" name="SniperJoe" x="736" y="1744" width="16" height="16"/>
   <object id="43" name="DragonFly" x="640" y="1632" width="16" height="16"/>
   <object id="45" name="SniperJoe" x="1616" y="1784" width="16" height="16"/>
-  <object id="46" name="SniperJoe" x="1872" y="1656" width="16" height="16"/>
-  <object id="47" name="SniperJoe" x="2168" y="1656" width="16" height="16"/>
   <object id="49" name="DragonFly" x="1616" y="1632" width="16" height="16"/>
   <object id="50" name="DragonFly" x="2168" y="1800" width="16" height="16"/>
   <object id="85" name="SuctionRoller" x="2168" y="1296" width="16" height="16"/>
   <object id="88" name="SpringHead" x="1544" y="1328" width="16" height="16"/>
   <object id="89" name="SuctionRoller" x="1224" y="1456" width="16" height="16"/>
+  <object id="106" name="SniperJoe" x="2080" y="1656" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="6" name="hazards"/>
  <objectgroup id="7" name="blocks">
@@ -221,52 +220,52 @@
     <property name="rotation" type="float" value="270"/>
    </properties>
   </object>
-  <object id="32" name="ForceDecoration" x="1744" y="1656" width="32" height="32">
+  <object id="32" name="ForceDecoration" x="1752" y="1928" width="32" height="32">
    <properties>
     <property name="rotation" type="float" value="90"/>
    </properties>
   </object>
-  <object id="33" name="ForceDecoration" x="1808" y="1656" width="32" height="32">
+  <object id="33" name="ForceDecoration" x="1816" y="1928" width="32" height="32">
    <properties>
     <property name="rotation" type="float" value="90"/>
    </properties>
   </object>
-  <object id="34" name="ForceDecoration" x="1872" y="1656" width="32" height="32">
+  <object id="34" name="ForceDecoration" x="1880" y="1928" width="32" height="32">
    <properties>
     <property name="rotation" type="float" value="90"/>
    </properties>
   </object>
-  <object id="35" name="ForceDecoration" x="1936" y="1656" width="32" height="32">
+  <object id="35" name="ForceDecoration" x="1944" y="1928" width="32" height="32">
    <properties>
     <property name="rotation" type="float" value="90"/>
    </properties>
   </object>
-  <object id="36" name="ForceDecoration" x="2000" y="1656" width="32" height="32">
+  <object id="36" name="ForceDecoration" x="2008" y="1928" width="32" height="32">
    <properties>
     <property name="rotation" type="float" value="90"/>
    </properties>
   </object>
-  <object id="37" name="ForceDecoration" x="2064" y="1656" width="32" height="32">
+  <object id="37" name="ForceDecoration" x="2072" y="1928" width="32" height="32">
    <properties>
     <property name="rotation" type="float" value="90"/>
    </properties>
   </object>
-  <object id="38" name="ForceDecoration" x="2128" y="1656" width="32" height="32">
+  <object id="38" name="ForceDecoration" x="2136" y="1928" width="32" height="32">
    <properties>
     <property name="rotation" type="float" value="90"/>
    </properties>
   </object>
-  <object id="39" name="ForceDecoration" x="2192" y="1656" width="32" height="32">
+  <object id="39" name="ForceDecoration" x="2200" y="1928" width="32" height="32">
    <properties>
     <property name="rotation" type="float" value="90"/>
    </properties>
   </object>
-  <object id="40" name="ForceDecoration" x="2256" y="1656" width="32" height="32">
+  <object id="40" name="ForceDecoration" x="2264" y="1928" width="32" height="32">
    <properties>
     <property name="rotation" type="float" value="90"/>
    </properties>
   </object>
-  <object id="41" name="ForceDecoration" x="2320" y="1656" width="32" height="32">
+  <object id="41" name="ForceDecoration" x="2328" y="1928" width="32" height="32">
    <properties>
     <property name="rotation" type="float" value="90"/>
    </properties>
@@ -343,7 +342,7 @@
     <property name="direction" value="up"/>
    </properties>
   </object>
-  <object id="20" name="GravityChange" x="1736" y="1656" width="624" height="168">
+  <object id="20" name="GravityChange" x="1760" y="2144" width="624" height="168">
    <properties>
     <property name="direction" value="down"/>
    </properties>
@@ -355,14 +354,14 @@
     <property name="tag_filter" value="megaman,sniperjoe,met"/>
    </properties>
   </object>
-  <object id="22" name="Force" x="1736" y="1656" width="624" height="168">
+  <object id="22" name="Force" x="1752" y="1984" width="624" height="168">
    <properties>
     <property name="force_y" type="float" value="40"/>
     <property name="not_body_sense_filter" value="feet_on_ground"/>
     <property name="tag_filter" value="megaman,sniperjoe,met"/>
    </properties>
   </object>
-  <object id="23" name="GravityChange" x="2368" y="1600" width="160" height="232">
+  <object id="23" name="GravityChange" x="2376" y="1600" width="152" height="232">
    <properties>
     <property name="direction" value="up"/>
    </properties>
@@ -407,5 +406,11 @@
    </properties>
   </object>
   <object id="90" name="Ladder" x="2496" y="1344" width="32" height="480"/>
+  <object id="104" name="DecoratedForceGravity" x="1728" y="1656" width="640" height="168">
+   <properties>
+    <property name="direction" value="down"/>
+    <property name="force_y" type="float" value="40"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

@@ -9,6 +9,7 @@ import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
@@ -21,7 +22,7 @@ import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 
-class GravityChange(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity {
+class GravityChange(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity {
 
     private lateinit var gravityChangeFixture: Fixture
 
