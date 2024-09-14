@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="650" height="51" tilewidth="32" tileheight="32" infinite="0" nextlayerid="15" nextobjectid="496">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="650" height="51" tilewidth="32" tileheight="32" infinite="0" nextlayerid="15" nextobjectid="497">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/Gravity Man Stage.tsx"/>
  <tileset firstgid="4609" source="../tsx/MM3Wily1.tsx"/>
@@ -730,7 +730,7 @@
   <object id="454" name="1" x="3136" y="1152" width="32" height="32"/>
   <object id="455" name="2" x="5216" y="768" width="32" height="32"/>
   <object id="456" name="3" x="10944" y="928" width="32" height="32"/>
-  <object id="495" name="0" x="13952" y="896" width="32" height="32"/>
+  <object id="496" name="0" x="96" y="1472" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="8" name="hazards">
   <object id="161" name="LaserBeamer" x="3856" y="1048" width="32" height="32">

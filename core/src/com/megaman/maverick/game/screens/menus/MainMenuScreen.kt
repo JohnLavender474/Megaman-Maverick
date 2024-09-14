@@ -206,7 +206,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
                     Direction.UP -> MainScreenButton.EXIT.text
                     Direction.DOWN -> MainScreenButton.LOAD_PASSWORD.text
-                    else -> null
+                    else -> currentButtonKey
                 }
             })
 
@@ -221,7 +221,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
                     Direction.UP -> MainScreenButton.START_NEW_GAME.text
                     Direction.DOWN -> MainScreenButton.LOAD_SAVE_FILE.text
-                    else -> null
+                    else -> currentButtonKey
                 }
             })
 
@@ -245,7 +245,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
                     Direction.UP -> MainScreenButton.LOAD_PASSWORD.text
                     Direction.DOWN -> MainScreenButton.SETTINGS.text
-                    else -> null
+                    else -> currentButtonKey
                 }
             }
         )
@@ -262,7 +262,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
                     Direction.UP -> MainScreenButton.LOAD_SAVE_FILE.text
                     Direction.DOWN -> MainScreenButton.CREDITS.text
-                    else -> null
+                    else -> currentButtonKey
                 }
             })
 
@@ -277,7 +277,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
                     Direction.UP -> MainScreenButton.SETTINGS.text
                     Direction.DOWN -> MainScreenButton.EXIT.text
-                    else -> null
+                    else -> currentButtonKey
                 }
             })
 
@@ -292,7 +292,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
                     Direction.UP -> MainScreenButton.CREDITS.text
                     Direction.DOWN -> MainScreenButton.START_NEW_GAME.text
-                    else -> null
+                    else -> currentButtonKey
                 }
             })
 
@@ -308,30 +308,28 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
                     Direction.UP -> MainScreenSettingsButton.EFFECTS_VOLUME.text
                     Direction.DOWN -> MainScreenSettingsButton.MUSIC_VOLUME.text
-                    else -> null
+                    else -> currentButtonKey
                 }
             })
 
         buttons.put(
             MainScreenSettingsButton.MUSIC_VOLUME.text,
             object : IMenuButton {
-                override fun onSelect(delta: Float): Boolean {
-                    return false
-                }
+                override fun onSelect(delta: Float) = false
 
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
                     Direction.LEFT -> {
                         var volume = game.audioMan.musicVolume
                         volume = if (volume <= 0f) 1f else volume - 0.1f
                         game.audioMan.musicVolume = volume
-                        null
+                        currentButtonKey
                     }
 
                     Direction.RIGHT -> {
                         var volume = game.audioMan.musicVolume
                         volume = if (volume >= 1f) 0f else volume + 0.1f
                         game.audioMan.musicVolume = volume
-                        null
+                        currentButtonKey
                     }
 
                     Direction.UP -> MainScreenSettingsButton.BACK.text
@@ -342,23 +340,21 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         buttons.put(
             MainScreenSettingsButton.EFFECTS_VOLUME.text,
             object : IMenuButton {
-                override fun onSelect(delta: Float): Boolean {
-                    return false
-                }
+                override fun onSelect(delta: Float) = false
 
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
                     Direction.LEFT -> {
                         var volume = game.audioMan.soundVolume
                         volume = if (volume <= 0f) 1f else volume - 0.1f
                         game.audioMan.soundVolume = volume
-                        null
+                        currentButtonKey
                     }
 
                     Direction.RIGHT -> {
                         var volume = game.audioMan.soundVolume
                         volume = if (volume >= 1f) 0f else volume + 0.1f
                         game.audioMan.soundVolume = volume
-                        null
+                        currentButtonKey
                     }
 
                     Direction.UP -> MainScreenSettingsButton.MUSIC_VOLUME.text
@@ -377,7 +373,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
                     Direction.UP -> MainScreenSettingsButton.EFFECTS_VOLUME.text
                     Direction.DOWN -> MainScreenSettingsButton.CONTROLLER_SETTINGS.text
-                    else -> null
+                    else -> currentButtonKey
                 }
             })
 
@@ -398,7 +394,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
                     Direction.UP -> MainScreenSettingsButton.KEYBOARD_SETTINGS.text
                     Direction.DOWN -> MainScreenSettingsButton.BACK.text
-                    else -> null
+                    else -> currentButtonKey
                 }
             })
     }
