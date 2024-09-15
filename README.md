@@ -5,21 +5,67 @@
 <img src="img/BossSelectScreen.png" width="600px"/>
 <hr/>
 
-"Megaman Maverick" is a fangame based on the [classic Megaman series by Capcom](https://megaman.fandom.com/wiki/Mega_Man_(original_series)).
+**Megaman Maverick** is a fangame based on the [classic Megaman series by Capcom](https://megaman.fandom.com/wiki/Mega_Man_(original_series)).
 
-This game is currently under development in a pre-alpha stage.
+The game is currently under active development and is in a **pre-alpha** stage.
 
-This game is built using the [Mega 2D Game Engine](https://github.com/JohnLavender474/Mega-2D-Game-Engine), an engine built
-on top of the popular open-source [LibGDX game library](https://libgdx.com/). This game is programmed primarily in Kotlin,
-with few parts written in Java.
+The game is built using the [Mega 2D Game Engine](https://github.com/JohnLavender474/Mega-2D-Game-Engine), an engine
+built on top of the popular open-source [LibGDX game library](https://libgdx.com/). This game is programmed primarily in
+Kotlin, with few parts written in Java.
+
+View my Youtube channel for demos and more! https://youtube.com/playlist?list=PL4ZszXL-HC0r0E6Eb5NCFGhsi93AXoDZj&si=IITydzhhTSKmxc5-
 
 ## RUNNING THE GAME
 
-TODO
+### RUNNING AN "OFFICIAL" VERSION OF THE GAME
+
+Download the latest zipped build from one of the following links depending on your OS:
+- Windows: https://drive.google.com/file/d/18KVTMErB2zWhANkvfaD5S5z3RyA3ZvuY/view?usp=sharing
+- Linux: https://drive.google.com/file/d/1pHo7JE-d9CUIBNADLJdiatiP95DJP7mb/view?usp=sharing
+
+Once the download has completed, extract the zip to a suitable location on your local desktop.
+
+For Windows, there should be a `desktop.exe` file in the root of the unzipped directory to launch the game.
+
+For Linux, there should be an AppImage in the `bin` directory of the unzipped directory.
+
+**Support for Macbooks is in the works!**
+
+Please note that while the game is in development, new "official" versions will not be generated often. Therefore, as
+long as there is no "release" version of the game, it is recommended to build the game from source for the latest
+changes and fixes.
+
+### BUILDING THE GAME FROM SOURCE
+
+Since the game runs using gradle and JRE, you can build a JAR of the game yourself. Keep in mind that in order to run
+the generated JAR, you will need Java 17+ installed on your local machine.
+
+#### Pre-requisites:
+
+- git
+- Java 17+
+
+1. Use `git` to clone the project to a suitable location on your desktop.
+2. From the root directory, run one of the following:
+
+- Build and run a "distribution" JAR:
+    - Windows:
+        - `.\gradlew desktop:dist`
+        - `java -jar .\desktop\build\libs\desktop-1.0.jar` (replace `desktop-1.0` in the JAR filename if these values
+          have been changed in the root `build.gradle` file)
+    - Linux/Mac:
+        - `build-run-desktop.sh` (runs the same commands as those for the Windows "distribution" JAR)
+- For debugging purposes, the following can be run instead:
+    - Windows:
+        - `.\gradlew desktop:run --args="[args here]"`where `[args here]` is replaced with the optional program args
+    - Linux/Mac:
+        - `./gradlew desktop:run --args="[args here]"`where `[args here]` is replaced with the optional program args
+    - See [DesktopLauncher](./desktop/src/com/megaman/maverick/game/DesktopLauncher.java) for more info regarding app
+      args
 
 ## CREDITS
 
-The artwork, sounds, and music used in this game are sourced from Capcom and fan works from the community. Below is a 
+The artwork, sounds, and music used in this game are sourced from Capcom and fan works from the community. Below is a
 comprehensive listing of the credits for the artwork used in this game.
 
 ### Pixel Art
@@ -34,7 +80,7 @@ Megaman Weapon Get Sprite - [PixelBoy127](https://www.spriters-resource.com/cust
 - Rodent Man - [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/Rodent-Man-Megaman-Maverick-1087797101)
 - Reactor Man - [Balloon Cart](https://balloon-cart.itch.io/reactor-man-asset-pack)
 - Moon Man - [boberatu](https://www.deviantart.com/boberatu/art/MPN-006-Moon-Man-625679636)
-- Naval Man - [boberatu](https://www.deviantart.com/boberatu/art/naval-man-sprites-256984034)
+- Glacier Man - [Balloon Cart](https://balloon-cart.itch.io/glacier-man-asset-pack)
 - Inferno Man - [boberatu](https://www.deviantart.com/boberatu/art/MPN-000-Volcano-Man-313694441)
 - Polarity man - [pharos04](https://www.deviantart.com/pharos04/art/Polarity-Man-ORN-010-570273324)
 - Desert Man - [rcrdcat](https://www.deviantart.com/rcrdcat/art/Desert-Man-Spritesheet-Mugshot-332165249)
@@ -52,23 +98,25 @@ Megaman Weapon Get Sprite - [PixelBoy127](https://www.spriters-resource.com/cust
 - [Balloon Cart (Glacier Man)](https://balloon-cart.itch.io/glacier-man-asset-pack)
 - [MegaBot](https://ansimuz.itch.io/mega-bot)
 - [Mega 8-Bit](https://assetstore.unity.com/packages/2d/environments/mega-8-bit-pixel-pack-60158?srsltid=AfmBOordeWICo0KR-N3MKcw6iqd2TehrlFgQn6Hijzmk09-2eoq2Gid0)
-- TODO: other tilesets
+- All other tilesets ripped from Capcom's official Megaman games
 
 #### Music
 
-- World Revolution - [TrojanHorse711](https://youtu.be/UbA4ahXMGos) - used in Wily stage 3 boss fight
-- Duel of the Fates - [Chips 'N Cellos](https://youtu.be/acIkuMy5684) - used in Wily stage 1 boss fight 
-- FF7 Let the Battles Begin - [Bulby](https://www.youtube.com/watch?v=04_jviOqc3Y&t=16s&ab_channel=Bulby) - used as boss theme 1
-- MM11 Fuse Man - [8-Bit Alchemy](https://youtu.be/435U3tSeKbg) - used in Reactor Man stage 
 - MM Omega Title Theme - [8-Bit Alchemy](https://www.youtube.com/watch?v=ygMXSgow2FY) - used in title screen
-- MMX2 Hunter Stage - [Famitard](https://www.youtube.com/watch?v=R0YZoNYZVhE&ab_channel=FamiTard) - used in Wily stage 2  
-- MMX3 Intro Stage - [Famitard](https://www.youtube.com/watch?v=jEPimSadiRE&ab_channel=FamiTard) - used in intro stage
-- MMX5 Dark Necrobat - [Famitard](https://youtu.be/RosxPCxVOyk) - used in Moon Man stage
 - MMX6 Blaze Heatnix - [Famitard](https://youtu.be/QpbMwCnJDSo) - used in Inferno Man stage
-- MMX6 Sigma 2 - [Famitard](https://youtu.be/FVdYxfEo4lI) - used in Wily stage 2 boss fight
+- MMX5 Dark Necrobat - [Famitard](https://youtu.be/RosxPCxVOyk) - used in Moon Man stage
 - Xenoblade Gaur Plains - [Bulby](https://www.youtube.com/watch?v=xkrf4xfDsZs&t=60s&ab_channel=Bulby) - used in Timber Woman stage
 - MMX7 Vanish. Gung. - [Famitard](https://youtu.be/MFfZ-LEwcMo) - used in Desert Man stage
-- MMX8 Burn Rooster - [Famitard](https://youtu.be/DHh-QSWvb-o) - TODO
+- MM8 Frost Man Alt - [Famitard](https://youtu.be/pQvwU4BavFI) - used in Glacier Man stage
+- MMX5 Shining Firefly - [Famitard](https://youtu.be/EQMQvUFC3g0) - used in Polarity Man stage
+- MM Omega Sludge Man - [8-bit Alchemy](https://youtu.be/1W6vRVMyLvE) - used in Reactor Man stage
+- FF7 Let the Battles Begin - [Bulby](https://www.youtube.com/watch?v=04_jviOqc3Y&t=16s&ab_channel=Bulby) - used as boss theme 1
+- MMX Sigma Fortress 1 - [Wyatt](https://youtu.be/mpHnNDPZNKk) - used in Wily stage 1
+- Duel of the Fates - [Chips 'N Cellos](https://youtu.be/acIkuMy5684) - used in Wily stage 1 boss fight
+- MMX Sigma Fortress 2 - [Bulby](https://youtu.be/WQK9AGaDJLw) - used in Wily stage 2 boss fight
+- World Revolution - [TrojanHorse711](https://youtu.be/UbA4ahXMGos) - used in Wily stage 2 boss fight
+- MMZ Enemy Hall - [DjKlzonez](https://www.youtube.com/watch?v=Van2IRP7OJM&ab_channel=DjKlzonez) - used in Wily stage 3
+- MMX6 Sigma Final Boss - [Famitard](https://youtu.be/FVdYxfEo4lI) - used in Wily stage 3 boss fight
 
 ####
 
