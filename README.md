@@ -60,8 +60,61 @@ the generated JAR, you will need Java 17+ installed on your local machine.
         - `.\gradlew desktop:run --args="[args here]"`where `[args here]` is replaced with the optional program args
     - Linux/Mac:
         - `./gradlew desktop:run --args="[args here]"`where `[args here]` is replaced with the optional program args
-    - See [DesktopLauncher](./desktop/src/com/megaman/maverick/game/DesktopLauncher.java) for more info regarding app
-      args
+    - See [DesktopLauncher](./desktop/src/com/megaman/maverick/game/DesktopLauncher.java) for more info regarding app args
+
+## PLAYING THE GAME
+
+### CONTROLS
+
+By default, the keyboard controls for the game are the following whether the 1st value is the keyboard key and the 2nd 
+value is the "in-game" action:
+- A: LEFT
+- D: RIGHT
+- S: DOWN
+- W: UP
+- J: B
+- K: A
+- ENTER: START
+
+These can be remapped through the Keyboard Settings screen. Use the keys for "UP" and "DOWN" (by default the "W" and "S" 
+keys respectively) to navigate to the game button you wish to remap and press the key for "START" (by default the "ENTER"
+key). You will be prompted to press any key on the keyboard to assign that key's code to the in-game button action.
+
+<img src="img/KeyboardSettings.png" width="600px"/>
+<img src="img/PressToReassignKey.png" width="600px"/>
+
+The game supports controllers and should detect a controller as soon as it is plugged in. The keyboard controls continue
+to work even when a controller is connected. The game has been tested with the following controllers:
+- PS3 controller
+- Xbox 360 controller
+- NES-style USB controller
+
+When a controller is connected, default mappings are assigned. Most likely, you will want to configure these mappings. 
+In the "Controller Settings" screen, you can reassign the mappings for the controller similarly to how the same is done 
+for the keyboard mappings.
+
+### STARTING THE GAME
+
+This section currently pertains to starting an alpha build of the game, and it will be updated when beta and release
+versions are eventually released.
+
+When launching an alpha build, the first screen you see should be something like the following.
+
+<img src="img/StartAlphaGame.png" width="600px"/>
+
+Press the key that corresponds to the command you wish to run. To quit the app, press the ESCAPE key.
+
+If you press ENTER, you will be taken to the "Select Level" screen. Here, you can select any level you want to play. 
+Levels are separated into three categories:
+- Beta: Levels that are over halfway complete but may require some level of redesigning
+- Alpha: Levels that are less than halfway complete and require major redesigning
+- Test: Levels that are made purely for testing game functionality, and that will not be included in release versions of the game
+
+Navigate to the level you wish to play and press the key for START. This will launch the level. **NOTE: Due to the fact
+that this game is an alpha, don't be surprised if the game crashes or if you encounter any bugs!** 
+
+To exit out of a level early, press the ESCAPE key. From the "Select Level" screen, you can return back to the start 
+screen by pressing the ESCAPE key.
 
 ## CREDITS
 
