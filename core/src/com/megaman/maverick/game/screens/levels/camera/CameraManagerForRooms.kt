@@ -23,11 +23,11 @@ import kotlin.math.min
 class CameraManagerForRooms(
     val camera: Camera,
     var distanceOnTransition: Float,
-    var interpolationScalar: Float,
+    var interpolate: () -> Boolean,
+    var interpolationScalar: () -> Float,
     var transitionScannerDimensions: Vector2,
     transDelay: Float,
     transDuration: Float,
-    var interpolate: Boolean = true,
     var beginTransition: (() -> Unit)? = null,
     var continueTransition: ((Float) -> Unit)? = null,
     var endTransition: (() -> Unit)? = null,
@@ -314,11 +314,11 @@ class CameraManagerForRooms(
         focus?.let {
             val focusPos = it.getBounds().getCenter()
 
-            val cameraPos = if (interpolate && !reset)
+            val cameraPos = if (interpolate.invoke() && !reset)
                 interpolate(
                     camera.position.toVector2(),
                     focusPos,
-                    delta * interpolationScalar
+                    delta * interpolationScalar.invoke()
                 )
             else focusPos
 

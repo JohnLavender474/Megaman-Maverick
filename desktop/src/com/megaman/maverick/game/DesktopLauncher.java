@@ -1,6 +1,5 @@
 package com.megaman.maverick.game;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowAdapter;
@@ -12,10 +11,10 @@ import com.megaman.maverick.game.screens.levels.Level;
 // Please note that on macOS your application needs to be started with the -XstartOnFirstThread JVM argument
 public class DesktopLauncher {
 
-    private static final int DEFAULT_FPS = 60;
+    private static final int DEFAULT_FPS = ConstVals.MID_FPS;
     private static final int DEFAULT_WIDTH = 1920;
     private static final int DEFAULT_HEIGHT = 1080;
-    private static final boolean DEFAULT_FULLSCREEN = true;
+    private static final boolean DEFAULT_FULLSCREEN = false;
     private static final boolean DEFAULT_VSYNC = false;
     private static final boolean DEFAULT_DEBUG = false;
     private static final float DEFAULT_FIXED_STEP_SCALAR = 1.0f;
@@ -131,7 +130,8 @@ public class DesktopLauncher {
             params.setStartLevel(level);
         }
 
-        Game game = new MegamanMaverickGame(params);
+        MegamanMaverickGame game = new MegamanMaverickGame(params);
+        game.setTargetFPS(appArgs.fps);
 
         config.setWindowListener(new Lwjgl3WindowAdapter() {
             @Override

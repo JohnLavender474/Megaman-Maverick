@@ -47,7 +47,8 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         MUSIC_VOLUME("MUSIC VOLUME"),
         EFFECTS_VOLUME("SFX VOLUME"),
         KEYBOARD_SETTINGS("KEYBOARD SETTINGS"),
-        CONTROLLER_SETTINGS("CONTROLLER SETTINGS")
+        CONTROLLER_SETTINGS("CONTROLLER SETTINGS"),
+        CAMERA_SETTINGS("CAMERA SETTINGS")
     }
 
     companion object {
@@ -393,8 +394,22 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
 
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
                     Direction.UP -> MainScreenSettingsButton.KEYBOARD_SETTINGS.text
+                    Direction.DOWN -> MainScreenSettingsButton.CAMERA_SETTINGS.text
+                    else -> currentButtonKey
+                }
+            })
+
+        buttons.put(MainScreenSettingsButton.CAMERA_SETTINGS.text,
+            object : IMenuButton {
+                override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
+                    Direction.UP -> MainScreenSettingsButton.CONTROLLER_SETTINGS.text
                     Direction.DOWN -> MainScreenSettingsButton.BACK.text
                     else -> currentButtonKey
+                }
+
+                override fun onSelect(delta: Float): Boolean {
+                    game.setCurrentScreen(ScreenEnum.CAMERA_SETTINGS_SCREEN.name)
+                    return true
                 }
             })
     }

@@ -14,6 +14,7 @@ enum class Level(tmxSourceFile: String, val musicAss: MusicAsset) {
     DESERT_MAN("DesertMan.tmx", MusicAsset.MMX7_VANISHING_GUNGAROO_MUSIC),
     GLACIER_MAN("GlacierMan.tmx", MusicAsset.MM8_FROST_MAN_ALT_MUSIC),
     POLARITY_MAN("MagnetMan.tmx", MusicAsset.MMX5_IZZY_GLOW_MUSIC),
+    RODENT_MAN("Test1.tmx", MusicAsset.MM10_WILY1_MUSIC),
 
     // Final levels
     WILY_STAGE_1("WilyStage1.tmx", MusicAsset.MMX_SIGMA_1ST_MUSIC),

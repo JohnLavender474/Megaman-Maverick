@@ -175,14 +175,13 @@ class MegaLevelScreen(
         bossSpawnEventHandler = BossSpawnEventHandler(game)
         cameraManagerForRooms = CameraManagerForRooms(
             gameCamera,
-            ROOM_DISTANCE_ON_TRANSITION * ConstVals.PPM,
-            ROOM_INTERPOLATION_SCALAR * ConstVals.PPM,
-            vector2Of(TRANSITION_SCANNER_SIZE * ConstVals.PPM),
-            ConstVals.ROOM_TRANS_DELAY_DURATION,
-            ConstVals.ROOM_TRANS_DURATION,
+            distanceOnTransition = ROOM_DISTANCE_ON_TRANSITION * ConstVals.PPM,
+            interpolate = { game.doLerpGameCamera() },
+            interpolationScalar = { game.getLerpValueForGameCamera() },
+            transitionScannerDimensions = vector2Of(TRANSITION_SCANNER_SIZE * ConstVals.PPM),
+            transDelay = ConstVals.ROOM_TRANS_DELAY_DURATION,
+            transDuration = ConstVals.ROOM_TRANS_DURATION,
         )
-        cameraManagerForRooms.interpolate = INTERPOLATE_GAME_CAM
-        cameraManagerForRooms.interpolationScalar = 5f
         cameraManagerForRooms.focus = megaman
         cameraManagerForRooms.beginTransition = {
             GameLogger.debug(TAG, "Begin transition logic for camera manager")
@@ -190,8 +189,7 @@ class MegaLevelScreen(
             eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
             eventsMan.submitEvent(
                 Event(
-                    EventType.BEGIN_ROOM_TRANS,
-                    props(
+                    EventType.BEGIN_ROOM_TRANS, props(
                         ConstKeys.ROOM to cameraManagerForRooms.currentGameRoom,
                         ConstKeys.POSITION to cameraManagerForRooms.transitionInterpolation,
                         ConstKeys.PRIOR to cameraManagerForRooms.priorGameRoom
@@ -217,8 +215,7 @@ class MegaLevelScreen(
             GameLogger.debug(TAG, "End transition logic for camera manager")
             eventsMan.submitEvent(
                 Event(
-                    EventType.END_ROOM_TRANS,
-                    props(ConstKeys.ROOM to cameraManagerForRooms.currentGameRoom)
+                    EventType.END_ROOM_TRANS, props(ConstKeys.ROOM to cameraManagerForRooms.currentGameRoom)
                 )
             )
 
@@ -226,8 +223,7 @@ class MegaLevelScreen(
             if (currentRoom?.properties?.containsKey(ConstKeys.EVENT) == true) {
                 val props = props(ConstKeys.ROOM to currentRoom)
                 val roomEvent =
-                    when (val roomEventString =
-                        currentRoom.properties.get(ConstKeys.EVENT, String::class.java)) {
+                    when (val roomEventString = currentRoom.properties.get(ConstKeys.EVENT, String::class.java)) {
                         ConstKeys.BOSS -> EventType.ENTER_BOSS_ROOM
                         ConstKeys.SUCCESS -> EventType.VICTORY_EVENT
                         else -> throw IllegalStateException("Unknown room event: $roomEventString")
@@ -242,8 +238,7 @@ class MegaLevelScreen(
             GameLogger.debug(TAG, "On set to room no trans")
             eventsMan.submitEvent(
                 Event(
-                    EventType.SET_TO_ROOM_NO_TRANS,
-                    props(ConstKeys.ROOM to cameraManagerForRooms.currentGameRoom)
+                    EventType.SET_TO_ROOM_NO_TRANS, props(ConstKeys.ROOM to cameraManagerForRooms.currentGameRoom)
                 )
             )
         }
@@ -258,13 +253,11 @@ class MegaLevelScreen(
         eventsMan.addListener(this)
         engine.systems.forEach { it.on = true }
         music?.let { audioMan.playMusic(it, true) }
-        if (tiledMapLoadResult == null)
-            throw IllegalStateException("No tiled map load result found in level screen")
+        if (tiledMapLoadResult == null) throw IllegalStateException("No tiled map load result found in level screen")
         game.setTiledMapLoadResult(tiledMapLoadResult!!)
         val (map, _, worldWidth, worldHeight) = tiledMapLoadResult!!
 
-        val worldContainer = SimpleGridWorldContainer(ConstVals.PPM)
-        /*
+        val worldContainer = SimpleGridWorldContainer(ConstVals.PPM)/*
         QuadtreeWorldContainer(
             ConstVals.PPM,
             0,
@@ -281,16 +274,13 @@ class MegaLevelScreen(
 
         val mapProps = map.properties.toProps()
         backgroundParallaxFactorX = mapProps.getOrDefault(
-            ConstKeys.BACKGROUND_PARALLAX_FACTOR_X,
-            DEFAULT_BACKGROUND_PARALLAX_FACTOR_X, Float::class
+            ConstKeys.BACKGROUND_PARALLAX_FACTOR_X, DEFAULT_BACKGROUND_PARALLAX_FACTOR_X, Float::class
         )
         backgroundParallaxFactorY = mapProps.getOrDefault(
-            ConstKeys.BACKGROUND_PARALLAX_FACTOR_Y,
-            DEFAULT_BACKGROUND_PARALLAX_FACTOR_Y, Float::class
+            ConstKeys.BACKGROUND_PARALLAX_FACTOR_Y, DEFAULT_BACKGROUND_PARALLAX_FACTOR_Y, Float::class
         )
         foregroundParallaxFactor = mapProps.getOrDefault(
-            ConstKeys.FOREGROUND_PARALLAX_FACTOR,
-            DEFAULT_FOREGROUND_PARALLAX_FACTOR, Float::class
+            ConstKeys.FOREGROUND_PARALLAX_FACTOR, DEFAULT_FOREGROUND_PARALLAX_FACTOR, Float::class
         )
         camerasSetToGameCamera = false
         gameCameraPriorPosition.setZero()
@@ -301,8 +291,7 @@ class MegaLevelScreen(
         showBackgrounds = true
     }
 
-    override fun getLayerBuilders() =
-        MegaMapLayerBuilders(MegaMapLayerBuildersParams(game, spawnsMan))
+    override fun getLayerBuilders() = MegaMapLayerBuilders(MegaMapLayerBuildersParams(game, spawnsMan))
 
     override fun buildLevel(result: Properties) {
         backgrounds = result.get(ConstKeys.BACKGROUNDS) as Array<Background>? ?: Array()
@@ -311,8 +300,7 @@ class MegaLevelScreen(
             result.get("${ConstKeys.PLAYER}_${ConstKeys.SPAWNS}") as Array<RectangleMapObject>? ?: Array()
         playerSpawnsMan.set(playerSpawns)
 
-        cameraManagerForRooms.gameRooms =
-            result.get(ConstKeys.GAME_ROOMS) as Array<RectangleMapObject>? ?: Array()
+        cameraManagerForRooms.gameRooms = result.get(ConstKeys.GAME_ROOMS) as Array<RectangleMapObject>? ?: Array()
 
         val spawners = result.get(ConstKeys.SPAWNERS) as Array<ISpawner>? ?: Array()
         spawnsMan.setSpawners(spawners)
@@ -345,8 +333,7 @@ class MegaLevelScreen(
                 cameraManagerForRooms.reset()
 
                 GameLogger.debug(
-                    TAG,
-                    "onEvent(): Player spawn --> spawn Megaman: ${playerSpawnsMan.currentSpawnProps!!}"
+                    TAG, "onEvent(): Player spawn --> spawn Megaman: ${playerSpawnsMan.currentSpawnProps!!}"
                 )
 
                 MegaGameEntitiesMap.getEntitiesOfType(EntityType.ENEMY).forEach { game.engine.destroy(it) }
@@ -366,8 +353,7 @@ class MegaLevelScreen(
 
             EventType.PLAYER_JUST_DIED -> {
                 GameLogger.debug(
-                    MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG,
-                    "onEvent(): Player just died --> init death handler"
+                    MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Player just died --> init death handler"
                 )
                 audioMan.unsetMusic()
                 audioMan.stopAllLoopingSounds()
@@ -397,27 +383,23 @@ class MegaLevelScreen(
 
             EventType.NEXT_ROOM_REQ -> {
                 GameLogger.debug(
-                    MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG,
-                    "onEvent(): Next room req --> start room transition"
+                    MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Next room req --> start room transition"
                 )
                 val roomName = event.properties.get(ConstKeys.ROOM) as String
                 val isTrans = cameraManagerForRooms.transitionToRoom(roomName)
-                if (isTrans)
-                    GameLogger.debug(
-                        MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG,
-                        "onEvent(): Next room req --> successfully starting transition to room: $roomName"
-                    )
-                else
-                    GameLogger.error(
-                        MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG,
-                        "onEvent(): Next room req --> could not start transition to room: $roomName"
-                    )
+                if (isTrans) GameLogger.debug(
+                    MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG,
+                    "onEvent(): Next room req --> successfully starting transition to room: $roomName"
+                )
+                else GameLogger.error(
+                    MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG,
+                    "onEvent(): Next room req --> could not start transition to room: $roomName"
+                )
             }
 
             EventType.GATE_INIT_OPENING -> {
                 GameLogger.debug(
-                    MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG,
-                    "onEvent(): Gate init opening --> start room transition"
+                    MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Gate init opening --> start room transition"
                 )
                 val systemsToTurnOff = gdxArrayOf(
                     MotionSystem::class,
@@ -432,15 +414,14 @@ class MegaLevelScreen(
             EventType.GATE_INIT_CLOSING -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Gate init closing")
                 val systemsToTurnOn = gdxArrayOf(
-                    MotionSystem::class,
-                    BehaviorsSystem::class,
-                    WorldSystem::class
+                    MotionSystem::class, BehaviorsSystem::class, WorldSystem::class
                 )
                 systemsToTurnOn.forEach { game.getSystem(it).on = true }
 
                 val roomName = cameraManagerForRooms.currentGameRoom?.name
-                if (roomName != null && roomName != ConstKeys.BOSS_ROOM && !roomName.contains(ConstKeys.MINI))
-                    eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
+                if (roomName != null && roomName != ConstKeys.BOSS_ROOM && !roomName.contains(ConstKeys.MINI)) eventsMan.submitEvent(
+                    Event(EventType.TURN_CONTROLLER_ON)
+                )
             }
 
             EventType.ENTER_BOSS_ROOM -> {
@@ -456,8 +437,8 @@ class MegaLevelScreen(
 
                 bossSpawnEventHandler.init(bossName, bossSpawnProps, mini)
 
-                megaman.running = false
-                // engine.systems.forEach { it.on = it is WorldSystem || it is SpritesSystem || it is AnimationsSystem }
+                megaman.running =
+                    false // engine.systems.forEach { it.on = it is WorldSystem || it is SpritesSystem || it is AnimationsSystem }
             }
 
             EventType.BEGIN_BOSS_SPAWN -> {
@@ -477,8 +458,7 @@ class MegaLevelScreen(
 
                 MegaGameEntitiesMap.forEachEntity {
                     if (it.isAny(
-                            IDamager::class,
-                            IHazard::class
+                            IDamager::class, IHazard::class
                         ) && it != boss
                     ) it.destroy()
                 }
@@ -503,8 +483,7 @@ class MegaLevelScreen(
                 eventsMan.submitEvent(Event(eventType, props(ConstKeys.BOSS to boss)))
             }
 
-            EventType.MINI_BOSS_DEAD -> {
-                /*
+            EventType.MINI_BOSS_DEAD -> {/*
                 val systemsToSwitch = gdxArrayOf(MotionSystem::class, BehaviorsSystem::class)
                 engine.systems.forEach { if (systemsToSwitch.contains(it::class)) it.on = true }
                  */
@@ -553,20 +532,11 @@ class MegaLevelScreen(
     }
 
     override fun render(delta: Float) {
-        if (controllerPoller.isJustPressed(MegaControllerButtons.START) &&
-            playerStatsHandler.finished &&
-            playerSpawnEventHandler.finished &&
-            playerDeathEventHandler.finished &&
-            bossSpawnEventHandler.finished
-        ) {
+        if (controllerPoller.isJustPressed(MegaControllerButtons.START) && playerStatsHandler.finished && playerSpawnEventHandler.finished && playerDeathEventHandler.finished && bossSpawnEventHandler.finished) {
             if (game.paused) game.resume() else game.pause()
         }
 
-        if (game.paused &&
-            (!playerStatsHandler.finished ||
-                    !playerSpawnEventHandler.finished ||
-                    !playerDeathEventHandler.finished)
-        ) game.resume()
+        if (game.paused && (!playerStatsHandler.finished || !playerSpawnEventHandler.finished || !playerDeathEventHandler.finished)) game.resume()
 
         if (!game.paused) {
             spawnsMan.update(delta / 2f)

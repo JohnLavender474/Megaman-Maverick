@@ -70,7 +70,6 @@ class BossSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MEGA_MA
         if (initialized) return
 
         buttons.put(MEGA_MAN, object : IMenuButton {
-
             override fun onSelect(delta: Float) = false
 
             override fun onNavigate(direction: Direction, delta: Float): String? {
@@ -129,11 +128,7 @@ class BossSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MEGA_MA
 
         for (b in BossType.values()) bNameSet.add(b.name)
         val outTimerRunnable = Array<TimeMarkedRunnable>()
-        for (i in 1..10) {
-            outTimerRunnable.add(TimeMarkedRunnable(.1f * i) {
-                blink = !blink
-            })
-        }
+        for (i in 1..10) outTimerRunnable.add(TimeMarkedRunnable(.1f * i) { blink = !blink })
         outTimer.setRunnables(outTimerRunnable)
         val megamanFacesAtlas = game.assMan.get(TextureAsset.FACES_1.source, TextureAtlas::class.java)
         val megamanFaces: MutableMap<Position, TextureRegion> = EnumMap(Position::class.java)
@@ -250,9 +245,13 @@ class BossSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MEGA_MA
             slide.update(delta)
             if (outro) outTimer.update(delta)
             if (outTimer.isFinished()) {
+                /*
+                TODO:
                 val bIntroScreen = game.screens.get(ScreenEnum.BOSS_INTRO_SCREEN.name) as BossIntroScreen
                 bIntroScreen.set(bSelect!!)
                 game.setCurrentScreen(ScreenEnum.BOSS_INTRO_SCREEN.name)
+                 */
+                game.startLevelScreen(bSelect!!.level)
                 return
             }
             for (e in bars) {

@@ -188,6 +188,28 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
 
     fun getTiledMapLoadResult() = properties.get(ConstKeys.TILED_MAP_LOAD_RESULT) as TiledMapLoadResult
 
+    fun setTargetFPS(value: Int) = putProperty(ConstKeys.FPS, value)
+
+    fun getTargetFPS() = getProperty(ConstKeys.FPS, Int::class)!!
+
+    fun setLerpGameCamera(lerp: Boolean) = putProperty(ConstKeys.LERP, lerp)
+
+    fun doLerpGameCamera() = getProperty(ConstKeys.LERP, Boolean::class)!!
+
+    fun setLerpSettingForGameCamera(value: String) = putProperty("${ConstKeys.LERP}_${ConstKeys.VALUE}", value)
+
+    fun getLerpSettingForGameCamera() = getProperty("${ConstKeys.LERP}_${ConstKeys.VALUE}", String::class)!!
+
+    fun getLerpValueForGameCamera(): Float {
+        val speed = getLerpSettingForGameCamera()
+        return when (speed) {
+            ConstKeys.FAST -> ConstVals.FAST_LERP_VALUE
+            ConstKeys.MEDIUM -> ConstVals.MEDIUM_LERP_VALUE
+            ConstKeys.SLOW -> ConstVals.SLOW_LERP_VALUE
+            else -> throw IllegalStateException("Illegal lerp value: $speed")
+        }
+    }
+
     override fun create() {
         GameLogger.set(GameLogLevel.ERROR)
         GameLogger.filterByTag = true
@@ -256,6 +278,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
         screens.put(ScreenEnum.LOAD_PASSWORD_SCREEN.name, LoadPasswordScreen(this))
         screens.put(ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name, ControllerSettingsScreen(this, buttons, true))
         screens.put(ScreenEnum.CONTROLLER_SETTINGS_SCREEN.name, ControllerSettingsScreen(this, buttons, false))
+        screens.put(ScreenEnum.CAMERA_SETTINGS_SCREEN.name, CameraSettingsScreen(this))
         screens.put(ScreenEnum.BOSS_SELECT_SCREEN.name, BossSelectScreen(this))
         screens.put(ScreenEnum.BOSS_INTRO_SCREEN.name, BossIntroScreen(this))
         screens.put(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name, SimpleInitGameScreen(this))
@@ -268,6 +291,9 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
             StartScreenOption.SIMPLE -> setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name)
             else -> setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
         }
+
+        setLerpGameCamera(ConstVals.DEFAULT_LERP_SETTING)
+        setLerpSettingForGameCamera(ConstKeys.FAST)
     }
 
     override fun onEvent(event: Event) {
