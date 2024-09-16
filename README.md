@@ -135,8 +135,6 @@ Megaman Weapon Get Sprite - [PixelBoy127](https://www.spriters-resource.com/cust
 - Moon Man - [boberatu](https://www.deviantart.com/boberatu/art/MPN-006-Moon-Man-625679636)
 - Glacier Man - [Balloon Cart](https://balloon-cart.itch.io/glacier-man-asset-pack)
 - Inferno Man - [boberatu](https://www.deviantart.com/boberatu/art/MPN-000-Volcano-Man-313694441)
-- Polarity man - [pharos04](https://www.deviantart.com/pharos04/art/Polarity-Man-ORN-010-570273324)
-- Desert Man - [rcrdcat](https://www.deviantart.com/rcrdcat/art/Desert-Man-Spritesheet-Mugshot-332165249)
 - Bospider - [Bean and Shawn](https://www.spriters-resource.com/game_boy_gbc/mmxtreme/sheet/480/?source=genre)
 - Guts Tank - [Mister Mike](https://www.spriters-resource.com/nes/mm2/sheet/2317/)
 - Mecha Dragon - [Mister Mike](https://www.spriters-resource.com/nes/mm2/sheet/2317/)
