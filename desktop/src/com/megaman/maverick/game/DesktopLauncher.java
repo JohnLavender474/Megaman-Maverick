@@ -2,7 +2,6 @@ package com.megaman.maverick.game;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowAdapter;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
@@ -12,8 +11,8 @@ import com.megaman.maverick.game.screens.levels.Level;
 public class DesktopLauncher {
 
     private static final int DEFAULT_FPS = ConstVals.MID_FPS;
-    private static final int DEFAULT_WIDTH = 1920;
-    private static final int DEFAULT_HEIGHT = 1080;
+    private static final int DEFAULT_WIDTH = 800;
+    private static final int DEFAULT_HEIGHT = 600;
     private static final boolean DEFAULT_FULLSCREEN = false;
     private static final boolean DEFAULT_VSYNC = false;
     private static final boolean DEFAULT_DEBUG = false;
@@ -29,8 +28,7 @@ public class DesktopLauncher {
                 "Frames per second: min of 30 and max of 90. Default value = " + DEFAULT_FPS + ".")
         public int fps = DEFAULT_FPS;
 
-        @Parameter(names = {"--width"}, description = "Window width: min of 600. Default value = " + DEFAULT_WIDTH +
-                ".")
+        @Parameter(names = {"--width"}, description = "Window width: min of 600. Default value = " + DEFAULT_WIDTH + ".")
         public int width = DEFAULT_WIDTH;
 
         @Parameter(names = {"--height"}, description =
@@ -133,6 +131,7 @@ public class DesktopLauncher {
         MegamanMaverickGame game = new MegamanMaverickGame(params);
         game.setTargetFPS(appArgs.fps);
 
+        /*
         config.setWindowListener(new Lwjgl3WindowAdapter() {
             @Override
             public void iconified(boolean isIconified) {
@@ -149,6 +148,7 @@ public class DesktopLauncher {
                 game.pause();
             }
         });
+         */
 
         try {
             new Lwjgl3Application(game, config);

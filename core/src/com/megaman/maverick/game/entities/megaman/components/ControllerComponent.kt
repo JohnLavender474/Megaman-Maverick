@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.entities.megaman.components
 
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.controller.ControllerComponent
 import com.mega.game.engine.controller.buttons.ButtonActuator
@@ -17,6 +18,7 @@ import com.megaman.maverick.game.entities.megaman.extensions.shoot
 import com.megaman.maverick.game.entities.megaman.extensions.stopCharging
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.isSensing
+import kotlin.math.abs
 
 const val MEGAMAN_CONTROLLER_COMPONENT_TAG = "MegamanControllerComponent"
 
@@ -30,6 +32,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
         }
 
         facing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) Facing.RIGHT else Facing.LEFT
+        if (directionRotation == Direction.DOWN) swapFacing()
 
         if (isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.RIDING_CART)) return@ButtonActuator
         running = !isBehaviorActive(BehaviorType.WALL_SLIDING)
@@ -39,10 +42,10 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
         val impulse = if (body.isSensing(BodySense.FEET_ON_ICE)) MegamanValues.ICE_RUN_IMPULSE
         else MegamanValues.RUN_IMPULSE
 
-        if (isDirectionRotatedVertically() && body.physics.velocity.x > -threshold)
-            body.physics.velocity.x -= impulse * delta * movementScalar * ConstVals.PPM
-        else if (isDirectionRotatedHorizontally() && body.physics.velocity.y > -threshold)
-            body.physics.velocity.y -= impulse * delta * movementScalar * ConstVals.PPM
+        if (isDirectionRotatedVertically() && abs(body.physics.velocity.x) < threshold)
+            body.physics.velocity.x += impulse * delta * movementScalar * ConstVals.PPM * facing.value
+        else if (isDirectionRotatedHorizontally() && abs(body.physics.velocity.y) < threshold)
+            body.physics.velocity.y += impulse * delta * movementScalar * ConstVals.PPM * facing.value
     }, onJustReleased = { poller ->
         GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "left actuator just released")
         if (!poller.isPressed(MegaControllerButtons.RIGHT)) running = false
@@ -59,6 +62,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
         }
 
         facing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) Facing.LEFT else Facing.RIGHT
+        if (directionRotation == Direction.DOWN) swapFacing()
 
         if (isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.RIDING_CART)) return@ButtonActuator
         running = !isBehaviorActive(BehaviorType.WALL_SLIDING)
@@ -68,8 +72,10 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
         val impulse = if (body.isSensing(BodySense.FEET_ON_ICE)) MegamanValues.ICE_RUN_IMPULSE
         else MegamanValues.RUN_IMPULSE
 
-        if (isDirectionRotatedVertically() && body.physics.velocity.x < threshold) body.physics.velocity.x += impulse * delta * movementScalar * ConstVals.PPM
-        else if (isDirectionRotatedHorizontally() && body.physics.velocity.y < threshold) body.physics.velocity.y += impulse * delta * movementScalar * ConstVals.PPM
+        if (isDirectionRotatedVertically() && abs(body.physics.velocity.x) < threshold)
+            body.physics.velocity.x += impulse * delta * movementScalar * ConstVals.PPM * facing.value
+        else if (isDirectionRotatedHorizontally() && abs(body.physics.velocity.y) < threshold)
+            body.physics.velocity.y += impulse * delta * movementScalar * ConstVals.PPM * facing.value
     }, onJustReleased = { poller ->
         GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "right actuator just released")
         if (!poller.isPressed(MegaControllerButtons.LEFT)) running = false
@@ -79,7 +85,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
 
     val attack = ButtonActuator(
         onPressContinued = { _, delta ->
-            if (!ready || damaged || teleporting || currentWeapon == MegamanWeapon.RUSH_JETPACK ||
+            if (!ready || damaged || cameraRotating || teleporting || currentWeapon == MegamanWeapon.RUSH_JETPACK ||
                 (!charging && !weaponHandler.canFireWeapon(currentWeapon, MegaChargeStatus.HALF_CHARGED)) ||
                 (charging && !weaponHandler.canFireWeapon(currentWeapon, MegaChargeStatus.FULLY_CHARGED) ||
                         !has(MegaAbility.CHARGE_WEAPONS))
@@ -90,7 +96,8 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
             chargingTimer.update(delta)
         },
         onJustReleased = {
-            if (damaged || teleporting || !ready || !weaponHandler.canFireWeapon(currentWeapon, chargeStatus) ||
+            if (damaged || cameraRotating || teleporting || !ready ||
+                !weaponHandler.canFireWeapon(currentWeapon, chargeStatus) ||
                 game.isProperty(ConstKeys.ROOM_TRANSITION, true)
             ) {
                 stopCharging()

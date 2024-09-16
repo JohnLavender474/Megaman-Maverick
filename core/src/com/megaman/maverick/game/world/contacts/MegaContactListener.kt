@@ -291,6 +291,7 @@ class MegaContactListener(
             val (bodyFixture, gravityChangeFixture) = contact.getFixturesInOrder(
                 FixtureType.BODY, FixtureType.GRAVITY_CHANGE
             )!!
+
             val body = bodyFixture.getBody()
             val pd = body.getPositionDelta()
             val bodyPointToCheck = if (pd.x > 0f) {
@@ -304,7 +305,9 @@ class MegaContactListener(
                 if (pd.y > 0f) body.getTopCenterPoint()
                 else if (pd.y < 0f) body.getBottomCenterPoint() else body.getCenter()
             }
+
             if (!gravityChangeFixture.getShape().contains(bodyPointToCheck)) return
+
             val entity = bodyFixture.getEntity()
             if (gravityChangeFixture.hasProperty(ConstKeys.GRAVITY) && entity is IScalableGravityEntity) {
                 val canChangeGravityValue =

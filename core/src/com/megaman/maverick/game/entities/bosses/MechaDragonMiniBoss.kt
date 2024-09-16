@@ -55,7 +55,9 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.FixtureLabel
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.addFixtureLabel
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.reflect.KClass
@@ -320,6 +322,7 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         debugShapes.add { body.getBodyBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
+        bodyFixture.addFixtureLabel(FixtureLabel.NO_PROJECTILE_COLLISION)
         body.addFixture(bodyFixture)
         bodyFixture.rawShape.color = Color.GRAY
         debugShapes.add { bodyFixture.getShape() }

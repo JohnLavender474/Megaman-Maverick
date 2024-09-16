@@ -108,7 +108,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
 
     companion object {
         const val TAG = "MegamanMaverickGame"
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(Megaman.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.WATER, FixtureType.WATER_LISTENER)
         }
@@ -192,16 +192,19 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
 
     fun getTargetFPS() = getProperty(ConstKeys.FPS, Int::class)!!
 
-    fun setLerpGameCamera(lerp: Boolean) = putProperty(ConstKeys.LERP, lerp)
+    fun setDoLerpGameCamera(lerp: Boolean) = putProperty(ConstKeys.LERP, lerp)
 
     fun doLerpGameCamera() = getProperty(ConstKeys.LERP, Boolean::class)!!
 
-    fun setLerpSettingForGameCamera(value: String) = putProperty("${ConstKeys.LERP}_${ConstKeys.VALUE}", value)
+    fun setLerpValueForGameCamera(value: String) = putProperty("${ConstKeys.LERP}_${ConstKeys.VALUE}", value)
 
-    fun getLerpSettingForGameCamera() = getProperty("${ConstKeys.LERP}_${ConstKeys.VALUE}", String::class)!!
+    // returns the string representation of the lerp value,
+    // float value needs to be calculated
+    fun getLerpValueForGameCamera() = getProperty("${ConstKeys.LERP}_${ConstKeys.VALUE}", String::class)!!
 
-    fun getLerpValueForGameCamera(): Float {
-        val speed = getLerpSettingForGameCamera()
+    // converts the string representation of the lerp value into the float value
+    fun calculateLerpValueForGameCamera(): Float {
+        val speed = this.getLerpValueForGameCamera()
         return when (speed) {
             ConstKeys.FAST -> ConstVals.FAST_LERP_VALUE
             ConstKeys.MEDIUM -> ConstVals.MEDIUM_LERP_VALUE
@@ -292,8 +295,8 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
             else -> setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
         }
 
-        setLerpGameCamera(ConstVals.DEFAULT_LERP_SETTING)
-        setLerpSettingForGameCamera(ConstKeys.FAST)
+        setDoLerpGameCamera(ConstVals.DEFAULT_LERP_SETTING)
+        setLerpValueForGameCamera(ConstKeys.FAST)
     }
 
     override fun onEvent(event: Event) {

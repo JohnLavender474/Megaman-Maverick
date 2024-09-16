@@ -27,19 +27,21 @@ lateinit var animations: ObjectMap<String, IAnimation>
 
 val Megaman.slipSliding: Boolean
     get() = body.isSensing(BodySense.FEET_ON_GROUND) && abs(
-        if (isDirectionRotatedVertically()) body.physics.velocity.x
-        else body.physics.velocity.y
+        if (isDirectionRotatedVertically()) body.physics.velocity.x else body.physics.velocity.y
     ) > ConstVals.PPM / 16f
 
 private lateinit var lastAnimationKey: String
 
 internal fun Megaman.defineAnimationsComponent(): AnimationsComponent {
     val megamanAnimationKeySupplier = {
-        if (!ready) "Stand"
-        else if (!roomTransPauseTimer.isFinished()) null
-        else if (game.isProperty(ConstKeys.ROOM_TRANSITION, true)) lastAnimationKey
-        else {
-            lastAnimationKey =
+        lastAnimationKey =
+            if (!ready) "Stand"
+            else if (cameraRotating) {
+                if (shooting) "JumpShoot"
+                else if (fullyCharged) "JumpCharging" else if (halfCharged) "JumpHalfCharging" else "Jump"
+            } else if (!roomTransPauseTimer.isFinished()) lastAnimationKey
+            else if (game.isProperty(ConstKeys.ROOM_TRANSITION, true)) lastAnimationKey
+            else {
                 if (isBehaviorActive(BehaviorType.JETPACKING)) {
                     if (shooting) "JetpackShoot"
                     else "Jetpack"
@@ -92,14 +94,13 @@ internal fun Megaman.defineAnimationsComponent(): AnimationsComponent {
                 } else if (body.isSensing(BodySense.FEET_ON_GROUND) && running) {
                     if (shooting) "RunShoot"
                     else if (fullyCharged) "RunCharging" else if (halfCharged) "RunHalfCharging" else "Run"
-                } else if (isBehaviorActive(BehaviorType.JUMPING) ||
-                    !body.isSensing(BodySense.FEET_ON_GROUND)
-                    /*
-                    (!body.isSensing(BodySense.FEET_ON_GROUND) && abs(
-                        if (directionRotation!!.isVertical()) body.physics.velocity.y
-                        else body.physics.velocity.x
-                    ) > 0.1f * ConstVals.PPM)
-                     */
+                } else if (isBehaviorActive(BehaviorType.JUMPING) || !body.isSensing(BodySense.FEET_ON_GROUND)
+                /*
+                (!body.isSensing(BodySense.FEET_ON_GROUND) && abs(
+                    if (directionRotation!!.isVertical()) body.physics.velocity.y
+                    else body.physics.velocity.x
+                ) > 0.1f * ConstVals.PPM)
+                 */
                 ) {
                     if (shooting) "JumpShoot"
                     else if (fullyCharged) "JumpCharging" else if (halfCharged) "JumpHalfCharging" else "Jump"
@@ -112,11 +113,11 @@ internal fun Megaman.defineAnimationsComponent(): AnimationsComponent {
                     else if (fullyCharged) "StandCharging"
                     else if (halfCharged) "StandHalfCharging" else "Stand"
                 }
-            if (maverick && facing == Facing.LEFT) lastAnimationKey += "_Left"
-            lastAnimationKey += if (maverick) "_MegamanMaverick" else "_Megaman"
-            lastAnimationKey += "_${currentWeapon.name}"
-            lastAnimationKey
-        }
+            }
+        if (maverick && facing == Facing.LEFT) lastAnimationKey += "_Left"
+        lastAnimationKey += if (maverick) "_MegamanMaverick" else "_Megaman"
+        lastAnimationKey += "_${currentWeapon.name}"
+        lastAnimationKey
     }
 
     animations = ObjectMap<String, IAnimation>()

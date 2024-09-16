@@ -208,6 +208,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             body.physics.gravityOn = false
             aButtonTask = AButtonTask.JUMP
             requestToPlaySound(SoundAsset.WHOOSH_SOUND, false)
+            // requestToPlaySound(SoundAsset.WALL_JUMP_SOUND, false)
 
             if (isDirectionRotatedVertically()) impulse.y = 0f else impulse.x = 0f
 
@@ -238,18 +239,19 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         override fun end() {
             GameLogger.debug(MEGAMAN_AIR_DASH_BEHAVIOR_TAG, "End")
             airDashTimer.reset()
-            body.physics.gravityOn = true
+            if (!cameraRotating) {
+                body.physics.gravityOn = true
+                if (!body.isSensing(BodySense.TELEPORTING) && !teleporting) {
+                    val impulseOnEnd =
+                        facing.value * ConstVals.PPM * if (body.isSensing(BodySense.IN_WATER))
+                            MegamanValues.WATER_AIR_DASH_END_BUMP else MegamanValues.AIR_DASH_END_BUMP
 
-            if (!body.isSensing(BodySense.TELEPORTING) && !teleporting) {
-                val impulseOnEnd =
-                    facing.value * ConstVals.PPM * if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_AIR_DASH_END_BUMP
-                    else MegamanValues.AIR_DASH_END_BUMP
-
-                when (directionRotation!!) {
-                    Direction.UP -> body.physics.velocity.x += impulseOnEnd
-                    Direction.DOWN -> body.physics.velocity.x -= impulseOnEnd
-                    Direction.LEFT -> body.physics.velocity.y += impulseOnEnd
-                    Direction.RIGHT -> body.physics.velocity.y -= impulseOnEnd
+                    when (directionRotation!!) {
+                        Direction.UP -> body.physics.velocity.x += impulseOnEnd
+                        Direction.DOWN -> body.physics.velocity.x -= impulseOnEnd
+                        Direction.LEFT -> body.physics.velocity.y += impulseOnEnd
+                        Direction.RIGHT -> body.physics.velocity.y -= impulseOnEnd
+                    }
                 }
             }
         }
@@ -313,22 +315,24 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         override fun end() {
             groundSlideTimer.reset()
 
-            val endDash = (if (body.isSensing(BodySense.IN_WATER)) 2f else 5f) * ConstVals.PPM * facing.value
+            if (!cameraRotating) {
+                val endDash = (if (body.isSensing(BodySense.IN_WATER)) 2f else 5f) * ConstVals.PPM * facing.value
 
-            if (directionOnInit == directionRotation) {
-                when (directionRotation!!) {
-                    Direction.UP, Direction.DOWN -> body.physics.velocity.x += endDash
+                if (directionOnInit == directionRotation) {
+                    when (directionRotation!!) {
+                        Direction.UP, Direction.DOWN -> body.physics.velocity.x += endDash
 
-                    Direction.LEFT, Direction.RIGHT -> body.physics.velocity.y += endDash
-                }
-            } else {
-                body.physics.velocity.setZero()
-                when (directionOnInit) {
-                    Direction.UP, Direction.DOWN -> body.physics.velocity.x = endDash
+                        Direction.LEFT, Direction.RIGHT -> body.physics.velocity.y += endDash
+                    }
+                } else {
+                    body.physics.velocity.setZero()
+                    when (directionOnInit) {
+                        Direction.UP, Direction.DOWN -> body.physics.velocity.x = endDash
 
-                    Direction.LEFT, Direction.RIGHT -> body.physics.velocity.y = endDash
+                        Direction.LEFT, Direction.RIGHT -> body.physics.velocity.y = endDash
 
-                    null -> throw IllegalStateException("Direction on init cannot be null")
+                        null -> throw IllegalStateException("Direction on init cannot be null")
+                    }
                 }
             }
 

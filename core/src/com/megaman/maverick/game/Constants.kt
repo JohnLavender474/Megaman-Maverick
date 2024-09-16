@@ -38,6 +38,7 @@ object ConstVals {
     const val FAST_LERP_VALUE = 15f
     const val MEDIUM_LERP_VALUE = 10f
     const val SLOW_LERP_VALUE = 5f
+    const val GAME_CAM_ROTATE_TIME = 1f
 }
 
 object ConstKeys {

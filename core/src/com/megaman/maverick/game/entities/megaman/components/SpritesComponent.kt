@@ -18,12 +18,11 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
     val spritesComponent = SpritesComponent()
 
     val megamanSprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
-    megamanSprite.setSize(2.475f * ConstVals.PPM, 1.875f * ConstVals.PPM)
+    megamanSprite.setSize(2.225f * ConstVals.PPM, 2.1f * ConstVals.PPM)
     spritesComponent.sprites.put("megaman", megamanSprite)
     spritesComponent.putUpdateFunction("megaman") { _, player ->
-        val direction = if (isBehaviorActive(BehaviorType.AIR_DASHING)) getProperty(
-            MegamanKeys.DIRECTION_ON_AIR_DASH, Direction::class
-        )!!
+        val direction = if (isBehaviorActive(BehaviorType.AIR_DASHING))
+            getProperty(MegamanKeys.DIRECTION_ON_AIR_DASH, Direction::class)!!
         else directionRotation
 
         val flipX = !maverick && facing == Facing.LEFT

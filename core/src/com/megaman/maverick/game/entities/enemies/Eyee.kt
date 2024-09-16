@@ -158,7 +158,7 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.75f * ConstVals.PPM)
+        body.setSize(0.5f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
@@ -184,7 +184,7 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(0.85f * ConstVals.PPM)
+        sprite.setSize(0.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink

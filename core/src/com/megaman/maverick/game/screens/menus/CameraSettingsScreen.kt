@@ -154,14 +154,14 @@ class CameraSettingsScreen(
                 Direction.DOWN -> if (game.doLerpGameCamera()) VALUE else BACK
                 else -> {
                     val doLerp = game.doLerpGameCamera()
-                    game.setLerpGameCamera(!doLerp)
+                    game.setDoLerpGameCamera(!doLerp)
                     currentButtonKey
                 }
             }
 
             override fun onSelect(delta: Float): Boolean {
                 val doLerp = game.doLerpGameCamera()
-                game.setLerpGameCamera(!doLerp)
+                game.setDoLerpGameCamera(!doLerp)
                 return false
             }
         })
@@ -175,7 +175,7 @@ class CameraSettingsScreen(
                 centerX = false
             )
         valueFontHandle = MegaFontHandle(
-            { game.getLerpSettingForGameCamera() },
+            { game.getLerpValueForGameCamera() },
             positionX = VALUE_X * ConstVals.PPM,
             positionY = row * ConstVals.PPM,
             centerX = false
@@ -185,39 +185,39 @@ class CameraSettingsScreen(
                 Direction.UP -> LERP
                 Direction.DOWN -> BACK
                 Direction.LEFT -> {
-                    val oldKey = game.getLerpSettingForGameCamera()
+                    val oldKey = game.getLerpValueForGameCamera()
                     val newKey = when (oldKey) {
                         ConstKeys.FAST -> ConstKeys.MEDIUM
                         ConstKeys.MEDIUM -> ConstKeys.SLOW
                         ConstKeys.SLOW -> ConstKeys.FAST
                         else -> throw IllegalStateException("Illegal lerp setting: $oldKey")
                     }
-                    game.setLerpSettingForGameCamera(newKey)
+                    game.setLerpValueForGameCamera(newKey)
                     currentButtonKey
                 }
 
                 Direction.RIGHT -> {
-                    val oldKey = game.getLerpSettingForGameCamera()
+                    val oldKey = game.getLerpValueForGameCamera()
                     val newKey = when (oldKey) {
                         ConstKeys.FAST -> ConstKeys.SLOW
                         ConstKeys.MEDIUM -> ConstKeys.FAST
                         ConstKeys.SLOW -> ConstKeys.MEDIUM
                         else -> throw IllegalStateException("Illegal lerp setting: $oldKey")
                     }
-                    game.setLerpSettingForGameCamera(newKey)
+                    game.setLerpValueForGameCamera(newKey)
                     currentButtonKey
                 }
             }
 
             override fun onSelect(delta: Float): Boolean {
-                val oldKey = game.getLerpSettingForGameCamera()
+                val oldKey = game.getLerpValueForGameCamera()
                 val newKey = when (oldKey) {
                     ConstKeys.FAST -> ConstKeys.SLOW
                     ConstKeys.MEDIUM -> ConstKeys.FAST
                     ConstKeys.SLOW -> ConstKeys.MEDIUM
                     else -> throw IllegalStateException("Illegal lerp setting: $oldKey")
                 }
-                game.setLerpSettingForGameCamera(newKey)
+                game.setLerpValueForGameCamera(newKey)
                 return false
             }
         })

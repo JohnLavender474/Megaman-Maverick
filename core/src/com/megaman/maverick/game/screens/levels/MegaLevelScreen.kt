@@ -66,6 +66,7 @@ import com.megaman.maverick.game.screens.levels.stats.PlayerStatsHandler
 import com.megaman.maverick.game.spawns.ISpawner
 import com.megaman.maverick.game.spawns.Spawn
 import com.megaman.maverick.game.spawns.SpawnsManager
+import com.megaman.maverick.game.utils.CameraRotator
 import com.megaman.maverick.game.utils.toProps
 import java.util.*
 
@@ -78,9 +79,7 @@ class MegaLevelScreen(
         const val TAG = "MegaLevelScreen"
         const val MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG = "MegaLevelScreenEventListener"
         private const val ROOM_DISTANCE_ON_TRANSITION = 2f
-        private const val ROOM_INTERPOLATION_SCALAR = 10f
         private const val TRANSITION_SCANNER_SIZE = 5f
-        private const val INTERPOLATE_GAME_CAM = true
         private const val DEFAULT_BACKGROUND_PARALLAX_FACTOR_X = 0.5f
         private const val DEFAULT_BACKGROUND_PARALLAX_FACTOR_Y = 0f
         private const val DEFAULT_FOREGROUND_PARALLAX_FACTOR = 2f
@@ -109,7 +108,8 @@ class MegaLevelScreen(
         EventType.VICTORY_EVENT,
         EventType.END_LEVEL,
         EventType.EDIT_TILED_MAP,
-        EventType.SHOW_BACKGROUND
+        EventType.SHOW_BACKGROUND,
+        EventType.SET_GAME_CAM_ROTATION
     )
 
     val engine: GameEngine
@@ -127,28 +127,38 @@ class MegaLevelScreen(
 
     private lateinit var spawnsMan: SpawnsManager
     private lateinit var playerSpawnsMan: PlayerSpawnsManager
+
     private lateinit var playerStatsHandler: PlayerStatsHandler
     private lateinit var entityStatsHandler: EntityStatsHandler
+
     private lateinit var levelStateHandler: LevelStateHandler
+
     private lateinit var endLevelEventHandler: EndLevelEventHandler
-    private lateinit var cameraManagerForRooms: CameraManagerForRooms
-    private lateinit var cameraShaker: CameraShaker
     private lateinit var playerSpawnEventHandler: PlayerSpawnEventHandler
     private lateinit var playerDeathEventHandler: PlayerDeathEventHandler
     private lateinit var bossSpawnEventHandler: BossSpawnEventHandler
+
     private lateinit var drawables: ObjectMap<DrawingSection, PriorityQueue<IComparableDrawable<Batch>>>
     private lateinit var shapes: PriorityQueue<IDrawableShape>
     private lateinit var backgrounds: Array<Background>
+
     private lateinit var backgroundCamera: OrthographicCamera
     private lateinit var gameCamera: OrthographicCamera
+    private val gameCameraPriorPosition = Vector3()
+    private lateinit var gameCameraRotator: CameraRotator
+    private lateinit var cameraManagerForRooms: CameraManagerForRooms
+    private lateinit var gameCameraShaker: CameraShaker
     private lateinit var foregroundCamera: OrthographicCamera
     private lateinit var uiCamera: OrthographicCamera
+
     private val disposables = Array<Disposable>()
-    private val gameCameraPriorPosition = Vector3()
+
     private var backgroundParallaxFactorX = DEFAULT_BACKGROUND_PARALLAX_FACTOR_X
     private var backgroundParallaxFactorY = DEFAULT_BACKGROUND_PARALLAX_FACTOR_Y
     private var foregroundParallaxFactor = DEFAULT_FOREGROUND_PARALLAX_FACTOR
+
     private var camerasSetToGameCamera = false
+
     private val spawns = Array<Spawn>()
     private var initialized = false
     private var showBackgrounds = true
@@ -177,7 +187,7 @@ class MegaLevelScreen(
             gameCamera,
             distanceOnTransition = ROOM_DISTANCE_ON_TRANSITION * ConstVals.PPM,
             interpolate = { game.doLerpGameCamera() },
-            interpolationScalar = { game.getLerpValueForGameCamera() },
+            interpolationScalar = { game.calculateLerpValueForGameCamera() },
             transitionScannerDimensions = vector2Of(TRANSITION_SCANNER_SIZE * ConstVals.PPM),
             transDelay = ConstVals.ROOM_TRANS_DELAY_DURATION,
             transDuration = ConstVals.ROOM_TRANS_DURATION,
@@ -243,7 +253,11 @@ class MegaLevelScreen(
             )
         }
 
-        cameraShaker = CameraShaker(gameCamera)
+        gameCameraRotator = CameraRotator(
+            camera = gameCamera,
+            onJustFinished = { eventsMan.submitEvent(Event(EventType.END_GAME_CAM_ROTATION)) }
+        )
+        gameCameraShaker = CameraShaker(gameCamera)
     }
 
     override fun show() {
@@ -257,7 +271,9 @@ class MegaLevelScreen(
         game.setTiledMapLoadResult(tiledMapLoadResult!!)
         val (map, _, worldWidth, worldHeight) = tiledMapLoadResult!!
 
-        val worldContainer = SimpleGridWorldContainer(ConstVals.PPM)/*
+        val worldContainer = SimpleGridWorldContainer(ConstVals.PPM)
+        // TODO: fix Quadtree impl (not working currently)
+        /*
         QuadtreeWorldContainer(
             ConstVals.PPM,
             0,
@@ -288,6 +304,7 @@ class MegaLevelScreen(
         gameCamera.position.set(ConstFuncs.getCamInitPos())
         foregroundCamera.position.set(ConstFuncs.getCamInitPos())
         uiCamera.position.set(ConstFuncs.getCamInitPos())
+        gameCameraRotator.reset()
         showBackgrounds = true
     }
 
@@ -436,9 +453,8 @@ class MegaLevelScreen(
                 if (!mini) audioMan.fadeOutMusic(FADE_OUT_MUSIC_ON_BOSS_SPAWN)
 
                 bossSpawnEventHandler.init(bossName, bossSpawnProps, mini)
-
-                megaman.running =
-                    false // engine.systems.forEach { it.on = it is WorldSystem || it is SpritesSystem || it is AnimationsSystem }
+                megaman.running = false
+                // engine.systems.forEach { it.on = it is WorldSystem || it is SpritesSystem || it is AnimationsSystem }
             }
 
             EventType.BEGIN_BOSS_SPAWN -> {
@@ -446,9 +462,7 @@ class MegaLevelScreen(
                 entityStatsHandler.set(boss)
             }
 
-            EventType.END_BOSS_SPAWN -> {
-                eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
-            }
+            EventType.END_BOSS_SPAWN -> eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
 
             EventType.BOSS_DEFEATED -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Boss defeated")
@@ -470,9 +484,7 @@ class MegaLevelScreen(
                         )
                     )
                 )
-
                 megaman.canBeDamaged = false
-
                 entityStatsHandler.unset()
             }
 
@@ -483,11 +495,11 @@ class MegaLevelScreen(
                 eventsMan.submitEvent(Event(eventType, props(ConstKeys.BOSS to boss)))
             }
 
-            EventType.MINI_BOSS_DEAD -> {/*
+            EventType.MINI_BOSS_DEAD -> {
+                /*
                 val systemsToSwitch = gdxArrayOf(MotionSystem::class, BehaviorsSystem::class)
                 engine.systems.forEach { if (systemsToSwitch.contains(it::class)) it.on = true }
                  */
-
                 eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
                 megaman.canBeDamaged = true
             }
@@ -499,12 +511,12 @@ class MegaLevelScreen(
 
             EventType.SHAKE_CAM -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Req shake cam")
-                if (cameraShaker.isFinished) {
+                if (gameCameraShaker.isFinished) {
                     val duration = event.properties.get(ConstKeys.DURATION, Float::class)!!
                     val interval = event.properties.get(ConstKeys.INTERVAL, Float::class)!!
                     val shakeX = event.properties.get(ConstKeys.X, Float::class)!!
                     val shakeY = event.properties.get(ConstKeys.Y, Float::class)!!
-                    cameraShaker.startShake(duration, interval, shakeX, shakeY)
+                    gameCameraShaker.startShake(duration, interval, shakeX, shakeY)
                 }
             }
 
@@ -528,15 +540,26 @@ class MegaLevelScreen(
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Show background")
                 showBackgrounds = event.getProperty(ConstKeys.SHOW, Boolean::class)!!
             }
+
+            EventType.SET_GAME_CAM_ROTATION -> {
+                val rotation = event.getProperty(ConstKeys.VALUE, Float::class)!!
+                if (rotation >= 360f || rotation < 0f)
+                    throw IllegalArgumentException("Rotation must be between 0 and 359 degrees!")
+                gameCameraRotator.startRotation(rotation, ConstVals.GAME_CAM_ROTATE_TIME)
+            }
         }
     }
 
     override fun render(delta: Float) {
-        if (controllerPoller.isJustPressed(MegaControllerButtons.START) && playerStatsHandler.finished && playerSpawnEventHandler.finished && playerDeathEventHandler.finished && bossSpawnEventHandler.finished) {
+        if (controllerPoller.isJustPressed(MegaControllerButtons.START) && playerStatsHandler.finished &&
+            playerSpawnEventHandler.finished && playerDeathEventHandler.finished && bossSpawnEventHandler.finished
+        ) {
             if (game.paused) game.resume() else game.pause()
         }
 
-        if (game.paused && (!playerStatsHandler.finished || !playerSpawnEventHandler.finished || !playerDeathEventHandler.finished)) game.resume()
+        if (game.paused && (!playerStatsHandler.finished || !playerSpawnEventHandler.finished ||
+                    !playerDeathEventHandler.finished)
+        ) game.resume()
 
         if (!game.paused) {
             spawnsMan.update(delta / 2f)
@@ -560,9 +583,10 @@ class MegaLevelScreen(
 
             backgrounds.forEach { it.update(delta) }
             cameraManagerForRooms.update(delta)
+            gameCameraRotator.update(delta)
+            if (!gameCameraShaker.isFinished) gameCameraShaker.update(delta)
 
             if (!bossSpawnEventHandler.finished) bossSpawnEventHandler.update(delta)
-
             if (!playerSpawnEventHandler.finished) playerSpawnEventHandler.update(delta)
             else if (!playerDeathEventHandler.finished) playerDeathEventHandler.update(delta)
             else if (!endLevelEventHandler.finished) endLevelEventHandler.update(delta)
@@ -583,21 +607,17 @@ class MegaLevelScreen(
         if (showBackgrounds) backgrounds.forEach { it.draw(batch) }
 
         batch.projectionMatrix = gameCamera.combined
-
         val backgroundSprites = drawables.get(DrawingSection.BACKGROUND)
         while (!backgroundSprites.isEmpty()) {
             val backgroundSprite = backgroundSprites.poll()
             backgroundSprite.draw(batch)
         }
-
         tiledMapLevelRenderer?.render(gameCamera)
-
         val gameGroundSprites = drawables.get(DrawingSection.PLAYGROUND)
         while (!gameGroundSprites.isEmpty()) {
             val gameGroundSprite = gameGroundSprites.poll()
             gameGroundSprite.draw(batch)
         }
-
         val foregroundSprites = drawables.get(DrawingSection.FOREGROUND)
         while (!foregroundSprites.isEmpty()) {
             val foregroundSprite = foregroundSprites.poll()
@@ -605,10 +625,8 @@ class MegaLevelScreen(
         }
 
         batch.projectionMatrix = uiCamera.combined
-
         entityStatsHandler.draw(batch)
         playerStatsHandler.draw(batch)
-
         batch.end()
 
         if (!playerSpawnEventHandler.finished) playerSpawnEventHandler.draw(batch)
@@ -616,15 +634,12 @@ class MegaLevelScreen(
 
         val shapeRenderer = game.shapeRenderer
         shapeRenderer.projectionMatrix = gameCamera.combined
-
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
         while (!shapes.isEmpty()) {
             val shape = shapes.poll()
             shape.draw(shapeRenderer)
         }
         shapeRenderer.end()
-
-        if (!game.paused && !cameraShaker.isFinished) cameraShaker.update(delta)
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) onEscapePressed.invoke()
     }
@@ -639,6 +654,7 @@ class MegaLevelScreen(
         playerSpawnsMan.reset()
         playerDeathEventHandler.reset()
         cameraManagerForRooms.reset()
+        gameCameraRotator.reset()
         audioMan.unsetMusic()
         game.putProperty(ConstKeys.ROOM_TRANSITION, false)
         game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))

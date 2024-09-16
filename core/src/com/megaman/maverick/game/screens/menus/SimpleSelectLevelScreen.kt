@@ -35,7 +35,7 @@ class SimpleSelectLevelScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, 
             ),
             ALPHA to gdxArrayOf(
                 Level.TIMBER_WOMAN,
-                Level.POLARITY_MAN,
+                Level.MAGNET_MAN,
                 Level.WILY_STAGE_1,
                 Level.WILY_STAGE_2,
                 Level.WILY_STAGE_3

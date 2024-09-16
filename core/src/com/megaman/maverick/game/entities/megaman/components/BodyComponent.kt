@@ -173,24 +173,23 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
             }
         }
 
-        val rightSideOffset = Vector2(0.5f, 0f).scl(ConstVals.PPM.toFloat())
-        rightFixture.offsetFromBodyCenter.set(rightSideOffset)
-        leftFixture.offsetFromBodyCenter.set(rightSideOffset.scl(-1f))
+        rightFixture.offsetFromBodyCenter = Vector2(0.5f, 0.25f).scl(ConstVals.PPM.toFloat())
+        leftFixture.offsetFromBodyCenter = Vector2(-0.5f, 0.25f).scl(ConstVals.PPM.toFloat())
 
         if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) {
             body.height = 0.45f * ConstVals.PPM
             (playerFixture.rawShape as GameRectangle).height = 0.45f * ConstVals.PPM
             headFixture.offsetFromBodyCenter.y = ConstVals.PPM / 4f
             feetFixture.offsetFromBodyCenter.y = -ConstVals.PPM / 4f
-            (leftFixture.rawShape as Rectangle).setHeight(0.25f * ConstVals.PPM)
-            (rightFixture.rawShape as Rectangle).setHeight(0.25f * ConstVals.PPM)
+            (leftFixture.rawShape as Rectangle).setHeight(0.1f * ConstVals.PPM)
+            (rightFixture.rawShape as Rectangle).setHeight(0.1f * ConstVals.PPM)
         } else {
             body.height = 0.95f * ConstVals.PPM
             (playerFixture.rawShape as GameRectangle).height = 0.95f * ConstVals.PPM
             headFixture.offsetFromBodyCenter.y = ConstVals.PPM / 2f
             feetFixture.offsetFromBodyCenter.y = -ConstVals.PPM / 2f
-            (leftFixture.rawShape as Rectangle).setHeight(0.6f * ConstVals.PPM)
-            (rightFixture.rawShape as Rectangle).setHeight(0.6f * ConstVals.PPM)
+            (leftFixture.rawShape as Rectangle).setHeight(0.4f * ConstVals.PPM)
+            (rightFixture.rawShape as Rectangle).setHeight(0.4f * ConstVals.PPM)
         }
 
         (bodyFixture.rawShape as Rectangle).set(body)

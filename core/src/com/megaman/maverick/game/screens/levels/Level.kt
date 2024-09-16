@@ -13,7 +13,7 @@ enum class Level(tmxSourceFile: String, val musicAss: MusicAsset) {
     MOON_MAN("MoonMan_v2.tmx", MusicAsset.MMX5_DARK_DIZZY_MUSIC),
     DESERT_MAN("DesertMan.tmx", MusicAsset.MMX7_VANISHING_GUNGAROO_MUSIC),
     GLACIER_MAN("GlacierMan.tmx", MusicAsset.MM8_FROST_MAN_ALT_MUSIC),
-    POLARITY_MAN("MagnetMan.tmx", MusicAsset.MMX5_IZZY_GLOW_MUSIC),
+    MAGNET_MAN("MagnetMan.tmx", MusicAsset.MMX5_IZZY_GLOW_MUSIC),
     RODENT_MAN("Test1.tmx", MusicAsset.MM10_WILY1_MUSIC),
 
     // Final levels
@@ -47,7 +47,7 @@ enum class Level(tmxSourceFile: String, val musicAss: MusicAsset) {
 object LevelCompletionMap {
 
     private val prodMap = objectMapOf(
-        Level.POLARITY_MAN to ScreenEnum.SAVE_GAME_SCREEN,
+        Level.MAGNET_MAN to ScreenEnum.SAVE_GAME_SCREEN,
         Level.TIMBER_WOMAN to ScreenEnum.SAVE_GAME_SCREEN,
         Level.DISTRIBUTOR_MAN to ScreenEnum.SAVE_GAME_SCREEN,
         Level.ROASTER_MAN to ScreenEnum.SAVE_GAME_SCREEN,

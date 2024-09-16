@@ -138,7 +138,7 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
 
         val size = when (type) {
             ENEMY_TYPE -> Vector2(2f, 2f)
-            LEVER_TYPE -> Vector2(1f, 2f)
+            LEVER_TYPE -> vector2Of(0.75f)
             SWITCHAROO_ARROW_TYPE -> Vector2(3f, 6f)
             else -> throw IllegalStateException("Invalid type: $type")
         }.scl(ConstVals.PPM.toFloat())
