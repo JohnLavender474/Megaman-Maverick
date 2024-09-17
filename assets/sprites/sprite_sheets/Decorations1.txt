@@ -1,40 +1,61 @@
 Decorations1.png
-size: 1752, 260
+size: 1836, 260
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-BreathBubbles
+BlinkingArrow
   rotate: false
   xy: 0, 0
+  size: 26, 52
+  orig: 26, 52
+  offset: 0, 0
+  index: -1
+BreathBubbles
+  rotate: false
+  xy: 26, 0
   size: 16, 48
   orig: 16, 48
   offset: 0, 0
   index: -1
 JetpackFlame
   rotate: false
-  xy: 16, 0
+  xy: 42, 0
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 Lava
   rotate: false
-  xy: 112, 0
+  xy: 138, 0
   size: 1560, 260
   orig: 1560, 260
   offset: 0, 0
   index: -1
 MuzzleFlash
   rotate: false
-  xy: 1672, 0
+  xy: 1698, 0
   size: 48, 16
   orig: 48, 16
   offset: 0, 0
   index: -1
+Thread
+  rotate: false
+  xy: 1746, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 UnderWaterBubble
   rotate: false
-  xy: 1720, 0
+  xy: 1778, 0
   size: 32, 16
   orig: 32, 16
+  offset: 0, 0
+  index: -1
+WhiteArrow
+  rotate: false
+  xy: 1810, 0
+  size: 26, 26
+  orig: 26, 26
   offset: 0, 0
   index: -1

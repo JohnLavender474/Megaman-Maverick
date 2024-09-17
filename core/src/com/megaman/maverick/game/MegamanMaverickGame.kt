@@ -68,6 +68,7 @@ import com.megaman.maverick.game.controllers.MegaControllerPoller
 import com.megaman.maverick.game.controllers.loadButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.decorations.WhiteArrow
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.hazards.Saw
 import com.megaman.maverick.game.entities.megaman.Megaman
