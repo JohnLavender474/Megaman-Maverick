@@ -254,7 +254,7 @@ class MegaLevelScreen(
         }
 
         gameCameraRotator = CameraRotator(
-            camera = gameCamera,
+            cameras = gdxArrayOf(gameCamera, backgroundCamera),
             onJustFinished = { eventsMan.submitEvent(Event(EventType.END_GAME_CAM_ROTATION)) }
         )
         gameCameraShaker = CameraShaker(gameCamera)

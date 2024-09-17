@@ -42,6 +42,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val INVALID = "invalid"
     const val FPS = "fps"
     const val FAST = "fast"
     const val MEDIUM = "medium"

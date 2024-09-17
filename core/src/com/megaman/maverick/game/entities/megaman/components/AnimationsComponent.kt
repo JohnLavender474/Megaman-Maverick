@@ -30,18 +30,25 @@ val Megaman.slipSliding: Boolean
         if (isDirectionRotatedVertically()) body.physics.velocity.x else body.physics.velocity.y
     ) > ConstVals.PPM / 16f
 
-private lateinit var lastAnimationKey: String
+val Megaman.rawAnimKey: String
+    get() = currentRawAnimKey
+
+val Megaman.amendedAnimKey: String
+    get() = currentAmendedAnimKey
+
+private lateinit var currentRawAnimKey: String
+private lateinit var currentAmendedAnimKey: String
 
 internal fun Megaman.defineAnimationsComponent(): AnimationsComponent {
     val megamanAnimationKeySupplier = {
-        lastAnimationKey =
-            if (!ready) "Stand"
+        val newAnimKey =
+            if (!roomTransPauseTimer.isFinished()) ConstKeys.INVALID
+            else if (game.isProperty(ConstKeys.ROOM_TRANSITION, true)) currentRawAnimKey
+            else if (!ready) "Stand"
             else if (cameraRotating) {
                 if (shooting) "JumpShoot"
                 else if (fullyCharged) "JumpCharging" else if (halfCharged) "JumpHalfCharging" else "Jump"
-            } else if (!roomTransPauseTimer.isFinished()) lastAnimationKey
-            else if (game.isProperty(ConstKeys.ROOM_TRANSITION, true)) lastAnimationKey
-            else {
+            } else {
                 if (isBehaviorActive(BehaviorType.JETPACKING)) {
                     if (shooting) "JetpackShoot"
                     else "Jetpack"
@@ -114,10 +121,12 @@ internal fun Megaman.defineAnimationsComponent(): AnimationsComponent {
                     else if (halfCharged) "StandHalfCharging" else "Stand"
                 }
             }
-        if (maverick && facing == Facing.LEFT) lastAnimationKey += "_Left"
-        lastAnimationKey += if (maverick) "_MegamanMaverick" else "_Megaman"
-        lastAnimationKey += "_${currentWeapon.name}"
-        lastAnimationKey
+        if (newAnimKey != ConstKeys.INVALID) currentRawAnimKey = newAnimKey
+        currentAmendedAnimKey = newAnimKey
+        if (maverick && facing == Facing.LEFT) currentAmendedAnimKey += "_Left"
+        currentAmendedAnimKey += if (maverick) "_MegamanMaverick" else "_Megaman"
+        currentAmendedAnimKey += "_${currentWeapon.name}"
+        currentAmendedAnimKey
     }
 
     animations = ObjectMap<String, IAnimation>()

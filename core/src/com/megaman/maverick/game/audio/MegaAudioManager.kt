@@ -91,12 +91,16 @@ class MegaAudioManager(
             return
         }
         if (currentMusic?.isPlaying == true) currentMusic?.stop()
+
         currentMusic = music.get(key as MusicAsset)
-        fadeOutMusicTimer = null
+        if (currentMusic == null) return
+
         currentMusic!!.isLooping = loop
         currentMusic!!.volume = musicVolume
         currentMusic!!.play()
+
         musicPaused = false
+        fadeOutMusicTimer = null
     }
 
     fun unsetMusic() {

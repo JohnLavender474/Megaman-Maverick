@@ -232,7 +232,7 @@ class BossSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MEGA_MA
         slide.init()
         outro = false
         outTimer.reset()
-        game.audioMan.playMusic(MusicAsset.MMX_LEVEL_SELECT_SCREEN_MUSIC, true)
+        game.audioMan.playMusic(MusicAsset.MM3_SNAKE_MAN_MUSIC, true)
     }
 
     override fun onAnyMovement(direction: Direction) =

@@ -150,7 +150,7 @@ public enum BossType {
         }
     },
 
-    DISTRIBUTOR_MAN("Distributor Man", Level.TEST1, Position.BOTTOM_CENTER, TextureAsset.BOSSES) {
+    PRECIOUS_MAN("Precious Man", Level.TEST1, Position.BOTTOM_CENTER, TextureAsset.BOSSES) {
         @Override
         public Vector2 getSpriteSize() {
             return new Vector2(2.85f, 2.5f);

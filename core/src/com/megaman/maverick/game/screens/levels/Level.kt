@@ -8,17 +8,17 @@ import com.megaman.maverick.game.screens.ScreenEnum
 enum class Level(tmxSourceFile: String, val musicAss: MusicAsset) {
     // Boss levels
     TIMBER_WOMAN("TimberWoman.tmx", MusicAsset.XENOBLADE_GAUR_PLAINS_MUSIC),
-    REACTOR_MAN("ReactMan_v2.tmx", MusicAsset.MM_OMEGA_SLUDGE_MAN),
+    REACTOR_MAN("ReactMan_v2.tmx", MusicAsset.MM3_SNAKE_MAN_MUSIC),
     INFERNO_MAN("InfernoMan_v2.tmx", MusicAsset.MMX6_BLAZE_HEATNIX_MUSIC),
-    MOON_MAN("MoonMan_v2.tmx", MusicAsset.MMX5_DARK_DIZZY_MUSIC),
+    MOON_MAN("MoonMan_v3.tmx", MusicAsset.MMX5_DARK_DIZZY_MUSIC),
     DESERT_MAN("DesertMan.tmx", MusicAsset.MMX7_VANISHING_GUNGAROO_MUSIC),
     GLACIER_MAN("GlacierMan.tmx", MusicAsset.MM8_FROST_MAN_ALT_MUSIC),
     MAGNET_MAN("MagnetMan.tmx", MusicAsset.MMX5_IZZY_GLOW_MUSIC),
     RODENT_MAN("Test1.tmx", MusicAsset.MM10_WILY1_MUSIC),
 
     // Final levels
-    WILY_STAGE_1("WilyStage1.tmx", MusicAsset.MMX_SIGMA_1ST_MUSIC),
-    WILY_STAGE_2("WilyStage2.tmx", MusicAsset.MMX_SIGMA_2_STAGE),
+    WILY_STAGE_1("WilyStage1.tmx", MusicAsset.MM3_SNAKE_MAN_MUSIC),
+    WILY_STAGE_2("WilyStage2.tmx", MusicAsset.MM3_SNAKE_MAN_MUSIC),
     WILY_STAGE_3("WilyStage3.tmx", MusicAsset.MMZ_ENEMY_HALL_MUSIC),
 
     // Bonus levels
@@ -26,7 +26,7 @@ enum class Level(tmxSourceFile: String, val musicAss: MusicAsset) {
     ROASTER_MAN("Test1.tmx", MusicAsset.XENOBLADE_GAUR_PLAINS_MUSIC),
     BLUNT_MAN("Test1.tmx", MusicAsset.XENOBLADE_GAUR_PLAINS_MUSIC),
     NUKE_MAN("Test1.tmx", MusicAsset.XENOBLADE_GAUR_PLAINS_MUSIC),
-    CREW_MAN("CrewMan.tmx", MusicAsset.MM7_JUNK_MAN_MUSIC),
+    CREW_MAN("CrewMan.tmx", MusicAsset.MM3_SNAKE_MAN_MUSIC),
     FREEZE_MAN("FreezeMan.tmx", MusicAsset.MMX_CHILL_PENGUIN_MUSIC),
     MICROWAVE_MAN("Test1.tmx", MusicAsset.XENOBLADE_GAUR_PLAINS_MUSIC),
     GALAXY_MAN("GalaxyMan.tmx", MusicAsset.MM9_GALAXY_MAN_MUSIC),
@@ -36,10 +36,10 @@ enum class Level(tmxSourceFile: String, val musicAss: MusicAsset) {
     TEST1("Test1.tmx", MusicAsset.MMX2_X_HUNTER_MUSIC),
     TEST2("Test2.tmx", MusicAsset.MMX5_VOLT_KRAKEN_MUSIC),
     TEST3("Test3.tmx", MusicAsset.XENOBLADE_GAUR_PLAINS_MUSIC),
-    TEST4("Test4.tmx", MusicAsset.MMX_SIGMA_1ST_MUSIC),
-    TEST5("Test5.tmx", MusicAsset.MMZ_NEO_ARCADIA_MUSIC),
+    TEST4("Test4.tmx", MusicAsset.MM3_SNAKE_MAN_MUSIC),
+    TEST5("Test5.tmx", MusicAsset.MM3_SNAKE_MAN_MUSIC),
     TEST6("Test6.tmx", MusicAsset.MMX3_INTRO_STAGE_MUSIC),
-    TEST7("Test7.tmx", MusicAsset.MMX_SIGMA_2_STAGE);
+    TEST7("Test7.tmx", MusicAsset.MM3_SNAKE_MAN_MUSIC);
 
     val tmxSourceFile = "tiled_maps/tmx/$tmxSourceFile"
 }

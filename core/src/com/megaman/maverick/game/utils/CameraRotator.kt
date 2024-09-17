@@ -3,12 +3,14 @@ package com.megaman.maverick.game.utils
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.utils.Array
+import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.interfaces.Updatable
 
 // Thanks to https://stackoverflow.com/questions/16509244/set-camera-rotation-in-libgdx
-class CameraRotator(private val camera: OrthographicCamera, var onJustFinished: (() -> Unit)? = null) : Updatable,
-    Resettable {
+class CameraRotator(private val cameras: Array<OrthographicCamera>, var onJustFinished: (() -> Unit)? = null) :
+    Updatable, Resettable {
 
     companion object {
         private val interpolation = Interpolation.smooth
@@ -20,6 +22,11 @@ class CameraRotator(private val camera: OrthographicCamera, var onJustFinished: 
     private var rotTime = 0f
     private var rotFinished = true
     private var accumulator = 0f
+
+    constructor(camera: OrthographicCamera, onJustFinished: (() -> Unit)? = null) : this(
+        gdxArrayOf(camera),
+        onJustFinished
+    )
 
     fun isFinished() = rotFinished
 
@@ -49,7 +56,7 @@ class CameraRotator(private val camera: OrthographicCamera, var onJustFinished: 
     }
 
     private fun rotate(degrees: Float) {
-        camera.rotate(degrees)
+        cameras.forEach { it.rotate(degrees) }
         totRot += degrees
     }
 

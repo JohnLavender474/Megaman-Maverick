@@ -23,22 +23,21 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
     spritesComponent.putUpdateFunction("megaman") { _, player ->
         val direction = if (isBehaviorActive(BehaviorType.AIR_DASHING))
             getProperty(MegamanKeys.DIRECTION_ON_AIR_DASH, Direction::class)!!
-        else directionRotation
+        else directionRotation!!
 
         val flipX = !maverick && facing == Facing.LEFT
         val flipY = direction == Direction.DOWN
         player.setFlip(flipX, flipY)
 
-        val rotation = when (direction) {
-            Direction.UP, Direction.DOWN, null -> 0f
+        player.setOriginCenter()
+        player.rotation = when (direction) {
+            Direction.UP, Direction.DOWN -> 0f
             Direction.LEFT -> 90f
             Direction.RIGHT -> 270f
         }
-        player.setOriginCenter()
-        player.rotation = rotation
 
         val position = when (direction) {
-            Direction.UP, null -> Position.BOTTOM_CENTER
+            Direction.UP -> Position.BOTTOM_CENTER
             Direction.DOWN -> Position.TOP_CENTER
             Direction.LEFT -> Position.CENTER_RIGHT
             Direction.RIGHT -> Position.CENTER_LEFT
@@ -46,16 +45,13 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
         val bodyPosition = body.getPositionPoint(position)
         player.setPosition(bodyPosition, position)
 
-        val xTranslation = if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) when (direction) {
-            Direction.UP, Direction.DOWN, null -> 0f
-            Direction.LEFT -> 0.15f
-            Direction.RIGHT -> -0.15f
-        } else when (direction) {
-            Direction.UP, Direction.DOWN, null -> 0f
-            Direction.LEFT -> 0.425f
-            Direction.RIGHT -> -0.425f
+        val xTranslation = if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) 0f else when (direction) {
+            Direction.UP, Direction.DOWN -> if (rawAnimKey == "JumpShoot") 0.1f * facing.value else 0f
+            Direction.LEFT -> 0.2f
+            Direction.RIGHT -> -0.2f
         }
         player.translateX(xTranslation * ConstVals.PPM)
+
         player.setAlpha(if (damageFlash) 0f else 1f)
     }
 

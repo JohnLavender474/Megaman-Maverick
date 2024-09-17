@@ -125,23 +125,27 @@ comprehensive listing of the credits for the artwork used in this game.
 
 #### Title Screen
 
+Megaman Title - [Mister Mike](https://www.spriters-resource.com/fullview/258/)
 Megaman Weapon Get Sprite - [PixelBoy127](https://www.spriters-resource.com/custom_edited/megamancustoms/sheet/166239/)
 
 #### Bosses
 
-- Timber Woman - [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/TimberWoman-Megaman-Maverick-1087794591)
-- Rodent Man - [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/Rodent-Man-Megaman-Maverick-1087797101)
-- Reactor Man - [Balloon Cart](https://balloon-cart.itch.io/reactor-man-asset-pack)
-- Moon Man - [boberatu](https://www.deviantart.com/boberatu/art/MPN-006-Moon-Man-625679636)
-- Glacier Man - [Balloon Cart](https://balloon-cart.itch.io/glacier-man-asset-pack)
-- Inferno Man - [boberatu](https://www.deviantart.com/boberatu/art/MPN-000-Volcano-Man-313694441)
-- Bospider - [Bean and Shawn](https://www.spriters-resource.com/game_boy_gbc/mmxtreme/sheet/480/?source=genre)
-- Guts Tank - [Mister Mike](https://www.spriters-resource.com/nes/mm2/sheet/2317/)
-- Mecha Dragon - [Mister Mike](https://www.spriters-resource.com/nes/mm2/sheet/2317/)
-- Moon Head - [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/MoonHead-Miniboss-Megaman-Maverick-1090151707)
-- Penpen Maker - [Mister Mike](https://www.spriters-resource.com/nes/mm3/sheet/77911/)
-- Nuclear Monkey - [Balloon Cart](https://balloon-cart.itch.io/reactor-man-asset-pack)
-- Sphinx - [Mister Mike](https://www.spriters-resource.com/custom_edited/megamancustoms/sheet/108177/)
+- Timber Woman spritesheet & mugshot- [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/TimberWoman-Megaman-Maverick-1087794591)
+- Rodent Man spritesheet & mugshot - [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/Rodent-Man-Megaman-Maverick-1087797101)
+- Precious Man spritesheet & mugshot - [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/Precious-Man-Megaman-Maverick-1087800596)
+- Reactor Man spritesheet & mugshot - [Balloon Cart](https://balloon-cart.itch.io/reactor-man-asset-pack)
+- Moon Man spritesheet - [boberatu](https://www.deviantart.com/boberatu/art/MPN-006-Moon-Man-625679636)
+- Moon Man mugshot - [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/Moon-Man-Mugshot-Based-on-boberatu-s-sprite-1088201420)
+- Glacier Man spritesheet & mugshot - [Balloon Cart](https://balloon-cart.itch.io/glacier-man-asset-pack)
+- Inferno Man spritesheet & mugshot - [boberatu](https://www.deviantart.com/boberatu/art/MPN-000-Volcano-Man-313694441)
+- Desert Man spritesheet & mugshot - [rcrdcat](https://www.deviantart.com/rcrdcat/art/Desert-Man-Spritesheet-Mugshot-332165249)
+- Bospider spritesheet - [Bean and Shawn](https://www.spriters-resource.com/game_boy_gbc/mmxtreme/sheet/480/?source=genre)
+- Guts Tank spritesheet - [Mister Mike](https://www.spriters-resource.com/nes/mm2/sheet/2317/)
+- Mecha Dragon spritesheet - [Mister Mike](https://www.spriters-resource.com/nes/mm2/sheet/2317/)
+- Moon Head spritesheet - [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/MoonHead-Miniboss-Megaman-Maverick-1090151707)
+- Penpen Maker spritesheet - [Mister Mike](https://www.spriters-resource.com/nes/mm3/sheet/77911/)
+- Nuclear Monkey spritesheet - [Balloon Cart](https://balloon-cart.itch.io/reactor-man-asset-pack)
+- Sphinx spritesheet - [Mister Mike](https://www.spriters-resource.com/custom_edited/megamancustoms/sheet/108177/)
 
 #### Tilesets
 
@@ -149,28 +153,53 @@ Megaman Weapon Get Sprite - [PixelBoy127](https://www.spriters-resource.com/cust
 - [Balloon Cart (Glacier Man)](https://balloon-cart.itch.io/glacier-man-asset-pack)
 - [MegaBot](https://ansimuz.itch.io/mega-bot)
 - [Mega 8-Bit](https://assetstore.unity.com/packages/2d/environments/mega-8-bit-pixel-pack-60158?srsltid=AfmBOordeWICo0KR-N3MKcw6iqd2TehrlFgQn6Hijzmk09-2eoq2Gid0)
-- All other tilesets ripped from Capcom's official Megaman games
+- TODO: All other tilesets ripped from Capcom's official Megaman games via the Spriter's Resource website (TODO: will provide links and credits for each tileset used from here)
 
 #### Music
 
-- MM Omega Title Theme - [8-Bit Alchemy](https://www.youtube.com/watch?v=ygMXSgow2FY) - used in title screen
 - MMX6 Blaze Heatnix - [Famitard](https://youtu.be/QpbMwCnJDSo) - used in Inferno Man stage
 - MMX5 Dark Necrobat - [Famitard](https://youtu.be/RosxPCxVOyk) - used in Moon Man stage
 - Xenoblade Gaur Plains - [Bulby](https://www.youtube.com/watch?v=xkrf4xfDsZs&t=60s&ab_channel=Bulby) - used in Timber Woman stage
 - MMX7 Vanish. Gung. - [Famitard](https://youtu.be/MFfZ-LEwcMo) - used in Desert Man stage
 - MM8 Frost Man Alt - [Famitard](https://youtu.be/pQvwU4BavFI) - used in Glacier Man stage
 - MMX5 Shining Firefly - [Famitard](https://youtu.be/EQMQvUFC3g0) - used in Polarity Man stage
-- MM Omega Sludge Man - [8-bit Alchemy](https://youtu.be/1W6vRVMyLvE) - used in Reactor Man stage
 - FF7 Let the Battles Begin - [Bulby](https://www.youtube.com/watch?v=04_jviOqc3Y&t=16s&ab_channel=Bulby) - used as boss theme 1
 - MMX Sigma Fortress 1 - [Wyatt](https://youtu.be/mpHnNDPZNKk) - used in Wily stage 1
-- Duel of the Fates - [Chips 'N Cellos](https://youtu.be/acIkuMy5684) - used in Wily stage 1 boss fight
 - MMX Sigma Fortress 2 - [Bulby](https://youtu.be/WQK9AGaDJLw) - used in Wily stage 2 boss fight
-- World Revolution - [TrojanHorse711](https://youtu.be/UbA4ahXMGos) - used in Wily stage 2 boss fight
-- MMZ Enemy Hall - [DjKlzonez](https://www.youtube.com/watch?v=Van2IRP7OJM&ab_channel=DjKlzonez) - used in Wily stage 3
+- MMZ Enemy Hall - [Famitard](https://www.youtube.com/watch?v=cqmr80ml66Q) - used in Wily stage 3
 - MMX6 Sigma Final Boss - [Famitard](https://youtu.be/FVdYxfEo4lI) - used in Wily stage 3 boss fight
+- MMX5 Volt Kraken - [Famitard](https://www.youtube.com/watch?v=xi7Odov_rek&ab_channel=FamiTard)
+- TODO: Other music tracks are saved in the `assets` dir but not yet used in the game; these will be added here as they're added to the game
 
 ####
 
 Sounds belong to Capcom (Megaman-ripped sound effects) and Nintendo (Mario-ripped sound effects)
+TODO: add credits and links here for where the sounds were downloaded from
 
+####
 
+**PROOF OF PERMISSIONS FOR COMMUNITY ASSETS**
+
+For some of the artwork used in this game, the artist did not state in the work's description or elsewhere that the work was 
+free to use. For these works, I reached out to the artist personally to ask if I could use their work. Below are screenshots 
+as proof of permission. No proof is required for works where the description states that the asset is free to use.
+
+Works by Wyatt:
+
+<img src="./img/permissions/Wyatt.png" width="300"/>
+
+Works by boberatu:
+
+<img src="./img/permissions/boberatu.png" width="300">
+
+Works by rcrdcat:
+
+<img src="./img/permissions/rcrdcat.png" width="300">
+
+Works by Famitard:
+
+<img src="./img/permissions/famitard.png" width="300">
+
+Works by Bulby:
+
+<img src="./img/permissions/Bulby.png" width="300">
