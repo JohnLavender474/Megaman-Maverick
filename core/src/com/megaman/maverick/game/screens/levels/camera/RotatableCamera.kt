@@ -3,17 +3,30 @@ package com.megaman.maverick.game.screens.levels.camera
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.MathUtils
+import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.interfaces.Updatable
-import com.mega.game.engine.common.shapes.GamePolygon
-import com.mega.game.engine.common.shapes.GameRectangle
+import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
+import com.megaman.maverick.game.utils.toGameRectangle
 
-// use [CameraRotator] for now
-class GameCamera(var onJustFinishedRotating: (() -> Unit)? = null) : OrthographicCamera(), Updatable, Resettable {
-    
+// Thanks to https://stackoverflow.com/questions/16509244/set-camera-rotation-in-libgdx
+class RotatableCamera(
+    var timeToRotate: Float,
+    var onJustFinishedRotating: (() -> Unit)? = null
+) : OrthographicCamera(), IDirectionRotatable,
+    Updatable, Resettable {
+
     companion object {
+        const val TAG = "RotatableCamera"
         private val interpolation = Interpolation.smooth
     }
+
+    override var directionRotation: Direction? = Direction.UP
+        set(value) {
+            field = value
+            if (value == null) return
+            startRotation(value.rotation, timeToRotate)
+        }
 
     private var startRot = 0f
     private var rotAmount = 0f
@@ -22,15 +35,7 @@ class GameCamera(var onJustFinishedRotating: (() -> Unit)? = null) : Orthographi
     private var rotFinished = true
     private var accumulator = 0f
 
-    fun toGamePolygon(): GamePolygon {
-        val polygon = GameRectangle()
-            .setSize(viewportWidth, viewportHeight)
-            .setCenter(position.x, position.y)
-            .setOrigin(position.x, position.y)
-            .toPolygon()
-        polygon.rotation = totRot
-        return polygon
-    }
+    fun getRotatedBounds() = toGameRectangle().getCardinallyRotatedShape(directionRotation!!, false)
 
     fun isFinishedRotating() = rotFinished
 
@@ -52,16 +57,19 @@ class GameCamera(var onJustFinishedRotating: (() -> Unit)? = null) : Orthographi
         }
     }
 
-    fun startRotation(degrees: Float, time: Float) {
+    /**
+     * Do not call this method directly, should use [directionRotation] instead of this method
+     */
+    override fun rotate(degrees: Float) {
+        super.rotate(degrees)
+        totRot += degrees
+    }
+
+    private fun startRotation(degrees: Float, time: Float) {
         startRot = totRot
         rotAmount = degrees
         rotTime = time
         rotFinished = false
-    }
-
-    override fun rotate(degrees: Float) {
-        super.rotate(degrees)
-        totRot += degrees
     }
 
     private fun rotateTo(degrees: Float) = rotate(degrees - totRot)

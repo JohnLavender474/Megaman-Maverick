@@ -12,10 +12,7 @@ import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
-import com.mega.game.engine.common.extensions.gdxArrayOf
-import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.extensions.toObjectSet
+import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.IntPair
 import com.mega.game.engine.common.objects.Properties
@@ -29,6 +26,8 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.events.Event
+import com.mega.game.engine.events.IEventListener
 import com.mega.game.engine.pathfinding.PathfinderParams
 import com.mega.game.engine.pathfinding.PathfindingComponent
 import com.mega.game.engine.updatables.UpdatablesComponent
@@ -46,13 +45,14 @@ import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.utils.DynamicBodyHeuristic
+import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.pathfinding.StandardPathfinderResultConsumer
 import com.megaman.maverick.game.utils.isNeighborOf
 import com.megaman.maverick.game.utils.toGridCoordinate
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
-class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
+class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IEventListener {
 
     enum class BatStatus(val region: String) {
         HANGING("Hang"), OPEN_EYES("OpenEyes"), OPEN_WINGS("OpenWings"), FLYING_TO_ATTACK("Fly"),
@@ -82,6 +82,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
             it as ChargedShotExplosion
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
         })
+    override val eventKeyMask = objectSetOf<Any>(EventType.SET_GAME_CAM_ROTATION, EventType.END_GAME_CAM_ROTATION)
 
     private val hangTimer = Timer(HANG_DURATION)
     private val releasePerchTimer = Timer(RELEASE_FROM_PERCH_DURATION)
@@ -91,6 +92,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
     private lateinit var animations: ObjectMap<String, IAnimation>
     private var flyToAttackSpeed = DEFAULT_FLY_TO_ATTACK_SPEED
     private var flyToRetreatSpeed = DEFAULT_FLY_TO_RETREAT_SPEED
+    private var canMove = true
 
     @Volatile
     private var printDebugFilter = false
@@ -103,6 +105,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        game.eventsMan.addListener(this)
         super.onSpawn(spawnProps)
 
         hangTimer.reset()
@@ -117,15 +120,30 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
         val frameDuration = spawnProps.getOrDefault(ConstKeys.FRAME, 0.1f, Float::class)
         gdxArrayOf(animations.get("Fly"), animations.get("SnowFly")).forEach { it.setFrameDuration(frameDuration) }
 
-        flyToAttackSpeed = spawnProps.getOrDefault(
-            "${ConstKeys.ATTACK}_${ConstKeys.SPEED}", DEFAULT_FLY_TO_ATTACK_SPEED, Float::class
-        )
+        flyToAttackSpeed =
+            spawnProps.getOrDefault("${ConstKeys.ATTACK}_${ConstKeys.SPEED}", DEFAULT_FLY_TO_ATTACK_SPEED, Float::class)
         flyToRetreatSpeed = spawnProps.getOrDefault(
-            "${ConstKeys.RETREAT}_${ConstKeys.SPEED}", DEFAULT_FLY_TO_RETREAT_SPEED, Float::class
+            "${ConstKeys.RETREAT}_${ConstKeys.SPEED}",
+            DEFAULT_FLY_TO_RETREAT_SPEED,
+            Float::class
         )
 
         debugPathfindingTimer.reset()
         printDebugFilter = DEBUG_PATHFINDING
+
+        canMove = true
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        game.eventsMan.removeListener(this)
+    }
+
+    override fun onEvent(event: Event) {
+        when (event.key) {
+            EventType.SET_GAME_CAM_ROTATION -> canMove = false
+            EventType.END_GAME_CAM_ROTATION -> canMove = true
+        }
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -180,10 +198,13 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(.5f * ConstVals.PPM, .25f * ConstVals.PPM)
+        body.setSize(0.75f * ConstVals.PPM)
+
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
+        body.addFixture(bodyFixture)
 
         val headFixture = Fixture(
-            body, FixtureType.HEAD, GameRectangle().setSize(0.5f * ConstVals.PPM, .175f * ConstVals.PPM)
+            body, FixtureType.HEAD, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.175f * ConstVals.PPM)
         )
         headFixture.offsetFromBodyCenter.y = 0.375f * ConstVals.PPM
         body.addFixture(headFixture)
@@ -202,8 +223,8 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
 
         val scannerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.7f * ConstVals.PPM))
         val consumer: (IFixture) -> Unit = {
-            if (it.getFixtureType() == FixtureType.DAMAGEABLE && it.getEntity() == getMegaman()) status =
-                BatStatus.FLYING_TO_RETREAT
+            if (it.getFixtureType() == FixtureType.DAMAGEABLE && it.getEntity() == getMegaman())
+                status = BatStatus.FLYING_TO_RETREAT
         }
         scannerFixture.setConsumer { _, it -> consumer(it) }
         body.addFixture(scannerFixture)
@@ -212,22 +233,25 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
             shieldFixture.active = status == BatStatus.HANGING
             damageableFixture.active = status != BatStatus.HANGING
 
-            if (status == BatStatus.FLYING_TO_RETREAT) body.physics.velocity.set(0f, flyToRetreatSpeed * ConstVals.PPM)
+            if (!canMove) body.physics.velocity.setZero()
+            else if (status == BatStatus.FLYING_TO_RETREAT) body.physics.velocity.set(
+                0f, flyToRetreatSpeed * ConstVals.PPM
+            )
             else if (status != BatStatus.FLYING_TO_ATTACK) body.physics.velocity.setZero()
         })
 
-        addComponent(
-            DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true)
-        )
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.5f * ConstVals.PPM)
+        sprite.setSize(1.35f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.setOriginCenter()
+            _sprite.rotation = getMegaman().directionRotation!!.rotation
             _sprite.hidden = damageBlink
             _sprite.setPosition(body.getCenter(), Position.CENTER)
         }
@@ -266,10 +290,8 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
                     break
                 }
 
-                if (!passable && coordinate.isNeighborOf(
-                        body.getCenter().toGridCoordinate()
-                    )
-                ) blockingBody?.let { passable = !body.overlaps(it as Rectangle) }
+                if (!passable && coordinate.isNeighborOf(body.getCenter().toGridCoordinate()))
+                    blockingBody?.let { passable = !body.overlaps(it as Rectangle) }
 
                 if (printDebugFilter) {
                     GameLogger.debug(TAG, "Can pass $coordinate: $passable")
@@ -280,18 +302,23 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
             },
             properties = props(ConstKeys.HEURISTIC to DynamicBodyHeuristic(game))
         )
-        val pathfindingComponent = PathfindingComponent(params, {
-            StandardPathfinderResultConsumer.consume(
-                it,
-                body,
-                body.getCenter(),
-                { flyToAttackSpeed * ConstVals.PPM },
-                body,
-                stopOnTargetReached = false,
-                stopOnTargetNull = false,
-                shapes = if (DEBUG_PATHFINDING) game.getShapes() else null
-            )
-        }, { status == BatStatus.FLYING_TO_ATTACK }, intervalTimer = Timer(PATHFINDING_UPDATE_INTERVAL))
+        val pathfindingComponent = PathfindingComponent(
+            params,
+            {
+                if (canMove) StandardPathfinderResultConsumer.consume(
+                    it,
+                    body,
+                    body.getCenter(),
+                    { flyToAttackSpeed * ConstVals.PPM },
+                    body,
+                    stopOnTargetReached = false,
+                    stopOnTargetNull = false,
+                    shapes = if (DEBUG_PATHFINDING) game.getShapes() else null
+                )
+            },
+            { canMove && status == BatStatus.FLYING_TO_ATTACK },
+            intervalTimer = Timer(PATHFINDING_UPDATE_INTERVAL)
+        )
         return pathfindingComponent
     }
 }

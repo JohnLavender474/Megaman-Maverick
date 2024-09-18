@@ -1,6 +1,6 @@
 package com.megaman.maverick.game.entities.contracts
 
-import com.mega.game.engine.common.extensions.overlaps
+import com.badlogic.gdx.math.Rectangle
 import com.mega.game.engine.common.interfaces.ITaggable
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -21,4 +21,6 @@ interface IMegaGameEntity : ITaggable {
     fun stopSoundNow(soundKey: Any) = game.audioMan.stopSound(soundKey)
 }
 
-fun IBodyEntity.overlapsGameCamera() = (this as MegaGameEntity).game.getGameCamera().overlaps(body)
+fun IBodyEntity.overlapsGameCamera() = (this as MegaGameEntity).game.getGameCamera().getRotatedBounds().overlaps(
+    body as Rectangle
+)

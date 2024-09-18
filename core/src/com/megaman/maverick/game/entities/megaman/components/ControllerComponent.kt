@@ -3,6 +3,7 @@ package com.megaman.maverick.game.entities.megaman.components
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
+import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.controller.ControllerComponent
 import com.mega.game.engine.controller.buttons.ButtonActuator
 import com.megaman.maverick.game.ConstKeys
@@ -23,85 +24,94 @@ import kotlin.math.abs
 const val MEGAMAN_CONTROLLER_COMPONENT_TAG = "MegamanControllerComponent"
 
 internal fun Megaman.defineControllerComponent(): ControllerComponent {
-    val left = ButtonActuator(onJustPressed = { _ ->
-        GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "left actuator just pressed")
-    }, onPressContinued = { poller, delta ->
-        if (!canMove || !ready || damaged || poller.isPressed(MegaControllerButtons.RIGHT) || teleporting) {
+    val left = ButtonActuator(
+        onJustPressed = { _ ->
+            GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "left actuator just pressed")
+        },
+        onPressContinued = { poller, delta ->
+            if (!canMove || !ready || damaged || poller.isPressed(MegaControllerButtons.RIGHT) || teleporting) {
+                if (!poller.isPressed(MegaControllerButtons.RIGHT)) running = false
+                return@ButtonActuator
+            }
+
+            facing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) Facing.RIGHT else Facing.LEFT
+            if (directionRotation!!.equalsAny(Direction.DOWN, Direction.RIGHT)) swapFacing()
+
+            if (isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.RIDING_CART)) return@ButtonActuator
+            running = !isBehaviorActive(BehaviorType.WALL_SLIDING)
+
+            val threshold = (if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_RUN_SPEED
+            else MegamanValues.RUN_SPEED) * ConstVals.PPM
+
+            val rawImpulse = if (body.isSensing(BodySense.FEET_ON_ICE)) MegamanValues.ICE_RUN_IMPULSE
+            else MegamanValues.RUN_IMPULSE
+
+            val impulse = rawImpulse * delta * movementScalar * ConstVals.PPM * facing.value *
+                    if (isBehaviorActive(BehaviorType.WALL_SLIDING)) -1f else 1f
+
+            if (isDirectionRotatedVertically() && abs(body.physics.velocity.x) < threshold)
+                body.physics.velocity.x += impulse
+            else if (isDirectionRotatedHorizontally() && abs(body.physics.velocity.y) < threshold)
+                body.physics.velocity.y += impulse
+            /*
+            if (isDirectionRotatedVertically() && body.physics.velocity.x > -threshold)
+                body.physics.velocity.x -= rawImpulse * delta * movementScalar * ConstVals.PPM
+            else if (isDirectionRotatedHorizontally() && body.physics.velocity.y > -threshold)
+                body.physics.velocity.y -= rawImpulse * delta * movementScalar * ConstVals.PPM
+             */
+        },
+        onJustReleased = { poller ->
+            GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "left actuator just released")
             if (!poller.isPressed(MegaControllerButtons.RIGHT)) running = false
-            return@ButtonActuator
-        }
+        },
+        onReleaseContinued = { poller, _ ->
+            if (!poller.isPressed(MegaControllerButtons.RIGHT)) running = false
+        })
 
-        facing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) Facing.RIGHT else Facing.LEFT
-        if (directionRotation == Direction.DOWN) swapFacing()
+    val right = ButtonActuator(
+        onJustPressed = { _ ->
+            GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "right actuator just pressed")
+        },
+        onPressContinued = { poller, delta ->
+            if (!canMove || !ready || damaged || poller.isPressed(MegaControllerButtons.LEFT) || teleporting) {
+                if (!poller.isPressed(MegaControllerButtons.LEFT)) running = false
+                return@ButtonActuator
+            }
 
-        if (isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.RIDING_CART)) return@ButtonActuator
-        running = !isBehaviorActive(BehaviorType.WALL_SLIDING)
+            facing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) Facing.LEFT else Facing.RIGHT
+            if (directionRotation!!.equalsAny(Direction.DOWN, Direction.RIGHT)) swapFacing()
 
-        val threshold = (if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_RUN_SPEED
-        else MegamanValues.RUN_SPEED) * ConstVals.PPM
+            if (isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.RIDING_CART)) return@ButtonActuator
+            running = !isBehaviorActive(BehaviorType.WALL_SLIDING)
 
-        val rawImpulse = if (body.isSensing(BodySense.FEET_ON_ICE)) MegamanValues.ICE_RUN_IMPULSE
-        else MegamanValues.RUN_IMPULSE
+            val threshold = (if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_RUN_SPEED
+            else MegamanValues.RUN_SPEED) * ConstVals.PPM
 
-        val impulse = rawImpulse * delta * movementScalar * ConstVals.PPM * facing.value *
-                if (isBehaviorActive(BehaviorType.WALL_SLIDING)) -1f else 1f
+            val rawImpulse = if (body.isSensing(BodySense.FEET_ON_ICE)) MegamanValues.ICE_RUN_IMPULSE
+            else MegamanValues.RUN_IMPULSE
 
-        if (isDirectionRotatedVertically() && abs(body.physics.velocity.x) < threshold)
-            body.physics.velocity.x += impulse
-        else if (isDirectionRotatedHorizontally() && abs(body.physics.velocity.y) < threshold)
-            body.physics.velocity.y += impulse
-        /*
-        if (isDirectionRotatedVertically() && body.physics.velocity.x > -threshold)
-            body.physics.velocity.x -= rawImpulse * delta * movementScalar * ConstVals.PPM
-        else if (isDirectionRotatedHorizontally() && body.physics.velocity.y > -threshold)
-            body.physics.velocity.y -= rawImpulse * delta * movementScalar * ConstVals.PPM
-         */
-    }, onJustReleased = { poller ->
-        GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "left actuator just released")
-        if (!poller.isPressed(MegaControllerButtons.RIGHT)) running = false
-    }, onReleaseContinued = { poller, _ ->
-        if (!poller.isPressed(MegaControllerButtons.RIGHT)) running = false
-    })
+            val impulse = rawImpulse * delta * movementScalar * ConstVals.PPM * facing.value *
+                    if (isBehaviorActive(BehaviorType.WALL_SLIDING)) -1f else 1f
 
-    val right = ButtonActuator(onJustPressed = { _ ->
-        GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "right actuator just pressed")
-    }, onPressContinued = { poller, delta ->
-        if (!canMove || !ready || damaged || poller.isPressed(MegaControllerButtons.LEFT) || teleporting) {
+            if (isDirectionRotatedVertically() && abs(body.physics.velocity.x) < threshold)
+                body.physics.velocity.x += impulse
+            else if (isDirectionRotatedHorizontally() && abs(body.physics.velocity.y) < threshold)
+                body.physics.velocity.y += impulse
+            /*
+            if (isDirectionRotatedVertically() && body.physics.velocity.x < threshold)
+                body.physics.velocity.x += impulse * delta * movementScalar * ConstVals.PPM
+            else if (isDirectionRotatedHorizontally() && body.physics.velocity.y < threshold)
+                body.physics.velocity.y += impulse * delta * movementScalar * ConstVals.PPM
+             */
+        },
+        onJustReleased = { poller ->
+            GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "right actuator just released")
             if (!poller.isPressed(MegaControllerButtons.LEFT)) running = false
-            return@ButtonActuator
+        },
+        onReleaseContinued = { poller, _ ->
+            if (!poller.isPressed(MegaControllerButtons.LEFT)) running = false
         }
-
-        facing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) Facing.LEFT else Facing.RIGHT
-        if (directionRotation == Direction.DOWN) swapFacing()
-
-        if (isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.RIDING_CART)) return@ButtonActuator
-        running = !isBehaviorActive(BehaviorType.WALL_SLIDING)
-
-        val threshold = (if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_RUN_SPEED
-        else MegamanValues.RUN_SPEED) * ConstVals.PPM
-
-        val rawImpulse = if (body.isSensing(BodySense.FEET_ON_ICE)) MegamanValues.ICE_RUN_IMPULSE
-        else MegamanValues.RUN_IMPULSE
-
-        val impulse = rawImpulse * delta * movementScalar * ConstVals.PPM * facing.value *
-                if (isBehaviorActive(BehaviorType.WALL_SLIDING)) -1f else 1f
-
-        if (isDirectionRotatedVertically() && abs(body.physics.velocity.x) < threshold)
-            body.physics.velocity.x += impulse
-        else if (isDirectionRotatedHorizontally() && abs(body.physics.velocity.y) < threshold)
-            body.physics.velocity.y += impulse
-        /*
-        if (isDirectionRotatedVertically() && body.physics.velocity.x < threshold)
-            body.physics.velocity.x += impulse * delta * movementScalar * ConstVals.PPM
-        else if (isDirectionRotatedHorizontally() && body.physics.velocity.y < threshold)
-            body.physics.velocity.y += impulse * delta * movementScalar * ConstVals.PPM
-         */
-    }, onJustReleased = { poller ->
-        GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "right actuator just released")
-        if (!poller.isPressed(MegaControllerButtons.LEFT)) running = false
-    }, onReleaseContinued = { poller, _ ->
-        if (!poller.isPressed(MegaControllerButtons.LEFT)) running = false
-    })
+    )
 
     val attack = ButtonActuator(
         onPressContinued = { _, delta ->

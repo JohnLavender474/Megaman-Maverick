@@ -69,14 +69,14 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
             yOffset += if (megaman.isBehaviorActive(BehaviorType.JETPACKING)) 0.065f * ConstVals.PPM
             else if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING)) 0.1f * ConstVals.PPM
             else if (megaman.isBehaviorActive(BehaviorType.RIDING_CART)) 0.325f * ConstVals.PPM
-            else if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.175f * ConstVals.PPM
+            else if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.225f * ConstVals.PPM
             else if (megaman.isBehaviorActive(BehaviorType.CLIMBING)) 0.25f * ConstVals.PPM
             else if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.035f * ConstVals.PPM
             else 0.05f * ConstVals.PPM
 
             if (megaman.isDirectionRotatedVertically()) {
                 spawnCenter.x += xOffset
-                spawnCenter.y += if (megaman.isDirectionRotatedDown()) -yOffset else yOffset
+                spawnCenter.y += if (megaman.isDirectionRotatedDown()) (-yOffset + 0.1f * ConstVals.PPM) else yOffset
             } else {
                 yOffset -= 0.025f * ConstVals.PPM
                 spawnCenter.x += if (megaman.isDirectionRotatedLeft()) -yOffset else yOffset

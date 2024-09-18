@@ -2,6 +2,7 @@ package com.megaman.maverick.game.screens.levels
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
@@ -15,6 +16,7 @@ import com.mega.game.engine.GameEngine
 import com.mega.game.engine.animations.AnimationsSystem
 import com.mega.game.engine.behaviors.BehaviorsSystem
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.isAny
 import com.mega.game.engine.common.extensions.objectSetOf
@@ -24,6 +26,7 @@ import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.toGameRectangle
+import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.controller.polling.IControllerPoller
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -33,6 +36,7 @@ import com.mega.game.engine.events.Event
 import com.mega.game.engine.events.EventsManager
 import com.mega.game.engine.events.IEventListener
 import com.mega.game.engine.motion.MotionSystem
+import com.mega.game.engine.pathfinding.AsyncPathfindingSystem
 import com.mega.game.engine.screens.levels.tiledmap.TiledMapLevelScreen
 import com.mega.game.engine.world.WorldSystem
 import com.mega.game.engine.world.container.SimpleGridWorldContainer
@@ -54,6 +58,7 @@ import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.camera.CameraManagerForRooms
 import com.megaman.maverick.game.screens.levels.camera.CameraShaker
+import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
 import com.megaman.maverick.game.screens.levels.events.BossSpawnEventHandler
 import com.megaman.maverick.game.screens.levels.events.EndLevelEventHandler
 import com.megaman.maverick.game.screens.levels.events.PlayerDeathEventHandler
@@ -66,7 +71,6 @@ import com.megaman.maverick.game.screens.levels.stats.PlayerStatsHandler
 import com.megaman.maverick.game.spawns.ISpawner
 import com.megaman.maverick.game.spawns.Spawn
 import com.megaman.maverick.game.spawns.SpawnsManager
-import com.megaman.maverick.game.utils.CameraRotator
 import com.megaman.maverick.game.utils.toProps
 import java.util.*
 
@@ -84,6 +88,7 @@ class MegaLevelScreen(
         private const val DEFAULT_BACKGROUND_PARALLAX_FACTOR_Y = 0f
         private const val DEFAULT_FOREGROUND_PARALLAX_FACTOR = 2f
         private const val FADE_OUT_MUSIC_ON_BOSS_SPAWN = 1f
+        private const val DEBUG_PRINT_DELAY = 2f
     }
 
     override val eventKeyMask = objectSetOf<Any>(
@@ -109,7 +114,8 @@ class MegaLevelScreen(
         EventType.END_LEVEL,
         EventType.EDIT_TILED_MAP,
         EventType.SHOW_BACKGROUND,
-        EventType.SET_GAME_CAM_ROTATION
+        EventType.SET_GAME_CAM_ROTATION,
+        EventType.END_GAME_CAM_ROTATION
     )
 
     val engine: GameEngine
@@ -142,10 +148,8 @@ class MegaLevelScreen(
     private lateinit var shapes: PriorityQueue<IDrawableShape>
     private lateinit var backgrounds: Array<Background>
 
-    private lateinit var backgroundCamera: OrthographicCamera
-    private lateinit var gameCamera: OrthographicCamera
-    private val gameCameraPriorPosition = Vector3()
-    private lateinit var gameCameraRotator: CameraRotator
+    private lateinit var backgroundCamera: RotatableCamera
+    private lateinit var gameCamera: RotatableCamera
     private lateinit var cameraManagerForRooms: CameraManagerForRooms
     private lateinit var gameCameraShaker: CameraShaker
     private lateinit var foregroundCamera: OrthographicCamera
@@ -157,9 +161,13 @@ class MegaLevelScreen(
     private var backgroundParallaxFactorY = DEFAULT_BACKGROUND_PARALLAX_FACTOR_Y
     private var foregroundParallaxFactor = DEFAULT_FOREGROUND_PARALLAX_FACTOR
 
+    private val gameCameraPriorPosition = Vector3()
     private var camerasSetToGameCamera = false
 
     private val spawns = Array<Spawn>()
+
+    private val debugPrintTimer = Timer(DEBUG_PRINT_DELAY)
+
     private var initialized = false
     private var showBackgrounds = true
 
@@ -253,10 +261,6 @@ class MegaLevelScreen(
             )
         }
 
-        gameCameraRotator = CameraRotator(
-            cameras = gdxArrayOf(gameCamera, backgroundCamera),
-            onJustFinished = { eventsMan.submitEvent(Event(EventType.END_GAME_CAM_ROTATION)) }
-        )
         gameCameraShaker = CameraShaker(gameCamera)
     }
 
@@ -304,7 +308,8 @@ class MegaLevelScreen(
         gameCamera.position.set(ConstFuncs.getCamInitPos())
         foregroundCamera.position.set(ConstFuncs.getCamInitPos())
         uiCamera.position.set(ConstFuncs.getCamInitPos())
-        gameCameraRotator.reset()
+        backgroundCamera.reset()
+        gameCamera.reset()
         showBackgrounds = true
     }
 
@@ -419,6 +424,7 @@ class MegaLevelScreen(
                     MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Gate init opening --> start room transition"
                 )
                 val systemsToTurnOff = gdxArrayOf(
+                    AsyncPathfindingSystem::class,
                     MotionSystem::class,
                     BehaviorsSystem::class,
                     WorldSystem::class,
@@ -431,14 +437,16 @@ class MegaLevelScreen(
             EventType.GATE_INIT_CLOSING -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Gate init closing")
                 val systemsToTurnOn = gdxArrayOf(
-                    MotionSystem::class, BehaviorsSystem::class, WorldSystem::class
+                    AsyncPathfindingSystem::class,
+                    MotionSystem::class,
+                    BehaviorsSystem::class,
+                    WorldSystem::class
                 )
                 systemsToTurnOn.forEach { game.getSystem(it).on = true }
 
                 val roomName = cameraManagerForRooms.currentGameRoom?.name
-                if (roomName != null && roomName != ConstKeys.BOSS_ROOM && !roomName.contains(ConstKeys.MINI)) eventsMan.submitEvent(
-                    Event(EventType.TURN_CONTROLLER_ON)
-                )
+                if (roomName != null && roomName != ConstKeys.BOSS_ROOM && !roomName.contains(ConstKeys.MINI))
+                    eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
             }
 
             EventType.ENTER_BOSS_ROOM -> {
@@ -471,10 +479,7 @@ class MegaLevelScreen(
                 if (!boss.mini) audioMan.unsetMusic()
 
                 MegaGameEntitiesMap.forEachEntity {
-                    if (it.isAny(
-                            IDamager::class, IHazard::class
-                        ) && it != boss
-                    ) it.destroy()
+                    if (it.isAny(IDamager::class, IHazard::class) && it != boss) it.destroy()
                 }
 
                 eventsMan.submitEvent(
@@ -542,10 +547,17 @@ class MegaLevelScreen(
             }
 
             EventType.SET_GAME_CAM_ROTATION -> {
-                val rotation = event.getProperty(ConstKeys.VALUE, Float::class)!!
-                if (rotation >= 360f || rotation < 0f)
-                    throw IllegalArgumentException("Rotation must be between 0 and 359 degrees!")
-                gameCameraRotator.startRotation(rotation, ConstVals.GAME_CAM_ROTATE_TIME)
+                val direction = event.getProperty(ConstKeys.DIRECTION, Direction::class)!!
+                backgroundCamera.directionRotation = direction
+                gameCamera.directionRotation = direction
+
+                val systemsToTurnOff = gdxArrayOf(AsyncPathfindingSystem::class, MotionSystem::class)
+                systemsToTurnOff.forEach { game.getSystem(it).on = false }
+            }
+
+            EventType.END_GAME_CAM_ROTATION -> {
+                val systemsToTurnOn = gdxArrayOf(AsyncPathfindingSystem::class, MotionSystem::class)
+                systemsToTurnOn.forEach { game.getSystem(it).on = true }
             }
         }
     }
@@ -583,7 +595,8 @@ class MegaLevelScreen(
 
             backgrounds.forEach { it.update(delta) }
             cameraManagerForRooms.update(delta)
-            gameCameraRotator.update(delta)
+            backgroundCamera.update(delta)
+            gameCamera.update(delta)
             if (!gameCameraShaker.isFinished) gameCameraShaker.update(delta)
 
             if (!bossSpawnEventHandler.finished) bossSpawnEventHandler.update(delta)
@@ -639,7 +652,23 @@ class MegaLevelScreen(
             val shape = shapes.poll()
             shape.draw(shapeRenderer)
         }
+        if (game.params.debug) {
+            val gameCamBounds = gameCamera.getRotatedBounds()
+            gameCamBounds.x += 0.1f * ConstVals.PPM
+            gameCamBounds.y += 0.1f * ConstVals.PPM
+            gameCamBounds.width -= 0.2f * ConstVals.PPM
+            gameCamBounds.height -= 0.2f * ConstVals.PPM
+            shapeRenderer.color = Color.BLUE
+            shapeRenderer.rect(gameCamBounds.x, gameCamBounds.y, gameCamBounds.width, gameCamBounds.height)
+        }
         shapeRenderer.end()
+
+        debugPrintTimer.update(delta)
+        if (debugPrintTimer.isFinished()) {
+            debugPrintTimer.reset()
+            GameLogger.debug(TAG, "Game cam rotated bounds: ${gameCamera.getRotatedBounds()}")
+            GameLogger.debug(TAG, "Megaman center: ${megaman.body.getCenter()}")
+        }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) onEscapePressed.invoke()
     }
@@ -654,7 +683,8 @@ class MegaLevelScreen(
         playerSpawnsMan.reset()
         playerDeathEventHandler.reset()
         cameraManagerForRooms.reset()
-        gameCameraRotator.reset()
+        backgroundCamera.reset()
+        gameCamera.reset()
         audioMan.unsetMusic()
         game.putProperty(ConstKeys.ROOM_TRANSITION, false)
         game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))

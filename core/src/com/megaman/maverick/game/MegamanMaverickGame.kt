@@ -2,7 +2,6 @@ package com.megaman.maverick.game
 
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.Input
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
@@ -68,7 +67,6 @@ import com.megaman.maverick.game.controllers.MegaControllerPoller
 import com.megaman.maverick.game.controllers.loadButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.decorations.WhiteArrow
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.hazards.Saw
 import com.megaman.maverick.game.entities.megaman.Megaman
@@ -78,6 +76,7 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
+import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
 import com.megaman.maverick.game.screens.menus.*
 import com.megaman.maverick.game.screens.menus.bosses.BossIntroScreen
 import com.megaman.maverick.game.screens.menus.bosses.BossSelectScreen
@@ -109,7 +108,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
 
     companion object {
         const val TAG = "MegamanMaverickGame"
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(Megaman.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.WATER, FixtureType.WATER_LISTENER)
         }
@@ -162,9 +161,9 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
         setCurrentScreen(ScreenEnum.LEVEL_SCREEN.name)
     }
 
-    fun getBackgroundCamera() = viewports.get(ConstKeys.BACKGROUND).camera as OrthographicCamera
+    fun getBackgroundCamera() = viewports.get(ConstKeys.BACKGROUND).camera as RotatableCamera
 
-    fun getGameCamera() = viewports.get(ConstKeys.GAME).camera as OrthographicCamera
+    fun getGameCamera() = viewports.get(ConstKeys.GAME).camera as RotatableCamera
 
     fun getForegroundCamera() = viewports.get(ConstKeys.FOREGROUND).camera as OrthographicCamera
 
@@ -235,12 +234,21 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
 
         val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
         val screenHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
-        val backgroundViewport = FitViewport(screenWidth, screenHeight)
+
+        val backgroundCamera = RotatableCamera(ConstVals.GAME_CAM_ROTATE_TIME)
+        val backgroundViewport = FitViewport(screenWidth, screenHeight, backgroundCamera)
         viewports.put(ConstKeys.BACKGROUND, backgroundViewport)
-        val gameViewport = FitViewport(screenWidth, screenHeight)
+
+        val gameCamera = RotatableCamera(
+            ConstVals.GAME_CAM_ROTATE_TIME,
+            onJustFinishedRotating = { eventsMan.submitEvent(Event(EventType.END_GAME_CAM_ROTATION)) }
+        )
+        val gameViewport = FitViewport(screenWidth, screenHeight, gameCamera)
         viewports.put(ConstKeys.GAME, gameViewport)
+
         val foregroundViewport = FitViewport(screenWidth, screenHeight)
         viewports.put(ConstKeys.FOREGROUND, foregroundViewport)
+
         val uiViewport = FitViewport(screenWidth, screenHeight)
         viewports.put(ConstKeys.UI, uiViewport)
 
@@ -323,18 +331,17 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
     }
 
     override fun render() {
-        if (params.startScreen != StartScreenOption.SIMPLE && Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
-            Gdx.app.exit()
-
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
         val delta = Gdx.graphics.deltaTime
+
         controllerPoller.run()
         eventsMan.run()
+        audioMan.update(delta)
+
         currentScreen?.render(delta)
         viewports.values().forEach { it.apply() }
-        audioMan.update(delta)
 
         if (params.debug) {
             batch.projectionMatrix = getUiCamera().combined

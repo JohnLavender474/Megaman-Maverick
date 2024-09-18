@@ -235,7 +235,6 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         EventType.END_ROOM_TRANS,
         EventType.GATE_INIT_OPENING,
         EventType.STUN_PLAYER,
-        EventType.SET_GAME_CAM_ROTATION,
         EventType.END_GAME_CAM_ROTATION
     )
     override val upgradeHandler = MegamanUpgradeHandler(game.state, this)
@@ -307,11 +306,11 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
                 }
             }
             value?.let {
-                val rotation = if (it.isVertical()) it.rotation else it.getOpposite().rotation
+                val direction = if (it.isVertical()) directionRotation!! else directionRotation!!.getOpposite()
                 game.eventsMan.submitEvent(
                     Event(
                         EventType.SET_GAME_CAM_ROTATION,
-                        props(ConstKeys.VALUE to rotation)
+                        props(ConstKeys.DIRECTION to direction)
                     )
                 )
                 canMove = false
@@ -532,7 +531,8 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
                         ) return
 
                         val stunOriginX = event.getProperty(ConstKeys.X, Float::class)!!
-                        stunBounce(stunOriginX)
+                        // TODO: replace with new stunBounds method which accepts rectangle
+                        // stunBounce(stunOriginX)
                         val stunDuration = event.getProperty(ConstKeys.DURATION, Float::class)!!
                         stunTimer.resetDuration(stunDuration)
                     }
@@ -552,26 +552,51 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
                 (damager is AbstractEnemy || damager is IHazard ||
                         (damager is IProjectileEntity && damager.owner != this))
 
-    fun stunBounce(bounceOriginX: Float) {
-        body.physics.velocity.x =
-            (if (bounceOriginX > body.x) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
-        body.physics.velocity.y = MegamanValues.DMG_Y * ConstVals.PPM
-    }
-
     fun setToNextWeapon() {
         val index = currentWeapon.ordinal
         val nextIndex = (index + 1) % MegamanWeapon.values().size
         currentWeapon = MegamanWeapon.values()[nextIndex]
     }
 
+    fun stunBounce(bounds: GameRectangle) =
+        when (directionRotation!!) {
+            Direction.UP -> {
+                body.physics.velocity.x =
+                    (if (bounds.x > body.x) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
+                body.physics.velocity.y = MegamanValues.DMG_Y * ConstVals.PPM
+            }
+            Direction.DOWN -> {
+                body.physics.velocity.x =
+                    (if (bounds.x > body.x) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
+                body.physics.velocity.y = -MegamanValues.DMG_Y * ConstVals.PPM
+            }
+            Direction.LEFT -> {
+                body.physics.velocity.x = -MegamanValues.DMG_Y * ConstVals.PPM
+                body.physics.velocity.y =
+                    (if (bounds.y > body.y) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
+            }
+            Direction.RIGHT -> {
+                body.physics.velocity.x = MegamanValues.DMG_Y * ConstVals.PPM
+                body.physics.velocity.y =
+                    (if (bounds.y > body.y) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
+            }
+        }
+
+    /*
+    fun stunBounce(bounceOriginX: Float) {
+        body.physics.velocity.x =
+            (if (bounceOriginX > body.x) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
+        body.physics.velocity.y = MegamanValues.DMG_Y * ConstVals.PPM
+    }
+     */
+
     override fun takeDamageFrom(damager: IDamager): Boolean {
-        if (canMove && !isBehaviorActive(BehaviorType.RIDING_CART) &&
-            !noDmgBounce.contains(damager::class) &&
-            damager is GameEntity &&
-            damager.hasComponent(BodyComponent::class)
+        if (canMove && !isBehaviorActive(BehaviorType.RIDING_CART) && !noDmgBounce.contains(damager::class) &&
+            damager is GameEntity && damager.hasComponent(BodyComponent::class)
         ) {
             val enemyBody = damager.getComponent(BodyComponent::class)!!.body
-            stunBounce(enemyBody.x)
+            // stunBounce(enemyBody.x)
+            stunBounce(enemyBody)
         }
         val damage = dmgNegotations.get(damager::class).get(damager)
         translateHealth(-damage)

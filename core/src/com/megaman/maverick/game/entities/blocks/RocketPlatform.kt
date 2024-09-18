@@ -5,7 +5,7 @@ import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
-import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
@@ -14,7 +14,7 @@ import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
-import com.mega.game.engine.drawables.sprites.setPosition
+import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.GameEntity
 import com.mega.game.engine.entities.contracts.IChildEntity
@@ -29,20 +29,27 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntitySuppliers
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 
 class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, ISpritesEntity, IMotionEntity,
-    IEventListener {
+    IEventListener, IDirectionRotatable {
 
     companion object {
         private var region: TextureRegion? = null
-        private const val WIDTH = .85f
+        private const val WIDTH = 0.85f
         private const val HEIGHT = 3f
     }
 
-    override var children = Array<GameEntity>()
     override val eventKeyMask = objectSetOf<Any>(EventType.BEGIN_ROOM_TRANS, EventType.END_ROOM_TRANS)
+    override var directionRotation: Direction?
+        get() = body.cardinalRotation
+        set(value) {
+            body.cardinalRotation = value
+        }
+    override var children = Array<GameEntity>()
 
     override fun init() {
         if (region == null)
@@ -56,17 +63,15 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, IS
     override fun onSpawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
         super.onSpawn(spawnProps)
-
         game.eventsMan.addListener(this)
 
-        // define the spawn and bounds
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
-        val bounds = GameRectangle()
-            .setSize(WIDTH * ConstVals.PPM, HEIGHT * ConstVals.PPM)
-            .setBottomCenterToPoint(spawn)
-        body.set(bounds)
+        directionRotation =
+            Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
+        val position = DirectionPositionMapper.getPosition(directionRotation!!).opposite()
+        val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+        body.setSize(WIDTH * ConstVals.PPM, HEIGHT * ConstVals.PPM)
+            .positionOnPoint(bounds.getPositionPoint(position), position)
 
-        // define the trajectory
         val trajectory = Trajectory(spawnProps.get(ConstKeys.TRAJECTORY, String::class)!!, ConstVals.PPM)
         val motionDefinition =
             MotionComponent.MotionDefinition(
@@ -75,18 +80,14 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, IS
                 onReset = { body.set(bounds) })
         putMotionDefinition(ConstKeys.TRAJECTORY, motionDefinition)
 
-        // spawn the entities triggered by this entity's spawning, collecting any subsequent entities
-        // that implement IChildEntity into the children collection
         val subsequentEntitySuppliers = convertObjectPropsToEntitySuppliers(spawnProps)
         subsequentEntitySuppliers.forEach { entry ->
             val (subsequentEntitySupplier, subsequentEntityProps) = entry
-
             val entity = subsequentEntitySupplier.invoke()
             if (entity is IChildEntity) {
                 entity.parent = this
                 children.add(entity)
             }
-
             entity.spawn(subsequentEntityProps)
         }
     }
@@ -122,8 +123,16 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, IS
         sprite.setSize(4f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(body.getTopCenterPoint(), Position.TOP_CENTER)
-            _sprite.translateY(ConstVals.PPM / 16f)
+            _sprite.setOriginCenter()
+            _sprite.rotation = directionRotation!!.rotation
+            _sprite.setCenter(body.getCenter())
+            val offset = 0.5f * ConstVals.PPM
+            when (directionRotation!!) {
+                Direction.UP -> _sprite.translateY(-offset)
+                Direction.DOWN -> _sprite.translateY(offset)
+                Direction.LEFT -> _sprite.translateX(offset)
+                Direction.RIGHT -> _sprite.translateX(-offset)
+            }
         }
         return spritesComponent
     }

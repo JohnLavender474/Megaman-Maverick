@@ -144,7 +144,7 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        spawnProps.put(ConstKeys.ENTITY_CAN_DIE, false)
+        spawnProps.put(ConstKeys.ENTTIY_KILLED_BY_DEATH_FIXTURE, false)
         super.onSpawn(spawnProps)
 
         facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT

@@ -103,9 +103,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                     val spawner = SpawnerFactory.spawnerForWhenEventCalled(events, spawnSupplier, respawnable)
                     spawners.add(spawner)
 
-                    GameLogger.debug(
-                        TAG, "build(): Adding spawner $spawner for game rectangle object ${it.name}"
-                    )
+                    GameLogger.debug(TAG, "build(): Adding spawner $spawner for game rectangle object ${it.name}")
 
                     game.eventsMan.addListener(spawner)
                     disposables.add { game.eventsMan.removeListener(spawner) }
@@ -113,13 +111,14 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
 
                 else -> {
                     val spawner = SpawnerFactory.spawnerForWhenInCamera(
-                        game.getGameCamera(), it.getShape(), spawnSupplier, respawnable
+                        game.getGameCamera(),
+                        it.getShape(),
+                        spawnSupplier,
+                        respawnable
                     )
                     spawners.add(spawner)
 
-                    GameLogger.debug(
-                        TAG, "build(): Adding spawner $spawner for game rectangle object ${it.name}"
-                    )
+                    GameLogger.debug(TAG, "build(): Adding spawner $spawner for game rectangle object ${it.name}")
                 }
             }
         }

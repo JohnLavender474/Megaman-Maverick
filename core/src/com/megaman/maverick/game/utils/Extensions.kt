@@ -116,6 +116,7 @@ fun Camera.toGameRectangle(): GameRectangle {
     val rectangle = GameRectangle()
     rectangle.setSize(viewportWidth, viewportHeight)
     rectangle.setCenter(position.x, position.y)
+    rectangle.setOrigin(position.x, position.y)
     return rectangle
 }
 

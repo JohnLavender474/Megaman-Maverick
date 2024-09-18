@@ -25,7 +25,8 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
             getProperty(MegamanKeys.DIRECTION_ON_AIR_DASH, Direction::class)!!
         else directionRotation!!
 
-        val flipX = !maverick && facing == Facing.LEFT
+        val flipX =
+            !maverick && if (directionRotation == Direction.RIGHT) facing == Facing.RIGHT else facing == Facing.LEFT
         val flipY = direction == Direction.DOWN
         player.setFlip(flipX, flipY)
 
@@ -51,6 +52,14 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
             Direction.RIGHT -> -0.2f
         }
         player.translateX(xTranslation * ConstVals.PPM)
+
+        val yTranslation = when (direction) {
+            Direction.UP -> 0f
+            Direction.DOWN -> 0.1f
+            Direction.LEFT -> 0f
+            Direction.RIGHT -> 0f
+        }
+        player.translateY(yTranslation * ConstVals.PPM)
 
         player.setAlpha(if (damageFlash) 0f else 1f)
     }

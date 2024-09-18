@@ -261,8 +261,9 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         private var directionOnInit: Direction? = null
 
         override fun evaluate(delta: Float): Boolean {
-            if (dead || !ready || !canMove || !has(MegaAbility.GROUND_SLIDE) || body.isSensing(BodySense.FEET_ON_SAND))
-                return false
+            if (dead || !ready || !canMove || cameraRotating || !has(MegaAbility.GROUND_SLIDE) ||
+                body.isSensing(BodySense.FEET_ON_SAND)
+            ) return false
 
             if (isBehaviorActive(BehaviorType.GROUND_SLIDING) && body.isSensing(BodySense.HEAD_TOUCHING_BLOCK))
                 return true

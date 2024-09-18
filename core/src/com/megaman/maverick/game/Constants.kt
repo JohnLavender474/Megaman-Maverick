@@ -12,7 +12,7 @@ object ConstVals {
     const val VIEW_WIDTH = 16f
     const val VIEW_HEIGHT = 12f
     const val PPM = 32
-    const val HIGH_FPS = 120
+    const val HIGH_FPS = 90
     const val MID_FPS = 60
     const val LOW_FPS = 30
     const val FIXED_TIME_STEP = 1 / 150f
@@ -42,6 +42,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val CAM = "cam"
     const val INVALID = "invalid"
     const val FPS = "fps"
     const val FAST = "fast"
@@ -124,7 +125,7 @@ object ConstKeys {
     const val JUMP = "jump"
     const val DECORATIONS = "decorations"
     const val FILTER = "filter"
-    const val ENTITY_CAN_DIE = "entity_can_die"
+    const val ENTTIY_KILLED_BY_DEATH_FIXTURE = "entity_affected_by_death_fixture"
     const val DEATH_LISTENER = "death_listener"
     const val GREEN = "green"
     const val ORANGE = "orange"

@@ -1,24 +1,23 @@
 package com.megaman.maverick.game.spawns
 
-import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.shapes.IGameShape2D
-import com.megaman.maverick.game.utils.toGameRectangle
+import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
 
 object SpawnerFactory {
 
     const val TAG = "SpawnerFactory"
 
     fun spawnerForWhenInCamera(
-        camera: Camera,
+        camera: RotatableCamera,
         spawnShape: IGameShape2D,
         spawnSupplier: () -> Spawn,
         respawnable: Boolean = true
     ): SpawnerForBoundsEntered {
         GameLogger.debug(TAG, "spawnerForWhenEnteringCamera(): Creating spawner for camera: $camera")
         return SpawnerForBoundsEntered(
-            spawnSupplier, { spawnShape }, { camera.toGameRectangle() }, respawnable = respawnable
+            spawnSupplier, { spawnShape }, { camera.getRotatedBounds() }, respawnable = respawnable
         )
     }
 

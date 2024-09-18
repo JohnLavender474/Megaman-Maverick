@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.utils
 
-import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Array
@@ -15,17 +14,18 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.utils.toGameRectangle
+import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
 import com.megaman.maverick.game.utils.toProps
 
-fun getGameCameraCullingLogic(entity: IBodyEntity, timeToCull: Float = 1f) = CullableOnUncontained(
-    { (entity as MegaGameEntity).game.getGameCamera().toGameRectangle() },
-    { it.overlaps(entity.body as Rectangle) },
-    timeToCull
-)
+fun getGameCameraCullingLogic(entity: IBodyEntity, timeToCull: Float = 1f) =
+    getGameCameraCullingLogic((entity as MegaGameEntity).getGameCamera(), { entity.body }, timeToCull)
 
-fun getGameCameraCullingLogic(camera: Camera, bounds: () -> Rectangle, timeToCull: Float = 1f) =
-    CullableOnUncontained({ camera.toGameRectangle() }, { it.overlaps(bounds()) }, timeToCull)
+fun getGameCameraCullingLogic(camera: RotatableCamera, bounds: () -> Rectangle, timeToCull: Float = 1f) =
+    CullableOnUncontained(
+        { camera.getRotatedBounds() },
+        { it.overlaps(bounds()) },
+        timeToCull
+    )
 
 fun getObjectProps(props: Properties): Array<RectangleMapObject> {
     val objectProps = Array<RectangleMapObject>()

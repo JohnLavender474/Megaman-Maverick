@@ -93,7 +93,7 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        spawnProps.put(ConstKeys.ENTITY_CAN_DIE, false)
+        spawnProps.put(ConstKeys.ENTTIY_KILLED_BY_DEATH_FIXTURE, false)
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
 
         super.onSpawn(spawnProps)
@@ -157,7 +157,7 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         val body = Body(BodyType.ABSTRACT)
         body.setSize(ConstVals.PPM.toFloat())
 
-        addDebugShapeSupplier { body }
+        addDebugShapeSupplier { body.getBodyBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
@@ -223,7 +223,6 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
 
     private lateinit var rotatingLine: RotatingLine
     private lateinit var type: String
-
     private var scalar = START_SCALAR
 
     override fun init() {
@@ -242,7 +241,7 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        spawnProps.put(ConstKeys.ENTITY_CAN_DIE, false)
+        spawnProps.put(ConstKeys.ENTTIY_KILLED_BY_DEATH_FIXTURE, false)
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
         super.onSpawn(spawnProps)
 
@@ -286,7 +285,7 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.5f * ConstVals.PPM)
 
-        addDebugShapeSupplier { body }
+        addDebugShapeSupplier { body.getBodyBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)

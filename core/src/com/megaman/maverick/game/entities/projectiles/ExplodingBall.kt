@@ -1,7 +1,5 @@
 package com.megaman.maverick.game.entities.projectiles
 
-import com.mega.game.engine.world.body.*;
-
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.animations.Animation
@@ -22,6 +20,7 @@ import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.GameEntity
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -29,23 +28,18 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
-
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 
-class ExplodingBall(game: MegamanMaverickGame) : AbstractProjectile(game), IScalableGravityEntity, IAnimatedEntity {
+class ExplodingBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
 
     companion object {
         const val TAG = "ExplodingBall"
         private const val CLAMP = 10f
-        private const val GRAVITY = -0.15f
         private var region: TextureRegion? = null
     }
-
-    override var gravityScalar = 1f
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "GachappanBall")
@@ -55,12 +49,17 @@ class ExplodingBall(game: MegamanMaverickGame) : AbstractProjectile(game), IScal
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         owner = spawnProps.get(ConstKeys.OWNER) as GameEntity?
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
+
         val impulse = spawnProps.get(ConstKeys.IMPULSE, Vector2::class)!!
         body.physics.velocity.set(impulse)
-        gravityScalar = spawnProps.getOrDefault("${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}", 1f, Float::class)
+
+        val gravity = spawnProps.get(ConstKeys.GRAVITY, Vector2::class)!!
+        body.physics.gravity.set(gravity)
     }
 
     override fun hitBlock(blockFixture: IFixture) = explodeAndDie()
@@ -93,13 +92,7 @@ class ExplodingBall(game: MegamanMaverickGame) : AbstractProjectile(game), IScal
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(.2f * ConstVals.PPM))
         body.addFixture(damagerFixture)
 
-        body.preProcess.put(ConstKeys.DEFAULT) {
-            body.physics.gravity.y = GRAVITY * ConstVals.PPM * gravityScalar
-        }
-
-        addComponent(
-            DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true)
-        )
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
