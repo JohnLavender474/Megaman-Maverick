@@ -39,13 +39,23 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
 
         val threshold = (if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_RUN_SPEED
         else MegamanValues.RUN_SPEED) * ConstVals.PPM
-        val impulse = if (body.isSensing(BodySense.FEET_ON_ICE)) MegamanValues.ICE_RUN_IMPULSE
+
+        val rawImpulse = if (body.isSensing(BodySense.FEET_ON_ICE)) MegamanValues.ICE_RUN_IMPULSE
         else MegamanValues.RUN_IMPULSE
 
+        val impulse = rawImpulse * delta * movementScalar * ConstVals.PPM * facing.value *
+                if (isBehaviorActive(BehaviorType.WALL_SLIDING)) -1f else 1f
+
         if (isDirectionRotatedVertically() && abs(body.physics.velocity.x) < threshold)
-            body.physics.velocity.x += impulse * delta * movementScalar * ConstVals.PPM * facing.value
+            body.physics.velocity.x += impulse
         else if (isDirectionRotatedHorizontally() && abs(body.physics.velocity.y) < threshold)
-            body.physics.velocity.y += impulse * delta * movementScalar * ConstVals.PPM * facing.value
+            body.physics.velocity.y += impulse
+        /*
+        if (isDirectionRotatedVertically() && body.physics.velocity.x > -threshold)
+            body.physics.velocity.x -= rawImpulse * delta * movementScalar * ConstVals.PPM
+        else if (isDirectionRotatedHorizontally() && body.physics.velocity.y > -threshold)
+            body.physics.velocity.y -= rawImpulse * delta * movementScalar * ConstVals.PPM
+         */
     }, onJustReleased = { poller ->
         GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "left actuator just released")
         if (!poller.isPressed(MegaControllerButtons.RIGHT)) running = false
@@ -69,13 +79,23 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
 
         val threshold = (if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_RUN_SPEED
         else MegamanValues.RUN_SPEED) * ConstVals.PPM
-        val impulse = if (body.isSensing(BodySense.FEET_ON_ICE)) MegamanValues.ICE_RUN_IMPULSE
+
+        val rawImpulse = if (body.isSensing(BodySense.FEET_ON_ICE)) MegamanValues.ICE_RUN_IMPULSE
         else MegamanValues.RUN_IMPULSE
 
+        val impulse = rawImpulse * delta * movementScalar * ConstVals.PPM * facing.value *
+                if (isBehaviorActive(BehaviorType.WALL_SLIDING)) -1f else 1f
+
         if (isDirectionRotatedVertically() && abs(body.physics.velocity.x) < threshold)
-            body.physics.velocity.x += impulse * delta * movementScalar * ConstVals.PPM * facing.value
+            body.physics.velocity.x += impulse
         else if (isDirectionRotatedHorizontally() && abs(body.physics.velocity.y) < threshold)
-            body.physics.velocity.y += impulse * delta * movementScalar * ConstVals.PPM * facing.value
+            body.physics.velocity.y += impulse
+        /*
+        if (isDirectionRotatedVertically() && body.physics.velocity.x < threshold)
+            body.physics.velocity.x += impulse * delta * movementScalar * ConstVals.PPM
+        else if (isDirectionRotatedHorizontally() && body.physics.velocity.y < threshold)
+            body.physics.velocity.y += impulse * delta * movementScalar * ConstVals.PPM
+         */
     }, onJustReleased = { poller ->
         GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "right actuator just released")
         if (!poller.isPressed(MegaControllerButtons.LEFT)) running = false

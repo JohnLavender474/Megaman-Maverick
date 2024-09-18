@@ -45,11 +45,11 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             ) return@FunctionalBehaviorImpl false
 
             if ((body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && game.controllerPoller.isPressed(
-                    if (isDirectionRotatedDown() || isDirectionRotatedRight()) MegaControllerButtons.RIGHT
-                    else MegaControllerButtons.LEFT
+                    /* if (isDirectionRotatedDown() || isDirectionRotatedRight()) MegaControllerButtons.RIGHT
+                    else */ MegaControllerButtons.LEFT
                 )) || body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) && game.controllerPoller.isPressed(
-                    if (isDirectionRotatedDown() || isDirectionRotatedRight()) MegaControllerButtons.LEFT
-                    else MegaControllerButtons.RIGHT
+                    /* if (isDirectionRotatedDown() || isDirectionRotatedRight()) MegaControllerButtons.LEFT
+                    else */ MegaControllerButtons.RIGHT
                 )
             ) {
                 if (damaged) {
@@ -208,7 +208,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             body.physics.gravityOn = false
             aButtonTask = AButtonTask.JUMP
             requestToPlaySound(SoundAsset.WHOOSH_SOUND, false)
-            // requestToPlaySound(SoundAsset.WALL_JUMP_SOUND, false)
 
             if (isDirectionRotatedVertically()) impulse.y = 0f else impulse.x = 0f
 
@@ -307,7 +306,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             when (directionRotation!!) {
                 Direction.UP, Direction.DOWN -> body.physics.velocity.x = impulse
-
                 Direction.LEFT, Direction.RIGHT -> body.physics.velocity.y = impulse
             }
         }
@@ -318,19 +316,14 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             if (!cameraRotating) {
                 val endDash = (if (body.isSensing(BodySense.IN_WATER)) 2f else 5f) * ConstVals.PPM * facing.value
 
-                if (directionOnInit == directionRotation) {
-                    when (directionRotation!!) {
-                        Direction.UP, Direction.DOWN -> body.physics.velocity.x += endDash
-
-                        Direction.LEFT, Direction.RIGHT -> body.physics.velocity.y += endDash
-                    }
+                if (directionOnInit == directionRotation) when (directionRotation!!) {
+                    Direction.UP, Direction.DOWN -> body.physics.velocity.x += endDash
+                    Direction.LEFT, Direction.RIGHT -> body.physics.velocity.y += endDash
                 } else {
                     body.physics.velocity.setZero()
                     when (directionOnInit) {
                         Direction.UP, Direction.DOWN -> body.physics.velocity.x = endDash
-
                         Direction.LEFT, Direction.RIGHT -> body.physics.velocity.y = endDash
-
                         null -> throw IllegalStateException("Direction on init cannot be null")
                     }
                 }

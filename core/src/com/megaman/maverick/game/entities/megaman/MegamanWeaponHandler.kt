@@ -58,9 +58,9 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
                     if (megaman.isBehaviorActive(BehaviorType.RIDING_CART) &&
                         megaman.body.isSensing(BodySense.FEET_ON_GROUND)
                     ) 1.25f else if (!megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.75f
-                    else if (megaman.slipSliding) 0.65f else 1.05f
+                    else if (megaman.slipSliding) 0.65f else 1f
 
-            var yOffset = 2f
+            var yOffset = ConstVals.PPM / 16f
 
             if (!megaman.body.isSensing(BodySense.FEET_ON_GROUND) &&
                 !megaman.isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.WALL_SLIDING)
@@ -69,15 +69,16 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
             yOffset += if (megaman.isBehaviorActive(BehaviorType.JETPACKING)) 0.065f * ConstVals.PPM
             else if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING)) 0.1f * ConstVals.PPM
             else if (megaman.isBehaviorActive(BehaviorType.RIDING_CART)) 0.325f * ConstVals.PPM
-            else if (megaman.isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.WALL_SLIDING))
-                0.175f * ConstVals.PPM
-            else if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.02f * ConstVals.PPM
+            else if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.175f * ConstVals.PPM
+            else if (megaman.isBehaviorActive(BehaviorType.CLIMBING)) 0.25f * ConstVals.PPM
+            else if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.035f * ConstVals.PPM
             else 0.05f * ConstVals.PPM
 
             if (megaman.isDirectionRotatedVertically()) {
                 spawnCenter.x += xOffset
                 spawnCenter.y += if (megaman.isDirectionRotatedDown()) -yOffset else yOffset
             } else {
+                yOffset -= 0.025f * ConstVals.PPM
                 spawnCenter.x += if (megaman.isDirectionRotatedLeft()) -yOffset else yOffset
                 spawnCenter.y += xOffset
             }

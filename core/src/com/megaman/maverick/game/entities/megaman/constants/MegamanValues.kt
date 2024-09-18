@@ -26,7 +26,7 @@ object MegamanValues {
     const val JUMP_VEL = 24f
     const val WALL_JUMP_VEL = 42f
 
-    const val WALL_JUMP_HORIZONTAL = 8f
+    const val WALL_JUMP_HORIZONTAL = 6f // 8f
     const val WALL_JUMP_IMPETUS_TIME = 0.1f
 
     const val GROUND_GRAVITY = -0.0015f
