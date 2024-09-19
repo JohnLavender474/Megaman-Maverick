@@ -9,7 +9,10 @@ import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.extensions.*
+import com.mega.game.engine.common.extensions.equalsAny
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.interpolate
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
@@ -23,8 +26,6 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
-import com.mega.game.engine.events.Event
-import com.mega.game.engine.events.IEventListener
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
@@ -41,12 +42,11 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import kotlin.reflect.KClass
 
-class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IEventListener {
+class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
 
     enum class EyeeState {
         MOVING_TO_END, WAITING_AT_END, MOVING_TO_START, WAITING_AT_START
@@ -73,16 +73,16 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IE
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 10
         }
     )
-    override val eventKeyMask = objectSetOf<Any>(EventType.SET_GAME_CAM_ROTATION, EventType.END_GAME_CAM_ROTATION)
 
     private val loop = Loop(EyeeState.values().toGdxArray())
     private val currentState: EyeeState
         get() = loop.getCurrent()
+    private val canMove: Boolean
+        get() = !game.isCameraRotating()
     private val waitTimer = Timer(WAIT_DURATION)
     private lateinit var start: Vector2
     private lateinit var end: Vector2
     private var progress = 0f
-    private var canMove = true
 
     override fun init() {
         super.init()
@@ -98,8 +98,6 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IE
         spawnProps.put(ConstKeys.CULL_TIME, CULL_TIME)
         super.onSpawn(spawnProps)
 
-        game.eventsMan.addListener(this)
-
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
@@ -112,21 +110,7 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IE
         waitTimer.reset()
         progress = 0f
 
-        canMove = true
-
         GameLogger.debug(TAG, "Movement scalar = $movementScalar")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        game.eventsMan.removeListener(this)
-    }
-
-    override fun onEvent(event: Event) {
-        when (event.key) {
-            EventType.SET_GAME_CAM_ROTATION -> canMove = false
-            EventType.END_GAME_CAM_ROTATION -> canMove = true
-        }
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {

@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
@@ -68,9 +69,9 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableG
         private const val GROUND_GRAVITY = -0.001f
         private const val GRAVITY = -0.5f
         private const val BULLET_X_VEL = 10f
-        private const val FIRST_BULLET_Y_VEL = -0.15f
-        private const val SECOND_BULLET_Y_VEL = -0.25f
-        private const val THIRD_BULLET_Y_VEL = -0.35f
+        private const val FIRST_BULLET_Y_VEL = -0.25f
+        private const val SECOND_BULLET_Y_VEL = -0.5f
+        private const val THIRD_BULLET_Y_VEL = -0.75f
         private var standRegion: TextureRegion? = null
         private var jumpRegion: TextureRegion? = null
     }
@@ -95,8 +96,10 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableG
             TimeMarkedRunnable(0.5f) { shoot(SECOND_BULLET_Y_VEL) },
             TimeMarkedRunnable(0.75f) { shoot(THIRD_BULLET_Y_VEL) })
     )
+    private lateinit var animations: ObjectMap<String, IAnimation>
     private var timesJumped = 0
     private var feetOnGround = false
+    private var scaleBullet = true
 
     override fun init() {
         super.init()
@@ -121,20 +124,34 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableG
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
+
         facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+
         waitTimer.reset()
         jumpDelayTimer.setToEnd()
         shootTimer.reset()
+
         timesJumped = 0
         feetOnGround = true
-        gravityScalar = 1f
+
+        gravityScalar = spawnProps.getOrDefault("${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}", 1f, Float::class)
+        scaleBullet = spawnProps.getOrDefault("${ConstKeys.SCALE}_${ConstKeys.BULLET}", true, Boolean::class)
+
+        val frameDuration = spawnProps.getOrDefault(ConstKeys.FRAME, 0.2f, Float::class)
+        gdxArrayOf(animations.get("jump")).forEach { it.setFrameDuration(frameDuration) }
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
+            if (body.physics.velocity.y > 0f &&
+                body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) &&
+                !body.isSensing(BodySense.FEET_ON_GROUND)
+            ) body.physics.velocity.y = 0f
+
             val wasFeetOnGround = feetOnGround
             feetOnGround = body.isSensing(BodySense.FEET_ON_GROUND)
             if (!wasFeetOnGround && feetOnGround) {
@@ -196,6 +213,14 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableG
         feetFixture.getShape().color = Color.GREEN
         debugShapes.add { feetFixture.getShape() }
 
+        val headFixture = Fixture(
+            body, FixtureType.HEAD, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.2f * ConstVals.PPM)
+        )
+        headFixture.offsetFromBodyCenter.y = ConstVals.PPM.toFloat()
+        body.addFixture(headFixture)
+        headFixture.rawShape.color = Color.ORANGE
+        debugShapes.add { headFixture.getShape() }
+
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.gravity.y =
                 ConstVals.PPM * (if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY) * gravityScalar
@@ -221,8 +246,9 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableG
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { if (!waitTimer.isFinished()) "stand" else "jump" }
-        val animations = objectMapOf<String, IAnimation>(
-            "stand" to Animation(standRegion!!), "jump" to Animation(jumpRegion!!, 1, 2, 0.2f, false)
+        animations = objectMapOf(
+            "stand" to Animation(standRegion!!),
+            "jump" to Animation(jumpRegion!!, 1, 2, 0.2f, false)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
@@ -230,6 +256,7 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableG
 
     private fun shoot(y: Float) {
         val trajectory = Vector2(BULLET_X_VEL * facing.value, y).scl(ConstVals.PPM.toFloat())
+        if (scaleBullet) trajectory.x *= gravityScalar
         val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
         val props = props(
             ConstKeys.POSITION to body.getCenter().add(0.15f * ConstVals.PPM * facing.value, 0.2f * ConstVals.PPM),

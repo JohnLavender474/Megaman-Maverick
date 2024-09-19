@@ -114,8 +114,7 @@ class MegaLevelScreen(
         EventType.END_LEVEL,
         EventType.EDIT_TILED_MAP,
         EventType.SHOW_BACKGROUND,
-        EventType.SET_GAME_CAM_ROTATION,
-        EventType.END_GAME_CAM_ROTATION
+        EventType.SET_GAME_CAM_ROTATION
     )
 
     val engine: GameEngine
@@ -165,7 +164,6 @@ class MegaLevelScreen(
     private var camerasSetToGameCamera = false
 
     private val spawns = Array<Spawn>()
-
     private val debugPrintTimer = Timer(DEBUG_PRINT_DELAY)
 
     private var initialized = false
@@ -215,7 +213,8 @@ class MegaLevelScreen(
                 )
             )
 
-            MegaGameEntitiesMap.getEntitiesOfType(EntityType.ENEMY).forEach { game.engine.destroy(it) }
+            MegaGameEntitiesMap.getEntitiesOfType(EntityType.ENEMY).forEach { it.destroy() }
+            MegaGameEntitiesMap.getEntitiesOfType(EntityType.PROJECTILE).forEach { it.destroy() }
 
             game.putProperty(ConstKeys.ROOM_TRANSITION, true)
         }
@@ -353,6 +352,8 @@ class MegaLevelScreen(
                     "onEvent(): Player spawn --> reset camera manager for rooms and spawn megaman"
                 )
                 cameraManagerForRooms.reset()
+                backgroundCamera.immediateRotation(Direction.UP)
+                gameCamera.immediateRotation(Direction.UP)
 
                 GameLogger.debug(
                     TAG, "onEvent(): Player spawn --> spawn Megaman: ${playerSpawnsMan.currentSpawnProps!!}"
@@ -547,17 +548,11 @@ class MegaLevelScreen(
             }
 
             EventType.SET_GAME_CAM_ROTATION -> {
+                game.setCameraRotating(true)
+                MegaGameEntitiesMap.getEntitiesOfType(EntityType.PROJECTILE).forEach { it.destroy() }
                 val direction = event.getProperty(ConstKeys.DIRECTION, Direction::class)!!
-                backgroundCamera.directionRotation = direction
-                gameCamera.directionRotation = direction
-
-                val systemsToTurnOff = gdxArrayOf(AsyncPathfindingSystem::class, MotionSystem::class)
-                systemsToTurnOff.forEach { game.getSystem(it).on = false }
-            }
-
-            EventType.END_GAME_CAM_ROTATION -> {
-                val systemsToTurnOn = gdxArrayOf(AsyncPathfindingSystem::class, MotionSystem::class)
-                systemsToTurnOn.forEach { game.getSystem(it).on = true }
+                backgroundCamera.startRotation(direction, ConstVals.GAME_CAM_ROTATE_TIME)
+                gameCamera.startRotation(direction, ConstVals.GAME_CAM_ROTATE_TIME)
             }
         }
     }

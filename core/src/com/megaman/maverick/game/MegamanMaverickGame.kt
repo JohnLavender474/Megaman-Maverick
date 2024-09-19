@@ -165,6 +165,10 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
 
     fun getGameCamera() = viewports.get(ConstKeys.GAME).camera as RotatableCamera
 
+    fun setCameraRotating(value: Boolean) = putProperty("${ConstKeys.CAM}_${ConstKeys.ROTATION}", value)
+
+    fun isCameraRotating() = getOrDefaultProperty("${ConstKeys.CAM}_${ConstKeys.ROTATION}", false, Boolean::class)
+
     fun getForegroundCamera() = viewports.get(ConstKeys.FOREGROUND).camera as OrthographicCamera
 
     fun getUiCamera() = viewports.get(ConstKeys.UI).camera as OrthographicCamera
@@ -235,14 +239,15 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
         val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
         val screenHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
 
-        val backgroundCamera = RotatableCamera(ConstVals.GAME_CAM_ROTATE_TIME)
+        val backgroundCamera = RotatableCamera()
         val backgroundViewport = FitViewport(screenWidth, screenHeight, backgroundCamera)
         viewports.put(ConstKeys.BACKGROUND, backgroundViewport)
 
-        val gameCamera = RotatableCamera(
-            ConstVals.GAME_CAM_ROTATE_TIME,
-            onJustFinishedRotating = { eventsMan.submitEvent(Event(EventType.END_GAME_CAM_ROTATION)) }
-        )
+        val gameCamera =
+            RotatableCamera(onJustFinishedRotating = {
+                setCameraRotating(false)
+                eventsMan.submitEvent(Event(EventType.END_GAME_CAM_ROTATION))
+            })
         val gameViewport = FitViewport(screenWidth, screenHeight, gameCamera)
         viewports.put(ConstKeys.GAME, gameViewport)
 

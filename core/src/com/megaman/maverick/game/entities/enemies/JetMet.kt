@@ -53,7 +53,9 @@ import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.isSensing
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -69,9 +71,7 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    private enum class JetMetState {
-        STAND, LIFT_OFF, JET
-    }
+    private enum class JetMetState { STAND, LIFT_OFF, JET }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
         Bullet::class to dmgNeg(15),
@@ -138,7 +138,12 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         shootTimer.reset()
 
         jetMetState = JetMetState.STAND
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = when (getMegaman().directionRotation!!) {
+            Direction.UP -> if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+            Direction.DOWN -> if (getMegaman().body.x > body.x) Facing.LEFT else Facing.RIGHT
+            Direction.LEFT -> if (getMegaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
+            Direction.RIGHT -> if (getMegaman().body.y > body.y) Facing.LEFT else Facing.RIGHT
+        }
 
         targetReached = false
 
@@ -161,7 +166,12 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
                 }
 
                 JetMetState.JET -> {
-                    facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+                    facing = when (getMegaman().directionRotation!!) {
+                        Direction.UP -> if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+                        Direction.DOWN -> if (getMegaman().body.x > body.x) Facing.LEFT else Facing.RIGHT
+                        Direction.LEFT -> if (getMegaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
+                        Direction.RIGHT -> if (getMegaman().body.y > body.y) Facing.LEFT else Facing.RIGHT
+                    }
 
                     if (!targetReached) {
                         val direction = liftTarget.cpy().sub(body.getCenter()).nor()
@@ -261,7 +271,8 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = {
-            when (jetMetState) {
+            if (!body.isSensing(BodySense.FEET_ON_GROUND)) "jet"
+            else when (jetMetState) {
                 JetMetState.STAND -> "stand"
                 JetMetState.LIFT_OFF -> "take_off"
                 JetMetState.JET -> "jet"

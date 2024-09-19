@@ -12,12 +12,20 @@ class AnimatedStars(
     width: Float = MODEL_WIDTH * ConstVals.PPM,
     height: Float = MODEL_HEIGHT * ConstVals.PPM
 ) : AnimatedBackground(
-    start.x, start.y, game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_1.source, "AnimatedStarsBG"),
-    width, height, ROWS, COLS, ANIM_ROWS, ANIM_COLS, ANIM_DUR
+    start.x - (ROWS * ConstVals.PPM) / 2f,
+    start.y - (COLS * ConstVals.PPM) / 2f,
+    game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_1.source, "AnimatedStarsBG"),
+    width,
+    height,
+    ROWS,
+    COLS,
+    ANIM_ROWS,
+    ANIM_COLS,
+    ANIM_DUR
 ) {
 
     companion object {
-        private const val ROWS = 10
+        private const val ROWS = 100
         private const val COLS = 100
         private const val ANIM_ROWS = 1
         private const val ANIM_COLS = 3

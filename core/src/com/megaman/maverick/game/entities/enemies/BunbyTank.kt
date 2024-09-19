@@ -63,8 +63,8 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         const val TAG = "BunbyTank"
         private const val MOVE_SPEED = 3f
         private const val SHOOT_DUR = 0.5f
-        private const val SHOOT_TIME = 0.3f
-        private const val AFTER_SHOOT_DELAY = 0.25f
+        private const val SHOOT_TIME = 0.35f
+        private const val AFTER_SHOOT_DELAY = 0.75f
         private const val GRAVITY = 0.15f
         private const val ROCKET_SPEED = 8f
         private val regions = ObjectMap<String, TextureRegion>()
@@ -140,10 +140,10 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     private fun shoot() {
         val spawn = body.getCenter().add(
             (when (directionRotation!!) {
-                Direction.UP -> Vector2(0.5f * facing.value, 0.125f)
-                Direction.DOWN -> Vector2(-0.5f * facing.value, 0.125f)
-                Direction.LEFT -> Vector2(0.125f, 0.5f * facing.value)
-                Direction.RIGHT -> Vector2(0.125f, -0.5f * facing.value)
+                Direction.UP -> Vector2(0.5f * facing.value, 0.175f)
+                Direction.DOWN -> Vector2(-0.5f * facing.value, 0.175f)
+                Direction.LEFT -> Vector2(0.175f, 0.5f * facing.value)
+                Direction.RIGHT -> Vector2(0.175f, -0.5f * facing.value)
             }).scl(ConstVals.PPM.toFloat())
         )
 
@@ -198,11 +198,13 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             val turnAroundScannerPosition = body.getPositionPoint(position.opposite())
             turnAroundScanner.positionOnPoint(turnAroundScannerPosition, position.opposite())
 
-            if (getMegaman().body.overlaps(shootScanner as Rectangle)) {
-                body.physics.velocity.setZero()
-                shootTimer.reset()
-                return@add
-            } else if (getMegaman().body.overlaps(turnAroundScanner as Rectangle)) swapFacing()
+            if (!getMegaman().dead) {
+                if (getMegaman().body.overlaps(shootScanner as Rectangle)) {
+                    body.physics.velocity.setZero()
+                    shootTimer.reset()
+                    return@add
+                } else if (getMegaman().body.overlaps(turnAroundScanner as Rectangle)) swapFacing()
+            }
 
             body.physics.velocity = (when (directionRotation!!) {
                 Direction.UP -> Vector2(MOVE_SPEED * facing.value, 0f)

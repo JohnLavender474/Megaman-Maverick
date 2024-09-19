@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.ObjectSet
 import com.badlogic.gdx.utils.OrderedMap
@@ -12,7 +13,10 @@ import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
-import com.mega.game.engine.common.extensions.*
+import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.toObjectSet
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.IntPair
 import com.mega.game.engine.common.objects.Properties
@@ -26,8 +30,6 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
-import com.mega.game.engine.events.Event
-import com.mega.game.engine.events.IEventListener
 import com.mega.game.engine.pathfinding.PathfinderParams
 import com.mega.game.engine.pathfinding.PathfindingComponent
 import com.mega.game.engine.updatables.UpdatablesComponent
@@ -40,19 +42,19 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.utils.DynamicBodyHeuristic
-import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.pathfinding.StandardPathfinderResultConsumer
 import com.megaman.maverick.game.utils.isNeighborOf
 import com.megaman.maverick.game.utils.toGridCoordinate
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
-class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IEventListener {
+class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDirectionRotatable {
 
     enum class BatStatus(val region: String) {
         HANGING("Hang"), OPEN_EYES("OpenEyes"), OPEN_WINGS("OpenWings"), FLYING_TO_ATTACK("Fly"),
@@ -82,17 +84,22 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IEv
             it as ChargedShotExplosion
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
         })
-    override val eventKeyMask = objectSetOf<Any>(EventType.SET_GAME_CAM_ROTATION, EventType.END_GAME_CAM_ROTATION)
+    override var directionRotation: Direction?
+        get() = body.cardinalRotation
+        set(value) {
+            body.cardinalRotation = value
+        }
 
     private val hangTimer = Timer(HANG_DURATION)
     private val releasePerchTimer = Timer(RELEASE_FROM_PERCH_DURATION)
     private val debugPathfindingTimer = Timer(DEBUG_PATHFINDING_DURATION)
+    private val canMove: Boolean
+        get() = !game.isCameraRotating()
     private lateinit var type: String
     private lateinit var status: BatStatus
     private lateinit var animations: ObjectMap<String, IAnimation>
     private var flyToAttackSpeed = DEFAULT_FLY_TO_ATTACK_SPEED
     private var flyToRetreatSpeed = DEFAULT_FLY_TO_RETREAT_SPEED
-    private var canMove = true
 
     @Volatile
     private var printDebugFilter = false
@@ -105,7 +112,6 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IEv
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        game.eventsMan.addListener(this)
         super.onSpawn(spawnProps)
 
         hangTimer.reset()
@@ -128,22 +134,11 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IEv
             Float::class
         )
 
+        directionRotation =
+            Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
+
         debugPathfindingTimer.reset()
         printDebugFilter = DEBUG_PATHFINDING
-
-        canMove = true
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        game.eventsMan.removeListener(this)
-    }
-
-    override fun onEvent(event: Event) {
-        when (event.key) {
-            EventType.SET_GAME_CAM_ROTATION -> canMove = false
-            EventType.END_GAME_CAM_ROTATION -> canMove = true
-        }
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -234,9 +229,13 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IEv
             damageableFixture.active = status != BatStatus.HANGING
 
             if (!canMove) body.physics.velocity.setZero()
-            else if (status == BatStatus.FLYING_TO_RETREAT) body.physics.velocity.set(
-                0f, flyToRetreatSpeed * ConstVals.PPM
-            )
+            else if (status == BatStatus.FLYING_TO_RETREAT)
+                body.physics.velocity = when (directionRotation!!) {
+                    Direction.UP -> Vector2(0f, flyToRetreatSpeed)
+                    Direction.DOWN -> Vector2(0f, -flyToRetreatSpeed)
+                    Direction.LEFT -> Vector2(-flyToAttackSpeed, 0f)
+                    Direction.RIGHT -> Vector2(flyToRetreatSpeed, 0f)
+                }.scl(ConstVals.PPM.toFloat())
             else if (status != BatStatus.FLYING_TO_ATTACK) body.physics.velocity.setZero()
         })
 

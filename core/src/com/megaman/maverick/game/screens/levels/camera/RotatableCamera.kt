@@ -6,27 +6,17 @@ import com.badlogic.gdx.math.MathUtils
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.interfaces.Updatable
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.utils.toGameRectangle
 
 // Thanks to https://stackoverflow.com/questions/16509244/set-camera-rotation-in-libgdx
-class RotatableCamera(
-    var timeToRotate: Float,
-    var onJustFinishedRotating: (() -> Unit)? = null
-) : OrthographicCamera(), IDirectionRotatable,
-    Updatable, Resettable {
+class RotatableCamera(var onJustFinishedRotating: (() -> Unit)? = null) : OrthographicCamera(), Updatable, Resettable {
 
     companion object {
         const val TAG = "RotatableCamera"
         private val interpolation = Interpolation.smooth
     }
 
-    override var directionRotation: Direction? = Direction.UP
-        set(value) {
-            field = value
-            if (value == null) return
-            startRotation(value.rotation, timeToRotate)
-        }
+    private var directionRotation = Direction.UP
 
     private var startRot = 0f
     private var rotAmount = 0f
@@ -35,7 +25,7 @@ class RotatableCamera(
     private var rotFinished = true
     private var accumulator = 0f
 
-    fun getRotatedBounds() = toGameRectangle().getCardinallyRotatedShape(directionRotation!!, false)
+    fun getRotatedBounds() = toGameRectangle().getCardinallyRotatedShape(directionRotation, false)
 
     fun isFinishedRotating() = rotFinished
 
@@ -58,11 +48,23 @@ class RotatableCamera(
     }
 
     /**
-     * Do not call this method directly, should use [directionRotation] instead of this method
+     * Do not call this method directly, should use [startRotation] instead of this method
      */
     override fun rotate(degrees: Float) {
         super.rotate(degrees)
         totRot += degrees
+    }
+
+    fun startRotation(direction: Direction, time: Float) {
+        directionRotation = direction
+        startRotation(direction.rotation, time)
+    }
+
+    fun immediateRotation(direction: Direction) {
+        this.directionRotation = direction
+        rotateTo(direction.rotation)
+        rotFinished = true
+        accumulator = 0f
     }
 
     private fun startRotation(degrees: Float, time: Float) {

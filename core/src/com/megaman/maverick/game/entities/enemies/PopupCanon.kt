@@ -12,7 +12,10 @@ import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Size
-import com.mega.game.engine.common.extensions.*
+import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
@@ -28,8 +31,6 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
-import com.mega.game.engine.events.Event
-import com.mega.game.engine.events.IEventListener
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
@@ -51,14 +52,12 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import kotlin.reflect.KClass
 
-class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable, IDirectionRotatable,
-    IEventListener {
+class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable, IDirectionRotatable {
 
     companion object {
         const val TAG = "PopupCanon"
@@ -68,13 +67,12 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         private const val TRANS_DUR = 0.6f
         private const val SHOOT_DUR = 0.25f
         private const val BALL_GRAVITY = 0.15f
+        private const val TRANS_DAMAGEABLE_CUTOFF = 0.5f
         private const val DEFAULT_BALL_GRAVITY_SCALAR = 1f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    private enum class PopupCanonState {
-        REST, RISE, SHOOT, FALL
-    }
+    private enum class PopupCanonState { REST, RISE, SHOOT, FALL }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
         Bullet::class to dmgNeg(10),
@@ -87,10 +85,11 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             it as ChargedShotExplosion
             if (it.fullyCharged) 10 else 5
         })
-    override val eventKeyMask = objectSetOf<Any>(EventType.SET_GAME_CAM_ROTATION, EventType.END_GAME_CAM_ROTATION)
     override var directionRotation: Direction? = null
     override lateinit var facing: Facing
 
+    private val canMove: Boolean
+        get() = !game.isCameraRotating()
     private val loop = Loop(PopupCanonState.values().toGdxArray())
     private val timers = objectMapOf(
         "rest" to Timer(REST_DUR),
@@ -108,7 +107,6 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     )
     private var ballGravityScalar = DEFAULT_BALL_GRAVITY_SCALAR
     private lateinit var transState: Size
-    private var canMove = false
 
     override fun init() {
         if (regions.isEmpty) {
@@ -122,7 +120,6 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        game.eventsMan.addListener(this)
         super.onSpawn(spawnProps)
 
         loop.reset()
@@ -152,19 +149,6 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             Direction.RIGHT -> if (getMegaman().body.x < body.x) Facing.RIGHT else Facing.LEFT
         }
         transState = Size.SMALL
-        canMove = true
-    }
-
-    override fun onDestroy() {
-        game.eventsMan.removeListener(this)
-        super.onDestroy()
-    }
-
-    override fun onEvent(event: Event) {
-        when (event.key) {
-            EventType.SET_GAME_CAM_ROTATION -> canMove = false
-            EventType.END_GAME_CAM_ROTATION -> canMove = true
-        }
     }
 
     private fun shoot() {
@@ -240,7 +224,9 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         debugShapes.add { if (damageableFixture.active) damageableFixture.getShape() else null }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            val damageable = loop.getCurrent() != PopupCanonState.REST
+            val damageable = loop.getCurrent() == PopupCanonState.SHOOT ||
+                    (loop.getCurrent() == PopupCanonState.RISE && timers["rise"].getRatio() > TRANS_DAMAGEABLE_CUTOFF) ||
+                    (loop.getCurrent() == PopupCanonState.FALL && timers["fall"].getRatio() < TRANS_DAMAGEABLE_CUTOFF)
             damageableFixture.active = damageable
 
             (damagerFixture.rawShape as GameRectangle).height = (when (transState) {

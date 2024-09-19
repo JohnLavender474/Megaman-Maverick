@@ -6,12 +6,12 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
-
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -93,9 +93,8 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        spawnProps.put(ConstKeys.ENTTIY_KILLED_BY_DEATH_FIXTURE, false)
+        putProperty(ConstKeys.ENTTIY_KILLED_BY_DEATH_FIXTURE, false)
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
-
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
@@ -112,7 +111,12 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             )
         }
 
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = when (getMegaman().directionRotation!!) {
+            Direction.UP -> if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+            Direction.DOWN -> if (getMegaman().body.x > body.x) Facing.LEFT else Facing.RIGHT
+            Direction.LEFT -> if (getMegaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
+            Direction.RIGHT -> if (getMegaman().body.y > body.y) Facing.LEFT else Facing.RIGHT
+        }
 
         val trajectory = getMegaman().body.getCenter().sub(body.getCenter()).nor().scl(SPEED * ConstVals.PPM)
         body.physics.velocity = trajectory
@@ -149,7 +153,12 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
                 if (child.dead) iter.remove()
             }
 
-            facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+            facing = when (getMegaman().directionRotation!!) {
+                Direction.UP -> if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+                Direction.DOWN -> if (getMegaman().body.x > body.x) Facing.LEFT else Facing.RIGHT
+                Direction.LEFT -> if (getMegaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
+                Direction.RIGHT -> if (getMegaman().body.y > body.y) Facing.LEFT else Facing.RIGHT
+            }
         }
     }
 
@@ -178,7 +187,10 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
             _sprite.setCenter(body.getCenter())
+            _sprite.setOriginCenter()
+            val direction = getMegaman().directionRotation!!
             _sprite.setFlip(isFacing(Facing.LEFT), false)
+            _sprite.rotation = direction.rotation
         }
         return spritesComponent
     }
@@ -241,7 +253,7 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        spawnProps.put(ConstKeys.ENTTIY_KILLED_BY_DEATH_FIXTURE, false)
+        putProperty(ConstKeys.ENTTIY_KILLED_BY_DEATH_FIXTURE, false)
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
         super.onSpawn(spawnProps)
 
@@ -254,7 +266,12 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
         type = spawnProps.get(ConstKeys.TYPE, String::class)!!
         scalar = START_SCALAR
 
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = when (getMegaman().directionRotation!!) {
+            Direction.UP -> if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+            Direction.DOWN -> if (getMegaman().body.x > body.x) Facing.LEFT else Facing.RIGHT
+            Direction.LEFT -> if (getMegaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
+            Direction.RIGHT -> if (getMegaman().body.y > body.y) Facing.LEFT else Facing.RIGHT
+        }
     }
 
     internal fun disintegrateAndDie() {
@@ -277,7 +294,12 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
             scalar += OUT_SPEED * delta
             body.setCenter(rotatingLine.getScaledPosition(scalar))
 
-            facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+            facing = when (getMegaman().directionRotation!!) {
+                Direction.UP -> if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+                Direction.DOWN -> if (getMegaman().body.x > body.x) Facing.LEFT else Facing.RIGHT
+                Direction.LEFT -> if (getMegaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
+                Direction.RIGHT -> if (getMegaman().body.y > body.y) Facing.LEFT else Facing.RIGHT
+            }
         }
     }
 
@@ -304,6 +326,8 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
         sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.setOriginCenter()
+            _sprite.rotation = getMegaman().directionRotation!!.rotation
             _sprite.hidden = damageBlink
             _sprite.setCenter(body.getCenter())
             _sprite.setFlip(isFacing(Facing.LEFT), false)

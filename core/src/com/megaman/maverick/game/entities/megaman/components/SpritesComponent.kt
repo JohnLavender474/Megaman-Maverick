@@ -56,8 +56,7 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
         val yTranslation = when (direction) {
             Direction.UP -> 0f
             Direction.DOWN -> 0.1f
-            Direction.LEFT -> 0f
-            Direction.RIGHT -> 0f
+            Direction.LEFT, Direction.RIGHT -> if (rawAnimKey == "JumpShoot") 0.1f * facing.value else 0f
         }
         player.translateY(yTranslation * ConstVals.PPM)
 

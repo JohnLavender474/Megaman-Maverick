@@ -155,9 +155,16 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
     protected open fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.STATIC)
-        blockFixture = Fixture(body, FixtureType.BLOCK, GameRectangle())
+        body.color = Color.GRAY
+        debugShapeSuppliers.add { body.getBodyBounds() }
+
+        blockFixture = Fixture(body, FixtureType.BLOCK)
         body.addFixture(blockFixture)
+        blockFixture.rawShape.color = Color.BLUE
+        debugShapeSuppliers.add { blockFixture.getShape() }
+
         body.preProcess.put(ConstKeys.DEFAULT) { (blockFixture.rawShape as GameRectangle).set(body) }
+
         return BodyComponentCreator.create(this, body)
     }
 }

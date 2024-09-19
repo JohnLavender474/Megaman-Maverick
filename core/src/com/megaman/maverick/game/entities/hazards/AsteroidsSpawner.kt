@@ -1,10 +1,5 @@
 package com.megaman.maverick.game.entities.hazards
 
-import com.mega.game.engine.world.body.*;
-import com.mega.game.engine.world.collisions.*;
-import com.mega.game.engine.world.contacts.*;
-import com.mega.game.engine.world.pathfinding.*;
-
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.GameLogger
@@ -108,6 +103,8 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
         children.removeAll { (it as MegaGameEntity).dead }
         if (children.size >= MAX_CHILDREN) return@UpdatablesComponent
 
+        if (game.isProperty(ConstKeys.ROOM_TRANSITION, true)) return@UpdatablesComponent
+        
         spawnTimer.update(delta)
         if (spawnTimer.isFinished()) {
             spawnAsteroid()
@@ -122,6 +119,8 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
             EventType.GATE_INIT_OPENING
         )
         val cullEvents = CullableOnEvent({ cullEventsSet.contains(it) }, cullEventsSet)
+        runnablesOnSpawn.put(ConstKeys.CULL_EVENTS) { game.eventsMan.addListener(cullEvents) }
+        runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullEvents) }
         return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS to cullEvents))
     }
 }

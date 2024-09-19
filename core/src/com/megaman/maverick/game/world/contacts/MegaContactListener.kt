@@ -103,11 +103,15 @@ class MegaContactListener(
         // block, body
         else if (contact.fixturesMatch(FixtureType.BLOCK, FixtureType.BODY)) {
             printDebugLog(contact, "beginContact(): Block-Body, contact = $contact")
+
             val (blockFixture, bodyFixture) = contact.getFixturesInOrder(FixtureType.BLOCK, FixtureType.BODY)!!
             if (blockFixture.hasFixtureLabel(FixtureLabel.NO_BODY_TOUCHIE)) return
+
             val block = blockFixture.getEntity() as Block
             block.hitByBody(bodyFixture)
+
             if (bodyFixture.hasHitByBlockReceiver()) bodyFixture.getHitByBlock(block)
+
             val body = bodyFixture.getBody()
             body.setBodySense(BodySense.BODY_TOUCHING_BLOCK, true)
         }
@@ -123,14 +127,19 @@ class MegaContactListener(
         // side, block
         else if (contact.fixturesMatch(FixtureType.BLOCK, FixtureType.SIDE)) {
             printDebugLog(contact, "beginContact(): Block-Side, contact = $contact")
+
             val (blockFixture, sideFixture) = contact.getFixturesInOrder(FixtureType.BLOCK, FixtureType.SIDE)!!
             if (blockFixture.hasFixtureLabel(FixtureLabel.NO_SIDE_TOUCHIE)) return
+
             val body = sideFixture.getBody()
+
             val sideType = sideFixture.getProperty(ConstKeys.SIDE)
             if (sideType == ConstKeys.LEFT) body.setBodySense(BodySense.SIDE_TOUCHING_BLOCK_LEFT, true)
             else body.setBodySense(BodySense.SIDE_TOUCHING_BLOCK_RIGHT, true)
+
             val block = blockFixture.getEntity() as Block
             block.hitBySide(sideFixture)
+
             if (sideFixture.hasHitByBlockReceiver()) sideFixture.getHitByBlock(block)
         }
 

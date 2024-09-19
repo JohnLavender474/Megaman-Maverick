@@ -72,7 +72,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
 
         private val TIMES_TO_SHOOT = floatArrayOf(0.15f, 0.75f, 1.35f)
 
-        private const val BULLET_SPEED = 7.5f
+        private const val BULLET_SPEED = 10f
         private const val SNOWBALL_X = 8f
         private const val SNOWBALL_Y = 5f
         private const val SNOWBALL_GRAV = 0.15f
@@ -133,6 +133,8 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
     private val hasShield: Boolean
         get() = sniperJoeState == SniperJoeState.WAITING_SHIELDED || sniperJoeState == SniperJoeState.SHOOTING_WITH_SHIELD
 
+    private val shouldUpdate: Boolean
+        get() = !game.isCameraRotating()
     private val waitTimer = Timer(SHIELD_DUR)
     private val shootTimer = Timer(SHOOT_DUR)
     private val throwShieldTimer = Timer(THROW_SHIELD_DUR)
@@ -140,6 +142,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
     private var canJump = true
     private var canThrowShield = false
     private var setToThrowShield = false
+    private var scaleBullet = true
 
     override fun getTag() = TAG
 
@@ -190,7 +193,8 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         shootTimer.setToEnd()
         throwShieldTimer.setToEnd()
 
-        gravityScalar = 1f
+        gravityScalar = spawnProps.getOrDefault("${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}", 1f, Float::class)
+        scaleBullet = spawnProps.getOrDefault("${ConstKeys.SCALE}_${ConstKeys.BULLET}", true, Boolean::class)
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -207,6 +211,12 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         body.addFixture(feetFixture)
         feetFixture.rawShape.color = Color.GREEN
         shapes.add { feetFixture.getShape() }
+
+        val headFixture = Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.1f * ConstVals.PPM))
+        headFixture.offsetFromBodyCenter.y = 0.75f * ConstVals.PPM
+        body.addFixture(headFixture)
+        headFixture.rawShape.color = Color.ORANGE
+        shapes.add { headFixture.getShape() }
 
         val damagerFixture = Fixture(
             body, FixtureType.DAMAGER, GameRectangle().setSize(0.75f * ConstVals.PPM, 1.15f * ConstVals.PPM)
@@ -310,12 +320,35 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
+            if (!shouldUpdate) return@add
+
             facing = when (directionRotation!!) {
                 Direction.UP, Direction.DOWN -> if (getMegaman().body.x > body.x) Facing.RIGHT else Facing.LEFT
                 Direction.LEFT, Direction.RIGHT -> if (getMegaman().body.y > body.y) Facing.RIGHT else Facing.LEFT
             }
 
             if (canJump && shouldJump()) jump()
+            when (directionRotation!!) {
+                Direction.UP -> if (body.physics.velocity.y > 0f &&
+                    body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) &&
+                    !body.isSensing(BodySense.FEET_ON_GROUND)
+                ) body.physics.velocity.y = 0f
+
+                Direction.DOWN -> if (body.physics.velocity.y < 0f &&
+                    body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) &&
+                    !body.isSensing(BodySense.FEET_ON_GROUND)
+                ) body.physics.velocity.y = 0f
+
+                Direction.LEFT -> if (body.physics.velocity.x < 0f &&
+                    body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) &&
+                    !body.isSensing(BodySense.FEET_ON_GROUND)
+                ) body.physics.velocity.x = 0f
+
+                Direction.RIGHT -> if (body.physics.velocity.x > 0f &&
+                    body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) &&
+                    !body.isSensing(BodySense.FEET_ON_GROUND)
+                ) body.physics.velocity.x = 0f
+            }
 
             if (!overlapsGameCamera()) {
                 sniperJoeState = if (hasShield) SniperJoeState.WAITING_SHIELDED else SniperJoeState.WAITING_NO_SHIELD
@@ -425,10 +458,26 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         )
     }
 
-    private fun shouldJump() = body.isSensing(BodySense.FEET_ON_GROUND) && (when (directionRotation!!) {
-        Direction.UP, Direction.DOWN -> getMegaman().body.x >= body.x && getMegaman().body.getMaxX() <= body.getMaxX()
-        Direction.LEFT, Direction.RIGHT -> getMegaman().body.y >= body.y && getMegaman().body.getMaxY() <= body.getMaxY()
-    })
+    private fun shouldJump(): Boolean {
+        if (!body.isSensing(BodySense.FEET_ON_GROUND)) return false
+        return when (directionRotation!!) {
+            Direction.UP -> getMegaman().body.y > body.getMaxY() &&
+                    getMegaman().body.x >= body.x &&
+                    getMegaman().body.getMaxX() <= body.getMaxX()
+
+            Direction.DOWN -> getMegaman().body.getMaxY() < body.y &&
+                    getMegaman().body.x >= body.x &&
+                    getMegaman().body.getMaxX() <= body.getMaxX()
+
+            Direction.LEFT -> getMegaman().body.getMaxX() < body.x &&
+                    getMegaman().body.y >= body.y &&
+                    getMegaman().body.getMaxY() <= body.getMaxY()
+
+            Direction.RIGHT -> getMegaman().body.x > body.getMaxX() &&
+                    getMegaman().body.y >= body.y &&
+                    getMegaman().body.getMaxY() <= body.getMaxY()
+        }
+    }
 
     private fun jump() {
         val impulse = (when (directionRotation!!) {
@@ -475,6 +524,8 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
 
             EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
         }
+
+        if (scaleBullet) trajectory.scl(gravityScalar)
 
         entity.spawn(props)
     }

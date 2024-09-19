@@ -73,11 +73,14 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, IS
             .positionOnPoint(bounds.getPositionPoint(position), position)
 
         val trajectory = Trajectory(spawnProps.get(ConstKeys.TRAJECTORY, String::class)!!, ConstVals.PPM)
-        val motionDefinition =
-            MotionComponent.MotionDefinition(
-                motion = trajectory,
-                function = { value, _ -> body.physics.velocity.set(value) },
-                onReset = { body.set(bounds) })
+        val motionDefinition = MotionComponent.MotionDefinition(
+            motion = trajectory,
+            function = { value, _ -> body.physics.velocity.set(value) },
+            onReset = {
+                body.setSize(WIDTH * ConstVals.PPM, HEIGHT * ConstVals.PPM)
+                    .positionOnPoint(bounds.getPositionPoint(position), position)
+            }
+        )
         putMotionDefinition(ConstKeys.TRAJECTORY, motionDefinition)
 
         val subsequentEntitySuppliers = convertObjectPropsToEntitySuppliers(spawnProps)

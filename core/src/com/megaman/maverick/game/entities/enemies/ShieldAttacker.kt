@@ -66,7 +66,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
             if (it.fullyCharged) 15 else 5
         }
     )
-    override var facing = Facing.RIGHT
+    override lateinit var facing: Facing
 
     private val turnAroundTimer = Timer(TURN_AROUND_DUR)
     private lateinit var animations: ObjectMap<String, IAnimation>
@@ -76,6 +76,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
     private var switch = false
     private val turningAround: Boolean
         get() = !turnAroundTimer.isFinished()
+    private var flipY = false
 
     override fun init() {
         super.init()
@@ -102,6 +103,8 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
                 max = spawn.y
                 switch = true
             }
+            body.setCenter(spawn)
+            facing = if (getMegaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
         } else {
             body.setSize(0.75f * ConstVals.PPM, 1.5f * ConstVals.PPM)
             val targetX = spawn.x + spawnProps.get(ConstKeys.VALUE, Float::class)!! * ConstVals.PPM
@@ -114,13 +117,16 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
                 max = spawn.x
                 switch = true
             }
+            body.setCenter(spawn)
+            facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
         }
-        body.setCenter(spawn)
 
         val frameDuration = spawnProps.getOrDefault(ConstKeys.FRAME, 0.1f, Float::class)
         animations.forEach { it.value.setFrameDuration(frameDuration) }
 
         turnAroundTimer.reset()
+
+        flipY = spawnProps.getOrDefault("${ConstKeys.FLIP}_${ConstKeys.Y}", false, Boolean::class)
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -224,7 +230,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
-            _sprite.setFlip(turningAround != switch, false)
+            _sprite.setFlip(turningAround != switch, flipY)
             _sprite.setCenter(body.getCenter())
             _sprite.setOriginCenter()
             _sprite.rotation = if (vertical) 90f else 0f

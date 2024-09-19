@@ -42,6 +42,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val BULLET = "bullet"
     const val CAM = "cam"
     const val INVALID = "invalid"
     const val FPS = "fps"
