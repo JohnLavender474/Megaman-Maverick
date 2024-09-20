@@ -196,12 +196,6 @@
   <object id="337" name="FallingLeaf" x="9728" y="328" width="32" height="32"/>
   <object id="338" name="FallingLeaf" x="9704" y="280" width="32" height="32"/>
   <object id="339" name="FallingLeaf" x="9736" y="264" width="32" height="32"/>
-  <object id="351" name="Tree" x="10656" y="288" width="96" height="96"/>
-  <object id="352" name="FallingLeaf" x="10696" y="280" width="32" height="32"/>
-  <object id="353" name="FallingLeaf" x="10664" y="312" width="32" height="32"/>
-  <object id="354" name="FallingLeaf" x="10688" y="312" width="32" height="32"/>
-  <object id="355" name="FallingLeaf" x="10704" y="328" width="32" height="32"/>
-  <object id="356" name="FallingLeaf" x="10680" y="288" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="2" name="blocks">
   <object id="4" x="0" y="1408" width="1184" height="96"/>
@@ -385,7 +379,7 @@
   </object>
   <object id="162" name="Peat" x="3608" y="744" width="16" height="16"/>
   <object id="172" name="Hanabiran" x="3816" y="816" width="16" height="16"/>
-  <object id="179" name="Pipi" x="4920" y="696" width="16" height="16"/>
+  <object id="179" name="Pipi" x="4920" y="688" width="16" height="16"/>
   <object id="190" name="Peat" x="4312" y="744" width="16" height="16"/>
   <object id="208" name="Robbit" x="6336" y="816" width="16" height="16"/>
   <object id="209" name="Peat" x="6336" y="752" width="16" height="16"/>

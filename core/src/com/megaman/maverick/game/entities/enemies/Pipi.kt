@@ -124,14 +124,14 @@ class Pipi(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
         body.addFixture(damageableFixture)
 
         val leftSideFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        leftSideFixture.offsetFromBodyCenter.x = -0.125f * ConstVals.PPM
+        leftSideFixture.offsetFromBodyCenter.x = -0.2f * ConstVals.PPM
         leftSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftSideFixture)
         leftSideFixture.rawShape.color = Color.YELLOW
         debugShapes.add { leftSideFixture.getShape() }
 
         val rightSideFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        rightSideFixture.offsetFromBodyCenter.x = 0.125f * ConstVals.PPM
+        rightSideFixture.offsetFromBodyCenter.x = 0.2f * ConstVals.PPM
         rightSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightSideFixture)
         rightSideFixture.rawShape.color = Color.YELLOW
