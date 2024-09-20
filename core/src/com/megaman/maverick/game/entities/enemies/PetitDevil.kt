@@ -57,6 +57,7 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     companion object {
         const val TAG = "PetitDevil"
         private const val SPEED = 4f
+        private const val CULL_TIME = 1f
         private val CHILDREN = gdxArrayOf(0f, 90f, 180f, 270f)
         private var orangeRegion: TextureRegion? = null
         private var greenRegion: TextureRegion? = null
@@ -122,10 +123,27 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         body.physics.velocity = trajectory
 
         putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, object : ICullable {
+
+            private var time = 0f
+
             override fun shouldBeCulled(delta: Float): Boolean {
-                if (overlapsGameCamera()) return false
-                for (child in children) if ((child as AbstractEnemy).overlapsGameCamera()) return false
-                return true
+                if (overlapsGameCamera()) {
+                    time = 0f
+                    return false
+                }
+                for (child in children) {
+                    if ((child as PetitDevilChild).overlapsGameCamera()) {
+                        time = 0f
+                        return false
+                    }
+                }
+                time += delta
+                return time >= CULL_TIME
+            }
+
+            override fun reset() {
+                super.reset()
+                time = 0f
             }
         })
     }
@@ -272,6 +290,14 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
             Direction.LEFT -> if (getMegaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
             Direction.RIGHT -> if (getMegaman().body.y > body.y) Facing.LEFT else Facing.RIGHT
         }
+
+        putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, object : ICullable {
+
+            override fun shouldBeCulled(delta: Float): Boolean {
+                if ((parent as PetitDevil).overlapsGameCamera()) return false
+                return !overlapsGameCamera()
+            }
+        })
     }
 
     internal fun disintegrateAndDie() {

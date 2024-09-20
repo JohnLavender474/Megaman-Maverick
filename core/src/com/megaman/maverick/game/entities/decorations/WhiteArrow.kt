@@ -13,6 +13,7 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -21,8 +22,9 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import kotlin.math.max
 
-class WhiteArrow(game: MegamanMaverickGame) : MegaGameEntity(game), IDirectionRotatable {
+class WhiteArrow(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IDirectionRotatable {
 
     companion object {
         const val TAG = "WhiteArrow"
@@ -38,6 +40,9 @@ class WhiteArrow(game: MegamanMaverickGame) : MegaGameEntity(game), IDirectionRo
     private val oscillationTimer = SmoothOscillationTimer(ALPHA_FREQUENCY, MIN_ALPHA, MAX_ALPHA)
     private lateinit var position: Vector2
     private var maxValue = 0f
+    private var fadeOnSpawnAlpha = 0f
+    private var fadeOnDestroyAlpha = 0f
+    private var setToDestroy = false
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
@@ -59,6 +64,8 @@ class WhiteArrow(game: MegamanMaverickGame) : MegaGameEntity(game), IDirectionRo
             Direction.RIGHT -> position.x + maxOffset * ConstVals.PPM
         }
         oscillationTimer.reset()
+        setToDestroy = false
+        fadeOnSpawnAlpha = 0f
     }
 
     override fun onDestroy() {
@@ -67,8 +74,6 @@ class WhiteArrow(game: MegamanMaverickGame) : MegaGameEntity(game), IDirectionRo
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        oscillationTimer.update(delta)
-
         val movement = when (directionRotation!!) {
             Direction.UP -> Vector2(0f, SPEED)
             Direction.DOWN -> Vector2(0f, -SPEED)
@@ -77,13 +82,24 @@ class WhiteArrow(game: MegamanMaverickGame) : MegaGameEntity(game), IDirectionRo
         }.scl(ConstVals.PPM.toFloat() * delta)
         position.add(movement)
 
-        if (when (directionRotation!!) {
-                Direction.UP -> position.y >= maxValue
-                Direction.DOWN -> position.y <= maxValue
-                Direction.LEFT -> position.x <= maxValue
-                Direction.RIGHT -> position.x >= maxValue
+        if (setToDestroy) {
+            fadeOnDestroyAlpha = max(fadeOnDestroyAlpha - (ALPHA_FREQUENCY / 2f) * delta, 0f)
+            if (fadeOnDestroyAlpha <= 0f) destroy()
+        } else {
+            if (fadeOnSpawnAlpha < MIN_ALPHA) fadeOnSpawnAlpha += (ALPHA_FREQUENCY / 2f) * delta
+            else oscillationTimer.update(delta)
+
+            if (when (directionRotation!!) {
+                    Direction.UP -> position.y >= maxValue
+                    Direction.DOWN -> position.y <= maxValue
+                    Direction.LEFT -> position.x <= maxValue
+                    Direction.RIGHT -> position.x >= maxValue
+                }
+            ) {
+                fadeOnDestroyAlpha = if (fadeOnSpawnAlpha < MIN_ALPHA) fadeOnSpawnAlpha else oscillationTimer.getValue()
+                setToDestroy = true
             }
-        ) destroy()
+        }
     })
 
     private fun defineSpritesComponent(): SpritesComponent {
@@ -94,7 +110,11 @@ class WhiteArrow(game: MegamanMaverickGame) : MegaGameEntity(game), IDirectionRo
             _sprite.setOriginCenter()
             _sprite.rotation = directionRotation!!.rotation
             _sprite.setCenter(position)
-            _sprite.setAlpha(oscillationTimer.getValue())
+            _sprite.setAlpha(
+                if (setToDestroy) fadeOnDestroyAlpha
+                else if (fadeOnSpawnAlpha < MIN_ALPHA) fadeOnSpawnAlpha
+                else oscillationTimer.getValue()
+            )
         }
         return spritesComponent
     }

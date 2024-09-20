@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="450" height="85" tilewidth="32" tileheight="32" infinite="0" nextlayerid="18" nextobjectid="688">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="450" height="85" tilewidth="32" tileheight="32" infinite="0" nextlayerid="18" nextobjectid="689">
  <tileset firstgid="1" source="../tsx/mm9endless.tsx"/>
  <tileset firstgid="323" source="../tsx/StarManTileset-NoBlack.tsx"/>
  <tileset firstgid="18755" source="../tsx/mm10-final-stage-tileset.tsx"/>
@@ -407,7 +407,7 @@
   </object>
  </objectgroup>
  <objectgroup id="13" name="temp">
-  <object id="664" name="0" x="12576" y="1728" width="32" height="32">
+  <object id="688" name="0" x="9824" y="1280" width="32" height="32">
    <properties>
     <property name="apply_scalar_to_children" type="bool" value="true"/>
     <property name="gravity_scalar" type="float" value="0.25"/>
@@ -473,7 +473,7 @@
   <object id="47" x="3648" y="1472" width="192" height="352"/>
   <object id="48" x="3776" y="1152" width="64" height="384"/>
   <object id="49" x="3584" y="1152" width="256" height="32"/>
-  <object id="57" x="976" y="2176" width="64" height="8">
+  <object id="57" x="992" y="2176" width="32" height="8">
    <properties>
     <property name="body_labels" value="collide_down_only"/>
     <property name="fixture_labels" value="no_side_touchie,no_projectile_collision"/>
@@ -1079,7 +1079,13 @@
     <property name="shoot_frame" type="float" value="0.3"/>
    </properties>
   </object>
-  <object id="634" name="BunbyTank" x="12672" y="1360" width="16" height="16"/>
+  <object id="634" name="BunbyTank" x="12672" y="1360" width="16" height="16">
+   <properties>
+    <property name="movement_scalar" type="float" value="0.5"/>
+    <property name="roll_frame" type="float" value="0.25"/>
+    <property name="shoot_frame" type="float" value="0.3"/>
+   </properties>
+  </object>
   <object id="649" name="Bat" x="12904" y="1568" width="16" height="16">
    <properties>
     <property name="attack_speed" type="float" value="1.5"/>

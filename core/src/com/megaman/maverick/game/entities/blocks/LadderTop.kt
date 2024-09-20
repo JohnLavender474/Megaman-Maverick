@@ -11,6 +11,7 @@ class LadderTop(game: MegamanMaverickGame) : Block(game) {
 
     override fun onSpawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.FRICTION_X, 0f)
+        spawnProps.put(ConstKeys.FRICTION_Y, 0f)
         spawnProps.put(
             ConstKeys.FIXTURE_LABELS,
             objectSetOf(FixtureLabel.NO_PROJECTILE_COLLISION, FixtureLabel.NO_SIDE_TOUCHIE)

@@ -92,10 +92,8 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
     private val down: Boolean
         get() = !downTimer.isFinished()
-
     private val shooting: Boolean
         get() = !shootTimer.isFinished()
-
     private val rising: Boolean
         get() = !riseTimer.isFinished()
 
@@ -171,6 +169,8 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
+            if (game.isCameraRotating()) return@add
+
             if (!downTimer.isFinished()) {
                 downTimer.update(it)
                 if (downTimer.isFinished()) riseTimer.reset()
