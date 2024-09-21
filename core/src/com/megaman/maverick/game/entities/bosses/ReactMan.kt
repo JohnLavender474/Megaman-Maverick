@@ -60,7 +60,11 @@ import kotlin.reflect.KClass
 class ReactMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, IFaceable {
 
     enum class ReactManState(val regionName: String) {
-        DANCE("Dance"), JUMP("Jump"), RUN("Run"), STAND("Stand"), THROW("Throw")
+        DANCE("Dance"),
+        JUMP("Jump"),
+        RUN("Run"),
+        STAND("Stand"),
+        THROW("Throw")
     }
 
     companion object {
@@ -249,7 +253,8 @@ class ReactMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
     private fun spawnProjectile() {
         projectile = EntityFactories.fetch(
-            EntityType.PROJECTILE, ProjectilesFactory.REACT_MAN_PROJECTILE
+            EntityType.PROJECTILE,
+            ProjectilesFactory.REACT_MAN_PROJECTILE
         )!! as ReactManProjectile
 
         projectile!!.spawn(

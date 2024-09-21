@@ -96,8 +96,8 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         super.onSpawn(spawnProps)
 
         val spawn =
-            if (spawnProps.containsKey(ConstKeys.BOUNDS)) spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
-                .getBottomCenterPoint()
+            if (spawnProps.containsKey(ConstKeys.BOUNDS))
+                spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
             else spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setBottomCenterToPoint(spawn)
 
@@ -112,7 +112,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
     override fun onDestroy() {
         super.onDestroy()
-        flame?.let { it.destroy() }
+        flame?.destroy()
         flame = null
     }
 
@@ -120,11 +120,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         if (flame != null) throw IllegalStateException("Flame must be null before spawning new flame")
 
         flame = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.FIRE_MET_FLAME) as FireMetFlame?
-        flame!!.spawn(
-            props(
-                ConstKeys.OWNER to this, ConstKeys.POSITION to body.getTopCenterPoint()
-            )
-        )
+        flame!!.spawn(props(ConstKeys.OWNER to this, ConstKeys.POSITION to body.getTopCenterPoint()))
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -262,29 +258,23 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
         body.postProcess.put(ConstKeys.DEFAULT) {
             if (isFacing(Facing.LEFT)) {
-                if (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) || leftConsumerFixture.isProperty(
-                        ConstKeys.DEATH,
-                        true
-                    )
+                if (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) ||
+                    leftConsumerFixture.isProperty(ConstKeys.DEATH, true)
                 ) facing = Facing.RIGHT
-                else if (fireMetState == FireMetState.MOVE && body.isSensing(BodySense.FEET_ON_GROUND) && leftConsumerFixture.isProperty(
-                        ConstKeys.BLOCK,
-                        false
-                    )
+                else if (fireMetState == FireMetState.MOVE &&
+                    body.isSensing(BodySense.FEET_ON_GROUND) &&
+                    leftConsumerFixture.isProperty(ConstKeys.BLOCK, false)
                 ) {
                     jump()
                     moveTimer.reset()
                 }
             } else if (isFacing(Facing.RIGHT)) {
-                if (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) || rightConsumerFixture.isProperty(
-                        ConstKeys.DEATH,
-                        true
-                    )
+                if (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) ||
+                    rightConsumerFixture.isProperty(ConstKeys.DEATH, true)
                 ) facing = Facing.LEFT
-                else if (fireMetState == FireMetState.MOVE && body.isSensing(BodySense.FEET_ON_GROUND) && rightConsumerFixture.isProperty(
-                        ConstKeys.BLOCK,
-                        false
-                    )
+                else if (fireMetState == FireMetState.MOVE &&
+                    body.isSensing(BodySense.FEET_ON_GROUND) &&
+                    rightConsumerFixture.isProperty(ConstKeys.BLOCK, false)
                 ) {
                     jump()
                     moveTimer.reset()

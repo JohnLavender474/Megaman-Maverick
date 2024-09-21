@@ -14,7 +14,6 @@ import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
-
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -45,6 +44,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.bosses.gutstank.GutsTank.GutsTankAttackState
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.enemies.HeliMet
@@ -61,9 +61,7 @@ import kotlin.reflect.KClass
 class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration = DAMAGE_DURATION), IChildEntity,
     IDrawableShapesEntity, IFaceable {
 
-    enum class GutsTankFistState {
-        ATTACHED, LAUNCHED, RETURNING
-    }
+    enum class GutsTankFistState { ATTACHED, LAUNCHED, RETURNING }
 
     companion object {
         const val TAG = "GutsTankFist"
@@ -79,10 +77,15 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(1), ChargedShot::class to dmgNeg {
+        Bullet::class to dmgNeg(1),
+        ChargedShot::class to dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 3 else 2
-        }, ChargedShotExplosion::class to dmgNeg(1)
+        },
+        ChargedShotExplosion::class to dmgNeg {
+            it as ChargedShotExplosion
+            if (it.fullyCharged) 2 else 1
+        }
     )
     override var parent: GameEntity? = null
     override lateinit var facing: Facing
@@ -132,11 +135,12 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
     override fun canBeDamagedBy(damager: IDamager): Boolean {
         if (damager is AbstractProjectile) {
             damager.owner?.let { damagerOwner ->
-                if (damagerOwner == this || damagerOwner == parent ||
+                if (damagerOwner == this ||
+                    damagerOwner == parent ||
                     damagerOwner == (parent as GutsTank).tankBlock ||
                     damagerOwner == (parent as GutsTank).bodyBlock ||
-                    (damagerOwner is Met && (parent as GutsTank).runningMetsSet.contains(damagerOwner)) ||
-                    (damagerOwner is HeliMet && (parent as GutsTank).flyingMetsSet.contains(damagerOwner))
+                    (damagerOwner is Met && (parent as GutsTank).runningMets.contains(damagerOwner)) ||
+                    (damagerOwner is HeliMet && (parent as GutsTank).heliMets.contains(damagerOwner))
                 ) return false
             }
         }
@@ -168,7 +172,7 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
                         return@add
                     }
                     if (launchDelayTimer.isJustFinished()) {
-                        target = game.megaman.body.getCenter()
+                        target = game.megaman.body.getCenterLeftPoint()
                         requestToPlaySound(SoundAsset.BURST_SOUND, false)
                     }
                     body.physics.velocity = target.cpy().sub(body.getCenter()).nor().scl(LAUNCH_SPEED * ConstVals.PPM)
@@ -188,7 +192,7 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
                         )
                         if (body.contains(attachment)) {
                             fistState = GutsTankFistState.ATTACHED
-                            (parent as GutsTank).finishAttack(GutsTank.GutsTankAttackState.LAUNCH_FIST)
+                            (parent as GutsTank).finishAttack(GutsTankAttackState.LAUNCH_FIST)
                         }
                     } else body.physics.velocity.setZero()
                 }
@@ -204,36 +208,32 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body }
 
-        val damagerFixture = Fixture(
-            body,
-            FixtureType.DAMAGER,
-            GameRectangle().setSize(1.05f * ConstVals.PPM)
-        )
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(ConstVals.PPM.toFloat()))
+        body.addFixture(bodyFixture)
+        bodyFixture.rawShape.color = Color.GRAY
+        debugShapes.add { bodyFixture.getShape() }
+
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(1.75f * ConstVals.PPM))
         body.addFixture(damagerFixture)
         damagerFixture.getShape().color = Color.RED
         debugShapes.add { damagerFixture.getShape() }
 
-        val damageableFixture = Fixture(
-            body,
-            FixtureType.DAMAGEABLE,
-            GameRectangle().setSize(0.2f * ConstVals.PPM, 1.05f * ConstVals.PPM)
-        )
+        val damageableFixture =
+            Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.2f * ConstVals.PPM, 1.05f * ConstVals.PPM))
         body.addFixture(damageableFixture)
-        damageableFixture.getShape().color = Color.PURPLE
+        damageableFixture.rawShape.color = Color.PURPLE
         debugShapes.add { damageableFixture.getShape() }
 
-        val shieldFixture = Fixture(
-            body,
-            FixtureType.SHIELD,
-            GameRectangle().setSize(1.05f * ConstVals.PPM)
-        )
+        val shieldFixture =
+            Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(0.2f * ConstVals.PPM, 1.05f * ConstVals.PPM))
         body.addFixture(shieldFixture)
-        shieldFixture.getShape().color = Color.BLUE
+        shieldFixture.rawShape.color = Color.BLUE
         debugShapes.add { shieldFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            shieldFixture.offsetFromBodyCenter.x = 0.2f * facing.value * ConstVals.PPM
+            shieldFixture.offsetFromBodyCenter.x = 0.65f * facing.value * ConstVals.PPM
             damageableFixture.offsetFromBodyCenter.x = 0.75f * -facing.value * ConstVals.PPM
+            damagerFixture.offsetFromBodyCenter.x = 0.5f * -facing.value * ConstVals.PPM
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

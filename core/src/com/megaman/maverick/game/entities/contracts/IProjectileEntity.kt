@@ -1,10 +1,5 @@
 package com.megaman.maverick.game.entities.contracts
 
-import com.mega.game.engine.world.body.*;
-import com.mega.game.engine.world.collisions.*;
-import com.mega.game.engine.world.contacts.*;
-import com.mega.game.engine.world.pathfinding.*;
-
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.audio.AudioComponent
@@ -15,7 +10,6 @@ import com.mega.game.engine.components.IGameComponent
 import com.mega.game.engine.cullables.CullableOnEvent
 import com.mega.game.engine.cullables.CullableOnUncontained
 import com.mega.game.engine.cullables.CullablesComponent
-import com.mega.game.engine.cullables.ICullable
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.sprites.SpritesComponent
@@ -50,7 +44,7 @@ interface IProjectileEntity : IMegaGameEntity, IBodyEntity, IAudioEntity, ICulla
 
     fun removeCullOnEventCullable() = removeCullable(ConstKeys.CULL_EVENTS)
 
-    fun getCullOnEventCullable(): ICullable {
+    fun getCullOnEventCullable(): CullableOnEvent {
         val cullEvents = objectSetOf<Any>(
             EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING
         )

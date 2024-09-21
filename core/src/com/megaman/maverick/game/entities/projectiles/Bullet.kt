@@ -83,7 +83,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
 
         bounced++
         if (bounced >= BOUNCE_LIMIT) {
-            destroy()
+            explodeAndDie()
             return
         }
 

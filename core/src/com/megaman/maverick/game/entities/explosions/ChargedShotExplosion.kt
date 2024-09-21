@@ -32,6 +32,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 
@@ -93,7 +94,7 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
         if (durationTimer.isFinished()) destroy()
 
         soundTimer.update(it)
-        if (soundTimer.isFinished()) {
+        if (soundTimer.isFinished() && overlapsGameCamera()) {
             requestToPlaySound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
             soundTimer.reset()
         }

@@ -809,9 +809,8 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses/TimberWoman/Damaged.png</key>
-            <key type="filename">../frames/Bosses/TimberWoman/OnFire.png</key>
-            <key type="filename">../frames/Bosses/TimberWoman/Stand.png</key>
+            <key type="filename">../frames/Bosses/TimberWoman/damaged.png</key>
+            <key type="filename">../frames/Bosses/TimberWoman/on_fire.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -826,7 +825,9 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses/TimberWoman/Jump.png</key>
+            <key type="filename">../frames/Bosses/TimberWoman/jump.png</key>
+            <key type="filename">../frames/Bosses/TimberWoman/jump_swing.png</key>
+            <key type="filename">../frames/Bosses/TimberWoman/just_land.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -835,13 +836,13 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>96,24,192,48</rect>
+                <rect>48,48,96,96</rect>
                 <key>scale9Paddings</key>
-                <rect>96,24,192,48</rect>
+                <rect>48,48,96,96</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses/TimberWoman/JustLand.png</key>
+            <key type="filename">../frames/Bosses/TimberWoman/stand.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -850,13 +851,13 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>120,24,240,48</rect>
+                <rect>24,48,48,96</rect>
                 <key>scale9Paddings</key>
-                <rect>120,24,240,48</rect>
+                <rect>24,48,48,96</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses/TimberWoman/Swing.png</key>
+            <key type="filename">../frames/Bosses/TimberWoman/stand_swing.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -865,9 +866,9 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>144,24,288,48</rect>
+                <rect>168,24,336,48</rect>
                 <key>scale9Paddings</key>
-                <rect>144,24,288,48</rect>
+                <rect>168,24,336,48</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

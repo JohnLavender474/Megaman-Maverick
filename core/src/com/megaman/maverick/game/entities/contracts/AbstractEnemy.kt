@@ -120,7 +120,7 @@ abstract class AbstractEnemy(
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
         val damaged = super.takeDamageFrom(damager)
-        if (damaged) requestToPlaySound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
+        if (damaged && overlapsGameCamera()) requestToPlaySound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
         return damaged
     }
 

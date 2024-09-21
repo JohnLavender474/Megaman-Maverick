@@ -63,13 +63,14 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
             var yOffset = ConstVals.PPM / 16f
 
             if (!megaman.body.isSensing(BodySense.FEET_ON_GROUND) &&
-                !megaman.isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.WALL_SLIDING)
+                !megaman.isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.WALL_SLIDING, BehaviorType.RIDING_CART)
             ) yOffset += 0.15f * ConstVals.PPM
 
             yOffset += if (megaman.isBehaviorActive(BehaviorType.JETPACKING)) 0.065f * ConstVals.PPM
             else if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING)) 0.1f * ConstVals.PPM
-            else if (megaman.isBehaviorActive(BehaviorType.RIDING_CART)) 0.325f * ConstVals.PPM
-            else if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.225f * ConstVals.PPM
+            else if (megaman.isBehaviorActive(BehaviorType.RIDING_CART)) {
+                if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.4f * ConstVals.PPM else 0.5f * ConstVals.PPM
+            } else if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.225f * ConstVals.PPM
             else if (megaman.isBehaviorActive(BehaviorType.CLIMBING)) 0.25f * ConstVals.PPM
             else if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.035f * ConstVals.PPM
             else 0.05f * ConstVals.PPM

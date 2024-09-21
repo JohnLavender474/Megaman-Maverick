@@ -362,8 +362,6 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
     internal var swimVel = 0f
     internal var applyMovementScalarToBullet = false
     internal val roomTransPauseTimer = Timer(ConstVals.ROOM_TRANS_DELAY_DURATION)
-    internal val boundsSupplierOffset = Vector2()
-    internal var doOffsetBoundsSupplier = false
     internal var cameraRotating = false
 
     override fun getEntityType() = EntityType.MEGAMAN
@@ -434,12 +432,9 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         gravityScalar = spawnProps.getOrDefault("${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}", 1f, Float::class)
         movementScalar = spawnProps.getOrDefault("${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}", 1f, Float::class)
         applyMovementScalarToBullet = spawnProps.getOrDefault(ConstKeys.APPLY_SCALAR_TO_CHILDREN, false, Boolean::class)
+        cameraRotating = false
 
         roomTransPauseTimer.setToEnd()
-
-        boundsSupplierOffset.setZero()
-        doOffsetBoundsSupplier = false
-        cameraRotating = false
     }
 
     override fun onDestroy() {
@@ -565,16 +560,19 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
                     (if (bounds.x > body.x) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
                 body.physics.velocity.y = MegamanValues.DMG_Y * ConstVals.PPM
             }
+
             Direction.DOWN -> {
                 body.physics.velocity.x =
                     (if (bounds.x > body.x) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
                 body.physics.velocity.y = -MegamanValues.DMG_Y * ConstVals.PPM
             }
+
             Direction.LEFT -> {
                 body.physics.velocity.x = -MegamanValues.DMG_Y * ConstVals.PPM
                 body.physics.velocity.y =
                     (if (bounds.y > body.y) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
             }
+
             Direction.RIGHT -> {
                 body.physics.velocity.x = MegamanValues.DMG_Y * ConstVals.PPM
                 body.physics.velocity.y =
@@ -606,13 +604,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         return true
     }
 
-    override fun getBounds(): GameRectangle =
-        if (!doOffsetBoundsSupplier) body
-        else {
-            val bounds = GameRectangle(body)
-            bounds.translation(boundsSupplierOffset)
-            bounds
-        }
+    override fun getBounds() = body.getBodyBounds()
 
     override fun getTag() = TAG
 }

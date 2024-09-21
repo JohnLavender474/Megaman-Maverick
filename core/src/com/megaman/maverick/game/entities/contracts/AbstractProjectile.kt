@@ -1,14 +1,10 @@
 package com.megaman.maverick.game.entities.contracts
 
-import com.mega.game.engine.world.body.*;
-import com.mega.game.engine.world.collisions.*;
-import com.mega.game.engine.world.contacts.*;
-import com.mega.game.engine.world.pathfinding.*;
-
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.entities.GameEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.events.IEventListener
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 
@@ -36,9 +32,19 @@ abstract class AbstractProjectile(game: MegamanMaverickGame) : MegaGameEntity(ga
         if (cullOutOfBounds) putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, getCullOnOutOfGameCam())
         else removeCullOnOutOfGameCam()
 
-        val cullOnEvents = spawnProps.getOrDefault(ConstKeys.CULL_EVENTS, true, Boolean::class)
-        if (cullOnEvents) putCullable(ConstKeys.CULL_EVENTS, getCullOnEventCullable())
-        else removeCullOnEventCullable()
+        val doCullOnEvents = spawnProps.getOrDefault(ConstKeys.CULL_EVENTS, true, Boolean::class)
+        if (doCullOnEvents) {
+            val cullOnEvents = getCullOnEventCullable()
+            putCullable(ConstKeys.CULL_EVENTS, cullOnEvents)
+            putProperty(ConstKeys.CULL_EVENTS, cullOnEvents)
+            game.eventsMan.addListener(cullOnEvents)
+            runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
+        } else {
+            removeCullOnEventCullable()
+            val cullOnEvents = getProperty(ConstKeys.CULL_EVENTS)
+            if (cullOnEvents != null) game.eventsMan.removeListener(cullOnEvents as IEventListener)
+            runnablesOnDestroy.remove(ConstKeys.CULL_EVENTS)
+        }
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) {

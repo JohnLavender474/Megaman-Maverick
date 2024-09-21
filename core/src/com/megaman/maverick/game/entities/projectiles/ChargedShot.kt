@@ -48,6 +48,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     IDirectionRotatable {
 
     companion object {
+        private const val BOUNCE_LIMIT = 3
         private var fullyChargedRegion: TextureRegion? = null
         private var halfChargedRegion: TextureRegion? = null
     }
@@ -58,6 +59,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         private set
 
     private lateinit var trajectory: Vector2
+    private var bounced = 0
 
     override fun init() {
         if (fullyChargedRegion == null)
@@ -94,6 +96,8 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
+
+        bounced = 0
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
@@ -106,6 +110,13 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         val shieldEntity = shieldFixture.getEntity()
         if (shieldEntity == owner) return
         if (shieldEntity is IOwnable && shieldEntity.owner == owner) return
+
+        bounced++
+        if (bounced >= BOUNCE_LIMIT) {
+            explodeAndDie()
+            return
+        }
+
         owner = shieldEntity
 
         swapFacing()

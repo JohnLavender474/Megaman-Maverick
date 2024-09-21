@@ -214,7 +214,6 @@ class MegaLevelScreen(
             )
 
             MegaGameEntitiesMap.getEntitiesOfType(EntityType.ENEMY).forEach { it.destroy() }
-            MegaGameEntitiesMap.getEntitiesOfType(EntityType.PROJECTILE).forEach { it.destroy() }
 
             game.putProperty(ConstKeys.ROOM_TRANSITION, true)
         }

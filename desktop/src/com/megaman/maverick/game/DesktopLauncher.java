@@ -77,6 +77,7 @@ public class DesktopLauncher {
             jCommander.parse(args);
         } catch (ParameterException e) {
             System.err.println("[Application] Error in main method while parsing parameters: " + e.getMessage());
+            e.printStackTrace();
             jCommander.usage();
             System.exit(1);
         }
@@ -90,7 +91,9 @@ public class DesktopLauncher {
         System.out.println("- Debug: " + appArgs.debug);
         System.out.println("- Start Screen: " + appArgs.startScreen);
         System.out.println("- Level: " + appArgs.level);
-        System.out.println("- Fixed step Scalar: " + appArgs.fixedStepScalar);
+        System.out.println("- Fixed Step Scalar: " + appArgs.fixedStepScalar);
+        System.out.println("- Music volume: " + appArgs.musicVolume);
+        System.out.println("- Sound volume: " + appArgs.soundVolume);
 
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle(TITLE);
@@ -116,7 +119,7 @@ public class DesktopLauncher {
         } else if (appArgs.startScreen.equalsIgnoreCase("simple")) {
             startScreenOption = StartScreenOption.SIMPLE;
         } else {
-            System.err.println("[Application] Error in main method: Invalid start screen option.");
+            System.err.println("Invalid start screen option: " + appArgs.startScreen);
             jCommander.usage();
             System.exit(1);
             return;
@@ -131,6 +134,7 @@ public class DesktopLauncher {
         MegamanMaverickGame game = new MegamanMaverickGame(params);
         game.setTargetFPS(appArgs.fps);
 
+        // TODO: refine pausing/resuming logic in regards to game window focus
         /*
         config.setWindowListener(new Lwjgl3WindowAdapter() {
             @Override
@@ -155,9 +159,7 @@ public class DesktopLauncher {
         } catch (Exception e) {
             System.err.println("Exception while running game!");
             System.err.println("Exception message: " + e.getMessage());
-            System.err.println("Exception cause: " + e.getCause());
             System.err.println("Exception stacktrace: ");
-            //noinspection CallToPrintStackTrace
             e.printStackTrace();
             game.dispose();
         }

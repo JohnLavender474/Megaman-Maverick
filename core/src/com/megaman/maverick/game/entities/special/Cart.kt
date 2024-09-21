@@ -160,7 +160,7 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
 
     private fun defineSpriteComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(2.45f * ConstVals.PPM, 1.85f * ConstVals.PPM)
+        sprite.setSize(2.225f * ConstVals.PPM, 2.1f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             val position = body.getBottomCenterPoint()
