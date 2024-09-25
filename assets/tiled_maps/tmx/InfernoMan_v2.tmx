@@ -434,7 +434,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="5" name="temp">
+ <objectgroup id="5" name="player">
   <object id="383" name="1" x="1120" y="1216" width="32" height="32"/>
   <object id="474" name="2" x="3968" y="832" width="32" height="32">
    <properties>
@@ -446,7 +446,7 @@
   <object id="608" name="0" x="160" y="384" width="32" height="32"/>
   <object id="620" name="5" x="8592" y="416" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="14" name="player">
+ <objectgroup id="14" name="temp">
   <object id="624" name="0" x="5104" y="1152" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="6" name="sensors">
@@ -669,7 +669,7 @@
     <property name="move_y" type="float" value="40"/>
     <property name="spawn_room" value="room12"/>
     <property name="spawn_type" value="spawn_room"/>
-    <property name="speed" type="float" value="1.15"/>
+    <property name="speed" type="float" value="1.25"/>
    </properties>
   </object>
  </objectgroup>

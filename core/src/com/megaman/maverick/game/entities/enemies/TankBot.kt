@@ -14,7 +14,6 @@ import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.extensions.vector2Of
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.props
@@ -75,7 +74,10 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
             it as ChargedShot
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
         },
-        ChargedShotExplosion::class to dmgNeg(15)
+        ChargedShotExplosion::class to dmgNeg {
+            it as ChargedShotExplosion
+            if (it.fullyCharged) 15 else 10
+        }
     )
     override lateinit var facing: Facing
 
@@ -110,7 +112,7 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
     private fun shoot() {
         GameLogger.debug(TAG, "shoot()")
-        val spawn = body.getCenter().add(0.15f * ConstVals.PPM * facing.value, 0.375f * ConstVals.PPM)
+        val spawn = body.getCenter().add(0.075f * ConstVals.PPM * facing.value, 0.375f * ConstVals.PPM)
         val impulse = Vector2(LAUNCH_IMPULSE_X * facing.value, LAUNCH_IMPULSE_Y).scl(ConstVals.PPM.toFloat())
         val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
         bullet.spawn(
@@ -172,7 +174,7 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(0.85f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat(), 0.85f * ConstVals.PPM)
         body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
@@ -188,14 +190,14 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         body.addFixture(damageableFixture)
 
         val leftFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        leftFixture.offsetFromBodyCenter = vector2Of(-0.5f * ConstVals.PPM)
+        leftFixture.offsetFromBodyCenter = Vector2(-0.65f * ConstVals.PPM, -0.5f * ConstVals.PPM)
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftFixture)
         leftFixture.rawShape.color = Color.YELLOW
         debugShapes.add { leftFixture.getShape() }
 
         val rightFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        rightFixture.offsetFromBodyCenter = Vector2(0.5f * ConstVals.PPM, -0.5f * ConstVals.PPM)
+        rightFixture.offsetFromBodyCenter = Vector2(0.65f * ConstVals.PPM, -0.5f * ConstVals.PPM)
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
         rightFixture.rawShape.color = Color.YELLOW

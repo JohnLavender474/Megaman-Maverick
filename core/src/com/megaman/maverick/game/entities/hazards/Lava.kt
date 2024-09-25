@@ -197,7 +197,7 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
             }
         }, cullEvents)
 
-        runnablesOnSpawn.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
+        runnablesOnSpawn.put(ConstKeys.CULL_EVENTS) { game.eventsMan.addListener(cullOnEvents) }
         runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
 
         return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS to cullOnEvents))

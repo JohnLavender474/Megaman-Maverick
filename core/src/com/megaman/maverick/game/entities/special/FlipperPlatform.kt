@@ -35,6 +35,7 @@ import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.entities.megaman.components.feetFixture
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.body.BodyLabel
+import com.megaman.maverick.game.world.body.FixtureLabel
 
 class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, IAudioEntity {
 
@@ -95,7 +96,11 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
                     .setSize(1.1875f * ConstVals.PPM, 0.25f * ConstVals.PPM)
                     .setX(-100f * ConstVals.PPM),
                 ConstKeys.CULL_OUT_OF_BOUNDS to false,
-                ConstKeys.BODY_LABELS to objectSetOf(BodyLabel.COLLIDE_DOWN_ONLY)
+                ConstKeys.BODY_LABELS to objectSetOf(BodyLabel.COLLIDE_DOWN_ONLY),
+                ConstKeys.FIXTURE_LABELS to objectSetOf(
+                    FixtureLabel.NO_SIDE_TOUCHIE,
+                    FixtureLabel.NO_PROJECTILE_COLLISION
+                )
             )
         )
     }
@@ -142,7 +147,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
                 val position = bounds.getTopCenterPoint()
                 block!!.body.setTopRightToPoint(position)
                 block!!.body.x -= 0.25f * ConstVals.PPM
-                block!!.body.y -= 0.3f * ConstVals.PPM
+                block!!.body.y -= 0.4f * ConstVals.PPM
 
                 if (switchDelay.isFinished() &&
                     block!!.body.overlaps(getMegaman().feetFixture.getShape())
