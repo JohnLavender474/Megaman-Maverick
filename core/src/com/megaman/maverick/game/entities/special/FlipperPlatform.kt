@@ -1,7 +1,6 @@
 package com.megaman.maverick.game.entities.special
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.math.Rectangle
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
@@ -10,6 +9,7 @@ import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -32,8 +32,9 @@ import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
+import com.megaman.maverick.game.entities.megaman.components.feetFixture
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
-import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.BodyLabel
 
 class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, IAudioEntity {
 
@@ -49,19 +50,17 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
         private var flipToLeftRegion: TextureRegion? = null
     }
 
-    private enum class FlipperPlatformState {
-        LEFT, RIGHT, FLIP_TO_RIGHT, FLIP_TO_LEFT
-    }
+    private enum class FlipperPlatformState { LEFT, RIGHT, FLIP_TO_RIGHT, FLIP_TO_LEFT }
 
     private val switchDelay = Timer(SWITCH_DELAY)
     private val switchTimer = Timer(SWITCH_DURATION)
-
     private lateinit var flipperPlatformState: FlipperPlatformState
     private lateinit var bounds: GameRectangle
-
     private var block: Block? = null
 
     override fun getEntityType() = EntityType.SPECIAL
+
+    override fun getTag() = TAG
 
     override fun init() {
         if (leftRegion == null || rightRegion == null || flipToRightRegion == null || flipToLeftRegion == null) {
@@ -92,8 +91,11 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
         block = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.STANDARD)!! as Block
         block!!.spawn(
             props(
-                ConstKeys.BOUNDS to GameRectangle().setSize(1.1875f * ConstVals.PPM, 0.25f * ConstVals.PPM)
-                    .setX(-100f * ConstVals.PPM), ConstKeys.CULL_OUT_OF_BOUNDS to false
+                ConstKeys.BOUNDS to GameRectangle()
+                    .setSize(1.1875f * ConstVals.PPM, 0.25f * ConstVals.PPM)
+                    .setX(-100f * ConstVals.PPM),
+                ConstKeys.CULL_OUT_OF_BOUNDS to false,
+                ConstKeys.BODY_LABELS to objectSetOf(BodyLabel.COLLIDE_DOWN_ONLY)
             )
         )
     }
@@ -142,10 +144,9 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
                 block!!.body.x -= 0.25f * ConstVals.PPM
                 block!!.body.y -= 0.3f * ConstVals.PPM
 
-                val megamanFeet = game.megaman.body.fixtures.first { pair ->
-                    pair.second.getFixtureType() == FixtureType.FEET
-                }.second.getShape() as Rectangle
-                if (switchDelay.isFinished() && block!!.body.overlaps(megamanFeet)) {
+                if (switchDelay.isFinished() &&
+                    block!!.body.overlaps(getMegaman().feetFixture.getShape())
+                ) {
                     switchDelay.reset()
                     requestToPlaySound(SoundAsset.BLOOPITY_SOUND, false)
                 }
@@ -158,10 +159,9 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
                 block!!.body.x += 0.25f * ConstVals.PPM
                 block!!.body.y -= 0.3f * ConstVals.PPM
 
-                val megamanFeet = getMegaman().body.fixtures.first { pair ->
-                    pair.second.getFixtureType() == FixtureType.FEET
-                }.second.getShape() as Rectangle
-                if (switchDelay.isFinished() && block!!.body.overlaps(megamanFeet)) {
+                if (switchDelay.isFinished() &&
+                    block!!.body.overlaps(getMegaman().feetFixture.getShape())
+                ) {
                     switchDelay.reset()
                     requestToPlaySound(SoundAsset.BLOOPITY_SOUND, false)
                 }
@@ -205,5 +205,4 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }
-
 }

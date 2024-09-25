@@ -252,7 +252,6 @@
             <key type="filename">../frames/Platforms1/ConveyorBelt/LeftPart-MoveRight.png</key>
             <key type="filename">../frames/Platforms1/ConveyorBelt/MiddlePart.png</key>
             <key type="filename">../frames/Platforms1/ConveyorBelt/RightPart-MoveLeft.png</key>
-            <key type="filename">../frames/Platforms1/ConveyorBelt/RightPart-MoveRight.png</key>
             <key type="filename">../frames/Platforms1/GearTrolleyPlatform.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>

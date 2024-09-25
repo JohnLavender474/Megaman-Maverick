@@ -30,8 +30,8 @@ class WhiteArrow(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         const val TAG = "WhiteArrow"
         private const val ALPHA_FREQUENCY = 2f
         private const val SPEED = 3f
-        private const val MIN_ALPHA = 0.3f
-        private const val MAX_ALPHA = 0.9f
+        private const val MIN_ALPHA = 0.25f
+        private const val MAX_ALPHA = 0.75f
         private var region: TextureRegion? = null
     }
 

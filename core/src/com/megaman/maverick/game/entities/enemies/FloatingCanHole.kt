@@ -31,7 +31,7 @@ class FloatingCanHole(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
 
     companion object {
         const val TAG = "FloatingCanHole"
-        private const val SPAWN_DELAY = 1.5f
+        private const val SPAWN_DELAY = 2f
         private const val DEFAULT_MAX_SPAWNED = 3
         private const val DEFAULT_DROP_ITEM_ON_DEATH = true
     }

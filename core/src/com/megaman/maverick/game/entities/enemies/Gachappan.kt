@@ -61,6 +61,7 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
     companion object {
         const val TAG = "Gachappan"
         private const val BULLET_SPEED = 7.5f
+        private const val BALL_GRAVITY = -0.1f
         private const val BALL_IMPULSE = 12f
         private const val WAIT_DURATION = 0.9f
         private const val TRANS_DURATION = 0.3f
@@ -70,11 +71,7 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
         private var openRegion: TextureRegion? = null
     }
 
-    enum class GachappanState {
-        WAIT, OPENING, SHOOT, CLOSING
-    }
-
-    override lateinit var facing: Facing
+    enum class GachappanState { WAIT, OPENING, SHOOT, CLOSING }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
         Bullet::class to dmgNeg(5),
@@ -88,6 +85,7 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
             if (it.fullyCharged) 5 else 3
         }
     )
+    override lateinit var facing: Facing
 
     private lateinit var loop: Loop<Pair<GachappanState, Timer>>
 
@@ -103,7 +101,7 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
         val shootTimes = gdxArrayOf(1f, 1.5f, 2f)
         val runnables = Array<TimeMarkedRunnable>()
         throwTimes.forEach {
-            runnables.add(TimeMarkedRunnable(it) { throwBall() })
+            runnables.add(TimeMarkedRunnable(it) { launchBall() })
         }
         shootTimes.forEach {
             runnables.add(TimeMarkedRunnable(it) { shoot() })
@@ -256,7 +254,7 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
         return AnimationsComponent(this, animator)
     }
 
-    private fun throwBall() {
+    private fun launchBall() {
         val spawn = body.getTopCenterPoint()
         spawn.x += 0.25f * ConstVals.PPM * -facing.value
         val ball = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.EXPLODING_BALL)!!
@@ -266,7 +264,8 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
             props(
                 ConstKeys.OWNER to this,
                 ConstKeys.POSITION to spawn,
-                ConstKeys.IMPULSE to Vector2(impulseX, impulseY)
+                ConstKeys.IMPULSE to Vector2(impulseX, impulseY),
+                ConstKeys.GRAVITY to Vector2(0f, BALL_GRAVITY * ConstVals.PPM)
             )
         )
         requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)

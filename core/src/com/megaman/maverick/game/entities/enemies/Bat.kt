@@ -23,6 +23,7 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -33,7 +34,10 @@ import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.pathfinding.PathfinderParams
 import com.mega.game.engine.pathfinding.PathfindingComponent
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.body.*
+import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -44,6 +48,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
+import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
@@ -141,6 +146,10 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
         printDebugFilter = DEBUG_PATHFINDING
     }
 
+    override fun onDamageInflictedTo(damageable: IDamageable) {
+        if (damageable is Megaman) status = BatStatus.FLYING_TO_RETREAT
+    }
+
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
@@ -216,6 +225,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
         body.addFixture(shieldFixture)
 
+        /*
         val scannerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.7f * ConstVals.PPM))
         val consumer: (IFixture) -> Unit = {
             if (it.getFixtureType() == FixtureType.DAMAGEABLE && it.getEntity() == getMegaman())
@@ -223,6 +233,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
         }
         scannerFixture.setConsumer { _, it -> consumer(it) }
         body.addFixture(scannerFixture)
+         */
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             shieldFixture.active = status == BatStatus.HANGING

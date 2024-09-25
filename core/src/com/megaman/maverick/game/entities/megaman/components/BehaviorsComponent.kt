@@ -38,10 +38,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
     val wallSlide = FunctionalBehaviorImpl(
         evaluate = {
-            if (dead || !ready || !canMove || !has(MegaAbility.WALL_SLIDE) || isAnyBehaviorActive(
-                    BehaviorType.JETPACKING,
-                    BehaviorType.RIDING_CART
-                ) || body.isSensing(BodySense.FEET_ON_SAND)
+            if (dead || !ready || !canMove || !has(MegaAbility.WALL_SLIDE) || body.isSensing(BodySense.FEET_ON_SAND) ||
+                isAnyBehaviorActive(BehaviorType.JETPACKING, BehaviorType.RIDING_CART)
             ) return@FunctionalBehaviorImpl false
 
             if ((body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && game.controllerPoller.isPressed(
@@ -84,6 +82,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "Init method called")
         },
         act = {
+            aButtonTask = AButtonTask.JUMP
             if (isDirectionRotatedVertically()) body.physics.frictionOnSelf.y += MegamanValues.WALL_SLIDE_FRICTION_TO_APPLY
             else body.physics.frictionOnSelf.x += MegamanValues.WALL_SLIDE_FRICTION_TO_APPLY
         },
@@ -195,7 +194,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 )
             ) return false
 
-            return if (isBehaviorActive(BehaviorType.AIR_DASHING)) game.controllerPoller.isPressed(MegaControllerButtons.A)
+            return if (isBehaviorActive(BehaviorType.AIR_DASHING))
+                game.controllerPoller.isPressed(MegaControllerButtons.A)
             else aButtonTask == AButtonTask.AIR_DASH &&
                     game.controllerPoller.isJustPressed(MegaControllerButtons.A) &&
                     game.controllerPoller.isReleased(MegaControllerButtons.DOWN) &&

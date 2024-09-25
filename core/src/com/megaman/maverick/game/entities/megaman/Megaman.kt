@@ -94,7 +94,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         FloatingCan::class to dmgNeg(2),
         FlyBoy::class to dmgNeg(3),
         GapingFish::class to dmgNeg(2),
-        SpringHead::class to dmgNeg(3),
+        // TODO: SpringHead::class to dmgNeg(3),
         SuctionRoller::class to dmgNeg(2),
         MagFly::class to dmgNeg(3),
         Explosion::class to dmgNeg(2),

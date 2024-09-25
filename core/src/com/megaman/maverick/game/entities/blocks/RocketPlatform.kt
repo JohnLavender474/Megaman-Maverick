@@ -51,6 +51,8 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, IS
         }
     override var children = Array<GameEntity>()
 
+    override fun getTag() = TAG
+
     override fun init() {
         if (region == null)
             region = game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "JeffBezosLittleDickRocket")

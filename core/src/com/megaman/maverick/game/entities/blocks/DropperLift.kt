@@ -7,7 +7,10 @@ import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.enums.Position
-import com.mega.game.engine.common.extensions.*
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.time.Timer
@@ -23,8 +26,8 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.megaman.components.feetFixture
 import com.megaman.maverick.game.world.body.BodyLabel
-import com.megaman.maverick.game.world.body.FixtureType
 
 class DropperLift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity {
 
@@ -66,11 +69,8 @@ class DropperLift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAni
         timer.reset()
     }
 
-    private fun isMegamanOverlapping(): Boolean {
-        val megamanFeet =
-            getMegaman().body.fixtures.map { it.second }.find { it.getFixtureType() == FixtureType.FEET }!!
-        return megamanFeet.getShape().overlaps(body) || getMegaman().body.overlaps(body as Rectangle)
-    }
+    private fun isMegamanOverlapping() =
+        getMegaman().feetFixture.getShape().overlaps(body) || getMegaman().body.overlaps(body as Rectangle)
 
     private fun setActive(active: Boolean) {
         body.physics.collisionOn = active

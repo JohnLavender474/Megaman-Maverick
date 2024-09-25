@@ -57,6 +57,7 @@ import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
+import com.megaman.maverick.game.entities.projectiles.PurpleBlast
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureLabel
@@ -93,13 +94,13 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
         private const val ATTACK_DELAY_MIN = 1f
         private const val ATTACK_DELAY_MAX = 2f
 
-        private const val BULLETS_TO_CHUNK = 5
+        private const val BULLETS_TO_CHUNK = 4
         private const val CHUNKED_BULLET_GRAVITY = -0.1f
         private const val CHUNKED_BULLET_VELOCITY_Y = 10f
         private const val BULLET_CHUNK_DELAY = 0.25f
 
         private const val BLASTS_TO_SHOOT = 3
-        private const val BLAST_SHOOT_DELAY = 0.15f
+        private const val BLAST_SHOOT_DELAY = 0.2f
         private const val BLAST_VELOCITY = 5f
         private val BLAST_ANGLES = gdxArrayOf(180f, 190f, 200f, 210f, 220f)
 
@@ -250,29 +251,40 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
 
     override fun onDestroy() {
         super.onDestroy()
+
         runningMets.forEach { it.destroy() }
         runningMets.clear()
+
         heliMets.forEach { it.destroy() }
         heliMets.clear()
+
         fist?.destroy()
         fist = null
+
         tankBlock?.destroy()
         tankBlock = null
+
         bodyBlock?.destroy()
         bodyBlock = null
     }
 
     override fun triggerDefeat() {
         super.triggerDefeat()
+
         moveState = GutsTankMoveState.PAUSE
+
         runningMets.forEach { it.setHealth(0) }
         runningMets.clear()
+
         heliMets.forEach { it.setHealth(0) }
         heliMets.clear()
+
         fist?.setHealth(0)
         fist = null
+
         tankBlock?.destroy()
         tankBlock = null
+
         bodyBlock?.destroy()
         bodyBlock = null
     }
@@ -357,7 +369,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                     bulletChunkDelayTimer.update(delta)
                     if (bulletChunkDelayTimer.isFinished()) {
                         requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
-                        val bullet = EntityFactories.fetch(EntityType.PROJECTILE, "Bullet")!!
+                        val bullet = EntityFactories.fetch(EntityType.PROJECTILE, Bullet.TAG)!!
                         val spawn = body.getCenter().add(-1.65f * ConstVals.PPM, 1.85f * ConstVals.PPM)
                         val trajectory = MegaUtilMethods.calculateJumpImpulse(
                             spawn,
@@ -385,13 +397,13 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                 GutsTankAttackState.SHOOT_BLASTS -> {
                     blastShootDelayTimer.update(delta)
                     if (blastShootDelayTimer.isFinished()) {
-                        requestToPlaySound(SoundAsset.MM2_MECHA_DRAGON_SOUND, false)
+                        requestToPlaySound(SoundAsset.BASSY_BLAST_SOUND, false)
 
                         val randomIndex = getRandom(0, blastAngles.size - 1)
                         val angle = blastAngles.removeIndex(randomIndex)
                         val trajectory = Vector2(BLAST_VELOCITY * ConstVals.PPM, 0f).setAngleDeg(angle)
 
-                        val blast = EntityFactories.fetch(EntityType.PROJECTILE, "PurpleBlast")!!
+                        val blast = EntityFactories.fetch(EntityType.PROJECTILE, PurpleBlast.TAG)!!
                         blast.spawn(
                             props(
                                 ConstKeys.POSITION to body.getCenter().add(

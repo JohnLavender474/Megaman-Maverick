@@ -75,7 +75,7 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
-        body.setSize(1f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat())
 
         val debugShapes = Array<() -> IDrawableShape?>()
 

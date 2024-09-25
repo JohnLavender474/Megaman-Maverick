@@ -103,7 +103,7 @@
   <object id="524" name="0" x="7264" y="2336" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="7" name="backgrounds"/>
- <objectgroup id="6" name="game_rooms" visible="0">
+ <objectgroup id="6" name="game_rooms">
   <object id="17" name="room1" x="0" y="192" width="1984" height="384"/>
   <object id="40" name="room2" x="1984" y="192" width="1216" height="384"/>
   <object id="74" name="room3" x="3200" y="192" width="1344" height="384"/>

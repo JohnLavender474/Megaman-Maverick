@@ -69,7 +69,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
         }, ChargedShotExplosion::class to dmgNeg {
             it as ChargedShotExplosion
-            if (it.fullyCharged) 15 else 5
+            if (it.fullyCharged) 15 else 10
         }
     )
 

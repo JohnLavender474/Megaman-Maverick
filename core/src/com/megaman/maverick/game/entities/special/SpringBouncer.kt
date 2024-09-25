@@ -42,8 +42,7 @@ class SpringBouncer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesE
     companion object {
         private var atlas: TextureAtlas? = null
         private const val BOUNCE_DURATION = 0.5f
-        private const val X_BOUNCE = 25f
-        private const val Y_BOUNCE = 18f
+        private const val BOUNCE = 25f
         private const val SPRITE_DIM = 1.5f
     }
 
@@ -71,7 +70,7 @@ class SpringBouncer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesE
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
         (bounceFixture.rawShape as GameRectangle).set(bounds)
-        val directionString = spawnProps.get(ConstKeys.DIRECTION, String::class)!!
+        val directionString = spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class)
         direction =
             when (directionString) {
                 ConstKeys.UP -> Direction.UP
@@ -137,27 +136,20 @@ class SpringBouncer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesE
 
         val bounce = VelocityAlteration()
         when (direction) {
-            Direction.UP -> bounce.forceY = Y_BOUNCE * ConstVals.PPM
-            Direction.DOWN -> bounce.forceY = -Y_BOUNCE * ConstVals.PPM
-            Direction.LEFT -> bounce.forceX = -X_BOUNCE * ConstVals.PPM
-            Direction.RIGHT -> bounce.forceX = X_BOUNCE * ConstVals.PPM
+            Direction.UP -> bounce.forceY = BOUNCE * ConstVals.PPM
+            Direction.DOWN -> bounce.forceY = -BOUNCE * ConstVals.PPM
+            Direction.LEFT -> bounce.forceX = -BOUNCE * ConstVals.PPM
+            Direction.RIGHT -> bounce.forceX = BOUNCE * ConstVals.PPM
         }
 
         if (fixture.getEntity() is Megaman) {
             val controllerPoller = game.controllerPoller
-            if ((direction == Direction.UP &&
-                        controllerPoller.isPressed(MegaControllerButtons.UP)) ||
-                (direction == Direction.DOWN &&
-                        controllerPoller.isPressed(MegaControllerButtons.DOWN))
-            ) {
-                bounce.forceY *= 2f
-            } else if ((direction == Direction.LEFT &&
-                        controllerPoller.isPressed(MegaControllerButtons.LEFT)) ||
-                (direction == Direction.RIGHT &&
-                        controllerPoller.isPressed(MegaControllerButtons.RIGHT))
-            ) {
-                bounce.forceX *= 2f
-            }
+            if ((direction == Direction.UP && controllerPoller.isPressed(MegaControllerButtons.UP)) ||
+                (direction == Direction.DOWN && controllerPoller.isPressed(MegaControllerButtons.DOWN))
+            ) bounce.forceY *= 2f
+            else if ((direction == Direction.LEFT && controllerPoller.isPressed(MegaControllerButtons.LEFT)) ||
+                (direction == Direction.RIGHT && controllerPoller.isPressed(MegaControllerButtons.RIGHT))
+            ) bounce.forceX *= 2f
         }
 
         return bounce

@@ -234,7 +234,10 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
             if (upsideDown) trajectory.y *= -1f
             bullet.spawn(
                 props(
-                    ConstKeys.TRAJECTORY to trajectory, ConstKeys.POSITION to spawn, ConstKeys.OWNER to this
+                    ConstKeys.TRAJECTORY to trajectory,
+                    ConstKeys.POSITION to spawn,
+                    ConstKeys.OWNER to this,
+                    ConstKeys.DIRECTION to getMegaman().directionRotation!!
                 )
             )
         }

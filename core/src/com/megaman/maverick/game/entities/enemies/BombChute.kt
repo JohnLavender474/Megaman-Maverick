@@ -90,14 +90,10 @@ class BombChute(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
-
         body.physics.velocity.set(0f, RISE_SPEED * ConstVals.PPM)
-
         turnTimer.reset()
-
         targetY = spawnProps.get(ConstKeys.TARGET, RectangleMapObject::class)!!.rectangle.getCenter().y
         targetReached = false
     }

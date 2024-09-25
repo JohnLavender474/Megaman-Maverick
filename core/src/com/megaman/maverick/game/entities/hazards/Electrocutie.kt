@@ -46,6 +46,7 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
     }
 
     override var children = Array<GameEntity>()
+
     val currentState: ElectrocutieState
         get() = loop.getCurrent()
 

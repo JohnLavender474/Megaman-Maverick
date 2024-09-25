@@ -85,7 +85,6 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         set(value) {
             body.cardinalRotation = value
         }
-
     override lateinit var facing: Facing
 
     private val standTimer = Timer(STAND_DUR)
@@ -200,7 +199,8 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         val bulletProps = props(
             ConstKeys.POSITION to spawn,
             ConstKeys.TRAJECTORY to bulletTrajectory,
-            ConstKeys.OWNER to this
+            ConstKeys.OWNER to this,
+            ConstKeys.DIRECTION to directionRotation
         )
         if (applyMovementScalarToBullet) bulletProps.put("${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}", movementScalar)
 

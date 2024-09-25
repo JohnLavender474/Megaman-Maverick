@@ -81,9 +81,7 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimate
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    private enum class MoonHeadState {
-        DELAY, DARK, AWAKEN, SHOOT, MOVE, CRUMBLE
-    }
+    private enum class MoonHeadState { DELAY, DARK, AWAKEN, SHOOT, MOVE, CRUMBLE }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
         Bullet::class to dmgNeg(2),
@@ -108,7 +106,6 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimate
         "shoot" to Timer(SHOOT_DUR),
         "crumble" to Timer(CRUMBLE_DUR),
     )
-
     private lateinit var area: GameRectangle
     private lateinit var arcMotion: ArcMotion
     private var firstSpawn: Vector2? = null

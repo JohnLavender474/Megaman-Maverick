@@ -47,6 +47,8 @@ class WanaanLauncher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
 
     override fun getEntityType() = EntityType.HAZARD
 
+    override fun getTag() = TAG
+
     override fun init() {
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
@@ -69,13 +71,12 @@ class WanaanLauncher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
 
     override fun onDestroy() {
         super.onDestroy()
-        wanaan?.let { it.destroy() }
+        wanaan?.destroy()
         wanaan = null
         sensors.clear()
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        val megaman = game.megaman
         if (wanaan != null && wanaan!!.comingDown && body.contains(wanaan!!.cullPoint)) {
             wanaan!!.destroy()
             wanaan = null

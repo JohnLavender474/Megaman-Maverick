@@ -533,8 +533,8 @@
   <object id="124" x="8384" y="288" width="256" height="32"/>
   <object id="125" x="8160" y="320" width="64" height="224"/>
   <object id="126" x="7648" y="288" width="384" height="32"/>
-  <object id="127" x="8928" y="160" width="64" height="256"/>
-  <object id="128" x="8960" y="160" width="1856" height="64"/>
+  <object id="127" x="8928" y="128" width="64" height="288"/>
+  <object id="128" x="8960" y="128" width="1888" height="96"/>
   <object id="129" x="9184" y="160" width="128" height="384"/>
   <object id="130" x="9056" y="480" width="1760" height="64"/>
   <object id="131" x="6144" y="128" width="2848" height="48">
@@ -648,7 +648,7 @@
     <property name="friction_y" type="float" value="0.035"/>
    </properties>
   </object>
-  <object id="601" x="11712" y="576" width="1408" height="416"/>
+  <object id="601" x="11712" y="576" width="1888" height="416"/>
   <object id="603" x="9696" y="1024" width="1120" height="64"/>
   <object id="604" x="10112" y="1024" width="64" height="128"/>
   <object id="605" x="10752" y="1056" width="128" height="128"/>
@@ -1079,11 +1079,11 @@
     <property name="shoot_frame" type="float" value="0.3"/>
    </properties>
   </object>
-  <object id="634" name="BunbyTank" x="12672" y="1360" width="16" height="16">
+  <object id="634" name="SniperJoe" x="12608" y="1360" width="16" height="16">
    <properties>
-    <property name="movement_scalar" type="float" value="0.5"/>
-    <property name="roll_frame" type="float" value="0.25"/>
-    <property name="shoot_frame" type="float" value="0.3"/>
+    <property name="gravity_scalar" type="float" value="0.75"/>
+    <property name="jump" type="bool" value="false"/>
+    <property name="scale_bullet" type="bool" value="true"/>
    </properties>
   </object>
   <object id="649" name="Bat" x="12904" y="1568" width="16" height="16">
@@ -1117,36 +1117,42 @@
   <object id="653" name="SniperJoe" x="11896" y="1168" width="16" height="16">
    <properties>
     <property name="gravity_scalar" type="float" value="0.75"/>
+    <property name="jump" type="bool" value="false"/>
     <property name="scale_bullet" type="bool" value="true"/>
    </properties>
   </object>
   <object id="654" name="SniperJoe" x="12304" y="1056" width="16" height="16">
    <properties>
     <property name="gravity_scalar" type="float" value="0.75"/>
+    <property name="jump" type="bool" value="false"/>
     <property name="scale_bullet" type="bool" value="true"/>
    </properties>
   </object>
   <object id="655" name="SniperJoe" x="10424" y="1152" width="16" height="16">
    <properties>
     <property name="gravity_scalar" type="float" value="0.75"/>
+    <property name="jump" type="bool" value="false"/>
     <property name="scale_bullet" type="bool" value="true"/>
    </properties>
   </object>
   <object id="657" name="SniperJoe" x="5656" y="1104" width="16" height="16">
    <properties>
     <property name="gravity_scalar" type="float" value="0.75"/>
+    <property name="jump" type="bool" value="false"/>
     <property name="scale_bullet" type="bool" value="true"/>
    </properties>
   </object>
   <object id="658" name="SniperJoe" x="3680" y="1456" width="16" height="16">
    <properties>
     <property name="gravity_scalar" type="float" value="0.75"/>
+    <property name="jump" type="bool" value="false"/>
     <property name="scale_bullet" type="bool" value="true"/>
    </properties>
   </object>
   <object id="660" name="SniperJoe" x="1496" y="1424" width="16" height="16">
    <properties>
     <property name="gravity_scalar" type="float" value="0.75"/>
+    <property name="jump" type="bool" value="false"/>
     <property name="scale_bullet" type="bool" value="true"/>
    </properties>
   </object>
@@ -1185,6 +1191,7 @@
   <object id="677" name="SniperJoe" x="2200" y="1424" width="16" height="16">
    <properties>
     <property name="gravity_scalar" type="float" value="0.75"/>
+    <property name="jump" type="bool" value="false"/>
     <property name="scale_bullet" type="bool" value="true"/>
    </properties>
   </object>
