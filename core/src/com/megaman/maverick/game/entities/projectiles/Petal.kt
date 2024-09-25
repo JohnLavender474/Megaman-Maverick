@@ -114,6 +114,7 @@ class Petal(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
+        body.physics.takeFrictionFromOthers = false
         body.setSize(0.9f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()

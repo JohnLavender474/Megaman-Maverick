@@ -37,7 +37,7 @@ class ConveyorBelt(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAn
         const val TAG = "ConveyorBelt"
         const val DEFAULT_TYPE = "default"
         const val GREEN_TYPE = "green"
-        private const val FORCE_AMOUNT = 45f
+        private const val FORCE_AMOUNT = 25f
         private val regions = ObjectMap<String, TextureRegion>()
         private val animDefs = ObjectMap<String, AnimationDef>()
     }

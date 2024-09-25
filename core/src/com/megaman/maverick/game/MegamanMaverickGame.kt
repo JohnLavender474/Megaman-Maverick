@@ -192,7 +192,13 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
 
     fun getTiledMapLoadResult() = properties.get(ConstKeys.TILED_MAP_LOAD_RESULT) as TiledMapLoadResult
 
-    fun setTargetFPS(value: Int) = putProperty(ConstKeys.FPS, value)
+    fun setTargetFPS(value: Int) {
+        putProperty(ConstKeys.FPS, value)
+        Gdx.graphics?.setForegroundFPS(value) ?: GameLogger.error(
+            TAG,
+            "Tried setting target fps when Gdx.graphcis is null"
+        )
+    }
 
     fun getTargetFPS() = getProperty(ConstKeys.FPS, Int::class)!!
 
@@ -215,6 +221,13 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
             ConstKeys.SLOW -> ConstVals.SLOW_LERP_VALUE
             else -> throw IllegalStateException("Illegal lerp value: $speed")
         }
+    }
+
+    fun doUseVsync() = getProperty(ConstKeys.VSYNC, Boolean::class)!!
+
+    fun setUseVsync(use: Boolean) {
+        putProperty(ConstKeys.VSYNC, use)
+        Gdx.graphics?.setVSync(use) ?: GameLogger.error(TAG, "Tried setting vysnc when Gdx.graphics is null")
     }
 
     override fun create() {
@@ -264,7 +277,6 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
         audioMan.soundVolume = params.soundVolume
 
         EntityFactories.initialize(this)
-
         state = GameState()
 
         megaman = Megaman(this)
@@ -387,6 +399,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
         val saveFile = Gdx.app.getPreferences(PreferenceFiles.MEGAMAN_MAVERICK_SAVE_FILE)
         val password = GamePasswords.getGamePassword(state)
         saveFile.putString(ConstKeys.PASSWORD, password.joinToString(""))
+        saveFile.flush()
     }
 
     fun hasSavedState(): Boolean {

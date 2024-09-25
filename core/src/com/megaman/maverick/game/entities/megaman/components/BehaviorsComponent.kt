@@ -83,8 +83,9 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         },
         act = {
             aButtonTask = AButtonTask.JUMP
-            if (isDirectionRotatedVertically()) body.physics.frictionOnSelf.y += MegamanValues.WALL_SLIDE_FRICTION_TO_APPLY
-            else body.physics.frictionOnSelf.x += MegamanValues.WALL_SLIDE_FRICTION_TO_APPLY
+            val wallSlideFriction = MegamanValues.WALL_SLIDE_FRICTION_TO_APPLY * ConstVals.PPM * it
+            if (isDirectionRotatedVertically()) body.physics.frictionOnSelf.y += wallSlideFriction
+            else body.physics.frictionOnSelf.x += wallSlideFriction
         },
         end = {
             if (!body.isSensing(BodySense.IN_WATER)) aButtonTask = AButtonTask.AIR_DASH
@@ -148,7 +149,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             val v = Vector2()
             v.x = when (directionRotation!!) {
                 Direction.UP, Direction.DOWN -> {
-                    if (isBehaviorActive(BehaviorType.WALL_SLIDING)) MegamanValues.WALL_JUMP_HORIZONTAL * ConstVals.PPM * facing.value
+                    if (isBehaviorActive(BehaviorType.WALL_SLIDING))
+                        MegamanValues.WALL_JUMP_HORIZONTAL * ConstVals.PPM * facing.value
                     else body.physics.velocity.x
                 }
 
@@ -166,7 +168,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 }
 
                 Direction.LEFT, Direction.RIGHT -> {
-                    if (isBehaviorActive(BehaviorType.WALL_SLIDING)) MegamanValues.WALL_JUMP_HORIZONTAL * ConstVals.PPM * facing.value
+                    if (isBehaviorActive(BehaviorType.WALL_SLIDING))
+                        MegamanValues.WALL_JUMP_HORIZONTAL * ConstVals.PPM * facing.value
                     else body.physics.velocity.y
                 }
             }

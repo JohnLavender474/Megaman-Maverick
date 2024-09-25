@@ -145,6 +145,7 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
+        body.physics.takeFrictionFromOthers = false
         body.setSize(1.25f * ConstVals.PPM)
         body.color = Color.GRAY
 

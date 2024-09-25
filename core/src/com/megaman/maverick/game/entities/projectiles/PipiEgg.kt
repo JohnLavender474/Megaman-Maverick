@@ -117,6 +117,7 @@ class PipiEgg(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.35f * ConstVals.PPM)
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
+        body.physics.takeFrictionFromOthers = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBodyBounds() }

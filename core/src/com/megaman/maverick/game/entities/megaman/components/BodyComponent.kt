@@ -115,7 +115,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     teleporterListenerFixture.rawShape.color = Color.CYAN
     debugShapes.add { teleporterListenerFixture.getShape() }
 
-    body.preProcess.put(ConstKeys.DEFAULT, Updatable {
+    body.preProcess.put(ConstKeys.DEFAULT, Updatable { delta ->
         if (!ready) {
             body.physics.velocity.setZero()
             return@Updatable
@@ -138,8 +138,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
                 body.physics.defaultFrictionOnSelf =
                     when (directionRotation!!) {
                         Direction.UP,
-                        Direction.DOWN
-                        -> Vector2(ConstVals.STANDARD_RESISTANCE_X, ConstVals.STANDARD_RESISTANCE_Y)
+                        Direction.DOWN -> Vector2(ConstVals.STANDARD_RESISTANCE_X, ConstVals.STANDARD_RESISTANCE_Y)
 
                         Direction.LEFT,
                         Direction.RIGHT -> Vector2(ConstVals.STANDARD_RESISTANCE_Y, ConstVals.STANDARD_RESISTANCE_X)

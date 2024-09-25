@@ -55,9 +55,7 @@ import kotlin.reflect.KClass
 
 class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectionRotatable {
 
-    enum class MetBehavior {
-        SHIELDING, POP_UP, RUNNING
-    }
+    enum class MetBehavior { SHIELDING, POP_UP, RUNNING }
 
     companion object {
         const val TAG = "Met"
@@ -79,7 +77,6 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
     }
 
     override lateinit var facing: Facing
-
     override var directionRotation: Direction?
         get() = body.cardinalRotation
         set(value) {
@@ -152,8 +149,8 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
             Direction.RIGHT -> Vector2(BULLET_TRAJECTORY_Y, -BULLET_TRAJECTORY_X * facing.value)
         }).scl(ConstVals.PPM.toFloat())
 
-        val offset = ConstVals.PPM / 64f
-        val spawn = body.getCenter().add(offset * facing.value, if (isDirectionRotatedDown()) -offset else offset)
+        val offset = 0.1f * ConstVals.PPM
+        val spawn = body.getCenter().add(offset * facing.value, if (isDirectionRotatedDown()) offset else -offset)
 
         val spawnProps = props(
             ConstKeys.OWNER to this, ConstKeys.TRAJECTORY to trajectory, ConstKeys.POSITION to spawn

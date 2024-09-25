@@ -614,11 +614,7 @@
     <property name="facing" value="left"/>
    </properties>
   </object>
-  <object id="263" name="4" x="7264" y="1696" width="32" height="32">
-   <properties>
-    <property name="facing" value="left"/>
-   </properties>
-  </object>
+  <object id="263" name="4" x="7264" y="1696" width="32" height="32"/>
   <object id="345" name="5" x="11584" y="640" width="32" height="32"/>
   <object id="346" name="6" x="12224" y="640" width="32" height="32"/>
  </objectgroup>
@@ -734,7 +730,7 @@
     <property name="key" value="2"/>
    </properties>
   </object>
-  <object id="167" name="AnimatedBlock" x="6016" y="2352" width="32" height="32">
+  <object id="167" name="AnimatedBlock" x="6048" y="2352" width="32" height="32">
    <properties>
     <property name="animation" value="Brick1"/>
     <property name="cull_out_of_bounds" type="bool" value="false"/>

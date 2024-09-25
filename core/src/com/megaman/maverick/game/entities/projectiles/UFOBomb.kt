@@ -79,6 +79,7 @@ class UFOBomb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEn
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.8125f * ConstVals.PPM)
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
+        body.physics.takeFrictionFromOthers = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBodyBounds() }

@@ -2,6 +2,7 @@ package com.megaman.maverick.game;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowAdapter;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
@@ -98,8 +99,14 @@ public class DesktopLauncher {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle(TITLE);
         config.useVsync(appArgs.vsync);
+        // TODO: disable dynamic fps until issues regarding physics tied to fps are resolved,
+        //  for now use default fps
+        config.setIdleFPS(DEFAULT_FPS);
+        config.setForegroundFPS(DEFAULT_FPS);
+        /*
         config.setIdleFPS(appArgs.fps);
         config.setForegroundFPS(appArgs.fps);
+         */
         config.setWindowedMode(appArgs.width, appArgs.height);
         if (appArgs.fullScreen) {
             config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
@@ -132,10 +139,13 @@ public class DesktopLauncher {
         }
 
         MegamanMaverickGame game = new MegamanMaverickGame(params);
-        game.setTargetFPS(appArgs.fps);
+        // TODO: disable dynamic fps until issues regarding physics tied to fps are resolved,
+        //  for now always use the default fps
+        // game.setTargetFPS(appArgs.fps);
+        game.setTargetFPS(DEFAULT_FPS);
+        game.setUseVsync(appArgs.vsync);
 
         // TODO: refine pausing/resuming logic in regards to game window focus
-        /*
         config.setWindowListener(new Lwjgl3WindowAdapter() {
             @Override
             public void iconified(boolean isIconified) {
@@ -152,7 +162,6 @@ public class DesktopLauncher {
                 game.pause();
             }
         });
-         */
 
         try {
             new Lwjgl3Application(game, config);
@@ -160,6 +169,7 @@ public class DesktopLauncher {
             System.err.println("Exception while running game!");
             System.err.println("Exception message: " + e.getMessage());
             System.err.println("Exception stacktrace: ");
+            //noinspection CallToPrintStackTrace
             e.printStackTrace();
             game.dispose();
         }

@@ -1,7 +1,5 @@
 package com.megaman.maverick.game.entities.projectiles
 
-import com.mega.game.engine.world.body.*;
-
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
@@ -26,6 +24,7 @@ import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -48,9 +47,7 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    private enum class FallingIcicleState {
-        STILL, SHAKE, FALL
-    }
+    private enum class FallingIcicleState { STILL, SHAKE, FALL }
 
     private val shakeTimer = Timer(SHAKE_DUR)
     private val shatterTimer = Timer(SHATTER_DUR)
@@ -124,6 +121,7 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.25f * ConstVals.PPM, ConstVals.PPM.toFloat())
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
+        body.physics.takeFrictionFromOthers = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBodyBounds() }

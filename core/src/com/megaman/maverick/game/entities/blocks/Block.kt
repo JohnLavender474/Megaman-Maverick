@@ -27,7 +27,7 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
     companion object {
         const val TAG = "Block"
-        const val STANDARD_FRICTION_X = 0.035f
+        const val STANDARD_FRICTION_X = 1.75f
         const val STANDARD_FRICTION_Y = 0f
     }
 
