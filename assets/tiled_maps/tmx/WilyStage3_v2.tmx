@@ -598,14 +598,14 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="13" name="player">
+ <objectgroup id="13" name="temp">
   <object id="344" name="0" x="11600" y="640" width="32" height="32">
    <properties>
     <property name="facing" value="left"/>
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="6" name="temp">
+ <objectgroup id="6" name="player">
   <object id="49" name="0" x="256" y="1824" width="32" height="32"/>
   <object id="153" name="1" x="2208" y="1728" width="32" height="32"/>
   <object id="180" name="2" x="4512" y="2784" width="32" height="32"/>
