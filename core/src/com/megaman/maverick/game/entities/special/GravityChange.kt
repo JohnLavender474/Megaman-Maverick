@@ -5,6 +5,7 @@ import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -84,6 +85,6 @@ class GravityChange(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
 
     private fun createCullablesComponent(): CullablesComponent {
         val cullOnOutOfBounds = getGameCameraCullingLogic(this)
-        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullOnOutOfBounds))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullOnOutOfBounds))
     }
 }

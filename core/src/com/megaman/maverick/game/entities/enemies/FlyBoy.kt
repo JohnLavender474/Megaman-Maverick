@@ -13,6 +13,7 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
@@ -56,12 +57,12 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(5),
-        Fireball::class to dmgNeg(10),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(5),
+        Fireball::class pairTo dmgNeg(10),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 15 else 10
-        }, ChargedShotExplosion::class to dmgNeg {
+        }, ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 10 else 5
         }
@@ -187,8 +188,8 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
         val animations = objectMapOf<String, IAnimation>(
-            "fly" to Animation(atlas.findRegion("FlyBoy/Fly"), 1, 4, 0.1f),
-            "stand" to Animation(atlas.findRegion("FlyBoy/Stand"))
+            "fly" pairTo Animation(atlas.findRegion("FlyBoy/Fly"), 1, 4, 0.1f),
+            "stand" pairTo Animation(atlas.findRegion("FlyBoy/Stand"))
         )
         val keySupplier = { if (flying) "fly" else "stand" }
         val animator = Animator(keySupplier, animations)

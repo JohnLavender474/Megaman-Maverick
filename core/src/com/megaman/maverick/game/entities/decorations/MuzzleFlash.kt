@@ -9,6 +9,7 @@ import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.toGameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.cullables.CullableOnEvent
@@ -75,8 +76,8 @@ class MuzzleFlash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
 
         return CullablesComponent(
             objectMapOf(
-                ConstKeys.CULL_EVENTS to cullOnEvents,
-                ConstKeys.CULL_OUT_OF_BOUNDS to cullOutOfBounds
+                ConstKeys.CULL_EVENTS pairTo cullOnEvents,
+                ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullOutOfBounds
             )
         )
     }

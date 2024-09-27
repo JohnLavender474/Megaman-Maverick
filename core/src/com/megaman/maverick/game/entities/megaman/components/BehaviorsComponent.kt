@@ -9,6 +9,7 @@ import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.objects.pairTo
 
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.controller.buttons.ButtonStatus
@@ -83,9 +84,13 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         },
         act = {
             aButtonTask = AButtonTask.JUMP
-            val wallSlideFriction = MegamanValues.WALL_SLIDE_FRICTION_TO_APPLY * ConstVals.PPM * it
-            if (isDirectionRotatedVertically()) body.physics.frictionOnSelf.y += wallSlideFriction
-            else body.physics.frictionOnSelf.x += wallSlideFriction
+            // TODO: this logic is tied to the FPS and breaks as it deviates from 60 FPS
+            //  an alternative that is FPS-agnostic needs to be found
+            /*
+            val wallSlideFriction = MegamanValues.WALL_SLIDE_FRICTION_TO_APPLY * ConstVals.PPM
+            if (isDirectionRotatedVertically()) body.physics.frictionOnSelf.y = wallSlideFriction
+            else body.physics.frictionOnSelf.x = wallSlideFriction
+             */
         },
         end = {
             if (!body.isSensing(BodySense.IN_WATER)) aButtonTask = AButtonTask.AIR_DASH
@@ -548,8 +553,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             )
             else game.controllerPoller.allMatch(
                 objectMapOf(
-                    MegaControllerButtons.UP to ButtonStatus.PRESSED,
-                    MegaControllerButtons.A to ButtonStatus.JUST_PRESSED
+                    MegaControllerButtons.UP pairTo ButtonStatus.PRESSED,
+                    MegaControllerButtons.A pairTo ButtonStatus.JUST_PRESSED
                 )
             )
         }

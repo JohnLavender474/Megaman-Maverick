@@ -4,6 +4,7 @@ import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.entities.contracts.IBodyEntity
@@ -51,14 +52,14 @@ class Force(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICul
 
         val filterByTagSet = ObjectSet<String>()
         spawnProps.get("${ConstKeys.TAG}_${ConstKeys.FILTER}", String::class)?.split(",")!!.forEach {
-            GameLogger.debug(TAG, "Adding tag to force filter: ${it.uppercase()}")
+            GameLogger.debug(TAG, "Adding tag pairTo force filter: ${it.uppercase()}")
             filterByTagSet.add(it.uppercase())
         }
         val filterByNotBodySenseSet = ObjectSet<BodySense>()
         spawnProps.get("${ConstKeys.NOT}_${ConstKeys.BODY}_${ConstKeys.SENSE}_${ConstKeys.FILTER}", String::class)
             ?.split(",")!!.forEach {
                 val bodySense = BodySense.valueOf(it.uppercase())
-                GameLogger.debug(TAG, "Adding body sense to force filter: $bodySense")
+                GameLogger.debug(TAG, "Adding body sense pairTo force filter: $bodySense")
                 filterByNotBodySenseSet.add(bodySense)
             }
         filter = { fixture, _ ->
@@ -66,7 +67,7 @@ class Force(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICul
             val bodySenseFiltered = !fixture.getBody().isSensingAny(filterByNotBodySenseSet)
             if (tagFiltered && bodySenseFiltered) GameLogger.debug(
                 TAG,
-                "Force applied to ${fixture.getEntity().getTag()}"
+                "Force applied pairTo ${fixture.getEntity().getTag()}"
             )
             tagFiltered && bodySenseFiltered
         }
@@ -105,6 +106,6 @@ class Force(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICul
 
     private fun createCullablesComponent(): CullablesComponent {
         val cullOnOutOfBounds = getGameCameraCullingLogic(this)
-        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullOnOutOfBounds))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullOnOutOfBounds))
     }
 }

@@ -11,6 +11,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamageable
@@ -55,10 +56,10 @@ class Petal(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity
 
     private val damageNegotiations =
         objectMapOf<KClass<out IDamager>, Int>(
-            Bullet::class to 10,
-            Fireball::class to ConstVals.MAX_HEALTH,
-            ChargedShot::class to ConstVals.MAX_HEALTH,
-            ChargedShotExplosion::class to ConstVals.MAX_HEALTH
+            Bullet::class pairTo 10,
+            Fireball::class pairTo ConstVals.MAX_HEALTH,
+            ChargedShot::class pairTo ConstVals.MAX_HEALTH,
+            ChargedShotExplosion::class pairTo ConstVals.MAX_HEALTH
         )
     private val damageTimer = Timer(DAMAGE_DURATION)
 

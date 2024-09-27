@@ -10,6 +10,7 @@ import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.interfaces.ArgsPredicate
 import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -67,7 +68,7 @@ open class AnimatedBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntit
             body.physics.velocity = trajectory
             if (deathPredicate != null && deathPredicate!!.test(
                     props(
-                        ConstKeys.DELTA to it, ConstKeys.ENTITY to this
+                        ConstKeys.DELTA pairTo it, ConstKeys.ENTITY pairTo this
                     )
                 )
             ) destroy()
@@ -118,6 +119,6 @@ object AnimatedBlockAnimators {
         }
 
         val animator = Animator(animation)
-        animators.add({ animatedBlock.firstSprite!! } to animator)
+        animators.add({ animatedBlock.firstSprite!! } pairTo animator)
     }
 }

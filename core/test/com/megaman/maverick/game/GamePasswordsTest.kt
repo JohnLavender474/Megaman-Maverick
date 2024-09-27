@@ -1,12 +1,8 @@
 package com.megaman.maverick.game
 
-import com.mega.game.engine.world.body.*;
-import com.mega.game.engine.world.collisions.*;
-import com.mega.game.engine.world.contacts.*;
-import com.mega.game.engine.world.pathfinding.*;
-
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.objects.pairTo
 import com.megaman.maverick.game.entities.bosses.BossType
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
@@ -38,8 +34,8 @@ class GamePasswordsTest : DescribeSpec({
             )
             state.healthTanksCollected.putAll(
                 objectMapOf(
-                    MegaHealthTank.A to 0,
-                    MegaHealthTank.C to 0
+                    MegaHealthTank.A pairTo 0,
+                    MegaHealthTank.C pairTo 0
                 )
             )
 
@@ -70,9 +66,9 @@ class GamePasswordsTest : DescribeSpec({
             )
             state.healthTanksCollected.putAll(
                 objectMapOf(
-                    MegaHealthTank.A to 0,
-                    MegaHealthTank.C to 0,
-                    MegaHealthTank.D to 0
+                    MegaHealthTank.A pairTo 0,
+                    MegaHealthTank.C pairTo 0,
+                    MegaHealthTank.D pairTo 0
                 )
             )
 
@@ -91,7 +87,7 @@ class GamePasswordsTest : DescribeSpec({
             // bosses defeated = Timber Woman, Reactor Man --> 0, 6 : 8, 17
             // heart tanks collected = A, C --> 8, 10 : 7, 35
             // health tanks collected = B --> 18 : 14
-            // indices set to true: 8, 17, 7, 35, 5, 28, 10
+            // indices set pairTo true: 8, 17, 7, 35, 5, 28, 10
             val setIndices = objectSetOf(8, 17, 7, 35, 14, 28, 10)
             val password = IntArray(36) { if (it in setIndices) 1 else 0 }
 
@@ -102,7 +98,7 @@ class GamePasswordsTest : DescribeSpec({
             // then
             state.bossesDefeated shouldBe objectSetOf(BossType.TIMBER_WOMAN, BossType.REACTOR_MAN)
             state.heartTanksCollected shouldBe objectSetOf(MegaHeartTank.A, MegaHeartTank.C)
-            state.healthTanksCollected shouldBe objectMapOf(MegaHealthTank.B to 0)
+            state.healthTanksCollected shouldBe objectMapOf(MegaHealthTank.B pairTo 0)
         }
     }
 })

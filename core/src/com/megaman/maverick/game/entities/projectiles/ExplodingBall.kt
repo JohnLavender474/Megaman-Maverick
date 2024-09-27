@@ -8,6 +8,7 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.damage.IDamageable
@@ -69,9 +70,9 @@ class ExplodingBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
     override fun explodeAndDie(vararg params: Any?) {
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)
         val props = props(
-            ConstKeys.POSITION to body.getCenter(),
-            ConstKeys.SOUND to SoundAsset.EXPLOSION_2_SOUND,
-            ConstKeys.OWNER to owner
+            ConstKeys.POSITION pairTo body.getCenter(),
+            ConstKeys.SOUND pairTo SoundAsset.EXPLOSION_2_SOUND,
+            ConstKeys.OWNER pairTo owner
         )
         explosion!!.spawn(props)
         destroy()

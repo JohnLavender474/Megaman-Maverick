@@ -15,6 +15,7 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -77,12 +78,12 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(1),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(1),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 3 else 2
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 2 else 1
         }
@@ -126,7 +127,7 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
             val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
             explosion.spawn(
                 props(
-                    ConstKeys.POSITION to body.getCenter(), ConstKeys.SOUND to SoundAsset.EXPLOSION_1_SOUND
+                    ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.SOUND pairTo SoundAsset.EXPLOSION_1_SOUND
                 )
             )
         }
@@ -267,8 +268,8 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
             }
         }
         val animations = objectMapOf<String, IAnimation>(
-            "fist" to Animation(fistRegion!!),
-            "launched" to Animation(launchedRegion!!, 2, 1, 0.1f, true)
+            "fist" pairTo Animation(fistRegion!!),
+            "launched" pairTo Animation(launchedRegion!!, 2, 1, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

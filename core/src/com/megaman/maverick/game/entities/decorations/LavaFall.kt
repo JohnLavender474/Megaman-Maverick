@@ -1,10 +1,5 @@
 package com.megaman.maverick.game.entities.decorations
 
-import com.mega.game.engine.world.body.*;
-import com.mega.game.engine.world.collisions.*;
-import com.mega.game.engine.world.contacts.*;
-import com.mega.game.engine.world.pathfinding.*;
-
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.OrderedMap
@@ -13,8 +8,10 @@ import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimator
 import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Matrix
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GamePolygon
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -56,7 +53,7 @@ class LavaFall(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
 
     private fun defineDrawables(cells: Matrix<GameRectangle>) {
         val sprites = OrderedMap<String, GameSprite>()
-        val animators = Array<Pair<() -> GameSprite, IAnimator>>()
+        val animators = Array<GamePair<() -> GameSprite, IAnimator>>()
         cells.forEach { x, y, gameRectangle ->
             if (gameRectangle == null) return@forEach
 
@@ -66,7 +63,7 @@ class LavaFall(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
 
             val animation = Animation(region!!, 1, 3, 0.2f, true)
             val animator = Animator(animation)
-            animators.add({ lavaSprite } to animator)
+            animators.add({ lavaSprite } pairTo animator)
         }
         addComponent(SpritesComponent(sprites))
         addComponent(AnimationsComponent(animators))

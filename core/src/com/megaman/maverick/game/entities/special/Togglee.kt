@@ -14,7 +14,9 @@ import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.*
+import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamageable
@@ -92,8 +94,8 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
     lateinit var text: String
         private set
 
-    private val offEntitySuppliers = Array<Pair<() -> GameEntity, Properties>>()
-    private val onEntitySuppliers = Array<Pair<() -> GameEntity, Properties>>()
+    private val offEntitySuppliers = Array<GamePair<() -> GameEntity, Properties>>()
+    private val onEntitySuppliers = Array<GamePair<() -> GameEntity, Properties>>()
 
     private val switcharooArrowBlinkTimer = Timer(SWITCHAROO_ARROW_BLINK_DUR)
 
@@ -343,6 +345,6 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
         val font = BitmapFontHandle(
             { text }, MegaUtilMethods.getDefaultFontSize(), fontSource = ConstVals.MEGAMAN_MAVERICK_FONT
         )
-        return FontsComponent(ConstKeys.DEFAULT to font)
+        return FontsComponent(ConstKeys.DEFAULT pairTo font)
     }
 }

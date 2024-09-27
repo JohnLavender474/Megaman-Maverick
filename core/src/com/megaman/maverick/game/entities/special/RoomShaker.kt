@@ -1,15 +1,11 @@
 package com.megaman.maverick.game.entities.special
 
-import com.mega.game.engine.world.body.*;
-import com.mega.game.engine.world.collisions.*;
-import com.mega.game.engine.world.contacts.*;
-import com.mega.game.engine.world.pathfinding.*;
-
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.entities.contracts.IAudioEntity
@@ -127,10 +123,10 @@ class RoomShaker(game: MegamanMaverickGame) : MegaGameEntity(game), IEventListen
             game.eventsMan.submitEvent(
                 Event(
                     EventType.SHAKE_CAM, props(
-                        ConstKeys.INTERVAL to interval,
-                        ConstKeys.DURATION to duration,
-                        ConstKeys.X to x,
-                        ConstKeys.Y to y
+                        ConstKeys.INTERVAL pairTo interval,
+                        ConstKeys.DURATION pairTo duration,
+                        ConstKeys.X pairTo x,
+                        ConstKeys.Y pairTo y
                     )
                 )
             )

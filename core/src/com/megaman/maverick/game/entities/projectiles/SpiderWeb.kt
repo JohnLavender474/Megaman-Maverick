@@ -16,6 +16,7 @@ import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IFaceable
 
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -132,8 +133,8 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
     private fun explode() {
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
         val props = props(
-            ConstKeys.POSITION to body.getCenter(),
-            ConstKeys.SOUND to SoundAsset.EXPLOSION_2_SOUND
+            ConstKeys.POSITION pairTo body.getCenter(),
+            ConstKeys.SOUND pairTo SoundAsset.EXPLOSION_2_SOUND
         )
         explosion.spawn(props)
     }
@@ -197,8 +198,8 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier = { if (blinkWhiteTimer.isFinished()) "gray" else "blink_white" }
         val animations = objectMapOf<String, IAnimation>(
-            "gray" to Animation(grayRegion!!),
-            "blink_white" to Animation(blinkWhiteRegion!!, 1, 2, 0.1f, true)
+            "gray" pairTo Animation(grayRegion!!),
+            "blink_white" pairTo Animation(blinkWhiteRegion!!, 1, 2, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

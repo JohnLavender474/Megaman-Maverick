@@ -14,6 +14,7 @@ import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IBoundsSupplier
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
@@ -86,63 +87,63 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
     internal val damageFlashTimer = Timer(MegamanValues.DAMAGE_FLASH_DURATION)
 
     private val dmgNegotations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(2),
-        ChargedShot::class to dmgNeg(4),
-        Bat::class to dmgNeg(2),
-        Met::class to dmgNeg(2),
-        DragonFly::class to dmgNeg(3),
-        FloatingCan::class to dmgNeg(2),
-        FlyBoy::class to dmgNeg(3),
-        GapingFish::class to dmgNeg(2),
-        // TODO: SpringHead::class to dmgNeg(3),
-        SuctionRoller::class to dmgNeg(2),
-        MagFly::class to dmgNeg(3),
-        Explosion::class to dmgNeg(2),
-        JoeBall::class to dmgNeg(3),
-        Snowball::class to dmgNeg(3),
-        SnowballExplosion::class to dmgNeg(1),
-        SwinginJoe::class to dmgNeg(2),
-        SniperJoe::class to dmgNeg(3),
-        ShieldAttacker::class to dmgNeg(4),
-        Penguin::class to dmgNeg(3),
-        Hanabiran::class to dmgNeg(3),
-        Petal::class to dmgNeg(3),
-        CaveRock::class to dmgNeg(3),
-        CaveRocker::class to dmgNeg(3),
-        CaveRockExplosion::class to dmgNeg(2),
-        Elecn::class to dmgNeg(3),
-        ElectricBall::class to dmgNeg(3),
-        Ratton::class to dmgNeg(2),
-        PicketJoe::class to dmgNeg(3),
-        Picket::class to dmgNeg(3),
-        LaserBeamer::class to dmgNeg(3),
-        CartinJoe::class to dmgNeg(3),
-        Bolt::class to dmgNeg(3),
-        ElectrocutieChild::class to dmgNeg(3),
-        Togglee::class to dmgNeg(3),
-        Eyee::class to dmgNeg(3),
-        Adamski::class to dmgNeg(3),
-        UpNDown::class to dmgNeg(3),
-        BigJumpingJoe::class to dmgNeg(6),
-        SniperJoeShield::class to dmgNeg(2),
-        SuicideBummer::class to dmgNeg(3),
-        Gachappan::class to dmgNeg(5),
-        ExplodingBall::class to dmgNeg(3),
-        Imorm::class to dmgNeg(3),
-        SpikeBall::class to dmgNeg(8),
-        Peat::class to dmgNeg(2),
-        BulbBlaster::class to dmgNeg(2),
-        Bospider::class to dmgNeg(5),
-        BabySpider::class to dmgNeg(2),
-        GutsTankFist::class to dmgNeg(3),
-        PurpleBlast::class to dmgNeg(3),
-        HeliMet::class to dmgNeg(3),
-        SigmaRat::class to dmgNeg(3),
-        SigmaRatElectricBall::class to dmgNeg(3),
-        SigmaRatElectricBallExplosion::class to dmgNeg(2),
-        SigmaRatClaw::class to dmgNeg(2),
-        Fireball::class to dmgNeg(3),
-        BoulderProjectile::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(2),
+        ChargedShot::class pairTo dmgNeg(4),
+        Bat::class pairTo dmgNeg(2),
+        Met::class pairTo dmgNeg(2),
+        DragonFly::class pairTo dmgNeg(3),
+        FloatingCan::class pairTo dmgNeg(2),
+        FlyBoy::class pairTo dmgNeg(3),
+        GapingFish::class pairTo dmgNeg(2),
+        // TODO: SpringHead::class pairTo dmgNeg(3),
+        SuctionRoller::class pairTo dmgNeg(2),
+        MagFly::class pairTo dmgNeg(3),
+        Explosion::class pairTo dmgNeg(2),
+        JoeBall::class pairTo dmgNeg(3),
+        Snowball::class pairTo dmgNeg(3),
+        SnowballExplosion::class pairTo dmgNeg(1),
+        SwinginJoe::class pairTo dmgNeg(2),
+        SniperJoe::class pairTo dmgNeg(3),
+        ShieldAttacker::class pairTo dmgNeg(4),
+        Penguin::class pairTo dmgNeg(3),
+        Hanabiran::class pairTo dmgNeg(3),
+        Petal::class pairTo dmgNeg(3),
+        CaveRock::class pairTo dmgNeg(3),
+        CaveRocker::class pairTo dmgNeg(3),
+        CaveRockExplosion::class pairTo dmgNeg(2),
+        Elecn::class pairTo dmgNeg(3),
+        ElectricBall::class pairTo dmgNeg(3),
+        Ratton::class pairTo dmgNeg(2),
+        PicketJoe::class pairTo dmgNeg(3),
+        Picket::class pairTo dmgNeg(3),
+        LaserBeamer::class pairTo dmgNeg(3),
+        CartinJoe::class pairTo dmgNeg(3),
+        Bolt::class pairTo dmgNeg(3),
+        ElectrocutieChild::class pairTo dmgNeg(3),
+        Togglee::class pairTo dmgNeg(3),
+        Eyee::class pairTo dmgNeg(3),
+        Adamski::class pairTo dmgNeg(3),
+        UpNDown::class pairTo dmgNeg(3),
+        BigJumpingJoe::class pairTo dmgNeg(6),
+        SniperJoeShield::class pairTo dmgNeg(2),
+        SuicideBummer::class pairTo dmgNeg(3),
+        Gachappan::class pairTo dmgNeg(5),
+        ExplodingBall::class pairTo dmgNeg(3),
+        Imorm::class pairTo dmgNeg(3),
+        SpikeBall::class pairTo dmgNeg(8),
+        Peat::class pairTo dmgNeg(2),
+        BulbBlaster::class pairTo dmgNeg(2),
+        Bospider::class pairTo dmgNeg(5),
+        BabySpider::class pairTo dmgNeg(2),
+        GutsTankFist::class pairTo dmgNeg(3),
+        PurpleBlast::class pairTo dmgNeg(3),
+        HeliMet::class pairTo dmgNeg(3),
+        SigmaRat::class pairTo dmgNeg(3),
+        SigmaRatElectricBall::class pairTo dmgNeg(3),
+        SigmaRatElectricBallExplosion::class pairTo dmgNeg(2),
+        SigmaRatClaw::class pairTo dmgNeg(2),
+        Fireball::class pairTo dmgNeg(3),
+        BoulderProjectile::class pairTo dmgNeg {
             it as BoulderProjectile
             when (it.size) {
                 Size.LARGE -> 4
@@ -150,73 +151,73 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
                 Size.SMALL -> 1
             }
         },
-        PetitDevil::class to dmgNeg(3),
-        PetitDevilChild::class to dmgNeg(2),
-        Shotman::class to dmgNeg(2),
-        Snowhead::class to dmgNeg(2),
-        SnowheadThrower::class to dmgNeg(3),
-        Spiky::class to dmgNeg(4),
-        PenguinMiniBoss::class to dmgNeg(3),
-        BabyPenguin::class to dmgNeg(2),
-        UFOBomb::class to dmgNeg(3),
-        OLD_UFOBombBot::class to dmgNeg(2),
-        RollingBot::class to dmgNeg(3),
-        RollingBotShot::class to dmgNeg(3),
-        AcidGoop::class to dmgNeg(3),
-        ToxicBarrelBot::class to dmgNeg(3),
-        ToxicGoopShot::class to dmgNeg(3),
-        ToxicGoopSplash::class to dmgNeg(3),
-        ReactorMonkeyBall::class to dmgNeg(3),
-        ReactorMonkeyMiniBoss::class to dmgNeg(3),
-        SmokePuff::class to dmgNeg(2),
-        TubeBeam::class to dmgNeg(5),
-        ReactMan::class to dmgNeg(3),
-        ReactManProjectile::class to dmgNeg(3),
-        FlameThrower::class to dmgNeg(6),
-        Popoheli::class to dmgNeg(3),
-        BouncingAngryFlameBall::class to dmgNeg(3),
-        LavaDrop::class to dmgNeg(6),
-        PopupCanon::class to dmgNeg(3),
-        Asteroid::class to dmgNeg(3),
-        AsteroidExplosion::class to dmgNeg(3),
-        MoonHeadMiniBoss::class to dmgNeg(3),
-        BunbyRedRocket::class to dmgNeg(3),
-        BunbyTank::class to dmgNeg(3),
-        FireMet::class to dmgNeg(3),
-        FireMetFlame::class to dmgNeg(3),
-        Robbit::class to dmgNeg(3),
-        Pipi::class to dmgNeg(3),
-        PipiEgg::class to dmgNeg(3),
-        Copipi::class to dmgNeg(3),
-        MechaDragonMiniBoss::class to dmgNeg(3),
-        SpitFireball::class to dmgNeg(3),
-        BombPotton::class to dmgNeg(3),
-        SmallMissile::class to dmgNeg(3),
-        GreenExplosion::class to dmgNeg(3),
-        Arigock::class to dmgNeg(3),
-        ArigockBall::class to dmgNeg(3),
-        TotemPolem::class to dmgNeg(3),
-        CactusLauncher::class to dmgNeg(3),
-        CactusMissile::class to dmgNeg(3),
-        ColtonJoe::class to dmgNeg(3),
-        SphinxBall::class to dmgNeg(3),
-        SphinxMiniBoss::class to dmgNeg(3),
-        SpikeBot::class to dmgNeg(3),
-        Needle::class to dmgNeg(3),
-        JetpackIceBlaster::class to dmgNeg(3),
-        TeardropBlast::class to dmgNeg(3),
-        FallingIcicle::class to dmgNeg(3),
-        FragileIceCube::class to dmgNeg(1),
-        UnderwaterFan::class to dmgNeg(5),
-        Tropish::class to dmgNeg(3),
-        SeaMine::class to dmgNeg(3),
-        Sealion::class to dmgNeg(3),
-        SealionBall::class to dmgNeg(3),
-        YellowTiggerSquirt::class to dmgNeg(3),
-        UFOhNoBot::class to dmgNeg(3),
-        TankBot::class to dmgNeg(3),
-        Darspider::class to dmgNeg(3),
-        WalrusBot::class to dmgNeg(3)
+        PetitDevil::class pairTo dmgNeg(3),
+        PetitDevilChild::class pairTo dmgNeg(2),
+        Shotman::class pairTo dmgNeg(2),
+        Snowhead::class pairTo dmgNeg(2),
+        SnowheadThrower::class pairTo dmgNeg(3),
+        Spiky::class pairTo dmgNeg(4),
+        PenguinMiniBoss::class pairTo dmgNeg(3),
+        BabyPenguin::class pairTo dmgNeg(2),
+        UFOBomb::class pairTo dmgNeg(3),
+        OLD_UFOBombBot::class pairTo dmgNeg(2),
+        RollingBot::class pairTo dmgNeg(3),
+        RollingBotShot::class pairTo dmgNeg(3),
+        AcidGoop::class pairTo dmgNeg(3),
+        ToxicBarrelBot::class pairTo dmgNeg(3),
+        ToxicGoopShot::class pairTo dmgNeg(3),
+        ToxicGoopSplash::class pairTo dmgNeg(3),
+        ReactorMonkeyBall::class pairTo dmgNeg(3),
+        ReactorMonkeyMiniBoss::class pairTo dmgNeg(3),
+        SmokePuff::class pairTo dmgNeg(2),
+        TubeBeam::class pairTo dmgNeg(5),
+        ReactMan::class pairTo dmgNeg(3),
+        ReactManProjectile::class pairTo dmgNeg(3),
+        FlameThrower::class pairTo dmgNeg(6),
+        Popoheli::class pairTo dmgNeg(3),
+        BouncingAngryFlameBall::class pairTo dmgNeg(3),
+        LavaDrop::class pairTo dmgNeg(6),
+        PopupCanon::class pairTo dmgNeg(3),
+        Asteroid::class pairTo dmgNeg(3),
+        AsteroidExplosion::class pairTo dmgNeg(3),
+        MoonHeadMiniBoss::class pairTo dmgNeg(3),
+        BunbyRedRocket::class pairTo dmgNeg(3),
+        BunbyTank::class pairTo dmgNeg(3),
+        FireMet::class pairTo dmgNeg(3),
+        FireMetFlame::class pairTo dmgNeg(3),
+        Robbit::class pairTo dmgNeg(3),
+        Pipi::class pairTo dmgNeg(3),
+        PipiEgg::class pairTo dmgNeg(3),
+        Copipi::class pairTo dmgNeg(3),
+        MechaDragonMiniBoss::class pairTo dmgNeg(3),
+        SpitFireball::class pairTo dmgNeg(3),
+        BombPotton::class pairTo dmgNeg(3),
+        SmallMissile::class pairTo dmgNeg(3),
+        GreenExplosion::class pairTo dmgNeg(3),
+        Arigock::class pairTo dmgNeg(3),
+        ArigockBall::class pairTo dmgNeg(3),
+        TotemPolem::class pairTo dmgNeg(3),
+        CactusLauncher::class pairTo dmgNeg(3),
+        CactusMissile::class pairTo dmgNeg(3),
+        ColtonJoe::class pairTo dmgNeg(3),
+        SphinxBall::class pairTo dmgNeg(3),
+        SphinxMiniBoss::class pairTo dmgNeg(3),
+        SpikeBot::class pairTo dmgNeg(3),
+        Needle::class pairTo dmgNeg(3),
+        JetpackIceBlaster::class pairTo dmgNeg(3),
+        TeardropBlast::class pairTo dmgNeg(3),
+        FallingIcicle::class pairTo dmgNeg(3),
+        FragileIceCube::class pairTo dmgNeg(1),
+        UnderwaterFan::class pairTo dmgNeg(5),
+        Tropish::class pairTo dmgNeg(3),
+        SeaMine::class pairTo dmgNeg(3),
+        Sealion::class pairTo dmgNeg(3),
+        SealionBall::class pairTo dmgNeg(3),
+        YellowTiggerSquirt::class pairTo dmgNeg(3),
+        UFOhNoBot::class pairTo dmgNeg(3),
+        TankBot::class pairTo dmgNeg(3),
+        Darspider::class pairTo dmgNeg(3),
+        WalrusBot::class pairTo dmgNeg(3)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 
@@ -283,6 +284,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
                     cartJumpVel = MegamanValues.CART_JUMP_VEL
 
                     gravity = MegamanValues.GRAVITY
+                    wallSlideGravity = MegamanValues.WALL_SLIDE_GRAVITY
                     groundGravity = MegamanValues.GROUND_GRAVITY
                     iceGravity = MegamanValues.ICE_GRAVITY
                     waterGravity = MegamanValues.WATER_GRAVITY
@@ -297,6 +299,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
                     cartJumpVel = -MegamanValues.CART_JUMP_VEL
 
                     gravity = -MegamanValues.GRAVITY
+                    wallSlideGravity = -MegamanValues.WALL_SLIDE_GRAVITY
                     groundGravity = -MegamanValues.GROUND_GRAVITY
                     iceGravity = -MegamanValues.ICE_GRAVITY
                     waterGravity = -MegamanValues.WATER_GRAVITY
@@ -310,7 +313,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
                 game.eventsMan.submitEvent(
                     Event(
                         EventType.SET_GAME_CAM_ROTATION,
-                        props(ConstKeys.DIRECTION to direction)
+                        props(ConstKeys.DIRECTION pairTo direction)
                     )
                 )
                 canMove = false
@@ -355,6 +358,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
     internal var wallJumpVel = 0f
     internal var cartJumpVel = 0f
     internal var gravity = 0f
+    internal var wallSlideGravity = 0f
     internal var groundGravity = 0f
     internal var iceGravity = 0f
     internal var waterGravity = 0f
@@ -460,7 +464,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         explosionOrbTrajectories.forEach { trajectory ->
             val explosionOrb = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION_ORB)
             explosionOrb?.spawn(
-                props(ConstKeys.TRAJECTORY to trajectory, ConstKeys.POSITION to body.getCenter())
+                props(ConstKeys.TRAJECTORY pairTo trajectory, ConstKeys.POSITION pairTo body.getCenter())
             )
         }
     }

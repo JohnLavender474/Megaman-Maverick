@@ -9,6 +9,7 @@ import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.damage.IDamageable
@@ -62,7 +63,7 @@ class TeardropBlast(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
         val muzzleFlash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.MUZZLE_FLASH)!!
-        muzzleFlash.spawn(props(ConstKeys.POSITION to body.getCenter()))
+        muzzleFlash.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
     }
 
     override fun defineBodyComponent(): BodyComponent {

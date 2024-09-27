@@ -11,6 +11,7 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.IGameShape2D
@@ -87,7 +88,12 @@ class SniperJoeShield(game: MegamanMaverickGame) : AbstractProjectile(game), IFa
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
-        explosion.spawn(props(ConstKeys.POSITION to body.getCenter(), ConstKeys.SOUND to SoundAsset.EXPLOSION_2_SOUND))
+        explosion.spawn(
+            props(
+                ConstKeys.POSITION pairTo body.getCenter(),
+                ConstKeys.SOUND pairTo SoundAsset.EXPLOSION_2_SOUND
+            )
+        )
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()

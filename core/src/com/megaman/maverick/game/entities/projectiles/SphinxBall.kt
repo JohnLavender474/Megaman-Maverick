@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -70,9 +71,9 @@ class SphinxBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         block = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.STANDARD)!! as Block
         block!!.spawn(
             props(
-                ConstKeys.BOUNDS to GameRectangle().setSize(1.35f * ConstVals.PPM, 0.1f * ConstVals.PPM),
-                ConstKeys.BODY_LABELS to objectSetOf(BodyLabel.COLLIDE_DOWN_ONLY),
-                ConstKeys.FIXTURE_LABELS to objectSetOf(
+                ConstKeys.BOUNDS pairTo GameRectangle().setSize(1.35f * ConstVals.PPM, 0.1f * ConstVals.PPM),
+                ConstKeys.BODY_LABELS pairTo objectSetOf(BodyLabel.COLLIDE_DOWN_ONLY),
+                ConstKeys.FIXTURE_LABELS pairTo objectSetOf(
                     FixtureLabel.NO_SIDE_TOUCHIE,
                     FixtureLabel.NO_PROJECTILE_COLLISION
                 )

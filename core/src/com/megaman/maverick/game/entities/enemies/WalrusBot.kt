@@ -18,6 +18,7 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.set
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
@@ -78,13 +79,13 @@ class WalrusBot(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
     private enum class WalrusBotState { STAND, SLIDE, SHOOT, JET }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(5),
-        Fireball::class to dmgNeg(15),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(5),
+        Fireball::class pairTo dmgNeg(15),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 15 else 10
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 10 else 5
         }
@@ -126,11 +127,11 @@ class WalrusBot(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
         val gravity = Vector2(0f, GRAVITY * ConstVals.PPM)
         snowball.spawn(
             props(
-                ConstKeys.POSITION to spawn,
-                ConstKeys.TRAJECTORY to trajectory,
-                ConstKeys.GRAVITY to gravity,
-                ConstKeys.GRAVITY_ON to true,
-                ConstKeys.OWNER to this
+                ConstKeys.POSITION pairTo spawn,
+                ConstKeys.TRAJECTORY pairTo trajectory,
+                ConstKeys.GRAVITY pairTo gravity,
+                ConstKeys.GRAVITY_ON pairTo true,
+                ConstKeys.OWNER pairTo this
             )
         )
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
@@ -233,10 +234,10 @@ class WalrusBot(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { walrusBotState.name.lowercase() }
         val animations = objectMapOf<String, IAnimation>(
-            "stand" to Animation(regions["stand"], 2, 1, gdxArrayOf(1f, 0.15f), true),
-            "shoot" to Animation(regions["shoot"], 7, 1, 0.1f, false),
-            "jet" to Animation(regions["jet"], 2, 2, 0.1f, true),
-            "slide" to Animation(regions["slide"], 2, 2, 0.1f, true)
+            "stand" pairTo Animation(regions["stand"], 2, 1, gdxArrayOf(1f, 0.15f), true),
+            "shoot" pairTo Animation(regions["shoot"], 7, 1, 0.1f, false),
+            "jet" pairTo Animation(regions["jet"], 2, 2, 0.1f, true),
+            "slide" pairTo Animation(regions["slide"], 2, 2, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

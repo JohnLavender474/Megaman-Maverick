@@ -8,6 +8,7 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.getRandom
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -90,8 +91,8 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
         val asteroid = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.ASTEROID)!!
         asteroid.spawn(
             props(
-                ConstKeys.POSITION to Vector2(posX, posY),
-                ConstKeys.IMPULSE to impulse
+                ConstKeys.POSITION pairTo Vector2(posX, posY),
+                ConstKeys.IMPULSE pairTo impulse
             )
         )
         children.add(asteroid)
@@ -121,6 +122,6 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
         val cullEvents = CullableOnEvent({ cullEventsSet.contains(it) }, cullEventsSet)
         runnablesOnSpawn.put(ConstKeys.CULL_EVENTS) { game.eventsMan.addListener(cullEvents) }
         runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullEvents) }
-        return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS to cullEvents))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS pairTo cullEvents))
     }
 }

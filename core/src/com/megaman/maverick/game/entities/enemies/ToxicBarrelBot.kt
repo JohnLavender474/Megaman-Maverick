@@ -17,6 +17,7 @@ import com.mega.game.engine.common.getRandomBool
 import com.mega.game.engine.common.interfaces.IFaceable
 
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -70,14 +71,15 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         private var openTopRegion: TextureRegion? = null
     }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(Bullet::class to dmgNeg(3),
-        Bullet::class to dmgNeg(5),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg {
+    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+        Bullet::class pairTo dmgNeg(3),
+        Bullet::class pairTo dmgNeg(5),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 15 else 10
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 5 else 3
         })
@@ -170,9 +172,9 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
             val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
             bullet.spawn(
                 props(
-                    ConstKeys.POSITION to spawn,
-                    ConstKeys.OWNER to this,
-                    ConstKeys.TRAJECTORY to Vector2(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
+                    ConstKeys.POSITION pairTo spawn,
+                    ConstKeys.OWNER pairTo this,
+                    ConstKeys.TRAJECTORY pairTo Vector2(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
                 )
             )
             requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
@@ -184,9 +186,9 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
             val toxicGoopShot = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.TOXIC_GOOP_SHOT)!!
             toxicGoopShot.spawn(
                 props(
-                    ConstKeys.POSITION to spawn,
-                    ConstKeys.OWNER to this,
-                    ConstKeys.IMPULSE to Vector2(GOOP_SHOT_X_IMPULSE * ConstVals.PPM * facing.value, 0f)
+                    ConstKeys.POSITION pairTo spawn,
+                    ConstKeys.OWNER pairTo this,
+                    ConstKeys.IMPULSE pairTo Vector2(GOOP_SHOT_X_IMPULSE * ConstVals.PPM * facing.value, 0f)
                 )
             )
             requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
@@ -237,7 +239,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
                 val fixture = entry.second as Fixture
                 val bounds = fixture.rawShape as GameRectangle
 
-                when (fixture.type) {
+                when (fixture.getType()) {
                     FixtureType.DAMAGEABLE -> {
                         val center: Vector2
                         if (toxicBarrelBotState.equalsAny(
@@ -292,11 +294,11 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
             }
         }
         val animations = objectMapOf<String, IAnimation>(
-            "closed" to Animation(closedRegion!!),
-            "open_top" to Animation(openTopRegion!!, 1, 5, 0.1f, false),
-            "closing_top" to Animation(openTopRegion!!, 1, 5, 0.1f, false).reversed(),
-            "open_center" to Animation(openCenterRegion!!, 2, 2, 0.1f, false),
-            "closing_center" to Animation(openCenterRegion!!, 2, 2, 0.1f, false).reversed()
+            "closed" pairTo Animation(closedRegion!!),
+            "open_top" pairTo Animation(openTopRegion!!, 1, 5, 0.1f, false),
+            "closing_top" pairTo Animation(openTopRegion!!, 1, 5, 0.1f, false).reversed(),
+            "open_center" pairTo Animation(openCenterRegion!!, 2, 2, 0.1f, false),
+            "closing_center" pairTo Animation(openCenterRegion!!, 2, 2, 0.1f, false).reversed()
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

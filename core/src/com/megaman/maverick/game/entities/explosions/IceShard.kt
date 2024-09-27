@@ -8,6 +8,7 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.sprites.*
 import com.mega.game.engine.entities.contracts.IAudioEntity
@@ -81,7 +82,7 @@ class IceShard(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
 
     private fun defineCullablesComponent(): CullablesComponent {
         val cullOnOutOfBounds = getGameCameraCullingLogic(this)
-        return CullablesComponent(objectMapOf(ConstKeys.CULL to cullOnOutOfBounds))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL pairTo cullOnOutOfBounds))
     }
 
     private fun defineSpritesComponent(): SpritesComponent {

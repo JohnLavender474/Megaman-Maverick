@@ -20,6 +20,7 @@ import com.mega.game.engine.common.extensions.toObjectSet
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.IntPair
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -79,13 +80,13 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(15),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(15),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
         })
@@ -203,6 +204,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.75f * ConstVals.PPM)
+        body.physics.takeFrictionFromOthers = false
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         body.addFixture(bodyFixture)
@@ -228,7 +230,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
         /*
         val scannerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.7f * ConstVals.PPM))
         val consumer: (IFixture) -> Unit = {
-            if (it.getFixtureType() == FixtureType.DAMAGEABLE && it.getEntity() == getMegaman())
+            if (it.getType() == FixtureType.DAMAGEABLE && it.getEntity() == getMegaman())
                 status = BatStatus.FLYING_TO_RETREAT
         }
         scannerFixture.setConsumer { _, it -> consumer(it) }
@@ -271,14 +273,14 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier = { type + status.region }
         animations = objectMapOf(
-            "Hang" to Animation(atlas!!.findRegion("Bat/Hang")),
-            "Fly" to Animation(atlas!!.findRegion("Bat/Fly"), 1, 2, 0.1f, true),
-            "OpenEyes" to Animation(atlas!!.findRegion("Bat/OpenEyes")),
-            "OpenWings" to Animation(atlas!!.findRegion("Bat/OpenWings")),
-            "SnowHang" to Animation(atlas!!.findRegion("SnowBat/Hang")),
-            "SnowFly" to Animation(atlas!!.findRegion("SnowBat/Fly"), 1, 2, 0.1f, true),
-            "SnowOpenEyes" to Animation(atlas!!.findRegion("SnowBat/OpenEyes")),
-            "SnowOpenWings" to Animation(atlas!!.findRegion("SnowBat/OpenWings"))
+            "Hang" pairTo Animation(atlas!!.findRegion("Bat/Hang")),
+            "Fly" pairTo Animation(atlas!!.findRegion("Bat/Fly"), 1, 2, 0.1f, true),
+            "OpenEyes" pairTo Animation(atlas!!.findRegion("Bat/OpenEyes")),
+            "OpenWings" pairTo Animation(atlas!!.findRegion("Bat/OpenWings")),
+            "SnowHang" pairTo Animation(atlas!!.findRegion("SnowBat/Hang")),
+            "SnowFly" pairTo Animation(atlas!!.findRegion("SnowBat/Fly"), 1, 2, 0.1f, true),
+            "SnowOpenEyes" pairTo Animation(atlas!!.findRegion("SnowBat/OpenEyes")),
+            "SnowOpenWings" pairTo Animation(atlas!!.findRegion("SnowBat/OpenWings"))
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
@@ -310,7 +312,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
 
                 passable
             },
-            properties = props(ConstKeys.HEURISTIC to DynamicBodyHeuristic(game))
+            properties = props(ConstKeys.HEURISTIC pairTo DynamicBodyHeuristic(game))
         )
         val pathfindingComponent = PathfindingComponent(
             params,

@@ -8,11 +8,13 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.getPosition
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.screens.levels.tiledmap.builders.ITiledMapLayerBuilder
 import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.TEXTURE_ASSET_PREFIX
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.drawables.sprites.*
@@ -26,7 +28,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
     }
 
     private val presetBGMap: ObjectMap<String, (RectangleMapObject) -> Background> = objectMapOf(
-        "WindyClouds" to {
+        "WindyClouds" pairTo {
             WindyClouds(
                 params.game,
                 it.rectangle.getPosition(),
@@ -34,19 +36,19 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
                 it.rectangle.height
             )
         },
-        "AnimatedStars" to {
+        "AnimatedStars" pairTo {
             AnimatedStars(
                 params.game,
                 it.rectangle.getPosition()
             )
         },
-        "ScrollingStars" to {
+        "ScrollingStars" pairTo {
             ScrollingStars(
                 params.game,
                 it.rectangle.getPosition()
             )
         },
-        "ForestBKG" to {
+        "ForestBKG" pairTo {
             Background(
                 it.rectangle.x,
                 it.rectangle.y,
@@ -80,21 +82,24 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
 
             GameLogger.debug(TAG, "Building custom background ${o.name}")
 
+            val props = o.properties.toProps()
             val backgroundRegion =
                 params.game.assMan.getTextureRegion(
-                    TEXTURE_ASSET_PREFIX + o.properties.get(ConstKeys.ATLAS, String::class.java),
-                    o.properties.get(ConstKeys.REGION, String::class.java)
+                    TEXTURE_ASSET_PREFIX + props.get(ConstKeys.ATLAS, String::class)!!,
+                    props.get(ConstKeys.REGION, String::class)!!
                 )
-            val rows = o.properties.get(ConstKeys.ROWS) as Int
-            val columns = o.properties.get(ConstKeys.COLUMNS) as Int
+            val rows = props.get(ConstKeys.ROWS, Int::class)!!
+            val columns = props.get(ConstKeys.COLUMNS, Int::class)!!
+            val offsetX = props.getOrDefault(ConstKeys.OFFSET_X, 0f, Float::class) * ConstVals.PPM
+            val offsetY = props.getOrDefault(ConstKeys.OFFSET_Y, 0f, Float::class) * ConstVals.PPM
 
             val background = if (o.name == ANIMATED_BACKGROUND) {
-                val animRows = o.properties.get("${ConstKeys.ANIMATION}_${ConstKeys.ROWS}") as Int
-                val animColumns = o.properties.get("${ConstKeys.ANIMATION}_${ConstKeys.COLUMNS}") as Int
-                val duration = o.properties.get(ConstKeys.DURATION) as Float
+                val animRows = props.get("${ConstKeys.ANIMATION}_${ConstKeys.ROWS}", Int::class)!!
+                val animColumns = props.get("${ConstKeys.ANIMATION}_${ConstKeys.COLUMNS}", Int::class)!!
+                val duration = props.get(ConstKeys.DURATION, Float::class)!!
                 AnimatedBackground(
-                    o.rectangle.x,
-                    o.rectangle.y,
+                    o.rectangle.x + offsetX,
+                    o.rectangle.y + offsetY,
                     backgroundRegion,
                     o.rectangle.width,
                     o.rectangle.height,
@@ -105,8 +110,8 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
                     duration
                 )
             } else Background(
-                o.rectangle.x,
-                o.rectangle.y,
+                o.rectangle.x + offsetX,
+                o.rectangle.y + offsetY,
                 backgroundRegion,
                 o.rectangle.width,
                 o.rectangle.height,

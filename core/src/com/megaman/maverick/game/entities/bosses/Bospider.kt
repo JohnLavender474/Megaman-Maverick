@@ -18,6 +18,7 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.toGameRectangle
@@ -79,19 +80,17 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         private var openEyeRegion: TextureRegion? = null
     }
 
-    private enum class BospiderState {
-        SPAWN, CLIMB, OPEN_EYE, CLOSE_EYE, RETREAT
-    }
+    private enum class BospiderState { SPAWN, CLIMB, OPEN_EYE, CLOSE_EYE, RETREAT }
 
     override var children = Array<GameEntity>()
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(1),
-        Fireball::class to dmgNeg(2),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(1),
+        Fireball::class pairTo dmgNeg(2),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 2 else 1
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 2 else 1
         }
@@ -306,10 +305,10 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
             }
         }
         val animations = objectMapOf<String, IAnimation>(
-            "still" to Animation(stillRegion!!),
-            "climb" to Animation(climbRegion!!, 1, 5, 0.1f, true),
-            "open_eye" to Animation(openEyeRegion!!, 1, 4, 0.1f, false),
-            "close_eye" to Animation(openEyeRegion!!, 1, 4, 0.1f, false).reversed()
+            "still" pairTo Animation(stillRegion!!),
+            "climb" pairTo Animation(climbRegion!!, 1, 5, 0.1f, true),
+            "open_eye" pairTo Animation(openEyeRegion!!, 1, 4, 0.1f, false),
+            "close_eye" pairTo Animation(openEyeRegion!!, 1, 4, 0.1f, false).reversed()
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
@@ -347,9 +346,9 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         val web = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SPIDER_WEB)!!
         val scaledTrajectory = trajectory.scl(WEB_SPEED * ConstVals.PPM)
         val props = props(
-            ConstKeys.POSITION to body.getBottomCenterPoint(),
-            ConstKeys.TRAJECTORY to scaledTrajectory,
-            ConstKeys.OWNER to this
+            ConstKeys.POSITION pairTo body.getBottomCenterPoint(),
+            ConstKeys.TRAJECTORY pairTo scaledTrajectory,
+            ConstKeys.OWNER pairTo this
         )
         web.spawn(props)
     }

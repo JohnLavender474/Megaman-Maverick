@@ -3,6 +3,7 @@ package com.megaman.maverick.game.entities.hazards
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -57,7 +58,7 @@ class LavaDropSupplier(game: MegamanMaverickGame) : MegaGameEntity(game), IHazar
 
     private fun createLavaDrop() {
         lavaDrop = EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.LAVA_DROP) as LavaDrop?
-        lavaDrop!!.spawn(props(ConstKeys.POSITION to body.getCenter()))
+        lavaDrop!!.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
     }
 
     private fun dropLavaDrop() = lavaDrop!!.setToFall()
@@ -82,7 +83,7 @@ class LavaDropSupplier(game: MegamanMaverickGame) : MegaGameEntity(game), IHazar
 
     private fun defineCullablesComponent() = CullablesComponent(
         objectMapOf(
-            ConstKeys.CULL_OUT_OF_BOUNDS to getGameCameraCullingLogic(this)
+            ConstKeys.CULL_OUT_OF_BOUNDS pairTo getGameCameraCullingLogic(this)
         )
     )
 }

@@ -16,6 +16,7 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -132,8 +133,8 @@ class CarriCarry(game: MegamanMaverickGame) : AbstractEnemy(game), IMotionEntity
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { if (shake) "shake" else "ride" }
         val animations = objectMapOf<String, IAnimation>(
-            "shake" to Animation(regions.get("shake"), 2, 1, 0.1f, true),
-            "ride" to Animation(regions.get("ride"), 2, 1, 0.1f, true)
+            "shake" pairTo Animation(regions.get("shake"), 2, 1, 0.1f, true),
+            "ride" pairTo Animation(regions.get("ride"), 2, 1, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

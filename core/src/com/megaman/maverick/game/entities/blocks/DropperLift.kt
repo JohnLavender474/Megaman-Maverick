@@ -13,6 +13,7 @@ import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
@@ -126,10 +127,10 @@ class DropperLift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAni
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { currentState.name }
         val animations = objectMapOf<String, IAnimation>(
-            DropperLiftState.CLOSED.name to Animation(closedRegion!!),
-            DropperLiftState.OPENING.name to Animation(openingRegion!!, 2, 2, 0.1f, false),
-            DropperLiftState.OPEN.name to Animation(openRegion!!),
-            DropperLiftState.CLOSING.name to Animation(openingRegion!!, 2, 2, 0.1f, false).reversed()
+            DropperLiftState.CLOSED.name pairTo Animation(closedRegion!!),
+            DropperLiftState.OPENING.name pairTo Animation(openingRegion!!, 2, 2, 0.1f, false),
+            DropperLiftState.OPEN.name pairTo Animation(openRegion!!),
+            DropperLiftState.CLOSING.name pairTo Animation(openingRegion!!, 2, 2, 0.1f, false).reversed()
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

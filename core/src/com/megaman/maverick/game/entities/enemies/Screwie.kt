@@ -15,6 +15,7 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
@@ -68,13 +69,13 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(10),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(10),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
         }
@@ -207,14 +208,14 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
             "$type-$key"
         }
         animations = objectMapOf(
-            "red-down" to Animation(atlas!!.findRegion("RedScrewie/Down")),
-            "red-rise" to Animation(atlas!!.findRegion("RedScrewie/Rise"), 1, 3, 0.1f, false),
-            "red-drop" to Animation(atlas!!.findRegion("RedScrewie/Drop"), 1, 3, 0.1f, false),
-            "red-shoot" to Animation(atlas!!.findRegion("RedScrewie/Shoot"), 1, 3, 0.1f, true),
-            "blue-down" to Animation(atlas!!.findRegion("BlueScrewie/Down")),
-            "blue-rise" to Animation(atlas!!.findRegion("BlueScrewie/Rise"), 1, 3, 0.1f, false),
-            "blue-drop" to Animation(atlas!!.findRegion("BlueScrewie/Drop"), 1, 3, 0.1f, false),
-            "blue-shoot" to Animation(atlas!!.findRegion("BlueScrewie/Shoot"), 1, 3, 0.1f, true),
+            "red-down" pairTo Animation(atlas!!.findRegion("RedScrewie/Down")),
+            "red-rise" pairTo Animation(atlas!!.findRegion("RedScrewie/Rise"), 1, 3, 0.1f, false),
+            "red-drop" pairTo Animation(atlas!!.findRegion("RedScrewie/Drop"), 1, 3, 0.1f, false),
+            "red-shoot" pairTo Animation(atlas!!.findRegion("RedScrewie/Shoot"), 1, 3, 0.1f, true),
+            "blue-down" pairTo Animation(atlas!!.findRegion("BlueScrewie/Down")),
+            "blue-rise" pairTo Animation(atlas!!.findRegion("BlueScrewie/Rise"), 1, 3, 0.1f, false),
+            "blue-drop" pairTo Animation(atlas!!.findRegion("BlueScrewie/Drop"), 1, 3, 0.1f, false),
+            "blue-shoot" pairTo Animation(atlas!!.findRegion("BlueScrewie/Shoot"), 1, 3, 0.1f, true),
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
@@ -234,10 +235,10 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
             if (upsideDown) trajectory.y *= -1f
             bullet.spawn(
                 props(
-                    ConstKeys.TRAJECTORY to trajectory,
-                    ConstKeys.POSITION to spawn,
-                    ConstKeys.OWNER to this,
-                    ConstKeys.DIRECTION to getMegaman().directionRotation!!
+                    ConstKeys.TRAJECTORY pairTo trajectory,
+                    ConstKeys.POSITION pairTo spawn,
+                    ConstKeys.OWNER pairTo this,
+                    ConstKeys.DIRECTION pairTo getMegaman().directionRotation!!
                 )
             )
         }

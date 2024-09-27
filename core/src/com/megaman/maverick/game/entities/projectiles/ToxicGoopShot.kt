@@ -10,6 +10,7 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.getOverlapPushDirection
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.damage.IDamageable
@@ -71,9 +72,9 @@ class ToxicGoopShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
         val goopSplash = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.TOXIC_GOOP_SPLASH)!!
         goopSplash.spawn(
             props(
-                ConstKeys.OWNER to this,
-                ConstKeys.DIRECTION to params[0] as Direction?,
-                ConstKeys.POSITION to body.getBottomCenterPoint()
+                ConstKeys.OWNER pairTo this,
+                ConstKeys.DIRECTION pairTo params[0] as Direction?,
+                ConstKeys.POSITION pairTo body.getBottomCenterPoint()
             )
         )
     }

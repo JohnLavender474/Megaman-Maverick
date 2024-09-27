@@ -18,6 +18,7 @@ import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.interfaces.Updatable
 
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
@@ -66,12 +67,12 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(10),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(10),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
-        }, ChargedShotExplosion::class to dmgNeg {
+        }, ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 15 else 5
         }
@@ -201,8 +202,8 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { if (standing) "stand" else "throw" }
         val animations = objectMapOf<String, IAnimation>(
-            "stand" to Animation(atlas!!.findRegion("PicketJoe/Stand")),
-            "throw" to Animation(atlas!!.findRegion("PicketJoe/Throw"), 1, 4, 0.125f, false)
+            "stand" pairTo Animation(atlas!!.findRegion("PicketJoe/Stand")),
+            "throw" pairTo Animation(atlas!!.findRegion("PicketJoe/Throw"), 1, 4, 0.125f, false)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
@@ -232,9 +233,9 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val picket = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.PICKET)!!
         picket.spawn(
             props(
-                ConstKeys.OWNER to this,
-                ConstKeys.POSITION to spawn,
-                ConstKeys.IMPULSE to impulse
+                ConstKeys.OWNER pairTo this,
+                ConstKeys.POSITION pairTo spawn,
+                ConstKeys.IMPULSE pairTo impulse
             )
         )
     }

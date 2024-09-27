@@ -11,6 +11,7 @@ import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullableOnEvent
@@ -56,7 +57,6 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEnti
 
     private lateinit var drops: Array<GameRectangle>
     private lateinit var bounds: GameRectangle
-
     private var platform: RailTrackPlatform? = null
     private var platformRight = false
 
@@ -124,9 +124,9 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEnti
         platformRight = spawnProps.get(ConstKeys.RIGHT, Boolean::class)!!
         platform!!.spawn(
             props(
-                ConstKeys.POSITION to Vector2(spawn.x + platformSpawn * ConstVals.PPM, spawn.y),
-                ConstKeys.CULL_OUT_OF_BOUNDS to false,
-                ConstKeys.TRAJECTORY to PLATFORM_SPEED * ConstVals.PPM * if (platformRight) 1 else -1
+                ConstKeys.POSITION pairTo Vector2(spawn.x + platformSpawn * ConstVals.PPM, spawn.y),
+                ConstKeys.CULL_OUT_OF_BOUNDS pairTo false,
+                ConstKeys.TRAJECTORY pairTo PLATFORM_SPEED * ConstVals.PPM * if (platformRight) 1 else -1
             )
         )
 
@@ -135,7 +135,7 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEnti
 
     override fun onDestroy() {
         super.onDestroy()
-        platform?.let { it.destroy() }
+        platform?.destroy()
         platform = null
         sprites.clear()
     }
@@ -162,7 +162,7 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEnti
         val cullOnEvents = CullableOnEvent({ cullEvents.contains(it) }, cullEvents)
         runnablesOnSpawn.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
         runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
-        return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS to cullOnEvents))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS pairTo cullOnEvents))
     }
 }
 
@@ -204,6 +204,7 @@ class RailTrackPlatform(game: MegamanMaverickGame) : Block(game), ISpritesEntity
             ConstKeys.FIXTURE_LABELS,
             objectSetOf(FixtureLabel.NO_SIDE_TOUCHIE, FixtureLabel.NO_PROJECTILE_COLLISION)
         )
+        spawnProps.put(ConstKeys.RESIST_ON, false)
 
         super.onSpawn(spawnProps)
 
@@ -240,8 +241,8 @@ class RailTrackPlatform(game: MegamanMaverickGame) : Block(game), ISpritesEntity
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { if (body.physics.collisionOn) "platform" else "drop" }
         val animations = objectMapOf<String, IAnimation>(
-            "platform" to Animation(platformRegion!!),
-            "drop" to Animation(platformDropRegion!!, 1, 3, 0.025f, false)
+            "platform" pairTo Animation(platformRegion!!),
+            "drop" pairTo Animation(platformDropRegion!!, 1, 3, 0.025f, false)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

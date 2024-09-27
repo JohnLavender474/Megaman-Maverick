@@ -19,6 +19,7 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.getCenter
 import com.mega.game.engine.common.shapes.toGameRectangle
@@ -63,10 +64,10 @@ class Tropish(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     private enum class TropishState { WAIT, SWIM, BENT }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(15),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShotExplosion::class to dmgNeg(10)
+        Bullet::class pairTo dmgNeg(15),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShotExplosion::class pairTo dmgNeg(10)
     )
     override lateinit var facing: Facing
 
@@ -153,7 +154,7 @@ class Tropish(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         noseFixture.setConsumer { processState, fixture ->
             if (tropishState == TropishState.SWIM &&
                 processState == ProcessState.BEGIN &&
-                fixture.getFixtureType() == FixtureType.BLOCK
+                fixture.getType() == FixtureType.BLOCK
             ) hitNose()
         }
         body.addFixture(noseFixture)
@@ -191,8 +192,8 @@ class Tropish(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { if (tropishState == TropishState.WAIT) null else tropishState.name.lowercase() }
         val animations = objectMapOf<String, IAnimation>(
-            "swim" to Animation(regions["swim"], 2, 1, 0.1f, true),
-            "bent" to Animation(regions["bent"], 2, 1, 0.25f, true)
+            "swim" pairTo Animation(regions["swim"], 2, 1, 0.1f, true),
+            "bent" pairTo Animation(regions["bent"], 2, 1, 0.25f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

@@ -15,6 +15,7 @@ import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -71,9 +72,9 @@ class LavaBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
     private val loop = Loop(LavaBeamerState.values().toGdxArray())
     private val timers = objectMapOf(
-        LavaBeamerState.IDLE to Timer(IDLE_DUR),
-        LavaBeamerState.SWITCHING_ON to Timer(SWITCHING_ON_DUR),
-        LavaBeamerState.FIRING to Timer(FIRING_DUR)
+        LavaBeamerState.IDLE pairTo Timer(IDLE_DUR),
+        LavaBeamerState.SWITCHING_ON pairTo Timer(SWITCHING_ON_DUR),
+        LavaBeamerState.FIRING pairTo Timer(FIRING_DUR)
     )
     private lateinit var cullOnEvents: CullableOnEvent
 
@@ -145,9 +146,9 @@ class LavaBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         val lavaBeam = EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.LAVA_BEAM)!!
         lavaBeam.spawn(
             props(
-                ConstKeys.POSITION to spawn,
-                ConstKeys.DIRECTION to directionRotation,
-                ConstKeys.SPEED to FIRE_SPEED * ConstVals.PPM
+                ConstKeys.POSITION pairTo spawn,
+                ConstKeys.DIRECTION pairTo directionRotation,
+                ConstKeys.SPEED pairTo FIRE_SPEED * ConstVals.PPM
             )
         )
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.WHEE_SOUND, false)
@@ -180,9 +181,9 @@ class LavaBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
             }
         }
         val animations = objectMapOf<String, IAnimation>(
-            "off" to Animation(regions["off"]),
-            "switch" to Animation(regions["switch"], 2, 1, 0.1f, true),
-            "on" to Animation(regions["on"])
+            "off" pairTo Animation(regions["off"]),
+            "switch" pairTo Animation(regions["switch"], 2, 1, 0.1f, true),
+            "on" pairTo Animation(regions["on"])
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

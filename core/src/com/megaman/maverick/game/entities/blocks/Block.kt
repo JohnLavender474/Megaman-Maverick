@@ -6,7 +6,9 @@ import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -57,7 +59,7 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         if (cullOutOfBounds) addComponent(
             CullablesComponent(
                 objectMapOf(
-                    ConstKeys.CULL_OUT_OF_BOUNDS to getGameCameraCullingLogic(this)
+                    ConstKeys.CULL_OUT_OF_BOUNDS pairTo getGameCameraCullingLogic(this)
                 )
             )
         ) else removeComponent(CullablesComponent::class)
@@ -107,7 +109,7 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
         blockFixture.active = spawnProps.getOrDefault(ConstKeys.BLOCK_ON, true, Boolean::class)
 
-        val fixtureEntriesToAdd = spawnProps.get(ConstKeys.FIXTURES) as Array<Pair<FixtureType, Properties>>?
+        val fixtureEntriesToAdd = spawnProps.get(ConstKeys.FIXTURES) as Array<GamePair<FixtureType, Properties>>?
         fixtureEntriesToAdd?.forEach { fixtureEntry ->
             val (fixtureType, fixtureProps) = fixtureEntry
             val fixture = Fixture(body, fixtureType, GameRectangle().set(body))

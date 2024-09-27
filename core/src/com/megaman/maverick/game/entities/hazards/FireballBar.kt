@@ -4,6 +4,7 @@ import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullableOnEvent
@@ -54,10 +55,10 @@ class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEnti
             val fireball = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.FIREBALL)!!
             fireball.spawn(
                 props(
-                    ConstKeys.OWNER to this,
-                    ConstKeys.CULL_OUT_OF_BOUNDS to false,
-                    ConstKeys.CULL_EVENTS to false,
-                    Fireball.BURST_ON_HIT_BLOCK to false
+                    ConstKeys.OWNER pairTo this,
+                    ConstKeys.CULL_OUT_OF_BOUNDS pairTo false,
+                    ConstKeys.CULL_EVENTS pairTo false,
+                    Fireball.BURST_ON_HIT_BLOCK pairTo false
                 )
             )
             children.add(fireball)
@@ -86,6 +87,6 @@ class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEnti
         val cullOnEvents = CullableOnEvent({ cullEvents.contains(it.key) }, cullEvents)
         runnablesOnSpawn.put(ConstKeys.CULL_EVENTS) { game.eventsMan.addListener(cullOnEvents) }
         runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
-        return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS to cullOnEvents))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS pairTo cullOnEvents))
     }
 }

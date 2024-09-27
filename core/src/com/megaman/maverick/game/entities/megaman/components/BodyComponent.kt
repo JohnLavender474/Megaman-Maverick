@@ -121,14 +121,15 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
             return@Updatable
         }
 
-        val wallSlidingOnIce =
-            isBehaviorActive(BehaviorType.WALL_SLIDING) &&
-                    (body.isSensingAny(BodySense.SIDE_TOUCHING_ICE_LEFT, BodySense.SIDE_TOUCHING_ICE_RIGHT))
+        val wallSlidingOnIce = isBehaviorActive(BehaviorType.WALL_SLIDING) &&
+                (body.isSensingAny(BodySense.SIDE_TOUCHING_ICE_LEFT, BodySense.SIDE_TOUCHING_ICE_RIGHT))
         var gravityValue =
-            if (body.isSensing(BodySense.IN_WATER))
+            if (body.isSensing(BodySense.IN_WATER)) {
                 if (wallSlidingOnIce) waterIceGravity else waterGravity
-            else if (wallSlidingOnIce) iceGravity
-            else if (body.isSensing(BodySense.FEET_ON_GROUND)) groundGravity else gravity
+            } else if (wallSlidingOnIce) iceGravity
+            else if (isBehaviorActive(BehaviorType.WALL_SLIDING)) wallSlideGravity
+            else if (body.isSensing(BodySense.FEET_ON_GROUND)) groundGravity
+            else gravity
         gravityValue *= gravityScalar
 
         when (directionRotation!!) {
@@ -144,15 +145,15 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
                         Direction.RIGHT -> Vector2(ConstVals.STANDARD_RESISTANCE_Y, ConstVals.STANDARD_RESISTANCE_X)
                     }
 
-                body.physics.velocityClamp = if (isBehaviorActive(BehaviorType.RIDING_CART))
-                    Vector2(
-                        MegamanValues.CART_RIDE_MAX_SPEED * ConstVals.PPM,
-                        MegamanValues.CLAMP_Y * ConstVals.PPM
-                    )
-                else Vector2(
-                    MegamanValues.CLAMP_X * ConstVals.PPM,
-                    MegamanValues.CLAMP_Y * ConstVals.PPM
-                )
+                body.physics.velocityClamp = (
+                        if (isBehaviorActive(BehaviorType.RIDING_CART))
+                            Vector2(MegamanValues.CART_RIDE_MAX_SPEED, MegamanValues.CLAMP_Y)
+                        else if (isBehaviorActive(BehaviorType.JUMPING))
+                            Vector2(MegamanValues.CLAMP_X, MegamanValues.CLAMP_Y)
+                        else if (isBehaviorActive(BehaviorType.WALL_SLIDING))
+                            Vector2(MegamanValues.CLAMP_X, MegamanValues.WALL_SLIDE_CLAMP_Y)
+                        else Vector2(MegamanValues.CLAMP_X, MegamanValues.CLAMP_Y))
+                    .scl(ConstVals.PPM.toFloat())
             }
 
             else -> {
@@ -160,15 +161,15 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
                 body.physics.defaultFrictionOnSelf =
                     Vector2(ConstVals.STANDARD_RESISTANCE_Y, ConstVals.STANDARD_RESISTANCE_X)
 
-                body.physics.velocityClamp = if (isBehaviorActive(BehaviorType.RIDING_CART))
-                    Vector2(
-                        MegamanValues.CLAMP_Y * ConstVals.PPM,
-                        MegamanValues.CART_RIDE_MAX_SPEED * ConstVals.PPM
-                    )
-                else Vector2(
-                    MegamanValues.CLAMP_Y * ConstVals.PPM,
-                    MegamanValues.CLAMP_X * ConstVals.PPM
-                )
+                body.physics.velocityClamp = (
+                        if (isBehaviorActive(BehaviorType.RIDING_CART))
+                            Vector2(MegamanValues.CLAMP_Y, MegamanValues.CART_RIDE_MAX_SPEED)
+                        else if (isBehaviorActive(BehaviorType.JUMPING))
+                            Vector2(MegamanValues.CLAMP_X, MegamanValues.CLAMP_Y)
+                        else if (isBehaviorActive(BehaviorType.WALL_SLIDING))
+                            Vector2(MegamanValues.WALL_SLIDE_CLAMP_Y, MegamanValues.CLAMP_X)
+                        else Vector2(MegamanValues.CLAMP_Y, MegamanValues.CLAMP_X))
+                    .scl(ConstVals.PPM.toFloat())
             }
         }
 

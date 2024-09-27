@@ -11,6 +11,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -57,13 +58,13 @@ class Adamski(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(15),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(15),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 20
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 10
         }
@@ -151,9 +152,9 @@ class Adamski(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { "$type" }
         val animations = objectMapOf<String, IAnimation>(
-            "0" to Animation(purpleRegion!!, 1, 2, 0.1f, true),
-            "1" to Animation(blueRegion!!, 1, 2, 0.1f, true),
-            "2" to Animation(orangeRegion!!, 1, 2, 0.1f, true)
+            "0" pairTo Animation(purpleRegion!!, 1, 2, 0.1f, true),
+            "1" pairTo Animation(blueRegion!!, 1, 2, 0.1f, true),
+            "2" pairTo Animation(orangeRegion!!, 1, 2, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

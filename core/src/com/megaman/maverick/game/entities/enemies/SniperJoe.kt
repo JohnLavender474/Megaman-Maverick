@@ -22,6 +22,7 @@ import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.normalizedTrajectory
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.toGameRectangle
@@ -104,13 +105,13 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(5),
-        Fireball::class to dmgNeg(15),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(5),
+        Fireball::class pairTo dmgNeg(15),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 15 else 10
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 10 else 5
         }
@@ -241,7 +242,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
 
         val triggerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle())
         triggerFixture.setConsumer { processState, fixture ->
-            if (hasShield && processState == ProcessState.BEGIN && fixture.getFixtureType() == FixtureType.PLAYER)
+            if (hasShield && processState == ProcessState.BEGIN && fixture.getType() == FixtureType.PLAYER)
                 setToThrowShield = true
         }
         triggerFixture.attachedToBody = false
@@ -451,9 +452,9 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         val shield = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SNIPER_JOE_SHIELD)!!
         shield.spawn(
             props(
-                ConstKeys.POSITION to body.getCenter(), ConstKeys.TRAJECTORY to normalizedTrajectory(
+                ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.TRAJECTORY pairTo normalizedTrajectory(
                     body.getCenter(), getMegaman().body.getCenter(), SHIELD_VEL * ConstVals.PPM
-                ), ConstKeys.OWNER to this
+                ), ConstKeys.OWNER pairTo this
             )
         )
     }
@@ -500,10 +501,10 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         val trajectory = Vector2()
 
         val props = props(
-            ConstKeys.OWNER to this,
-            ConstKeys.POSITION to spawn,
-            ConstKeys.TRAJECTORY to trajectory,
-            ConstKeys.DIRECTION to directionRotation
+            ConstKeys.OWNER pairTo this,
+            ConstKeys.POSITION pairTo spawn,
+            ConstKeys.TRAJECTORY pairTo trajectory,
+            ConstKeys.DIRECTION pairTo directionRotation
         )
 
         val entity: GameEntity = if (type == SNOW_TYPE) {

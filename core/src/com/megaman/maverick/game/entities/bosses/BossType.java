@@ -5,11 +5,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.mega.game.engine.animations.Animation;
 import com.mega.game.engine.common.enums.Position;
+import com.mega.game.engine.common.objects.GamePair;
 import com.mega.game.engine.common.time.Timer;
 import com.megaman.maverick.game.ConstVals;
 import com.megaman.maverick.game.assets.TextureAsset;
 import com.megaman.maverick.game.screens.levels.Level;
-import kotlin.Pair;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -37,13 +37,13 @@ public enum BossType {
         }
 
         @Override
-        public Queue<Pair<Animation, Timer>> getIntroAnimsQ(TextureAtlas textureAtlas) {
+        public Queue<GamePair<Animation, Timer>> getIntroAnimsQ(TextureAtlas textureAtlas) {
             Map<String, Animation> anims = getAnims(textureAtlas);
-            Queue<Pair<Animation, Timer>> timerPairs = new LinkedList<>();
-            timerPairs.add(new Pair<>(anims.get("Jump"), new Timer(ConstVals.BOSS_DROP_DOWN_DURATION)));
-            timerPairs.add(new Pair<>(anims.get("JustLand"), new Timer(0.5f)));
-            timerPairs.add(new Pair<>(anims.get("Stand"), new Timer(1.75f)));
-            timerPairs.add(new Pair<>(anims.get("Swing"), new Timer(4f)));
+            Queue<GamePair<Animation, Timer>> timerPairs = new LinkedList<>();
+            timerPairs.add(new GamePair<>(anims.get("Jump"), new Timer(ConstVals.BOSS_DROP_DOWN_DURATION)));
+            timerPairs.add(new GamePair<>(anims.get("JustLand"), new Timer(0.5f)));
+            timerPairs.add(new GamePair<>(anims.get("Stand"), new Timer(1.75f)));
+            timerPairs.add(new GamePair<>(anims.get("Swing"), new Timer(4f)));
             return timerPairs;
         }
     },
@@ -70,16 +70,16 @@ public enum BossType {
         }
 
         @Override
-        public Queue<Pair<Animation, Timer>> getIntroAnimsQ(TextureAtlas textureAtlas) {
+        public Queue<GamePair<Animation, Timer>> getIntroAnimsQ(TextureAtlas textureAtlas) {
             Map<String, Animation> anims = getAnims(textureAtlas);
-            Queue<Pair<Animation, Timer>> timerPairs = new LinkedList<>();
+            Queue<GamePair<Animation, Timer>> timerPairs = new LinkedList<>();
             // TODO:
             /*
-            timerPairs.add(new Pair<>(anims.get("Jump"), new Timer(ConstVals.BOSS_DROP_DOWN_DURATION)));
-            timerPairs.add(new Pair<>(anims.get("JustLand"), new Timer(.3f)));
-            timerPairs.add(new Pair<>(anims.get("Stand"), new Timer(2.15f)));
-            timerPairs.add(new Pair<>(anims.get("Shock"), new Timer(1f)));
-            timerPairs.add(new Pair<>(anims.get("Stand"), new Timer(1.7f)));
+            timerPairs.add(new GamePair<>(anims.get("Jump"), new Timer(ConstVals.BOSS_DROP_DOWN_DURATION)));
+            timerPairs.add(new GamePair<>(anims.get("JustLand"), new Timer(.3f)));
+            timerPairs.add(new GamePair<>(anims.get("Stand"), new Timer(2.15f)));
+            timerPairs.add(new GamePair<>(anims.get("Shock"), new Timer(1f)));
+            timerPairs.add(new GamePair<>(anims.get("Stand"), new Timer(1.7f)));
              */
             return timerPairs;
         }
@@ -102,12 +102,12 @@ public enum BossType {
         }
 
         @Override
-        public Queue<Pair<Animation, Timer>> getIntroAnimsQ(TextureAtlas textureAtlas) {
+        public Queue<GamePair<Animation, Timer>> getIntroAnimsQ(TextureAtlas textureAtlas) {
             Map<String, Animation> anims = getAnims(textureAtlas);
-            Queue<Pair<Animation, Timer>> timerPairs = new LinkedList<>();
-            timerPairs.add(new Pair<>(anims.get("jump"), new Timer(ConstVals.BOSS_DROP_DOWN_DURATION)));
-            timerPairs.add(new Pair<>(anims.get("stand"), new Timer(0.5f)));
-            timerPairs.add(new Pair<>(anims.get("throw"), new Timer(4f)));
+            Queue<GamePair<Animation, Timer>> timerPairs = new LinkedList<>();
+            timerPairs.add(new GamePair<>(anims.get("jump"), new Timer(ConstVals.BOSS_DROP_DOWN_DURATION)));
+            timerPairs.add(new GamePair<>(anims.get("stand"), new Timer(0.5f)));
+            timerPairs.add(new GamePair<>(anims.get("throw"), new Timer(4f)));
             return timerPairs;
         }
     },
@@ -135,16 +135,16 @@ public enum BossType {
         }
 
         @Override
-        public Queue<Pair<Animation, Timer>> getIntroAnimsQ(TextureAtlas textureAtlas) {
+        public Queue<GamePair<Animation, Timer>> getIntroAnimsQ(TextureAtlas textureAtlas) {
             Map<String, Animation> anims = getAnims(textureAtlas);
-            Queue<Pair<Animation, Timer>> timerPairs = new LinkedList<>();
+            Queue<GamePair<Animation, Timer>> timerPairs = new LinkedList<>();
             // TODO:
             /*
-            timerPairs.add(new Pair<>(anims.get("Jump"), new Timer(ConstVals.BOSS_DROP_DOWN_DURATION)));
-            timerPairs.add(new Pair<>(anims.get("Stand"), new Timer(1f)));
-            timerPairs.add(new Pair<>(anims.get("Flex"), new Timer(1.5f)));
-            timerPairs.add(new Pair<>(anims.get("Slide"), new Timer(.75f)));
-            timerPairs.add(new Pair<>(anims.get("Stand"), new Timer(3.5f)));
+            timerPairs.add(new GamePair<>(anims.get("Jump"), new Timer(ConstVals.BOSS_DROP_DOWN_DURATION)));
+            timerPairs.add(new GamePair<>(anims.get("Stand"), new Timer(1f)));
+            timerPairs.add(new GamePair<>(anims.get("Flex"), new Timer(1.5f)));
+            timerPairs.add(new GamePair<>(anims.get("Slide"), new Timer(.75f)));
+            timerPairs.add(new GamePair<>(anims.get("Stand"), new Timer(3.5f)));
              */
             return timerPairs;
         }
@@ -171,15 +171,15 @@ public enum BossType {
         }
 
         @Override
-        public Queue<Pair<Animation, Timer>> getIntroAnimsQ(TextureAtlas textureAtlas) {
+        public Queue<GamePair<Animation, Timer>> getIntroAnimsQ(TextureAtlas textureAtlas) {
             Map<String, Animation> anims = getAnims(textureAtlas);
-            Queue<Pair<Animation, Timer>> timerPairs = new LinkedList<>();
+            Queue<GamePair<Animation, Timer>> timerPairs = new LinkedList<>();
             /*
-            timerPairs.add(new Pair<>(anims.get("Jump"), new Timer(ConstVals.BOSS_DROP_DOWN_DURATION)));
-            timerPairs.add(new Pair<>(anims.get("StandShoot"), new Timer(.15f)));
-            timerPairs.add(new Pair<>(anims.get("Stand"), new Timer(1.6f)));
-            timerPairs.add(new Pair<>(anims.get("StandFreeze"), new Timer(2.7f)));
-            timerPairs.add(new Pair<>(anims.get("Stand"), new Timer(2.5f)));
+            timerPairs.add(new GamePair<>(anims.get("Jump"), new Timer(ConstVals.BOSS_DROP_DOWN_DURATION)));
+            timerPairs.add(new GamePair<>(anims.get("StandShoot"), new Timer(.15f)));
+            timerPairs.add(new GamePair<>(anims.get("Stand"), new Timer(1.6f)));
+            timerPairs.add(new GamePair<>(anims.get("StandFreeze"), new Timer(2.7f)));
+            timerPairs.add(new GamePair<>(anims.get("Stand"), new Timer(2.5f)));
              */
             return timerPairs;
         }
@@ -209,16 +209,16 @@ public enum BossType {
         }
 
         @Override
-        public Queue<Pair<Animation, Timer>> getIntroAnimsQ(TextureAtlas textureAtlas) {
+        public Queue<GamePair<Animation, Timer>> getIntroAnimsQ(TextureAtlas textureAtlas) {
             Map<String, Animation> anims = getAnims(textureAtlas);
-            Queue<Pair<Animation, Timer>> timerPairs = new LinkedList<>();
+            Queue<GamePair<Animation, Timer>> timerPairs = new LinkedList<>();
             // TODO:
             /*
-            timerPairs.add(new Pair<>(anims.get("FlyFlap"), new Timer(ConstVals.BOSS_DROP_DOWN_DURATION)));
-            timerPairs.add(new Pair<>(anims.get("StandFlap"), new Timer(1.5f)));
-            timerPairs.add(new Pair<>(anims.get("RetractWings"), new Timer(.2f)));
-            timerPairs.add(new Pair<>(anims.get("SuaveCombSweep"), new Timer(.8f)));
-            timerPairs.add(new Pair<>(anims.get("CoolPose"), new Timer(4.25f)));
+            timerPairs.add(new GamePair<>(anims.get("FlyFlap"), new Timer(ConstVals.BOSS_DROP_DOWN_DURATION)));
+            timerPairs.add(new GamePair<>(anims.get("StandFlap"), new Timer(1.5f)));
+            timerPairs.add(new GamePair<>(anims.get("RetractWings"), new Timer(.2f)));
+            timerPairs.add(new GamePair<>(anims.get("SuaveCombSweep"), new Timer(.8f)));
+            timerPairs.add(new GamePair<>(anims.get("CoolPose"), new Timer(4.25f)));
              */
             return timerPairs;
         }
@@ -245,14 +245,14 @@ public enum BossType {
         }
 
         @Override
-        public Queue<Pair<Animation, Timer>> getIntroAnimsQ(TextureAtlas textureAtlas) {
+        public Queue<GamePair<Animation, Timer>> getIntroAnimsQ(TextureAtlas textureAtlas) {
             Map<String, Animation> anims = getAnims(textureAtlas);
-            Queue<Pair<Animation, Timer>> timerPairs = new LinkedList<>();
-            timerPairs.add(new Pair<>(anims.get("Jump"), new Timer(ConstVals.BOSS_DROP_DOWN_DURATION)));
-            timerPairs.add(new Pair<>(anims.get("Stand"), new Timer(1.5f)));
-            timerPairs.add(new Pair<>(anims.get("Shoot"), new Timer(1.5f)));
-            timerPairs.add(new Pair<>(anims.get("OpenDoor"), new Timer(2.5f)));
-            timerPairs.add(new Pair<>(anims.get("Stand"), new Timer(1.25f)));
+            Queue<GamePair<Animation, Timer>> timerPairs = new LinkedList<>();
+            timerPairs.add(new GamePair<>(anims.get("Jump"), new Timer(ConstVals.BOSS_DROP_DOWN_DURATION)));
+            timerPairs.add(new GamePair<>(anims.get("Stand"), new Timer(1.5f)));
+            timerPairs.add(new GamePair<>(anims.get("Shoot"), new Timer(1.5f)));
+            timerPairs.add(new GamePair<>(anims.get("OpenDoor"), new Timer(2.5f)));
+            timerPairs.add(new GamePair<>(anims.get("Stand"), new Timer(1.25f)));
             return timerPairs;
         }
     },
@@ -277,15 +277,15 @@ public enum BossType {
         }
 
         @Override
-        public Queue<Pair<Animation, Timer>> getIntroAnimsQ(TextureAtlas textureAtlas) {
+        public Queue<GamePair<Animation, Timer>> getIntroAnimsQ(TextureAtlas textureAtlas) {
             Map<String, Animation> anims = getAnims(textureAtlas);
-            Queue<Pair<Animation, Timer>> timerPairs = new LinkedList<>();
-            timerPairs.add(new Pair<>(anims.get("Jump"), new Timer(ConstVals.BOSS_DROP_DOWN_DURATION)));
-            timerPairs.add(new Pair<>(anims.get("Stand"), new Timer(2f)));
-            timerPairs.add(new Pair<>(anims.get("Run"), new Timer(0.6f)));
-            timerPairs.add(new Pair<>(anims.get("Slash"), new Timer(0.45f)));
-            timerPairs.add(new Pair<>(anims.get("Slash"), new Timer(0.45f)));
-            timerPairs.add(new Pair<>(anims.get("StandStill"), new Timer(3f)));
+            Queue<GamePair<Animation, Timer>> timerPairs = new LinkedList<>();
+            timerPairs.add(new GamePair<>(anims.get("Jump"), new Timer(ConstVals.BOSS_DROP_DOWN_DURATION)));
+            timerPairs.add(new GamePair<>(anims.get("Stand"), new Timer(2f)));
+            timerPairs.add(new GamePair<>(anims.get("Run"), new Timer(0.6f)));
+            timerPairs.add(new GamePair<>(anims.get("Slash"), new Timer(0.45f)));
+            timerPairs.add(new GamePair<>(anims.get("Slash"), new Timer(0.45f)));
+            timerPairs.add(new GamePair<>(anims.get("StandStill"), new Timer(3f)));
             return timerPairs;
         }
     },
@@ -329,6 +329,6 @@ public enum BossType {
 
     public abstract Map<String, Animation> getAnims(TextureAtlas textureAtlas);
 
-    public abstract Queue<Pair<Animation, Timer>> getIntroAnimsQ(TextureAtlas textureAtlas);
+    public abstract Queue<GamePair<Animation, Timer>> getIntroAnimsQ(TextureAtlas textureAtlas);
 
 }

@@ -3,6 +3,7 @@ package com.megaman.maverick.game.entities.enemies
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -69,8 +70,8 @@ class FloatingCanHole(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         val floatingCan = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.FLOATING_CAN)!!
         floatingCan.spawn(
             props(
-                ConstKeys.POSITION to body.getCenter(),
-                ConstKeys.DROP_ITEM_ON_DEATH to dropItemOnDeath
+                ConstKeys.POSITION pairTo body.getCenter(),
+                ConstKeys.DROP_ITEM_ON_DEATH pairTo dropItemOnDeath
             )
         )
         children.add(floatingCan)
@@ -99,6 +100,6 @@ class FloatingCanHole(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
 
     private fun defineCullablesComponent(): CullablesComponent {
         val camCullable = getGameCameraCullingLogic(this)
-        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to camCullable))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo camCullable))
     }
 }

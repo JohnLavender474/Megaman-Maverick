@@ -16,6 +16,7 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.vector2Of
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
@@ -63,13 +64,13 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(15),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(15),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 20
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 15 else 10
         }
@@ -223,7 +224,7 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
         val leftFootFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
         leftFootFixture.setConsumer { _, fixture ->
-            if (fixture.getFixtureType() == FixtureType.BLOCK)
+            if (fixture.getType() == FixtureType.BLOCK)
                 body.putProperty("${ConstKeys.LEFT}_${ConstKeys.FOOT}", true)
         }
         leftFootFixture.offsetFromBodyCenter = vector2Of(-0.375f * ConstVals.PPM)
@@ -233,7 +234,7 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
         val rightFootFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
         rightFootFixture.setConsumer { _, fixture ->
-            if (fixture.getFixtureType() == FixtureType.BLOCK)
+            if (fixture.getType() == FixtureType.BLOCK)
                 body.putProperty("${ConstKeys.RIGHT}_${ConstKeys.FOOT}", true)
         }
         rightFootFixture.offsetFromBodyCenter.x = 0.375f * ConstVals.PPM
@@ -280,9 +281,9 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             else "crawl"
         }
         val animation = objectMapOf<String, IAnimation>(
-            "still" to Animation(regions["still"]),
-            "jump" to Animation(regions["jump"]),
-            "crawl" to Animation(regions["crawl"], 2, 2, 0.1f, true)
+            "still" pairTo Animation(regions["still"]),
+            "jump" pairTo Animation(regions["jump"]),
+            "crawl" pairTo Animation(regions["crawl"], 2, 2, 0.1f, true)
         )
         val animator = Animator(keySupplier, animation)
         return AnimationsComponent(this, animator)

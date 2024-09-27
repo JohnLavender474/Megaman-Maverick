@@ -16,6 +16,7 @@ import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.cullables.CullableOnEvent
@@ -149,7 +150,7 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         val cullOnEvent = CullableOnEvent({ cullEvents.contains(it) }, cullEvents)
         runnablesOnSpawn.put(ConstKeys.CULL_EVENTS) { game.eventsMan.addListener(cullOnEvent) }
         runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvent) }
-        return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS to cullOnEvent))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS pairTo cullOnEvent))
     }
 
     private fun defineBodyComponent(): BodyComponent {
@@ -226,15 +227,15 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
         val throwerKeySupplier: () -> String? = { loop.getCurrent().name }
         val throwerAnims = objectMapOf<String, IAnimation>(
-            FlameThrowerState.COOL.name to Animation(regions.get("cool_thrower")),
-            FlameThrowerState.BLINK.name to Animation(regions.get("blink_thrower"), 1, 2, 0.1f, true),
-            FlameThrowerState.HOT.name to Animation(regions.get("hot_thrower"))
+            FlameThrowerState.COOL.name pairTo Animation(regions.get("cool_thrower")),
+            FlameThrowerState.BLINK.name pairTo Animation(regions.get("blink_thrower"), 1, 2, 0.1f, true),
+            FlameThrowerState.HOT.name pairTo Animation(regions.get("hot_thrower"))
         )
         val throwerAnimator = Animator(throwerKeySupplier, throwerAnims)
 
         return AnimationsComponent(gdxArrayOf(
-            { sprites.get("flameColumn") } to flameColumnAnimator,
-            { sprites.get("thrower") } to throwerAnimator
+            { sprites.get("flameColumn") } pairTo flameColumnAnimator,
+            { sprites.get("thrower") } pairTo throwerAnimator
         ))
     }
 }

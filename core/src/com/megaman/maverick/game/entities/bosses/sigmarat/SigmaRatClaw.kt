@@ -15,6 +15,7 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -126,10 +127,10 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
         block = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.STANDARD)!! as Block
         block!!.spawn(
             props(
-                ConstKeys.BOUNDS to GameRectangle().setSize(1.35f * ConstVals.PPM, 0.1f * ConstVals.PPM)
+                ConstKeys.BOUNDS pairTo GameRectangle().setSize(1.35f * ConstVals.PPM, 0.1f * ConstVals.PPM)
                     .setTopCenterToPoint(body.getTopCenterPoint()),
-                ConstKeys.BODY_LABELS to objectSetOf(BodyLabel.COLLIDE_DOWN_ONLY),
-                ConstKeys.FIXTURE_LABELS to objectSetOf(
+                ConstKeys.BODY_LABELS pairTo objectSetOf(BodyLabel.COLLIDE_DOWN_ONLY),
+                ConstKeys.FIXTURE_LABELS pairTo objectSetOf(
                     FixtureLabel.NO_PROJECTILE_COLLISION, FixtureLabel.NO_SIDE_TOUCHIE
                 )
             )
@@ -164,7 +165,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
         ) as SigmaRatElectricBall
         shockBall!!.spawn(
             props(
-                ConstKeys.OWNER to this, ConstKeys.POSITION to body.getCenter().sub(0f, 0.15f * ConstVals.PPM)
+                ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo body.getCenter().sub(0f, 0.15f * ConstVals.PPM)
             )
         )
     }
@@ -173,20 +174,20 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
         val shocks = EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.BOLT, 2)
         shocks[0].spawn(
             props(
-                ConstKeys.PARENT to this,
-                ConstKeys.POSITION to body.getCenter(),
-                ConstKeys.DIRECTION to Direction.UP,
-                ConstKeys.TRAJECTORY to Vector2(0f, SHOCK_VELOCITY_Y * ConstVals.PPM),
-                ConstKeys.SCALE to SHOCK_BOLT_SCALE
+                ConstKeys.PARENT pairTo this,
+                ConstKeys.POSITION pairTo body.getCenter(),
+                ConstKeys.DIRECTION pairTo Direction.UP,
+                ConstKeys.TRAJECTORY pairTo Vector2(0f, SHOCK_VELOCITY_Y * ConstVals.PPM),
+                ConstKeys.SCALE pairTo SHOCK_BOLT_SCALE
             )
         )
         shocks[1].spawn(
             props(
-                ConstKeys.PARENT to this,
-                ConstKeys.POSITION to body.getCenter(),
-                ConstKeys.DIRECTION to Direction.DOWN,
-                ConstKeys.TRAJECTORY to Vector2(0f, -SHOCK_VELOCITY_Y * ConstVals.PPM),
-                ConstKeys.SCALE to SHOCK_BOLT_SCALE
+                ConstKeys.PARENT pairTo this,
+                ConstKeys.POSITION pairTo body.getCenter(),
+                ConstKeys.DIRECTION pairTo Direction.DOWN,
+                ConstKeys.TRAJECTORY pairTo Vector2(0f, -SHOCK_VELOCITY_Y * ConstVals.PPM),
+                ConstKeys.SCALE pairTo SHOCK_BOLT_SCALE
             )
         )
         requestToPlaySound(SoundAsset.BURST_SOUND, false)
@@ -326,9 +327,9 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
             }
         }
         val animations = objectMapOf<String, IAnimation>(
-            "closed" to Animation(closedRegion!!),
-            "open" to Animation(openRegion!!),
-            "shock" to Animation(shockRegion!!, 1, 2, 0.1f, true)
+            "closed" pairTo Animation(closedRegion!!),
+            "open" pairTo Animation(openRegion!!),
+            "shock" pairTo Animation(shockRegion!!, 1, 2, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

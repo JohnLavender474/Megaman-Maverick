@@ -20,6 +20,7 @@ import com.mega.game.engine.common.interfaces.IFaceable
 
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameLine
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -97,13 +98,13 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(5),
-        Fireball::class to dmgNeg(15),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(5),
+        Fireball::class pairTo dmgNeg(15),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 15 else 10
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 10 else 5
         }
@@ -184,14 +185,14 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
         val trajectory = Vector2(0f, BLAST_SPEED * ConstVals.PPM).rotateDeg(aimLine!!.rotation)
         blast.spawn(
             props(
-                ConstKeys.OWNER to this,
-                ConstKeys.POSITION to spawn,
-                ConstKeys.TRAJECTORY to trajectory
+                ConstKeys.OWNER pairTo this,
+                ConstKeys.POSITION pairTo spawn,
+                ConstKeys.TRAJECTORY pairTo trajectory
             )
         )
 
         val muzzleFlash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.MUZZLE_FLASH)!!
-        muzzleFlash.spawn(props(ConstKeys.POSITION to spawn))
+        muzzleFlash.spawn(props(ConstKeys.POSITION pairTo spawn))
 
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.BLAST_SOUND, false)
     }

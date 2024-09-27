@@ -15,10 +15,8 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
+import com.mega.game.engine.common.objects.*
 
-import com.mega.game.engine.common.objects.Loop
-import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
@@ -74,20 +72,20 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
     enum class GachappanState { WAIT, OPENING, SHOOT, CLOSING }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(5),
-        Fireball::class to dmgNeg(15),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(5),
+        Fireball::class pairTo dmgNeg(15),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 15 else 10
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 5 else 3
         }
     )
     override lateinit var facing: Facing
 
-    private lateinit var loop: Loop<Pair<GachappanState, Timer>>
+    private lateinit var loop: Loop<GamePair<GachappanState, Timer>>
 
     override fun init() {
         if (waitRegion == null || shootRegion == null || openRegion == null) {
@@ -100,18 +98,14 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
         val throwTimes = gdxArrayOf(0.5f, 2.5f)
         val shootTimes = gdxArrayOf(1f, 1.5f, 2f)
         val runnables = Array<TimeMarkedRunnable>()
-        throwTimes.forEach {
-            runnables.add(TimeMarkedRunnable(it) { launchBall() })
-        }
-        shootTimes.forEach {
-            runnables.add(TimeMarkedRunnable(it) { shoot() })
-        }
+        throwTimes.forEach { runnables.add(TimeMarkedRunnable(it) { launchBall() }) }
+        shootTimes.forEach { runnables.add(TimeMarkedRunnable(it) { shoot() }) }
         loop = Loop(
             gdxArrayOf(
-                GachappanState.WAIT to Timer(WAIT_DURATION),
-                GachappanState.OPENING to Timer(TRANS_DURATION),
-                GachappanState.SHOOT to Timer(SHOOT_DURATION).setRunnables(runnables),
-                GachappanState.CLOSING to Timer(TRANS_DURATION)
+                GachappanState.WAIT pairTo Timer(WAIT_DURATION),
+                GachappanState.OPENING pairTo Timer(TRANS_DURATION),
+                GachappanState.SHOOT pairTo Timer(SHOOT_DURATION).setRunnables(runnables),
+                GachappanState.CLOSING pairTo Timer(TRANS_DURATION)
             )
         )
 
@@ -136,8 +130,8 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
         if (hasDepletedHealth()) {
             val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
             val props = props(
-                ConstKeys.POSITION to body.getCenter(),
-                ConstKeys.SOUND to SoundAsset.EXPLOSION_1_SOUND
+                ConstKeys.POSITION pairTo body.getCenter(),
+                ConstKeys.SOUND pairTo SoundAsset.EXPLOSION_1_SOUND
             )
             explosion.spawn(props)
         }
@@ -245,10 +239,10 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
             gachappanState.name
         }
         val animations = objectMapOf<String, IAnimation>(
-            GachappanState.WAIT.name to Animation(waitRegion!!, 1, 3, 0.1f, false),
-            GachappanState.OPENING.name to Animation(openRegion!!, 1, 3, 0.1f, false),
-            GachappanState.SHOOT.name to Animation(shootRegion!!, 1, 3, 0.1f, true),
-            GachappanState.CLOSING.name to Animation(openRegion!!, 1, 3, 0.1f, false).reversed()
+            GachappanState.WAIT.name pairTo Animation(waitRegion!!, 1, 3, 0.1f, false),
+            GachappanState.OPENING.name pairTo Animation(openRegion!!, 1, 3, 0.1f, false),
+            GachappanState.SHOOT.name pairTo Animation(shootRegion!!, 1, 3, 0.1f, true),
+            GachappanState.CLOSING.name pairTo Animation(openRegion!!, 1, 3, 0.1f, false).reversed()
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
@@ -262,10 +256,10 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
         val impulseY = BALL_IMPULSE * ConstVals.PPM
         ball.spawn(
             props(
-                ConstKeys.OWNER to this,
-                ConstKeys.POSITION to spawn,
-                ConstKeys.IMPULSE to Vector2(impulseX, impulseY),
-                ConstKeys.GRAVITY to Vector2(0f, BALL_GRAVITY * ConstVals.PPM)
+                ConstKeys.OWNER pairTo this,
+                ConstKeys.POSITION pairTo spawn,
+                ConstKeys.IMPULSE pairTo Vector2(impulseX, impulseY),
+                ConstKeys.GRAVITY pairTo Vector2(0f, BALL_GRAVITY * ConstVals.PPM)
             )
         )
         requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
@@ -276,9 +270,9 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
         val spawn = body.getBottomCenterPoint().add(0.5f * ConstVals.PPM * facing.value, 0.175f * ConstVals.PPM)
         val trajectory = Vector2(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
         val bulletProps = props(
-            ConstKeys.POSITION to spawn,
-            ConstKeys.TRAJECTORY to trajectory,
-            ConstKeys.OWNER to this
+            ConstKeys.POSITION pairTo spawn,
+            ConstKeys.TRAJECTORY pairTo trajectory,
+            ConstKeys.OWNER pairTo this
         )
         bullet.spawn(bulletProps)
         requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)

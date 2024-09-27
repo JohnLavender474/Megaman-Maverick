@@ -21,7 +21,7 @@ fun IFixture.setEntity(entity: IBodyEntity): IFixture {
     return this
 }
 
-fun IFixture.hasFixtureType(fixtureType: Any) = fixtureType == getFixtureType()
+fun IFixture.hasFixtureType(fixtureType: Any) = fixtureType == getType()
 
 fun IFixture.getEntity() = properties.get(ConstKeys.ENTITY) as MegaGameEntity
 

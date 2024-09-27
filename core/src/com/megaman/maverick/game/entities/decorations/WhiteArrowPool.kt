@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -84,9 +85,9 @@ class WhiteArrowPool(game: MegamanMaverickGame) : MegaGameEntity(game), ICullabl
             val arrow = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.WHITE_ARROW)!!
             arrow.spawn(
                 props(
-                    ConstKeys.POSITION to spawn,
-                    ConstKeys.DIRECTION to directionRotation,
-                    ConstKeys.MAX to maxOffset
+                    ConstKeys.POSITION pairTo spawn,
+                    ConstKeys.DIRECTION pairTo directionRotation,
+                    ConstKeys.MAX pairTo maxOffset
                 )
             )
             i += 2
@@ -104,7 +105,7 @@ class WhiteArrowPool(game: MegamanMaverickGame) : MegaGameEntity(game), ICullabl
 
     private fun defineCullablesComponent(): CullablesComponent {
         val cull = getGameCameraCullingLogic(getGameCamera(), { bounds })
-        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cull))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cull))
     }
 
     override fun getEntityType() = EntityType.DECORATION

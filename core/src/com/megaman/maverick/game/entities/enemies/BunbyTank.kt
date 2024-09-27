@@ -19,6 +19,7 @@ import com.mega.game.engine.common.interfaces.IFaceable
 
 
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
@@ -71,13 +72,13 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(5),
-        Fireball::class to dmgNeg(15),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(5),
+        Fireball::class pairTo dmgNeg(15),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 15 else 10
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 10 else 5
         }
@@ -157,11 +158,11 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         val rocket = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BUNBY_RED_ROCKET)!!
         rocket.spawn(
             props(
-                ConstKeys.OWNER to this,
-                ConstKeys.POSITION to spawn,
-                ConstKeys.TRAJECTORY to trajectory,
-                ConstKeys.FACING to facing,
-                ConstKeys.DIRECTION to directionRotation
+                ConstKeys.OWNER pairTo this,
+                ConstKeys.POSITION pairTo spawn,
+                ConstKeys.TRAJECTORY pairTo trajectory,
+                ConstKeys.FACING pairTo facing,
+                ConstKeys.DIRECTION pairTo directionRotation
             )
         )
 
@@ -273,7 +274,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         )
         leftFootFixture.offsetFromBodyCenter = Vector2(-0.75f * ConstVals.PPM, -0.625f * ConstVals.PPM)
         leftFootFixture.setConsumer { _, fixture ->
-            when (fixture.getFixtureType()) {
+            when (fixture.getType()) {
                 FixtureType.BLOCK -> leftFootFixture.putProperty(ConstKeys.BLOCK, true)
                 FixtureType.DEATH -> leftFootFixture.putProperty(ConstKeys.DEATH, true)
             }
@@ -289,7 +290,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         )
         rightFootFixture.offsetFromBodyCenter = Vector2(0.75f * ConstVals.PPM, -0.625f * ConstVals.PPM)
         rightFootFixture.setConsumer { _, fixture ->
-            when (fixture.getFixtureType()) {
+            when (fixture.getType()) {
                 FixtureType.BLOCK -> rightFootFixture.putProperty(ConstKeys.BLOCK, true)
                 FixtureType.DEATH -> rightFootFixture.putProperty(ConstKeys.DEATH, true)
             }
@@ -359,9 +360,9 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             else "roll"
         }
         animations = objectMapOf(
-            "still" to Animation(regions.get("still")),
-            "shoot" to Animation(regions.get("shoot"), 3, 1, 0.15f, false),
-            "roll" to Animation(regions.get("roll"), 2, 1, 0.1f, true)
+            "still" pairTo Animation(regions.get("still")),
+            "shoot" pairTo Animation(regions.get("shoot"), 3, 1, 0.15f, false),
+            "roll" pairTo Animation(regions.get("roll"), 2, 1, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

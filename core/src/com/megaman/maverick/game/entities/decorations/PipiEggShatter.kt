@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -93,6 +94,6 @@ class PipiEggShatter(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
 
     private fun defineCullablesComponent(): CullablesComponent {
         val cullOutOfBounds = getGameCameraCullingLogic(this)
-        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullOutOfBounds))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullOutOfBounds))
     }
 }

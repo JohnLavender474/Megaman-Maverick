@@ -18,6 +18,7 @@ import com.mega.game.engine.common.extensions.vector2Of
 import com.mega.game.engine.common.interfaces.IFaceable
 
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -70,9 +71,9 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     private enum class FireMetState { MOVE, SHOOT }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(15),
-        ChargedShot::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShotExplosion::class to dmgNeg(ConstVals.MAX_HEALTH)
+        Bullet::class pairTo dmgNeg(15),
+        ChargedShot::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShotExplosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
     )
     override lateinit var facing: Facing
 
@@ -120,7 +121,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         if (flame != null) throw IllegalStateException("Flame must be null before spawning new flame")
 
         flame = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.FIRE_MET_FLAME) as FireMetFlame?
-        flame!!.spawn(props(ConstKeys.OWNER to this, ConstKeys.POSITION to body.getTopCenterPoint()))
+        flame!!.spawn(props(ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo body.getTopCenterPoint()))
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -225,7 +226,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         val leftConsumerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
         leftConsumerFixture.offsetFromBodyCenter = vector2Of(-0.5f * ConstVals.PPM)
         leftConsumerFixture.setConsumer { _, fixture ->
-            when (fixture.getFixtureType()) {
+            when (fixture.getType()) {
                 FixtureType.DEATH -> leftConsumerFixture.putProperty(ConstKeys.DEATH, true)
                 FixtureType.BLOCK -> leftConsumerFixture.putProperty(ConstKeys.BLOCK, true)
             }
@@ -237,7 +238,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         val rightConsumerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.2f * ConstVals.PPM))
         rightConsumerFixture.offsetFromBodyCenter = Vector2(0.5f * ConstVals.PPM, -0.5f * ConstVals.PPM)
         rightConsumerFixture.setConsumer { _, fixture ->
-            when (fixture.getFixtureType()) {
+            when (fixture.getType()) {
                 FixtureType.DEATH -> rightConsumerFixture.putProperty(ConstKeys.DEATH, true)
                 FixtureType.BLOCK -> rightConsumerFixture.putProperty(ConstKeys.BLOCK, true)
             }
@@ -306,9 +307,9 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
             else "walk"
         }
         val animations = objectMapOf<String, IAnimation>(
-            "walk" to Animation(regions["walk"], 2, 2, 0.1f, true),
-            "shoot" to Animation(regions["shoot"], 1, 2, 0.1f, false),
-            "jump" to Animation(regions["jump"], 1, 2, 0.1f, false)
+            "walk" pairTo Animation(regions["walk"], 2, 2, 0.1f, true),
+            "shoot" pairTo Animation(regions["shoot"], 1, 2, 0.1f, false),
+            "jump" pairTo Animation(regions["jump"], 1, 2, 0.1f, false)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

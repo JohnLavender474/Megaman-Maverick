@@ -13,6 +13,7 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -67,13 +68,13 @@ class CactusLauncher(game: MegamanMaverickGame) : AbstractEnemy(game), IParentEn
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(10),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(10),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 15 else 10
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 10 else 5
         }
@@ -82,9 +83,9 @@ class CactusLauncher(game: MegamanMaverickGame) : AbstractEnemy(game), IParentEn
 
     private val loop = Loop(CactusLauncherState.values().toGdxArray())
     private val timers = objectMapOf(
-        "wait" to Timer(WAIT_DUR),
-        "fire" to Timer(FIRE_DUR),
-        "reload" to Timer(RELOAD_DUR)
+        "wait" pairTo Timer(WAIT_DUR),
+        "fire" pairTo Timer(FIRE_DUR),
+        "reload" pairTo Timer(RELOAD_DUR)
     )
 
     override fun init() {
@@ -113,7 +114,7 @@ class CactusLauncher(game: MegamanMaverickGame) : AbstractEnemy(game), IParentEn
 
     private fun launchMissile() {
         val missile = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.CACTUS_MISSILE)!!
-        missile.spawn(props(ConstKeys.POSITION to body.getTopCenterPoint()))
+        missile.spawn(props(ConstKeys.POSITION pairTo body.getTopCenterPoint()))
         children.add(missile)
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
     }
@@ -185,9 +186,9 @@ class CactusLauncher(game: MegamanMaverickGame) : AbstractEnemy(game), IParentEn
             }
         }
         val animations = objectMapOf<String, IAnimation>(
-            "wait" to Animation(regions["wait"]),
-            "fire" to Animation(regions["fire"], 2, 1, 0.1f, false),
-            "reload" to Animation(regions["reload"], 2, 1, 0.1f, false)
+            "wait" pairTo Animation(regions["wait"]),
+            "fire" pairTo Animation(regions["fire"], 2, 1, 0.1f, false),
+            "reload" pairTo Animation(regions["reload"], 2, 1, 0.1f, false)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

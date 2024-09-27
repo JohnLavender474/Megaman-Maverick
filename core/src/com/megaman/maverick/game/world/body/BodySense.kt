@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.world.body
 
+import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.world.body.Body
 
 enum class BodySense {
@@ -36,7 +37,7 @@ fun Body.setBodySense(bodySense: BodySense, value: Boolean) =
 fun Body.setBodySense(vararg bodySenses: BodySense, value: Boolean) =
     bodySenses.forEach { setBodySense(it, value) }
 
-fun Body.setBodySense(vararg bodySenses: Pair<BodySense, Boolean>) =
+fun Body.setBodySense(vararg bodySenses: GamePair<BodySense, Boolean>) =
     bodySenses.forEach { setBodySense(it.first, it.second) }
 
 fun Body.resetBodySenses() = BodySense.values().forEach { putProperty(it.toString(), false) }

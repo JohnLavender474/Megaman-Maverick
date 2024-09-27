@@ -11,6 +11,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -56,10 +57,15 @@ class BabySpider(game: MegamanMaverickGame) : AbstractEnemy(game) {
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(10), Fireball::class to dmgNeg(ConstVals.MAX_HEALTH), ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(10),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
-        }, ChargedShotExplosion::class to dmgNeg(15)
+        }, ChargedShotExplosion::class pairTo dmgNeg {
+            it as ChargedShotExplosion
+            if (it.fullyCharged) 10 else 5
+        }
     )
 
     private lateinit var babySpiderState: BabySpiderState
@@ -226,8 +232,8 @@ class BabySpider(game: MegamanMaverickGame) : AbstractEnemy(game) {
             }
         }
         val animations = objectMapOf<String, IAnimation>(
-            "still" to Animation(stillRegion!!),
-            "running" to Animation(runRegion!!, 1, 4, 0.1f, true)
+            "still" pairTo Animation(stillRegion!!),
+            "running" pairTo Animation(runRegion!!, 1, 4, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

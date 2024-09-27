@@ -13,9 +13,7 @@ import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.getRandomBool
-import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.common.objects.WeightedRandomSelector
-import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.objects.*
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.getCenter
 import com.mega.game.engine.common.time.Timer
@@ -118,20 +116,20 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
     }
 
     override val damageNegotiations =
-        objectMapOf<KClass<out IDamager>, DamageNegotiation>(ChargedShot::class to dmgNeg {
+        objectMapOf<KClass<out IDamager>, DamageNegotiation>(ChargedShot::class pairTo dmgNeg {
             if ((it as ChargedShot).fullyCharged) 1 else 0
         })
 
     private val weightedAttackSelector = WeightedRandomSelector(
-        SigmaRatAttack.ELECTRIC_BALLS to HIGH_CHANCE,
-        SigmaRatAttack.FIRE_BLASTS to MEDIUM_CHANCE,
-        SigmaRatAttack.CLAW_SHOCK to MEDIUM_CHANCE,
-        SigmaRatAttack.CLAW_LAUNCH to HIGH_CHANCE
+        SigmaRatAttack.ELECTRIC_BALLS pairTo HIGH_CHANCE,
+        SigmaRatAttack.FIRE_BLASTS pairTo MEDIUM_CHANCE,
+        SigmaRatAttack.CLAW_SHOCK pairTo MEDIUM_CHANCE,
+        SigmaRatAttack.CLAW_LAUNCH pairTo HIGH_CHANCE
     )
     private val attackTimer = Timer(ATTACK_DELAY_MAX)
     private val electricBalls = Queue<SigmaRatElectricBall>()
     private val electricShotDelayTimer = Timer(ELECTRIC_BALL_SHOT_DELAY)
-    private val fireballs = Queue<Pair<Fireball, Float>>()
+    private val fireballs = Queue<GamePair<Fireball, Float>>()
     private val fireballDelayTimer = Timer(FIREBALL_DELAY)
     private lateinit var headPosition: Vector2
     private lateinit var leftClawSpawn: Vector2
@@ -167,18 +165,18 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
         rightClaw = SigmaRatClaw(game)
         leftClaw!!.spawn(
             props(
-                ConstKeys.PARENT to this,
-                ConstKeys.SPEED to CLAW_ROTATION_SPEED,
-                ConstKeys.POSITION to leftClawSpawn,
-                ConstKeys.MAX_Y to headPosition.y
+                ConstKeys.PARENT pairTo this,
+                ConstKeys.SPEED pairTo CLAW_ROTATION_SPEED,
+                ConstKeys.POSITION pairTo leftClawSpawn,
+                ConstKeys.MAX_Y pairTo headPosition.y
             )
         )
         rightClaw!!.spawn(
             props(
-                ConstKeys.PARENT to this,
-                ConstKeys.SPEED to -CLAW_ROTATION_SPEED,
-                ConstKeys.POSITION to rightClawSpawn,
-                ConstKeys.MAX_Y to headPosition.y
+                ConstKeys.PARENT pairTo this,
+                ConstKeys.SPEED pairTo -CLAW_ROTATION_SPEED,
+                ConstKeys.POSITION pairTo rightClawSpawn,
+                ConstKeys.MAX_Y pairTo headPosition.y
             )
         )
 
@@ -200,12 +198,12 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
         val explosions = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION, 2)
         explosions[0].spawn(
             props(
-                ConstKeys.POSITION to leftClaw!!.body.getCenter(), ConstKeys.SOUND to SoundAsset.EXPLOSION_1_SOUND
+                ConstKeys.POSITION pairTo leftClaw!!.body.getCenter(), ConstKeys.SOUND pairTo SoundAsset.EXPLOSION_1_SOUND
             )
         )
         explosions[1].spawn(
             props(
-                ConstKeys.POSITION to rightClaw!!.body.getCenter(), ConstKeys.SOUND to SoundAsset.EXPLOSION_1_SOUND
+                ConstKeys.POSITION pairTo rightClaw!!.body.getCenter(), ConstKeys.SOUND pairTo SoundAsset.EXPLOSION_1_SOUND
             )
         )
         leftClaw!!.destroy()
@@ -263,7 +261,7 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
                 for (i in 0 until ELECTRIC_BALL_ANGLES.size) {
                     val electricBall =
                         EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SIGMA_RAT_ELECTRIC_BALL)!!
-                    electricBall.spawn(props(ConstKeys.POSITION to headPosition))
+                    electricBall.spawn(props(ConstKeys.POSITION pairTo headPosition))
                     electricBalls.addLast(electricBall as SigmaRatElectricBall)
                 }
                 electricBallsClockwise = getRandomBool()
@@ -278,10 +276,10 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
                         EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.FIREBALL)!! as Fireball
                     fireball.spawn(
                         props(
-                            ConstKeys.POSITION to headPosition, ConstKeys.CULL_TIME to FIREBALL_CULL_TIME
+                            ConstKeys.POSITION pairTo headPosition, ConstKeys.CULL_TIME pairTo FIREBALL_CULL_TIME
                         )
                     )
-                    fireballs.addLast(fireball to angle)
+                    fireballs.addLast(fireball pairTo angle)
                 }
             }
 
@@ -428,7 +426,8 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
             }
         }
         val animations = objectMapOf<String, IAnimation>(
-            "Body" to Animation(bodyRegion!!), "BodyDamaged" to Animation(bodyDamagedRegion!!, 1, 2, 0.1f, true)
+            "Body" pairTo Animation(bodyRegion!!),
+            "BodyDamaged" pairTo Animation(bodyDamagedRegion!!, 1, 2, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

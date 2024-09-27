@@ -10,6 +10,7 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.getRandom
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -113,7 +114,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEnt
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.ASTEROID_EXPLOSION)!!
-        explosion.spawn(props(ConstKeys.POSITION to body.getCenter()))
+        explosion.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
     }
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
@@ -192,7 +193,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEnt
         )
         pointsComponent.putListener(ConstKeys.HEALTH) {
             if (it.current <= ConstVals.MIN_HEALTH) {
-                GameLogger.debug(TAG, "Asteroid has died due to health reaching zero.")
+                GameLogger.debug(TAG, "Asteroid has died due pairTo health reaching zero.")
                 destroy()
             }
         }

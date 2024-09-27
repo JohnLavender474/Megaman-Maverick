@@ -11,8 +11,10 @@ import com.mega.game.engine.animations.IAnimator
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Matrix
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GamePolygon
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullablesComponent
@@ -94,7 +96,7 @@ class PolygonWater(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     private fun defineDrawables(cells: Matrix<GameRectangle>) {
         val sprites = OrderedMap<String, GameSprite>()
-        val animators = Array<Pair<() -> GameSprite, IAnimator>>()
+        val animators = Array<GamePair<() -> GameSprite, IAnimator>>()
         cells.forEach { x, y, bounds ->
             if (bounds == null) return@forEach
 
@@ -116,7 +118,7 @@ class PolygonWater(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
             val animation = Animation(if (isSurface) surfaceReg!! else underReg!!, 1, 2, 0.15f, true)
             val animator = Animator(animation)
-            animators.add({ waterSprite } to animator)
+            animators.add({ waterSprite } pairTo animator)
         }
         addComponent(SpritesComponent(sprites))
         addComponent(AnimationsComponent(animators))
@@ -141,6 +143,6 @@ class PolygonWater(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     private fun defineCullablesComponent(): CullablesComponent {
         val cullable = getGameCameraCullingLogic(this)
-        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullable))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullable))
     }
 }

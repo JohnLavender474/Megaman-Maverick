@@ -13,6 +13,7 @@ import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
@@ -130,8 +131,8 @@ class SigmaRatElectricBallExplosion(game: MegamanMaverickGame) : MegaGameEntity(
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySuppplier: () -> String? = { if (shockTimer.isFinished()) "dissipate" else "pulse" }
         val animations = objectMapOf<String, IAnimation>(
-            "dissipate" to Animation(dissipateRegion!!, 1, 3, 0.1f, false),
-            "pulse" to Animation(explosionRegion!!, 1, 3, 0.1f, true)
+            "dissipate" pairTo Animation(dissipateRegion!!, 1, 3, 0.1f, false),
+            "pulse" pairTo Animation(explosionRegion!!, 1, 3, 0.1f, true)
         )
         val animator = Animator(keySuppplier, animations)
         return AnimationsComponent(this, animator)

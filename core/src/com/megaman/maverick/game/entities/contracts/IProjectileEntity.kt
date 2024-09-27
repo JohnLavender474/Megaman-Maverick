@@ -6,6 +6,7 @@ import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.extensions.overlaps
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.components.IGameComponent
 import com.mega.game.engine.cullables.CullableOnEvent
 import com.mega.game.engine.cullables.CullableOnUncontained
@@ -34,8 +35,8 @@ interface IProjectileEntity : IMegaGameEntity, IBodyEntity, IAudioEntity, ICulla
         components.add(
             CullablesComponent(
                 objectMapOf(
-                    ConstKeys.CULL_EVENTS to getCullOnEventCullable(),
-                    ConstKeys.CULL_OUT_OF_BOUNDS to getCullOnOutOfGameCam(outOfBoundsCullTime)
+                    ConstKeys.CULL_EVENTS pairTo getCullOnEventCullable(),
+                    ConstKeys.CULL_OUT_OF_BOUNDS pairTo getCullOnOutOfGameCam(outOfBoundsCullTime)
                 )
             )
         )

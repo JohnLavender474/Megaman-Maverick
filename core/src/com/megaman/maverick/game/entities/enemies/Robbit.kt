@@ -18,6 +18,7 @@ import com.mega.game.engine.common.interfaces.Updatable
 
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
@@ -66,13 +67,13 @@ class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override var facing = Facing.RIGHT
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(10),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(10),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 15 else 10
         }
@@ -81,9 +82,9 @@ class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     private val robbitLoop = Loop(RobbitState.values().toGdxArray())
     private val robbitTimers =
         objectMapOf(
-            RobbitState.STANDING to Timer(STAND_DUR),
-            RobbitState.CROUCHING to Timer(CROUCH_DUR),
-            RobbitState.JUMPING to Timer(JUMP_DUR)
+            RobbitState.STANDING pairTo Timer(STAND_DUR),
+            RobbitState.CROUCHING pairTo Timer(CROUCH_DUR),
+            RobbitState.JUMPING pairTo Timer(JUMP_DUR)
         )
     private val robbitTimer: Timer
         get() = robbitTimers[robbitLoop.getCurrent()]!!
@@ -187,9 +188,9 @@ class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         }
         val animations =
             objectMapOf<String, IAnimation>(
-                "stand" to Animation(atlas!!.findRegion("Robbit/Stand")),
-                "crouch" to Animation(atlas!!.findRegion("Robbit/Crouch")),
-                "jump" to Animation(atlas!!.findRegion("Robbit/Jump"))
+                "stand" pairTo Animation(atlas!!.findRegion("Robbit/Stand")),
+                "crouch" pairTo Animation(atlas!!.findRegion("Robbit/Crouch")),
+                "jump" pairTo Animation(atlas!!.findRegion("Robbit/Jump"))
             )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

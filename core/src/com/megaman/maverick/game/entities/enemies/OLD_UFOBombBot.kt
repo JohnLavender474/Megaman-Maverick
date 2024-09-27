@@ -12,6 +12,7 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -61,10 +62,10 @@ class OLD_UFOBombBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(15),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShotExplosion::class to dmgNeg(ConstVals.MAX_HEALTH)
+        Bullet::class pairTo dmgNeg(15),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShotExplosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
     )
     override lateinit var facing: Facing
 
@@ -120,8 +121,8 @@ class OLD_UFOBombBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         val bomb = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.UFO_BOMB)!!
         bomb.spawn(
             props(
-                ConstKeys.POSITION to body.getBottomCenterPoint(),
-                ConstKeys.OWNER to this
+                ConstKeys.POSITION pairTo body.getBottomCenterPoint(),
+                ConstKeys.OWNER pairTo this
             )
         )
     }
@@ -164,8 +165,8 @@ class OLD_UFOBombBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { if (dropping) "drop" else "fly" }
         val animations = objectMapOf<String, IAnimation>(
-            "drop" to Animation(dropRegion!!, 1, 3, 0.05f, false),
-            "fly" to Animation(flyRegion!!, 1, 2, 0.1f, true)
+            "drop" pairTo Animation(dropRegion!!, 1, 3, 0.05f, false),
+            "fly" pairTo Animation(flyRegion!!, 1, 2, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

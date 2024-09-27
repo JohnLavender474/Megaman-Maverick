@@ -25,7 +25,7 @@ class RotatableCamera(var onJustFinishedRotating: (() -> Unit)? = null) : Orthog
     private var rotFinished = true
     private var accumulator = 0f
 
-    fun getRotatedBounds() = toGameRectangle().getCardinallyRotatedShape(directionRotation, false)
+    fun getRotatedBounds() = toGameRectangle().getCardinallyRotatedShape(directionRotation)
 
     fun isFinishedRotating() = rotFinished
 

@@ -12,6 +12,7 @@ import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
@@ -132,7 +133,7 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
         destroy()
         game.eventsMan.submitEvent(
             Event(
-                EventType.ADD_PLAYER_HEALTH, props(ConstKeys.VALUE to (if (large) LARGE_HEALTH else SMALL_HEALTH))
+                EventType.ADD_PLAYER_HEALTH, props(ConstKeys.VALUE pairTo (if (large) LARGE_HEALTH else SMALL_HEALTH))
             )
         )
     }
@@ -201,8 +202,8 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String = { if (large) "large" else "small" }
         val animations = objectMapOf<String, IAnimation>(
-            "large" to Animation(textureAtlas!!.findRegion("HealthBulb"), 1, 2, 0.15f, true),
-            "small" to Animation(textureAtlas!!.findRegion("SmallHealthBulb"))
+            "large" pairTo Animation(textureAtlas!!.findRegion("HealthBulb"), 1, 2, 0.15f, true),
+            "small" pairTo Animation(textureAtlas!!.findRegion("SmallHealthBulb"))
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
@@ -211,7 +212,7 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
     private fun defineCullablesComponent(): CullablesComponent {
         val eventsToCullOn = objectSetOf<Any>(EventType.GAME_OVER)
         val cullOnEvent = CullableOnEvent({ eventsToCullOn.contains(it.key) }, eventsToCullOn)
-        return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS to cullOnEvent))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS pairTo cullOnEvent))
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->

@@ -11,6 +11,7 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -45,10 +46,10 @@ class Copipi(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(ConstVals.MAX_HEALTH),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShotExplosion::class to dmgNeg(ConstVals.MAX_HEALTH)
+        Bullet::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShotExplosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
     )
     override lateinit var facing: Facing
 

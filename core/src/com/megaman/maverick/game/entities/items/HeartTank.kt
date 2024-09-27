@@ -8,6 +8,7 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -74,7 +75,7 @@ class HeartTank(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, I
 
     override fun contactWithPlayer(megaman: Megaman) {
         destroy()
-        game.eventsMan.submitEvent(Event(EventType.ADD_HEART_TANK, props(ConstKeys.VALUE to heartTank)))
+        game.eventsMan.submitEvent(Event(EventType.ADD_HEART_TANK, props(ConstKeys.VALUE pairTo heartTank)))
     }
 
     private fun defineBodyComponent(): BodyComponent {

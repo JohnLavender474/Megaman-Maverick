@@ -14,6 +14,7 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.damage.IDamageable
@@ -79,7 +80,7 @@ class FireMetFlame(game: MegamanMaverickGame) : AbstractProjectile(game), IAnima
         destroy()
 
         val smokePuff = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SMOKE_PUFF)!!
-        smokePuff.spawn(props(ConstKeys.POSITION to body.getBottomCenterPoint(), ConstKeys.OWNER to owner))
+        smokePuff.spawn(props(ConstKeys.POSITION pairTo body.getBottomCenterPoint(), ConstKeys.OWNER pairTo owner))
 
         if (overlapsGameCamera()) playSoundNow(SoundAsset.WHOOSH_SOUND, false)
     }
@@ -121,8 +122,8 @@ class FireMetFlame(game: MegamanMaverickGame) : AbstractProjectile(game), IAnima
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { if (whooshing) "whooshing" else "still" }
         val animations = objectMapOf<String, IAnimation>(
-            "still" to Animation(regions["still"], 1, 3, 0.1f, true),
-            "whooshing" to Animation(regions["whoosh"], 1, 3, 0.1f, true)
+            "still" pairTo Animation(regions["still"], 1, 3, 0.1f, true),
+            "whooshing" pairTo Animation(regions["whoosh"], 1, 3, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

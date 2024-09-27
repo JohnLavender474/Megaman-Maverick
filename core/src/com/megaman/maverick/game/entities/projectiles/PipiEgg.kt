@@ -8,6 +8,7 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.randomVector2
 import com.mega.game.engine.common.getRandom
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.damage.IDamageable
@@ -96,7 +97,12 @@ class PipiEgg(game: MegamanMaverickGame) : AbstractProjectile(game) {
             if (getMegaman().body.x < body.getMaxX()) trajectory.x *= -1f
 
             val babyBirdie = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.COPIPI)!!
-            babyBirdie.spawn(props(ConstKeys.POSITION to randomSpawnPosition, ConstKeys.TRAJECTORY to trajectory))
+            babyBirdie.spawn(
+                props(
+                    ConstKeys.POSITION pairTo randomSpawnPosition,
+                    ConstKeys.TRAJECTORY pairTo trajectory
+                )
+            )
         }
     }
 
@@ -105,9 +111,9 @@ class PipiEgg(game: MegamanMaverickGame) : AbstractProjectile(game) {
             val eggShatter = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.PIPI_EGG_SHATTER)!!
             eggShatter.spawn(
                 props(
-                    ConstKeys.POSITION to body.getCenter(),
-                    ConstKeys.IMPULSE to eggShatterImpulses[i].cpy().scl(ConstVals.PPM.toFloat()),
-                    ConstKeys.TYPE to i
+                    ConstKeys.POSITION pairTo body.getCenter(),
+                    ConstKeys.IMPULSE pairTo eggShatterImpulses[i].cpy().scl(ConstVals.PPM.toFloat()),
+                    ConstKeys.TYPE pairTo i
                 )
             )
         }

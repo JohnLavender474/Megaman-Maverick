@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.common.interfaces.Initializable
+import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.fonts.BitmapFontHandle
 import com.mega.game.engine.screens.BaseScreen
@@ -47,7 +48,7 @@ class BossIntroScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
     private lateinit var bText: BitmapFontHandle
 
     private var b: BossType? = null
-    private var currBAnim: Pair<Sprite, Queue<Pair<Animation, Timer>?>>? = null
+    private var currBAnim: GamePair<Sprite, Queue<GamePair<Animation, Timer>?>>? = null
 
     private var initialized = false
 
@@ -89,7 +90,7 @@ class BossIntroScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
         val size = b.spriteSize
         s.setSize(size.x * ConstVals.PPM, size.y * ConstVals.PPM)
 
-        currBAnim = Pair(
+        currBAnim = GamePair(
             s, b.getIntroAnimsQ(
                 game.assMan.get(b.ass.source, TextureAtlas::class.java)
             )

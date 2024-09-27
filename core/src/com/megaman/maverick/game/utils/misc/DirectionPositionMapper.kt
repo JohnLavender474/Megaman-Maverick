@@ -4,20 +4,21 @@ import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.objects.pairTo
 
 object DirectionPositionMapper {
 
     private val directionToPosition = objectMapOf(
-        Direction.UP to Position.TOP_CENTER,
-        Direction.DOWN to Position.BOTTOM_CENTER,
-        Direction.LEFT to Position.CENTER_LEFT,
-        Direction.RIGHT to Position.CENTER_RIGHT
+        Direction.UP pairTo Position.TOP_CENTER,
+        Direction.DOWN pairTo Position.BOTTOM_CENTER,
+        Direction.LEFT pairTo Position.CENTER_LEFT,
+        Direction.RIGHT pairTo Position.CENTER_RIGHT
     )
     private val invertedDirectionToPosition = objectMapOf(
-        Direction.UP to Position.BOTTOM_CENTER,
-        Direction.DOWN to Position.TOP_CENTER,
-        Direction.LEFT to Position.CENTER_RIGHT,
-        Direction.RIGHT to Position.CENTER_LEFT
+        Direction.UP pairTo Position.BOTTOM_CENTER,
+        Direction.DOWN pairTo Position.TOP_CENTER,
+        Direction.LEFT pairTo Position.CENTER_RIGHT,
+        Direction.RIGHT pairTo Position.CENTER_LEFT
     )
     private val positionToDirection = ObjectMap<Position, Direction>()
 

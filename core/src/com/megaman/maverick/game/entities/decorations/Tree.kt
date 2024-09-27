@@ -5,6 +5,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -59,6 +60,6 @@ class Tree(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IC
 
     private fun defineCullablesComponent(): CullablesComponent {
         val cullOutOfBounds = getGameCameraCullingLogic(game.getGameCamera(), { bounds }, 0f)
-        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullOutOfBounds))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullOutOfBounds))
     }
 }

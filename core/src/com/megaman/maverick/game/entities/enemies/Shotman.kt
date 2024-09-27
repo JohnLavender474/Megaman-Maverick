@@ -12,6 +12,7 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -62,13 +63,13 @@ class Shotman(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity 
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(10),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(10),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 15 else 10
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 10 else 5
         }
@@ -124,10 +125,10 @@ class Shotman(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity 
 
         bullet.spawn(
             props(
-                ConstKeys.OWNER to this,
-                ConstKeys.POSITION to spawn,
-                ConstKeys.GRAVITY to Vector2(0f, LAUNCH_GRAVITY * ConstVals.PPM),
-                ConstKeys.TRAJECTORY to Vector2(impulseX, LAUNCH_IMPULSE_Y * ConstVals.PPM)
+                ConstKeys.OWNER pairTo this,
+                ConstKeys.POSITION pairTo spawn,
+                ConstKeys.GRAVITY pairTo Vector2(0f, LAUNCH_GRAVITY * ConstVals.PPM),
+                ConstKeys.TRAJECTORY pairTo Vector2(impulseX, LAUNCH_IMPULSE_Y * ConstVals.PPM)
             )
         )
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
@@ -141,9 +142,9 @@ class Shotman(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity 
             if (getMegaman().body.x > body.x) SHOOT_SPEED_X * ConstVals.PPM else -SHOOT_SPEED_X * ConstVals.PPM
         bullet.spawn(
             props(
-                ConstKeys.OWNER to this,
-                ConstKeys.POSITION to spawn,
-                ConstKeys.TRAJECTORY to Vector2(impulseX, 0f)
+                ConstKeys.OWNER pairTo this,
+                ConstKeys.POSITION pairTo spawn,
+                ConstKeys.TRAJECTORY pairTo Vector2(impulseX, 0f)
             )
         )
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
@@ -181,8 +182,8 @@ class Shotman(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { if (crouchTimer.isFinished()) "shoot" else "launch" }
         val animations = objectMapOf<String, IAnimation>(
-            "shoot" to Animation(shootRegion!!, 1, 2, 0.1f, true),
-            "launch" to Animation(launchRegion!!)
+            "shoot" pairTo Animation(shootRegion!!, 1, 2, 0.1f, true),
+            "launch" pairTo Animation(launchRegion!!)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.Queue
 import com.mega.game.engine.common.interfaces.Initializable
 import com.mega.game.engine.common.interfaces.Updatable
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
@@ -94,7 +95,7 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
         timer.runOnFinished = {
             megaman.add(heartTank)
             eventsMan.submitEvent(
-                Event(EventType.ADD_PLAYER_HEALTH, props(ConstKeys.VALUE to MegaHeartTank.HEALTH_BUMP))
+                Event(EventType.ADD_PLAYER_HEALTH, props(ConstKeys.VALUE pairTo MegaHeartTank.HEALTH_BUMP))
             )
             engine.systems.forEach { it.on = true }
         }

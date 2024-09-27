@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.Initializable
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.screens.menus.IMenuButton
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -39,8 +40,8 @@ class CameraSettingsScreen(
         CameraSettingsButton.FPS to { Gdx.graphics.framesPerSecond.toString() },
         CameraSettingsButton.VSYNC to { game.doUseVsync().toString() },
          */
-        CameraSettingsButton.LERP to { game.doLerpGameCamera().toString() },
-        CameraSettingsButton.LERP_VAL to { game.getLerpValueForGameCamera() }
+        CameraSettingsButton.LERP pairTo { game.doLerpGameCamera().toString() },
+        CameraSettingsButton.LERP_VAL pairTo { game.getLerpValueForGameCamera() }
     )
     private val buttonFontHandles = OrderedMap<MegaFontHandle, () -> Boolean>()
     private lateinit var blinkingArrow: BlinkingArrow

@@ -7,6 +7,7 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -78,9 +79,9 @@ class TubeBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IAudioEntity
         }).scl(ConstVals.PPM.toFloat())
         tubeBeam.spawn(
             props(
-                ConstKeys.POSITION to body.getCenter(),
-                ConstKeys.DIRECTION to directionRotation,
-                ConstKeys.TRAJECTORY to trajectory
+                ConstKeys.POSITION pairTo body.getCenter(),
+                ConstKeys.DIRECTION pairTo directionRotation,
+                ConstKeys.TRAJECTORY pairTo trajectory
             )
         )
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.BURST_SOUND, false)
@@ -111,7 +112,7 @@ class TubeBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IAudioEntity
         val cullableOnEvents = CullableOnEvent({ cullEvents.contains(it) }, cullEvents)
         return CullablesComponent(
             objectMapOf(
-                ConstKeys.CULL_OUT_OF_BOUNDS to cullableOutOfBounds, ConstKeys.CULL_EVENTS to cullableOnEvents
+                ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullableOutOfBounds, ConstKeys.CULL_EVENTS pairTo cullableOnEvents
             )
         )
     }

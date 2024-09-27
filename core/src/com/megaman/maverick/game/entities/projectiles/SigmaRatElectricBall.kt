@@ -13,6 +13,7 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.getOverlapPushDirection
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -109,8 +110,8 @@ class SigmaRatElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game)
         )
         explosion!!.spawn(
             props(
-                ConstKeys.POSITION to body.getBottomCenterPoint(),
-                ConstKeys.DIRECTION to (explosionDirection ?: Direction.UP)
+                ConstKeys.POSITION pairTo body.getBottomCenterPoint(),
+                ConstKeys.DIRECTION pairTo (explosionDirection ?: Direction.UP)
             )
         )
     }
@@ -152,7 +153,7 @@ class SigmaRatElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game)
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { if (hit) "hit" else "ball" }
         val animations = objectMapOf<String, IAnimation>(
-            "ball" to Animation(ballRegion!!, 1, 2, 0.1f, true), "hit" to Animation(hitRegion!!)
+            "ball" pairTo Animation(ballRegion!!, 1, 2, 0.1f, true), "hit" pairTo Animation(hitRegion!!)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

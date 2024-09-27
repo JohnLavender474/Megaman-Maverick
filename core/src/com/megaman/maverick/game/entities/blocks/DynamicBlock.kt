@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.blocks
 
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -46,7 +47,7 @@ open class DynamicBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
         body.set(bounds)
 
         staticInnerBlock = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.STANDARD) as Block
-        val staticInnerBlockProps = props(ConstKeys.BOUNDS to bounds)
+        val staticInnerBlockProps = props(ConstKeys.BOUNDS pairTo bounds)
         if (spawnProps.containsKey(ConstKeys.BODY_LABELS)) staticInnerBlockProps.put(
             ConstKeys.BODY_LABELS,
             spawnProps.get(ConstKeys.BODY_LABELS)

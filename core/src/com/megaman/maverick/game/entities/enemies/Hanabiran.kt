@@ -15,6 +15,7 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -87,10 +88,10 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
     override val damageNegotiations =
         objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-            Bullet::class to dmgNeg(10),
-            Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-            ChargedShot::class to dmgNeg(ConstVals.MAX_HEALTH),
-            ChargedShotExplosion::class to dmgNeg(ConstVals.MAX_HEALTH)
+            Bullet::class pairTo dmgNeg(10),
+            Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+            ChargedShot::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+            ChargedShotExplosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
         )
 
     override fun init() {
@@ -120,9 +121,9 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         )
         petal.spawn(
             props(
-                ConstKeys.POSITION to start,
-                ConstKeys.TRAJECTORY to trajectory,
-                ConstKeys.OWNER to this
+                ConstKeys.POSITION pairTo start,
+                ConstKeys.TRAJECTORY pairTo trajectory,
+                ConstKeys.OWNER pairTo this
             )
         )
     }
@@ -270,7 +271,7 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         }
         val animations =
             objectMapOf<String, IAnimation>(
-                "1PetalSpin" to
+                "1PetalSpin" pairTo
                         Animation(
                             atlas!!.findRegion("Hanabiran/1PetalSpin"),
                             1,
@@ -278,7 +279,7 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                             ANIMATION_FRAME_DURATION,
                             true
                         ),
-                "2PetalsSpin" to
+                "2PetalsSpin" pairTo
                         Animation(
                             atlas!!.findRegion("Hanabiran/2PetalsSpin"),
                             1,
@@ -286,7 +287,7 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                             ANIMATION_FRAME_DURATION,
                             true
                         ),
-                "3PetalsSpin" to
+                "3PetalsSpin" pairTo
                         Animation(
                             atlas!!.findRegion("Hanabiran/3PetalsSpin"),
                             1,
@@ -294,7 +295,7 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                             ANIMATION_FRAME_DURATION,
                             true
                         ),
-                "4PetalsSpin" to
+                "4PetalsSpin" pairTo
                         Animation(
                             atlas!!.findRegion("Hanabiran/4PetalsSpin"),
                             1,
@@ -302,7 +303,7 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                             ANIMATION_FRAME_DURATION,
                             true
                         ),
-                "NoPetalsSpin" to
+                "NoPetalsSpin" pairTo
                         Animation(
                             atlas!!.findRegion("Hanabiran/NoPetalsSpin"),
                             1,
@@ -310,11 +311,11 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                             ANIMATION_FRAME_DURATION,
                             true
                         ),
-                "Rise" to
+                "Rise" pairTo
                         Animation(
                             atlas!!.findRegion("Hanabiran/Rise"), 1, 3, ANIMATION_FRAME_DURATION, false
                         ),
-                "Drop" to
+                "Drop" pairTo
                         Animation(
                             atlas!!.findRegion("Hanabiran/Drop"), 1, 3, ANIMATION_FRAME_DURATION, false
                         ),

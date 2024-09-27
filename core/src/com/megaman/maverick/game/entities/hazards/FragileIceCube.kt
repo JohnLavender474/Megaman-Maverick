@@ -10,6 +10,7 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.extensions.set
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullableOnEvent
@@ -89,7 +90,7 @@ class FragileIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         destroy()
         for (i in 0 until 5) {
             val iceShard = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.ICE_SHARD)!!
-            iceShard.spawn(props(ConstKeys.POSITION to body.getCenter(), ConstKeys.INDEX to i))
+            iceShard.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.INDEX pairTo i))
         }
     }
 
@@ -152,7 +153,7 @@ class FragileIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         val cullOutOfBounds = getGameCameraCullingLogic(this, CULL_TIME)
         return CullablesComponent(
             objectMapOf(
-                ConstKeys.CULL_EVENTS to cullOnEvents, ConstKeys.CULL_OUT_OF_BOUNDS to cullOutOfBounds
+                ConstKeys.CULL_EVENTS pairTo cullOnEvents, ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullOutOfBounds
             )
         )
     }

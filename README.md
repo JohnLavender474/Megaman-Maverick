@@ -162,10 +162,10 @@ Megaman Weapon Get Sprite - [PixelBoy127](https://www.spriters-resource.com/cust
 - Xenoblade Gaur Plains - [Bulby](https://www.youtube.com/watch?v=xkrf4xfDsZs&t=60s&ab_channel=Bulby) - used in Timber Woman stage
 - MMX7 Vanish. Gung. - [Famitard](https://youtu.be/MFfZ-LEwcMo) - used in Desert Man stage
 - MM8 Frost Man Alt - [Famitard](https://youtu.be/pQvwU4BavFI) - used in Glacier Man stage
-- MMX5 Shining Firefly - [Famitard](https://youtu.be/EQMQvUFC3g0) - used in Polarity Man stage
-- FF7 Let the Battles Begin - [Bulby](https://www.youtube.com/watch?v=04_jviOqc3Y&t=16s&ab_channel=Bulby) - used as boss theme 1
+- MMX2 Morph Moth - [Famitard](https://youtu.be/qVGex4LsbYw?list=PLR2h5gxqJtUEUoq6GEYSHoMFaczaSmMP-) - used in Reactor Man stage
+- MMX6 Boss - [Famitard](https://youtu.be/IeySHEF5U_8) - used in Robot Master boss fights
 - MMX Sigma Fortress 1 - [Wyatt](https://youtu.be/mpHnNDPZNKk) - used in Wily stage 1
-- MMX Sigma Fortress 2 - [Bulby](https://youtu.be/WQK9AGaDJLw) - used in Wily stage 2 boss fight
+- MMX Sigma Fortress 2 - [Bulby](https://youtu.be/WQK9AGaDJLw) - used in Wily stage 2
 - MMX6 Gate's Laboratory- [Famitard](https://youtu.be/Zdtp6f57E_c) - used in Wily stage 3
 - MMX6 Sigma Final Boss - [Famitard](https://youtu.be/FVdYxfEo4lI) - used in Wily stage 3 boss fight
 - MMX5 Volt Kraken - [Famitard](https://www.youtube.com/watch?v=xi7Odov_rek&ab_channel=FamiTard)

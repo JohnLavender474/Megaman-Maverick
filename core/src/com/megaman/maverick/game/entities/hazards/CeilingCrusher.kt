@@ -12,6 +12,7 @@ import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -110,9 +111,9 @@ class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         block = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.STANDARD) as Block
         block!!.spawn(
             props(
-                ConstKeys.BOUNDS to GameRectangle().setSize(2f * ConstVals.PPM, 0.5f * ConstVals.PPM),
-                ConstKeys.BLOCK_FILTERS to objectSetOf(TAG),
-                ConstKeys.CULL_OUT_OF_BOUNDS to false
+                ConstKeys.BOUNDS pairTo GameRectangle().setSize(2f * ConstVals.PPM, 0.5f * ConstVals.PPM),
+                ConstKeys.BLOCK_FILTERS pairTo objectSetOf(TAG),
+                ConstKeys.CULL_OUT_OF_BOUNDS pairTo false
             )
         )
     }
@@ -137,7 +138,7 @@ class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
     }
 
     private fun setToStopIfBlock(fixture: IFixture) {
-        if (fixture.getEntity() != block && fixture.getFixtureType() == FixtureType.BLOCK) {
+        if (fixture.getEntity() != block && fixture.getType() == FixtureType.BLOCK) {
             GameLogger.debug(TAG, "setToStopIfBlock: fixture = $fixture")
             ceilingCrusherState = CeilingCrusherState.RAISING
             body.physics.velocity.setZero()

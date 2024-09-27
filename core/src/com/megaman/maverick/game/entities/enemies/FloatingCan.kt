@@ -11,6 +11,7 @@ import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -58,16 +59,15 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
         private const val SPAWN_DELAY = 1f
         private const val SPAWN_BLINK = 0.1f
         private const val FLY_SPEED = 1.5f
-        private const val DEBUG_PATHFINDING = false
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(15),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(15),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
-        }, ChargedShotExplosion::class to dmgNeg {
+        }, ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 15 else 10
         }
@@ -176,7 +176,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
                 passable
             },
-            properties = props(ConstKeys.HEURISTIC to DynamicBodyHeuristic(game))
+            properties = props(ConstKeys.HEURISTIC pairTo DynamicBodyHeuristic(game))
         )
         val pathfindingComponent = PathfindingComponent(params, {
             if (spawnDelayTimer.isFinished())

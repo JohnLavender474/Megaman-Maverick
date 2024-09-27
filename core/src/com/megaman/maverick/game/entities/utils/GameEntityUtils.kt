@@ -4,7 +4,9 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.toGameRectangle
 import com.mega.game.engine.cullables.CullableOnUncontained
 import com.mega.game.engine.entities.GameEntity
@@ -33,8 +35,8 @@ fun getObjectProps(props: Properties): Array<RectangleMapObject> {
     return objectProps
 }
 
-fun convertObjectPropsToEntitySuppliers(props: Properties): Array<Pair<() -> GameEntity, Properties>> {
-    val childEntitySuppliers = Array<Pair<() -> GameEntity, Properties>>()
+fun convertObjectPropsToEntitySuppliers(props: Properties): Array<GamePair<() -> GameEntity, Properties>> {
+    val childEntitySuppliers = Array<GamePair<() -> GameEntity, Properties>>()
 
     props.forEach { key, value ->
         if (value is RectangleMapObject) {
@@ -54,7 +56,7 @@ fun convertObjectPropsToEntitySuppliers(props: Properties): Array<Pair<() -> Gam
                 childProps.put(ConstKeys.CHILD_KEY, key)
                 childProps.put(ConstKeys.BOUNDS, value.rectangle.toGameRectangle())
 
-                childEntitySuppliers.add(childEntitySupplier to childProps)
+                childEntitySuppliers.add(childEntitySupplier pairTo childProps)
             }
         }
     }

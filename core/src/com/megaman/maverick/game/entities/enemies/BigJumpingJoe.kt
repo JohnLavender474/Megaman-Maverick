@@ -16,6 +16,7 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
@@ -76,13 +77,14 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableG
         private var jumpRegion: TextureRegion? = null
     }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(Bullet::class to dmgNeg(3),
-        Fireball::class to dmgNeg(10),
-        ChargedShot::class to dmgNeg {
+    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+        Bullet::class pairTo dmgNeg(3),
+        Fireball::class pairTo dmgNeg(10),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 10 else 5
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 5 else 3
         })
@@ -113,7 +115,7 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableG
             if (hasDepletedHealth()) {
                 val sniperJoe = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.SNIPER_JOE)!!
                 val spawnProps = props(
-                    ConstKeys.POSITION to body.getCenter().add(
+                    ConstKeys.POSITION pairTo body.getCenter().add(
                         0.15f * ConstVals.PPM * facing.value, 0.15f * ConstVals.PPM
                     )
                 )
@@ -247,8 +249,8 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableG
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { if (!waitTimer.isFinished()) "stand" else "jump" }
         animations = objectMapOf(
-            "stand" to Animation(standRegion!!),
-            "jump" to Animation(jumpRegion!!, 1, 2, 0.2f, false)
+            "stand" pairTo Animation(standRegion!!),
+            "jump" pairTo Animation(jumpRegion!!, 1, 2, 0.2f, false)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
@@ -259,9 +261,9 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableG
         if (scaleBullet) trajectory.x *= gravityScalar
         val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
         val props = props(
-            ConstKeys.POSITION to body.getCenter().add(0.15f * ConstVals.PPM * facing.value, 0.2f * ConstVals.PPM),
-            ConstKeys.TRAJECTORY to trajectory,
-            ConstKeys.OWNER to this
+            ConstKeys.POSITION pairTo body.getCenter().add(0.15f * ConstVals.PPM * facing.value, 0.2f * ConstVals.PPM),
+            ConstKeys.TRAJECTORY pairTo trajectory,
+            ConstKeys.OWNER pairTo this
         )
         bullet.spawn(props)
         requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)

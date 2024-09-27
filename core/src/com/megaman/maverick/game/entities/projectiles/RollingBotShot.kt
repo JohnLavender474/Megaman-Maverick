@@ -12,6 +12,7 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.damage.IDamageable
@@ -62,11 +63,11 @@ class RollingBotShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAni
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.CHARGED_SHOT_EXPLOSION)!!
         explosion.spawn(
             props(
-                ConstKeys.OWNER to owner,
-                ConstKeys.BOOLEAN to false,
-                ConstKeys.DURATION to EXPLOSION_DURATION,
-                ConstKeys.POSITION to body.getCenter(),
-                ConstKeys.DIRECTION to if (isFacing(Facing.LEFT)) Direction.LEFT else Direction.RIGHT
+                ConstKeys.OWNER pairTo owner,
+                ConstKeys.BOOLEAN pairTo false,
+                ConstKeys.DURATION pairTo EXPLOSION_DURATION,
+                ConstKeys.POSITION pairTo body.getCenter(),
+                ConstKeys.DIRECTION pairTo if (isFacing(Facing.LEFT)) Direction.LEFT else Direction.RIGHT
             )
         )
     }

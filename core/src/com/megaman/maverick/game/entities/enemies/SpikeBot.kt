@@ -15,6 +15,7 @@ import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
@@ -75,18 +76,18 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
     private enum class SpikeBotState { STAND, WALK, SHOOT }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(15),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShotExplosion::class to dmgNeg(ConstVals.MAX_HEALTH)
+        Bullet::class pairTo dmgNeg(15),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShotExplosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
     )
     override lateinit var facing: Facing
 
     private val loop = Loop(SpikeBotState.values().toGdxArray())
     private val timers = objectMapOf(
-        "stand" to Timer(STAND_DUR),
-        "shoot" to Timer(SHOOT_DUR, gdxArrayOf(TimeMarkedRunnable(SHOOT_TIME) { shoot() })),
-        "walk" to Timer(WALK_DUR)
+        "stand" pairTo Timer(STAND_DUR),
+        "shoot" pairTo Timer(SHOOT_DUR, gdxArrayOf(TimeMarkedRunnable(SHOOT_TIME) { shoot() })),
+        "walk" pairTo Timer(WALK_DUR)
     )
     private lateinit var animations: ObjectMap<String, IAnimation>
 
@@ -124,9 +125,9 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
             val needle = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.NEEDLE)!!
             needle.spawn(
                 props(
-                    ConstKeys.OWNER to this,
-                    ConstKeys.POSITION to position,
-                    ConstKeys.TRAJECTORY to trajectory
+                    ConstKeys.OWNER pairTo this,
+                    ConstKeys.POSITION pairTo position,
+                    ConstKeys.TRAJECTORY pairTo trajectory
                 )
             )
         }
@@ -211,7 +212,7 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
         val leftFootFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
         leftFootFixture.setConsumer { _, fixture ->
-            if (fixture.getFixtureType() == FixtureType.BLOCK)
+            if (fixture.getType() == FixtureType.BLOCK)
                 body.putProperty("${ConstKeys.LEFT}_${ConstKeys.FOOT}", true)
         }
         leftFootFixture.offsetFromBodyCenter = vector2Of(-0.375f * ConstVals.PPM)
@@ -221,7 +222,7 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
         val rightFootFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
         rightFootFixture.setConsumer { _, fixture ->
-            if (fixture.getFixtureType() == FixtureType.BLOCK)
+            if (fixture.getType() == FixtureType.BLOCK)
                 body.putProperty("${ConstKeys.RIGHT}_${ConstKeys.FOOT}", true)
         }
         rightFootFixture.offsetFromBodyCenter.x = 0.375f * ConstVals.PPM
@@ -265,10 +266,10 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
             }
         }
         animations = objectMapOf(
-            "jump" to Animation(regions["jump"]),
-            "stand" to Animation(regions["stand"]),
-            "walk" to Animation(regions["walk"], 2, 2, 0.1f, true),
-            "shoot" to Animation(regions["shoot"], 5, 1, 0.1f, false)
+            "jump" pairTo Animation(regions["jump"]),
+            "stand" pairTo Animation(regions["stand"]),
+            "walk" pairTo Animation(regions["walk"], 2, 2, 0.1f, true),
+            "shoot" pairTo Animation(regions["shoot"], 5, 1, 0.1f, false)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

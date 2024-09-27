@@ -12,6 +12,7 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -54,13 +55,13 @@ class BouncingAngryFlameBall(game: MegamanMaverickGame) : AbstractEnemy(game), I
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(3),
-        Fireball::class to dmgNeg(1),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(3),
+        Fireball::class pairTo dmgNeg(1),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 10 else 5
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 5 else 3
         })

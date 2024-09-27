@@ -10,6 +10,7 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -158,7 +159,8 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IEventListen
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String = { if (light) "light" else "dark" }
         val animations = objectMapOf<String, IAnimation>(
-            "light" to Animation(lightRegion!!, 1, 4, 0.1f, true), "dark" to Animation(darkRegion!!, 1, 4, 0.1f, true)
+            "light" pairTo Animation(lightRegion!!, 1, 4, 0.1f, true),
+            "dark" pairTo Animation(darkRegion!!, 1, 4, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
@@ -168,11 +170,11 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IEventListen
         game.eventsMan.submitEvent(
             Event(
                 EventType.BLACK_BACKGROUND, props(
-                    ConstKeys.KEYS to keys,
-                    ConstKeys.LIGHT to light,
-                    ConstKeys.CENTER to body.getCenter(),
-                    ConstKeys.RADIUS to LIGHT_RADIUS,
-                    ConstKeys.RADIANCE to RADIANCE_FACTOR
+                    ConstKeys.KEYS pairTo keys,
+                    ConstKeys.LIGHT pairTo light,
+                    ConstKeys.CENTER pairTo body.getCenter(),
+                    ConstKeys.RADIUS pairTo LIGHT_RADIUS,
+                    ConstKeys.RADIANCE pairTo RADIANCE_FACTOR
                 )
             )
         )

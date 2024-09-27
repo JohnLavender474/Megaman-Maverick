@@ -8,6 +8,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.damage.IDamageable
@@ -44,8 +45,7 @@ class CaveRock(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun init() {
         if (rockRegion == null)
-            rockRegion =
-                game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "CaveRock/Rock")
+            rockRegion = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "CaveRock/Rock")
         super.init()
     }
 
@@ -77,7 +77,7 @@ class CaveRock(game: MegamanMaverickGame) : AbstractProjectile(game) {
     }
 
     override fun hitWater(waterFixture: IFixture) {
-        // set x vel to zero and sink slowly
+        // set x vel pairTo zero and sink slowly
     }
 
     override fun hitShield(shieldFixture: IFixture) {
@@ -134,6 +134,6 @@ class CaveRock(game: MegamanMaverickGame) : AbstractProjectile(game) {
         destroy()
         val caveRockExplosion =
             EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.CAVE_ROCK_EXPLOSION)!!
-        caveRockExplosion.spawn(props(ConstKeys.POSITION to body.getCenter()))
+        caveRockExplosion.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
     }
 }

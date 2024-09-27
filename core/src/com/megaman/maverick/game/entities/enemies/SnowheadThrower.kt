@@ -14,6 +14,7 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -63,13 +64,13 @@ class SnowheadThrower(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(10),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(10),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 20
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
         }
@@ -110,7 +111,7 @@ class SnowheadThrower(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
 
     override fun explode(explosionProps: Properties?) {
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SNOWBALL_EXPLOSION)!!
-        explosion.spawn(props(ConstKeys.POSITION to body.getCenter()))
+        explosion.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
     }
 
     private fun throwHead() {
@@ -119,7 +120,7 @@ class SnowheadThrower(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
         val snowhead = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SNOW_HEAD)!!
         snowhead.spawn(
             props(
-                ConstKeys.OWNER to this, ConstKeys.POSITION to spawn, ConstKeys.TRAJECTORY to trajectory
+                ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo spawn, ConstKeys.TRAJECTORY pairTo trajectory
             )
         )
     }
@@ -185,8 +186,8 @@ class SnowheadThrower(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { if (throwing) "throwing" else "standing" }
         val animations = objectMapOf<String, IAnimation>(
-            "standing" to Animation(standRegion!!, 1, 3, 0.1f, false),
-            "throwing" to Animation(throwRegion!!, 1, 5, 0.075f, false)
+            "standing" pairTo Animation(standRegion!!, 1, 3, 0.1f, false),
+            "throwing" pairTo Animation(throwRegion!!, 1, 5, 0.075f, false)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

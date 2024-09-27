@@ -17,6 +17,7 @@ import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.interfaces.UpdateFunction
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.toGameRectangle
@@ -114,8 +115,11 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
         upperBlock = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.STANDARD) as Block
         upperBlock!!.spawn(
             props(
-                ConstKeys.CULL_OUT_OF_BOUNDS to false,
-                ConstKeys.BOUNDS to GameRectangle().setSize(BLOCK_WIDTH * ConstVals.PPM, BLOCK_HEIGHT * ConstVals.PPM)
+                ConstKeys.CULL_OUT_OF_BOUNDS pairTo false,
+                ConstKeys.BOUNDS pairTo GameRectangle().setSize(
+                    BLOCK_WIDTH * ConstVals.PPM,
+                    BLOCK_HEIGHT * ConstVals.PPM
+                )
                     .setTopCenterToPoint(body.getTopCenterPoint())
             )
         )
@@ -123,8 +127,11 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
         lowerBlock = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.STANDARD) as Block
         lowerBlock!!.spawn(
             props(
-                ConstKeys.CULL_OUT_OF_BOUNDS to false,
-                ConstKeys.BOUNDS to GameRectangle().setSize(BLOCK_WIDTH * ConstVals.PPM, BLOCK_HEIGHT * ConstVals.PPM)
+                ConstKeys.CULL_OUT_OF_BOUNDS pairTo false,
+                ConstKeys.BOUNDS pairTo GameRectangle().setSize(
+                    BLOCK_WIDTH * ConstVals.PPM,
+                    BLOCK_HEIGHT * ConstVals.PPM
+                )
                     .setBottomCenterToPoint(body.getBottomCenterPoint())
             )
         )
@@ -201,7 +208,7 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
 
                 game.eventsMan.submitEvent(
                     Event(
-                        EventType.TELEPORT, props(ConstKeys.ENTITY to entity, ConstKeys.KEY to nextKey)
+                        EventType.TELEPORT, props(ConstKeys.ENTITY pairTo entity, ConstKeys.KEY pairTo nextKey)
                     )
                 )
 
@@ -276,10 +283,10 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
 
         return SpritesComponent(
             orderedMapOf(
-                "frame" to frameSprite, "glass" to glassSprite
-            ), objectMapOf("frame" to UpdateFunction { _, _sprite ->
+                "frame" pairTo frameSprite, "glass" pairTo glassSprite
+            ), objectMapOf("frame" pairTo UpdateFunction { _, _sprite ->
                 _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
-            }, "glass" to UpdateFunction { _, _sprite ->
+            }, "glass" pairTo UpdateFunction { _, _sprite ->
                 _sprite.setCenter(body.getCenter())
             })
         )
@@ -289,10 +296,10 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
         val keySupplier: () -> String? =
             { if (!incomingBodies.isEmpty || !outgoingBodies.isEmpty) "active" else "inactive" }
         val animations = objectMapOf<String, IAnimation>(
-            "active" to Animation(regions["active"]!!, 1, 2, 0.05f, true),
-            "inactive" to Animation(regions["inactive"]!!)
+            "active" pairTo Animation(regions["active"]!!, 1, 2, 0.05f, true),
+            "inactive" pairTo Animation(regions["inactive"]!!)
         )
         val animator = Animator(keySupplier, animations)
-        return AnimationsComponent(gdxArrayOf({ sprites["glass"] } to animator))
+        return AnimationsComponent(gdxArrayOf({ sprites["glass"] } pairTo animator))
     }
 }

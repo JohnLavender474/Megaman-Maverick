@@ -14,6 +14,7 @@ import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -103,7 +104,7 @@ class FireMetSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParentE
 
     private fun spawnFireMet() {
         val fireMet = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.FIRE_MET)!!
-        fireMet.spawn(props(ConstKeys.POSITION to body.getCenter()))
+        fireMet.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
         children.add(fireMet)
     }
 
@@ -141,7 +142,7 @@ class FireMetSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParentE
             EventType.GAME_OVER, EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING
         )
         val cullOnEvents = CullableOnEvent({ eventsToCullOn.contains(it.key) }, eventsToCullOn)
-        return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS to cullOnEvents))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS pairTo cullOnEvents))
     }
 
     private fun defineSpritesComponent(): SpritesComponent {
@@ -164,10 +165,10 @@ class FireMetSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParentE
             } else "closed"
         }
         val animations = objectMapOf<String, IAnimation>(
-            "closed" to Animation(regions.get("closed")),
-            "opening" to Animation(regions.get("opening"), 2, 2, 0.1f, false),
-            "open" to Animation(regions.get("open")),
-            "closing" to Animation(regions.get("opening"), 2, 2, 0.1f, false).reversed()
+            "closed" pairTo Animation(regions.get("closed")),
+            "opening" pairTo Animation(regions.get("opening"), 2, 2, 0.1f, false),
+            "open" pairTo Animation(regions.get("open")),
+            "closing" pairTo Animation(regions.get("opening"), 2, 2, 0.1f, false).reversed()
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

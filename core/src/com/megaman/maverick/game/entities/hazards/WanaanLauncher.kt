@@ -7,6 +7,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.toGameRectangle
@@ -103,9 +104,9 @@ class WanaanLauncher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         wanaan = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.WANAAN) as Wanaan
         wanaan!!.spawn(
             props(
-                ConstKeys.POSITION to body.getTopCenterPoint(),
-                ConstKeys.DIRECTION to direction,
-                ConstKeys.IMPULSE to WANAAN_IMPULSE * ConstVals.PPM
+                ConstKeys.POSITION pairTo body.getTopCenterPoint(),
+                ConstKeys.DIRECTION pairTo direction,
+                ConstKeys.IMPULSE pairTo WANAAN_IMPULSE * ConstVals.PPM
             )
         )
         requestToPlaySound(SoundAsset.CHOMP_SOUND, false)

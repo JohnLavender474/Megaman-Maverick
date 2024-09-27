@@ -6,6 +6,7 @@ import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.getRandom
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.cullables.CullableOnEvent
 import com.mega.game.engine.cullables.CullablesComponent
@@ -59,7 +60,7 @@ abstract class AbstractEnemy(
                 disintegrate()
                 if (dropItemOnDeath) {
                     val randomInt = getRandom(0, 10)
-                    val props = props(ConstKeys.POSITION to body.getCenter())
+                    val props = props(ConstKeys.POSITION pairTo body.getCenter())
                     val entity: GameEntity? = when (randomInt) {
                         0, 1, 2 -> {
                             props.put(ConstKeys.LARGE, randomInt == 1)
@@ -131,14 +132,14 @@ abstract class AbstractEnemy(
     protected open fun disintegrate(disintegrationProps: Properties? = null) {
         if (overlapsGameCamera()) playSoundNow(SoundAsset.ENEMY_DAMAGE_SOUND, false)
         val disintegration = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)
-        val props = disintegrationProps ?: props(ConstKeys.POSITION to body.getCenter())
+        val props = disintegrationProps ?: props(ConstKeys.POSITION pairTo body.getCenter())
         disintegration!!.spawn(props)
     }
 
     protected open fun explode(explosionProps: Properties? = null) {
         if (overlapsGameCamera()) playSoundNow(SoundAsset.ENEMY_DAMAGE_SOUND, false)
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
-        val props = explosionProps ?: props(ConstKeys.OWNER to this, ConstKeys.POSITION to body.getCenter())
+        val props = explosionProps ?: props(ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo body.getCenter())
         explosion.spawn(props)
     }
 

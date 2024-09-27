@@ -18,6 +18,7 @@ import com.mega.game.engine.common.interfaces.Updatable
 
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -75,17 +76,22 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override var facing = Facing.LEFT
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(10), Fireball::class to dmgNeg(ConstVals.MAX_HEALTH), ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(10), 
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH), 
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
-        }, ChargedShotExplosion::class to dmgNeg(15)
+        }, ChargedShotExplosion::class pairTo dmgNeg {
+            it as ChargedShotExplosion
+            if (it.fullyCharged) 15 else 10
+        }
     )
 
     private val elecnLoop = Loop(ElecnState.values().toGdxArray(), false)
     private val elecnTimers = objectMapOf(
-        ElecnState.MOVING to Timer(MOVING_DURATION),
-        ElecnState.CHARGING to Timer(CHARGING_DURATION),
-        ElecnState.SHOCKING to Timer(SHOCKING_DURATION)
+        ElecnState.MOVING pairTo Timer(MOVING_DURATION),
+        ElecnState.CHARGING pairTo Timer(CHARGING_DURATION),
+        ElecnState.SHOCKING pairTo Timer(SHOCKING_DURATION)
     )
     private val elecnTimer: Timer
         get() = elecnTimers[elecnLoop.getCurrent()]!!
@@ -205,9 +211,9 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             }
         }
         val animations = objectMapOf<String, IAnimation>(
-            "moving" to Animation(atlas!!.findRegion("Elecn/Elecn1")),
-            "charging" to Animation(atlas!!.findRegion("Elecn/Elecn2"), 1, 2, 0.15f, true),
-            "shocking" to Animation(atlas!!.findRegion("Elecn/Elecn3"))
+            "moving" pairTo Animation(atlas!!.findRegion("Elecn/Elecn1")),
+            "charging" pairTo Animation(atlas!!.findRegion("Elecn/Elecn2"), 1, 2, 0.15f, true),
+            "shocking" pairTo Animation(atlas!!.findRegion("Elecn/Elecn3"))
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
@@ -224,7 +230,7 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             val shock = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.ELECTRIC_BALL)!!
             shock.spawn(
                 props(
-                    ConstKeys.POSITION to body.getTopCenterPoint(), ConstKeys.X to xVel, ConstKeys.Y to yVel
+                    ConstKeys.POSITION pairTo body.getTopCenterPoint(), ConstKeys.X pairTo xVel, ConstKeys.Y pairTo yVel
                 )
             )
         }

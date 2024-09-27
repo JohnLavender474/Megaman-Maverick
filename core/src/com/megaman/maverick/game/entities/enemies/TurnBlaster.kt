@@ -12,6 +12,7 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.vector2Of
 import com.mega.game.engine.common.interfaces.UpdateFunction
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -61,13 +62,13 @@ class TurnBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IDirectionRo
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(10),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(10),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 15 else 10
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 10 else 5
         }
@@ -117,7 +118,7 @@ class TurnBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IDirectionRo
             EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.REACT_MAN_PROJECTILE) as AbstractProjectile
         val offset = Vector2(0f, 0.65f * ConstVals.PPM).rotateDeg(directionRotation!!.rotation + angleOffset)
         val position = body.getCenter().add(offset)
-        orb!!.spawn(props(ConstKeys.OWNER to this, ConstKeys.POSITION to position, ConstKeys.BIG to false))
+        orb!!.spawn(props(ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo position, ConstKeys.BIG pairTo false))
     }
 
     private fun shootOrb() {

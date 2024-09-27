@@ -13,6 +13,7 @@ import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -156,9 +157,9 @@ class ElectrocutieChild(game: MegamanMaverickGame) : MegaGameEntity(game), IHaza
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { (parent as Electrocutie).currentState.name }
         val animations = objectMapOf<String, IAnimation>(
-            ElectrocutieState.MOVE.name to Animation(moveRegion!!),
-            ElectrocutieState.CHARGE.name to Animation(chargeRegion!!, 1, 2, 0.1f, true),
-            ElectrocutieState.SHOCK.name to Animation(shockRegion!!)
+            ElectrocutieState.MOVE.name pairTo Animation(moveRegion!!),
+            ElectrocutieState.CHARGE.name pairTo Animation(chargeRegion!!, 1, 2, 0.1f, true),
+            ElectrocutieState.SHOCK.name pairTo Animation(shockRegion!!)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

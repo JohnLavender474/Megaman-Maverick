@@ -4,6 +4,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.extensions.equalsAny
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.controller.ControllerComponent
 import com.mega.game.engine.controller.buttons.ButtonActuator
 import com.megaman.maverick.game.ConstKeys
@@ -143,8 +144,8 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
         setToNextWeapon()
     })
 
-    return ControllerComponent(MegaControllerButtons.LEFT to { left },
-        MegaControllerButtons.RIGHT to { right },
-        MegaControllerButtons.B to { attack },
-        MegaControllerButtons.SELECT to { changeWeapon })
+    return ControllerComponent(MegaControllerButtons.LEFT pairTo { left },
+        MegaControllerButtons.RIGHT pairTo { right },
+        MegaControllerButtons.B pairTo { attack },
+        MegaControllerButtons.SELECT pairTo { changeWeapon })
 }

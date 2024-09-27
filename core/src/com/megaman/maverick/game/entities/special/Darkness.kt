@@ -1,10 +1,5 @@
 package com.megaman.maverick.game.entities.special
 
-import com.mega.game.engine.world.body.*;
-import com.mega.game.engine.world.collisions.*;
-import com.mega.game.engine.world.contacts.*;
-import com.mega.game.engine.world.pathfinding.*;
-
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
@@ -17,6 +12,7 @@ import com.mega.game.engine.common.interfaces.IPropertizable
 import com.mega.game.engine.common.interpolate
 import com.mega.game.engine.common.objects.Matrix
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -39,7 +35,6 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
-
 import java.util.*
 
 class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IEventListener {
@@ -173,10 +168,10 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
                     lightEventQueue.add(
                         LightEvent(
                             LightEventType.LIGHT_SOURCE, props(
-                                ConstKeys.LIGHT to light,
-                                ConstKeys.CENTER to center,
-                                ConstKeys.RADIUS to radius,
-                                ConstKeys.RADIANCE to radiance
+                                ConstKeys.LIGHT pairTo light,
+                                ConstKeys.CENTER pairTo center,
+                                ConstKeys.RADIUS pairTo radius,
+                                ConstKeys.RADIANCE pairTo radiance
                             )
                         )
                     )
@@ -272,6 +267,6 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
 
     private fun defineCullablesComponent(): CullablesComponent {
         val cullable = getGameCameraCullingLogic(game.getGameCamera(), { bounds })
-        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullable))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullable))
     }
 }

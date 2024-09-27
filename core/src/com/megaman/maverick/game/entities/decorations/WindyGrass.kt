@@ -8,6 +8,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -67,7 +68,7 @@ open class WindyGrass(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
             val region = if (i == 0) leftRegion else if (i == tiles - 1) rightRegion else middleRegion
             val animation = Animation(region!!, 1, 2, 0.2f, true)
             val animator = Animator(animation)
-            animators.add({ grassSprite } to animator)
+            animators.add({ grassSprite } pairTo animator)
         }
     }
 
@@ -80,6 +81,6 @@ open class WindyGrass(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
 
     private fun defineCullablesComponent(): CullablesComponent {
         val cullOutOfBounds = getGameCameraCullingLogic(game.getGameCamera(), { bounds }, 0f)
-        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullOutOfBounds))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullOutOfBounds))
     }
 }

@@ -17,8 +17,10 @@ import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.interfaces.UpdateFunction
+import com.mega.game.engine.common.objects.GamePair
 
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.getCenter
 import com.mega.game.engine.common.time.Timer
@@ -68,16 +70,17 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
     enum class PopoheliState { APPROACHING, ATTACKING, FLEEING }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(15),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(15),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
-        })
+        }
+    )
     override lateinit var facing: Facing
 
     private val attackDelayTimer = Timer(ATTACK_DELAY)
@@ -244,16 +247,16 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val animators = Array<Pair<() -> GameSprite, IAnimator>>()
+        val animators = Array<GamePair<() -> GameSprite, IAnimator>>()
 
         val heliAnimation = Animation(heliRegion!!, 1, 2, 0.1f, true)
         val heliAnimator = Animator(heliAnimation)
-        animators.add({ sprites.get("heli") } to heliAnimator)
+        animators.add({ sprites.get("heli") } pairTo heliAnimator)
 
         for (i in 0 until FLAMES) {
             val flameAnimation = Animation(flameRegion!!, 1, 3, 0.1f, true)
             val flameAnimator = Animator(flameAnimation)
-            animators.add({ sprites.get("flame_$i") } to flameAnimator)
+            animators.add({ sprites.get("flame_$i") } pairTo flameAnimator)
         }
 
         return AnimationsComponent(animators)

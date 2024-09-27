@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.screens.levels
 
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.objects.pairTo
 import com.megaman.maverick.game.StartScreenOption
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.screens.ScreenEnum
@@ -8,7 +9,7 @@ import com.megaman.maverick.game.screens.ScreenEnum
 enum class Level(tmxSourceFile: String, val musicAss: MusicAsset) {
     // Boss levels
     TIMBER_WOMAN("TimberWoman.tmx", MusicAsset.XENOBLADE_GAUR_PLAINS_MUSIC),
-    REACTOR_MAN("ReactMan_v2.tmx", MusicAsset.MM3_SNAKE_MAN_MUSIC),
+    REACTOR_MAN("ReactMan_v2.tmx", MusicAsset.MMX2_MORPH_MOTH_MUSIC),
     INFERNO_MAN("InfernoMan_v2.tmx", MusicAsset.MMX6_BLAZE_HEATNIX_MUSIC),
     MOON_MAN("MoonMan_v3.tmx", MusicAsset.MMX5_DARK_DIZZY_MUSIC),
     DESERT_MAN("DesertMan.tmx", MusicAsset.MMX7_VANISHING_GUNGAROO_MUSIC),
@@ -47,20 +48,20 @@ enum class Level(tmxSourceFile: String, val musicAss: MusicAsset) {
 object LevelCompletionMap {
 
     private val prodMap = objectMapOf(
-        Level.MAGNET_MAN to ScreenEnum.SAVE_GAME_SCREEN,
-        Level.TIMBER_WOMAN to ScreenEnum.SAVE_GAME_SCREEN,
-        Level.DISTRIBUTOR_MAN to ScreenEnum.SAVE_GAME_SCREEN,
-        Level.ROASTER_MAN to ScreenEnum.SAVE_GAME_SCREEN,
-        Level.INFERNO_MAN to ScreenEnum.SAVE_GAME_SCREEN,
-        Level.BLUNT_MAN to ScreenEnum.SAVE_GAME_SCREEN,
-        Level.NUKE_MAN to ScreenEnum.SAVE_GAME_SCREEN,
-        Level.CREW_MAN to ScreenEnum.SAVE_GAME_SCREEN,
-        Level.FREEZE_MAN to ScreenEnum.SAVE_GAME_SCREEN,
-        Level.MICROWAVE_MAN to ScreenEnum.SAVE_GAME_SCREEN,
-        Level.GALAXY_MAN to ScreenEnum.SAVE_GAME_SCREEN,
-        Level.WILY_STAGE_1 to ScreenEnum.WILY_CASTLE_SCREEN,
-        Level.WILY_STAGE_2 to ScreenEnum.WILY_CASTLE_SCREEN,
-        Level.WILY_STAGE_3 to ScreenEnum.WILY_CASTLE_SCREEN
+        Level.MAGNET_MAN pairTo ScreenEnum.SAVE_GAME_SCREEN,
+        Level.TIMBER_WOMAN pairTo ScreenEnum.SAVE_GAME_SCREEN,
+        Level.DISTRIBUTOR_MAN pairTo ScreenEnum.SAVE_GAME_SCREEN,
+        Level.ROASTER_MAN pairTo ScreenEnum.SAVE_GAME_SCREEN,
+        Level.INFERNO_MAN pairTo ScreenEnum.SAVE_GAME_SCREEN,
+        Level.BLUNT_MAN pairTo ScreenEnum.SAVE_GAME_SCREEN,
+        Level.NUKE_MAN pairTo ScreenEnum.SAVE_GAME_SCREEN,
+        Level.CREW_MAN pairTo ScreenEnum.SAVE_GAME_SCREEN,
+        Level.FREEZE_MAN pairTo ScreenEnum.SAVE_GAME_SCREEN,
+        Level.MICROWAVE_MAN pairTo ScreenEnum.SAVE_GAME_SCREEN,
+        Level.GALAXY_MAN pairTo ScreenEnum.SAVE_GAME_SCREEN,
+        Level.WILY_STAGE_1 pairTo ScreenEnum.WILY_CASTLE_SCREEN,
+        Level.WILY_STAGE_2 pairTo ScreenEnum.WILY_CASTLE_SCREEN,
+        Level.WILY_STAGE_3 pairTo ScreenEnum.WILY_CASTLE_SCREEN
     )
 
     fun getNextScreen(level: Level, gameType: StartScreenOption = StartScreenOption.MAIN): ScreenEnum =

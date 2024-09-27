@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullablesComponent
@@ -83,7 +84,9 @@ class DecoratedGravityForce(game: MegamanMaverickGame) : MegaGameEntity(game), I
                 EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.FORCE_DECORATION)!! as ForceDecoration
             decoration.spawn(
                 props(
-                    ConstKeys.BOUNDS to it, ConstKeys.ROTATION to direction.rotation, ConstKeys.CULL to false
+                    ConstKeys.BOUNDS pairTo it,
+                    ConstKeys.ROTATION pairTo direction.rotation,
+                    ConstKeys.CULL pairTo false
                 )
             )
             decorations.add(decoration)
@@ -102,6 +105,6 @@ class DecoratedGravityForce(game: MegamanMaverickGame) : MegaGameEntity(game), I
 
     private fun defineCullablesComponent(): CullablesComponent {
         val cullOnOutOfBounds = getGameCameraCullingLogic(game.getGameCamera(), { bounds })
-        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullOnOutOfBounds))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullOnOutOfBounds))
     }
 }

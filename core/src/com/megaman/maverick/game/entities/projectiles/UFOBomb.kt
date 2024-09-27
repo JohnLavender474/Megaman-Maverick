@@ -9,6 +9,7 @@ import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -68,9 +69,9 @@ class UFOBomb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEn
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
         explosion.spawn(
             props(
-                ConstKeys.POSITION to body.getCenter(),
-                ConstKeys.OWNER to owner,
-                ConstKeys.SOUND to SoundAsset.EXPLOSION_2_SOUND
+                ConstKeys.POSITION pairTo body.getCenter(),
+                ConstKeys.OWNER pairTo owner,
+                ConstKeys.SOUND pairTo SoundAsset.EXPLOSION_2_SOUND
             )
         )
     }

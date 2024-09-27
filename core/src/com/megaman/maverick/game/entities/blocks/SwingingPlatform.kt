@@ -11,6 +11,7 @@ import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameLine
@@ -95,7 +96,7 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, 
             }
         }
         body.addBodyLabels(objectSetOf(BodyLabel.COLLIDE_DOWN_ONLY))
-        body.fixtures.filter { it.second.getFixtureType() == FixtureType.BLOCK }.map { it.second as Fixture }.forEach {
+        body.fixtures.filter { it.second.getType() == FixtureType.BLOCK }.map { it.second as Fixture }.forEach {
             it.addFixtureLabels(objectSetOf(FixtureLabel.NO_SIDE_TOUCHIE, FixtureLabel.NO_PROJECTILE_COLLISION))
         }
 
@@ -169,7 +170,7 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, 
                         children.add(picketJoe)
                         picketJoe.spawn(
                             props(
-                                ConstKeys.POSITION to body.getTopCenterPoint(), ConstKeys.CULL_OUT_OF_BOUNDS to false
+                                ConstKeys.POSITION pairTo body.getTopCenterPoint(), ConstKeys.CULL_OUT_OF_BOUNDS pairTo false
                             )
                         )
                     }
@@ -179,7 +180,7 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, 
                         children.add(sniperJoe)
                         sniperJoe.spawn(
                             props(
-                                ConstKeys.POSITION to body.getTopCenterPoint(), ConstKeys.CULL_OUT_OF_BOUNDS to false
+                                ConstKeys.POSITION pairTo body.getTopCenterPoint(), ConstKeys.CULL_OUT_OF_BOUNDS pairTo false
                             )
                         )
                     }

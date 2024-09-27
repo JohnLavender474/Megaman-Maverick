@@ -7,6 +7,7 @@ import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -66,7 +67,7 @@ class IceCubeMaker(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     private fun dropIceCube() {
         val spawn = body.getBottomCenterPoint()
         val icecube = EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.FRAGILE_ICE_CUBE)!!
-        icecube.spawn(props(ConstKeys.POSITION to spawn))
+        icecube.spawn(props(ConstKeys.POSITION pairTo spawn))
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
     }
 
@@ -84,7 +85,7 @@ class IceCubeMaker(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         val cullOnEvents = CullableOnEvent({ cullEvents.contains(it) }, cullEvents)
         runnablesOnSpawn.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
         runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
-        return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS to cullOnEvents))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS pairTo cullOnEvents))
     }
 
     private fun defineSpritesComponent(): SpritesComponent {

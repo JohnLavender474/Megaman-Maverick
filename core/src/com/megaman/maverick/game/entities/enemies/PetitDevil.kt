@@ -13,6 +13,7 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.ICullable
@@ -64,12 +65,12 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(10),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(10),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
-        }, ChargedShotExplosion::class to dmgNeg {
+        }, ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 15 else 10
         }
@@ -107,7 +108,7 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             val child = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.PETIT_DEVIL_CHILD)!!
             child.spawn(
                 props(
-                    ConstKeys.PARENT to this, ConstKeys.ANGLE to angle, ConstKeys.TYPE to type
+                    ConstKeys.PARENT pairTo this, ConstKeys.ANGLE pairTo angle, ConstKeys.TYPE pairTo type
                 )
             )
         }
@@ -152,7 +153,7 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         super.onDestroy()
         if (hasDepletedHealth()) explode(
             props(
-                ConstKeys.POSITION to body.getCenter(), ConstKeys.SOUND to SoundAsset.EXPLOSION_2_SOUND
+                ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.SOUND pairTo SoundAsset.EXPLOSION_2_SOUND
             )
         )
         children.forEach {
@@ -216,8 +217,8 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { if (type == ConstKeys.GREEN) "LargeGreen" else "LargeOrange" }
         val animations = objectMapOf<String, IAnimation>(
-            "LargeGreen" to Animation(greenRegion!!, 1, 4, gdxArrayOf(1f, 0.1f, 0.1f, 0.1f), true),
-            "LargeOrange" to Animation(orangeRegion!!, 1, 4, gdxArrayOf(1f, 0.1f, 0.1f, 0.1f), true)
+            "LargeGreen" pairTo Animation(greenRegion!!, 1, 4, gdxArrayOf(1f, 0.1f, 0.1f, 0.1f), true),
+            "LargeOrange" pairTo Animation(orangeRegion!!, 1, 4, gdxArrayOf(1f, 0.1f, 0.1f, 0.1f), true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
@@ -237,13 +238,13 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(10),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(10),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 10 else 5
         }
@@ -364,8 +365,8 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { if (type == ConstKeys.GREEN) "SmallGreen" else "SmallOrange" }
         val animations = objectMapOf<String, IAnimation>(
-            "SmallGreen" to Animation(greenRegion!!, 1, 4, gdxArrayOf(1f, 0.1f, 0.1f, 0.1f), true),
-            "SmallOrange" to Animation(orangeRegion!!, 1, 4, gdxArrayOf(1f, 0.1f, 0.1f, 0.1f), true)
+            "SmallGreen" pairTo Animation(greenRegion!!, 1, 4, gdxArrayOf(1f, 0.1f, 0.1f, 0.1f), true),
+            "SmallOrange" pairTo Animation(orangeRegion!!, 1, 4, gdxArrayOf(1f, 0.1f, 0.1f, 0.1f), true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

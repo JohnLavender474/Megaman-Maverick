@@ -12,6 +12,7 @@ import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -67,24 +68,24 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     private enum class SealionState { WAIT, THROW, TAUNT, POUT }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(15),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(15),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 20
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 10
         }
     )
 
     private val timers = objectMapOf(
-        "wait" to Timer(WAIT_DUR),
-        "taunt" to Timer(TAUNT_DUR),
-        "before_throw_ball_delay" to Timer(BEFORE_THROW_BALL_DELAY),
-        "pout_sink_delay" to Timer(POUT_SINK_DELAY),
-        "pout_fade_out" to Timer(POUT_FADE_OUT_DUR)
+        "wait" pairTo Timer(WAIT_DUR),
+        "taunt" pairTo Timer(TAUNT_DUR),
+        "before_throw_ball_delay" pairTo Timer(BEFORE_THROW_BALL_DELAY),
+        "pout_sink_delay" pairTo Timer(POUT_SINK_DELAY),
+        "pout_fade_out" pairTo Timer(POUT_FADE_OUT_DUR)
     )
     private val ballCatchBounds = GameRectangle().setSize(0.5f * ConstVals.PPM)
     private lateinit var sealionState: SealionState
@@ -116,7 +117,7 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         ballCatchBounds.setCenter(body.getCenter().add(BALL_CATCH_BOUNDS_OFFSET_X * ConstVals.PPM, 0f))
         sealionBall = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SEALION_BALL)!! as SealionBall
         sealionBall!!.spawn(
-            props(ConstKeys.OWNER to this, ConstKeys.POSITION to ballCatchBounds.getCenter())
+            props(ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo ballCatchBounds.getCenter())
         )
 
         fadingOut = false
@@ -165,7 +166,7 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
                     if (timer.isFinished()) {
                         timer.reset()
                         sealionState = SealionState.THROW
-                        GameLogger.debug(TAG, "Wait timer finished, set state to THROW")
+                        GameLogger.debug(TAG, "Wait timer finished, set state pairTo THROW")
                     }
                 }
 
@@ -181,7 +182,7 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
                     } else if (canCatchBall()) {
                         catchBall()
                         sealionState = SealionState.WAIT
-                        GameLogger.debug(TAG, "Catch ball, set state to WAIT")
+                        GameLogger.debug(TAG, "Catch ball, set state pairTo WAIT")
                     }
                 }
 
@@ -192,7 +193,7 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
                     if (timer.isFinished()) {
                         timer.reset()
                         sealionState = if (ballInHands) SealionState.WAIT else SealionState.THROW
-                        GameLogger.debug(TAG, "Taunt finished, setting state to $sealionState")
+                        GameLogger.debug(TAG, "Taunt finished, setting state pairTo $sealionState")
                     }
                 }
 
@@ -264,13 +265,13 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
             }
         }
         val animations = objectMapOf<String, IAnimation>(
-            "wait_with_ball" to Animation(regions["wait_with_ball"], 2, 1, 0.1f, true),
-            "wait_no_ball" to Animation(regions["wait_no_ball"], 2, 1, 0.1f, true),
-            "taunt_with_ball" to Animation(regions["taunt_with_ball"], 2, 1, 0.1f, true),
-            "taunt_no_ball" to Animation(regions["taunt_no_ball"], 2, 2, 0.05f, true),
-            "before_throw_ball" to Animation(regions["before_throw_ball"], 2, 1, 0.1f, true),
-            "after_throw_ball" to Animation(regions["after_throw_ball"], 2, 1, 0.1f, true),
-            "pout" to Animation(regions["pout"], 2, 2, 0.2f, true)
+            "wait_with_ball" pairTo Animation(regions["wait_with_ball"], 2, 1, 0.1f, true),
+            "wait_no_ball" pairTo Animation(regions["wait_no_ball"], 2, 1, 0.1f, true),
+            "taunt_with_ball" pairTo Animation(regions["taunt_with_ball"], 2, 1, 0.1f, true),
+            "taunt_no_ball" pairTo Animation(regions["taunt_no_ball"], 2, 2, 0.05f, true),
+            "before_throw_ball" pairTo Animation(regions["before_throw_ball"], 2, 1, 0.1f, true),
+            "after_throw_ball" pairTo Animation(regions["after_throw_ball"], 2, 1, 0.1f, true),
+            "pout" pairTo Animation(regions["pout"], 2, 2, 0.2f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

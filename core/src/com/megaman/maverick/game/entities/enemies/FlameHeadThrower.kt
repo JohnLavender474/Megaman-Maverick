@@ -15,6 +15,7 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
@@ -91,11 +92,11 @@ class FlameHeadThrower(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimat
         val fireBall = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.FIREBALL)!!
         fireBall.spawn(
             props(
-                ConstKeys.POSITION to body.getCenter().add(0.1f * ConstVals.PPM * facing.value, 0.1f * ConstVals.PPM),
-                ConstKeys.OWNER to this,
-                ConstKeys.TRAJECTORY to trajectory,
-                ConstKeys.GRAVITY to Vector2(0f, FIREBALL_GRAVITY * ConstVals.PPM),
-                Fireball.BURST_ON_DAMAGE_INFLICTED to true
+                ConstKeys.POSITION pairTo body.getCenter().add(0.1f * ConstVals.PPM * facing.value, 0.1f * ConstVals.PPM),
+                ConstKeys.OWNER pairTo this,
+                ConstKeys.TRAJECTORY pairTo trajectory,
+                ConstKeys.GRAVITY pairTo Vector2(0f, FIREBALL_GRAVITY * ConstVals.PPM),
+                Fireball.BURST_ON_DAMAGE_INFLICTED pairTo true
             )
         )
     }
@@ -145,8 +146,8 @@ class FlameHeadThrower(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimat
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { if (!standTimer.isFinished()) "stand" else "throw" }
         val animations = objectMapOf<String, IAnimation>(
-            "stand" to Animation(regions.get("stand")),
-            "throw" to Animation(regions.get("throw"), 1, 3, 0.1f, false)
+            "stand" pairTo Animation(regions.get("stand")),
+            "throw" pairTo Animation(regions.get("throw"), 1, 3, 0.1f, false)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

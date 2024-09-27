@@ -19,6 +19,7 @@ import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
@@ -75,13 +76,13 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     private enum class PopupCanonState { REST, RISE, SHOOT, FALL }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(10),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(10),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 10 else 5
         })
@@ -92,18 +93,18 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         get() = !game.isCameraRotating()
     private val loop = Loop(PopupCanonState.values().toGdxArray())
     private val timers = objectMapOf(
-        "rest" to Timer(REST_DUR),
-        "rise" to Timer(TRANS_DUR, gdxArrayOf(
+        "rest" pairTo Timer(REST_DUR),
+        "rise" pairTo Timer(TRANS_DUR, gdxArrayOf(
             TimeMarkedRunnable(0f) { transState = Size.SMALL },
             TimeMarkedRunnable(0.25f) { transState = Size.MEDIUM },
             TimeMarkedRunnable(0.5f) { transState = Size.LARGE }
         )),
-        "fall" to Timer(TRANS_DUR, gdxArrayOf(
+        "fall" pairTo Timer(TRANS_DUR, gdxArrayOf(
             TimeMarkedRunnable(0f) { transState = Size.LARGE },
             TimeMarkedRunnable(0.25f) { transState = Size.MEDIUM },
             TimeMarkedRunnable(0.5f) { transState = Size.SMALL }
         )),
-        "shoot" to Timer(SHOOT_DUR, gdxArrayOf(TimeMarkedRunnable(0.25f) { shoot() }))
+        "shoot" pairTo Timer(SHOOT_DUR, gdxArrayOf(TimeMarkedRunnable(0.25f) { shoot() }))
     )
     private var ballGravityScalar = DEFAULT_BALL_GRAVITY_SCALAR
     private lateinit var transState: Size
@@ -174,9 +175,9 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         }.scl(ballGravityScalar * ConstVals.PPM.toFloat())
         explodingBall.spawn(
             props(
-                ConstKeys.POSITION to spawn,
-                ConstKeys.IMPULSE to impulse,
-                ConstKeys.GRAVITY to gravity
+                ConstKeys.POSITION pairTo spawn,
+                ConstKeys.IMPULSE pairTo impulse,
+                ConstKeys.GRAVITY pairTo gravity
             )
         )
 
@@ -276,10 +277,10 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             }
         }
         val animations = objectMapOf<String, IAnimation>(
-            "rest" to Animation(regions.get("rest")),
-            "rise" to Animation(regions.get("trans"), 2, 3, 0.1f, false),
-            "shoot" to Animation(regions.get("shoot")),
-            "fall" to Animation(regions.get("trans"), 2, 3, 0.1f, false).reversed()
+            "rest" pairTo Animation(regions.get("rest")),
+            "rise" pairTo Animation(regions.get("trans"), 2, 3, 0.1f, false),
+            "shoot" pairTo Animation(regions.get("shoot")),
+            "fall" pairTo Animation(regions.get("trans"), 2, 3, 0.1f, false).reversed()
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

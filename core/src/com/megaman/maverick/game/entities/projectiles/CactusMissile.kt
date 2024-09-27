@@ -11,7 +11,9 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamageable
@@ -49,23 +51,22 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
         private const val SPEED = 4f
         private const val UP_DUR = 0.25f
         private const val RECALC_DELAY = 0.5f
-        private const val DAMAGE_DURATION = 0.25f
+        private const val DAMAGE_DURATION = 0.1f
         private var region: TextureRegion? = null
     }
 
     override val invincible: Boolean
         get() = !damageTimer.isFinished()
 
-    private val damageNegotiations =
-        objectMapOf<KClass<out IDamager>, Int>(
-            Bullet::class to 10,
-            Fireball::class to ConstVals.MAX_HEALTH,
-            ChargedShot::class to ConstVals.MAX_HEALTH,
-            ChargedShotExplosion::class to ConstVals.MAX_HEALTH
-        )
-    private val damageTimer = Timer(DAMAGE_DURATION)
+    private val damageNegotiations = objectMapOf<KClass<out IDamager>, Int>(
+        Bullet::class pairTo 10,
+        Fireball::class pairTo ConstVals.MAX_HEALTH,
+        ChargedShot::class pairTo ConstVals.MAX_HEALTH,
+        ChargedShotExplosion::class pairTo ConstVals.MAX_HEALTH
+    )
     private val upTimer = Timer(UP_DUR)
     private val recalcTimer = Timer(RECALC_DELAY)
+    private val damageTimer = Timer(DAMAGE_DURATION)
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
@@ -80,9 +81,9 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
         setHealth(ConstVals.MAX_HEALTH)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
-        damageTimer.setToEnd()
         upTimer.reset()
         recalcTimer.reset()
+        damageTimer.setToEnd()
     }
 
     override fun onDestroy() {
@@ -103,9 +104,9 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
         explosion.spawn(
             props(
-                ConstKeys.POSITION to body.getCenter(),
-                ConstKeys.SOUND to SoundAsset.EXPLOSION_2_SOUND,
-                ConstKeys.OWNER to this
+                ConstKeys.POSITION pairTo body.getCenter(),
+                ConstKeys.SOUND pairTo SoundAsset.EXPLOSION_2_SOUND,
+                ConstKeys.OWNER pairTo this
             )
         )
     }
@@ -152,6 +153,11 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBodyBounds() }
 
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameCircle().setRadius(0.625f * ConstVals.PPM))
+        body.addFixture(bodyFixture)
+        bodyFixture.rawShape.color = Color.GRAY
+        debugShapes.add { bodyFixture.getShape() }
+
         val projectileFixture =
             Fixture(body, FixtureType.PROJECTILE, GameRectangle().setSize(0.625f * ConstVals.PPM))
         body.addFixture(projectileFixture)
@@ -186,6 +192,7 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
             _sprite.setOriginCenter()
             _sprite.rotation = body.physics.velocity.angleDeg() - 90f
             _sprite.setCenter(body.getCenter())
+            _sprite.hidden = !damageTimer.isFinished()
         }
         return spritesComponent
     }

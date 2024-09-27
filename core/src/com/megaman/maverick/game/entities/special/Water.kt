@@ -12,7 +12,9 @@ import com.mega.game.engine.animations.IAnimator
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -109,7 +111,7 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
 
     private fun defineCullablesComponent(): CullablesComponent {
         val cullable = getGameCameraCullingLogic(this)
-        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullable))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullable))
     }
 
     private fun defineDrawables(bounds: GameRectangle) {
@@ -123,7 +125,7 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         val rows = (bounds.height / ConstVals.PPM).toInt()
         val columns = (bounds.width / ConstVals.PPM).toInt()
 
-        val animators = Array<Pair<() -> GameSprite, IAnimator>>()
+        val animators = Array<GamePair<() -> GameSprite, IAnimator>>()
 
         for (x in 0 until columns) {
             for (y in 0 until rows) {
@@ -139,7 +141,7 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
                 sprites.put("animated_water_${x}_${y}", sprite)
 
                 val animator = Animator(animation)
-                animators.add({ sprite } to animator)
+                animators.add({ sprite } pairTo animator)
             }
         }
 

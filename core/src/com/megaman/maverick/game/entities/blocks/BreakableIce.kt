@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
@@ -79,7 +80,7 @@ class BreakableIce(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity, 
     private fun explodeAndDie() {
         for (i in 0 until 5) {
             val iceShard = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.ICE_SHARD)!!
-            iceShard.spawn(props(ConstKeys.POSITION to body.getCenter(), ConstKeys.INDEX to i))
+            iceShard.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.INDEX pairTo i))
         }
         destroy()
     }

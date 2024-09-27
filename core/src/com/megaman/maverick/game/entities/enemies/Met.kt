@@ -15,6 +15,7 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -83,16 +84,16 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
             body.cardinalRotation = value
         }
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(15),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShotExplosion::class to dmgNeg(ConstVals.MAX_HEALTH)
+        Bullet::class pairTo dmgNeg(15),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShotExplosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
     )
 
     private val metBehaviorTimers = objectMapOf(
-        MetBehavior.SHIELDING to Timer(SHIELDING_DURATION),
-        MetBehavior.POP_UP to Timer(POP_UP_DURATION),
-        MetBehavior.RUNNING to Timer(RUNNING_DURATION)
+        MetBehavior.SHIELDING pairTo Timer(SHIELDING_DURATION),
+        MetBehavior.POP_UP pairTo Timer(POP_UP_DURATION),
+        MetBehavior.RUNNING pairTo Timer(RUNNING_DURATION)
     )
     private lateinit var type: String
     private var behavior: MetBehavior = MetBehavior.SHIELDING
@@ -153,7 +154,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
         val spawn = body.getCenter().add(offset * facing.value, if (isDirectionRotatedDown()) offset else -offset)
 
         val spawnProps = props(
-            ConstKeys.OWNER to this, ConstKeys.TRAJECTORY to trajectory, ConstKeys.POSITION to spawn
+            ConstKeys.OWNER pairTo this, ConstKeys.TRAJECTORY pairTo trajectory, ConstKeys.POSITION pairTo spawn
         )
         val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
         bullet.spawn(spawnProps)
@@ -316,12 +317,12 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
         }
         val animator = Animator(
             keySupplier, objectMapOf(
-                "Run" to Animation(atlas!!.findRegion("Met/Run"), 1, 2, 0.125f, true),
-                "PopUp" to Animation(atlas!!.findRegion("Met/PopUp"), false),
-                "LayDown" to Animation(atlas!!.findRegion("Met/LayDown"), false),
-                "SnowRun" to Animation(atlas!!.findRegion("SnowMet/Run"), 1, 2, 0.125f, true),
-                "SnowPopUp" to Animation(atlas!!.findRegion("SnowMet/PopUp"), false),
-                "SnowLayDown" to Animation(atlas!!.findRegion("SnowMet/LayDown"), false)
+                "Run" pairTo Animation(atlas!!.findRegion("Met/Run"), 1, 2, 0.125f, true),
+                "PopUp" pairTo Animation(atlas!!.findRegion("Met/PopUp"), false),
+                "LayDown" pairTo Animation(atlas!!.findRegion("Met/LayDown"), false),
+                "SnowRun" pairTo Animation(atlas!!.findRegion("SnowMet/Run"), 1, 2, 0.125f, true),
+                "SnowPopUp" pairTo Animation(atlas!!.findRegion("SnowMet/PopUp"), false),
+                "SnowLayDown" pairTo Animation(atlas!!.findRegion("SnowMet/LayDown"), false)
             )
         )
         return AnimationsComponent(this, animator)

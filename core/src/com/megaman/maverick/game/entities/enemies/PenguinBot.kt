@@ -13,6 +13,7 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.set
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
@@ -55,21 +56,19 @@ class PenguinBot(game: MegamanMaverickGame): AbstractEnemy(game), IAnimatedEntit
     private enum class PenguinBotState { WADDLE, THROW_BOMB, RISE, FLY }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(5),
-        Fireball::class to dmgNeg(15),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(5),
+        Fireball::class pairTo dmgNeg(15),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 15 else 10
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 10 else 5
         }
     )
     override lateinit var facing: Facing
 
-    private val waddleTimer = Timer(WADDLE_DUR)
-    private val throwBombTimer = Timer(THROW_BOMB_DUR)
     private lateinit var penguinBotState: PenguinBotState
 
     override fun init() {
@@ -146,10 +145,10 @@ class PenguinBot(game: MegamanMaverickGame): AbstractEnemy(game), IAnimatedEntit
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { penguinBotState.name.lowercase() }
         val animations = objectMapOf<String, IAnimation>(
-            "waddle" to Animation(regions["waddle"], 2, 2, 0.1f, true),
-            "throw_bomb" to Animation(regions["throw_bomb"], 3, 1, 0.1f, false),
-            "rise" to Animation(regions["rise"], 2, 2, 0.1f, true),
-            "fly" to Animation(regions["fly"], 2, 2, 0.1f, true)
+            "waddle" pairTo Animation(regions["waddle"], 2, 2, 0.1f, true),
+            "throw_bomb" pairTo Animation(regions["throw_bomb"], 3, 1, 0.1f, false),
+            "rise" pairTo Animation(regions["rise"], 2, 2, 0.1f, true),
+            "fly" pairTo Animation(regions["fly"], 2, 2, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

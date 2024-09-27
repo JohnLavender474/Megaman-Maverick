@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.damage.IDamageable
@@ -73,11 +74,10 @@ class Snowball(game: MegamanMaverickGame) : AbstractProjectile(game) {
             EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SNOWBALL_EXPLOSION)!!
         explosion.spawn(
             props(
-                ConstKeys.POSITION to body.getCenter(),
-                ConstKeys.MASK to
-                        objectSetOf<KClass<out IDamageable>>(
-                            if (owner is Megaman) AbstractEnemy::class else Megaman::class
-                        )
+                ConstKeys.POSITION pairTo body.getCenter(),
+                ConstKeys.MASK pairTo objectSetOf<KClass<out IDamageable>>(
+                    if (owner is Megaman) AbstractEnemy::class else Megaman::class
+                )
             )
         )
     }

@@ -16,6 +16,7 @@ import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.interpolate
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
@@ -62,13 +63,13 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(10),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(10),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 10
         }
@@ -205,8 +206,8 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
         val keySupplier: () -> String? =
             { if (currentState.equalsAny(EyeeState.MOVING_TO_START, EyeeState.MOVING_TO_END)) "open" else "blink" }
         val animations = objectMapOf<String, IAnimation>(
-            "open" to Animation(openRegion!!),
-            "blink" to Animation(blinkRegion!!, 1, 5, 0.1f, false)
+            "open" pairTo Animation(openRegion!!),
+            "blink" pairTo Animation(blinkRegion!!, 1, 5, 0.1f, false)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

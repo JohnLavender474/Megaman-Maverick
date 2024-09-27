@@ -15,6 +15,7 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.getCenter
@@ -63,13 +64,13 @@ class BombPotton(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(10),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(10),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 15 else 10
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 10 else 5
         }
@@ -128,10 +129,10 @@ class BombPotton(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         val greenBomb = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SMALL_MISSILE)!!
         greenBomb.spawn(
             props(
-                ConstKeys.POSITION to body.getBottomCenterPoint(),
-                ConstKeys.OWNER to this,
-                ConstKeys.DIRECTION to Direction.DOWN,
-                ConstKeys.EXPLOSION to SmallMissile.WAVE_EXPLOSION
+                ConstKeys.POSITION pairTo body.getBottomCenterPoint(),
+                ConstKeys.OWNER pairTo this,
+                ConstKeys.DIRECTION pairTo Direction.DOWN,
+                ConstKeys.EXPLOSION pairTo SmallMissile.WAVE_EXPLOSION
             )
         )
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.MARIO_FIREBALL_SOUND, false)

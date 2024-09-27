@@ -10,6 +10,7 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.getOverlapPushDirection
 import com.mega.game.engine.common.getRandom
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.IGameShape2D
@@ -103,7 +104,7 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
         val disintegration = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)
-        disintegration!!.spawn(props(ConstKeys.POSITION to body.getCenter()))
+        disintegration!!.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
         if (overlapsGameCamera() && size == Size.SMALL) requestToPlaySound(SoundAsset.THUMP_SOUND, false)
     }
 
@@ -137,9 +138,9 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
             val boulder = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BOULDER_PROJECTILE)
             boulder!!.spawn(
                 props(
-                    ConstKeys.POSITION to body.getCenter(),
-                    ConstKeys.SIZE to (if (size == Size.LARGE) Size.MEDIUM else Size.SMALL),
-                    ConstKeys.TRAJECTORY to rotatedTrajectory
+                    ConstKeys.POSITION pairTo body.getCenter(),
+                    ConstKeys.SIZE pairTo (if (size == Size.LARGE) Size.MEDIUM else Size.SMALL),
+                    ConstKeys.TRAJECTORY pairTo rotatedTrajectory
                 )
             )
         }
@@ -186,7 +187,7 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun onDamageInflictedTo(damageable: IDamageable) {
         if (damageable is IBodyEntity) {
-            GameLogger.debug(TAG, "On damage inflicted to: $damageable")
+            GameLogger.debug(TAG, "On damage inflicted pairTo: $damageable")
             super.onDamageInflictedTo(damageable)
             when (size) {
                 Size.LARGE, Size.MEDIUM -> breakApart(damageable.body)
@@ -216,7 +217,7 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.fixtures.forEach { (_, fixture) ->
                 val shape = (fixture as Fixture).rawShape as GameRectangle
-                if (fixture.type == FixtureType.DAMAGER)
+                if (fixture.getType() == FixtureType.DAMAGER)
                     shape.setSize(body.width * 1.05f, body.height * 1.05f)
                 else shape.set(body)
             }

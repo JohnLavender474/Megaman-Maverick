@@ -10,6 +10,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -44,7 +45,7 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
             for (i in 0 until numSplashes) {
                 val splash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SPLASH)!!
                 val spawn = Vector2(splasher.x + ConstVals.PPM / 2f + i * ConstVals.PPM, water.y + water.height)
-                splash.spawn(props(ConstKeys.POSITION to spawn))
+                splash.spawn(props(ConstKeys.POSITION pairTo spawn))
             }
         }
     }

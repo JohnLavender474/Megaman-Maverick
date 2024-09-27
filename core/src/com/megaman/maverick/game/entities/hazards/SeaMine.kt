@@ -12,6 +12,7 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -97,9 +98,9 @@ class SeaMine(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IS
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
         explosion.spawn(
             props(
-                ConstKeys.OWNER to this,
-                ConstKeys.POSITION to body.getCenter(),
-                ConstKeys.SOUND to SoundAsset.EXPLOSION_2_SOUND
+                ConstKeys.OWNER pairTo this,
+                ConstKeys.POSITION pairTo body.getCenter(),
+                ConstKeys.SOUND pairTo SoundAsset.EXPLOSION_2_SOUND
             )
         )
     }
@@ -148,7 +149,7 @@ class SeaMine(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IS
         val cullOutOfBounds = getGameCameraCullingLogic(this, CULL_TIME)
         return CullablesComponent(
             objectMapOf(
-                ConstKeys.CULL_EVENTS to cullOnEvents, ConstKeys.CULL_OUT_OF_BOUNDS to cullOutOfBounds
+                ConstKeys.CULL_EVENTS pairTo cullOnEvents, ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullOutOfBounds
             )
         )
     }
@@ -166,7 +167,7 @@ class SeaMine(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IS
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { if (triggered) "blow" else "wait" }
         val animations = objectMapOf<String, IAnimation>(
-            "blow" to Animation(regions["blow"], 1, 2, 0.1f, true), "wait" to Animation(regions["wait"])
+            "blow" pairTo Animation(regions["blow"], 1, 2, 0.1f, true), "wait" pairTo Animation(regions["wait"])
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

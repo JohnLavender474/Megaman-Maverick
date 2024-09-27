@@ -14,6 +14,7 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.damage.IDamager
@@ -58,13 +59,13 @@ class Pipi(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(15),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(15),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 20
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 10
         }
@@ -103,7 +104,7 @@ class Pipi(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
 
     private fun dropEgg() {
         val egg = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.PIPI_EGG)!!
-        egg.spawn(props(ConstKeys.POSITION to body.getBottomCenterPoint()))
+        egg.spawn(props(ConstKeys.POSITION pairTo body.getBottomCenterPoint()))
         hasEgg = false
     }
 
@@ -163,8 +164,8 @@ class Pipi(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { if (hasEgg) "with_egg" else "no_egg" }
         val animations = objectMapOf<String, IAnimation>(
-            "with_egg" to Animation(regions["with_egg"], 2, 1, 0.1f, true),
-            "no_egg" to Animation(regions["no_egg"], 2, 1, 0.1f, true)
+            "with_egg" pairTo Animation(regions["with_egg"], 2, 1, 0.1f, true),
+            "no_egg" pairTo Animation(regions["no_egg"], 2, 1, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

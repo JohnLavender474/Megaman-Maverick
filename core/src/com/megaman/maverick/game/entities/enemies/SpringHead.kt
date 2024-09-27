@@ -13,6 +13,7 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
@@ -176,8 +177,8 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String = { if (bouncing) "unleashed" else "compressed" }
         val animations = objectMapOf<String, IAnimation>(
-            "unleashed" to Animation(textureAtlas!!.findRegion("SpringHead/Unleashed"), 1, 6, 0.1f, true),
-            "compressed" to Animation(textureAtlas!!.findRegion("SpringHead/Compressed"))
+            "unleashed" pairTo Animation(textureAtlas!!.findRegion("SpringHead/Unleashed"), 1, 6, 0.1f, true),
+            "compressed" pairTo Animation(textureAtlas!!.findRegion("SpringHead/Compressed"))
         )
         return AnimationsComponent(this, Animator(keySupplier, animations))
     }

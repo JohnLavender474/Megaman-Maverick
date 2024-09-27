@@ -11,6 +11,7 @@ import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.damage.IDamageable
@@ -133,8 +134,8 @@ class JoeBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEn
         val keySupplier: () -> String = { type }
         val animations =
             objectMapOf<String, IAnimation>(
-                "" to Animation(joeBallReg!!, 1, 4, 0.1f, true),
-                SNOW_TYPE to Animation(snowJoeBallReg!!, 1, 4, 0.1f, true)
+                "" pairTo Animation(joeBallReg!!, 1, 4, 0.1f, true),
+                SNOW_TYPE pairTo Animation(snowJoeBallReg!!, 1, 4, 0.1f, true)
             )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
@@ -160,9 +161,9 @@ class JoeBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEn
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, explosionType)!!
         explosion.spawn(
             props(
-                ConstKeys.POSITION to body.getCenter(),
-                ConstKeys.SOUND to soundAsset,
-                ConstKeys.MASK to
+                ConstKeys.POSITION pairTo body.getCenter(),
+                ConstKeys.SOUND pairTo soundAsset,
+                ConstKeys.MASK pairTo
                         objectSetOf<KClass<out IDamageable>>(
                             if (owner is Megaman) AbstractEnemy::class else Megaman::class
                         )

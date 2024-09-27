@@ -24,6 +24,7 @@ import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IPropertizable
 import com.mega.game.engine.common.objects.MultiCollectionIterable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.controller.ControllerSystem
 import com.mega.game.engine.controller.ControllerUtils
 import com.mega.game.engine.controller.buttons.ControllerButtons
@@ -461,27 +462,27 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
                     contactListener = MegaContactListener(this, CONTACT_LISTENER_DEBUG_FILTER),
                     collisionHandler = MegaCollisionHandler(this),
                     contactFilterMap = objectMapOf(
-                        FixtureType.CONSUMER to objectSetOf(*FixtureType.values()),
-                        FixtureType.PLAYER to objectSetOf(FixtureType.BODY, FixtureType.ITEM),
-                        FixtureType.DAMAGEABLE to objectSetOf(FixtureType.DAMAGER),
-                        FixtureType.BODY to objectSetOf(
+                        FixtureType.CONSUMER pairTo objectSetOf(*FixtureType.values()),
+                        FixtureType.PLAYER pairTo objectSetOf(FixtureType.BODY, FixtureType.ITEM),
+                        FixtureType.DAMAGEABLE pairTo objectSetOf(FixtureType.DAMAGER),
+                        FixtureType.BODY pairTo objectSetOf(
                             FixtureType.BLOCK,
                             FixtureType.FORCE,
                             FixtureType.GRAVITY_CHANGE
                         ),
-                        FixtureType.DEATH to objectSetOf(
+                        FixtureType.DEATH pairTo objectSetOf(
                             FixtureType.FEET, FixtureType.SIDE, FixtureType.HEAD, FixtureType.BODY
                         ),
-                        FixtureType.WATER to objectSetOf(FixtureType.WATER_LISTENER),
-                        FixtureType.LADDER to objectSetOf(FixtureType.HEAD, FixtureType.FEET),
-                        FixtureType.SIDE to objectSetOf(
+                        FixtureType.WATER pairTo objectSetOf(FixtureType.WATER_LISTENER),
+                        FixtureType.LADDER pairTo objectSetOf(FixtureType.HEAD, FixtureType.FEET),
+                        FixtureType.SIDE pairTo objectSetOf(
                             FixtureType.ICE, FixtureType.GATE, FixtureType.BLOCK, FixtureType.BOUNCER
                         ),
-                        FixtureType.FEET to objectSetOf(
+                        FixtureType.FEET pairTo objectSetOf(
                             FixtureType.ICE, FixtureType.BLOCK, FixtureType.BOUNCER, FixtureType.SAND, FixtureType.CART
                         ),
-                        FixtureType.HEAD to objectSetOf(FixtureType.BLOCK, FixtureType.BOUNCER),
-                        FixtureType.PROJECTILE to objectSetOf(
+                        FixtureType.HEAD pairTo objectSetOf(FixtureType.BLOCK, FixtureType.BOUNCER),
+                        FixtureType.PROJECTILE pairTo objectSetOf(
                             FixtureType.BODY,
                             FixtureType.BLOCK,
                             FixtureType.WATER,
@@ -489,8 +490,8 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
                             FixtureType.SAND,
                             FixtureType.PROJECTILE
                         ),
-                        FixtureType.LASER to objectSetOf(FixtureType.BLOCK),
-                        FixtureType.TELEPORTER to objectSetOf(FixtureType.TELEPORTER_LISTENER)
+                        FixtureType.LASER pairTo objectSetOf(FixtureType.BLOCK),
+                        FixtureType.TELEPORTER pairTo objectSetOf(FixtureType.TELEPORTER_LISTENER)
                     ),
                     fixedStepScalar = params.fixedStepScalar
                 ),

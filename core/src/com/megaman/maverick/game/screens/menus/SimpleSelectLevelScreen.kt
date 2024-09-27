@@ -8,6 +8,7 @@ import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.Initializable
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.screens.menus.IMenuButton
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -26,21 +27,21 @@ class SimpleSelectLevelScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, 
         const val ALPHA = "ALPHA"
         const val TEST = "TEST"
         private val LEVELS = objectMapOf(
-            BETA to gdxArrayOf(
+            BETA pairTo gdxArrayOf(
                 Level.INFERNO_MAN,
                 Level.MOON_MAN,
                 Level.DESERT_MAN,
                 Level.REACTOR_MAN,
                 Level.GLACIER_MAN
             ),
-            ALPHA to gdxArrayOf(
+            ALPHA pairTo gdxArrayOf(
                 Level.TIMBER_WOMAN,
                 Level.MAGNET_MAN,
                 Level.WILY_STAGE_1,
                 Level.WILY_STAGE_2,
                 Level.WILY_STAGE_3
             ),
-            TEST to gdxArrayOf(
+            TEST pairTo gdxArrayOf(
                 Level.TEST1,
                 Level.TEST2
             )

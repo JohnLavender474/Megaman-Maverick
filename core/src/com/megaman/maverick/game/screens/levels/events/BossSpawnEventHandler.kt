@@ -3,6 +3,7 @@ package com.megaman.maverick.game.screens.levels.events
 import com.badlogic.gdx.utils.Queue
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.events.Event
@@ -33,11 +34,11 @@ class BossSpawnEventHandler(private val game: MegamanMaverickGame) : Updatable {
             val boss = EntityFactories.fetch(EntityType.BOSS, bossName)!! as AbstractBoss
             boss.ready = false
             boss.spawn(bossSpawnProps)
-            game.eventsMan.submitEvent(Event(EventType.BEGIN_BOSS_SPAWN, props(ConstKeys.BOSS to boss)))
+            game.eventsMan.submitEvent(Event(EventType.BEGIN_BOSS_SPAWN, props(ConstKeys.BOSS pairTo boss)))
         }
 
         spawnTimer.runOnFinished = {
-            game.eventsMan.submitEvent(Event(EventType.END_BOSS_SPAWN, props(ConstKeys.MINI to isMini)))
+            game.eventsMan.submitEvent(Event(EventType.END_BOSS_SPAWN, props(ConstKeys.MINI pairTo isMini)))
 
             if (!isMini) {
                 val music = MusicAsset.valueOf(

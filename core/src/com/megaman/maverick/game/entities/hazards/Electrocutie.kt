@@ -9,6 +9,7 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -52,9 +53,9 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
 
     private val loop = Loop(ElectrocutieState.values().toGdxArray())
     private val timers = objectMapOf(
-        ElectrocutieState.MOVE to Timer(MOVE_DURATION),
-        ElectrocutieState.CHARGE to Timer(CHARGE_DURATION),
-        ElectrocutieState.SHOCK to Timer(SHOCK_DURATION)
+        ElectrocutieState.MOVE pairTo Timer(MOVE_DURATION),
+        ElectrocutieState.CHARGE pairTo Timer(CHARGE_DURATION),
+        ElectrocutieState.SHOCK pairTo Timer(SHOCK_DURATION)
     )
     private var vertical = true
     private var left = true
@@ -92,9 +93,9 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
             maxPosition = bounds.getCenter().x + (max * ConstVals.PPM)
 
             val bottomElectrocutieChildProps = props(
-                ConstKeys.POSITION to bounds.getBottomCenterPoint(),
-                ConstKeys.DIRECTION to Direction.UP,
-                ConstKeys.PARENT to this
+                ConstKeys.POSITION pairTo bounds.getBottomCenterPoint(),
+                ConstKeys.DIRECTION pairTo Direction.UP,
+                ConstKeys.PARENT pairTo this
             )
             val bottomElectrocutieChild =
                 EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.ELECTROCUTIE_CHILD)!! as ElectrocutieChild
@@ -102,9 +103,9 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
             children.add(bottomElectrocutieChild)
 
             val topElectrocutieProps = props(
-                ConstKeys.POSITION to bounds.getTopCenterPoint(),
-                ConstKeys.DIRECTION to Direction.DOWN,
-                ConstKeys.PARENT to this
+                ConstKeys.POSITION pairTo bounds.getTopCenterPoint(),
+                ConstKeys.DIRECTION pairTo Direction.DOWN,
+                ConstKeys.PARENT pairTo this
             )
             val topElectrocutieChild =
                 EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.ELECTROCUTIE_CHILD)!! as ElectrocutieChild
@@ -117,10 +118,10 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
                 val bolt = EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.BOLT)!! as Bolt
                 bolt.spawn(
                     props(
-                        ConstKeys.POSITION to position,
-                        ConstKeys.DIRECTION to Direction.UP,
-                        ConstKeys.PARENT to this,
-                        ConstKeys.CULL_OUT_OF_BOUNDS to false
+                        ConstKeys.POSITION pairTo position,
+                        ConstKeys.DIRECTION pairTo Direction.UP,
+                        ConstKeys.PARENT pairTo this,
+                        ConstKeys.CULL_OUT_OF_BOUNDS pairTo false
                     )
                 )
                 children.add(bolt)
@@ -130,9 +131,9 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
             maxPosition = bounds.getCenter().y + (max * ConstVals.PPM)
 
             val bottomElectrocutieProps = props(
-                ConstKeys.POSITION to bounds.getCenterLeftPoint(),
-                ConstKeys.DIRECTION to Direction.RIGHT,
-                ConstKeys.PARENT to this
+                ConstKeys.POSITION pairTo bounds.getCenterLeftPoint(),
+                ConstKeys.DIRECTION pairTo Direction.RIGHT,
+                ConstKeys.PARENT pairTo this
             )
             val bottomElectrocutieChild =
                 EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.ELECTROCUTIE_CHILD)!! as ElectrocutieChild
@@ -140,9 +141,9 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
             children.add(bottomElectrocutieChild)
 
             val topElectrocutieProps = props(
-                ConstKeys.POSITION to bounds.getCenterRightPoint(),
-                ConstKeys.DIRECTION to Direction.LEFT,
-                ConstKeys.PARENT to this
+                ConstKeys.POSITION pairTo bounds.getCenterRightPoint(),
+                ConstKeys.DIRECTION pairTo Direction.LEFT,
+                ConstKeys.PARENT pairTo this
             )
             val topElectrocutieChild =
                 EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.ELECTROCUTIE_CHILD)!! as ElectrocutieChild
@@ -155,10 +156,10 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
                 val bolt = Bolt(game)
                 bolt.spawn(
                     props(
-                        ConstKeys.POSITION to position,
-                        ConstKeys.DIRECTION to Direction.RIGHT,
-                        ConstKeys.PARENT to this,
-                        ConstKeys.CULL_OUT_OF_BOUNDS to false
+                        ConstKeys.POSITION pairTo position,
+                        ConstKeys.DIRECTION pairTo Direction.RIGHT,
+                        ConstKeys.PARENT pairTo this,
+                        ConstKeys.CULL_OUT_OF_BOUNDS pairTo false
                     )
                 )
                 children.add(bolt)

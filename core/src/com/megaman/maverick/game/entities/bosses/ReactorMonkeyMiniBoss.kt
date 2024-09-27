@@ -14,6 +14,7 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -70,13 +71,14 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
         private var throwRegion: TextureRegion? = null
     }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(Bullet::class to dmgNeg(1),
-        Fireball::class to dmgNeg(3),
-        ChargedShot::class to dmgNeg {
+    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+        Bullet::class pairTo dmgNeg(1),
+        Fireball::class pairTo dmgNeg(3),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 3 else 2
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 2 else 1
         })
@@ -122,7 +124,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
         monkeyBall =
             EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.REACTOR_MONKEY_BALL)!! as ReactorMonkeyBall
         val spawn = body.getTopCenterPoint().add(0f, ballSpawnY * ConstVals.PPM)
-        monkeyBall!!.spawn(props(ConstKeys.POSITION to spawn, ConstKeys.OWNER to this))
+        monkeyBall!!.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.OWNER pairTo this))
     }
 
     fun catchMonkeyBall() {
@@ -217,8 +219,8 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { reactorMonkeyState.name }
         val animations = objectMapOf<String, IAnimation>(
-            ReactorMonkeyState.STAND.name to Animation(standRegion!!, 1, 2, gdxArrayOf(1f, 0.1f), true),
-            ReactorMonkeyState.THROW.name to Animation(throwRegion!!, 1, 3, 0.1f, false)
+            ReactorMonkeyState.STAND.name pairTo Animation(standRegion!!, 1, 2, gdxArrayOf(1f, 0.1f), true),
+            ReactorMonkeyState.THROW.name pairTo Animation(throwRegion!!, 1, 3, 0.1f, false)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

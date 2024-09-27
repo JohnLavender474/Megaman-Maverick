@@ -15,6 +15,7 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.getOverlapPushDirection
 import com.mega.game.engine.common.mask
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.time.Timer
@@ -135,7 +136,7 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         destroy()
         val smokePuff = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SMOKE_PUFF)!!
         val spawn = Vector2(body.getCenter().x, waterFixture.getShape().getMaxY())
-        smokePuff.spawn(props(ConstKeys.POSITION to spawn, ConstKeys.OWNER to owner))
+        smokePuff.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.OWNER pairTo owner))
         playSoundNow(SoundAsset.WHOOSH_SOUND, false)
     }
 
@@ -156,9 +157,9 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
             }
             smokePuff.spawn(
                 props(
-                    ConstKeys.OWNER to owner,
-                    ConstKeys.POSITION to position,
-                    ConstKeys.DIRECTION to burstDirection
+                    ConstKeys.OWNER pairTo owner,
+                    ConstKeys.POSITION pairTo position,
+                    ConstKeys.DIRECTION pairTo burstDirection
                 )
             )
         }
@@ -209,8 +210,8 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val keySupplier: () -> String = { if (burst) "burst" else "fireball" }
         val animations =
             objectMapOf<String, IAnimation>(
-                "burst" to Animation(flameAtlas!!.findRegion("Flame"), 1, 4, 0.1f, true),
-                "fireball" to Animation(fireballAtlas!!.findRegion("Fire/Fireball"))
+                "burst" pairTo Animation(flameAtlas!!.findRegion("Flame"), 1, 4, 0.1f, true),
+                "fireball" pairTo Animation(fireballAtlas!!.findRegion("Fire/Fireball"))
             )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

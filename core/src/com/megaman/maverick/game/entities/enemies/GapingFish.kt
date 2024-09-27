@@ -14,6 +14,7 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamageable
@@ -61,11 +62,11 @@ class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(10),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShotExplosion::class to dmgNeg(15),
-        UnderwaterFan::class to dmgNeg(ConstVals.MAX_HEALTH)
+        Bullet::class pairTo dmgNeg(10),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShotExplosion::class pairTo dmgNeg(15),
+        UnderwaterFan::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
     )
     override lateinit var facing: Facing
 
@@ -207,9 +208,9 @@ class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             if (chomping) "chomp" else if (invincible) "gaping" else "swimming"
         }
         val animations = objectMapOf<String, IAnimation>(
-            "chomp" to Animation(atlas!!.findRegion("GapingFish/Chomping"), 1, 2, 0.1f),
-            "gaping" to Animation(atlas!!.findRegion("GapingFish/Gaping"), 1, 2, 0.15f),
-            "swimming" to Animation(atlas!!.findRegion("GapingFish/Swimming"), 1, 2, 0.15f)
+            "chomp" pairTo Animation(atlas!!.findRegion("GapingFish/Chomping"), 1, 2, 0.1f),
+            "gaping" pairTo Animation(atlas!!.findRegion("GapingFish/Gaping"), 1, 2, 0.15f),
+            "swimming" pairTo Animation(atlas!!.findRegion("GapingFish/Swimming"), 1, 2, 0.15f)
         )
         return AnimationsComponent(this, Animator(keySupplier, animations))
     }

@@ -18,6 +18,7 @@ import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -151,17 +152,17 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
         if (gateState == GateState.OPENING) {
             timer.update(it)
             if (timer.isFinished()) {
-                GameLogger.debug(TAG, "Set gate to OPENED")
+                GameLogger.debug(TAG, "Set gate pairTo OPENED")
                 timer.reset()
                 gateState = GateState.OPEN
                 game.eventsMan.submitEvent(Event(EventType.GATE_FINISH_OPENING))
-                game.eventsMan.submitEvent(Event(EventType.NEXT_ROOM_REQ, props(ConstKeys.ROOM to nextRoomKey)))
+                game.eventsMan.submitEvent(Event(EventType.NEXT_ROOM_REQ, props(ConstKeys.ROOM pairTo nextRoomKey)))
             }
         }
 
         if (gateState == GateState.OPEN) {
             if (transitionFinished) {
-                GameLogger.debug(TAG, "Set gate to CLOSING")
+                GameLogger.debug(TAG, "Set gate pairTo CLOSING")
                 transitionFinished = false
                 gateState = GateState.CLOSING
                 if (showCloseEvent) requestToPlaySound(SoundAsset.BOSS_DOOR_SOUND, false)
@@ -172,7 +173,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
         if (gateState == GateState.CLOSING) {
             timer.update(it)
             if (timer.isFinished()) {
-                GameLogger.debug(TAG, "Set gate to CLOSED")
+                GameLogger.debug(TAG, "Set gate pairTo CLOSED")
                 timer.reset()
                 gateState = GateState.CLOSED
                 game.eventsMan.submitEvent(Event(EventType.GATE_FINISH_CLOSING))
@@ -248,7 +249,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
         val opening = Animation(atlas!!.findRegion("opening"), 1, 5, 0.125f, false)
         val closing = Animation(opening, reverse = true)
         val animator = Animator(
-            keySupplier, objectMapOf("closed" to closed, "opening" to opening, "closing" to closing)
+            keySupplier, objectMapOf("closed" pairTo closed, "opening" pairTo opening, "closing" pairTo closing)
         )
         return AnimationsComponent(this, animator)
     }

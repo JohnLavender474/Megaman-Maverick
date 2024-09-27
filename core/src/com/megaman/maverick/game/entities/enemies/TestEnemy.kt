@@ -4,6 +4,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
@@ -81,6 +82,6 @@ class TestEnemy(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        return SpritesComponent(TAG to sprite)
+        return SpritesComponent(TAG pairTo sprite)
     }
 }

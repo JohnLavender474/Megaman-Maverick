@@ -10,6 +10,7 @@ import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.getOverlapPushDirection
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.damage.IDamageable
@@ -97,7 +98,7 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
 
         if (explosionType == DEFAULT_EXPLOSION) {
             val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
-            explosion.spawn(props(ConstKeys.OWNER to owner, ConstKeys.POSITION to body.getCenter()))
+            explosion.spawn(props(ConstKeys.OWNER pairTo owner, ConstKeys.POSITION pairTo body.getCenter()))
 
             if (overlapsGameCamera()) playSoundNow(SoundAsset.EXPLOSION_2_SOUND, false)
         } else if (explosionType == WAVE_EXPLOSION) {
@@ -115,9 +116,9 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
             val greenExplosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.GREEN_EXPLOSION)!!
             greenExplosion.spawn(
                 props(
-                    ConstKeys.POSITION to position,
-                    ConstKeys.DIRECTION to direction,
-                    ConstKeys.OWNER to owner
+                    ConstKeys.POSITION pairTo position,
+                    ConstKeys.DIRECTION pairTo direction,
+                    ConstKeys.OWNER pairTo owner
                 )
             )
 

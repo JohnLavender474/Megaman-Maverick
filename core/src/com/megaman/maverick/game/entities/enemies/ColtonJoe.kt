@@ -19,6 +19,7 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -67,13 +68,13 @@ class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(10),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(10),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 15 else 10
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 10 else 5
         }
@@ -110,11 +111,11 @@ class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         val position = body.getCenter().add(0.65f * ConstVals.PPM * facing.value, 0.125f * ConstVals.PPM)
         bullet.spawn(
             props(
-                ConstKeys.OWNER to this,
-                ConstKeys.POSITION to position,
-                ConstKeys.TRAJECTORY to Vector2(BULLET_SPEED * facing.value * ConstVals.PPM, 0f),
-                ConstKeys.DIRECTION to if (isFacing(Facing.LEFT)) Direction.LEFT else Direction.RIGHT,
-                ConstKeys.GRAVITY_ON to false
+                ConstKeys.OWNER pairTo this,
+                ConstKeys.POSITION pairTo position,
+                ConstKeys.TRAJECTORY pairTo Vector2(BULLET_SPEED * facing.value * ConstVals.PPM, 0f),
+                ConstKeys.DIRECTION pairTo if (isFacing(Facing.LEFT)) Direction.LEFT else Direction.RIGHT,
+                ConstKeys.GRAVITY_ON pairTo false
             )
         )
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.BLAST_SOUND, false)
@@ -190,8 +191,8 @@ class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { if (shootTimer.isFinished()) "stand" else "shoot" }
         val animations = objectMapOf<String, IAnimation>(
-            "stand" to Animation(regions.get("stand"), 2, 1, gdxArrayOf(0.75f, 0.15f), true),
-            "shoot" to Animation(regions.get("shoot"), 5, 1, 0.1f, false)
+            "stand" pairTo Animation(regions.get("stand"), 2, 1, gdxArrayOf(0.75f, 0.15f), true),
+            "shoot" pairTo Animation(regions.get("shoot"), 5, 1, 0.1f, false)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

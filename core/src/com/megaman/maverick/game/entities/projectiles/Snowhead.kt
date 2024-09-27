@@ -11,6 +11,7 @@ import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.getOverlapPushDirection
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.IGameShape2D
@@ -86,11 +87,11 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
             trajectory.rotateDeg(direction.rotation)
             snowballs[i].spawn(
                 props(
-                    ConstKeys.POSITION to spawn,
-                    ConstKeys.TRAJECTORY to trajectory.scl(ConstVals.PPM.toFloat()),
-                    ConstKeys.GRAVITY to Vector2(0f, GRAVITY * ConstVals.PPM),
-                    ConstKeys.GRAVITY_ON to true,
-                    ConstKeys.OWNER to owner
+                    ConstKeys.POSITION pairTo spawn,
+                    ConstKeys.TRAJECTORY pairTo trajectory.scl(ConstVals.PPM.toFloat()),
+                    ConstKeys.GRAVITY pairTo Vector2(0f, GRAVITY * ConstVals.PPM),
+                    ConstKeys.GRAVITY_ON pairTo true,
+                    ConstKeys.OWNER pairTo owner
                 )
             )
         }
@@ -100,7 +101,7 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
         destroy()
         if (overlapsGameCamera()) playSoundNow(SoundAsset.CHILL_SHOOT_SOUND, false)
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SNOWBALL_EXPLOSION)!!
-        explosion.spawn(props(ConstKeys.POSITION to body.getCenter()))
+        explosion.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
     }
 
     override fun hitBlock(blockFixture: IFixture) {

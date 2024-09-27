@@ -10,6 +10,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -74,7 +75,7 @@ class UnderWaterBubble(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyE
     })
 
     private fun defineCullablesComponent() =
-        CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to getGameCameraCullingLogic(this)))
+        CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo getGameCameraCullingLogic(this)))
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)

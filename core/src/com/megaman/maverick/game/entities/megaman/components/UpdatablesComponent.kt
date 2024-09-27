@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.entities.megaman.components
 
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.updatables.UpdatablesComponent
@@ -63,5 +64,5 @@ private fun Megaman.spawnBubbles() {
     val offsetY = if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) 0.05f else 0.1f
     val offsetX = 0.2f * facing.value
     val spawn = body.getCenter().add(offsetX * ConstVals.PPM, offsetY * ConstVals.PPM)
-    bubbles.spawn(props(ConstKeys.POSITION to spawn))
+    bubbles.spawn(props(ConstKeys.POSITION pairTo spawn))
 }

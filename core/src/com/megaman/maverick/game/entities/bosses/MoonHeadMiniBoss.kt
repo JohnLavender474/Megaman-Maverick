@@ -18,6 +18,7 @@ import com.mega.game.engine.common.getRandom
 import com.mega.game.engine.common.getRandomValue
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -84,13 +85,13 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimate
     private enum class MoonHeadState { DELAY, DARK, AWAKEN, SHOOT, MOVE, CRUMBLE }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(2),
-        Fireball::class to dmgNeg(3),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(2),
+        Fireball::class pairTo dmgNeg(3),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 3 else 2
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 2 else 1
         }
@@ -98,13 +99,13 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimate
 
     private val loop = Loop(MoonHeadState.values().toGdxArray())
     private val timers = objectMapOf(
-        "delay" to Timer(DELAY),
-        "dark" to Timer(DARK_DUR),
-        "awaken" to Timer(AWAKEN_DUR),
-        "shoot_init" to Timer(SHOOT_INIT_DELAY),
-        "shoot_delay" to Timer(SHOOT_DELAY),
-        "shoot" to Timer(SHOOT_DUR),
-        "crumble" to Timer(CRUMBLE_DUR),
+        "delay" pairTo Timer(DELAY),
+        "dark" pairTo Timer(DARK_DUR),
+        "awaken" pairTo Timer(AWAKEN_DUR),
+        "shoot_init" pairTo Timer(SHOOT_INIT_DELAY),
+        "shoot_delay" pairTo Timer(SHOOT_DELAY),
+        "shoot" pairTo Timer(SHOOT_DUR),
+        "crumble" pairTo Timer(CRUMBLE_DUR),
     )
     private lateinit var area: GameRectangle
     private lateinit var arcMotion: ArcMotion
@@ -144,11 +145,11 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimate
         val asteroid = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.ASTEROID)!!
         asteroid.spawn(
             props(
-                ConstKeys.POSITION to spawn,
-                ConstKeys.IMPULSE to impulse,
-                ConstKeys.OWNER to this,
-                ConstKeys.TYPE to Asteroid.BLUE,
-                "${ConstKeys.ROTATION}_${ConstKeys.SPEED}" to Asteroid.MAX_ROTATION_SPEED
+                ConstKeys.POSITION pairTo spawn,
+                ConstKeys.IMPULSE pairTo impulse,
+                ConstKeys.OWNER pairTo this,
+                ConstKeys.TYPE pairTo Asteroid.BLUE,
+                "${ConstKeys.ROTATION}_${ConstKeys.SPEED}" pairTo Asteroid.MAX_ROTATION_SPEED
             )
         )
     }
@@ -329,12 +330,12 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimate
             }
         }
         val animations = objectMapOf<String, IAnimation>(
-            "dark" to Animation(regions.get("dark")),
-            "awaken" to Animation(regions.get("awaken"), 5, 2, 0.1f, false),
-            "shoot" to Animation(regions.get("shoot")),
-            "angry" to Animation(regions.get("angry")),
-            "crumble" to Animation(regions.get("crumble"), 1, 3, 0.1f, false),
-            "defeated" to Animation(regions.get("defeated"))
+            "dark" pairTo Animation(regions.get("dark")),
+            "awaken" pairTo Animation(regions.get("awaken"), 5, 2, 0.1f, false),
+            "shoot" pairTo Animation(regions.get("shoot")),
+            "angry" pairTo Animation(regions.get("angry")),
+            "crumble" pairTo Animation(regions.get("crumble"), 1, 3, 0.1f, false),
+            "defeated" pairTo Animation(regions.get("defeated"))
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

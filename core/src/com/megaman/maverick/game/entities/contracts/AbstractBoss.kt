@@ -7,6 +7,7 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.events.Event
@@ -92,7 +93,12 @@ abstract class AbstractBoss(
         )
         explosionOrbTrajectories.forEach { trajectory ->
             val explosionOrb = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION_ORB)
-            explosionOrb?.spawn(props(ConstKeys.TRAJECTORY to trajectory, ConstKeys.POSITION to body.getCenter()))
+            explosionOrb?.spawn(
+                props(
+                    ConstKeys.TRAJECTORY pairTo trajectory,
+                    ConstKeys.POSITION pairTo body.getCenter()
+                )
+            )
         }
     }
 
@@ -120,7 +126,7 @@ abstract class AbstractBoss(
                 if (defeatTimer.isFinished()) {
                     GameLogger.debug(TAG, "Defeat timer is finished, dying and sending BOSS_DEAD event")
                     game.eventsMan.submitEvent(
-                        Event(EventType.BOSS_DEAD, props(ConstKeys.BOSS to this))
+                        Event(EventType.BOSS_DEAD, props(ConstKeys.BOSS pairTo this))
                     )
                     destroy()
                 }
@@ -145,7 +151,7 @@ abstract class AbstractBoss(
 
     protected open fun triggerDefeat() {
         GameLogger.debug(TAG, "Trigger defeat")
-        game.eventsMan.submitEvent(Event(EventType.BOSS_DEFEATED, props(ConstKeys.BOSS to this)))
+        game.eventsMan.submitEvent(Event(EventType.BOSS_DEFEATED, props(ConstKeys.BOSS pairTo this)))
         defeatTimer.reset()
         defeated = true
     }
@@ -159,7 +165,7 @@ abstract class AbstractBoss(
             val position = Position.values().toGdxArray().random()
             explosion.spawn(
                 props(
-                    ConstKeys.SOUND to SoundAsset.EXPLOSION_2_SOUND, ConstKeys.POSITION to body.getCenter().add(
+                    ConstKeys.SOUND pairTo SoundAsset.EXPLOSION_2_SOUND, ConstKeys.POSITION pairTo body.getCenter().add(
                         (position.x - 1) * 0.75f * ConstVals.PPM, (position.y - 1) * 0.75f * ConstVals.PPM
                     )
                 )

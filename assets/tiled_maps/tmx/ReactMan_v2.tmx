@@ -683,7 +683,7 @@
    </properties>
   </object>
   <object id="150" name="Start" x="4960" y="2000" width="32" height="32"/>
-  <object id="151" name="Target" x="4960" y="1664" width="32" height="32"/>
+  <object id="151" name="Target" x="4960" y="1680" width="32" height="32"/>
   <object id="152" name="Trigger1" x="4864" y="1672" width="32" height="344"/>
   <object id="153" name="Trigger2" x="5056" y="1672" width="32" height="344"/>
   <object id="258" name="ReactorMonkeyMiniBoss" x="7448" y="1952" width="32" height="32">
@@ -700,7 +700,7 @@
   </object>
   <object id="452" name="ReactMan" x="12768" y="2720" width="32" height="32">
    <properties>
-    <property name="music" value="FF7_BOSS_MUSIC"/>
+    <property name="music" value="MMX6_BOSS_FIGHT_MUSIC"/>
    </properties>
   </object>
  </objectgroup>
@@ -793,8 +793,7 @@
   </object>
  </objectgroup>
  <objectgroup id="13" name="player">
-  <object id="458" name="0" x="11552" y="2720" width="32" height="32"/>
-  <object id="459" name="1" x="12128" y="2720" width="32" height="32"/>
+  <object id="458" name="0" x="12160" y="2720" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="5" name="temp">
   <object id="107" name="1" x="2304" y="2816" width="32" height="32"/>

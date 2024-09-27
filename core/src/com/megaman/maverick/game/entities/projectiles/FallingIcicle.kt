@@ -12,6 +12,7 @@ import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -92,7 +93,7 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
         destroy()
         for (i in 0 until 5) {
             val iceShard = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.ICE_SHARD)!!
-            iceShard.spawn(props(ConstKeys.POSITION to body.getCenter(), ConstKeys.INDEX to i))
+            iceShard.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.INDEX pairTo i))
         }
     }
 
@@ -157,8 +158,8 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
             }
         }
         val animations = objectMapOf<String, IAnimation>(
-            "still" to Animation(regions["still"]),
-            "shake" to Animation(regions["shake"], 2, 1, 0.1f, true),
+            "still" pairTo Animation(regions["still"]),
+            "shake" pairTo Animation(regions["shake"], 2, 1, 0.1f, true),
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

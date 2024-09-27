@@ -19,6 +19,7 @@ import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullablesComponent
@@ -92,8 +93,8 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         childBlock = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.STANDARD) as Block
         childBlock!!.spawn(
             props(
-                ConstKeys.BOUNDS to GameRectangle().setSize(0.9f * ConstVals.PPM, 0.75f * ConstVals.PPM),
-                ConstKeys.BLOCK_FILTERS to objectSetOf(TAG)
+                ConstKeys.BOUNDS pairTo GameRectangle().setSize(0.9f * ConstVals.PPM, 0.75f * ConstVals.PPM),
+                ConstKeys.BLOCK_FILTERS pairTo objectSetOf(TAG)
             )
         )
         facing = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, "right", String::class).uppercase())
@@ -181,11 +182,11 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         }
         val animations = objectMapOf<String, IAnimation>(
             /*
-            "moving_fast" to Animation(region!!, 1, 2, 0.1f, true),
-            "moving_slow" to Animation(region!!, 1, 2, 0.25f, true),
-            "moving_slowest" to Animation(region!!, 1, 2, 0.35f, true),
+            "moving_fast" pairTo Animation(region!!, 1, 2, 0.1f, true),
+            "moving_slow" pairTo Animation(region!!, 1, 2, 0.25f, true),
+            "moving_slowest" pairTo Animation(region!!, 1, 2, 0.35f, true),
              */
-            "idle" to Animation(region!!)
+            "idle" pairTo Animation(region!!)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
@@ -193,6 +194,6 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
 
     private fun defineCullablesComponent(): CullablesComponent {
         val cullable = getGameCameraCullingLogic(this)
-        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullable))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullable))
     }
 }

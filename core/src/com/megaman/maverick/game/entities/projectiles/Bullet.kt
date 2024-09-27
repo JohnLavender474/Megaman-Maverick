@@ -10,6 +10,7 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.set
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.damage.IDamageable
@@ -121,7 +122,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
         val disintegration = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)
-        disintegration!!.spawn(props(ConstKeys.POSITION to body.getCenter()))
+        disintegration!!.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
     }
 
     override fun defineBodyComponent(): BodyComponent {

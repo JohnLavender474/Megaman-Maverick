@@ -12,6 +12,7 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.getOverlapPushDirection
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.IGameShape2D
@@ -46,22 +47,22 @@ class ReactManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game), 
         private const val GRAVITY = -0.15f
         private const val DIE_DUR = 0.05f
         private val shatterTrajectories = objectMapOf(
-            Direction.UP to gdxArrayOf(
+            Direction.UP pairTo gdxArrayOf(
                 Vector2(5f, 9f),
                 Vector2(0f, 9f),
                 Vector2(-5f, 9f)
             ),
-            Direction.DOWN to gdxArrayOf(
+            Direction.DOWN pairTo gdxArrayOf(
                 Vector2(5f, -9f),
                 Vector2(0f, -9f),
                 Vector2(-5f, -9f)
             ),
-            Direction.LEFT to gdxArrayOf(
+            Direction.LEFT pairTo gdxArrayOf(
                 Vector2(-9f, 5f),
                 Vector2(-9f, 0f),
                 Vector2(-9f, -5f)
             ),
-            Direction.RIGHT to gdxArrayOf(
+            Direction.RIGHT pairTo gdxArrayOf(
                 Vector2(9f, 5f),
                 Vector2(9f, 0f),
                 Vector2(9f, -5f)
@@ -136,17 +137,17 @@ class ReactManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game), 
             val projectile = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.REACT_MAN_PROJECTILE)!!
             projectile.spawn(
                 props(
-                    ConstKeys.POSITION to when (direction) {
+                    ConstKeys.POSITION pairTo when (direction) {
                         Direction.UP -> body.getTopCenterPoint()
                         Direction.DOWN -> body.getBottomCenterPoint()
                         Direction.LEFT -> body.getCenterLeftPoint()
                         Direction.RIGHT -> body.getCenterRightPoint()
                     },
-                    ConstKeys.OWNER to owner,
-                    ConstKeys.BIG to false,
-                    ConstKeys.TRAJECTORY to trajectory.cpy().scl(ConstVals.PPM.toFloat()),
-                    ConstKeys.GRAVITY_ON to true,
-                    ConstKeys.ACTIVE to true
+                    ConstKeys.OWNER pairTo owner,
+                    ConstKeys.BIG pairTo false,
+                    ConstKeys.TRAJECTORY pairTo trajectory.cpy().scl(ConstVals.PPM.toFloat()),
+                    ConstKeys.GRAVITY_ON pairTo true,
+                    ConstKeys.ACTIVE pairTo true
                 )
             )
         }
@@ -197,9 +198,9 @@ class ReactManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game), 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { if (big) "big" else if (!dying) "small" else "dying" }
         val animations = objectMapOf<String, IAnimation>(
-            "big" to Animation(bigRegion!!, 1, 3, 0.1f, true),
-            "small" to Animation(smallRegion!!, 2, 2, 0.1f, true),
-            "dying" to Animation(dyingRegion!!, 1, 2, 0.05f, false)
+            "big" pairTo Animation(bigRegion!!, 1, 3, 0.1f, true),
+            "small" pairTo Animation(smallRegion!!, 2, 2, 0.1f, true),
+            "dying" pairTo Animation(dyingRegion!!, 1, 2, 0.05f, false)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

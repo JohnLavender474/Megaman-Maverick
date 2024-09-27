@@ -11,6 +11,7 @@ import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -123,8 +124,8 @@ class SpringBouncer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesE
         val keySupplier: () -> String = { if (bounceTimer.isFinished()) "still" else "bounce" }
         val animations =
             objectMapOf<String, IAnimation>(
-                "still" to Animation(atlas!!.findRegion("SpringBounceStill")),
-                "bounce" to Animation(atlas!!.findRegion("SpringBounce"), 1, 5, 0.05f, true)
+                "still" pairTo Animation(atlas!!.findRegion("SpringBounceStill")),
+                "bounce" pairTo Animation(atlas!!.findRegion("SpringBounce"), 1, 5, 0.05f, true)
             )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

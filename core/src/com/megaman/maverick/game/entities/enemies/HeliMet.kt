@@ -16,6 +16,7 @@ import com.mega.game.engine.common.interfaces.IFaceable
 
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.SmoothOscillationTimer
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.toGameRectangle
@@ -79,10 +80,10 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(15),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShotExplosion::class to dmgNeg(ConstVals.MAX_HEALTH)
+        Bullet::class pairTo dmgNeg(15),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShotExplosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
     )
 
     override var directionRotation: Direction? = null
@@ -266,9 +267,9 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
             }
         }
         val animations = objectMapOf<String, IAnimation>(
-            "shield" to Animation(shieldRegion!!),
-            "pop_up" to Animation(popUpRegion!!, 1, 3, 0.1f, false),
-            "fly" to Animation(flyRegion!!, 1, 2, 0.1f, true)
+            "shield" pairTo Animation(shieldRegion!!),
+            "pop_up" pairTo Animation(popUpRegion!!, 1, 3, 0.1f, false),
+            "fly" pairTo Animation(flyRegion!!, 1, 2, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
@@ -299,9 +300,9 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         val trajectory = getMegaman().body.getCenter().sub(spawn).nor().scl(BULLET_VELOCITY * ConstVals.PPM)
         val spawnProps =
             props(
-                ConstKeys.OWNER to this,
-                ConstKeys.TRAJECTORY to trajectory,
-                ConstKeys.POSITION to spawn
+                ConstKeys.OWNER pairTo this,
+                ConstKeys.TRAJECTORY pairTo trajectory,
+                ConstKeys.POSITION pairTo spawn
             )
         val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
         bullet.spawn(spawnProps)

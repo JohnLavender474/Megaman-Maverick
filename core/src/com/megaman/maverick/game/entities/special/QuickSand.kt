@@ -11,8 +11,10 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimator
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.interfaces.UpdateFunction
+import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Matrix
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -86,7 +88,7 @@ class QuickSand(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
     private fun defineDrawables(cells: Matrix<GameRectangle>) {
         val sprites = OrderedMap<String, GameSprite>()
         val updateFunctions = ObjectMap<String, UpdateFunction<GameSprite>>()
-        val animators = Array<Pair<() -> GameSprite, IAnimator>>()
+        val animators = Array<GamePair<() -> GameSprite, IAnimator>>()
 
         cells.forEach { x, y, bounds ->
             val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
@@ -105,7 +107,7 @@ class QuickSand(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
             val region = regions.get(regionKey)
             val animation = Animation(region!!, 1, 2, 0.25f, true)
             val animator = Animator(animation)
-            animators.add({ sprite } to animator)
+            animators.add({ sprite } pairTo animator)
         }
 
         addComponent(SpritesComponent(sprites, updateFunctions))

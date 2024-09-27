@@ -1,18 +1,18 @@
 package com.megaman.maverick.game.entities.sensors
 
-import com.mega.game.engine.world.body.*;
-
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
 import com.badlogic.gdx.utils.OrderedSet
 import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.toOrderedSet
+import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.entities.GameEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.IParentEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
@@ -30,7 +30,7 @@ class FixtureTypeOverlapSpawn(game: MegamanMaverickGame) : MegaGameEntity(game),
 
     override var children = Array<GameEntity>()
 
-    private lateinit var entitySuppliers: Array<Pair<() -> GameEntity, Properties>>
+    private lateinit var entitySuppliers: Array<GamePair<() -> GameEntity, Properties>>
     private lateinit var spawnMask: OrderedSet<FixtureType>
     private val fixturesConsumed = ObjectSet<FixtureType>()
     private var objectSpawned = false
@@ -67,7 +67,7 @@ class FixtureTypeOverlapSpawn(game: MegamanMaverickGame) : MegaGameEntity(game),
 
         val consumerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle())
         val consumer: (ProcessState, IFixture) -> Unit = { _, it ->
-            fixturesConsumed.add(it.getFixtureType() as FixtureType)
+            fixturesConsumed.add(it.getType() as FixtureType)
         }
         consumerFixture.setConsumer(consumer)
         body.addFixture(consumerFixture)

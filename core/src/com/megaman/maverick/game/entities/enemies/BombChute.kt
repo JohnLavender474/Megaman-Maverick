@@ -13,6 +13,7 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interpolate
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.getCenter
@@ -61,13 +62,13 @@ class BombChute(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(10),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(10),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 15 else 10
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 10 else 5
         }
@@ -173,9 +174,9 @@ class BombChute(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         val keySupplier: () -> String? =
             { if (!targetReached) "up" else if (!turnTimer.isFinished()) "turn" else "down" }
         val animations = objectMapOf<String, IAnimation>(
-            "up" to Animation(regions.get("up"), 2, 1, 0.1f, true),
-            "turn" to Animation(regions.get("turn"), 2, 2, 0.2f, false),
-            "down" to Animation(regions.get("down"), 2, 2, 0.25f, true)
+            "up" pairTo Animation(regions.get("up"), 2, 1, 0.1f, true),
+            "turn" pairTo Animation(regions.get("turn"), 2, 2, 0.2f, false),
+            "down" pairTo Animation(regions.get("down"), 2, 2, 0.25f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

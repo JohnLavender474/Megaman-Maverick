@@ -18,6 +18,7 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -70,10 +71,10 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(15),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShotExplosion::class to dmgNeg(ConstVals.MAX_HEALTH)
+        Bullet::class pairTo dmgNeg(15),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShotExplosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
     )
     override lateinit var facing: Facing
 
@@ -133,7 +134,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     private fun dropBomb() {
         val bomb = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.UFO_BOMB)!!
         val spawn = body.getBottomCenterPoint().sub(0f, 0.6f * ConstVals.PPM)
-        bomb.spawn(props(ConstKeys.POSITION to spawn, ConstKeys.OWNER to this))
+        bomb.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.OWNER pairTo this))
     }
 
     private fun setToHover() {
@@ -196,6 +197,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
         body.setSize(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat())
+        body.physics.takeFrictionFromOthers = false
         body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
@@ -262,8 +264,8 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { if (dropped) "no_bomb" else "with_bomb" }
         val animations = objectMapOf<String, IAnimation>(
-            "no_bomb" to Animation(regions["no_bomb"], 2, 2, 0.1f, true),
-            "with_bomb" to Animation(regions["with_bomb"], 2, 2, 0.1f, true)
+            "no_bomb" pairTo Animation(regions["no_bomb"], 2, 2, 0.1f, true),
+            "with_bomb" pairTo Animation(regions["with_bomb"], 2, 2, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

@@ -19,6 +19,7 @@ import com.mega.game.engine.common.interfaces.Updatable
 
 
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -73,13 +74,13 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
 
     override var facing = Facing.RIGHT
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(15),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(15),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 15 else 5
         }
@@ -178,7 +179,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
 
         val onBounce: () -> Unit = {
             swapFacing()
-            GameLogger.debug(TAG, "onBounce: swap facing to $facing")
+            GameLogger.debug(TAG, "onBounce: swap facing pairTo $facing")
         }
 
         val leftFixture = Fixture(
@@ -233,7 +234,8 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
             if (shooting) "shoot" else "move"
         }
         val animations = objectMapOf<String, IAnimation>(
-            "shoot" to Animation(shootRegion!!, 1, 2, 0.1f, true), "move" to Animation(moveRegion!!, 1, 2, 0.1f, true)
+            "shoot" pairTo Animation(shootRegion!!, 1, 2, 0.1f, true),
+            "move" pairTo Animation(moveRegion!!, 1, 2, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
@@ -252,10 +254,10 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
         else trajectory.set(0f, BULLET_SPEED * ConstVals.PPM * facing.value)
 
         val props = props(
-            ConstKeys.OWNER to this,
-            ConstKeys.POSITION to spawn,
-            ConstKeys.TRAJECTORY to trajectory,
-            ConstKeys.DIRECTION to directionRotation
+            ConstKeys.OWNER pairTo this,
+            ConstKeys.POSITION pairTo spawn,
+            ConstKeys.TRAJECTORY pairTo trajectory,
+            ConstKeys.DIRECTION pairTo directionRotation
         )
 
         val entity = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!

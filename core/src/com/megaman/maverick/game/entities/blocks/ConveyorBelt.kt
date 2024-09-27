@@ -10,7 +10,9 @@ import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimator
 import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
@@ -92,7 +94,7 @@ class ConveyorBelt(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAn
         val type = spawnProps.getOrDefault(ConstKeys.TYPE, DEFAULT_TYPE, String::class)
 
         val sprites = OrderedMap<String, GameSprite>()
-        val animators = Array<Pair<() -> GameSprite, IAnimator>>()
+        val animators = Array<GamePair<() -> GameSprite, IAnimator>>()
         val numParts = (bounds.width / ConstVals.PPM).toInt()
         for (i in 0 until numParts) {
             val part = if (i == 0) "left" else if (i == numParts - 1) "right" else "middle $i"
@@ -117,7 +119,7 @@ class ConveyorBelt(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAn
             sprite.setBounds(bounds.x + i * ConstVals.PPM, bounds.y, ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
 
             sprites.put(part, sprite)
-            animators.add({ sprite } to Animator(animation))
+            animators.add({ sprite } pairTo Animator(animation))
         }
 
         addComponent(SpritesComponent(sprites))

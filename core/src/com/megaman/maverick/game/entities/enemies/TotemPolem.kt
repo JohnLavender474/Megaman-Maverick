@@ -20,6 +20,7 @@ import com.mega.game.engine.common.interfaces.IFaceable
 
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
@@ -77,13 +78,13 @@ class TotemPolem(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(1),
-        Fireball::class to dmgNeg(20),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(1),
+        Fireball::class pairTo dmgNeg(20),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 5 else 3
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 3 else 2
         }
@@ -95,11 +96,11 @@ class TotemPolem(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     private val loop = Loop(TotemPolemState.values().toGdxArray())
     private val timers = objectMapOf(
-        TotemPolemState.EYES_CLOSED to Timer(EYES_CLOSE_DUR),
-        TotemPolemState.EYES_OPENING to Timer(EYES_OPENING_DUR),
-        TotemPolemState.EYES_OPEN to Timer(EYES_OPEN_DUR),
-        TotemPolemState.EYES_CLOSING to Timer(EYES_CLOSING_DUR),
-        TotemPolemState.EYES_OPEN_SHOOTING to Timer(
+        TotemPolemState.EYES_CLOSED pairTo Timer(EYES_CLOSE_DUR),
+        TotemPolemState.EYES_OPENING pairTo Timer(EYES_OPENING_DUR),
+        TotemPolemState.EYES_OPEN pairTo Timer(EYES_OPEN_DUR),
+        TotemPolemState.EYES_CLOSING pairTo Timer(EYES_CLOSING_DUR),
+        TotemPolemState.EYES_OPEN_SHOOTING pairTo Timer(
             SHOOT_DUR, gdxArrayOf(TimeMarkedRunnable(SHOOT_TIME) { shoot() })
         )
     )
@@ -143,12 +144,12 @@ class TotemPolem(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
         bullet.spawn(
             props(
-                ConstKeys.OWNER to this,
-                ConstKeys.POSITION to body.getCenter().add(
+                ConstKeys.OWNER pairTo this,
+                ConstKeys.POSITION pairTo body.getCenter().add(
                     0.1f * facing.value * ConstVals.PPM,
                     (getShootPositionY(shootPositionIndex) - 0.3f) * ConstVals.PPM
                 ),
-                ConstKeys.TRAJECTORY to Vector2(BULLET_SPEED * facing.value * ConstVals.PPM, 0f)
+                ConstKeys.TRAJECTORY pairTo Vector2(BULLET_SPEED * facing.value * ConstVals.PPM, 0f)
             )
         )
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
@@ -253,14 +254,14 @@ class TotemPolem(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             }
         }
         val animations = objectMapOf<String, IAnimation>(
-            "eyes_closed" to Animation(regions.get("eyes_closed")),
-            "eyes_open" to Animation(regions.get("eyes_open")),
-            "eyes_closing" to Animation(regions.get("eyes_closing"), 3, 1, 0.1f, false),
-            "eyes_opening" to Animation(regions.get("eyes_closing"), 3, 1, 0.1f, false).reversed(),
-            "shoot_1" to Animation(regions.get("shoot_1")),
-            "shoot_2" to Animation(regions.get("shoot_2")),
-            "shoot_3" to Animation(regions.get("shoot_3")),
-            "shoot_4" to Animation(regions.get("shoot_4"))
+            "eyes_closed" pairTo Animation(regions.get("eyes_closed")),
+            "eyes_open" pairTo Animation(regions.get("eyes_open")),
+            "eyes_closing" pairTo Animation(regions.get("eyes_closing"), 3, 1, 0.1f, false),
+            "eyes_opening" pairTo Animation(regions.get("eyes_closing"), 3, 1, 0.1f, false).reversed(),
+            "shoot_1" pairTo Animation(regions.get("shoot_1")),
+            "shoot_2" pairTo Animation(regions.get("shoot_2")),
+            "shoot_3" pairTo Animation(regions.get("shoot_3")),
+            "shoot_4" pairTo Animation(regions.get("shoot_4"))
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

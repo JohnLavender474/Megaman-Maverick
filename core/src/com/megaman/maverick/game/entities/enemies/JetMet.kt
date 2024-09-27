@@ -17,6 +17,7 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.getCenter
@@ -74,10 +75,10 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
     private enum class JetMetState { STAND, LIFT_OFF, JET }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(15),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShotExplosion::class to dmgNeg(ConstVals.MAX_HEALTH)
+        Bullet::class pairTo dmgNeg(15),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShotExplosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
     )
 
     override var directionRotation: Direction?
@@ -197,10 +198,10 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         val spawn = body.getCenter().add(offset * facing.value, if (isDirectionRotatedDown()) -offset else offset)
 
         val bulletProps = props(
-            ConstKeys.POSITION to spawn,
-            ConstKeys.TRAJECTORY to bulletTrajectory,
-            ConstKeys.OWNER to this,
-            ConstKeys.DIRECTION to directionRotation
+            ConstKeys.POSITION pairTo spawn,
+            ConstKeys.TRAJECTORY pairTo bulletTrajectory,
+            ConstKeys.OWNER pairTo this,
+            ConstKeys.DIRECTION pairTo directionRotation
         )
         if (applyMovementScalarToBullet) bulletProps.put("${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}", movementScalar)
 
@@ -279,9 +280,9 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
             }
         }
         animations = objectMapOf(
-            "stand" to Animation(regions.get("stand")),
-            "take_off" to Animation(regions.get("take_off")),
-            "jet" to Animation(regions.get("jet"), 2, 2, 0.1f, true)
+            "stand" pairTo Animation(regions.get("stand")),
+            "take_off" pairTo Animation(regions.get("take_off")),
+            "jet" pairTo Animation(regions.get("jet"), 2, 2, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

@@ -20,9 +20,11 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.interfaces.UpdateFunction
+import com.mega.game.engine.common.objects.GamePair
 
 import com.mega.game.engine.common.objects.Matrix
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullableOnEvent
 import com.mega.game.engine.cullables.CullablesComponent
@@ -200,13 +202,13 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         runnablesOnSpawn.put(ConstKeys.CULL_EVENTS) { game.eventsMan.addListener(cullOnEvents) }
         runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
 
-        return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS to cullOnEvents))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS pairTo cullOnEvents))
     }
 
     private fun defineDrawables(rows: Int, cols: Int) {
         val sprites = OrderedMap<String, GameSprite>()
         val updateFunctions = ObjectMap<String, UpdateFunction<GameSprite>>()
-        val animators = Array<Pair<() -> GameSprite, IAnimator>>()
+        val animators = Array<GamePair<() -> GameSprite, IAnimator>>()
 
         for (row in 0 until rows) {
             for (col in 0 until cols) {
@@ -235,7 +237,7 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
 
                 val animation = Animation(region!!, 3, 1, 0.1f, true)
                 val animator = Animator(animation)
-                animators.add({ sprite } to animator)
+                animators.add({ sprite } pairTo animator)
             }
         }
 

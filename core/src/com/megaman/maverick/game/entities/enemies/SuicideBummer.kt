@@ -15,6 +15,7 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.damage.IDamageable
@@ -65,13 +66,16 @@ class SuicideBummer(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable,
     override lateinit var facing: Facing
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(10),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(10),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
         },
-        ChargedShotExplosion::class to dmgNeg(5)
+        ChargedShotExplosion::class pairTo dmgNeg {
+            it as ChargedShotExplosion
+            if (it.fullyCharged) 10 else 5
+        }
     )
 
     private var wasSideOnGround = false
@@ -102,8 +106,8 @@ class SuicideBummer(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable,
     override fun onDamageInflictedTo(damageable: IDamageable) {
         explode(
             props(
-                ConstKeys.POSITION to body.getCenter(),
-                ConstKeys.SOUND to SoundAsset.EXPLOSION_2_SOUND
+                ConstKeys.POSITION pairTo body.getCenter(),
+                ConstKeys.SOUND pairTo SoundAsset.EXPLOSION_2_SOUND
             )
         )
         destroy()
@@ -192,8 +196,8 @@ class SuicideBummer(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable,
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String = { if (body.isSensing(BodySense.FEET_ON_GROUND)) "run" else "jump" }
         val animations = objectMapOf<String, IAnimation>(
-            "run" to Animation(runRegion!!, 1, 4, 0.125f, true),
-            "jump" to Animation(jumpRegion!!, 1, 2, 0.125f, true)
+            "run" pairTo Animation(runRegion!!, 1, 4, 0.125f, true),
+            "jump" pairTo Animation(jumpRegion!!, 1, 2, 0.125f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

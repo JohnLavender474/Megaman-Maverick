@@ -12,6 +12,7 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -101,7 +102,7 @@ class AcidGoop(game: MegamanMaverickGame) : MegaGameEntity(game), IDamager, IHaz
 
     private fun spawnSmokePuff() {
         val smokePuff = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SMOKE_PUFF)!!
-        smokePuff.spawn(props(ConstKeys.POSITION to body.getBottomCenterPoint(), ConstKeys.OWNER to this))
+        smokePuff.spawn(props(ConstKeys.POSITION pairTo body.getBottomCenterPoint(), ConstKeys.OWNER pairTo this))
     }
 
     private fun defineBodyComponent(): BodyComponent {
@@ -137,8 +138,8 @@ class AcidGoop(game: MegamanMaverickGame) : MegaGameEntity(game), IDamager, IHaz
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier = { if (dissipating) "dissipating" else "falling" }
         val animations = objectMapOf<String, IAnimation>(
-            "dissipating" to Animation(splatRegion!!, 1, 2, 0.1f, false),
-            "falling" to Animation(fallingRegion!!, 1, 3, 0.1f, true)
+            "dissipating" pairTo Animation(splatRegion!!, 1, 2, 0.1f, false),
+            "falling" pairTo Animation(fallingRegion!!, 1, 3, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

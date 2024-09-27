@@ -30,7 +30,9 @@ enum class MusicAsset(src: String) : IAsset {
     MMX7_VANISHING_GUNGAROO_MUSIC("MMX7_VanishingGungaroo.mp3"),
     MMX8_BURN_ROOSTER_MUSIC("MMX8_BurnRooster.mp3"),
     MMX5_IZZY_GLOW_MUSIC("MMX5_IzzyGlow.mp3"),
-    MMX6_GATE_STAGE_MUSIC("MMX6_Gate_Stage.mp3");
+    MMX6_GATE_STAGE_MUSIC("MMX6_Gate_Stage.mp3"),
+    MMX6_BOSS_FIGHT_MUSIC("MMX6_BossFight.mp3"),
+    MMX2_MORPH_MOTH_MUSIC("MMX2_MorphMoth.mp3");
 
     companion object {
         fun valuesAsIAssetArray(): Array<IAsset> {

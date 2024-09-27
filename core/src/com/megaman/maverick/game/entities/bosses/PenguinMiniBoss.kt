@@ -13,6 +13,7 @@ import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -75,13 +76,13 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
     private var snowballsLaunched = 0
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(2),
-        Fireball::class to dmgNeg(10),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(2),
+        Fireball::class pairTo dmgNeg(10),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 5 else 3
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 2 else 1
         }
@@ -185,11 +186,11 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
         val gravity = Vector2(0f, SNOWBALL_GRAVITY * ConstVals.PPM)
         snowball.spawn(
             props(
-                ConstKeys.POSITION to spawn,
-                ConstKeys.TRAJECTORY to trajectory,
-                ConstKeys.GRAVITY_ON to true,
-                ConstKeys.GRAVITY to gravity,
-                ConstKeys.OWNER to this
+                ConstKeys.POSITION pairTo spawn,
+                ConstKeys.TRAJECTORY pairTo trajectory,
+                ConstKeys.GRAVITY_ON pairTo true,
+                ConstKeys.GRAVITY pairTo gravity,
+                ConstKeys.OWNER pairTo this
             )
         )
         requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
@@ -200,8 +201,8 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
         val spawn = body.getBottomCenterPoint().add(0f, 0.15f * ConstVals.PPM)
         penguin.spawn(
             props(
-                ConstKeys.POSITION to spawn,
-                ConstKeys.LEFT to (facing == Facing.LEFT)
+                ConstKeys.POSITION pairTo spawn,
+                ConstKeys.LEFT pairTo (facing == Facing.LEFT)
             )
         )
         children.add(penguin)

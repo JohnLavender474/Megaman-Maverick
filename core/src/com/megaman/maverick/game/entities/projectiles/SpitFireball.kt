@@ -15,6 +15,7 @@ import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.getOverlapPushDirection
 import com.mega.game.engine.common.getSingleMostDirectionFromStartToTarget
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.damage.IDamageable
@@ -101,11 +102,11 @@ class SpitFireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnima
             }
             fireball.spawn(
                 props(
-                    ConstKeys.OWNER to owner,
-                    ConstKeys.POSITION to position,
-                    ConstKeys.TRAJECTORY to trajectory,
-                    ConstKeys.GRAVITY to Vector2(0f, FIREBALL_GRAVITY * ConstVals.PPM),
-                    ConstKeys.CULL_TIME to FIREBALL_CULL_TIME,
+                    ConstKeys.OWNER pairTo owner,
+                    ConstKeys.POSITION pairTo position,
+                    ConstKeys.TRAJECTORY pairTo trajectory,
+                    ConstKeys.GRAVITY pairTo Vector2(0f, FIREBALL_GRAVITY * ConstVals.PPM),
+                    ConstKeys.CULL_TIME pairTo FIREBALL_CULL_TIME,
                 )
             )
         }

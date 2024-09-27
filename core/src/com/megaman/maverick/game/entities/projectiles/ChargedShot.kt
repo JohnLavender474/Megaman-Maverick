@@ -15,6 +15,7 @@ import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.damage.IDamageable
@@ -172,10 +173,10 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
             else if (trajectory.x > 0f) Direction.RIGHT else Direction.LEFT
         val props =
             props(
-                ConstKeys.POSITION to body.getCenter(),
-                ConstKeys.OWNER to owner,
-                ConstKeys.DIRECTION to direction,
-                ConstKeys.BOOLEAN to fullyCharged,
+                ConstKeys.POSITION pairTo body.getCenter(),
+                ConstKeys.OWNER pairTo owner,
+                ConstKeys.DIRECTION pairTo direction,
+                ConstKeys.BOOLEAN pairTo fullyCharged,
             )
         e.spawn(props)
     }
@@ -204,7 +205,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         val animator =
             Animator(
                 { if (fullyCharged) "charged" else "half" },
-                objectMapOf("charged" to chargedAnimation, "half" to halfChargedAnimation)
+                objectMapOf("charged" pairTo chargedAnimation, "half" pairTo halfChargedAnimation)
             )
         return AnimationsComponent(this, animator)
     }

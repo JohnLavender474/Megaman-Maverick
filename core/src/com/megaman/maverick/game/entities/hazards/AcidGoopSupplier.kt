@@ -4,6 +4,7 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.getRandom
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -63,7 +64,7 @@ class AcidGoopSupplier(game: MegamanMaverickGame) : MegaGameEntity(game), IHazar
 
     private fun createAcidGoop() {
         acidGoop = EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.ACID_GOOP) as AcidGoop?
-        acidGoop!!.spawn(props(ConstKeys.POSITION to body.getCenter()))
+        acidGoop!!.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
     }
 
     private fun dropAcidGoop() = acidGoop!!.setToFall()
@@ -94,8 +95,6 @@ class AcidGoopSupplier(game: MegamanMaverickGame) : MegaGameEntity(game), IHazar
     }
 
     private fun defineCullablesComponent() = CullablesComponent(
-        objectMapOf(
-            ConstKeys.CULL_OUT_OF_BOUNDS to getGameCameraCullingLogic(this)
-        )
+        objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo getGameCameraCullingLogic(this))
     )
 }

@@ -14,6 +14,7 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
@@ -61,13 +62,13 @@ class Arigock(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(10),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(10),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 15 else 10
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 10 else 5
         }
@@ -106,9 +107,9 @@ class Arigock(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         val position = body.getTopCenterPoint().sub(0f, 0.1f * ConstVals.PPM)
         ball.spawn(
             props(
-                ConstKeys.OWNER to this,
-                ConstKeys.POSITION to position,
-                ConstKeys.IMPULSE to impulse
+                ConstKeys.OWNER pairTo this,
+                ConstKeys.POSITION pairTo position,
+                ConstKeys.IMPULSE pairTo impulse
             )
         )
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
@@ -158,8 +159,8 @@ class Arigock(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { if (!shootingTimer.isFinished()) "shooting" else "closed" }
         val animations = objectMapOf<String, IAnimation>(
-            "shooting" to Animation(regions.get("shooting"), 2, 1, 0.1f, true),
-            "closed" to Animation(regions.get("closed"), 2, 1, gdxArrayOf(1f, 0.15f), true)
+            "shooting" pairTo Animation(regions.get("shooting"), 2, 1, 0.1f, true),
+            "closed" pairTo Animation(regions.get("closed"), 2, 1, gdxArrayOf(1f, 0.15f), true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

@@ -16,6 +16,7 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -68,13 +69,13 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(10),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(10),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 15 else 10
         }
@@ -117,10 +118,10 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
         bullet.spawn(
             props(
-                ConstKeys.OWNER to this,
-                ConstKeys.POSITION to spawn,
-                ConstKeys.GRAVITY to Vector2(0f, LAUNCH_GRAVITY * ConstVals.PPM),
-                ConstKeys.TRAJECTORY to impulse
+                ConstKeys.OWNER pairTo this,
+                ConstKeys.POSITION pairTo spawn,
+                ConstKeys.GRAVITY pairTo Vector2(0f, LAUNCH_GRAVITY * ConstVals.PPM),
+                ConstKeys.TRAJECTORY pairTo impulse
             )
         )
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
@@ -227,9 +228,9 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
             else "roll"
         }
         val animations = objectMapOf<String, IAnimation>(
-            "stop" to Animation(regions["stop"]),
-            "turn" to Animation(regions["turn"], 2, 2, 0.1f, true),
-            "roll" to Animation(regions["roll"], 2, 2, 0.1f, true)
+            "stop" pairTo Animation(regions["stop"]),
+            "turn" pairTo Animation(regions["turn"], 2, 2, 0.1f, true),
+            "roll" pairTo Animation(regions["roll"], 2, 2, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

@@ -24,6 +24,7 @@ import com.mega.game.engine.common.extensions.vector2Of
 import com.mega.game.engine.common.interfaces.Initializable
 import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.toGameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -206,9 +207,9 @@ class MegaLevelScreen(
             eventsMan.submitEvent(
                 Event(
                     EventType.BEGIN_ROOM_TRANS, props(
-                        ConstKeys.ROOM to cameraManagerForRooms.currentGameRoom,
-                        ConstKeys.POSITION to cameraManagerForRooms.transitionInterpolation,
-                        ConstKeys.PRIOR to cameraManagerForRooms.priorGameRoom
+                        ConstKeys.ROOM pairTo cameraManagerForRooms.currentGameRoom,
+                        ConstKeys.POSITION pairTo cameraManagerForRooms.transitionInterpolation,
+                        ConstKeys.PRIOR pairTo cameraManagerForRooms.priorGameRoom
                     )
                 )
             )
@@ -223,7 +224,7 @@ class MegaLevelScreen(
             eventsMan.submitEvent(
                 Event(
                     EventType.CONTINUE_ROOM_TRANS,
-                    props(ConstKeys.POSITION to cameraManagerForRooms.transitionInterpolation)
+                    props(ConstKeys.POSITION pairTo cameraManagerForRooms.transitionInterpolation)
                 )
             )
         }
@@ -231,13 +232,13 @@ class MegaLevelScreen(
             GameLogger.debug(TAG, "End transition logic for camera manager")
             eventsMan.submitEvent(
                 Event(
-                    EventType.END_ROOM_TRANS, props(ConstKeys.ROOM to cameraManagerForRooms.currentGameRoom)
+                    EventType.END_ROOM_TRANS, props(ConstKeys.ROOM pairTo cameraManagerForRooms.currentGameRoom)
                 )
             )
 
             val currentRoom = cameraManagerForRooms.currentGameRoom
             if (currentRoom?.properties?.containsKey(ConstKeys.EVENT) == true) {
-                val props = props(ConstKeys.ROOM to currentRoom)
+                val props = props(ConstKeys.ROOM pairTo currentRoom)
                 val roomEvent =
                     when (val roomEventString = currentRoom.properties.get(ConstKeys.EVENT, String::class.java)) {
                         ConstKeys.BOSS -> EventType.ENTER_BOSS_ROOM
@@ -254,7 +255,7 @@ class MegaLevelScreen(
             GameLogger.debug(TAG, "On set to room no trans")
             eventsMan.submitEvent(
                 Event(
-                    EventType.SET_TO_ROOM_NO_TRANS, props(ConstKeys.ROOM to cameraManagerForRooms.currentGameRoom)
+                    EventType.SET_TO_ROOM_NO_TRANS, props(ConstKeys.ROOM pairTo cameraManagerForRooms.currentGameRoom)
                 )
             )
         }
@@ -485,7 +486,7 @@ class MegaLevelScreen(
                 eventsMan.submitEvent(
                     Event(
                         EventType.TURN_CONTROLLER_OFF, props(
-                            "${ConstKeys.CONTROLLER}_${ConstKeys.SYSTEM}_${ConstKeys.OFF}" to false
+                            "${ConstKeys.CONTROLLER}_${ConstKeys.SYSTEM}_${ConstKeys.OFF}" pairTo false
                         )
                     )
                 )
@@ -497,7 +498,7 @@ class MegaLevelScreen(
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Boss dead")
                 val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
                 val eventType = if (boss.mini) EventType.MINI_BOSS_DEAD else EventType.VICTORY_EVENT
-                eventsMan.submitEvent(Event(eventType, props(ConstKeys.BOSS to boss)))
+                eventsMan.submitEvent(Event(eventType, props(ConstKeys.BOSS pairTo boss)))
             }
 
             EventType.MINI_BOSS_DEAD -> {
@@ -653,6 +654,7 @@ class MegaLevelScreen(
             gameCamBounds.width -= 0.2f * ConstVals.PPM
             gameCamBounds.height -= 0.2f * ConstVals.PPM
             shapeRenderer.color = Color.BLUE
+            shapeRenderer.set(ShapeRenderer.ShapeType.Line)
             shapeRenderer.rect(gameCamBounds.x, gameCamBounds.y, gameCamBounds.width, gameCamBounds.height)
         }
         shapeRenderer.end()

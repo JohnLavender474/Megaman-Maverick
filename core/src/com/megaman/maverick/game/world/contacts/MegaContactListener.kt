@@ -17,6 +17,7 @@ import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.world.contacts.Contact
 import com.mega.game.engine.world.contacts.IContactListener
 import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
@@ -41,7 +42,7 @@ class MegaContactListener(
     companion object {
         const val TAG = "MegaContactListener"
         const val FEET_ON_ICE_FRICTION = 1.0175f
-        const val FEET_ON_SAND_FRICTION = 1.25f
+        const val FEET_ON_SAND_FRICTION = 1.15f
     }
 
     private fun printDebugLog(contact: Contact, log: String) {
@@ -207,7 +208,7 @@ class MegaContactListener(
             val (feetFixture, _) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.SAND)!!
             val body = feetFixture.getBody()
             body.setBodySense(BodySense.FEET_ON_SAND, true)
-            body.physics.frictionOnSelf.set(FEET_ON_SAND_FRICTION, FEET_ON_SAND_FRICTION)
+            body.physics.frictionOnSelf.set(FEET_ON_SAND_FRICTION, FEET_ON_SAND_FRICTION).scl(ConstVals.PPM.toFloat())
         }
 
         // bouncer, feet or head or side
@@ -390,7 +391,7 @@ class MegaContactListener(
             if (otherFixture.hasFixtureLabel(FixtureLabel.NO_PROJECTILE_COLLISION)) return
             val projectile = projectileFixture.getEntity() as IProjectileEntity
             if (otherFixture.hasHitByProjectileReceiver()) otherFixture.getHitByProjectile(projectile)
-            when (otherFixture.getFixtureType()) {
+            when (otherFixture.getType()) {
                 FixtureType.BLOCK -> {
                     printDebugLog(contact, "beginContact(): Projectile-Block, contact = $contact")
                     projectile.hitBlock(otherFixture)
@@ -593,7 +594,7 @@ class MegaContactListener(
             val (feetFixture, _) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.SAND)!!
             val body = feetFixture.getBody()
             body.setBodySense(BodySense.FEET_ON_SAND, true)
-            body.physics.frictionOnSelf.set(FEET_ON_SAND_FRICTION, FEET_ON_SAND_FRICTION)
+            body.physics.frictionOnSelf.set(FEET_ON_SAND_FRICTION, FEET_ON_SAND_FRICTION).scl(ConstVals.PPM.toFloat())
         }
 
         // water listener, water
@@ -693,7 +694,9 @@ class MegaContactListener(
         else if (contact.fixturesMatch(FixtureType.SIDE, FixtureType.BLOCK)) {
             val (sideFixture, blockFixture) = contact.getFixturesInOrder(FixtureType.SIDE, FixtureType.BLOCK)!!
             if (blockFixture.hasFixtureLabel(FixtureLabel.NO_SIDE_TOUCHIE)) return
+
             val body = sideFixture.getBody()
+
             val sideType = sideFixture.getProperty(ConstKeys.SIDE)
             if (sideType == ConstKeys.LEFT) body.setBodySense(BodySense.SIDE_TOUCHING_BLOCK_LEFT, true)
             else body.setBodySense(BodySense.SIDE_TOUCHING_BLOCK_RIGHT, true)
@@ -707,7 +710,9 @@ class MegaContactListener(
         if (contact.fixturesMatch(FixtureType.SIDE, FixtureType.BLOCK)) {
             printDebugLog(contact, "End Contact: Side-Block, contact = $contact")
             val (sideFixture, _) = contact.getFixturesInOrder(FixtureType.SIDE, FixtureType.BLOCK)!!
+
             val body = sideFixture.getBody()
+
             val sideType = sideFixture.getProperty(ConstKeys.SIDE)
             if (sideType == ConstKeys.LEFT) body.setBodySense(BodySense.SIDE_TOUCHING_BLOCK_LEFT, false)
             else body.setBodySense(BodySense.SIDE_TOUCHING_BLOCK_RIGHT, false)

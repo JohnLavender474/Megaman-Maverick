@@ -13,6 +13,7 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
@@ -59,13 +60,13 @@ class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override var facing = Facing.RIGHT
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(10),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(10),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 10 else 5
         }
@@ -159,10 +160,10 @@ class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         }
         val animations =
             objectMapOf<String, IAnimation>(
-                "slippin" to Animation(atlas!!.findRegion("Penguin/Slippin")),
-                "stand" to Animation(atlas!!.findRegion("Penguin/Stand"), 1, 2, 0.1f, true),
-                "jump" to Animation(atlas!!.findRegion("Penguin/Jump")),
-                "slide" to Animation(atlas!!.findRegion("Penguin/Slide"))
+                "slippin" pairTo Animation(atlas!!.findRegion("Penguin/Slippin")),
+                "stand" pairTo Animation(atlas!!.findRegion("Penguin/Stand"), 1, 2, 0.1f, true),
+                "jump" pairTo Animation(atlas!!.findRegion("Penguin/Jump")),
+                "slide" pairTo Animation(atlas!!.findRegion("Penguin/Slide"))
             )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

@@ -17,6 +17,7 @@ import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -68,12 +69,12 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override var facing = Facing.RIGHT
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(5),
-        Fireball::class to dmgNeg(15),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(5),
+        Fireball::class pairTo dmgNeg(15),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 15 else 5
-        }, ChargedShotExplosion::class to dmgNeg {
+        }, ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 5 else 3
         }
@@ -187,12 +188,12 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             }
         }
         val animations = objectMapOf<String, IAnimation>(
-            "SwingBall1" to Animation(atlas!!.findRegion("SwinginJoe/SwingBall1"), 1, 4, 0.1f, true),
-            "SwingBall2" to Animation(atlas!!.findRegion("SwinginJoe/SwingBall2"), 1, 4, 0.1f, true),
-            "ThrowBall" to Animation(atlas!!.findRegion("SwinginJoe/ThrowBall")),
-            "SnowSwingBall1" to Animation(atlas!!.findRegion("SwinginJoe/SnowSwingBall1"), 1, 4, 0.1f, true),
-            "SnowSwingBall2" to Animation(atlas!!.findRegion("SwinginJoe/SnowSwingBall2"), 1, 4, 0.1f, true),
-            "SnowThrowBall" to Animation(atlas!!.findRegion("SwinginJoe/SnowThrowBall")),
+            "SwingBall1" pairTo Animation(atlas!!.findRegion("SwinginJoe/SwingBall1"), 1, 4, 0.1f, true),
+            "SwingBall2" pairTo Animation(atlas!!.findRegion("SwinginJoe/SwingBall2"), 1, 4, 0.1f, true),
+            "ThrowBall" pairTo Animation(atlas!!.findRegion("SwinginJoe/ThrowBall")),
+            "SnowSwingBall1" pairTo Animation(atlas!!.findRegion("SwinginJoe/SnowSwingBall1"), 1, 4, 0.1f, true),
+            "SnowSwingBall2" pairTo Animation(atlas!!.findRegion("SwinginJoe/SnowSwingBall2"), 1, 4, 0.1f, true),
+            "SnowThrowBall" pairTo Animation(atlas!!.findRegion("SwinginJoe/SnowThrowBall")),
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
@@ -201,11 +202,11 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     private fun shoot() {
         val spawn = body.getCenter().add(0.2f * facing.value * ConstVals.PPM, 0.15f * ConstVals.PPM)
         val props = props(
-            ConstKeys.POSITION to spawn,
-            ConstKeys.TYPE to type,
-            ConstKeys.OWNER to this,
-            ConstKeys.TRAJECTORY to Vector2().set(BALL_SPEED * ConstVals.PPM * facing.value, 0f),
-            ConstKeys.MASK to objectSetOf<KClass<out IDamageable>>(Megaman::class)
+            ConstKeys.POSITION pairTo spawn,
+            ConstKeys.TYPE pairTo type,
+            ConstKeys.OWNER pairTo this,
+            ConstKeys.TRAJECTORY pairTo Vector2().set(BALL_SPEED * ConstVals.PPM * facing.value, 0f),
+            ConstKeys.MASK pairTo objectSetOf<KClass<out IDamageable>>(Megaman::class)
         )
         val joeBall = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.JOEBALL)!!
         joeBall.spawn(props)

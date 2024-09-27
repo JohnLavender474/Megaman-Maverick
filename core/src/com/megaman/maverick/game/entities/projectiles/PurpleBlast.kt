@@ -13,6 +13,7 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -112,8 +113,8 @@ class PurpleBlast(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { if (!chargeDelayTimer.isFinished()) "charge" else "blast" }
         val animations = objectMapOf<String, IAnimation>(
-            "charge" to Animation(chargeRegion!!, 1, 7, 0.025f, false),
-            "blast" to Animation(blastRegion!!, 1, 2, 0.1f, true)
+            "charge" pairTo Animation(chargeRegion!!, 1, 7, 0.025f, false),
+            "blast" pairTo Animation(blastRegion!!, 1, 2, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

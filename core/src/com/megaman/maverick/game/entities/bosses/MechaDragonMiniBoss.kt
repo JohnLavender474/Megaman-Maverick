@@ -20,6 +20,7 @@ import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.normalizedTrajectory
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -91,11 +92,11 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
 
     override val damageNegotiations =
         objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-            Bullet::class to dmgNeg(1),
-            ChargedShot::class to dmgNeg {
+            Bullet::class pairTo dmgNeg(1),
+            ChargedShot::class pairTo dmgNeg {
                 it as ChargedShot
                 if (it.fullyCharged) 2 else 1
-            }, ChargedShotExplosion::class to dmgNeg {
+            }, ChargedShotExplosion::class pairTo dmgNeg {
                 it as ChargedShotExplosion
                 if (it.fullyCharged) 2 else 1
             }
@@ -196,7 +197,7 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         val spawn = body.getCenter().add(2.15f * ConstVals.PPM * facing.value, 1.25f * ConstVals.PPM)
         fireball.spawn(
             props(
-                ConstKeys.OWNER to this, ConstKeys.POSITION to spawn, ConstKeys.TRAJECTORY to normalizedTrajectory(
+                ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo spawn, ConstKeys.TRAJECTORY pairTo normalizedTrajectory(
                     spawn, getMegaman().body.getCenter(), FIRE_SPEED * ConstVals.PPM
                 )
             )
@@ -434,13 +435,13 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         val flyRegion = regions.get("fly")
         val shootRegion = regions.get("shoot")
         val animations = objectMapOf<String, IAnimation>(
-            "defeated" to Animation(regions.get("defeated"), 1, 2, 0.1f, true),
-            "fly_slow" to Animation(flyRegion, 1, 2, 0.15f, true),
-            "fly_medium" to Animation(flyRegion, 1, 2, 0.1f, true),
-            "fly_fast" to Animation(flyRegion, 1, 2, 0.05f, true),
-            "shoot_slow" to Animation(shootRegion, 1, 2, 0.15f, true),
-            "shoot_medium" to Animation(shootRegion, 1, 2, 0.1f, true),
-            "shoot_fast" to Animation(shootRegion, 1, 2, 0.05f, true)
+            "defeated" pairTo Animation(regions.get("defeated"), 1, 2, 0.1f, true),
+            "fly_slow" pairTo Animation(flyRegion, 1, 2, 0.15f, true),
+            "fly_medium" pairTo Animation(flyRegion, 1, 2, 0.1f, true),
+            "fly_fast" pairTo Animation(flyRegion, 1, 2, 0.05f, true),
+            "shoot_slow" pairTo Animation(shootRegion, 1, 2, 0.15f, true),
+            "shoot_medium" pairTo Animation(shootRegion, 1, 2, 0.1f, true),
+            "shoot_fast" pairTo Animation(shootRegion, 1, 2, 0.05f, true)
         )
 
         val animator = Animator(keySupplier, animations)

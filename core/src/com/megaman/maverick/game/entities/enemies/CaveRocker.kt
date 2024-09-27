@@ -18,6 +18,7 @@ import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.interfaces.Updatable
 
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -67,10 +68,15 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     override var facing = Facing.RIGHT
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(5), Fireball::class to dmgNeg(10), ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(5),
+        Fireball::class pairTo dmgNeg(10),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 15 else 10
-        }, ChargedShotExplosion::class to dmgNeg(5)
+        }, ChargedShotExplosion::class pairTo dmgNeg {
+            it as ChargedShotExplosion
+            if (it.fullyCharged) 10 else 5
+        }
     )
 
     private val waitTimer = Timer(WAIT_DURATION)
@@ -191,8 +197,8 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { if (throwing) "throw" else "stand" }
         val animations = objectMapOf<String, IAnimation>(
-            "stand" to Animation(standingRegion!!, 1, 2, gdxArrayOf(0.5f, 0.15f), true),
-            "throw" to Animation(throwingRegion!!, 1, 3, 0.05f, false)
+            "stand" pairTo Animation(standingRegion!!, 1, 2, gdxArrayOf(0.5f, 0.15f), true),
+            "throw" pairTo Animation(throwingRegion!!, 1, 3, 0.05f, false)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
@@ -203,7 +209,9 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         val caveRockToThrow = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.CAVE_ROCK)!!
         caveRockToThrow.spawn(
             props(
-                ConstKeys.OWNER to this, ConstKeys.POSITION to body.getTopCenterPoint(), ConstKeys.IMPULSE to Vector2(
+                ConstKeys.OWNER pairTo this, 
+                ConstKeys.POSITION pairTo body.getTopCenterPoint(), 
+                ConstKeys.IMPULSE pairTo Vector2(
                     ROCK_IMPULSE_X * ConstVals.PPM * facing.value, ROCK_IMPULSE_Y * ConstVals.PPM
                 )
             )
@@ -216,11 +224,11 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         newRock = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.CAVE_ROCK) as CaveRock
         newRock!!.spawn(
             props(
-                ConstKeys.OWNER to this,
-                ConstKeys.POSITION to newRockSpawn,
-                ConstKeys.TRAJECTORY to newRockTrajectory,
-                ConstKeys.GRAVITY to 0f,
-                ConstKeys.PASS_THROUGH to true
+                ConstKeys.OWNER pairTo this,
+                ConstKeys.POSITION pairTo newRockSpawn,
+                ConstKeys.TRAJECTORY pairTo newRockTrajectory,
+                ConstKeys.GRAVITY pairTo 0f,
+                ConstKeys.PASS_THROUGH pairTo true
             )
         )
     }

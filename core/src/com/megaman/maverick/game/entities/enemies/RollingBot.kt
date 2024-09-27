@@ -15,6 +15,7 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -74,13 +75,13 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(5),
-        Fireball::class to dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(5),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 15 else 5
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 5 else 3
         }
@@ -126,9 +127,9 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         else body.getCenterRightPoint().add(0.2f * ConstVals.PPM, 0.1f * ConstVals.PPM)
         rollingBotShot.spawn(
             props(
-                ConstKeys.OWNER to this,
-                ConstKeys.POSITION to position,
-                ConstKeys.LEFT to isFacing(Facing.LEFT)
+                ConstKeys.OWNER pairTo this,
+                ConstKeys.POSITION pairTo position,
+                ConstKeys.LEFT pairTo isFacing(Facing.LEFT)
             )
         )
     }
@@ -226,14 +227,14 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             body.fixtures.forEach {
                 val fixture = it.second as Fixture
 
-                if (fixture.type == FixtureType.FEET) {
+                if (fixture.getType() == FixtureType.FEET) {
                     fixture.offsetFromBodyCenter.y = feetFixtureOffset
                     return@forEach
                 }
 
-                if (fixture.type == FixtureType.SHIELD)
+                if (fixture.getType() == FixtureType.SHIELD)
                     fixture.active = rollingBotState != RollingBotState.SHOOTING
-                if (fixture.type == FixtureType.DAMAGEABLE)
+                if (fixture.getType() == FixtureType.DAMAGEABLE)
                     fixture.active = rollingBotState == RollingBotState.SHOOTING
 
                 val fixtureShape = fixture.rawShape as GameRectangle
@@ -264,10 +265,10 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier = { rollingBotState.name }
         val animations = objectMapOf<String, IAnimation>(
-            RollingBotState.ROLLING.name to Animation(rollRegion!!, 2, 4, 0.1f, true),
-            RollingBotState.OPENING.name to Animation(openRegion!!, 1, 3, 0.1f, false),
-            RollingBotState.SHOOTING.name to Animation(shootRegion!!),
-            RollingBotState.CLOSING.name to Animation(closeRegion!!, 1, 3, 0.1f, false)
+            RollingBotState.ROLLING.name pairTo Animation(rollRegion!!, 2, 4, 0.1f, true),
+            RollingBotState.OPENING.name pairTo Animation(openRegion!!, 1, 3, 0.1f, false),
+            RollingBotState.SHOOTING.name pairTo Animation(shootRegion!!),
+            RollingBotState.CLOSING.name pairTo Animation(closeRegion!!, 1, 3, 0.1f, false)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

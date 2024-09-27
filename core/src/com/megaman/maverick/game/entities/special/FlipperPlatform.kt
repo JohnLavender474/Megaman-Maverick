@@ -11,6 +11,7 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -92,12 +93,12 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
         block = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.STANDARD)!! as Block
         block!!.spawn(
             props(
-                ConstKeys.BOUNDS to GameRectangle()
+                ConstKeys.BOUNDS pairTo GameRectangle()
                     .setSize(1.1875f * ConstVals.PPM, 0.25f * ConstVals.PPM)
                     .setX(-100f * ConstVals.PPM),
-                ConstKeys.CULL_OUT_OF_BOUNDS to false,
-                ConstKeys.BODY_LABELS to objectSetOf(BodyLabel.COLLIDE_DOWN_ONLY),
-                ConstKeys.FIXTURE_LABELS to objectSetOf(
+                ConstKeys.CULL_OUT_OF_BOUNDS pairTo false,
+                ConstKeys.BODY_LABELS pairTo objectSetOf(BodyLabel.COLLIDE_DOWN_ONLY),
+                ConstKeys.FIXTURE_LABELS pairTo objectSetOf(
                     FixtureLabel.NO_SIDE_TOUCHIE,
                     FixtureLabel.NO_PROJECTILE_COLLISION
                 )
@@ -177,7 +178,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
     private fun defineCullablesComponent(): CullablesComponent {
         val gameCamera = game.getGameCamera()
         val cullable = getGameCameraCullingLogic(gameCamera, { bounds })
-        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS to cullable))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullable))
     }
 
     private fun defineSpritesComponent(): SpritesComponent {
@@ -200,12 +201,12 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
             }
         }
         val animations = objectMapOf<String, IAnimation>(
-            "left" to Animation(leftRegion!!),
-            "right" to Animation(rightRegion!!),
-            "leftDelay" to Animation(leftDelayRegion!!, 1, 4, 0.1f, false),
-            "rightDelay" to Animation(rightDelayRegion!!, 1, 4, 0.1f, false),
-            "flipToRight" to Animation(flipToRightRegion!!, 1, 5, 0.05f, false),
-            "flipToLeft" to Animation(flipToLeftRegion!!, 1, 5, 0.05f, false)
+            "left" pairTo Animation(leftRegion!!),
+            "right" pairTo Animation(rightRegion!!),
+            "leftDelay" pairTo Animation(leftDelayRegion!!, 1, 4, 0.1f, false),
+            "rightDelay" pairTo Animation(rightDelayRegion!!, 1, 4, 0.1f, false),
+            "flipToRight" pairTo Animation(flipToRightRegion!!, 1, 5, 0.05f, false),
+            "flipToLeft" pairTo Animation(flipToLeftRegion!!, 1, 5, 0.05f, false)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

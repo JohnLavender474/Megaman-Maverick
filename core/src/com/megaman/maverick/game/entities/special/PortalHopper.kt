@@ -13,7 +13,9 @@ import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -60,7 +62,7 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     private lateinit var thisDirection: Direction
     private lateinit var nextDirection: Direction
 
-    private val hopQueue = Array<Pair<IBodyEntity, Timer>>()
+    private val hopQueue = Array<GamePair<IBodyEntity, Timer>>()
 
     private var thisKey = -1
     private var nextKey = -1
@@ -138,7 +140,7 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         val onPortalStart = entity.getProperty(ConstKeys.ON_TELEPORT_START) as? () -> Unit
         onPortalStart?.invoke()
 
-        hopQueue.add(entity to Timer(PORTAL_HOP_DELAY))
+        hopQueue.add(entity pairTo Timer(PORTAL_HOP_DELAY))
         GameLogger.debug(TAG, "teleportEntity(): thisKey=$thisKey, entity=$entity, hopPoint=$hopPoint")
     }
 
@@ -147,9 +149,9 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         game.eventsMan.submitEvent(
             Event(
                 EventType.TELEPORT, props(
-                    ConstKeys.ENTITY to entity,
-                    ConstKeys.KEY to nextKey,
-                    ConstKeys.DIRECTION to nextDirection
+                    ConstKeys.ENTITY pairTo entity,
+                    ConstKeys.KEY pairTo nextKey,
+                    ConstKeys.DIRECTION pairTo nextDirection
                 )
             )
         )
@@ -215,8 +217,8 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { if (launch) "launch" else "wait" }
         val animations = objectMapOf<String, IAnimation>(
-            "launch" to Animation(launchRegion!!, 1, 3, 0.05f, true),
-            "wait" to Animation(waitRegion!!, 1, 2, 0.1f, true)
+            "launch" pairTo Animation(launchRegion!!, 1, 3, 0.05f, true),
+            "wait" pairTo Animation(waitRegion!!, 1, 2, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

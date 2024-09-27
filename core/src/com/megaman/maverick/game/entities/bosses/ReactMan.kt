@@ -17,6 +17,7 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -82,13 +83,13 @@ class ReactMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class to dmgNeg(1),
-        Fireball::class to dmgNeg(2),
-        ChargedShot::class to dmgNeg {
+        Bullet::class pairTo dmgNeg(1),
+        Fireball::class pairTo dmgNeg(2),
+        ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 2 else 1
         },
-        ChargedShotExplosion::class to dmgNeg {
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 2 else 1
         }
@@ -259,10 +260,10 @@ class ReactMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
         projectile!!.spawn(
             props(
-                ConstKeys.POSITION to projectilePosition,
-                ConstKeys.BIG to true,
-                ConstKeys.OWNER to this,
-                ConstKeys.ACTIVE to false
+                ConstKeys.POSITION pairTo projectilePosition,
+                ConstKeys.BIG pairTo true,
+                ConstKeys.OWNER pairTo this,
+                ConstKeys.ACTIVE pairTo false
             )
         )
     }
@@ -353,14 +354,14 @@ class ReactMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
             else reactManState.name
         }
         val animations = objectMapOf<String, IAnimation>(
-            ReactManState.STAND.name to Animation(
+            ReactManState.STAND.name pairTo Animation(
                 regions.get(ReactManState.STAND.regionName), 1, 3, gdxArrayOf(1f, 0.1f, 0.1f), true
             ),
-            ReactManState.THROW.name to Animation(regions.get(ReactManState.THROW.regionName)),
-            ReactManState.DANCE.name to Animation(regions.get(ReactManState.DANCE.regionName), 2, 2, 0.1f, false),
-            ReactManState.RUN.name to Animation(regions.get(ReactManState.RUN.regionName), 2, 2, 0.1f, true),
-            ReactManState.JUMP.name to Animation(regions.get(ReactManState.JUMP.regionName)),
-            "Die" to Animation(regions.get("Die"))
+            ReactManState.THROW.name pairTo Animation(regions.get(ReactManState.THROW.regionName)),
+            ReactManState.DANCE.name pairTo Animation(regions.get(ReactManState.DANCE.regionName), 2, 2, 0.1f, false),
+            ReactManState.RUN.name pairTo Animation(regions.get(ReactManState.RUN.regionName), 2, 2, 0.1f, true),
+            ReactManState.JUMP.name pairTo Animation(regions.get(ReactManState.JUMP.regionName)),
+            "Die" pairTo Animation(regions.get("Die"))
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
