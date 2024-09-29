@@ -66,7 +66,7 @@ the generated JAR, you will need Java 17+ installed on your local machine.
 
 ### CONTROLS
 
-By default, the keyboard controls for the game are the following whether the 1st value is the keyboard key and the 2nd 
+By default, the keyboard controls for the game are the following whether the 1st value is the keyboard key and the 2nd
 value is the "in-game" action:
 - A: LEFT
 - D: RIGHT
@@ -76,7 +76,7 @@ value is the "in-game" action:
 - K: A
 - ENTER: START
 
-These can be remapped through the Keyboard Settings screen. Use the keys for "UP" and "DOWN" (by default the "W" and "S" 
+These can be remapped through the Keyboard Settings screen. Use the keys for "UP" and "DOWN" (by default the "W" and "S"
 keys respectively) to navigate to the game button you wish to remap and press the key for "START" (by default the "ENTER"
 key). You will be prompted to press any key on the keyboard to assign that key's code to the in-game button action.
 
@@ -89,8 +89,8 @@ to work even when a controller is connected. The game has been tested with the f
 - Xbox 360 controller
 - NES-style USB controller
 
-When a controller is connected, default mappings are assigned. Most likely, you will want to configure these mappings. 
-In the "Controller Settings" screen, you can reassign the mappings for the controller similarly to how the same is done 
+When a controller is connected, default mappings are assigned. Most likely, you will want to configure these mappings.
+In the "Controller Settings" screen, you can reassign the mappings for the controller similarly to how the same is done
 for the keyboard mappings.
 
 ### STARTING THE GAME
@@ -104,16 +104,16 @@ When launching an alpha build, the first screen you see should be something like
 
 Press the key that corresponds to the command you wish to run. To quit the app, press the ESCAPE key.
 
-If you press ENTER, you will be taken to the "Select Level" screen. Here, you can select any level you want to play. 
+If you press ENTER, you will be taken to the "Select Level" screen. Here, you can select any level you want to play.
 Levels are separated into three categories:
 - Beta: Levels that are over halfway complete but may require some level of redesigning
 - Alpha: Levels that are less than halfway complete and require major redesigning
 - Test: Levels that are made purely for testing game functionality, and that will not be included in release versions of the game
 
 Navigate to the level you wish to play and press the key for START. This will launch the level. **NOTE: Due to the fact
-that this game is an alpha, don't be surprised if the game crashes or if you encounter any bugs!** 
+that this game is an alpha, don't be surprised if the game crashes or if you encounter any bugs!**
 
-To exit out of a level early, press the ESCAPE key. From the "Select Level" screen, you can return back to the start 
+To exit out of a level early, press the ESCAPE key. From the "Select Level" screen, you can return back to the start
 screen by pressing the ESCAPE key.
 
 ## CREDITS
@@ -180,8 +180,8 @@ TODO: add credits and links here for where the sounds were downloaded from
 
 **PROOF OF PERMISSIONS FOR COMMUNITY ASSETS**
 
-For some of the artwork used in this game, the artist did not state in the work's description or elsewhere that the work was 
-free to use. For these works, I reached out to the artist personally to ask if I could use their work. Below are screenshots 
+For some of the artwork used in this game, the artist did not state in the work's description or elsewhere that the work was
+free to use. For these works, I reached out to the artist personally to ask if I could use their work. Below are screenshots
 as proof of permission. No proof is required for works where the description states that the asset is free to use.
 
 Works by Wyatt:
@@ -203,3 +203,37 @@ Works by Famitard:
 Works by Bulby:
 
 <img src="./img/permissions/Bulby.png" width="300">
+
+---
+
+# GDX Liftoff
+
+This project was generated with a template including simple application launchers and an `ApplicationAdapter` extension that draws libGDX logo.
+
+## Platforms
+
+- `core`: Main module with the application logic shared by all platforms.
+- `lwjgl3`: Primary desktop platform using LWJGL3; was called 'desktop' in older docs.
+
+## Gradle
+
+This project uses [Gradle](https://gradle.org/) to manage dependencies.
+The Gradle wrapper was included, so you can run Gradle tasks using `gradlew.bat` or `./gradlew` commands.
+Useful Gradle tasks and flags:
+
+- `--continue`: when using this flag, errors will not stop the tasks from running.
+- `--daemon`: thanks to this flag, Gradle daemon will be used to run chosen tasks.
+- `--offline`: when using this flag, cached dependency archives will be used.
+- `--refresh-dependencies`: this flag forces validation of all dependencies. Useful for snapshot versions.
+- `build`: builds sources and archives of every project.
+- `cleanEclipse`: removes Eclipse project data.
+- `cleanIdea`: removes IntelliJ project data.
+- `clean`: removes `build` folders, which store compiled classes and built archives.
+- `eclipse`: generates Eclipse project data.
+- `idea`: generates IntelliJ project data.
+- `lwjgl3:jar`: builds application's runnable jar, which can be found at `lwjgl3/build/libs`.
+- `lwjgl3:run`: starts the application.
+- `test`: runs unit tests (if any).
+
+Note that most tasks that are not specific to a single project can be run with `name:` prefix, where the `name` should be replaced with the ID of a specific project.
+For example, `core:clean` removes `build` folder only from the `core` project.

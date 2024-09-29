@@ -1,82 +1,76 @@
 buildscript {
-    ext.kotlinVersion = '1.8.10'
+  repositories {
+    mavenCentral()
+    maven { url 'https://s01.oss.sonatype.org' }
+    gradlePluginPortal()
+    mavenLocal()
+    google()
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+    maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots/' }
+  }
+  dependencies {
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
 
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-    }
-
-    repositories {
-        mavenLocal()
-        mavenCentral()
-        gradlePluginPortal()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        maven { url 'https://jitpack.io' }
-        google()
-    }
+  }
 }
 
 allprojects {
-    apply plugin: "eclipse"
+  apply plugin: 'eclipse'
+  apply plugin: 'idea'
 
-    version = '1.0'
-    ext {
-        appName = "Megaman Maverick"
-        gdxVersion = '1.12.1'
-        roboVMVersion = '2.3.16'
-        box2DLightsVersion = '1.5'
-        ashleyVersion = '1.7.4'
-        aiVersion = '1.8.2'
-        gdxControllersVersion = '2.2.1'
-        jamepadVersion = '2.0.14.2'
+  // This allows you to "Build and run using IntelliJ IDEA", an option in IDEA's Settings.
+  idea {
+    module {
+      outputDir file('build/classes/java/main')
+      testOutputDir file('build/classes/java/test')
     }
-
-    repositories {
-        mavenLocal()
-        mavenCentral()
-        google()
-        gradlePluginPortal()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
-        maven { url "https://jitpack.io" }
-    }
+  }
 }
 
-project(":desktop") {
-    apply plugin: "kotlin"
+configure(subprojects) {
+  apply plugin: 'java-library'
+  apply plugin: 'kotlin'
+  sourceCompatibility = 11
 
-    dependencies {
-        implementation project(":core")
-        api fileTree(dir: 'libs', include: '*.jar')
-        api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
-        api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        api "com.badlogicgames.gdx-controllers:gdx-controllers-desktop:$gdxControllersVersion"
-        api "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
-        api "com.badlogicgames.gdx:gdx-lwjgl3-glfw-awt-macos:$gdxVersion" // Mac OS
-        constraints {
-            implementation("com.badlogicgames.jamepad:jamepad:$jamepadVersion") {
-                because("Default jamepad version 2.0.14.1 is missing macOS arm64 binaries.")
-            }
-        }
-        implementation 'com.beust:jcommander:1.82'
+  // From https://lyze.dev/2021/04/29/libGDX-Internal-Assets-List/
+  // The article can be helpful when using assets.txt in your project.
+  tasks.register('generateAssetList') {
+    inputs.dir("${project.rootDir}/assets/")
+    // projectFolder/assets
+    File assetsFolder = new File("${project.rootDir}/assets/")
+    // projectFolder/assets/assets.txt
+    File assetsFile = new File(assetsFolder, "assets.txt")
+    // delete that file in case we've already created it
+    assetsFile.delete()
+
+    // iterate through all files inside that folder
+    // convert it to a relative path
+    // and append it to the file assets.txt
+    fileTree(assetsFolder).collect { assetsFolder.relativePath(it) }.each {
+      assetsFile.append(it + "\n")
     }
+  }
+  processResources.dependsOn 'generateAssetList'
+
+  compileJava {
+    options.incremental = true
+  }
+  compileKotlin.compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+  
 }
 
-project(":core") {
-    apply plugin: "kotlin"
-    apply plugin: "java-library"
-
-    dependencies {
-        implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-        implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
-        api "com.badlogicgames.gdx:gdx:$gdxVersion"
-        api "com.badlogicgames.gdx-controllers:gdx-controllers-core:$gdxControllersVersion"
-        api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        api fileTree(dir: 'libs', include: '*.jar')
-        testImplementation "com.badlogicgames.gdx:gdx:$gdxVersion"
-        testImplementation "io.kotest:kotest-runner-junit5-jvm:4.6.0"
-        testImplementation "io.kotest:kotest-runner-junit5:4.0.2"
-        testImplementation "io.kotest:kotest-assertions-core:4.0.2"
-        testImplementation "io.kotest:kotest-property:4.0.2"
-        testImplementation "io.mockk:mockk:1.13.7"
-    }
+subprojects {
+  version = '$projectVersion'
+  ext.appName = 'MegamanMaverick-v2'
+  repositories {
+    mavenCentral()
+    maven { url 'https://s01.oss.sonatype.org' }
+    // You may want to remove the following line if you have errors downloading dependencies.
+    mavenLocal()
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+    maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots/' }
+    maven { url 'https://jitpack.io' }
+  }
 }
+
+eclipse.project.name = 'MegamanMaverick-v2' + '-parent'
