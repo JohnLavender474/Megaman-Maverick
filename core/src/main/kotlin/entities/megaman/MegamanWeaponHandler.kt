@@ -66,14 +66,14 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
                 !megaman.isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.WALL_SLIDING, BehaviorType.RIDING_CART)
             ) yOffset += 0.15f * ConstVals.PPM
 
-            yOffset += if (megaman.isBehaviorActive(BehaviorType.JETPACKING)) 0.065f * ConstVals.PPM
-            else if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING)) 0.1f * ConstVals.PPM
+            yOffset += if (megaman.isBehaviorActive(BehaviorType.JETPACKING)) 0.4f * ConstVals.PPM
+            else if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING)) 0.175f * ConstVals.PPM
             else if (megaman.isBehaviorActive(BehaviorType.RIDING_CART)) {
-                if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.4f * ConstVals.PPM else 0.5f * ConstVals.PPM
-            } else if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.225f * ConstVals.PPM
-            else if (megaman.isBehaviorActive(BehaviorType.CLIMBING)) 0.25f * ConstVals.PPM
-            else if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.035f * ConstVals.PPM
-            else 0.05f * ConstVals.PPM
+                if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.6f * ConstVals.PPM else 0.75f * ConstVals.PPM
+            } else if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.4f * ConstVals.PPM
+            else if (megaman.isBehaviorActive(BehaviorType.CLIMBING)) 0.35f * ConstVals.PPM
+            else if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.15f * ConstVals.PPM
+            else 0.2f * ConstVals.PPM
 
             if (megaman.isDirectionRotatedVertically()) {
                 spawnCenter.x += xOffset

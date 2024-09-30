@@ -127,7 +127,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.15f * ConstVals.PPM)
+        body.setSize(0.25f * ConstVals.PPM)
         body.physics.takeFrictionFromOthers = false
         body.physics.velocityClamp.set(CLAMP * ConstVals.PPM)
 
@@ -164,7 +164,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
         if (bulletRegion == null) bulletRegion =
             game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Bullet")
         val sprite = GameSprite(bulletRegion!!, DrawingPriority(DrawingSection.FOREGROUND, 5))
-        sprite.setSize(1.25f * ConstVals.PPM)
+        sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getCenter(), Position.CENTER)

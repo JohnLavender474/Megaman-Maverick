@@ -1,5 +1,5 @@
 Decorations1.png
-size: 1836, 260
+size: 1846, 260
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -38,23 +38,30 @@ MuzzleFlash
   orig: 48, 16
   offset: 0, 0
   index: -1
-Thread
+RainDrop
   rotate: false
   xy: 1746, 0
+  size: 10, 9
+  orig: 10, 9
+  offset: 0, 0
+  index: -1
+Thread
+  rotate: false
+  xy: 1756, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 UnderWaterBubble
   rotate: false
-  xy: 1778, 0
+  xy: 1788, 0
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 WhiteArrow
   rotate: false
-  xy: 1810, 0
+  xy: 1820, 0
   size: 26, 26
   orig: 26, 26
   offset: 0, 0

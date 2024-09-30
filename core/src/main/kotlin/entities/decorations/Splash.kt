@@ -64,8 +64,10 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        val spawn = spawnProps.get(ConstKeys.POSITION) as Vector2
+        val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         firstSprite!!.setPosition(spawn, Position.BOTTOM_CENTER)
+        firstSprite!!.setOriginCenter()
+        firstSprite!!.rotation = spawnProps.getOrDefault(ConstKeys.ROTATION, 0f, Float::class)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({

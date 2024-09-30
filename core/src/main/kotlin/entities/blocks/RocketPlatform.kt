@@ -131,7 +131,7 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, IS
             _sprite.setOriginCenter()
             _sprite.rotation = directionRotation!!.rotation
             _sprite.setCenter(body.getCenter())
-            val offset = 0.5f * ConstVals.PPM
+            val offset = 0.4f * ConstVals.PPM
             when (directionRotation!!) {
                 Direction.UP -> _sprite.translateY(-offset)
                 Direction.DOWN -> _sprite.translateY(offset)

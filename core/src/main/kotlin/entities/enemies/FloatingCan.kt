@@ -117,7 +117,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.75f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat())
 
         val shapes = Array<() -> IDrawableShape?>()
 
@@ -138,7 +138,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.5f * ConstVals.PPM)
+        sprite.setSize(1.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink

@@ -102,7 +102,7 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(ConstVals.PPM.toFloat(), 1.25f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat(), 1.5f * ConstVals.PPM)
 
         val shapes = Array<() -> IDrawableShape?>()
 
@@ -131,7 +131,7 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         shapes.add { damageableFixture.getShape() }
 
         val shieldFixture = Fixture(
-            body, FixtureType.SHIELD, GameRectangle().setSize(0.4f * ConstVals.PPM, 0.9f * ConstVals.PPM)
+            body, FixtureType.SHIELD, GameRectangle().setSize(0.5f * ConstVals.PPM, 1.25f * ConstVals.PPM)
         )
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
         body.addFixture(shieldFixture)
@@ -154,7 +154,7 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(2.25f * ConstVals.PPM)
+        sprite.setSize(2.5f * ConstVals.PPM)
         val SpritesComponent = SpritesComponent(sprite)
         SpritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink

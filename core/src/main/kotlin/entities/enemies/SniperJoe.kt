@@ -200,7 +200,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(ConstVals.PPM.toFloat(), 1.25f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat(), 1.5f * ConstVals.PPM)
 
         val shapes = Array<() -> IDrawableShape?>()
 
@@ -220,7 +220,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         shapes.add { headFixture.getShape() }
 
         val damagerFixture = Fixture(
-            body, FixtureType.DAMAGER, GameRectangle().setSize(0.75f * ConstVals.PPM, 1.15f * ConstVals.PPM)
+            body, FixtureType.DAMAGER, GameRectangle().setSize(0.75f * ConstVals.PPM, 1.25f * ConstVals.PPM)
         )
         body.addFixture(damagerFixture)
         damagerFixture.rawShape.color = Color.RED
@@ -234,7 +234,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         shapes.add { damageableFixture.getShape() }
 
         val shieldFixture = Fixture(
-            body, FixtureType.SHIELD, GameRectangle().setSize(0.4f * ConstVals.PPM, 0.9f * ConstVals.PPM)
+            body, FixtureType.SHIELD, GameRectangle().setSize(0.25f * ConstVals.PPM, 1.25f * ConstVals.PPM)
         )
         body.addFixture(shieldFixture)
         shieldFixture.getShape().color = Color.BLUE
@@ -269,7 +269,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
 
             shieldFixture.active = shielded
             shieldFixture.offsetFromBodyCenter.x =
-                0.35f * ConstVals.PPM * if (isDirectionRotatedUp() || isDirectionRotatedLeft()) facing.value
+                0.5f * ConstVals.PPM * if (isDirectionRotatedUp() || isDirectionRotatedLeft()) facing.value
                 else -facing.value
 
             if (shielded) damageableFixture.offsetFromBodyCenter.x =
@@ -285,7 +285,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.35f * ConstVals.PPM)
+        sprite.setSize(1.575f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
@@ -492,10 +492,10 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
 
     private fun shoot() {
         val spawn = (when (directionRotation!!) {
-            Direction.UP -> Vector2(0.25f * facing.value, -0.15f)
-            Direction.DOWN -> Vector2(0.25f * facing.value, 0.15f)
-            Direction.LEFT -> Vector2(0.2f, 0.25f * facing.value)
-            Direction.RIGHT -> Vector2(-0.2f, 0.25f * facing.value)
+            Direction.UP -> Vector2(0.35f * facing.value, -0.2f)
+            Direction.DOWN -> Vector2(0.35f * facing.value, 0.2f)
+            Direction.LEFT -> Vector2(0.25f, 0.35f * facing.value)
+            Direction.RIGHT -> Vector2(-0.25f, 0.35f * facing.value)
         }).scl(ConstVals.PPM.toFloat()).add(body.getCenter())
 
         val trajectory = Vector2()

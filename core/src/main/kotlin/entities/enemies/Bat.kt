@@ -63,7 +63,10 @@ import kotlin.reflect.KClass
 class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDirectionRotatable {
 
     enum class BatStatus(val region: String) {
-        HANGING("Hang"), OPEN_EYES("OpenEyes"), OPEN_WINGS("OpenWings"), FLYING_TO_ATTACK("Fly"),
+        HANGING("Hang"),
+        OPEN_EYES("OpenEyes"),
+        OPEN_WINGS("OpenWings"),
+        FLYING_TO_ATTACK("Fly"),
         FLYING_TO_RETREAT("Fly")
     }
 
@@ -203,7 +206,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.75f * ConstVals.PPM)
+        body.setSize(0.85f * ConstVals.PPM)
         body.physics.takeFrictionFromOthers = false
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
@@ -259,7 +262,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.35f * ConstVals.PPM)
+        sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setOriginCenter()

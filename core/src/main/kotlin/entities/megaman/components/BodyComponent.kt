@@ -103,8 +103,9 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     debugShapes.add { damageableFixture.getShape() }
     body.putProperty(ConstKeys.DAMAGEABLE, damageableFixture)
 
-    val waterListenerFixture =
-        Fixture(body, FixtureType.WATER_LISTENER, GameRectangle().setSize(0.8f * ConstVals.PPM, ConstVals.PPM / 4f))
+    val waterListenerFixture = Fixture(
+        body, FixtureType.WATER_LISTENER, GameRectangle().setSize(0.8f * ConstVals.PPM, ConstVals.PPM / 4f)
+    )
     body.addFixture(waterListenerFixture)
     waterListenerFixture.rawShape.color = Color.PURPLE
     debugShapes.add { waterListenerFixture.getShape() }
@@ -115,14 +116,14 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     teleporterListenerFixture.rawShape.color = Color.CYAN
     debugShapes.add { teleporterListenerFixture.getShape() }
 
-    body.preProcess.put(ConstKeys.DEFAULT, Updatable { delta ->
+    body.preProcess.put(ConstKeys.DEFAULT, Updatable {
         if (!ready) {
             body.physics.velocity.setZero()
             return@Updatable
         }
 
         val wallSlidingOnIce = isBehaviorActive(BehaviorType.WALL_SLIDING) &&
-                (body.isSensingAny(BodySense.SIDE_TOUCHING_ICE_LEFT, BodySense.SIDE_TOUCHING_ICE_RIGHT))
+            (body.isSensingAny(BodySense.SIDE_TOUCHING_ICE_LEFT, BodySense.SIDE_TOUCHING_ICE_RIGHT))
         var gravityValue =
             if (body.isSensing(BodySense.IN_WATER)) {
                 if (wallSlidingOnIce) waterIceGravity else waterGravity
@@ -146,16 +147,16 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
                     }
 
                 body.physics.velocityClamp = (
-                        if (isBehaviorActive(BehaviorType.RIDING_CART))
-                            Vector2(MegamanValues.CART_RIDE_MAX_SPEED, MegamanValues.CLAMP_Y)
-                        else if (isBehaviorActive(BehaviorType.JUMPING))
-                            Vector2(MegamanValues.CLAMP_X, MegamanValues.CLAMP_Y)
-                        /*
-                        TODO:
-                        else if (isBehaviorActive(BehaviorType.WALL_SLIDING))
-                            Vector2(MegamanValues.CLAMP_X, MegamanValues.WALL_SLIDE_CLAMP_Y)
-                         */
-                        else Vector2(MegamanValues.CLAMP_X, MegamanValues.CLAMP_Y))
+                    if (isBehaviorActive(BehaviorType.RIDING_CART))
+                        Vector2(MegamanValues.CART_RIDE_MAX_SPEED, MegamanValues.CLAMP_Y)
+                    else if (isBehaviorActive(BehaviorType.JUMPING))
+                        Vector2(MegamanValues.CLAMP_X, MegamanValues.CLAMP_Y)
+                    /*
+                    TODO:
+                    else if (isBehaviorActive(BehaviorType.WALL_SLIDING))
+                        Vector2(MegamanValues.CLAMP_X, MegamanValues.WALL_SLIDE_CLAMP_Y)
+                     */
+                    else Vector2(MegamanValues.CLAMP_X, MegamanValues.CLAMP_Y))
                     .scl(ConstVals.PPM.toFloat())
             }
 
@@ -165,16 +166,16 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
                     Vector2(ConstVals.STANDARD_RESISTANCE_Y, ConstVals.STANDARD_RESISTANCE_X)
 
                 body.physics.velocityClamp = (
-                        if (isBehaviorActive(BehaviorType.RIDING_CART))
-                            Vector2(MegamanValues.CLAMP_Y, MegamanValues.CART_RIDE_MAX_SPEED)
-                        else if (isBehaviorActive(BehaviorType.JUMPING))
-                            Vector2(MegamanValues.CLAMP_X, MegamanValues.CLAMP_Y)
-                        /*
-                        TODO:
-                        else if (isBehaviorActive(BehaviorType.WALL_SLIDING))
-                            Vector2(MegamanValues.WALL_SLIDE_CLAMP_Y, MegamanValues.CLAMP_X)
-                         */
-                        else Vector2(MegamanValues.CLAMP_Y, MegamanValues.CLAMP_X))
+                    if (isBehaviorActive(BehaviorType.RIDING_CART))
+                        Vector2(MegamanValues.CLAMP_Y, MegamanValues.CART_RIDE_MAX_SPEED)
+                    else if (isBehaviorActive(BehaviorType.JUMPING))
+                        Vector2(MegamanValues.CLAMP_X, MegamanValues.CLAMP_Y)
+                    /*
+                    TODO:
+                    else if (isBehaviorActive(BehaviorType.WALL_SLIDING))
+                        Vector2(MegamanValues.WALL_SLIDE_CLAMP_Y, MegamanValues.CLAMP_X)
+                     */
+                    else Vector2(MegamanValues.CLAMP_Y, MegamanValues.CLAMP_X))
                     .scl(ConstVals.PPM.toFloat())
             }
         }
@@ -182,21 +183,24 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
         rightFixture.offsetFromBodyCenter = Vector2(0.5f, 0f /* 0.25f */).scl(ConstVals.PPM.toFloat())
         leftFixture.offsetFromBodyCenter = Vector2(-0.5f, 0f /* 0.25f */).scl(ConstVals.PPM.toFloat())
 
+        /*
         if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) {
             body.height = 0.45f * ConstVals.PPM
-            (playerFixture.rawShape as GameRectangle).height = 0.45f * ConstVals.PPM
+            (playerFixture.rawShape as GameRectangle).height = 0.5f * ConstVals.PPM
             headFixture.offsetFromBodyCenter.y = ConstVals.PPM / 4f
             feetFixture.offsetFromBodyCenter.y = -ConstVals.PPM / 4f
             (leftFixture.rawShape as Rectangle).setHeight(0.25f /* 0.1f */ * ConstVals.PPM)
             (rightFixture.rawShape as Rectangle).setHeight(0.25f /* 0.1f */ * ConstVals.PPM)
         } else {
-            body.height = 0.95f * ConstVals.PPM
-            (playerFixture.rawShape as GameRectangle).height = 0.95f * ConstVals.PPM
-            headFixture.offsetFromBodyCenter.y = ConstVals.PPM / 2f
-            feetFixture.offsetFromBodyCenter.y = -ConstVals.PPM / 2f
-            (leftFixture.rawShape as Rectangle).setHeight(0.6f /* 0.4f */ * ConstVals.PPM)
-            (rightFixture.rawShape as Rectangle).setHeight(0.6f /* 0.4f */ * ConstVals.PPM)
-        }
+
+         */
+        body.height = 0.95f * ConstVals.PPM
+        (playerFixture.rawShape as GameRectangle).height = ConstVals.PPM.toFloat()
+        headFixture.offsetFromBodyCenter.y = ConstVals.PPM / 2f
+        feetFixture.offsetFromBodyCenter.y = -ConstVals.PPM / 2f
+        (leftFixture.rawShape as Rectangle).setHeight(0.6f /* 0.4f */ * ConstVals.PPM)
+        (rightFixture.rawShape as Rectangle).setHeight(0.6f /* 0.4f */ * ConstVals.PPM)
+        // }
 
         (bodyFixture.rawShape as Rectangle).set(body)
 

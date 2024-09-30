@@ -28,7 +28,7 @@ object ConstVals {
     const val ROOM_TRANS_DURATION = 1f
     const val HEALTH_BAR_X = 0.25f
     const val WEAPON_BAR_X = 0.75f
-    const val STATS_BAR_Y = 7.5f
+    const val STATS_BAR_Y = 9.5f
     const val STANDARD_MAX_STAT_BITS = 30
     const val STAT_BIT_WIDTH = 0.5f
     const val STAT_BIT_HEIGHT = 0.125f

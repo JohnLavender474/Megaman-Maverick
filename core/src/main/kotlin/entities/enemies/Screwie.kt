@@ -133,7 +133,7 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.65f * ConstVals.PPM, 0.5f * ConstVals.PPM)
+        body.setSize(0.85f * ConstVals.PPM, 0.65f * ConstVals.PPM)
 
         val shapes = Array<() -> IDrawableShape?>()
 
@@ -190,7 +190,7 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.35f * ConstVals.PPM)
+        sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink

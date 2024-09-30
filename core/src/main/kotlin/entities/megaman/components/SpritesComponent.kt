@@ -13,6 +13,8 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegamanKeys
+import com.megaman.maverick.game.world.body.BodySense
+import com.megaman.maverick.game.world.body.isSensing
 
 internal fun Megaman.defineSpritesComponent(): SpritesComponent {
     val spritesComponent = SpritesComponent()
@@ -54,7 +56,10 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
         player.translateX(xTranslation * ConstVals.PPM)
 
         val yTranslation = when (direction) {
-            Direction.UP -> 0f
+            Direction.UP -> if (!body.isSensing(BodySense.FEET_ON_GROUND) &&
+                !isBehaviorActive(BehaviorType.WALL_SLIDING)
+            ) -0.25f else 0f
+
             Direction.DOWN -> 0.1f
             Direction.LEFT, Direction.RIGHT -> if (rawAnimKey == "JumpShoot") 0.1f * facing.value else 0f
         }

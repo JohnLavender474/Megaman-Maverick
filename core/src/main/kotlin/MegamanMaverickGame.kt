@@ -466,6 +466,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
                         FixtureType.PLAYER pairTo objectSetOf(FixtureType.BODY, FixtureType.ITEM),
                         FixtureType.DAMAGEABLE pairTo objectSetOf(FixtureType.DAMAGER),
                         FixtureType.BODY pairTo objectSetOf(
+                            FixtureType.BODY,
                             FixtureType.BLOCK,
                             FixtureType.FORCE,
                             FixtureType.GRAVITY_CHANGE

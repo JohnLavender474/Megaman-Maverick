@@ -86,16 +86,16 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(ConstVals.PPM / 4f)
+        body.setSize(0.5f * ConstVals.PPM)
 
         val leftFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
-        leftFixture.offsetFromBodyCenter.set(-0.4f * ConstVals.PPM, -ConstVals.PPM / 4f)
+        leftFixture.offsetFromBodyCenter.set(-0.4f * ConstVals.PPM, -0.25f * ConstVals.PPM)
         body.addFixture(leftFixture)
 
         val rightFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
-        rightFixture.offsetFromBodyCenter.set(0.4f * ConstVals.PPM, -ConstVals.PPM / 4f)
+        rightFixture.offsetFromBodyCenter.set(0.4f * ConstVals.PPM, -0.25f * ConstVals.PPM)
         body.addFixture(rightFixture)
 
         val c1 = GameRectangle().setSize(ConstVals.PPM.toFloat())
@@ -164,7 +164,7 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.35f * ConstVals.PPM)
+        sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink

@@ -55,7 +55,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
         private const val CULL_TIME = 2f
         private const val VERT_SPEED = 18f
         private const val HORIZ_SPEED = 14f
-        private const val CHANGE_BEHAV_DUR = .35f
+        private const val CHANGE_BEHAV_DUR = 0.35f
         private const val VERT_SCANNER_OFFSET = 2f
         private const val HORIZ_SCANNER_OFFSET = 3f
     }

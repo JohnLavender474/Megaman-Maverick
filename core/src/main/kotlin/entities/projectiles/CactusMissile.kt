@@ -53,17 +53,17 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
         private const val RECALC_DELAY = 0.5f
         private const val DAMAGE_DURATION = 0.1f
         private var region: TextureRegion? = null
+        private val damageNegotiations = objectMapOf<KClass<out IDamager>, Int>(
+            Bullet::class pairTo 10,
+            Fireball::class pairTo ConstVals.MAX_HEALTH,
+            ChargedShot::class pairTo ConstVals.MAX_HEALTH,
+            ChargedShotExplosion::class pairTo ConstVals.MAX_HEALTH
+        )
     }
 
     override val invincible: Boolean
         get() = !damageTimer.isFinished()
 
-    private val damageNegotiations = objectMapOf<KClass<out IDamager>, Int>(
-        Bullet::class pairTo 10,
-        Fireball::class pairTo ConstVals.MAX_HEALTH,
-        ChargedShot::class pairTo ConstVals.MAX_HEALTH,
-        ChargedShotExplosion::class pairTo ConstVals.MAX_HEALTH
-    )
     private val upTimer = Timer(UP_DUR)
     private val recalcTimer = Timer(RECALC_DELAY)
     private val damageTimer = Timer(DAMAGE_DURATION)

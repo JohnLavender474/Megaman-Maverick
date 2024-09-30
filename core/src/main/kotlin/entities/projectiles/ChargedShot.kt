@@ -37,13 +37,19 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
+import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.contracts.IOwnable
+import com.megaman.maverick.game.entities.enemies.Bat
+import com.megaman.maverick.game.entities.enemies.DragonFly
+import com.megaman.maverick.game.entities.enemies.Met
+import com.megaman.maverick.game.entities.enemies.ShieldAttacker
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getEntity
 import kotlin.math.abs
+import kotlin.reflect.KClass
 
 class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IFaceable,
     IDirectionRotatable {
@@ -52,6 +58,12 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         private const val BOUNCE_LIMIT = 3
         private var fullyChargedRegion: TextureRegion? = null
         private var halfChargedRegion: TextureRegion? = null
+        private val damageNegotiations = objectMapOf<KClass<out IDamageable>, Int>(
+            Met::class pairTo 10,
+            DragonFly::class pairTo 10,
+            Bat::class pairTo 10,
+            ShieldAttacker::class pairTo 15
+        )
     }
 
     override var facing = Facing.RIGHT
@@ -61,6 +73,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     private lateinit var trajectory: Vector2
     private var bounced = 0
+    private var health = ConstVals.MAX_HEALTH
 
     override fun init() {
         if (fullyChargedRegion == null)
@@ -99,9 +112,18 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         body.setCenter(spawn)
 
         bounced = 0
+        health = ConstVals.MAX_HEALTH
     }
 
-    override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
+    override fun onDamageInflictedTo(damageable: IDamageable) {
+        if (damageNegotiations.containsKey(damageable::class)) {
+            val damage = damageNegotiations.get(damageable::class)
+            health -= damage
+            // in MegaContactListener, damage should be applied to damageable before `onDamagedInflictedTo` is called
+            val damageableNotDead = damageable is IHealthEntity && damageable.getCurrentHealth() > ConstVals.MIN_HEALTH
+            if (damageableNotDead || health <= ConstVals.MIN_HEALTH) explodeAndDie()
+        } else explodeAndDie()
+    }
 
     override fun hitBlock(blockFixture: IFixture) = explodeAndDie()
 
