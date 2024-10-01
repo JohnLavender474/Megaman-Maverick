@@ -64,17 +64,13 @@ class SuicideBummer(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable,
     }
 
     override lateinit var facing: Facing
-
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class pairTo dmgNeg(10),
+        Bullet::class pairTo dmgNeg(15),
         Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class pairTo dmgNeg {
-            it as ChargedShot
-            if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
-        },
+        ChargedShot::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
         ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
-            if (it.fullyCharged) 10 else 5
+            if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
         }
     )
 
@@ -122,9 +118,9 @@ class SuicideBummer(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable,
             if (
                 (wasSideOnGround && !isSideOnGround) ||
                 (isSideOnGround &&
-                        getMegaman().body.getMaxX() >= body.x &&
-                        getMegaman().body.x <= body.getMaxX() &&
-                        getMegaman().body.getY() > body.getY())
+                    getMegaman().body.getMaxX() >= body.x &&
+                    getMegaman().body.x <= body.getMaxX() &&
+                    getMegaman().body.getY() > body.getY())
             ) jump()
             wasSideOnGround = isSideOnGround
         }

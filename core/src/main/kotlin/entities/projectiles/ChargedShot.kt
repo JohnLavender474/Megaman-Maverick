@@ -39,10 +39,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.contracts.IOwnable
-import com.megaman.maverick.game.entities.enemies.Bat
-import com.megaman.maverick.game.entities.enemies.DragonFly
-import com.megaman.maverick.game.entities.enemies.Met
-import com.megaman.maverick.game.entities.enemies.ShieldAttacker
+import com.megaman.maverick.game.entities.enemies.*
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.world.body.BodyComponentCreator
@@ -59,10 +56,16 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         private var fullyChargedRegion: TextureRegion? = null
         private var halfChargedRegion: TextureRegion? = null
         private val damageNegotiations = objectMapOf<KClass<out IDamageable>, Int>(
+            SuicideBummer::class pairTo 5,
             Met::class pairTo 10,
+            HeliMet::class pairTo 10,
+            JetMet::class pairTo 10,
             DragonFly::class pairTo 10,
             Bat::class pairTo 10,
-            ShieldAttacker::class pairTo 15
+            Eyee::class pairTo 10,
+            FloatingCan::class pairTo 10,
+            ShieldAttacker::class pairTo 15,
+            SpikeBot::class pairTo 15
         )
     }
 
