@@ -125,8 +125,8 @@ comprehensive listing of the credits for the artwork used in this game.
 
 #### Title Screen
 
-Megaman Title - [Mister Mike](https://www.spriters-resource.com/fullview/258/)
-Megaman Weapon Get Sprite - [PixelBoy127](https://www.spriters-resource.com/custom_edited/megamancustoms/sheet/166239/)
+- Megaman Title - [Mister Mike](https://www.spriters-resource.com/fullview/258/)
+- Megaman Weapon Get Sprite - [PixelBoy127](https://www.spriters-resource.com/custom_edited/megamancustoms/sheet/166239/)
 
 #### Bosses
 
