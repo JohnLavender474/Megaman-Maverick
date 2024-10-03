@@ -114,13 +114,13 @@ class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             val feetBounds = feetFixture.rawShape as GameRectangle
             if (standing || jumping) {
-                body.setSize(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat())
+                body.setSize(0.9f * ConstVals.PPM, 1.25f * ConstVals.PPM)
                 feetBounds.width = 0.65f * ConstVals.PPM
-                feetFixture.offsetFromBodyCenter.y = -0.5f * ConstVals.PPM
+                feetFixture.offsetFromBodyCenter.y = -0.625f * ConstVals.PPM
             } else {
-                body.setSize(ConstVals.PPM.toFloat(), 0.5f * ConstVals.PPM)
+                body.setSize(ConstVals.PPM.toFloat(), 0.75f * ConstVals.PPM)
                 feetBounds.width = 0.9f * ConstVals.PPM.toFloat()
-                feetFixture.offsetFromBodyCenter.y = -0.25f * ConstVals.PPM
+                feetFixture.offsetFromBodyCenter.y = -0.375f * ConstVals.PPM
             }
 
             (damageableFixture.rawShape as GameRectangle).set(body)
@@ -142,7 +142,7 @@ class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.5f * ConstVals.PPM)
+        sprite.setSize(1.75f * ConstVals.PPM)
         val SpritesComponent = SpritesComponent(sprite)
         SpritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink

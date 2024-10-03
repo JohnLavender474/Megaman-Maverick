@@ -55,25 +55,31 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
             val spawnCenter = Vector2(megaman.body.getCenter())
 
             val xOffset = ConstVals.PPM * megaman.facing.value *
-                    if (megaman.isBehaviorActive(BehaviorType.RIDING_CART) &&
-                        megaman.body.isSensing(BodySense.FEET_ON_GROUND)
-                    ) 1.25f else if (!megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.75f
-                    else if (megaman.slipSliding) 0.65f else 1f
+                if (megaman.isBehaviorActive(BehaviorType.RIDING_CART) &&
+                    megaman.body.isSensing(BodySense.FEET_ON_GROUND)
+                ) 1.25f else if (!megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.75f
+                else if (megaman.slipSliding) 0.65f else 1f
 
             var yOffset = ConstVals.PPM / 16f
 
+            /*
             if (!megaman.body.isSensing(BodySense.FEET_ON_GROUND) &&
                 !megaman.isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.WALL_SLIDING, BehaviorType.RIDING_CART)
             ) yOffset += 0.15f * ConstVals.PPM
+             */
 
-            yOffset += if (megaman.isBehaviorActive(BehaviorType.JETPACKING)) 0.4f * ConstVals.PPM
+            yOffset += if (megaman.isAnyBehaviorActive(BehaviorType.JETPACKING, BehaviorType.WALL_SLIDING))
+                0.4f * ConstVals.PPM
             else if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING)) 0.175f * ConstVals.PPM
             else if (megaman.isBehaviorActive(BehaviorType.RIDING_CART)) {
                 if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.6f * ConstVals.PPM else 0.75f * ConstVals.PPM
-            } else if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.4f * ConstVals.PPM
-            else if (megaman.isBehaviorActive(BehaviorType.CLIMBING)) 0.35f * ConstVals.PPM
+            } // else if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.4f * ConstVals.PPM
+            else 0.15f * ConstVals.PPM
+            /*
+            else if (megaman.isBehaviorActive(BehaviorType.CLIMBING)) 0.15f * ConstVals.PPM
             else if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.15f * ConstVals.PPM
-            else 0.2f * ConstVals.PPM
+            else 0.15f * ConstVals.PPM
+             */
 
             if (megaman.isDirectionRotatedVertically()) {
                 spawnCenter.x += xOffset

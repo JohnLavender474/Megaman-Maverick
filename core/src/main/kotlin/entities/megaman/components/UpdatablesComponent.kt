@@ -19,11 +19,15 @@ import com.megaman.maverick.game.world.body.isSensing
 const val MEGAMAN_UPDATE_COMPONENT_TAG = "MegamanUpdateComponentTag"
 
 private const val UNDER_WATER_BUBBLE_DELAY = 2f
-
+private const val DEATH_X_OFFSET = 1.5f
+private const val DEATH_Y_OFFSET = 1.5f
 private val underWaterBubbleTimer = Timer(UNDER_WATER_BUBBLE_DELAY)
 
 internal fun Megaman.defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-    if (body.x < -10 * ConstVals.PPM || body.y < -10 * ConstVals.PPM) {
+    if (body.x < -DEATH_X_OFFSET * ConstVals.PPM || body.y < -DEATH_Y_OFFSET * ConstVals.PPM ||
+        body.getMaxX() > (game.getTiledMapLoadResult().map.properties.get("width") as Int + DEATH_X_OFFSET) * ConstVals.PPM ||
+        body.getMaxY() > (game.getTiledMapLoadResult().map.properties.get("height") as Int + DEATH_Y_OFFSET) * ConstVals.PPM
+    ) {
         GameLogger.error(MEGAMAN_UPDATE_COMPONENT_TAG, "Megaman is below game bounds, killing him")
         destroy()
     }

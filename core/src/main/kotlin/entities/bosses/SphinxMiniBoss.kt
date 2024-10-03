@@ -60,7 +60,7 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
         const val TAG = "SphinxMiniBoss"
         private const val WAIT_DUR = 1.25f
         private const val OPEN_DUR = 0.25f
-        private const val SHOOT_ORBS_DUR = 2.5f
+        private const val SHOOT_ORBS_DUR = 2f
         private const val LAUGH_DUR = 0.5f
         private const val BALL_SPEED = 3f
         private const val ORB_SPEED = 8f
@@ -77,27 +77,32 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
     }
 
     override val damageNegotiations =
-        objectMapOf<KClass<out IDamager>, DamageNegotiation>(Bullet::class pairTo dmgNeg(1), ChargedShot::class pairTo dmgNeg {
-            it as ChargedShot
-            if (it.fullyCharged) 2 else 1
-        }, ChargedShotExplosion::class pairTo dmgNeg {
-            it as ChargedShotExplosion
-            if (it.fullyCharged) 2 else 1
-        })
+        objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+            Bullet::class pairTo dmgNeg(1),
+            ChargedShot::class pairTo dmgNeg {
+                it as ChargedShot
+                if (it.fullyCharged) 2 else 1
+            }, ChargedShotExplosion::class pairTo dmgNeg {
+                it as ChargedShotExplosion
+                if (it.fullyCharged) 2 else 1
+            }
+        )
 
     private val loop = Loop(SphinxMiniBossState.values().toGdxArray())
     private val timers = objectMapOf(
         "wait" pairTo Timer(WAIT_DUR), "opening" pairTo Timer(
-            OPEN_DUR, gdxArrayOf(TimeMarkedRunnable(0f) { activeChinIndex = 0 },
+            OPEN_DUR, gdxArrayOf(
+                TimeMarkedRunnable(0f) { activeChinIndex = 0 },
                 TimeMarkedRunnable(0.1f) { activeChinIndex = 1 },
                 TimeMarkedRunnable(0.2f) { activeChinIndex = 2 })
         ), "shoot_orbs" pairTo Timer(
-            SHOOT_ORBS_DUR, gdxArrayOf(TimeMarkedRunnable(0.5f) { shootOrb() },
+            SHOOT_ORBS_DUR, gdxArrayOf(
+                TimeMarkedRunnable(0.5f) { shootOrb() },
                 TimeMarkedRunnable(1f) { shootOrb() },
-                TimeMarkedRunnable(1.5f) { shootOrb() },
-                TimeMarkedRunnable(2f) { shootOrb() })
+                TimeMarkedRunnable(1.5f) { shootOrb() })
         ), "closing" pairTo Timer(
-            OPEN_DUR, gdxArrayOf(TimeMarkedRunnable(0f) { activeChinIndex = 2 },
+            OPEN_DUR, gdxArrayOf(
+                TimeMarkedRunnable(0f) { activeChinIndex = 2 },
                 TimeMarkedRunnable(0.1f) { activeChinIndex = 1 },
                 TimeMarkedRunnable(0.2f) { activeChinIndex = 0 })
         ), "laugh" pairTo Timer(LAUGH_DUR)

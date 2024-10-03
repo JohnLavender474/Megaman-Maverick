@@ -109,7 +109,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
 
     companion object {
         const val TAG = "MegamanMaverickGame"
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(/*RainDrop.TAG, RainFall.TAG*/)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.WATER, FixtureType.WATER_LISTENER)
         }
@@ -359,7 +359,9 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
         audioMan.update(delta)
 
         currentScreen?.render(delta)
-        viewports.values().forEach { it.apply() }
+        // TODO: should not apply viewports all at once at end of render(); rather should apply each viewport
+        //  individually right before drawing drawables that are to be contained in the viewport
+        // viewports.values().forEach { it.apply(true) }
 
         if (params.debug) {
             batch.projectionMatrix = getUiCamera().combined

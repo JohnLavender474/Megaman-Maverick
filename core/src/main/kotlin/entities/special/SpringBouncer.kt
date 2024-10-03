@@ -47,11 +47,9 @@ class SpringBouncer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesE
         private const val SPRITE_DIM = 1.5f
     }
 
-    private val bounceTimer = Timer(BOUNCE_DURATION)
-
     lateinit var direction: Direction
         private set
-
+    private val bounceTimer = Timer(BOUNCE_DURATION)
     private lateinit var bounceFixture: Fixture
 
     override fun getEntityType() = EntityType.SPECIAL
@@ -84,11 +82,9 @@ class SpringBouncer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesE
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.STATIC)
-
         bounceFixture = Fixture(body, FixtureType.BOUNCER, GameRectangle())
         bounceFixture.setVelocityAlteration { fixture, _ -> bounce(fixture) }
         body.addFixture(bounceFixture)
-
         return BodyComponentCreator.create(this, body)
     }
 

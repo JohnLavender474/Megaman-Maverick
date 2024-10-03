@@ -175,6 +175,7 @@
         <map type="IndividualSpriteSettingsMap">
             <key type="filename">../frames/Environs1/Leaves/SpringLeaf.png</key>
             <key type="filename">../frames/Environs1/Water/Splash.png</key>
+            <key type="filename">../frames/Environs1/Water/WhiteSplash.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

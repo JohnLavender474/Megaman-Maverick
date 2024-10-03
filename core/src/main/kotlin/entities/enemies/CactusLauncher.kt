@@ -150,7 +150,7 @@ class CactusLauncher(game: MegamanMaverickGame) : AbstractEnemy(game), IParentEn
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.75f * ConstVals.PPM)
+        body.setSize(0.85f * ConstVals.PPM)
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
@@ -166,7 +166,7 @@ class CactusLauncher(game: MegamanMaverickGame) : AbstractEnemy(game), IParentEn
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.35f * ConstVals.PPM)
+        sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink

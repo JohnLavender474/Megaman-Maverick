@@ -1,7 +1,9 @@
 package com.megaman.maverick.game.entities.decorations
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureRegion
@@ -13,6 +15,7 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.shapes.toGameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -43,7 +46,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.setHitByBlockReceiver
 import com.megaman.maverick.game.world.body.setHitByBodyReceiver
 
-class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntity, IBodyEntity, ISpritesEntity {
+class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity {
 
     companion object {
         const val TAG = "RainDrop"
@@ -53,13 +56,14 @@ class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntit
 
     private val splashTimer = Timer(SPLASH_DUR)
     private var splashed = false
+    private var deathY = 0f
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         super.init()
+        addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
-        addComponent(defineCullablesComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -72,14 +76,28 @@ class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntit
         body.physics.gravityOn = true
         splashTimer.setToEnd()
         splashed = false
+        deathY = spawnProps.get("${ConstKeys.DEATH}_${ConstKeys.Y}", Float::class)!!
     }
 
     private fun splash(rotation: Float = 0f) {
-        GameLogger.debug(TAG, "splash")
+        GameLogger.debug(TAG, "splash()")
         destroy()
         val splash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SPLASH)!!
-        splash.spawn(props(ConstKeys.POSITION pairTo body.getBottomCenterPoint() /*ConstKeys.ROTATION pairTo rotation*/))
+        splash.spawn(
+            props(
+                ConstKeys.POSITION pairTo body.getBottomCenterPoint(),
+                /* ConstKeys.ROTATION pairTo rotation, */
+                ConstKeys.TYPE pairTo Splash.SplashType.WHITE
+            )
+        )
     }
+
+    private fun defineUpdatablesComponent() = UpdatablesComponent({
+        if (body.y <= deathY) {
+            GameLogger.debug(TAG, "update(): below death y $deathY, destroying $this")
+            destroy()
+        }
+    })
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
@@ -88,11 +106,13 @@ class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntit
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         bodyFixture.setHitByBlockReceiver {
+            GameLogger.debug(TAG, "hit block $it")
             val direction = getOverlapPushDirection(bodyFixture.getShape(), it.body)
             splash(direction?.rotation ?: 0f)
         }
         bodyFixture.setHitByBodyReceiver {
             if (!it.isAny(RainFall::class, RainDrop::class)) {
+                GameLogger.debug(TAG, "hit body $it")
                 val direction = getOverlapPushDirection(bodyFixture.getShape(), it.body)
                 splash(direction?.rotation ?: 0f)
             }
@@ -112,11 +132,6 @@ class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntit
         return spritesComponent
     }
 
-    private fun defineCullablesComponent(): CullablesComponent {
-        val cullOutOfBounds = getGameCameraCullingLogic(this)
-        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullOutOfBounds))
-    }
-
     override fun getTag() = TAG
 
     override fun getEntityType() = EntityType.DECORATION
@@ -127,13 +142,15 @@ class RainFall(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntit
     companion object {
         const val TAG = "RainFall"
         private const val VELOCITY = 15f
-
-        // private const val ANGLE = 140f
-        private const val DELAY_DUR = 0.025f
+        private const val ANGLE = 140f
+        private const val MIN_DELAY_DUR = 0.025f
+        private const val MAX_DELAY_DUR = 0.1f
     }
 
-    private val delayTimer = Timer(DELAY_DUR)
-    private lateinit var bounds: GameRectangle
+    private val rainSpawners = Array<GameRectangle>()
+    private lateinit var delayTimer: Timer
+    private lateinit var cullBounds: GameRectangle
+    private var deathY = 0f
 
     override fun init() {
         super.init()
@@ -142,34 +159,48 @@ class RainFall(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntit
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        GameLogger.debug(TAG, "onSpawn: spawnProps=$spawnProps")
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
+        GameLogger.debug(TAG, "onSpawn(): Megaman's position = ${getMegaman().body.getCenter()}")
         super.onSpawn(spawnProps)
-        bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
-        delayTimer.reset()
+        cullBounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+        spawnProps.forEach { key, value ->
+            if (key.toString().contains(ConstKeys.SPAWN) && value is RectangleMapObject) {
+                val rainSpawner = value.rectangle.toGameRectangle()
+                GameLogger.debug(TAG, "onSpawn(): adding rain spawner $rainSpawner")
+                rainSpawners.add(rainSpawner)
+            }
+        }
+        deathY = spawnProps.getOrDefault("${ConstKeys.DEATH}_${ConstKeys.Y}", cullBounds.y, Float::class)
+        delayTimer = Timer(getRandom(MIN_DELAY_DUR, MAX_DELAY_DUR))
     }
 
-    private fun spawnRainDrop() {
-        GameLogger.debug(TAG, "spawnRainDrop")
-        val rainDrop = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.RAIN_DROP)!!
-        val spawnX = getRandom(bounds.x, bounds.getMaxX())
-        rainDrop.spawn(
-            props(
-                ConstKeys.POSITION pairTo Vector2(spawnX, bounds.getTopCenterPoint().y),
-                ConstKeys.TRAJECTORY pairTo Vector2(0f, -VELOCITY * ConstVals.PPM)//.rotateDeg(ANGLE)
+    private fun spawnRainDrops() {
+        GameLogger.debug(TAG, "spawnRainDrops()")
+        rainSpawners.forEach { rainSpawner ->
+            val rainDrop = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.RAIN_DROP)!!
+            rainDrop.spawn(
+                props(
+                    ConstKeys.POSITION pairTo Vector2(
+                        getRandom(rainSpawner.x, rainSpawner.getMaxX()),
+                        rainSpawner.getTopCenterPoint().y
+                    ),
+                    ConstKeys.TRAJECTORY pairTo Vector2(0f, VELOCITY * ConstVals.PPM).rotateDeg(ANGLE),
+                    "${ConstKeys.DEATH}_${ConstKeys.Y}" pairTo deathY
+                )
             )
-        )
+        }
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         delayTimer.update(delta)
         if (delayTimer.isFinished()) {
-            spawnRainDrop()
-            delayTimer.reset()
+            spawnRainDrops()
+            delayTimer.resetDuration(getRandom(MIN_DELAY_DUR, MAX_DELAY_DUR))
         }
     })
 
     private fun defineCullablesComponent(): CullablesComponent {
-        val cullOutOfBounds = getGameCameraCullingLogic(game.getGameCamera(), { bounds })
+        val cullOutOfBounds = getGameCameraCullingLogic(game.getGameCamera(), { cullBounds })
         return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullOutOfBounds))
     }
 

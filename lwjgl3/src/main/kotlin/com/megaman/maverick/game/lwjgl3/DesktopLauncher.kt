@@ -1,3 +1,5 @@
+package com.megaman.maverick.game.lwjgl3
+
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowAdapter
@@ -56,14 +58,16 @@ object DesktopLauncher {
         val config = Lwjgl3ApplicationConfiguration()
         config.setTitle(TITLE)
         config.useVsync(appArgs.vsync)
-        // TODO: disable dynamic fps until issues regarding physics tied to fps are resolved,
-        //  for now use default fps
+
+        // TODO: disable dynamic fps until issues regarding physics tied to fps are resolved;
+        //  for now always use default fps and disregard custom input
         config.setIdleFPS(DEFAULT_FPS)
         config.setForegroundFPS(DEFAULT_FPS)
         /*
         config.setIdleFPS(appArgs.fps);
         config.setForegroundFPS(appArgs.fps);
          */
+
         config.setWindowedMode(appArgs.width, appArgs.height)
         if (appArgs.fullScreen) {
             config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode())
@@ -133,66 +137,77 @@ object DesktopLauncher {
             names = ["--fps"],
             description = "Frames per second: min of 30 and max of 90. Default value = $DEFAULT_FPS."
         )
-        var fps: Int = DEFAULT_FPS
+        var fps = DEFAULT_FPS
 
         @Parameter(
             names = ["--width"],
             description = "Window width: min of 600. Default value = $DEFAULT_WIDTH."
         )
-        var width: Int = DEFAULT_WIDTH
+        var width = DEFAULT_WIDTH
 
         @Parameter(
             names = ["--height"],
             description = "Window height: min of 400. Default value = $DEFAULT_HEIGHT."
         )
-        var height: Int = DEFAULT_HEIGHT
+        var height = DEFAULT_HEIGHT
 
         @Parameter(
             names = ["--fullscreen"],
             description = "Enable fullscreen. Default value = $DEFAULT_FULLSCREEN."
         )
-        var fullScreen: Boolean = DEFAULT_FULLSCREEN
-
-        @Parameter(names = ["--vsync"], description = "Enable vsync. Default value = $DEFAULT_VSYNC.")
-        var vsync: Boolean = DEFAULT_VSYNC
+        var fullScreen = DEFAULT_FULLSCREEN
 
         @Parameter(
-            names = ["--debug"], description = ("Enable debugging mode which turns on debug text rendering and " +
+            names = ["--vsync"],
+            description = "Enable vsync. Default value = $DEFAULT_VSYNC."
+        )
+        var vsync = DEFAULT_VSYNC
+
+        @Parameter(
+            names = ["--debug"],
+            description =
+                ("Enable debugging mode which turns on debug text rendering and " +
                     "debug shape rendering. Default value = " + DEFAULT_DEBUG + ".")
         )
-        var debug: Boolean = DEFAULT_DEBUG
+        var debug = DEFAULT_DEBUG
 
         @Parameter(
-            names = ["--startScreen"], description = ("The screen to start the game app on. Options: \"main\", " +
-                    "\"level\", \"simple\". Options not case sensitive. Default value = " + DEFAULT_START_SCREEN + ".")
+            names = ["--startScreen"],
+            description = ("The screen to start the game app on. Options: \"main\", " +
+                "\"level\", \"simple\". Options not case sensitive. Default value = " + DEFAULT_START_SCREEN + ".")
         )
-        var startScreen: String = DEFAULT_START_SCREEN
+        var startScreen = DEFAULT_START_SCREEN
 
         @Parameter(
-            names = ["--level"], description = ("The level to start the game app on. This option only works if " +
+            names = ["--level"],
+            description =
+                ("The level to start the game app on. This option only works if " +
                     "\"level\" has been selected as the start screen. Choose the name of the level from the Level " +
                     "enum class (not case sensitive). No default value. If the level is not found, an exception is " +
                     "thrown.")
         )
-        var level: String = DEFAULT_LEVEL
+        var level = DEFAULT_LEVEL
 
         @Parameter(
-            names = ["--fixedStepScalar"], description = ("Sets the world fixed step scalar, useful for " +
-                    "debugging. Default value is " + DEFAULT_FIXED_STEP_SCALAR + ". Should be default value if not " +
-                    "debugging")
+            names = ["--fixedStepScalar"],
+            description = ("Sets the world fixed step scalar, useful for " +
+                "debugging. Default value is " + DEFAULT_FIXED_STEP_SCALAR + ". Should be default value if not " +
+                "debugging")
         )
-        var fixedStepScalar: Float = DEFAULT_FIXED_STEP_SCALAR
+        var fixedStepScalar = DEFAULT_FIXED_STEP_SCALAR
 
         @Parameter(
-            names = ["--musicVolume"], description = ("Sets the music volume. Must be between 0 and 1. Default " +
-                    "value is " + DEFAULT_MUSIC_VOLUME)
+            names = ["--musicVolume"],
+            description = ("Sets the music volume. Must be between 0 and 1. Default " +
+                "value is " + DEFAULT_MUSIC_VOLUME)
         )
-        var musicVolume: Float = DEFAULT_MUSIC_VOLUME
+        var musicVolume = DEFAULT_MUSIC_VOLUME
 
         @Parameter(
-            names = ["--soundVolume"], description = ("Sets the sound volume. Must be between 0 and 1. Default " +
-                    "value is " + DEFAULT_SOUND_VOLUME)
+            names = ["--soundVolume"],
+            description = ("Sets the sound volume. Must be between 0 and 1. Default " +
+                "value is " + DEFAULT_SOUND_VOLUME)
         )
-        var soundVolume: Float = DEFAULT_SOUND_VOLUME
+        var soundVolume = DEFAULT_SOUND_VOLUME
     }
 }

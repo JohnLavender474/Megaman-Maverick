@@ -44,8 +44,10 @@ class Needle(game: MegamanMaverickGame) : AbstractProjectile(game) {
         super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
-        val trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
-        body.physics.velocity.set(trajectory)
+        val gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, 0f, Float::class)
+        body.physics.gravity = Vector2(0f, gravity)
+        val impulse = spawnProps.get(ConstKeys.IMPULSE, Vector2::class)!!
+        body.physics.velocity.set(impulse)
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()

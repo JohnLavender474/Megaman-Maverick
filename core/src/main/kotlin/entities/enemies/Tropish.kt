@@ -137,6 +137,7 @@ class Tropish(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         val body = Body(BodyType.DYNAMIC)
         body.setSize(1.25f * ConstVals.PPM, 0.75f * ConstVals.PPM)
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
+        body.physics.takeFrictionFromOthers = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBodyBounds() }

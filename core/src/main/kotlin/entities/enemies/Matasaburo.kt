@@ -79,7 +79,7 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(ConstVals.PPM.toFloat())
+        body.setSize(1.35f * ConstVals.PPM)
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
@@ -114,7 +114,7 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.5f * ConstVals.PPM)
+        sprite.setSize(1.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink

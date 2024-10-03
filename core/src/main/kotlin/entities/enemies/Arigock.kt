@@ -147,7 +147,7 @@ class Arigock(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.15f * ConstVals.PPM)
+        sprite.setSize(1.45f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)

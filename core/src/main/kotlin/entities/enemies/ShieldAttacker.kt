@@ -158,11 +158,11 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
             (damagerFixture.rawShape as GameRectangle).set(body)
 
             if (vertical) {
-                body.setSize(1.5f * ConstVals.PPM, 0.75f * ConstVals.PPM)
+                body.setSize(1.75f * ConstVals.PPM, 0.85f * ConstVals.PPM)
                 (damageableFixture.rawShape as GameRectangle).width = body.width
                 (shieldFixture.rawShape as GameRectangle).setSize(1.25f * ConstVals.PPM, 0.75f * ConstVals.PPM)
             } else {
-                body.setSize(0.75f * ConstVals.PPM, 1.5f * ConstVals.PPM)
+                body.setSize(0.85f * ConstVals.PPM, 1.75f * ConstVals.PPM)
                 (damageableFixture.rawShape as GameRectangle).height = body.height
                 (shieldFixture.rawShape as GameRectangle).setSize(0.75f * ConstVals.PPM, 1.25f * ConstVals.PPM)
             }

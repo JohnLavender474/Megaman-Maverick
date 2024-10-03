@@ -86,10 +86,7 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    private enum class JetpackIceShooterState {
-        FLY_TO_TARGET, ADJUST_AIM, SHOOT
-    }
-
+    private enum class JetpackIceShooterState { FLY_TO_TARGET, ADJUST_AIM, SHOOT }
     private enum class DistanceType(val angle: Float) {
         STRAIGHT(STRAIGHT_LINE_OF_SIGHT_ANGLE),
         FAR(FAR_LINE_OF_SIGHT_ANGLE),
@@ -324,6 +321,7 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
         body.setSize(1.15f * ConstVals.PPM, 1.5f * ConstVals.PPM)
+        body.physics.takeFrictionFromOthers = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBodyBounds() }
@@ -358,7 +356,7 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.5f * ConstVals.PPM)
+        sprite.setSize(1.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())

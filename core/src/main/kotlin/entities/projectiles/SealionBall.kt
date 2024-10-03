@@ -9,6 +9,7 @@ import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
+import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.damage.IDamager
@@ -26,13 +27,18 @@ import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
+import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.enemies.Sealion
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
+import com.megaman.maverick.game.entities.factories.EntityFactories
+import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import kotlin.reflect.KClass
@@ -98,6 +104,11 @@ class SealionBall(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
 
     override fun onDestroy() {
         super.onDestroy()
+
+        if (overlapsGameCamera()) playSoundNow(SoundAsset.ENEMY_DAMAGE_SOUND, false)
+        val disintegration = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)!!
+        disintegration.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
+
         if (owner != null) {
             (owner as Sealion).onBallDestroyed()
             owner = null
@@ -106,7 +117,7 @@ class SealionBall(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.65f * ConstVals.PPM)
+        body.setSize(1.05f * ConstVals.PPM)
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
         body.color = Color.GRAY
 
@@ -131,7 +142,7 @@ class SealionBall(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(region!!)
-        sprite.setSize(2f * ConstVals.PPM, 1.25f * ConstVals.PPM)
+        sprite.setSize(2.25f * ConstVals.PPM, 1.4f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())

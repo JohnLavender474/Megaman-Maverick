@@ -115,7 +115,7 @@ class SnowheadThrower(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
     }
 
     private fun throwHead() {
-        val spawn = body.getTopCenterPoint().sub(0f, 0.25f * ConstVals.PPM)
+        val spawn = body.getTopCenterPoint().sub(0f, 0.35f * ConstVals.PPM)
         val trajectory = Vector2(SNOW_HEAD_X_VEL * facing.value, SNOW_HEAD_Y_VEL).scl(ConstVals.PPM.toFloat())
         val snowhead = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SNOW_HEAD)!!
         snowhead.spawn(
@@ -152,7 +152,7 @@ class SnowheadThrower(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.65f * ConstVals.PPM, ConstVals.PPM.toFloat())
+        body.setSize(0.85f * ConstVals.PPM, 1.15f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBodyBounds() }
@@ -173,7 +173,7 @@ class SnowheadThrower(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.25f * ConstVals.PPM)
+        sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink

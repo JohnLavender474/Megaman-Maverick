@@ -178,7 +178,7 @@ class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(2.75f * ConstVals.PPM)
+        sprite.setSize(2.85f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)

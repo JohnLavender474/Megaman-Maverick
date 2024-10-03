@@ -140,7 +140,7 @@ class BombPotton(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(ConstVals.PPM.toFloat())
+        body.setSize(1.25f * ConstVals.PPM)
         body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
@@ -162,7 +162,7 @@ class BombPotton(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.15f * ConstVals.PPM)
+        sprite.setSize(1.45f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())

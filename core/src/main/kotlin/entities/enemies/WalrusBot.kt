@@ -65,9 +65,9 @@ class WalrusBot(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
         const val TAG = "WalrusBot"
         private const val SHOOT_DUR = 0.8f
         private const val STAND_DUR = 1.25f
-        private const val JET_DUR = 0.5f
-        private const val JET_IMPULSE = 20f
-        private const val SLIDE_MIN_VEL = 0.1f
+        private const val JET_DUR = 0.35f
+        private const val JET_IMPULSE = 15f
+        private const val SLIDE_MIN_VEL = 0.2f
         private const val VEL_CLAMP = 10f
         private const val GRAVITY = -0.15f
         private const val GROUND_GRAVITY = -0.001f
@@ -186,7 +186,7 @@ class WalrusBot(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(ConstVals.PPM.toFloat())
+        body.setSize(1.25f * ConstVals.PPM)
         body.physics.velocityClamp.set(VEL_CLAMP * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
@@ -204,7 +204,7 @@ class WalrusBot(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
         debugShapes.add { damageableFixture.getShape() }
 
         val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyCenter.y = -0.5f * ConstVals.PPM
+        feetFixture.offsetFromBodyCenter.y = -0.625f * ConstVals.PPM
         body.addFixture(feetFixture)
         feetFixture.rawShape.color = Color.GREEN
         debugShapes.add { feetFixture.getShape() }
@@ -221,7 +221,7 @@ class WalrusBot(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(2f * ConstVals.PPM, 1.25f * ConstVals.PPM)
+        sprite.setSize(2.25f * ConstVals.PPM, 1.4f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)

@@ -257,9 +257,9 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>4,4,8,7</rect>
+                <rect>3,2,5,5</rect>
                 <key>scale9Paddings</key>
-                <rect>4,4,8,7</rect>
+                <rect>3,2,5,5</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

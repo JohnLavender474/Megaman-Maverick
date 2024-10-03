@@ -55,19 +55,26 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
     companion object {
         const val TAG = "SpikeBot"
-        private const val STAND_DUR = 0.35f
-        private const val SHOOT_DUR = 0.65f
-        private const val SHOOT_TIME = 0.3f
-        private const val WALK_DUR = 0.75f
+        private const val STAND_DUR = 0.1f
+
+        private const val SHOOT_DUR = 0.25f
+        private const val SHOOT_TIME = 0.125f
+
+        private const val WALK_DUR = 0.5f
         private const val WALK_SPEED = 4f
+
         private const val NEEDLES = 3
-        private const val Y_OFFSET = 0.1f
-        private const val NEEDLE_SPEED = 10f
+        private const val NEEDLE_GRAV = -0.1f
+        private const val NEEDLE_IMPULSE = 10f
+        private const val NEEDLE_Y_OFFSET = 0.1f
+
         private const val JUMP_IMPULSE = 10f
         private const val LEFT_FOOT = "${ConstKeys.LEFT}_${ConstKeys.FOOT}"
         private const val RIGHT_FOOT = "${ConstKeys.RIGHT}_${ConstKeys.FOOT}"
+
         private const val GRAVITY = -0.15f
         private const val GROUND_GRAVITY = -0.01f
+
         private val angles = gdxArrayOf(45f, 0f, 315f)
         private val xOffsets = gdxArrayOf(-0.1f, 0f, 0.1f)
         private val regions = ObjectMap<String, TextureRegion>()
@@ -117,17 +124,18 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
     private fun shoot() {
         for (i in 0 until NEEDLES) {
             val xOffset = xOffsets[i]
-            val position = body.getTopCenterPoint().add(xOffset * ConstVals.PPM, Y_OFFSET * ConstVals.PPM)
+            val position = body.getTopCenterPoint().add(xOffset * ConstVals.PPM, NEEDLE_Y_OFFSET * ConstVals.PPM)
 
             val angle = angles[i]
-            val trajectory = Vector2(0f, NEEDLE_SPEED * ConstVals.PPM).rotateDeg(angle).scl(movementScalar)
+            val impulse = Vector2(0f, NEEDLE_IMPULSE * ConstVals.PPM).rotateDeg(angle).scl(movementScalar)
 
             val needle = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.NEEDLE)!!
             needle.spawn(
                 props(
                     ConstKeys.OWNER pairTo this,
                     ConstKeys.POSITION pairTo position,
-                    ConstKeys.TRAJECTORY pairTo trajectory
+                    ConstKeys.IMPULSE pairTo impulse,
+                    ConstKeys.GRAVITY pairTo NEEDLE_GRAV * ConstVals.PPM
                 )
             )
         }
@@ -174,6 +182,7 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
         body.setSize(0.75f * ConstVals.PPM)
+        body.physics.takeFrictionFromOthers = false
         body.putProperty(LEFT_FOOT, false)
         body.putProperty(RIGHT_FOOT, false)
 

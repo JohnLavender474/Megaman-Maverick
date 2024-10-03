@@ -35,7 +35,7 @@ object ConstVals {
     const val DEFAULT_PATHFINDING_MAX_ITERATIONS = 100
     const val DEFAULT_PATHFINDING_MAX_DISTANCE = 100
     const val DEFAULT_RETURN_BEST_PATH = true
-    const val DEFAULT_LERP_SETTING = true
+    const val DEFAULT_LERP_SETTING = false
     const val FAST_LERP_VALUE = 12.5f
     const val MEDIUM_LERP_VALUE = 10f
     const val SLOW_LERP_VALUE = 7.5f

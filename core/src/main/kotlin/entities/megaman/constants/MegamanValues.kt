@@ -11,7 +11,7 @@ object MegamanValues {
 
     const val CLAMP_X = 25f
     const val CLAMP_Y = 50f
-    // TODO: const val WALL_SLIDE_CLAMP_Y = 5f
+
 
     const val RUN_SPEED = 4.5f
     const val RUN_IMPULSE = 35f

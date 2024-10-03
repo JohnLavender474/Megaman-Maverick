@@ -476,6 +476,11 @@ class MegaLevelScreen(
             EventType.BOSS_DEFEATED -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Boss defeated")
 
+                if (megaman.dead) {
+                    GameLogger.debug(TAG, "onEvent(): Megaman dead when boss defeated, doing nothing...")
+                    return
+                }
+
                 val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
                 if (!boss.mini) audioMan.unsetMusic()
 
@@ -496,6 +501,12 @@ class MegaLevelScreen(
 
             EventType.BOSS_DEAD -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Boss dead")
+
+                if (megaman.dead) {
+                    GameLogger.debug(TAG, "onEvent(): Megaman dead when boss dead, doing nothing...")
+                    return
+                }
+
                 val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
                 val eventType = if (boss.mini) EventType.MINI_BOSS_DEAD else EventType.VICTORY_EVENT
                 eventsMan.submitEvent(Event(eventType, props(ConstKeys.BOSS pairTo boss)))
@@ -609,11 +620,13 @@ class MegaLevelScreen(
         gameCameraPriorPosition.set(gameCamera.position)
 
         val batch = game.batch
-        batch.begin()
 
+        game.viewports.get(ConstKeys.BACKGROUND).apply()
+        batch.begin()
         batch.projectionMatrix = backgroundCamera.combined
         if (showBackgrounds) backgrounds.forEach { it.draw(batch) }
 
+        game.viewports.get(ConstKeys.GAME).apply()
         batch.projectionMatrix = gameCamera.combined
         val backgroundSprites = drawables.get(DrawingSection.BACKGROUND)
         while (!backgroundSprites.isEmpty()) {
@@ -632,6 +645,7 @@ class MegaLevelScreen(
             foregroundSprite.draw(batch)
         }
 
+        game.viewports.get(ConstKeys.UI).apply()
         batch.projectionMatrix = uiCamera.combined
         entityStatsHandler.draw(batch)
         playerStatsHandler.draw(batch)

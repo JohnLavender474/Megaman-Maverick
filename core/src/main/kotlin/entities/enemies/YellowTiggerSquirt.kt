@@ -52,7 +52,7 @@ class YellowTiggerSquirt(game: MegamanMaverickGame) : AbstractEnemy(game), IAnim
 
     companion object {
         const val TAG = "YellowTiggerSquirt"
-        private const val CULL_TIME = 2f
+        private const val CULL_TIME = 3f
         private const val FREQUENCY_X = 0.75f
         private const val AMPLITUDE_X = 0.05f
         private const val FREQUENCY_Y = 6f
@@ -109,7 +109,7 @@ class YellowTiggerSquirt(game: MegamanMaverickGame) : AbstractEnemy(game), IAnim
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.45f * ConstVals.PPM)
+        body.setSize(0.75f * ConstVals.PPM)
         body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
@@ -132,7 +132,7 @@ class YellowTiggerSquirt(game: MegamanMaverickGame) : AbstractEnemy(game), IAnim
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
-        sprite.setSize(1.25f * ConstVals.PPM)
+        sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())

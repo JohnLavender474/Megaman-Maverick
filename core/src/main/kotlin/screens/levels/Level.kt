@@ -12,8 +12,8 @@ enum class Level(tmxSourceFile: String, val musicAss: MusicAsset) {
     REACTOR_MAN("ReactMan_v2.tmx", MusicAsset.MMX2_MORPH_MOTH_MUSIC),
     INFERNO_MAN("InfernoMan_v2.tmx", MusicAsset.MMX6_BLAZE_HEATNIX_MUSIC),
     MOON_MAN("MoonMan_v3.tmx", MusicAsset.MMX5_DARK_DIZZY_MUSIC),
-    DESERT_MAN("DesertMan.tmx", MusicAsset.MMX7_VANISHING_GUNGAROO_MUSIC),
-    GLACIER_MAN("GlacierMan.tmx", MusicAsset.MM8_FROST_MAN_ALT_MUSIC),
+    DESERT_MAN("DesertMan_v2.tmx", MusicAsset.MMX7_VANISHING_GUNGAROO_MUSIC),
+    GLACIER_MAN("GlacierMan_v3.tmx", MusicAsset.MM8_FROST_MAN_ALT_MUSIC),
     MAGNET_MAN("MagnetMan.tmx", MusicAsset.MMX5_IZZY_GLOW_MUSIC),
     RODENT_MAN("Test1.tmx", MusicAsset.MM10_WILY1_MUSIC),
 

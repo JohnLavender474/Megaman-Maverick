@@ -125,7 +125,7 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.5f * ConstVals.PPM)
+        body.setSize(0.75f * ConstVals.PPM)
         body.physics.takeFrictionFromOthers = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
@@ -145,7 +145,7 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setRegion(region!!)
-        sprite.setSize(1.25f * ConstVals.PPM)
+        sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setFlip(isFacing(Facing.RIGHT), false)

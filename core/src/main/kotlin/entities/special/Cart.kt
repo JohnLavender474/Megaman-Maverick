@@ -28,6 +28,7 @@ import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
+import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.GameEntity
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
@@ -161,7 +162,7 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
 
     private fun defineSpriteComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(2.225f * ConstVals.PPM, 2.1f * ConstVals.PPM)
+        sprite.setSize(2.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             val position = body.getBottomCenterPoint()

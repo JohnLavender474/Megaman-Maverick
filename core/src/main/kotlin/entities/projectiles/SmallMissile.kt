@@ -128,7 +128,7 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.25f * ConstVals.PPM, 0.5f * ConstVals.PPM)
+        body.setSize(0.35f * ConstVals.PPM, 0.65f * ConstVals.PPM)
         body.physics.takeFrictionFromOthers = false
         body.color = Color.GRAY
 
@@ -160,7 +160,7 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
-        sprite.setSize(0.35f * ConstVals.PPM)
+        sprite.setSize(0.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setOriginCenter()

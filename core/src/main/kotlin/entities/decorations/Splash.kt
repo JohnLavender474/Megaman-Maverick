@@ -8,11 +8,13 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Position
-import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -33,11 +35,16 @@ import kotlin.math.ceil
 
 class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
 
+    enum class SplashType { BLUE, WHITE }
+
     companion object {
         const val TAG = "Splash"
-        private const val SPLASH_REGION_KEY = "Water/Splash"
+        private const val BLUE_SPLASH_REGION_KEY = "Water/Splash"
+        private const val WHITE_SPLASH_REGION_KEY = "Water/WhiteSplash"
         private const val ALPHA = 0.5f
-        private var splashRegion: TextureRegion? = null
+        private const val CULL_TIME = 0.375f
+        private var blueSplashRegion: TextureRegion? = null
+        private var whiteSplashRegion: TextureRegion? = null
 
         fun generate(splasher: GameRectangle, water: GameRectangle) {
             GameLogger.debug(TAG, "Generating splash for splasher [$splasher] and water [$water]")
@@ -50,13 +57,16 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
         }
     }
 
-    private lateinit var animation: IAnimation
+    lateinit var type: SplashType
 
-    override fun getEntityType() = EntityType.DECORATION
+    private val cullTimer = Timer(CULL_TIME)
 
     override fun init() {
-        if (splashRegion == null) splashRegion =
-            game.assMan.getTextureRegion(TextureAsset.ENVIRONS_1.source, SPLASH_REGION_KEY)
+        if (blueSplashRegion == null || whiteSplashRegion == null) {
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENVIRONS_1.source)
+            blueSplashRegion = atlas.findRegion(BLUE_SPLASH_REGION_KEY)
+            whiteSplashRegion = atlas.findRegion(WHITE_SPLASH_REGION_KEY)
+        }
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
         addComponent(defineUpdatablesComponent())
@@ -64,19 +74,31 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+        type = if (spawnProps.containsKey(ConstKeys.TYPE)) {
+            val rawType = spawnProps.get(ConstKeys.TYPE)
+            rawType as? SplashType ?: if (rawType is String) SplashType.valueOf(rawType.uppercase())
+            else throw IllegalArgumentException("Type value must be a string or SplashType: $rawType")
+        } else SplashType.BLUE
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         firstSprite!!.setPosition(spawn, Position.BOTTOM_CENTER)
         firstSprite!!.setOriginCenter()
         firstSprite!!.rotation = spawnProps.getOrDefault(ConstKeys.ROTATION, 0f, Float::class)
+        cullTimer.reset()
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent({
-        if (animation.isFinished()) destroy()
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+        cullTimer.update(delta)
+        if (cullTimer.isFinished()) destroy()
     })
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        animation = Animation(splashRegion!!, 1, 5, 0.075f, false)
-        return AnimationsComponent(this, Animator(animation))
+        val keySupplier: () -> String? = { type.name }
+        val animations = objectMapOf<String, IAnimation>(
+            SplashType.BLUE.name pairTo Animation(blueSplashRegion!!, 1, 5, 0.075f, false),
+            SplashType.WHITE.name pairTo Animation(whiteSplashRegion!!, 1, 5, 0.075f, false)
+        )
+        val animator = Animator(keySupplier, animations)
+        return AnimationsComponent(this, animator)
     }
 
     private fun defineSpritesCompoent(): SpritesComponent {
@@ -85,4 +107,6 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
         sprite.setAlpha(ALPHA)
         return SpritesComponent(sprite)
     }
+
+    override fun getEntityType() = EntityType.DECORATION
 }

@@ -101,7 +101,7 @@ class ArigockBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
-        sprite.setSize(ConstVals.PPM.toFloat())
+        sprite.setSize(1.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())

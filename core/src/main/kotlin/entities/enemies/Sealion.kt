@@ -154,7 +154,7 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     }
 
     private fun canCatchBall() = sealionBall!!.body.contains(ballCatchBounds.getBottomCenterPoint()) ||
-            sealionBall!!.body.getMaxY() < ballCatchBounds.y // in case ball falls below sealion before it's caught
+        sealionBall!!.body.getMaxY() < ballCatchBounds.y // in case ball falls below sealion before it's caught
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
@@ -220,7 +220,7 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(1.5f * ConstVals.PPM, 0.9175f * ConstVals.PPM)
+        body.setSize(1.6875f * ConstVals.PPM, 1.0325f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBodyBounds() }
@@ -241,7 +241,7 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
-        sprite.setSize(2f * ConstVals.PPM, 1.25f * ConstVals.PPM)
+        sprite.setSize(2.25f * ConstVals.PPM, 1.4f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
