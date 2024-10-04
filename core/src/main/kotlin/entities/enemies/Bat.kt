@@ -75,9 +75,9 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
         private var atlas: TextureAtlas? = null
         private const val DEBUG_PATHFINDING = false
         private const val DEBUG_PATHFINDING_DURATION = 1f
-        private const val HANG_DURATION = 1.25f
+        private const val HANG_DURATION = 0.75f
         private const val RELEASE_FROM_PERCH_DURATION = 0.25f
-        private const val DEFAULT_FLY_TO_ATTACK_SPEED = 3f
+        private const val DEFAULT_FLY_TO_ATTACK_SPEED = 4f
         private const val DEFAULT_FLY_TO_RETREAT_SPEED = 8f
         private const val PATHFINDING_UPDATE_INTERVAL = 0.05f
     }
@@ -205,7 +205,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
     }
 
     override fun defineBodyComponent(): BodyComponent {
-        val body = Body(BodyType.ABSTRACT)
+        val body = Body(BodyType.DYNAMIC)
         body.setSize(0.85f * ConstVals.PPM)
         body.physics.takeFrictionFromOthers = false
 
@@ -292,7 +292,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
     private fun definePathfindingComponent(): PathfindingComponent {
         val params = PathfinderParams(
             startCoordinateSupplier = { body.getCenter().toGridCoordinate() },
-            targetCoordinateSupplier = { getMegaman().body.getTopCenterPoint().toGridCoordinate() },
+            targetCoordinateSupplier = { getMegaman().body.getCenter().toGridCoordinate() },
             allowDiagonal = { true },
             filter = { coordinate ->
                 val bodies = game.getWorldContainer()!!.getBodies(coordinate.x, coordinate.y)

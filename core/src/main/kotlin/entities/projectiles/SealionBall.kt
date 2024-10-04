@@ -48,7 +48,7 @@ class SealionBall(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
 
     companion object {
         const val TAG = "SealionBall"
-        private const val VELOCITY_Y = 12f
+        private const val VELOCITY_Y = 16f
         private const val GRAVITY = -0.1f
         private const val OUT_OF_BOUNDS_CULL_TIME = 1f
         private var region: TextureRegion? = null
