@@ -183,6 +183,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
         rightFixture.offsetFromBodyCenter = Vector2(0.5f, 0f /* 0.25f */).scl(ConstVals.PPM.toFloat())
         leftFixture.offsetFromBodyCenter = Vector2(-0.5f, 0f /* 0.25f */).scl(ConstVals.PPM.toFloat())
 
+        // TODO: should ground sliding result in different sizes for body and fixture?
         /*
         if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) {
             body.height = 0.45f * ConstVals.PPM
@@ -194,8 +195,11 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
         } else {
 
          */
+
+        // TODO: if these values are final, then move them out of the pre-process update
         body.height = 0.95f * ConstVals.PPM
         (playerFixture.rawShape as GameRectangle).height = ConstVals.PPM.toFloat()
+        (teleporterListenerFixture.rawShape as GameRectangle).height = ConstVals.PPM.toFloat()
         headFixture.offsetFromBodyCenter.y = ConstVals.PPM / 2f
         feetFixture.offsetFromBodyCenter.y = -ConstVals.PPM / 2f
         (leftFixture.rawShape as Rectangle).setHeight(0.6f /* 0.4f */ * ConstVals.PPM)
@@ -204,9 +208,12 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
 
         (bodyFixture.rawShape as Rectangle).set(body)
 
+        // TODO: see above TODO stub regarding ground sliding and body/fixtures sizes
+        /*
         val playerFixtureHeight = (if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) 0.25f else 0.5f) * ConstVals.PPM
         (playerFixture.rawShape as Rectangle).height = playerFixtureHeight
         (teleporterListenerFixture.rawShape as Rectangle).height = playerFixtureHeight
+         */
     })
 
     addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

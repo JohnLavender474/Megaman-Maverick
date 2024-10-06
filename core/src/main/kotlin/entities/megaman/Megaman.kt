@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.entities.megaman
 
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
@@ -34,6 +35,7 @@ import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.bosses.*
 import com.megaman.maverick.game.entities.bosses.gutstank.GutsTankFist
 import com.megaman.maverick.game.entities.bosses.sigmarat.SigmaRat
@@ -47,6 +49,7 @@ import com.megaman.maverick.game.entities.hazards.*
 import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOSION_ORB_SPEED
+import com.megaman.maverick.game.entities.megaman.extensions.clearFeetBlocks
 import com.megaman.maverick.game.entities.megaman.extensions.stopCharging
 import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.entities.projectiles.SniperJoeShield
@@ -217,7 +220,8 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         UFOhNoBot::class pairTo dmgNeg(3),
         TankBot::class pairTo dmgNeg(3),
         Darspider::class pairTo dmgNeg(3),
-        WalrusBot::class pairTo dmgNeg(3)
+        WalrusBot::class pairTo dmgNeg(3),
+        BigFishNeo::class pairTo dmgNeg(4)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 
@@ -388,9 +392,6 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         GameLogger.debug(TAG, "onSpawn(): spawnProps = $spawnProps")
         super.onSpawn(spawnProps)
 
-        setHealth(getMaxHealth())
-        weaponHandler.setAllToMaxAmmo()
-
         game.eventsMan.addListener(this)
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS) as GameRectangle
@@ -400,12 +401,20 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         directionRotation =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
 
+        setHealth(getMaxHealth())
+        weaponHandler.setAllToMaxAmmo()
+
         aButtonTask = AButtonTask.JUMP
         currentWeapon = MegamanWeapon.BUSTER
         running = false
         damageFlash = false
         canMove = true
         canBeDamaged = true
+        teleporting = false
+        gravityScalar = spawnProps.getOrDefault("${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}", 1f, Float::class)
+        movementScalar = spawnProps.getOrDefault("${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}", 1f, Float::class)
+        applyMovementScalarToBullet = spawnProps.getOrDefault(ConstKeys.APPLY_SCALAR_TO_CHILDREN, false, Boolean::class)
+        cameraRotating = false
 
         damageTimer.setToEnd()
         damageRecoveryTimer.setToEnd()
@@ -415,6 +424,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         wallJumpTimer.reset()
         chargingTimer.reset()
         airDashTimer.reset()
+        roomTransPauseTimer.setToEnd()
 
         putProperty(ConstKeys.ON_TELEPORT_START, {
             standardOnTeleportStart(this)
@@ -432,13 +442,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
             canBeDamaged = true
         })
 
-        teleporting = false
-        gravityScalar = spawnProps.getOrDefault("${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}", 1f, Float::class)
-        movementScalar = spawnProps.getOrDefault("${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}", 1f, Float::class)
-        applyMovementScalarToBullet = spawnProps.getOrDefault(ConstKeys.APPLY_SCALAR_TO_CHILDREN, false, Boolean::class)
-        cameraRotating = false
-
-        roomTransPauseTimer.setToEnd()
+        clearFeetBlocks()
     }
 
     override fun onDestroy() {

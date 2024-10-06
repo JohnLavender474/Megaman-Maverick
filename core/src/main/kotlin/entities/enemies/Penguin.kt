@@ -42,6 +42,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.isSensing
+import com.megaman.maverick.game.world.contacts.MegaContactListener
 import kotlin.math.abs
 import kotlin.reflect.KClass
 
@@ -50,15 +51,14 @@ class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     companion object {
         private var atlas: TextureAtlas? = null
         private const val STAND_DUR = 1f
-        private const val SLIDE_DUR = 0.25f
-        private const val G_GRAV = -0.0015f
+        private const val SLIDE_DUR = 0.2f
+        private const val G_GRAV = -0.001f
         private const val GRAV = -0.375f
-        private const val JUMP_X = 5f
-        private const val JUMP_Y = 10f
+        private const val JUMP_X = 6f
+        private const val JUMP_Y = 14f
         private const val SLIDE_X = 8f
     }
 
-    override var facing = Facing.RIGHT
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
         Bullet::class pairTo dmgNeg(10),
         Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
@@ -71,6 +71,7 @@ class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             if (it.fullyCharged) 10 else 5
         }
     )
+    override lateinit var facing: Facing
 
     val sliding: Boolean
         get() = !slideTimer.isFinished() && body.isSensing(BodySense.FEET_ON_GROUND)
@@ -94,10 +95,13 @@ class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         body.setBottomCenterToPoint(spawn)
         slideTimer.setToEnd()
         standTimer.reset()
+        facing = if (getMegaman().body.x > body.x) Facing.RIGHT else Facing.LEFT
     }
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
+        body.physics.defaultFrictionOnSelf.set(MegaContactListener.ICE_FRICTION, MegaContactListener.ICE_FRICTION)
+        body.physics.takeFrictionFromOthers = false
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle())
         body.addFixture(bodyFixture)
@@ -143,20 +147,21 @@ class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.75f * ConstVals.PPM)
-        val SpritesComponent = SpritesComponent(sprite)
-        SpritesComponent.putUpdateFunction { _, _sprite ->
+        val spritesComponent = SpritesComponent(sprite)
+        spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
             _sprite.setFlip(facing == Facing.LEFT, false)
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
             if (sliding) sprite.translateY(-0.25f * ConstVals.PPM)
         }
-        return SpritesComponent
+        return spritesComponent
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String = {
-            if (standing) if (abs(body.physics.velocity.x) > ConstVals.PPM / 4f) "slippin" else "stand"
-            else if (jumping) "jump" else "slide"
+        val keySupplier: () -> String? = {
+            if (standing) {
+                if (abs(body.physics.velocity.x) > 0.25f * ConstVals.PPM) "slippin" else "stand"
+            } else if (jumping) "jump" else "slide"
         }
         val animations =
             objectMapOf<String, IAnimation>(

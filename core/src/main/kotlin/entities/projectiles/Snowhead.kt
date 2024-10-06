@@ -109,7 +109,10 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
         explodeAndDie()
     }
 
-    override fun hitWater(waterFixture: IFixture) = explodeAndDie()
+    override fun hitWater(waterFixture: IFixture) {
+        bounceBullets(waterFixture.getShape())
+        explodeAndDie()
+    }
 
     override fun hitShield(shieldFixture: IFixture) {
         if (shieldFixture.getEntity() == owner) return

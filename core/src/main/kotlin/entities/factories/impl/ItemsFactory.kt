@@ -1,10 +1,5 @@
 package com.megaman.maverick.game.entities.factories.impl
 
-import com.mega.game.engine.world.body.*;
-import com.mega.game.engine.world.collisions.*;
-import com.mega.game.engine.world.contacts.*;
-import com.mega.game.engine.world.pathfinding.*;
-
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.factories.EntityFactory
 import com.megaman.maverick.game.entities.factories.GameEntityPoolCreator
@@ -15,6 +10,7 @@ class ItemsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
 
     companion object {
         const val HEALTH_BULB = "HealthBulb"
+        const val WEAPON_ENERGY = "WeaponEnergy"
         const val HEART_TANK = "HeartTank"
         const val ARMOR_PIECE = "ArmorPiece"
         const val HEALTH_TANK = "HealthTank"

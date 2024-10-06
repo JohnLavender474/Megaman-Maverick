@@ -5,6 +5,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.getRandom
+import com.mega.game.engine.common.getRandomBool
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -13,7 +14,6 @@ import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.sprites.SpritesComponent
-import com.mega.game.engine.entities.GameEntity
 import com.mega.game.engine.entities.contracts.IAudioEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
@@ -41,6 +41,8 @@ abstract class AbstractEnemy(
     companion object {
         const val TAG = "AbstractEnemy"
         const val DEFAULT_CULL_TIME = 1f
+        const val BASE_DROP_ITEM_CHANCE = 0.2f
+        const val MEGAMAN_HEALTH_INFLUENCE_FACTOR = 0.3f
     }
 
     protected var movementScalar = 1f
@@ -59,22 +61,23 @@ abstract class AbstractEnemy(
             if (hasDepletedHealth()) {
                 disintegrate()
                 if (dropItemOnDeath) {
-                    val randomInt = getRandom(0, 10)
-                    val props = props(ConstKeys.POSITION pairTo body.getCenter())
-                    val entity: GameEntity? = when (randomInt) {
-                        0, 1, 2 -> {
-                            props.put(ConstKeys.LARGE, randomInt == 1)
+                    val playerHealthModifier =
+                        1f - getMegaman().getCurrentHealth().toFloat() / getMegaman().getMaxHealth().toFloat()
+                    val dropChance = BASE_DROP_ITEM_CHANCE + (playerHealthModifier * MEGAMAN_HEALTH_INFLUENCE_FACTOR)
+                    val rand = getRandom(0f, 1f)
+                    GameLogger.debug(
+                        TAG,
+                        "Player health modifier = $playerHealthModifier. Drop chance = $dropChance. Random: $rand"
+                    )
+                    if (rand < dropChance) {
+                        val props = props(ConstKeys.POSITION pairTo body.getCenter())
+                        val spawnHealth = getRandomBool()
+                        val entity = if (spawnHealth) {
+                            props.put(ConstKeys.LARGE, getRandomBool())
                             EntityFactories.fetch(EntityType.ITEM, ItemsFactory.HEALTH_BULB)
-                        }
-
-                        3, 4, 5 -> {
-                            // TODO: EntityFactories.fetch(EntityType.ITEM, ItemsFactory.WEAPON_ENERGY)
-                            null
-                        }
-
-                        else -> null
+                        } else EntityFactories.fetch(EntityType.ITEM, ItemsFactory.WEAPON_ENERGY)
+                        entity?.spawn(props)
                     }
-                    entity?.spawn(props)
                 }
             }
         }

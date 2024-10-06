@@ -2,7 +2,7 @@ package com.megaman.maverick.game.entities.megaman.constants
 
 object MegamanValues {
     const val MAX_WEAPON_AMMO = 30
-    const val START_HEALTH = 30 // 14
+    const val START_HEALTH = 14
 
     const val CART_RIDE_MAX_SPEED = 14f
     const val CART_RIDE_ACCELERATION = 1.15f
@@ -12,7 +12,6 @@ object MegamanValues {
     const val CLAMP_X = 25f
     const val CLAMP_Y = 50f
 
-
     const val RUN_SPEED = 4.5f
     const val RUN_IMPULSE = 35f
     const val ICE_RUN_IMPULSE = 15f
@@ -21,8 +20,8 @@ object MegamanValues {
     const val WATER_GRAVITY_SCALAR = 0.5f
     const val SWIM_VEL_Y = 14f
 
-    const val JUMP_VEL = 24f
-    const val WALL_JUMP_VEL = 32f // 42f, 12f
+    const val JUMP_VEL = 26f
+    const val WALL_JUMP_VEL = 34f // 42f, 12f
 
     const val WALL_SLIDE_FRICTION_TO_APPLY = 2.5f // 150f
 

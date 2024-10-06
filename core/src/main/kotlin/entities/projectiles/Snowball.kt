@@ -70,8 +70,7 @@ class Snowball(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
-        val explosion =
-            EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SNOWBALL_EXPLOSION)!!
+        val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SNOWBALL_EXPLOSION)!!
         explosion.spawn(
             props(
                 ConstKeys.POSITION pairTo body.getCenter(),

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="1200" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="313">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="1200" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="314">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/Gravity Man Stage.tsx"/>
  <tileset firstgid="4609" source="../tsx/MM3Wily1.tsx"/>
@@ -234,6 +234,11 @@
     <property name="on_min" type="float" value="2"/>
    </properties>
   </object>
+  <object id="313" name="BigFishNeo" x="21296" y="240" width="32" height="32">
+   <properties>
+    <property name="value" type="float" value="-5"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="10" name="children">
   <object id="97" name="GravityChange" x="11936" y="96" width="384" height="320">
@@ -422,7 +427,7 @@
     <property name="type" value="p"/>
    </properties>
   </object>
-  <object id="311" name="Saw" x="21424" y="264" width="32" height="32">
+  <object id="311" name="Saw" x="21520" y="328" width="32" height="32">
    <properties>
     <property name="spawn_room" value="room12"/>
     <property name="spawn_type" value="spawn_room"/>

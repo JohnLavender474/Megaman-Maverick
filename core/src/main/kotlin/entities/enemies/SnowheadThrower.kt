@@ -80,7 +80,6 @@ class SnowheadThrower(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
     private val standTimer = Timer(STAND_DUR)
     private val throwTimer = Timer(THROW_DUR)
     private val throwDelay = Timer(THROW_DELAY)
-
     private var throwing = false
 
     override fun init() {
@@ -115,7 +114,7 @@ class SnowheadThrower(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
     }
 
     private fun throwHead() {
-        val spawn = body.getTopCenterPoint().sub(0f, 0.35f * ConstVals.PPM)
+        val spawn = body.getTopCenterPoint().sub(0f, 0.1f * ConstVals.PPM)
         val trajectory = Vector2(SNOW_HEAD_X_VEL * facing.value, SNOW_HEAD_Y_VEL).scl(ConstVals.PPM.toFloat())
         val snowhead = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SNOW_HEAD)!!
         snowhead.spawn(

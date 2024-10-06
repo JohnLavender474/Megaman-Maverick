@@ -10,7 +10,6 @@ buildscript {
   }
   dependencies {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-
   }
 }
 
@@ -56,7 +55,7 @@ configure(subprojects) {
     options.incremental = true
   }
   compileKotlin.compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
-  
+
 }
 
 subprojects {

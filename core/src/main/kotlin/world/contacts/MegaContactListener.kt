@@ -7,7 +7,6 @@ import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.objectSetOf
-
 import com.mega.game.engine.common.shapes.GameLine
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.ShapeUtils
@@ -27,6 +26,9 @@ import com.megaman.maverick.game.entities.decorations.Splash
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
+import com.megaman.maverick.game.entities.megaman.extensions.addFeetBlock
+import com.megaman.maverick.game.entities.megaman.extensions.hasAnyFeetBlock
+import com.megaman.maverick.game.entities.megaman.extensions.removeFeetBlock
 import com.megaman.maverick.game.entities.sensors.Gate
 import com.megaman.maverick.game.entities.sensors.Gate.GateState
 import com.megaman.maverick.game.entities.special.Cart
@@ -41,8 +43,8 @@ class MegaContactListener(
 
     companion object {
         const val TAG = "MegaContactListener"
-        const val FEET_ON_ICE_FRICTION = 1.0175f
-        const val FEET_ON_SAND_FRICTION = 1.15f
+        const val ICE_FRICTION = 1.0175f
+        const val SAND_FRICTION = 1.15f
     }
 
     private fun printDebugLog(contact: Contact, log: String) {
@@ -165,6 +167,11 @@ class MegaContactListener(
             printDebugLog(contact, "beginContact(): Side-Ice, contact = $contact")
             val (sideFixture, _) = contact.getFixturesInOrder(FixtureType.SIDE, FixtureType.ICE)!!
             val body = sideFixture.getBody()
+
+            val entity = body.getEntity()
+            if (entity is Megaman && entity.isBehaviorActive(BehaviorType.WALL_SLIDING))
+                body.physics.frictionOnSelf.y = ICE_FRICTION
+
             val sideType = sideFixture.getProperty(ConstKeys.SIDE)
             if (sideType == ConstKeys.LEFT) body.setBodySense(BodySense.SIDE_TOUCHING_ICE_LEFT, true)
             else body.setBodySense(BodySense.SIDE_TOUCHING_ICE_RIGHT, true)
@@ -174,20 +181,28 @@ class MegaContactListener(
         else if (contact.fixturesMatch(FixtureType.FEET, FixtureType.BLOCK)) {
             printDebugLog(contact, "beginContact(): Feet-Block, contact = $contact")
             val (feetFixture, blockFixture) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.BLOCK)!!
+
             val body = feetFixture.getBody()
             if (!blockFixture.getBody().physics.collisionOn) {
                 body.setBodySense(BodySense.FEET_ON_GROUND, false)
                 return
             }
+
             val stickToBlock = feetFixture.getOrDefaultProperty(ConstKeys.STICK_TO_BLOCK, true, Boolean::class)
             if (stickToBlock) {
                 val posDelta = blockFixture.getBody().getPositionDelta()
                 body.x += posDelta.x
                 body.y += posDelta.y
             }
+
             val entity = feetFixture.getEntity()
-            if (entity is Megaman) entity.aButtonTask = AButtonTask.JUMP
+            if (entity is Megaman) {
+                entity.aButtonTask = AButtonTask.JUMP
+                entity.addFeetBlock(blockFixture.getEntity() as Block)
+            }
+
             body.setBodySense(BodySense.FEET_ON_GROUND, true)
+
             val block = blockFixture.getEntity() as Block
             block.hitByFeet(feetFixture)
             if (feetFixture.hasHitByBlockReceiver()) feetFixture.getHitByBlock(block)
@@ -197,9 +212,11 @@ class MegaContactListener(
         else if (contact.fixturesMatch(FixtureType.FEET, FixtureType.ICE)) {
             printDebugLog(contact, "beginContact(): Feet-Ice, contact = $contact")
             val (feetFixture, _) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.ICE)!!
+
             val body = feetFixture.getBody()
             body.setBodySense(BodySense.FEET_ON_ICE, true)
-            body.physics.frictionOnSelf.set(FEET_ON_ICE_FRICTION, FEET_ON_ICE_FRICTION)
+
+            body.physics.frictionOnSelf.x = ICE_FRICTION
         }
 
         // feet, sand
@@ -208,7 +225,7 @@ class MegaContactListener(
             val (feetFixture, _) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.SAND)!!
             val body = feetFixture.getBody()
             body.setBodySense(BodySense.FEET_ON_SAND, true)
-            body.physics.frictionOnSelf.set(FEET_ON_SAND_FRICTION, FEET_ON_SAND_FRICTION).scl(ConstVals.PPM.toFloat())
+            body.physics.frictionOnSelf.set(SAND_FRICTION, SAND_FRICTION).scl(ConstVals.PPM.toFloat())
         }
 
         // bouncer, feet or head or side
@@ -513,19 +530,25 @@ class MegaContactListener(
         // feet, block
         else if (contact.fixturesMatch(FixtureType.FEET, FixtureType.BLOCK)) {
             val (feetFixture, blockFixture) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.BLOCK)!!
+
             val body = feetFixture.getBody()
             if (!blockFixture.getBody().physics.collisionOn) {
                 body.setBodySense(BodySense.FEET_ON_GROUND, false)
                 return
             }
+
             val stickToBlock = feetFixture.getOrDefaultProperty(ConstKeys.STICK_TO_BLOCK, true, Boolean::class)
             if (stickToBlock) {
                 val posDelta = blockFixture.getBody().getPositionDelta()
                 body.x += posDelta.x
                 body.y += posDelta.y
             }
+
             val entity = feetFixture.getEntity()
-            if (entity is Megaman) entity.aButtonTask = AButtonTask.JUMP
+            if (entity is Megaman) {
+                entity.aButtonTask = AButtonTask.JUMP
+                entity.addFeetBlock(blockFixture.getEntity() as Block)
+            }
             body.setBodySense(BodySense.FEET_ON_GROUND, true)
         }
 
@@ -577,7 +600,9 @@ class MegaContactListener(
         else if (contact.fixturesMatch(FixtureType.FEET, FixtureType.ICE)) {
             val (feetFixture, _) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.ICE)!!
             val body = feetFixture.getBody()
+
             body.setBodySense(BodySense.FEET_ON_ICE, true)
+
             val entity = feetFixture.getEntity()
             if (entity is Megaman) {
                 if (entity.body.isSensing(BodySense.FEET_ON_GROUND) && (entity.body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && entity.isFacing(
@@ -585,7 +610,8 @@ class MegaContactListener(
                     ) || (entity.body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) && entity.isFacing(Facing.RIGHT)))
                 ) return
             }
-            body.physics.frictionOnSelf.set(FEET_ON_ICE_FRICTION, FEET_ON_ICE_FRICTION)
+
+            body.physics.frictionOnSelf.x = ICE_FRICTION
         }
 
         // feet, sand
@@ -594,7 +620,7 @@ class MegaContactListener(
             val (feetFixture, _) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.SAND)!!
             val body = feetFixture.getBody()
             body.setBodySense(BodySense.FEET_ON_SAND, true)
-            body.physics.frictionOnSelf.set(FEET_ON_SAND_FRICTION, FEET_ON_SAND_FRICTION).scl(ConstVals.PPM.toFloat())
+            body.physics.frictionOnSelf.set(SAND_FRICTION, SAND_FRICTION).scl(ConstVals.PPM.toFloat())
         }
 
         // water listener, water
@@ -685,6 +711,11 @@ class MegaContactListener(
         else if (contact.fixturesMatch(FixtureType.SIDE, FixtureType.ICE)) {
             val (sideFixture, _) = contact.getFixturesInOrder(FixtureType.SIDE, FixtureType.ICE)!!
             val body = sideFixture.getBody()
+
+            val entity = body.getEntity()
+            if (entity is Megaman && entity.isBehaviorActive(BehaviorType.WALL_SLIDING))
+                body.physics.frictionOnSelf.y = ICE_FRICTION
+
             val sideType = sideFixture.getProperty(ConstKeys.SIDE)
             if (sideType == ConstKeys.LEFT) body.setBodySense(BodySense.SIDE_TOUCHING_ICE_LEFT, true)
             else body.setBodySense(BodySense.SIDE_TOUCHING_ICE_RIGHT, true)
@@ -722,7 +753,9 @@ class MegaContactListener(
         else if (contact.fixturesMatch(FixtureType.SIDE, FixtureType.ICE)) {
             printDebugLog(contact, "End Contact: Side-Ice, contact = $contact")
             val (sideFixture, _) = contact.getFixturesInOrder(FixtureType.SIDE, FixtureType.ICE)!!
+
             val body = sideFixture.getBody()
+
             val sideType = sideFixture.getProperty(ConstKeys.SIDE)
             if (sideType == ConstKeys.LEFT) body.setBodySense(BodySense.SIDE_TOUCHING_ICE_LEFT, false)
             else body.setBodySense(BodySense.SIDE_TOUCHING_ICE_RIGHT, false)
@@ -731,12 +764,16 @@ class MegaContactListener(
         // feet, block
         else if (contact.fixturesMatch(FixtureType.FEET, FixtureType.BLOCK)) {
             printDebugLog(contact, "End Contact: Feet-Block, contact = $contact")
-            val (feetFixture, _) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.BLOCK)!!
+            val (feetFixture, blockFixture) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.BLOCK)!!
+
             val body = feetFixture.getBody()
-            body.setBodySense(BodySense.FEET_ON_GROUND, false)
             val entity = feetFixture.getEntity()
-            if (entity is Megaman) entity.aButtonTask = if (entity.body.isSensing(BodySense.IN_WATER)) AButtonTask.SWIM
-            else AButtonTask.AIR_DASH
+            if (entity is Megaman) {
+                entity.aButtonTask =
+                    if (entity.body.isSensing(BodySense.IN_WATER)) AButtonTask.SWIM else AButtonTask.AIR_DASH
+                entity.removeFeetBlock(blockFixture.getEntity() as Block)
+                if (!entity.hasAnyFeetBlock()) body.setBodySense(BodySense.FEET_ON_GROUND, false)
+            } else body.setBodySense(BodySense.FEET_ON_GROUND, false)
         }
 
         // feet, ice

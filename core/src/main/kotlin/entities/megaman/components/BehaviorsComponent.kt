@@ -146,7 +146,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     Direction.RIGHT -> velocity.x > 0f
                 }
             } else aButtonTask == AButtonTask.JUMP && game.controllerPoller.isJustPressed(MegaControllerButtons.A) &&
-                    (body.isSensing(BodySense.FEET_ON_GROUND) || isBehaviorActive(BehaviorType.WALL_SLIDING))
+                (body.isSensing(BodySense.FEET_ON_GROUND) || isBehaviorActive(BehaviorType.WALL_SLIDING))
         },
         init = {
             val v = Vector2()
@@ -203,10 +203,10 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             return if (isBehaviorActive(BehaviorType.AIR_DASHING))
                 game.controllerPoller.isPressed(MegaControllerButtons.A)
             else aButtonTask == AButtonTask.AIR_DASH &&
-                    game.controllerPoller.isJustPressed(MegaControllerButtons.A) &&
-                    game.controllerPoller.isReleased(MegaControllerButtons.DOWN) &&
-                    (if (currentWeapon == MegamanWeapon.RUSH_JETPACK)
-                        game.controllerPoller.isReleased(MegaControllerButtons.UP) else true)
+                game.controllerPoller.isJustPressed(MegaControllerButtons.A) &&
+                game.controllerPoller.isReleased(MegaControllerButtons.DOWN) &&
+                (if (currentWeapon == MegamanWeapon.RUSH_JETPACK)
+                    game.controllerPoller.isReleased(MegaControllerButtons.UP) else true)
         }
 
         override fun init() {
@@ -218,7 +218,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             if (isDirectionRotatedVertically()) impulse.y = 0f else impulse.x = 0f
 
             val impulseValue = facing.value * ConstVals.PPM * movementScalar *
-                    (if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_AIR_DASH_VEL else MegamanValues.AIR_DASH_VEL)
+                (if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_AIR_DASH_VEL else MegamanValues.AIR_DASH_VEL)
             when (directionRotation!!) {
                 Direction.UP, Direction.DOWN -> impulse.x = impulseValue
 
@@ -479,7 +479,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
         override fun evaluate(delta: Float) =
             !dead && ready && body.isSensing(BodySense.TOUCHING_CART) &&
-                    !game.controllerPoller.areAllPressed(gdxArrayOf(MegaControllerButtons.A, MegaControllerButtons.UP))
+                !game.controllerPoller.areAllPressed(gdxArrayOf(MegaControllerButtons.A, MegaControllerButtons.UP))
 
         override fun init() {
             body.physics.velocity.setZero()
@@ -542,14 +542,14 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         override fun evaluate(delta: Float): Boolean {
             if (dead || !ready || !canMove || damaged || teleporting || currentWeapon != MegamanWeapon.RUSH_JETPACK ||
                 !game.controllerPoller.areAllPressed(gdxArrayOf(MegaControllerButtons.A, MegaControllerButtons.UP)) ||
-                body.isSensing(BodySense.FEET_ON_GROUND) || weaponHandler.isDepleted(MegamanWeapon.RUSH_JETPACK) ||
-                isAnyBehaviorActive(BehaviorType.WALL_SLIDING, BehaviorType.AIR_DASHING, BehaviorType.GROUND_SLIDING)
+                isAnyBehaviorActive(BehaviorType.WALL_SLIDING, BehaviorType.AIR_DASHING, BehaviorType.GROUND_SLIDING) ||
+                body.isSensingAny(BodySense.FEET_ON_GROUND, BodySense.IN_WATER) ||
+                weaponHandler.isDepleted(MegamanWeapon.RUSH_JETPACK)
             ) return false
 
             return if (isBehaviorActive(BehaviorType.JETPACKING)) game.controllerPoller.areAllPressed(
                 gdxArrayOf(MegaControllerButtons.A, MegaControllerButtons.UP)
-            )
-            else game.controllerPoller.allMatch(
+            ) else game.controllerPoller.allMatch(
                 objectMapOf(
                     MegaControllerButtons.UP pairTo ButtonStatus.PRESSED,
                     MegaControllerButtons.A pairTo ButtonStatus.JUST_PRESSED

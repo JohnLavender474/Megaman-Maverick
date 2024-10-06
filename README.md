@@ -147,6 +147,11 @@ comprehensive listing of the credits for the artwork used in this game.
 - Nuclear Monkey spritesheet - [Balloon Cart](https://balloon-cart.itch.io/reactor-man-asset-pack)
 - Sphinx spritesheet - [Mister Mike](https://www.spriters-resource.com/custom_edited/megamancustoms/sheet/108177/)
 
+#### Enemies
+- Sprites by [MegaRed225](https://www.deviantart.com/megared225/gallery):
+  - [Random Enemies Set 5](https://www.deviantart.com/megared225/art/Random-Enemies-Set-5-517418497):
+    - Big Fish Neo 
+
 #### Tilesets
 
 - [Balloon Cart (Reactor Man)](https://balloon-cart.itch.io/reactor-man-asset-pack)
@@ -155,7 +160,7 @@ comprehensive listing of the credits for the artwork used in this game.
 - [Mega 8-Bit](https://assetstore.unity.com/packages/2d/environments/mega-8-bit-pixel-pack-60158?srsltid=AfmBOordeWICo0KR-N3MKcw6iqd2TehrlFgQn6Hijzmk09-2eoq2Gid0)
 - TODO: All other tilesets ripped from Capcom's official Megaman games via the Spriter's Resource website (TODO: will provide links and credits for each tileset used from here)
 
-#### Music
+### Music
 
 - MMX6 Blaze Heatnix - [Famitard](https://youtu.be/QpbMwCnJDSo) - used in Inferno Man stage
 - MMX5 Dark Necrobat - [Famitard](https://youtu.be/RosxPCxVOyk) - used in Moon Man stage
@@ -171,12 +176,12 @@ comprehensive listing of the credits for the artwork used in this game.
 - MMX5 Volt Kraken - [Famitard](https://www.youtube.com/watch?v=xi7Odov_rek&ab_channel=FamiTard)
 - TODO: Other music tracks are saved in the `assets` dir but not yet used in the game; these will be added here as they're added to the game
 
-####
+### Sounds
 
 Sounds belong to Capcom (Megaman-ripped sound effects) and Nintendo (Mario-ripped sound effects)
 TODO: add credits and links here for where the sounds were downloaded from
 
-####
+---
 
 **PROOF OF PERMISSIONS FOR COMMUNITY ASSETS**
 

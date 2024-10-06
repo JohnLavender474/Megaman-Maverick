@@ -62,14 +62,16 @@ class HeartTank(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, I
         super.onSpawn(spawnProps)
 
         heartTank = MegaHeartTank.get(spawnProps.get(ConstKeys.VALUE, String::class)!!.uppercase())
-        upsideDown = spawnProps.getOrDefault(ConstKeys.UPSIDE_DOWN, false) as Boolean
+        if (getMegaman().has(heartTank)) {
+            destroy()
+            return
+        }
 
-        if (getMegaman().has(heartTank)) destroy()
+        upsideDown = spawnProps.getOrDefault(ConstKeys.UPSIDE_DOWN, false, Boolean::class)
 
         val spawn = if (spawnProps.containsKey(ConstKeys.BOUNDS))
             spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         else spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-
         body.setBottomCenterToPoint(spawn)
     }
 

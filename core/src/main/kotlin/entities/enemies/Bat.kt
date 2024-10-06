@@ -77,7 +77,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
         private const val DEBUG_PATHFINDING_DURATION = 1f
         private const val HANG_DURATION = 0.75f
         private const val RELEASE_FROM_PERCH_DURATION = 0.25f
-        private const val DEFAULT_FLY_TO_ATTACK_SPEED = 4f
+        private const val DEFAULT_FLY_TO_ATTACK_SPEED = 3f
         private const val DEFAULT_FLY_TO_RETREAT_SPEED = 8f
         private const val PATHFINDING_UPDATE_INTERVAL = 0.05f
     }

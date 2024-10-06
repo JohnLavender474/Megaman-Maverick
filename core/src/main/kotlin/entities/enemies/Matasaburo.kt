@@ -30,13 +30,12 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
+import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.VelocityAlteration
-
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getEntity
@@ -91,8 +90,12 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         )
         blowFixture.setVelocityAlteration { fixture, _ ->
             val entity = fixture.getEntity()
+            if (entity !is Megaman) return@setVelocityAlteration VelocityAlteration.addNone()
+            /*
+            TODO: for now, ONLY apply force to Megaman and no other entities
             if (entity is AbstractEnemy) return@setVelocityAlteration VelocityAlteration.addNone()
             if (entity is AbstractProjectile) entity.owner = null
+             */
             val force = BLOW_FORCE * ConstVals.PPM * facing.value
             return@setVelocityAlteration VelocityAlteration.add(force, 0f)
         }

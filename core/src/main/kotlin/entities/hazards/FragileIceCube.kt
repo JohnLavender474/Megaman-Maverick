@@ -54,7 +54,7 @@ class FragileIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         const val TAG = "FragileIceCube"
         private const val GRAVITY = -0.15f
         private const val GROUND_GRAVITY = -0.01f
-        private const val CLAMP = 8f
+        private const val CLAMP = 12f
         private const val CULL_TIME = 2f
         private const val MAX_HIT_BLOCK_TIMES = 1
         private var region1: TextureRegion? = null
@@ -106,7 +106,8 @@ class FragileIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         body.setSize(0.5f * ConstVals.PPM)
         body.physics.velocityClamp.set(CLAMP * ConstVals.PPM)
 
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(0.51f * ConstVals.PPM))
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(0.55f * ConstVals.PPM))
+        bodyFixture.setHitByBodyReceiver { entity -> if (entity is FragileIceCube) shatterAndDie() }
         bodyFixture.setHitByPlayerReceiver { shatterAndDie() }
         bodyFixture.setHitByProjectileReceiver { shatterAndDie() }
         body.addFixture(bodyFixture)
@@ -137,7 +138,6 @@ class FragileIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         body.preProcess.put(ConstKeys.DEFAULT) {
             val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
             body.physics.gravity.y = gravity * ConstVals.PPM
-
             if (body.isSensing(BodySense.FEET_ON_GROUND)) body.physics.velocity.y = 0f
         }
 
