@@ -44,6 +44,7 @@ import com.megaman.maverick.game.entities.hazards.UnderwaterFan
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
+import com.megaman.maverick.game.entities.projectiles.FallingIcicle
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodySense
@@ -66,7 +67,8 @@ class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
         ChargedShot::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
         ChargedShotExplosion::class pairTo dmgNeg(15),
-        UnderwaterFan::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
+        UnderwaterFan::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        FallingIcicle::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
     )
     override lateinit var facing: Facing
 

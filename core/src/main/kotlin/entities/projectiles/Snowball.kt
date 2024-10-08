@@ -85,7 +85,8 @@ class Snowball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.15f * ConstVals.PPM)
         body.physics.velocityClamp.set(CLAMP * ConstVals.PPM.toFloat(), CLAMP * ConstVals.PPM.toFloat())
-        body.physics.takeFrictionFromOthers = false
+        body.physics.applyFrictionX = false
+body.physics.applyFrictionY = false
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         body.addFixture(bodyFixture)

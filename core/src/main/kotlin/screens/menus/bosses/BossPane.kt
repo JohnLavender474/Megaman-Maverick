@@ -12,7 +12,7 @@ import com.mega.game.engine.drawables.IDrawable
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
-import entities.bosses.BossType
+import com.megaman.maverick.game.entities.bosses.BossType
 import java.util.function.Supplier
 
 class BossPane(

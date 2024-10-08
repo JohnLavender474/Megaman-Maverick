@@ -167,7 +167,8 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.physics.takeFrictionFromOthers = false
+        body.physics.applyFrictionX = false
+body.physics.applyFrictionY = false
         body.setSize(0.6f * ConstVals.PPM)
         body.color = Color.GRAY
 

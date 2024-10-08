@@ -112,7 +112,7 @@ class ReactMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
     override fun init() {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES.source)
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
             ReactManState.values().forEach {
                 val region = atlas.findRegion("ReactMan/${it.regionName}")
                 regions.put(it.regionName, region)

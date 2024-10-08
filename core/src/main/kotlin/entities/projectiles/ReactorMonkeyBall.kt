@@ -70,7 +70,8 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(2f * ConstVals.PPM)
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
-        body.physics.takeFrictionFromOthers = false
+        body.physics.applyFrictionX = false
+body.physics.applyFrictionY = false
 
         val shieldFixture = Fixture(body, FixtureType.SHIELD, GameCircle().setRadius(ConstVals.PPM.toFloat()))
         body.addFixture(shieldFixture)

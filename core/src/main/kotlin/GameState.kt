@@ -4,10 +4,10 @@ import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.points.Points
+import com.megaman.maverick.game.entities.bosses.BossType
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
-import entities.bosses.BossType
 
 data class GameState(
     var bossesDefeated: ObjectSet<BossType> = ObjectSet(),

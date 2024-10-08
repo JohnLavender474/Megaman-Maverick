@@ -155,7 +155,8 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.physics.takeFrictionFromOthers = false
+        body.physics.applyFrictionX = false
+body.physics.applyFrictionY = false
         val debugShapes = gdxArrayOf<() -> IDrawableShape?>({ body })
         body.preProcess.put(ConstKeys.DEFAULT) { delta ->
             body.physics.velocity.set(trajectory)

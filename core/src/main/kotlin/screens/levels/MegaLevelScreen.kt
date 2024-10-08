@@ -85,9 +85,6 @@ class MegaLevelScreen(
         const val MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG = "MegaLevelScreenEventListener"
         private const val ROOM_DISTANCE_ON_TRANSITION = 2f
         private const val TRANSITION_SCANNER_SIZE = 5f
-        private const val DEFAULT_BACKGROUND_PARALLAX_FACTOR_X = 0.5f
-        private const val DEFAULT_BACKGROUND_PARALLAX_FACTOR_Y = 0f
-        private const val DEFAULT_FOREGROUND_PARALLAX_FACTOR = 2f
         private const val FADE_OUT_MUSIC_ON_BOSS_SPAWN = 1f
         private const val DEBUG_PRINT_DELAY = 2f
     }
@@ -146,20 +143,14 @@ class MegaLevelScreen(
 
     private lateinit var drawables: ObjectMap<DrawingSection, PriorityQueue<IComparableDrawable<Batch>>>
     private lateinit var shapes: PriorityQueue<IDrawableShape>
-    private lateinit var backgrounds: Array<Background>
+    private lateinit var backgrounds: PriorityQueue<Background>
 
-    private lateinit var backgroundCamera: RotatableCamera
     private lateinit var gameCamera: RotatableCamera
     private lateinit var cameraManagerForRooms: CameraManagerForRooms
     private lateinit var gameCameraShaker: CameraShaker
-    private lateinit var foregroundCamera: OrthographicCamera
     private lateinit var uiCamera: OrthographicCamera
 
     private val disposables = Array<Disposable>()
-
-    private var backgroundParallaxFactorX = DEFAULT_BACKGROUND_PARALLAX_FACTOR_X
-    private var backgroundParallaxFactorY = DEFAULT_BACKGROUND_PARALLAX_FACTOR_Y
-    private var foregroundParallaxFactor = DEFAULT_FOREGROUND_PARALLAX_FACTOR
 
     private val gameCameraPriorPosition = Vector3()
     private var camerasSetToGameCamera = false
@@ -179,9 +170,7 @@ class MegaLevelScreen(
         endLevelEventHandler = EndLevelEventHandler(game)
         drawables = game.getDrawables()
         shapes = game.getShapes()
-        backgroundCamera = game.getBackgroundCamera()
         gameCamera = game.getGameCamera()
-        foregroundCamera = game.getForegroundCamera()
         uiCamera = game.getUiCamera()
         playerSpawnsMan = PlayerSpawnsManager(gameCamera)
         playerStatsHandler = PlayerStatsHandler(megaman)
@@ -269,6 +258,7 @@ class MegaLevelScreen(
         super.show()
         eventsMan.addListener(this)
         engine.systems.forEach { it.on = true }
+        game.setCurrentRoomSupplier { cameraManagerForRooms.currentGameRoom?.name }
         music?.let { audioMan.playMusic(it, true) }
         if (tiledMapLoadResult == null) throw IllegalStateException("No tiled map load result found in level screen")
         game.setTiledMapLoadResult(tiledMapLoadResult!!)
@@ -291,23 +281,10 @@ class MegaLevelScreen(
 
         playerSpawnEventHandler.init()
 
-        val mapProps = map.properties.toProps()
-        backgroundParallaxFactorX = mapProps.getOrDefault(
-            ConstKeys.BACKGROUND_PARALLAX_FACTOR_X, DEFAULT_BACKGROUND_PARALLAX_FACTOR_X, Float::class
-        )
-        backgroundParallaxFactorY = mapProps.getOrDefault(
-            ConstKeys.BACKGROUND_PARALLAX_FACTOR_Y, DEFAULT_BACKGROUND_PARALLAX_FACTOR_Y, Float::class
-        )
-        foregroundParallaxFactor = mapProps.getOrDefault(
-            ConstKeys.FOREGROUND_PARALLAX_FACTOR, DEFAULT_FOREGROUND_PARALLAX_FACTOR, Float::class
-        )
         camerasSetToGameCamera = false
         gameCameraPriorPosition.setZero()
-        backgroundCamera.position.set(ConstFuncs.getCamInitPos())
         gameCamera.position.set(ConstFuncs.getCamInitPos())
-        foregroundCamera.position.set(ConstFuncs.getCamInitPos())
         uiCamera.position.set(ConstFuncs.getCamInitPos())
-        backgroundCamera.reset()
         gameCamera.reset()
         showBackgrounds = true
     }
@@ -315,7 +292,7 @@ class MegaLevelScreen(
     override fun getLayerBuilders() = MegaMapLayerBuilders(MegaMapLayerBuildersParams(game, spawnsMan))
 
     override fun buildLevel(result: Properties) {
-        backgrounds = result.get(ConstKeys.BACKGROUNDS) as Array<Background>? ?: Array()
+        backgrounds = result.get(ConstKeys.BACKGROUNDS) as PriorityQueue<Background>? ?: PriorityQueue()
 
         val playerSpawns =
             result.get("${ConstKeys.PLAYER}_${ConstKeys.SPAWNS}") as Array<RectangleMapObject>? ?: Array()
@@ -352,7 +329,7 @@ class MegaLevelScreen(
                     "onEvent(): Player spawn --> reset camera manager for rooms and spawn megaman"
                 )
                 cameraManagerForRooms.reset()
-                backgroundCamera.immediateRotation(Direction.UP)
+                backgrounds.forEach { background -> background.immediateRotation(Direction.UP) }
                 gameCamera.immediateRotation(Direction.UP)
 
                 GameLogger.debug(
@@ -562,7 +539,12 @@ class MegaLevelScreen(
                 game.setCameraRotating(true)
                 MegaGameEntitiesMap.getEntitiesOfType(EntityType.PROJECTILE).forEach { it.destroy() }
                 val direction = event.getProperty(ConstKeys.DIRECTION, Direction::class)!!
-                backgroundCamera.startRotation(direction, ConstVals.GAME_CAM_ROTATE_TIME)
+                backgrounds.forEach { background ->
+                    background.startRotation(
+                        direction,
+                        ConstVals.GAME_CAM_ROTATE_TIME
+                    )
+                }
                 gameCamera.startRotation(direction, ConstVals.GAME_CAM_ROTATE_TIME)
             }
         }
@@ -576,7 +558,7 @@ class MegaLevelScreen(
         }
 
         if (game.paused && (!playerStatsHandler.finished || !playerSpawnEventHandler.finished ||
-                    !playerDeathEventHandler.finished)
+                !playerDeathEventHandler.finished)
         ) game.resume()
 
         if (!game.paused) {
@@ -601,7 +583,6 @@ class MegaLevelScreen(
 
             backgrounds.forEach { it.update(delta) }
             cameraManagerForRooms.update(delta)
-            backgroundCamera.update(delta)
             gameCamera.update(delta)
             if (!gameCameraShaker.isFinished) gameCameraShaker.update(delta)
 
@@ -615,15 +596,12 @@ class MegaLevelScreen(
 
         val gameCamDeltaX = gameCamera.position.x - gameCameraPriorPosition.x
         val gameCamDeltaY = gameCamera.position.y - gameCameraPriorPosition.y
-        backgroundCamera.position.x += gameCamDeltaX * backgroundParallaxFactorX
-        backgroundCamera.position.y += gameCamDeltaY * backgroundParallaxFactorY
+        backgrounds.forEach { background -> background.move(gameCamDeltaX, gameCamDeltaY) }
         gameCameraPriorPosition.set(gameCamera.position)
 
         val batch = game.batch
-
-        game.viewports.get(ConstKeys.BACKGROUND).apply()
         batch.begin()
-        batch.projectionMatrix = backgroundCamera.combined
+
         if (showBackgrounds) backgrounds.forEach { it.draw(batch) }
 
         game.viewports.get(ConstKeys.GAME).apply()
@@ -693,7 +671,7 @@ class MegaLevelScreen(
         playerSpawnsMan.reset()
         playerDeathEventHandler.reset()
         cameraManagerForRooms.reset()
-        backgroundCamera.reset()
+        backgrounds.forEach { background -> background.reset() }
         gameCamera.reset()
         audioMan.unsetMusic()
         game.putProperty(ConstKeys.ROOM_TRANSITION, false)
@@ -716,4 +694,7 @@ class MegaLevelScreen(
         audioMan.playMusic()
         levelStateHandler.resume()
     }
+
+    override fun resize(width: Int, height: Int) =
+        backgrounds.forEach { background -> background.updateViewportSize(width, height) }
 }

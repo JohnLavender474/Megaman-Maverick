@@ -78,6 +78,7 @@ import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
 import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
+import com.megaman.maverick.game.screens.levels.map.layers.BackgroundLayerBuilder
 import com.megaman.maverick.game.screens.menus.*
 import com.megaman.maverick.game.screens.menus.bosses.BossIntroScreen
 import com.megaman.maverick.game.screens.menus.bosses.BossSelectScreen
@@ -109,7 +110,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
 
     companion object {
         const val TAG = "MegamanMaverickGame"
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(BackgroundLayerBuilder.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.WATER, FixtureType.WATER_LISTENER)
         }
@@ -162,15 +163,11 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
         setCurrentScreen(ScreenEnum.LEVEL_SCREEN.name)
     }
 
-    fun getBackgroundCamera() = viewports.get(ConstKeys.BACKGROUND).camera as RotatableCamera
-
     fun getGameCamera() = viewports.get(ConstKeys.GAME).camera as RotatableCamera
 
     fun setCameraRotating(value: Boolean) = putProperty("${ConstKeys.CAM}_${ConstKeys.ROTATION}", value)
 
     fun isCameraRotating() = getOrDefaultProperty("${ConstKeys.CAM}_${ConstKeys.ROTATION}", false, Boolean::class)
-
-    fun getForegroundCamera() = viewports.get(ConstKeys.FOREGROUND).camera as OrthographicCamera
 
     fun getUiCamera() = viewports.get(ConstKeys.UI).camera as OrthographicCamera
 
@@ -183,6 +180,17 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
         properties.get(ConstKeys.SYSTEMS) as ObjectMap<String, GameSystem>
 
     fun <T : GameSystem> getSystem(clazz: KClass<T>) = clazz.cast(getSystems()[clazz.simpleName]!!)
+
+    fun setCurrentRoomSupplier(supplier: () -> String?) =
+        properties.put("${ConstKeys.ROOM}_${ConstKeys.SUPPLIER}", supplier)
+
+    fun getCurrentRoom(): String? {
+        if (properties.containsKey("${ConstKeys.ROOM}_${ConstKeys.SUPPLIER}")) {
+            val supplier = properties.get("${ConstKeys.ROOM}_${ConstKeys.SUPPLIER}") as () -> String?
+            return supplier.invoke()
+        }
+        return null
+    }
 
     fun setWorldContainer(worldContainer: IWorldContainer) = properties.put(ConstKeys.WORLD_CONTAINER, worldContainer)
 
@@ -253,10 +261,6 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
         val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
         val screenHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
 
-        val backgroundCamera = RotatableCamera()
-        val backgroundViewport = FitViewport(screenWidth, screenHeight, backgroundCamera)
-        viewports.put(ConstKeys.BACKGROUND, backgroundViewport)
-
         val gameCamera =
             RotatableCamera(onJustFinishedRotating = {
                 setCameraRotating(false)
@@ -264,9 +268,6 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
             })
         val gameViewport = FitViewport(screenWidth, screenHeight, gameCamera)
         viewports.put(ConstKeys.GAME, gameViewport)
-
-        val foregroundViewport = FitViewport(screenWidth, screenHeight)
-        viewports.put(ConstKeys.FOREGROUND, foregroundViewport)
 
         val uiViewport = FitViewport(screenWidth, screenHeight)
         viewports.put(ConstKeys.UI, uiViewport)
@@ -549,7 +550,8 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
                 FontsSystem { font -> drawables.get(font.priority.section).add(font) },
                 SpritesSystem { sprite -> drawables.get(sprite.priority.section).add(sprite) },
                 DrawableShapesSystem({ shapes.add(it) }, params.debug),
-                AudioSystem({ audioMan.playSound(it.source, it.loop) },
+                AudioSystem(
+                    { audioMan.playSound(it.source, it.loop) },
                     { audioMan.playMusic(it.source, it.loop) },
                     { audioMan.stopSound(it) },
                     { audioMan.stopMusic(it) })

@@ -42,7 +42,7 @@ dependencies {
     }
   implementation "com.badlogicgames.jamepad:jamepad:$jamepadVersion"
   implementation 'com.beust:jcommander:1.82'
-  implementation "com.mega.2D.game.engine:Mega-2D-Game-Engine:1.0.0"
+  implementation "com.mega.2D.game.engine:Mega-2D-Game-Engine:$gameEngineVersion"
 }
 
 def os = System.properties['os.name'].toLowerCase()

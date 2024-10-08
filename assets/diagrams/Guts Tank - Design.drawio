@@ -1,0 +1,113 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.17 Chrome/128.0.6613.36 Electron/32.0.1 Safari/537.36" version="24.7.17">
+  <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
+    <mxGraphModel dx="1114" dy="2007" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="16DGvtkIrXTCnWnW5mJ5-0" value="At begin pos" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="480" y="40" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="16DGvtkIrXTCnWnW5mJ5-18" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="980" y="150" width="640" height="560" as="geometry" />
+        </mxCell>
+        <mxCell id="16DGvtkIrXTCnWnW5mJ5-19" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="1580" y="150" width="40" height="560" as="geometry" />
+        </mxCell>
+        <mxCell id="16DGvtkIrXTCnWnW5mJ5-20" value="Ground" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="980" y="670" width="640" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="16DGvtkIrXTCnWnW5mJ5-21" value="Play area" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="1175" y="110" width="250" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="16DGvtkIrXTCnWnW5mJ5-22" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="980" y="150" width="20" height="520" as="geometry" />
+        </mxCell>
+        <mxCell id="16DGvtkIrXTCnWnW5mJ5-23" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="980" y="150" width="640" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="16DGvtkIrXTCnWnW5mJ5-24" value="Static invisible wall" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="1010" y="250" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="16DGvtkIrXTCnWnW5mJ5-25" value="Ceiling" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="1270" y="170" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="16DGvtkIrXTCnWnW5mJ5-27" value="Invisible wall attached to boss&#39;s back" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="1480" y="250" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="16DGvtkIrXTCnWnW5mJ5-28" value="Guts Tank" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="1320" y="500" width="260" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="16DGvtkIrXTCnWnW5mJ5-29" value="Max Pos" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="1210" y="650" width="40" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="16DGvtkIrXTCnWnW5mJ5-30" value="Min Pos" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="1410" y="650" width="40" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="16DGvtkIrXTCnWnW5mJ5-31" value="Shoot 3 fire blasts" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="280" y="160" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="16DGvtkIrXTCnWnW5mJ5-32" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0;exitY=1;exitDx=0;exitDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="16DGvtkIrXTCnWnW5mJ5-0" target="16DGvtkIrXTCnWnW5mJ5-31" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="540" y="80" as="sourcePoint" />
+            <mxPoint x="590" y="30" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="16DGvtkIrXTCnWnW5mJ5-35" value="Shoot 3 running mets" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="540" y="160" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="16DGvtkIrXTCnWnW5mJ5-36" value="Shoot 2 flying mets" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="680" y="160" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="16DGvtkIrXTCnWnW5mJ5-37" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.75;exitY=1;exitDx=0;exitDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="16DGvtkIrXTCnWnW5mJ5-0" target="16DGvtkIrXTCnWnW5mJ5-35" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="520" y="80" as="sourcePoint" />
+            <mxPoint x="570" y="30" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="16DGvtkIrXTCnWnW5mJ5-39" value="" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" target="16DGvtkIrXTCnWnW5mJ5-36" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="600" y="80" as="sourcePoint" />
+            <mxPoint x="650" y="30" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="16DGvtkIrXTCnWnW5mJ5-45" value="Shoot 4 bullets" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="410" y="160" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="16DGvtkIrXTCnWnW5mJ5-47" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="16DGvtkIrXTCnWnW5mJ5-0" target="16DGvtkIrXTCnWnW5mJ5-45" edge="1">
+          <mxGeometry x="1" y="260" width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="426" y="40" as="sourcePoint" />
+            <mxPoint x="401" y="160" as="targetPoint" />
+            <mxPoint x="29" y="-77" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="16DGvtkIrXTCnWnW5mJ5-48" value="Boss drops to start pos" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="460" y="-230" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="16DGvtkIrXTCnWnW5mJ5-49" value="" style="endArrow=classic;html=1;rounded=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="16DGvtkIrXTCnWnW5mJ5-48" target="16DGvtkIrXTCnWnW5mJ5-50" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="540" y="-190" as="sourcePoint" />
+            <mxPoint x="540" y="-150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="16DGvtkIrXTCnWnW5mJ5-50" value="Cam shakes for x seconds" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="465" y="-150" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="16DGvtkIrXTCnWnW5mJ5-51" value="Boss health fills" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="465" y="-60" width="150" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="16DGvtkIrXTCnWnW5mJ5-52" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="16DGvtkIrXTCnWnW5mJ5-50" target="16DGvtkIrXTCnWnW5mJ5-51" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="540" y="-90" as="sourcePoint" />
+            <mxPoint x="590" y="-140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="16DGvtkIrXTCnWnW5mJ5-53" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="16DGvtkIrXTCnWnW5mJ5-51" target="16DGvtkIrXTCnWnW5mJ5-0" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="540" y="-10" as="sourcePoint" />
+            <mxPoint x="590" y="-60" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

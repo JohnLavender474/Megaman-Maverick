@@ -135,7 +135,7 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
 
     override fun init() {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES.source)
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
             regions.put("fly", atlas.findRegion("$TAG/Fly"))
             regions.put("shoot", atlas.findRegion("$TAG/Shoot"))
             regions.put("defeated", atlas.findRegion("$TAG/Defeated"))

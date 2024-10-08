@@ -129,7 +129,8 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.35f * ConstVals.PPM, 0.65f * ConstVals.PPM)
-        body.physics.takeFrictionFromOthers = false
+        body.physics.applyFrictionX = false
+body.physics.applyFrictionY = false
         body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()

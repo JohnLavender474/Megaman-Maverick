@@ -22,6 +22,8 @@ allprojects {
     module {
       outputDir file('build/classes/java/main')
       testOutputDir file('build/classes/java/test')
+      downloadJavadoc = true
+      downloadSources = true
     }
   }
 }
@@ -60,7 +62,7 @@ configure(subprojects) {
 
 subprojects {
   version = '$projectVersion'
-  ext.appName = 'MegamanMaverick-v2'
+  ext.appName = 'MegamanMaverick'
   repositories {
     mavenCentral()
     maven { url 'https://s01.oss.sonatype.org' }
@@ -72,4 +74,4 @@ subprojects {
   }
 }
 
-eclipse.project.name = 'MegamanMaverick-v2' + '-parent'
+eclipse.project.name = 'MegamanMaverick' + '-parent'

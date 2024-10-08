@@ -6,7 +6,7 @@ dependencies {
   api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
   api "com.badlogicgames.gdx:gdx:$gdxVersion"
   api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-  implementation "com.mega.2D.game.engine:Mega-2D-Game-Engine:1.0.0"
+  implementation "com.mega.2D.game.engine:Mega-2D-Game-Engine:$gameEngineVersion"
 
   if(enableGraalNative == 'true') {
     implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"

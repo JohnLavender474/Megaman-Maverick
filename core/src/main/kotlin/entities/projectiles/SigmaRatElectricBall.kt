@@ -60,7 +60,7 @@ class SigmaRatElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game)
 
     override fun init() {
         if (ballRegion == null || hitRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES.source)
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
             ballRegion = atlas.findRegion("SigmaRat/ElectricBall")
             hitRegion = atlas.findRegion("SigmaRat/ElectricBallDissipate")
         }
@@ -119,7 +119,8 @@ class SigmaRatElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game)
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(ConstVals.PPM.toFloat())
-        body.physics.takeFrictionFromOthers = false
+        body.physics.applyFrictionX = false
+body.physics.applyFrictionY = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
         body.color = Color.YELLOW

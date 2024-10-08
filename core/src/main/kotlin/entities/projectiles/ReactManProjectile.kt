@@ -163,7 +163,8 @@ class ReactManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game), 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.physics.gravity.set(0f, GRAVITY * ConstVals.PPM)
-        body.physics.takeFrictionFromOthers = false
+        body.physics.applyFrictionX = false
+body.physics.applyFrictionY = false
 
         val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameRectangle())
         body.addFixture(projectileFixture)

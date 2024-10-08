@@ -53,7 +53,7 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         private var surfaceReg: TextureRegion? = null
         private var underReg: TextureRegion? = null
 
-        private const val WATER_ALPHA = 0.35f
+        private const val WATER_ALPHA = 0.2f
     }
 
     var splashSound = true

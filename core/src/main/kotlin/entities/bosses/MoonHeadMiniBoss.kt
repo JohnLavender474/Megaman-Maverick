@@ -113,7 +113,7 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimate
 
     override fun init() {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES.source)
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
             regions.put("dark", atlas.findRegion("$TAG/Dark"))
             regions.put("awaken", atlas.findRegion("$TAG/Awaken"))
             regions.put("angry", atlas.findRegion("$TAG/Angry"))

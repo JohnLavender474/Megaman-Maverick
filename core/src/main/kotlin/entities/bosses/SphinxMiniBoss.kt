@@ -114,7 +114,7 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
 
     override fun init() {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES.source)
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
             regions.put("defeated", atlas.findRegion("$TAG/defeated"))
             regions.put("wait", atlas.findRegion("$TAG/wait"))
             regions.put("open", atlas.findRegion("$TAG/open"))

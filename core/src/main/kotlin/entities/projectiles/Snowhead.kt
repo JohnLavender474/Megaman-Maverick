@@ -74,7 +74,8 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
     }
 
     private fun bounceBullets(collisionShape: IGameShape2D) {
-        val snowballs = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SNOWBALL, SNOWBALL_TRAJECTORIES.size)
+        val snowballs =
+            EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SNOWBALL, SNOWBALL_TRAJECTORIES.size)
         val direction = getOverlapPushDirection(body, collisionShape) ?: Direction.UP
         val spawn = when (direction) {
             Direction.UP -> body.getTopCenterPoint().add(0f, 0.1f * ConstVals.PPM)
@@ -129,15 +130,16 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.75f * ConstVals.PPM)
-        body.physics.takeFrictionFromOthers = false
+        body.physics.applyFrictionX = false
+        body.physics.applyFrictionY = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBodyBounds() }
 
-        val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameRectangle().set(body))
+        val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameRectangle(body))
         body.addFixture(projectileFixture)
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().set(body))
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
         body.addFixture(damagerFixture)
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

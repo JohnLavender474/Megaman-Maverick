@@ -189,7 +189,8 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.physics.takeFrictionFromOthers = false
+        body.physics.applyFrictionX = false
+        body.physics.applyFrictionY = false
 
         val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameRectangle())
         body.addFixture(projectileFixture)

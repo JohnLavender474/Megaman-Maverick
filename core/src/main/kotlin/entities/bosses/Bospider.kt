@@ -113,7 +113,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
     override fun init() {
         if (climbRegion == null || stillRegion == null || openEyeRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES.source)
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
             climbRegion = atlas.findRegion("Bospider/Climb")
             stillRegion = atlas.findRegion("Bospider/Still")
             openEyeRegion = atlas.findRegion("Bospider/OpenEye")

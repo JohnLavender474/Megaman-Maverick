@@ -1,10 +1,5 @@
 package com.megaman.maverick.game.entities
 
-import com.mega.game.engine.world.body.*;
-import com.mega.game.engine.world.collisions.*;
-import com.mega.game.engine.world.contacts.*;
-import com.mega.game.engine.world.pathfinding.*;
-
 import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.OrderedSet
 import com.mega.game.engine.common.extensions.putIfAbsentAndGet
@@ -12,20 +7,31 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 
 object MegaGameEntitiesMap {
 
-    private val map = OrderedMap<EntityType, OrderedSet<MegaGameEntity>>()
+    private val entities = OrderedSet<MegaGameEntity>()
+    private val entityTypeToEntities = OrderedMap<EntityType, OrderedSet<MegaGameEntity>>()
+    private val mapObjectIdToEntities = OrderedMap<Int, OrderedSet<MegaGameEntity>>()
 
     fun add(entity: MegaGameEntity) {
-        val type = entity.getEntityType()
-        if (!map.containsKey(type)) map.put(type, OrderedSet())
-        map.get(type).add(entity)
+        entities.add(entity)
+        entityTypeToEntities.putIfAbsentAndGet(entity.getEntityType(), OrderedSet()).add(entity)
+        mapObjectIdToEntities.putIfAbsentAndGet(entity.mapObjectId, OrderedSet()).add(entity)
     }
 
-    fun remove(entity: MegaGameEntity) = map.get(entity.getEntityType())?.remove(entity)
+    fun remove(entity: MegaGameEntity) {
+        entities.remove(entity)
+        entityTypeToEntities.get(entity.getEntityType())?.remove(entity)
+        if (mapObjectIdToEntities.containsKey(entity.mapObjectId)) {
+            val set = mapObjectIdToEntities.get(entity.mapObjectId)
+            set.remove(entity)
+            if (set.isEmpty) mapObjectIdToEntities.remove(entity.mapObjectId)
+        }
+    }
 
-    fun getEntitiesOfType(type: EntityType): OrderedSet<MegaGameEntity> = map.putIfAbsentAndGet(type, OrderedSet())
+    fun getEntitiesOfType(type: EntityType): OrderedSet<MegaGameEntity> =
+        entityTypeToEntities.putIfAbsentAndGet(type, OrderedSet())
 
-    fun forEachEntry(action: (EntityType, OrderedSet<MegaGameEntity>) -> Unit) =
-        map.forEach { action(it.key, it.value) }
+    fun getEntitiesOfMapObjectId(mapObjectId: Int) =
+        mapObjectIdToEntities.putIfAbsentAndGet(mapObjectId, OrderedSet())
 
-    fun forEachEntity(action: (MegaGameEntity) -> Unit) = map.forEach { entry -> entry.value.forEach { action(it) } }
+    fun forEachEntity(action: (MegaGameEntity) -> Unit) = entities.forEach { action.invoke(it) }
 }

@@ -205,9 +205,10 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
     }
 
     override fun defineBodyComponent(): BodyComponent {
-        val body = Body(BodyType.DYNAMIC)
+        val body = Body(BodyType.ABSTRACT)
         body.setSize(0.85f * ConstVals.PPM)
-        body.physics.takeFrictionFromOthers = false
+        body.physics.applyFrictionX = false
+        body.physics.applyFrictionY = false
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         body.addFixture(bodyFixture)
@@ -321,12 +322,14 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
             params,
             {
                 if (canMove) StandardPathfinderResultConsumer.consume(
-                    it,
-                    body,
-                    body.getCenter(),
-                    { flyToAttackSpeed * ConstVals.PPM },
-                    body,
+                    result = it,
+                    body = body,
+                    start = body.getCenter(),
+                    speed = { flyToAttackSpeed * ConstVals.PPM },
+                    targetPursuer = body,
+                    onTargetReached = { directlyChaseMegaman() },
                     stopOnTargetReached = false,
+                    onTargetNull = { directlyChaseMegaman() },
                     stopOnTargetNull = false,
                     shapes = if (DEBUG_PATHFINDING) game.getShapes() else null
                 )
@@ -335,5 +338,10 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
             intervalTimer = Timer(PATHFINDING_UPDATE_INTERVAL)
         )
         return pathfindingComponent
+    }
+
+    private fun directlyChaseMegaman() {
+        body.physics.velocity =
+            getMegaman().body.getCenter().sub(body.getCenter()).nor().scl(flyToAttackSpeed * ConstVals.PPM)
     }
 }

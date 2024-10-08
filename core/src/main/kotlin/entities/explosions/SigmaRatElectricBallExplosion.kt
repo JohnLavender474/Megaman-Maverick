@@ -66,7 +66,7 @@ class SigmaRatElectricBallExplosion(game: MegamanMaverickGame) : MegaGameEntity(
 
     override fun init() {
         if (explosionRegion == null || dissipateRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES.source)
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
             explosionRegion = atlas.findRegion("SigmaRat/ElectricPulse")
             dissipateRegion = atlas.findRegion("SigmaRat/ElectricDissipate")
         }

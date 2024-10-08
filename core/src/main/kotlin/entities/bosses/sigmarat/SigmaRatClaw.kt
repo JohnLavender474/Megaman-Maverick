@@ -105,7 +105,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
 
     override fun init() {
         if (closedRegion == null || openRegion == null || shockRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES.source)
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
             closedRegion = atlas.findRegion("SigmaRat/ClawClosed")
             openRegion = atlas.findRegion("SigmaRat/ClawOpen")
             shockRegion = atlas.findRegion("SigmaRat/ClawFlash")

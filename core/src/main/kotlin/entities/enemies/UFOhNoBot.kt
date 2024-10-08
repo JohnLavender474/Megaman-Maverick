@@ -197,7 +197,8 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
         body.setSize(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat())
-        body.physics.takeFrictionFromOthers = false
+        body.physics.applyFrictionX = false
+body.physics.applyFrictionY = false
         body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()

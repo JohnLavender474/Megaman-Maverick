@@ -69,7 +69,10 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         body.physics.frictionToApply.y =
             spawnProps.getOrDefault(ConstKeys.FRICTION_Y, STANDARD_FRICTION_Y, Float::class)
         body.physics.gravityOn = spawnProps.getOrDefault(ConstKeys.GRAVITY_ON, false, Boolean::class)
-        body.physics.takeFrictionFromOthers = spawnProps.getOrDefault(ConstKeys.RESIST_ON, true, Boolean::class)
+
+        val resistOn = spawnProps.getOrDefault(ConstKeys.RESIST_ON, true, Boolean::class)
+        body.physics.applyFrictionX = resistOn
+        body.physics.applyFrictionY = resistOn
 
         body.clearBodyLabels()
         if (spawnProps.containsKey(ConstKeys.BODY_LABELS)) {

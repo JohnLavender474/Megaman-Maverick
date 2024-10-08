@@ -181,11 +181,11 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
         val pathfindingComponent = PathfindingComponent(params, {
             if (spawnDelayTimer.isFinished())
                 StandardPathfinderResultConsumer.consume(
-                    it,
-                    body,
-                    body.getCenter(),
-                    { FLY_SPEED * ConstVals.PPM },
-                    body,
+                    result = it,
+                    body = body,
+                    start = body.getCenter(),
+                    speed = { FLY_SPEED * ConstVals.PPM },
+                    targetPursuer = body,
                     stopOnTargetReached = false,
                     stopOnTargetNull = false
                 )

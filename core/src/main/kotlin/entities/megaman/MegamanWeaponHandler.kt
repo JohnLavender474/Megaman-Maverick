@@ -72,12 +72,12 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
              */
 
             yOffset += if (megaman.isAnyBehaviorActive(BehaviorType.JETPACKING, BehaviorType.WALL_SLIDING))
-                0.4f * ConstVals.PPM
+                0.3f * ConstVals.PPM
             else if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING)) -0.05f * ConstVals.PPM
             else if (megaman.isBehaviorActive(BehaviorType.RIDING_CART)) {
                 if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.6f * ConstVals.PPM else 0.75f * ConstVals.PPM
             } // else if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.4f * ConstVals.PPM
-            else 0.15f * ConstVals.PPM
+            else 0.135f * ConstVals.PPM
             /*
             else if (megaman.isBehaviorActive(BehaviorType.CLIMBING)) 0.15f * ConstVals.PPM
             else if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.15f * ConstVals.PPM

@@ -80,7 +80,8 @@ class ArigockBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.15f * ConstVals.PPM)
-        body.physics.takeFrictionFromOthers = false
+        body.physics.applyFrictionX = false
+body.physics.applyFrictionY = false
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
         body.color = Color.GRAY
 

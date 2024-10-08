@@ -17,9 +17,9 @@ import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.drawables.sprites.ScrollingStars
+import com.megaman.maverick.game.entities.bosses.BossType
 import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
 import com.megaman.maverick.game.utils.getDefaultCameraPosition
-import entities.bosses.BossType
 import java.util.*
 
 class BossIntroScreen(private val game: MegamanMaverickGame) : BaseScreen(), Initializable {
@@ -48,7 +48,7 @@ class BossIntroScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
     private lateinit var bText: BitmapFontHandle
 
     private var b: BossType? = null
-    private var currBAnim: GamePair<Sprite, Queue<GamePair<Animation, Timer>?>>? = null
+    private var currBAnim: GamePair<Sprite, Queue<GamePair<Animation, Timer>>>? = null
 
     private var initialized = false
 
@@ -87,7 +87,7 @@ class BossIntroScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
         this.b = b
 
         val s = Sprite()
-        val size = b.spriteSize
+        val size = b.getSpriteSize()
         s.setSize(size.x * ConstVals.PPM, size.y * ConstVals.PPM)
 
         currBAnim = GamePair(
@@ -98,10 +98,10 @@ class BossIntroScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
 
         bLettersAnimQ.clear()
 
-        for (i in 0 until b.name.length) {
+        for (i in 0 until b.bossName.length) {
             bLettersAnimQ.add(Runnable {
-                bText.textSupplier = { b.name.substring(0, i + 1).uppercase() }
-                if (Character.isWhitespace(b.name[i])) return@Runnable
+                bText.textSupplier = { b.bossName.substring(0, i + 1).uppercase() }
+                if (Character.isWhitespace(b.bossName[i])) return@Runnable
                 audioMan.playSound(SoundAsset.THUMP_SOUND, false)
             })
         }

@@ -103,7 +103,7 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
 
     override fun init() {
         if (launchedRegion == null || fistRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES.source)
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
             fistRegion = atlas.findRegion("GutsTank/Fist")
             launchedRegion = atlas.findRegion("GutsTank/FistLaunched")
         }

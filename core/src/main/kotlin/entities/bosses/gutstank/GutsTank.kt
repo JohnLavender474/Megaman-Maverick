@@ -169,7 +169,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
 
     override fun init() {
         if (laughingRegion == null || mouthOpenRegion == null || mouthClosedRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES.source)
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
             laughingRegion = atlas.findRegion("$TAG/Laughing")
             mouthOpenRegion = atlas.findRegion("$TAG/MouthOpen")
             mouthClosedRegion = atlas.findRegion("$TAG/MouthClosed")

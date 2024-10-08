@@ -40,9 +40,13 @@ object ConstVals {
     const val MEDIUM_LERP_VALUE = 10f
     const val SLOW_LERP_VALUE = 7.5f
     const val GAME_CAM_ROTATE_TIME = 1f
+    const val DEFAULT_PARALLAX_X = 0.25f
+    const val DEFAULT_PARALLAX_Y = 0f
 }
 
 object ConstKeys {
+    const val ID = "id"
+    const val SUPPLIER = "supplier"
     const val VSYNC = "vsyinc"
     const val BULLET = "bullet"
     const val CAM = "cam"
@@ -180,9 +184,7 @@ object ConstKeys {
     const val CHILD_KEY = "child_key"
     const val SPEED = "speed"
     const val DEFINITION = "definition"
-    const val BACKGROUND_PARALLAX_FACTOR_X = "background_parallax_factor_x"
-    const val BACKGROUND_PARALLAX_FACTOR_Y = "background_parallax_factor_y"
-    const val FOREGROUND_PARALLAX_FACTOR = "foreground_parallax_factor"
+    const val PARALLAX = "parallax"
     const val FOREGROUND = "foreground"
     const val BACKGROUND = "background"
     const val ENTITY_TYPE = "entity_type"

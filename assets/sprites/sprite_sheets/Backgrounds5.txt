@@ -1,0 +1,12 @@
+Backgrounds5.png
+size: 1000, 750
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+GlacierCloudsBKG
+  rotate: false
+  xy: 0, 0
+  size: 1000, 750
+  orig: 1000, 750
+  offset: 0, 0
+  index: -1

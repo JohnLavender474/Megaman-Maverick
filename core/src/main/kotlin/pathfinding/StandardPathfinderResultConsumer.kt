@@ -21,7 +21,9 @@ object StandardPathfinderResultConsumer {
         start: Vector2,
         speed: () -> Float,
         targetPursuer: GameRectangle = body,
+        onTargetReached: () -> Unit = {},
         stopOnTargetReached: Boolean = true,
+        onTargetNull: () -> Unit = {},
         stopOnTargetNull: Boolean = true,
         preProcess: (() -> Unit)? = null,
         trajectoryConsumer: (Vector2) -> Unit = { body.physics.velocity.set(it) },
@@ -33,6 +35,7 @@ object StandardPathfinderResultConsumer {
         val path = result.path
         if (path == null || path.isEmpty) {
             if (stopOnTargetReached) body.physics.velocity.setZero()
+            onTargetReached.invoke()
             return false
         }
 
@@ -52,6 +55,7 @@ object StandardPathfinderResultConsumer {
         val target: Vector2? = worldPath.firstOrNull { !targetPursuer.overlaps(it as Rectangle) }?.getCenter()
         if (target == null) {
             if (stopOnTargetNull) body.physics.velocity.setZero()
+            onTargetNull.invoke()
             return false
         }
 

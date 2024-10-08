@@ -93,7 +93,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
 
     override fun init() {
         if (standRegion == null || throwRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES.source)
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
             standRegion = atlas.findRegion("${TAG}/Stand")
             throwRegion = atlas.findRegion("${TAG}/Throw")
         }

@@ -101,7 +101,8 @@ class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
         body.physics.defaultFrictionOnSelf.set(MegaContactListener.ICE_FRICTION, MegaContactListener.ICE_FRICTION)
-        body.physics.takeFrictionFromOthers = false
+        body.physics.applyFrictionX = true
+        body.physics.applyFrictionY = false
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle())
         body.addFixture(bodyFixture)

@@ -19,6 +19,8 @@ import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
@@ -35,7 +37,9 @@ import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.isSensing
 
 
 class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
@@ -45,6 +49,8 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
         private const val SHAKE_DUR = 0.25f
         private const val GRAVITY = -0.15f
         private const val SHATTER_DUR = 0.25f
+        private const val NORMAL_CLAMP_Y = 10f
+        private const val WATER_CLAMP_Y = 3f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -67,14 +73,10 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getTopCenterPoint()
         body.setTopCenterToPoint(spawn)
-
         body.physics.gravityOn = false
-
         fallingIcicleState = FallingIcicleState.STILL
-
         shakeTimer.reset()
         shatterTimer.reset()
     }
@@ -84,7 +86,11 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
         super.onDestroy()
     }
 
+    override fun hitProjectile(projectileFixture: IFixture) = explodeAndDie()
+
     override fun hitBlock(blockFixture: IFixture) = explodeAndDie()
+
+    override fun hitBody(bodyFixture: IFixture) = explodeAndDie()
 
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
@@ -120,12 +126,14 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.25f * ConstVals.PPM, ConstVals.PPM.toFloat())
+        body.setSize(0.25f * ConstVals.PPM, 1.15f * ConstVals.PPM)
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
-        body.physics.takeFrictionFromOthers = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBodyBounds() }
+
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
+        body.addFixture(bodyFixture)
 
         val projectileFixture =
             Fixture(body, FixtureType.PROJECTILE, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.75f * ConstVals.PPM))
@@ -135,13 +143,21 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
         body.addFixture(damagerFixture)
 
+        val waterListener = Fixture(body, FixtureType.WATER_LISTENER, GameRectangle().setSize(0.1f * ConstVals.PPM))
+        body.addFixture(waterListener)
+
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            body.physics.velocityClamp.y =
+                (if (body.isSensing(BodySense.IN_WATER)) WATER_CLAMP_Y else NORMAL_CLAMP_Y) * ConstVals.PPM
+        }
+
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite()
+        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
         sprite.setSize(1.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->

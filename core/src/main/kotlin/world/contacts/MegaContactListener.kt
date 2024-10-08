@@ -406,38 +406,40 @@ class MegaContactListener(
                 )
             )!!
             if (otherFixture.hasFixtureLabel(FixtureLabel.NO_PROJECTILE_COLLISION)) return
-            val projectile = projectileFixture.getEntity() as IProjectileEntity
-            if (otherFixture.hasHitByProjectileReceiver()) otherFixture.getHitByProjectile(projectile)
+            val projectile1 = projectileFixture.getEntity() as IProjectileEntity
+            if (otherFixture.hasHitByProjectileReceiver()) otherFixture.getHitByProjectile(projectile1)
             when (otherFixture.getType()) {
                 FixtureType.BLOCK -> {
                     printDebugLog(contact, "beginContact(): Projectile-Block, contact = $contact")
-                    projectile.hitBlock(otherFixture)
+                    projectile1.hitBlock(otherFixture)
                     (otherFixture.getEntity() as Block).hitByProjectile(projectileFixture)
                 }
 
                 FixtureType.BODY -> {
                     printDebugLog(contact, "beginContact(): Projectile-Body, contact = $contact")
-                    projectile.hitBody(otherFixture)
+                    projectile1.hitBody(otherFixture)
                 }
 
                 FixtureType.SHIELD -> {
                     printDebugLog(contact, "beginContact(): Projectile-Shield, contact = $contact")
-                    projectile.hitShield(otherFixture)
+                    projectile1.hitShield(otherFixture)
                 }
 
                 FixtureType.WATER -> {
                     printDebugLog(contact, "beginContact(): Projectile-Water, contact = $contact")
-                    projectile.hitWater(otherFixture)
+                    projectile1.hitWater(otherFixture)
                 }
 
                 FixtureType.SAND -> {
                     printDebugLog(contact, "beginContact(): Projectile-Sand, contact = $contact")
-                    projectile.hitSand(otherFixture)
+                    projectile1.hitSand(otherFixture)
                 }
 
                 FixtureType.PROJECTILE -> {
                     printDebugLog(contact, "beginContact(): Projectile-Projectile, contact = $contact")
-                    projectile.hitProjectile(otherFixture)
+                    projectile1.hitProjectile(otherFixture)
+                    val projectile2 = otherFixture.getEntity() as IProjectileEntity
+                    projectile2.hitProjectile(projectileFixture)
                 }
             }
         }

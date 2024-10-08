@@ -23,13 +23,13 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.bosses.BossType
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.menus.MegaMenuScreen
 import com.megaman.maverick.game.screens.utils.BlinkingArrow
 import com.megaman.maverick.game.screens.utils.ScreenSlide
 import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
 import com.megaman.maverick.game.utils.getDefaultCameraPosition
-import entities.bosses.BossType
 import java.util.*
 import java.util.function.Supplier
 
@@ -74,10 +74,10 @@ class BossSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MEGA_MA
 
             override fun onNavigate(direction: Direction, delta: Float): String? {
                 return when (direction) {
-                    Direction.UP -> BossType.findByPos(1, 2).name
-                    Direction.DOWN -> BossType.findByPos(1, 0).name
-                    Direction.LEFT -> BossType.findByPos(0, 1).name
-                    Direction.RIGHT -> BossType.findByPos(2, 1).name
+                    Direction.UP -> BossType.findByPos(1, 2)!!.bossName
+                    Direction.DOWN -> BossType.findByPos(1, 0)!!.bossName
+                    Direction.LEFT -> BossType.findByPos(0, 1)!!.bossName
+                    Direction.RIGHT -> BossType.findByPos(2, 1)!!.bossName
                 }
             }
         })
@@ -89,8 +89,8 @@ class BossSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MEGA_MA
 
             override fun onNavigate(direction: Direction, delta: Float): String? {
                 return when (direction) {
-                    Direction.UP, Direction.LEFT, Direction.RIGHT -> BossType.findByPos(2, 0).name
-                    Direction.DOWN -> BossType.findByPos(2, 2).name
+                    Direction.UP, Direction.LEFT, Direction.RIGHT -> BossType.findByPos(2, 0)!!.bossName
+                    Direction.DOWN -> BossType.findByPos(2, 2)!!.bossName
                 }
             }
         })
@@ -120,7 +120,7 @@ class BossSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MEGA_MA
                     return when (position) {
                         null -> throw IllegalStateException()
                         Position.CENTER -> MEGA_MAN
-                        else -> BossType.findByPos(x, y).name
+                        else -> BossType.findByPos(x, y)!!.bossName
                     }
                 }
             })
@@ -137,7 +137,7 @@ class BossSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MEGA_MA
             megamanFaces[position] = faceRegion
         }
         val megamanFaceSupplier = Supplier {
-            val boss = BossType.findByName(currentButtonKey) ?: return@Supplier megamanFaces[Position.CENTER]
+            val boss = BossType.findByName(currentButtonKey!!) ?: return@Supplier megamanFaces[Position.CENTER]
             megamanFaces[boss.position]
         }
         val megamanPane = BossPane(game, megamanFaceSupplier, MEGA_MAN, Position.CENTER)

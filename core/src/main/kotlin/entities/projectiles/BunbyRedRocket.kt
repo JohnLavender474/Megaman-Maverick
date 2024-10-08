@@ -89,7 +89,8 @@ class BunbyRedRocket(game: MegamanMaverickGame) : AbstractProjectile(game), IAni
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.physics.takeFrictionFromOthers = false
+        body.physics.applyFrictionX = false
+body.physics.applyFrictionY = false
         body.setSize(0.75f * ConstVals.PPM, 0.25f * ConstVals.PPM)
 
         val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameRectangle(body))
