@@ -43,7 +43,8 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     val body = Body(BodyType.DYNAMIC)
     body.setSize(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat())
     body.physics.applyFrictionX = true
-body.physics.applyFrictionY = true
+    body.physics.applyFrictionY = true
+    body.putProperty("${ConstKeys.ICE}_${ConstKeys.FRICTION_Y}", false)
     body.color = Color.BROWN
 
     val debugShapes = Array<() -> IDrawableShape?>()
@@ -61,7 +62,7 @@ body.physics.applyFrictionY = true
     }
 
     val feetFixture =
-        Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.65f * ConstVals.PPM, 0.15f * ConstVals.PPM))
+        Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.55f * ConstVals.PPM, 0.15f * ConstVals.PPM))
     feetFixture.offsetFromBodyCenter.y = -0.5f * ConstVals.PPM
     feetFixture.setRunnable(onBounce)
     body.addFixture(feetFixture)
@@ -70,7 +71,7 @@ body.physics.applyFrictionY = true
     body.putProperty(ConstKeys.FEET, feetFixture)
 
     val headFixture =
-        Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.65f * ConstVals.PPM, 0.15f * ConstVals.PPM))
+        Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.55f * ConstVals.PPM, 0.15f * ConstVals.PPM))
     headFixture.offsetFromBodyCenter.y = 0.5f * ConstVals.PPM
     headFixture.setRunnable(onBounce)
     body.addFixture(headFixture)

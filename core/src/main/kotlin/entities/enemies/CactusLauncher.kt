@@ -22,7 +22,7 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
-import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.IParentEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
@@ -79,7 +79,7 @@ class CactusLauncher(game: MegamanMaverickGame) : AbstractEnemy(game), IParentEn
             if (it.fullyCharged) 10 else 5
         }
     )
-    override var children = Array<GameEntity>()
+    override var children = Array<IGameEntity>()
 
     private val loop = Loop(CactusLauncherState.values().toGdxArray())
     private val timers = objectMapOf(

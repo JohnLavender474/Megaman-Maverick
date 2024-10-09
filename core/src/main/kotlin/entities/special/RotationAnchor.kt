@@ -14,6 +14,7 @@ import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.IDrawableShapesEntity
 import com.mega.game.engine.entities.contracts.IMotionEntity
@@ -41,7 +42,7 @@ open class RotationAnchor(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
         private const val DEFAULT_ROTATION_SPEED = 2f
     }
 
-    override var children = Array<GameEntity>()
+    override var children = Array<IGameEntity>()
 
     private val childTargets = ObjectMap<GameEntity, Vector2>()
 
@@ -99,7 +100,7 @@ open class RotationAnchor(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
 
     override fun onDestroy() {
         super.onDestroy()
-        children.forEach { it.destroy() }
+        children.forEach { (it as GameEntity).destroy() }
         children.clear()
         clearMotionDefinitions()
     }
@@ -119,7 +120,7 @@ open class RotationAnchor(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
         body.preProcess.put(ConstKeys.DEFAULT) { delta ->
             children.forEach { child ->
                 child as IBodyEntity
-                val target = childTargets[child] ?: return@forEach
+                val target = childTargets[child as GameEntity] ?: return@forEach
                 val velocity = target.cpy().sub(child.body.getCenter())
                 child.body.physics.velocity.set(velocity.scl(1f / delta))
             }

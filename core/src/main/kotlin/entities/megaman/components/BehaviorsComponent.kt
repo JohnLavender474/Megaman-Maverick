@@ -275,8 +275,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 return true
 
             if (damaged || groundSlideTimer.isFinished() || isAnyBehaviorActive(
-                    BehaviorType.RIDING_CART,
-                    BehaviorType.JETPACKING
+                    BehaviorType.RIDING_CART, BehaviorType.JETPACKING
                 ) || !body.isSensing(BodySense.FEET_ON_GROUND) ||
                 !game.controllerPoller.isPressed(MegaControllerButtons.DOWN)
             ) return false
@@ -309,7 +308,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             ) return
 
             val impulse = (if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_GROUND_SLIDE_VEL
-            else MegamanValues.GROUND_SLIDE_VEL) * ConstVals.PPM * facing.value * movementScalar
+            else MegamanValues.GROUND_SLIDE_VEL) * ConstVals.PPM * movementScalar * facing.value
 
             when (directionRotation!!) {
                 Direction.UP, Direction.DOWN -> body.physics.velocity.x = impulse

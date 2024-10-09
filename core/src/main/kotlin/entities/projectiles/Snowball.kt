@@ -58,7 +58,10 @@ class Snowball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         body.physics.gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, Vector2(), Vector2::class)
     }
 
-    override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
+    override fun onDamageInflictedTo(damageable: IDamageable) {
+        super.onDamageInflictedTo(damageable)
+        explodeAndDie()
+    }
 
     override fun hitBlock(blockFixture: IFixture) = explodeAndDie()
 
@@ -86,7 +89,7 @@ class Snowball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         body.setSize(0.15f * ConstVals.PPM)
         body.physics.velocityClamp.set(CLAMP * ConstVals.PPM.toFloat(), CLAMP * ConstVals.PPM.toFloat())
         body.physics.applyFrictionX = false
-body.physics.applyFrictionY = false
+        body.physics.applyFrictionY = false
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         body.addFixture(bodyFixture)

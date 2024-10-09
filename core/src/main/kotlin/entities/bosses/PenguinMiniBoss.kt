@@ -24,6 +24,7 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.IParentEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
@@ -87,7 +88,7 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
             if (it.fullyCharged) 2 else 1
         }
     )
-    override var children = Array<GameEntity>()
+    override var children = Array<IGameEntity>()
     override lateinit var facing: Facing
 
     private var launchPenguins = false
@@ -112,13 +113,13 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
 
     override fun onDestroy() {
         super.onDestroy()
-        children.forEach { it.destroy() }
+        children.forEach { (it as GameEntity).destroy() }
         children.clear()
     }
 
     override fun triggerDefeat() {
         super.triggerDefeat()
-        children.forEach { it.destroy() }
+        children.forEach { (it as GameEntity).destroy() }
         children.clear()
     }
 

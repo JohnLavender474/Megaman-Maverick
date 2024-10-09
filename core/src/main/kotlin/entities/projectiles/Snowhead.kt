@@ -7,7 +7,8 @@ import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.extensions.gdxArrayOf
-import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.set
 import com.mega.game.engine.common.getOverlapPushDirection
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
@@ -17,6 +18,7 @@ import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
@@ -31,6 +33,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
+import com.megaman.maverick.game.entities.enemies.SnowheadThrower
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -51,26 +54,44 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
             Vector2(7f, 5f),
         )
         private var region: TextureRegion? = null
+        private var noFaceRegion: TextureRegion? = null
     }
 
     override lateinit var facing: Facing
 
     override fun init() {
-        if (region == null) region = game.assMan.getTextureRegion(
-            TextureAsset.ENEMIES_2.source, "SnowheadThrower/Snowhead"
-        )
+        if (region == null || noFaceRegion == null) {
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            region = atlas.findRegion("${SnowheadThrower.TAG}/$TAG")
+            noFaceRegion = atlas.findRegion("${SnowheadThrower.TAG}/NoFace")
+        }
         super.init()
     }
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
+
+        val size = spawnProps.getOrDefault(ConstKeys.SIZE, Vector2().set(0.75f * ConstVals.PPM), Vector2::class)
+        body.setSize(size)
+        firstSprite!!.setSize(size.cpy().scl(2f))
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
         val trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2(), Vector2::class)
         body.physics.velocity = trajectory
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
+
         facing = if (trajectory.x > 0f) Facing.RIGHT else Facing.LEFT
+        owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
+
+        val noFace = spawnProps.getOrDefault("${ConstKeys.NO}_${ConstKeys.FACE}", false, Boolean::class)
+        firstSprite!!.setRegion(if (noFace) noFaceRegion!! else region!!)
+        firstSprite!!.priority.section = spawnProps.getOrDefault(
+            ConstKeys.SECTION,
+            DrawingSection.PLAYGROUND,
+            DrawingSection::class
+        )
+        firstSprite!!.priority.value = spawnProps.getOrDefault(ConstKeys.PRIORITY, 0, Int::class)
     }
 
     private fun bounceBullets(collisionShape: IGameShape2D) {
@@ -129,7 +150,6 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.75f * ConstVals.PPM)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
 
@@ -149,8 +169,6 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setRegion(region!!)
-        sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setFlip(isFacing(Facing.RIGHT), false)

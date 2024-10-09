@@ -58,7 +58,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.isSensing
 import kotlin.reflect.KClass
 
-class ReactMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, IFaceable {
+class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, IFaceable {
 
     enum class ReactManState(val regionName: String) {
         DANCE("Dance"),
@@ -113,11 +113,11 @@ class ReactMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
-            ReactManState.values().forEach {
-                val region = atlas.findRegion("ReactMan/${it.regionName}")
+            ReactManState.entries.forEach {
+                val region = atlas.findRegion("$TAG/${it.regionName}")
                 regions.put(it.regionName, region)
             }
-            regions.put("Die", atlas.findRegion("ReactMan/Die"))
+            regions.put("Die", atlas.findRegion("$TAG/Die"))
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -143,7 +143,7 @@ class ReactMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
     override fun onDestroy() {
         super.onDestroy()
-        projectile?.let { it.destroy() }
+        projectile?.destroy()
         projectile = null
     }
 

@@ -1,7 +1,6 @@
 package com.megaman.maverick.game.entities.megaman
 
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
@@ -35,7 +34,6 @@ import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.bosses.*
 import com.megaman.maverick.game.entities.bosses.gutstank.GutsTankFist
 import com.megaman.maverick.game.entities.bosses.sigmarat.SigmaRat
@@ -98,12 +96,12 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         FloatingCan::class pairTo dmgNeg(2),
         FlyBoy::class pairTo dmgNeg(3),
         GapingFish::class pairTo dmgNeg(2),
-        // TODO: SpringHead::class pairTo dmgNeg(3),
+        SpringHead::class pairTo dmgNeg(3),
         SuctionRoller::class pairTo dmgNeg(2),
         MagFly::class pairTo dmgNeg(3),
         Explosion::class pairTo dmgNeg(2),
         JoeBall::class pairTo dmgNeg(3),
-        Snowball::class pairTo dmgNeg(3),
+        Snowball::class pairTo dmgNeg(1),
         SnowballExplosion::class pairTo dmgNeg(1),
         SwinginJoe::class pairTo dmgNeg(2),
         SniperJoe::class pairTo dmgNeg(3),
@@ -157,7 +155,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         PetitDevil::class pairTo dmgNeg(3),
         PetitDevilChild::class pairTo dmgNeg(2),
         Shotman::class pairTo dmgNeg(2),
-        Snowhead::class pairTo dmgNeg(2),
+        Snowhead::class pairTo dmgNeg(1),
         SnowheadThrower::class pairTo dmgNeg(3),
         Spiky::class pairTo dmgNeg(4),
         PenguinMiniBoss::class pairTo dmgNeg(3),
@@ -174,7 +172,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         ReactorMonkeyMiniBoss::class pairTo dmgNeg(3),
         SmokePuff::class pairTo dmgNeg(2),
         TubeBeam::class pairTo dmgNeg(5),
-        ReactMan::class pairTo dmgNeg(3),
+        ReactorMan::class pairTo dmgNeg(3),
         ReactManProjectile::class pairTo dmgNeg(3),
         FlameThrower::class pairTo dmgNeg(6),
         Popoheli::class pairTo dmgNeg(3),
@@ -221,7 +219,8 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         TankBot::class pairTo dmgNeg(3),
         Darspider::class pairTo dmgNeg(3),
         WalrusBot::class pairTo dmgNeg(3),
-        BigFishNeo::class pairTo dmgNeg(4)
+        BigFishNeo::class pairTo dmgNeg(4),
+        GlacierMan::class pairTo dmgNeg(4)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 
@@ -493,7 +492,9 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
             }
 
             EventType.END_ROOM_TRANS -> {
-                if (!isAnyBehaviorActive(
+                val setVel = event.getOrDefaultProperty(ConstKeys.VELOCITY, true, Boolean::class)
+                GameLogger.debug(MEGAMAN_EVENT_LISTENER_TAG, "endRoomTrans(): setVel=$setVel")
+                if (setVel && !isAnyBehaviorActive(
                         BehaviorType.CLIMBING,
                         BehaviorType.JETPACKING,
                         BehaviorType.RIDING_CART,
@@ -502,7 +503,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
                 ) {
                     val velocity = body.getProperty(ConstKeys.VELOCITY, Vector2::class)
                     velocity?.let { body.physics.velocity.set(it) }
-                }
+                } else body.physics.velocity.setZero()
                 body.physics.gravityOn = !isBehaviorActive(BehaviorType.CLIMBING)
                 body.removeProperty(ConstKeys.VELOCITY)
             }
@@ -552,8 +553,8 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
 
     override fun canBeDamagedBy(damager: IDamager) =
         !invincible && dmgNegotations.containsKey(damager::class) &&
-                (damager is AbstractEnemy || damager is IHazard ||
-                        (damager is IProjectileEntity && damager.owner != this))
+            (damager is AbstractEnemy || damager is IHazard ||
+                (damager is IProjectileEntity && damager.owner != this))
 
     fun setToNextWeapon() {
         val index = currentWeapon.ordinal

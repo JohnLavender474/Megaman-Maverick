@@ -17,7 +17,6 @@ import com.mega.game.engine.cullables.CullableOnEvent
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.damage.IDamager
-import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
@@ -56,12 +55,13 @@ class FragileIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         private const val GROUND_GRAVITY = -0.01f
         private const val CLAMP = 12f
         private const val CULL_TIME = 2f
-        private const val MAX_HIT_BLOCK_TIMES = 1
+        private const val DEFAULT_MAX_HIT_BLOCK_TIMES = 1
         private var region1: TextureRegion? = null
         private var region2: TextureRegion? = null
     }
 
     private var hitBlockTimes = 0
+    private var maxHitBlockTimes = DEFAULT_MAX_HIT_BLOCK_TIMES
 
     override fun getEntityType() = EntityType.HAZARD
 
@@ -79,8 +79,29 @@ class FragileIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
+
+        val trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2(), Vector2::class)
+        body.physics.velocity.set(trajectory)
+
+        val gravityOn = spawnProps.getOrDefault(ConstKeys.GRAVITY_ON, true, Boolean::class)
+        body.physics.gravityOn = gravityOn
+
+        val applyFrictionX = spawnProps.getOrDefault(ConstKeys.FRICTION_X, true, Boolean::class)
+        body.physics.applyFrictionX = applyFrictionX
+
+        val applyFrictionY = spawnProps.getOrDefault(ConstKeys.FRICTION_Y, true, Boolean::class)
+        body.physics.applyFrictionY = applyFrictionY
+
+        val section = spawnProps.getOrDefault(ConstKeys.SECTION, DrawingSection.PLAYGROUND, DrawingSection::class)
+        firstSprite!!.priority.section = section
+
+        val priority = spawnProps.getOrDefault(ConstKeys.PRIORITY, 1, Int::class)
+        firstSprite!!.priority.value = priority
+
+        maxHitBlockTimes = spawnProps.getOrDefault(ConstKeys.MAX, DEFAULT_MAX_HIT_BLOCK_TIMES, Int::class)
         hitBlockTimes = 0
     }
 
@@ -95,10 +116,10 @@ class FragileIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
     }
 
     private fun getHitByBlock() {
-        GameLogger.debug(TAG, "Hit by block")
+        GameLogger.debug(TAG, "hit by block")
         hitBlockTimes++
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ICE_SHARD_1_SOUND, false)
-        if (hitBlockTimes > MAX_HIT_BLOCK_TIMES) shatterAndDie()
+        if (hitBlockTimes > maxHitBlockTimes) shatterAndDie()
     }
 
     private fun defineBodyComponent(): BodyComponent {
@@ -159,7 +180,7 @@ class FragileIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
     }
 
     private fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
+        val sprite = GameSprite()
         sprite.setSize(0.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->

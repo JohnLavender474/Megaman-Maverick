@@ -43,7 +43,7 @@ class MegaContactListener(
 
     companion object {
         const val TAG = "MegaContactListener"
-        const val ICE_FRICTION = 1.0175f
+        const val ICE_FRICTION = 1.05f
         const val SAND_FRICTION = 1.15f
     }
 
@@ -168,8 +168,10 @@ class MegaContactListener(
             val (sideFixture, _) = contact.getFixturesInOrder(FixtureType.SIDE, FixtureType.ICE)!!
             val body = sideFixture.getBody()
 
+            val applyIceFrictionY =
+                body.getOrDefaultProperty("${ConstKeys.ICE}_${ConstKeys.FRICTION_Y}", true, Boolean::class)
             val entity = body.getEntity()
-            if (entity is Megaman && entity.isBehaviorActive(BehaviorType.WALL_SLIDING))
+            if (applyIceFrictionY || (entity is Megaman && entity.isBehaviorActive(BehaviorType.WALL_SLIDING)))
                 body.physics.frictionOnSelf.y = ICE_FRICTION
 
             val sideType = sideFixture.getProperty(ConstKeys.SIDE)
@@ -216,7 +218,9 @@ class MegaContactListener(
             val body = feetFixture.getBody()
             body.setBodySense(BodySense.FEET_ON_ICE, true)
 
-            body.physics.frictionOnSelf.x = ICE_FRICTION
+            val applyIceFrictionX =
+                body.getOrDefaultProperty("${ConstKeys.ICE}_${ConstKeys.FRICTION_X}", true, Boolean::class)
+            if (applyIceFrictionX) body.physics.frictionOnSelf.x = ICE_FRICTION
         }
 
         // feet, sand
@@ -613,7 +617,9 @@ class MegaContactListener(
                 ) return
             }
 
-            body.physics.frictionOnSelf.x = ICE_FRICTION
+            val applyIceFrictionX =
+                body.getOrDefaultProperty("${ConstKeys.ICE}_${ConstKeys.FRICTION_X}", true, Boolean::class)
+            if (applyIceFrictionX) body.physics.frictionOnSelf.x = ICE_FRICTION
         }
 
         // feet, sand
@@ -714,8 +720,10 @@ class MegaContactListener(
             val (sideFixture, _) = contact.getFixturesInOrder(FixtureType.SIDE, FixtureType.ICE)!!
             val body = sideFixture.getBody()
 
+            val applyIceFrictionY =
+                body.getOrDefaultProperty("${ConstKeys.ICE}_${ConstKeys.FRICTION_Y}", true, Boolean::class)
             val entity = body.getEntity()
-            if (entity is Megaman && entity.isBehaviorActive(BehaviorType.WALL_SLIDING))
+            if (applyIceFrictionY || (entity is Megaman && entity.isBehaviorActive(BehaviorType.WALL_SLIDING)))
                 body.physics.frictionOnSelf.y = ICE_FRICTION
 
             val sideType = sideFixture.getProperty(ConstKeys.SIDE)

@@ -21,6 +21,7 @@ import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.*
 import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IMotionEntity
 import com.mega.game.engine.entities.contracts.IParentEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
@@ -58,7 +59,7 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, 
     }
 
     override val eventKeyMask = objectSetOf<Any>(EventType.PLAYER_SPAWN)
-    override var children = Array<GameEntity>()
+    override var children = Array<IGameEntity>()
 
     private lateinit var pendulum: Pendulum
     private val timeToSpawnEnemyTimer = Timer(TIME_TO_SPAWN_ENEMY)
@@ -114,7 +115,7 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, 
 
     override fun onDestroy() {
         super.onDestroy()
-        children.forEach { it.destroy() }
+        children.forEach { (it as GameEntity).destroy() }
         children.clear()
         enemyToSpawn = null
         game.eventsMan.removeListener(this)

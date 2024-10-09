@@ -222,6 +222,7 @@
             <key type="filename">../frames/Bosses1/GlacierMan/brake.png</key>
             <key type="filename">../frames/Bosses1/GlacierMan/brake_shoot.png</key>
             <key type="filename">../frames/Bosses1/GlacierMan/brake_shoot_up.png</key>
+            <key type="filename">../frames/Bosses1/GlacierMan/defeated.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -256,7 +257,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Bosses1/GlacierMan/fall.png</key>
-            <key type="filename">../frames/Bosses1/GlacierMan/fall_shoot.png</key>
+            <key type="filename">../frames/Bosses1/GlacierMan/fall_shoot_up.png</key>
             <key type="filename">../frames/Bosses1/GlacierMan/jump.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>

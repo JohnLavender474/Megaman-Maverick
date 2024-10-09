@@ -17,6 +17,7 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IChildEntity
 import com.mega.game.engine.entities.contracts.IMotionEntity
 import com.mega.game.engine.entities.contracts.IParentEntity
@@ -49,7 +50,7 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, IS
         set(value) {
             body.cardinalRotation = value
         }
-    override var children = Array<GameEntity>()
+    override var children = Array<IGameEntity>()
 
     override fun getTag() = TAG
 
@@ -100,7 +101,7 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, IS
     override fun onDestroy() {
         super.onDestroy()
         game.eventsMan.removeListener(this)
-        children.forEach { it.destroy() }
+        children.forEach { (it as GameEntity).destroy() }
         children.clear()
     }
 

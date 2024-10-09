@@ -36,6 +36,7 @@ enum class SoundAsset(src: String, val seconds: Int) : IAsset {
     MEGA_BUSTER_BULLET_SHOT_SOUND("buster_bullet_shot.mp3", 1),
     MEGA_BUSTER_CHARGED_SHOT_SOUND("buster_charged_shot.mp3", 1),
     MM1_VICTORY_SOUND("mm1_victory.mp3", 8),
+    MM2_VICTORY_SOUND("mm2_victory.mp3", 9),
     MM3_ELECTRIC_SAW_SOUND("electric_saw.wav", 1),
     MM3_ELECTRIC_PULSE_SOUND("electric_pulse.mp3", 1),
     DISAPPEARING_BLOCK_SOUND("disappearing_block.mp3", 1),
@@ -62,7 +63,7 @@ enum class SoundAsset(src: String, val seconds: Int) : IAsset {
     companion object {
         fun valuesAsIAssetArray(): Array<IAsset> {
             val assets = Array<IAsset>()
-            values().forEach { assets.add(it) }
+            SoundAsset.entries.forEach { assets.add(it) }
             return assets
         }
     }

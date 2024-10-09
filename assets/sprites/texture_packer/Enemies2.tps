@@ -381,6 +381,7 @@
             </struct>
             <key type="filename">../frames/Enemies2/CactusLauncher/wait.png</key>
             <key type="filename">../frames/Enemies2/Shotman/Launch.png</key>
+            <key type="filename">../frames/Enemies2/SnowheadThrower/NoFace.png</key>
             <key type="filename">../frames/Enemies2/SnowheadThrower/Snowhead.png</key>
             <key type="filename">../frames/Enemies2/Taketenko/Fly.png</key>
             <key type="filename">../frames/Enemies2/Taketenko/Spin.png</key>

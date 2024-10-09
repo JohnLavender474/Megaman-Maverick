@@ -9,6 +9,7 @@ import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.IParentEntity
@@ -37,7 +38,7 @@ class FloatingCanHole(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         private const val DEFAULT_DROP_ITEM_ON_DEATH = true
     }
 
-    override var children = Array<GameEntity>()
+    override var children = Array<IGameEntity>()
 
     private val spawnDelayTimer = Timer(SPAWN_DELAY)
     private var maxToSpawn = DEFAULT_MAX_SPAWNED

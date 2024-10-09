@@ -24,6 +24,7 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.*
 import com.mega.game.engine.motion.RotatingLine
 import com.mega.game.engine.updatables.UpdatablesComponent
@@ -76,7 +77,7 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         }
     )
     override lateinit var facing: Facing
-    override var children = Array<GameEntity>()
+    override var children = Array<IGameEntity>()
 
     private lateinit var type: String
 
@@ -158,7 +159,7 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         )
         children.forEach {
             if (hasDepletedHealth()) (it as PetitDevilChild).disintegrateAndDie()
-            else it.destroy()
+            else (it as GameEntity).destroy()
         }
         children.clear()
     }

@@ -37,7 +37,7 @@ enum class MusicAsset(src: String) : IAsset {
     companion object {
         fun valuesAsIAssetArray(): Array<IAsset> {
             val assets = Array<IAsset>()
-            values().forEach { assets.add(it) }
+            MusicAsset.entries.forEach { assets.add(it) }
             return assets
         }
     }

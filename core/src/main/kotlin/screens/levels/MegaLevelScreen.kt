@@ -219,22 +219,27 @@ class MegaLevelScreen(
         }
         cameraManagerForRooms.endTransition = {
             GameLogger.debug(TAG, "End transition logic for camera manager")
+
+            val currentRoom = cameraManagerForRooms.currentGameRoom
+            val hasEvent = currentRoom?.properties?.containsKey(ConstKeys.EVENT) == true
+            val event = currentRoom?.properties?.get(ConstKeys.EVENT, String::class.java)
+
             eventsMan.submitEvent(
                 Event(
-                    EventType.END_ROOM_TRANS, props(ConstKeys.ROOM pairTo cameraManagerForRooms.currentGameRoom)
+                    EventType.END_ROOM_TRANS, props(
+                        ConstKeys.ROOM pairTo cameraManagerForRooms.currentGameRoom,
+                        ConstKeys.VELOCITY pairTo !(hasEvent && event == ConstKeys.BOSS)
+                    )
                 )
             )
 
-            val currentRoom = cameraManagerForRooms.currentGameRoom
-            if (currentRoom?.properties?.containsKey(ConstKeys.EVENT) == true) {
+            if (hasEvent) {
                 val props = props(ConstKeys.ROOM pairTo currentRoom)
-                val roomEvent =
-                    when (val roomEventString = currentRoom.properties.get(ConstKeys.EVENT, String::class.java)) {
-                        ConstKeys.BOSS -> EventType.ENTER_BOSS_ROOM
-                        ConstKeys.SUCCESS -> EventType.VICTORY_EVENT
-                        else -> throw IllegalStateException("Unknown room event: $roomEventString")
-                    }
-
+                val roomEvent = when (event) {
+                    ConstKeys.BOSS -> EventType.ENTER_BOSS_ROOM
+                    ConstKeys.SUCCESS -> EventType.VICTORY_EVENT
+                    else -> throw IllegalStateException("Unknown room event: $event")
+                }
                 eventsMan.submitEvent(Event(roomEvent, props))
             } else eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
 
@@ -440,7 +445,6 @@ class MegaLevelScreen(
 
                 bossSpawnEventHandler.init(bossName, bossSpawnProps, mini)
                 megaman.running = false
-                // engine.systems.forEach { it.on = it is WorldSystem || it is SpritesSystem || it is AnimationsSystem }
             }
 
             EventType.BEGIN_BOSS_SPAWN -> {

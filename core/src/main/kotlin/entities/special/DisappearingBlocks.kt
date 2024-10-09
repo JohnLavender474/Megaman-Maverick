@@ -12,6 +12,7 @@ import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IAudioEntity
 import com.mega.game.engine.entities.contracts.IParentEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
@@ -34,7 +35,7 @@ class DisappearingBlocks(game: MegamanMaverickGame) : MegaGameEntity(game), IPar
         private const val DEFAULT_DURATION = 1.15f
     }
 
-    override var children = Array<GameEntity>()
+    override var children = Array<IGameEntity>()
 
     private val keysToRender = LinkedList<String>()
     private lateinit var bounds: GameRectangle

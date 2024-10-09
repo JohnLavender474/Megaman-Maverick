@@ -31,6 +31,7 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.IParentEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
@@ -82,7 +83,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
     private enum class BospiderState { SPAWN, CLIMB, OPEN_EYE, CLOSE_EYE, RETREAT }
 
-    override var children = Array<GameEntity>()
+    override var children = Array<IGameEntity>()
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
         Bullet::class pairTo dmgNeg(1),
         Fireball::class pairTo dmgNeg(2),
@@ -98,7 +99,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
     private val paths = Array<Array<Vector2>>()
     private val currentPath = Queue<Vector2>()
-    private val stateLoop = Loop(BospiderState.values().toGdxArray())
+    private val stateLoop = Loop(BospiderState.entries.toTypedArray().toGdxArray())
 
     private val childrenSpawnPoints = Array<RectangleMapObject>()
 
@@ -114,9 +115,9 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
     override fun init() {
         if (climbRegion == null || stillRegion == null || openEyeRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
-            climbRegion = atlas.findRegion("Bospider/Climb")
-            stillRegion = atlas.findRegion("Bospider/Still")
-            openEyeRegion = atlas.findRegion("Bospider/OpenEye")
+            climbRegion = atlas.findRegion("$TAG/Climb")
+            stillRegion = atlas.findRegion("$TAG/Still")
+            openEyeRegion = atlas.findRegion("$TAG/OpenEye")
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -147,7 +148,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
     override fun onDestroy() {
         super.onDestroy()
-        children.forEach { it.destroy() }
+        children.forEach { (it as GameEntity).destroy() }
         children.clear()
         paths.clear()
     }
@@ -258,27 +259,35 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
     override fun triggerDefeat() {
         super.triggerDefeat()
-        children.forEach { it.destroy() }
+        children.forEach { (it as GameEntity).destroy() }
         children.clear()
     }
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(2f * ConstVals.PPM)
+        body.physics.applyFrictionX = false
+        body.physics.applyFrictionY = false
+
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(2f * ConstVals.PPM))
         body.addFixture(bodyFixture)
+
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(1.75f * ConstVals.PPM))
         body.addFixture(damagerFixture)
+
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(2f * ConstVals.PPM))
         body.addFixture(damageableFixture)
+
         val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(2f * ConstVals.PPM))
         body.addFixture(shieldFixture)
+
         body.preProcess.put(ConstKeys.DEFAULT) {
             val shielded =
                 stateLoop.getCurrent().equalsAny(BospiderState.SPAWN, BospiderState.CLIMB, BospiderState.RETREAT)
             shieldFixture.active = shielded
             damageableFixture.active = !shielded
         }
+
         return BodyComponentCreator.create(this, body)
     }
 

@@ -16,6 +16,7 @@ import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.IParentEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
@@ -46,7 +47,7 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
         const val SHOCK_DURATION = 0.5f
     }
 
-    override var children = Array<GameEntity>()
+    override var children = Array<IGameEntity>()
 
     val currentState: ElectrocutieState
         get() = loop.getCurrent()
@@ -169,7 +170,7 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
 
     override fun onDestroy() {
         super.onDestroy()
-        children.forEach { it.destroy() }
+        children.forEach { (it as GameEntity).destroy() }
         children.clear()
     }
 

@@ -10,6 +10,7 @@ import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullableOnEvent
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.IParentEntity
 import com.mega.game.engine.motion.RotatingLine
@@ -33,7 +34,7 @@ class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEnti
         private const val DEFAULT_SPEED = 4f
     }
 
-    override var children = Array<GameEntity>()
+    override var children = Array<IGameEntity>()
 
     private lateinit var rotatingLine: RotatingLine
 
@@ -67,7 +68,7 @@ class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEnti
 
     override fun onDestroy() {
         super.onDestroy()
-        children.forEach { it.destroy() }
+        children.forEach { (it as GameEntity).destroy() }
         children.clear()
     }
 

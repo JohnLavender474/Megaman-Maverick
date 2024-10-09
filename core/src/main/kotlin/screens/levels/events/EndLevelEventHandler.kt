@@ -93,7 +93,7 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
             if (startDelayTimer.isJustFinished()) {
                 GameLogger.debug(TAG, "Start delay timer just finished")
                 preBeamTimer.reset()
-                game.audioMan.playSound(SoundAsset.MM1_VICTORY_SOUND, false)
+                game.audioMan.playSound(SoundAsset.MM2_VICTORY_SOUND, false)
             }
         } else if (!preBeamTimer.isFinished()) preBeam(delta)
         else if (!beamTransitionTimer.isFinished()) {

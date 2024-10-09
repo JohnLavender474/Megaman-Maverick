@@ -27,6 +27,7 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.*
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
@@ -58,7 +59,7 @@ class FireMetSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParentE
 
     enum class FireMetSpawnerState { CLOSED, OPENING, SPAWNING, CLOSING }
 
-    override var children = Array<GameEntity>()
+    override var children = Array<IGameEntity>()
 
     private val loop = Loop(FireMetSpawnerState.values().toGdxArray())
     private val closedTimer = Timer(CLOSED_DUR)
@@ -98,7 +99,7 @@ class FireMetSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParentE
 
     override fun onDestroy() {
         super.onDestroy()
-        children.forEach { it.destroy() }
+        children.forEach { (it as GameEntity).destroy() }
         children.clear()
     }
 

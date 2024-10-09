@@ -16,6 +16,7 @@ import com.mega.game.engine.cullables.CullableOnEvent
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.IDrawableShapesEntity
 import com.mega.game.engine.entities.contracts.IParentEntity
@@ -44,7 +45,7 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
         private const val MAX_CHILDREN = 5
     }
 
-    override var children = Array<GameEntity>()
+    override var children = Array<IGameEntity>()
 
     private lateinit var bounds: GameRectangle
     private lateinit var spawnTimer: Timer
@@ -105,7 +106,7 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
         if (children.size >= MAX_CHILDREN) return@UpdatablesComponent
 
         if (game.isProperty(ConstKeys.ROOM_TRANSITION, true)) return@UpdatablesComponent
-        
+
         spawnTimer.update(delta)
         if (spawnTimer.isFinished()) {
             spawnAsteroid()

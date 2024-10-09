@@ -45,8 +45,10 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val NO = "no"
     const val ID = "id"
     const val SUPPLIER = "supplier"
+    const val ICE = "ice"
     const val VSYNC = "vsyinc"
     const val BULLET = "bullet"
     const val CAM = "cam"

@@ -26,7 +26,7 @@ class SimpleEndLevelScreen(private val game: MegamanMaverickGame) : BaseScreen()
                 centerY = true,
                 fontSource = ConstVals.MEGAMAN_MAVERICK_FONT
             )
-        game.audioMan.playSound(SoundAsset.MM1_VICTORY_SOUND, false)
+        game.audioMan.playSound(SoundAsset.MM2_VICTORY_SOUND, false)
     }
 
     override fun render(delta: Float) {

@@ -1,10 +1,5 @@
 package com.megaman.maverick.game.entities.factories.impl
 
-import com.mega.game.engine.world.body.*;
-import com.mega.game.engine.world.collisions.*;
-import com.mega.game.engine.world.contacts.*;
-import com.mega.game.engine.world.pathfinding.*;
-
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.bosses.*
 import com.megaman.maverick.game.entities.bosses.gutstank.GutsTank
@@ -15,7 +10,8 @@ import com.megaman.maverick.game.entities.factories.GameEntityPoolCreator
 class BossesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
 
     companion object {
-        const val REACT_MAN = "ReactMan"
+        const val REACTOR_MAN = "ReactorMan"
+        const val GLACIER_MAN = "GlacierMan"
         const val BOSPIDER = "Bospider"
         const val GUTS_TANK = "GutsTank"
         const val SIGMA_RAT = "SigmaRat"
@@ -27,7 +23,8 @@ class BossesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
     }
 
     override fun init() {
-        pools.put(REACT_MAN, GameEntityPoolCreator.create { ReactMan(game) })
+        pools.put(REACTOR_MAN, GameEntityPoolCreator.create { ReactorMan(game) })
+        pools.put(GLACIER_MAN, GameEntityPoolCreator.create { GlacierMan(game) })
         pools.put(BOSPIDER, GameEntityPoolCreator.create { Bospider(game) })
         pools.put(GUTS_TANK, GameEntityPoolCreator.create { GutsTank(game) })
         pools.put(SIGMA_RAT, GameEntityPoolCreator.create { SigmaRat(game) })

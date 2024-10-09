@@ -1,7 +1,7 @@
 Backgrounds5.png
 size: 1000, 750
 format: RGBA8888
-filter: Linear,Linear
+filter: Nearest,Nearest
 repeat: none
 GlacierCloudsBKG
   rotate: false

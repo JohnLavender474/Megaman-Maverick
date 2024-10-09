@@ -40,7 +40,7 @@ class SnowballExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
     IDamager {
 
     companion object {
-        const val DURATION = 0.075f
+        const val DURATION = 0.025f
         private var region: TextureRegion? = null
     }
 
@@ -72,7 +72,7 @@ class SnowballExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(1.5f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat())
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
         body.addFixture(damagerFixture)
@@ -89,7 +89,7 @@ class SnowballExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(2.5f * ConstVals.PPM)
+        sprite.setSize(2f * ConstVals.PPM)
         val spriteComponent = SpritesComponent(sprite)
         spriteComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())

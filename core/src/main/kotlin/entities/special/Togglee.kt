@@ -30,6 +30,7 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.*
 import com.mega.game.engine.events.Event
 import com.mega.game.engine.events.IEventListener
@@ -79,7 +80,7 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    override var children = Array<GameEntity>()
+    override var children = Array<IGameEntity>()
     override var directionRotation: Direction? = null
     override val eventKeyMask = objectSetOf<Any>(EventType.PLAYER_SPAWN, EventType.END_ROOM_TRANS)
 
@@ -183,7 +184,7 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
     override fun onDestroy() {
         super.onDestroy()
         game.eventsMan.removeListener(this)
-        children.forEach { it.destroy() }
+        children.forEach { (it as GameEntity).destroy() }
         children.clear()
         offEntitySuppliers.clear()
         onEntitySuppliers.clear()
@@ -203,7 +204,8 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
 
     private fun spawnEntities(on: Boolean) {
         children.forEach {
-            if (it is Lava && it.moveBeforeKill && !it.movingBeforeKill) it.moveBeforeKill() else it.destroy()
+            if (it is Lava && it.moveBeforeKill && !it.movingBeforeKill) it.moveBeforeKill()
+            else (it as GameEntity).destroy()
         }
         children.clear()
 
