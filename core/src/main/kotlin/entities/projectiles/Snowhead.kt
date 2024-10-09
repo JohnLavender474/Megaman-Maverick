@@ -48,10 +48,10 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
         const val TAG = "Snowhead"
         private const val GRAVITY = -0.2f
         private val SNOWBALL_TRAJECTORIES = gdxArrayOf(
-            Vector2(-7f, 5f),
-            Vector2(-3f, 7f),
-            Vector2(3f, 7f),
-            Vector2(7f, 5f),
+            Vector2(-7.5f, 7f),
+            Vector2(-3.5f, 9f),
+            Vector2(3.5f, 9f),
+            Vector2(7.5f, 7f),
         )
         private var region: TextureRegion? = null
         private var noFaceRegion: TextureRegion? = null

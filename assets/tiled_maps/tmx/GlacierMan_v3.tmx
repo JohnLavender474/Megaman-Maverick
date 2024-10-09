@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="650" height="70" tilewidth="32" tileheight="32" infinite="0" nextlayerid="15" nextobjectid="485">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="650" height="70" tilewidth="32" tileheight="32" infinite="0" nextlayerid="15" nextobjectid="487">
  <tileset firstgid="1" source="../tsx/GlacierManTileset.tsx"/>
  <tileset firstgid="17281" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="18305" source="../tsx/Blizzardman.tsx"/>
@@ -188,7 +188,7 @@
     <property name="left" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="62" name="SnowheadThrower" x="2840" y="1424" width="16" height="16"/>
+  <object id="62" name="SnowheadThrower" x="2816" y="1424" width="16" height="16"/>
   <object id="63" name="SniperJoe" x="2072" y="1872" width="16" height="16">
    <properties>
     <property name="type" value="Snow"/>
@@ -340,7 +340,11 @@
   </object>
   <object id="315" name="Matasaburo" x="11832" y="432" width="16" height="16"/>
   <object id="316" name="Sealion" x="2600" y="1848" width="16" height="16"/>
-  <object id="322" name="SnowheadThrower" x="8424" y="976" width="16" height="16"/>
+  <object id="322" name="SniperJoe" x="8440" y="976" width="16" height="16">
+   <properties>
+    <property name="type" value="Snow"/>
+   </properties>
+  </object>
   <object id="335" name="SnowheadThrower" x="13080" y="432" width="16" height="16"/>
   <object id="336" name="SniperJoe" x="13544" y="432" width="16" height="16">
    <properties>
@@ -491,7 +495,7 @@
     <property name="y" type="float" value="0"/>
    </properties>
   </object>
-  <object id="477" name="ShieldAttacker" x="15608" y="864" width="16" height="16">
+  <object id="477" name="ShieldAttacker" x="15608" y="872" width="16" height="16">
    <properties>
     <property name="value" type="float" value="-3"/>
    </properties>
@@ -501,10 +505,10 @@
   <object id="76" name="GlacierBKG" x="0" y="1600" width="768" height="640"/>
   <object id="478" name="GlacierCloudsBKG" x="0" y="1600" width="768" height="640"/>
  </objectgroup>
- <objectgroup id="5" name="temp">
-  <object id="481" name="0" x="17952" y="992" width="32" height="32"/>
+ <objectgroup id="5" name="player">
+  <object id="486" name="0" x="17952" y="992" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="10" name="player">
+ <objectgroup id="10" name="temp">
   <object id="80" name="0" x="96" y="1984" width="32" height="32"/>
   <object id="308" name="1" x="3008" y="608" width="32" height="32">
    <properties>

@@ -86,7 +86,6 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity,
 
         private const val JUMP_IMPULSE_X = 25f
         private const val JUMP_IMPULSE_Y = 48f
-        // private const val FALL_SHOOT_DELAY = 0.5f
 
         private const val GRAVITY = -0.15f
         private const val GROUND_GRAVITY = -0.01f
@@ -238,9 +237,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity,
         )
     }
 
-    private fun canShootUp(): Boolean {
-        return !stateMachine.getCurrent().equalsAny(GlacierManState.SLED, GlacierManState.JUMP)
-    }
+    private fun canShootUp() = !stateMachine.getCurrent().equalsAny(GlacierManState.SLED, GlacierManState.JUMP)
 
     private fun shoot() {
         GameLogger.debug(TAG, "shoot()")
@@ -258,30 +255,6 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity,
                 if (shootUp) SNOWBALL_VEL_UP_Y else SNOWBALL_VEL_STRAIGHT_Y
             ).scl(ConstVals.PPM.toFloat())
         }
-        /*
-        else if (isFalling() && animator.currentKey?.equalsAny("fall", "fall_shoot_up") == true) {
-            val index = animator.currentAnimation?.getIndex()
-            when (index) {
-                0 -> {
-                    spawn.add(-0.5f * ConstVals.PPM, 0f)
-                    trajectory.set(-SNOWBALL_VEL_UP_X, SNOWBALL_VEL_UP_Y).scl(ConstVals.PPM.toFloat())
-                }
-
-                4 -> {
-                    spawn.add(0.5f * ConstVals.PPM, 0f)
-                    trajectory.set(SNOWBALL_VEL_UP_X, SNOWBALL_VEL_UP_Y).scl(ConstVals.PPM.toFloat())
-                }
-
-                else -> {
-                    GameLogger.error(
-                        TAG,
-                        "shoot(): cannot shoot because index of \"fall\"/\"fall_shoot_up\" animation is invalid: $index"
-                    )
-                    return
-                }
-            }
-        }
-        */
 
         val snowhead = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SNOW_HEAD)!!
         snowhead.spawn(
@@ -329,7 +302,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity,
             body.physics.defaultFrictionOnSelf.x = ConstVals.STANDARD_RESISTANCE_X
             body.putProperty("${ConstKeys.ICE}_${ConstKeys.FRICTION_X}", true)
             body.physics.applyFrictionX = true
-        } // else if (previous == GlacierManState.JUMP) timers["fall_shoot"].reset()
+        }
 
         if (previous != GlacierManState.BRAKE && current != GlacierManState.BRAKE) {
             body.physics.defaultFrictionOnSelf.x = 1f
@@ -382,6 +355,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity,
                     timer.update(delta)
                     if (timer.isFinished()) stateMachine.next()
                 }
+
                 GlacierManState.STAND,
                 GlacierManState.DUCK,
                 GlacierManState.SLED,
@@ -422,22 +396,6 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity,
                         GameLogger.debug(TAG, "update(): end jump")
                         stateMachine.next()
                     } else body.physics.velocity.x += JUMP_IMPULSE_X * ConstVals.PPM * facing.value * delta
-
-                    /*
-                    if (isFalling() && animator.currentKey?.equalsAny("fall", "fall_shoot_up") == true) {
-                        GameLogger.debug(TAG, "update(): is falling and animator key is ${animator.currentKey}")
-                        val fallShootTimer = timers["fall_shoot"]
-                        fallShootTimer.update(delta)
-                        if (fallShootTimer.isFinished()) {
-                            val index = animator.currentAnimation?.getIndex()
-                            GameLogger.debug(TAG, "update(): fall-shoot timer finished; anim index = $index")
-                            if (index == 0 || index == 4) {
-                                shoot()
-                                fallShootTimer.reset()
-                            } else GameLogger.debug(TAG, "update(): delay jump-shoot because current anim index is $index")
-                        }
-                    }
-                    */
                 }
 
                 GlacierManState.BRAKE -> {
@@ -683,11 +641,6 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity,
 
         val initTimer = Timer(INIT_DUR)
         timers.put("init", initTimer)
-
-        /*
-        val fallShootTimer = Timer(FALL_SHOOT_DELAY)
-        timers.put("fall_shoot", fallShootTimer)
-         */
 
         val standTimer = Timer(STAND_DUR)
         standTimer.setRunnables(gdxArrayOf(TimeMarkedRunnable(0.5f) { shoot() }))

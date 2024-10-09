@@ -56,7 +56,7 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         const val TAG = "FragileIceCube"
         private const val GRAVITY = -0.15f
         private const val GROUND_GRAVITY = -0.01f
-        private const val CLAMP = 12f
+        private const val CLAMP = 10f
         private const val CULL_TIME = 2f
         private const val DEFAULT_MAX_HIT_TIMES = 1
         private var region1: TextureRegion? = null
@@ -139,9 +139,9 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         body.setSize(0.4f * ConstVals.PPM)
         body.physics.velocityClamp.set(CLAMP * ConstVals.PPM)
 
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(0.45f * ConstVals.PPM))
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(0.55f * ConstVals.PPM))
         bodyFixture.setHitByBodyReceiver { entity -> if (entity is SmallIceCube) shatterAndDie() }
-        // bodyFixture.setHitByPlayerReceiver { getHit(it) }
+        bodyFixture.setHitByPlayerReceiver { getHit(it) }
         bodyFixture.setHitByProjectileReceiver { getHit(it) }
         bodyFixture.setHitByBlockReceiver { if (destroyOnHitBlock) shatterAndDie() else getHit(it) }
         body.addFixture(bodyFixture)
@@ -151,18 +151,18 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyCenter.y = -0.25f * ConstVals.PPM
+        feetFixture.offsetFromBodyCenter.y = -0.225f * ConstVals.PPM
         body.addFixture(feetFixture)
 
         val leftFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.25f * ConstVals.PPM))
-        leftFixture.offsetFromBodyCenter.x = -0.25f * ConstVals.PPM
+        leftFixture.offsetFromBodyCenter.x = -0.2f * ConstVals.PPM
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftFixture)
 
         val rightFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.25f * ConstVals.PPM))
-        rightFixture.offsetFromBodyCenter.x = -0.25f * ConstVals.PPM
+        rightFixture.offsetFromBodyCenter.x = -0.2f * ConstVals.PPM
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
 
@@ -170,6 +170,13 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
             val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
             body.physics.gravity.y = gravity * ConstVals.PPM
             if (body.isSensing(BodySense.FEET_ON_GROUND)) body.physics.velocity.y = 0f
+
+            if (body.physics.velocity.x < -0.1f * ConstVals.PPM &&
+                body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)
+            ) body.physics.velocity.x = -0.1f * ConstVals.PPM
+            else if (body.physics.velocity.x > 0.1f * ConstVals.PPM &&
+                body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)
+            ) body.physics.velocity.x = 0.1f * ConstVals.PPM
         }
 
         return BodyComponentCreator.create(this, body)
