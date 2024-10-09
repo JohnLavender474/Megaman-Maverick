@@ -154,18 +154,21 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity,
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
         body.physics.defaultFrictionOnSelf.x = 1f
         body.physics.applyFrictionX = false
-        body.physics.gravityOn = true
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        body.physics.velocity.setZero()
+
         stateMachine.reset()
         timers.forEach { entry ->
             val timer = entry.value
             if (entry.key.equalsAny("shoot_anim")) timer.setToEnd()
             else timer.reset()
         }
+
+        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
         shootUp = false
         firstUpdate = true
         iceBlastLeftHand = false
@@ -313,10 +316,19 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity,
         body.physics.gravityOn = false
     }
 
+    override fun onReady() {
+        super.onReady()
+        body.physics.gravityOn = true
+    }
+
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (!ready) return@add
+            if (!ready) {
+                body.physics.velocity.setZero()
+                body.physics.gravityOn = false
+                return@add
+            }
             if (defeated) {
                 explodeOnDefeat(delta)
                 return@add
@@ -464,7 +476,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity,
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
             _sprite.setFlip(isFacing(Facing.RIGHT), false)
-            _sprite.hidden = damageBlink
+            _sprite.hidden = damageBlink || !ready
         }
         return spritesComponent
     }

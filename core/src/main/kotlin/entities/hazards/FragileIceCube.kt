@@ -124,13 +124,14 @@ class FragileIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(0.5f * ConstVals.PPM)
+        body.setSize(0.45f * ConstVals.PPM)
         body.physics.velocityClamp.set(CLAMP * ConstVals.PPM)
 
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(0.55f * ConstVals.PPM))
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(0.5f * ConstVals.PPM))
         bodyFixture.setHitByBodyReceiver { entity -> if (entity is FragileIceCube) shatterAndDie() }
         bodyFixture.setHitByPlayerReceiver { shatterAndDie() }
         bodyFixture.setHitByProjectileReceiver { shatterAndDie() }
+        bodyFixture.setHitByBlockReceiver { getHitByBlock() }
         body.addFixture(bodyFixture)
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
@@ -140,20 +141,17 @@ class FragileIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyCenter.y = -0.25f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.setHitByBlockReceiver { getHitByBlock() }
 
         val leftFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.25f * ConstVals.PPM))
         leftFixture.offsetFromBodyCenter.x = -0.25f * ConstVals.PPM
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
-        leftFixture.setHitByBlockReceiver { getHitByBlock() }
         body.addFixture(leftFixture)
 
         val rightFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.25f * ConstVals.PPM))
         rightFixture.offsetFromBodyCenter.x = -0.25f * ConstVals.PPM
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
-        rightFixture.setHitByBlockReceiver { getHitByBlock() }
         body.addFixture(rightFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT) {
