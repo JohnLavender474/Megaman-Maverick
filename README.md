@@ -17,23 +17,8 @@ View my Youtube channel for demos and more! https://youtube.com/playlist?list=PL
 
 ## RUNNING THE GAME
 
-### RUNNING AN "OFFICIAL" VERSION OF THE GAME
-
-Download the latest zipped build from one of the following links depending on your OS:
-- Windows: https://drive.google.com/file/d/18KVTMErB2zWhANkvfaD5S5z3RyA3ZvuY/view?usp=sharing
-- Linux: https://drive.google.com/file/d/1pHo7JE-d9CUIBNADLJdiatiP95DJP7mb/view?usp=sharing
-
-Once the download has completed, extract the zip to a suitable location on your local desktop.
-
-For Windows, there should be a `desktop.exe` file in the root of the unzipped directory to launch the game.
-
-For Linux, there should be an AppImage in the `bin` directory of the unzipped directory.
-
-**Support for Macbooks is in the works!**
-
-Please note that while the game is in development, new "official" versions will not be generated often. Therefore, as
-long as there is no "release" version of the game, it is recommended to build the game from source for the latest
-changes and fixes.
+Currently, there is no "official" release of this game since it is still under active development. However, see the 
+section below on how to run the game using the source code.
 
 ### BUILDING THE GAME FROM SOURCE
 
@@ -48,19 +33,11 @@ the generated JAR, you will need Java 17+ installed on your local machine.
 1. Use `git` to clone the project to a suitable location on your desktop.
 2. From the root directory, run one of the following:
 
-- Build and run a "distribution" JAR:
-    - Windows:
-        - `.\gradlew desktop:dist`
-        - `java -jar .\desktop\build\libs\desktop-1.0.jar` (replace `desktop-1.0` in the JAR filename if these values
-          have been changed in the root `build.gradle` file)
-    - Linux/Mac:
-        - `build-run-desktop.sh` (runs the same commands as those for the Windows "distribution" JAR)
-- For debugging purposes, the following can be run instead:
-    - Windows:
-        - `.\gradlew desktop:run --args="[args here]"`where `[args here]` is replaced with the optional program args
-    - Linux/Mac:
-        - `./gradlew desktop:run --args="[args here]"`where `[args here]` is replaced with the optional program args
-    - See [DesktopLauncher](./desktop/src/com/megaman/maverick/game/DesktopLauncher.java) for more info regarding app args
+- Run using gradle:
+    - Run the following command to start the desktop application: `./gradlew lwjgl:run`. 
+    - Optionally, you can run the `build-run-desktop-alpha.sh` or `build-run-desktop-debug.sh` script instead. The former is 
+      a shortcut for the above command. Meanwhile, the latter script includes configurable args for debugging purposes.
+    - See the [GDX Liftoff](#GDX-Liftoff) section for more gradle commands.
 
 ## PLAYING THE GAME
 
@@ -93,10 +70,10 @@ When a controller is connected, default mappings are assigned. Most likely, you 
 In the "Controller Settings" screen, you can reassign the mappings for the controller similarly to how the same is done
 for the keyboard mappings.
 
-### STARTING THE GAME
+### STARTING THE GAME (ALPHA)
 
-This section currently pertains to starting an alpha build of the game, and it will be updated when beta and release
-versions are eventually released.
+This section pertains to starting an alpha build of the game (which can be started via the `./build-run-desktop-alpha.sh`
+script), and it will be updated when beta and release versions are eventually released. To run an 
 
 When launching an alpha build, the first screen you see should be something like the following.
 
