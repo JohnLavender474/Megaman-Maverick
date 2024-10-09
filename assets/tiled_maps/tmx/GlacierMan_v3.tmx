@@ -505,10 +505,10 @@
   <object id="76" name="GlacierBKG" x="0" y="1600" width="768" height="640"/>
   <object id="478" name="GlacierCloudsBKG" x="0" y="1600" width="768" height="640"/>
  </objectgroup>
- <objectgroup id="5" name="player">
+ <objectgroup id="5" name="temp">
   <object id="486" name="0" x="17952" y="992" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="10" name="temp">
+ <objectgroup id="10" name="player">
   <object id="80" name="0" x="96" y="1984" width="32" height="32"/>
   <object id="308" name="1" x="3008" y="608" width="32" height="32">
    <properties>
