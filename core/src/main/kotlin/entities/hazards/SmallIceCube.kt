@@ -22,6 +22,7 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IAudioEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
@@ -42,11 +43,13 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.body.*
 
-class FragileIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity, ISpritesEntity,
+class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity, ISpritesEntity,
     IAudioEntity, IHazard, IDamager {
 
     companion object {
@@ -55,13 +58,18 @@ class FragileIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         private const val GROUND_GRAVITY = -0.01f
         private const val CLAMP = 12f
         private const val CULL_TIME = 2f
-        private const val DEFAULT_MAX_HIT_BLOCK_TIMES = 1
+        private const val DEFAULT_MAX_HIT_TIMES = 1
         private var region1: TextureRegion? = null
         private var region2: TextureRegion? = null
+        private val INSTANT_DEATH_ENTITIES = objectSetOf(
+            Megaman::class,
+            ChargedShot::class
+        )
     }
 
-    private var hitBlockTimes = 0
-    private var maxHitBlockTimes = DEFAULT_MAX_HIT_BLOCK_TIMES
+    private var hitTimes = 0
+    private var destroyOnHitBlock = false
+    private var maxHitTimes = DEFAULT_MAX_HIT_TIMES
 
     override fun getEntityType() = EntityType.HAZARD
 
@@ -101,11 +109,12 @@ class FragileIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         val priority = spawnProps.getOrDefault(ConstKeys.PRIORITY, 1, Int::class)
         firstSprite!!.priority.value = priority
 
-        maxHitBlockTimes = spawnProps.getOrDefault(ConstKeys.MAX, DEFAULT_MAX_HIT_BLOCK_TIMES, Int::class)
-        hitBlockTimes = 0
+        destroyOnHitBlock = spawnProps.getOrDefault(ConstKeys.HIT_BY_BLOCK, false, Boolean::class)
+        maxHitTimes = spawnProps.getOrDefault(ConstKeys.MAX, DEFAULT_MAX_HIT_TIMES, Int::class)
+        hitTimes = 0
     }
 
-    override fun onDamageInflictedTo(damageable: IDamageable) = shatterAndDie()
+    override fun onDamageInflictedTo(damageable: IDamageable) = getHit(damageable as IGameEntity)
 
     private fun shatterAndDie() {
         destroy()
@@ -115,26 +124,29 @@ class FragileIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         }
     }
 
-    private fun getHitByBlock() {
-        GameLogger.debug(TAG, "hit by block")
-        hitBlockTimes++
-        if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ICE_SHARD_1_SOUND, false)
-        if (hitBlockTimes > maxHitBlockTimes) shatterAndDie()
+    private fun getHit(entity: IGameEntity) {
+        GameLogger.debug(TAG, "getHit(): entity=$entity")
+        if (INSTANT_DEATH_ENTITIES.contains(entity::class)) shatterAndDie()
+        else {
+            hitTimes++
+            if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ICE_SHARD_1_SOUND, false)
+            if (hitTimes > maxHitTimes) shatterAndDie()
+        }
     }
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(0.45f * ConstVals.PPM)
+        body.setSize(0.4f * ConstVals.PPM)
         body.physics.velocityClamp.set(CLAMP * ConstVals.PPM)
 
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(0.5f * ConstVals.PPM))
-        bodyFixture.setHitByBodyReceiver { entity -> if (entity is FragileIceCube) shatterAndDie() }
-        bodyFixture.setHitByPlayerReceiver { shatterAndDie() }
-        bodyFixture.setHitByProjectileReceiver { shatterAndDie() }
-        bodyFixture.setHitByBlockReceiver { getHitByBlock() }
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(0.45f * ConstVals.PPM))
+        bodyFixture.setHitByBodyReceiver { entity -> if (entity is SmallIceCube) shatterAndDie() }
+        // bodyFixture.setHitByPlayerReceiver { getHit(it) }
+        bodyFixture.setHitByProjectileReceiver { getHit(it) }
+        bodyFixture.setHitByBlockReceiver { if (destroyOnHitBlock) shatterAndDie() else getHit(it) }
         body.addFixture(bodyFixture)
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.55f * ConstVals.PPM))
         body.addFixture(damagerFixture)
 
         val feetFixture =
@@ -182,7 +194,7 @@ class FragileIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         sprite.setSize(0.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
-            val region = if (hitBlockTimes == 0) region1 else region2
+            val region = if (hitTimes == 0) region1 else region2
             _sprite.setRegion(region)
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
         }

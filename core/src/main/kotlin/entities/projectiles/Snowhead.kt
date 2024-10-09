@@ -46,7 +46,7 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
 
     companion object {
         const val TAG = "Snowhead"
-        private const val GRAVITY = -0.15f
+        private const val GRAVITY = -0.2f
         private val SNOWBALL_TRAJECTORIES = gdxArrayOf(
             Vector2(-7f, 5f),
             Vector2(-3f, 7f),

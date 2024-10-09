@@ -885,9 +885,11 @@
   <object id="313" name="Start" x="8088" y="1752" width="16" height="16"/>
   <object id="436" name="Target1" x="15192" y="800" width="16" height="16"/>
   <object id="437" name="Target2" x="15256" y="640" width="16" height="16"/>
-  <object id="480" name="GlacierMan" x="18592" y="992" width="32" height="32">
+  <object id="480" name="GlacierMan" x="18592" y="736" width="32" height="32">
    <properties>
     <property name="music" value="MMX6_BOSS_FIGHT_MUSIC"/>
+    <property name="wall_1" type="int" value="419"/>
+    <property name="wall_2" type="int" value="422"/>
    </properties>
   </object>
  </objectgroup>

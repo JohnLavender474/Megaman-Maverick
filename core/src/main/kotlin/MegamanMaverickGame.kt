@@ -71,7 +71,6 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.hazards.Saw
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.megaman.Megaman.Companion.MEGAMAN_EVENT_LISTENER_TAG
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
 import com.megaman.maverick.game.events.EventType
@@ -110,7 +109,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
 
     companion object {
         const val TAG = "MegamanMaverickGame"
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(MEGAMAN_EVENT_LISTENER_TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.WATER, FixtureType.WATER_LISTENER)
         }

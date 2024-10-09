@@ -57,8 +57,8 @@ class SnowheadThrower(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
         private const val STAND_DUR = 1f
         private const val THROW_DUR = 0.6f
         private const val THROW_DELAY = 0.1f
-        private const val SNOW_HEAD_X_VEL = 6f
-        private const val SNOW_HEAD_Y_VEL = 6f
+        private const val SNOW_HEAD_X_VEL = 8f
+        private const val SNOW_HEAD_Y_VEL = 8f
         private var standRegion: TextureRegion? = null
         private var throwRegion: TextureRegion? = null
     }

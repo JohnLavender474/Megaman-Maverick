@@ -66,7 +66,7 @@ class IceCubeMaker(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     private fun dropIceCube() {
         val spawn = body.getBottomCenterPoint()
-        val icecube = EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.FRAGILE_ICE_CUBE)!!
+        val icecube = EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.SMALL_ICE_CUBE)!!
         icecube.spawn(props(ConstKeys.POSITION pairTo spawn))
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
     }

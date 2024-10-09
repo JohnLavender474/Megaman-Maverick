@@ -30,7 +30,9 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
             GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "left actuator just pressed")
         },
         onPressContinued = { poller, delta ->
-            if (!canMove || !ready || damaged || poller.isPressed(MegaControllerButtons.RIGHT) || teleporting) {
+            if (!canMove || !ready || damaged || poller.isPressed(MegaControllerButtons.RIGHT) || teleporting ||
+                isBehaviorActive(BehaviorType.GROUND_SLIDING)
+            ) {
                 if (!poller.isPressed(MegaControllerButtons.RIGHT)) running = false
                 return@ButtonActuator
             }
@@ -48,7 +50,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
             else MegamanValues.RUN_IMPULSE
 
             val impulse = rawImpulse * delta * movementScalar * ConstVals.PPM * facing.value *
-                    if (isBehaviorActive(BehaviorType.WALL_SLIDING)) -1f else 1f
+                if (isBehaviorActive(BehaviorType.WALL_SLIDING)) -1f else 1f
 
             if (isDirectionRotatedVertically() && abs(body.physics.velocity.x) < threshold)
                 body.physics.velocity.x += impulse
@@ -74,7 +76,9 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
             GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "right actuator just pressed")
         },
         onPressContinued = { poller, delta ->
-            if (!canMove || !ready || damaged || poller.isPressed(MegaControllerButtons.LEFT) || teleporting) {
+            if (!canMove || !ready || damaged || poller.isPressed(MegaControllerButtons.LEFT) || teleporting ||
+                isBehaviorActive(BehaviorType.GROUND_SLIDING)
+            ) {
                 if (!poller.isPressed(MegaControllerButtons.LEFT)) running = false
                 return@ButtonActuator
             }
@@ -92,7 +96,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
             else MegamanValues.RUN_IMPULSE
 
             val impulse = rawImpulse * delta * movementScalar * ConstVals.PPM * facing.value *
-                    if (isBehaviorActive(BehaviorType.WALL_SLIDING)) -1f else 1f
+                if (isBehaviorActive(BehaviorType.WALL_SLIDING)) -1f else 1f
 
             if (isDirectionRotatedVertically() && abs(body.physics.velocity.x) < threshold)
                 body.physics.velocity.x += impulse
@@ -119,7 +123,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
             if (!ready || damaged || cameraRotating || teleporting || currentWeapon == MegamanWeapon.RUSH_JETPACK ||
                 (!charging && !weaponHandler.canFireWeapon(currentWeapon, MegaChargeStatus.HALF_CHARGED)) ||
                 (charging && !weaponHandler.canFireWeapon(currentWeapon, MegaChargeStatus.FULLY_CHARGED) ||
-                        !has(MegaAbility.CHARGE_WEAPONS))
+                    !has(MegaAbility.CHARGE_WEAPONS))
             ) {
                 stopCharging()
                 return@ButtonActuator
@@ -144,7 +148,8 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
         setToNextWeapon()
     })
 
-    return ControllerComponent(MegaControllerButtons.LEFT pairTo { left },
+    return ControllerComponent(
+        MegaControllerButtons.LEFT pairTo { left },
         MegaControllerButtons.RIGHT pairTo { right },
         MegaControllerButtons.B pairTo { attack },
         MegaControllerButtons.SELECT pairTo { changeWeapon })

@@ -106,6 +106,11 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         if (damageable !is IHealthEntity || damageable.getCurrentHealth() > ConstVals.MIN_HEALTH) explodeAndDie()
     }
 
+    override fun hitBody(bodyFixture: IFixture) {
+        val entity = bodyFixture.getEntity()
+        if (entity != owner && entity is IDamageable && !entity.canBeDamagedBy(this)) explodeAndDie()
+    }
+
     override fun hitBlock(blockFixture: IFixture) = explodeAndDie()
 
     override fun hitSand(sandFixture: IFixture) = explodeAndDie()

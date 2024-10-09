@@ -50,7 +50,6 @@ import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOS
 import com.megaman.maverick.game.entities.megaman.extensions.clearFeetBlocks
 import com.megaman.maverick.game.entities.megaman.extensions.stopCharging
 import com.megaman.maverick.game.entities.projectiles.*
-import com.megaman.maverick.game.entities.projectiles.SniperJoeShield
 import com.megaman.maverick.game.entities.special.Togglee
 import com.megaman.maverick.game.entities.utils.setStandardOnTeleportContinueProp
 import com.megaman.maverick.game.entities.utils.standardOnTeleportEnd
@@ -155,7 +154,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         PetitDevil::class pairTo dmgNeg(3),
         PetitDevilChild::class pairTo dmgNeg(2),
         Shotman::class pairTo dmgNeg(2),
-        Snowhead::class pairTo dmgNeg(1),
+        Snowhead::class pairTo dmgNeg(2),
         SnowheadThrower::class pairTo dmgNeg(3),
         Spiky::class pairTo dmgNeg(4),
         PenguinMiniBoss::class pairTo dmgNeg(3),
@@ -208,7 +207,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         JetpackIceBlaster::class pairTo dmgNeg(3),
         TeardropBlast::class pairTo dmgNeg(3),
         FallingIcicle::class pairTo dmgNeg(3),
-        FragileIceCube::class pairTo dmgNeg(1),
+        SmallIceCube::class pairTo dmgNeg(1),
         UnderwaterFan::class pairTo dmgNeg(5),
         Tropish::class pairTo dmgNeg(3),
         SeaMine::class pairTo dmgNeg(3),
