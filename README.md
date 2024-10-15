@@ -1,3 +1,5 @@
+This README is not finished; therefore sections may contain inaccurate or outdated info.
+
 # MEGAMAN MAVERICK
 
 <img src="img/MainScreen.png" width="600px"/>
