@@ -3,6 +3,7 @@ package com.megaman.maverick.game.entities.megaman
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
+import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.interfaces.Updatable
@@ -55,9 +56,9 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
             val spawnCenter = Vector2(megaman.body.getCenter())
 
             val xOffset = ConstVals.PPM * megaman.facing.value *
-                if (megaman.isBehaviorActive(BehaviorType.RIDING_CART) &&
-                    megaman.body.isSensing(BodySense.FEET_ON_GROUND)
-                ) 1.25f
+                if (megaman.isBehaviorActive(BehaviorType.RIDING_CART)) {
+                    if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 1.25f else 1f
+                }
                 else if (!megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.75f
                 else if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING)) 0.25f
                 else if (megaman.slipSliding) 0.65f
@@ -75,8 +76,11 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
                 0.3f * ConstVals.PPM
             else if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING)) -0.05f * ConstVals.PPM
             else if (megaman.isBehaviorActive(BehaviorType.RIDING_CART)) {
-                if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.6f * ConstVals.PPM else 0.75f * ConstVals.PPM
+                if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.6f * ConstVals.PPM else 0.3f * ConstVals.PPM
             } // else if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.4f * ConstVals.PPM
+            else if (megaman.directionRotation == Direction.DOWN) {
+                (if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.15f else 0.25f) * ConstVals.PPM
+            }
             else 0.135f * ConstVals.PPM
             /*
             else if (megaman.isBehaviorActive(BehaviorType.CLIMBING)) 0.15f * ConstVals.PPM
@@ -88,7 +92,9 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
                 spawnCenter.x += xOffset
                 spawnCenter.y += if (megaman.isDirectionRotatedDown()) (-yOffset + 0.1f * ConstVals.PPM) else yOffset
             } else {
-                yOffset -= 0.025f * ConstVals.PPM
+                yOffset += if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) -0.075f * ConstVals.PPM
+                else if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) -0.1f * ConstVals.PPM
+                else 0.05f * ConstVals.PPM
                 spawnCenter.x += if (megaman.isDirectionRotatedLeft()) -yOffset else yOffset
                 spawnCenter.y += xOffset
             }

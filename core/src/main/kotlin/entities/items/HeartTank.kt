@@ -21,7 +21,6 @@ import com.mega.game.engine.events.Event
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -34,6 +33,7 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
 
 class HeartTank(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, IBodyEntity, ISpritesEntity,
@@ -51,24 +51,21 @@ class HeartTank(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, I
     override fun getEntityType() = EntityType.ITEM
 
     override fun init() {
-        if (textureRegion == null)
-            textureRegion = game.assMan.getTextureRegion(TextureAsset.ITEMS_1.source, "HeartTank")
+        if (textureRegion == null) textureRegion = game.assMan.getTextureRegion(TextureAsset.ITEMS_1.source, TAG)
         addComponent(defineBodyComponent())
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
     }
 
+    override fun canSpawn(spawnProps: Properties): Boolean {
+        heartTank = MegaHeartTank.get(spawnProps.get(ConstKeys.VALUE, String::class)!!.uppercase())
+        return !getMegaman().has(heartTank) && super.canSpawn(spawnProps)
+    }
+
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-
-        heartTank = MegaHeartTank.get(spawnProps.get(ConstKeys.VALUE, String::class)!!.uppercase())
-        if (getMegaman().has(heartTank)) {
-            destroy()
-            return
-        }
-
+        if (!this::heartTank.isInitialized) throw IllegalStateException("Heart tank value is not initialized")
         upsideDown = spawnProps.getOrDefault(ConstKeys.UPSIDE_DOWN, false, Boolean::class)
-
         val spawn = if (spawnProps.containsKey(ConstKeys.BOUNDS))
             spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         else spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
@@ -83,11 +80,7 @@ class HeartTank(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, I
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(ConstVals.PPM.toFloat())
-
-        val itemFixture = Fixture(body, FixtureType.ITEM, GameRectangle().setSize(ConstVals.PPM.toFloat()))
-        body.addFixture(itemFixture)
-
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.ITEM))
     }
 
     private fun defineSpritesCompoent(): SpritesComponent {

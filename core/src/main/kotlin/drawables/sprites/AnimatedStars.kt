@@ -21,7 +21,8 @@ class AnimatedStars(
     COLS,
     ANIM_ROWS,
     ANIM_COLS,
-    ANIM_DUR
+    ANIM_DUR,
+    initPos = Vector2(start.x + (ROWS * ConstVals.PPM) / 2f, start.y + (COLS * ConstVals.PPM) / 2f)
 ) {
 
     companion object {

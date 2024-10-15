@@ -61,7 +61,7 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
     override fun getEntityType() = EntityType.SPECIAL
 
     override fun init() {
-        GameLogger.debug(TAG, "Initializing...")
+        GameLogger.debug(TAG, "init()")
 
         val atlas = game.assMan.getTextureAtlas(TextureAsset.ENVIRONS_1.source)
         if (waterReg == null) waterReg = atlas.findRegion(WATER_REG)
@@ -73,7 +73,7 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        GameLogger.debug(TAG, "Spawning")
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
@@ -83,14 +83,18 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
             if (shape is GameRectangle) shape.set(bounds)
         }
 
-        defineDrawables(bounds)
+        val hidden = spawnProps.getOrDefault(ConstKeys.HIDDEN, false, Boolean::class)
+        if (hidden) {
+            removeComponent(SpritesComponent::class)
+            removeComponent(AnimationsComponent::class)
+        } else defineDrawables(bounds)
 
         splashSound = spawnProps.getOrDefault(ConstKeys.SPLASH, true, Boolean::class)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        GameLogger.debug(TAG, "Destroyed")
+        GameLogger.debug(TAG, "onDestroy()")
     }
 
     private fun defineBodyComponent(): BodyComponent {

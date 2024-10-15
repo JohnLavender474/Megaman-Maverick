@@ -16,7 +16,6 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
-
 import com.mega.game.engine.common.normalizedTrajectory
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
@@ -73,7 +72,7 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         private const val HOVER_SPEED = 3f
         private const val HOVER_X_SWAY_SPEED = 0.5f
 
-        private const val FIRE_DUR = 0.25f
+        private const val FIRE_DUR = 0.5f
         private const val FIRE_DELAY = 1.5f
         private const val FIRES_TO_SHOOT = 2
         private const val FIRE_SPEED = 6f
@@ -136,16 +135,16 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
-            regions.put("fly", atlas.findRegion("$TAG/Fly"))
-            regions.put("shoot", atlas.findRegion("$TAG/Shoot"))
-            regions.put("defeated", atlas.findRegion("$TAG/Defeated"))
+            regions.put("fly", atlas.findRegion("$TAG/fly"))
+            regions.put("shoot", atlas.findRegion("$TAG/shoot"))
+            regions.put("defeated", atlas.findRegion("$TAG/defeated"))
         }
         super.init()
         addComponent(defineAnimationsComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        spawnProps.put(ConstKeys.ENTTIY_KILLED_BY_DEATH_FIXTURE, false)
+        putProperty(ConstKeys.ENTTIY_KILLED_BY_DEATH_FIXTURE, false)
         super.onSpawn(spawnProps)
 
         facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
@@ -197,7 +196,9 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         val spawn = body.getCenter().add(2.15f * ConstVals.PPM * facing.value, 1.25f * ConstVals.PPM)
         fireball.spawn(
             props(
-                ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo spawn, ConstKeys.TRAJECTORY pairTo normalizedTrajectory(
+                ConstKeys.OWNER pairTo this,
+                ConstKeys.POSITION pairTo spawn,
+                ConstKeys.TRAJECTORY pairTo normalizedTrajectory(
                     spawn, getMegaman().body.getCenter(), FIRE_SPEED * ConstVals.PPM
                 )
             )
@@ -223,32 +224,30 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
                     body.physics.velocity.x = HOVER_X_SWAY_SPEED * facing.value * ConstVals.PPM
                     body.physics.velocity.y = 0f
 
-                    if (firesShot < FIRES_TO_SHOOT) {
-                        if (!fireTimer.isFinished()) fireTimer.update(delta)
-                        else {
+                    fireTimer.update(delta)
+                    if (fireTimer.isFinished()) {
+                        if (firesShot < FIRES_TO_SHOOT) {
                             fireDelayTimer.update(delta)
                             if (fireDelayTimer.isFinished()) {
                                 fire()
                                 firesShot++
-
                                 fireTimer.reset()
                                 fireDelayTimer.reset()
                             }
+                        } else {
+                            fireDelayTimer.reset()
+                            firesShot = 0
+
+                            GameLogger.debug(TAG, "From state: ${loop.getCurrent()}")
+                            loop.next()
+                            GameLogger.debug(TAG, "To state: ${loop.getCurrent()}")
+
+                            currentTarget =
+                                if (loop.getCurrent() == MechaDragonState.HOVER_TO_RANDOM_SPOT) targets.random()
+                                else if (loop.getCurrent() == MechaDragonState.HOVER_TO_ROOM_CENTER) roomCenter
+                                else getMegaman().body.getCenter()
+                            currentTarget.y = min(currentTarget.y, maxY)
                         }
-                    } else {
-                        fireTimer.setToEnd()
-                        fireDelayTimer.reset()
-
-                        firesShot = 0
-
-                        GameLogger.debug(TAG, "From state: ${loop.getCurrent()}")
-                        loop.next()
-                        GameLogger.debug(TAG, "To state: ${loop.getCurrent()}")
-
-                        currentTarget = if (loop.getCurrent() == MechaDragonState.HOVER_TO_RANDOM_SPOT) targets.random()
-                        else if (loop.getCurrent() == MechaDragonState.HOVER_TO_ROOM_CENTER) roomCenter
-                        else getMegaman().body.getCenter()
-                        currentTarget.y = min(currentTarget.y, maxY)
                     }
                 }
 
@@ -258,7 +257,8 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
                     if (currentTarget.x < body.getX()) facing = Facing.LEFT
                     else if (currentTarget.x > body.getMaxX()) facing = Facing.RIGHT
 
-                    val trajectory = normalizedTrajectory(body.getCenter(), currentTarget, HOVER_SPEED * ConstVals.PPM)
+                    val trajectory =
+                        normalizedTrajectory(body.getCenter(), currentTarget, HOVER_SPEED * ConstVals.PPM)
                     body.physics.velocity.set(trajectory)
 
                     val stopPredicate = if (loop.getCurrent() == MechaDragonState.HOVER_TO_MEGAMAN)
@@ -278,8 +278,9 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
                     if (!chargeFirstDelayTimer.isFinished()) {
                         body.physics.velocity.x = 0f
                         val megamanCenterY = getMegaman().body.getCenter().y
-                        body.physics.velocity.y = (if (megamanCenterY > body.y && megamanCenterY < body.getMaxY()) 0f
-                        else CHARGE_FIRST_DELAY_SPEED * if (megamanCenterY > body.getMaxY()) 1f else -1f) * ConstVals.PPM
+                        body.physics.velocity.y =
+                            (if (megamanCenterY > body.y && megamanCenterY < body.getMaxY()) 0f
+                            else CHARGE_FIRST_DELAY_SPEED * if (megamanCenterY > body.getMaxY()) 1f else -1f) * ConstVals.PPM
 
                         if (getMegaman().body.getMaxX() < body.x) facing = Facing.LEFT
                         else if (getMegaman().body.x > body.getMaxX()) facing = Facing.RIGHT
@@ -334,7 +335,8 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         headDamagerFixture.rawShape.color = Color.RED
         debugShapes.add { headDamagerFixture.getShape() }
 
-        val headDamageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameCircle().setRadius(0.75f * ConstVals.PPM))
+        val headDamageableFixture =
+            Fixture(body, FixtureType.DAMAGEABLE, GameCircle().setRadius(0.75f * ConstVals.PPM))
         headDamageableFixture.offsetFromBodyCenter.y = 1.75f * ConstVals.PPM
         body.addFixture(headDamageableFixture)
         headDamageableFixture.rawShape.color = Color.PURPLE
@@ -346,7 +348,8 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         neckDamagerFixture.rawShape.color = Color.RED
         debugShapes.add { neckDamagerFixture.getShape() }
 
-        val neckDamageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameCircle().setRadius(0.75f * ConstVals.PPM))
+        val neckDamageableFixture =
+            Fixture(body, FixtureType.DAMAGEABLE, GameCircle().setRadius(0.75f * ConstVals.PPM))
         neckDamageableFixture.offsetFromBodyCenter.y = 1.5f * ConstVals.PPM
         body.addFixture(neckDamageableFixture)
         neckDamageableFixture.rawShape.color = Color.PURPLE
@@ -384,6 +387,20 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         tailDamageableFixture.rawShape.color = Color.PURPLE
         debugShapes.add { tailDamageableFixture.getShape() }
 
+        gdxArrayOf(
+            tailDamageableFixture,
+            bodyDamageableFixture,
+            neckDamageableFixture,
+            headDamageableFixture
+        ).forEach { t ->
+            val bodyFixture1 = t.copy()
+            val width = bodyFixture1.rawShape.getWidth() * 0.9f
+            val height = bodyFixture1.rawShape.getHeight() * 0.9f
+            bodyFixture1.rawShape.setWithProps(props("width" pairTo width, "height" pairTo height))
+            bodyFixture1.fixtureType = FixtureType.BODY
+            body.addFixture(bodyFixture1)
+        }
+
         body.preProcess.put(ConstKeys.DEFAULT) {
             headDamagerFixture.offsetFromBodyCenter.x = ConstVals.PPM.toFloat() * facing.value
             headDamageableFixture.offsetFromBodyCenter.x = ConstVals.PPM.toFloat() * facing.value
@@ -405,7 +422,7 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
-        sprite.setSize(7f * ConstVals.PPM)
+        sprite.setSize(8f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())

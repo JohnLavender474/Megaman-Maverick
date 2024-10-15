@@ -45,9 +45,7 @@ import kotlin.reflect.KClass
 
 class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectionRotatable {
 
-    enum class DragonFlyBehavior {
-        MOVE_UP, MOVE_DOWN, MOVE_HORIZONTAL
-    }
+    enum class DragonFlyBehavior { MOVE_UP, MOVE_DOWN, MOVE_HORIZONTAL }
 
     companion object {
         const val TAG = "DragonFly"
@@ -66,7 +64,6 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
         ChargedShot::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
         ChargedShotExplosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
     )
-
     override var directionRotation: Direction? = null
     override lateinit var facing: Facing
 
@@ -100,7 +97,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.75f * ConstVals.PPM)
+        body.setSize(0.85f * ConstVals.PPM)
 
         val damageableFixture = Fixture(
             body, FixtureType.DAMAGEABLE, GameRectangle().setSize(
@@ -214,7 +211,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.5f * ConstVals.PPM)
+        sprite.setSize(1.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink

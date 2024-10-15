@@ -76,7 +76,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         private const val DANCE_DUR = 0.4f
         private const val RUN_DUR = 0.5f
         private const val RUN_SPEED = 6f
-        private const val JUMP_IMPULSE = 10.5f
+        private const val JUMP_IMPULSE = 12f
         private const val THROW_DELAY = 0.25f
         private const val PROJECTILE_SPEED = 10f
         private val regions = ObjectMap<String, TextureRegion>()
@@ -102,7 +102,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     private val throwTimer = Timer(THROW_DELAY)
 
     private val projectilePosition: Vector2
-        get() = body.getTopCenterPoint().add(0.1f * ConstVals.PPM * -facing.value, 0f)
+        get() = body.getTopCenterPoint().add(0.15f * ConstVals.PPM * -facing.value, 0.05f * ConstVals.PPM)
 
     private var projectile: ReactManProjectile? = null
     private var jumped = false
@@ -277,7 +277,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(ConstVals.PPM.toFloat(), 1.25f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat(), 1.35f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
@@ -299,7 +299,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 0.25f * ConstVals.PPM, 0.1f * ConstVals.PPM
             )
         )
-        feetFixture.offsetFromBodyCenter.y = -0.625f * ConstVals.PPM
+        feetFixture.offsetFromBodyCenter.y = -0.675f * ConstVals.PPM
         feetFixture.rawShape.color = Color.GREEN
         debugShapes.add { feetFixture.getShape() }
         body.addFixture(feetFixture)
@@ -338,7 +338,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
-            val size = if (defeated || reactManState == ReactManState.DANCE) 1.5f else 2f
+            val size = if (defeated || reactManState == ReactManState.DANCE) 1.6875f else 2.25f
             _sprite.setSize(size * ConstVals.PPM)
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
             _sprite.setFlip(isFacing(Facing.RIGHT), false)

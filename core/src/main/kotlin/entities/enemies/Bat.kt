@@ -327,7 +327,6 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
                     start = body.getCenter(),
                     speed = { flyToAttackSpeed * ConstVals.PPM },
                     targetPursuer = body,
-                    onTargetReached = { directlyChaseMegaman() },
                     stopOnTargetReached = false,
                     onTargetNull = { directlyChaseMegaman() },
                     stopOnTargetNull = false,

@@ -94,7 +94,7 @@ class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity,
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(ConstVals.PPM.toFloat())
+        sprite.setSize(1.05f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setOriginCenter()

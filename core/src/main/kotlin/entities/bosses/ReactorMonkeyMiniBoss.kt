@@ -66,7 +66,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
         private const val BALL_IMPULSE_Y = 6.5f
         private const val HORIZONTAL_SCALAR = 1.1f
         private const val VERTICAL_SCALAR = 0.75f
-        private const val DEFAULT_BALL_SPAWN_Y = 5f
+        private const val DEFAULT_BALL_SPAWN_Y = 6f
         private var standRegion: TextureRegion? = null
         private var throwRegion: TextureRegion? = null
     }
@@ -184,7 +184,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(2.75f * ConstVals.PPM, 3.5f * ConstVals.PPM)
+        body.setSize(3.5f * ConstVals.PPM, 4.25f * ConstVals.PPM)
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
@@ -206,7 +206,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
-        sprite.setSize(6.25f * ConstVals.PPM, 6.5f * ConstVals.PPM)
+        sprite.setSize(7.5f * ConstVals.PPM, 8f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)

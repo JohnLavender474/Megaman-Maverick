@@ -55,6 +55,7 @@ import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getEntity
 
 class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITeleporterEntity, IBodyEntity,
     ISpritesEntity, IAnimatedEntity, IAudioEntity, IEventListener {
@@ -73,12 +74,9 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
     private val outgoingBodies = OrderedMap<IBodyEntity, Timer>()
     private val incomingBodies = OrderedMap<IBodyEntity, Timer>()
     private val ignoredBodies = OrderedSet<IBodyEntity>()
-
     private var teleporterBounds: GameRectangle? = null
-
     private var upperBlock: Block? = null
     private var lowerBlock: Block? = null
-
     private var thisKey = -1
     private var nextKey = -1
 
@@ -153,16 +151,13 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
     }
 
     override fun teleportEntity(entity: IBodyEntity) {
-        GameLogger.debug(TAG, "thisKey=$thisKey, teleportEntity(): entity=$entity")
-
-        if (ignoredBodies.contains(entity) || outgoingBodies.containsKey(entity)) {
+        GameLogger.debug(TAG, "teleportEntity(): thisKey=$thisKey, entity=$entity")
+        if (ignoredBodies.contains(entity) || incomingBodies.containsKey(entity) || outgoingBodies.containsKey(entity)) {
             GameLogger.debug(TAG, "teleportEntity(): entity already in bodiesToSend")
             return
         }
-
         val onPortalStart = entity.getProperty(ConstKeys.ON_TELEPORT_START) as? () -> Unit
         onPortalStart?.invoke()
-
         outgoingBodies.put(entity, Timer(SEND_DELAY))
     }
 
@@ -174,16 +169,13 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
     }
 
     private fun receiveEntity(entity: IBodyEntity) {
-        GameLogger.debug(PortalHopper.TAG, "thisKey=$thisKey, receiveEntity(): entity=$entity")
-
+        GameLogger.debug(PortalHopper.TAG, "receiveEntity(): thisKey=$thisKey, entity=$entity")
         if (incomingBodies.containsKey(entity)) {
             GameLogger.debug(PortalHopper.TAG, "receiveEntity(): entity already in bodiesToReceive")
             return
         }
-
         val teleportPosition = lowerBlock!!.body.getTopCenterPoint()
         entity.body.setBottomCenterToPoint(teleportPosition)
-
         incomingBodies.put(entity, Timer(RECEIVE_DELAY))
     }
 
@@ -204,14 +196,12 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
 
             timer.update(delta)
             if (timer.isFinished()) {
-                GameLogger.debug(TAG, "Send timer finished: thisKey=$thisKey, entity=$entity")
-
+                GameLogger.debug(TAG, "update(): send timer finished; thisKey=$thisKey, entity=$entity")
                 game.eventsMan.submitEvent(
                     Event(
                         EventType.TELEPORT, props(ConstKeys.ENTITY pairTo entity, ConstKeys.KEY pairTo nextKey)
                     )
                 )
-
                 sendIter.remove()
             }
         }
@@ -232,15 +222,11 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
 
             timer.update(delta)
             if (timer.isFinished()) {
-                GameLogger.debug(PortalHopper.TAG, "Timer finished: thisKey=$thisKey, entity=$entity, timer=$timer")
-
+                GameLogger.debug(PortalHopper.TAG, "update(): receive timer finished; thisKey=$thisKey, entity=$entity")
                 requestToPlaySound(SoundAsset.TELEPORT_SOUND, false)
-
                 val onPortalEnd = entity.getProperty(ConstKeys.ON_TELEPORT_END) as? () -> Unit
                 onPortalEnd?.invoke()
-
                 ignoredBodies.add(entity)
-
                 receiveIter.remove()
             }
         }
@@ -248,7 +234,10 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
         val ignoredBodiesIter = ignoredBodies.iterator()
         while (ignoredBodiesIter.hasNext) {
             val entity = ignoredBodiesIter.next()
-            if ((entity as MegaGameEntity).dead || !body.overlaps(entity.body as Rectangle)) ignoredBodiesIter.remove()
+            if ((entity as MegaGameEntity).dead || !body.overlaps(entity.body as Rectangle)) {
+                GameLogger.debug(TAG, "update(): remove ignored body; thisKey=$thisKey, entity=${body.getEntity()}")
+                ignoredBodiesIter.remove()
+            }
         }
     })
 

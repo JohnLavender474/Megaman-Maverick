@@ -1,5 +1,5 @@
 Decorations1.png
-size: 1846, 260
+size: 1910, 260
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -17,51 +17,65 @@ BreathBubbles
   orig: 16, 48
   offset: 0, 0
   index: -1
-JetpackFlame
+DrippingToxicGoop
   rotate: false
   xy: 42, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+JetpackFlame
+  rotate: false
+  xy: 74, 0
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 Lava
   rotate: false
-  xy: 138, 0
+  xy: 170, 0
   size: 1560, 260
   orig: 1560, 260
   offset: 0, 0
   index: -1
 MuzzleFlash
   rotate: false
-  xy: 1698, 0
+  xy: 1730, 0
   size: 48, 16
   orig: 48, 16
   offset: 0, 0
   index: -1
 RainDrop
   rotate: false
-  xy: 1746, 0
+  xy: 1778, 0
   size: 10, 9
   orig: 10, 9
   offset: 0, 0
   index: -1
 Thread
   rotate: false
-  xy: 1756, 0
+  xy: 1788, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
+ToxicWaterfall
+  rotate: false
+  xy: 1820, 0
+  size: 32, 16
+  orig: 32, 16
+  offset: 0, 0
+  index: -1
 UnderWaterBubble
   rotate: false
-  xy: 1788, 0
+  xy: 1852, 0
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 WhiteArrow
   rotate: false
-  xy: 1820, 0
+  xy: 1884, 0
   size: 26, 26
   orig: 26, 26
   offset: 0, 0

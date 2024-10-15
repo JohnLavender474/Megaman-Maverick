@@ -129,34 +129,20 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
             Direction.UP,
             Direction.DOWN -> {
                 body.physics.gravity.set(0f, gravityValue * ConstVals.PPM)
-                body.physics.defaultFrictionOnSelf =
-                    when (directionRotation!!) {
-                        Direction.UP,
-                        Direction.DOWN -> Vector2(ConstVals.STANDARD_RESISTANCE_X, ConstVals.STANDARD_RESISTANCE_Y)
-
-                        Direction.LEFT,
-                        Direction.RIGHT -> Vector2(ConstVals.STANDARD_RESISTANCE_Y, ConstVals.STANDARD_RESISTANCE_X)
-                    }
-
+                body.physics.defaultFrictionOnSelf.set(ConstVals.STANDARD_RESISTANCE_X, ConstVals.STANDARD_RESISTANCE_Y)
                 body.physics.velocityClamp.set(
                     if (isBehaviorActive(BehaviorType.RIDING_CART))
                         Vector2(MegamanValues.CART_RIDE_MAX_SPEED, MegamanValues.CLAMP_Y)
-                    else if (isBehaviorActive(BehaviorType.JUMPING))
-                        Vector2(MegamanValues.CLAMP_X, MegamanValues.CLAMP_Y)
                     else Vector2(MegamanValues.CLAMP_X, MegamanValues.CLAMP_Y)
                 ).scl(ConstVals.PPM.toFloat())
             }
 
             else -> {
                 body.physics.gravity.set(gravityValue * ConstVals.PPM, 0f)
-                body.physics.defaultFrictionOnSelf =
-                    Vector2(ConstVals.STANDARD_RESISTANCE_Y, ConstVals.STANDARD_RESISTANCE_X)
-
+                body.physics.defaultFrictionOnSelf.set(ConstVals.STANDARD_RESISTANCE_Y, ConstVals.STANDARD_RESISTANCE_X)
                 body.physics.velocityClamp.set(
                     if (isBehaviorActive(BehaviorType.RIDING_CART))
                         Vector2(MegamanValues.CLAMP_Y, MegamanValues.CART_RIDE_MAX_SPEED)
-                    else if (isBehaviorActive(BehaviorType.JUMPING))
-                        Vector2(MegamanValues.CLAMP_X, MegamanValues.CLAMP_Y)
                     else Vector2(MegamanValues.CLAMP_Y, MegamanValues.CLAMP_X)
                 ).scl(ConstVals.PPM.toFloat())
             }

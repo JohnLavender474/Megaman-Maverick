@@ -37,6 +37,8 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override var owner: GameEntity? = null
 
+    override fun getTag() = TAG
+
     override fun init() {
         if (region == null) region =
             game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Nuclear_Monkey_Ball")
@@ -68,10 +70,10 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(2f * ConstVals.PPM)
+        body.setSize(2.5f * ConstVals.PPM)
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
         body.physics.applyFrictionX = false
-body.physics.applyFrictionY = false
+        body.physics.applyFrictionY = false
 
         val shieldFixture = Fixture(body, FixtureType.SHIELD, GameCircle().setRadius(ConstVals.PPM.toFloat()))
         body.addFixture(shieldFixture)
@@ -89,7 +91,7 @@ body.physics.applyFrictionY = false
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(region!!)
-        sprite.setSize(2.5f * ConstVals.PPM)
+        sprite.setSize(3f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())

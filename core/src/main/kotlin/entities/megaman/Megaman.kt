@@ -393,12 +393,12 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
 
         game.eventsMan.addListener(this)
 
-        val bounds = spawnProps.get(ConstKeys.BOUNDS) as GameRectangle
+        val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.positionOnPoint(bounds.getBottomCenterPoint(), Position.BOTTOM_CENTER)
 
-        facing = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, "right", String::class).uppercase())
+        facing = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, ConstKeys.RIGHT, String::class).uppercase())
         directionRotation =
-            Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
+            Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
 
         setHealth(getMaxHealth())
         weaponHandler.setAllToMaxAmmo()

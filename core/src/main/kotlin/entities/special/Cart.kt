@@ -78,7 +78,7 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         addComponent(defineCullablesComponent())
     }
 
-    override fun canSpawn(): Boolean {
+    override fun canSpawn(spawnProps: Properties): Boolean {
         val specials = MegaGameEntitiesMap.getEntitiesOfType(getEntityType())
         val otherCart = specials.find { it is Cart && it != this }
         val canSpawn = otherCart == null

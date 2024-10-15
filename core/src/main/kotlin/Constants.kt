@@ -136,7 +136,7 @@ object ConstKeys {
     const val JUMP = "jump"
     const val DECORATIONS = "decorations"
     const val FILTER = "filter"
-    const val ENTTIY_KILLED_BY_DEATH_FIXTURE = "entity_affected_by_death_fixture"
+    const val ENTTIY_KILLED_BY_DEATH_FIXTURE = "entity_killed_by_death_fixture"
     const val DEATH_LISTENER = "death_listener"
     const val GREEN = "green"
     const val ORANGE = "orange"

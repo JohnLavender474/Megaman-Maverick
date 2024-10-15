@@ -48,7 +48,7 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
         val bodyPosition = body.getPositionPoint(position)
         player.setPosition(bodyPosition, position)
 
-        val xTranslation = if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) 0f else when (direction) {
+        val xTranslation =  when (direction) {
             Direction.UP, Direction.DOWN -> if (rawAnimKey == "JumpShoot") 0.1f * facing.value else 0f
             Direction.LEFT -> 0.2f
             Direction.RIGHT -> -0.2f
@@ -57,9 +57,7 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
 
         val yTranslation = when (direction) {
             Direction.UP -> if (!body.isSensing(BodySense.FEET_ON_GROUND) &&
-                !isBehaviorActive(BehaviorType.WALL_SLIDING)
-            ) -0.25f else 0f
-
+                !isBehaviorActive(BehaviorType.WALL_SLIDING)) -0.25f else 0f
             Direction.DOWN -> 0.1f
             Direction.LEFT, Direction.RIGHT -> if (rawAnimKey == "JumpShoot") 0.1f * facing.value else 0f
         }

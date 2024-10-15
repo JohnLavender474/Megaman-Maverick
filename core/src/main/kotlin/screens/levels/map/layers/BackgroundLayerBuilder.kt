@@ -130,7 +130,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
             val parallaxX =
                 props.getOrDefault("${ConstKeys.PARALLAX}_${ConstKeys.X}", ConstVals.DEFAULT_PARALLAX_X, Float::class)
             val parallaxY =
-                props.getOrDefault("${ConstKeys.PARALLAX}_${ConstKeys.Y}", ConstVals.DEFAULT_PARALLAX_X, Float::class)
+                props.getOrDefault("${ConstKeys.PARALLAX}_${ConstKeys.Y}", ConstVals.DEFAULT_PARALLAX_Y, Float::class)
             val rotatable = props.getOrDefault(ConstKeys.ROTATION, true, Boolean::class)
 
             val background = if (o.name == ANIMATED_BACKGROUND) {
@@ -138,8 +138,8 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
                 val animColumns = props.get("${ConstKeys.ANIMATION}_${ConstKeys.COLUMNS}", Int::class)!!
                 val duration = props.get(ConstKeys.DURATION, Float::class)!!
                 AnimatedBackground(
-                    o.rectangle.x + offsetX,
-                    o.rectangle.y + offsetY,
+                    o.rectangle.x,
+                    o.rectangle.y,
                     backgroundRegion,
                     o.rectangle.width,
                     o.rectangle.height,
@@ -148,18 +148,20 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
                     animRows,
                     animColumns,
                     duration,
+                    initPos = Vector2(o.rectangle.getCenter().x + offsetX, o.rectangle.getCenter().y + offsetY),
                     parallaxX = parallaxX,
                     parallaxY = parallaxY,
                     rotatable = rotatable
                 )
             } else Background(
-                o.rectangle.x + offsetX,
-                o.rectangle.y + offsetY,
+                o.rectangle.x,
+                o.rectangle.y,
                 backgroundRegion,
                 o.rectangle.width,
                 o.rectangle.height,
                 rows,
                 columns,
+                initPos = Vector2(o.rectangle.getCenter().x + offsetX, o.rectangle.getCenter().y + offsetY),
                 parallaxX = parallaxX,
                 parallaxY = parallaxY,
                 rotatable = rotatable

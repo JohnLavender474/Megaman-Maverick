@@ -11,7 +11,6 @@ import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -26,7 +25,6 @@ import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -37,6 +35,7 @@ import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
 
 class LavaBeam(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
@@ -86,17 +85,10 @@ class LavaBeam(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(2f * ConstVals.PPM, 5f * ConstVals.PPM)
-
-        val deathFixture = Fixture(body, FixtureType.DEATH, GameRectangle(body))
-        body.addFixture(deathFixture)
-
-        addComponent(
-            DrawableShapesComponent(
-                debugShapeSuppliers = gdxArrayOf({ body.getBodyBounds() }), debug = true
-            )
-        )
-
-        return BodyComponentCreator.create(this, body)
+        body.physics.applyFrictionX = false
+        body.physics.applyFrictionY = false
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBodyBounds() }), debug = true))
+        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.DEATH))
     }
 
     private fun defineSpritesComponent(): SpritesComponent {

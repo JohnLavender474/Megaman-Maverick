@@ -66,8 +66,6 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         private const val SETTING_DUR = .8f
     }
 
-    override var facing = Facing.RIGHT
-
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
         Bullet::class pairTo dmgNeg(5),
         Fireball::class pairTo dmgNeg(15),
@@ -79,10 +77,11 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             if (it.fullyCharged) 5 else 3
         }
     )
+    override lateinit var facing: Facing
 
     private lateinit var setting: SwinginJoeSetting
+    private lateinit var type: String
     private val settingTimer = Timer(SETTING_DUR)
-    private var type = ""
 
     override fun init() {
         super.init()
@@ -98,19 +97,20 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         body.positionOnPoint(spawn, Position.BOTTOM_CENTER)
         type = if (spawnProps.containsKey(ConstKeys.TYPE))
             spawnProps.get(ConstKeys.TYPE, String::class)!! else ""
+        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
     }
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
         body.setSize(ConstVals.PPM.toFloat(), 1.5f * ConstVals.PPM)
 
-        val shapes = Array<() -> IDrawableShape?>()
+        val debugShapes = Array<() -> IDrawableShape?>()
 
         val bodyFixture =
             Fixture(body, FixtureType.BODY, GameRectangle().setSize(0.75f * ConstVals.PPM, 1.15f * ConstVals.PPM))
         body.addFixture(bodyFixture)
         bodyFixture.rawShape.color = Color.GRAY
-        shapes.add { bodyFixture.getShape() }
+        debugShapes.add { bodyFixture.getShape() }
 
         val damagerFixture = Fixture(
             body,
@@ -119,7 +119,7 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         )
         body.addFixture(damagerFixture)
         damagerFixture.rawShape.color = Color.RED
-        shapes.add { damagerFixture.getShape() }
+        debugShapes.add { damagerFixture.getShape() }
 
         val damageableFixture = Fixture(
             body,
@@ -128,7 +128,7 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         )
         body.addFixture(damageableFixture)
         damageableFixture.rawShape.color = Color.PURPLE
-        shapes.add { damageableFixture.getShape() }
+        debugShapes.add { damageableFixture.getShape() }
 
         val shieldFixture = Fixture(
             body, FixtureType.SHIELD, GameRectangle().setSize(0.5f * ConstVals.PPM, 1.25f * ConstVals.PPM)
@@ -136,7 +136,7 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
         body.addFixture(shieldFixture)
         shieldFixture.rawShape.color = Color.BLUE
-        shapes.add { shieldFixture.getShape() }
+        debugShapes.add { shieldFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             shieldFixture.active = setting == SwinginJoeSetting.SWING_EYES_CLOSED
@@ -147,7 +147,7 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             } else damageableFixture.offsetFromBodyCenter.x = 0f
         })
 
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = shapes, debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }

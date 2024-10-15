@@ -55,9 +55,7 @@ import kotlin.reflect.KClass
 
 class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
 
-    enum class RollingBotState {
-        ROLLING, OPENING, SHOOTING, CLOSING
-    }
+    enum class RollingBotState { ROLLING, OPENING, SHOOTING, CLOSING }
 
     companion object {
         const val TAG = "RollingBot"
@@ -212,15 +210,15 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             var feetFixtureOffset = 0f
             when (rollingBotState) {
                 RollingBotState.ROLLING -> {
-                    body.setSize(0.5f * ConstVals.PPM)
-                    feetFixtureOffset = -0.25f * ConstVals.PPM
+                    body.setSize(0.75f * ConstVals.PPM)
+                    feetFixtureOffset = -0.375f * ConstVals.PPM
                 }
 
                 RollingBotState.OPENING,
                 RollingBotState.SHOOTING,
                 RollingBotState.CLOSING -> {
-                    body.setSize(0.75f * ConstVals.PPM, 1.15f * ConstVals.PPM)
-                    feetFixtureOffset = -0.575f * ConstVals.PPM
+                    body.setSize(ConstVals.PPM.toFloat(), 1.25f * ConstVals.PPM)
+                    feetFixtureOffset = -0.675f * ConstVals.PPM
                 }
             }
 
@@ -252,7 +250,7 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.5f * ConstVals.PPM)
+        sprite.setSize(1.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setFlip(isFacing(Facing.RIGHT), false)

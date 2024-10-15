@@ -370,9 +370,9 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses1/MechaDragonMiniBoss/Defeated.png</key>
-            <key type="filename">../frames/Bosses1/MechaDragonMiniBoss/Fly.png</key>
-            <key type="filename">../frames/Bosses1/MechaDragonMiniBoss/Shoot.png</key>
+            <key type="filename">../frames/Bosses1/MechaDragonMiniBoss/defeated.png</key>
+            <key type="filename">../frames/Bosses1/MechaDragonMiniBoss/fly.png</key>
+            <key type="filename">../frames/Bosses1/MechaDragonMiniBoss/shoot.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -381,9 +381,9 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>156,94,313,187</rect>
+                <rect>100,50,200,100</rect>
                 <key>scale9Paddings</key>
-                <rect>156,94,313,187</rect>
+                <rect>100,50,200,100</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

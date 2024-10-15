@@ -113,7 +113,7 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
     private fun shoot() {
         GameLogger.debug(TAG, "shoot()")
-        val spawn = body.getCenter().add(0.075f * ConstVals.PPM * facing.value, 0.375f * ConstVals.PPM)
+        val spawn = body.getCenter().add(0.05f * ConstVals.PPM * facing.value, 0.375f * ConstVals.PPM)
         val impulse = Vector2(LAUNCH_IMPULSE_X * facing.value, LAUNCH_IMPULSE_Y).scl(ConstVals.PPM.toFloat())
         val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
         bullet.spawn(
@@ -211,7 +211,7 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.25f * ConstVals.PPM, 1.05f * ConstVals.PPM)
+        sprite.setSize(1.5f * ConstVals.PPM, 1.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)

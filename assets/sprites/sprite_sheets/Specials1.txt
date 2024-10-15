@@ -1,5 +1,5 @@
 Specials1.png
-size: 448, 254
+size: 464, 254
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -26,7 +26,7 @@ CapsuleTeleporter/Inactive
   index: -1
 Cart
   rotate: false
-  xy: 64, 32
+  xy: 96, 32
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -40,56 +40,56 @@ Force
   index: -1
 LightSwitch/Off
   rotate: false
-  xy: 0, 0
+  xy: 48, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 LightSwitch/On
   rotate: false
-  xy: 32, 0
+  xy: 80, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 LightSwitch/SwitchOff
   rotate: false
-  xy: 64, 0
+  xy: 112, 0
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 PortalHopper/Launch
   rotate: false
-  xy: 160, 0
+  xy: 208, 0
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 PortalHopper/Wait
   rotate: false
-  xy: 256, 0
+  xy: 304, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 RailTrack/Drop
   rotate: false
-  xy: 320, 0
+  xy: 368, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 RailTrack/Left
   rotate: false
-  xy: 352, 0
+  xy: 400, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 RailTrack/Middle
   rotate: false
-  xy: 384, 0
+  xy: 432, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -110,14 +110,14 @@ RailTrack/PlatformDrop
   index: -1
 RailTrack/Right
   rotate: false
-  xy: 416, 0
+  xy: 0, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SpringBounce
   rotate: false
-  xy: 112, 32
+  xy: 144, 32
   size: 320, 56
   orig: 320, 56
   offset: 0, 0
@@ -138,15 +138,29 @@ SwitcharooArrow
   index: -1
 Togglee/Left
   rotate: false
-  xy: 0, 32
+  xy: 32, 32
   size: 32, 33
   orig: 32, 33
   offset: 0, 0
   index: -1
 Togglee/Right
   rotate: false
-  xy: 32, 32
+  xy: 64, 32
   size: 32, 33
   orig: 32, 33
+  offset: 0, 0
+  index: -1
+ToxicWater/water
+  rotate: false
+  xy: 0, 0
+  size: 16, 8
+  orig: 16, 8
+  offset: 0, 0
+  index: -1
+ToxicWater/waves
+  rotate: false
+  xy: 16, 0
+  size: 32, 16
+  orig: 32, 16
   offset: 0, 0
   index: -1

@@ -129,7 +129,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     }
 
     private fun isMegamanUnderMe() = getMegaman().body.getMaxY() <= body.y &&
-            getMegaman().body.getCenter().x >= body.x && getMegaman().body.getCenter().x <= body.getMaxX()
+        getMegaman().body.getCenter().x >= body.x && getMegaman().body.getCenter().x <= body.getMaxX()
 
     private fun dropBomb() {
         val bomb = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.UFO_BOMB)!!
@@ -196,9 +196,9 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat())
+        body.setSize(ConstVals.PPM.toFloat(), 1.25f * ConstVals.PPM)
         body.physics.applyFrictionX = false
-body.physics.applyFrictionY = false
+        body.physics.applyFrictionY = false
         body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
@@ -243,7 +243,7 @@ body.physics.applyFrictionY = false
         body.preProcess.put(ConstKeys.DEFAULT) {
             if (!waiting && !rising &&
                 ((isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
-                        (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)))
+                    (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)))
             ) swapFacing()
         }
 
@@ -252,7 +252,7 @@ body.physics.applyFrictionY = false
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
-        sprite.setSize(2f * ConstVals.PPM)
+        sprite.setSize(2.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getTopCenterPoint(), Position.TOP_CENTER)
