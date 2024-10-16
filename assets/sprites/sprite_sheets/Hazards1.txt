@@ -143,6 +143,13 @@ Lava/Fall
   orig: 32, 96
   offset: 0, 0
   index: -1
+Lava/FallBlack
+  rotate: false
+  xy: 416, 164
+  size: 32, 96
+  orig: 32, 96
+  offset: 0, 0
+  index: -1
 Lava/Flow
   rotate: false
   xy: 296, 64
@@ -152,42 +159,42 @@ Lava/Flow
   index: -1
 Lava/Flow1
   rotate: false
-  xy: 416, 164
+  xy: 448, 164
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
   index: -1
 Lava/Flow2
   rotate: false
-  xy: 448, 164
+  xy: 0, 260
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
   index: -1
 Lava/Flow3
   rotate: false
-  xy: 0, 260
+  xy: 32, 260
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
   index: -1
 Lava/TopFlow1
   rotate: false
-  xy: 32, 260
+  xy: 64, 260
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
   index: -1
 Lava/TopFlow2
   rotate: false
-  xy: 64, 260
+  xy: 96, 260
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
   index: -1
 Lava/TopFlow3
   rotate: false
-  xy: 96, 260
+  xy: 128, 260
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
@@ -334,7 +341,7 @@ SwingingAxe
   index: -1
 SwingingAxe_HandleEndCentered
   rotate: false
-  xy: 128, 260
+  xy: 160, 260
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
