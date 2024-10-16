@@ -53,6 +53,7 @@ object ConstKeys {
     const val ICE = "ice"
     const val VSYNC = "vsyinc"
     const val BULLET = "bullet"
+    const val BLACK = "black"
     const val CAM = "cam"
     const val INVALID = "invalid"
     const val FPS = "fps"

@@ -12,6 +12,7 @@ import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.ShapeUtils
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.damage.IDamager
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.world.contacts.Contact
 import com.mega.game.engine.world.contacts.IContactListener
@@ -23,6 +24,7 @@ import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.decorations.Splash
+import com.megaman.maverick.game.entities.items.HeartTank
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
@@ -53,6 +55,8 @@ class MegaContactListener(
         }
     }
 
+    private fun deathShouldDestroy(entity: IGameEntity) = entity is HeartTank
+
     override fun beginContact(contact: Contact, delta: Float) {
         if (contact.fixture1.getEntity() == contact.fixture2.getEntity()) return
 
@@ -71,10 +75,13 @@ class MegaContactListener(
             )!!
             val damager = damagerFixture.getEntity() as IDamager
             val damageable = damageableFixture.getEntity() as IDamageable
+
             val canBeDamaged = damageable.canBeDamagedBy(damager)
             printDebugLog(contact, "canBeDamaged=$canBeDamaged")
+
             val canDamage = damager.canDamage(damageable)
-            printDebugLog(contact, "canDamage=$canDamage")
+            printDebugLog(contact, "canDamage=$canDamage"
+            )
             if (canBeDamaged && canDamage) {
                 val takeDamageFrom = damageable.takeDamageFrom(damager)
                 printDebugLog(contact, "takeDamageFrom=$takeDamageFrom")
@@ -94,13 +101,17 @@ class MegaContactListener(
                     FixtureType.FEET, FixtureType.SIDE, FixtureType.HEAD, FixtureType.BODY
                 )
             )!!
+
             val entity = otherFixture.getEntity()
             val canDie = entity.getOrDefaultProperty(ConstKeys.ENTTIY_KILLED_BY_DEATH_FIXTURE, true, Boolean::class)
             if (!canDie) return
+
             val deathListener = otherFixture.getOrDefaultProperty(ConstKeys.DEATH_LISTENER, true, Boolean::class)
             if (!deathListener) return
-            val instant = deathFixture.getProperty(ConstKeys.INSTANT, Boolean::class) ?: false
+
+            val instant = deathFixture.isProperty(ConstKeys.INSTANT, true)
             if (entity is IDamageable && (instant || !entity.invincible)) otherFixture.depleteHealth()
+            else if (deathShouldDestroy(entity)) entity.destroy()
         }
 
         // block, body

@@ -3,6 +3,7 @@ Heart Locations
 - A: Glacier Man
 - B: Moon Man
 - C: Desert Man
+- D: Inferno Man
 
 Energy Tank Locations
 

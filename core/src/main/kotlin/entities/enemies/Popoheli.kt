@@ -169,11 +169,13 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         body.addFixture(bodyFixture)
-        bodyFixture.rawShape.color = Color.GRAY // debugShapes.add { bodyFixture.getShape() }
+        bodyFixture.rawShape.color = Color.GRAY
+        debugShapes.add { bodyFixture.getShape() }
 
         val damagerFixture1 = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
         body.addFixture(damagerFixture1)
-        damagerFixture1.rawShape.color = Color.RED // debugShapes.add { damagerFixture1.getShape() }
+        damagerFixture1.rawShape.color = Color.RED
+        debugShapes.add { damagerFixture1.getShape() }
 
         val damagerFixture2 = Fixture(
             body, FixtureType.DAMAGER, GameRectangle().setSize(
@@ -227,6 +229,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         updateFunctions.put("heli") { _, _sprite ->
             _sprite.setFlip(isFacing(Facing.RIGHT), false)
             _sprite.setCenter(body.getCenter())
+            _sprite.hidden = damageBlink
         }
 
         for (i in 0 until FLAMES) {

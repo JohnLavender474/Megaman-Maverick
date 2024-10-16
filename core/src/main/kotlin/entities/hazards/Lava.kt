@@ -21,7 +21,6 @@ import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.interfaces.UpdateFunction
 import com.mega.game.engine.common.objects.GamePair
-
 import com.mega.game.engine.common.objects.Matrix
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -84,6 +83,7 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
     private var speed = 0f
     private var spritePriorityValue = 0
     private var doCull = false
+    private var black = false
 
     override fun getEntityType() = EntityType.HAZARD
 
@@ -98,6 +98,7 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
             regions.put("${FLOW}2", atlas.findRegion("$TAG/${FLOW}2"))
             regions.put("${FLOW}3", atlas.findRegion("$TAG/${FLOW}3"))
             regions.put(FALL, atlas.findRegion("$TAG/${FALL}"))
+            regions.put("${FALL}_${ConstKeys.BLACK}", atlas.findRegion("$TAG/${FALL}Black"))
         }
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
@@ -114,34 +115,32 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         body.set(bounds)
 
         type = spawnProps.getOrDefault(ConstKeys.TYPE, FLOW, String::class)
-
         drawingSection = DrawingSection.valueOf(
             spawnProps.getOrDefault(ConstKeys.SECTION, "foreground", String::class).uppercase()
         )
         spritePriorityValue = spawnProps.getOrDefault(ConstKeys.PRIORITY, if (type == FALL) 2 else 1, Int::class)
+        black = spawnProps.getOrDefault(ConstKeys.BLACK, false, Boolean::class)
         directionRotation =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
         facing = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, "right", String::class).uppercase())
+        speed = spawnProps.getOrDefault(ConstKeys.SPEED, 0f, Float::class)
+        doCull = spawnProps.getOrDefault(ConstKeys.CULL, false, Boolean::class)
+        spawnRoom = spawnProps.get("${ConstKeys.SPAWN}_${ConstKeys.ROOM}", String::class)
 
         val moveX = spawnProps.getOrDefault("${ConstKeys.MOVE}_${ConstKeys.X}", 0f, Float::class)
         val moveY = spawnProps.getOrDefault("${ConstKeys.MOVE}_${ConstKeys.Y}", 0f, Float::class)
         moveTarget = body.getCenter().add(moveX * ConstVals.PPM, moveY * ConstVals.PPM)
-
-        speed = spawnProps.getOrDefault(ConstKeys.SPEED, 0f, Float::class)
-
-        val dimensions = bounds.getSplitDimensions(ConstVals.PPM.toFloat())
-        defineDrawables(dimensions.first, dimensions.second)
 
         moveBeforeKill = spawnProps.containsKey(MOVE_BEFORE_KILL)
         removeProperty(MOVE_BEFORE_KILL)
         if (moveBeforeKill) putProperty(MOVE_BEFORE_KILL, spawnProps.get(MOVE_BEFORE_KILL))
         movingBeforeKill = false
 
-        doCull = spawnProps.getOrDefault(ConstKeys.CULL, false, Boolean::class)
-        spawnRoom = spawnProps.get("${ConstKeys.SPAWN}_${ConstKeys.ROOM}", String::class)
-
         val playSound = spawnProps.getOrDefault(ConstKeys.SOUND, false, Boolean::class)
         if (playSound && overlapsGameCamera()) requestToPlaySound(SoundAsset.ATOMIC_FIRE_SOUND, false)
+
+        val dimensions = bounds.getSplitDimensions(ConstVals.PPM.toFloat())
+        defineDrawables(dimensions.first, dimensions.second)
     }
 
     fun moveBeforeKill() {
@@ -213,7 +212,7 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         for (row in 0 until rows) {
             for (col in 0 until cols) {
                 val sprite = GameSprite()
-                sprite.setSize(ConstVals.PPM.toFloat())
+                sprite.setSize(1.05f * ConstVals.PPM)
 
                 val spriteKey = "lava_$${col}_${row}"
                 sprites.put(spriteKey, sprite)
@@ -232,8 +231,8 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
                     val index = ((row + col) % 3) + 1
                     var regionKey = "$FLOW$index"
                     if (row == rows - 1) regionKey = "$TOP$regionKey"
-                    regions.get(regionKey)
-                } else regions.get(FALL)
+                    regions[regionKey]
+                } else if (black) regions["${FALL}_${ConstKeys.BLACK}"] else regions[FALL]
 
                 val animation = Animation(region!!, 3, 1, 0.1f, true)
                 val animator = Animator(animation)

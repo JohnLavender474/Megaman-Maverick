@@ -140,7 +140,7 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
         type = spawnProps.get(ConstKeys.TYPE, String::class)!!
 
         val size = when (type) {
-            ENEMY_TYPE -> Vector2(2f, 2f)
+            ENEMY_TYPE -> vector2Of(2f)
             LEVER_TYPE -> vector2Of(0.75f)
             SWITCHAROO_ARROW_TYPE -> Vector2(3f, 6f)
             else -> throw IllegalStateException("Invalid type: $type")
@@ -244,9 +244,7 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
         debugShapes.add { body.getBodyBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle())
-        bodyFixture.setHitByPlayerReceiver {
-            if (type == SWITCHAROO_ARROW_TYPE && switchTimer.isFinished()) switchToggleeState()
-        }
+        bodyFixture.setHitByPlayerReceiver { if (switchTimer.isFinished()) switchToggleeState() }
         bodyFixture.setHitByProjectileReceiver {
             if (type != SWITCHAROO_ARROW_TYPE && switchTimer.isFinished()) switchToggleeState()
         }
@@ -276,7 +274,7 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { delta, _sprite ->
             val size = when (type) {
-                LEVER_TYPE -> vector2Of(0.5f)
+                LEVER_TYPE -> vector2Of(0.75f)
                 ENEMY_TYPE -> vector2Of(2f)
                 SWITCHAROO_ARROW_TYPE -> vector2Of(6f)
                 else -> throw IllegalStateException("Unknown type: $type")
