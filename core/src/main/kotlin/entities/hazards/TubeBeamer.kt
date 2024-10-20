@@ -5,13 +5,11 @@ import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.cullables.CullableOnEvent
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.entities.contracts.IAudioEntity
@@ -32,7 +30,7 @@ import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.TubeBeam
-import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 
 class TubeBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IAudioEntity, IBodyEntity, ICullableEntity,
@@ -112,10 +110,6 @@ class TubeBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IAudioEntity
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun defineCullablesComponent(): CullablesComponent {
-        val cullEvents =
-            objectSetOf<Any>(EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING, EventType.PLAYER_SPAWN)
-        val cullableOnEvents = CullableOnEvent({ cullEvents.contains(it) }, cullEvents)
-        return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS pairTo cullableOnEvents))
-    }
+    private fun defineCullablesComponent() =
+        CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(this)))
 }

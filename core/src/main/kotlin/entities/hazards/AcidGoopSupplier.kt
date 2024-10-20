@@ -24,7 +24,7 @@ import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.HazardsFactory
-import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 
 class AcidGoopSupplier(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IBodyEntity, ICullableEntity {
@@ -59,11 +59,12 @@ class AcidGoopSupplier(game: MegamanMaverickGame) : MegaGameEntity(game), IHazar
 
     override fun onDestroy() {
         super.onDestroy()
+        acidGoop?.destroy()
         acidGoop = null
     }
 
     private fun createAcidGoop() {
-        acidGoop = EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.ACID_GOOP) as AcidGoop?
+        acidGoop = EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.ACID_GOOP) as AcidGoop
         acidGoop!!.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
     }
 
@@ -94,7 +95,10 @@ class AcidGoopSupplier(game: MegamanMaverickGame) : MegaGameEntity(game), IHazar
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun defineCullablesComponent() = CullablesComponent(
-        objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo getGameCameraCullingLogic(this))
-    )
+    private fun defineCullablesComponent() =
+        CullablesComponent(
+            objectMapOf(
+                ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(this)
+            )
+        )
 }
