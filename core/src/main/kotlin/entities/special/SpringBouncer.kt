@@ -83,7 +83,7 @@ class SpringBouncer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesE
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.STATIC)
         bounceFixture = Fixture(body, FixtureType.BOUNCER, GameRectangle())
-        bounceFixture.setVelocityAlteration { fixture, _ -> bounce(fixture) }
+        bounceFixture.setVelocityAlteration { fixture -> bounce(fixture) }
         body.addFixture(bounceFixture)
         return BodyComponentCreator.create(this, body)
     }

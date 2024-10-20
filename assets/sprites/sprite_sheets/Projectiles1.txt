@@ -1,5 +1,5 @@
 Projectiles1.png
-size: 512, 460
+size: 512, 564
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -199,93 +199,121 @@ ReactManProjectile/Small
   orig: 32, 32
   offset: 0, 0
   index: -1
+ReactorMonkeyBall/0
+  rotate: false
+  xy: 448, 340
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+ReactorMonkeyBall/1
+  rotate: false
+  xy: 0, 404
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+ReactorMonkeyBall/2
+  rotate: false
+  xy: 64, 404
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+ReactorMonkeyBall/3
+  rotate: false
+  xy: 128, 404
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
 RocketBomb
   rotate: false
-  xy: 0, 388
+  xy: 192, 404
   size: 120, 40
   orig: 120, 40
   offset: 0, 0
   index: -1
 RollingBotShot
   rotate: false
-  xy: 120, 388
+  xy: 312, 404
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 SealionBall
   rotate: false
-  xy: 184, 388
+  xy: 376, 404
   size: 48, 30
   orig: 48, 30
   offset: 0, 0
   index: -1
 Snowball
   rotate: false
-  xy: 232, 388
+  xy: 424, 404
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Snowball2
   rotate: false
-  xy: 264, 388
+  xy: 456, 404
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 SnowballForm
   rotate: false
-  xy: 280, 388
+  xy: 0, 532
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 SnowJoeball
   rotate: false
-  xy: 376, 388
+  xy: 96, 532
   size: 128, 32
   orig: 128, 32
   offset: 0, 0
   index: -1
 SpiderWeb/BlinkWhite
   rotate: false
-  xy: 0, 428
+  xy: 224, 532
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 SpiderWeb/Gray
   rotate: false
-  xy: 64, 428
+  xy: 288, 532
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SpiderWeb/White
   rotate: false
-  xy: 96, 428
+  xy: 320, 532
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ToxicGoopShot
   rotate: false
-  xy: 128, 428
+  xy: 352, 532
   size: 48, 16
   orig: 48, 16
   offset: 0, 0
   index: -1
 TubeBeam
   rotate: false
-  xy: 176, 428
+  xy: 400, 532
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 UFOBomb
   rotate: false
-  xy: 208, 428
+  xy: 432, 532
   size: 80, 16
   orig: 80, 16
   offset: 0, 0

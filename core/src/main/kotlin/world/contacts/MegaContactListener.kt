@@ -252,7 +252,7 @@ class MegaContactListener(
             val (bouncerFixture, bounceableFixture) = contact.getFixtureSetsInOrder(
                 objectSetOf(FixtureType.BOUNCER), objectSetOf(FixtureType.FEET, FixtureType.HEAD, FixtureType.SIDE)
             )!!
-            val bounce = bouncerFixture.getVelocityAlteration(bounceableFixture, delta)
+            val bounce = bouncerFixture.getVelocityAlteration(bounceableFixture)
             VelocityAlterator.alterate(bounceableFixture.getBody(), bounce)
             bouncerFixture.getRunnable()?.invoke()
             bounceableFixture.getRunnable()?.invoke()
@@ -289,7 +289,7 @@ class MegaContactListener(
             if (water is Water && listenerFixture.hasHitByWaterByReceiver()) listenerFixture.getHitByWater(water)
             val entity = listenerFixture.getEntity()
             if (entity is Megaman) {
-                Splash.generate(listenerFixture.getBody(), waterFixture.getBody())
+                Splash.splashOnWaterSurface(listenerFixture.getBody(), waterFixture.getBody())
                 if (!entity.body.isSensing(BodySense.FEET_ON_GROUND) && !entity.isBehaviorActive(BehaviorType.WALL_SLIDING)) entity.aButtonTask =
                     AButtonTask.SWIM
                 entity.gravityScalar = MegamanValues.WATER_GRAVITY_SCALAR
@@ -322,8 +322,8 @@ class MegaContactListener(
         else if (contact.fixturesMatch(FixtureType.BODY, FixtureType.FORCE)) {
             printDebugLog(contact, "beginContact(): Body-Force, contact = $contact")
             val (bodyFixture, forceFixture) = contact.getFixturesInOrder(FixtureType.BODY, FixtureType.FORCE)!!
-            val forceAlteration = forceFixture.getVelocityAlteration(bodyFixture, delta)
-            bodyFixture.applyForceAlteration(ProcessState.BEGIN, forceAlteration, delta)
+            val forceAlteration = forceFixture.getVelocityAlteration(bodyFixture)
+            bodyFixture.applyForceAlteration(ProcessState.BEGIN, forceAlteration)
             bodyFixture.getBody().setBodySense(BodySense.FORCE_APPLIED, true)
             forceFixture.getRunnable()?.invoke()
         }
@@ -657,8 +657,8 @@ class MegaContactListener(
         // body, force
         else if (contact.fixturesMatch(FixtureType.BODY, FixtureType.FORCE)) {
             val (bodyFixture, forceFixture) = contact.getFixturesInOrder(FixtureType.BODY, FixtureType.FORCE)!!
-            val forceAlteration = forceFixture.getVelocityAlteration(bodyFixture, delta)
-            bodyFixture.applyForceAlteration(ProcessState.CONTINUE, forceAlteration, delta)
+            val forceAlteration = forceFixture.getVelocityAlteration(bodyFixture)
+            bodyFixture.applyForceAlteration(ProcessState.CONTINUE, forceAlteration)
             bodyFixture.getBody().setBodySense(BodySense.FORCE_APPLIED, true)
             forceFixture.getRunnable()?.invoke()
         }
@@ -851,8 +851,8 @@ class MegaContactListener(
         else if (contact.fixturesMatch(FixtureType.BODY, FixtureType.FORCE)) {
             printDebugLog(contact, "End Contact: Body-Force, contact = $contact")
             val (bodyFixture, forceFixture) = contact.getFixturesInOrder(FixtureType.BODY, FixtureType.FORCE)!!
-            val forceAlteration = forceFixture.getVelocityAlteration(bodyFixture, delta)
-            bodyFixture.applyForceAlteration(ProcessState.END, forceAlteration, delta)
+            val forceAlteration = forceFixture.getVelocityAlteration(bodyFixture)
+            bodyFixture.applyForceAlteration(ProcessState.END, forceAlteration)
             bodyFixture.getBody().setBodySense(BodySense.FORCE_APPLIED, false)
             forceFixture.getRunnable()?.invoke()
         }
@@ -866,7 +866,7 @@ class MegaContactListener(
             listenerFixture.getBody().setBodySense(BodySense.IN_WATER, false)
             val listenerEntity = listenerFixture.getEntity()
             if (listenerEntity is Megaman) {
-                Splash.generate(listenerFixture.getBody(), waterFixture.getBody())
+                Splash.splashOnWaterSurface(listenerFixture.getBody(), waterFixture.getBody())
                 listenerEntity.aButtonTask = AButtonTask.AIR_DASH
                 listenerEntity.gravityScalar = 1f
                 game.audioMan.playSound(SoundAsset.SPLASH_SOUND, false)

@@ -33,16 +33,13 @@ fun IFixture.depleteHealth(): Boolean {
     return true
 }
 
-fun IFixture.setVelocityAlteration(alteration: (IFixture, Float) -> VelocityAlteration): IFixture {
+fun IFixture.setVelocityAlteration(alteration: (IFixture) -> VelocityAlteration): IFixture {
     properties.put(ConstKeys.VELOCITY_ALTERATION, alteration)
     return this
 }
 
-fun IFixture.getVelocityAlteration(alterableBodyFixture: IFixture, delta: Float) =
-    (properties.get(ConstKeys.VELOCITY_ALTERATION) as (IFixture, Float) -> VelocityAlteration).invoke(
-        alterableBodyFixture,
-        delta
-    )
+fun IFixture.getVelocityAlteration(alterableBodyFixture: IFixture) =
+    (properties.get(ConstKeys.VELOCITY_ALTERATION) as (IFixture) -> VelocityAlteration).invoke(alterableBodyFixture)
 
 fun IFixture.setRunnable(runnable: () -> Unit): IFixture {
     properties.put(ConstKeys.RUNNABLE, runnable)
@@ -67,17 +64,17 @@ fun IFixture.setHitWaterByReceiver(receiver: (Water) -> Unit) {
 fun IFixture.hasForceAlterationForState(processState: ProcessState) =
     hasProperty("${processState.name.lowercase()}_${ConstKeys.FORCE}_${ConstKeys.VELOCITY_ALTERATION}")
 
-fun IFixture.setForceAlterationListener(processState: ProcessState, listener: (VelocityAlteration, Float) -> Unit) {
+fun IFixture.setForceAlterationForState(processState: ProcessState, listener: (VelocityAlteration) -> Unit) {
     putProperty("${processState.name.lowercase()}_${ConstKeys.FORCE}_${ConstKeys.VELOCITY_ALTERATION}", listener)
 }
 
-fun IFixture.applyForceAlteration(processState: ProcessState, alteration: VelocityAlteration, delta: Float) {
+fun IFixture.applyForceAlteration(processState: ProcessState, alteration: VelocityAlteration) {
     if (hasForceAlterationForState(processState)) {
         val runnable = getProperty(
             "${processState.name.lowercase()}_${ConstKeys.FORCE}_${ConstKeys.VELOCITY_ALTERATION}"
-        ) as (VelocityAlteration, Float) -> Unit
-        runnable.invoke(alteration, delta)
-    } else VelocityAlterator.alterate(getBody(), alteration, delta)
+        ) as (VelocityAlteration) -> Unit
+        runnable.invoke(alteration)
+    } else VelocityAlterator.alterate(getBody(), alteration)
 }
 
 fun IFixture.hasHitByWaterByReceiver() = hasProperty(ConstKeys.HIT_WATER)

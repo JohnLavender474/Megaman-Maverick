@@ -13,7 +13,6 @@ import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
-
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -61,8 +60,8 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         const val TAG = "RollingBot"
         private const val X_VEL = 3f
         private const val ROLL_DURATION = 1f
-        private const val OPEN_DELAY = 0.45f
-        private const val SHOOT_DELAY = 0.65f
+        private const val OPEN_DELAY = 0.5f
+        private const val SHOOT_DELAY = 0.25f
         private const val BULLETS_TO_SHOOT = 3
         private const val GRAVITY = -0.15f
         private const val GROUND_GRAVITY = -0.0001f
@@ -86,6 +85,8 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     )
     override lateinit var facing: Facing
 
+    private val rolling: Boolean
+        get() = rollingBotState == RollingBotState.ROLLING
     private val rollTimer = Timer(ROLL_DURATION)
     private val openTimer = Timer(OPEN_DELAY)
     private val shootTimer = Timer(SHOOT_DELAY)
@@ -155,8 +156,8 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
                 }
 
                 RollingBotState.SHOOTING -> {
-                    facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
                     body.physics.velocity.x = 0f
+                    facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
 
                     shootTimer.update(delta)
                     if (shootTimer.isFinished()) {
@@ -229,11 +230,8 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
                     fixture.offsetFromBodyCenter.y = feetFixtureOffset
                     return@forEach
                 }
-
-                if (fixture.getType() == FixtureType.SHIELD)
-                    fixture.active = rollingBotState != RollingBotState.SHOOTING
-                if (fixture.getType() == FixtureType.DAMAGEABLE)
-                    fixture.active = rollingBotState == RollingBotState.SHOOTING
+                else if (fixture.getType() == FixtureType.SHIELD) fixture.active = rolling
+                else if (fixture.getType() == FixtureType.DAMAGEABLE) fixture.active = !rolling
 
                 val fixtureShape = fixture.rawShape as GameRectangle
                 fixtureShape.set(body)

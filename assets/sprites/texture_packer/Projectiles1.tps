@@ -300,6 +300,9 @@
             </struct>
             <key type="filename">../frames/Projectiles1/Monkey_Ball.png</key>
             <key type="filename">../frames/Projectiles1/Nuclear_Monkey_Ball.png</key>
+            <key type="filename">../frames/Projectiles1/ReactorMonkeyBall/0.png</key>
+            <key type="filename">../frames/Projectiles1/ReactorMonkeyBall/1.png</key>
+            <key type="filename">../frames/Projectiles1/ReactorMonkeyBall/2.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -402,6 +405,21 @@
                 <rect>12,4,24,8</rect>
                 <key>scale9Paddings</key>
                 <rect>12,4,24,8</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Projectiles1/ReactorMonkeyBall/3.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,32,32,64</rect>
+                <key>scale9Paddings</key>
+                <rect>16,32,32,64</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

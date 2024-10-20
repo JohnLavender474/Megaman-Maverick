@@ -182,6 +182,8 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
         body.setSize(0.75f * ConstVals.PPM)
+        body.physics.applyFrictionX = false
+        body.physics.applyFrictionY = false
         body.putProperty(LEFT_FOOT, false)
         body.putProperty(RIGHT_FOOT, false)
 

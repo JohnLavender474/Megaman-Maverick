@@ -36,7 +36,7 @@ import com.megaman.maverick.game.utils.VelocityAlterator
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getEntity
-import com.megaman.maverick.game.world.body.setForceAlterationListener
+import com.megaman.maverick.game.world.body.setForceAlterationForState
 
 class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRotatable {
 
@@ -134,13 +134,13 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         bodyFixture.putProperty(ConstKeys.GRAVITY_ROTATABLE, false)
-        bodyFixture.setForceAlterationListener(ProcessState.BEGIN) { alteration, delta ->
+        bodyFixture.setForceAlterationForState(ProcessState.BEGIN) { alteration ->
             val startVelocity = body.physics.velocity.cpy()
             GameLogger.debug(TAG, "start force alteration: startVel=$startVelocity")
             body.putProperty("${ConstKeys.START}_${ConstKeys.VELOCITY}", startVelocity)
-            VelocityAlterator.alterate(body, alteration, delta)
+            VelocityAlterator.alterate(body, alteration)
         }
-        bodyFixture.setForceAlterationListener(ProcessState.END) { _, _ ->
+        bodyFixture.setForceAlterationForState(ProcessState.END) { _ ->
             val newVelocity = body.getProperty("${ConstKeys.START}_${ConstKeys.VELOCITY}", Vector2::class)
             GameLogger.debug(TAG, "end force alteration: newVel=$newVelocity")
             newVelocity?.let { body.physics.velocity.set(it) }

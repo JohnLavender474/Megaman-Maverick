@@ -65,7 +65,8 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     companion object {
         const val TAG = "UFOhNoBot"
         private const val RISE_VEL = 8f
-        private const val X_VEL = 5f
+        private const val X_VEL_WITH_BOMB = 5f
+        private const val X_VEL_NO_BOMB = 10f
         private const val DROP_DURATION = 1f
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -126,10 +127,16 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+        triggers.clear()
     }
 
     private fun isMegamanUnderMe() = getMegaman().body.getMaxY() <= body.y &&
         getMegaman().body.getCenter().x >= body.x && getMegaman().body.getCenter().x <= body.getMaxX()
+
+    private fun moveX() {
+        val xVel = (if (dropped) X_VEL_NO_BOMB else X_VEL_WITH_BOMB) * ConstVals.PPM * facing.value
+        body.physics.velocity.set(xVel, 0f)
+    }
 
     private fun dropBomb() {
         val bomb = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.UFO_BOMB)!!
@@ -139,15 +146,13 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
     private fun setToHover() {
         facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
-        val xVel = X_VEL * ConstVals.PPM * facing.value
-        body.physics.velocity.set(xVel, 0f)
+        moveX()
     }
 
     override fun swapFacing() {
         super.swapFacing()
         GameLogger.debug(TAG, "swapFacing(): new facing = $facing")
-        val xVel = X_VEL * ConstVals.PPM * facing.value
-        body.physics.velocity.set(xVel, 0f)
+        moveX()
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -186,10 +191,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
             if (!dropDurationTimer.isFinished()) {
                 dropDurationTimer.update(delta)
-                if (dropDurationTimer.isFinished()) {
-                    val xVel = X_VEL * ConstVals.PPM * facing.value
-                    body.physics.velocity.set(xVel, 0f)
-                }
+                if (dropDurationTimer.isFinished()) moveX()
             }
         }
     }
@@ -224,7 +226,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
         val leftSideFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM))
-        leftSideFixture.offsetFromBodyCenter.x = -0.375f * ConstVals.PPM
+        leftSideFixture.offsetFromBodyCenter.x = -0.5f * ConstVals.PPM
         leftSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftSideFixture)
         leftSideFixture.rawShape.color = Color.YELLOW
@@ -232,7 +234,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
         val rightSideFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM))
-        rightSideFixture.offsetFromBodyCenter.x = 0.375f * ConstVals.PPM
+        rightSideFixture.offsetFromBodyCenter.x = 0.5f * ConstVals.PPM
         rightSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightSideFixture)
         rightSideFixture.rawShape.color = Color.YELLOW

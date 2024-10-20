@@ -111,6 +111,8 @@ class Pipi(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
         body.setSize(0.35f * ConstVals.PPM)
+        body.physics.applyFrictionX = false
+        body.physics.applyFrictionY = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBodyBounds() }

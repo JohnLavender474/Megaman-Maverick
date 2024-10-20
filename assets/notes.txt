@@ -4,7 +4,9 @@ Heart Locations
 - B: Moon Man
 - C: Desert Man
 - D: Inferno Man
+- E: Reactor Man
 
 Energy Tank Locations
 
 - A: Glacier Man
+- B: Inferno Man

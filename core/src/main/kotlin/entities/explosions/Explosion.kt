@@ -46,6 +46,7 @@ class Explosion(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IOwn
     IAudioEntity, IDamager {
 
     companion object {
+        const val TAG = "Explosion"
         private var explosionRegion: TextureRegion? = null
         private const val DURATION = 0.275f
     }
@@ -54,11 +55,9 @@ class Explosion(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IOwn
 
     private val durationTimer = Timer(DURATION)
 
-    override fun getEntityType() = EntityType.EXPLOSION
-
     override fun init() {
         if (explosionRegion == null) explosionRegion =
-            game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "Explosion")
+            game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
         addComponent(defineSpritesCompoent())
         addComponent(defineBodyComponent())
         addComponent(defineAnimationsComponent())
@@ -71,7 +70,7 @@ class Explosion(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IOwn
         val spawn = spawnProps.get(ConstKeys.POSITION) as Vector2
         body.setCenter(spawn)
         durationTimer.reset()
-        owner = spawnProps.get(ConstKeys.OWNER) as GameEntity?
+        owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
         if (spawnProps.containsKey(ConstKeys.SOUND) && overlapsGameCamera()) {
             val sound = spawnProps.get(ConstKeys.SOUND, SoundAsset::class)!!
             requestToPlaySound(sound, false)
@@ -113,4 +112,6 @@ class Explosion(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IOwn
         )
         return BodyComponentCreator.create(this, body)
     }
+
+    override fun getEntityType() = EntityType.EXPLOSION
 }
