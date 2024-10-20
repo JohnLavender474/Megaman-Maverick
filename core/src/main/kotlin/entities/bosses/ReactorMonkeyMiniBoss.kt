@@ -118,7 +118,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
 
     override fun onDestroy() {
         super.onDestroy()
-        monkeyBall?.destroy()
+        monkeyBall?.let { ball -> if (!ball.dead) ball.destroy() }
         monkeyBall = null
     }
 
@@ -131,13 +131,14 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
     }
 
     fun catchMonkeyBall() {
-        monkeyBall!!.body.physics.gravityOn = false
-        monkeyBall!!.body.physics.velocity.setZero()
-        monkeyBall!!.hidden = true
+        monkeyBall?.let { ball ->
+            ball.body.physics.gravityOn = false
+            ball.body.physics.velocity.setZero()
+            ball.hidden = true
+        }
     }
 
     fun hurlMonkeyBall() {
-        monkeyBall!!.body.physics.gravityOn = true
         val impulse = MegaUtilMethods.calculateJumpImpulse(
             body.getPosition(),
             getMegaman().body.getPosition(),
@@ -145,8 +146,11 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
             HORIZONTAL_SCALAR,
             VERTICAL_SCALAR
         )
-        monkeyBall!!.body.physics.velocity.set(impulse)
-        monkeyBall!!.hidden = false
+        monkeyBall?.let { ball ->
+            ball.body.physics.velocity.set(impulse)
+            ball.body.physics.gravityOn = true
+            ball.hidden = false
+        }
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {

@@ -87,22 +87,23 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         bounces = 0
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        exploding = false
+    }
+
     override fun explodeAndDie(vararg params: Any?) {
         val explosionField = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION_FIELD)!!
         val props = props(
             ConstKeys.BOUNDS pairTo GameRectangle(body),
             ConstKeys.OWNER pairTo this,
-            ConstKeys.END pairTo this::onExplosionFieldEnd
+            ConstKeys.END pairTo { if (exploding) destroy() } as () -> Unit
         )
         explosionField.spawn(props)
 
         exploding = true
         body.physics.gravityOn = false
         body.physics.velocity.setZero()
-    }
-
-    private fun onExplosionFieldEnd() {
-        destroy()
     }
 
     private fun bounce(direction: Direction, add: Boolean = true) {
@@ -119,17 +120,6 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
             requestToPlaySound(SoundAsset.BLOOPITY_SOUND, false)
         }
     }
-
-    /*
-    override fun hitProjectile(projectileFixture: IFixture) = hitFixture(projectileFixture)
-
-    override fun hitBody(bodyFixture: IFixture) = hitFixture(bodyFixture)
-
-    private fun hitFixture(fixture: IFixture) {
-        val pushDirection = getOverlapPushDirection(body, fixture.getShape()) ?: Direction.UP
-        bounce(pushDirection, false)
-    }
-     */
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
