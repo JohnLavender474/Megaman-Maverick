@@ -88,7 +88,7 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             FixtureType.FORCE,
             GameRectangle().setSize(10f * ConstVals.PPM, 1.15f * ConstVals.PPM)
         )
-        blowFixture.setVelocityAlteration { fixture, _ ->
+        blowFixture.setVelocityAlteration { fixture ->
             val entity = fixture.getEntity()
             if (entity !is Megaman) return@setVelocityAlteration VelocityAlteration.addNone()
             /*

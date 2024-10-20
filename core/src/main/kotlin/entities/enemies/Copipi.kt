@@ -74,6 +74,8 @@ class Copipi(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.25f * ConstVals.PPM)
+        body.physics.applyFrictionX = false
+        body.physics.applyFrictionY = false
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameCircle().setRadius(0.125f * ConstVals.PPM))
         body.addFixture(bodyFixture)

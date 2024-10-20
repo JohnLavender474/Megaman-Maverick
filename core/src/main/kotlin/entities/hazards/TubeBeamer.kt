@@ -31,7 +31,6 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
-import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 
@@ -106,14 +105,9 @@ class TubeBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IAudioEntity
     }
 
     private fun defineCullablesComponent(): CullablesComponent {
-        val cullableOutOfBounds = getGameCameraCullingLogic(this)
         val cullEvents =
             objectSetOf<Any>(EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING, EventType.PLAYER_SPAWN)
         val cullableOnEvents = CullableOnEvent({ cullEvents.contains(it) }, cullEvents)
-        return CullablesComponent(
-            objectMapOf(
-                ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullableOutOfBounds, ConstKeys.CULL_EVENTS pairTo cullableOnEvents
-            )
-        )
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS pairTo cullableOnEvents))
     }
 }

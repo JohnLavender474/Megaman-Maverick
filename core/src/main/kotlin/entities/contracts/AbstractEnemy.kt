@@ -140,7 +140,7 @@ abstract class AbstractEnemy(
     }
 
     protected open fun explode(explosionProps: Properties? = null) {
-        if (overlapsGameCamera()) playSoundNow(SoundAsset.ENEMY_DAMAGE_SOUND, false)
+        if (overlapsGameCamera()) playSoundNow(SoundAsset.EXPLOSION_2_SOUND, false)
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
         val props = explosionProps ?: props(ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo body.getCenter())
         explosion.spawn(props)

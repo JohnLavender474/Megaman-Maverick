@@ -36,13 +36,13 @@ class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
     companion object {
         const val TAG = "TubeBeam"
-        private const val CULL_TIME = 1f
+        private const val DEFAULT_CULL_TIME = 1f
         private var region: TextureRegion? = null
     }
 
     override var directionRotation: Direction? = null
 
-    private val cullTimer = Timer(CULL_TIME)
+    private lateinit var cullTimer: Timer
     private lateinit var trajectory: Vector2
 
     override fun init() {
@@ -54,13 +54,18 @@ class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         directionRotation = spawnProps.get(ConstKeys.DIRECTION, Direction::class)!!
+        trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
+
         val size = if (directionRotation?.isHorizontal() == true) Vector2(2f, 0.85f) else Vector2(0.85f, 2f)
         body.setSize(size.scl(ConstVals.PPM.toFloat()))
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
-        trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
-        cullTimer.reset()
+
+        val cullTime = spawnProps.getOrDefault(ConstKeys.CULL_TIME, DEFAULT_CULL_TIME, Float::class)
+        cullTimer = Timer(cullTime)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
@@ -71,14 +76,18 @@ class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.physics.applyFrictionX = false
-body.physics.applyFrictionY = false
+        body.physics.applyFrictionY = false
+
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
         body.addFixture(damagerFixture)
+
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.velocity.set(trajectory)
             (damagerFixture.rawShape as GameRectangle).setSize(body.getSize())
         }
+
         addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
+
         return BodyComponentCreator.create(this, body)
     }
 

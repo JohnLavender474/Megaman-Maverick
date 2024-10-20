@@ -75,8 +75,8 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         private const val STAND_DUR = 0.5f
         private const val DANCE_DUR = 0.4f
         private const val RUN_DUR = 0.5f
-        private const val RUN_SPEED = 6f
-        private const val JUMP_IMPULSE = 12f
+        private const val RUN_SPEED = 8f
+        private const val JUMP_IMPULSE = 25f
         private const val THROW_DELAY = 0.25f
         private const val PROJECTILE_SPEED = 10f
         private val regions = ObjectMap<String, TextureRegion>()
@@ -102,7 +102,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     private val throwTimer = Timer(THROW_DELAY)
 
     private val projectilePosition: Vector2
-        get() = body.getTopCenterPoint().add(0.15f * ConstVals.PPM * -facing.value, 0.05f * ConstVals.PPM)
+        get() = body.getTopCenterPoint().add(0.15f * ConstVals.PPM * -facing.value, 0.125f * ConstVals.PPM)
 
     private var projectile: ReactManProjectile? = null
     private var jumped = false
@@ -294,6 +294,16 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         debugShapes.add { damageableFixture.getShape() }
         body.addFixture(damageableFixture)
 
+        val headFixture = Fixture(
+            body, FixtureType.HEAD, GameRectangle().setSize(
+                0.25f * ConstVals.PPM, 0.1f * ConstVals.PPM
+            )
+        )
+        headFixture.offsetFromBodyCenter.y = 0.675f * ConstVals.PPM
+        headFixture.rawShape.color = Color.ORANGE
+        debugShapes.add { headFixture.getShape() }
+        body.addFixture(headFixture)
+
         val feetFixture = Fixture(
             body, FixtureType.FEET, GameRectangle().setSize(
                 0.25f * ConstVals.PPM, 0.1f * ConstVals.PPM
@@ -319,12 +329,15 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 0.1f * ConstVals.PPM, 0.25f * ConstVals.PPM
             )
         )
-        leftFixture.offsetFromBodyCenter.x = 0.625f * ConstVals.PPM
+        rightFixture.offsetFromBodyCenter.x = 0.625f * ConstVals.PPM
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         rightFixture.rawShape.color = Color.YELLOW
         debugShapes.add { rightFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
+            if (body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) && body.physics.velocity.y > 0f)
+                body.physics.velocity.y = 0f
+
             val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
             body.physics.gravity.y = gravity * ConstVals.PPM
         }

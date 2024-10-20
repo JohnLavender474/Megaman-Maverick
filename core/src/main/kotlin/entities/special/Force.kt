@@ -30,7 +30,7 @@ class Force(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICul
         const val FORCE_Y = "force_y"
     }
 
-    private lateinit var filter: (IFixture, Float) -> Boolean
+    private lateinit var filter: (IFixture) -> Boolean
     private lateinit var actionX: VelocityAlterationType
     private lateinit var actionY: VelocityAlterationType
     private var forceX = 0f
@@ -62,7 +62,7 @@ class Force(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICul
                 GameLogger.debug(TAG, "Adding body sense pairTo force filter: $bodySense")
                 filterByNotBodySenseSet.add(bodySense)
             }
-        filter = { fixture, _ ->
+        filter = { fixture ->
             val tagFiltered = filterByTagSet.contains(fixture.getEntity().getTag().uppercase())
             val bodySenseFiltered = !fixture.getBody().isSensingAny(filterByNotBodySenseSet)
             if (tagFiltered && bodySenseFiltered) GameLogger.debug(
@@ -94,8 +94,8 @@ class Force(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICul
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         val forceFixture = Fixture(body, FixtureType.FORCE, GameRectangle())
-        forceFixture.setVelocityAlteration { fixture, delta ->
-            if (filter(fixture, delta)) VelocityAlteration(
+        forceFixture.setVelocityAlteration { fixture->
+            if (filter(fixture)) VelocityAlteration(
                 forceX, forceY, actionX, actionY
             ) else VelocityAlteration.addNone()
         }

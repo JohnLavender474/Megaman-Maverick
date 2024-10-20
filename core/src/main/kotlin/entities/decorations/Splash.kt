@@ -35,18 +35,20 @@ import kotlin.math.ceil
 
 class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
 
-    enum class SplashType { BLUE, WHITE }
+    enum class SplashType { BLUE, WHITE, TOXIC }
 
     companion object {
         const val TAG = "Splash"
         private const val BLUE_SPLASH_REGION_KEY = "Water/Splash"
         private const val WHITE_SPLASH_REGION_KEY = "Water/WhiteSplash"
-        private const val ALPHA = 0.5f
+        private const val TOXIC_SPLASH_REGION_KEY = "Water/ToxicSplash"
+        private const val DEFAULT_ALPHA = 0.5f
         private const val CULL_TIME = 0.375f
         private var blueSplashRegion: TextureRegion? = null
         private var whiteSplashRegion: TextureRegion? = null
+        private var toxicSplashRegion: TextureRegion? = null
 
-        fun generate(splasher: GameRectangle, water: GameRectangle) {
+        fun splashOnWaterSurface(splasher: GameRectangle, water: GameRectangle) {
             GameLogger.debug(TAG, "Generating splash for splasher [$splasher] and water [$water]")
             val numSplashes = ceil(splasher.width / ConstVals.PPM).toInt()
             for (i in 0 until numSplashes) {
@@ -62,10 +64,11 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
     private val cullTimer = Timer(CULL_TIME)
 
     override fun init() {
-        if (blueSplashRegion == null || whiteSplashRegion == null) {
+        if (blueSplashRegion == null || whiteSplashRegion == null || toxicSplashRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENVIRONS_1.source)
             blueSplashRegion = atlas.findRegion(BLUE_SPLASH_REGION_KEY)
             whiteSplashRegion = atlas.findRegion(WHITE_SPLASH_REGION_KEY)
+            toxicSplashRegion = atlas.findRegion(TOXIC_SPLASH_REGION_KEY)
         }
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
@@ -74,15 +77,23 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         type = if (spawnProps.containsKey(ConstKeys.TYPE)) {
             val rawType = spawnProps.get(ConstKeys.TYPE)
             rawType as? SplashType ?: if (rawType is String) SplashType.valueOf(rawType.uppercase())
             else throw IllegalArgumentException("Type value must be a string or SplashType: $rawType")
         } else SplashType.BLUE
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         firstSprite!!.setPosition(spawn, Position.BOTTOM_CENTER)
         firstSprite!!.setOriginCenter()
         firstSprite!!.rotation = spawnProps.getOrDefault(ConstKeys.ROTATION, 0f, Float::class)
+        val priority = spawnProps.getOrDefault(ConstKeys.PRIORITY, DrawingPriority(DrawingSection.PLAYGROUND, -1), DrawingPriority::class)
+        firstSprite!!.priority.section = priority.section
+        firstSprite!!.priority.value = priority.value
+        val alpha = spawnProps.getOrDefault(ConstKeys.ALPHA, DEFAULT_ALPHA, Float::class)
+        firstSprite!!.setAlpha(alpha)
+
         cullTimer.reset()
     }
 
@@ -95,16 +106,16 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
         val keySupplier: () -> String? = { type.name }
         val animations = objectMapOf<String, IAnimation>(
             SplashType.BLUE.name pairTo Animation(blueSplashRegion!!, 1, 5, 0.075f, false),
-            SplashType.WHITE.name pairTo Animation(whiteSplashRegion!!, 1, 5, 0.075f, false)
+            SplashType.WHITE.name pairTo Animation(whiteSplashRegion!!, 1, 5, 0.075f, false),
+            SplashType.TOXIC.name pairTo Animation(toxicSplashRegion!!, 1, 5, 0.075f, false)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }
 
     private fun defineSpritesCompoent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -1))
+        val sprite = GameSprite()
         sprite.setSize(ConstVals.PPM.toFloat())
-        sprite.setAlpha(ALPHA)
         return SpritesComponent(sprite)
     }
 

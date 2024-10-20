@@ -1,10 +1,5 @@
 package com.megaman.maverick.game.drawables.sprites
 
-import com.mega.game.engine.world.body.*;
-import com.mega.game.engine.world.collisions.*;
-import com.mega.game.engine.world.contacts.*;
-import com.mega.game.engine.world.pathfinding.*;
-
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.megaman.maverick.game.ConstVals
@@ -16,7 +11,7 @@ class ScrollingStars(
     width: Float = WIDTH * ConstVals.PPM, height: Float = HEIGHT * ConstVals.PPM
 ) : ScrollingBackground(
     game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_1.source, "StarFieldBG"),
-    start, target, DUR, width, height, ROWS, COLS
+    start, target, DUR, width, height, ROWS, COLS, initPos = start
 ) {
 
     companion object {

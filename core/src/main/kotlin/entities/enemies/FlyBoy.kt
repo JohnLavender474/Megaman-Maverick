@@ -62,7 +62,8 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 15 else 10
-        }, ChargedShotExplosion::class pairTo dmgNeg {
+        },
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 10 else 5
         }
@@ -100,6 +101,8 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
         body.setSize(ConstVals.PPM.toFloat(), ConstVals.PPM * 2f)
+        body.physics.applyFrictionX = false
+        body.physics.applyFrictionY = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
 

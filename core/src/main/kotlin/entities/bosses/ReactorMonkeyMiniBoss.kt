@@ -12,7 +12,6 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
-
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -31,7 +30,6 @@ import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -49,6 +47,7 @@ import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.projectiles.ReactorMonkeyBall
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
 import kotlin.reflect.KClass
 
@@ -59,8 +58,8 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
     companion object {
         const val TAG = "ReactorMonkeyMiniBoss"
         const val BALL_SPAWN_Y_KEY = "${ConstKeys.BALL}_${ConstKeys.SPAWN}_${ConstKeys.Y}"
-        private const val MIN_THROW_DELAY = 0.5f
-        private const val MAX_THROW_DELAY = 2f
+        private const val MIN_THROW_DELAY = 0.75f
+        private const val MAX_THROW_DELAY = 2.25f
         private const val THROW_DUR = 0.3f
         private const val BALL_CATCH_RADIUS = 0.25f
         private const val BALL_IMPULSE_Y = 6.5f
@@ -76,18 +75,18 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
         Fireball::class pairTo dmgNeg(3),
         ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
-            if (it.fullyCharged) 3 else 2
-        },
-        ChargedShotExplosion::class pairTo dmgNeg {
-            it as ChargedShotExplosion
             if (it.fullyCharged) 2 else 1
-        })
+        },
+        ChargedShotExplosion::class pairTo dmgNeg(1)
+    )
     override lateinit var facing: Facing
 
     private val throwTimer = Timer(THROW_DUR)
     private val ballCatchArea = GameCircle().setRadius(BALL_CATCH_RADIUS * ConstVals.PPM)
+
     private lateinit var throwDelayTimer: Timer
     private lateinit var reactorMonkeyState: ReactorMonkeyState
+
     private var monkeyBall: ReactorMonkeyBall? = null
     private var ballSpawnY = DEFAULT_BALL_SPAWN_Y
 
@@ -104,11 +103,15 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "Boss key = ${spawnProps.get("${ConstKeys.BOSS}_${ConstKeys.KEY}")}")
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
+
         throwDelayTimer = Timer(MAX_THROW_DELAY)
         throwTimer.reset()
+
         reactorMonkeyState = ReactorMonkeyState.STAND
+
         facing = if (getMegaman().body.x >= body.x) Facing.RIGHT else Facing.LEFT
         ballSpawnY = spawnProps.getOrDefault(BALL_SPAWN_Y_KEY, DEFAULT_BALL_SPAWN_Y, Float::class)
     }
@@ -130,7 +133,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
     fun catchMonkeyBall() {
         monkeyBall!!.body.physics.gravityOn = false
         monkeyBall!!.body.physics.velocity.setZero()
-        monkeyBall!!.firstSprite!!.hidden = true
+        monkeyBall!!.hidden = true
     }
 
     fun hurlMonkeyBall() {
@@ -143,7 +146,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
             VERTICAL_SCALAR
         )
         monkeyBall!!.body.physics.velocity.set(impulse)
-        monkeyBall!!.firstSprite!!.hidden = false
+        monkeyBall!!.hidden = false
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -162,7 +165,10 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
                 throwDelayTimer.update(delta)
                 if (throwDelayTimer.isFinished()) {
                     if (monkeyBall == null) spawnNewMonkeyBall()
-                    else if (monkeyBall!!.body != null && ballCatchArea.contains(monkeyBall!!.body.getCenter())) {
+                    else if (monkeyBall!!.body != null && (
+                            ballCatchArea.contains(monkeyBall!!.body.getCenter()) ||
+                                monkeyBall!!.body.y < ballCatchArea.getY())
+                    ) {
                         catchMonkeyBall()
                         reactorMonkeyState = ReactorMonkeyState.THROW
                         throwDelayTimer.resetDuration(MIN_THROW_DELAY + (MAX_THROW_DELAY - MIN_THROW_DELAY) * getHealthRatio())
@@ -185,23 +191,17 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(3.5f * ConstVals.PPM, 4.25f * ConstVals.PPM)
-
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
-        body.addFixture(bodyFixture)
-
-        val damagerFixture1 = Fixture(body, FixtureType.DAMAGER, GameRectangle().set(body))
-        body.addFixture(damagerFixture1)
-
-        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().set(body))
-        body.addFixture(damageableFixture)
-
         addComponent(
             DrawableShapesComponent(
-                debugShapeSuppliers = gdxArrayOf({ body }, { ballCatchArea }), debug = true
+                debugShapeSuppliers = gdxArrayOf({ body }, { ballCatchArea }),
+                debug = true
             )
         )
-
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(
+            this,
+            body,
+            BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER, FixtureType.DAMAGEABLE)
+        )
     }
 
     override fun defineSpritesComponent(): SpritesComponent {

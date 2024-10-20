@@ -1,10 +1,5 @@
 package com.megaman.maverick.game.entities.factories.impl
 
-import com.mega.game.engine.world.body.*;
-import com.mega.game.engine.world.collisions.*;
-import com.mega.game.engine.world.contacts.*;
-import com.mega.game.engine.world.pathfinding.*;
-
 import com.mega.game.engine.common.GameLogger
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -29,6 +24,7 @@ class ExplosionsFactory(private val game: MegamanMaverickGame) : EntityFactory()
         const val SMOKE_PUFF = "SmokePuff"
         const val ASTEROID_EXPLOSION = "AsteroidExplosion"
         const val GREEN_EXPLOSION = "GreenExplosion"
+        const val EXPLOSION_FIELD = "ExplosionField"
     }
 
     override fun init() {
@@ -46,6 +42,7 @@ class ExplosionsFactory(private val game: MegamanMaverickGame) : EntityFactory()
         pools.put(SMOKE_PUFF, GameEntityPoolCreator.create { SmokePuff(game) })
         pools.put(ASTEROID_EXPLOSION, GameEntityPoolCreator.create { AsteroidExplosion(game) })
         pools.put(GREEN_EXPLOSION, GameEntityPoolCreator.create { GreenExplosion(game) })
+        pools.put(EXPLOSION_FIELD, GameEntityPoolCreator.create { ExplosionField(game) })
     }
 
     override fun fetch(key: Any): MegaGameEntity? {

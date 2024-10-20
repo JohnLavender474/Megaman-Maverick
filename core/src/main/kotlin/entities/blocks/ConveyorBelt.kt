@@ -89,7 +89,7 @@ class ConveyorBelt(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAn
         var forceX = FORCE_AMOUNT * ConstVals.PPM
         if (left) forceX = -forceX
         val velocityAlteration = VelocityAlteration(forceX = forceX, actionX = VelocityAlterationType.ADD)
-        forceFixture!!.setVelocityAlteration { _, _ -> velocityAlteration }
+        forceFixture!!.setVelocityAlteration { _ -> velocityAlteration }
 
         val type = spawnProps.getOrDefault(ConstKeys.TYPE, DEFAULT_TYPE, String::class)
 

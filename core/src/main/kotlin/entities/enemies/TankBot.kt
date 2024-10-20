@@ -61,7 +61,7 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         private const val X_VEL = 2f
         private const val TURN_DUR = 0.4f
         private const val TURN_DELAY = 0.25f
-        private const val SHOOT_DELAY = 1f
+        private const val SHOOT_DELAY = 0.5f
         private const val LAUNCH_IMPULSE_X = 8f
         private const val LAUNCH_IMPULSE_Y = 8f
         private const val LAUNCH_GRAVITY = -0.15f

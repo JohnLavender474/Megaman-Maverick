@@ -43,6 +43,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
+import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
 import com.megaman.maverick.game.entities.contracts.ItemEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.decorations.Splash
@@ -52,7 +53,7 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.body.*
 
 class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, ISpritesEntity, IAnimatedEntity,
-    IBodyEntity, ICullableEntity, IDirectionRotatable {
+    IBodyEntity, ICullableEntity, IDirectionRotatable, IScalableGravityEntity {
 
     companion object {
         const val TAG = "HealthBulb"
@@ -73,6 +74,7 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
         set(value) {
             body.cardinalRotation = value
         }
+    override var gravityScalar = 1f
 
     private val blinkTimer = Timer(BLINK_DUR)
     private val cullTimer = Timer(CULL_DUR)
@@ -121,12 +123,15 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
 
         warning = false
         blink = false
+
         blinkTimer.setToEnd()
         cullTimer.reset()
 
         directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
         gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, GRAVITY, Float::class)
         velClamp = spawnProps.getOrDefault(ConstKeys.CLAMP, VEL_CLAMP, Float::class)
+
+        gravityScalar = 1f
     }
 
     override fun contactWithPlayer(megaman: Megaman) {
@@ -154,13 +159,13 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
         body.addFixture(feetFixture)
         feetFixture.rawShape.color = Color.GREEN
         debugShapes.add { feetFixture.getShape() }
-        
+
         waterListenerFixture = Fixture(body, FixtureType.WATER_LISTENER, GameRectangle())
-        waterListenerFixture.setHitWaterByReceiver { 
+        waterListenerFixture.setHitWaterByReceiver {
             body.physics.velocity.setZero()
             gravity = WATER_GRAVITY
             velClamp = WATER_VEL_CLAMP
-            Splash.generate(body, it.body)
+            Splash.splashOnWaterSurface(body, it.body)
         }
         body.addFixture(waterListenerFixture)
 
@@ -177,7 +182,7 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
                     Direction.RIGHT -> Vector2(-gravity, 0f)
                     Direction.UP -> Vector2(0f, -gravity)
                     Direction.DOWN -> Vector2(0f, gravity)
-                }.scl(ConstVals.PPM.toFloat())
+                }.scl(gravityScalar * ConstVals.PPM.toFloat())
             }
 
             feetFixture.putProperty(ConstKeys.STICK_TO_BLOCK, !body.isSensing(BodySense.FEET_ON_SAND))

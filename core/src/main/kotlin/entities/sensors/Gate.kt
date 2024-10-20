@@ -71,9 +71,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
         private set
 
     private val timer = Timer(DURATION)
-
     private lateinit var nextRoomKey: String
-
     private var triggerable = true
     private var resettable = false
     private var transitionFinished = false
@@ -98,12 +96,14 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
 
         center.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter())
 
-        nextRoomKey = spawnProps.get(ConstKeys.ROOM, String::class)!!
         val directionString = spawnProps.getOrDefault(ConstKeys.DIRECTION, "left", String::class)
         direction = Direction.valueOf(directionString.uppercase())
+
         miniBossGate = spawnProps.getOrDefault("${ConstKeys.MINI}_${ConstKeys.BOSS}", false, Boolean::class)
         thisBossKey = if (miniBossGate)
             spawnProps.get("${ConstKeys.BOSS}_${ConstKeys.KEY}", String::class)!! else "NO_BOSS_KEY_FOR_GATE"
+
+        nextRoomKey = spawnProps.get(ConstKeys.ROOM, String::class)!!
         triggerable = spawnProps.getOrDefault(ConstKeys.TRIGGER, !miniBossGate, Boolean::class)
         resettable = spawnProps.getOrDefault(ConstKeys.RESET, true, Boolean::class)
         showCloseEvent = spawnProps.getOrDefault(ConstKeys.CLOSE, true, Boolean::class)

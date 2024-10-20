@@ -1,10 +1,5 @@
 package com.megaman.maverick.game.drawables.sprites
 
-import com.mega.game.engine.world.body.*;
-import com.mega.game.engine.world.collisions.*;
-import com.mega.game.engine.world.contacts.*;
-import com.mega.game.engine.world.pathfinding.*;
-
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.common.interpolate
@@ -21,8 +16,9 @@ open class ScrollingBackground(
     height: Float,
     rows: Int,
     cols: Int,
+    initPos: Vector2 = Vector2(start).add(width / 2f, height / 2f),
     priority: DrawingPriority = DrawingPriority(DrawingSection.BACKGROUND, 0)
-) : Background(start.x, start.y, region, width, height, rows, cols, priority) {
+) : Background(start.x, start.y, region, width, height, rows, cols, priority, initPos = initPos) {
 
     private val timer = Timer(duration)
 
