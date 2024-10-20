@@ -1,21 +1,22 @@
 package com.megaman.maverick.game.entities.explosions
 
-import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.cullables.CullableOnEvent
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
@@ -25,13 +26,15 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 
 
-class ExplosionOrb(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
+class ExplosionOrb(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, ICullableEntity {
 
     companion object {
         const val TAG = "ExplosionOrb"
+        private const val OOB_CULL_TIME = 0.5f
         private var textureRegion: TextureRegion? = null
     }
 
@@ -75,20 +78,13 @@ class ExplosionOrb(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEn
     })
 
     private fun defineCullablesComponent(): CullablesComponent {
-        val cullable = CullablesComponent()
-
-        cullable.put(
-            ConstKeys.CULL_OUT_OF_BOUNDS, getGameCameraCullingLogic(
-                game.getGameCamera(), { (firstSprite as Sprite).boundingRectangle }, 0.5f
+        val cullOOB = getGameCameraCullingLogic(game.getGameCamera(), { firstSprite.boundingRectangle }, OOB_CULL_TIME)
+        val cullEvents = getStandardEventCullingLogic(this, objectSetOf(EventType.PLAYER_SPAWN))
+        return CullablesComponent(
+            objectMapOf(
+                ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullOOB,
+                ConstKeys.CULL_EVENTS pairTo cullEvents
             )
         )
-
-        val cullOnEvent = CullableOnEvent({ it.key == EventType.PLAYER_SPAWN }, objectSetOf(EventType.PLAYER_SPAWN))
-        cullable.put(ConstKeys.CULL_EVENTS, cullOnEvent)
-
-        runnablesOnSpawn.put(ConstKeys.CULL_EVENTS) { game.eventsMan.addListener(cullOnEvent) }
-        runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvent) }
-
-        return cullable
     }
 }

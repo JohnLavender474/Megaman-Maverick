@@ -3,21 +3,42 @@ package com.megaman.maverick.game.entities.utils
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.toGameRectangle
+import com.mega.game.engine.cullables.CullableOnEvent
 import com.mega.game.engine.cullables.CullableOnUncontained
 import com.mega.game.engine.entities.GameEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
+import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
 import com.megaman.maverick.game.utils.toProps
+
+fun getStandardEventCullingLogic(
+    entity: ICullableEntity,
+    cullEvents: ObjectSet<Any> = objectSetOf<Any>(
+        EventType.BEGIN_ROOM_TRANS,
+        EventType.GATE_INIT_OPENING,
+        EventType.PLAYER_SPAWN
+    )
+): CullableOnEvent {
+    if (entity !is MegaGameEntity) throw IllegalArgumentException("Must be a MegaGameEntity: $entity")
+    val cullableOnEvents = CullableOnEvent({ event -> cullEvents.contains(event.key) }, cullEvents)
+    val eventsMan = entity.game.eventsMan
+    entity.runnablesOnSpawn.put(ConstKeys.CULL_EVENTS) { eventsMan.addListener(cullableOnEvents) }
+    entity.runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { eventsMan.removeListener(cullableOnEvents) }
+    return cullableOnEvents
+}
 
 fun getGameCameraCullingLogic(entity: IBodyEntity, timeToCull: Float = 1f) =
     getGameCameraCullingLogic((entity as MegaGameEntity).getGameCamera(), { entity.body }, timeToCull)
