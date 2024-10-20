@@ -36,7 +36,7 @@ class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
     companion object {
         const val TAG = "TubeBeam"
-        private const val DEFAULT_CULL_TIME = 1f
+        const val DEFAULT_CULL_TIME = 1f
         private var region: TextureRegion? = null
     }
 

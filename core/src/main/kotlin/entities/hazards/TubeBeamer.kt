@@ -31,6 +31,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.projectiles.TubeBeam
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 
@@ -48,6 +49,7 @@ class TubeBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IAudioEntity
 
     private val spawnTimer = Timer(SPAWN_DELAY)
     private lateinit var initialDelayTimer: Timer
+    private var cullTime = TubeBeam.DEFAULT_CULL_TIME
 
     override fun getEntityType() = EntityType.HAZARD
 
@@ -60,12 +62,17 @@ class TubeBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IAudioEntity
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
-        directionRotation = Direction.valueOf(spawnProps.get(ConstKeys.DIRECTION, String::class)!!.uppercase())
-        spawnTimer.reset()
+
         val initialDelay = spawnProps.getOrDefault(ConstKeys.DELAY, DEFAULT_INITIAL_DELAY, Float::class)
         initialDelayTimer = Timer(initialDelay)
+
+        directionRotation = Direction.valueOf(spawnProps.get(ConstKeys.DIRECTION, String::class)!!.uppercase())
+        cullTime = spawnProps.getOrDefault(ConstKeys.CULL_TIME, TubeBeam.DEFAULT_CULL_TIME, Float::class)
+
+        spawnTimer.reset()
     }
 
     private fun beamTube() {
@@ -80,7 +87,8 @@ class TubeBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IAudioEntity
             props(
                 ConstKeys.POSITION pairTo body.getCenter(),
                 ConstKeys.DIRECTION pairTo directionRotation,
-                ConstKeys.TRAJECTORY pairTo trajectory
+                ConstKeys.TRAJECTORY pairTo trajectory,
+                ConstKeys.CULL_TIME pairTo cullTime
             )
         )
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.BURST_SOUND, false)
