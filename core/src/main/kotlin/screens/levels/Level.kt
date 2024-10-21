@@ -8,11 +8,11 @@ import com.megaman.maverick.game.screens.ScreenEnum
 
 enum class Level(tmxSourceFile: String, val musicAss: MusicAsset) {
     // Boss levels
-    TIMBER_WOMAN("TimberWoman.tmx", MusicAsset.XENOBLADE_GAUR_PLAINS_MUSIC),
+    TIMBER_WOMAN("TimberWoman.tmx", MusicAsset.MM3_SNAKE_MAN_MUSIC),
     REACTOR_MAN("ReactorMan.tmx", MusicAsset.MMX8_BURN_ROOSTER_MUSIC),
     INFERNO_MAN("InfernoMan_v2.tmx", MusicAsset.MMX6_BLAZE_HEATNIX_MUSIC),
     MOON_MAN("MoonMan_v3.tmx", MusicAsset.MMX5_DARK_DIZZY_MUSIC),
-    DESERT_MAN("DesertMan_v2.tmx", MusicAsset.MMX7_VANISHING_GUNGAROO_MUSIC),
+    DESERT_MAN("DesertMan_v3.tmx", MusicAsset.MMX7_VANISHING_GUNGAROO_MUSIC),
     GLACIER_MAN("GlacierMan_v3.tmx", MusicAsset.MM8_FROST_MAN_ALT_MUSIC),
     MAGNET_MAN("MagnetMan.tmx", MusicAsset.MMX5_IZZY_GLOW_MUSIC),
     RODENT_MAN("Test1.tmx", MusicAsset.MM10_WILY1_MUSIC),
@@ -23,20 +23,20 @@ enum class Level(tmxSourceFile: String, val musicAss: MusicAsset) {
     WILY_STAGE_3("WilyStage3_v2.tmx", MusicAsset.MMX6_GATE_STAGE_MUSIC),
 
     // Bonus levels
-    DISTRIBUTOR_MAN("Test1.tmx", MusicAsset.XENOBLADE_GAUR_PLAINS_MUSIC),
-    ROASTER_MAN("Test1.tmx", MusicAsset.XENOBLADE_GAUR_PLAINS_MUSIC),
-    BLUNT_MAN("Test1.tmx", MusicAsset.XENOBLADE_GAUR_PLAINS_MUSIC),
-    NUKE_MAN("Test1.tmx", MusicAsset.XENOBLADE_GAUR_PLAINS_MUSIC),
+    DISTRIBUTOR_MAN("Test1.tmx", MusicAsset.MM3_SNAKE_MAN_MUSIC),
+    ROASTER_MAN("Test1.tmx", MusicAsset.MM3_SNAKE_MAN_MUSIC),
+    BLUNT_MAN("Test1.tmx", MusicAsset.MM3_SNAKE_MAN_MUSIC),
+    NUKE_MAN("Test1.tmx", MusicAsset.MM3_SNAKE_MAN_MUSIC),
     CREW_MAN("CrewMan.tmx", MusicAsset.MM3_SNAKE_MAN_MUSIC),
     FREEZE_MAN("FreezeMan.tmx", MusicAsset.MMX_CHILL_PENGUIN_MUSIC),
-    MICROWAVE_MAN("Test1.tmx", MusicAsset.XENOBLADE_GAUR_PLAINS_MUSIC),
+    MICROWAVE_MAN("Test1.tmx", MusicAsset.MM3_SNAKE_MAN_MUSIC),
     GALAXY_MAN("GalaxyMan.tmx", MusicAsset.MM9_GALAXY_MAN_MUSIC),
     NAVAL_MAN("NavalMan.tmx", MusicAsset.MMX_CHILL_PENGUIN_MUSIC),
 
     // Test levels
     TEST1("Test1.tmx", MusicAsset.MMX2_X_HUNTER_MUSIC),
     TEST2("Test2.tmx", MusicAsset.MMX5_VOLT_KRAKEN_MUSIC),
-    TEST3("Test3.tmx", MusicAsset.XENOBLADE_GAUR_PLAINS_MUSIC),
+    TEST3("Test3.tmx", MusicAsset.MM3_SNAKE_MAN_MUSIC),
     TEST4("Test4.tmx", MusicAsset.MM3_SNAKE_MAN_MUSIC),
     TEST5("Test5.tmx", MusicAsset.MM3_SNAKE_MAN_MUSIC),
     TEST6("Test6.tmx", MusicAsset.MMX3_INTRO_STAGE_MUSIC),
