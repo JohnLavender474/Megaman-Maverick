@@ -143,13 +143,10 @@ comprehensive listing of the credits for the artwork used in this game.
 
 - MMX6 Blaze Heatnix - [Famitard](https://youtu.be/QpbMwCnJDSo) - used in Inferno Man stage
 - MMX5 Dark Necrobat - [Famitard](https://youtu.be/RosxPCxVOyk) - used in Moon Man stage
-- Xenoblade Gaur Plains - [Bulby](https://www.youtube.com/watch?v=xkrf4xfDsZs&t=60s&ab_channel=Bulby) - used in Timber Woman stage
 - MMX7 Vanish. Gung. - [Famitard](https://youtu.be/MFfZ-LEwcMo) - used in Desert Man stage
 - MM8 Frost Man Alt - [Famitard](https://youtu.be/pQvwU4BavFI) - used in Glacier Man stage
 - MMX8 Burn Rooster - [Famitard](https://youtu.be/DHh-QSWvb-o) - used in Reactor Man stage
 - MMX6 Boss - [Famitard](https://youtu.be/IeySHEF5U_8) - used in Robot Master boss fights
-- MMX Sigma Fortress 1 - [Wyatt](https://youtu.be/mpHnNDPZNKk) - used in Wily stage 1
-- MMX Sigma Fortress 2 - [Bulby](https://youtu.be/WQK9AGaDJLw) - used in Wily stage 2
 - MMX6 Gate's Laboratory- [Famitard](https://youtu.be/Zdtp6f57E_c) - used in Wily stage 3
 - MMX6 Sigma Final Boss - [Famitard](https://youtu.be/FVdYxfEo4lI) - used in Wily stage 3 boss fight
 - MMX5 Volt Kraken - [Famitard](https://www.youtube.com/watch?v=xi7Odov_rek&ab_channel=FamiTard)
@@ -168,10 +165,6 @@ For some of the artwork used in this game, the artist did not state in the work'
 free to use. For these works, I reached out to the artist personally to ask if I could use their work. Below are screenshots
 as proof of permission. No proof is required for works where the description states that the asset is free to use.
 
-Works by Wyatt:
-
-<img src="./img/permissions/Wyatt.png" width="300"/>
-
 Works by boberatu:
 
 <img src="./img/permissions/boberatu.png" width="300">
@@ -183,10 +176,6 @@ Works by rcrdcat:
 Works by Famitard:
 
 <img src="./img/permissions/famitard.png" width="300">
-
-Works by Bulby:
-
-<img src="./img/permissions/Bulby.png" width="300">
 
 ---
 

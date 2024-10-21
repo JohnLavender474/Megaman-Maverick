@@ -29,7 +29,6 @@ import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -47,6 +46,7 @@ import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
 import kotlin.reflect.KClass
 
@@ -75,12 +75,13 @@ class Arigock(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     )
     override lateinit var facing: Facing
 
-    private val shootingTimer = Timer(SHOOTING_DUR, gdxArrayOf(
-        TimeMarkedRunnable(0.25f) { shoot(0) },
-        TimeMarkedRunnable(0.5f) { shoot(1) },
-        TimeMarkedRunnable(0.75f) { shoot(2) },
-        TimeMarkedRunnable(1f) { shoot(3) }
-    ))
+    private val shootingTimer = Timer(
+        SHOOTING_DUR, gdxArrayOf(
+            TimeMarkedRunnable(0.25f) { shoot(0) },
+            TimeMarkedRunnable(0.5f) { shoot(1) },
+            TimeMarkedRunnable(0.75f) { shoot(2) },
+            TimeMarkedRunnable(1f) { shoot(3) }
+        ))
     private val closedTimer = Timer(CLOSED_DUR)
 
     override fun init() {
@@ -104,7 +105,7 @@ class Arigock(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     private fun shoot(xImpulseIndex: Int) {
         val ball = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.ARIGOCK_BALL)!!
         val impulse = Vector2(shotImpulses[xImpulseIndex], BALL_Y_FORCE).scl(ConstVals.PPM.toFloat())
-        val position = body.getTopCenterPoint().sub(0f, 0.1f * ConstVals.PPM)
+        val position = body.getTopCenterPoint().sub(0f, 0.2f * ConstVals.PPM)
         ball.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
@@ -132,22 +133,17 @@ class Arigock(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(ConstVals.PPM.toFloat())
-
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
-        body.addFixture(bodyFixture)
-
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
-        body.addFixture(damagerFixture)
-
-        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle(body))
-        body.addFixture(damageableFixture)
-
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(
+            this, body, BodyFixtureDef.of(
+                FixtureType.BODY, FixtureType.DAMAGER,
+                FixtureType.DAMAGEABLE
+            )
+        )
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.45f * ConstVals.PPM)
+        sprite.setSize(1.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
