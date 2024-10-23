@@ -203,6 +203,21 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Decorations1/Candle.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>24,11,48,21</rect>
+                <key>scale9Paddings</key>
+                <rect>24,11,48,21</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Decorations1/DrippingToxicGoop.png</key>
             <key type="filename">../frames/Decorations1/Thread.png</key>
             <struct type="IndividualSpriteSettings">
@@ -231,6 +246,21 @@
                 <rect>24,8,48,16</rect>
                 <key>scale9Paddings</key>
                 <rect>24,8,48,16</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Decorations1/Lantern.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>6,6,12,12</rect>
+                <key>scale9Paddings</key>
+                <rect>6,6,12,12</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -276,6 +306,21 @@
                 <rect>3,2,5,5</rect>
                 <key>scale9Paddings</key>
                 <rect>3,2,5,5</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Decorations1/ToxicWaterSplash.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>40,8,80,16</rect>
+                <key>scale9Paddings</key>
+                <rect>40,8,80,16</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

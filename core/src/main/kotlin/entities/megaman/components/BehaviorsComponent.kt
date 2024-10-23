@@ -10,10 +10,8 @@ import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.pairTo
-
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.controller.buttons.ButtonStatus
-import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.SoundAsset
@@ -486,8 +484,10 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             cart = body.getProperty(ConstKeys.CART, Cart::class)!!
             // cart.body.physics.gravityOn = false
+            /*
             cart.childBlock!!.body.physics.collisionOn = false
             cart.childBlock!!.body.fixtures.forEach { (it.second as Fixture).active = false }
+             */
 
             body.setBottomCenterToPoint(cart.body.getBottomCenterPoint())
             body.preProcess.put(ConstKeys.CART) { cart.body.setCenter(body.getCenter()) }
@@ -516,8 +516,10 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             cart.sprites.values().forEach { it.hidden = false }
 
+            /*
             cart.childBlock!!.body.physics.collisionOn = true
             cart.childBlock!!.body.fixtures.forEach { (it.second as Fixture).active = true }
+             */
 
             if (!dead) {
                 body.translation(0f, ConstVals.PPM / 1.75f)

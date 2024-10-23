@@ -127,7 +127,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.25f * ConstVals.PPM)
+        body.setSize(0.35f * ConstVals.PPM)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
         body.physics.velocityClamp.set(CLAMP * ConstVals.PPM)

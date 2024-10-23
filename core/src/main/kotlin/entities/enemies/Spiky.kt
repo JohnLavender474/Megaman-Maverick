@@ -64,7 +64,7 @@ class Spiky(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
     override lateinit var facing: Facing
 
     override fun init() {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, "Spiky")
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
     }
@@ -80,19 +80,21 @@ class Spiky(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(ConstVals.PPM.toFloat())
+        body.setSize(1.25f * ConstVals.PPM)
+        body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body.getBodyBounds() }
 
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameCircle().setRadius(0.5f * ConstVals.PPM))
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameCircle().setRadius(0.625f * ConstVals.PPM))
         body.addFixture(bodyFixture)
         bodyFixture.rawShape.color = Color.BLUE
         debugShapes.add { bodyFixture.getShape() }
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.5f * ConstVals.PPM))
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.625f * ConstVals.PPM))
         body.addFixture(damagerFixture)
 
-        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameCircle().setRadius(0.5f * ConstVals.PPM))
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameCircle().setRadius(0.625f * ConstVals.PPM))
         body.addFixture(damageableFixture)
 
         val feetFixture = Fixture(
@@ -100,7 +102,7 @@ class Spiky(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
                 0.75f * ConstVals.PPM, 0.1f * ConstVals.PPM
             )
         )
-        feetFixture.offsetFromBodyCenter.y = -0.55f * ConstVals.PPM
+        feetFixture.offsetFromBodyCenter.y = -0.625f * ConstVals.PPM
         body.addFixture(feetFixture)
         feetFixture.rawShape.color = Color.GREEN
         debugShapes.add { feetFixture.getShape() }
@@ -110,7 +112,7 @@ class Spiky(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
                 0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM
             )
         )
-        leftFixture.offsetFromBodyCenter.x = -0.55f * ConstVals.PPM
+        leftFixture.offsetFromBodyCenter.x = -0.625f * ConstVals.PPM
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftFixture)
         leftFixture.rawShape.color = Color.YELLOW
@@ -121,7 +123,7 @@ class Spiky(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
                 0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM
             )
         )
-        rightFixture.offsetFromBodyCenter.x = 0.55f * ConstVals.PPM
+        rightFixture.offsetFromBodyCenter.x = 0.625f * ConstVals.PPM
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
         rightFixture.rawShape.color = Color.YELLOW
@@ -150,7 +152,7 @@ class Spiky(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.5f * ConstVals.PPM)
+        sprite.setSize(1.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink

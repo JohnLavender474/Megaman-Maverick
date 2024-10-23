@@ -43,7 +43,9 @@ class BossSpawnEventHandler(private val game: MegamanMaverickGame) : Updatable {
             if (!isMini) {
                 val music = MusicAsset.valueOf(
                     bossSpawnProps.getOrDefault(
-                        ConstKeys.MUSIC, MusicAsset.FF7_BOSS_MUSIC.name, String::class
+                        ConstKeys.MUSIC,
+                        MusicAsset.MMX6_BOSS_FIGHT_MUSIC.name,
+                        String::class
                     ).uppercase()
                 )
                 game.audioMan.playMusic(music, true)

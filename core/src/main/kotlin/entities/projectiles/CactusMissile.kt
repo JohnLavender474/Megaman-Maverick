@@ -5,16 +5,19 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
-import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.damage.IDamager
@@ -52,13 +55,15 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
         private const val UP_DUR = 0.25f
         private const val RECALC_DELAY = 0.5f
         private const val DAMAGE_DURATION = 0.1f
-        private var region: TextureRegion? = null
+        private const val LIFE_DUR = 3f
+        private const val BLINK_TIME = 2.5f
         private val damageNegotiations = objectMapOf<KClass<out IDamager>, Int>(
             Bullet::class pairTo 10,
             Fireball::class pairTo ConstVals.MAX_HEALTH,
             ChargedShot::class pairTo ConstVals.MAX_HEALTH,
             ChargedShotExplosion::class pairTo ConstVals.MAX_HEALTH
         )
+        private val regions = ObjectMap<String, TextureRegion>()
     }
 
     override val invincible: Boolean
@@ -67,9 +72,15 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
     private val upTimer = Timer(UP_DUR)
     private val recalcTimer = Timer(RECALC_DELAY)
     private val damageTimer = Timer(DAMAGE_DURATION)
+    private val lifeTimer = Timer(LIFE_DUR, TimeMarkedRunnable(BLINK_TIME) { blink = true })
+    private var blink = false
 
     override fun init() {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
+        if (regions.isEmpty) {
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_2.source)
+            regions.put("fly", atlas.findRegion("$TAG/fly"))
+            regions.put("blink", atlas.findRegion("$TAG/blink"))
+        }
         super.init()
         addComponent(defineUpdatablesComponent())
         addComponent(definePointsComponent())
@@ -81,9 +92,11 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
         setHealth(ConstVals.MAX_HEALTH)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
+        lifeTimer.reset()
         upTimer.reset()
         recalcTimer.reset()
         damageTimer.setToEnd()
+        blink = false
     }
 
     override fun onDestroy() {
@@ -127,6 +140,12 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+        lifeTimer.update(delta)
+        if (lifeTimer.isFinished()) {
+            explodeAndDie()
+            return@UpdatablesComponent
+        }
+
         damageTimer.update(delta)
 
         if (!upTimer.isFinished()) {
@@ -147,7 +166,7 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.physics.applyFrictionX = false
-body.physics.applyFrictionY = false
+        body.physics.applyFrictionY = false
         body.setSize(1.25f * ConstVals.PPM)
         body.color = Color.GRAY
 
@@ -199,8 +218,12 @@ body.physics.applyFrictionY = false
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val animation = Animation(region!!, 2, 1, 0.1f, true)
-        val animator = Animator(animation)
+        val keySupplier: () -> String? = { if (blink) "blink" else "fly" }
+        val animations = objectMapOf<String, IAnimation>(
+            "blink" pairTo Animation(regions["blink"], 2, 2, 0.05f, true),
+            "fly" pairTo Animation(regions["fly"], 2, 1, 0.1f, true)
+        )
+        val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }
 }

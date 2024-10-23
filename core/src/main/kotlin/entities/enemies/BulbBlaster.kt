@@ -30,16 +30,20 @@ import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.decorations.LightSource
+import com.megaman.maverick.game.entities.factories.EntityFactories
+import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
 import kotlin.reflect.KClass
 
@@ -57,8 +61,8 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IEventListen
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>()
     override val eventKeyMask = objectSetOf<Any>(EventType.END_ROOM_TRANS)
 
-
     private val timer = Timer(STATE_DUR)
+    private var lightSource: LightSource? = null
     private lateinit var keys: ObjectSet<Int>
     private lateinit var spawnRoom: String
     private var light = false
@@ -66,8 +70,8 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IEventListen
     override fun init() {
         if (lightRegion == null || darkRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-            lightRegion = atlas.findRegion("BulbBlaster/Light")
-            darkRegion = atlas.findRegion("BulbBlaster/Dark")
+            lightRegion = atlas.findRegion("$TAG/Light")
+            darkRegion = atlas.findRegion("$TAG/Dark")
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -80,12 +84,19 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IEventListen
 
         game.eventsMan.addListener(this)
 
-        val spawn = if (spawnProps.containsKey(ConstKeys.POSITION)) spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+        val spawn = if (spawnProps.containsKey(ConstKeys.POSITION))
+            spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         else spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
+        lightSource = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.LIGHT_SOURCE)!! as LightSource
+        lightSource!!.spawn(props(ConstKeys.BOUNDS pairTo body))
+
         light = spawnProps.getOrDefault(ConstKeys.LIGHT, false, Boolean::class)
-        keys = spawnProps.get(ConstKeys.KEYS, String::class)!!.replace("\\s+", "").split(",").map { it.toInt() }
+        keys = spawnProps.get(ConstKeys.KEYS, String::class)!!
+            .replace("\\s+", "")
+            .split(",")
+            .map { it.toInt() }
             .toObjectSet()
         timer.reset()
 
@@ -93,7 +104,8 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IEventListen
 
         if (spawnProps.containsKey(ConstKeys.TRAJECTORY)) {
             val trajectory = Trajectory(spawnProps.get(ConstKeys.TRAJECTORY) as String, ConstVals.PPM)
-            val motionDefinition = MotionDefinition(motion = trajectory,
+            val motionDefinition = MotionDefinition(
+                motion = trajectory,
                 function = { value, _ -> body.physics.velocity.set(value) },
                 onReset = { body.setCenter(spawn) })
             putMotionDefinition(ConstKeys.TRAJECTORY, motionDefinition)
@@ -134,15 +146,11 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IEventListen
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.65f * ConstVals.PPM)
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
-        body.addFixture(bodyFixture)
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().set(body))
-        body.addFixture(damagerFixture)
-        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().set(body))
-        body.addFixture(damageableFixture)
-        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(0.8f * ConstVals.PPM))
-        body.addFixture(shieldFixture)
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(
+            this,
+            body,
+            BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER, FixtureType.SHIELD)
+        )
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
@@ -169,7 +177,7 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IEventListen
     private fun sendEvent() {
         game.eventsMan.submitEvent(
             Event(
-                EventType.BLACK_BACKGROUND, props(
+                EventType.ADJUST_DARKNESS, props(
                     ConstKeys.KEYS pairTo keys,
                     ConstKeys.LIGHT pairTo light,
                     ConstKeys.CENTER pairTo body.getCenter(),

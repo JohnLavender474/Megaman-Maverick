@@ -50,6 +50,7 @@ import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.CaveRock
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import kotlin.reflect.KClass
@@ -60,12 +61,10 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         const val TAG = "CaveRocker"
         private var standingRegion: TextureRegion? = null
         private var throwingRegion: TextureRegion? = null
-        private const val WAIT_DURATION = 1f
-        private const val ROCK_IMPULSE_X = 12f
-        private const val ROCK_IMPULSE_Y = 10f
+        private const val WAIT_DURATION = 1.25f
+        private const val ROCK_IMPULSE_X = 10f
+        private const val ROCK_IMPULSE_Y = 8f
     }
-
-    override var facing = Facing.RIGHT
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
         Bullet::class pairTo dmgNeg(5),
@@ -73,14 +72,15 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 15 else 10
-        }, ChargedShotExplosion::class pairTo dmgNeg {
+        },
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 10 else 5
         }
     )
+    override lateinit var facing: Facing
 
     private val waitTimer = Timer(WAIT_DURATION)
-
     private var throwing = false
     private var newRock: CaveRock? = null
     private var newRockOffsetY = 0f
@@ -89,8 +89,8 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         super.init()
         if (standingRegion == null || throwingRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-            standingRegion = atlas.findRegion("CaveRocker/Stand")
-            throwingRegion = atlas.findRegion("CaveRocker/Throw")
+            standingRegion = atlas.findRegion("$TAG/Stand")
+            throwingRegion = atlas.findRegion("$TAG/Throw")
         }
         addComponent(defineAnimationsComponent())
     }
@@ -102,14 +102,13 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         newRockOffsetY = spawnProps.get(ConstKeys.OFFSET_Y, Float::class)!!
         waitTimer.reset()
         throwing = false
+        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        if (newRock != null) {
-            newRock!!.destroy()
-            newRock = null
-        }
+        newRock?.destroy()
+        newRock = null
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -126,7 +125,7 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(1f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat())
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
@@ -158,18 +157,18 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         debugShapes.add { headFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
-            newRock?.let { _newRock ->
-                if (throwing && _newRock.dead) {
+            newRock?.let {
+                if (throwing && it.dead) {
                     GameLogger.debug(TAG, "New rock died before reaching cave rocker, so spawning a new one")
                     spawnNewRock()
-                } else if (_newRock.body.overlaps(headFixture.getShape()) ||
-                    _newRock.body.y < headFixture.getShape().getY()
+                } else if (it.body.overlaps(headFixture.getShape()) ||
+                    it.body.y < headFixture.getShape().getY()
                 ) {
                     GameLogger.debug(
                         TAG,
                         "New rock landed on cave rocker's head. Setting [throwing] to false and resetting wait timer"
                     )
-                    _newRock.destroy()
+                    it.destroy()
                     throwing = false
                     newRock = null
                     waitTimer.reset()
@@ -184,7 +183,7 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(2.5f * ConstVals.PPM)
+        sprite.setSize(2.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
@@ -207,27 +206,31 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     private fun throwRock() {
         throwing = true
         val caveRockToThrow = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.CAVE_ROCK)!!
+        val impulse = MegaUtilMethods.calculateJumpImpulse(
+            body.getTopCenterPoint(),
+            getMegaman().body.getCenter(),
+            ROCK_IMPULSE_Y * ConstVals.PPM
+        )
+        impulse.x = impulse.x.coerceIn(-ROCK_IMPULSE_X * ConstVals.PPM, ROCK_IMPULSE_X * ConstVals.PPM)
         caveRockToThrow.spawn(
             props(
-                ConstKeys.OWNER pairTo this, 
-                ConstKeys.POSITION pairTo body.getTopCenterPoint(), 
-                ConstKeys.IMPULSE pairTo Vector2(
-                    ROCK_IMPULSE_X * ConstVals.PPM * facing.value, ROCK_IMPULSE_Y * ConstVals.PPM
-                )
+                ConstKeys.OWNER pairTo this,
+                ConstKeys.POSITION pairTo body.getTopCenterPoint(),
+                ConstKeys.IMPULSE pairTo impulse,
+                ConstKeys.PASS_THROUGH pairTo false
             )
         )
     }
 
     private fun spawnNewRock() {
-        val newRockSpawn = body.getCenter().add(0f, newRockOffsetY * ConstVals.PPM)
-        val newRockTrajectory = Vector2(0f, -newRockOffsetY * ConstVals.PPM)
+        val spawn = body.getCenter().add(0f, newRockOffsetY * ConstVals.PPM)
+        val impulse = Vector2(0f, -ROCK_IMPULSE_Y * ConstVals.PPM)
         newRock = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.CAVE_ROCK) as CaveRock
         newRock!!.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
-                ConstKeys.POSITION pairTo newRockSpawn,
-                ConstKeys.TRAJECTORY pairTo newRockTrajectory,
-                ConstKeys.GRAVITY pairTo 0f,
+                ConstKeys.POSITION pairTo spawn,
+                ConstKeys.IMPULSE pairTo impulse,
                 ConstKeys.PASS_THROUGH pairTo true
             )
         )

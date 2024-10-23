@@ -37,7 +37,7 @@ enum class EventType {
 
     TELEPORT,
     SHAKE_CAM,
-    BLACK_BACKGROUND,
+    ADJUST_DARKNESS,
     STUN_PLAYER,
 
     TURN_CONTROLLER_ON,

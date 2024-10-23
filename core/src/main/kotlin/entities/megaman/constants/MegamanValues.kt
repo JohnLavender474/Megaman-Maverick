@@ -4,10 +4,10 @@ object MegamanValues {
     const val MAX_WEAPON_AMMO = 30
     const val START_HEALTH = 14
 
-    const val CART_RIDE_MAX_SPEED = 14f
-    const val CART_RIDE_ACCELERATION = 1.15f
+    const val CART_RIDE_MAX_SPEED = 15f
+    const val CART_RIDE_ACCELERATION = 1.25f
     const val CART_JUMP_ACCELERATION = 0.35f
-    const val CART_JUMP_VEL = 22f
+    const val CART_JUMP_VEL = 25f
 
     const val CLAMP_X = 15f
     const val CLAMP_Y = 40f
@@ -21,11 +21,11 @@ object MegamanValues {
     const val SWIM_VEL_Y = 14f
 
     const val JUMP_VEL = 26f
-    const val WALL_JUMP_VEL = 34f // 42f, 12f
+    const val WALL_JUMP_VEL = 34f
 
-    const val WALL_SLIDE_FRICTION_TO_APPLY = 2.5f // 150f
+    const val WALL_SLIDE_FRICTION_TO_APPLY = 2.5f
 
-    const val WALL_JUMP_HORIZONTAL = 6f // 8f
+    const val WALL_JUMP_HORIZONTAL = 6f
     const val WALL_JUMP_IMPETUS_TIME = 0.1f
 
     const val GROUND_GRAVITY = -0.001f

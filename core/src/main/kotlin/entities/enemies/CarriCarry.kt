@@ -18,12 +18,14 @@ import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
+import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.IMotionEntity
 import com.mega.game.engine.motion.MotionComponent
@@ -39,6 +41,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
 import kotlin.reflect.KClass
 
@@ -49,13 +52,14 @@ class CarriCarry(game: MegamanMaverickGame) : AbstractEnemy(game), IMotionEntity
         private const val SINE_SPEED = 3f
         private const val SINE_AMPLITUDE = 3f
         private const val SINE_FREQUENCY = 3f
+        private const val SHAKE_DUR = 1f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>()
     override lateinit var facing: Facing
 
-    private var shake = false
+    private val shakeTimer = Timer(SHAKE_DUR)
     private var centerX = 0f
 
     override fun init() {
@@ -70,13 +74,13 @@ class CarriCarry(game: MegamanMaverickGame) : AbstractEnemy(game), IMotionEntity
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        GameLogger.debug(TAG, "Spawn(): spawn props = $spawnProps")
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
 
-        shake = false
+        shakeTimer.setToEnd()
 
         centerX = body.getCenter().x
         val sine = SineWave(Vector2(0f, 1f), SINE_SPEED, SINE_AMPLITUDE, SINE_FREQUENCY)
@@ -99,12 +103,6 @@ class CarriCarry(game: MegamanMaverickGame) : AbstractEnemy(game), IMotionEntity
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBodyBounds() }
 
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
-        body.addFixture(bodyFixture)
-
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
-        body.addFixture(damagerFixture)
-
         val damageableFixture = Fixture(
             body, FixtureType.DAMAGEABLE, GameRectangle().setSize(
                 ConstVals.PPM.toFloat(), 0.5f * ConstVals.PPM
@@ -116,12 +114,12 @@ class CarriCarry(game: MegamanMaverickGame) : AbstractEnemy(game), IMotionEntity
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER))
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(2.475f * ConstVals.PPM, 1.875f * ConstVals.PPM)
+        sprite.setSize(2.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
@@ -131,7 +129,7 @@ class CarriCarry(game: MegamanMaverickGame) : AbstractEnemy(game), IMotionEntity
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { if (shake) "shake" else "ride" }
+        val keySupplier: () -> String? = { if (!shakeTimer.isFinished()) "shake" else "ride" }
         val animations = objectMapOf<String, IAnimation>(
             "shake" pairTo Animation(regions.get("shake"), 2, 1, 0.1f, true),
             "ride" pairTo Animation(regions.get("ride"), 2, 1, 0.1f, true)
