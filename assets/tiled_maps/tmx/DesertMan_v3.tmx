@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="400" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="16" nextobjectid="268">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="400" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="16" nextobjectid="269">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/tomahawk_man_stage_tileset.tsx"/>
  <layer id="15" name="tiles3" width="400" height="50">
@@ -767,6 +767,14 @@
     <property name="type" value="Lantern"/>
    </properties>
   </object>
+  <object id="268" name="LightSource" x="3208" y="1488" width="16" height="16">
+   <properties>
+    <property name="keys" value="1"/>
+    <property name="spawn_room" value="room2"/>
+    <property name="spawn_type" value="spawn_room"/>
+    <property name="type" value="Lantern"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="11" name="backgrounds">
   <object id="23" name="Background" x="0" y="1152" width="448" height="448">
@@ -997,7 +1005,7 @@
   </object>
   <object id="59" name="ColtonJoe" x="1320" y="1360" width="16" height="16"/>
   <object id="66" name="Arigock" x="2456" y="1328" width="16" height="16"/>
-  <object id="67" name="CarriCarry" x="2968" y="1488" width="16" height="16"/>
+  <object id="67" name="Spiky" x="3232" y="1488" width="16" height="16"/>
   <object id="80" name="ColtonJoe" x="3464" y="816" width="16" height="16"/>
   <object id="90" name="Bat" x="4600" y="800" width="16" height="16"/>
   <object id="91" name="Bat" x="4376" y="800" width="16" height="16"/>
@@ -1042,14 +1050,22 @@
     <property name="left" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="260" name="CaveRocker" x="5976" y="1008" width="16" height="16"/>
+  <object id="260" name="CaveRocker" x="5976" y="1008" width="16" height="16">
+   <properties>
+    <property name="offset_y" type="float" value="5"/>
+   </properties>
+  </object>
   <object id="261" name="Bat" x="6072" y="864" width="16" height="16"/>
   <object id="262" name="Bat" x="6200" y="864" width="16" height="16"/>
   <object id="263" name="CarriCarry" x="6200" y="1008" width="16" height="16"/>
   <object id="264" name="Bat" x="6472" y="864" width="16" height="16"/>
-  <object id="265" name="CaveRocker" x="6472" y="1040" width="16" height="16"/>
+  <object id="265" name="CaveRocker" x="6472" y="1040" width="16" height="16">
+   <properties>
+    <property name="offset_y" type="float" value="5"/>
+   </properties>
+  </object>
   <object id="266" name="Spiky" x="3280" y="1008" width="16" height="16"/>
-  <object id="267" name="SpikeBall" x="6328" y="1008" width="16" height="16"/>
+  <object id="267" name="Spiky" x="6328" y="1008" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="5" name="player">
   <object id="257" name="0" x="2368" y="1408" width="32" height="32"/>

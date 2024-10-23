@@ -30,6 +30,7 @@ import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.IMotionEntity
 import com.mega.game.engine.motion.MotionComponent
 import com.mega.game.engine.motion.SineWave
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
@@ -39,7 +40,12 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
+import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
+import com.megaman.maverick.game.entities.projectiles.Bullet
+import com.megaman.maverick.game.entities.projectiles.ChargedShot
+import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
@@ -56,7 +62,18 @@ class CarriCarry(game: MegamanMaverickGame) : AbstractEnemy(game), IMotionEntity
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>()
+    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+        Bullet::class pairTo dmgNeg(10),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg {
+            it as ChargedShot
+            if (it.fullyCharged) 15 else 10
+        },
+        ChargedShotExplosion::class pairTo dmgNeg {
+            it as ChargedShotExplosion
+            if (it.fullyCharged) 10 else 5
+        }
+    )
     override lateinit var facing: Facing
 
     private val shakeTimer = Timer(SHAKE_DUR)
@@ -76,12 +93,9 @@ class CarriCarry(game: MegamanMaverickGame) : AbstractEnemy(game), IMotionEntity
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
-
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
-
         shakeTimer.setToEnd()
-
         centerX = body.getCenter().x
         val sine = SineWave(Vector2(0f, 1f), SINE_SPEED, SINE_AMPLITUDE, SINE_FREQUENCY)
         putMotionDefinition(ConstKeys.MOVE, MotionComponent.MotionDefinition(sine, { value, _ ->
@@ -93,6 +107,33 @@ class CarriCarry(game: MegamanMaverickGame) : AbstractEnemy(game), IMotionEntity
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+        if (hasDepletedHealth()) crumble()
+    }
+
+    override fun takeDamageFrom(damager: IDamager): Boolean {
+        val damageTaken = super.takeDamageFrom(damager)
+        if (damageTaken) {
+            shakeTimer.reset()
+            throwPebble()
+        }
+        return damageTaken
+    }
+
+    private fun throwPebble() {
+        GameLogger.debug(TAG, "throwPebble()")
+        // TODO
+    }
+
+    private fun crumble() {
+        GameLogger.debug(TAG, "crumble()")
+        // TODO
+    }
+
+    override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
+        super.defineUpdatablesComponent(updatablesComponent)
+        updatablesComponent.add { delta ->
+            shakeTimer.update(delta)
+        }
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -105,16 +146,20 @@ class CarriCarry(game: MegamanMaverickGame) : AbstractEnemy(game), IMotionEntity
 
         val damageableFixture = Fixture(
             body, FixtureType.DAMAGEABLE, GameRectangle().setSize(
-                ConstVals.PPM.toFloat(), 0.5f * ConstVals.PPM
+                1.35f * ConstVals.PPM, 0.5f * ConstVals.PPM
             )
         )
-        damageableFixture.offsetFromBodyCenter.y = 0.35f * ConstVals.PPM
+        damageableFixture.offsetFromBodyCenter.y = 0.75f * ConstVals.PPM
         body.addFixture(damageableFixture)
         debugShapes.add { damageableFixture.getShape() }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER))
+        return BodyComponentCreator.create(
+            this,
+            body,
+            BodyFixtureDef.of(FixtureType.BODY, FixtureType.SHIELD, FixtureType.DAMAGER)
+        )
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
