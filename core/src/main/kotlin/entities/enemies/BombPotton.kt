@@ -62,7 +62,6 @@ class BombPotton(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         private var region: TextureRegion? = null
     }
 
-
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
         Bullet::class pairTo dmgNeg(10),
         Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
@@ -83,7 +82,7 @@ class BombPotton(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     private var launchedBomb = false
 
     override fun init() {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, "BombPotton")
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
     }

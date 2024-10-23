@@ -88,7 +88,7 @@ class GreenExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
     override fun getEntityType() = EntityType.EXPLOSION
 
     override fun init() {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "GreenExplosion")
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
@@ -132,9 +132,17 @@ class GreenExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         body.addFixture(damagerFixture2)
         debugShapes.add { damagerFixture2.getShape() }
 
+        val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setHeight(0.1f * ConstVals.PPM))
+        feetFixture.offsetFromBodyCenter.y = -0.5f * ConstVals.PPM
+        body.addFixture(feetFixture)
+        feetFixture.rawShape.color = Color.GREEN
+        debugShapes.add { feetFixture.getShape() }
+
         body.preProcess.put(ConstKeys.DEFAULT) {
-            (damagerFixture1.rawShape as GameRectangle).setWidth(width * ConstVals.PPM)
-            (damagerFixture2.rawShape as GameRectangle).setWidth(width * ConstVals.PPM)
+            body.fixtures.forEach { t ->
+                val fixture = t.second as Fixture
+                (fixture.rawShape as GameRectangle).setWidth(width * ConstVals.PPM)
+            }
             damagerFixture1.offsetFromBodyCenter.x = damagerOffset * ConstVals.PPM
             damagerFixture2.offsetFromBodyCenter.x = -damagerOffset * ConstVals.PPM
         }

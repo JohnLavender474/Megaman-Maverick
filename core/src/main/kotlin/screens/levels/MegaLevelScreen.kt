@@ -197,8 +197,8 @@ class MegaLevelScreen(
                 Event(
                     EventType.BEGIN_ROOM_TRANS, props(
                         ConstKeys.ROOM pairTo cameraManagerForRooms.currentGameRoom,
+                        ConstKeys.PRIOR pairTo cameraManagerForRooms.priorGameRoom,
                         ConstKeys.POSITION pairTo cameraManagerForRooms.transitionInterpolation,
-                        ConstKeys.PRIOR pairTo cameraManagerForRooms.priorGameRoom
                     )
                 )
             )
@@ -213,7 +213,11 @@ class MegaLevelScreen(
             eventsMan.submitEvent(
                 Event(
                     EventType.CONTINUE_ROOM_TRANS,
-                    props(ConstKeys.POSITION pairTo cameraManagerForRooms.transitionInterpolation)
+                    props(
+                        ConstKeys.ROOM pairTo cameraManagerForRooms.currentGameRoom,
+                        ConstKeys.PRIOR pairTo cameraManagerForRooms.priorGameRoom,
+                        ConstKeys.POSITION pairTo cameraManagerForRooms.transitionInterpolation
+                    )
                 )
             )
         }
@@ -228,6 +232,7 @@ class MegaLevelScreen(
                 Event(
                     EventType.END_ROOM_TRANS, props(
                         ConstKeys.ROOM pairTo cameraManagerForRooms.currentGameRoom,
+                        ConstKeys.PRIOR pairTo cameraManagerForRooms.priorGameRoom,
                         ConstKeys.VELOCITY pairTo !(hasEvent && event == ConstKeys.BOSS)
                     )
                 )

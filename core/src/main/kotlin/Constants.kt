@@ -49,6 +49,7 @@ object ConstKeys {
     const val ID = "id"
     const val WALL = "wall"
     const val LISTENER = "listener"
+    const val SPRITE = "sprite"
     const val SUPPLIER = "supplier"
     const val SHIELD = "shield"
     const val ICE = "ice"

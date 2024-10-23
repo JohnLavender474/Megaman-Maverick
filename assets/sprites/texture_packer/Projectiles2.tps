@@ -189,7 +189,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Projectiles2/BunbyRedRocket.png</key>
-            <key type="filename">../frames/Projectiles2/CactusMissile.png</key>
+            <key type="filename">../frames/Projectiles2/CactusMissile/fly.png</key>
             <key type="filename">../frames/Projectiles2/DeathBomb/tick.png</key>
             <key type="filename">../frames/Projectiles2/DeathBomb/wait.png</key>
             <struct type="IndividualSpriteSettings">
@@ -203,6 +203,21 @@
                 <rect>8,16,16,32</rect>
                 <key>scale9Paddings</key>
                 <rect>8,16,16,32</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Projectiles2/CactusMissile/blink.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,16,32,32</rect>
+                <key>scale9Paddings</key>
+                <rect>16,16,32,32</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -342,6 +357,21 @@
                 <rect>13,25,25,50</rect>
                 <key>scale9Paddings</key>
                 <rect>13,25,25,50</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Projectiles2/UFOBomb.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>4,20,8,40</rect>
+                <key>scale9Paddings</key>
+                <rect>4,20,8,40</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

@@ -15,12 +15,10 @@ import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -44,14 +42,13 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntitiesMap
-import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
-import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.isSensing
 
 class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity, ISpritesEntity,
     IAnimatedEntity, IOwnable, IFaceable {
@@ -59,16 +56,12 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
     companion object {
         const val TAG = "Cart"
         private var region: TextureRegion? = null
-        private const val GRAVITY = -0.5f
+        private const val GROUND_GRAVITY = -0.01f
+        private const val GRAVITY = -0.1f
     }
 
     override var owner: GameEntity? = null
     override lateinit var facing: Facing
-    var childBlock: Block? = null
-
-    override fun getTag() = TAG
-
-    override fun getEntityType() = EntityType.SPECIAL
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.SPECIALS_1.source, TAG)
@@ -91,26 +84,12 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
-        childBlock = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.STANDARD) as Block
-        childBlock!!.spawn(
-            props(
-                ConstKeys.BOUNDS pairTo GameRectangle().setSize(0.9f * ConstVals.PPM, 0.75f * ConstVals.PPM),
-                ConstKeys.BLOCK_FILTERS pairTo objectSetOf(TAG)
-            )
-        )
         facing = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, "right", String::class).uppercase())
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        childBlock?.destroy()
-        childBlock = null
     }
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
         body.setSize(1.25f * ConstVals.PPM, 0.75f * ConstVals.PPM)
-        body.physics.gravity.y = GRAVITY * ConstVals.PPM
         body.physics.defaultFrictionOnSelf = Vector2(ConstVals.STANDARD_RESISTANCE_X, ConstVals.STANDARD_RESISTANCE_Y)
         body.color = Color.GRAY
 
@@ -136,22 +115,23 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         val leftFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM))
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
-        leftFixture.offsetFromBodyCenter.x = -0.75f * ConstVals.PPM
+        leftFixture.offsetFromBodyCenter.x = -0.65f * ConstVals.PPM
         body.addFixture(leftFixture)
 
         val rightFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM))
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
-        rightFixture.offsetFromBodyCenter.x = 0.75f * ConstVals.PPM
+        rightFixture.offsetFromBodyCenter.x = 0.65f * ConstVals.PPM
         body.addFixture(rightFixture)
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyCenter.y = -0.6f * ConstVals.PPM
+        feetFixture.offsetFromBodyCenter.y = -0.4f * ConstVals.PPM
         body.addFixture(feetFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
-            childBlock!!.body.setBottomCenterToPoint(body.getBottomCenterPoint())
+            body.physics.gravity.y =
+                if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY * ConstVals.PPM else GRAVITY * ConstVals.PPM
         })
         body.fixtures.forEach { it.second.putProperty(ConstKeys.DEATH_LISTENER, false) }
 
@@ -172,7 +152,8 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { "idle"
+        val keySupplier: () -> String? = {
+            "idle"
             /*
             val vel = abs(body.physics.velocity.x)
             if (vel > 0.5f * ConstVals.PPM) "moving_fast"
@@ -193,8 +174,10 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         return AnimationsComponent(this, animator)
     }
 
-    private fun defineCullablesComponent(): CullablesComponent {
-        val cullable = getGameCameraCullingLogic(this)
-        return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullable))
-    }
+    private fun defineCullablesComponent() =
+        CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(this)))
+
+    override fun getTag() = TAG
+
+    override fun getEntityType() = EntityType.SPECIAL
 }

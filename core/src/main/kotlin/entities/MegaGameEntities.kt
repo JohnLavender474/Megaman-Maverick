@@ -30,7 +30,7 @@ object MegaGameEntitiesMap {
     fun getEntitiesOfType(type: EntityType): OrderedSet<MegaGameEntity> =
         entityTypeToEntities.putIfAbsentAndGet(type, OrderedSet())
 
-    fun getEntitiesOfMapObjectId(mapObjectId: Int) =
+    fun getEntitiesOfMapObjectId(mapObjectId: Int): OrderedSet<MegaGameEntity> =
         mapObjectIdToEntities.putIfAbsentAndGet(mapObjectId, OrderedSet())
 
     fun forEachEntity(action: (MegaGameEntity) -> Unit) = entities.forEach { action.invoke(it) }

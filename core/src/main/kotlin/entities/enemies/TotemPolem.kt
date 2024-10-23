@@ -69,7 +69,7 @@ class TotemPolem(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         private const val EYES_CLOSING_DUR = 0.35f
         private const val SHOOT_DUR = 0.5f
         private const val SHOOT_TIME = 0.25f
-        private const val BULLET_SPEED = 6f
+        private const val BULLET_SPEED = 8f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 

@@ -1,60 +1,67 @@
 Projectiles2.png
-size: 64, 766
+size: 64, 862
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 ArigockBall
   rotate: false
-  xy: 0, 344
+  xy: 0, 440
   size: 48, 82
   orig: 48, 82
   offset: 0, 0
   index: -1
 BunbyRedRocket
   rotate: false
-  xy: 0, 216
+  xy: 0, 168
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
-CactusMissile
+CactusMissile/blink
   rotate: false
-  xy: 32, 216
+  xy: 0, 376
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+CactusMissile/fly
+  rotate: false
+  xy: 32, 168
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 DeathBomb/tick
   rotate: false
-  xy: 0, 280
+  xy: 0, 232
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 DeathBomb/wait
   rotate: false
-  xy: 32, 280
+  xy: 32, 232
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 FallingIcicle/shake
   rotate: false
-  xy: 0, 16
+  xy: 16, 16
   size: 24, 32
   orig: 24, 32
   offset: 0, 0
   index: -1
 FallingIcicle/shatter
   rotate: false
-  xy: 24, 16
+  xy: 40, 16
   size: 24, 32
   orig: 24, 32
   offset: 0, 0
   index: -1
 FallingIcicle/still
   rotate: false
-  xy: 12, 0
+  xy: 28, 0
   size: 24, 16
   orig: 24, 16
   offset: 0, 0
@@ -68,21 +75,21 @@ Harpoon
   index: -1
 MoonMan/crescent
   rotate: false
-  xy: 0, 526
+  xy: 0, 622
   size: 64, 120
   orig: 64, 120
   offset: 0, 0
   index: -1
 MoonMan/star
   rotate: false
-  xy: 0, 646
+  xy: 0, 742
   size: 64, 120
   orig: 64, 120
   offset: 0, 0
   index: -1
 Needle
   rotate: false
-  xy: 36, 0
+  xy: 12, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -110,22 +117,29 @@ SmallPurpleMissile
   index: -1
 SphinxBall
   rotate: false
-  xy: 0, 168
+  xy: 0, 296
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 SpitFireball
   rotate: false
-  xy: 0, 426
+  xy: 0, 522
   size: 50, 100
   orig: 50, 100
   offset: 0, 0
   index: -1
 TeardropBlast
   rotate: false
-  xy: 48, 16
+  xy: 0, 16
   size: 16, 32
   orig: 16, 32
+  offset: 0, 0
+  index: -1
+UFOBomb
+  rotate: false
+  xy: 48, 296
+  size: 16, 80
+  orig: 16, 80
   offset: 0, 0
   index: -1
