@@ -95,7 +95,7 @@ abstract class AbstractBoss(
             val explosionOrb = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION_ORB)
             explosionOrb?.spawn(
                 props(
-                    ConstKeys.TRAJECTORY pairTo trajectory,
+                    ConstKeys.TRAJECTORY pairTo trajectory.scl(ConstVals.PPM.toFloat()),
                     ConstKeys.POSITION pairTo body.getCenter()
                 )
             )
@@ -162,10 +162,11 @@ abstract class AbstractBoss(
         explosionTimer.update(delta)
         if (explosionTimer.isFinished()) {
             val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
-            val position = Position.values().toGdxArray().random()
+            val position = Position.entries.toTypedArray().toGdxArray().random()
             explosion.spawn(
                 props(
-                    ConstKeys.SOUND pairTo SoundAsset.EXPLOSION_2_SOUND, ConstKeys.POSITION pairTo body.getCenter().add(
+                    ConstKeys.SOUND pairTo SoundAsset.EXPLOSION_2_SOUND,
+                    ConstKeys.POSITION pairTo body.getCenter().add(
                         (position.x - 1) * 0.75f * ConstVals.PPM, (position.y - 1) * 0.75f * ConstVals.PPM
                     )
                 )

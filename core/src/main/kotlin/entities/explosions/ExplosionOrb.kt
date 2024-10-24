@@ -15,10 +15,14 @@ import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
-import com.mega.game.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -28,54 +32,55 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.world.body.BodyComponentCreator
 
 
-class ExplosionOrb(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, ICullableEntity {
+class ExplosionOrb(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, ICullableEntity {
 
     companion object {
         const val TAG = "ExplosionOrb"
         private const val OOB_CULL_TIME = 0.5f
-        private var textureRegion: TextureRegion? = null
+        private var region: TextureRegion? = null
     }
-
-    private lateinit var trajectory: Vector2
 
     override fun getEntityType() = EntityType.EXPLOSION
 
     override fun init() {
-        if (textureRegion == null) textureRegion =
+        if (region == null) region =
             game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "ExplosionOrbs")
-
+        addComponent(defineBodyComponent())
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
-        addComponent(defineUpdatablesComponent())
         addComponent(defineCullablesComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-        firstSprite!!.setCenter(spawn.x, spawn.y)
-        trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
+        body.setCenter(spawn)
+        body.physics.velocity = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
+    }
+
+    private fun defineBodyComponent(): BodyComponent {
+        val body = Body(BodyType.ABSTRACT)
+        body.physics.applyFrictionX = false
+        body.physics.applyFrictionY = false
+        return BodyComponentCreator.create(this, body)
     }
 
     private fun defineSpritesCompoent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 2))
+        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 20))
         sprite.setSize(3f * ConstVals.PPM)
-        return SpritesComponent(sprite)
+        val spritesComponent = SpritesComponent(sprite)
+        spritesComponent.putUpdateFunction { _, _sprite -> _sprite.setCenter(body.getCenter()) }
+        return spritesComponent
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val animation = Animation(textureRegion!!, 1, 2, 0.075f, true)
+        val animation = Animation(region!!, 1, 2, 0.075f, true)
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }
-
-    private fun defineUpdatablesComponent() = UpdatablesComponent({
-        firstSprite!!.translate(
-            trajectory.x * ConstVals.PPM * it, trajectory.y * ConstVals.PPM * it
-        )
-    })
 
     private fun defineCullablesComponent(): CullablesComponent {
         val cullOOB = getGameCameraCullingLogic(game.getGameCamera(), { firstSprite.boundingRectangle }, OOB_CULL_TIME)

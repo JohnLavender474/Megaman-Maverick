@@ -177,7 +177,7 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IEventListen
     private fun sendEvent() {
         game.eventsMan.submitEvent(
             Event(
-                EventType.LIGHT_SOURCE, props(
+                EventType.ADD_LIGHT_SOURCE, props(
                     ConstKeys.KEYS pairTo keys,
                     ConstKeys.LIGHT pairTo light,
                     ConstKeys.CENTER pairTo body.getCenter(),

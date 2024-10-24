@@ -10,9 +10,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.spawns.SpawnsManager
 
-data class MegaMapLayerBuildersParams(
-    val game: MegamanMaverickGame, val spawnsManager: SpawnsManager
-)
+data class MegaMapLayerBuildersParams(val game: MegamanMaverickGame, val spawnsManager: SpawnsManager)
 
 class MegaMapLayerBuilders(private val params: MegaMapLayerBuildersParams) : TiledMapLayerBuilders(), Initializable {
 

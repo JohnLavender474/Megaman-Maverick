@@ -109,11 +109,11 @@ class LightSource(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         GameLogger.debug(TAG, "sendEvent(): light=$light")
         game.eventsMan.submitEvent(
             Event(
-                EventType.LIGHT_SOURCE, props(
+                EventType.ADD_LIGHT_SOURCE, props(
                     ConstKeys.KEYS pairTo keys,
                     ConstKeys.LIGHT pairTo light,
                     ConstKeys.CENTER pairTo bounds.getCenter(),
-                    ConstKeys.RADIUS pairTo radius,
+                    ConstKeys.RADIUS pairTo radius * ConstVals.PPM,
                     ConstKeys.RADIANCE pairTo radiance
                 )
             )

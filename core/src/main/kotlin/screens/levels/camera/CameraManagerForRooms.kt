@@ -23,8 +23,6 @@ import kotlin.math.min
 class CameraManagerForRooms(
     val camera: Camera,
     var distanceOnTransition: Float,
-    var interpolate: () -> Boolean,
-    var interpolationScalar: () -> Float,
     var transitionScannerDimensions: Vector2,
     transDelay: Float,
     transDuration: Float,
@@ -90,9 +88,9 @@ class CameraManagerForRooms(
             currentGameRoom = null
             transitionDirection = null
             transitionState = null
-            setCameraToFocusable(delta)
+            setCameraToFocusable()
             currentGameRoom = nextGameRoom()
-        } else if (transitioning) onTransition(delta) else onNoTransition(delta)
+        } else if (transitioning) onTransition(delta) else onNoTransition()
     }
 
     override fun reset() {
@@ -146,7 +144,7 @@ class CameraManagerForRooms(
         }
     }
 
-    private fun onNoTransition(delta: Float) {
+    private fun onNoTransition() {
         if (currentGameRoom == null) {
             val nextGameRoom = nextGameRoom()
             if (nextGameRoom != null) {
@@ -165,7 +163,7 @@ class CameraManagerForRooms(
 
         val currentRoomBounds = currentGameRoom?.rectangle?.toGameRectangle() ?: return
         if (currentRoomBounds.overlaps(focus!!.getBounds() as Rectangle)) {
-            setCameraToFocusable(delta)
+            setCameraToFocusable()
             if (camera.position.y > (currentRoomBounds.y + currentRoomBounds.height) - camera.viewportHeight / 2f)
                 camera.position.y = (currentRoomBounds.y + currentRoomBounds.height) - camera.viewportHeight / 2f
             if (camera.position.y < currentRoomBounds.y + camera.viewportHeight / 2f)
@@ -241,18 +239,11 @@ class CameraManagerForRooms(
         return nextGameRoom
     }
 
-    private fun setCameraToFocusable(delta: Float) {
+    private fun setCameraToFocusable() {
         focus?.let {
             val focusPos = it.getBounds().getCenter()
-            val cameraPos = if (interpolate.invoke() && !reset)
-                interpolate(
-                    camera.position.toVector2(),
-                    focusPos,
-                    delta * interpolationScalar.invoke()
-                )
-            else focusPos
-            camera.position.x = cameraPos.x
-            camera.position.y = cameraPos.y
+            camera.position.x = focusPos.x
+            camera.position.y = focusPos.y
         }
     }
 }

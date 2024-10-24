@@ -1,11 +1,4 @@
-This README is not finished; therefore sections may contain inaccurate or outdated info.
-
 # MEGAMAN MAVERICK
-
-<img src="img/MainScreen.png" width="600px"/>
-<hr/>
-<img src="img/BossSelectScreen.png" width="600px"/>
-<hr/>
 
 **Megaman Maverick** is a fangame based on the [classic Megaman series by Capcom](https://megaman.fandom.com/wiki/Mega_Man_(original_series)).
 
@@ -16,6 +9,11 @@ built on top of the popular open-source [LibGDX game library](https://libgdx.com
 Kotlin, with few parts written in Java.
 
 View my Youtube channel for demos and more! https://youtube.com/playlist?list=PL4ZszXL-HC0r0E6Eb5NCFGhsi93AXoDZj&si=IITydzhhTSKmxc5-
+
+<img src="img/MainScreen.png" width="600px"/>
+<hr/>
+<img src="img/BossSelectScreen.png" width="600px"/>
+<hr/>
 
 ## RUNNING THE GAME
 

@@ -182,8 +182,6 @@ class MegaLevelScreen(
         cameraManagerForRooms = CameraManagerForRooms(
             gameCamera,
             distanceOnTransition = ROOM_DISTANCE_ON_TRANSITION * ConstVals.PPM,
-            interpolate = { game.doLerpGameCamera() },
-            interpolationScalar = { game.calculateLerpValueForGameCamera() },
             transitionScannerDimensions = vector2Of(TRANSITION_SCANNER_SIZE * ConstVals.PPM),
             transDelay = ConstVals.ROOM_TRANS_DELAY_DURATION,
             transDuration = ConstVals.ROOM_TRANS_DURATION,
@@ -648,7 +646,7 @@ class MegaLevelScreen(
             val shape = shapes.poll()
             shape.draw(shapeRenderer)
         }
-        if (game.params.debug) {
+        if (game.params.debugShapes) {
             val gameCamBounds = gameCamera.getRotatedBounds()
             gameCamBounds.x += 0.1f * ConstVals.PPM
             gameCamBounds.y += 0.1f * ConstVals.PPM

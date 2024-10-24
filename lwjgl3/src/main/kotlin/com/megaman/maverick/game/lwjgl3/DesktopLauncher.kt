@@ -16,12 +16,12 @@ import kotlin.system.exitProcess
 // Please note that on macOS your application needs to be started with the -XstartOnFirstThread JVM argument
 object DesktopLauncher {
 
-    private const val DEFAULT_FPS = ConstVals.MID_FPS
     private const val DEFAULT_WIDTH = 800
     private const val DEFAULT_HEIGHT = 600
     private const val DEFAULT_FULLSCREEN = false
     private const val DEFAULT_VSYNC = false
-    private const val DEFAULT_DEBUG = false
+    private const val DEFAULT_DEBUG_SHAPES = false
+    private const val DEFAULT_DEBUG_FPS = false
     private const val DEFAULT_FIXED_STEP_SCALAR = 1.0f
     private const val DEFAULT_MUSIC_VOLUME = 0.5f
     private const val DEFAULT_SOUND_VOLUME = 0.5f
@@ -43,12 +43,12 @@ object DesktopLauncher {
         }
 
         println("Game loaded with arguments:")
-        println("- FPS: " + appArgs.fps)
         println("- Width: " + appArgs.width)
         println("- Height: " + appArgs.height)
         println("- Fullscreen: " + appArgs.fullScreen)
         println("- Vsync: " + appArgs.vsync)
-        println("- Debug: " + appArgs.debug)
+        println("- Debug Shapes: " + appArgs.debugShapes)
+        println("- Debug FPS: " + appArgs.debugFPS)
         println("- Start Screen: " + appArgs.startScreen)
         println("- Level: " + appArgs.level)
         println("- Fixed Step Scalar: " + appArgs.fixedStepScalar)
@@ -58,23 +58,16 @@ object DesktopLauncher {
         val config = Lwjgl3ApplicationConfiguration()
         config.setTitle(TITLE)
         config.useVsync(appArgs.vsync)
-
-        // TODO: disable dynamic fps until issues regarding physics tied to fps are resolved;
-        //  for now always use default fps and disregard custom input
-        config.setIdleFPS(DEFAULT_FPS)
-        config.setForegroundFPS(DEFAULT_FPS)
-        /*
-        config.setIdleFPS(appArgs.fps);
-        config.setForegroundFPS(appArgs.fps);
-         */
-
+        config.setIdleFPS(ConstVals.FPS)
+        config.setForegroundFPS(ConstVals.FPS)
         config.setWindowedMode(appArgs.width, appArgs.height)
         if (appArgs.fullScreen) {
             config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode())
         }
 
         val params = MegamanMaverickGameParams()
-        params.debug = appArgs.debug
+        params.debugShapes = appArgs.debugShapes
+        params.debugFPS = appArgs.debugFPS
         params.fixedStepScalar = appArgs.fixedStepScalar
         params.musicVolume = appArgs.musicVolume
         params.soundVolume = appArgs.soundVolume
@@ -97,13 +90,7 @@ object DesktopLauncher {
         }
 
         val game = MegamanMaverickGame(params)
-        // TODO: disable dynamic fps until issues regarding physics tied to fps are resolved,
-        //  for now always use the default fps
-        // game.setTargetFPS(appArgs.fps);
-        game.setTargetFPS(DEFAULT_FPS)
-        game.setUseVsync(appArgs.vsync)
 
-        // TODO: refine pausing/resuming logic in regards to game window focus
         config.setWindowListener(object : Lwjgl3WindowAdapter() {
             @Override
             override fun iconified(isIconified: Boolean) {
@@ -134,12 +121,6 @@ object DesktopLauncher {
 
     class DesktopAppArgs {
         @Parameter(
-            names = ["--fps"],
-            description = "Frames per second: min of 30 and max of 90. Default value = $DEFAULT_FPS."
-        )
-        var fps = DEFAULT_FPS
-
-        @Parameter(
             names = ["--width"],
             description = "Window width: min of 600. Default value = $DEFAULT_WIDTH."
         )
@@ -164,12 +145,16 @@ object DesktopLauncher {
         var vsync = DEFAULT_VSYNC
 
         @Parameter(
-            names = ["--debug"],
-            description =
-                ("Enable debugging mode which turns on debug text rendering and " +
-                    "debug shape rendering. Default value = " + DEFAULT_DEBUG + ".")
+            names = ["--debugShapes"],
+            description = ("Enable debugging shapes. Default value = $DEFAULT_DEBUG_SHAPES.")
         )
-        var debug = DEFAULT_DEBUG
+        var debugShapes = DEFAULT_DEBUG_SHAPES
+
+        @Parameter(
+            names = ["--debugFPS"],
+            description = ("Enable debugging FPS. Default value = $DEFAULT_DEBUG_FPS")
+        )
+        var debugFPS = DEFAULT_DEBUG_FPS
 
         @Parameter(
             names = ["--startScreen"],
