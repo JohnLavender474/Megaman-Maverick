@@ -59,6 +59,7 @@ class CarriCarry(game: MegamanMaverickGame) : AbstractEnemy(game), IMotionEntity
         private const val SINE_AMPLITUDE = 3f
         private const val SINE_FREQUENCY = 3f
         private const val SHAKE_DUR = 1f
+        private const val CULL_TIME = 2.5f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -91,16 +92,20 @@ class CarriCarry(game: MegamanMaverickGame) : AbstractEnemy(game), IMotionEntity
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        spawnProps.put(ConstKeys.CULL_TIME, CULL_TIME)
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
+
         shakeTimer.setToEnd()
+
         centerX = body.getCenter().x
         val sine = SineWave(Vector2(0f, 1f), SINE_SPEED, SINE_AMPLITUDE, SINE_FREQUENCY)
         putMotionDefinition(ConstKeys.MOVE, MotionComponent.MotionDefinition(sine, { value, _ ->
             body.setCenterX(centerX + value.y)
-            GameLogger.debug(TAG, "Set to center x: ${body.getCenter().x}")
+            GameLogger.debug(TAG, "set to center x = ${body.getCenter().x}")
         }))
     }
 
@@ -131,9 +136,7 @@ class CarriCarry(game: MegamanMaverickGame) : AbstractEnemy(game), IMotionEntity
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
-        updatablesComponent.add { delta ->
-            shakeTimer.update(delta)
-        }
+        updatablesComponent.add { delta -> shakeTimer.update(delta) }
     }
 
     override fun defineBodyComponent(): BodyComponent {

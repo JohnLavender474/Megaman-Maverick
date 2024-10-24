@@ -50,6 +50,7 @@ class Spiky(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
     companion object {
         const val TAG = "Spiky"
         private const val X_VEL = 4f
+        private const val CULL_TIME = 2.5f
         private const val GROUND_GRAVITY = -0.01f
         private const val GRAVITY = -0.15f
         private var region: TextureRegion? = null
@@ -70,9 +71,12 @@ class Spiky(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        spawnProps.put(ConstKeys.CULL_TIME, CULL_TIME)
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
+
         facing = if (spawnProps.containsKey(ConstKeys.FACING))
             Facing.valueOf(spawnProps.get(ConstKeys.FACING, String::class)!!.uppercase())
         else if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT

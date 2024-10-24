@@ -43,7 +43,7 @@ class SpecialsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(ROTATION_ANCHOR, GameEntityPoolCreator.create { RotationAnchor(game) })
         pools.put(PORTAL_HOPPER, GameEntityPoolCreator.create { PortalHopper(game) })
         pools.put(FIXTURE_TYPE_OVERLAP_SPAWN, GameEntityPoolCreator.create { FixtureTypeOverlapSpawn(game) })
-        pools.put(DARKNESS, GameEntityPoolCreator.create { Darkness(game) })
+        pools.put(DARKNESS, GameEntityPoolCreator.create { /* Darkness(game) */ DarknessV2(game) })
         pools.put(FLIPPER_PLATFORM, GameEntityPoolCreator.create { FlipperPlatform(game) })
         pools.put(RAIL_TRACK, GameEntityPoolCreator.create { RailTrack(game) })
         pools.put(FORCE, GameEntityPoolCreator.create { Force(game) })

@@ -41,7 +41,7 @@ fun getStandardEventCullingLogic(
 }
 
 fun getGameCameraCullingLogic(entity: IBodyEntity, timeToCull: Float = 1f) =
-    getGameCameraCullingLogic((entity as MegaGameEntity).getGameCamera(), { entity.body }, timeToCull)
+    getGameCameraCullingLogic((entity as MegaGameEntity).getGameCamera(), { entity.body.getBodyBounds() }, timeToCull)
 
 fun getGameCameraCullingLogic(camera: RotatableCamera, bounds: () -> Rectangle, timeToCull: Float = 1f) =
     CullableOnUncontained(

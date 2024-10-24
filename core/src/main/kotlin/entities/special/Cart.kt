@@ -15,6 +15,7 @@ import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.Properties
@@ -45,10 +46,12 @@ import com.megaman.maverick.game.entities.MegaGameEntitiesMap
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
+import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.isSensing
+import kotlin.math.abs
 
 class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity, ISpritesEntity,
     IAnimatedEntity, IOwnable, IFaceable {
@@ -153,21 +156,16 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = {
-            "idle"
-            /*
             val vel = abs(body.physics.velocity.x)
             if (vel > 0.5f * ConstVals.PPM) "moving_fast"
             else if (vel > 0.1f * ConstVals.PPM) "moving_slow"
             else if (vel > 0.05f * ConstVals.PPM) "moving_slowest"
             else "idle"
-             */
         }
         val animations = objectMapOf<String, IAnimation>(
-            /*
             "moving_fast" pairTo Animation(region!!, 1, 2, 0.1f, true),
             "moving_slow" pairTo Animation(region!!, 1, 2, 0.25f, true),
             "moving_slowest" pairTo Animation(region!!, 1, 2, 0.35f, true),
-             */
             "idle" pairTo Animation(region!!)
         )
         val animator = Animator(keySupplier, animations)
@@ -175,7 +173,11 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
     }
 
     private fun defineCullablesComponent() =
-        CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(this)))
+        CullablesComponent(
+            objectMapOf(
+                ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(this, objectSetOf(EventType.PLAYER_SPAWN))
+            )
+        )
 
     override fun getTag() = TAG
 
