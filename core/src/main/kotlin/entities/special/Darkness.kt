@@ -98,7 +98,7 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
     }
 
     override val eventKeyMask = objectSetOf<Any>(
-        EventType.LIGHT_SOURCE, EventType.BEGIN_ROOM_TRANS, EventType.SET_TO_ROOM_NO_TRANS, EventType.END_ROOM_TRANS
+        EventType.ADD_LIGHT_SOURCE, EventType.BEGIN_ROOM_TRANS, EventType.SET_TO_ROOM_NO_TRANS, EventType.END_ROOM_TRANS
     )
 
     private val lightEventQueue = PriorityQueue<LightEvent>()
@@ -186,7 +186,7 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
 
     override fun onEvent(event: Event) {
         when (event.key) {
-            EventType.LIGHT_SOURCE -> {
+            EventType.ADD_LIGHT_SOURCE -> {
                 val keys = event.getProperty(ConstKeys.KEYS) as ObjectSet<Int>
                 if (keys.contains(key)) {
                     val light = event.getProperty(ConstKeys.LIGHT, Boolean::class)!!

@@ -468,7 +468,10 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         explosionOrbTrajectories.forEach { trajectory ->
             val explosionOrb = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION_ORB)
             explosionOrb?.spawn(
-                props(ConstKeys.TRAJECTORY pairTo trajectory, ConstKeys.POSITION pairTo body.getCenter())
+                props(
+                    ConstKeys.TRAJECTORY pairTo trajectory.scl(ConstVals.PPM.toFloat()),
+                    ConstKeys.POSITION pairTo body.getCenter()
+                )
             )
         }
     }

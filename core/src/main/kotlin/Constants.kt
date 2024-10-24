@@ -12,10 +12,7 @@ object ConstVals {
     const val VIEW_WIDTH = 16f
     const val VIEW_HEIGHT = 14f
     const val PPM = 32
-    const val VERY_HIGH_FPS = 120
-    const val HIGH_FPS = 90
-    const val MID_FPS = 60
-    const val LOW_FPS = 30
+    const val FPS = 60
     const val FIXED_TIME_STEP = 1 / 150f
     const val STANDARD_RESISTANCE_X = 6f
     const val STANDARD_RESISTANCE_Y = 4f
@@ -35,10 +32,6 @@ object ConstVals {
     const val DEFAULT_PATHFINDING_MAX_ITERATIONS = 100
     const val DEFAULT_PATHFINDING_MAX_DISTANCE = 100
     const val DEFAULT_RETURN_BEST_PATH = true
-    const val DEFAULT_LERP_SETTING = false
-    const val FAST_LERP_VALUE = 12.5f
-    const val MEDIUM_LERP_VALUE = 10f
-    const val SLOW_LERP_VALUE = 7.5f
     const val GAME_CAM_ROTATE_TIME = 1f
     const val DEFAULT_PARALLAX_X = 0.25f
     const val DEFAULT_PARALLAX_Y = 0f

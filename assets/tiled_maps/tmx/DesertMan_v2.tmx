@@ -493,7 +493,7 @@
   <object id="229" x="15168" y="160" width="96" height="192"/>
   <object id="230" x="15232" y="160" width="128" height="160"/>
   <object id="231" x="15328" y="160" width="128" height="128"/>
-  <object id="238" x="17248" y="536" width="512" height="136"/>
+  <object id="238" x="17216" y="536" width="544" height="136"/>
   <object id="235" name="FeetRiseSinkBlock" x="17280" y="512" width="416" height="32">
    <properties>
     <property name="fall" type="float" value="-0.5"/>

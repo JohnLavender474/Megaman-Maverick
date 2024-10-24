@@ -243,10 +243,10 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
 
     private fun shoot() {
         val spawn = (when (directionRotation!!) {
-            Direction.UP -> Vector2(0.25f * facing.value, 0.25f)
-            Direction.DOWN -> Vector2(0.25f * facing.value, -0.25f)
-            Direction.LEFT -> Vector2(-0.2f, 0.25f * facing.value)
-            Direction.RIGHT -> Vector2(0.2f, 0.25f * facing.value)
+            Direction.UP -> Vector2(0.25f * facing.value, 0.5f)
+            Direction.DOWN -> Vector2(0.25f * facing.value, -0.5f)
+            Direction.LEFT -> Vector2(-0.4f, 0.25f * facing.value)
+            Direction.RIGHT -> Vector2(0.4f, 0.25f * facing.value)
         }).scl(ConstVals.PPM.toFloat()).add(body.getCenter())
 
         val trajectory = Vector2()

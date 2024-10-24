@@ -31,7 +31,6 @@ import com.mega.game.engine.controller.buttons.ControllerButtons
 import com.mega.game.engine.controller.polling.IControllerPoller
 import com.mega.game.engine.cullables.CullablesSystem
 import com.mega.game.engine.cullables.GameEntityCuller
-import com.mega.game.engine.drawables.IDrawable
 import com.mega.game.engine.drawables.fonts.FontsSystem
 import com.mega.game.engine.drawables.shapes.DrawableShapesSystem
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -98,7 +97,8 @@ import kotlin.reflect.cast
 enum class StartScreenOption { MAIN, SIMPLE, LEVEL }
 
 class MegamanMaverickGameParams {
-    var debug: Boolean = false
+    var debugShapes: Boolean = false
+    var debugFPS: Boolean = false
     var startScreen: StartScreenOption = StartScreenOption.MAIN
     var startLevel: Level? = null
     var fixedStepScalar: Float = 1f
@@ -138,7 +138,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
 
     var paused = false
 
-    private lateinit var debugText: IDrawable<Batch>
+    private lateinit var debugFPSText: MegaFontHandle
     private var currentScreenKey: String? = null
 
     fun setCurrentScreen(key: String) {
@@ -201,44 +201,6 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
 
     fun getTiledMapLoadResult() = properties.get(ConstKeys.TILED_MAP_LOAD_RESULT) as TiledMapLoadResult
 
-    fun setTargetFPS(value: Int) {
-        putProperty(ConstKeys.FPS, value)
-        Gdx.graphics?.setForegroundFPS(value) ?: GameLogger.error(
-            TAG,
-            "Tried setting target fps when Gdx.graphcis is null"
-        )
-    }
-
-    fun getTargetFPS() = getProperty(ConstKeys.FPS, Int::class)!!
-
-    fun setDoLerpGameCamera(lerp: Boolean) = putProperty(ConstKeys.LERP, lerp)
-
-    fun doLerpGameCamera() = getProperty(ConstKeys.LERP, Boolean::class)!!
-
-    fun setLerpValueForGameCamera(value: String) = putProperty("${ConstKeys.LERP}_${ConstKeys.VALUE}", value)
-
-    // returns the string representation of the lerp value,
-    // float value needs to be calculated
-    fun getLerpValueForGameCamera() = getProperty("${ConstKeys.LERP}_${ConstKeys.VALUE}", String::class)!!
-
-    // converts the string representation of the lerp value into the float value
-    fun calculateLerpValueForGameCamera(): Float {
-        val speed = this.getLerpValueForGameCamera()
-        return when (speed) {
-            ConstKeys.FAST -> ConstVals.FAST_LERP_VALUE
-            ConstKeys.MEDIUM -> ConstVals.MEDIUM_LERP_VALUE
-            ConstKeys.SLOW -> ConstVals.SLOW_LERP_VALUE
-            else -> throw IllegalStateException("Illegal lerp value: $speed")
-        }
-    }
-
-    fun doUseVsync() = getProperty(ConstKeys.VSYNC, Boolean::class)!!
-
-    fun setUseVsync(use: Boolean) {
-        putProperty(ConstKeys.VSYNC, use)
-        Gdx.graphics?.setVSync(use) ?: GameLogger.error(TAG, "Tried setting vysnc when Gdx.graphics is null")
-    }
-
     override fun create() {
         GameLogger.set(GameLogLevel.ERROR)
         GameLogger.filterByTag = true
@@ -272,7 +234,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
         val uiViewport = FitViewport(screenWidth, screenHeight)
         viewports.put(ConstKeys.UI, uiViewport)
 
-        debugText = MegaFontHandle({ "FPS: ${Gdx.graphics.framesPerSecond}" })
+        debugFPSText = MegaFontHandle({ "FPS: ${Gdx.graphics.framesPerSecond}" })
 
         audioMan = MegaAudioManager(assMan.getSounds(), assMan.getMusics())
         audioMan.musicVolume = params.musicVolume
@@ -309,7 +271,6 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
         screens.put(ScreenEnum.LOAD_PASSWORD_SCREEN.name, LoadPasswordScreen(this))
         screens.put(ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name, ControllerSettingsScreen(this, buttons, true))
         screens.put(ScreenEnum.CONTROLLER_SETTINGS_SCREEN.name, ControllerSettingsScreen(this, buttons, false))
-        screens.put(ScreenEnum.CAMERA_SETTINGS_SCREEN.name, CameraSettingsScreen(this))
         screens.put(ScreenEnum.BOSS_SELECT_SCREEN.name, BossSelectScreen(this))
         screens.put(ScreenEnum.BOSS_INTRO_SCREEN.name, BossIntroScreen(this))
         screens.put(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name, SimpleInitGameScreen(this))
@@ -322,9 +283,6 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
             StartScreenOption.SIMPLE -> setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name)
             else -> setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
         }
-
-        setDoLerpGameCamera(ConstVals.DEFAULT_LERP_SETTING)
-        setLerpValueForGameCamera(ConstKeys.FAST)
     }
 
     override fun onEvent(event: Event) {
@@ -364,10 +322,10 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
         //  individually right before drawing drawables that are to be contained in the viewport
         // viewports.values().forEach { it.apply(true) }
 
-        if (params.debug) {
+        if (params.debugFPS) {
             batch.projectionMatrix = getUiCamera().combined
             batch.begin()
-            debugText.draw(batch)
+            debugFPSText.draw(batch)
             batch.end()
         }
     }
@@ -447,7 +405,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
 
     private fun createGameEngine(): GameEngine {
         val drawables = ObjectMap<DrawingSection, PriorityQueue<IComparableDrawable<Batch>>>()
-        DrawingSection.values().forEach { section -> drawables.put(section, PriorityQueue()) }
+        DrawingSection.entries.forEach { section -> drawables.put(section, PriorityQueue()) }
         properties.put(ConstKeys.DRAWABLES, drawables)
 
         val shapes = PriorityQueue<IDrawableShape> { s1, s2 -> s1.shapeType.ordinal - s2.shapeType.ordinal }
@@ -465,7 +423,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
                     contactListener = MegaContactListener(this, CONTACT_LISTENER_DEBUG_FILTER),
                     collisionHandler = MegaCollisionHandler(this),
                     contactFilterMap = objectMapOf(
-                        FixtureType.CONSUMER pairTo objectSetOf(*FixtureType.values()),
+                        FixtureType.CONSUMER pairTo objectSetOf(*FixtureType.entries.toTypedArray()),
                         FixtureType.PLAYER pairTo objectSetOf(FixtureType.BODY, FixtureType.ITEM),
                         FixtureType.DAMAGEABLE pairTo objectSetOf(FixtureType.DAMAGER),
                         FixtureType.BODY pairTo objectSetOf(
@@ -549,7 +507,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
                 UpdatablesSystem(),
                 FontsSystem { font -> drawables.get(font.priority.section).add(font) },
                 SpritesSystem { sprite -> drawables.get(sprite.priority.section).add(sprite) },
-                DrawableShapesSystem({ shapes.add(it) }, params.debug),
+                DrawableShapesSystem({ shapes.add(it) }, params.debugShapes),
                 AudioSystem(
                     { audioMan.playSound(it.source, it.loop) },
                     { audioMan.playMusic(it.source, it.loop) },

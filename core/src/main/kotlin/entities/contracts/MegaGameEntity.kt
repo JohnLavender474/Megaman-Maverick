@@ -16,8 +16,10 @@ abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEnti
 
     val runnablesOnSpawn = OrderedMap<String, () -> Unit>()
     val runnablesOnDestroy = OrderedMap<String, () -> Unit>()
+
     var dead = false
     var mapObjectId = 0
+        private set
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): ${this::class.simpleName}, spawnProps=$spawnProps")

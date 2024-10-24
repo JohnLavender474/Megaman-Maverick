@@ -81,9 +81,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                         )
                         spawners.add(spawner)
 
-                        GameLogger.debug(
-                            TAG, "build(): Adding spawner $spawner for game rectangle object ${it.name}"
-                        )
+                        GameLogger.debug(TAG, "build(): Adding spawner $spawner for game rectangle object ${it.name}")
 
                         roomFound = true
                         break
