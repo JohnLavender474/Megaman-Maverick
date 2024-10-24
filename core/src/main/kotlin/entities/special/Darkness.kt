@@ -48,7 +48,8 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
 
     companion object {
         const val TAG = "Darkness"
-        private const val TRANS_DUR = 0.25f
+        private const val DEFAULT_TRANS_DUR = 0.25f
+        private const val DEFAULT_PPM_DIVISOR = 4
         private const val MEGAMAN_CHARGING_RADIUS = 4
         private const val MEGAMAN_CHARGING_RADIANCE = 1f
         private var region: TextureRegion? = null
@@ -97,7 +98,7 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
     }
 
     override val eventKeyMask = objectSetOf<Any>(
-        EventType.ADJUST_DARKNESS, EventType.BEGIN_ROOM_TRANS, EventType.SET_TO_ROOM_NO_TRANS, EventType.END_ROOM_TRANS
+        EventType.LIGHT_SOURCE, EventType.BEGIN_ROOM_TRANS, EventType.SET_TO_ROOM_NO_TRANS, EventType.END_ROOM_TRANS
     )
 
     private val lightEventQueue = PriorityQueue<LightEvent>()
@@ -106,6 +107,7 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
     private lateinit var bounds: GameRectangle
     private var key = -1
     private var darkMode = false
+    private var ppmDivisor = 2
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.COLORS.source, "Black")
@@ -124,8 +126,10 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
         spawnProps.get(ConstKeys.ROOM, String::class)!!.split(",").forEach { t -> rooms.add(t) }
 
         bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
-        val rows = (bounds.height / ConstVals.PPM).toInt()
-        val columns = (bounds.width / ConstVals.PPM).toInt()
+        ppmDivisor = spawnProps.getOrDefault("${ConstKeys.PPM}_${ConstKeys.DIVISOR}", DEFAULT_PPM_DIVISOR, Int::class)
+        val rows = (bounds.height / (ConstVals.PPM / ppmDivisor)).toInt()
+        val columns = (bounds.width / (ConstVals.PPM / ppmDivisor)).toInt()
+        GameLogger.debug(TAG, "onSpawn(): rows=$rows, columns=$columns")
 
         tiles = Matrix(rows, columns)
         for (x in 0 until columns) {
@@ -133,11 +137,16 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
                 val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
                 sprite.setRegion(region!!)
                 sprite.setAlpha(0f)
-                val spriteX = bounds.x + (x * ConstVals.PPM)
-                val spriteY = bounds.y + (y * ConstVals.PPM)
-                sprite.setBounds(spriteX, spriteY, ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
+                val spriteX = bounds.x + (x * (ConstVals.PPM / ppmDivisor))
+                val spriteY = bounds.y + (y * (ConstVals.PPM / ppmDivisor))
+                sprite.setBounds(
+                    spriteX,
+                    spriteY,
+                    ConstVals.PPM.toFloat() / ppmDivisor,
+                    ConstVals.PPM.toFloat() / ppmDivisor
+                )
 
-                val timer = Timer(TRANS_DUR).setToEnd()
+                val timer = Timer(DEFAULT_TRANS_DUR).setToEnd()
                 val tile = BlackTile(sprite, timer, 0f, 0f)
                 tiles[x, y] = tile
 
@@ -164,8 +173,7 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
                 }
             }
         }
-
-        // lightEventQueue.add(LightEvent(LightEventType.DARKEN_ALL))
+        GameLogger.debug(TAG, "onSpawn(): loaded ${rows * columns} sprites")
     }
 
     override fun onDestroy() {
@@ -178,8 +186,7 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
 
     override fun onEvent(event: Event) {
         when (event.key) {
-            EventType.ADJUST_DARKNESS -> {
-                // GameLogger.debug(TAG, "onEvent(): BLACK_BACKGROUND, event=$event")
+            EventType.LIGHT_SOURCE -> {
                 val keys = event.getProperty(ConstKeys.KEYS) as ObjectSet<Int>
                 if (keys.contains(key)) {
                     val light = event.getProperty(ConstKeys.LIGHT, Boolean::class)!!
@@ -232,7 +239,7 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
         val currentRoom = game.getCurrentRoom()
-        if (currentRoom != null /* && rooms.contains(currentRoom) && game.getProperty(ConstKeys.ROOM_TRANSITION) != true */) {
+        if (currentRoom != null) {
             MegaGameEntitiesMap.getEntitiesOfType(EntityType.PROJECTILE).forEach { t -> tryToLightUp(t) }
             MegaGameEntitiesMap.getEntitiesOfType(EntityType.EXPLOSION).forEach { t -> tryToLightUp(t) }
 
@@ -266,7 +273,6 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
     })
 
     private fun handleLightEvent(lightEventType: LightEventType, lightEventDef: LightEventDef? = null) {
-        // GameLogger.debug(TAG, "handleLightEvent(): lightEventType=$lightEventType, lightEventDef=$lightEventDef")
         when (lightEventType) {
             LightEventType.LIGHT_UP_ALL -> {
                 darkMode = false
@@ -295,16 +301,20 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
                 val (light, center, radius, radiance) = lightEventDef
                 val adjustedRadius = radius.toFloat() * ConstVals.PPM
                 val circle = GameCircle(center, adjustedRadius)
-                val startX =
-                    (((center.x - adjustedRadius) - bounds.x) / ConstVals.PPM).toInt().coerceIn(0, tiles.columns - 1)
-                val endX =
-                    ceil(((center.x + adjustedRadius) - bounds.x) / ConstVals.PPM).toInt()
-                        .coerceIn(0, tiles.columns - 1)
-                val startY =
-                    (((center.y - adjustedRadius) - bounds.y) / ConstVals.PPM).toInt().coerceIn(0, tiles.rows - 1)
-                val endY =
-                    ceil(((center.y + adjustedRadius) - bounds.y) / ConstVals.PPM).toInt()
-                        .coerceIn(0, tiles.rows - 1)
+
+                var startX = (((center.x - adjustedRadius) - bounds.x) / (ConstVals.PPM.toFloat() / ppmDivisor)).toInt()
+                startX = startX.coerceIn(0, tiles.columns - 1)
+                var endX = ceil(((center.x + adjustedRadius) - bounds.x) / (ConstVals.PPM / ppmDivisor)).toInt()
+                endX = endX.coerceIn(0, tiles.columns - 1)
+                var startY = (((center.y - adjustedRadius) - bounds.y) / (ConstVals.PPM / ppmDivisor)).toInt()
+                startY = startY.coerceIn(0, tiles.rows - 1)
+                var endY = ceil(((center.y + adjustedRadius) - bounds.y) / (ConstVals.PPM / ppmDivisor)).toInt()
+                endY = endY.coerceIn(0, tiles.rows - 1)
+
+                GameLogger.debug(
+                    TAG,
+                    "handleLightEvent(): LIGHT_SOURCE: startX=$startX, startY=$startY, endX=$endX, endY=$endY"
+                )
 
                 for (x in startX..endX) for (y in startY..endY) {
                     val tile = tiles[x, y]

@@ -32,6 +32,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 
@@ -41,8 +42,8 @@ class LightSource(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         const val TAG = "LightSource"
         const val LANTERN_TYPE = "Lantern"
         const val CANDLE_TYPE = "Candle"
-        private const val LIGHT_RADIUS = 6
-        private const val RADIANCE_FACTOR = 1f
+        private const val DEFAULT_RADIUS = 6
+        private const val DEFAULT_RADIANCE = 1f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -50,6 +51,8 @@ class LightSource(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
     private lateinit var bounds: GameRectangle
     private lateinit var keys: ObjectSet<Int>
     private lateinit var spritePos: Position
+    private var radiance = 0f
+    private var radius = 0
 
     override fun init() {
         if (regions.isEmpty) {
@@ -58,8 +61,8 @@ class LightSource(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
             regions.put(CANDLE_TYPE, atlas.findRegion(CANDLE_TYPE))
         }
         super.init()
+        addComponent(CullablesComponent())
         addComponent(defineUpdatablesComponent())
-        addComponent(defineCullablesComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
     }
@@ -75,6 +78,8 @@ class LightSource(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
             .map { it.toInt() }
             .toObjectSet()
         type = spawnProps.getOrDefault(ConstKeys.TYPE, LANTERN_TYPE, String::class)
+        radiance = spawnProps.getOrDefault(ConstKeys.RADIANCE, DEFAULT_RADIANCE, Float::class)
+        radius = spawnProps.getOrDefault(ConstKeys.RADIUS, DEFAULT_RADIUS, Int::class)
 
         val rawSpritePos = spawnProps.get("${ConstKeys.SPRITE}_${ConstKeys.POSITION}")
         spritePos = when (rawSpritePos) {
@@ -82,6 +87,16 @@ class LightSource(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
             is String -> Position.valueOf(rawSpritePos.uppercase())
             else -> Position.BOTTOM_CENTER
         }
+
+        val cullOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
+        if (cullOutOfBounds) putCullable(
+            ConstKeys.CULL_OUT_OF_BOUNDS, getGameCameraCullingLogic(game.getGameCamera(), { bounds })
+        ) else removeCullable(ConstKeys.CULL_OUT_OF_BOUNDS)
+
+        val cullEvents = spawnProps.getOrDefault(ConstKeys.CULL_EVENTS, true, Boolean::class)
+        if (cullEvents) putCullable(
+            ConstKeys.CULL_EVENTS, getStandardEventCullingLogic(this, objectSetOf(EventType.BEGIN_ROOM_TRANS))
+        ) else removeCullable(ConstKeys.CULL_EVENTS)
     }
 
     override fun onDestroy() {
@@ -94,12 +109,12 @@ class LightSource(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         GameLogger.debug(TAG, "sendEvent(): light=$light")
         game.eventsMan.submitEvent(
             Event(
-                EventType.ADJUST_DARKNESS, props(
+                EventType.LIGHT_SOURCE, props(
                     ConstKeys.KEYS pairTo keys,
                     ConstKeys.LIGHT pairTo light,
                     ConstKeys.CENTER pairTo bounds.getCenter(),
-                    ConstKeys.RADIUS pairTo LIGHT_RADIUS,
-                    ConstKeys.RADIANCE pairTo RADIANCE_FACTOR
+                    ConstKeys.RADIUS pairTo radius,
+                    ConstKeys.RADIANCE pairTo radiance
                 )
             )
         )
@@ -107,23 +122,13 @@ class LightSource(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ sendEvent(true) })
 
-    private fun defineCullablesComponent() = CullablesComponent(
-        objectMapOf(
-            ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(
-                this,
-                objectSetOf(EventType.BEGIN_ROOM_TRANS)
-            )
-        )
-    )
-
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -1))
         sprite.setSize(1.65f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(
-                bounds.getPositionPoint(spritePos),
-                spritePos
+                bounds.getPositionPoint(spritePos), spritePos
             )
         }
         return spritesComponent

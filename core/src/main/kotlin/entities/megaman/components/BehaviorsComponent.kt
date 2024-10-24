@@ -483,20 +483,14 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             aButtonTask = AButtonTask.JUMP
 
             cart = body.getProperty(ConstKeys.CART, Cart::class)!!
-            // cart.body.physics.gravityOn = false
-            /*
-            cart.childBlock!!.body.physics.collisionOn = false
-            cart.childBlock!!.body.fixtures.forEach { (it.second as Fixture).active = false }
-             */
+            cart.sprites.values().forEach { it.hidden = true }
 
             body.setBottomCenterToPoint(cart.body.getBottomCenterPoint())
             body.preProcess.put(ConstKeys.CART) { cart.body.setCenter(body.getCenter()) }
-
-            cart.sprites.values().forEach { it.hidden = true }
-
             gdxArrayOf(feetFixture, leftSideFixture, rightSideFixture, bodyFixture).forEach { fixture ->
                 fixture.putProperty(ConstKeys.DEATH_LISTENER, false)
             }
+
             requestToPlaySound(SoundAsset.CONVEYOR_LIFT_SOUND, true)
         }
 
@@ -513,20 +507,13 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             cart.body.physics.gravityOn = true
             cart.body.physics.velocity.x = body.physics.velocity.x
             cart.body.physics.velocity.y = 0f
-
             cart.sprites.values().forEach { it.hidden = false }
-
-            /*
-            cart.childBlock!!.body.physics.collisionOn = true
-            cart.childBlock!!.body.fixtures.forEach { (it.second as Fixture).active = true }
-             */
 
             if (!dead) {
                 body.translation(0f, ConstVals.PPM / 1.75f)
                 body.physics.velocity.y = MegamanValues.JUMP_VEL * ConstVals.PPM
             }
             body.preProcess.remove(ConstKeys.CART)
-
             gdxArrayOf(feetFixture, leftSideFixture, rightSideFixture, bodyFixture).forEach { fixture ->
                 fixture.putProperty(ConstKeys.DEATH_LISTENER, true)
             }
