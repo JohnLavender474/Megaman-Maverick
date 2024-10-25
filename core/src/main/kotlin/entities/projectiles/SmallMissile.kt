@@ -23,7 +23,10 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IBodyEntity
-import com.mega.game.engine.world.body.*
+import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -36,7 +39,9 @@ import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
+import kotlin.math.abs
 
 class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRotatable {
 
@@ -93,6 +98,12 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
 
     override fun hitSand(sandFixture: IFixture) = explodeAndDie(sandFixture.getShape() as GameRectangle)
 
+    override fun hitShield(shieldFixture: IFixture) {
+        val left = body.x < shieldFixture.getShape().getX()
+        body.physics.velocity.x = if (left) -abs(body.physics.velocity.x) else abs(body.physics.velocity.x)
+        requestToPlaySound(SoundAsset.DINK_SOUND, false)
+    }
+
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
 
@@ -130,20 +141,11 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.35f * ConstVals.PPM, 0.65f * ConstVals.PPM)
         body.physics.applyFrictionX = false
-body.physics.applyFrictionY = false
+        body.physics.applyFrictionY = false
         body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBodyBounds() }
-
-        val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameRectangle(body))
-        body.addFixture(projectileFixture)
-
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
-        body.addFixture(damagerFixture)
-
-        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle(body))
-        body.addFixture(shieldFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.gravity = when (directionRotation!!) {
@@ -156,7 +158,11 @@ body.physics.applyFrictionY = false
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(
+            this,
+            body,
+            BodyFixtureDef.of(FixtureType.BODY, FixtureType.PROJECTILE, FixtureType.DAMAGER)
+        )
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
