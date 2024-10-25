@@ -62,8 +62,8 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         private var standingRegion: TextureRegion? = null
         private var throwingRegion: TextureRegion? = null
         private const val WAIT_DURATION = 1.25f
-        private const val ROCK_IMPULSE_X = 10f
-        private const val ROCK_IMPULSE_Y = 8f
+        private const val ROCK_IMPULSE_X = 11f
+        private const val ROCK_IMPULSE_Y = 9f
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(

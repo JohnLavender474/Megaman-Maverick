@@ -7,6 +7,7 @@ import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.events.IEventListener
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.world.body.FixtureType
 
 abstract class AbstractProjectile(game: MegamanMaverickGame) : MegaGameEntity(game), IProjectileEntity, ISpritesEntity {
 
@@ -50,4 +51,6 @@ abstract class AbstractProjectile(game: MegamanMaverickGame) : MegaGameEntity(ga
     override fun onDamageInflictedTo(damageable: IDamageable) {
         onDamageInflictedTo?.invoke(damageable)
     }
+
+    fun getProjectileFixture() = body.fixtures.first { it.first == FixtureType.PROJECTILE }.second
 }

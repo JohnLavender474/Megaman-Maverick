@@ -94,7 +94,7 @@ class TotemPolem(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     val eyesOpen: Boolean
         get() = loop.getCurrent() != TotemPolemState.EYES_CLOSED
 
-    private val loop = Loop(TotemPolemState.values().toGdxArray())
+    private val loop = Loop(TotemPolemState.entries.toTypedArray().toGdxArray())
     private val timers = objectMapOf(
         TotemPolemState.EYES_CLOSED pairTo Timer(EYES_CLOSE_DUR),
         TotemPolemState.EYES_OPENING pairTo Timer(EYES_OPENING_DUR),

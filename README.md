@@ -1,8 +1,16 @@
 # MEGAMAN MAVERICK
 
-**Megaman Maverick** is a fangame based on the [classic Megaman series by Capcom](https://megaman.fandom.com/wiki/Mega_Man_(original_series)).
+---
+
+**Megaman Maverick** is a fan game based on the [classic Megaman series by Capcom](https://megaman.fandom.com/wiki/Mega_Man_(original_series)).
+All rights to the "Megaman" franchise are owned by Capcom. This game is developed solely for non-commercial purposes, 
+in line with Capcom's lenient approach towards fan projects that do not seek to profit.
 
 The game is currently under active development and is in a **pre-alpha** stage.
+
+The game uses assets from the official Capcom games as well as from the community. See the [Credits](#Credits) section
+below for attributions to the creators. Special thanks to these creators for helping to make my dream of creating
+a Megaman game become a reality!
 
 The game is built using the [Mega 2D Game Engine](https://github.com/JohnLavender474/Mega-2D-Game-Engine), an engine
 built on top of the popular open-source [LibGDX game library](https://libgdx.com/). This game is programmed primarily in
@@ -11,87 +19,9 @@ Kotlin, with few parts written in Java.
 View my Youtube channel for demos and more! https://youtube.com/playlist?list=PL4ZszXL-HC0r0E6Eb5NCFGhsi93AXoDZj&si=IITydzhhTSKmxc5-
 
 <img src="img/MainScreen.png" width="600px"/>
-<hr/>
 <img src="img/BossSelectScreen.png" width="600px"/>
-<hr/>
 
-## RUNNING THE GAME
-
-Currently, there is no "official" release of this game since it is still under active development. However, see the 
-section below on how to run the game using the source code.
-
-### BUILDING THE GAME FROM SOURCE
-
-Since the game runs using gradle and JRE, you can build a JAR of the game yourself. Keep in mind that in order to run
-the generated JAR, you will need Java 17+ installed on your local machine.
-
-#### Pre-requisites:
-
-- git
-- Java 17+
-
-1. Use `git` to clone the project to a suitable location on your desktop.
-2. From the root directory, run one of the following:
-
-- Run using gradle:
-    - Run the following command to start the desktop application: `./gradlew lwjgl:run`. 
-    - Optionally, you can run the `build-run-desktop-alpha.sh` or `build-run-desktop-debug.sh` script instead. The former is 
-      a shortcut for the above command. Meanwhile, the latter script includes configurable args for debugging purposes.
-    - See the [GDX Liftoff](#GDX-Liftoff) section for more gradle commands.
-
-## PLAYING THE GAME
-
-### CONTROLS
-
-By default, the keyboard controls for the game are the following whether the 1st value is the keyboard key and the 2nd
-value is the "in-game" action:
-- A: LEFT
-- D: RIGHT
-- S: DOWN
-- W: UP
-- J: B
-- K: A
-- ENTER: START
-
-These can be remapped through the Keyboard Settings screen. Use the keys for "UP" and "DOWN" (by default the "W" and "S"
-keys respectively) to navigate to the game button you wish to remap and press the key for "START" (by default the "ENTER"
-key). You will be prompted to press any key on the keyboard to assign that key's code to the in-game button action.
-
-<img src="img/KeyboardSettings.png" width="600px"/>
-<img src="img/PressToReassignKey.png" width="600px"/>
-
-The game supports controllers and should detect a controller as soon as it is plugged in. The keyboard controls continue
-to work even when a controller is connected. The game has been tested with the following controllers:
-- PS3 controller
-- Xbox 360 controller
-- NES-style USB controller
-
-When a controller is connected, default mappings are assigned. Most likely, you will want to configure these mappings.
-In the "Controller Settings" screen, you can reassign the mappings for the controller similarly to how the same is done
-for the keyboard mappings.
-
-### STARTING THE GAME (ALPHA)
-
-This section pertains to starting an alpha build of the game (which can be started via the `./build-run-desktop-alpha.sh`
-script), and it will be updated when beta and release versions are eventually released. To run an 
-
-When launching an alpha build, the first screen you see should be something like the following.
-
-<img src="img/StartAlphaGame.png" width="600px"/>
-
-Press the key that corresponds to the command you wish to run. To quit the app, press the ESCAPE key.
-
-If you press ENTER, you will be taken to the "Select Level" screen. Here, you can select any level you want to play.
-Levels are separated into three categories:
-- Beta: Levels that are over halfway complete but may require some level of redesigning
-- Alpha: Levels that are less than halfway complete and require major redesigning
-- Test: Levels that are made purely for testing game functionality, and that will not be included in release versions of the game
-
-Navigate to the level you wish to play and press the key for START. This will launch the level. **NOTE: Due to the fact
-that this game is an alpha, don't be surprised if the game crashes or if you encounter any bugs!**
-
-To exit out of a level early, press the ESCAPE key. From the "Select Level" screen, you can return back to the start
-screen by pressing the ESCAPE key.
+---
 
 ## CREDITS
 
@@ -155,9 +85,7 @@ comprehensive listing of the credits for the artwork used in this game.
 Sounds belong to Capcom (Megaman-ripped sound effects) and Nintendo (Mario-ripped sound effects)
 TODO: add credits and links here for where the sounds were downloaded from
 
----
-
-**PROOF OF PERMISSIONS FOR COMMUNITY ASSETS**
+### PROOF OF PERMISSIONS FOR COMMUNITY ASSETS
 
 For some of the artwork used in this game, the artist did not state in the work's description or elsewhere that the work was
 free to use. For these works, I reached out to the artist personally to ask if I could use their work. Below are screenshots
@@ -177,16 +105,98 @@ Works by Famitard:
 
 ---
 
-# GDX Liftoff
+## RUNNING THE GAME
+
+Currently, there is no "official" release of this game since it is still under active development. However, see the
+section below on how to run the game using the source code.
+
+### BUILDING THE GAME FROM SOURCE
+
+Since the game runs using gradle and JRE, you can build a JAR of the game yourself. Keep in mind that in order to run
+the generated JAR, you will need Java 17+ installed on your local machine.
+
+#### Pre-requisites:
+
+- git
+- Java 17+
+
+1. Use `git` to clone the project to a suitable location on your desktop.
+2. From the root directory, run one of the following:
+
+- Run using gradle:
+    - Run the following command to start the desktop application: `./gradlew lwjgl:run`.
+    - Optionally, you can run the `build-run-desktop-alpha.sh` or `build-run-desktop-debug.sh` script instead. The former is
+      a shortcut for the above command. Meanwhile, the latter script includes configurable args for debugging purposes.
+    - See the [GDX Liftoff](#GDX-Liftoff) section for more gradle commands.
+
+---
+
+## PLAYING THE GAME
+
+### CONTROLS
+
+By default, the keyboard controls for the game are the following whether the 1st value is the keyboard key and the 2nd
+value is the "in-game" action:
+- A: LEFT
+- D: RIGHT
+- S: DOWN
+- W: UP
+- J: B
+- K: A
+- ENTER: START
+
+These can be remapped through the Keyboard Settings screen. Use the keys for "UP" and "DOWN" (by default the "W" and "S"
+keys respectively) to navigate to the game button you wish to remap and press the key for "START" (by default the "ENTER"
+key). You will be prompted to press any key on the keyboard to assign that key's code to the in-game button action.
+
+<img src="img/KeyboardSettings.png" width="600px"/>
+<img src="img/PressToReassignKey.png" width="600px"/>
+
+The game supports controllers and should detect a controller as soon as it is plugged in. The keyboard controls continue
+to work even when a controller is connected. The game has been tested with the following controllers:
+- PS3 controller
+- Xbox 360 controller
+- NES-style USB controller
+
+When a controller is connected, default mappings are assigned. Most likely, you will want to configure these mappings.
+In the "Controller Settings" screen, you can reassign the mappings for the controller similarly to how the same is done
+for the keyboard mappings.
+
+### STARTING THE GAME (ALPHA)
+
+This section pertains to starting an alpha build of the game (which can be started via the `./build-run-desktop-alpha.sh`
+script), and it will be updated when beta and release versions are eventually released. To run an
+
+When launching an alpha build, the first screen you see should be something like the following.
+
+<img src="img/StartAlphaGame.png" width="600px"/>
+
+Press the key that corresponds to the command you wish to run. To quit the app, press the ESCAPE key.
+
+If you press ENTER, you will be taken to the "Select Level" screen. Here, you can select any level you want to play.
+Levels are separated into three categories:
+- Beta: Levels that are over halfway complete but may require some level of redesigning
+- Alpha: Levels that are less than halfway complete and require major redesigning
+- Test: Levels that are made purely for testing game functionality, and that will not be included in release versions of the game
+
+Navigate to the level you wish to play and press the key for START. This will launch the level. **NOTE: Due to the fact
+that this game is an alpha, don't be surprised if the game crashes or if you encounter any bugs!**
+
+To exit out of a level early, press the ESCAPE key. From the "Select Level" screen, you can return back to the start
+screen by pressing the ESCAPE key.
+
+---
+
+## GDX Liftoff
 
 This project was generated with a template including simple application launchers and an `ApplicationAdapter` extension that draws libGDX logo.
 
-## Platforms
+### Platforms
 
 - `core`: Main module with the application logic shared by all platforms.
 - `lwjgl3`: Primary desktop platform using LWJGL3; was called 'desktop' in older docs.
 
-## Gradle
+### Gradle
 
 This project uses [Gradle](https://gradle.org/) to manage dependencies.
 The Gradle wrapper was included, so you can run Gradle tasks using `gradlew.bat` or `./gradlew` commands.

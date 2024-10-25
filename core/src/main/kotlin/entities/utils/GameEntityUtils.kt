@@ -5,7 +5,9 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.getOverlapPushDirection
 import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -16,6 +18,7 @@ import com.mega.game.engine.entities.GameEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -23,10 +26,28 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
 import com.megaman.maverick.game.utils.toProps
+import com.megaman.maverick.game.world.body.getBody
+import kotlin.math.abs
+
+fun performStandardShieldReflection(projectileFixture: IFixture, shieldFixture: IFixture) {
+    val body = projectileFixture.getBody()
+    var direction = getOverlapPushDirection(body, shieldFixture.getShape())
+    direction?.let {
+        when (it) {
+            Direction.UP -> body.physics.velocity.y = abs(body.physics.velocity.y)
+            Direction.DOWN -> body.physics.velocity.y = -abs(body.physics.velocity.y)
+            Direction.LEFT -> {
+                body.physics.velocity.x = -abs(body.physics.velocity.x)
+            }
+
+            Direction.RIGHT -> body.physics.velocity.x = abs(body.physics.velocity.x)
+        }
+    }
+}
 
 fun getStandardEventCullingLogic(
     entity: ICullableEntity,
-    cullEvents: ObjectSet<Any> = objectSetOf<Any>(
+    cullEvents: ObjectSet<Any> = objectSetOf(
         EventType.BEGIN_ROOM_TRANS,
         EventType.GATE_INIT_OPENING,
         EventType.PLAYER_SPAWN
@@ -44,11 +65,7 @@ fun getGameCameraCullingLogic(entity: IBodyEntity, timeToCull: Float = 1f) =
     getGameCameraCullingLogic((entity as MegaGameEntity).getGameCamera(), { entity.body.getBodyBounds() }, timeToCull)
 
 fun getGameCameraCullingLogic(camera: RotatableCamera, bounds: () -> Rectangle, timeToCull: Float = 1f) =
-    CullableOnUncontained(
-        { camera.getRotatedBounds() },
-        { it.overlaps(bounds()) },
-        timeToCull
-    )
+    CullableOnUncontained({ camera.getRotatedBounds() }, { it.overlaps(bounds()) }, timeToCull)
 
 fun getObjectProps(props: Properties): Array<RectangleMapObject> {
     val objectProps = Array<RectangleMapObject>()
