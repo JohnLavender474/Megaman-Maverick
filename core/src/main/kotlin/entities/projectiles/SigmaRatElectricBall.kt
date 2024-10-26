@@ -91,7 +91,7 @@ class SigmaRatElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game)
 
     internal fun launch(trajectory: Vector2) {
         body.physics.velocity = trajectory
-        requestToPlaySound(SoundAsset.BLAST_SOUND, false)
+        requestToPlaySound(SoundAsset.BLAST_1_SOUND, false)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->

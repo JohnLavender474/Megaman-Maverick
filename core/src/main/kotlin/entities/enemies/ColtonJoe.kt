@@ -118,7 +118,7 @@ class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                 ConstKeys.GRAVITY_ON pairTo false
             )
         )
-        if (overlapsGameCamera()) requestToPlaySound(SoundAsset.BLAST_SOUND, false)
+        if (overlapsGameCamera()) requestToPlaySound(SoundAsset.BLAST_2_SOUND, false)
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {

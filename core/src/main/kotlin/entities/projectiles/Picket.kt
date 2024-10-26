@@ -34,8 +34,7 @@ class Picket(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEnt
     }
 
     override fun init() {
-        if (region == null)
-            region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Picket")
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
     }
@@ -59,7 +58,7 @@ class Picket(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEnt
         body.setSize(0.5f * ConstVals.PPM)
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
         body.physics.applyFrictionX = false
-body.physics.applyFrictionY = false
+        body.physics.applyFrictionY = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBodyBounds() }
@@ -84,7 +83,7 @@ body.physics.applyFrictionY = false
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.5f * ConstVals.PPM)
+        sprite.setSize(1.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())

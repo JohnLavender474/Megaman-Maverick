@@ -188,7 +188,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.35f * ConstVals.PPM)
+        sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
@@ -223,8 +223,8 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         if (!overlapsGameCamera()) return
 
         val spawn = body.getCenter()
-        spawn.x += 0.1f * ConstVals.PPM * facing.value
-        spawn.y += 0.25f * ConstVals.PPM
+        spawn.x += 0.15f * ConstVals.PPM * facing.value
+        spawn.y += 0.3f * ConstVals.PPM
 
         val impulse = MegaUtilMethods.calculateJumpImpulse(
             spawn, getMegaman().body.getCenter(), PICKET_IMPULSE_Y * ConstVals.PPM

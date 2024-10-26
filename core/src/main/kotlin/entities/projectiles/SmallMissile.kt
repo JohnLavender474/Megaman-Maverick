@@ -133,7 +133,7 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
                 )
             )
 
-            if (overlapsGameCamera()) playSoundNow(SoundAsset.BLAST_SOUND, false)
+            if (overlapsGameCamera()) playSoundNow(SoundAsset.BLAST_1_SOUND, false)
         }
     }
 

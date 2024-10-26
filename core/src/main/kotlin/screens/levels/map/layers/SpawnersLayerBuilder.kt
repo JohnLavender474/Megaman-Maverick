@@ -17,8 +17,8 @@ import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.spawns.ISpawner
 import com.megaman.maverick.game.spawns.Spawn
 import com.megaman.maverick.game.spawns.SpawnerFactory
+import com.megaman.maverick.game.spawns.SpawnerShapeFactory
 import com.megaman.maverick.game.utils.convertToProps
-import com.megaman.maverick.game.utils.getShape
 
 class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITiledMapLayerBuilder {
 
@@ -110,7 +110,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                 else -> {
                     val spawner = SpawnerFactory.spawnerForWhenInCamera(
                         game.getGameCamera(),
-                        it.getShape(),
+                        SpawnerShapeFactory.getSpawnShape(entityType, it),
                         spawnSupplier,
                         respawnable
                     )
