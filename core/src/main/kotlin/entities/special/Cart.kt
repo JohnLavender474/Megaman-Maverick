@@ -4,7 +4,6 @@ package com.megaman.maverick.game.entities.special
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
@@ -60,6 +59,8 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         private var region: TextureRegion? = null
         private const val GROUND_GRAVITY = -0.01f
         private const val GRAVITY = -0.1f
+        private const val FRICTION_X = 1.5f
+        private const val FRICTION_Y = 1.25f
     }
 
     override var owner: GameEntity? = null
@@ -92,7 +93,8 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
         body.setSize(1.25f * ConstVals.PPM, 0.75f * ConstVals.PPM)
-        body.physics.defaultFrictionOnSelf = Vector2(ConstVals.STANDARD_RESISTANCE_X, ConstVals.STANDARD_RESISTANCE_Y)
+        body.physics.defaultFrictionOnSelf.x = FRICTION_X
+        body.physics.defaultFrictionOnSelf.y = FRICTION_Y
         body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()

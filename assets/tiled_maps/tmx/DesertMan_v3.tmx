@@ -195,49 +195,49 @@
   </object>
  </objectgroup>
  <objectgroup id="10" name="decorations">
-  <object id="114" name="LightSource" x="2976" y="1408" width="32" height="32">
+  <object id="114" name="LightSource" x="2784" y="1408" width="416" height="32">
    <properties>
     <property name="keys" value="1"/>
     <property name="type" value="Lantern"/>
    </properties>
   </object>
-  <object id="121" name="LightSource" x="3392" y="928" width="32" height="32">
+  <object id="121" name="LightSource" x="3200" y="928" width="416" height="32">
    <properties>
     <property name="keys" value="1"/>
     <property name="type" value="Lantern"/>
    </properties>
   </object>
-  <object id="125" name="LightSource" x="3792" y="736" width="32" height="32">
+  <object id="125" name="LightSource" x="3616" y="736" width="384" height="32">
    <properties>
     <property name="keys" value="1"/>
     <property name="type" value="Lantern"/>
    </properties>
   </object>
-  <object id="130" name="LightSource" x="4368" y="928" width="32" height="32">
+  <object id="130" name="LightSource" x="4192" y="928" width="384" height="32">
    <properties>
     <property name="keys" value="1"/>
     <property name="type" value="Lantern"/>
    </properties>
   </object>
-  <object id="134" name="LightSource" x="4784" y="992" width="32" height="32">
+  <object id="134" name="LightSource" x="4608" y="992" width="384" height="32">
    <properties>
     <property name="keys" value="1"/>
     <property name="type" value="Lantern"/>
    </properties>
   </object>
-  <object id="136" name="LightSource" x="5088" y="1024" width="32" height="32">
+  <object id="136" name="LightSource" x="4896" y="1024" width="416" height="32">
    <properties>
     <property name="keys" value="1"/>
     <property name="type" value="Lantern"/>
    </properties>
   </object>
-  <object id="137" name="LightSource" x="5328" y="960" width="32" height="32">
+  <object id="137" name="LightSource" x="5152" y="960" width="384" height="32">
    <properties>
     <property name="keys" value="1"/>
     <property name="type" value="Lantern"/>
    </properties>
   </object>
-  <object id="142" name="LightSource" x="5600" y="864" width="32" height="32">
+  <object id="142" name="LightSource" x="5408" y="864" width="416" height="32">
    <properties>
     <property name="keys" value="1"/>
     <property name="type" value="Lantern"/>
@@ -375,13 +375,13 @@
     <property name="type" value="Lantern"/>
    </properties>
   </object>
-  <object id="259" name="LightSource" x="3536" y="1408" width="32" height="32">
+  <object id="259" name="LightSource" x="3360" y="1408" width="384" height="32">
    <properties>
     <property name="keys" value="1"/>
     <property name="type" value="Lantern"/>
    </properties>
   </object>
-  <object id="280" name="LightSource" x="4288" y="800" width="32" height="32">
+  <object id="280" name="LightSource" x="4096" y="800" width="416" height="32">
    <properties>
     <property name="keys" value="1"/>
     <property name="type" value="Lantern"/>
@@ -579,7 +579,7 @@
     <property name="type" value="Lantern"/>
    </properties>
   </object>
-  <object id="368" name="LightSource" x="3152" y="1280" width="32" height="32">
+  <object id="368" name="LightSource" x="2976" y="1280" width="384" height="32">
    <properties>
     <property name="keys" value="1"/>
     <property name="type" value="Lantern"/>

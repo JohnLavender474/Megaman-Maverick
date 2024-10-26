@@ -50,6 +50,7 @@ abstract class AbstractBoss(
         private set
     var bossKey = ""
         private set
+    var orbs = true
 
     override fun getEntityType() = EntityType.BOSS
 
@@ -66,6 +67,7 @@ abstract class AbstractBoss(
             "NO_BOSS_KEY_FOR_ABSTRACT_BOSS",
             String::class
         )
+        orbs = spawnProps.getOrDefault(ConstKeys.ORB, true, Boolean::class)
         super.onSpawn(spawnProps)
     }
 
@@ -77,28 +79,30 @@ abstract class AbstractBoss(
         ready = false
 
         super.onDestroy()
-
         if (getCurrentHealth() > 0) return
 
-        playSoundNow(SoundAsset.DEFEAT_SOUND, false)
-        val explosionOrbTrajectories = gdxArrayOf(
-            Vector2(-EXPLOSION_ORB_SPEED, 0f),
-            Vector2(-EXPLOSION_ORB_SPEED, EXPLOSION_ORB_SPEED),
-            Vector2(0f, EXPLOSION_ORB_SPEED),
-            Vector2(EXPLOSION_ORB_SPEED, EXPLOSION_ORB_SPEED),
-            Vector2(EXPLOSION_ORB_SPEED, 0f),
-            Vector2(EXPLOSION_ORB_SPEED, -EXPLOSION_ORB_SPEED),
-            Vector2(0f, -EXPLOSION_ORB_SPEED),
-            Vector2(-EXPLOSION_ORB_SPEED, -EXPLOSION_ORB_SPEED)
-        )
-        explosionOrbTrajectories.forEach { trajectory ->
-            val explosionOrb = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION_ORB)
-            explosionOrb?.spawn(
-                props(
-                    ConstKeys.TRAJECTORY pairTo trajectory.scl(ConstVals.PPM.toFloat()),
-                    ConstKeys.POSITION pairTo body.getCenter()
-                )
+        if (orbs) {
+            val explosionOrbTrajectories = gdxArrayOf(
+                Vector2(-EXPLOSION_ORB_SPEED, 0f),
+                Vector2(-EXPLOSION_ORB_SPEED, EXPLOSION_ORB_SPEED),
+                Vector2(0f, EXPLOSION_ORB_SPEED),
+                Vector2(EXPLOSION_ORB_SPEED, EXPLOSION_ORB_SPEED),
+                Vector2(EXPLOSION_ORB_SPEED, 0f),
+                Vector2(EXPLOSION_ORB_SPEED, -EXPLOSION_ORB_SPEED),
+                Vector2(0f, -EXPLOSION_ORB_SPEED),
+                Vector2(-EXPLOSION_ORB_SPEED, -EXPLOSION_ORB_SPEED)
             )
+            explosionOrbTrajectories.forEach { trajectory ->
+                val explosionOrb = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION_ORB)
+                explosionOrb?.spawn(
+                    props(
+                        ConstKeys.TRAJECTORY pairTo trajectory.scl(ConstVals.PPM.toFloat()),
+                        ConstKeys.POSITION pairTo body.getCenter()
+                    )
+                )
+            }
+
+            playSoundNow(SoundAsset.DEFEAT_SOUND, false)
         }
     }
 

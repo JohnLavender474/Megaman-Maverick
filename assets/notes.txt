@@ -10,3 +10,7 @@ Energy Tank Locations
 
 - A: Glacier Man
 - B: Inferno Man
+
+Sound Effects
+
+- Megaman 6: https://www.sounds-resource.com/nes/megaman6/sound/3619/

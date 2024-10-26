@@ -63,13 +63,13 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
     companion object {
         const val TAG = "DarknessV2"
         const val MIN_ALPHA = 0f
-        const val MAX_ALPHA = 1f
+        const val MAX_ALPHA = 0.9f
         private const val CAM_BOUNDS_BUFFER = 2f
         private const val DEFAULT_PPM_DIVISOR = 2
         private const val MEGAMAN_HALF_CHARGING_RADIUS = 3
-        private const val MEGAMAN_HALF_CHARGING_RADIANCE = 1f
+        private const val MEGAMAN_HALF_CHARGING_RADIANCE = 1.25f
         private const val MEGAMAN_FULL_CHARGING_RADIUS = 4
-        private const val MEGAMAN_FULL_CHARGING_RADIANCE = 1.25f
+        private const val MEGAMAN_FULL_CHARGING_RADIANCE = 1.5f
         private var region: TextureRegion? = null
         private val standardProjLightDef: (IBodyEntity) -> LightSourceDef =
             { LightSourceDef(it.body.getCenter(), 2 * ConstVals.PPM, 1.5f) }
@@ -181,8 +181,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
             EventType.BEGIN_ROOM_TRANS, EventType.SET_TO_ROOM_NO_TRANS -> {
                 val priorRoom = event.getProperty(ConstKeys.PRIOR, RectangleMapObject::class)?.name
                 val newRoom = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)?.name
-
-                if (priorRoom == null && newRoom == null) return
+                if (priorRoom == null || newRoom == null) return
 
                 if (rooms.contains(priorRoom) && !rooms.contains(newRoom)) {
                     GameLogger.debug(
@@ -214,6 +213,10 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
                 if (keys.contains(key)) {
                     val center = event.getProperty(ConstKeys.CENTER, Vector2::class)!!
                     val radius = event.getProperty(ConstKeys.RADIUS, Int::class)!!
+
+                    reusableCircle.setRadius(radius.toFloat()).setCenter(center)
+                    if (!reusableCircle.overlaps(game.getGameCamera().getRotatedBounds())) return
+
                     val radiance = event.getProperty(ConstKeys.RADIANCE, Float::class)!!
 
                     val lightSourceDef = lightSourcePool.fetch()
@@ -246,7 +249,10 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
     }
 
     private fun tryToLightUp(entity: IGameEntity) {
-        if (entity is IBodyEntity && entity.body.overlaps(bounds as Rectangle) && lightUpEntities.containsKey(entity::class)) {
+        if (entity is IBodyEntity &&
+            entity.body.overlaps(bounds as Rectangle) &&
+            lightUpEntities.containsKey(entity::class)
+        ) {
             val lightSourceDef = lightSourcePool.fetch()
             lightUpEntities[entity::class].invoke(entity).let {
                 lightSourceDef.center = it.center
@@ -258,8 +264,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
     }
 
     private fun handleLightSource(lightSourceDef: LightSourceDef) {
-        var startTime = System.currentTimeMillis()
-
+        val startTime = System.currentTimeMillis()
         val (center, radius, radiance) = lightSourceDef
 
         reusableCircle.setRadius(radius.toFloat()).setCenter(center)
@@ -269,7 +274,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         for (x in minX..maxX) for (y in minY..maxY) {
             val tile = getTile(x, y)
             if (reusableCircle.overlaps(tile.bounds)) {
-                var alpha = ((tile.bounds.getCenter().dst(center) / radius) / radiance)
+                val alpha = ((tile.bounds.getCenter().dst(center) / radius) / radiance)
                 tile.currentAlpha = min(alpha.coerceIn(MIN_ALPHA, MAX_ALPHA), tile.currentAlpha)
             }
         }

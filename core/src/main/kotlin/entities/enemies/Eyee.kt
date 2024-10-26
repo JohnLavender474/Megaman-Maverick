@@ -54,7 +54,7 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
 
     companion object {
         const val TAG = "Eyee"
-        private const val WAIT_DURATION = 0.6f
+        private const val WAIT_DURATION = 1f
         private const val SPEED = 10f
         private const val CULL_TIME = 2f
         private var openRegion: TextureRegion? = null

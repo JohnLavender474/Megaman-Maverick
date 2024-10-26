@@ -191,7 +191,7 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
         val muzzleFlash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.MUZZLE_FLASH)!!
         muzzleFlash.spawn(props(ConstKeys.POSITION pairTo spawn))
 
-        if (overlapsGameCamera()) requestToPlaySound(SoundAsset.BLAST_SOUND, false)
+        if (overlapsGameCamera()) requestToPlaySound(SoundAsset.BLAST_1_SOUND, false)
     }
 
     private fun calculateAimLineOriginOffset(distanceType: DistanceType) =

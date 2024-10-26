@@ -25,6 +25,7 @@ class DecorationsFactory(private val game: MegamanMaverickGame) : EntityFactory(
         const val DRIPPING_TOXIC_GOOP = "DrippingToxicGoop"
         const val TOXIC_WATERFALL = "ToxicWaterfall"
         const val LIGHT_SOURCE = "LightSource"
+        const val LANTERN = "Lantern"
     }
 
     override fun init() {
@@ -45,6 +46,7 @@ class DecorationsFactory(private val game: MegamanMaverickGame) : EntityFactory(
         pools.put(DRIPPING_TOXIC_GOOP, GameEntityPoolCreator.create { DrippingToxicGoop(game) })
         pools.put(TOXIC_WATERFALL, GameEntityPoolCreator.create { ToxicWaterfall(game) })
         pools.put(LIGHT_SOURCE, GameEntityPoolCreator.create { LightSource(game) })
+        pools.put(LANTERN, GameEntityPoolCreator.create { Lantern(game) })
     }
 
     override fun fetch(key: Any) = pools.get(key)?.fetch()

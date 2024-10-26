@@ -127,15 +127,19 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        spawnProps.put(ConstKeys.ORB, false)
         GameLogger.debug(TAG, "spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomRightPoint()
         body.setBottomRightToPoint(spawn)
+
         loop.reset()
         timers.forEach {
             if (it.key == "laugh") it.value.setToEnd()
             else it.value.reset()
         }
+
         activeChinIndex = 0
         chunkOrbs = false
     }
@@ -287,6 +291,7 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
             _sprite.hidden = damageBlink
+            _sprite.setAlpha(if (defeated) 1f - defeatTimer.getRatio() else 1f)
         }
         return spritesComponent
     }

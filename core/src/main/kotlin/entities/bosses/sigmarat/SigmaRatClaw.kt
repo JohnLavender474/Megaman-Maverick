@@ -196,7 +196,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
             getMegaman().body.getCenter().sub(body.getCenter()).nor().scl(SHOCK_VELOCITY_Y * ConstVals.PPM)
         )
         shockBall = null
-        requestToPlaySound(SoundAsset.BLAST_SOUND, false)
+        requestToPlaySound(SoundAsset.BLAST_1_SOUND, false)
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {

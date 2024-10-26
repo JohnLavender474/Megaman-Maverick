@@ -99,9 +99,12 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     debugShapes.add { rightFixture.getShape() }
     body.putProperty("${ConstKeys.RIGHT}_${ConstKeys.SIDE}", rightFixture)
 
-    val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle(body))
+    val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(body.width, 1.25f * ConstVals.PPM))
+    damageableFixture.offsetFromBodyCenter.y = 0.125f * ConstVals.PPM
     body.addFixture(damageableFixture)
     body.putProperty(ConstKeys.DAMAGEABLE, damageableFixture)
+    damageableFixture.rawShape.color = Color.PURPLE
+    debugShapes.add { damageableFixture.getShape() }
 
     val waterListenerFixture = Fixture(body, FixtureType.WATER_LISTENER, GameRectangle(body))
     body.addFixture(waterListenerFixture)

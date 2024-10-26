@@ -47,6 +47,7 @@ object ConstKeys {
     const val SHIELD = "shield"
     const val DIVISOR = "divisor"
     const val ICE = "ice"
+    const val ORB = "orb"
     const val VSYNC = "vsyinc"
     const val BULLET = "bullet"
     const val ALPHA = "alpha"
