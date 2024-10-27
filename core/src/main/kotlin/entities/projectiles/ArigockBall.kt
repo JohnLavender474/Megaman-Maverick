@@ -44,17 +44,20 @@ class ArigockBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     }
 
     override fun init() {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, "ArigockBall")
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
+
         val impulse = spawnProps.get(ConstKeys.IMPULSE, Vector2::class)!!
         body.physics.velocity.set(impulse)
+
         val gravityOn = spawnProps.getOrDefault(ConstKeys.GRAVITY_ON, true, Boolean::class)
         body.physics.gravityOn = gravityOn
     }
@@ -62,6 +65,8 @@ class ArigockBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     override fun hitBlock(blockFixture: IFixture) = explodeAndDie()
 
     override fun hitSand(sandFixture: IFixture) = explodeAndDie()
+
+    override fun hitProjectile(projectileFixture: IFixture) = explodeAndDie()
 
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
@@ -104,9 +109,7 @@ class ArigockBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setCenter(body.getCenter())
-        }
+        spritesComponent.putUpdateFunction { _, _sprite -> _sprite.setCenter(body.getCenter()) }
         return spritesComponent
     }
 

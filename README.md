@@ -65,7 +65,8 @@ comprehensive listing of the credits for the artwork used in this game.
 - [Balloon Cart (Glacier Man)](https://balloon-cart.itch.io/glacier-man-asset-pack)
 - [MegaBot](https://ansimuz.itch.io/mega-bot)
 - [Mega 8-Bit](https://assetstore.unity.com/packages/2d/environments/mega-8-bit-pixel-pack-60158?srsltid=AfmBOordeWICo0KR-N3MKcw6iqd2TehrlFgQn6Hijzmk09-2eoq2Gid0)
-- TODO: All other tilesets ripped from Capcom's official Megaman games via the Spriter's Resource website (TODO: will provide links and credits for each tileset used from here)
+- Mister Mike:
+  - [Megaman 6 - Tomahawk Man Tileset](https://www.spriters-resource.com/nes/mm6/sheet/16402/)
 
 ### Music
 
