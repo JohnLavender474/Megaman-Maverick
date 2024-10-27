@@ -251,10 +251,10 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
     private fun tryToLightUp(entity: IGameEntity) {
         if (entity is IBodyEntity &&
             entity.body.overlaps(bounds as Rectangle) &&
-            lightUpEntities.containsKey(entity::class)
+            lightUpEntities.containsKey((entity as IBodyEntity)::class)
         ) {
             val lightSourceDef = lightSourcePool.fetch()
-            lightUpEntities[entity::class].invoke(entity).let {
+            lightUpEntities[(entity as IBodyEntity)::class].invoke(entity).let {
                 lightSourceDef.center = it.center
                 lightSourceDef.radiance = it.radiance
                 lightSourceDef.radius = it.radius

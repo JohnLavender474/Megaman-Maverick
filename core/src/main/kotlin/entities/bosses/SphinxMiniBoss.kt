@@ -15,6 +15,7 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.toGdxArray
+import com.mega.game.engine.common.getRandom
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -49,7 +50,6 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.SphinxBall
-import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import kotlin.reflect.KClass
@@ -60,14 +60,18 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
         const val TAG = "SphinxMiniBoss"
         private const val WAIT_DUR = 1.25f
         private const val OPEN_DUR = 0.25f
-        private const val SHOOT_ORBS_DUR = 2f
+        private const val SHOOT_ORBS_DUR = 2.5f
         private const val LAUGH_DUR = 0.5f
         private const val BALL_SPEED = 3f
         private const val ORB_SPEED = 8f
         private const val MAX_CHUNK_ORB_IMPULSE = 10f
         private const val CHUNK_X_SCALAR = 1.25f
+        private const val MIN_SHOOT_ORB_ANGLE = 45f
+        private const val MAX_SHOOT_ORB_ANGLE = 100f
         private val chinOffsets = gdxArrayOf(
-            Vector2(-2.75f, 0.7f), Vector2(-2.75f, 0.1f), Vector2(-2.75f, -0.5f)
+            Vector2(-2.75f, 0.7f),
+            Vector2(-2.75f, 0.1f),
+            Vector2(-2.75f, -0.5f)
         )
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -88,24 +92,28 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
             }
         )
 
-    private val loop = Loop(SphinxMiniBossState.values().toGdxArray())
+    private val loop = Loop(SphinxMiniBossState.entries.toTypedArray().toGdxArray())
     private val timers = objectMapOf(
-        "wait" pairTo Timer(WAIT_DUR), "opening" pairTo Timer(
+        "wait" pairTo Timer(WAIT_DUR),
+        "opening" pairTo Timer(
             OPEN_DUR, gdxArrayOf(
                 TimeMarkedRunnable(0f) { activeChinIndex = 0 },
                 TimeMarkedRunnable(0.1f) { activeChinIndex = 1 },
                 TimeMarkedRunnable(0.2f) { activeChinIndex = 2 })
-        ), "shoot_orbs" pairTo Timer(
+        ),
+        "shoot_orbs" pairTo Timer(
             SHOOT_ORBS_DUR, gdxArrayOf(
                 TimeMarkedRunnable(0.5f) { shootOrb() },
-                TimeMarkedRunnable(1f) { shootOrb() },
-                TimeMarkedRunnable(1.5f) { shootOrb() })
-        ), "closing" pairTo Timer(
+                TimeMarkedRunnable(1.5f) { shootOrb() },
+                TimeMarkedRunnable(2.5f) { shootOrb() })
+        ),
+        "closing" pairTo Timer(
             OPEN_DUR, gdxArrayOf(
                 TimeMarkedRunnable(0f) { activeChinIndex = 2 },
                 TimeMarkedRunnable(0.1f) { activeChinIndex = 1 },
                 TimeMarkedRunnable(0.2f) { activeChinIndex = 0 })
-        ), "laugh" pairTo Timer(LAUGH_DUR)
+        ),
+        "laugh" pairTo Timer(LAUGH_DUR)
     )
     private val chinBounds = GameRectangle().setSize(1.5f * ConstVals.PPM, 0.5f * ConstVals.PPM)
     private var activeChinIndex = 0
@@ -166,12 +174,19 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
     private fun shootOrb() {
         val arigockBall = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.ARIGOCK_BALL)!!
         val spawn = chinBounds.getTopCenterPoint().add(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat())
+        /*
         val impulse = if (chunkOrbs) MegaUtilMethods.calculateJumpImpulse(
             spawn, getMegaman().body.getCenter(), MAX_CHUNK_ORB_IMPULSE * ConstVals.PPM, CHUNK_X_SCALAR
         ) else getMegaman().body.getCenter().sub(spawn).nor().scl(ORB_SPEED * ConstVals.PPM)
+         */
+        val angle = getRandom(MIN_SHOOT_ORB_ANGLE, MAX_SHOOT_ORB_ANGLE)
+        val impulse = Vector2(0f, ORB_SPEED * ConstVals.PPM).rotateDeg(angle)
+        val gravityOn = false // chunkOrbs
         arigockBall.spawn(
             props(
-                ConstKeys.POSITION pairTo spawn, ConstKeys.IMPULSE pairTo impulse, ConstKeys.GRAVITY_ON pairTo chunkOrbs
+                ConstKeys.POSITION pairTo spawn,
+                ConstKeys.IMPULSE pairTo impulse,
+                ConstKeys.GRAVITY_ON pairTo gravityOn
             )
         )
     }
