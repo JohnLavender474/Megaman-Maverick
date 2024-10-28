@@ -278,7 +278,7 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
         gdxArrayOf(FixtureType.DAMAGER, FixtureType.SHIELD).forEach { fixtureType ->
             body.fixtures.map { it.second }.forEach { bodyFixture ->
                 val copy = (bodyFixture as Fixture).copy()
-                (bodyFixture as Fixture).fixtureType = fixtureType
+                bodyFixture.fixtureType = fixtureType
                 body.addFixture(copy)
             }
         }

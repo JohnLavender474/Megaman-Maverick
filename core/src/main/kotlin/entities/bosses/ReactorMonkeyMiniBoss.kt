@@ -62,9 +62,9 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
         private const val MAX_THROW_DELAY = 2.25f
         private const val THROW_DUR = 0.3f
         private const val BALL_CATCH_RADIUS = 0.25f
-        private const val BALL_IMPULSE_Y = 6.5f
-        private const val HORIZONTAL_SCALAR = 1.1f
-        private const val VERTICAL_SCALAR = 0.75f
+        private const val BALL_IMPULSE_Y = 7.5f
+        private const val HORIZONTAL_SCALAR = 1.25f
+        private const val VERTICAL_SCALAR = 1f
         private const val DEFAULT_BALL_SPAWN_Y = 6f
         private var standRegion: TextureRegion? = null
         private var throwRegion: TextureRegion? = null
@@ -101,7 +101,8 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        GameLogger.debug(TAG, "Boss key = ${spawnProps.get("${ConstKeys.BOSS}_${ConstKeys.KEY}")}")
+        spawnProps.put(ConstKeys.ORB, false)
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
@@ -117,6 +118,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
     }
 
     override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
         monkeyBall?.let { ball -> if (!ball.dead) ball.destroy() }
         monkeyBall = null
@@ -140,7 +142,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
 
     fun hurlMonkeyBall() {
         val impulse = MegaUtilMethods.calculateJumpImpulse(
-            body.getPosition(),
+            ballCatchArea.getCenter(),
             getMegaman().body.getPosition(),
             BALL_IMPULSE_Y * ConstVals.PPM,
             HORIZONTAL_SCALAR,
@@ -216,6 +218,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
             _sprite.setFlip(isFacing(Facing.RIGHT), false)
             _sprite.hidden = damageBlink || !ready
+            _sprite.setAlpha(if (defeated) 1f - defeatTimer.getRatio() else 1f)
         }
         return spritesComponent
     }

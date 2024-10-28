@@ -5,6 +5,7 @@ import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -29,8 +30,8 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
-import com.megaman.maverick.game.entities.projectiles.TubeBeam
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
+import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 
 class TubeBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IAudioEntity, IBodyEntity, ICullableEntity,
@@ -40,14 +41,11 @@ class TubeBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IAudioEntity
         const val TAG = "TubeBeamer"
         private const val VELOCITY = 10f
         private const val SPAWN_DELAY = 1.25f
-        private const val DEFAULT_INITIAL_DELAY = 0f
     }
 
     override var directionRotation: Direction? = null
 
     private val spawnTimer = Timer(SPAWN_DELAY)
-    private lateinit var initialDelayTimer: Timer
-    private var cullTime = TubeBeam.DEFAULT_CULL_TIME
 
     override fun getEntityType() = EntityType.HAZARD
 
@@ -60,16 +58,9 @@ class TubeBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IAudioEntity
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
-
-        val initialDelay = spawnProps.getOrDefault(ConstKeys.DELAY, DEFAULT_INITIAL_DELAY, Float::class)
-        initialDelayTimer = Timer(initialDelay)
-
         directionRotation = Direction.valueOf(spawnProps.get(ConstKeys.DIRECTION, String::class)!!.uppercase())
-        cullTime = spawnProps.getOrDefault(ConstKeys.CULL_TIME, TubeBeam.DEFAULT_CULL_TIME, Float::class)
-
         spawnTimer.reset()
     }
 
@@ -85,16 +76,14 @@ class TubeBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IAudioEntity
             props(
                 ConstKeys.POSITION pairTo body.getCenter(),
                 ConstKeys.DIRECTION pairTo directionRotation,
-                ConstKeys.TRAJECTORY pairTo trajectory,
-                ConstKeys.CULL_TIME pairTo cullTime
+                ConstKeys.TRAJECTORY pairTo trajectory
             )
         )
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.BURST_SOUND, false)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        initialDelayTimer.update(delta)
-        if (!initialDelayTimer.isFinished()) return@UpdatablesComponent
+        if (!getMegaman().ready) return@UpdatablesComponent
 
         spawnTimer.update(delta)
         if (spawnTimer.isFinished()) {
@@ -110,6 +99,9 @@ class TubeBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IAudioEntity
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun defineCullablesComponent() =
-        CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(this)))
+    private fun defineCullablesComponent() = CullablesComponent(
+        objectMapOf(
+            ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(this, objectSetOf(EventType.BEGIN_ROOM_TRANS))
+        )
+    )
 }
