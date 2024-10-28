@@ -8,7 +8,7 @@ import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
-import com.mega.game.engine.common.extensions.set
+import com.mega.game.engine.common.extensions.vector2Of
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -54,7 +54,7 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     companion object {
         const val TAG = "FragileIceCube"
-        private const val GRAVITY = -0.15f
+        private const val DEFAULT_GRAVITY = -0.1f
         private const val GROUND_GRAVITY = -0.01f
         private const val CLAMP = 10f
         private const val CULL_TIME = 2f
@@ -70,6 +70,7 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     private var hitTimes = 0
     private var destroyOnHitBlock = false
     private var maxHitTimes = DEFAULT_MAX_HIT_TIMES
+    private var gravity = DEFAULT_GRAVITY
 
     override fun getEntityType() = EntityType.HAZARD
 
@@ -94,6 +95,8 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         val trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2(), Vector2::class)
         body.physics.velocity.set(trajectory)
 
+        gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, DEFAULT_GRAVITY, Float::class)
+
         val gravityOn = spawnProps.getOrDefault(ConstKeys.GRAVITY_ON, true, Boolean::class)
         body.physics.gravityOn = gravityOn
 
@@ -108,6 +111,10 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
         val priority = spawnProps.getOrDefault(ConstKeys.PRIORITY, 1, Int::class)
         firstSprite!!.priority.value = priority
+
+        val clamp = spawnProps.getOrDefault(ConstKeys.CLAMP, true, Boolean::class)
+        body.physics.velocityClamp =
+            if (clamp) vector2Of(CLAMP * ConstVals.PPM) else Vector2(Float.MAX_VALUE, Float.MAX_VALUE)
 
         destroyOnHitBlock = spawnProps.getOrDefault(ConstKeys.HIT_BY_BLOCK, false, Boolean::class)
         maxHitTimes = spawnProps.getOrDefault(ConstKeys.MAX, DEFAULT_MAX_HIT_TIMES, Int::class)
@@ -137,7 +144,6 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
         body.setSize(0.4f * ConstVals.PPM)
-        body.physics.velocityClamp.set(CLAMP * ConstVals.PPM)
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(0.55f * ConstVals.PPM))
         bodyFixture.setHitByBodyReceiver { entity -> if (entity is SmallIceCube) shatterAndDie() }
@@ -167,7 +173,7 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         body.addFixture(rightFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
+            val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else gravity
             body.physics.gravity.y = gravity * ConstVals.PPM
             if (body.isSensing(BodySense.FEET_ON_GROUND)) body.physics.velocity.y = 0f
 

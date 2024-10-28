@@ -66,6 +66,13 @@ GlacierMan/duck_shoot
   orig: 64, 48
   offset: 0, 0
   index: -1
+GlacierMan/duck_shoot_up
+  rotate: false
+  xy: 784, 0
+  size: 64, 48
+  orig: 64, 48
+  offset: 0, 0
+  index: -1
 GlacierMan/fall
   rotate: false
   xy: 744, 368
@@ -110,21 +117,21 @@ GlacierMan/sled_shoot
   index: -1
 GlacierMan/stand
   rotate: false
-  xy: 784, 0
+  xy: 848, 0
   size: 64, 48
   orig: 64, 48
   offset: 0, 0
   index: -1
 GlacierMan/stand_shoot
   rotate: false
-  xy: 848, 0
+  xy: 912, 0
   size: 64, 48
   orig: 64, 48
   offset: 0, 0
   index: -1
 GlacierMan/stand_shoot_up
   rotate: false
-  xy: 912, 0
+  xy: 976, 0
   size: 64, 48
   orig: 64, 48
   offset: 0, 0
@@ -138,7 +145,7 @@ GlacierMan/stop
   index: -1
 GutsTank/Fist
   rotate: false
-  xy: 976, 0
+  xy: 1040, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -271,42 +278,42 @@ MoonMan_v2/throw
   index: -1
 PreciousMan/Jump
   rotate: false
-  xy: 1024, 0
+  xy: 1088, 0
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 PreciousMan/JumpFreeze
   rotate: false
-  xy: 1120, 0
+  xy: 1184, 0
   size: 192, 48
   orig: 192, 48
   offset: 0, 0
   index: -1
 PreciousMan/Run
   rotate: false
-  xy: 1312, 0
+  xy: 1376, 0
   size: 192, 48
   orig: 192, 48
   offset: 0, 0
   index: -1
 PreciousMan/Stand
   rotate: false
-  xy: 1504, 0
+  xy: 1568, 0
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 PreciousMan/StandFreeze
   rotate: false
-  xy: 1600, 0
+  xy: 1664, 0
   size: 144, 48
   orig: 144, 48
   offset: 0, 0
   index: -1
 PreciousMan/StandShoot
   rotate: false
-  xy: 1744, 0
+  xy: 1808, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -327,7 +334,7 @@ ReactMan/Die
   index: -1
 ReactMan/Jump
   rotate: false
-  xy: 1792, 0
+  xy: 1856, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0

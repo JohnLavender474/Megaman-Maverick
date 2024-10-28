@@ -72,12 +72,21 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                 SpawnType.SPAWN_ROOM -> {
                     val roomName = it.properties.get(SpawnType.SPAWN_ROOM) as String
                     val gameRooms = returnProps.get(ConstKeys.GAME_ROOMS) as Array<RectangleMapObject>
+                    val continueCheckingAfterOverlap = spawnProps.getOrDefault(
+                        "${ConstKeys.SPAWNER}_${ConstKeys.RUN}_${ConstKeys.AFTER}_${ConstKeys.OVERLAP}",
+                        true,
+                        Boolean::class
+                    )
 
                     var roomFound = false
                     for (room in gameRooms) if (roomName == room.name) {
                         spawnProps.put(ConstKeys.ROOM, room)
                         val spawner = SpawnerFactory.spawnerForWhenInCamera(
-                            game.getGameCamera(), room.rectangle.toGameRectangle(), spawnSupplier, respawnable
+                            game.getGameCamera(),
+                            room.rectangle.toGameRectangle(),
+                            spawnSupplier,
+                            respawnable,
+                            continueCheckingAfterOverlap
                         )
                         spawners.add(spawner)
 
@@ -108,11 +117,17 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                 }
 
                 else -> {
+                    val continueCheckingAfterOverlap = spawnProps.getOrDefault(
+                        "${ConstKeys.SPAWNER}_${ConstKeys.RUN}_${ConstKeys.AFTER}_${ConstKeys.OVERLAP}",
+                        false,
+                        Boolean::class
+                    )
                     val spawner = SpawnerFactory.spawnerForWhenInCamera(
                         game.getGameCamera(),
                         SpawnerShapeFactory.getSpawnShape(entityType, it),
                         spawnSupplier,
-                        respawnable
+                        respawnable,
+                        continueCheckingAfterOverlap
                     )
                     spawners.add(spawner)
 

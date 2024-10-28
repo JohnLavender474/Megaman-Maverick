@@ -13,11 +13,16 @@ object SpawnerFactory {
         camera: RotatableCamera,
         spawnShape: IGameShape2D,
         spawnSupplier: () -> Spawn,
-        respawnable: Boolean = true
+        respawnable: Boolean = true,
+        continueCheckingAfterOverlap: Boolean = false
     ): SpawnerForBoundsEntered {
         GameLogger.debug(TAG, "spawnerForWhenEnteringCamera(): Creating spawner for camera: $camera")
         return SpawnerForBoundsEntered(
-            spawnSupplier, { spawnShape }, { camera.getRotatedBounds() }, respawnable = respawnable
+            spawnSupplier,
+            { spawnShape },
+            { camera.getRotatedBounds() },
+            respawnable = respawnable,
+            continueCheckingAfterOverlap = continueCheckingAfterOverlap
         )
     }
 

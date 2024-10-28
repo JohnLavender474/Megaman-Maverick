@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.decorations
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Intersector
 import com.badlogic.gdx.utils.Array
@@ -127,11 +126,14 @@ class ToxicWaterfall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         body.addFixture(consumerFixture)
 
         val forceFixture = Fixture(body, FixtureType.FORCE)
-        forceFixture.setVelocityAlteration { fixture ->
+        forceFixture.setVelocityAlteration { fixture, delta ->
             val entity = fixture.getEntity()
-            return@setVelocityAlteration if (!entity.isAny(Megaman::class, AbstractEnemy::class))
-                VelocityAlteration.addNone()
-            else VelocityAlteration.add(0f, -FORCE * ConstVals.PPM * Gdx.graphics.deltaTime)
+            return@setVelocityAlteration if (!entity.isAny(
+                    Megaman::class,
+                    AbstractEnemy::class
+                )
+            ) VelocityAlteration.addNone()
+            else VelocityAlteration.add(0f, -FORCE * ConstVals.PPM * delta)
         }
         body.addFixture(forceFixture)
 

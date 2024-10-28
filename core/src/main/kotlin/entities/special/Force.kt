@@ -35,6 +35,8 @@ class Force(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICul
     private lateinit var actionY: VelocityAlterationType
     private var forceX = 0f
     private var forceY = 0f
+    private var applyDeltaX = true
+    private var applyDeltaY = true
 
     override fun getEntityType() = EntityType.SPECIAL
 
@@ -87,6 +89,9 @@ class Force(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICul
         forceX = spawnProps.getOrDefault(FORCE_X, 0f, Float::class) * ConstVals.PPM
         forceY = spawnProps.getOrDefault(FORCE_Y, 0f, Float::class) * ConstVals.PPM
 
+        applyDeltaX = spawnProps.getOrDefault("${ConstKeys.DELTA}_${ConstKeys.X}", true, Boolean::class)
+        applyDeltaY = spawnProps.getOrDefault("${ConstKeys.DELTA}_${ConstKeys.Y}", true, Boolean::class)
+
         val cull = spawnProps.getOrDefault(ConstKeys.CULL, true, Boolean::class)
         if (cull) addComponent(createCullablesComponent()) else removeComponent(CullablesComponent::class)
     }
@@ -94,9 +99,12 @@ class Force(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICul
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         val forceFixture = Fixture(body, FixtureType.FORCE, GameRectangle())
-        forceFixture.setVelocityAlteration { fixture->
+        forceFixture.setVelocityAlteration { fixture, delta ->
             if (filter(fixture)) VelocityAlteration(
-                forceX, forceY, actionX, actionY
+                forceX * if (applyDeltaX) delta else 1f,
+                forceY * if (applyDeltaY) delta else 1f,
+                actionX,
+                actionY
             ) else VelocityAlteration.addNone()
         }
         body.addFixture(forceFixture)

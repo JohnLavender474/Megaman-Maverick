@@ -30,6 +30,36 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
     }
 
     private val presetBKGMap: ObjectMap<String, (RectangleMapObject) -> Background> = objectMapOf(
+        "DesertCanyon" pairTo {
+            Background(
+                it.rectangle.x,
+                it.rectangle.y,
+                params.game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_6.source, "Desert/Canyon"),
+                it.rectangle.width,
+                it.rectangle.height,
+                rows = 1,
+                columns = 100,
+                DrawingPriority(DrawingSection.BACKGROUND, 1)
+            )
+        },
+        "DesertSky" pairTo {
+             AnimatedBackground(
+                 startX = it.rectangle.x,
+                 startY = it.rectangle.y,
+                 model = params.game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_6.source, "Desert/Sky"),
+                 modelWidth = it.rectangle.width,
+                 modelHeight = it.rectangle.height,
+                 rows = 1,
+                 columns = 1,
+                 animRows = 3,
+                 animColumns = 1,
+                 duration = 0.1f,
+                 priority = DrawingPriority(DrawingSection.BACKGROUND, 0),
+                 parallaxX = 0f,
+                 parallaxY = 0f,
+                 initPos = Vector2(it.rectangle.getCenter().x, it.rectangle.getCenter().y - 0.75f * ConstVals.PPM),
+             )
+        },
         "WindyClouds" pairTo {
             WindyClouds(
                 params.game,

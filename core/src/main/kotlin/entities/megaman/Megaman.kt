@@ -221,7 +221,8 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         BigFishNeo::class pairTo dmgNeg(4),
         GlacierMan::class pairTo dmgNeg(4),
         Matasaburo::class pairTo dmgNeg(3),
-        CarriCarry::class pairTo dmgNeg(3)
+        CarriCarry::class pairTo dmgNeg(3),
+        Cactus::class pairTo dmgNeg(2)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 

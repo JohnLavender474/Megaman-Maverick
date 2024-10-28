@@ -239,6 +239,7 @@
             </struct>
             <key type="filename">../frames/Bosses1/GlacierMan/duck.png</key>
             <key type="filename">../frames/Bosses1/GlacierMan/duck_shoot.png</key>
+            <key type="filename">../frames/Bosses1/GlacierMan/duck_shoot_up.png</key>
             <key type="filename">../frames/Bosses1/GlacierMan/stand.png</key>
             <key type="filename">../frames/Bosses1/GlacierMan/stand_shoot.png</key>
             <key type="filename">../frames/Bosses1/GlacierMan/stand_shoot_up.png</key>

@@ -46,8 +46,9 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     companion object {
         const val TAG = "Matasaburo"
-        private const val BLOW_FORCE = 25f
-        private var matasaburoReg: TextureRegion? = null
+        private const val BLOW_FORCE = 20f
+        private const val BLOW_MAX = 8f
+        private var region: TextureRegion? = null
     }
 
     override var facing = Facing.RIGHT
@@ -57,7 +58,8 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
-        }, ChargedShotExplosion::class pairTo dmgNeg {
+        },
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 15 else 5
         }
@@ -65,7 +67,7 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override fun init() {
         super.init()
-        if (matasaburoReg == null) matasaburoReg =
+        if (region == null) region =
             game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, "Matasaburo")
         addComponent(defineAnimationsComponent())
     }
@@ -88,16 +90,22 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             FixtureType.FORCE,
             GameRectangle().setSize(10f * ConstVals.PPM, 1.15f * ConstVals.PPM)
         )
-        blowFixture.setVelocityAlteration { fixture ->
+        blowFixture.setVelocityAlteration { fixture, delta ->
             val entity = fixture.getEntity()
             if (entity !is Megaman) return@setVelocityAlteration VelocityAlteration.addNone()
+
             /*
             TODO: for now, ONLY apply force to Megaman and no other entities
             if (entity is AbstractEnemy) return@setVelocityAlteration VelocityAlteration.addNone()
             if (entity is AbstractProjectile) entity.owner = null
              */
+
+            if ((isFacing(Facing.LEFT) && entity.body.physics.velocity.x <= -BLOW_MAX * ConstVals.PPM) ||
+                (isFacing(Facing.RIGHT) && entity.body.physics.velocity.x >= BLOW_MAX * ConstVals.PPM)
+            ) return@setVelocityAlteration VelocityAlteration.addNone()
+
             val force = BLOW_FORCE * ConstVals.PPM * facing.value
-            return@setVelocityAlteration VelocityAlteration.add(force, 0f)
+            return@setVelocityAlteration VelocityAlteration.add(force * delta, 0f)
         }
         body.addFixture(blowFixture)
 
@@ -136,7 +144,7 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val animation = Animation(matasaburoReg!!, 1, 6, 0.1f, true)
+        val animation = Animation(region!!, 1, 6, 0.1f, true)
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }

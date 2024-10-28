@@ -1,0 +1,19 @@
+Backgrounds6.png
+size: 256, 896
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Desert/Canyon
+  rotate: false
+  xy: 0, 0
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+Desert/Sky
+  rotate: false
+  xy: 0, 224
+  size: 256, 672
+  orig: 256, 672
+  offset: 0, 0
+  index: -1
