@@ -12,6 +12,7 @@ class BossesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
     companion object {
         const val REACTOR_MAN = "ReactorMan"
         const val GLACIER_MAN = "GlacierMan"
+        const val DESERT_MAN = "DesertMan"
         const val BOSPIDER = "Bospider"
         const val GUTS_TANK = "GutsTank"
         const val SIGMA_RAT = "SigmaRat"
@@ -25,6 +26,7 @@ class BossesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
     override fun init() {
         pools.put(REACTOR_MAN, GameEntityPoolCreator.create { ReactorMan(game) })
         pools.put(GLACIER_MAN, GameEntityPoolCreator.create { GlacierMan(game) })
+        pools.put(DESERT_MAN, GameEntityPoolCreator.create { DesertMan(game) })
         pools.put(BOSPIDER, GameEntityPoolCreator.create { Bospider(game) })
         pools.put(GUTS_TANK, GameEntityPoolCreator.create { GutsTank(game) })
         pools.put(SIGMA_RAT, GameEntityPoolCreator.create { SigmaRat(game) })
