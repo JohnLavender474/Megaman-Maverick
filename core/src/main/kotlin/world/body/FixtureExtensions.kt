@@ -33,13 +33,16 @@ fun IFixture.depleteHealth(): Boolean {
     return true
 }
 
-fun IFixture.setVelocityAlteration(alteration: (IFixture) -> VelocityAlteration): IFixture {
+fun IFixture.setVelocityAlteration(alteration: (IFixture, Float) -> VelocityAlteration): IFixture {
     properties.put(ConstKeys.VELOCITY_ALTERATION, alteration)
     return this
 }
 
-fun IFixture.getVelocityAlteration(alterableBodyFixture: IFixture) =
-    (properties.get(ConstKeys.VELOCITY_ALTERATION) as (IFixture) -> VelocityAlteration).invoke(alterableBodyFixture)
+fun IFixture.getVelocityAlteration(alterableBodyFixture: IFixture, delta: Float) =
+    (properties.get(ConstKeys.VELOCITY_ALTERATION) as (IFixture, Float) -> VelocityAlteration).invoke(
+        alterableBodyFixture,
+        delta
+    )
 
 fun IFixture.setRunnable(runnable: () -> Unit): IFixture {
     properties.put(ConstKeys.RUNNABLE, runnable)

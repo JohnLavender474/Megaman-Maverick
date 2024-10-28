@@ -5,10 +5,8 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -43,26 +41,24 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
     override fun getTag() = TAG
 
     override fun init() {
-        GameLogger.debug(TAG, "init(): Initializing Block entity.")
+        GameLogger.debug(TAG, "init()")
+
+        addComponent(CullablesComponent())
         addComponent(defineBodyComponent())
+
         body.color = Color.GRAY
         debugShapeSuppliers.add { body.getBodyBounds() }
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapeSuppliers, debug = true))
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        GameLogger.debug(TAG, "Spawned:` $spawnProps")
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         // TODO: if the bug where blocks do not always spawn persists, then the default value here can be set to false
         val cullOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
-        if (cullOutOfBounds) addComponent(
-            CullablesComponent(
-                objectMapOf(
-                    ConstKeys.CULL_OUT_OF_BOUNDS pairTo getGameCameraCullingLogic(this)
-                )
-            )
-        ) else removeComponent(CullablesComponent::class)
+        if (cullOutOfBounds) putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, getGameCameraCullingLogic(this))
+        else removeCullable(ConstKeys.CULL_OUT_OF_BOUNDS)
 
         body.physics.frictionToApply.x =
             spawnProps.getOrDefault(ConstKeys.FRICTION_X, STANDARD_FRICTION_X, Float::class)
@@ -136,7 +132,7 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
     }
 
     override fun onDestroy() {
-        GameLogger.debug(TAG, "Destroyed: $properties")
+        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
 
         val fixtureIter = body.fixtures.iterator()

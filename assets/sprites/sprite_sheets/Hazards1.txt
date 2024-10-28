@@ -1,5 +1,5 @@
 Hazards1.png
-size: 506, 624
+size: 506, 608
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -22,6 +22,20 @@ Bolt
   xy: 285, 0
   size: 64, 32
   orig: 64, 32
+  offset: 0, 0
+  index: -1
+Cactus/big
+  rotate: false
+  xy: 304, 108
+  size: 32, 48
+  orig: 32, 48
+  offset: 0, 0
+  index: -1
+Cactus/small
+  rotate: false
+  xy: 336, 108
+  size: 32, 48
+  orig: 32, 48
   offset: 0, 0
   index: -1
 CactusSpike
@@ -96,7 +110,7 @@ Flame3/Whoosh
   index: -1
 FlameColumn
   rotate: false
-  xy: 410, 388
+  xy: 410, 372
   size: 96, 236
   orig: 96, 236
   offset: 0, 0
@@ -124,7 +138,7 @@ FlameThrower/Hot
   index: -1
 IceCubeMaker
   rotate: false
-  xy: 128, 164
+  xy: 288, 156
   size: 128, 80
   orig: 128, 80
   offset: 0, 0
@@ -138,14 +152,14 @@ LaserBeamer
   index: -1
 Lava/Fall
   rotate: false
-  xy: 384, 164
+  xy: 64, 244
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
   index: -1
 Lava/FallBlack
   rotate: false
-  xy: 416, 164
+  xy: 96, 244
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
@@ -159,56 +173,56 @@ Lava/Flow
   index: -1
 Lava/Flow1
   rotate: false
-  xy: 448, 164
+  xy: 128, 244
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
   index: -1
 Lava/Flow2
   rotate: false
-  xy: 0, 260
+  xy: 160, 244
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
   index: -1
 Lava/Flow3
   rotate: false
-  xy: 32, 260
+  xy: 192, 244
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
   index: -1
 Lava/TopFlow1
   rotate: false
-  xy: 64, 260
+  xy: 224, 244
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
   index: -1
 Lava/TopFlow2
   rotate: false
-  xy: 96, 260
+  xy: 256, 244
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
   index: -1
 Lava/TopFlow3
   rotate: false
-  xy: 128, 260
+  xy: 288, 244
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
   index: -1
 LavaBeam
   rotate: false
-  xy: 260, 388
+  xy: 260, 372
   size: 150, 134
   orig: 150, 134
   offset: 0, 0
   index: -1
 LavaBeamer
   rotate: false
-  xy: 256, 164
+  xy: 416, 156
   size: 64, 88
   orig: 64, 88
   offset: 0, 0
@@ -229,7 +243,7 @@ LavaBeamer/On
   index: -1
 LavaBeamer/SwitchingOn
   rotate: false
-  xy: 320, 164
+  xy: 0, 244
   size: 64, 88
   orig: 64, 88
   offset: 0, 0
@@ -257,7 +271,7 @@ Saw/ring
   index: -1
 Saw/saw
   rotate: false
-  xy: 0, 388
+  xy: 0, 372
   size: 260, 130
   orig: 260, 130
   offset: 0, 0
@@ -334,28 +348,28 @@ SpikeBall/SpikeBall
   index: -1
 SwingingAxe
   rotate: false
-  xy: 0, 164
+  xy: 160, 156
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 SwingingAxe_HandleEndCentered
   rotate: false
-  xy: 160, 260
+  xy: 320, 244
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 SwingingAxe_UpsideDown
   rotate: false
-  xy: 64, 164
+  xy: 224, 156
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 UnderwaterFan
   rotate: false
-  xy: 304, 108
+  xy: 0, 156
   size: 160, 56
   orig: 160, 56
   offset: 0, 0

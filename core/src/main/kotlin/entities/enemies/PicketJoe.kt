@@ -1,22 +1,23 @@
 package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.g2d.TextureAtlas
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.coerceX
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.interfaces.Updatable
-
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -28,8 +29,7 @@ import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
-import com.mega.game.engine.drawables.sprites.setCenter
-import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
@@ -59,11 +59,11 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     companion object {
         const val TAG = "PicketJoe"
-        private var atlas: TextureAtlas? = null
         private const val STAND_DUR = 1f
         private const val THROW_DUR = 0.5f
         private const val MAX_IMPULSE_X = 6f
         private const val PICKET_IMPULSE_Y = 10f
+        private val regions = ObjectMap<String, TextureRegion>()
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -72,17 +72,17 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
-        }, ChargedShotExplosion::class pairTo dmgNeg {
+        },
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 15 else 5
         }
     )
 
-    override var facing = Facing.RIGHT
+    override lateinit var facing: Facing
 
     val standing: Boolean
         get() = !standTimer.isFinished()
-
     val throwingPickets: Boolean
         get() = !throwTimer.isFinished()
 
@@ -91,12 +91,15 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override fun init() {
         super.init()
-        if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+        if (regions.isEmpty) {
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            regions.put("stand", atlas.findRegion("$TAG/Stand"))
+            regions.put("throw", atlas.findRegion("$TAG/Throw"))
+        }
         throwTimer.setRunnables(gdxArrayOf(TimeMarkedRunnable(0.2f) { throwPicket() }))
         addComponent(defineAnimationsComponent())
     }
 
-    @Suppress("UNCHECKED_CAST")
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
         val spawn =
@@ -106,6 +109,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
                 (spawnProps.get(ConstKeys.POSITION_SUPPLIER) as () -> Vector2).invoke()
             else spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
+        facing = if (getMegaman().body.x >= body.x) Facing.RIGHT else Facing.LEFT
         throwTimer.setToEnd()
         standTimer.reset()
     }
@@ -188,12 +192,11 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.5f * ConstVals.PPM)
+        sprite.setSize(1.5f * ConstVals.PPM, 1.65f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.hidden = damageBlink
             _sprite.setFlip(isFacing(Facing.LEFT), false)
-            _sprite.setCenter(body.getCenter())
+            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
             _sprite.hidden = if (invincible) damageBlink else false
         }
         return spritesComponent
@@ -202,8 +205,8 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { if (standing) "stand" else "throw" }
         val animations = objectMapOf<String, IAnimation>(
-            "stand" pairTo Animation(atlas!!.findRegion("PicketJoe/Stand")),
-            "throw" pairTo Animation(atlas!!.findRegion("PicketJoe/Throw"), 1, 4, 0.125f, false)
+            "stand" pairTo Animation(regions["stand"]),
+            "throw" pairTo Animation(regions["throw"], 1, 4, 0.125f, false)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
@@ -223,8 +226,8 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         if (!overlapsGameCamera()) return
 
         val spawn = body.getCenter()
-        spawn.x += 0.15f * ConstVals.PPM * facing.value
-        spawn.y += 0.3f * ConstVals.PPM
+        spawn.x += 0.175f * ConstVals.PPM * facing.value
+        spawn.y += 0.4f * ConstVals.PPM
 
         val impulse = MegaUtilMethods.calculateJumpImpulse(
             spawn, getMegaman().body.getCenter(), PICKET_IMPULSE_Y * ConstVals.PPM

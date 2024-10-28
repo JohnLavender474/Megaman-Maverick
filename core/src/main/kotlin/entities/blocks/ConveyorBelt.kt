@@ -30,6 +30,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.VelocityAlterationType
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBody
 import com.megaman.maverick.game.world.body.setEntity
 import com.megaman.maverick.game.world.body.setVelocityAlteration
 
@@ -39,7 +40,8 @@ class ConveyorBelt(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAn
         const val TAG = "ConveyorBelt"
         const val DEFAULT_TYPE = "default"
         const val GREEN_TYPE = "green"
-        private const val FORCE_AMOUNT = 25f
+        private const val FORCE_IMPULSE = 20f
+        private const val FORCE_MAX = 30f
         private val regions = ObjectMap<String, TextureRegion>()
         private val animDefs = ObjectMap<String, AnimationDef>()
     }
@@ -86,10 +88,17 @@ class ConveyorBelt(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAn
 
         val left = spawnProps.get(ConstKeys.LEFT) as Boolean
 
-        var forceX = FORCE_AMOUNT * ConstVals.PPM
+        var forceX = FORCE_IMPULSE * ConstVals.PPM
         if (left) forceX = -forceX
-        val velocityAlteration = VelocityAlteration(forceX = forceX, actionX = VelocityAlterationType.ADD)
-        forceFixture!!.setVelocityAlteration { _ -> velocityAlteration }
+        forceFixture!!.setVelocityAlteration { fixture, delta ->
+            val body = fixture.getBody()
+            if ((left && body.physics.velocity.x <= -FORCE_MAX * ConstVals.PPM) ||
+                (!left && body.physics.velocity.x >= FORCE_MAX * ConstVals.PPM)
+            ) VelocityAlteration.addNone() else VelocityAlteration(
+                forceX = forceX * delta,
+                actionX = VelocityAlterationType.ADD
+            )
+        }
 
         val type = spawnProps.getOrDefault(ConstKeys.TYPE, DEFAULT_TYPE, String::class)
 
@@ -98,16 +107,15 @@ class ConveyorBelt(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAn
         val numParts = (bounds.width / ConstVals.PPM).toInt()
         for (i in 0 until numParts) {
             val part = if (i == 0) "left" else if (i == numParts - 1) "right" else "middle $i"
-            var regionKey =
-                when (part) {
-                    "left" -> if (left) "lLeft" else "lRight"
-                    "right" -> if (left) "rLeft" else "rRight"
-                    else -> when (type) {
-                        DEFAULT_TYPE -> "middle"
-                        GREEN_TYPE -> if (left) "mLeft" else "mRight"
-                        else -> throw IllegalArgumentException("Illegal type: $type")
-                    }
+            var regionKey = when (part) {
+                "left" -> if (left) "lLeft" else "lRight"
+                "right" -> if (left) "rLeft" else "rRight"
+                else -> when (type) {
+                    DEFAULT_TYPE -> "middle"
+                    GREEN_TYPE -> if (left) "mLeft" else "mRight"
+                    else -> throw IllegalArgumentException("Illegal type: $type")
                 }
+            }
 
             if (type != DEFAULT_TYPE) regionKey = "${regionKey}_${type}"
 

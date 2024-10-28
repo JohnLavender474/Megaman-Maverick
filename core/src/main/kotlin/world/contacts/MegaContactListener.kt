@@ -252,7 +252,7 @@ class MegaContactListener(
             val (bouncerFixture, bounceableFixture) = contact.getFixtureSetsInOrder(
                 objectSetOf(FixtureType.BOUNCER), objectSetOf(FixtureType.FEET, FixtureType.HEAD, FixtureType.SIDE)
             )!!
-            val bounce = bouncerFixture.getVelocityAlteration(bounceableFixture)
+            val bounce = bouncerFixture.getVelocityAlteration(bounceableFixture, delta)
             VelocityAlterator.alterate(bounceableFixture.getBody(), bounce)
             bouncerFixture.getRunnable()?.invoke()
             bounceableFixture.getRunnable()?.invoke()
@@ -322,7 +322,7 @@ class MegaContactListener(
         else if (contact.fixturesMatch(FixtureType.BODY, FixtureType.FORCE)) {
             printDebugLog(contact, "beginContact(): Body-Force, contact = $contact")
             val (bodyFixture, forceFixture) = contact.getFixturesInOrder(FixtureType.BODY, FixtureType.FORCE)!!
-            val forceAlteration = forceFixture.getVelocityAlteration(bodyFixture)
+            val forceAlteration = forceFixture.getVelocityAlteration(bodyFixture, delta)
             bodyFixture.applyForceAlteration(ProcessState.BEGIN, forceAlteration)
             bodyFixture.getBody().setBodySense(BodySense.FORCE_APPLIED, true)
             forceFixture.getRunnable()?.invoke()
@@ -657,7 +657,7 @@ class MegaContactListener(
         // body, force
         else if (contact.fixturesMatch(FixtureType.BODY, FixtureType.FORCE)) {
             val (bodyFixture, forceFixture) = contact.getFixturesInOrder(FixtureType.BODY, FixtureType.FORCE)!!
-            val forceAlteration = forceFixture.getVelocityAlteration(bodyFixture)
+            val forceAlteration = forceFixture.getVelocityAlteration(bodyFixture, delta)
             bodyFixture.applyForceAlteration(ProcessState.CONTINUE, forceAlteration)
             bodyFixture.getBody().setBodySense(BodySense.FORCE_APPLIED, true)
             forceFixture.getRunnable()?.invoke()
@@ -851,7 +851,7 @@ class MegaContactListener(
         else if (contact.fixturesMatch(FixtureType.BODY, FixtureType.FORCE)) {
             printDebugLog(contact, "End Contact: Body-Force, contact = $contact")
             val (bodyFixture, forceFixture) = contact.getFixturesInOrder(FixtureType.BODY, FixtureType.FORCE)!!
-            val forceAlteration = forceFixture.getVelocityAlteration(bodyFixture)
+            val forceAlteration = forceFixture.getVelocityAlteration(bodyFixture, delta)
             bodyFixture.applyForceAlteration(ProcessState.END, forceAlteration)
             bodyFixture.getBody().setBodySense(BodySense.FORCE_APPLIED, false)
             forceFixture.getRunnable()?.invoke()

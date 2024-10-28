@@ -14,6 +14,7 @@ import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.getRandom
+import com.mega.game.engine.common.getRandomBool
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -77,9 +78,12 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity,
         private const val STOP_DUR = 0.8f
 
         private const val SHOOT_ANIM_DUR = 0.25f
+        private const val SHOOT_UP_CHANCE = 0.4f
+
         private const val ICE_BLAST_ATTACK_DUR = 3.5f
         private const val ICE_BLAST_ATTACK_COUNT = 8
         private const val ICE_BLAST_VEL = 12f
+        private const val CHUNK_ICE_BLAST_VEL_Y = 8f
 
         private const val MEGAMAN_OFFSET_X = 2.5f
         private const val MEGAMAN_ABOVE_OFFSET_Y = 1.5f
@@ -148,6 +152,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity,
             regions.put("brake_shoot_up", atlas.findRegion("$TAG/brake_shoot_up"))
             regions.put("duck", atlas.findRegion("$TAG/duck"))
             regions.put("duck_shoot", atlas.findRegion("$TAG/duck_shoot"))
+            regions.put("duck_shoot_up", atlas.findRegion("$TAG/duck_shoot_up"))
             regions.put("ice_blast_attack", atlas.findRegion("$TAG/ice_blast_attack"))
         }
         super.init()
@@ -217,18 +222,33 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity,
 
     private fun iceBlast() {
         GameLogger.debug(TAG, "iceBlast()")
+
         val spawn = getCurrentIceBlastPos()
         iceBlastLeftHand = !iceBlastLeftHand
-        val trajectory =
-            getMegaman().body.getCenter().sub(body.getCenter()).nor().scl(ICE_BLAST_VEL * ConstVals.PPM)
+
+        val trajectory: Vector2
+        val gravityOn: Boolean
+        val chunkIceBlast = getRandomBool()
+        if (chunkIceBlast) {
+            trajectory = MegaUtilMethods.calculateJumpImpulse(
+                spawn, getMegaman().body.getCenter(), CHUNK_ICE_BLAST_VEL_Y * ConstVals.PPM
+            )
+            gravityOn = true
+        } else {
+            trajectory =
+                getMegaman().body.getCenter().sub(body.getCenter()).nor().scl(ICE_BLAST_VEL * ConstVals.PPM)
+            gravityOn = false
+        }
+
         val iceCube = EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.SMALL_ICE_CUBE)!!
         iceCube.spawn(
             props(
                 ConstKeys.POSITION pairTo spawn,
                 ConstKeys.TRAJECTORY pairTo trajectory,
+                ConstKeys.GRAVITY_ON pairTo gravityOn,
+                ConstKeys.CLAMP pairTo !chunkIceBlast,
                 ConstKeys.FRICTION_X pairTo false,
                 ConstKeys.FRICTION_Y pairTo false,
-                ConstKeys.GRAVITY_ON pairTo false,
                 ConstKeys.SECTION pairTo DrawingSection.FOREGROUND,
                 ConstKeys.PRIORITY pairTo 1,
                 ConstKeys.MAX pairTo 1,
@@ -242,7 +262,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity,
     private fun shoot() {
         GameLogger.debug(TAG, "shoot()")
 
-        shootUp = isFalling() || (canShootUp() && isMegamanAboveOffsetY())
+        shootUp = isFalling() || (canShootUp() && isMegamanAboveOffsetY()) || getRandom(0f, 1f) <= SHOOT_UP_CHANCE
 
         val spawn = body.getCenter()
         val trajectory = Vector2()
@@ -514,6 +534,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity,
             "brake_shoot_up" pairTo Animation(regions["brake_shoot_up"], 3, 1, 0.1f, true),
             "duck" pairTo Animation(regions["duck"]),
             "duck_shoot" pairTo Animation(regions["duck_shoot"]),
+            "duck_shoot_up" pairTo Animation(regions["duck_shoot_up"]),
             "fall" pairTo Animation(regions["fall"], 4, 2, 0.1f, true),
             "fall_shoot_up" pairTo Animation(regions["fall_shoot_up"], 4, 2, 0.1f, true),
             "jump" pairTo Animation(regions["jump"], 4, 2, 0.1f, true),

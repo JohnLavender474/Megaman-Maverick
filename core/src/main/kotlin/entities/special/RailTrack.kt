@@ -14,7 +14,6 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.cullables.CullableOnEvent
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -24,26 +23,24 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
-import com.mega.game.engine.entities.contracts.IAudioEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
+import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.body.BodyLabel
 import com.megaman.maverick.game.world.body.FixtureLabel
 
-class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntity, ISpritesEntity, IAudioEntity {
+class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntity, ISpritesEntity {
 
     companion object {
         const val TAG = "RailTrack"
@@ -65,10 +62,10 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEnti
     override fun init() {
         if (leftTrackRegion == null || rightTrackRegion == null || middleTrackRegion == null || dropTrackRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)
-            leftTrackRegion = atlas.findRegion("RailTrack/Left")
-            rightTrackRegion = atlas.findRegion("RailTrack/Right")
-            middleTrackRegion = atlas.findRegion("RailTrack/Middle")
-            dropTrackRegion = atlas.findRegion("RailTrack/Drop")
+            leftTrackRegion = atlas.findRegion("$TAG/Left")
+            rightTrackRegion = atlas.findRegion("$TAG/Right")
+            middleTrackRegion = atlas.findRegion("$TAG/Middle")
+            dropTrackRegion = atlas.findRegion("$TAG/Drop")
         }
         addComponent(defineUpdatablesComponent())
         addComponent(defineCullablesComponent())
@@ -129,8 +126,6 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEnti
                 ConstKeys.TRAJECTORY pairTo PLATFORM_SPEED * ConstVals.PPM * if (platformRight) 1 else -1
             )
         )
-
-        // requestToPlaySound(SoundAsset.CONVEYOR_LIFT_SOUND, false)
     }
 
     override fun onDestroy() {
@@ -157,16 +152,17 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEnti
             platform!!.drop()
     })
 
-    private fun defineCullablesComponent(): CullablesComponent {
-        val cullEvents = objectSetOf<Any>(EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS)
-        val cullOnEvents = CullableOnEvent({ cullEvents.contains(it) }, cullEvents)
-        runnablesOnSpawn.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
-        runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
-        return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS pairTo cullOnEvents))
-    }
+    private fun defineCullablesComponent() = CullablesComponent(
+        objectMapOf(
+            ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(
+                this,
+                objectSetOf(EventType.BEGIN_ROOM_TRANS)
+            )
+        )
+    )
 }
 
-class RailTrackPlatform(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity, IAudioEntity {
+class RailTrackPlatform(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "RailTrackPlatform"
@@ -181,8 +177,8 @@ class RailTrackPlatform(game: MegamanMaverickGame) : Block(game), ISpritesEntity
     override fun init() {
         if (platformRegion == null || platformDropRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)
-            platformRegion = atlas.findRegion("RailTrack/Platform")
-            platformDropRegion = atlas.findRegion("RailTrack/PlatformDrop")
+            platformRegion = atlas.findRegion("${RailTrack.TAG}/Platform")
+            platformDropRegion = atlas.findRegion("${RailTrack.TAG}/PlatformDrop")
         }
         super.init()
         addComponent(AudioComponent())
@@ -215,7 +211,6 @@ class RailTrackPlatform(game: MegamanMaverickGame) : Block(game), ISpritesEntity
 
     internal fun drop() {
         body.physics.collisionOn = false
-        if (overlapsGameCamera()) requestToPlaySound(SoundAsset.SWIM_SOUND, false)
     }
 
     internal fun raise() {

@@ -4,9 +4,10 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.shapes.IGameShape2D
 
 class SpawnerForBoundsEntered(
-    private val spawnSupplier: () -> Spawn,
-    private val thisBounds: () -> IGameShape2D,
-    private val otherBounds: () -> IGameShape2D,
+    var spawnSupplier: () -> Spawn,
+    var thisBounds: () -> IGameShape2D,
+    var otherBounds: () -> IGameShape2D,
+    var continueCheckingAfterOverlap: Boolean = false,
     shouldBeCulled: (Float) -> Boolean = { false },
     onCull: () -> Unit = {},
     respawnable: Boolean = true
@@ -23,7 +24,9 @@ class SpawnerForBoundsEntered(
 
         val wasEntered = isEntered
         isEntered = thisBounds().overlaps(otherBounds())
-        if (!wasEntered && isEntered) {
+
+        val shouldSpawn = if (continueCheckingAfterOverlap) isEntered else !wasEntered && isEntered
+        if (shouldSpawn) {
             spawn = spawnSupplier()
             if (debugFilterByEntityTag.contains(spawn!!.entity.getTag())) GameLogger.debug(
                 TAG,
