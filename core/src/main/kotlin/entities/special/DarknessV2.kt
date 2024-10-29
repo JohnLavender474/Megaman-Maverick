@@ -32,12 +32,14 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntitiesMap
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.explosions.ExplosionOrb
+import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.events.EventType
 import kotlin.math.ceil
@@ -63,7 +65,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
     companion object {
         const val TAG = "DarknessV2"
         const val MIN_ALPHA = 0f
-        const val MAX_ALPHA = 0.9f
+        const val MAX_ALPHA = 0.75f
         private const val CAM_BOUNDS_BUFFER = 2f
         private const val DEFAULT_PPM_DIVISOR = 2
         private const val MEGAMAN_HALF_CHARGING_RADIUS = 3
@@ -289,18 +291,35 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         MegaGameEntitiesMap.getEntitiesOfType(EntityType.PROJECTILE).forEach { t -> tryToLightUp(t) }
         MegaGameEntitiesMap.getEntitiesOfType(EntityType.EXPLOSION).forEach { t -> tryToLightUp(t) }
 
-        if (getMegaman().body.overlaps(bounds as Rectangle) && getMegaman().charging) {
-            val fullCharged = getMegaman().fullyCharged
+        if (getMegaman().body.overlaps(bounds as Rectangle)) {
+            if (getMegaman().charging) {
+                val fullCharged = getMegaman().fullyCharged
+                val lightSourceDef = lightSourcePool.fetch()
+                lightSourceDef.center = getMegaman().body.getCenter()
+                lightSourceDef.radius =
+                    (if (fullCharged) MEGAMAN_FULL_CHARGING_RADIUS else MEGAMAN_HALF_CHARGING_RADIUS) * ConstVals.PPM
+                lightSourceDef.radiance =
+                    if (fullCharged) MEGAMAN_FULL_CHARGING_RADIANCE else MEGAMAN_HALF_CHARGING_RADIANCE
+                lightSourceQueue.addLast(lightSourceDef)
+            } else if (getMegaman().isBehaviorActive(BehaviorType.JETPACKING)) {
+                val lightSourceDef = lightSourcePool.fetch()
+                lightSourceDef.center = getMegaman().body.getCenter()
+                lightSourceDef.radius = MEGAMAN_HALF_CHARGING_RADIUS * ConstVals.PPM
+                lightSourceDef.radiance = MEGAMAN_HALF_CHARGING_RADIANCE
+                lightSourceQueue.addLast(lightSourceDef)
+            }
+        }
 
-            val lightSourceDef = lightSourcePool.fetch()
-
-            lightSourceDef.center = getMegaman().body.getCenter()
-            lightSourceDef.radius =
-                (if (fullCharged) MEGAMAN_FULL_CHARGING_RADIUS else MEGAMAN_HALF_CHARGING_RADIUS) * ConstVals.PPM
-            lightSourceDef.radiance =
-                if (fullCharged) MEGAMAN_FULL_CHARGING_RADIANCE else MEGAMAN_HALF_CHARGING_RADIANCE
-
-            lightSourceQueue.addLast(lightSourceDef)
+        val beaming = game.isProperty("${Megaman.TAG}_${ConstKeys.BEAM}", true)
+        if (beaming) {
+            val beamCenter = game.getProperty("${Megaman.TAG}_${ConstKeys.BEAM}_${ConstKeys.CENTER}", Vector2::class)
+            if (beamCenter != null) {
+                val lightSourceDef = lightSourcePool.fetch()
+                lightSourceDef.center = beamCenter
+                lightSourceDef.radius = MEGAMAN_FULL_CHARGING_RADIUS * ConstVals.PPM
+                lightSourceDef.radiance = MEGAMAN_FULL_CHARGING_RADIANCE
+                lightSourceQueue.addLast(lightSourceDef)
+            }
         }
 
         while (!lightSourceQueue.isEmpty()) {

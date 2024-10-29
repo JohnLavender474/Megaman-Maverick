@@ -23,6 +23,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
 
 class Picket(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
@@ -62,28 +63,18 @@ class Picket(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEnt
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBodyBounds() }
-
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
-        body.addFixture(bodyFixture)
-
-        val projectileFixture =
-            Fixture(body, FixtureType.PROJECTILE, GameRectangle(body))
-        body.addFixture(projectileFixture)
-
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.4f * ConstVals.PPM))
-        body.addFixture(damagerFixture)
-
-        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle(body))
-        body.addFixture(shieldFixture)
-
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(
+            this,
+            body,
+            BodyFixtureDef.of(FixtureType.BODY, FixtureType.PROJECTILE, FixtureType.SHIELD, FixtureType.DAMAGER)
+        )
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.75f * ConstVals.PPM)
+        sprite.setSize(1.85f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())

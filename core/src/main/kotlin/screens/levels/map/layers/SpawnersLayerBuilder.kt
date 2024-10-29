@@ -32,7 +32,6 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
 
         if (!returnProps.containsKey(ConstKeys.DISPOSABLES)) returnProps.put(ConstKeys.DISPOSABLES, Array<Disposable>())
         val disposables = returnProps.get(ConstKeys.DISPOSABLES) as Array<Disposable>
-
         if (!returnProps.containsKey(ConstKeys.SPAWNERS)) returnProps.put(ConstKeys.SPAWNERS, Array<ISpawner>())
         val spawners = returnProps.get(ConstKeys.SPAWNERS) as Array<ISpawner>
 
@@ -50,7 +49,6 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
 
         layer.objects.forEach {
             val spawnProps = it.convertToProps()
-
             val spawnType = spawnProps.get(ConstKeys.SPAWN_TYPE) as String?
             if (spawnType == SpawnType.SPAWN_NOW) {
                 if (it.name == null) throw IllegalStateException("Entity name not found for spawn now")
@@ -60,24 +58,16 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                 entity.spawn(spawnProps)
                 return@forEach
             }
-
             val spawnSupplier = {
                 val entity = EntityFactories.fetch(entityType, it.name ?: "")
                     ?: throw IllegalStateException("Entity of type $entityType not found: ${it.name}")
                 Spawn(entity, spawnProps)
             }
             val respawnable = spawnProps.getOrDefault(ConstKeys.RESPAWNABLE, true, Boolean::class)
-
             when (spawnType) {
                 SpawnType.SPAWN_ROOM -> {
                     val roomName = it.properties.get(SpawnType.SPAWN_ROOM) as String
                     val gameRooms = returnProps.get(ConstKeys.GAME_ROOMS) as Array<RectangleMapObject>
-                    val continueCheckingAfterOverlap = spawnProps.getOrDefault(
-                        "${ConstKeys.SPAWNER}_${ConstKeys.RUN}_${ConstKeys.AFTER}_${ConstKeys.OVERLAP}",
-                        true,
-                        Boolean::class
-                    )
-
                     var roomFound = false
                     for (room in gameRooms) if (roomName == room.name) {
                         spawnProps.put(ConstKeys.ROOM, room)
@@ -85,17 +75,13 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                             game.getGameCamera(),
                             room.rectangle.toGameRectangle(),
                             spawnSupplier,
-                            respawnable,
-                            continueCheckingAfterOverlap
+                            respawnable
                         )
                         spawners.add(spawner)
-
                         GameLogger.debug(TAG, "build(): Adding spawner $spawner for game rectangle object ${it.name}")
-
                         roomFound = true
                         break
                     }
-
                     check(roomFound) { "Room not found: $roomName" }
                 }
 
@@ -106,31 +92,21 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                         val eventType = EventType.valueOf(eventName)
                         events.add(eventType)
                     }
-
                     val spawner = SpawnerFactory.spawnerForWhenEventCalled(events, spawnSupplier, respawnable)
                     spawners.add(spawner)
-
                     GameLogger.debug(TAG, "build(): Adding spawner $spawner for game rectangle object ${it.name}")
-
                     game.eventsMan.addListener(spawner)
                     disposables.add { game.eventsMan.removeListener(spawner) }
                 }
 
                 else -> {
-                    val continueCheckingAfterOverlap = spawnProps.getOrDefault(
-                        "${ConstKeys.SPAWNER}_${ConstKeys.RUN}_${ConstKeys.AFTER}_${ConstKeys.OVERLAP}",
-                        false,
-                        Boolean::class
-                    )
                     val spawner = SpawnerFactory.spawnerForWhenInCamera(
                         game.getGameCamera(),
                         SpawnerShapeFactory.getSpawnShape(entityType, it),
                         spawnSupplier,
-                        respawnable,
-                        continueCheckingAfterOverlap
+                        respawnable
                     )
                     spawners.add(spawner)
-
                     GameLogger.debug(TAG, "build(): Adding spawner $spawner for game rectangle object ${it.name}")
                 }
             }

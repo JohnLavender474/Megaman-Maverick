@@ -8,6 +8,7 @@ import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.audio.AudioComponent
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.objects.Properties
@@ -74,6 +75,7 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEnti
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
@@ -81,9 +83,10 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEnti
         val width = (bounds.width / ConstVals.PPM).toInt()
 
         val dropIndices = if (spawnProps.containsKey(DROPS))
-            spawnProps.get(DROPS, String::class)!!.split(",").map {
-                it.toInt()
-            }.toObjectSet()
+            spawnProps.get(DROPS, String::class)!!
+                .split(",")
+                .map { it.toInt() }
+                .toObjectSet()
         else Array()
 
         drops = dropIndices.map {
@@ -129,6 +132,7 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEnti
     }
 
     override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
         platform?.destroy()
         platform = null

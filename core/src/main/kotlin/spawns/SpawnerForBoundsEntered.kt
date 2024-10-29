@@ -7,7 +7,6 @@ class SpawnerForBoundsEntered(
     var spawnSupplier: () -> Spawn,
     var thisBounds: () -> IGameShape2D,
     var otherBounds: () -> IGameShape2D,
-    var continueCheckingAfterOverlap: Boolean = false,
     shouldBeCulled: (Float) -> Boolean = { false },
     onCull: () -> Unit = {},
     respawnable: Boolean = true
@@ -24,8 +23,7 @@ class SpawnerForBoundsEntered(
 
         val wasEntered = isEntered
         isEntered = thisBounds().overlaps(otherBounds())
-
-        val shouldSpawn = if (continueCheckingAfterOverlap) isEntered else !wasEntered && isEntered
+        val shouldSpawn = !wasEntered && isEntered
         if (shouldSpawn) {
             spawn = spawnSupplier()
             if (debugFilterByEntityTag.contains(spawn!!.entity.getTag())) GameLogger.debug(
