@@ -9,6 +9,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.interfaces.Initializable
 import com.mega.game.engine.common.interfaces.Updatable
+import com.mega.game.engine.common.shapes.getCenter
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.IDrawable
 import com.mega.game.engine.drawables.fonts.BitmapFontHandle
@@ -19,6 +20,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.events.EventType
 import java.util.*
 
@@ -34,6 +36,8 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
 
     val finished: Boolean
         get() = preBeamTimer.isFinished() && beamDownTimer.isFinished() && beamTransitionTimer.isFinished()
+    val beamCenter: Vector2
+        get() = beamSprite.boundingRectangle.getCenter()
 
     private val megaman = game.megaman
 
@@ -94,6 +98,8 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
         GameLogger.debug(TAG, "Submitted PLAYER_SPAWN event")
         game.eventsMan.submitEvent(Event(EventType.PLAYER_SPAWN))
         game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
+
+        game.putProperty("${Megaman.TAG}_${ConstKeys.BEAM}", true)
     }
 
     override fun draw(drawer: Batch) {
@@ -116,6 +122,8 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
     }
 
     override fun update(delta: Float) {
+        game.putProperty("${Megaman.TAG}_${ConstKeys.BEAM}_${ConstKeys.CENTER}", beamCenter)
+
         if (!preBeamTimer.isFinished()) preBeam(delta)
         else if (!beamDownTimer.isFinished()) beamDown(delta)
         else if (!beamTransitionTimer.isFinished()) beamTrans(delta)
@@ -162,6 +170,8 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
             game.eventsMan.submitEvent(Event(EventType.PLAYER_READY))
             game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
             game.audioMan.playSound(SoundAsset.BEAM_SOUND, false)
+
+            game.putProperty("${Megaman.TAG}_${ConstKeys.BEAM}", false)
         }
     }
 }

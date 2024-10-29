@@ -234,6 +234,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Platforms1/Brick1.png</key>
+            <key type="filename">../frames/Platforms1/WoodPlank.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

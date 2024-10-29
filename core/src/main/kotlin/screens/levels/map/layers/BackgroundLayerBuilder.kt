@@ -39,7 +39,10 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
                 it.rectangle.height,
                 rows = 1,
                 columns = 100,
-                DrawingPriority(DrawingSection.BACKGROUND, 1)
+                parallaxY = 0f,
+                parallaxX = 0.1f,
+                priority = DrawingPriority(DrawingSection.BACKGROUND, 1),
+                initPos = Vector2(it.rectangle.getCenter().x + 0.5f * ConstVals.PPM, it.rectangle.getCenter().y)
             )
         },
         "DesertSky" pairTo {
@@ -57,7 +60,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
                  priority = DrawingPriority(DrawingSection.BACKGROUND, 0),
                  parallaxX = 0f,
                  parallaxY = 0f,
-                 initPos = Vector2(it.rectangle.getCenter().x, it.rectangle.getCenter().y - 0.75f * ConstVals.PPM),
+                 initPos = Vector2(it.rectangle.getCenter().x, it.rectangle.getCenter().y - 0.5f * ConstVals.PPM)
              )
         },
         "WindyClouds" pairTo {

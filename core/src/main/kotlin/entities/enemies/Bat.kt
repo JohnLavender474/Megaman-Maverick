@@ -1,7 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.ObjectSet
@@ -55,7 +54,6 @@ import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.utils.DynamicBodyHeuristic
 import com.megaman.maverick.game.pathfinding.StandardPathfinderResultConsumer
-import com.megaman.maverick.game.utils.isNeighborOf
 import com.megaman.maverick.game.utils.toGridCoordinate
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
@@ -306,8 +304,10 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
                     break
                 }
 
+                /*
                 if (!passable && coordinate.isNeighborOf(body.getCenter().toGridCoordinate()))
                     blockingBody?.let { passable = !body.overlaps(it as Rectangle) }
+                 */
 
                 if (printDebugFilter) {
                     GameLogger.debug(TAG, "Can pass $coordinate: $passable")

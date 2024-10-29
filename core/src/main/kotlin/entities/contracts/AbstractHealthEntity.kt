@@ -1,10 +1,5 @@
 package com.megaman.maverick.game.entities.contracts
 
-import com.mega.game.engine.world.body.*;
-import com.mega.game.engine.world.collisions.*;
-import com.mega.game.engine.world.contacts.*;
-import com.mega.game.engine.world.pathfinding.*;
-
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.objects.Properties
@@ -62,12 +57,14 @@ abstract class AbstractHealthEntity(
 
         val damage = damageNegotiations[damagerKey].get(damager)
         if (damage <= 0) return false
-
         translateHealth(-damage)
 
         return true
     }
 
+    protected open fun onHealthDepleted() {
+        destroy()
+    }
 
     protected open fun definePointsComponent(): PointsComponent {
         val pointsComponent = PointsComponent()
@@ -77,7 +74,7 @@ abstract class AbstractHealthEntity(
         pointsComponent.putListener(ConstKeys.HEALTH) {
             if (it.current <= ConstVals.MIN_HEALTH) {
                 GameLogger.debug(AbstractEnemy.TAG, "Kill enemy due to depleted health")
-                destroy()
+                onHealthDepleted()
             }
         }
         return pointsComponent

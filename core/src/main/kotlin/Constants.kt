@@ -43,6 +43,7 @@ object ConstKeys {
     const val WALL = "wall"
     const val RUN = "run"
     const val LISTENER = "listener"
+    const val BEAM = "beam"
     const val SPRITE = "sprite"
     const val SUPPLIER = "supplier"
     const val SHIELD = "shield"

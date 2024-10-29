@@ -187,7 +187,7 @@ DropperLift/Opening
   index: -1
 FlipperPlatform/FlipToLeft
   rotate: false
-  xy: 352, 64
+  xy: 448, 64
   size: 430, 60
   orig: 430, 60
   offset: 0, 0
@@ -309,5 +309,12 @@ WoodBlock1
   xy: 288, 64
   size: 64, 32
   orig: 64, 32
+  offset: 0, 0
+  index: -1
+WoodPlank
+  rotate: false
+  xy: 352, 64
+  size: 96, 32
+  orig: 96, 32
   offset: 0, 0
   index: -1

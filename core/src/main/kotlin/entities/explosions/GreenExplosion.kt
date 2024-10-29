@@ -98,7 +98,7 @@ class GreenExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
-        directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
+        directionRotation = spawnProps.get(ConstKeys.DIRECTION, Direction::class) ?: Direction.UP
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         when (directionRotation!!) {
             Direction.UP -> body.setBottomCenterToPoint(spawn)

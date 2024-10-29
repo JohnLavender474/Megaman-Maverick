@@ -106,11 +106,9 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
 
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
-
         if (explosionType == DEFAULT_EXPLOSION) {
             val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
             explosion.spawn(props(ConstKeys.OWNER pairTo owner, ConstKeys.POSITION pairTo body.getCenter()))
-
             if (overlapsGameCamera()) playSoundNow(SoundAsset.EXPLOSION_2_SOUND, false)
         } else if (explosionType == WAVE_EXPLOSION) {
             val hitBounds = params[0] as GameRectangle

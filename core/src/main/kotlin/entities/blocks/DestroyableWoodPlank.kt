@@ -2,14 +2,8 @@ package com.megaman.maverick.game.entities.blocks
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.ObjectMap
-import com.mega.game.engine.animations.Animation
-import com.mega.game.engine.animations.AnimationsComponent
-import com.mega.game.engine.animations.Animator
-import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
@@ -32,11 +26,12 @@ class DestroyableWoodPlank(game: MegamanMaverickGame) : Block(game), ISpritesEnt
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
+            regions.put("plank", atlas.findRegion("WoodPlank"))
             regions.put("flash", atlas.findRegion("$TAG/flash"))
         }
         super.init()
         addComponent(defineSpritesComponent())
-        addComponent(defineAnimationsComponent())
+        // addComponent(defineAnimationsComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -45,20 +40,22 @@ class DestroyableWoodPlank(game: MegamanMaverickGame) : Block(game), ISpritesEnt
     }
 
     private fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite()
+        val sprite = GameSprite(regions["plank"])
         sprite.setSize(WIDTH * ConstVals.PPM.toFloat(), HEIGHT * ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite -> _sprite.setCenter(body.getCenter()) }
         return spritesComponent
     }
 
+    /*
     private fun defineAnimationsComponent(): AnimationsComponent {
         // TODO: add more animations
         val keySupplier: () -> String? = { "flash" }
         val animations = objectMapOf<String, IAnimation>(
-            "flash" pairTo Animation(regions["flash"], 2, 1, 0.1f, true)
+            "flash" pairTo Animation(regions["flash"], 1, 2, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }
+     */
 }
