@@ -28,13 +28,13 @@ class SimpleSelectLevelScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, 
         const val TEST = "TEST"
         private val LEVELS = objectMapOf(
             BETA pairTo gdxArrayOf(
+                Level.REACTOR_MAN,
+                Level.DESERT_MAN,
                 Level.GLACIER_MAN
             ),
             ALPHA pairTo gdxArrayOf(
                 Level.INFERNO_MAN,
                 Level.MOON_MAN,
-                Level.DESERT_MAN,
-                Level.REACTOR_MAN,
                 Level.TIMBER_WOMAN,
                 Level.MAGNET_MAN,
                 Level.WILY_STAGE_1,

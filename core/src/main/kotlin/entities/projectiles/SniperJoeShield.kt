@@ -103,13 +103,13 @@ class SniperJoeShield(game: MegamanMaverickGame) : AbstractProjectile(game), IFa
         GameLogger.debug(TAG, "Destroyed")
     }
 
-    override fun hitBlock(blockFixture: IFixture) = explodeAndDie()
+    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
 
-    override fun hitBody(bodyFixture: IFixture) {
+    override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         if (bodyFixture.getEntity() != owner) explodeAndDie()
     }
 
-    override fun hitShield(shieldFixture: IFixture) {
+    override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         if (shieldFixture.getEntity() != owner) explodeAndDie()
     }
 

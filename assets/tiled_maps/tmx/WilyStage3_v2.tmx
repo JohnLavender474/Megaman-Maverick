@@ -1584,26 +1584,6 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="13" name="temp">
-  <object id="348" name="0" x="10272" y="1760" width="32" height="32">
-   <properties>
-    <property name="facing" value="left"/>
-   </properties>
-  </object>
- </objectgroup>
- <objectgroup id="6" name="player">
-  <object id="49" name="0" x="96" y="448" width="32" height="32"/>
-  <object id="153" name="2" x="5248" y="1888" width="32" height="32"/>
-  <object id="180" name="3" x="7552" y="2944" width="32" height="32"/>
-  <object id="195" name="4" x="9840" y="2176" width="32" height="32">
-   <properties>
-    <property name="facing" value="left"/>
-   </properties>
-  </object>
-  <object id="345" name="5" x="14624" y="800" width="32" height="32"/>
-  <object id="346" name="6" x="15264" y="800" width="32" height="32"/>
-  <object id="373" name="1" x="3296" y="1984" width="32" height="32"/>
- </objectgroup>
  <objectgroup id="7" name="hazards">
   <object id="55" name="Saw" x="5600" y="1824" width="32" height="32">
    <properties>
@@ -1834,11 +1814,6 @@
     <property name="value" type="float" value="3"/>
    </properties>
   </object>
-  <object id="297" name="SpikeBot" x="12576" y="1376" width="32" height="32">
-   <properties>
-    <property name="value" type="float" value="4"/>
-   </properties>
-  </object>
   <object id="301" name="ShieldAttacker" x="13512" y="856" width="16" height="16">
    <properties>
     <property name="value" type="float" value="4"/>
@@ -1853,7 +1828,7 @@
   <object id="411" name="Met" x="2840" y="464" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="10" name="backgrounds">
-  <object id="50" x="0" y="3160" width="200" height="200">
+  <object id="50" name="Background" x="0" y="3160" width="200" height="200">
    <properties>
     <property name="atlas" value="Backgrounds3.txt"/>
     <property name="columns" type="int" value="100"/>
@@ -1862,5 +1837,25 @@
     <property name="rows" type="int" value="100"/>
    </properties>
   </object>
+ </objectgroup>
+ <objectgroup id="13" name="player">
+  <object id="348" name="0" x="15488" y="800" width="32" height="32">
+   <properties>
+    <property name="facing" value="left"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="6" name="temp">
+  <object id="49" name="0" x="96" y="448" width="32" height="32"/>
+  <object id="153" name="2" x="5248" y="1888" width="32" height="32"/>
+  <object id="180" name="3" x="7552" y="2944" width="32" height="32"/>
+  <object id="195" name="4" x="9840" y="2176" width="32" height="32">
+   <properties>
+    <property name="facing" value="left"/>
+   </properties>
+  </object>
+  <object id="345" name="5" x="14624" y="800" width="32" height="32"/>
+  <object id="346" name="6" x="15264" y="800" width="32" height="32"/>
+  <object id="373" name="1" x="3296" y="1984" width="32" height="32"/>
  </objectgroup>
 </map>

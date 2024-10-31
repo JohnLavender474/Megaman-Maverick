@@ -16,7 +16,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.drawables.sprites.ScrollingStars
+import com.megaman.maverick.game.drawables.backgrounds.ScrollingStars
 import com.megaman.maverick.game.entities.bosses.BossType
 import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
 import com.megaman.maverick.game.utils.getDefaultCameraPosition

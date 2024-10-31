@@ -6,13 +6,11 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.common.enums.Direction
-import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.getOverlapPushDirection
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
-import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -91,14 +89,14 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) {
-        if (damageable is IBodyEntity) explodeAndDie(damageable.body as GameRectangle)
+        if (explosionType == DEFAULT_EXPLOSION && damageable is IBodyEntity) explodeAndDie()
     }
 
-    override fun hitBlock(blockFixture: IFixture) = explodeAndDie(blockFixture.getShape() as GameRectangle)
+    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
 
-    override fun hitSand(sandFixture: IFixture) = explodeAndDie(sandFixture.getShape() as GameRectangle)
+    override fun hitSand(sandFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
 
-    override fun hitShield(shieldFixture: IFixture) {
+    override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val left = body.x < shieldFixture.getShape().getX()
         body.physics.velocity.x = if (left) -abs(body.physics.velocity.x) else abs(body.physics.velocity.x)
         requestToPlaySound(SoundAsset.DINK_SOUND, false)
@@ -111,26 +109,8 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
             explosion.spawn(props(ConstKeys.OWNER pairTo owner, ConstKeys.POSITION pairTo body.getCenter()))
             if (overlapsGameCamera()) playSoundNow(SoundAsset.EXPLOSION_2_SOUND, false)
         } else if (explosionType == WAVE_EXPLOSION) {
-            val hitBounds = params[0] as GameRectangle
-            val overlap = GameRectangle()
-            val direction = getOverlapPushDirection(body, hitBounds, overlap)
-            val position = overlap.getPositionPoint(
-                when (direction) {
-                    Direction.UP, null -> Position.TOP_CENTER
-                    Direction.DOWN -> Position.BOTTOM_CENTER
-                    Direction.LEFT -> Position.CENTER_LEFT
-                    Direction.RIGHT -> Position.CENTER_RIGHT
-                }
-            )
-            val greenExplosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.GREEN_EXPLOSION)!!
-            greenExplosion.spawn(
-                props(
-                    ConstKeys.POSITION pairTo position,
-                    ConstKeys.DIRECTION pairTo direction,
-                    ConstKeys.OWNER pairTo owner
-                )
-            )
-
+            val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.GREEN_EXPLOSION)!!
+            explosion.spawn(props(ConstKeys.OWNER pairTo owner, ConstKeys.POSITION pairTo body.getBottomCenterPoint()))
             if (overlapsGameCamera()) playSoundNow(SoundAsset.BLAST_1_SOUND, false)
         }
     }

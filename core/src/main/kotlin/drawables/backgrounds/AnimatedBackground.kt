@@ -1,4 +1,4 @@
-package com.megaman.maverick.game.drawables.sprites
+package com.megaman.maverick.game.drawables.backgrounds
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
@@ -10,6 +10,7 @@ import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.megaman.maverick.game.ConstVals
 
 open class AnimatedBackground(
+    key: String,
     startX: Float,
     startY: Float,
     model: TextureRegion,
@@ -27,6 +28,7 @@ open class AnimatedBackground(
     initPos: Vector2 = Vector2(startX, startY).add(modelWidth / 2f, modelHeight / 2f),
     doMove: () -> Boolean = { true }
 ) : Background(
+    key,
     startX,
     startY,
     model,

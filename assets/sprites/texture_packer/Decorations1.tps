@@ -309,6 +309,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Decorations1/SandSplash.png</key>
             <key type="filename">../frames/Decorations1/ToxicWaterSplash.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>

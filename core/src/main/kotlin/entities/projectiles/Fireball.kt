@@ -18,6 +18,7 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
+import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -113,26 +114,26 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         if (burstOnDamageInflicted) explodeAndDie()
     }
 
-    override fun hitBody(bodyFixture: IFixture) {
+    override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         if (burstOnHitBody && mask(owner, bodyFixture.getEntity(), { it is Megaman }, { it is AbstractEnemy })) {
             burstDirection = getOverlapPushDirection(body, bodyFixture.getShape()) ?: Direction.UP
             explodeAndDie()
         }
     }
 
-    override fun hitBlock(blockFixture: IFixture) {
+    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         if (burstOnHitBlock) {
             burstDirection = getOverlapPushDirection(body, blockFixture.getShape()) ?: Direction.UP
             explodeAndDie()
         }
     }
 
-    override fun hitShield(shieldFixture: IFixture) {
+    override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         body.physics.velocity.x *= -1f
         requestToPlaySound(SoundAsset.DINK_SOUND, false)
     }
 
-    override fun hitWater(waterFixture: IFixture) {
+    override fun hitWater(waterFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         destroy()
         val smokePuff = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SMOKE_PUFF)!!
         val spawn = Vector2(body.getCenter().x, waterFixture.getShape().getMaxY())

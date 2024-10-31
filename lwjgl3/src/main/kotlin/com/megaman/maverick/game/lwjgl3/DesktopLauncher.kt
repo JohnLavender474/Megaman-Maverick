@@ -31,6 +31,8 @@ object DesktopLauncher {
 
     @JvmStatic
     fun main(args: Array<String>) {
+        if (StartupHelper.startNewJvmIfRequired()) return
+
         val appArgs = DesktopAppArgs()
         val jCommander = JCommander.newBuilder().addObject(appArgs).build()
         try {

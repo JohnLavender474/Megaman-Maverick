@@ -863,7 +863,7 @@
   <object id="386" name="IceBlock" x="15360" y="288" width="1920" height="128"/>
   <object id="387" name="IceBlock" x="17184" y="288" width="480" height="256"/>
   <object id="388" name="IceBlock" x="17568" y="544" width="96" height="384"/>
-  <object id="389" name="IceBlock" x="17184" y="736" width="384" height="192"/>
+  <object id="389" x="17184" y="736" width="384" height="192"/>
   <object id="390" name="IceBlock" x="15424" y="480" width="96" height="128"/>
   <object id="391" name="IceBlock" x="15520" y="544" width="192" height="64"/>
   <object id="392" name="IceBlock" x="15648" y="608" width="96" height="320"/>

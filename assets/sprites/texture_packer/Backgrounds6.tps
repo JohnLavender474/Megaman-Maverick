@@ -174,6 +174,8 @@
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
             <key type="filename">../frames/Backgrounds6/Desert/Canyon.png</key>
+            <key type="filename">../frames/Backgrounds6/Desert/NoSunSky.png</key>
+            <key type="filename">../frames/Backgrounds6/MoonSky.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -188,7 +190,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Backgrounds6/Desert/Sky.png</key>
+            <key type="filename">../frames/Backgrounds6/Desert/SunSky.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

@@ -148,39 +148,39 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
         explodeAndDie()
     }
 
-    override fun hitBody(bodyFixture: IFixture) {
+    override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         if (!spawnExplodeDelay.isFinished() || bodyFixture.getEntity() is BoulderProjectile) return
         GameLogger.debug(TAG, "Hit body: $bodyFixture")
-        super.hitBody(bodyFixture)
+        super.hitBody(bodyFixture, thisShape, otherShape)
         when (size) {
             Size.LARGE, Size.MEDIUM -> breakApart(bodyFixture.getShape())
             Size.SMALL -> explodeAndDie()
         }
     }
 
-    override fun hitBlock(blockFixture: IFixture) {
+    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         if (!spawnExplodeDelay.isFinished()) return
         GameLogger.debug(TAG, "Hit block: $blockFixture")
-        super.hitBlock(blockFixture)
+        super.hitBlock(blockFixture, thisShape, otherShape)
         when (size) {
             Size.LARGE, Size.MEDIUM -> breakApart(blockFixture.getShape())
             Size.SMALL -> explodeAndDie()
         }
     }
 
-    override fun hitShield(shieldFixture: IFixture) {
+    override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         if (!spawnExplodeDelay.isFinished()) return
         GameLogger.debug(TAG, "Hit shield: $shieldFixture")
-        super.hitShield(shieldFixture)
+        super.hitShield(shieldFixture, thisShape, otherShape)
         when (size) {
             Size.LARGE, Size.MEDIUM -> breakApart(shieldFixture.getShape())
             Size.SMALL -> explodeAndDie()
         }
     }
 
-    override fun hitWater(waterFixture: IFixture) {
+    override fun hitWater(waterFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         GameLogger.debug(TAG, "Hit water: $waterFixture")
-        super.hitWater(waterFixture)
+        super.hitWater(waterFixture, thisShape, otherShape)
         body.physics.velocity.x = 0f
         // TODO: boulder should sink or float in water?
     }

@@ -3,7 +3,9 @@ package com.megaman.maverick.game.screens.levels.map.layers
 import com.badlogic.gdx.maps.MapLayer
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
+import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
@@ -18,9 +20,8 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.TEXTURE_ASSET_PREFIX
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.drawables.sprites.*
+import com.megaman.maverick.game.drawables.backgrounds.*
 import com.megaman.maverick.game.utils.toProps
-import java.util.*
 
 class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITiledMapLayerBuilder {
 
@@ -30,39 +31,10 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
     }
 
     private val presetBKGMap: ObjectMap<String, (RectangleMapObject) -> Background> = objectMapOf(
-        "DesertCanyon" pairTo {
-            Background(
-                it.rectangle.x,
-                it.rectangle.y,
-                params.game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_6.source, "Desert/Canyon"),
-                it.rectangle.width,
-                it.rectangle.height,
-                rows = 1,
-                columns = 100,
-                parallaxY = 0f,
-                parallaxX = 0.1f,
-                priority = DrawingPriority(DrawingSection.BACKGROUND, 1),
-                initPos = Vector2(it.rectangle.getCenter().x + 0.5f * ConstVals.PPM, it.rectangle.getCenter().y)
-            )
-        },
-        "DesertSky" pairTo {
-             AnimatedBackground(
-                 startX = it.rectangle.x,
-                 startY = it.rectangle.y,
-                 model = params.game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_6.source, "Desert/Sky"),
-                 modelWidth = it.rectangle.width,
-                 modelHeight = it.rectangle.height,
-                 rows = 1,
-                 columns = 1,
-                 animRows = 3,
-                 animColumns = 1,
-                 duration = 0.1f,
-                 priority = DrawingPriority(DrawingSection.BACKGROUND, 0),
-                 parallaxX = 0f,
-                 parallaxY = 0f,
-                 initPos = Vector2(it.rectangle.getCenter().x, it.rectangle.getCenter().y - 0.5f * ConstVals.PPM)
-             )
-        },
+        "DesertCanyon" pairTo { DesertCanyon(params.game.assMan, it) },
+        "DesertNoSunSky" pairTo { DesertNoSunSky(params.game.assMan, it) },
+        "DesertSunSky" pairTo { DesertSunSky(params.game.assMan, it) },
+        "MoonSky" pairTo { MoonSky(params.game.assMan, it) },
         "WindyClouds" pairTo {
             WindyClouds(
                 params.game,
@@ -85,6 +57,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
         },
         "ForestBKG" pairTo {
             Background(
+                it.name,
                 it.rectangle.x,
                 it.rectangle.y,
                 params.game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_3.source, "ForestBKG"),
@@ -97,6 +70,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
         },
         "GlacierBKG" pairTo {
             AnimatedBackground(
+                it.name,
                 startX = it.rectangle.x,
                 startY = it.rectangle.y,
                 model = params.game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_4.source, "GlacierBKG_v2"),
@@ -115,6 +89,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
         },
         "GlacierCloudsBKG" pairTo {
             Background(
+                it.name,
                 startX = it.rectangle.x,
                 startY = it.rectangle.y,
                 model = params.game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_5.source, "GlacierCloudsBKG"),
@@ -131,24 +106,21 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
     )
 
     override fun build(layer: MapLayer, returnProps: Properties) {
-        val backgrounds = PriorityQueue<Background>()
-
+        val backgrounds = Array<Background>()
         val iter = layer.objects.iterator()
         while (iter.hasNext()) {
             val o = iter.next()
             if (o !is RectangleMapObject) continue
 
-            GameLogger.debug(TAG, "Building background ${o.name} with props ${o.properties.toProps()}")
-
             if (o.name != null && presetBKGMap.containsKey(o.name)) {
-                GameLogger.debug(TAG, "Building preset background ${o.name}")
+                GameLogger.debug(TAG, "build(): building preset background ${o.name}")
                 val supplier = presetBKGMap[o.name]!!
                 val background = supplier.invoke(o)
                 backgrounds.add(background)
                 continue
             }
 
-            GameLogger.debug(TAG, "Building custom background ${o.name}")
+            GameLogger.debug(TAG, "build(): building custom background ${o.name}")
 
             val props = o.properties.toProps()
             val backgroundRegion =
@@ -171,6 +143,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
                 val animColumns = props.get("${ConstKeys.ANIMATION}_${ConstKeys.COLUMNS}", Int::class)!!
                 val duration = props.get(ConstKeys.DURATION, Float::class)!!
                 AnimatedBackground(
+                    o.name,
                     o.rectangle.x,
                     o.rectangle.y,
                     backgroundRegion,
@@ -187,6 +160,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
                     rotatable = rotatable
                 )
             } else Background(
+                o.name,
                 o.rectangle.x,
                 o.rectangle.y,
                 backgroundRegion,
@@ -201,8 +175,14 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
             )
             backgrounds.add(background)
         }
-
         returnProps.put(ConstKeys.BACKGROUNDS, backgrounds)
+
+        val backgroundsToHide = ObjectSet<String>()
+        layer.properties.get("${ConstKeys.HIDDEN}_${ConstKeys.BACKGROUNDS}", String::class.java)
+            ?.split(",")
+            ?.forEach { backgroundsToHide.add(it) }
+        returnProps.put("${ConstKeys.HIDDEN}_${ConstKeys.BACKGROUNDS}", backgroundsToHide)
+        GameLogger.debug(TAG, "build(): backgroundsToHide=$backgroundsToHide")
     }
 }
 

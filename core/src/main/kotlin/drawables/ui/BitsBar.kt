@@ -1,9 +1,4 @@
-package com.megaman.maverick.game.drawables.sprites
-
-import com.mega.game.engine.world.body.*;
-import com.mega.game.engine.world.collisions.*;
-import com.mega.game.engine.world.contacts.*;
-import com.mega.game.engine.world.pathfinding.*;
+package com.megaman.maverick.game.drawables.ui
 
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.g2d.Batch

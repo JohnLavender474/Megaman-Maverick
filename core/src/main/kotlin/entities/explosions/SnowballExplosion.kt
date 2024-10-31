@@ -40,7 +40,7 @@ class SnowballExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
     IDamager {
 
     companion object {
-        const val DURATION = 0.025f
+        const val DURATION = 0.015f
         private var region: TextureRegion? = null
     }
 
@@ -91,14 +91,12 @@ class SnowballExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
         val spriteComponent = SpritesComponent(sprite)
-        spriteComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setCenter(body.getCenter())
-        }
+        spriteComponent.putUpdateFunction { _, _sprite -> _sprite.setCenter(body.getCenter()) }
         return spriteComponent
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val animation = Animation(region!!, 1, 3, 0.025f, false)
+        val animation = Animation(region!!, 1, 3, 0.005f, false)
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }

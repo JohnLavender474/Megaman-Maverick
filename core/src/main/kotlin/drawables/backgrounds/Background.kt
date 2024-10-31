@@ -1,4 +1,4 @@
-package com.megaman.maverick.game.drawables.sprites
+package com.megaman.maverick.game.drawables.backgrounds
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
@@ -17,6 +17,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
 
 open class Background(
+    var key: String,
     startX: Float,
     startY: Float,
     model: TextureRegion,

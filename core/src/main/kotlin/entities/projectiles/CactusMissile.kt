@@ -17,6 +17,7 @@ import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamageable
@@ -104,7 +105,7 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
         if (hasDepletedHealth()) explode()
     }
 
-    override fun hitBlock(blockFixture: IFixture) = explodeAndDie()
+    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
 
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 

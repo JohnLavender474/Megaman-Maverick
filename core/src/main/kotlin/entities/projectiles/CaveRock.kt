@@ -8,6 +8,7 @@ import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -70,16 +71,16 @@ class CaveRock(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
-    override fun hitBlock(blockFixture: IFixture) {
+    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         if (passThroughBlocks) return
         explodeAndDie()
     }
 
-    override fun hitWater(waterFixture: IFixture) {
+    override fun hitWater(waterFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         // set x vel pairTo zero and sink slowly
     }
 
-    override fun hitShield(shieldFixture: IFixture) {
+    override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         // bounce
     }
 

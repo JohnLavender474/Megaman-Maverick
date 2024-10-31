@@ -14,6 +14,7 @@ import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.damage.IDamager
@@ -96,12 +97,12 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEnt
         type = spawnProps.getOrDefault(ConstKeys.TYPE, REGULAR, String::class)
     }
 
-    override fun hitBlock(blockFixture: IFixture) {
+    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         if (blockFixture.getBody().hasBlockFilter(TAG)) return
         explodeAndDie()
     }
 
-    override fun hitProjectile(projectileFixture: IFixture) {
+    override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val other = projectileFixture.getEntity()
         if (other is Asteroid) {
             explodeAndDie()

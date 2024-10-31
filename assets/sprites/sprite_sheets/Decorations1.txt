@@ -66,6 +66,13 @@ RainDrop
   orig: 10, 9
   offset: 0, 0
   index: -1
+SandSplash
+  rotate: false
+  xy: 508, 0
+  size: 160, 32
+  orig: 160, 32
+  offset: 0, 0
+  index: -1
 Thread
   rotate: false
   xy: 142, 0
@@ -82,7 +89,7 @@ ToxicWaterfall
   index: -1
 ToxicWaterSplash
   rotate: false
-  xy: 508, 0
+  xy: 668, 0
   size: 160, 32
   orig: 160, 32
   offset: 0, 0
