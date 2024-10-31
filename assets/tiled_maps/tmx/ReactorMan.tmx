@@ -521,14 +521,14 @@
   <object id="279" name="Ladder" x="5856" y="704" width="32" height="128"/>
   <object id="335" name="EventTrigger" x="9008" y="912" width="32" height="32">
    <properties>
-    <property name="event_type" value="show_background"/>
-    <property name="show" type="bool" value="false"/>
+    <property name="backgrounds" value="CityBKG"/>
+    <property name="event_type" value="show_backgrounds"/>
    </properties>
   </object>
   <object id="379" name="EventTrigger" x="4000" y="1328" width="32" height="32">
    <properties>
-    <property name="event_type" value="show_background"/>
-    <property name="show" type="bool" value="false"/>
+    <property name="backgrounds" value="CityBKG"/>
+    <property name="event_type" value="show_backgrounds"/>
    </properties>
   </object>
  </objectgroup>
@@ -587,7 +587,7 @@
   <object id="216" name="ToxicWaterfall" x="5792" y="576" width="64" height="192"/>
  </objectgroup>
  <objectgroup id="10" name="backgrounds">
-  <object id="1" x="0" y="1568" width="416" height="512">
+  <object id="1" name="CityBKG" x="0" y="1568" width="416" height="512">
    <properties>
     <property name="atlas" value="Backgrounds4.txt"/>
     <property name="columns" type="int" value="30"/>

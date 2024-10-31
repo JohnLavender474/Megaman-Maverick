@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.mega.game.engine.drawables.IDrawable
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.drawables.sprites.BitsBar
+import com.megaman.maverick.game.drawables.ui.BitsBar
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
 
 class EntityStatsHandler(private val game: MegamanMaverickGame) : IDrawable<Batch> {

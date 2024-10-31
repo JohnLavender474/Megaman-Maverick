@@ -16,6 +16,7 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -80,8 +81,8 @@ class SigmaRatElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game)
         hitTimer.reset()
     }
 
-    override fun hitBlock(blockFixture: IFixture) {
-        super.hitBlock(blockFixture)
+    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        super.hitBlock(blockFixture, thisShape, otherShape)
         body.physics.velocity.setZero()
         hit = true
         val blockBounds = blockFixture.getBody()

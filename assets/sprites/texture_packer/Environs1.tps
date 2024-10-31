@@ -174,6 +174,7 @@
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
             <key type="filename">../frames/Environs1/Leaves/SpringLeaf.png</key>
+            <key type="filename">../frames/Environs1/SandSplash.png</key>
             <key type="filename">../frames/Environs1/Water/Splash.png</key>
             <key type="filename">../frames/Environs1/Water/ToxicSplash.png</key>
             <key type="filename">../frames/Environs1/Water/WhiteSplash.png</key>

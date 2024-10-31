@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.ObjectMap
+import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.GameEngine
 import com.mega.game.engine.animations.AnimationsSystem
 import com.mega.game.engine.behaviors.BehaviorsSystem
@@ -48,7 +49,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.MegaControllerButtons
-import com.megaman.maverick.game.drawables.sprites.Background
+import com.megaman.maverick.game.drawables.backgrounds.Background
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntitiesMap
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
@@ -111,7 +112,8 @@ class MegaLevelScreen(
         EventType.VICTORY_EVENT,
         EventType.END_LEVEL,
         EventType.EDIT_TILED_MAP,
-        EventType.SHOW_BACKGROUND,
+        EventType.SHOW_BACKGROUNDS,
+        EventType.HIDE_BACKGROUNDS,
         EventType.SET_GAME_CAM_ROTATION
     )
 
@@ -143,7 +145,8 @@ class MegaLevelScreen(
 
     private lateinit var drawables: ObjectMap<DrawingSection, PriorityQueue<IComparableDrawable<Batch>>>
     private lateinit var shapes: PriorityQueue<IDrawableShape>
-    private lateinit var backgrounds: PriorityQueue<Background>
+    private lateinit var backgrounds: Array<Background>
+    private lateinit var backgroundsToHide: ObjectSet<String>
 
     private lateinit var gameCamera: RotatableCamera
     private lateinit var cameraManagerForRooms: CameraManagerForRooms
@@ -159,7 +162,6 @@ class MegaLevelScreen(
     private val debugPrintTimer = Timer(DEBUG_PRINT_DELAY)
 
     private var initialized = false
-    private var showBackgrounds = true
 
     override fun init() {
         if (initialized) return
@@ -294,13 +296,13 @@ class MegaLevelScreen(
         gameCamera.position.set(ConstFuncs.getCamInitPos())
         uiCamera.position.set(ConstFuncs.getCamInitPos())
         gameCamera.reset()
-        showBackgrounds = true
     }
 
     override fun getLayerBuilders() = MegaMapLayerBuilders(MegaMapLayerBuildersParams(game, spawnsMan))
 
     override fun buildLevel(result: Properties) {
-        backgrounds = result.get(ConstKeys.BACKGROUNDS) as PriorityQueue<Background>? ?: PriorityQueue()
+        backgrounds = result.get(ConstKeys.BACKGROUNDS) as Array<Background>
+        backgroundsToHide = result.get("${ConstKeys.HIDDEN}_${ConstKeys.BACKGROUNDS}") as ObjectSet<String>
 
         val playerSpawns =
             result.get("${ConstKeys.PLAYER}_${ConstKeys.SPAWNS}") as Array<RectangleMapObject>? ?: Array()
@@ -537,9 +539,16 @@ class MegaLevelScreen(
                 }
             }
 
-            EventType.SHOW_BACKGROUND -> {
-                GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Show background")
-                showBackgrounds = event.getProperty(ConstKeys.SHOW, Boolean::class)!!
+            EventType.SHOW_BACKGROUNDS -> {
+                val backgroundKeys = event.getProperty(ConstKeys.BACKGROUNDS, String::class)!!.split(",")
+                GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): show backgrounds: $backgroundKeys")
+                backgroundKeys.forEach { backgroundsToHide.remove(it) }
+            }
+
+            EventType.HIDE_BACKGROUNDS -> {
+                val backgroundKeys = event.getProperty(ConstKeys.BACKGROUNDS, String::class)!!.split(",")
+                GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): hide backgrounds: $backgroundKeys")
+                backgroundKeys.forEach { backgroundsToHide.add(it) }
             }
 
             EventType.SET_GAME_CAM_ROTATION -> {
@@ -609,7 +618,8 @@ class MegaLevelScreen(
         val batch = game.batch
         batch.begin()
 
-        if (showBackgrounds) backgrounds.forEach { it.draw(batch) }
+        backgrounds.sort()
+        backgrounds.forEach { if (!backgroundsToHide.contains(it.key)) it.draw(batch) }
 
         game.viewports.get(ConstKeys.GAME).apply()
         batch.projectionMatrix = gameCamera.combined

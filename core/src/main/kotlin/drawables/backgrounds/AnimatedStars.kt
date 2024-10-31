@@ -1,4 +1,4 @@
-package com.megaman.maverick.game.drawables.sprites
+package com.megaman.maverick.game.drawables.backgrounds
 
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.common.extensions.getTextureRegion
@@ -12,6 +12,7 @@ class AnimatedStars(
     width: Float = MODEL_WIDTH * ConstVals.PPM,
     height: Float = MODEL_HEIGHT * ConstVals.PPM
 ) : AnimatedBackground(
+    "AnimatedStars",
     start.x - (ROWS * ConstVals.PPM) / 2f,
     start.y - (COLS * ConstVals.PPM) / 2f,
     game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_1.source, "AnimatedStarsBG"),

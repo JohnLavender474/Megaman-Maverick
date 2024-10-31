@@ -5,6 +5,7 @@ import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.pairTo
+import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.components.IGameComponent
 import com.mega.game.engine.cullables.CullableOnEvent
 import com.mega.game.engine.cullables.CullablesComponent
@@ -58,17 +59,17 @@ interface IProjectileEntity : IMegaGameEntity, IBodyEntity, IAudioEntity, ICulla
 
     fun explodeAndDie(vararg params: Any?) {}
 
-    fun hitBody(bodyFixture: IFixture) {}
+    fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {}
 
-    fun hitBlock(blockFixture: IFixture) {}
+    fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {}
 
-    fun hitShield(shieldFixture: IFixture) {}
+    fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {}
 
-    fun hitWater(waterFixture: IFixture) {}
+    fun hitWater(waterFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {}
 
-    fun hitSand(sandFixture: IFixture) {}
+    fun hitSand(sandFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {}
 
-    fun hitProjectile(projectileFixture: IFixture) {}
+    fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {}
 
     fun defineBodyComponent(): BodyComponent
 

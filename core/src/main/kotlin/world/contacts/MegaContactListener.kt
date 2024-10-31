@@ -80,7 +80,8 @@ class MegaContactListener(
             printDebugLog(contact, "canBeDamaged=$canBeDamaged")
 
             val canDamage = damager.canDamage(damageable)
-            printDebugLog(contact, "canDamage=$canDamage"
+            printDebugLog(
+                contact, "canDamage=$canDamage"
             )
             if (canBeDamaged && canDamage) {
                 val takeDamageFrom = damageable.takeDamageFrom(damager)
@@ -240,7 +241,10 @@ class MegaContactListener(
             val (feetFixture, _) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.SAND)!!
             val body = feetFixture.getBody()
             body.setBodySense(BodySense.FEET_ON_SAND, true)
-            body.physics.frictionOnSelf.set(SAND_FRICTION, SAND_FRICTION).scl(ConstVals.PPM.toFloat())
+            val takeFriction =
+                body.getOrDefaultProperty("${ConstKeys.TAKE_FRICTION}_${ConstKeys.SAND}", true, Boolean::class)
+            if (takeFriction)
+                body.physics.frictionOnSelf.set(SAND_FRICTION, SAND_FRICTION).scl(ConstVals.PPM.toFloat())
         }
 
         // bouncer, feet or head or side
@@ -279,24 +283,29 @@ class MegaContactListener(
             val (listenerFixture, waterFixture) = contact.getFixturesInOrder(
                 FixtureType.WATER_LISTENER, FixtureType.WATER
             )!!
+
             printDebugLog(
                 contact,
                 "beginContact(): WaterListener-Water. Contact = $contact. Water shape = ${waterFixture.getShape()}"
             )
+
             val body = listenerFixture.getBody()
             body.setBodySense(BodySense.IN_WATER, true)
+
             val water = waterFixture.getEntity()
             if (water is Water && listenerFixture.hasHitByWaterByReceiver()) listenerFixture.getHitByWater(water)
+
             val entity = listenerFixture.getEntity()
             if (entity is Megaman) {
                 Splash.splashOnWaterSurface(listenerFixture.getBody(), waterFixture.getBody())
-                if (!entity.body.isSensing(BodySense.FEET_ON_GROUND) && !entity.isBehaviorActive(BehaviorType.WALL_SLIDING)) entity.aButtonTask =
-                    AButtonTask.SWIM
+                if (!entity.body.isSensing(BodySense.FEET_ON_GROUND) &&
+                    !entity.isBehaviorActive(BehaviorType.WALL_SLIDING)
+                ) entity.aButtonTask = AButtonTask.SWIM
+
                 entity.gravityScalar = MegamanValues.WATER_GRAVITY_SCALAR
-                if ((water is Water && water.splashSound) || (water is PolygonWater && water.splashSound)) game.audioMan.playSound(
-                    SoundAsset.SPLASH_SOUND,
-                    false
-                )
+
+                if ((water is Water && water.splashSound) || (water is PolygonWater && water.splashSound))
+                    game.audioMan.playSound(SoundAsset.SPLASH_SOUND, false)
             }
         }
 
@@ -420,41 +429,46 @@ class MegaContactListener(
                     FixtureType.PROJECTILE
                 )
             )!!
+
             if (otherFixture.hasFixtureLabel(FixtureLabel.NO_PROJECTILE_COLLISION)) return
+
             val projectile1 = projectileFixture.getEntity() as IProjectileEntity
             if (otherFixture.hasHitByProjectileReceiver()) otherFixture.getHitByProjectile(projectile1)
+
+            val thisShape = projectileFixture.getShape().copy()
+            val otherShape = otherFixture.getShape().copy()
             when (otherFixture.getType()) {
                 FixtureType.BLOCK -> {
                     printDebugLog(contact, "beginContact(): Projectile-Block, contact = $contact")
-                    projectile1.hitBlock(otherFixture)
+                    projectile1.hitBlock(otherFixture, thisShape, otherShape)
                     (otherFixture.getEntity() as Block).hitByProjectile(projectileFixture)
                 }
 
                 FixtureType.BODY -> {
                     printDebugLog(contact, "beginContact(): Projectile-Body, contact = $contact")
-                    projectile1.hitBody(otherFixture)
+                    projectile1.hitBody(otherFixture, thisShape, otherShape)
                 }
 
                 FixtureType.SHIELD -> {
                     printDebugLog(contact, "beginContact(): Projectile-Shield, contact = $contact")
-                    projectile1.hitShield(otherFixture)
+                    projectile1.hitShield(otherFixture, thisShape, otherShape)
                 }
 
                 FixtureType.WATER -> {
                     printDebugLog(contact, "beginContact(): Projectile-Water, contact = $contact")
-                    projectile1.hitWater(otherFixture)
+                    projectile1.hitWater(otherFixture, thisShape, otherShape)
                 }
 
                 FixtureType.SAND -> {
                     printDebugLog(contact, "beginContact(): Projectile-Sand, contact = $contact")
-                    projectile1.hitSand(otherFixture)
+                    projectile1.hitSand(otherFixture, thisShape, otherShape)
                 }
 
                 FixtureType.PROJECTILE -> {
                     printDebugLog(contact, "beginContact(): Projectile-Projectile, contact = $contact")
-                    projectile1.hitProjectile(otherFixture)
+                    projectile1.hitProjectile(otherFixture, thisShape, otherShape)
                     val projectile2 = otherFixture.getEntity() as IProjectileEntity
-                    projectile2.hitProjectile(projectileFixture)
+                    projectile2.hitProjectile(projectileFixture, otherShape, thisShape)
                 }
             }
         }
@@ -639,7 +653,10 @@ class MegaContactListener(
             val (feetFixture, _) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.SAND)!!
             val body = feetFixture.getBody()
             body.setBodySense(BodySense.FEET_ON_SAND, true)
-            body.physics.frictionOnSelf.set(SAND_FRICTION, SAND_FRICTION).scl(ConstVals.PPM.toFloat())
+            val takeFriction =
+                body.getOrDefaultProperty("${ConstKeys.TAKE_FRICTION}_${ConstKeys.SAND}", true, Boolean::class)
+            if (takeFriction)
+                body.physics.frictionOnSelf.set(SAND_FRICTION, SAND_FRICTION).scl(ConstVals.PPM.toFloat())
         }
 
         // water listener, water

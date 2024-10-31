@@ -18,6 +18,7 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -75,7 +76,7 @@ class SpitFireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnima
         spawnFireballsOnHit = spawnProps.getOrDefault(ConstKeys.SPAWN, true, Boolean::class)
     }
 
-    override fun hitBlock(blockFixture: IFixture) = explodeAndDie(blockFixture.getShape().getBoundingRectangle())
+    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie(blockFixture.getShape().getBoundingRectangle())
 
     override fun onDamageInflictedTo(damageable: IDamageable) {
         if (damageable is IBodyEntity) explodeAndDie(damageable.body.copy())

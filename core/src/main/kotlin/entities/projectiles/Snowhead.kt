@@ -48,10 +48,10 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
         const val TAG = "Snowhead"
         private const val GRAVITY = -0.2f
         private val SNOWBALL_TRAJECTORIES = gdxArrayOf(
-            Vector2(-7.5f, 7f),
-            Vector2(-3.5f, 9f),
-            Vector2(3.5f, 9f),
-            Vector2(7.5f, 7f),
+            Vector2(-6f, 6f),
+            Vector2(-3f, 9f),
+            Vector2(3f, 9f),
+            Vector2(6f, 6f),
         )
         private var region: TextureRegion? = null
         private var noFaceRegion: TextureRegion? = null
@@ -126,23 +126,23 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
         explosion.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
     }
 
-    override fun hitBlock(blockFixture: IFixture) {
+    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         bounceBullets(blockFixture.getShape())
         explodeAndDie()
     }
 
-    override fun hitWater(waterFixture: IFixture) {
+    override fun hitWater(waterFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         bounceBullets(waterFixture.getShape())
         explodeAndDie()
     }
 
-    override fun hitShield(shieldFixture: IFixture) {
+    override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         if (shieldFixture.getEntity() == owner) return
         bounceBullets(shieldFixture.getShape())
         explodeAndDie()
     }
 
-    override fun hitProjectile(projectileFixture: IFixture) {
+    override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val projectile = projectileFixture.getEntity() as AbstractProjectile
         if (projectile.owner == owner) return
         if (projectile.owner is Megaman) explodeAndDie()

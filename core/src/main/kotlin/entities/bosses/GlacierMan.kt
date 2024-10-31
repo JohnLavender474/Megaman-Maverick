@@ -30,10 +30,7 @@ import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
-import com.mega.game.engine.entities.GameEntity
-import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
-import com.mega.game.engine.entities.contracts.IParentEntity
 import com.mega.game.engine.state.StateMachine
 import com.mega.game.engine.state.StateMachineBuilder
 import com.mega.game.engine.updatables.UpdatablesComponent
@@ -59,14 +56,11 @@ import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.MegaUtilMethods
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodySense
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.isSensing
+import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 import kotlin.reflect.KClass
 
-class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity, IAnimatedEntity, IFaceable {
+class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "GlacierMan"
@@ -123,7 +117,6 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity,
             if (it.fullyCharged) 2 else 1
         }
     )
-    override var children = Array<IGameEntity>()
     override lateinit var facing: Facing
 
     private val timers = ObjectMap<String, Timer>()
@@ -197,8 +190,6 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity,
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-        children.forEach { (it as GameEntity).destroy() }
-        children.clear()
     }
 
     private fun getIceBlastLeftPos() = body.getCenter().add(-0.75f * ConstVals.PPM, 0.2f * ConstVals.PPM)
@@ -384,23 +375,10 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity,
                     if (state.equalsAny(GlacierManState.STAND, GlacierManState.DUCK))
                         facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
 
-                    if (state.equalsAny(
-                            GlacierManState.STAND,
-                            GlacierManState.DUCK,
-                            GlacierManState.STOP,
-                            GlacierManState.ICE_BLAST_ATTACK
-                        )
-                    ) body.physics.velocity.x = 0f
-                    else body.physics.velocity.x = SLED_SPEED * ConstVals.PPM * facing.value
+                    body.physics.velocity.x =
+                        if (state == GlacierManState.SLED) SLED_SPEED * ConstVals.PPM * facing.value else 0f
 
-                    val key = when (state) {
-                        GlacierManState.STAND -> "stand"
-                        GlacierManState.DUCK -> "duck"
-                        GlacierManState.SLED -> "sled"
-                        GlacierManState.STOP -> "stop"
-                        GlacierManState.ICE_BLAST_ATTACK -> "ice_blast_attack"
-                        else -> throw IllegalStateException("Invalid state for this context: $state")
-                    }
+                    val key = state.name.lowercase()
                     val timer = timers[key]
                     timer.update(delta)
                     if (timer.isFinished() || (state == GlacierManState.SLED && shouldStopSledding())) {
@@ -442,15 +420,6 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity,
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBodyBounds() }
-
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
-        body.addFixture(bodyFixture)
-
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
-        body.addFixture(damagerFixture)
-
-        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle(body))
-        body.addFixture(damageableFixture)
 
         val feetFixture =
             Fixture(
@@ -508,7 +477,11 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity,
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(
+            this, body, BodyFixtureDef.of(
+                FixtureType.BODY, FixtureType.DAMAGEABLE, FixtureType.DAMAGER
+            )
+        )
     }
 
     override fun defineSpritesComponent(): SpritesComponent {

@@ -14,6 +14,7 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
@@ -60,9 +61,9 @@ class RocketBomb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
         body.physics.velocity = Vector2(0f, SPEED * ConstVals.PPM).rotateDeg(directionRotation?.rotation ?: 0f)
     }
 
-    override fun hitBody(bodyFixture: IFixture) = explodeAndDie()
+    override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
 
-    override fun hitBlock(blockFixture: IFixture) = explodeAndDie()
+    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
 
     override fun explodeAndDie(vararg params: Any?) {
         destroy()

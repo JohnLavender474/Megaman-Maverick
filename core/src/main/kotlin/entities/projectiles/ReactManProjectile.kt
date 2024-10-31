@@ -116,7 +116,7 @@ class ReactManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game), 
         body.physics.velocity.set(trajectory)
     }
 
-    override fun hitBlock(blockFixture: IFixture) {
+    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         if (!active) return
         if (big) shatter(blockFixture.getShape())
         explodeAndDie()
