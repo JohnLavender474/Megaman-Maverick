@@ -85,6 +85,8 @@ comprehensive listing of the credits for the artwork used in this game.
 
 ### Sounds
 
+Megaman 9 Sounds: https://www.sounds-resource.com/xbox_360/megaman9/sound/33185/
+
 Sounds belong to Capcom (Megaman-ripped sound effects) and Nintendo (Mario-ripped sound effects)
 TODO: add credits and links here for where the sounds were downloaded from
 

@@ -352,6 +352,8 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 return@add
             }
             if (defeated) {
+                body.physics.velocity.setZero()
+                body.physics.gravityOn = false
                 explodeOnDefeat(delta)
                 return@add
             }

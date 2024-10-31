@@ -24,10 +24,12 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getEntity
 
 class Needle(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
@@ -61,6 +63,11 @@ class Needle(game: MegamanMaverickGame) : AbstractProjectile(game) {
         damagerFixture.active = damagerActive
     }
 
+    override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        val entity = projectileFixture.getEntity() as IProjectileEntity
+        if (entity.owner != owner) explodeAndDie()
+    }
+
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
 
     override fun explodeAndDie(vararg params: Any?) {
@@ -86,9 +93,6 @@ class Needle(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
         damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.25f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-
-        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameCircle().setRadius(0.25f * ConstVals.PPM))
-        body.addFixture(shieldFixture)
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 

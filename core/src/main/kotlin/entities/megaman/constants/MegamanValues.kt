@@ -1,8 +1,8 @@
 package com.megaman.maverick.game.entities.megaman.constants
 
 object MegamanValues {
-    const val MAX_WEAPON_AMMO = 30
     const val START_HEALTH = 14
+    const val MAX_WEAPON_AMMO = 30
 
     const val CART_RIDE_MAX_SPEED = 15f
     const val CART_RIDE_ACCELERATION = 1.25f

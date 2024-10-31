@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.world.contacts
 
+import com.badlogic.gdx.math.Intersector
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.GameLogger
@@ -7,6 +8,8 @@ import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.objects.pairTo
+import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameLine
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.ShapeUtils
@@ -21,9 +24,13 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.decorations.Splash
+import com.megaman.maverick.game.entities.decorations.Splash.SplashType
+import com.megaman.maverick.game.entities.factories.EntityFactories
+import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.entities.items.HeartTank
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
@@ -239,12 +246,18 @@ class MegaContactListener(
         else if (contact.fixturesMatch(FixtureType.FEET, FixtureType.SAND)) {
             printDebugLog(contact, "beginContact(): Feet-Sand, contact = $contact")
             val (feetFixture, _) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.SAND)!!
+
             val body = feetFixture.getBody()
             body.setBodySense(BodySense.FEET_ON_SAND, true)
+
             val takeFriction =
                 body.getOrDefaultProperty("${ConstKeys.TAKE_FRICTION}_${ConstKeys.SAND}", true, Boolean::class)
             if (takeFriction)
                 body.physics.frictionOnSelf.set(SAND_FRICTION, SAND_FRICTION).scl(ConstVals.PPM.toFloat())
+
+            val splash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SPLASH)!!
+            val position = feetFixture.getShape().getBoundingRectangle().getBottomCenterPoint()
+            splash.spawn(props(ConstKeys.POSITION pairTo position, ConstKeys.TYPE pairTo SplashType.SAND))
         }
 
         // bouncer, feet or head or side
@@ -462,6 +475,16 @@ class MegaContactListener(
                 FixtureType.SAND -> {
                     printDebugLog(contact, "beginContact(): Projectile-Sand, contact = $contact")
                     projectile1.hitSand(otherFixture, thisShape, otherShape)
+                    val splash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SPLASH)!!
+
+                    val overlap = GameRectangle()
+                    Intersector.intersectRectangles(
+                        projectileFixture.getShape().getBoundingRectangle(),
+                        otherFixture.getShape().getBoundingRectangle(),
+                        overlap
+                    )
+                    val position = overlap.getCenter()
+                    splash.spawn(props(ConstKeys.POSITION pairTo position, ConstKeys.TYPE pairTo SplashType.SAND))
                 }
 
                 FixtureType.PROJECTILE -> {
@@ -651,8 +674,10 @@ class MegaContactListener(
         else if (contact.fixturesMatch(FixtureType.FEET, FixtureType.SAND)) {
             printDebugLog(contact, "beginContact(): Feet-Sand, contact = $contact")
             val (feetFixture, _) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.SAND)!!
+
             val body = feetFixture.getBody()
             body.setBodySense(BodySense.FEET_ON_SAND, true)
+
             val takeFriction =
                 body.getOrDefaultProperty("${ConstKeys.TAKE_FRICTION}_${ConstKeys.SAND}", true, Boolean::class)
             if (takeFriction)
