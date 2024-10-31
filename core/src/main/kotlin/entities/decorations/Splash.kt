@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.decorations
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
@@ -9,7 +10,6 @@ import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -35,20 +35,23 @@ import kotlin.math.ceil
 
 class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
 
-    enum class SplashType { BLUE, WHITE, TOXIC, SAND }
+    enum class SplashType(
+        val defaultAlpha: Float,
+        val defaultSection: DrawingSection,
+        val defaultPriority: Int,
+        val defaultSize: Float,
+        val regionkey: String
+    ) {
+        BLUE(0.5f, DrawingSection.PLAYGROUND, -1, ConstVals.PPM.toFloat(), "Water/Splash"),
+        WHITE(0.5f, DrawingSection.PLAYGROUND, -1, ConstVals.PPM.toFloat(), "Water/WhiteSplash"),
+        TOXIC(0.5f, DrawingSection.PLAYGROUND, -1, ConstVals.PPM.toFloat(), "Water/ToxicSplash"),
+        SAND(1f, DrawingSection.FOREGROUND, 15, 1.5f * ConstVals.PPM, "SandSplash")
+    }
 
     companion object {
         const val TAG = "Splash"
-        private const val BLUE_SPLASH_REGION_KEY = "Water/Splash"
-        private const val WHITE_SPLASH_REGION_KEY = "Water/WhiteSplash"
-        private const val TOXIC_SPLASH_REGION_KEY = "Water/ToxicSplash"
-        private const val SAND_SPLASH_REGION_KEY = "SandSplash"
-        private const val DEFAULT_ALPHA = 0.5f
         private const val CULL_TIME = 0.375f
-        private var blueSplashRegion: TextureRegion? = null
-        private var whiteSplashRegion: TextureRegion? = null
-        private var toxicSplashRegion: TextureRegion? = null
-        private var sandSplashRegion: TextureRegion? = null
+        private val regions = ObjectMap<String, TextureRegion>()
 
         fun splashOnWaterSurface(splasher: GameRectangle, water: GameRectangle) {
             GameLogger.debug(TAG, "Generating splash for splasher [$splasher] and water [$water]")
@@ -65,18 +68,14 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
     private lateinit var type: SplashType
 
     override fun init() {
-        if (blueSplashRegion == null ||
-            whiteSplashRegion == null ||
-            toxicSplashRegion == null ||
-            sandSplashRegion == null
-        ) {
+        if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENVIRONS_1.source)
-            blueSplashRegion = atlas.findRegion(BLUE_SPLASH_REGION_KEY)
-            whiteSplashRegion = atlas.findRegion(WHITE_SPLASH_REGION_KEY)
-            toxicSplashRegion = atlas.findRegion(TOXIC_SPLASH_REGION_KEY)
-            sandSplashRegion = atlas.findRegion(SAND_SPLASH_REGION_KEY)
+            SplashType.entries.forEach { t ->
+                val region = atlas.findRegion(t.regionkey)
+                regions.put(t.name, region)
+            }
         }
-        addComponent(defineSpritesCompoent())
+        addComponent(SpritesComponent(GameSprite()))
         addComponent(defineAnimationsComponent())
         addComponent(defineUpdatablesComponent())
     }
@@ -91,18 +90,27 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
         } else SplashType.BLUE
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-        firstSprite!!.setPosition(spawn, Position.BOTTOM_CENTER)
-        firstSprite!!.setOriginCenter()
-        firstSprite!!.rotation = spawnProps.getOrDefault(ConstKeys.ROTATION, 0f, Float::class)
+        val size = spawnProps.getOrDefault(ConstKeys.SIZE, type.defaultSize, Float::class)
+        val rotation = spawnProps.getOrDefault(ConstKeys.ROTATION, 0f, Float::class)
+        val alpha = spawnProps.getOrDefault(ConstKeys.ALPHA, type.defaultAlpha, Float::class)
         val priority = spawnProps.getOrDefault(
             ConstKeys.PRIORITY,
-            DrawingPriority(DrawingSection.PLAYGROUND, -1),
+            DrawingPriority(type.defaultSection, type.defaultPriority),
             DrawingPriority::class
         )
-        firstSprite!!.priority.section = priority.section
-        firstSprite!!.priority.value = priority.value
-        val alpha = spawnProps.getOrDefault(ConstKeys.ALPHA, DEFAULT_ALPHA, Float::class)
-        firstSprite!!.setAlpha(alpha)
+
+        firstSprite!!.let { sprite ->
+            sprite.setSize(size)
+            sprite.setPosition(spawn, Position.BOTTOM_CENTER)
+
+            sprite.setOriginCenter()
+            sprite.rotation = rotation
+
+            sprite.setAlpha(alpha)
+
+            sprite.priority.section = priority.section
+            sprite.priority.value = priority.value
+        }
 
         cullTimer.reset()
     }
@@ -114,19 +122,10 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { type.name }
-        val animations = objectMapOf<String, IAnimation>(
-            SplashType.BLUE.name pairTo Animation(blueSplashRegion!!, 1, 5, 0.075f, false),
-            SplashType.WHITE.name pairTo Animation(whiteSplashRegion!!, 1, 5, 0.075f, false),
-            SplashType.TOXIC.name pairTo Animation(toxicSplashRegion!!, 1, 5, 0.075f, false)
-        )
+        val animations = ObjectMap<String, IAnimation>()
+        SplashType.entries.forEach { t -> animations.put(t.name, Animation(regions[t.name], 1, 5, 0.075f, false)) }
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
-    }
-
-    private fun defineSpritesCompoent(): SpritesComponent {
-        val sprite = GameSprite()
-        sprite.setSize(ConstVals.PPM.toFloat())
-        return SpritesComponent(sprite)
     }
 
     override fun getEntityType() = EntityType.DECORATION

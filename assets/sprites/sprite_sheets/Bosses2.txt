@@ -19,21 +19,21 @@ DesertMan/arm_extension_punch
   index: -1
 DesertMan/dance
   rotate: false
-  xy: 0, 64
+  xy: 64, 64
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 DesertMan/dance_flash
   rotate: false
-  xy: 0, 448
+  xy: 0, 640
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 DesertMan/defeated
   rotate: false
-  xy: 0, 576
+  xy: 0, 448
   size: 64, 192
   orig: 64, 192
   offset: 0, 0
@@ -47,28 +47,28 @@ DesertMan/jump
   index: -1
 DesertMan/punch_long
   rotate: false
-  xy: 64, 576
+  xy: 64, 448
   size: 64, 192
   orig: 64, 192
   offset: 0, 0
   index: -1
 DesertMan/punch_short
   rotate: false
-  xy: 64, 64
+  xy: 0, 192
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 DesertMan/stand
   rotate: false
-  xy: 0, 192
+  xy: 64, 192
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 DesertMan/tornado
   rotate: false
-  xy: 64, 192
+  xy: 0, 320
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
@@ -82,8 +82,15 @@ DesertMan/tornado_punch
   index: -1
 DesertMan/tornado_start
   rotate: false
-  xy: 0, 320
+  xy: 64, 320
   size: 64, 128
   orig: 64, 128
+  offset: 0, 0
+  index: -1
+DesertMan/wall_slide
+  rotate: false
+  xy: 0, 64
+  size: 64, 64
+  orig: 64, 64
   offset: 0, 0
   index: -1

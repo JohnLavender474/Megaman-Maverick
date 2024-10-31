@@ -111,6 +111,7 @@ class Cactus(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEntit
 
     override fun onHealthDepleted() {
         spawnNeedles()
+        playSoundNow(SoundAsset.THUMP_SOUND, false)
         super.onHealthDepleted()
     }
 
