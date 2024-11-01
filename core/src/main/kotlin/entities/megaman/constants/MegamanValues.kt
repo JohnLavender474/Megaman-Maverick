@@ -30,7 +30,7 @@ object MegamanValues {
 
     const val GROUND_GRAVITY = -0.001f
     const val WALL_SLIDE_GRAVITY = -0.1f
-    const val GRAVITY = -0.375f
+    const val GRAVITY = -0.35f
     const val ICE_GRAVITY = -0.5f
     const val WATER_GRAVITY = -0.25f
     const val WATER_ICE_GRAVITY = -0.4f

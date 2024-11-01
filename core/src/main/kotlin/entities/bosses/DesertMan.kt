@@ -499,7 +499,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
                 _sprite.setPosition(position, Position.BOTTOM_CENTER)
                 _sprite.translateY(SPRITE_Y_OFFSET * ConstVals.PPM)
                 _sprite.setFlip(isFacing(Facing.RIGHT), false)
-                _sprite.hidden = currentState != DesertManState.PUNCH_LONG || longPunchExtensionCount < i
+                _sprite.hidden = defeated || currentState != DesertManState.PUNCH_LONG || longPunchExtensionCount < i
             }
         }
 
