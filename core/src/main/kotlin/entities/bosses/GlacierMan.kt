@@ -83,7 +83,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         private const val MEGAMAN_ABOVE_OFFSET_Y = 1.5f
 
         private const val JUMP_IMPULSE_X = 25f
-        private const val JUMP_IMPULSE_Y = 48f
+        private const val JUMP_IMPULSE_Y = 15f
 
         private const val GRAVITY = -0.15f
         private const val GROUND_GRAVITY = -0.01f
@@ -120,12 +120,13 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     override lateinit var facing: Facing
 
     private val timers = ObjectMap<String, Timer>()
-    private lateinit var stateMachine: StateMachine<GlacierManState>
     private lateinit var animator: Animator
+    private lateinit var stateMachine: StateMachine<GlacierManState>
     private val walls = Array<Block>()
     private var shootUp = false
     private var firstUpdate = true
     private var iceBlastLeftHand = false
+    private var previousState: GlacierManState? = null
 
     override fun init() {
         if (regions.isEmpty) {
@@ -185,6 +186,8 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         val wall2 = MegaGameEntitiesMap.getEntitiesOfMapObjectId(wall2Id).firstOrNull()
         if (wall2 != null && wall2 is Block) walls.add(wall2)
         else GameLogger.error(TAG, "onSpawn(): no wall block 2 found for id $wall2Id; wall 2 = $wall2")
+
+        previousState = null
     }
 
     override fun onDestroy() {
@@ -297,15 +300,19 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         GameLogger.debug(TAG, "onChangeState(): new=$current, old=$previous")
 
         firstUpdate = false
-
-        if (current == GlacierManState.JUMP) {
-            GameLogger.debug(TAG, "onChangeState(): jump")
-            jump()
-        } else if (current == GlacierManState.BRAKE) {
-            GameLogger.debug(TAG, "onChangeState(): start brake, apply brake friction")
-            body.physics.defaultFrictionOnSelf.x = BRAKE_FRICTION_X
-            body.putProperty("${ConstKeys.ICE}_${ConstKeys.FRICTION_X}", false)
-            body.physics.applyFrictionX = true
+        when (current) {
+            GlacierManState.STAND -> previousState = previous
+            GlacierManState.JUMP -> {
+                GameLogger.debug(TAG, "onChangeState(): jump")
+                jump()
+            }
+            GlacierManState.BRAKE -> {
+                GameLogger.debug(TAG, "onChangeState(): start brake, apply brake friction")
+                body.physics.defaultFrictionOnSelf.x = BRAKE_FRICTION_X
+                body.putProperty("${ConstKeys.ICE}_${ConstKeys.FRICTION_X}", false)
+                body.physics.applyFrictionX = true
+            }
+            else -> GameLogger.debug(TAG, "onChangeState(): no change when current=$current")
         }
 
         if (previous == GlacierManState.BRAKE) {
@@ -574,15 +581,20 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             .transition(
                 GlacierManState.STAND.name,
                 GlacierManState.ICE_BLAST_ATTACK.name
-            ) { !firstUpdate && canIceBlast() && getRandom(0, 10) <= 2 }
+            ) { !firstUpdate &&
+                previousState != GlacierManState.ICE_BLAST_ATTACK &&
+                canIceBlast() &&
+                getRandom(0, 10) <= 4 }
             .transition(
                 GlacierManState.STAND.name,
                 GlacierManState.DUCK.name
-            ) { !isMegamanAboveOffsetY() && getRandom(0, 10) <= 5 }
+            ) { !isMegamanAboveOffsetY() &&
+                previousState != GlacierManState.DUCK &&
+                getRandom(0, 10) <= 5 }
             .transition(
                 GlacierManState.STAND.name,
                 GlacierManState.SLED.name
-            ) { isMegamanOutsideOffsetX() }
+            ) { isMegamanOutsideOffsetX() && previousState != GlacierManState.SLED }
             .transition(GlacierManState.STAND.name, GlacierManState.JUMP.name) { true }
             /*
             Transitions from the DUCK state:
