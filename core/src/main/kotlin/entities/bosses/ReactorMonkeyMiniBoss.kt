@@ -62,10 +62,10 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
         private const val MAX_THROW_DELAY = 2.25f
         private const val THROW_DUR = 0.3f
         private const val BALL_CATCH_RADIUS = 0.25f
-        private const val BALL_IMPULSE_Y = 7.5f
+        private const val BALL_IMPULSE_Y = 6f
         private const val HORIZONTAL_SCALAR = 1.25f
         private const val VERTICAL_SCALAR = 1f
-        private const val DEFAULT_BALL_SPAWN_Y = 6f
+        private const val DEFAULT_BALL_SPAWN_Y = 4f
         private var standRegion: TextureRegion? = null
         private var throwRegion: TextureRegion? = null
     }
