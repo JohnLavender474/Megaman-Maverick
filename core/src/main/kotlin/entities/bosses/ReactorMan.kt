@@ -61,7 +61,6 @@ import kotlin.reflect.KClass
 class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, IFaceable {
 
     enum class ReactManState(val regionName: String) {
-        DANCE("Dance"),
         JUMP("Jump"),
         RUN("Run"),
         STAND("Stand"),
@@ -70,15 +69,25 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
     companion object {
         const val TAG = "ReactMan"
+
         private const val GRAVITY = -0.15f
         private const val GROUND_GRAVITY = -0.001f
-        private const val STAND_DUR = 0.5f
+
+        private const val STAND_MAX_DUR = 0.75f
+        private const val STAND_MIN_DUR = 0.25f
+
         private const val DANCE_DUR = 0.4f
+
         private const val RUN_DUR = 0.5f
-        private const val RUN_SPEED = 8f
-        private const val JUMP_IMPULSE = 25f
+        private const val RUN_MIN_SPEED = 8f
+        private const val RUN_MAX_SPEED = 14f
+
+        private const val JUMP_IMPULSE = 16f
+
         private const val THROW_DELAY = 0.25f
-        private const val PROJECTILE_SPEED = 10f
+        private const val PROJECTILE_MIN_SPEED = 8f
+        private const val PROJECTILE_MAX_SPEED = 14f
+
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -96,7 +105,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     )
     override lateinit var facing: Facing
 
-    private val standTimer = Timer(STAND_DUR)
+    private val standTimer = Timer(STAND_MAX_DUR)
     private val danceTimer = Timer(DANCE_DUR)
     private val runTimer = Timer(RUN_DUR)
     private val throwTimer = Timer(THROW_DELAY)
@@ -120,6 +129,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 regions.put(it.regionName, region)
             }
             regions.put("Die", atlas.findRegion("$TAG/Die"))
+            regions.put("Defeated", atlas.findRegion("$TAG/Defeated"))
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -139,8 +149,13 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         jumped = false
         throwOnJump = true
 
-        currentState = ReactManState.DANCE
+        currentState = ReactManState.STAND
         facing = if (getMegaman().body.x <= body.x) Facing.LEFT else Facing.RIGHT
+    }
+
+    override fun onReady() {
+        super.onReady()
+        body.physics.gravityOn = true
     }
 
     override fun onDestroy() {
@@ -152,8 +167,14 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (!ready) return@add
+            if (!ready) {
+                body.physics.velocity.setZero()
+                body.physics.gravityOn = false
+                return@add
+            }
             if (defeated) {
+                body.physics.velocity.setZero()
+                body.physics.gravityOn = false
                 explodeOnDefeat(delta)
                 return@add
             }
@@ -161,27 +182,20 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             projectile?.body?.setCenter(projectilePosition)
 
             when (currentState) {
-                ReactManState.DANCE -> {
-                    body.physics.velocity.setZero()
-                    danceTimer.update(delta)
-                    if (danceTimer.isFinished()) {
-                        danceTimer.reset()
-                        currentState = ReactManState.STAND
-                    }
-                }
-
                 ReactManState.STAND -> {
                     if (projectile == null) spawnProjectile()
-
-                    body.physics.velocity.setZero()
 
                     if (getMegaman().body.x <= body.x) facing = Facing.LEFT
                     else if (getMegaman().body.getMaxX() >= body.getMaxX()) facing = Facing.RIGHT
 
-                    standTimer.update(delta)
-                    if (standTimer.isFinished()) {
-                        standTimer.reset()
-                        currentState = ReactManState.JUMP
+                    if (body.isSensing(BodySense.FEET_ON_GROUND)) {
+                        body.physics.velocity.setZero()
+
+                        standTimer.update(delta)
+                        if (standTimer.isFinished()) {
+                            standTimer.resetDuration(getStandDur())
+                            currentState = ReactManState.JUMP
+                        }
                     }
                 }
 
@@ -225,21 +239,14 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 }
 
                 ReactManState.RUN -> {
-                    if ((getMegaman().body.x <= body.getMaxX() && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
-                        (getMegaman().body.getMaxX() >= body.x && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
-                    ) {
-                        runTimer.reset()
-                        currentState = ReactManState.STAND
-                    }
-
                     runTimer.update(delta)
-                    if (runTimer.isFinished()) {
+                    if (runTimer.isFinished() || shouldStopRunning()) {
                         runTimer.reset()
                         currentState = ReactManState.STAND
                         return@add
                     }
 
-                    body.physics.velocity = Vector2(RUN_SPEED * ConstVals.PPM * facing.value, 0f)
+                    body.physics.velocity = Vector2(getRunSpeed() * ConstVals.PPM * facing.value, 0f)
                 }
             }
         }
@@ -271,11 +278,23 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     }
 
     private fun throwProjectile() {
-        val trajectory = getMegaman().body.getCenter().sub(body.getCenter()).nor().scl(PROJECTILE_SPEED * ConstVals.PPM)
+        val trajectory =
+            getMegaman().body.getCenter().sub(body.getCenter()).nor().scl(getProjectileSpeed() * ConstVals.PPM)
         projectile!!.setTrajectory(trajectory)
         projectile!!.active = true
         projectile = null
     }
+
+    private fun shouldStopRunning() =
+        (isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
+            (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
+
+    private fun getStandDur() = STAND_MIN_DUR + (STAND_MAX_DUR - STAND_MIN_DUR) * getHealthRatio()
+
+    private fun getRunSpeed() = RUN_MAX_SPEED - (RUN_MAX_SPEED - RUN_MIN_SPEED) * getHealthRatio()
+
+    private fun getProjectileSpeed() =
+        PROJECTILE_MAX_SPEED - (PROJECTILE_MAX_SPEED - PROJECTILE_MIN_SPEED) * getHealthRatio()
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
@@ -351,10 +370,9 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
+        sprite.setSize(2.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
-            val size = if (defeated || currentState == ReactManState.DANCE) 1.6875f else 2.25f
-            _sprite.setSize(size * ConstVals.PPM)
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
             _sprite.setFlip(isFacing(Facing.RIGHT), false)
             _sprite.hidden = damageBlink || !ready
@@ -364,8 +382,11 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = {
-            if (defeated) "Die"
-            else if (currentState == ReactManState.JUMP && throwOnJump && throwTimer.isFinished()) ReactManState.THROW.name
+            if (defeated) "Defeated"
+            else if (currentState == ReactManState.STAND) {
+                if (body.isSensing(BodySense.FEET_ON_GROUND)) ReactManState.STAND.name else ReactManState.JUMP.name
+            } else if (currentState == ReactManState.JUMP && throwOnJump && throwTimer.isFinished())
+                ReactManState.THROW.name
             else currentState.name
         }
         val animations = objectMapOf<String, IAnimation>(
@@ -373,10 +394,9 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 regions.get(ReactManState.STAND.regionName), 1, 3, gdxArrayOf(1f, 0.1f, 0.1f), true
             ),
             ReactManState.THROW.name pairTo Animation(regions.get(ReactManState.THROW.regionName)),
-            ReactManState.DANCE.name pairTo Animation(regions.get(ReactManState.DANCE.regionName), 2, 2, 0.1f, false),
             ReactManState.RUN.name pairTo Animation(regions.get(ReactManState.RUN.regionName), 2, 2, 0.1f, true),
             ReactManState.JUMP.name pairTo Animation(regions.get(ReactManState.JUMP.regionName)),
-            "Die" pairTo Animation(regions.get("Die"))
+            "Defeated" pairTo Animation(regions.get("Defeated"), 3, 1, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
