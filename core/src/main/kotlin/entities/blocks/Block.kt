@@ -33,12 +33,9 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
     lateinit var blockFixture: Fixture
         private set
+    var draw = true
     protected val debugShapeSuppliers = Array<() -> IDrawableShape?>()
     private val fixturesToRemove = ObjectSet<Fixture>()
-
-    override fun getEntityType() = EntityType.BLOCK
-
-    override fun getTag() = TAG
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -47,7 +44,7 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         addComponent(defineBodyComponent())
 
         body.color = Color.GRAY
-        debugShapeSuppliers.add { body.getBodyBounds() }
+        debugShapeSuppliers.add { if (draw) body.getBodyBounds() else null }
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapeSuppliers, debug = true))
     }
 
@@ -106,7 +103,10 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         val position = spawnProps.get(ConstKeys.POSITION, Vector2::class)
         if (position != null) body.setPosition(position)
 
-        blockFixture.active = spawnProps.getOrDefault(ConstKeys.BLOCK_ON, true, Boolean::class)
+        val collisionOn = spawnProps.getOrDefault(ConstKeys.ON, true, Boolean::class)
+        body.physics.collisionOn = collisionOn
+
+        blockFixture.active = spawnProps.getOrDefault(ConstKeys.ACTIVE, true, Boolean::class)
 
         val fixtureEntriesToAdd = spawnProps.get(ConstKeys.FIXTURES) as Array<GamePair<FixtureType, Properties>>?
         fixtureEntriesToAdd?.forEach { fixtureEntry ->
@@ -129,6 +129,8 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
                 filters.forEach { body.addBlockFilter(it.uppercase()) }
             }
         }
+
+        draw = spawnProps.getOrDefault(ConstKeys.DRAW, true, Boolean::class)
     }
 
     override fun onDestroy() {
@@ -168,4 +170,8 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
         return BodyComponentCreator.create(this, body)
     }
+
+    override fun getEntityType() = EntityType.BLOCK
+
+    override fun getTag() = TAG
 }

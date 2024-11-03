@@ -71,8 +71,8 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
         private const val LAUNCH_SPEED = 10f
         private const val RETURN_DELAY = 1f
         private const val RETURN_SPEED = 2f
-        private const val FIST_OFFSET_X = -2.5f
-        private const val FIST_OFFSET_Y = 0.65f
+        private const val FIST_OFFSET_X = -2.35f
+        private const val FIST_OFFSET_Y = 0.75f
         private var fistRegion: TextureRegion? = null
         private var launchedRegion: TextureRegion? = null
     }
@@ -139,7 +139,6 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
                 if (damagerOwner == this ||
                     damagerOwner == parent ||
                     damagerOwner == (parent as GutsTank).tankBlock ||
-                    damagerOwner == (parent as GutsTank).bodyBlock ||
                     (damagerOwner is Met && (parent as GutsTank).runningMets.contains(damagerOwner)) ||
                     (damagerOwner is HeliMet && (parent as GutsTank).heliMets.contains(damagerOwner))
                 ) return false
