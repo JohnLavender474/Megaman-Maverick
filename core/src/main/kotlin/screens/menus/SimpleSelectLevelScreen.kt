@@ -30,7 +30,7 @@ class SimpleSelectLevelScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, 
             BETA pairTo gdxArrayOf(
                 Level.REACTOR_MAN,
                 Level.DESERT_MAN,
-                Level.GLACIER_MAN
+                Level.GLACIER_MAN,
             ),
             ALPHA pairTo gdxArrayOf(
                 Level.INFERNO_MAN,

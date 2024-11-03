@@ -226,7 +226,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
             when (currentState) {
                 DesertManState.INIT -> {
                     body.physics.gravityOn = true
-                    if (body.isSensing(BodySense.FEET_ON_GROUND)) stateMachine.next()
+                    if (body.isSensing(BodySense.FEET_ON_SAND)) stateMachine.next()
                 }
 
                 DesertManState.DANCE -> {
