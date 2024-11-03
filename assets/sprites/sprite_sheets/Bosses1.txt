@@ -1,5 +1,5 @@
 Bosses1.png
-size: 1888, 1510
+size: 1968, 1558
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -26,28 +26,28 @@ Bospider/Still
   index: -1
 GlacierMan/brake
   rotate: false
-  xy: 64, 208
+  xy: 1872, 112
   size: 64, 144
   orig: 64, 144
   offset: 0, 0
   index: -1
 GlacierMan/brake_shoot
   rotate: false
-  xy: 128, 208
+  xy: 0, 256
   size: 64, 144
   orig: 64, 144
   offset: 0, 0
   index: -1
 GlacierMan/brake_shoot_up
   rotate: false
-  xy: 192, 208
+  xy: 64, 256
   size: 64, 144
   orig: 64, 144
   offset: 0, 0
   index: -1
 GlacierMan/defeated
   rotate: false
-  xy: 256, 208
+  xy: 128, 256
   size: 64, 144
   orig: 64, 144
   offset: 0, 0
@@ -75,42 +75,42 @@ GlacierMan/duck_shoot_up
   index: -1
 GlacierMan/fall
   rotate: false
-  xy: 1048, 368
+  xy: 1200, 416
   size: 128, 192
   orig: 128, 192
   offset: 0, 0
   index: -1
 GlacierMan/fall_shoot_up
   rotate: false
-  xy: 1176, 368
+  xy: 1328, 416
   size: 128, 192
   orig: 128, 192
   offset: 0, 0
   index: -1
 GlacierMan/ice_blast_attack
   rotate: false
-  xy: 352, 112
+  xy: 288, 112
   size: 64, 96
   orig: 64, 96
   offset: 0, 0
   index: -1
 GlacierMan/jump
   rotate: false
-  xy: 1304, 368
+  xy: 1456, 416
   size: 128, 192
   orig: 128, 192
   offset: 0, 0
   index: -1
 GlacierMan/sled
   rotate: false
-  xy: 416, 112
+  xy: 352, 112
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 GlacierMan/sled_shoot
   rotate: false
-  xy: 544, 112
+  xy: 480, 112
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
@@ -138,7 +138,7 @@ GlacierMan/stand_shoot_up
   index: -1
 GlacierMan/stop
   rotate: false
-  xy: 320, 208
+  xy: 192, 256
   size: 192, 144
   orig: 192, 144
   offset: 0, 0
@@ -152,49 +152,49 @@ GutsTank/Fist
   index: -1
 GutsTank/FistLaunched
   rotate: false
-  xy: 672, 112
+  xy: 608, 112
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 GutsTank/Laughing
   rotate: false
-  xy: 1432, 368
+  xy: 1584, 416
   size: 384, 192
   orig: 384, 192
   offset: 0, 0
   index: -1
 GutsTank/MouthClosed
   rotate: false
-  xy: 0, 560
+  xy: 0, 608
   size: 384, 192
   orig: 384, 192
   offset: 0, 0
   index: -1
 GutsTank/MouthOpen
   rotate: false
-  xy: 384, 560
+  xy: 384, 608
   size: 384, 192
   orig: 384, 192
   offset: 0, 0
   index: -1
 MechaDragonMiniBoss/defeated
   rotate: false
-  xy: 1440, 560
+  xy: 1440, 608
   size: 400, 200
   orig: 400, 200
   offset: 0, 0
   index: -1
 MechaDragonMiniBoss/fly
   rotate: false
-  xy: 0, 760
+  xy: 0, 808
   size: 400, 200
   orig: 400, 200
   offset: 0, 0
   index: -1
 MechaDragonMiniBoss/shoot
   rotate: false
-  xy: 400, 760
+  xy: 400, 808
   size: 400, 200
   orig: 400, 200
   offset: 0, 0
@@ -208,7 +208,7 @@ MoonHeadMiniBoss/Angry
   index: -1
 MoonHeadMiniBoss/Awaken
   rotate: false
-  xy: 0, 208
+  xy: 1808, 112
   size: 64, 135
   orig: 64, 135
   offset: 0, 0
@@ -243,35 +243,35 @@ MoonHeadMiniBoss/Shoot
   index: -1
 MoonMan_v2/jump
   rotate: false
-  xy: 64, 112
+  xy: 0, 112
   size: 96, 90
   orig: 96, 90
   offset: 0, 0
   index: -1
 MoonMan_v2/jump_shoot
   rotate: false
-  xy: 160, 112
+  xy: 96, 112
   size: 96, 90
   orig: 96, 90
   offset: 0, 0
   index: -1
 MoonMan_v2/stand
   rotate: false
-  xy: 760, 368
+  xy: 912, 416
   size: 96, 180
   orig: 96, 180
   offset: 0, 0
   index: -1
 MoonMan_v2/stand_shoot
   rotate: false
-  xy: 256, 112
+  xy: 192, 112
   size: 96, 90
   orig: 96, 90
   offset: 0, 0
   index: -1
 MoonMan_v2/throw
   rotate: false
-  xy: 856, 368
+  xy: 1008, 416
   size: 192, 180
   orig: 192, 180
   offset: 0, 0
@@ -320,7 +320,7 @@ PreciousMan/StandShoot
   index: -1
 ReactMan/Defeated
   rotate: false
-  xy: 512, 208
+  xy: 384, 256
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
@@ -334,7 +334,7 @@ ReactMan/Jump
   index: -1
 ReactMan/Run
   rotate: false
-  xy: 720, 112
+  xy: 656, 112
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
@@ -355,28 +355,42 @@ ReactMan/Throw
   index: -1
 ReactorMonkeyMiniBoss/Jump
   rotate: false
-  xy: 1448, 208
+  xy: 1320, 256
   size: 152, 160
   orig: 152, 160
   offset: 0, 0
   index: -1
 ReactorMonkeyMiniBoss/Nuclear_Monkey_Ball
   rotate: false
-  xy: 0, 112
+  xy: 1888, 48
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 ReactorMonkeyMiniBoss/Stand
   rotate: false
-  xy: 0, 368
+  xy: 1472, 256
   size: 304, 160
   orig: 304, 160
   offset: 0, 0
   index: -1
+ReactorMonkeyMiniBoss/StandDamaged
+  rotate: false
+  xy: 1776, 256
+  size: 152, 160
+  orig: 152, 160
+  offset: 0, 0
+  index: -1
 ReactorMonkeyMiniBoss/Throw
   rotate: false
-  xy: 304, 368
+  xy: 0, 416
+  size: 456, 160
+  orig: 456, 160
+  offset: 0, 0
+  index: -1
+ReactorMonkeyMiniBoss/ThrowDamaged
+  rotate: false
+  xy: 456, 416
   size: 456, 160
   orig: 456, 160
   offset: 0, 0
@@ -432,28 +446,28 @@ RodentMan/WallSlide
   index: -1
 SigmaRat/Body
   rotate: false
-  xy: 560, 208
+  xy: 432, 256
   size: 148, 148
   orig: 148, 148
   offset: 0, 0
   index: -1
 SigmaRat/BodyDamaged
   rotate: false
-  xy: 708, 208
+  xy: 580, 256
   size: 296, 148
   orig: 296, 148
   offset: 0, 0
   index: -1
 SigmaRat/BodyTittyShoot
   rotate: false
-  xy: 1004, 208
+  xy: 876, 256
   size: 148, 148
   orig: 148, 148
   offset: 0, 0
   index: -1
 SigmaRat/BodyTittyShootDamaged
   rotate: false
-  xy: 1152, 208
+  xy: 1024, 256
   size: 296, 148
   orig: 296, 148
   offset: 0, 0
@@ -516,77 +530,77 @@ SigmaRat/ElectricPulse
   index: -1
 SphinxMiniBoss/defeated
   rotate: false
-  xy: 800, 760
+  xy: 800, 808
   size: 250, 250
   orig: 250, 250
   offset: 0, 0
   index: -1
 SphinxMiniBoss/laugh
   rotate: false
-  xy: 1050, 760
+  xy: 1050, 808
   size: 250, 500
   orig: 250, 500
   offset: 0, 0
   index: -1
 SphinxMiniBoss/open
   rotate: false
-  xy: 1550, 760
+  xy: 1550, 808
   size: 250, 750
   orig: 250, 750
   offset: 0, 0
   index: -1
 SphinxMiniBoss/wait
   rotate: false
-  xy: 1300, 760
+  xy: 1300, 808
   size: 250, 500
   orig: 250, 500
   offset: 0, 0
   index: -1
 TimberWoman/damaged
   rotate: false
-  xy: 816, 112
+  xy: 752, 112
   size: 192, 96
   orig: 192, 96
   offset: 0, 0
   index: -1
 TimberWoman/jump
   rotate: false
-  xy: 768, 560
+  xy: 768, 608
   size: 192, 192
   orig: 192, 192
   offset: 0, 0
   index: -1
 TimberWoman/jump_swing
   rotate: false
-  xy: 960, 560
+  xy: 960, 608
   size: 192, 192
   orig: 192, 192
   offset: 0, 0
   index: -1
 TimberWoman/just_land
   rotate: false
-  xy: 1152, 560
+  xy: 1152, 608
   size: 192, 192
   orig: 192, 192
   offset: 0, 0
   index: -1
 TimberWoman/on_fire
   rotate: false
-  xy: 1008, 112
+  xy: 944, 112
   size: 192, 96
   orig: 192, 96
   offset: 0, 0
   index: -1
 TimberWoman/stand
   rotate: false
-  xy: 1344, 560
+  xy: 1344, 608
   size: 96, 192
   orig: 96, 192
   offset: 0, 0
   index: -1
 TimberWoman/stand_swing
   rotate: false
-  xy: 1200, 112
+  xy: 1136, 112
   size: 672, 96
   orig: 672, 96
   offset: 0, 0

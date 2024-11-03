@@ -567,6 +567,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Bosses1/ReactorMonkeyMiniBoss/Jump.png</key>
+            <key type="filename">../frames/Bosses1/ReactorMonkeyMiniBoss/StandDamaged.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -597,6 +598,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Bosses1/ReactorMonkeyMiniBoss/Throw.png</key>
+            <key type="filename">../frames/Bosses1/ReactorMonkeyMiniBoss/ThrowDamaged.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

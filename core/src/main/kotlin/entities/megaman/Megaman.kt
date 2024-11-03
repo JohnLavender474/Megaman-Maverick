@@ -36,6 +36,7 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.bosses.*
 import com.megaman.maverick.game.entities.bosses.gutstank.GutsTankFist
+import com.megaman.maverick.game.entities.bosses.gutstank.GutsTank
 import com.megaman.maverick.game.entities.bosses.sigmarat.SigmaRat
 import com.megaman.maverick.game.entities.bosses.sigmarat.SigmaRatClaw
 import com.megaman.maverick.game.entities.contracts.*
@@ -135,6 +136,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         BulbBlaster::class pairTo dmgNeg(2),
         Bospider::class pairTo dmgNeg(5),
         BabySpider::class pairTo dmgNeg(2),
+        GutsTank::class pairTo dmgNeg(3),
         GutsTankFist::class pairTo dmgNeg(3),
         PurpleBlast::class pairTo dmgNeg(3),
         HeliMet::class pairTo dmgNeg(3),
@@ -223,7 +225,8 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         Matasaburo::class pairTo dmgNeg(3),
         CarriCarry::class pairTo dmgNeg(3),
         Cactus::class pairTo dmgNeg(2),
-        DesertMan::class pairTo dmgNeg(3)
+        DesertMan::class pairTo dmgNeg(3),
+
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 

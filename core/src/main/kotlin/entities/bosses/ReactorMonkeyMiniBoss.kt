@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.entities.bosses
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
@@ -51,9 +52,8 @@ import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
 import kotlin.reflect.KClass
 
-class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, IFaceable {
-
-    enum class ReactorMonkeyState { STAND, THROW }
+class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) :
+    AbstractBoss(game, dmgDuration = DEFAULT_MINI_BOSS_DMG_DURATION), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "ReactorMonkeyMiniBoss"
@@ -66,9 +66,10 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
         private const val HORIZONTAL_SCALAR = 1.25f
         private const val VERTICAL_SCALAR = 1f
         private const val DEFAULT_BALL_SPAWN_Y = 4f
-        private var standRegion: TextureRegion? = null
-        private var throwRegion: TextureRegion? = null
+        private val regions = ObjectMap<String, TextureRegion>()
     }
+
+    private enum class ReactorMonkeyState { STAND, THROW }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
         Bullet::class pairTo dmgNeg(1),
@@ -77,7 +78,10 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
             it as ChargedShot
             if (it.fullyCharged) 2 else 1
         },
-        ChargedShotExplosion::class pairTo dmgNeg(1)
+        ChargedShotExplosion::class pairTo dmgNeg {
+            it as ChargedShotExplosion
+            if (it.fullyCharged) 2 else 1
+        }
     )
     override lateinit var facing: Facing
 
@@ -91,10 +95,12 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
     private var ballSpawnY = DEFAULT_BALL_SPAWN_Y
 
     override fun init() {
-        if (standRegion == null || throwRegion == null) {
+        if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
-            standRegion = atlas.findRegion("${TAG}/Stand")
-            throwRegion = atlas.findRegion("${TAG}/Throw")
+            regions.put("stand", atlas.findRegion("$TAG/Stand"))
+            regions.put("stand_damaged", atlas.findRegion("$TAG/StandDamaged"))
+            regions.put("throw", atlas.findRegion("$TAG/Throw"))
+            regions.put("throw_damaged", atlas.findRegion("$TAG/ThrowDamaged"))
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -224,12 +230,31 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAn
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { reactorMonkeyState.name }
+        val keySupplier: () -> String? = {
+            var key = reactorMonkeyState.name.lowercase()
+            if (!damageTimer.isFinished()) key += "_damaged"
+            key
+        }
         val animations = objectMapOf<String, IAnimation>(
-            ReactorMonkeyState.STAND.name pairTo Animation(standRegion!!, 1, 2, gdxArrayOf(1f, 0.1f), true),
-            ReactorMonkeyState.THROW.name pairTo Animation(throwRegion!!, 1, 3, 0.1f, false)
+            "stand" pairTo Animation(regions["stand"], 1, 2, gdxArrayOf(1f, 0.1f), true),
+            "stand_damaged" pairTo Animation(regions["stand_damaged"]),
+            "throw" pairTo Animation(regions["throw"], 1, 3, 0.1f, false),
+            "throw_damaged" pairTo Animation(regions["throw_damaged"], 1, 3, 0.1f, false)
         )
-        val animator = Animator(keySupplier, animations)
+        val onChangeKey: (String?, String?) -> Unit = { previous, current ->
+            if ((current == "throw_damaged" && previous == "throw") ||
+                (current == "throw" && previous == "throw_damaged")
+            ) {
+                val time = animations[previous].getCurrentTime()
+                animations[current].setCurrentTime(time)
+                GameLogger.debug(TAG, "onChangeKey(): set current to time=$time")
+            }
+        }
+        val animator = Animator(
+            keySupplier,
+            animations,
+            onChangeKey = onChangeKey
+        )
         return AnimationsComponent(this, animator)
     }
 }
