@@ -536,21 +536,6 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses1/ReactMan/Dance.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>16,20,32,40</rect>
-                <key>scale9Paddings</key>
-                <rect>16,20,32,40</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
             <key type="filename">../frames/Bosses1/ReactMan/Defeated.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -563,21 +548,6 @@
                 <rect>8,30,16,60</rect>
                 <key>scale9Paddings</key>
                 <rect>8,30,16,60</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Bosses1/ReactMan/Die.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>8,10,16,20</rect>
-                <key>scale9Paddings</key>
-                <rect>8,10,16,20</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
