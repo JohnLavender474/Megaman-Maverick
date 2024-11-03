@@ -13,6 +13,7 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -20,6 +21,7 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
@@ -48,6 +50,8 @@ class BabySpider(game: MegamanMaverickGame) : AbstractEnemy(game) {
         private const val SLOW_SPEED = 2.5f
         private const val FAST_SPEED = 5f
         private const val GRAVITY_BEFORE_LAND = -0.375f
+        private const val DEFAULT_WAIT_DUR = 0.5f
+        private const val WAIT_BLINK_DUR = 0.1f
         private var runRegion: TextureRegion? = null
         private var stillRegion: TextureRegion? = null
     }
@@ -67,6 +71,10 @@ class BabySpider(game: MegamanMaverickGame) : AbstractEnemy(game) {
             if (it.fullyCharged) 10 else 5
         }
     )
+
+    private val waitTimer = Timer()
+    private val waitBlinkTimer = Timer(WAIT_BLINK_DUR)
+    private var waitBlink = false
 
     private lateinit var babySpiderState: BabySpiderState
 
@@ -106,6 +114,11 @@ class BabySpider(game: MegamanMaverickGame) : AbstractEnemy(game) {
         wasRightTouchingBlock = false
         wasHeadTouchingBlock = false
         wasFeetTouchingBlock = false
+
+        val waitDur = spawnProps.getOrDefault(ConstKeys.WAIT, DEFAULT_WAIT_DUR, Float::class)
+        waitTimer.resetDuration(waitDur)
+        waitBlinkTimer.reset()
+        waitBlink = false
     }
 
     override fun onDestroy() {
@@ -113,9 +126,23 @@ class BabySpider(game: MegamanMaverickGame) : AbstractEnemy(game) {
         super.onDestroy()
     }
 
+    override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
+        super.defineUpdatablesComponent(updatablesComponent)
+        updatablesComponent.add { delta ->
+            waitTimer.update(delta)
+            if (!waitTimer.isFinished()) {
+                waitBlinkTimer.update(delta)
+                if (waitBlinkTimer.isFinished()) {
+                    waitBlink = !waitBlink
+                    waitBlinkTimer.reset()
+                }
+            }
+        }
+    }
+
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(0.5f * ConstVals.PPM, 0.25f * ConstVals.PPM)
+        body.setSize(0.75f * ConstVals.PPM, 0.5f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
@@ -125,27 +152,27 @@ class BabySpider(game: MegamanMaverickGame) : AbstractEnemy(game) {
         debugShapes.add { bodyFixture.getShape() }
 
         val leftFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        leftFixture.offsetFromBodyCenter.x = -0.275f * ConstVals.PPM
+        leftFixture.offsetFromBodyCenter.x = -0.375f * ConstVals.PPM
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftFixture)
         leftFixture.getShape().color = Color.YELLOW
         debugShapes.add { leftFixture.getShape() }
 
         val rightFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        rightFixture.offsetFromBodyCenter.x = 0.275f * ConstVals.PPM
+        rightFixture.offsetFromBodyCenter.x = 0.375f * ConstVals.PPM
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
         rightFixture.getShape().color = Color.YELLOW
         debugShapes.add { rightFixture.getShape() }
 
         val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyCenter.y = -0.15f * ConstVals.PPM
+        feetFixture.offsetFromBodyCenter.y = -0.25f * ConstVals.PPM
         body.addFixture(feetFixture)
         feetFixture.getShape().color = Color.GREEN
         debugShapes.add { feetFixture.getShape() }
 
         val headFixture = Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        headFixture.offsetFromBodyCenter.y = 0.15f * ConstVals.PPM
+        headFixture.offsetFromBodyCenter.y = 0.25f * ConstVals.PPM
         body.addFixture(headFixture)
         headFixture.getShape().color = Color.BLUE
         debugShapes.add { headFixture.getShape() }
@@ -155,7 +182,8 @@ class BabySpider(game: MegamanMaverickGame) : AbstractEnemy(game) {
         damagerFixture.getShape().color = Color.RED
         debugShapes.add { damagerFixture.getShape() }
 
-        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().set(body))
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.75f * ConstVals.PPM))
+        damageableFixture.offsetFromBodyCenter.y = 0.1f * ConstVals.PPM
         body.addFixture(damageableFixture)
         damageableFixture.getShape().color = Color.PURPLE
         debugShapes.add { damageableFixture.getShape() }
@@ -168,21 +196,21 @@ class BabySpider(game: MegamanMaverickGame) : AbstractEnemy(game) {
             val isHeadTouchingBlock = body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)
             val isFeetTouchingBlock = body.isSensing(BodySense.FEET_ON_GROUND)
 
-            if (!wasLeftTouchingBlock && isLeftTouchingBlock) {
-                babySpiderState = BabySpiderState.SCALING_WALL_LEFT
-                GameLogger.debug(TAG, "Change state to $babySpiderState")
-            } else if (!wasRightTouchingBlock && isRightTouchingBlock) {
-                babySpiderState = BabySpiderState.SCALING_WALL_RIGHT
-                GameLogger.debug(TAG, "Change state to $babySpiderState")
-            } else if (!wasHeadTouchingBlock && isHeadTouchingBlock) {
-                babySpiderState = BabySpiderState.RUNNING_ON_CEILING
-                GameLogger.debug(TAG, "Change state to $babySpiderState")
-            } else if (!wasFeetTouchingBlock && isFeetTouchingBlock) {
-                babySpiderState = BabySpiderState.RUNNING_ON_GROUND
-                GameLogger.debug(TAG, "Change state to $babySpiderState")
-            } else if (!isLeftTouchingBlock && !isRightTouchingBlock && !isHeadTouchingBlock && !isFeetTouchingBlock) {
-                babySpiderState = BabySpiderState.FALLING
-                GameLogger.debug(TAG, "Change state to $babySpiderState")
+            when {
+                !wasLeftTouchingBlock && isLeftTouchingBlock ->
+                    babySpiderState = BabySpiderState.SCALING_WALL_LEFT
+
+                !wasRightTouchingBlock && isRightTouchingBlock ->
+                    babySpiderState = BabySpiderState.SCALING_WALL_RIGHT
+
+                !wasHeadTouchingBlock && isHeadTouchingBlock ->
+                    babySpiderState = BabySpiderState.RUNNING_ON_CEILING
+
+                !wasFeetTouchingBlock && isFeetTouchingBlock ->
+                    babySpiderState = BabySpiderState.RUNNING_ON_GROUND
+
+                !isLeftTouchingBlock && !isRightTouchingBlock && !isHeadTouchingBlock && !isFeetTouchingBlock ->
+                    babySpiderState = BabySpiderState.FALLING
             }
 
             val speed = ConstVals.PPM * if (slow) SLOW_SPEED else FAST_SPEED * if (leftOnLand) -1f else 1f
@@ -194,7 +222,9 @@ class BabySpider(game: MegamanMaverickGame) : AbstractEnemy(game) {
                 BabySpiderState.SCALING_WALL_RIGHT -> body.physics.velocity.set(0f, speed)
             }
 
-            body.physics.gravity.y = if (babySpiderState == BabySpiderState.FALLING) GRAVITY_BEFORE_LAND * ConstVals.PPM else 0f
+            body.physics.gravity.y =
+                if (!waitTimer.isFinished() || babySpiderState != BabySpiderState.FALLING) 0f
+                else GRAVITY_BEFORE_LAND * ConstVals.PPM
 
             wasLeftTouchingBlock = isLeftTouchingBlock
             wasRightTouchingBlock = isRightTouchingBlock
@@ -207,10 +237,10 @@ class BabySpider(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1f * ConstVals.PPM)
+        sprite.setSize(1.65f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.hidden = damageBlink
+            _sprite.hidden = damageBlink || (!waitTimer.isFinished() && waitBlink)
             _sprite.setCenter(body.getCenter())
             _sprite.setOriginCenter()
             val rotation = when (babySpiderState) {

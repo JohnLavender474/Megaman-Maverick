@@ -89,11 +89,11 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
             return
         }
 
-        owner = shieldFixture.getEntity()
+        // owner = shieldFixture.getEntity()
 
         val trajectory = body.physics.velocity.cpy()
         if (isDirectionRotatedVertically()) trajectory.x *= -1f else trajectory.y *= -1f
-        val deflection = shieldFixture.getProperty(ConstKeys.DIRECTION, Direction::class)
+        val deflection = shieldFixture.getOrDefaultProperty(ConstKeys.DIRECTION, Direction.UP, Direction::class)
         when (deflection) {
             Direction.UP -> {
                 when (directionRotation!!) {

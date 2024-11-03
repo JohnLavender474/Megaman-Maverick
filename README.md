@@ -16,7 +16,7 @@ The game is built using the [Mega 2D Game Engine](https://github.com/JohnLavende
 built on top of the popular open-source [LibGDX game library](https://libgdx.com/). This game is programmed primarily in
 Kotlin, with few parts written in Java.
 
-View my Youtube channel for demos and more! https://youtube.com/playlist?list=PL4ZszXL-HC0r0E6Eb5NCFGhsi93AXoDZj&si=IITydzhhTSKmxc5-
+View my YouTube channel for demos and more! https://youtube.com/playlist?list=PL4ZszXL-HC0r0E6Eb5NCFGhsi93AXoDZj&si=IITydzhhTSKmxc5-
 
 <img src="img/MainScreen.png" width="600px"/>
 <img src="img/BossSelectScreen.png" width="600px"/>
@@ -47,7 +47,7 @@ comprehensive listing of the credits for the artwork used in this game.
 - Glacier Man spritesheet & mugshot - [Balloon Cart](https://balloon-cart.itch.io/glacier-man-asset-pack)
 - Inferno Man spritesheet & mugshot - [boberatu](https://www.deviantart.com/boberatu/art/MPN-000-Volcano-Man-313694441)
 
-#### Other Bosses
+#### Bosses
 - Nuclear Monkey spritesheet - [Balloon Cart](https://balloon-cart.itch.io/reactor-man-asset-pack)
 - Moon Head spritesheet - [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/MoonHead-Miniboss-Megaman-Maverick-1090151707)
 - Mecha Dragon spritesheet - [Mister Mike](https://www.spriters-resource.com/nes/mm2/sheet/2317/)
@@ -69,6 +69,9 @@ comprehensive listing of the credits for the artwork used in this game.
 - [Mega 8-Bit](https://assetstore.unity.com/packages/2d/environments/mega-8-bit-pixel-pack-60158?srsltid=AfmBOordeWICo0KR-N3MKcw6iqd2TehrlFgQn6Hijzmk09-2eoq2Gid0)
 - Mister Mike:
   - [Megaman 6 - Tomahawk Man Tileset](https://www.spriters-resource.com/nes/mm6/sheet/16402/)
+  - [Megaman 3 - Wily Stage 1 Tileset](https://www.spriters-resource.com/nes/mm3/sheet/16388/)
+- AxeW1eld3r:
+  - [Megaman 9 - Endless Attack Tileset](https://www.spriters-resource.com/wii/mm9/sheet/166545/)
 
 ### Music
 
@@ -81,7 +84,8 @@ comprehensive listing of the credits for the artwork used in this game.
 - MMX6 Gate's Laboratory- [Famitard](https://youtu.be/Zdtp6f57E_c) - used in Wily stage 3
 - MMX6 Sigma Final Boss - [Famitard](https://youtu.be/FVdYxfEo4lI) - used in Wily stage 3 boss fight
 - MMX5 Volt Kraken - [Famitard](https://www.youtube.com/watch?v=xi7Odov_rek&ab_channel=FamiTard)
-- TODO: Other music tracks are saved in the `assets` dir but not yet used in the game; these will be added here as they're added to the game
+- MM7 Wily Boss - [MyNewSoundtrack](https://youtu.be/-CJlMksbypE)
+- TODO: Other music tracks are saved in the `assets` dir but not yet used in the game. These will be added here as they're added to the game.
 
 ### Sounds
 

@@ -18,7 +18,7 @@ enum class Level(tmxSourceFile: String, val musicAss: MusicAsset) {
     RODENT_MAN("Test1.tmx", MusicAsset.MM10_WILY1_MUSIC),
 
     // Final levels
-    WILY_STAGE_1("WilyStage1.tmx", MusicAsset.MM3_SNAKE_MAN_MUSIC),
+    WILY_STAGE_1("WilyStage1.tmx", MusicAsset.MMX6_GATE_STAGE_MUSIC),
     WILY_STAGE_2("WilyStage2.tmx", MusicAsset.MM3_SNAKE_MAN_MUSIC),
     WILY_STAGE_3("WilyStage3_v2.tmx", MusicAsset.MMX6_GATE_STAGE_MUSIC),
 

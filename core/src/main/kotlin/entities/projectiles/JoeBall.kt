@@ -35,7 +35,6 @@ import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getEntity
 import kotlin.reflect.KClass
 
 class JoeBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
@@ -81,7 +80,7 @@ class JoeBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEn
 
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         super.hitShield(shieldFixture, thisShape, otherShape)
-        owner = shieldFixture.getEntity()
+        // owner = shieldFixture.getEntity()
         trajectory.x *= -1f
 
         val deflection =

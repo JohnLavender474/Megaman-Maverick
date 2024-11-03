@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectMapOf
@@ -62,8 +63,6 @@ class SimpleSelectLevelScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, 
     override fun init() {
         if (initialized) return
         initialized = true
-
-        index = 0
 
         buttons.put(BETA, object : IMenuButton {
             override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
@@ -142,7 +141,9 @@ class SimpleSelectLevelScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, 
         )
 
         level = MegaFontHandle(
-            { LEVELS[currentButtonKey][index].name },
+            {
+                LEVELS.get(currentButtonKey)?.get(index)?.name ?: "NULL"
+            },
             positionX = LEVEL_X * ConstVals.PPM,
             positionY = LEVEL_Y * ConstVals.PPM
         )
@@ -164,6 +165,7 @@ class SimpleSelectLevelScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, 
             Direction.LEFT -> index = 0
             Direction.RIGHT -> index = 0
         }
+        GameLogger.debug(TAG, "onAnyMovement(): direction=$direction, currentButtonKey=$currentButtonKey, index=$index")
     }
 
     override fun onAnySelection() = game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
@@ -196,5 +198,10 @@ class SimpleSelectLevelScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, 
         sectionArrow.draw(batch)
         level.draw(batch)
         batch.end()
+    }
+
+    override fun reset() {
+        super.reset()
+        index = 0
     }
 }
