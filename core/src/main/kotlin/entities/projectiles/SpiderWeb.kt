@@ -8,13 +8,10 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
-import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
-import com.mega.game.engine.common.interfaces.IFaceable
-
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -49,12 +46,13 @@ import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 
-class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IEventListener, IFaceable {
+class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IEventListener {
 
     companion object {
         const val TAG = "SpiderWeb"
         private const val PRESSES_TO_GET_UNSTUCK = 3
         private const val BLINK_WHITE_DUR = 0.3f
+        private const val START_SIZE = 0.75f
         private const val SIZE_INCREASE_PER_SECOND = 0.5f
         private val BUTTONS_TO_GET_UNSTUCK = gdxArrayOf<Any>(
             MegaControllerButtons.UP,
@@ -70,13 +68,9 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
     }
 
     override val eventKeyMask = objectSetOf<Any>(EventType.PLAYER_JUST_DIED)
-    override lateinit var facing: Facing
 
-    private val megaman = game.megaman
     private val blinkWhiteTimer = Timer(BLINK_WHITE_DUR)
-
     private lateinit var trajectory: Vector2
-
     private var stuckToMegaman = false
     private var presses = 0
 
@@ -95,15 +89,14 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         super.onSpawn(spawnProps)
         game.eventsMan.addListener(this)
 
-        body.setSize(0.5f * ConstVals.PPM)
-        val spawn = if (spawnProps.containsKey(ConstKeys.POSITION)) spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-        else spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
+        body.setSize(START_SIZE * ConstVals.PPM)
+        val spawn =
+            if (spawnProps.containsKey(ConstKeys.POSITION)) spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+            else spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
         trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2(), Vector2::class)
-
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
         stuckToMegaman = false
         presses = 0
 
@@ -117,9 +110,11 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
             WEBS_STUCK_TO_MEGAMAN.remove(this)
             if (WEBS_STUCK_TO_MEGAMAN.isEmpty) {
                 stuckToMegaman = false
-                megaman.canMove = true
-                megaman.setAllBehaviorsAllowed(true)
-                getMegaman().body.physics.gravityOn = true
+                getMegaman().let { megaman ->
+                    megaman.canMove = true
+                    megaman.setAllBehaviorsAllowed(true)
+                    megaman.body.physics.gravityOn = true
+                }
             }
         }
     }
@@ -145,10 +140,12 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         body.setCenter(getMegaman().body.getCenter())
         trajectory.setZero()
 
-        megaman.setAllBehaviorsAllowed(false)
-        getMegaman().body.physics.velocity.setZero()
-        getMegaman().body.physics.gravityOn = false
-        megaman.canMove = false
+        getMegaman().let { megaman ->
+            megaman.setAllBehaviorsAllowed(false)
+            megaman.body.physics.velocity.setZero()
+            megaman.body.physics.gravityOn = false
+            megaman.canMove = false
+        }
 
         WEBS_STUCK_TO_MEGAMAN.add(this)
     }
@@ -156,7 +153,7 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.physics.applyFrictionX = false
-body.physics.applyFrictionY = false
+        body.physics.applyFrictionY = false
         val debugShapes = gdxArrayOf<() -> IDrawableShape?>({ body })
         body.preProcess.put(ConstKeys.DEFAULT) { delta ->
             body.physics.velocity.set(trajectory)
@@ -173,7 +170,7 @@ body.physics.applyFrictionY = false
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
         blinkWhiteTimer.update(it)
-        if (!stuckToMegaman && !megaman.dead && body.overlaps(getMegaman().body as Rectangle)) stickToMegaman()
+        if (!stuckToMegaman && !getMegaman().dead && body.overlaps(getMegaman().body as Rectangle)) stickToMegaman()
         else if (stuckToMegaman) {
             body.setCenter(getMegaman().body.getCenter())
             if (game.controllerPoller.isAnyJustReleased(BUTTONS_TO_GET_UNSTUCK)) {
@@ -191,7 +188,7 @@ body.physics.applyFrictionY = false
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setSize(body.width, body.height)
             _sprite.setCenter(body.getCenter())
-            _sprite.setFlip(isFacing(Facing.LEFT), false)
+            _sprite.setFlip(trajectory.x < 0f, false)
         }
         return spritesComponent
     }

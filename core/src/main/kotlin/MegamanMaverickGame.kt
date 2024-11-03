@@ -66,7 +66,6 @@ import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.MegaControllerPoller
 import com.megaman.maverick.game.controllers.loadButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
-import com.megaman.maverick.game.entities.bosses.DesertMan
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.hazards.Saw
@@ -110,7 +109,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
 
     companion object {
         const val TAG = "MegamanMaverickGame"
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(DesertMan.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(SimpleSelectLevelScreen.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.TELEPORTER, FixtureType.TELEPORTER_LISTENER)
         }

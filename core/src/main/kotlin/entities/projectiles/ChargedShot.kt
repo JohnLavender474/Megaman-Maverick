@@ -127,12 +127,12 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
             return
         }
 
-        owner = shieldEntity
+        // owner = shieldEntity
 
         swapFacing()
         if (directionRotation?.isVertical() == true) trajectory.x *= -1f else trajectory.y *= -1f
 
-        val deflection = shieldFixture.getProperty(ConstKeys.DIRECTION, Direction::class)
+        val deflection = shieldFixture.getOrDefaultProperty(ConstKeys.DIRECTION, Direction.UP, Direction::class)
         val newTrajectory =
             when (directionRotation!!) {
                 Direction.UP -> {
