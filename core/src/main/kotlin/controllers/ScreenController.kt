@@ -24,6 +24,16 @@ import com.megaman.maverick.game.assets.TextureAsset
 
 class ScreenController(private val game: MegamanMaverickGame) {
 
+    companion object {
+        const val TAG = "ScreenController"
+        private const val PADDING = 0.1f
+        private const val BUTTON_SIZE = 1.1f
+        private const val BLANK_WIDTH = 0.35f
+        private const val TABLE_WIDTH = 19
+        private const val ALPHA = 0.5f
+        private const val DEBUG = false
+    }
+
     private class ScreenButtonDrawable(private val sprite: GameSprite, private val rotation: Float) : SpriteDrawable() {
 
         override fun draw(batch: Batch, x: Float, y: Float, width: Float, height: Float) {
@@ -31,7 +41,7 @@ class ScreenController(private val game: MegamanMaverickGame) {
             val oldColor = sprite.packedColor
             sprite.setColor(spriteColor.mul(batch.color))
 
-            sprite.setScale(1.25f, 1.25f)
+            sprite.setScale(BUTTON_SIZE, BUTTON_SIZE)
             sprite.setBounds(x, y, width, height)
             sprite.setOriginCenter()
             sprite.rotation = rotation
@@ -53,16 +63,6 @@ class ScreenController(private val game: MegamanMaverickGame) {
             scaleY: Float,
             rotation: Float
         ) = draw(batch, x, y, width, height)
-    }
-
-    companion object {
-        const val TAG = "ScreenController"
-        private const val PADDING = 0.15f
-        private const val BUTTON_SIZE = 1.15f
-        private const val BLANK_WIDTH = 0.35f
-        private const val TABLE_WIDTH = 16
-        private const val ALPHA = 0.5f
-        private const val DEBUG = false
     }
 
     var viewport: FitViewport

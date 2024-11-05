@@ -1,5 +1,6 @@
 package com.megaman.maverick.game
 
+import com.badlogic.gdx.Application.ApplicationType
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.assets.AssetManager
@@ -105,6 +106,7 @@ class MegamanMaverickGameParams {
     var fixedStepScalar: Float = 1f
     var musicVolume: Float = 0.5f
     var soundVolume: Float = 0.5f
+    var showScreenController: Boolean = false
 }
 
 class MegamanMaverickGame(
@@ -289,7 +291,8 @@ class MegamanMaverickGame(
             else -> setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
         }
 
-        /* if (Gdx.app.type == ApplicationType.Android) */ screenController = ScreenController(this)
+        if (Gdx.app.type == ApplicationType.Android || params.showScreenController)
+            screenController = ScreenController(this)
     }
 
     override fun onEvent(event: Event) {

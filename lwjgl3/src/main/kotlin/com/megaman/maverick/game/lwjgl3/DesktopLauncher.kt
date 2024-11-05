@@ -28,6 +28,7 @@ object DesktopLauncher {
     private const val DEFAULT_SOUND_VOLUME = 0.5f
     private const val DEFAULT_START_SCREEN = "simple"
     private const val DEFAULT_LEVEL = "null"
+    private const val DEFAULT_SHOW_SCREEN_CONTROLLER = false
     private const val TITLE = "Megaman Maverick"
 
     @JvmStatic
@@ -73,6 +74,7 @@ object DesktopLauncher {
         params.fixedStepScalar = appArgs.fixedStepScalar
         params.musicVolume = appArgs.musicVolume
         params.soundVolume = appArgs.soundVolume
+        params.showScreenController = appArgs.showScreenController
         try {
             params.logLevel = GameLogLevel.valueOf(appArgs.logLevel.uppercase())
         } catch (e: Exception) {
@@ -199,5 +201,12 @@ object DesktopLauncher {
                 "value is " + DEFAULT_SOUND_VOLUME)
         )
         var soundVolume = DEFAULT_SOUND_VOLUME
+
+        @Parameter(
+            names = ["--showScreenController"],
+            description = ("Sets if the screen controller UI should be shown. Default " +
+                "value is " + DEFAULT_SHOW_SCREEN_CONTROLLER)
+        )
+        var showScreenController = DEFAULT_SHOW_SCREEN_CONTROLLER
     }
 }
