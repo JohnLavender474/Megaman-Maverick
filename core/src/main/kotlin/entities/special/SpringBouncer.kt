@@ -28,7 +28,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.controllers.MegaControllerButtons
+import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.megaman.Megaman
@@ -141,11 +141,11 @@ class SpringBouncer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesE
 
         if (fixture.getEntity() is Megaman) {
             val controllerPoller = game.controllerPoller
-            if ((direction == Direction.UP && controllerPoller.isPressed(MegaControllerButtons.UP)) ||
-                (direction == Direction.DOWN && controllerPoller.isPressed(MegaControllerButtons.DOWN))
+            if ((direction == Direction.UP && controllerPoller.isPressed(MegaControllerButton.UP)) ||
+                (direction == Direction.DOWN && controllerPoller.isPressed(MegaControllerButton.DOWN))
             ) bounce.forceY *= 2f
-            else if ((direction == Direction.LEFT && controllerPoller.isPressed(MegaControllerButtons.LEFT)) ||
-                (direction == Direction.RIGHT && controllerPoller.isPressed(MegaControllerButtons.RIGHT))
+            else if ((direction == Direction.LEFT && controllerPoller.isPressed(MegaControllerButton.LEFT)) ||
+                (direction == Direction.RIGHT && controllerPoller.isPressed(MegaControllerButton.RIGHT))
             ) bounce.forceX *= 2f
         }
 

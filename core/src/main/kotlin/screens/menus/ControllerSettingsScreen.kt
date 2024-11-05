@@ -2,6 +2,7 @@ package com.megaman.maverick.game.screens.menus
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputAdapter
+import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.controllers.Controller
 import com.badlogic.gdx.controllers.ControllerAdapter
 import com.badlogic.gdx.math.Vector2
@@ -11,16 +12,18 @@ import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.interfaces.Initializable
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.controller.ControllerUtils
+import com.mega.game.engine.controller.buttons.ControllerButton
 import com.mega.game.engine.controller.buttons.ControllerButtons
 import com.mega.game.engine.drawables.fonts.BitmapFontHandle
 import com.mega.game.engine.screens.menus.IMenuButton
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
-import com.megaman.maverick.game.controllers.MegaControllerButtons
+import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.controllers.getControllerPreferences
 import com.megaman.maverick.game.controllers.getKeyboardPreferences
 import com.megaman.maverick.game.controllers.resetToDefaults
+import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.utils.BlinkingArrow
 import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
@@ -46,12 +49,15 @@ class ControllerSettingsScreen(
     private val delayOnChangeTimer = Timer(DELAY_ON_CHANGE)
     private val controller: Controller?
         get() = ControllerUtils.getController()
-    private val fontHandles = Array<BitmapFontHandle>()
-    private var selectedButton: MegaControllerButtons? = null
+    private val fontHandles = Array<MegaFontHandle>()
+
     private lateinit var keyboardListener: InputAdapter
     private lateinit var buttonListener: ControllerAdapter
     private lateinit var hintFontHandle: BitmapFontHandle
     private lateinit var blinkingArrow: BlinkingArrow
+
+    private var selectedMegaButton: MegaControllerButton? = null
+    private var oldInputProcessor: InputProcessor? = null
     private var initialized = false
 
     override fun init() {
@@ -60,26 +66,31 @@ class ControllerSettingsScreen(
 
         keyboardListener = object : InputAdapter() {
             override fun keyDown(keycode: Int): Boolean {
-                if (selectedButton == null) return true
+                if (selectedMegaButton == null) return true
 
-                val button = controllerButtons.get(selectedButton!!)
-                GameLogger.debug(TAG, "Setting [$selectedButton] keycode from [${button.keyboardCode}] to [$keycode]")
+                val button = controllerButtons.get(selectedMegaButton!!) as ControllerButton
+                GameLogger.debug(
+                    TAG,
+                    "Setting [$selectedMegaButton] keycode from [${button.keyboardCode}] to [$keycode]"
+                )
 
                 // if any buttons match the keycode, then switch them
-                controllerButtons.values()
-                    .forEach { if (it.keyboardCode == keycode) it.keyboardCode = button.keyboardCode }
+                controllerButtons.values().forEach {
+                    it as ControllerButton
+                    if (it.keyboardCode == keycode) it.keyboardCode = button.keyboardCode
+                }
                 button.keyboardCode = keycode
 
                 // save the keyboard codes to preferences
                 val keyboardPreferences = getKeyboardPreferences()
                 controllerButtons.forEach {
-                    val keyboardCode = it.value.keyboardCode
-                    keyboardPreferences.putInteger((it.key as MegaControllerButtons).name, keyboardCode)
+                    val keyboardCode = (it.value as ControllerButton).keyboardCode
+                    keyboardPreferences.putInteger((it.key as MegaControllerButton).name, keyboardCode)
                 }
                 keyboardPreferences.flush()
 
-                Gdx.input.inputProcessor = null
-                selectedButton = null
+                Gdx.input.inputProcessor = oldInputProcessor
+                selectedMegaButton = null
 
                 delayOnChangeTimer.reset()
                 return true
@@ -88,28 +99,32 @@ class ControllerSettingsScreen(
 
         buttonListener = object : ControllerAdapter() {
             override fun buttonDown(controller: Controller, buttonIndex: Int): Boolean {
-                if (selectedButton == null) return true
+                if (selectedMegaButton == null) return true
 
-                val button = controllerButtons.get(selectedButton!!)
+                val button = controllerButtons.get(selectedMegaButton!!) as ControllerButton
                 GameLogger.debug(
-                    TAG, "Setting [$selectedButton] controller code from [${button.controllerCode}] to [$buttonIndex]"
+                    TAG,
+                    "Setting [$selectedMegaButton] controller code from [${button.controllerCode}] to [$buttonIndex]"
                 )
 
                 // if any buttons match the controller code, then switch them
-                controllerButtons.values()
-                    .forEach { if (it.controllerCode == buttonIndex) it.controllerCode = button.controllerCode }
+                controllerButtons.values().forEach {
+                    it as ControllerButton
+                    if (it.controllerCode == buttonIndex) it.controllerCode = button.controllerCode
+                }
                 button.controllerCode = buttonIndex
 
                 // save the controller codes to preferences
                 val controllerPreferences = getControllerPreferences(controller)
                 controllerButtons.forEach {
-                    val controllerCode = it.value.controllerCode ?: return@forEach
-                    controllerPreferences.putInteger((it.key as MegaControllerButtons).name, controllerCode)
+                    val button = it.value as ControllerButton
+                    val controllerCode = button.controllerCode ?: return@forEach
+                    controllerPreferences.putInteger((it.key as MegaControllerButton).name, controllerCode)
                 }
                 controllerPreferences.flush()
 
                 controller.removeListener(this)
-                selectedButton = null
+                selectedMegaButton = null
 
                 delayOnChangeTimer.reset()
                 return super.buttonUp(controller, buttonIndex)
@@ -119,7 +134,7 @@ class ControllerSettingsScreen(
         hintFontHandle = BitmapFontHandle(
             {
                 "Press any ${if (isKeyboardSettings) "keyboard key" else "controller button"} to set \na new code for" +
-                        " the button: \n$selectedButton"
+                    " the button: \n$selectedMegaButton"
             },
             getDefaultFontSize(),
             Vector2(
@@ -133,13 +148,8 @@ class ControllerSettingsScreen(
         var row = 10.75f
         blinkingArrow = BlinkingArrow(game.assMan, Vector2(2.5f * ConstVals.PPM, row * ConstVals.PPM))
 
-        val backFontHandle = BitmapFontHandle(
-            BACK,
-            getDefaultFontSize(),
-            Vector2(3f * ConstVals.PPM, row * ConstVals.PPM),
-            centerX = false,
-            centerY = false,
-            fontSource = "Megaman10Font.ttf"
+        val backFontHandle = MegaFontHandle(
+            { BACK }, positionX = 3f * ConstVals.PPM, positionY = row * ConstVals.PPM, centerX = false, centerY = false
         )
         fontHandles.add(backFontHandle)
 
@@ -148,20 +158,19 @@ class ControllerSettingsScreen(
             override fun onSelect(delta: Float) = backAction.invoke()
 
             override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
-                Direction.UP -> MegaControllerButtons.B.name
+                Direction.UP -> MegaControllerButton.B.name
                 Direction.DOWN -> RESET_TO_DEFAULTS
                 else -> null
             }
         })
 
         row -= 1f
-        val resetToDefaultsFontHandle = BitmapFontHandle(
-            RESET_TO_DEFAULTS,
-            getDefaultFontSize(),
-            Vector2(3f * ConstVals.PPM, row * ConstVals.PPM),
+        val resetToDefaultsFontHandle = MegaFontHandle(
+            { RESET_TO_DEFAULTS },
+            positionX = 3f * ConstVals.PPM,
+            positionY = row * ConstVals.PPM,
             centerX = false,
             centerY = false,
-            fontSource = "Megaman10Font.ttf"
         )
         fontHandles.add(resetToDefaultsFontHandle)
 
@@ -174,33 +183,34 @@ class ControllerSettingsScreen(
 
             override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
                 Direction.UP -> BACK
-                Direction.DOWN -> MegaControllerButtons.START.name
+                Direction.DOWN -> MegaControllerButton.START.name
                 else -> null
             }
         })
 
-        MegaControllerButtons.values().forEach { controllerButton ->
+        MegaControllerButton.entries.forEach { b ->
             row -= 1f
             val codeHintSupplier = {
-                val button = controllerButtons.get(controllerButton)
+                val button = controllerButtons.get(b) as ControllerButton
                 val code = if (isKeyboardSettings) button.keyboardCode else button.controllerCode
-                "${controllerButton.name}: $code"
+                "${b.name}: $code"
             }
-            val buttonFontHandle = BitmapFontHandle(
+            val buttonFontHandle = MegaFontHandle(
                 { codeHintSupplier() },
-                getDefaultFontSize(),
-                Vector2(3f * ConstVals.PPM, row * ConstVals.PPM),
+                positionX = 3f * ConstVals.PPM,
+                positionY = row * ConstVals.PPM,
                 centerX = false,
-                centerY = false,
-                fontSource = "Megaman10Font.ttf"
+                centerY = false
             )
             fontHandles.add(buttonFontHandle)
 
-            buttons.put(controllerButton.name, object : IMenuButton {
+            buttons.put(b.name, object : IMenuButton {
                 override fun onSelect(delta: Float): Boolean {
-                    selectedButton = controllerButton
-                    if (isKeyboardSettings) Gdx.input.inputProcessor = keyboardListener
-                    else {
+                    selectedMegaButton = b
+                    if (isKeyboardSettings) {
+                        oldInputProcessor = Gdx.input.inputProcessor
+                        Gdx.input.inputProcessor = keyboardListener
+                    } else {
                         if (controller == null) return false
                         controller!!.addListener(buttonListener)
                     }
@@ -209,13 +219,13 @@ class ControllerSettingsScreen(
 
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
                     Direction.UP -> {
-                        val index = controllerButton.ordinal - 1
-                        if (index < 0) RESET_TO_DEFAULTS else MegaControllerButtons.values()[index].name
+                        val index = b.ordinal - 1
+                        if (index < 0) RESET_TO_DEFAULTS else MegaControllerButton.entries[index].name
                     }
 
                     Direction.DOWN -> {
-                        val index = controllerButton.ordinal + 1
-                        if (index >= MegaControllerButtons.values().size) BACK else MegaControllerButtons.values()[index].name
+                        val index = b.ordinal + 1
+                        if (index >= MegaControllerButton.entries.size) BACK else MegaControllerButton.entries[index].name
                     }
 
                     else -> null
@@ -253,7 +263,7 @@ class ControllerSettingsScreen(
             when (currentButtonKey) {
                 BACK -> 10.6f
                 RESET_TO_DEFAULTS -> 9.6f
-                else -> 9.6f - (MegaControllerButtons.valueOf(currentButtonKey!!).ordinal + 1)
+                else -> 9.6f - (MegaControllerButton.valueOf(currentButtonKey!!).ordinal + 1)
             }
         blinkingArrow.centerX = 2.5f * ConstVals.PPM
         blinkingArrow.centerY = arrowY * ConstVals.PPM
@@ -261,7 +271,7 @@ class ControllerSettingsScreen(
 
         game.batch.projectionMatrix = game.getUiCamera().combined
         game.batch.begin()
-        if (selectedButton != null) hintFontHandle.draw(game.batch)
+        if (selectedMegaButton != null) hintFontHandle.draw(game.batch)
         else {
             blinkingArrow.draw(game.batch)
             fontHandles.forEach { it.draw(game.batch) }

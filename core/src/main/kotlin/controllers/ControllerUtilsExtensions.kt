@@ -18,7 +18,7 @@ fun ControllerUtils.loadButtons(): ControllerButtons {
     val buttons = ControllerButtons()
 
     val keyboardPreferences = getKeyboardPreferences()
-    MegaControllerButtons.values().forEach {
+    MegaControllerButton.entries.forEach {
         val keyboardCode = keyboardPreferences.getInteger(it.name, it.defaultKeyboardKey)
         buttons.put(it, ControllerButton(keyboardCode))
     }
@@ -26,9 +26,9 @@ fun ControllerUtils.loadButtons(): ControllerButtons {
     val controller = getController()
     if (controller != null) {
         val controllerPreferences = getControllerPreferences(controller)
-        MegaControllerButtons.values().forEach {
+        MegaControllerButton.entries.forEach {
             val controllerCode = controllerPreferences.getInteger(it.name, controller.mapping.getMapping(it))
-            val button = buttons.get(it)
+            val button = buttons.get(it) as ControllerButton
             button.controllerCode = controllerCode
         }
     }
@@ -40,24 +40,26 @@ fun ControllerUtils.resetToDefaults(buttons: ControllerButtons, isKeyboardSettin
     if (isKeyboardSettings) {
         val keyboardPreferences = Gdx.app.getPreferences(PreferenceFiles.MEGAMAN_MAVERICK_KEYBOARD_PREFERENCES)
         buttons.forEach {
-            val keyboardCode = (it.key as MegaControllerButtons).defaultKeyboardKey
-            it.value.keyboardCode = keyboardCode
-            keyboardPreferences.putInteger((it.key as MegaControllerButtons).name, keyboardCode)
+            val button = it.value as ControllerButton
+            val keyboardCode = (it.key as MegaControllerButton).defaultKeyboardKey
+            button.keyboardCode = keyboardCode
+            keyboardPreferences.putInteger((it.key as MegaControllerButton).name, keyboardCode)
         }
         keyboardPreferences.flush()
     } else {
         val controller = getController() ?: return
         val controllerPreferences = getControllerPreferences(controller)
         buttons.forEach {
-            val controllerCode = controller.mapping.getMapping(it.key as MegaControllerButtons)
-            it.value.controllerCode = controllerCode
-            controllerPreferences.putInteger((it.key as MegaControllerButtons).name, controllerCode)
+            val button = it.value as ControllerButton
+            val controllerCode = controller.mapping.getMapping(it.key as MegaControllerButton)
+            button.controllerCode = controllerCode
+            controllerPreferences.putInteger((it.key as MegaControllerButton).name, controllerCode)
         }
         controllerPreferences.flush()
     }
 }
 
-fun ControllerUtils.getControllerCode(controller: Controller, button: MegaControllerButtons): Int? {
+fun ControllerUtils.getControllerCode(controller: Controller, button: MegaControllerButton): Int? {
     val controllerPreferences =
         Gdx.app.getPreferences("${PreferenceFiles.MEGAMAN_MAVERICK_CONTROLLER_PREFERENCES} - ${controller.name}")
     val defaultMapping = getController()?.mapping
