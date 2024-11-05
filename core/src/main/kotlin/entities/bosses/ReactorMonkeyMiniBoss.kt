@@ -65,7 +65,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) :
         private const val BALL_IMPULSE_Y = 6f
         private const val HORIZONTAL_SCALAR = 1.25f
         private const val VERTICAL_SCALAR = 1f
-        private const val DEFAULT_BALL_SPAWN_Y = 4f
+        private const val DEFAULT_BALL_SPAWN_Y = 3f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
