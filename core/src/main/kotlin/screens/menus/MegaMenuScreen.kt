@@ -6,7 +6,7 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.screens.menus.AbstractMenuScreen
 import com.mega.game.engine.screens.menus.IMenuButton
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.controllers.MegaControllerButtons
+import com.megaman.maverick.game.controllers.MegaControllerButton
 
 abstract class MegaMenuScreen(
     protected val game: MegamanMaverickGame,
@@ -15,19 +15,19 @@ abstract class MegaMenuScreen(
 ) : AbstractMenuScreen(buttons, { game.paused }, firstButtonKey) {
 
     override fun getNavigationDirection() =
-        if (game.controllerPoller.isJustPressed(MegaControllerButtons.UP)) Direction.UP
-        else if (game.controllerPoller.isJustPressed(MegaControllerButtons.DOWN))
+        if (game.controllerPoller.isJustPressed(MegaControllerButton.UP)) Direction.UP
+        else if (game.controllerPoller.isJustPressed(MegaControllerButton.DOWN))
             Direction.DOWN
-        else if (game.controllerPoller.isJustPressed(MegaControllerButtons.LEFT))
+        else if (game.controllerPoller.isJustPressed(MegaControllerButton.LEFT))
             Direction.LEFT
-        else if (game.controllerPoller.isJustPressed(MegaControllerButtons.RIGHT))
+        else if (game.controllerPoller.isJustPressed(MegaControllerButton.RIGHT))
             Direction.RIGHT
         else null
 
     override fun selectionRequested() = game.controllerPoller.isAnyJustPressed(
         gdxArrayOf(
-            MegaControllerButtons.START,
-            MegaControllerButtons.A
+            MegaControllerButton.START,
+            MegaControllerButton.A
         )
     )
 

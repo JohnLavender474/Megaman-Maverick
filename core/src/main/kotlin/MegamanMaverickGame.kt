@@ -8,8 +8,10 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.ObjectSet
+import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.mega.game.engine.GameEngine
@@ -64,12 +66,11 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.MegaControllerPoller
+import com.megaman.maverick.game.controllers.ScreenController
 import com.megaman.maverick.game.controllers.loadButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
-import com.megaman.maverick.game.entities.bosses.ReactorMonkeyMiniBoss
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.hazards.Saw
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
@@ -84,7 +85,6 @@ import com.megaman.maverick.game.screens.menus.bosses.BossSelectScreen
 import com.megaman.maverick.game.screens.other.CreditsScreen
 import com.megaman.maverick.game.screens.other.SimpleEndLevelScreen
 import com.megaman.maverick.game.screens.other.SimpleInitGameScreen
-import com.megaman.maverick.game.spawns.debugFilterByEntityTag
 import com.megaman.maverick.game.utils.getMusics
 import com.megaman.maverick.game.utils.getSounds
 import com.megaman.maverick.game.world.body.FixtureType
@@ -99,6 +99,7 @@ enum class StartScreenOption { MAIN, SIMPLE, LEVEL }
 class MegamanMaverickGameParams {
     var debugShapes: Boolean = false
     var debugFPS: Boolean = false
+    var logLevel: GameLogLevel = GameLogLevel.LOG
     var startScreen: StartScreenOption = StartScreenOption.MAIN
     var startLevel: Level? = null
     var fixedStepScalar: Float = 1f
@@ -106,11 +107,13 @@ class MegamanMaverickGameParams {
     var soundVolume: Float = 0.5f
 }
 
-class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEventListener, IPropertizable {
+class MegamanMaverickGame(
+    val params: MegamanMaverickGameParams = MegamanMaverickGameParams()
+) : Game(), IEventListener, IPropertizable {
 
     companion object {
         const val TAG = "MegamanMaverickGame"
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(ReactorMonkeyMiniBoss.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.TELEPORTER, FixtureType.TELEPORTER_LISTENER)
         }
@@ -123,6 +126,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
     val screens = ObjectMap<String, IScreen>()
     val currentScreen: IScreen?
         get() = currentScreenKey?.let { screens[it] }
+    val disposables = OrderedMap<String, Disposable>()
 
     lateinit var batch: SpriteBatch
     lateinit var shapeRenderer: ShapeRenderer
@@ -140,6 +144,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
 
     private lateinit var debugFPSText: MegaFontHandle
     private var currentScreenKey: String? = null
+    private var screenController: ScreenController? = null
 
     fun setCurrentScreen(key: String) {
         GameLogger.debug(TAG, "setCurrentScreen: set to screen with key = $key")
@@ -202,11 +207,11 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
     fun getTiledMapLoadResult() = properties.get(ConstKeys.TILED_MAP_LOAD_RESULT) as TiledMapLoadResult
 
     override fun create() {
-        GameLogger.set(GameLogLevel.ERROR)
-        GameLogger.filterByTag = true
-        GameLogger.tagsToLog.addAll(TAGS_TO_LOG)
-        GameLogger.debug(TAG, "create()")
-        debugFilterByEntityTag.addAll(Saw.TAG)
+        GameLogger.setLogLevel(params.logLevel)
+        GameLogger.setFilterByTag(params.logLevel, true)
+        GameLogger.addFilterTags(params.logLevel, TAGS_TO_LOG)
+
+        GameLogger.debug(TAG, "create(): appType=${Gdx.app.type}")
 
         shapeRenderer = ShapeRenderer()
         shapeRenderer.setAutoShapeType(true)
@@ -283,6 +288,8 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
             StartScreenOption.SIMPLE -> setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name)
             else -> setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
         }
+
+        /* if (Gdx.app.type == ApplicationType.Android) */ screenController = ScreenController(this)
     }
 
     override fun onEvent(event: Event) {
@@ -318,9 +325,10 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
         audioMan.update(delta)
 
         currentScreen?.render(delta)
-        // TODO: should not apply viewports all at once at end of render(); rather should apply each viewport
-        //  individually right before drawing drawables that are to be contained in the viewport
-        // viewports.values().forEach { it.apply(true) }
+        screenController?.let {
+            it.stage.act(delta)
+            it.stage.draw()
+        }
 
         if (params.debugFPS) {
             batch.projectionMatrix = getUiCamera().combined
@@ -333,6 +341,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
     override fun resize(width: Int, height: Int) {
         viewports.values().forEach { it.update(width, height) }
         currentScreen?.resize(width, height)
+        screenController?.viewport?.update(width, height)
     }
 
     override fun pause() {
@@ -355,6 +364,7 @@ class MegamanMaverickGame(val params: MegamanMaverickGameParams) : Game(), IEven
         if (this::shapeRenderer.isInitialized) shapeRenderer.dispose()
         if (this::engine.isInitialized) engine.dispose()
         screens.values().forEach { it.dispose() }
+        disposables.values().forEach { it.dispose() }
     }
 
     fun saveState() {

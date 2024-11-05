@@ -48,7 +48,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
-import com.megaman.maverick.game.controllers.MegaControllerButtons
+import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.drawables.backgrounds.Background
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntitiesMap
@@ -313,8 +313,8 @@ class MegaLevelScreen(
         val spawners = result.get(ConstKeys.SPAWNERS) as Array<ISpawner>? ?: Array()
         spawnsMan.setSpawners(spawners)
 
-        val _disposables = result.get(ConstKeys.DISPOSABLES) as Array<Disposable>? ?: Array()
-        disposables.addAll(_disposables)
+        val disposables = result.get(ConstKeys.DISPOSABLES) as Array<Disposable>? ?: Array()
+        this.disposables.addAll(disposables)
     }
 
     override fun onEvent(event: Event) {
@@ -567,7 +567,7 @@ class MegaLevelScreen(
     }
 
     override fun render(delta: Float) {
-        if (controllerPoller.isJustPressed(MegaControllerButtons.START) && playerStatsHandler.finished &&
+        if (controllerPoller.isJustPressed(MegaControllerButton.START) && playerStatsHandler.finished &&
             playerSpawnEventHandler.finished && playerDeathEventHandler.finished && bossSpawnEventHandler.finished
         ) {
             if (game.paused) game.resume() else game.pause()
@@ -646,8 +646,10 @@ class MegaLevelScreen(
         playerStatsHandler.draw(batch)
         batch.end()
 
-        if (!playerSpawnEventHandler.finished) playerSpawnEventHandler.draw(batch)
-        else if (!endLevelEventHandler.finished) endLevelEventHandler.draw(batch)
+        when {
+            !playerSpawnEventHandler.finished -> playerSpawnEventHandler.draw(batch)
+            !endLevelEventHandler.finished -> endLevelEventHandler.draw(batch)
+        }
 
         val shapeRenderer = game.shapeRenderer
         shapeRenderer.projectionMatrix = gameCamera.combined

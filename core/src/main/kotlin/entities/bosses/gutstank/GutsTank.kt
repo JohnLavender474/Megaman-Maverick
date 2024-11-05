@@ -144,8 +144,8 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
         get() = !laughTimer.isFinished()
     private val metSpawn: Vector2
         get() = Vector2(
-            body.getCenter().x - (0.75f * ConstVals.PPM),
-            tankBlock!!.body.getMaxY() + (0.25f * ConstVals.PPM)
+            body.getCenter().x - 1.25f * ConstVals.PPM,
+            tankBlock!!.body.getMaxY() + 0.75f * ConstVals.PPM
         )
 
     private lateinit var frontPoint: Vector2
@@ -266,12 +266,10 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
 
     override fun canBeDamagedBy(damager: IDamager): Boolean {
         if (damager is AbstractProjectile) {
-            damager.owner?.let { damagerOwner ->
-                if (damagerOwner == this ||
-                    damagerOwner == fist ||
-                    damagerOwner == tankBlock ||
-                    (damagerOwner is Met && runningMets.contains(damagerOwner)) ||
-                    (damagerOwner is HeliMet && heliMets.contains(damagerOwner))
+            damager.owner?.let {
+                if (it == this || it == fist || it == tankBlock ||
+                    (it is Met && runningMets.contains(it)) ||
+                    (it is HeliMet && heliMets.contains(it))
                 ) return false
             }
         }

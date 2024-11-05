@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.spawns
 
-import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.shapes.IGameShape2D
 
 class SpawnerForBoundsEntered(
@@ -24,13 +23,7 @@ class SpawnerForBoundsEntered(
         val wasEntered = isEntered
         isEntered = thisBounds().overlaps(otherBounds())
         val shouldSpawn = !wasEntered && isEntered
-        if (shouldSpawn) {
-            spawn = spawnSupplier()
-            if (debugFilterByEntityTag.contains(spawn!!.entity.getTag())) GameLogger.debug(
-                TAG,
-                "created spawner: ${spawn!!.entity}"
-            )
-        }
+        if (shouldSpawn) spawn = spawnSupplier()
 
         return spawned
     }

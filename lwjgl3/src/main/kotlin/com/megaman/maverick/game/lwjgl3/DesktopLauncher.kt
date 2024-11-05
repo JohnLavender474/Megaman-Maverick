@@ -6,6 +6,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowAdapter
 import com.beust.jcommander.JCommander
 import com.beust.jcommander.Parameter
 import com.beust.jcommander.ParameterException
+import com.mega.game.engine.common.GameLogLevel
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.MegamanMaverickGameParams
@@ -19,9 +20,9 @@ object DesktopLauncher {
     private const val DEFAULT_WIDTH = 800
     private const val DEFAULT_HEIGHT = 600
     private const val DEFAULT_FULLSCREEN = false
-    private const val DEFAULT_VSYNC = false
     private const val DEFAULT_DEBUG_SHAPES = false
     private const val DEFAULT_DEBUG_FPS = false
+    private const val DEFAULT_LOG_LEVEL = "off"
     private const val DEFAULT_FIXED_STEP_SCALAR = 1.0f
     private const val DEFAULT_MUSIC_VOLUME = 0.5f
     private const val DEFAULT_SOUND_VOLUME = 0.5f
@@ -48,9 +49,9 @@ object DesktopLauncher {
         println("- Width: " + appArgs.width)
         println("- Height: " + appArgs.height)
         println("- Fullscreen: " + appArgs.fullScreen)
-        println("- Vsync: " + appArgs.vsync)
         println("- Debug Shapes: " + appArgs.debugShapes)
         println("- Debug FPS: " + appArgs.debugFPS)
+        println("- Log Level: " + appArgs.logLevel)
         println("- Start Screen: " + appArgs.startScreen)
         println("- Level: " + appArgs.level)
         println("- Fixed Step Scalar: " + appArgs.fixedStepScalar)
@@ -59,7 +60,6 @@ object DesktopLauncher {
 
         val config = Lwjgl3ApplicationConfiguration()
         config.setTitle(TITLE)
-        config.useVsync(appArgs.vsync)
         config.setIdleFPS(ConstVals.FPS)
         config.setForegroundFPS(ConstVals.FPS)
         config.setWindowedMode(appArgs.width, appArgs.height)
@@ -73,19 +73,22 @@ object DesktopLauncher {
         params.fixedStepScalar = appArgs.fixedStepScalar
         params.musicVolume = appArgs.musicVolume
         params.soundVolume = appArgs.soundVolume
-        val startScreenOption = if (appArgs.startScreen.isBlank() || appArgs.startScreen.lowercase() == "main") {
-            StartScreenOption.MAIN
-        } else if (appArgs.startScreen.lowercase() == "level") {
-            StartScreenOption.LEVEL
-        } else if (appArgs.startScreen.lowercase() == "simple") {
-            StartScreenOption.SIMPLE
-        } else {
-            System.err.println("Invalid start screen option: " + appArgs.startScreen)
-            jCommander.usage()
-            exitProcess(1)
+        try {
+            params.logLevel = GameLogLevel.valueOf(appArgs.logLevel.uppercase())
+        } catch (e: Exception) {
+            System.err.println("Exception while setting log level: $e")
+        }
+        val startScreenOption = when {
+            appArgs.startScreen.isBlank() || appArgs.startScreen.lowercase() == "main" -> StartScreenOption.MAIN
+            appArgs.startScreen.lowercase() == "level" -> StartScreenOption.LEVEL
+            appArgs.startScreen.lowercase() == "simple" -> StartScreenOption.SIMPLE
+            else -> {
+                System.err.println("Invalid start screen option: " + appArgs.startScreen)
+                jCommander.usage()
+                exitProcess(1)
+            }
         }
         params.startScreen = startScreenOption
-
         if (startScreenOption == StartScreenOption.LEVEL) {
             val level = Level.valueOf(appArgs.level.uppercase())
             params.startLevel = level
@@ -141,12 +144,6 @@ object DesktopLauncher {
         var fullScreen = DEFAULT_FULLSCREEN
 
         @Parameter(
-            names = ["--vsync"],
-            description = "Enable vsync. Default value = $DEFAULT_VSYNC."
-        )
-        var vsync = DEFAULT_VSYNC
-
-        @Parameter(
             names = ["--debugShapes"],
             description = ("Enable debugging shapes. Default value = $DEFAULT_DEBUG_SHAPES.")
         )
@@ -157,6 +154,12 @@ object DesktopLauncher {
             description = ("Enable debugging FPS. Default value = $DEFAULT_DEBUG_FPS")
         )
         var debugFPS = DEFAULT_DEBUG_FPS
+
+        @Parameter(
+            names = ["--logLevel"],
+            description = ("Set the log level of the game logger. Default value = $DEFAULT_LOG_LEVEL")
+        )
+        var logLevel = DEFAULT_LOG_LEVEL
 
         @Parameter(
             names = ["--startScreen"],
