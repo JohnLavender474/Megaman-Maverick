@@ -1,7 +1,7 @@
 package com.megaman.maverick.game.controllers
 
 import com.badlogic.gdx.Input
-import com.badlogic.gdx.utils.OrderedSet
+import com.mega.game.engine.common.objects.ImmutableCollection
 
 enum class MegaControllerButton(val defaultKeyboardKey: Int) {
     START(Input.Keys.ENTER),
@@ -13,15 +13,15 @@ enum class MegaControllerButton(val defaultKeyboardKey: Int) {
     A(Input.Keys.K),
     B(Input.Keys.J);
 
-    companion object {
+    fun isDpadButton() = DPAD_BUTTONS.contains(this)
 
-        fun getDpadButtons(): OrderedSet<MegaControllerButton> {
-            val set = OrderedSet<MegaControllerButton>()
-            set.add(UP)
-            set.add(DOWN)
-            set.add(LEFT)
-            set.add(RIGHT)
-            return set
-        }
+    fun isActionButton() = ACTION_BUTTONS.contains(this)
+
+    fun isCommandButton() = COMMAND_BUTTONS.contains(this)
+
+    companion object {
+        val DPAD_BUTTONS = ImmutableCollection(hashSetOf(UP, DOWN, LEFT, RIGHT))
+        val ACTION_BUTTONS = ImmutableCollection(hashSetOf(A, B))
+        val COMMAND_BUTTONS = ImmutableCollection(hashSetOf(START, SELECT))
     }
 }

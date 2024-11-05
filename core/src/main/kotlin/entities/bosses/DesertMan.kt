@@ -88,7 +88,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         private const val TORNADO_HEIGHT = 2f
 
         private const val JUMP_MAX_IMPULSE_X = 10f
-        private const val JUMP_IMPULSE_Y = 15f
+        private const val JUMP_IMPULSE_Y = 14f
 
         private const val WALL_SLIDE_DUR = 0.5f
         private const val WALL_SLIDE_FRICTION_Y = 6f

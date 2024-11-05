@@ -58,7 +58,7 @@ class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         directionRotation = spawnProps.get(ConstKeys.DIRECTION, Direction::class)!!
         trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
 
-        val size = if (directionRotation?.isHorizontal() == true) Vector2(2f, 0.85f) else Vector2(0.85f, 2f)
+        val size = if (directionRotation?.isHorizontal() == true) Vector2(2f, 0.75f) else Vector2(0.75f, 2f)
         body.setSize(size.scl(ConstVals.PPM.toFloat()))
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!

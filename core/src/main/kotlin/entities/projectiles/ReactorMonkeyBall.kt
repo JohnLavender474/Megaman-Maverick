@@ -56,6 +56,7 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override var owner: GameEntity? = null
     var hidden = false
+    var collide = false
 
     private var exploding = false
     private var bounces = 0
@@ -76,6 +77,7 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         super.onSpawn(spawnProps)
 
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
+        collide = spawnProps.getOrDefault(ConstKeys.COLLIDE, false, Boolean::class)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
@@ -107,8 +109,8 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
     }
 
     private fun bounce(direction: Direction, add: Boolean = true) {
+        if (!collide) return
         if (add) bounces++
-
         if (bounces >= MAX_BOUNCES) explodeAndDie()
         else {
             when (direction) {

@@ -13,12 +13,11 @@ class AndroidLauncher : AndroidApplication() {
         super.onCreate(savedInstanceState)
 
         val configuration = AndroidApplicationConfiguration()
-        configuration.useImmersiveMode = true
+        configuration.useImmersiveMode = false
 
         val params = MegamanMaverickGameParams()
-        params.logLevel =
-            GameLogLevel.OFF
-        params.debugFPS = true
+        params.logLevel = GameLogLevel.OFF
+        params.debugFPS = false
         params.startScreen = StartScreenOption.SIMPLE
 
         initialize(MegamanMaverickGame(params), configuration)
