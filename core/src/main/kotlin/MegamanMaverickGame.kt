@@ -322,16 +322,11 @@ class MegamanMaverickGame(
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
         val delta = Gdx.graphics.deltaTime
-
         controllerPoller.run()
         eventsMan.run()
         audioMan.update(delta)
-
         currentScreen?.render(delta)
-        screenController?.let {
-            it.stage.act(delta)
-            it.stage.draw()
-        }
+        screenController?.update(delta)
 
         if (params.debugFPS) {
             batch.projectionMatrix = getUiCamera().combined
@@ -344,7 +339,7 @@ class MegamanMaverickGame(
     override fun resize(width: Int, height: Int) {
         viewports.values().forEach { it.update(width, height) }
         currentScreen?.resize(width, height)
-        screenController?.viewport?.update(width, height)
+        screenController?.resize(width, height)
     }
 
     override fun pause() {

@@ -65,7 +65,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) :
         private const val BALL_IMPULSE_Y = 6f
         private const val HORIZONTAL_SCALAR = 1.25f
         private const val VERTICAL_SCALAR = 1f
-        private const val DEFAULT_BALL_SPAWN_Y = 3f
+        private const val DEFAULT_BALL_SPAWN_Y = 4f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -135,7 +135,13 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) :
         monkeyBall =
             EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.REACTOR_MONKEY_BALL)!! as ReactorMonkeyBall
         val spawn = body.getTopCenterPoint().add(0f, ballSpawnY * ConstVals.PPM)
-        monkeyBall!!.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.OWNER pairTo this))
+        monkeyBall!!.spawn(
+            props(
+                ConstKeys.POSITION pairTo spawn,
+                ConstKeys.OWNER pairTo this,
+                ConstKeys.COLLIDE pairTo false
+            )
+        )
     }
 
     fun catchMonkeyBall() {
@@ -158,6 +164,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) :
             ball.body.physics.velocity.set(impulse)
             ball.body.physics.gravityOn = true
             ball.hidden = false
+            ball.collide = true
         }
     }
 

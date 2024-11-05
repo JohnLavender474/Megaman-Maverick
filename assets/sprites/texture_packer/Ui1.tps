@@ -401,6 +401,10 @@
             <key type="filename">../frames/Ui1/ScreenController/b.png</key>
             <key type="filename">../frames/Ui1/ScreenController/button.png</key>
             <key type="filename">../frames/Ui1/ScreenController/button_pressed.png</key>
+            <key type="filename">../frames/Ui1/ScreenController/command.png</key>
+            <key type="filename">../frames/Ui1/ScreenController/command_pressed.png</key>
+            <key type="filename">../frames/Ui1/ScreenController/select.png</key>
+            <key type="filename">../frames/Ui1/ScreenController/start.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

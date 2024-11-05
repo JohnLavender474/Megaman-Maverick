@@ -1,46 +1,46 @@
 Ui1.png
-size: 1990, 1807
+size: 1990, 1790
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 Arrow
   rotate: false
-  xy: 104, 0
+  xy: 168, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Background
   rotate: false
-  xy: 296, 0
+  xy: 360, 0
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Bar
   rotate: false
-  xy: 936, 0
+  xy: 1000, 0
   size: 256, 64
   orig: 256, 64
   offset: 0, 0
   index: -1
 Bit
   rotate: false
-  xy: 145, 145
+  xy: 290, 128
   size: 292, 76
   orig: 292, 76
   offset: 0, 0
   index: -1
 BlackBar
   rotate: false
-  xy: 360, 0
+  xy: 424, 0
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 BlackBit
   rotate: false
-  xy: 136, 0
+  xy: 200, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -54,98 +54,98 @@ BorderBlock
   index: -1
 Canvas
   rotate: false
-  xy: 400, 737
+  xy: 400, 720
   size: 512, 480
   orig: 512, 480
   offset: 0, 0
   index: -1
 EmptyBit
   rotate: false
-  xy: 437, 145
+  xy: 582, 128
   size: 388, 102
   orig: 388, 102
   offset: 0, 0
   index: -1
 MegamanHelmet
   rotate: false
-  xy: 966, 337
+  xy: 1222, 320
   size: 300, 284
   orig: 300, 284
   offset: 0, 0
   index: -1
 MegamanMaverick
   rotate: false
-  xy: 424, 0
+  xy: 488, 0
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 MegamanPose
   rotate: false
-  xy: 1192, 0
+  xy: 1256, 0
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 MegamanSubtitle
   rotate: false
-  xy: 912, 737
+  xy: 912, 720
   size: 1078, 270
   orig: 1078, 270
   offset: 0, 0
   index: -1
 MegamanTitle
   rotate: false
-  xy: 0, 1217
+  xy: 0, 1200
   size: 1982, 590
   orig: 1982, 590
   offset: 0, 0
   index: -1
 OrangeBit
   rotate: false
-  xy: 168, 0
+  xy: 232, 0
   size: 64, 16
   orig: 64, 16
   offset: 0, 0
   index: -1
 Pane
   rotate: false
-  xy: 488, 0
+  xy: 552, 0
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 PaneBlinking
   rotate: false
-  xy: 680, 0
+  xy: 744, 0
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
   index: -1
 PaneHighlighted
   rotate: false
-  xy: 552, 0
+  xy: 616, 0
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 PaneShattered
   rotate: false
-  xy: 616, 0
+  xy: 680, 0
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 RedBit
   rotate: false
-  xy: 256, 337
+  xy: 512, 320
   size: 460, 118
   orig: 460, 118
   offset: 0, 0
   index: -1
 RedDot
   rotate: false
-  xy: 232, 0
+  xy: 296, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -192,107 +192,135 @@ ScreenController/button_pressed
   orig: 16, 16
   offset: 0, 0
   index: -1
+ScreenController/command
+  rotate: false
+  xy: 104, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+ScreenController/command_pressed
+  rotate: false
+  xy: 120, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+ScreenController/select
+  rotate: false
+  xy: 136, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+ScreenController/start
+  rotate: false
+  xy: 152, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
 StageSelectBox_Blinking
   rotate: false
-  xy: 808, 0
+  xy: 872, 0
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
   index: -1
 StageSelectBox_Highlighted
   rotate: false
-  xy: 1266, 337
+  xy: 1522, 320
   size: 400, 400
   orig: 400, 400
   offset: 0, 0
   index: -1
 StageSelectBox_Unhighlighted
   rotate: false
-  xy: 0, 737
+  xy: 0, 720
   size: 400, 400
   orig: 400, 400
   offset: 0, 0
   index: -1
 StandardBit
   rotate: false
-  xy: 825, 145
+  xy: 970, 128
   size: 386, 104
   orig: 386, 104
   offset: 0, 0
   index: -1
 Stars
   rotate: false
-  xy: 1320, 0
+  xy: 1384, 0
   size: 256, 64
   orig: 256, 64
   offset: 0, 0
   index: -1
 Stars1
   rotate: false
-  xy: 1211, 145
+  xy: 1356, 128
   size: 256, 192
   orig: 256, 192
   offset: 0, 0
   index: -1
 Stars2
   rotate: false
-  xy: 1467, 145
+  xy: 1612, 128
   size: 256, 192
   orig: 256, 192
   offset: 0, 0
   index: -1
 Stars3
   rotate: false
-  xy: 1723, 145
+  xy: 0, 320
   size: 256, 192
   orig: 256, 192
   offset: 0, 0
   index: -1
 Stars4
   rotate: false
-  xy: 0, 337
+  xy: 256, 320
   size: 256, 192
   orig: 256, 192
   offset: 0, 0
   index: -1
 Subtitle8bit
   rotate: false
-  xy: 1832, 0
+  xy: 0, 128
   size: 145, 145
   orig: 145, 145
   offset: 0, 0
   index: -1
 TitleScreenBackground
   rotate: false
-  xy: 716, 337
+  xy: 972, 320
   size: 250, 262
   orig: 250, 262
   offset: 0, 0
   index: -1
 WhiteFrameBlackPane
   rotate: false
-  xy: 264, 0
+  xy: 328, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Z
   rotate: false
-  xy: 1576, 0
+  xy: 1640, 0
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 Z8bit
   rotate: false
-  xy: 0, 145
+  xy: 145, 128
   size: 145, 145
   orig: 145, 145
   offset: 0, 0
   index: -1
 ZeroSilhouette
   rotate: false
-  xy: 1704, 0
+  xy: 1768, 0
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
