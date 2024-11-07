@@ -61,7 +61,7 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
     companion object {
         const val TAG = "DemonMet"
         private const val STAND_DUR = 0.15f
-        private const val FIRE_DELAY = 1.5f
+        private const val FIRE_DELAY = 1.75f
         private const val FLY_SPEED = 4f
         private const val FIRE_PELLET_COUNT = 3
         private const val FIRE_PELLET_ANGLE_OFFSET = 25f
@@ -113,6 +113,7 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
             val d2 = o2.dst2(getMegaman().body.getCenter())
             d1.compareTo(d2)
         }
+
         spawnProps.forEach { key, value ->
             if (key.toString().contains(ConstKeys.TARGET) && value is RectangleMapObject)
                 targets.add(value.rectangle.getCenter())

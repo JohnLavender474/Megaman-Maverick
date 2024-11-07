@@ -67,7 +67,9 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         private var flameRegion: TextureRegion? = null
     }
 
-    enum class PopoheliState { WAITING, APPROACHING, ATTACKING, FLEEING }
+    private enum class PopoheliState { WAITING, APPROACHING, ATTACKING, FLEEING }
+
+    private class TriggerDef(val trigger: Rectangle, val start: Vector2, val target: Vector2)
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
         Bullet::class pairTo dmgNeg(15),
@@ -94,8 +96,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
     private lateinit var target: Vector2
     private lateinit var faceOnEnd: Facing
 
-    private var start: Vector2? = null
-    private var trigger: Rectangle? = null
+    private val triggers = Array<TriggerDef>()
 
     override fun init() {
         if (heliRegion == null || flameRegion == null) {
@@ -112,32 +113,43 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        val triggerable = spawnProps.containsKey(ConstKeys.TRIGGER)
+        val triggerable = spawnProps.getOrDefault(ConstKeys.TRIGGERABLE, false, Boolean::class)
         if (triggerable) {
-            trigger = spawnProps.get(ConstKeys.TRIGGER, RectangleMapObject::class)!!.rectangle
-            start = spawnProps.get(ConstKeys.START, RectangleMapObject::class)?.rectangle?.getCenter()
-            target = spawnProps.get(ConstKeys.TARGET, RectangleMapObject::class)!!.rectangle.getCenter()
-        } else {
-            val megamanCenter = getMegaman().body.getCenter()
-            val targets = PriorityQueue<Vector2> { target1, target2 ->
-                target1.dst2(megamanCenter).compareTo(target2.dst2(megamanCenter))
+            spawnProps.getAllMatching { it.toString().startsWith(ConstKeys.TRIGGER) }.forEach {
+                val value = it.second
+                if (value is RectangleMapObject) {
+                    val trigger = value.rectangle
+                    val start = (value.properties.get(ConstKeys.START) as RectangleMapObject).rectangle.getCenter()
+                    val target = (value.properties.get(ConstKeys.TARGET) as RectangleMapObject).rectangle.getCenter()
+                    triggers.add(TriggerDef(trigger, start, target))
+                }
             }
-            spawnProps.getAllMatching { it.toString().startsWith(ConstKeys.TARGET) }
-                .forEach { targets.add((it.second as RectangleMapObject).rectangle.getCenter()) }
+            facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        } else {
+            val center = getMegaman().body.getCenter()
+            val targets =
+                PriorityQueue<Vector2> { target1, target2 -> target1.dst2(center).compareTo(target2.dst2(center)) }
+            spawnProps.getAllMatching { it.toString().startsWith(ConstKeys.TARGET) }.forEach {
+                targets.add((it.second as RectangleMapObject).rectangle.getCenter())
+            }
             target = targets.poll()
+            facing = if (target.x < body.x) Facing.LEFT else Facing.RIGHT
         }
 
         state = if (triggerable) PopoheliState.WAITING else PopoheliState.APPROACHING
-        facing = if (target.x < body.x) Facing.LEFT else Facing.RIGHT
-        faceOnEnd = if (spawnProps.containsKey("${ConstKeys.FACE}_${ConstKeys.ON}_${ConstKeys.END}")) Facing.valueOf(
-            spawnProps.get(
-                "${ConstKeys.FACE}_${ConstKeys.ON}_${ConstKeys.END}",
-                String::class
-            )!!.uppercase()
-        ) else facing
+        faceOnEnd = if (spawnProps.containsKey("${ConstKeys.FACE}_${ConstKeys.ON}_${ConstKeys.END}")) {
+            val value =
+                spawnProps.get("${ConstKeys.FACE}_${ConstKeys.ON}_${ConstKeys.END}", String::class)!!.uppercase()
+            Facing.valueOf(value)
+        } else facing
 
         attackTimer.reset()
         attackDelayTimer.reset()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        triggers.clear()
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -145,11 +157,13 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         updatablesComponent.add { delta ->
             when (state) {
                 PopoheliState.WAITING -> {
-                    if (trigger == null) throw IllegalStateException("Trigger cannot be null when in WAITING state")
                     body.physics.velocity.setZero()
-                    if (getMegaman().body.overlaps(trigger)) {
-                        start?.let { body.setCenter(it) }
-                        state = PopoheliState.APPROACHING
+                    triggers.forEach {
+                        if (getMegaman().body.overlaps(it.trigger)) {
+                            body.setCenter(it.start)
+                            target = it.target
+                            state = PopoheliState.APPROACHING
+                        }
                     }
                 }
 
