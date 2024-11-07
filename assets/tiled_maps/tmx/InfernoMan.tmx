@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="250" height="150" tilewidth="32" tileheight="32" infinite="0" nextlayerid="15" nextobjectid="246">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="250" height="150" tilewidth="32" tileheight="32" infinite="0" nextlayerid="15" nextobjectid="246">
  <tileset firstgid="1" source="../tsx/MagmaMan.tsx"/>
  <tileset firstgid="129" source="../tsx/Tileset1.tsx"/>
  <layer id="11" name="tiles2" width="250" height="150">
@@ -518,12 +518,6 @@
   <object id="216" name="SniperJoe" x="4280" y="2224" width="16" height="16"/>
   <object id="223" name="BouncingAngryFlameBall" x="4568" y="2456" width="32" height="16"/>
  </objectgroup>
- <objectgroup id="5" name="temp">
-  <object id="228" name="0" x="128" y="1888" width="32" height="32"/>
- </objectgroup>
- <objectgroup id="14" name="player">
-  <object id="242" name="0" x="4608" y="2240" width="32" height="32"/>
- </objectgroup>
  <objectgroup id="6" name="sensors"/>
  <objectgroup id="13" name="hazards">
   <object id="21" name="Lava" x="288" y="2048" width="864" height="32"/>
@@ -768,4 +762,10 @@
   </object>
  </objectgroup>
  <objectgroup id="10" name="backgrounds"/>
+ <objectgroup id="14" name="temp">
+  <object id="242" name="0" x="4608" y="2240" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup id="5" name="player">
+  <object id="228" name="0" x="128" y="1888" width="32" height="32"/>
+ </objectgroup>
 </map>

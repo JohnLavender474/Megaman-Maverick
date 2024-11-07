@@ -3,6 +3,7 @@ package com.megaman.maverick.game.entities.enemies
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
@@ -18,7 +19,6 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.interfaces.UpdateFunction
 import com.mega.game.engine.common.objects.GamePair
-
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -67,7 +67,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         private var flameRegion: TextureRegion? = null
     }
 
-    enum class PopoheliState { APPROACHING, ATTACKING, FLEEING }
+    enum class PopoheliState { WAITING, APPROACHING, ATTACKING, FLEEING }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
         Bullet::class pairTo dmgNeg(15),
@@ -86,15 +86,20 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
     private val attackDelayTimer = Timer(ATTACK_DELAY)
     private val attackTimer = Timer(ATTACK_DUR)
     private val attacking: Boolean
-        get() = popoheliState == PopoheliState.ATTACKING && attackDelayTimer.isFinished()
+        get() = state == PopoheliState.ATTACKING && attackDelayTimer.isFinished()
+    private val waiting: Boolean
+        get() = state == PopoheliState.WAITING
 
-    private lateinit var popoheliState: PopoheliState
+    private lateinit var state: PopoheliState
     private lateinit var target: Vector2
     private lateinit var faceOnEnd: Facing
 
+    private var start: Vector2? = null
+    private var trigger: Rectangle? = null
+
     override fun init() {
         if (heliRegion == null || flameRegion == null) {
-            heliRegion = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, "Popoheli")
+            heliRegion = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, TAG)
             flameRegion = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, "Flame2")
         }
         super.init()
@@ -107,15 +112,22 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        val megamanCenter = getMegaman().body.getCenter()
-        val targets = PriorityQueue<Vector2> { target1, target2 ->
-            target1.dst2(megamanCenter).compareTo(target2.dst2(megamanCenter))
+        val triggerable = spawnProps.containsKey(ConstKeys.TRIGGER)
+        if (triggerable) {
+            trigger = spawnProps.get(ConstKeys.TRIGGER, RectangleMapObject::class)!!.rectangle
+            start = spawnProps.get(ConstKeys.START, RectangleMapObject::class)?.rectangle?.getCenter()
+            target = spawnProps.get(ConstKeys.TARGET, RectangleMapObject::class)!!.rectangle.getCenter()
+        } else {
+            val megamanCenter = getMegaman().body.getCenter()
+            val targets = PriorityQueue<Vector2> { target1, target2 ->
+                target1.dst2(megamanCenter).compareTo(target2.dst2(megamanCenter))
+            }
+            spawnProps.getAllMatching { it.toString().startsWith(ConstKeys.TARGET) }
+                .forEach { targets.add((it.second as RectangleMapObject).rectangle.getCenter()) }
+            target = targets.poll()
         }
-        spawnProps.getAllMatching { it.toString().startsWith(ConstKeys.TARGET) }
-            .forEach { targets.add((it.second as RectangleMapObject).rectangle.getCenter()) }
-        target = targets.poll()
 
-        popoheliState = PopoheliState.APPROACHING
+        state = if (triggerable) PopoheliState.WAITING else PopoheliState.APPROACHING
         facing = if (target.x < body.x) Facing.LEFT else Facing.RIGHT
         faceOnEnd = if (spawnProps.containsKey("${ConstKeys.FACE}_${ConstKeys.ON}_${ConstKeys.END}")) Facing.valueOf(
             spawnProps.get(
@@ -131,14 +143,23 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            when (popoheliState) {
+            when (state) {
+                PopoheliState.WAITING -> {
+                    if (trigger == null) throw IllegalStateException("Trigger cannot be null when in WAITING state")
+                    body.physics.velocity.setZero()
+                    if (getMegaman().body.overlaps(trigger)) {
+                        start?.let { body.setCenter(it) }
+                        state = PopoheliState.APPROACHING
+                    }
+                }
+
                 PopoheliState.APPROACHING -> {
                     val trajectory = target.cpy().sub(body.getCenter()).nor().scl(SPEED * ConstVals.PPM)
                     body.physics.velocity = trajectory
 
                     if (body.getCenter().epsilonEquals(target, 0.1f * ConstVals.PPM)) {
                         body.physics.velocity.setZero()
-                        popoheliState = PopoheliState.ATTACKING
+                        state = PopoheliState.ATTACKING
                         facing = faceOnEnd
                     }
                 }
@@ -151,7 +172,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
                     )
 
                     attackTimer.update(delta)
-                    if (attackTimer.isFinished()) popoheliState = PopoheliState.FLEEING
+                    if (attackTimer.isFinished()) state = PopoheliState.FLEEING
                 }
 
                 PopoheliState.FLEEING -> {
@@ -204,6 +225,10 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         debugShapes.add { shieldFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
+            body.physics.collisionOn = !waiting
+            body.fixtures.forEach { (it.second as Fixture).active = !waiting }
+            if (waiting) return@put
+
             damagerFixture2.offsetFromBodyCenter = Vector2(
                 FLAMES * FLAME_PADDING * facing.value * ConstVals.PPM / 2f, -0.5f * ConstVals.PPM
             )
@@ -229,7 +254,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         updateFunctions.put("heli") { _, _sprite ->
             _sprite.setFlip(isFacing(Facing.RIGHT), false)
             _sprite.setCenter(body.getCenter())
-            _sprite.hidden = damageBlink
+            _sprite.hidden = waiting || damageBlink
         }
 
         for (i in 0 until FLAMES) {
