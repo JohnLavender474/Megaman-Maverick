@@ -119,7 +119,6 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
     private fun spawnFlame() {
         if (flame != null) throw IllegalStateException("Flame must be null before spawning new flame")
-
         flame = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.FIRE_MET_FLAME) as FireMetFlame?
         flame!!.spawn(props(ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo body.getTopCenterPoint()))
     }

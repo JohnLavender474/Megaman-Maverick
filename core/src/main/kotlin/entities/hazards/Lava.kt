@@ -67,7 +67,6 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
 
     override var directionRotation: Direction? = null
     override lateinit var facing: Facing
-
     var moveBeforeKill = false
         private set
     var movingBeforeKill = false
@@ -84,8 +83,6 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
     private var spritePriorityValue = 0
     private var doCull = false
     private var black = false
-
-    override fun getEntityType() = EntityType.HAZARD
 
     override fun init() {
         if (regions.isEmpty) {
@@ -181,9 +178,7 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
     }
 
     private fun defineCullablesComponent(): CullablesComponent {
-        val cullEvents = objectSetOf<Any>(
-            EventType.BEGIN_ROOM_TRANS, EventType.PLAYER_SPAWN, EventType.SET_TO_ROOM_NO_TRANS
-        )
+        val cullEvents = objectSetOf<Any>(EventType.BEGIN_ROOM_TRANS, EventType.SET_TO_ROOM_NO_TRANS)
         val cullOnEvents = CullableOnEvent({ event ->
             if (!doCull) false
             else if (event.key == EventType.SET_TO_ROOM_NO_TRANS) {
@@ -243,4 +238,8 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         addComponent(SpritesComponent(sprites, updateFunctions))
         addComponent(AnimationsComponent(animators))
     }
+
+    override fun getEntityType() = EntityType.HAZARD
+
+    override fun getTag() = TAG
 }

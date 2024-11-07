@@ -177,7 +177,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         ReactManProjectile::class pairTo dmgNeg(3),
         FlameThrower::class pairTo dmgNeg(6),
         Popoheli::class pairTo dmgNeg(3),
-        BouncingAngryFlameBall::class pairTo dmgNeg(3),
+        AngryFlameBall::class pairTo dmgNeg(3),
         LavaDrop::class pairTo dmgNeg(6),
         PopupCanon::class pairTo dmgNeg(3),
         Asteroid::class pairTo dmgNeg(3),
@@ -226,6 +226,10 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         CarriCarry::class pairTo dmgNeg(3),
         Cactus::class pairTo dmgNeg(2),
         DesertMan::class pairTo dmgNeg(3),
+        FireDispensenator::class pairTo dmgNeg(3),
+        FireWall::class pairTo dmgNeg(4),
+        DemonMet::class pairTo dmgNeg(3),
+        FirePellet::class pairTo dmgNeg(3)
 
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
@@ -567,8 +571,8 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
 
     fun setToNextWeapon() {
         val index = currentWeapon.ordinal
-        val nextIndex = (index + 1) % MegamanWeapon.values().size
-        currentWeapon = MegamanWeapon.values()[nextIndex]
+        val nextIndex = (index + 1) % MegamanWeapon.entries.size
+        currentWeapon = MegamanWeapon.entries.toTypedArray()[nextIndex]
     }
 
     fun stunBounce(bounds: GameRectangle) =

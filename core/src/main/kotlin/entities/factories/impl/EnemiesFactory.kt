@@ -56,7 +56,7 @@ class EnemiesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         const val UFO_BOMB_BOT = "UFOBombBot"
         const val ROLLING_BOT = "RollingBot"
         const val TOXIC_BARREL_BOT = "ToxicBarrelBot"
-        const val BOUNCING_ANGRY_FLAME_BALL = "BouncingAngryFlameBall"
+        const val ANGRY_FLAME_BALL = "AngryFlameBall"
         const val POPOHELI = "Popoheli"
         const val POPUP_CANON = "PopupCanon"
         const val JET_MET = "JetMet"
@@ -85,6 +85,8 @@ class EnemiesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         const val WALRUS_BOT = "WalrusBot"
         const val DARSPIDER = "Darspider"
         const val BIG_FISH_NEO = "BigFishNeo"
+        const val FIRE_DISPENSENATOR = "FireDispensenator"
+        const val DEMON_MET = "DemonMet"
     }
 
     override fun init() {
@@ -133,7 +135,7 @@ class EnemiesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(UFO_BOMB_BOT, GameEntityPoolCreator.create { OLD_UFOBombBot(game) })
         pools.put(ROLLING_BOT, GameEntityPoolCreator.create { RollingBot(game) })
         pools.put(TOXIC_BARREL_BOT, GameEntityPoolCreator.create { ToxicBarrelBot(game) })
-        pools.put(BOUNCING_ANGRY_FLAME_BALL, GameEntityPoolCreator.create { BouncingAngryFlameBall(game) })
+        pools.put(ANGRY_FLAME_BALL, GameEntityPoolCreator.create { AngryFlameBall(game) })
         pools.put(POPOHELI, GameEntityPoolCreator.create { Popoheli(game) })
         pools.put(POPUP_CANON, GameEntityPoolCreator.create { PopupCanon(game) })
         pools.put(JET_MET, GameEntityPoolCreator.create { JetMet(game) })
@@ -162,6 +164,8 @@ class EnemiesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(WALRUS_BOT, GameEntityPoolCreator.create { WalrusBot(game) })
         pools.put(DARSPIDER, GameEntityPoolCreator.create { Darspider(game) })
         pools.put(BIG_FISH_NEO, GameEntityPoolCreator.create { BigFishNeo(game) })
+        pools.put(FIRE_DISPENSENATOR, GameEntityPoolCreator.create { FireDispensenator(game) })
+        pools.put(DEMON_MET, GameEntityPoolCreator.create { DemonMet(game) })
     }
 
     override fun fetch(key: Any): MegaGameEntity? {

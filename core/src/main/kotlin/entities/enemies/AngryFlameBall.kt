@@ -1,7 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.math.Rectangle
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
@@ -10,7 +9,6 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
-
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameCircle
@@ -44,12 +42,12 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import kotlin.reflect.KClass
 
-class BouncingAngryFlameBall(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
+class AngryFlameBall(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "AngryFlameBall"
         private const val BOUNCE_DELAY = 0.75f
-        private const val BOUNCE_IMPULSE = 20f
+        private const val BOUNCE_IMPULSE = 18f
         private const val GRAVITY = -0.15f
         private var region: TextureRegion? = null
     }
@@ -68,10 +66,10 @@ class BouncingAngryFlameBall(game: MegamanMaverickGame) : AbstractEnemy(game), I
     override lateinit var facing: Facing
 
     private val bounceDelayTimer = Timer(BOUNCE_DELAY)
-    private lateinit var spawnBounds: GameRectangle
+    private var spawnY = 0f
 
     override fun init() {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, "AngryFlameBall")
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
     }
@@ -79,8 +77,9 @@ class BouncingAngryFlameBall(game: MegamanMaverickGame) : AbstractEnemy(game), I
     override fun onSpawn(spawnProps: Properties) {
         putProperty(ConstKeys.ENTTIY_KILLED_BY_DEATH_FIXTURE, false)
         super.onSpawn(spawnProps)
-        spawnBounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
-        body.setCenter(spawnBounds.getCenter())
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
+        body.setCenter(spawn)
+        spawnY = spawn.y
         bounceDelayTimer.reset()
     }
 
@@ -95,23 +94,27 @@ class BouncingAngryFlameBall(game: MegamanMaverickGame) : AbstractEnemy(game), I
         val body = Body(BodyType.ABSTRACT)
         body.setSize(ConstVals.PPM.toFloat())
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
+        body.physics.applyFrictionX = false
+        body.physics.applyFrictionY = false
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameCircle().setRadius(0.5f * ConstVals.PPM))
         body.addFixture(bodyFixture)
 
-        val damagerRixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.5f * ConstVals.PPM))
-        body.addFixture(damagerRixture)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.5f * ConstVals.PPM))
+        body.addFixture(damagerFixture)
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameCircle().setRadius(0.5f * ConstVals.PPM))
         body.addFixture(damageableFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT) { delta ->
-            body.physics.gravityOn = !body.overlaps(spawnBounds as Rectangle)
-
-            if (body.physics.velocity.y < 0f && body.overlaps(spawnBounds as Rectangle)) bounceDelayTimer.reset()
+            body.physics.gravityOn = body.y > spawnY
+            if (body.physics.velocity.y < 0f && body.y < spawnY) {
+                body.y = spawnY
+                bounceDelayTimer.reset()
+                body.physics.velocity.setZero()
+            }
 
             bounceDelayTimer.update(delta)
-
             if (!bounceDelayTimer.isFinished()) body.physics.velocity.setZero()
             else if (bounceDelayTimer.isJustFinished()) {
                 requestToPlaySound(SoundAsset.MARIO_FIREBALL_SOUND, false)

@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.4.0</string>
+        <string>7.5.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -275,6 +275,8 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Enemies2/BigJumpingJoe/Stand.png</key>
+            <key type="filename">../frames/Enemies2/DemonMet/angel.png</key>
+            <key type="filename">../frames/Enemies2/DemonMet/fly.png</key>
             <key type="filename">../frames/Enemies2/Hanabiran/1PetalStand.png</key>
             <key type="filename">../frames/Enemies2/Hanabiran/2PetalsStand.png</key>
             <key type="filename">../frames/Enemies2/Hanabiran/3PetalsStand.png</key>
@@ -380,6 +382,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Enemies2/CactusLauncher/wait.png</key>
+            <key type="filename">../frames/Enemies2/DemonMet/stand.png</key>
             <key type="filename">../frames/Enemies2/Shotman/Launch.png</key>
             <key type="filename">../frames/Enemies2/SnowheadThrower/NoFace.png</key>
             <key type="filename">../frames/Enemies2/SnowheadThrower/Snowhead.png</key>
@@ -433,6 +436,7 @@
             </struct>
             <key type="filename">../frames/Enemies2/CartinJoe/Move.png</key>
             <key type="filename">../frames/Enemies2/CartinJoe/Shoot.png</key>
+            <key type="filename">../frames/Enemies2/FireDispensenator/sleep.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -575,6 +579,38 @@
                 <rect>12,4,24,8</rect>
                 <key>scale9Paddings</key>
                 <rect>12,4,24,8</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies2/FireDispensenator/close.png</key>
+            <key type="filename">../frames/Enemies2/FireDispensenator/open.png</key>
+            <key type="filename">../frames/Enemies2/ToxicBarrelBot/Closed.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,24,24,48</rect>
+                <key>scale9Paddings</key>
+                <rect>12,24,24,48</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies2/FireDispensenator/fire.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,36,24,72</rect>
+                <key>scale9Paddings</key>
+                <rect>12,36,24,72</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -881,21 +917,6 @@
                 <rect>24,72,48,144</rect>
                 <key>scale9Paddings</key>
                 <rect>24,72,48,144</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Enemies2/ToxicBarrelBot/Closed.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>12,24,24,48</rect>
-                <key>scale9Paddings</key>
-                <rect>12,24,24,48</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

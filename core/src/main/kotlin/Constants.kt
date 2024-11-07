@@ -45,6 +45,7 @@ object ConstKeys {
     const val B = "b"
     const val SELECT = "select"
     const val COLLIDE = "collide"
+    const val SCANNER = "scanner"
     const val BUTTON = "button"
     const val COMMAND = "command"
     const val RUN = "run"

@@ -12,19 +12,20 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.enums.Direction
-import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.cullables.CullableOnEvent
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
-import com.mega.game.engine.drawables.sprites.*
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setPosition
+import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.*
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
@@ -41,8 +42,10 @@ import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
+import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.getOpposingPosition
+import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 
@@ -146,11 +149,8 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     })
 
     private fun defineCullablesComponent(): CullablesComponent {
-        val cullEvents = objectSetOf<Any>(EventType.BEGIN_ROOM_TRANS)
-        val cullOnEvent = CullableOnEvent({ cullEvents.contains(it) }, cullEvents)
-        runnablesOnSpawn.put(ConstKeys.CULL_EVENTS) { game.eventsMan.addListener(cullOnEvent) }
-        runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvent) }
-        return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS pairTo cullOnEvent))
+        val cullOnEvents = getStandardEventCullingLogic(this, objectSetOf(EventType.BEGIN_ROOM_TRANS))
+        return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS pairTo cullOnEvents))
     }
 
     private fun defineBodyComponent(): BodyComponent {
@@ -198,24 +198,21 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         val spritesComponent = SpritesComponent(sprites)
         spritesComponent.putUpdateFunction("thrower") { _, _sprite ->
             _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation?.rotation ?: 0f
-            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            _sprite.rotation = directionRotation!!.rotation
+            val position = DirectionPositionMapper.getInvertedPosition(directionRotation!!)
+            _sprite.setPosition(body.getPositionPoint(position), position)
         }
         spritesComponent.putUpdateFunction("flameColumn") { _, _sprite ->
             _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation?.rotation ?: 0f
-
-            val position = directionRotation?.getOpposingPosition()
+            _sprite.rotation = directionRotation!!.rotation
+            val position = DirectionPositionMapper.getInvertedPosition(directionRotation!!)
             val offset = (when (directionRotation!!) {
                 Direction.UP -> Vector2(0f, 1.15f)
-                Direction.DOWN -> Vector2(0f, -0.85f)
+                Direction.DOWN -> Vector2(0f, -1.155f)
                 Direction.LEFT -> Vector2(-FLAME_COLUMN_HORIZ_OFFSET, 0.2f)
                 Direction.RIGHT -> Vector2(FLAME_COLUMN_HORIZ_OFFSET, 0.2f)
             }).scl(ConstVals.PPM.toFloat())
-
-            if (position != null) _sprite.setPosition(body.getPositionPoint(position), position, offset)
-            else _sprite.setCenter(body.getCenter())
-
+            _sprite.setPosition(body.getPositionPoint(position), position, offset)
             _sprite.hidden = loop.getCurrent() != FlameThrowerState.HOT
         }
         return spritesComponent
@@ -233,8 +230,9 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         )
         val throwerAnimator = Animator(throwerKeySupplier, throwerAnims)
 
-        return AnimationsComponent(gdxArrayOf(
-            { sprites.get("flameColumn") } pairTo flameColumnAnimator,
+        return AnimationsComponent(
+            gdxArrayOf(
+                { sprites.get("flameColumn") } pairTo flameColumnAnimator,
             { sprites.get("thrower") } pairTo throwerAnimator
         ))
     }

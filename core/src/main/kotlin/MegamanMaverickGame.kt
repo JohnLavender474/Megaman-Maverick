@@ -71,6 +71,7 @@ import com.megaman.maverick.game.controllers.ScreenController
 import com.megaman.maverick.game.controllers.loadButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.enemies.FireDispensenator
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
@@ -115,7 +116,7 @@ class MegamanMaverickGame(
 
     companion object {
         const val TAG = "MegamanMaverickGame"
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(FireDispensenator.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.TELEPORTER, FixtureType.TELEPORTER_LISTENER)
         }
@@ -210,8 +211,8 @@ class MegamanMaverickGame(
 
     override fun create() {
         GameLogger.setLogLevel(params.logLevel)
-        GameLogger.setFilterByTag(params.logLevel, true)
-        GameLogger.addFilterTags(params.logLevel, TAGS_TO_LOG)
+        GameLogger.filterByTag = true
+        GameLogger.tagsToLog.addAll(TAGS_TO_LOG)
 
         GameLogger.debug(TAG, "create(): appType=${Gdx.app.type}")
 

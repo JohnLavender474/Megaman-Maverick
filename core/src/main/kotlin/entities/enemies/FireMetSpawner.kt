@@ -61,7 +61,7 @@ class FireMetSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParentE
 
     override var children = Array<IGameEntity>()
 
-    private val loop = Loop(FireMetSpawnerState.values().toGdxArray())
+    private val loop = Loop(FireMetSpawnerState.entries.toTypedArray().toGdxArray())
     private val closedTimer = Timer(CLOSED_DUR)
     private val transTimer = Timer(TRANS_DUR)
     private val openTimer = Timer(OPEN_DUR)
