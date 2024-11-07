@@ -137,7 +137,7 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(ConstVals.PPM.toFloat())
+        body.setSize(1.5f * ConstVals.PPM)
         addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBodyBounds() }), debug = true))
         return BodyComponentCreator.create(
             this,
@@ -148,7 +148,7 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(2.25f * ConstVals.PPM)
+        sprite.setSize(2.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)

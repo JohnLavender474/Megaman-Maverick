@@ -53,11 +53,7 @@ class FirePellet(game: MegamanMaverickGame) : AbstractProjectile(game) {
         body.physics.velocity.set(impulse)
     }
 
-    override fun hitBlock(
-        blockFixture: IFixture,
-        thisShape: IGameShape2D,
-        otherShape: IGameShape2D
-    ) = explodeAndDie()
+    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
 
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
