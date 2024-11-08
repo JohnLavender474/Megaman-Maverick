@@ -165,10 +165,8 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         val impulse = MegaUtilMethods.calculateJumpImpulse(
             body.getCenter(), getMegaman().body.getCenter(), JUMP_IMPULSE_Y * ConstVals.PPM,
         ).coerceX(-MAX_SHOOT_X * ConstVals.PPM, MAX_SHOOT_Y * ConstVals.PPM)
-
         flame!!.launch(impulse)
         flame!!.body.physics.gravityOn = true
-
         flame = null
     }
 
@@ -289,7 +287,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.15f * ConstVals.PPM)
+        sprite.setSize(1.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)

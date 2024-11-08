@@ -34,6 +34,7 @@ import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -68,8 +69,9 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         private const val FIRE_SPEED = 10f
         private const val ANGEL_FLY_Y_IMPULSE = 10f
         private const val ANGEL_FLY_Y_MAX_SPEED = 10f
-        private const val OSCILLATION_DUR = 2f
-        private const val OSCILLATION_X = 1.25f
+        private const val X_OSCILLATION_DUR = 2f
+        private const val X_OSCILLATION = 1.25f
+        private const val ALPHA_OSCILLATION_DUR = 0.5f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -85,9 +87,10 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
     private val standTimer = Timer(STAND_DUR)
     private val fireTimer = Timer(FIRE_DELAY)
+    private val alphaOscillation = SmoothOscillationTimer(ALPHA_OSCILLATION_DUR, 0.5f, 0.75f)
+    private val xOscillation = SmoothOscillationTimer(X_OSCILLATION_DUR, -1f, 1f)
     private lateinit var state: DemonMetState
     private lateinit var target: Vector2
-    private lateinit var xOscillation: SmoothOscillationTimer //  = SmoothOscillationTimer(OSCILLATION_DUR, min = -1f, max = 1f)
     private var targetReached = false
 
     override fun init() {
@@ -126,8 +129,8 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
         standTimer.reset()
         fireTimer.reset()
-
-        xOscillation = SmoothOscillationTimer(OSCILLATION_DUR, -1f, 1f)
+        xOscillation.reset()
+        alphaOscillation.reset()
     }
 
     override fun onHealthDepleted() {
@@ -149,16 +152,15 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
                 DemonMetState.FLY -> {
                     facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
 
-                    if (!targetReached && body.getCenter().epsilonEquals(target, 0.01f * ConstVals.PPM)) {
+                    if (!targetReached && body.getCenter().epsilonEquals(target, 0.1f * ConstVals.PPM)) {
                         targetReached = true
                         target = body.getCenter()
                     }
 
                     if (targetReached) {
                         body.physics.velocity.y = 0f
-
                         xOscillation.update(delta)
-                        body.physics.velocity.x = xOscillation.getValue() * OSCILLATION_X * ConstVals.PPM
+                        body.physics.velocity.x = xOscillation.getValue() * X_OSCILLATION * ConstVals.PPM
                     } else {
                         val trajectory = target.cpy().sub(body.getCenter()).nor().scl(FLY_SPEED * ConstVals.PPM)
                         body.physics.velocity.set(trajectory)
@@ -185,6 +187,11 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         body.setSize(0.85f * ConstVals.PPM)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            body.fixtures.forEach {
+                (it.second as Fixture).active = state != DemonMetState.ANGEL
+            }
+        }
         val debugShapes = Array<() -> IDrawableShape?>()
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
         return BodyComponentCreator.create(
@@ -196,10 +203,15 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 4))
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
+        spritesComponent.putUpdateFunction { delta, _sprite ->
             _sprite.setCenter(body.getCenter())
             _sprite.setFlip(isFacing(Facing.RIGHT), false)
             _sprite.hidden = damageBlink
+            val alpha = if (state == DemonMetState.ANGEL) {
+                alphaOscillation.update(delta)
+                alphaOscillation.getValue()
+            } else 1f
+            _sprite.setAlpha(alpha)
         }
         return spritesComponent
     }

@@ -59,7 +59,7 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         private const val FLAME_THROW_DUR = 1.25f
         private const val DAMAGER_FIXTURE_VERT_OFFSET = 2f
         private const val DAMAGER_FIXTURE_HORIZ_OFFSET = 2f
-        private const val FLAME_COLUMN_HORIZ_OFFSET = 1.85f
+        private const val FLAME_COLUMN_HORIZ_OFFSET = 1.55f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -205,14 +205,16 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         spritesComponent.putUpdateFunction("flameColumn") { _, _sprite ->
             _sprite.setOriginCenter()
             _sprite.rotation = directionRotation!!.rotation
-            val position = DirectionPositionMapper.getInvertedPosition(directionRotation!!)
+            var position = DirectionPositionMapper.getInvertedPosition(directionRotation!!)
             val offset = (when (directionRotation!!) {
                 Direction.UP -> Vector2(0f, 1.15f)
-                Direction.DOWN -> Vector2(0f, -1.155f)
-                Direction.LEFT -> Vector2(-FLAME_COLUMN_HORIZ_OFFSET, 0.2f)
-                Direction.RIGHT -> Vector2(FLAME_COLUMN_HORIZ_OFFSET, 0.2f)
+                Direction.DOWN -> Vector2(0f, -1.15f)
+                Direction.LEFT -> Vector2(-1.5f, 0f)
+                Direction.RIGHT -> Vector2(1.5f, 0f)
             }).scl(ConstVals.PPM.toFloat())
-            _sprite.setPosition(body.getPositionPoint(position), position, offset)
+            val bodyPosition =
+                body.getPositionPoint(if (directionRotation!!.isVertical()) position else position.opposite())
+            _sprite.setPosition(bodyPosition, position, offset)
             _sprite.hidden = loop.getCurrent() != FlameThrowerState.HOT
         }
         return spritesComponent
@@ -233,7 +235,8 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         return AnimationsComponent(
             gdxArrayOf(
                 { sprites.get("flameColumn") } pairTo flameColumnAnimator,
-            { sprites.get("thrower") } pairTo throwerAnimator
-        ))
+                { sprites.get("thrower") } pairTo throwerAnimator
+            )
+        )
     }
 }

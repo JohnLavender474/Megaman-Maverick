@@ -1,7 +1,7 @@
 Projectiles1.png
 size: 424, 612
 format: RGBA8888
-filter: Linear,Linear
+filter: Nearest,Nearest
 repeat: none
 Asteroid
   rotate: false

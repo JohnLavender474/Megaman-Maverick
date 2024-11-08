@@ -140,7 +140,7 @@ object DesktopLauncher {
         var height = DEFAULT_HEIGHT
 
         @Parameter(
-            names = ["--fullscreen"],
+            names = ["--fullScreen"],
             description = "Enable fullscreen. Default value = $DEFAULT_FULLSCREEN."
         )
         var fullScreen = DEFAULT_FULLSCREEN

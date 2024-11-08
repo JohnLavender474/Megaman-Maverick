@@ -30,13 +30,13 @@ class ScreenController(private val game: MegamanMaverickGame) : Updatable, Resiz
 
     companion object {
         const val TAG = "ScreenController"
-        private const val CELL_PADDING_WIDTH = 0.35f
-        private const val CELL_PADDING_HEIGHT = 0.35f
-        private const val BUTTON_SIZE = 1.25f
-        private const val BLANK_WIDTH = 0.35f
-        private const val DPAD_SIZE = 3
-        private const val ACTION_SIZE = 2
-        private const val COMMAND_SIZE = 2
+        private const val CELL_PADDING_WIDTH = 0.2f
+        private const val CELL_PADDING_HEIGHT = 0.2f
+        private const val BUTTON_SIZE = 1f
+        private const val BLANK_WIDTH = 0.25f
+        private const val DPAD_TABLE_SIZE = 3
+        private const val ACTION_TABLE_WIDTH = 2
+        private const val ACTION_TABLE_HEIGHT = 4
         private const val ALPHA_UNPRESSED = 0.5f
         private const val ALPHA_PRESSED = 0.75f
         private const val DEBUG = false
@@ -148,8 +148,8 @@ class ScreenController(private val game: MegamanMaverickGame) : Updatable, Resiz
         }
 
         val dpadTable = Table()
-        for (y in 0 until DPAD_SIZE) {
-            for (x in 0 until DPAD_SIZE) when {
+        for (y in 0 until DPAD_TABLE_SIZE) {
+            for (x in 0 until DPAD_TABLE_SIZE) when {
                 x == 1 && y == 0 -> addButton(dpadTable, buttonImages[MegaControllerButton.UP])
                 x == 0 && y == 1 -> addButton(dpadTable, buttonImages[MegaControllerButton.LEFT])
                 x == 2 && y == 1 -> addButton(dpadTable, buttonImages[MegaControllerButton.RIGHT])
@@ -159,31 +159,23 @@ class ScreenController(private val game: MegamanMaverickGame) : Updatable, Resiz
             dpadTable.row()
         }
 
-        val startSelectTable = Table()
-        for (y in 0 until COMMAND_SIZE) {
-            for (x in 0 until COMMAND_SIZE) {
-                if (x == 0) {
-                    if (y == 0) addButton(startSelectTable, buttonImages[MegaControllerButton.START])
-                    else addButton(startSelectTable, Image(SpriteDrawable(Sprite(startRegion))))
-                } else {
-                    if (y == 0) addButton(startSelectTable, buttonImages[MegaControllerButton.SELECT])
-                    else addButton(startSelectTable, Image(SpriteDrawable(Sprite(selectRegion))))
-                }
-
-            }
-            startSelectTable.row()
-        }
-
         val actionTable = Table()
-        for (y in 0 until ACTION_SIZE) {
-            for (x in 0 until ACTION_SIZE) {
-                if (x == 0) {
-                    if (y == 0) addButton(actionTable, buttonImages[MegaControllerButton.B])
-                    else addButton(actionTable, Image(SpriteDrawable(Sprite(bRegion))))
-                } else {
-                    if (y == 0) addButton(actionTable, buttonImages[MegaControllerButton.A])
-                    else addButton(actionTable, Image(SpriteDrawable(Sprite(aRegion))))
+        for (y in 0 until ACTION_TABLE_HEIGHT) {
+            for (x in 0 until ACTION_TABLE_WIDTH) {
+                val actor = if (x == 0) when (y) {
+                    0 -> buttonImages[MegaControllerButton.START]
+                    1 -> Image(SpriteDrawable(Sprite(startRegion)))
+                    2 -> buttonImages[MegaControllerButton.B]
+                    3 -> Image(SpriteDrawable(Sprite(bRegion)))
+                    else -> throw IllegalStateException("Invalid y: x=$x, y=$y")
+                } else when (y) {
+                    0 -> buttonImages[MegaControllerButton.SELECT]
+                    1 -> Image(SpriteDrawable(Sprite(selectRegion)))
+                    2 -> buttonImages[MegaControllerButton.A]
+                    3 -> Image(SpriteDrawable(Sprite(aRegion)))
+                    else -> throw IllegalStateException("Invalid y: x=$x, y=$y")
                 }
+                addButton(actionTable, actor)
             }
             actionTable.row()
         }
@@ -192,8 +184,6 @@ class ScreenController(private val game: MegamanMaverickGame) : Updatable, Resiz
         outerTable.setFillParent(true)
         outerTable.bottom().left()
         outerTable.add(dpadTable).bottom().left()
-        outerTable.add().expandX()
-        outerTable.add(startSelectTable).bottom()
         outerTable.add().expandX()
         outerTable.add(actionTable).bottom().right()
         stage.addActor(outerTable)
@@ -219,24 +209,20 @@ class ScreenController(private val game: MegamanMaverickGame) : Updatable, Resiz
     override fun resize(width: Number, height: Number) = viewport.update(width.toInt(), height.toInt(), true)
 
     private fun addBlankCell(table: Table) {
-        table.add()
-            .size(BLANK_WIDTH * ConstVals.PPM, BUTTON_SIZE * ConstVals.PPM)
-            .pad(
-                CELL_PADDING_HEIGHT * ConstVals.PPM,
-                CELL_PADDING_WIDTH * ConstVals.PPM,
-                CELL_PADDING_HEIGHT * ConstVals.PPM,
-                CELL_PADDING_WIDTH * ConstVals.PPM
-            )
+        table.add().size(BLANK_WIDTH * ConstVals.PPM, BUTTON_SIZE * ConstVals.PPM).pad(
+            CELL_PADDING_HEIGHT * ConstVals.PPM,
+            CELL_PADDING_WIDTH * ConstVals.PPM,
+            CELL_PADDING_HEIGHT * ConstVals.PPM,
+            CELL_PADDING_WIDTH * ConstVals.PPM
+        )
     }
 
     private fun addButton(table: Table, image: Image) {
-        table.add(image)
-            .size(BUTTON_SIZE * ConstVals.PPM)
-            .pad(
-                CELL_PADDING_HEIGHT * ConstVals.PPM,
-                CELL_PADDING_WIDTH * ConstVals.PPM,
-                CELL_PADDING_HEIGHT * ConstVals.PPM,
-                CELL_PADDING_WIDTH * ConstVals.PPM
-            )
+        table.add(image).size(BUTTON_SIZE * ConstVals.PPM).pad(
+            CELL_PADDING_HEIGHT * ConstVals.PPM,
+            CELL_PADDING_WIDTH * ConstVals.PPM,
+            CELL_PADDING_HEIGHT * ConstVals.PPM,
+            CELL_PADDING_WIDTH * ConstVals.PPM
+        )
     }
 }

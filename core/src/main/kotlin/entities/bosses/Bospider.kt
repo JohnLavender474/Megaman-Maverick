@@ -67,10 +67,10 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
     companion object {
         const val TAG = "Bospider"
-        private const val SPAWN_DELAY = 2.5f
+        private const val SPAWN_DELAY = 2f
         private const val MAX_CHILDREN = 4
-        private const val MIN_SPEED = 5f
-        private const val MAX_SPEED = 15f
+        private const val MIN_SPEED = 8f
+        private const val MAX_SPEED = 20f
         private const val START_POINT_OFFSET = 2f
         private const val OPEN_EYE_MAX_DURATION = 2f
         private const val OPEN_EYE_MIN_DURATION = 0.5f
@@ -102,16 +102,12 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
     private val paths = Array<Array<Vector2>>()
     private val currentPath = Queue<Vector2>()
     private val stateLoop = Loop(BospiderState.entries.toTypedArray().toGdxArray())
-
     private val childrenSpawnPoints = Array<RectangleMapObject>()
-
     private val spawnDelayTimer = Timer(SPAWN_DELAY)
     private val closeEyeTimer = Timer(CLOSE_EYE_DURATION)
     private val debugTimer = Timer(DEBUG_TIMER)
-
     private lateinit var openEyeTimer: Timer
     private lateinit var spawn: Vector2
-
     private var firstSpawn = true
 
     override fun init() {
@@ -228,9 +224,8 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
                     }
 
                     moveToNextTarget()
-                    if (body.getCenter()
-                            .epsilonEquals(currentPath.first(), 0.1f * ConstVals.PPM)
-                    ) currentPath.removeFirst()
+                    if (body.getCenter().epsilonEquals(currentPath.first(), 0.1f * ConstVals.PPM))
+                        currentPath.removeFirst()
                 }
 
                 BospiderState.OPEN_EYE -> {

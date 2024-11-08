@@ -198,7 +198,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.65f * ConstVals.PPM)
+        body.setSize(0.75f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
@@ -244,13 +244,13 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
             if (waiting) return@put
 
             damagerFixture2.offsetFromBodyCenter = Vector2(
-                FLAMES * FLAME_PADDING * facing.value * ConstVals.PPM / 2f, -0.5f * ConstVals.PPM
+                FLAMES * FLAME_PADDING * facing.value * 0.65f * ConstVals.PPM, -0.5f * ConstVals.PPM
             )
             damagerFixture2.active = attacking
             damagerFixture2.rawShape.color = if (damagerFixture2.active) Color.GRAY else Color.RED
 
-            damageableFixture.offsetFromBodyCenter.x = 0.3f * ConstVals.PPM * -facing.value
-            shieldFixture.offsetFromBodyCenter.x = 0.2f * ConstVals.PPM * facing.value
+            damageableFixture.offsetFromBodyCenter.x = 0.4f * ConstVals.PPM * -facing.value
+            shieldFixture.offsetFromBodyCenter.x = 0.3f * ConstVals.PPM * facing.value
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -263,7 +263,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         val updateFunctions = ObjectMap<String, UpdateFunction<GameSprite>>()
 
         val heliSprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0))
-        heliSprite.setSize(1.25f * ConstVals.PPM)
+        heliSprite.setSize(1.5f * ConstVals.PPM)
         sprites.put("heli", heliSprite)
         updateFunctions.put("heli") { _, _sprite ->
             _sprite.setFlip(isFacing(Facing.RIGHT), false)
