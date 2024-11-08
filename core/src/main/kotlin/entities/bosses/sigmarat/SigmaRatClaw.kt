@@ -74,17 +74,13 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
         private var shockRegion: TextureRegion? = null
     }
 
-    enum class SigmaRatClawState {
-        ROTATE, SHOCK, LAUNCH, TITTY_GRAB
-    }
+    enum class SigmaRatClawState { ROTATE, SHOCK, LAUNCH, TITTY_GRAB }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>()
-
     override var parent: GameEntity? = null
 
     lateinit var clawState: SigmaRatClawState
         private set
-
     val shocking: Boolean
         get() = clawState == SigmaRatClawState.SHOCK
     val launched: Boolean
@@ -92,11 +88,9 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
 
     private val launchPauseTimer = Timer(LAUNCH_PAUSE_DUR)
     private val shockPauseTimer = Timer(SHOCK_PAUSE_DUR)
-
     private lateinit var rotatingLine: RotatingLine
     private lateinit var launchTarget: Vector2
     private lateinit var returnTarget: Vector2
-
     private var block: Block? = null
     private var shockBall: SigmaRatElectricBall? = null
     private var shocked = false

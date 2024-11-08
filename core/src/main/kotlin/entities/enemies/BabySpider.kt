@@ -47,10 +47,10 @@ class BabySpider(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
     companion object {
         const val TAG = "BabySpider"
-        private const val SLOW_SPEED = 2.5f
-        private const val FAST_SPEED = 5f
+        private const val SLOW_SPEED = 3f
+        private const val FAST_SPEED = 6f
         private const val GRAVITY_BEFORE_LAND = -0.375f
-        private const val DEFAULT_WAIT_DUR = 0.5f
+        private const val DEFAULT_WAIT_DUR = 1f
         private const val WAIT_BLINK_DUR = 0.1f
         private var runRegion: TextureRegion? = null
         private var stillRegion: TextureRegion? = null

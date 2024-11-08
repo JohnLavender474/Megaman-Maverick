@@ -23,7 +23,7 @@ import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.HazardsFactory
-import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 
 class LavaDropSupplier(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IBodyEntity, ICullableEntity {
@@ -83,7 +83,7 @@ class LavaDropSupplier(game: MegamanMaverickGame) : MegaGameEntity(game), IHazar
 
     private fun defineCullablesComponent() = CullablesComponent(
         objectMapOf(
-            ConstKeys.CULL_OUT_OF_BOUNDS pairTo getGameCameraCullingLogic(this)
+            ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(this)
         )
     )
 }

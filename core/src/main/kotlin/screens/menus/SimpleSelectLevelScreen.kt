@@ -11,6 +11,7 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.Initializable
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.screens.menus.IMenuButton
+import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
@@ -189,6 +190,8 @@ class SimpleSelectLevelScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, 
         sectionArrow.centerY = (SECTION_Y - 0.45f) * ConstVals.PPM
         sectionArrow.update(delta)
         levelArrows.forEach { it.update(delta) }
+
+        game.viewports[ConstKeys.UI].apply()
 
         val batch = game.batch
         batch.projectionMatrix = game.getUiCamera().combined

@@ -23,16 +23,6 @@
   </object>
  </objectgroup>
  <objectgroup id="10" name="items"/>
- <objectgroup id="4" name="player">
-  <object id="249" name="1" x="2368" y="4576" width="32" height="32"/>
-  <object id="250" name="2" x="3296" y="4736" width="32" height="32"/>
-  <object id="251" name="3" x="5840" y="4704" width="32" height="32"/>
-  <object id="268" name="0" x="96" y="4672" width="32" height="32"/>
- </objectgroup>
- <objectgroup id="16" name="temp">
-  <object id="256" name="1" x="5792" y="4704" width="32" height="32"/>
-  <object id="259" name="0" x="5376" y="4704" width="32" height="32"/>
- </objectgroup>
  <objectgroup id="5" name="specials">
   <object id="57" name="GravityChange" x="2208" y="4512" width="248" height="96">
    <properties>
@@ -325,7 +315,7 @@
    <properties>
     <property name="head_position" type="object" value="257"/>
     <property name="left" type="object" value="253"/>
-    <property name="music" value="CHRONO_TRIGGER_WORLD_REVOLUTION_MUSIC"/>
+    <property name="music" value="MMX_VILE_MUSIC"/>
     <property name="right" type="object" value="254"/>
    </properties>
   </object>
@@ -391,6 +381,16 @@
    </properties>
   </object>
   <object id="237" name="room5" x="5600" y="4416" width="512" height="384"/>
+ </objectgroup>
+ <objectgroup id="16" name="player">
+  <object id="256" name="1" x="5792" y="4704" width="32" height="32"/>
+  <object id="259" name="0" x="5376" y="4704" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup id="4" name="temp">
+  <object id="249" name="1" x="2368" y="4576" width="32" height="32"/>
+  <object id="250" name="2" x="3296" y="4736" width="32" height="32"/>
+  <object id="251" name="3" x="5840" y="4704" width="32" height="32"/>
+  <object id="268" name="0" x="96" y="4672" width="32" height="32"/>
  </objectgroup>
  <layer id="15" name="tiles3" width="500" height="150">
   <data encoding="csv">

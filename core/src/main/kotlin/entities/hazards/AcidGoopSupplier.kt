@@ -95,10 +95,9 @@ class AcidGoopSupplier(game: MegamanMaverickGame) : MegaGameEntity(game), IHazar
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun defineCullablesComponent() =
-        CullablesComponent(
-            objectMapOf(
-                ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(this)
-            )
+    private fun defineCullablesComponent() = CullablesComponent(
+        objectMapOf(
+            ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(this)
         )
+    )
 }

@@ -71,7 +71,6 @@ import com.megaman.maverick.game.controllers.ScreenController
 import com.megaman.maverick.game.controllers.loadButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.enemies.FireDispensenator
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
@@ -116,7 +115,7 @@ class MegamanMaverickGame(
 
     companion object {
         const val TAG = "MegamanMaverickGame"
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(FireDispensenator.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.TELEPORTER, FixtureType.TELEPORTER_LISTENER)
         }
@@ -338,6 +337,7 @@ class MegamanMaverickGame(
     }
 
     override fun resize(width: Int, height: Int) {
+        GameLogger.debug(TAG, "resize(): width=$width, height=$height")
         viewports.values().forEach { it.update(width, height) }
         currentScreen?.resize(width, height)
         screenController?.resize(width, height)

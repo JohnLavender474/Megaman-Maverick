@@ -64,6 +64,7 @@ comprehensive listing of the credits for the artwork used in this game.
     - Big Fish Neo
   - [Random Enemies Set 9](https://www.deviantart.com/megared225/art/Random-Enemy-Sprites-Set-9-557171615)
     - Fire Dispensenator
+- All other enemy sprites sourced from https://www.spriters-resource.com/
 
 #### Tilesets
 
@@ -87,8 +88,9 @@ comprehensive listing of the credits for the artwork used in this game.
 - MMX6 Boss - [Famitard](https://youtu.be/IeySHEF5U_8) - used in Robot Master boss fights
 - MMX6 Gate's Laboratory- [Famitard](https://youtu.be/Zdtp6f57E_c) - used in Wily stage 3
 - MMX6 Sigma Final Boss - [Famitard](https://youtu.be/FVdYxfEo4lI) - used in Wily stage 3 boss fight
-- MMX5 Volt Kraken - [Famitard](https://www.youtube.com/watch?v=xi7Odov_rek&ab_channel=FamiTard)
-- MM7 Wily Boss - [MyNewSoundtrack](https://youtu.be/-CJlMksbypE)
+- MMX Vile Fight - [Famitard](https://youtu.be/iIcvnpYVTKc) - used in Wily stages 1 & 2 boss fights
+- MMX5 Volt Kraken - [Famitard](https://www.youtube.com/watch?v=xi7Odov_rek&ab_channel=FamiTard) - not yet used
+- MM7 Wily Boss - [MyNewSoundtrack](https://youtu.be/-CJlMksbypE) - not yet used
 - TODO: Other music tracks are saved in the `assets` dir but not yet used in the game. These will be added here as they're added to the game.
 
 ### Sounds

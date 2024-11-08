@@ -54,10 +54,7 @@ class Bolt(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IHaza
         set(value) {
             body.cardinalRotation = value
         }
-
     var scale = 1f
-
-    override fun getEntityType() = EntityType.HAZARD
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, "Bolt")
@@ -95,21 +92,18 @@ class Bolt(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IHaza
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-
+        body.physics.applyFrictionX = false
+        body.physics.applyFrictionY = false
         val debugShapes = Array<() -> IDrawableShape?>()
-
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
         body.addFixture(damagerFixture)
         damagerFixture.getShape().color = Color.RED
         debugShapes.add { damagerFixture.getShape() }
-
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.setSize(BODY_SIZE.cpy().scl(scale))
             (damagerFixture.rawShape as GameRectangle).set(body)
         }
-
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
-
         return BodyComponentCreator.create(this, body)
     }
 
@@ -138,4 +132,6 @@ class Bolt(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IHaza
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }
+
+    override fun getEntityType() = EntityType.HAZARD
 }
