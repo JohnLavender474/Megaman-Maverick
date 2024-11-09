@@ -77,6 +77,8 @@ comprehensive listing of the credits for the artwork used in this game.
   - [Megaman 3 - Wily Stage 1 Tileset](https://www.spriters-resource.com/nes/mm3/sheet/16388/)
 - AxeW1eld3r:
   - [Megaman 9 - Endless Attack Tileset](https://www.spriters-resource.com/wii/mm9/sheet/166545/)
+- Rabbid4240:
+  - [Megaman 9 - Magma Man Tileset](https://www.spriters-resource.com/wii/mm9/sheet/197901/)
 
 ### Music
 

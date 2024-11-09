@@ -62,15 +62,15 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
     companion object {
         const val TAG = "DemonMet"
         private const val STAND_DUR = 0.15f
-        private const val FIRE_DELAY = 1.75f
-        private const val FLY_SPEED = 4f
+        private const val FIRE_DELAY = 1.25f
+        private const val FLY_SPEED = 5f
         private const val FIRE_PELLET_COUNT = 3
-        private const val FIRE_PELLET_ANGLE_OFFSET = 25f
+        private const val FIRE_PELLET_ANGLE_OFFSET = 10f
         private const val FIRE_SPEED = 10f
         private const val ANGEL_FLY_Y_IMPULSE = 10f
         private const val ANGEL_FLY_Y_MAX_SPEED = 10f
         private const val X_OSCILLATION_DUR = 2f
-        private const val X_OSCILLATION = 1.25f
+        private const val X_OSCILLATION = 1.75f
         private const val ALPHA_OSCILLATION_DUR = 0.5f
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -141,6 +141,14 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            if (state != DemonMetState.ANGEL) {
+                fireTimer.update(delta)
+                if (fireTimer.isFinished()) {
+                    fire()
+                    fireTimer.reset()
+                }
+            }
+
             when (state) {
                 DemonMetState.STAND -> {
                     facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
@@ -164,12 +172,6 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
                     } else {
                         val trajectory = target.cpy().sub(body.getCenter()).nor().scl(FLY_SPEED * ConstVals.PPM)
                         body.physics.velocity.set(trajectory)
-                    }
-
-                    fireTimer.update(delta)
-                    if (fireTimer.isFinished()) {
-                        fire()
-                        fireTimer.reset()
                     }
                 }
 
