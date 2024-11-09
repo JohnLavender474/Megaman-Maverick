@@ -1,7 +1,7 @@
 Bosses2.png
 size: 256, 1344
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Linear,Linear
 repeat: none
 DesertMan/arm_extension
   rotate: false
