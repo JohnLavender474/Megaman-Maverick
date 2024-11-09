@@ -377,7 +377,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         leftFixture.offsetFromBodyCenter.x = -BODY_WIDTH * ConstVals.PPM / 2f
         body.addFixture(leftFixture)
         leftFixture.rawShape.color = Color.BLUE
-        body.addFixture(leftFixture)
+        debugShapes.add { leftFixture.getShape() }
 
         val rightFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, ConstVals.PPM.toFloat()))
@@ -385,7 +385,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         rightFixture.offsetFromBodyCenter.x = BODY_WIDTH * ConstVals.PPM / 2f
         body.addFixture(rightFixture)
         rightFixture.rawShape.color = Color.BLUE
-        body.addFixture(rightFixture)
+        debugShapes.add { rightFixture.getShape() }
 
         val bodyFixture =
             Fixture(body, FixtureType.BODY, GameRectangle().setWidth(BODY_WIDTH * ConstVals.PPM))

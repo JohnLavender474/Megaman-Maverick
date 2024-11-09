@@ -176,6 +176,9 @@
             <key type="filename">../frames/Bosses2/DesertMan/arm_extension.png</key>
             <key type="filename">../frames/Bosses2/DesertMan/wall_slide.png</key>
             <key type="filename">../frames/Bosses2/InfernoMan/jump.png</key>
+            <key type="filename">../frames/Bosses2/InfernoMan/slide.png</key>
+            <key type="filename">../frames/Bosses2/InfernoMan/stand.png</key>
+            <key type="filename">../frames/Bosses2/InfernoMan/wall_slide.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -224,6 +227,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Bosses2/DesertMan/dance_flash.png</key>
+            <key type="filename">../frames/Bosses2/InfernoMan/flame_head.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -299,7 +303,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses2/InfernoMan/intro.png</key>
+            <key type="filename">../frames/Bosses2/InfernoMan/init.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -314,10 +318,11 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses2/InfernoMan/jump_shoot.png</key>
             <key type="filename">../frames/Bosses2/InfernoMan/jump_shoot_down.png</key>
+            <key type="filename">../frames/Bosses2/InfernoMan/jump_shoot_straight.png</key>
             <key type="filename">../frames/Bosses2/InfernoMan/jump_shoot_up.png</key>
-            <key type="filename">../frames/Bosses2/InfernoMan/stand_shoot.png</key>
+            <key type="filename">../frames/Bosses2/InfernoMan/stand_shoot_straight.png</key>
+            <key type="filename">../frames/Bosses2/InfernoMan/stand_shoot_straight_akimbo.png</key>
             <key type="filename">../frames/Bosses2/InfernoMan/stand_shoot_up.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>

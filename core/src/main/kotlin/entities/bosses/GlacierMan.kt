@@ -166,11 +166,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         body.physics.velocity.setZero()
 
         stateMachine.reset()
-        timers.forEach { entry ->
-            val timer = entry.value
-            if (entry.key.equalsAny("shoot_anim")) timer.setToEnd()
-            else timer.reset()
-        }
+        timers.forEach { if (it.key == "shoot_anim") it.value.setToEnd() else it.value.reset() }
 
         facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
         shootUp = false
@@ -565,10 +561,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         builder.setOnChangeState(this::onChangeState)
         builder.initialState(GlacierManState.INIT.name)
             // init state only occurs as the first state and always goes to the stand state
-            .transition(
-                GlacierManState.INIT.name,
-                GlacierManState.STAND.name
-            ) { true }
+            .transition(GlacierManState.INIT.name, GlacierManState.STAND.name) { true }
             /*
             Transitions from the STAND state:
             - If this is not the first update and random is less than threshold, then perform "ice blast attack" behavior.
@@ -581,20 +574,26 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             .transition(
                 GlacierManState.STAND.name,
                 GlacierManState.ICE_BLAST_ATTACK.name
-            ) { !firstUpdate &&
+            ) {
+                !firstUpdate &&
                 previousState != GlacierManState.ICE_BLAST_ATTACK &&
                 canIceBlast() &&
-                getRandom(0, 10) <= 4 }
+                getRandom(0, 10) <= 4
+            }
             .transition(
                 GlacierManState.STAND.name,
                 GlacierManState.DUCK.name
-            ) { !isMegamanAboveOffsetY() &&
+            ) {
+                !isMegamanAboveOffsetY() &&
                 previousState != GlacierManState.DUCK &&
-                getRandom(0, 10) <= 5 }
+                getRandom(0, 10) <= 5
+            }
             .transition(
                 GlacierManState.STAND.name,
                 GlacierManState.SLED.name
-            ) { isMegamanOutsideOffsetX() && previousState != GlacierManState.SLED }
+            ) {
+                isMegamanOutsideOffsetX() && previousState != GlacierManState.SLED
+            }
             .transition(GlacierManState.STAND.name, GlacierManState.JUMP.name) { true }
             /*
             Transitions from the DUCK state:
