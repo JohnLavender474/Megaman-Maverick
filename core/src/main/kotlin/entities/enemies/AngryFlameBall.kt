@@ -47,7 +47,7 @@ class AngryFlameBall(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
     companion object {
         const val TAG = "AngryFlameBall"
         private const val BOUNCE_DELAY = 0.75f
-        private const val BOUNCE_IMPULSE = 18f
+        private const val BOUNCE_IMPULSE = 16f
         private const val GRAVITY = -0.15f
         private var region: TextureRegion? = null
     }

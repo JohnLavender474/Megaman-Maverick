@@ -966,7 +966,7 @@
     <property name="type" value="Fall"/>
    </properties>
   </object>
-  <object id="444" name="Lava" x="4256" y="672" width="32" height="128">
+  <object id="444" name="Lava" x="4296" y="680" width="32" height="128">
    <properties>
     <property name="direction" value="left"/>
     <property name="entity_type" value="hazard"/>
