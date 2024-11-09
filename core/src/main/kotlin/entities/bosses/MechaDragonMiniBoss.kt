@@ -147,6 +147,7 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        spawnProps.put(ConstKeys.ORB, false)
         putProperty(ConstKeys.ENTTIY_KILLED_BY_DEATH_FIXTURE, false)
         super.onSpawn(spawnProps)
 
@@ -448,6 +449,7 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
             _sprite.setCenter(body.getCenter())
             _sprite.setFlip(isFacing(Facing.LEFT), false)
             _sprite.hidden = damageBlink || !ready
+            _sprite.setAlpha(if (defeated) 1f - defeatTimer.getRatio() else 1f)
         }
         return spritesComponent
     }
@@ -472,7 +474,7 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         val flyRegion = regions.get("fly")
         val shootRegion = regions.get("shoot")
         val animations = objectMapOf<String, IAnimation>(
-            "defeated" pairTo Animation(regions.get("defeated"), 1, 2, 0.1f, true),
+            "defeated" pairTo Animation(regions.get("defeated"), 2, 2, 0.1f, true),
             "fly_slow" pairTo Animation(flyRegion, 1, 2, 0.15f, true),
             "fly_medium" pairTo Animation(flyRegion, 1, 2, 0.1f, true),
             "fly_fast" pairTo Animation(flyRegion, 1, 2, 0.05f, true),

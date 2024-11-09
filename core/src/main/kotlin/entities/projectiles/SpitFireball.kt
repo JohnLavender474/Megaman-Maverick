@@ -1,7 +1,5 @@
 package com.megaman.maverick.game.entities.projectiles
 
-import com.mega.game.engine.world.body.*;
-
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -19,7 +17,6 @@ import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.IGameShape2D
-import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -29,7 +26,7 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
-import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -76,35 +73,27 @@ class SpitFireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnima
         spawnFireballsOnHit = spawnProps.getOrDefault(ConstKeys.SPAWN, true, Boolean::class)
     }
 
-    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie(blockFixture.getShape().getBoundingRectangle())
-
-    override fun onDamageInflictedTo(damageable: IDamageable) {
-        if (damageable is IBodyEntity) explodeAndDie(damageable.body.copy())
-    }
+    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) =
+        explodeAndDie(thisShape, otherShape)
 
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
 
-        val bounds = params[0] as GameRectangle
-        val direction = getOverlapPushDirection(body, bounds) ?: getSingleMostDirectionFromStartToTarget(
-            body.getCenter(),
-            bounds.getCenter()
+        val thisShape = params[0] as IGameShape2D
+        val otherShape = params[1] as IGameShape2D
+        val direction = getOverlapPushDirection(thisShape, otherShape) ?: getSingleMostDirectionFromStartToTarget(
+            thisShape.getCenter(),
+            otherShape.getCenter()
         )
 
         for (i in 0 until FIREBALLS_TO_SPAWN) {
             val fireball = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.FIREBALL)!!
             val angle = angles[direction]!![i]
             val trajectory = Vector2(0f, FIREBALL_IMPULSE * ConstVals.PPM).rotateDeg(angle)
-            val position = when (direction) {
-                Direction.UP -> body.getTopCenterPoint()
-                Direction.DOWN -> body.getBottomCenterPoint()
-                Direction.LEFT -> body.getCenterLeftPoint()
-                Direction.RIGHT -> body.getCenterRightPoint()
-            }
             fireball.spawn(
                 props(
                     ConstKeys.OWNER pairTo owner,
-                    ConstKeys.POSITION pairTo position,
+                    ConstKeys.POSITION pairTo body.getCenter(),
                     ConstKeys.TRAJECTORY pairTo trajectory,
                     ConstKeys.GRAVITY pairTo Vector2(0f, FIREBALL_GRAVITY * ConstVals.PPM),
                     ConstKeys.CULL_TIME pairTo FIREBALL_CULL_TIME,
@@ -116,7 +105,7 @@ class SpitFireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnima
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.physics.applyFrictionX = false
-body.physics.applyFrictionY = false
+        body.physics.applyFrictionY = false
         body.setSize(1.15f * ConstVals.PPM, ConstVals.PPM.toFloat())
 
         val debugShapes = Array<() -> IDrawableShape?>()
