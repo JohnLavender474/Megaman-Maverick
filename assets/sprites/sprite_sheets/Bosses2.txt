@@ -1,5 +1,5 @@
 Bosses2.png
-size: 256, 1088
+size: 256, 1344
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -12,28 +12,28 @@ DesertMan/arm_extension
   index: -1
 DesertMan/arm_extension_punch
   rotate: false
-  xy: 128, 832
+  xy: 128, 1088
   size: 128, 256
   orig: 128, 256
   offset: 0, 0
   index: -1
 DesertMan/dance
   rotate: false
-  xy: 0, 64
+  xy: 192, 64
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 DesertMan/dance_flash
   rotate: false
-  xy: 64, 64
+  xy: 0, 192
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 DesertMan/defeated
   rotate: false
-  xy: 128, 448
+  xy: 0, 704
   size: 64, 192
   orig: 64, 192
   offset: 0, 0
@@ -47,42 +47,42 @@ DesertMan/jump
   index: -1
 DesertMan/punch_long
   rotate: false
-  xy: 192, 448
+  xy: 64, 704
   size: 64, 192
   orig: 64, 192
   offset: 0, 0
   index: -1
 DesertMan/punch_short
   rotate: false
-  xy: 192, 64
+  xy: 128, 192
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 DesertMan/stand
   rotate: false
-  xy: 0, 192
+  xy: 192, 192
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 DesertMan/tornado
   rotate: false
-  xy: 64, 192
+  xy: 0, 320
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 DesertMan/tornado_punch
   rotate: false
-  xy: 128, 192
+  xy: 64, 320
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 DesertMan/tornado_start
   rotate: false
-  xy: 0, 320
+  xy: 192, 320
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
@@ -94,9 +94,16 @@ DesertMan/wall_slide
   orig: 64, 64
   offset: 0, 0
   index: -1
-InfernoMan/intro
+InfernoMan/flame_head
   rotate: false
-  xy: 0, 640
+  xy: 0, 448
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+InfernoMan/init
+  rotate: false
+  xy: 0, 896
   size: 192, 192
   orig: 192, 192
   offset: 0, 0
@@ -108,45 +115,73 @@ InfernoMan/jump
   orig: 64, 64
   offset: 0, 0
   index: -1
-InfernoMan/jump_shoot
+InfernoMan/jump_shoot_down
   rotate: false
-  xy: 64, 320
+  xy: 128, 448
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
-InfernoMan/jump_shoot_down
+InfernoMan/jump_shoot_straight
   rotate: false
-  xy: 128, 320
+  xy: 192, 448
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 InfernoMan/jump_shoot_up
   rotate: false
-  xy: 192, 320
+  xy: 0, 576
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
-InfernoMan/stand_shoot
+InfernoMan/slide
   rotate: false
-  xy: 0, 448
-  size: 64, 128
-  orig: 64, 128
+  xy: 0, 64
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+InfernoMan/stand
+  rotate: false
+  xy: 64, 64
+  size: 64, 64
+  orig: 64, 64
   offset: 0, 0
   index: -1
 InfernoMan/stand_shoot_mega
   rotate: false
-  xy: 0, 832
+  xy: 0, 1088
   size: 128, 192
   orig: 128, 192
   offset: 0, 0
   index: -1
-InfernoMan/stand_shoot_up
+InfernoMan/stand_shoot_straight
   rotate: false
-  xy: 64, 448
+  xy: 64, 576
   size: 64, 128
   orig: 64, 128
+  offset: 0, 0
+  index: -1
+InfernoMan/stand_shoot_straight_akimbo
+  rotate: false
+  xy: 128, 576
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+InfernoMan/stand_shoot_up
+  rotate: false
+  xy: 192, 576
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+InfernoMan/wall_slide
+  rotate: false
+  xy: 128, 64
+  size: 64, 64
+  orig: 64, 64
   offset: 0, 0
   index: -1
