@@ -95,9 +95,9 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
     override fun init() {
         if (closedRegion == null || openCenterRegion == null || openTopRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-            closedRegion = atlas.findRegion("ToxicBarrelBot/Closed")
-            openCenterRegion = atlas.findRegion("ToxicBarrelBot/OpenCenter")
-            openTopRegion = atlas.findRegion("ToxicBarrelBot/OpenTop")
+            closedRegion = atlas.findRegion("$TAG/Closed")
+            openCenterRegion = atlas.findRegion("$TAG/OpenCenter")
+            openTopRegion = atlas.findRegion("$TAG/OpenTop")
         }
         super.init()
         addComponent(defineAnimationsComponent())

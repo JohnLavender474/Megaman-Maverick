@@ -1,11 +1,14 @@
 package com.megaman.maverick.game.world.body
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.IGameShape2D
+import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
@@ -14,7 +17,12 @@ import com.megaman.maverick.game.ConstKeys
 
 object BodyComponentCreator {
 
-    fun create(entity: IBodyEntity, body: Body, bodyFixtureDefs: Array<BodyFixtureDef> = Array()): BodyComponent {
+    fun create(
+        entity: IBodyEntity,
+        body: Body,
+        bodyFixtureDefs: Array<BodyFixtureDef> = Array(),
+        debugShapes: Array<() -> IDrawableShape?>? = null
+    ): BodyComponent {
         bodyFixtureDefs.forEach { t ->
             val shape = t.shape ?: GameRectangle(body)
             val fixture = Fixture(
@@ -26,7 +34,12 @@ object BodyComponentCreator {
                 offsetFromBodyCenter = t.offset.cpy(),
                 properties = t.props
             )
+            fixture.addFixtureLabels(t.labels)
             body.addFixture(fixture)
+            if (debugShapes != null) t.debugColor?.let { color ->
+                fixture.rawShape.color = color
+                debugShapes.add { fixture.getShape() }
+            }
         }
         body.fixtures.forEach { (_, fixture) -> fixture.setEntity(entity) }
         body.setEntity(entity)
@@ -42,7 +55,9 @@ data class BodyFixtureDef(
     val offset: Vector2 = Vector2(),
     val active: Boolean = true,
     val attached: Boolean = true,
-    val props: Properties = props()
+    val props: Properties = props(),
+    val labels: ObjectSet<FixtureLabel> = ObjectSet(),
+    val debugColor: Color? = null
 ) {
 
     companion object {

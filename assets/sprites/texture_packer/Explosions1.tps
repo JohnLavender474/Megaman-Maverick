@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.4.0</string>
+        <string>7.5.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -188,6 +188,22 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Explosions1/DeathBombExplosion.png</key>
+            <key type="filename">../frames/Explosions1/SmokePuff.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>56,8,112,16</rect>
+                <key>scale9Paddings</key>
+                <rect>56,8,112,16</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Explosions1/Disintegration.png</key>
             <key type="filename">../frames/Explosions1/HalfChargedShot.png</key>
             <key type="filename">../frames/Explosions1/PreciousExplosion.png</key>
@@ -251,7 +267,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Explosions1/SmokePuff.png</key>
+            <key type="filename">../frames/Explosions1/MagmaExplosion.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -260,9 +276,24 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>56,8,112,16</rect>
+                <rect>48,48,96,96</rect>
                 <key>scale9Paddings</key>
-                <rect>56,8,112,16</rect>
+                <rect>48,48,96,96</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Explosions1/MagmaGoopExplosion.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>8,16,16,32</rect>
+                <key>scale9Paddings</key>
+                <rect>8,16,16,32</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

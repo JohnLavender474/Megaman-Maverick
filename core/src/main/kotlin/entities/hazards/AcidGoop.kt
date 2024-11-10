@@ -66,8 +66,8 @@ class AcidGoop(game: MegamanMaverickGame) : MegaGameEntity(game), IDamager, IHaz
     override fun init() {
         if (fallingRegion == null || splatRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
-            fallingRegion = atlas.findRegion("AcidGoop/Falling")
-            splatRegion = atlas.findRegion("AcidGoop/Landed")
+            fallingRegion = atlas.findRegion("$TAG/Falling")
+            splatRegion = atlas.findRegion("$TAG/Landed")
         }
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
