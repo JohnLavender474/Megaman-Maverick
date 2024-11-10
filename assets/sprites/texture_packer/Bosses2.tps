@@ -243,6 +243,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Bosses2/DesertMan/defeated.png</key>
+            <key type="filename">../frames/Bosses2/InfernoMan/charging.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

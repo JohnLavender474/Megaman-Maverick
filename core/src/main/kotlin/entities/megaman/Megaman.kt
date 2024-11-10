@@ -229,8 +229,14 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         FireDispensenator::class pairTo dmgNeg(3),
         FireWall::class pairTo dmgNeg(4),
         DemonMet::class pairTo dmgNeg(3),
-        FirePellet::class pairTo dmgNeg(3)
-
+        FirePellet::class pairTo dmgNeg(3),
+        InfernoMan::class pairTo dmgNeg(3),
+        MagmaOrb::class pairTo dmgNeg(4),
+        MagmaMeteor::class pairTo dmgNeg(4),
+        MagmaExplosion::class pairTo dmgNeg(4),
+        MagmaGoop::class pairTo dmgNeg(4),
+        MagmaGoopExplosion::class pairTo dmgNeg(4),
+        MagmaWave::class pairTo dmgNeg(4)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 

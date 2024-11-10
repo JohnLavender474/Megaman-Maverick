@@ -176,6 +176,7 @@ object ConstKeys {
     const val BACK = "back"
     const val FIXTURES = "fixtures"
     const val BODY = "body"
+    const val BODIES = "bodies"
     const val TANK = "tank"
     const val SLOW = "slow"
     const val PROPS = "props"
