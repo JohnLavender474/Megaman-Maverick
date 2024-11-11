@@ -236,7 +236,9 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         MagmaExplosion::class pairTo dmgNeg(4),
         MagmaGoop::class pairTo dmgNeg(4),
         MagmaGoopExplosion::class pairTo dmgNeg(4),
-        MagmaWave::class pairTo dmgNeg(4)
+        MagmaWave::class pairTo dmgNeg(4),
+        MagmaPellet::class pairTo dmgNeg(3),
+        MagmaFlame::class pairTo dmgNeg(3)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 

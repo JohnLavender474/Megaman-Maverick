@@ -73,7 +73,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         private const val SPRITE_SIZE = 3f
 
         private const val INIT_DUR = 1.5f
-        private const val STAND_DUR = 1f
+        private const val STAND_DUR = 1.5f
         private const val WALL_SLIDE_DUR = 0.75f
         private const val SHOOT_DUR = 0.25f
         private const val SHOOT_COOLDOWN_DUR = 0.5f
@@ -81,11 +81,9 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         private const val MEGA_SHOOT_DUR = 1f
         private const val MEGA_SHOOT_TIME = 0.5f
 
-        private const val FLAME_HEAD_DUR = 2f
+        private const val FLAME_HEAD_DUR = 3f
         private const val FLAME_HEAD_SHOTS = 4
         private const val FLAME_HEAD_SHOOT_DELAY = 0.2f
-
-        private const val ORB_SPEED = 12f
 
         private const val BODY_WIDTH = 1.15f
         private const val BODY_HEIGHT = 1.5f
@@ -101,12 +99,13 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         private const val JUMP_MAX_IMPULSE_X = 10f
         private const val JUMP_IMPULSE_Y = 16f
 
-        private const val MEGAMAN_STRAIGHT_Y_THRESHOLD = 0.75f
+        private const val MEGAMAN_STRAIGHT_Y_THRESHOLD = 1f
 
-        private const val GOOP_SPEED = 14f
+        private const val ORB_SPEED = 15f
+        private const val GOOP_SPEED = 10f
         private const val WAVE_SPEED = 12f
         private const val METEOR_SPEED = 10f
-        private const val SPAWN_METEOR_DELAY = 1.5f
+        private const val SPAWN_METEOR_DELAY = 1f
 
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -162,7 +161,8 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 "stand_shoot_straight_akimbo",
                 "stand_shoot_up",
                 "slide",
-                "wall_slide"
+                "wall_slide",
+                "defeated"
             ).forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
         }
         super.init()
@@ -355,10 +355,11 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             "stand_shoot_mega" pairTo Animation(regions["stand_shoot_mega"], 3, 2, 0.1f, false),
             "stand_shoot_straight" pairTo Animation(regions["stand_shoot_straight"], 2, 1, 0.1f, false),
             "stand_shoot_straight_akimbo" pairTo Animation(regions["stand_shoot_straight_akimbo"], 2, 1, 0.1f, true),
-            "stand_shoot_up" pairTo Animation(regions["stand_shoot_up"], 2, 1, 0.1f, false)
+            "stand_shoot_up" pairTo Animation(regions["stand_shoot_up"], 2, 1, 0.1f, false),
+            "defeated" pairTo Animation(regions["defeated"], 3, 1, 0.1f, true)
         )
         val keySupplier: () -> String? = {
-            when (currentState) {
+            if (defeated) "defeated" else when (currentState) {
                 InfernoManState.INIT -> if (body.isSensing(BodySense.FEET_ON_GROUND)) "init" else "jump"
                 else -> {
                     var key = currentState.name.lowercase()
@@ -516,8 +517,8 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             }
 
             ShootMethod.DOWN -> {
-                offsetX = 0.65f * ConstVals.PPM * facing.value
-                offsetY = -0.4f * ConstVals.PPM
+                offsetX = 0.85f * ConstVals.PPM * facing.value
+                offsetY = -0.2f * ConstVals.PPM
                 rotation = if (isFacing(Facing.LEFT)) 135f else 225f
             }
 
@@ -548,6 +549,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         val trajectory = Vector2(0f, ORB_SPEED * ConstVals.PPM)
         val orb = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.MAGMA_ORB)!!
         orb.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.TRAJECTORY pairTo trajectory))
+        requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
     }
 
     private fun setMeteorToBeSpawned(targetMegaman: Boolean) {

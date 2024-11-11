@@ -101,6 +101,13 @@ InfernoMan/charging
   orig: 64, 192
   offset: 0, 0
   index: -1
+InfernoMan/defeated
+  rotate: false
+  xy: 192, 704
+  size: 64, 192
+  orig: 64, 192
+  offset: 0, 0
+  index: -1
 InfernoMan/flame_head
   rotate: false
   xy: 0, 448
