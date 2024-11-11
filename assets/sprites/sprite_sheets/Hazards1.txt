@@ -262,6 +262,13 @@ LavaDrop/Landed
   orig: 48, 24
   offset: 0, 0
   index: -1
+MagmaFlame
+  rotate: false
+  xy: 288, 32
+  size: 16, 32
+  orig: 16, 32
+  offset: 0, 0
+  index: -1
 Saw/ring
   rotate: false
   xy: 116, 0
@@ -278,14 +285,14 @@ Saw/saw
   index: -1
 SeaMine/blow
   rotate: false
-  xy: 288, 32
+  xy: 304, 32
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 SeaMine/wait
   rotate: false
-  xy: 352, 32
+  xy: 368, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -299,21 +306,21 @@ Spike1
   index: -1
 Spike2
   rotate: false
-  xy: 384, 32
+  xy: 400, 32
   size: 30, 32
   orig: 30, 32
   offset: 0, 0
   index: -1
 Spike3
   rotate: false
-  xy: 414, 32
+  xy: 430, 32
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: -1
 Spike4
   rotate: false
-  xy: 447, 32
+  xy: 463, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

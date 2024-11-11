@@ -75,10 +75,10 @@ class FirePellet(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.FOREGROUND, 0))
         sprite.setSize(0.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setOriginCenter()
-            _sprite.rotation = body.physics.velocity.angleDeg() - 90f
-            _sprite.setCenter(body.getCenter())
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setOriginCenter()
+            sprite.rotation = body.physics.velocity.angleDeg() - 90f
+            sprite.setCenter(body.getCenter())
         }
         return spritesComponent
     }

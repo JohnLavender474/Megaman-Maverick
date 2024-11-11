@@ -1,4 +1,4 @@
-package com.megaman.maverick.game.entities.explosions
+package com.megaman.maverick.game.entities.hazards
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
@@ -10,11 +10,8 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
-import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
@@ -45,29 +42,26 @@ import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
-import com.megaman.maverick.game.entities.projectiles.MagmaPellet
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 
-class MagmaGoopExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity,
-    IAnimatedEntity, IAudioEntity, IDamager, IHazard, IDirectionRotatable {
+class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+    IAudioEntity, IDamager, IHazard, IDirectionRotatable {
 
     companion object {
-        const val TAG = "MagmaGoopExplosion"
-        private const val EXPLOSION_DUR = 0.2f
-        private val PELLET_IMPULSES = gdxArrayOf(Vector2(-5f, 7f), Vector2(5f, 7f))
+        const val TAG = "MagmaFlame"
+        private const val DURATION = 0.5f
         private var region: TextureRegion? = null
     }
 
     override var directionRotation: Direction? = null
 
-    private val timer = Timer(EXPLOSION_DUR)
+    private val timer = Timer(DURATION)
 
     override fun init() {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
+        super.init()
         addComponent(AudioComponent())
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
@@ -83,27 +77,9 @@ class MagmaGoopExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
         val position = DirectionPositionMapper.getPosition(directionRotation!!).opposite()
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.positionOnPoint(spawn, position)
+
         timer.reset()
-        if (overlapsGameCamera()) requestToPlaySound(SoundAsset.WHOOSH_SOUND, false)
-
-        val spawnPellets = spawnProps.getOrDefault(MagmaPellet.TAG, true, Boolean::class)
-        if (spawnPellets) spawnPellets()
-    }
-
-    private fun spawnPellets() {
-        val position = DirectionPositionMapper.getPosition(directionRotation!!)
-        val spawn = body.getPositionPoint(position)
-        for (i in 0 until PELLET_IMPULSES.size) {
-            val impulse = PELLET_IMPULSES[i].cpy().scl(ConstVals.PPM.toFloat()).rotateDeg(directionRotation!!.rotation)
-            val pellet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.MAGMA_PELLET)!!
-            pellet.spawn(
-                props(
-                    ConstKeys.OWNER pairTo this,
-                    ConstKeys.POSITION pairTo spawn,
-                    ConstKeys.IMPULSE pairTo impulse
-                )
-            )
-        }
+        if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ATOMIC_FIRE_SOUND, false)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
@@ -112,14 +88,14 @@ class MagmaGoopExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
     })
 
     private fun defineBodyComponent(): BodyComponent {
-        val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.75f * ConstVals.PPM)
+        val body = Body(BodyType.DYNAMIC)
+        body.setSize(0.8f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.25f * ConstVals.PPM))
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.4f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        damagerFixture.rawShape.color = Color.RED
+        damagerFixture.rawShape.color = Color.BLUE
         debugShapes.add { damagerFixture.getShape() }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -129,7 +105,7 @@ class MagmaGoopExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 15))
-        sprite.setSize(1.5f * ConstVals.PPM)
+        sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             val position = DirectionPositionMapper.getInvertedPosition(directionRotation!!)
@@ -141,11 +117,10 @@ class MagmaGoopExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val animation = Animation(region!!, 2, 1, 0.1f, false)
+        val animation = Animation(region!!, 2, 1, 0.1f, true)
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }
 
-    override fun getEntityType() = EntityType.EXPLOSION
-
+    override fun getEntityType() = EntityType.HAZARD
 }

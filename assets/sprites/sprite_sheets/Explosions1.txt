@@ -1,7 +1,7 @@
 Explosions1.png
 size: 832, 339
 format: RGBA8888
-filter: Linear,Linear
+filter: Nearest,Nearest
 repeat: none
 AsteroidExplosion
   rotate: false

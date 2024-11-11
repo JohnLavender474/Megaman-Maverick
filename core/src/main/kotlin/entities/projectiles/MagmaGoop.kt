@@ -91,7 +91,7 @@ class MagmaGoop(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
             otherShape.getBoundingRectangle(),
             overlap
         )
-        val spawn = if (overlapping) overlap.getPositionPoint(position) else thisShape.getCenter()
+        var spawn = if (overlapping) overlap.getPositionPoint(position) else thisShape.getCenter()
 
         GameLogger.debug(
             TAG,
