@@ -178,18 +178,23 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
     }
 
     private fun defineCullablesComponent(): CullablesComponent {
-        val cullEvents = objectSetOf<Any>(EventType.BEGIN_ROOM_TRANS, EventType.SET_TO_ROOM_NO_TRANS)
+        val cullEvents =
+            objectSetOf<Any>(EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.SET_TO_ROOM_NO_TRANS)
         val cullOnEvents = CullableOnEvent({ event ->
-            if (!doCull) false
-            else if (event.key == EventType.SET_TO_ROOM_NO_TRANS) {
-                val roomName = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!.name
-                val doKill = spawnRoom != roomName
-                GameLogger.debug(TAG, "Room: $roomName, Spawn Room: $spawnRoom, Do Kill: $doKill")
-                doKill
-            } else {
-                val doKill = cullEvents.contains(event.key)
-                GameLogger.debug(TAG, "Event: ${event.key}, Do Kill: $doKill")
-                doKill
+            when {
+                !doCull -> false
+                event.key == EventType.SET_TO_ROOM_NO_TRANS -> {
+                    val roomName = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!.name
+                    val doKill = spawnRoom != roomName
+                    GameLogger.debug(TAG, "Room: $roomName, Spawn Room: $spawnRoom, Do Kill: $doKill")
+                    doKill
+                }
+
+                else -> {
+                    val doKill = cullEvents.contains(event.key)
+                    GameLogger.debug(TAG, "Event: ${event.key}, Do Kill: $doKill")
+                    doKill
+                }
             }
         }, cullEvents)
 

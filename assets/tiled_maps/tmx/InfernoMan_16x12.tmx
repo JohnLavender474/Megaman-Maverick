@@ -245,10 +245,10 @@
  </objectgroup>
  <objectgroup id="12" name="decorations">
   <object id="4" name="LavaFall" x="608" y="1824">
-   <polygon points="0,0 96,0 96,320 0,320"/>
+   <polygon points="0,0 96,0 96,352 0,352"/>
   </object>
   <object id="14" name="LavaFall" x="896" y="1824">
-   <polygon points="0,0 96,0 96,320 0,320"/>
+   <polygon points="0,0 96,0 96,352 0,352"/>
   </object>
   <object id="193" name="LavaFall" x="3872" y="1056">
    <polygon points="0,0 96,0 96,320 0,320"/>
@@ -461,8 +461,8 @@
   <object id="17" name="Target" x="896" y="1944" width="32" height="32"/>
   <object id="23" name="Start" x="1120" y="1856" width="32" height="32"/>
   <object id="61" name="Scanner" x="2400" y="1664" width="384" height="32"/>
-  <object id="73" name="Target1" x="2744" y="1136" width="16" height="16"/>
-  <object id="74" name="Target2" x="3000" y="1136" width="16" height="16"/>
+  <object id="73" name="Target1" x="2776" y="1144" width="16" height="16"/>
+  <object id="74" name="Target2" x="2968" y="1144" width="16" height="16"/>
   <object id="84" name="Target" x="3168" y="1176" width="32" height="32"/>
   <object id="85" name="Start" x="3408" y="1112" width="32" height="32"/>
   <object id="86" name="Trigger1" x="3136" y="1088" width="32" height="128">

@@ -11,6 +11,8 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.shapes.IGameShape2D
+import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
@@ -19,9 +21,11 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -35,15 +39,31 @@ class FireWall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
     companion object {
         const val TAG = "FireWall"
+        private const val FADE_DUR = 0.25f
         private var region: TextureRegion? = null
     }
 
     override lateinit var facing: Facing
 
+    private val fadeTimer = Timer(FADE_DUR)
+    private var fading = false
+
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
         super.init()
+        addComponent(defineUpdatablesComponent())
         addComponent(defineAnimationsComponent())
+    }
+
+    override fun hitBlock(
+        blockFixture: IFixture,
+        thisShape: IGameShape2D,
+        otherShape: IGameShape2D
+    ) = explodeAndDie()
+
+    override fun explodeAndDie(vararg params: Any?) {
+        body.physics.velocity.setZero()
+        fading = true
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -54,7 +74,16 @@ class FireWall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         body.positionOnPoint(spawn, position)
         val trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
         body.physics.velocity.set(trajectory)
+        fadeTimer.reset()
+        fading = false
     }
+
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+        if (fading) {
+            fadeTimer.update(delta)
+            if (fadeTimer.isFinished()) destroy()
+        }
+    })
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
@@ -69,9 +98,11 @@ class FireWall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
         sprite.setSize(1.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setCenter(body.getCenter())
-            _sprite.setFlip(body.physics.velocity.x < 0f, false)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setCenter(body.getCenter())
+            sprite.setFlip(body.physics.velocity.x < 0f, false)
+            val alpha = if (fading) 1f - fadeTimer.getRatio() else 1f
+            sprite.setAlpha(alpha)
         }
         return spritesComponent
     }
