@@ -1,7 +1,7 @@
 Projectiles2.png
 size: 128, 1174
 format: RGBA8888
-filter: Linear,Linear
+filter: Nearest,Nearest
 repeat: none
 ArigockBall
   rotate: false

@@ -70,17 +70,20 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
 
         private const val DEFAULT_TYPE = "Orange"
         private const val SNOW_TYPE = "Snow"
+        private const val LAVA_TYPE = "Lava"
 
         private val TIMES_TO_SHOOT = floatArrayOf(0.15f, 0.75f, 1.35f)
 
         private const val BULLET_SPEED = 10f
         private const val SNOWBALL_X = 8f
         private const val SNOWBALL_Y = 5f
+        private const val LAVA_X = 10f
         private const val SNOWBALL_GRAV = 0.15f
         private const val JUMP_IMPULSE = 15f
 
         private const val SHIELD_DUR = 1.75f
         private const val SHOOT_DUR = 1.5f
+        private const val LAVA_SHOOT_DUR = 0.5f
         private const val THROW_SHIELD_DUR = 0.5f
         private const val SHIELD_VEL = 10f
 
@@ -88,7 +91,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         private const val GRAVITY = 0.375f
 
         private val regions = ObjectMap<String, TextureRegion>()
-        private val joeTypes = gdxArrayOf(DEFAULT_TYPE, SNOW_TYPE)
+        private val joeTypes = gdxArrayOf(DEFAULT_TYPE, SNOW_TYPE, LAVA_TYPE)
         private val regionKeys = gdxArrayOf(
             "JumpNoShield",
             "JumpWithShield",
@@ -152,15 +155,12 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             joeTypes.forEach { joeType ->
                 regionKeys.forEach { regionKey ->
-                    val region = atlas.findRegion("SniperJoe/$joeType/$regionKey")
+                    val region = atlas.findRegion("$TAG/$joeType/$regionKey")
                     regions.put("$joeType/$regionKey", region)
                 }
             }
         }
         super.init()
-        val shootRunnables = Array<TimeMarkedRunnable>()
-        TIMES_TO_SHOOT.forEach { shootRunnables.add(TimeMarkedRunnable(it) { shoot() }) }
-        shootTimer.setRunnables(shootRunnables)
         addComponent(defineAnimationsComponent())
     }
 
@@ -191,8 +191,24 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         )
 
         waitTimer.reset()
-        shootTimer.setToEnd()
         throwShieldTimer.setToEnd()
+
+        shootTimer.clearRunnables()
+        when (type) {
+            LAVA_TYPE -> {
+                shootTimer.resetDuration(LAVA_SHOOT_DUR)
+                val shootRunnable = TimeMarkedRunnable(TIMES_TO_SHOOT[0]) { shoot() }
+                shootTimer.setRunnables(gdxArrayOf(shootRunnable))
+            }
+
+            else -> {
+                shootTimer.resetDuration(SHOOT_DUR)
+                val shootRunnables = Array<TimeMarkedRunnable>()
+                TIMES_TO_SHOOT.forEach { shootRunnables.add(TimeMarkedRunnable(it) { shoot() }) }
+                shootTimer.setRunnables(shootRunnables)
+            }
+        }
+        shootTimer.setToEnd()
 
         gravityScalar = spawnProps.getOrDefault("${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}", 1f, Float::class)
         scaleBullet = spawnProps.getOrDefault("${ConstKeys.SCALE}_${ConstKeys.BULLET}", true, Boolean::class)
@@ -411,25 +427,17 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String = {
             val regionKey = when (sniperJoeState) {
-                SniperJoeState.WAITING_SHIELDED -> {
-                    if (body.isSensing(BodySense.FEET_ON_GROUND)) "StandShielded"
-                    else "JumpWithShield"
-                }
+                SniperJoeState.WAITING_SHIELDED ->
+                    if (body.isSensing(BodySense.FEET_ON_GROUND)) "StandShielded" else "JumpWithShield"
 
-                SniperJoeState.WAITING_NO_SHIELD -> {
-                    if (body.isSensing(BodySense.FEET_ON_GROUND)) "StandNoShield"
-                    else "JumpNoShield"
-                }
+                SniperJoeState.WAITING_NO_SHIELD ->
+                    if (body.isSensing(BodySense.FEET_ON_GROUND)) "StandNoShield" else "JumpNoShield"
 
-                SniperJoeState.SHOOTING_WITH_SHIELD -> {
-                    if (body.isSensing(BodySense.FEET_ON_GROUND)) "ShootingWithShield"
-                    else "JumpWithShield"
-                }
+                SniperJoeState.SHOOTING_WITH_SHIELD ->
+                    if (body.isSensing(BodySense.FEET_ON_GROUND)) "ShootingWithShield" else "JumpWithShield"
 
-                SniperJoeState.SHOOTING_NO_SHIELD -> {
-                    if (body.isSensing(BodySense.FEET_ON_GROUND)) "ShootingNoShield"
-                    else "JumpNoShield"
-                }
+                SniperJoeState.SHOOTING_NO_SHIELD ->
+                    if (body.isSensing(BodySense.FEET_ON_GROUND)) "ShootingNoShield" else "JumpNoShield"
 
                 SniperJoeState.THROWING_SHIELD -> "ThrowShield"
             }
@@ -463,20 +471,20 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         if (!body.isSensing(BodySense.FEET_ON_GROUND)) return false
         return when (directionRotation!!) {
             Direction.UP -> getMegaman().body.y > body.getMaxY() &&
-                    getMegaman().body.x >= body.x &&
-                    getMegaman().body.getMaxX() <= body.getMaxX()
+                getMegaman().body.x >= body.x &&
+                getMegaman().body.getMaxX() <= body.getMaxX()
 
             Direction.DOWN -> getMegaman().body.getMaxY() < body.y &&
-                    getMegaman().body.x >= body.x &&
-                    getMegaman().body.getMaxX() <= body.getMaxX()
+                getMegaman().body.x >= body.x &&
+                getMegaman().body.getMaxX() <= body.getMaxX()
 
             Direction.LEFT -> getMegaman().body.getMaxX() < body.x &&
-                    getMegaman().body.y >= body.y &&
-                    getMegaman().body.getMaxY() <= body.getMaxY()
+                getMegaman().body.y >= body.y &&
+                getMegaman().body.getMaxY() <= body.getMaxY()
 
             Direction.RIGHT -> getMegaman().body.x > body.getMaxX() &&
-                    getMegaman().body.y >= body.y &&
-                    getMegaman().body.getMaxY() <= body.getMaxY()
+                getMegaman().body.y >= body.y &&
+                getMegaman().body.getMaxY() <= body.getMaxY()
         }
     }
 
@@ -507,23 +515,31 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
             ConstKeys.DIRECTION pairTo directionRotation
         )
 
-        val entity: GameEntity = if (type == SNOW_TYPE) {
-            trajectory.x = SNOWBALL_X * ConstVals.PPM * facing.value
-            trajectory.y = SNOWBALL_Y * ConstVals.PPM
+        val entity: GameEntity = when (type) {
+            SNOW_TYPE -> {
+                trajectory.x = SNOWBALL_X * ConstVals.PPM * facing.value
+                trajectory.y = SNOWBALL_Y * ConstVals.PPM
+                props.put(ConstKeys.GRAVITY_ON, true)
+                props.put(ConstKeys.GRAVITY, Vector2(0f, -SNOWBALL_GRAV * ConstVals.PPM))
+                if (overlapsGameCamera()) requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
+                EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SNOWBALL)!!
+            }
 
-            props.put(ConstKeys.GRAVITY_ON, true)
-            props.put(ConstKeys.GRAVITY, Vector2(0f, -SNOWBALL_GRAV * ConstVals.PPM))
+            LAVA_TYPE -> {
+                trajectory.x = LAVA_X * ConstVals.PPM * facing.value
+                val rotation = if (isFacing(Facing.LEFT)) 90f else 270f
+                props.put(ConstKeys.ROTATION, rotation)
+                if (overlapsGameCamera()) requestToPlaySound(SoundAsset.BLAST_2_SOUND, false)
+                EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.MAGMA_GOOP)!!
+            }
 
-            if (overlapsGameCamera()) requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
-
-            EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SNOWBALL)!!
-        } else {
-            if (isDirectionRotatedVertically()) trajectory.set(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
-            else trajectory.set(0f, BULLET_SPEED * ConstVals.PPM * facing.value)
-
-            if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
-
-            EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
+            else -> {
+                if (isDirectionRotatedVertically())
+                    trajectory.set(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
+                else trajectory.set(0f, BULLET_SPEED * ConstVals.PPM * facing.value)
+                if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
+                EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
+            }
         }
 
         if (scaleBullet) trajectory.scl(gravityScalar)

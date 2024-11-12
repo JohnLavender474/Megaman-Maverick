@@ -102,6 +102,25 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
                 parallaxX = 0.075f,
                 parallaxY = 0f
             )
+        },
+        "BKG12" pairTo {
+            Background(
+                it.name,
+                startX = it.rectangle.x,
+                startY = it.rectangle.y,
+                model = params.game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_2.source, "BKG12"),
+                modelWidth = it.rectangle.width,
+                modelHeight = it.rectangle.height,
+                rows = 10,
+                columns = 50,
+                priority = DrawingPriority(DrawingSection.BACKGROUND, 0),
+                initPos = Vector2(
+                    it.rectangle.getCenter().x + 5f * ConstVals.PPM,
+                    it.rectangle.getCenter().y + 5f * ConstVals.PPM
+                ),
+                parallaxX = 0.1f,
+                parallaxY = 0f
+            )
         }
     )
 

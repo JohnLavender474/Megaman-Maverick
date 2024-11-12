@@ -540,6 +540,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 ConstKeys.ROTATION pairTo rotation
             )
         )
+
         requestToPlaySound(SoundAsset.BLAST_2_SOUND, false)
     }
 
