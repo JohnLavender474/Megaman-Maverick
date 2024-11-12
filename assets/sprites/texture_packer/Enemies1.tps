@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.4.0</string>
+        <string>7.5.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -272,6 +272,13 @@
             <key type="filename">../frames/Enemies1/PopupCanon/Down.png</key>
             <key type="filename">../frames/Enemies1/PopupCanon/Up.png</key>
             <key type="filename">../frames/Enemies1/RedScrewie/Down.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/Lava/JumpNoShield.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/Lava/JumpWithShield.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/Lava/ShootingNoShield.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/Lava/ShootingWithShield.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/Lava/StandNoShield.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/Lava/StandShielded.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/Lava/ThrowShield.png</key>
             <key type="filename">../frames/Enemies1/SniperJoe/Orange/JumpNoShield.png</key>
             <key type="filename">../frames/Enemies1/SniperJoe/Orange/JumpWithShield.png</key>
             <key type="filename">../frames/Enemies1/SniperJoe/Orange/ShootingNoShield.png</key>
