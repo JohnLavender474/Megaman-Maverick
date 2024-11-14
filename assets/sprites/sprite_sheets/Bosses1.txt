@@ -26,7 +26,7 @@ Bospider/Still
   index: -1
 GlacierMan/brake
   rotate: false
-  xy: 1872, 112
+  xy: 1904, 112
   size: 64, 144
   orig: 64, 144
   offset: 0, 0
@@ -54,21 +54,21 @@ GlacierMan/defeated
   index: -1
 GlacierMan/duck
   rotate: false
-  xy: 624, 0
+  xy: 592, 0
   size: 64, 48
   orig: 64, 48
   offset: 0, 0
   index: -1
 GlacierMan/duck_shoot
   rotate: false
-  xy: 688, 0
+  xy: 656, 0
   size: 64, 48
   orig: 64, 48
   offset: 0, 0
   index: -1
 GlacierMan/duck_shoot_up
   rotate: false
-  xy: 752, 0
+  xy: 720, 0
   size: 64, 48
   orig: 64, 48
   offset: 0, 0
@@ -89,7 +89,7 @@ GlacierMan/fall_shoot_up
   index: -1
 GlacierMan/ice_blast_attack
   rotate: false
-  xy: 288, 112
+  xy: 320, 112
   size: 64, 96
   orig: 64, 96
   offset: 0, 0
@@ -103,35 +103,35 @@ GlacierMan/jump
   index: -1
 GlacierMan/sled
   rotate: false
-  xy: 352, 112
+  xy: 384, 112
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 GlacierMan/sled_shoot
   rotate: false
-  xy: 480, 112
+  xy: 512, 112
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 GlacierMan/stand
   rotate: false
-  xy: 816, 0
+  xy: 784, 0
   size: 64, 48
   orig: 64, 48
   offset: 0, 0
   index: -1
 GlacierMan/stand_shoot
   rotate: false
-  xy: 880, 0
+  xy: 848, 0
   size: 64, 48
   orig: 64, 48
   offset: 0, 0
   index: -1
 GlacierMan/stand_shoot_up
   rotate: false
-  xy: 944, 0
+  xy: 912, 0
   size: 64, 48
   orig: 64, 48
   offset: 0, 0
@@ -145,14 +145,14 @@ GlacierMan/stop
   index: -1
 GutsTank/Fist
   rotate: false
-  xy: 1008, 0
+  xy: 976, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 GutsTank/FistLaunched
   rotate: false
-  xy: 608, 112
+  xy: 640, 112
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
@@ -208,7 +208,7 @@ MoonHeadMiniBoss/Angry
   index: -1
 MoonHeadMiniBoss/Awaken
   rotate: false
-  xy: 1808, 112
+  xy: 1840, 112
   size: 64, 135
   orig: 64, 135
   offset: 0, 0
@@ -220,6 +220,13 @@ MoonHeadMiniBoss/Crumble
   orig: 96, 27
   offset: 0, 0
   index: -1
+MoonHeadMiniBoss/Damaged
+  rotate: false
+  xy: 0, 112
+  size: 32, 81
+  orig: 32, 81
+  offset: 0, 0
+  index: -1
 MoonHeadMiniBoss/Dark
   rotate: false
   xy: 272, 0
@@ -227,30 +234,23 @@ MoonHeadMiniBoss/Dark
   orig: 32, 27
   offset: 0, 0
   index: -1
-MoonHeadMiniBoss/Defeated
+MoonHeadMiniBoss/Shoot
   rotate: false
   xy: 304, 0
   size: 32, 27
   orig: 32, 27
   offset: 0, 0
   index: -1
-MoonHeadMiniBoss/Shoot
-  rotate: false
-  xy: 336, 0
-  size: 32, 27
-  orig: 32, 27
-  offset: 0, 0
-  index: -1
 MoonMan_v2/jump
   rotate: false
-  xy: 0, 112
+  xy: 32, 112
   size: 96, 90
   orig: 96, 90
   offset: 0, 0
   index: -1
 MoonMan_v2/jump_shoot
   rotate: false
-  xy: 96, 112
+  xy: 128, 112
   size: 96, 90
   orig: 96, 90
   offset: 0, 0
@@ -264,7 +264,7 @@ MoonMan_v2/stand
   index: -1
 MoonMan_v2/stand_shoot
   rotate: false
-  xy: 192, 112
+  xy: 224, 112
   size: 96, 90
   orig: 96, 90
   offset: 0, 0
@@ -278,42 +278,42 @@ MoonMan_v2/throw
   index: -1
 PreciousMan/Jump
   rotate: false
-  xy: 1056, 0
+  xy: 1024, 0
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 PreciousMan/JumpFreeze
   rotate: false
-  xy: 1152, 0
+  xy: 1120, 0
   size: 192, 48
   orig: 192, 48
   offset: 0, 0
   index: -1
 PreciousMan/Run
   rotate: false
-  xy: 1344, 0
+  xy: 1312, 0
   size: 192, 48
   orig: 192, 48
   offset: 0, 0
   index: -1
 PreciousMan/Stand
   rotate: false
-  xy: 1536, 0
+  xy: 1504, 0
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 PreciousMan/StandFreeze
   rotate: false
-  xy: 1632, 0
+  xy: 1600, 0
   size: 144, 48
   orig: 144, 48
   offset: 0, 0
   index: -1
 PreciousMan/StandShoot
   rotate: false
-  xy: 1776, 0
+  xy: 1744, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -327,14 +327,14 @@ ReactMan/Defeated
   index: -1
 ReactMan/Jump
   rotate: false
-  xy: 1824, 0
+  xy: 1792, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 ReactMan/Run
   rotate: false
-  xy: 656, 112
+  xy: 688, 112
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
@@ -495,21 +495,21 @@ SigmaRat/ClawOpen
   index: -1
 SigmaRat/ElectricBall
   rotate: false
-  xy: 368, 0
+  xy: 336, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 SigmaRat/ElectricBallDissipate
   rotate: false
-  xy: 432, 0
+  xy: 400, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SigmaRat/ElectricBallForm
   rotate: false
-  xy: 464, 0
+  xy: 432, 0
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
@@ -523,7 +523,7 @@ SigmaRat/ElectricDissipate
   index: -1
 SigmaRat/ElectricPulse
   rotate: false
-  xy: 560, 0
+  xy: 528, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
@@ -558,7 +558,7 @@ SphinxMiniBoss/wait
   index: -1
 TimberWoman/damaged
   rotate: false
-  xy: 752, 112
+  xy: 784, 112
   size: 192, 96
   orig: 192, 96
   offset: 0, 0
@@ -586,7 +586,7 @@ TimberWoman/just_land
   index: -1
 TimberWoman/on_fire
   rotate: false
-  xy: 944, 112
+  xy: 976, 112
   size: 192, 96
   orig: 192, 96
   offset: 0, 0
@@ -600,7 +600,7 @@ TimberWoman/stand
   index: -1
 TimberWoman/stand_swing
   rotate: false
-  xy: 1136, 112
+  xy: 1168, 112
   size: 672, 96
   orig: 672, 96
   offset: 0, 0

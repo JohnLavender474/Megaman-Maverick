@@ -13,7 +13,7 @@ enum class Level(tmxSourceFile: String, val musicAss: MusicAsset) {
     REACTOR_MAN("ReactorMan_16x12.tmx", MusicAsset.MMX8_BURN_ROOSTER_MUSIC),
     TIMBER_WOMAN("TimberWoman.tmx", MusicAsset.MM3_SNAKE_MAN_MUSIC),
     INFERNO_MAN("InfernoMan_16x12.tmx", MusicAsset.MMX6_BLAZE_HEATNIX_MUSIC),
-    MOON_MAN("MoonMan_v3.tmx", MusicAsset.MMX5_DARK_DIZZY_MUSIC),
+    MOON_MAN("MoonMan_16x12.tmx", MusicAsset.MMX5_DARK_DIZZY_MUSIC),
     MAGNET_MAN("MagnetMan.tmx", MusicAsset.MMX5_IZZY_GLOW_MUSIC),
     RODENT_MAN("Test1.tmx", MusicAsset.MM10_WILY1_MUSIC),
 

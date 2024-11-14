@@ -75,7 +75,6 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         ChargedShot::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
         ChargedShotExplosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
     )
-
     override var directionRotation: Direction?
         get() = body.cardinalRotation
         set(value) {
@@ -86,6 +85,9 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
     private val standTimer = Timer(STAND_DUR)
     private val liftoffTimer = Timer(LIFTOFF_DUR)
     private val shootTimer = Timer(SHOOT_DELAY)
+
+    private val canMove: Boolean
+        get() = !game.isCameraRotating()
 
     private lateinit var animations: ObjectMap<String, IAnimation>
     private lateinit var jetMetState: JetMetState
@@ -149,6 +151,11 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            if (!canMove) {
+                body.physics.velocity.setZero()
+                return@add
+            }
+
             when (jetMetState) {
                 JetMetState.STAND -> {
                     standTimer.update(delta)

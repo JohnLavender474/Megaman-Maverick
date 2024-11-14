@@ -39,7 +39,7 @@ class FireWall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
     companion object {
         const val TAG = "FireWall"
-        private const val FADE_DUR = 0.25f
+        private const val FADE_DUR = 0.2f
         private var region: TextureRegion? = null
     }
 
@@ -74,6 +74,7 @@ class FireWall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         body.positionOnPoint(spawn, position)
         val trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
         body.physics.velocity.set(trajectory)
+        facing = if (trajectory.x < 0f) Facing.LEFT else Facing.RIGHT
         fadeTimer.reset()
         fading = false
     }
@@ -100,7 +101,7 @@ class FireWall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setCenter(body.getCenter())
-            sprite.setFlip(body.physics.velocity.x < 0f, false)
+            sprite.setFlip(isFacing(Facing.LEFT), false)
             val alpha = if (fading) 1f - fadeTimer.getRatio() else 1f
             sprite.setAlpha(alpha)
         }

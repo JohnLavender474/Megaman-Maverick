@@ -15,7 +15,6 @@ import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.cullables.CullableOnEvent
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
-import com.mega.game.engine.entities.GameEntity
 import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.IDrawableShapesEntity
@@ -36,19 +35,20 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
 
     companion object {
         const val TAG = "AsteroidsSpawner"
-        private const val MIN_SPAWN_DELAY = 0.5f
-        private const val MAX_SPAWN_DELAY = 1f
+        private const val MIN_SPAWN_DELAY = 0.75f
+        private const val MAX_SPAWN_DELAY = 1.5f
         private const val MIN_ANGLE = 240f
         private const val MAX_ANGLE = 300f
         private const val MIN_SPEED = 1.5f
         private const val MAX_SPEED = 4f
-        private const val MAX_CHILDREN = 5
+        private const val MAX_CHILDREN = 4
     }
 
     override var children = Array<IGameEntity>()
 
     private lateinit var bounds: GameRectangle
     private lateinit var spawnTimer: Timer
+    private var destroyChildren = false
 
     override fun getEntityType() = EntityType.HAZARD
 
@@ -60,21 +60,20 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-
         bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
-
         val cullOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
         if (cullOutOfBounds) putCullable(
             ConstKeys.CULL_OUT_OF_BOUNDS,
             getGameCameraCullingLogic(getGameCamera(), { bounds })
         ) else removeCullable(ConstKeys.CULL_OUT_OF_BOUNDS)
-
         spawnTimer = Timer()
         resetSpawnTimer()
+        destroyChildren = spawnProps.getOrDefault("${ConstKeys.DESTROY}_${ConstKeys.CHILDREN}", false, Boolean::class)
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        if (destroyChildren) children.forEach { (it as MegaGameEntity).destroy() }
         children.clear()
     }
 

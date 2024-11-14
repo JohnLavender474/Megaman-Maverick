@@ -499,10 +499,6 @@ class MegaLevelScreen(
             }
 
             EventType.MINI_BOSS_DEAD -> {
-                /*
-                val systemsToSwitch = gdxArrayOf(MotionSystem::class, BehaviorsSystem::class)
-                engine.systems.forEach { if (systemsToSwitch.contains(it::class)) it.on = true }
-                 */
                 eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
                 megaman.canBeDamaged = true
             }
@@ -553,7 +549,7 @@ class MegaLevelScreen(
 
             EventType.SET_GAME_CAM_ROTATION -> {
                 game.setCameraRotating(true)
-                MegaGameEntitiesMap.getEntitiesOfType(EntityType.PROJECTILE).forEach { it.destroy() }
+                // MegaGameEntitiesMap.getEntitiesOfType(EntityType.PROJECTILE).forEach { it.destroy() }
                 val direction = event.getProperty(ConstKeys.DIRECTION, Direction::class)!!
                 backgrounds.forEach { background ->
                     background.startRotation(
@@ -600,9 +596,11 @@ class MegaLevelScreen(
             backgrounds.forEach { it.update(delta) }
             cameraManagerForRooms.update(delta)
             gameCamera.update(delta)
+
             if (!gameCameraShaker.isFinished) gameCameraShaker.update(delta)
 
             if (!bossSpawnEventHandler.finished) bossSpawnEventHandler.update(delta)
+
             if (!playerSpawnEventHandler.finished) playerSpawnEventHandler.update(delta)
             else if (!playerDeathEventHandler.finished) playerDeathEventHandler.update(delta)
             else if (!endLevelEventHandler.finished) endLevelEventHandler.update(delta)
@@ -612,7 +610,7 @@ class MegaLevelScreen(
 
         val gameCamDeltaX = gameCamera.position.x - gameCameraPriorPosition.x
         val gameCamDeltaY = gameCamera.position.y - gameCameraPriorPosition.y
-        backgrounds.forEach { background -> background.move(gameCamDeltaX, gameCamDeltaY) }
+        backgrounds.forEach { it.move(gameCamDeltaX, gameCamDeltaY) }
         gameCameraPriorPosition.set(gameCamera.position)
 
         val batch = game.batch

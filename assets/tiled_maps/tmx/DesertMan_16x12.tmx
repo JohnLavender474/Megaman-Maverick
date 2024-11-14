@@ -1073,10 +1073,10 @@
   <object id="759" name="CactusLauncher" x="16792" y="720" width="16" height="16"/>
   <object id="769" name="PicketJoe" x="4984" y="1200" width="16" height="16"/>
  </objectgroup>
- <objectgroup id="5" name="player">
+ <objectgroup id="5" name="temp">
   <object id="844" name="0" x="20000" y="704" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="4" name="temp">
+ <objectgroup id="4" name="player">
   <object id="24" name="0" x="96" y="1632" width="32" height="32"/>
   <object id="364" name="1" x="2816" y="1568" width="32" height="32"/>
   <object id="365" name="2" x="4032" y="1280" width="32" height="32"/>

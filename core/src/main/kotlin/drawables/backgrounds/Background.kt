@@ -37,9 +37,9 @@ open class Background(
         const val TAG = "Background"
     }
 
-    protected val backgroundSprites: SpriteMatrix =
+    protected open val backgroundSprites: SpriteMatrix =
         SpriteMatrix(model, priority, modelWidth, modelHeight, rows, columns)
-    protected val viewport = FitViewport(
+    protected open val viewport = FitViewport(
         ConstVals.VIEW_WIDTH * ConstVals.PPM, ConstVals.VIEW_HEIGHT * ConstVals.PPM, RotatableCamera()
     )
 

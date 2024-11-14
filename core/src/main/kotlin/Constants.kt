@@ -32,7 +32,7 @@ object ConstVals {
     const val DEFAULT_PATHFINDING_MAX_ITERATIONS = 100
     const val DEFAULT_PATHFINDING_MAX_DISTANCE = 100
     const val DEFAULT_RETURN_BEST_PATH = true
-    const val GAME_CAM_ROTATE_TIME = 1f
+    const val GAME_CAM_ROTATE_TIME = 0.75f
     const val DEFAULT_PARALLAX_X = 0.25f
     const val DEFAULT_PARALLAX_Y = 0f
 }
@@ -45,6 +45,8 @@ object ConstKeys {
     const val B = "b"
     const val SELECT = "select"
     const val COLLIDE = "collide"
+    const val DESTROY = "destroy"
+    const val CHILDREN = "children"
     const val SCANNER = "scanner"
     const val TRIGGERABLE = "triggerable"
     const val BUTTON = "button"
@@ -93,6 +95,7 @@ object ConstKeys {
     const val ITERATIONS = "iterations"
     const val HEURISTIC = "heuristic"
     const val DRAW = "draw"
+    const val OUTLINE = "outline"
     const val BODY_FILTER = "body_filter"
     const val FIXTURE_FILTER = "fixture_filter"
     const val ALLOW_OUT_OF_BOUNDS = "allow_out_of_bounds"

@@ -227,33 +227,33 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         feetFixture.offsetFromBodyCenter.y = -0.75f * ConstVals.PPM
         body.addFixture(feetFixture)
         feetFixture.rawShape.color = Color.GREEN
-        shapes.add { feetFixture.getShape() }
+        // shapes.add { feetFixture.getShape() }
 
         val headFixture = Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.1f * ConstVals.PPM))
         headFixture.offsetFromBodyCenter.y = 0.75f * ConstVals.PPM
         body.addFixture(headFixture)
         headFixture.rawShape.color = Color.ORANGE
-        shapes.add { headFixture.getShape() }
+        // shapes.add { headFixture.getShape() }
 
         val damagerFixture = Fixture(
             body, FixtureType.DAMAGER, GameRectangle().setSize(0.75f * ConstVals.PPM, 1.25f * ConstVals.PPM)
         )
         body.addFixture(damagerFixture)
         damagerFixture.rawShape.color = Color.RED
-        shapes.add { damagerFixture.getShape() }
+        // shapes.add { damagerFixture.getShape() }
 
         val damageableFixture = Fixture(
             body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.8f * ConstVals.PPM, 1.35f * ConstVals.PPM)
         )
         body.addFixture(damageableFixture)
         damageableFixture.getShape().color = Color.PURPLE
-        shapes.add { damageableFixture.getShape() }
+        // shapes.add { damageableFixture.getShape() }
 
         val shieldFixture = Fixture(
             body, FixtureType.SHIELD, GameRectangle().setSize(0.25f * ConstVals.PPM, 1.25f * ConstVals.PPM)
         )
         body.addFixture(shieldFixture)
-        shieldFixture.getShape().color = Color.BLUE
+        shieldFixture.rawShape.color = Color.BLUE
         shapes.add { shieldFixture.getShape() }
 
         val triggerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle())
@@ -264,7 +264,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         triggerFixture.attachedToBody = false
         body.addFixture(triggerFixture)
         triggerFixture.getShape().color = Color.YELLOW
-        shapes.add { triggerFixture.getShape() }
+        // shapes.add { triggerFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             if (canThrowShield && throwShieldTrigger != null) {
@@ -303,12 +303,12 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         val sprite = GameSprite()
         sprite.setSize(1.575f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.hidden = damageBlink
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.hidden = damageBlink
 
             val flipX = facing == Facing.LEFT
             val flipY = directionRotation == Direction.DOWN
-            _sprite.setFlip(flipX, flipY)
+            sprite.setFlip(flipX, flipY)
 
             val rotation = when (directionRotation!!) {
                 Direction.UP, Direction.DOWN -> 0f
@@ -317,7 +317,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
                 Direction.RIGHT -> 270f
             }
             sprite.setOriginCenter()
-            _sprite.rotation = rotation
+            sprite.rotation = rotation
 
             val position = when (directionRotation!!) {
                 Direction.UP -> Position.BOTTOM_CENTER
@@ -326,10 +326,10 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
                 Direction.RIGHT -> Position.CENTER_LEFT
             }
             val bodyPosition = body.getPositionPoint(position)
-            _sprite.setPosition(bodyPosition, position)
+            sprite.setPosition(bodyPosition, position)
 
-            if (directionRotation == Direction.LEFT) _sprite.translateX(0.15f * ConstVals.PPM)
-            else if (directionRotation == Direction.RIGHT) _sprite.translateX(-0.15f * ConstVals.PPM)
+            if (directionRotation == Direction.LEFT) sprite.translateX(0.15f * ConstVals.PPM)
+            else if (directionRotation == Direction.RIGHT) sprite.translateX(-0.15f * ConstVals.PPM)
         }
         return spritesComponent
     }
@@ -340,8 +340,9 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
             if (!shouldUpdate) return@add
 
             facing = when (directionRotation!!) {
-                Direction.UP, Direction.DOWN -> if (getMegaman().body.x > body.x) Facing.RIGHT else Facing.LEFT
-                Direction.LEFT, Direction.RIGHT -> if (getMegaman().body.y > body.y) Facing.RIGHT else Facing.LEFT
+                Direction.UP, Direction.DOWN -> if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+                Direction.LEFT -> if (getMegaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
+                Direction.RIGHT -> if (getMegaman().body.y < body.y) Facing.RIGHT else Facing.LEFT
             }
 
             if (canJump && shouldJump()) jump()
@@ -502,8 +503,8 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         val spawn = (when (directionRotation!!) {
             Direction.UP -> Vector2(0.35f * facing.value, -0.2f)
             Direction.DOWN -> Vector2(0.35f * facing.value, 0.2f)
-            Direction.LEFT -> Vector2(0.25f, 0.35f * facing.value)
-            Direction.RIGHT -> Vector2(-0.25f, 0.35f * facing.value)
+            Direction.LEFT -> Vector2(0.15f, 0.35f * facing.value)
+            Direction.RIGHT -> Vector2(-0.15f, 0.35f * -facing.value)
         }).scl(ConstVals.PPM.toFloat()).add(body.getCenter())
 
         val trajectory = Vector2()
@@ -515,13 +516,14 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
             ConstKeys.DIRECTION pairTo directionRotation
         )
 
+        val sound: SoundAsset
         val entity: GameEntity = when (type) {
             SNOW_TYPE -> {
                 trajectory.x = SNOWBALL_X * ConstVals.PPM * facing.value
                 trajectory.y = SNOWBALL_Y * ConstVals.PPM
                 props.put(ConstKeys.GRAVITY_ON, true)
                 props.put(ConstKeys.GRAVITY, Vector2(0f, -SNOWBALL_GRAV * ConstVals.PPM))
-                if (overlapsGameCamera()) requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
+                sound = SoundAsset.CHILL_SHOOT_SOUND
                 EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SNOWBALL)!!
             }
 
@@ -529,20 +531,28 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
                 trajectory.x = LAVA_X * ConstVals.PPM * facing.value
                 val rotation = if (isFacing(Facing.LEFT)) 90f else 270f
                 props.put(ConstKeys.ROTATION, rotation)
-                if (overlapsGameCamera()) requestToPlaySound(SoundAsset.BLAST_2_SOUND, false)
+                sound = SoundAsset.BLAST_2_SOUND
                 EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.MAGMA_GOOP)!!
             }
 
             else -> {
-                if (isDirectionRotatedVertically())
-                    trajectory.set(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
-                else trajectory.set(0f, BULLET_SPEED * ConstVals.PPM * facing.value)
-                if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
+                when (directionRotation!!) {
+                    Direction.UP, Direction.DOWN ->
+                        trajectory.set(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
+
+                    Direction.LEFT ->
+                        trajectory.set(0f, BULLET_SPEED * ConstVals.PPM * facing.value)
+
+                    Direction.RIGHT ->
+                        trajectory.set(0f, -BULLET_SPEED * ConstVals.PPM * facing.value)
+                }
+                sound = SoundAsset.ENEMY_BULLET_SOUND
                 EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
             }
         }
 
         if (scaleBullet) trajectory.scl(gravityScalar)
+        if (overlapsGameCamera()) requestToPlaySound(sound, false)
 
         entity.spawn(props)
     }

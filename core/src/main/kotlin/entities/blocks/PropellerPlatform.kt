@@ -112,7 +112,7 @@ class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity,
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val animation = Animation(region!!, 1, 8, 0.1f, true)
+        val animation = Animation(region!!, 1, 8, 0.05f, true)
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }

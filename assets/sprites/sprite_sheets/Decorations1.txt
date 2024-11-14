@@ -1,5 +1,5 @@
 Decorations1.png
-size: 1560, 324
+size: 1560, 460
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -47,7 +47,7 @@ Lantern
   index: -1
 Lava
   rotate: false
-  xy: 0, 64
+  xy: 0, 200
   size: 1560, 260
   orig: 1560, 260
   offset: 0, 0
@@ -71,6 +71,13 @@ SandSplash
   xy: 508, 0
   size: 160, 32
   orig: 160, 32
+  offset: 0, 0
+  index: -1
+SpaceSatellite
+  rotate: false
+  xy: 828, 0
+  size: 400, 200
+  orig: 400, 200
   offset: 0, 0
   index: -1
 Thread

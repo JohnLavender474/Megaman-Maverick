@@ -57,9 +57,14 @@ class LavaFall(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
         cells.forEach { x, y, gameRectangle ->
             if (gameRectangle == null) return@forEach
 
+            val bounds = gameRectangle.copy()
+            val offset = 0.1f * ConstVals.PPM
+            bounds.height += offset
+            bounds.y -= offset
+
             val lavaSprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, 0))
-            lavaSprite.setBounds(gameRectangle)
-            sprites.put("lavafall_${x}_${y}", lavaSprite)
+            lavaSprite.setBounds(bounds)
+            sprites.put("${x}_${y}", lavaSprite)
 
             val animation = Animation(region!!, 1, 3, 0.2f, true)
             val animator = Animator(animation)

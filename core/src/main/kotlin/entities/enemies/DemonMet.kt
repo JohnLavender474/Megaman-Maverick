@@ -47,6 +47,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
+import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
@@ -61,11 +62,11 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
     companion object {
         const val TAG = "DemonMet"
-        private const val STAND_DUR = 0.15f
-        private const val FIRE_DELAY = 1.25f
+        private const val STAND_DUR = 0.25f
+        private const val FIRE_DELAY = 1.5f
         private const val FLY_SPEED = 5f
         private const val FIRE_PELLET_COUNT = 3
-        private const val FIRE_PELLET_ANGLE_OFFSET = 10f
+        private const val FIRE_PELLET_ANGLE_OFFSET = 5f
         private const val FIRE_SPEED = 10f
         private const val ANGEL_FLY_Y_IMPULSE = 10f
         private const val ANGEL_FLY_Y_MAX_SPEED = 10f
@@ -92,6 +93,7 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
     private lateinit var state: DemonMetState
     private lateinit var target: Vector2
     private var targetReached = false
+    private var exploded = false
 
     override fun init() {
         if (regions.isEmpty) {
@@ -131,11 +133,22 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         fireTimer.reset()
         xOscillation.reset()
         alphaOscillation.reset()
+
+        exploded = false
     }
 
     override fun onHealthDepleted() {
         body.physics.velocity.x = 0f
         state = DemonMetState.ANGEL
+        if (!exploded) {
+            explode()
+            exploded = true
+        }
+    }
+
+    private fun explode() {
+        val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.MAGMA_EXPLOSION)!!
+        explosion.spawn(props(ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo body.getCenter()))
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -190,9 +203,7 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
         body.preProcess.put(ConstKeys.DEFAULT) {
-            body.fixtures.forEach {
-                (it.second as Fixture).active = state != DemonMetState.ANGEL
-            }
+            body.fixtures.forEach { (it.second as Fixture).active = state != DemonMetState.ANGEL }
         }
         val debugShapes = Array<() -> IDrawableShape?>()
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

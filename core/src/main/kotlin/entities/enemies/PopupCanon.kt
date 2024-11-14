@@ -50,6 +50,7 @@ import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.projectiles.Asteroid
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
@@ -85,7 +86,9 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 10 else 5
-        })
+        },
+        Asteroid::class pairTo dmgNeg(15)
+    )
     override var directionRotation: Direction? = null
     override lateinit var facing: Facing
 
@@ -150,6 +153,11 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             Direction.RIGHT -> if (getMegaman().body.x < body.x) Facing.RIGHT else Facing.LEFT
         }
         transState = Size.SMALL
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (hasDepletedHealth()) explode()
     }
 
     private fun shoot() {

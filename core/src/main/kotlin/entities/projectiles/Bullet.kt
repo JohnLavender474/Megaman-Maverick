@@ -34,10 +34,7 @@ import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.utils.VelocityAlterator
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getEntity
-import com.megaman.maverick.game.world.body.setForceAlterationForState
+import com.megaman.maverick.game.world.body.*
 
 class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRotatable {
 
@@ -50,7 +47,14 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
 
     override var directionRotation: Direction? = null
 
+    private lateinit var trajectory: Vector2
     private var bounced = 0
+
+    override fun init() {
+        if (bulletRegion == null) bulletRegion =
+            game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
+        super.init()
+    }
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
@@ -59,9 +63,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
         body.setCenter(spawn)
 
         directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
-
-        val trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
-        body.physics.velocity.set(trajectory.scl(movementScalar))
+        trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
 
         val gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, Vector2(), Vector2::class)
         body.physics.gravity.set(gravity)
@@ -89,9 +91,6 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
             return
         }
 
-        // owner = shieldFixture.getEntity()
-
-        val trajectory = body.physics.velocity.cpy()
         if (isDirectionRotatedVertically()) trajectory.x *= -1f else trajectory.y *= -1f
         val deflection = shieldFixture.getOrDefaultProperty(ConstKeys.DIRECTION, Direction.UP, Direction::class)
         when (deflection) {
@@ -115,7 +114,6 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
 
             else -> {}
         }
-        body.physics.velocity.set(trajectory)
 
         requestToPlaySound(SoundAsset.DINK_SOUND, false)
     }
@@ -149,30 +147,24 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
         }
         body.addFixture(bodyFixture)
 
-        val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameRectangle(body))
-        body.addFixture(projectileFixture)
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            body.physics.velocity.let { if (canMove) it.set(trajectory.cpy().scl(movementScalar)) else it.setZero() }
+        }
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
-        body.addFixture(damagerFixture)
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBodyBounds() }), debug = true))
 
-        addComponent(
-            DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true)
-        )
-
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.PROJECTILE, FixtureType.DAMAGER))
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        if (bulletRegion == null) bulletRegion =
-            game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Bullet")
         val sprite = GameSprite(bulletRegion!!, DrawingPriority(DrawingSection.FOREGROUND, 5))
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(body.getCenter(), Position.CENTER)
-            val rotation = if (directionRotation?.isVertical() == true) 0f else 90f
-            _sprite.setOriginCenter()
-            _sprite.rotation = rotation
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setPosition(body.getCenter(), Position.CENTER)
+            sprite.setOriginCenter()
+            val rotation = body.physics.velocity.angleDeg()
+            sprite.rotation = rotation
         }
         return spritesComponent
     }

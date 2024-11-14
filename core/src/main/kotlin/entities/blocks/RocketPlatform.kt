@@ -25,7 +25,9 @@ import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.events.Event
 import com.mega.game.engine.events.IEventListener
 import com.mega.game.engine.motion.MotionComponent
+import com.mega.game.engine.motion.MotionComponent.MotionDefinition
 import com.mega.game.engine.motion.Trajectory
+import com.mega.game.engine.world.body.BodyComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -52,7 +54,9 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, IS
         }
     override var children = Array<IGameEntity>()
 
-    override fun getTag() = TAG
+    private val canMove: Boolean
+        get() = !game.isCameraRotating()
+    private var hidden = false
 
     override fun init() {
         if (region == null)
@@ -76,8 +80,9 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, IS
             .positionOnPoint(bounds.getPositionPoint(position), position)
 
         val trajectory = Trajectory(spawnProps.get(ConstKeys.TRAJECTORY, String::class)!!, ConstVals.PPM)
-        val motionDefinition = MotionComponent.MotionDefinition(
+        val motionDefinition = MotionDefinition(
             motion = trajectory,
+            doUpdate = { canMove },
             function = { value, _ -> body.physics.velocity.set(value) },
             onReset = {
                 body.setSize(WIDTH * ConstVals.PPM, HEIGHT * ConstVals.PPM)
@@ -96,6 +101,8 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, IS
             }
             entity.spawn(subsequentEntityProps)
         }
+
+        hidden = false
     }
 
     override fun onDestroy() {
@@ -108,7 +115,7 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, IS
     override fun onEvent(event: Event) {
         when (event.key) {
             EventType.BEGIN_ROOM_TRANS -> {
-                firstSprite!!.hidden = true
+                hidden = true
                 children.forEach { child ->
                     if (child is ISpritesEntity) child.sprites.values().forEach { it.hidden = true }
                 }
@@ -116,7 +123,7 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, IS
             }
 
             EventType.END_ROOM_TRANS -> {
-                firstSprite!!.hidden = false
+                hidden = false
                 children.forEach { child ->
                     if (child is ISpritesEntity) child.sprites.values().forEach { it.hidden = false }
                 }
@@ -124,20 +131,27 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, IS
         }
     }
 
+    override fun defineBodyComponent(): BodyComponent {
+        val bodyComponent = super.defineBodyComponent()
+        bodyComponent.body.preProcess.put(ConstKeys.MOVE) { if (!canMove) body.physics.velocity.setZero() }
+        return bodyComponent
+    }
+
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.PLAYGROUND, -1))
         sprite.setSize(4f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation!!.rotation
-            _sprite.setCenter(body.getCenter())
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.hidden = hidden
+            sprite.setOriginCenter()
+            sprite.rotation = directionRotation!!.rotation
+            sprite.setCenter(body.getCenter())
             val offset = 0.4f * ConstVals.PPM
             when (directionRotation!!) {
-                Direction.UP -> _sprite.translateY(-offset)
-                Direction.DOWN -> _sprite.translateY(offset)
-                Direction.LEFT -> _sprite.translateX(offset)
-                Direction.RIGHT -> _sprite.translateX(-offset)
+                Direction.UP -> sprite.translateY(-offset)
+                Direction.DOWN -> sprite.translateY(offset)
+                Direction.LEFT -> sprite.translateX(offset)
+                Direction.RIGHT -> sprite.translateX(-offset)
             }
         }
         return spritesComponent
@@ -148,4 +162,6 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, IS
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }
+
+    override fun getTag() = TAG
 }

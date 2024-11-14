@@ -1,8 +1,10 @@
 package com.megaman.maverick.game.entities.decorations
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -10,6 +12,7 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.cullables.CullablesComponent
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
@@ -34,20 +37,27 @@ class WhiteArrowPool(game: MegamanMaverickGame) : MegaGameEntity(game), ICullabl
     private val spawns = Array<Vector2>()
     private val spawnDelayTimer = Timer(SPAWN_DELAY_DUR)
     private lateinit var bounds: GameRectangle
-    private var maxOffset = 0
+    private var outline = true
     private var even = false
+    private var maxOffset = 0
 
     override fun init() {
         super.init()
+        addComponent(defineDrawableShapesComponent())
         addComponent(defineUpdatablesComponent())
         addComponent(defineCullablesComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
-        val cells = bounds.splitByCellSize(ConstVals.PPM.toFloat())
+        bounds.color = Color.WHITE
+        outline = spawnProps.getOrDefault(ConstKeys.OUTLINE, true, Boolean::class)
+
         directionRotation = Direction.valueOf(spawnProps.get(ConstKeys.DIRECTION, String::class)!!.uppercase())
+
+        val cells = bounds.splitByCellSize(ConstVals.PPM.toFloat())
         when (directionRotation!!) {
             Direction.UP -> {
                 for (i in 0 until cells.columns) spawns.add(cells[i, 0]!!.getBottomCenterPoint())
@@ -69,8 +79,9 @@ class WhiteArrowPool(game: MegamanMaverickGame) : MegaGameEntity(game), ICullabl
                 maxOffset = cells.columns
             }
         }
-        spawnDelayTimer.setToEnd()
+
         even = false
+        spawnDelayTimer.setToEnd()
     }
 
     override fun onDestroy() {
@@ -93,6 +104,9 @@ class WhiteArrowPool(game: MegamanMaverickGame) : MegaGameEntity(game), ICullabl
             i += 2
         }
     }
+
+    private fun defineDrawableShapesComponent() =
+        DrawableShapesComponent(prodShapeSuppliers = gdxArrayOf({ if (outline) bounds else null }))
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         spawnDelayTimer.update(delta)
