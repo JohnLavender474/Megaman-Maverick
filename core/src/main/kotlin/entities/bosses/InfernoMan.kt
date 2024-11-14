@@ -168,7 +168,6 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         super.init()
         addComponent(defineAnimationsComponent())
         stateMachine = buildStateMachine()
-        buildTimers()
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -188,8 +187,9 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
         shootMethod = ShootMethod.STRAIGHT
 
+        buildTimers()
         timers.forEach {
-            if (it.key.equalsAny("shoot", "shoot_cooldown", "shoot_delay")) it.value.setToEnd()
+            if (it.key.equalsAny("shoot_cooldown", "shoot_delay")) it.value.setToEnd()
             else it.value.reset()
         }
 

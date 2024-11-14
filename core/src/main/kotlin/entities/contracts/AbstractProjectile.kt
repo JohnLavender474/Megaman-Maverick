@@ -12,6 +12,9 @@ abstract class AbstractProjectile(game: MegamanMaverickGame) : MegaGameEntity(ga
 
     override var owner: GameEntity? = null
 
+    open val canMove: Boolean
+        get() = !game.isCameraRotating()
+
     protected var onDamageInflictedTo: ((IDamageable) -> Unit)? = null
     protected var movementScalar = 1f
 
@@ -29,21 +32,27 @@ abstract class AbstractProjectile(game: MegamanMaverickGame) : MegaGameEntity(ga
         movementScalar = spawnProps.getOrDefault("${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}", 1f, Float::class)
 
         val cullOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
-        if (cullOutOfBounds) putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, getCullOnOutOfGameCam())
-        else removeCullOnOutOfGameCam()
+        when {
+            cullOutOfBounds -> putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, getCullOnOutOfGameCam())
+            else -> removeCullOnOutOfGameCam()
+        }
 
         val doCullOnEvents = spawnProps.getOrDefault(ConstKeys.CULL_EVENTS, true, Boolean::class)
-        if (doCullOnEvents) {
-            val cullOnEvents = getCullOnEventCullable()
-            putCullable(ConstKeys.CULL_EVENTS, cullOnEvents)
-            putProperty(ConstKeys.CULL_EVENTS, cullOnEvents)
-            game.eventsMan.addListener(cullOnEvents)
-            runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
-        } else {
-            removeCullOnEventCullable()
-            val cullOnEvents = getProperty(ConstKeys.CULL_EVENTS)
-            if (cullOnEvents != null) game.eventsMan.removeListener(cullOnEvents as IEventListener)
-            runnablesOnDestroy.remove(ConstKeys.CULL_EVENTS)
+        when {
+            doCullOnEvents -> {
+                val cullOnEvents = getCullOnEventCullable()
+                putCullable(ConstKeys.CULL_EVENTS, cullOnEvents)
+                putProperty(ConstKeys.CULL_EVENTS, cullOnEvents)
+                game.eventsMan.addListener(cullOnEvents)
+                runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
+            }
+
+            else -> {
+                removeCullOnEventCullable()
+                val cullOnEvents = getProperty(ConstKeys.CULL_EVENTS)
+                if (cullOnEvents != null) game.eventsMan.removeListener(cullOnEvents as IEventListener)
+                runnablesOnDestroy.remove(ConstKeys.CULL_EVENTS)
+            }
         }
     }
 

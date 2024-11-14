@@ -34,7 +34,9 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
         "DesertCanyon" pairTo { DesertCanyon(params.game.assMan, it) },
         "DesertNoSunSky" pairTo { DesertNoSunSky(params.game.assMan, it) },
         "DesertSunSky" pairTo { DesertSunSky(params.game.assMan, it) },
-        "MoonSky" pairTo { MoonSky(params.game.assMan, it) },
+        "Space" pairTo { Space(params.game.assMan, it) },
+        "EarthBackdrop" pairTo { EarthBackdrop(params.game.assMan, it) },
+        "Moon" pairTo { Moon(params.game.assMan, it) },
         "WindyClouds" pairTo {
             WindyClouds(
                 params.game,

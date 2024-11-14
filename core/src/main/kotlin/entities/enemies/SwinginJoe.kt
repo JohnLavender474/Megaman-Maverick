@@ -56,9 +56,7 @@ import kotlin.reflect.KClass
 
 class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
-    private enum class SwinginJoeSetting {
-        SWING_EYES_CLOSED, SWING_EYES_OPEN, THROWING
-    }
+    private enum class SwinginJoeSetting { SWING_EYES_CLOSED, SWING_EYES_OPEN, THROWING }
 
     companion object {
         private var atlas: TextureAtlas? = null
@@ -72,7 +70,8 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) 15 else 5
-        }, ChargedShotExplosion::class pairTo dmgNeg {
+        },
+        ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 5 else 3
         }
@@ -188,11 +187,11 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             }
         }
         val animations = objectMapOf<String, IAnimation>(
-            "SwingBall1" pairTo Animation(atlas!!.findRegion("SwinginJoe/SwingBall1"), 1, 4, 0.1f, true),
-            "SwingBall2" pairTo Animation(atlas!!.findRegion("SwinginJoe/SwingBall2"), 1, 4, 0.1f, true),
+            "SwingBall1" pairTo Animation(atlas!!.findRegion("SwinginJoe/SwingBall1"), 1, 4, 0.05f, true),
+            "SwingBall2" pairTo Animation(atlas!!.findRegion("SwinginJoe/SwingBall2"), 1, 4, 0.05f, true),
             "ThrowBall" pairTo Animation(atlas!!.findRegion("SwinginJoe/ThrowBall")),
-            "SnowSwingBall1" pairTo Animation(atlas!!.findRegion("SwinginJoe/SnowSwingBall1"), 1, 4, 0.1f, true),
-            "SnowSwingBall2" pairTo Animation(atlas!!.findRegion("SwinginJoe/SnowSwingBall2"), 1, 4, 0.1f, true),
+            "SnowSwingBall1" pairTo Animation(atlas!!.findRegion("SwinginJoe/SnowSwingBall1"), 1, 4, 0.05f, true),
+            "SnowSwingBall2" pairTo Animation(atlas!!.findRegion("SwinginJoe/SnowSwingBall2"), 1, 4, 0.05f, true),
             "SnowThrowBall" pairTo Animation(atlas!!.findRegion("SwinginJoe/SnowThrowBall")),
         )
         val animator = Animator(keySupplier, animations)

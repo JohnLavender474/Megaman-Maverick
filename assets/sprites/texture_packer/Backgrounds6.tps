@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.4.0</string>
+        <string>7.5.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -175,7 +175,6 @@
         <map type="IndividualSpriteSettingsMap">
             <key type="filename">../frames/Backgrounds6/Desert/Canyon.png</key>
             <key type="filename">../frames/Backgrounds6/Desert/NoSunSky.png</key>
-            <key type="filename">../frames/Backgrounds6/MoonSky.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -202,6 +201,36 @@
                 <rect>64,168,128,336</rect>
                 <key>scale9Paddings</key>
                 <rect>64,168,128,336</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Backgrounds6/EarthBackdrop.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>125,38,250,75</rect>
+                <key>scale9Paddings</key>
+                <rect>125,38,250,75</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Backgrounds6/Space.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>64,112,128,224</rect>
+                <key>scale9Paddings</key>
+                <rect>64,112,128,224</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

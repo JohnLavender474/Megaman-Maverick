@@ -28,10 +28,11 @@ import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
-import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.motion.ArcMotion
 import com.mega.game.engine.updatables.UpdatablesComponent
@@ -52,7 +53,9 @@ import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
+import com.megaman.maverick.game.entities.factories.impl.HazardsFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.hazards.AsteroidsSpawner
 import com.megaman.maverick.game.entities.projectiles.Asteroid
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
@@ -63,10 +66,11 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.isSensing
 import kotlin.reflect.KClass
 
-class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity {
+class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, dmgDuration = DAMAGE_DUR), IAnimatedEntity {
 
     companion object {
         const val TAG = "MoonHeadMiniBoss"
+        private const val DAMAGE_DUR = 0.3f
         private const val SHOOT_SPEED = 6f
         private const val ASTEROID_OFFSET_Y = -0.65f
         private const val ARC_SPEED = 8f
@@ -97,7 +101,7 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimate
         }
     )
 
-    private val loop = Loop(MoonHeadState.values().toGdxArray())
+    private val loop = Loop(MoonHeadState.entries.toTypedArray().toGdxArray())
     private val timers = objectMapOf(
         "delay" pairTo Timer(DELAY),
         "dark" pairTo Timer(DARK_DUR),
@@ -110,6 +114,7 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimate
     private lateinit var area: GameRectangle
     private lateinit var arcMotion: ArcMotion
     private var firstSpawn: Vector2? = null
+    private var asteroidsSpawner: AsteroidsSpawner? = null
 
     override fun init() {
         if (regions.isEmpty) {
@@ -119,18 +124,48 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimate
             regions.put("angry", atlas.findRegion("$TAG/Angry"))
             regions.put("shoot", atlas.findRegion("$TAG/Shoot"))
             regions.put("crumble", atlas.findRegion("$TAG/Crumble"))
-            regions.put("defeated", atlas.findRegion("$TAG/Defeated"))
+            regions.put("damaged", atlas.findRegion("$TAG/Damaged"))
         }
         super.init()
         addComponent(defineAnimationsComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        spawnProps.put(ConstKeys.ORB, false)
         super.onSpawn(spawnProps)
-        area = spawnProps.get(ConstKeys.AREA, RectangleMapObject::class)!!.rectangle.toGameRectangle()
+
         loop.reset()
         timers.values().forEach { it.reset() }
+
+        area = spawnProps.get(ConstKeys.AREA, RectangleMapObject::class)!!.rectangle.toGameRectangle()
         firstSpawn = spawnProps.get(ConstKeys.FIRST, RectangleMapObject::class)!!.rectangle.getCenter()
+
+
+        val asteroidsSpawnerBounds =
+            spawnProps.get(AsteroidsSpawner.TAG, RectangleMapObject::class)!!.rectangle.toGameRectangle()
+        asteroidsSpawner =
+            EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.ASTEROIDS_SPAWNER)!! as AsteroidsSpawner
+        asteroidsSpawner!!.spawn(
+            props(
+                ConstKeys.BOUNDS pairTo asteroidsSpawnerBounds,
+                "${ConstKeys.DESTROY}_${ConstKeys.CHILDREN}" pairTo true,
+            )
+        )
+    }
+
+    override fun onDefeated(delta: Float) {
+        super.onDefeated(delta)
+        destroyAsteroidsSpawner()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        destroyAsteroidsSpawner()
+    }
+
+    private fun destroyAsteroidsSpawner() {
+        asteroidsSpawner?.destroy()
+        asteroidsSpawner = null
     }
 
     private fun getRandomSpawn(): Vector2 {
@@ -210,13 +245,8 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimate
 
             when (loop.getCurrent()) {
                 MoonHeadState.DELAY, MoonHeadState.DARK, MoonHeadState.AWAKEN, MoonHeadState.CRUMBLE -> {
-                    val key = if (loop.getCurrent() == MoonHeadState.DELAY) "delay"
-                    else if (loop.getCurrent() == MoonHeadState.DARK) "dark"
-                    else if (loop.getCurrent() == MoonHeadState.AWAKEN) "awaken"
-                    else "crumble"
-
+                    val key = loop.getCurrent().name.lowercase()
                     val timer = timers[key]
-
                     timer.update(delta)
                     if (timer.isFinished()) {
                         timer.reset()
@@ -308,19 +338,19 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimate
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite()
-        sprite.setSize(3f * ConstVals.PPM)
+        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
+        sprite.setSize(3f * ConstVals.PPM, 2.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setCenter(body.getCenter())
-            _sprite.hidden = damageBlink || loop.getCurrent() == MoonHeadState.DELAY
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setCenter(body.getCenter())
+            sprite.hidden = damageBlink || loop.getCurrent() == MoonHeadState.DELAY
         }
         return spritesComponent
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = {
-            if (defeated) "defeated"
+            if (defeated) "damaged"
             else when (loop.getCurrent()) {
                 MoonHeadState.DELAY, MoonHeadState.DARK -> "dark"
                 MoonHeadState.AWAKEN -> "awaken"
@@ -335,7 +365,7 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimate
             "shoot" pairTo Animation(regions.get("shoot")),
             "angry" pairTo Animation(regions.get("angry")),
             "crumble" pairTo Animation(regions.get("crumble"), 1, 3, 0.1f, false),
-            "defeated" pairTo Animation(regions.get("defeated"))
+            "damaged" pairTo Animation(regions.get("damaged"), 3, 1, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

@@ -43,6 +43,7 @@ import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getEntity
 import kotlin.math.abs
@@ -58,6 +59,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     override var facing = Facing.RIGHT
     override var directionRotation: Direction? = null
+
     var fullyCharged = false
         private set
 
@@ -93,9 +95,11 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
         trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
 
-        facing =
-            if (directionRotation?.isVertical() == true) if (trajectory.x > 0f) Facing.RIGHT else Facing.LEFT
-            else if (trajectory.y > 0f) Facing.RIGHT else Facing.LEFT
+        facing = when {
+            directionRotation?.isVertical() == true -> if (trajectory.x > 0f) Facing.RIGHT else Facing.LEFT
+            trajectory.y > 0f -> Facing.RIGHT
+            else -> Facing.LEFT
+        }
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
@@ -127,47 +131,43 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
             return
         }
 
-        // owner = shieldEntity
-
         swapFacing()
         if (directionRotation?.isVertical() == true) trajectory.x *= -1f else trajectory.y *= -1f
 
         val deflection = shieldFixture.getOrDefaultProperty(ConstKeys.DIRECTION, Direction.UP, Direction::class)
-        val newTrajectory =
-            when (directionRotation!!) {
-                Direction.UP -> {
-                    when (deflection) {
-                        Direction.UP -> Vector2(trajectory.x, 5f * ConstVals.PPM)
-                        Direction.DOWN -> Vector2(trajectory.x, -5f * ConstVals.PPM)
-                        else -> Vector2(trajectory.x, 0f)
-                    }
-                }
-
-                Direction.DOWN -> {
-                    when (deflection) {
-                        Direction.UP -> Vector2(trajectory.x, -5f * ConstVals.PPM)
-                        Direction.DOWN -> Vector2(trajectory.x, 5f * ConstVals.PPM)
-                        else -> Vector2(trajectory.x, 0f)
-                    }
-                }
-
-                Direction.LEFT -> {
-                    when (deflection) {
-                        Direction.UP -> Vector2(-5f * ConstVals.PPM, trajectory.y)
-                        Direction.DOWN -> Vector2(5f * ConstVals.PPM, trajectory.y)
-                        else -> Vector2(0f, trajectory.y)
-                    }
-                }
-
-                Direction.RIGHT -> {
-                    when (deflection) {
-                        Direction.UP -> Vector2(5f * ConstVals.PPM, trajectory.y)
-                        Direction.DOWN -> Vector2(-5f * ConstVals.PPM, trajectory.y)
-                        else -> Vector2(0f, trajectory.y)
-                    }
+        trajectory = when (directionRotation!!) {
+            Direction.UP -> {
+                when (deflection) {
+                    Direction.UP -> Vector2(trajectory.x, 5f * ConstVals.PPM)
+                    Direction.DOWN -> Vector2(trajectory.x, -5f * ConstVals.PPM)
+                    else -> Vector2(trajectory.x, 0f)
                 }
             }
-        trajectory.set(newTrajectory)
+
+            Direction.DOWN -> {
+                when (deflection) {
+                    Direction.UP -> Vector2(trajectory.x, -5f * ConstVals.PPM)
+                    Direction.DOWN -> Vector2(trajectory.x, 5f * ConstVals.PPM)
+                    else -> Vector2(trajectory.x, 0f)
+                }
+            }
+
+            Direction.LEFT -> {
+                when (deflection) {
+                    Direction.UP -> Vector2(-5f * ConstVals.PPM, trajectory.y)
+                    Direction.DOWN -> Vector2(5f * ConstVals.PPM, trajectory.y)
+                    else -> Vector2(0f, trajectory.y)
+                }
+            }
+
+            Direction.RIGHT -> {
+                when (deflection) {
+                    Direction.UP -> Vector2(5f * ConstVals.PPM, trajectory.y)
+                    Direction.DOWN -> Vector2(-5f * ConstVals.PPM, trajectory.y)
+                    else -> Vector2(0f, trajectory.y)
+                }
+            }
+        }
 
         requestToPlaySound(SoundAsset.DINK_SOUND, false)
     }
@@ -190,23 +190,16 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         e.spawn(props)
     }
 
-    private fun defineUpdatablesComponent() =
-        UpdatablesComponent({ body.physics.velocity.set(trajectory) })
+    private fun defineUpdatablesComponent() = UpdatablesComponent({
+        body.physics.velocity.let { if (canMove) it.set(trajectory.cpy().scl(movementScalar)) else it.setZero() }
+    })
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
-
-        val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameRectangle())
-        body.addFixture(projectileFixture)
-
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
-        body.addFixture(damagerFixture)
-
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
-
-        return BodyComponentCreator.create(this, body)
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBodyBounds() }), debug = true))
+        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.PROJECTILE, FixtureType.DAMAGER))
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
@@ -223,15 +216,17 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 4))
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setFlip(
-                if (directionRotation!!.equalsAny(Direction.UP, Direction.LEFT)) isFacing(Facing.LEFT)
-                else isFacing(Facing.RIGHT),
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setFlip(
+                when {
+                    directionRotation!!.equalsAny(Direction.UP, Direction.LEFT) -> isFacing(Facing.LEFT)
+                    else -> isFacing(Facing.RIGHT)
+                },
                 false
             )
-            _sprite.setPosition(body.getCenter(), Position.CENTER)
-            _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation!!.rotation
+            sprite.setPosition(body.getCenter(), Position.CENTER)
+            sprite.setOriginCenter()
+            sprite.rotation = directionRotation!!.rotation
         }
         return spritesComponent
     }

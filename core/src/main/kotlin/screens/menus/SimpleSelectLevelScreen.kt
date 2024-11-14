@@ -48,10 +48,10 @@ class SimpleSelectLevelScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, 
                 Level.TEST2
             )
         )
-        private const val SECTION_Y = 12f
-        private val SECTION_X_ARRAY = gdxArrayOf(2f, 6f, 10f)
         private const val LEVEL_X = 8f
         private const val LEVEL_Y = 4f
+        private const val SECTION_Y = 12f
+        private val SECTION_X_ARRAY = gdxArrayOf(2f, 6f, 10f)
     }
 
     private val sections = Array<MegaFontHandle>()
@@ -142,9 +142,7 @@ class SimpleSelectLevelScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, 
         )
 
         level = MegaFontHandle(
-            {
-                LEVELS.get(currentButtonKey)?.get(index)?.name ?: "NULL"
-            },
+            { LEVELS.get(currentButtonKey)?.get(index)?.name ?: "NULL" },
             positionX = LEVEL_X * ConstVals.PPM,
             positionY = LEVEL_Y * ConstVals.PPM
         )

@@ -543,7 +543,7 @@
   <object id="281" x="6176" y="1056" width="64" height="384"/>
   <object id="282" x="6176" y="992" width="1920" height="96"/>
   <object id="283" x="6784" y="1248" width="416" height="32"/>
-  <object id="284" x="6752" y="1024" width="64" height="256"/>
+  <object id="284" x="6752" y="1088" width="64" height="192"/>
   <object id="285" x="6880" y="1152" width="640" height="32"/>
   <object id="286" x="7264" y="1168" width="64" height="232"/>
   <object id="287" x="7392" y="1280" width="288" height="32"/>
