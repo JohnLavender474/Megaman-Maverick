@@ -7,6 +7,7 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.audio.AudioComponent
+import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.toGameRectangle
@@ -29,22 +30,25 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 
-class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, IAudioEntity {
+class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, IAudioEntity,
+    IDirectionRotatable {
 
     companion object {
+        const val TAG = "Disintegration"
         private const val DURATION = 0.275f
-        private var disintegrationRegion: TextureRegion? = null
+        private var region: TextureRegion? = null
     }
 
-    private val durationTimer = Timer(DURATION)
+    override var directionRotation: Direction? = null
 
-    override fun getEntityType() = EntityType.EXPLOSION
+    private val durationTimer = Timer(DURATION)
+    private val reusableRect = GameRectangle()
 
     override fun init() {
-        if (disintegrationRegion == null) disintegrationRegion =
-            game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "Disintegration")
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
         addComponent(AudioComponent())
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
@@ -53,17 +57,18 @@ class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
+        val rawDir = spawnProps.get(ConstKeys.DIRECTION, String::class)
+        directionRotation = rawDir?.let { Direction.valueOf(it.uppercase()) }
+
+        val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+        firstSprite.setPosition(spawn, Position.CENTER)
+
+        reusableRect.setSize(ConstVals.PPM.toFloat()).setCenter(spawn)
+        if (reusableRect.overlaps(getGameCamera().toGameRectangle() as Rectangle))
+            requestToPlaySound(SoundAsset.THUMP_SOUND, false)
+
         durationTimer.reset()
-        val spawn = spawnProps.get(ConstKeys.POSITION) as Vector2
-        (firstSprite as GameSprite).setPosition(spawn, Position.CENTER)
-        if (GameRectangle()
-                .setSize(ConstVals.PPM.toFloat())
-                .setCenter(spawn)
-                .overlaps(getGameCamera().toGameRectangle() as Rectangle)
-        ) requestToPlaySound(
-            SoundAsset.THUMP_SOUND,
-            false
-        )
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
@@ -74,12 +79,22 @@ class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(ConstVals.PPM.toFloat())
-        return SpritesComponent(sprite)
+        val spritesComponent = SpritesComponent(sprite)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setOriginCenter()
+            val rotation = directionRotation?.rotation ?: getMegaman().directionRotation!!.rotation
+            sprite.rotation = rotation
+        }
+        return spritesComponent
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val animation = Animation(disintegrationRegion!!, 1, 3, 0.005f, true)
+        val animation = Animation(region!!, 1, 3, 0.005f, true)
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }
+
+    override fun getEntityType() = EntityType.EXPLOSION
+
+    override fun getTag() = TAG
 }

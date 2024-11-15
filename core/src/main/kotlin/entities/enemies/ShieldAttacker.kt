@@ -154,6 +154,10 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBodyBounds() }
 
+        val bodyFixture = Fixture(body, FixtureType.BODY)
+        bodyFixture.putProperty(ConstKeys.GRAVITY_ROTATABLE, false)
+        body.addFixture(bodyFixture)
+
         val damagerFixture = Fixture(body, FixtureType.DAMAGER)
         body.addFixture(damagerFixture)
         damagerFixture.rawShape.color = Color.RED
@@ -172,6 +176,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
+            (bodyFixture.rawShape as GameRectangle).set(body)
             (damagerFixture.rawShape as GameRectangle).set(body)
 
             when {

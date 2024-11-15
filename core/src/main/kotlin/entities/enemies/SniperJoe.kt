@@ -59,6 +59,7 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
@@ -167,11 +168,15 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
 
+        directionRotation =
+            Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
+
         val spawn =
             if (spawnProps.containsKey(ConstKeys.BOUNDS)) spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
                 .getBottomCenterPoint()
             else spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-        body.positionOnPoint(spawn, Position.BOTTOM_CENTER)
+        val position = DirectionPositionMapper.getInvertedPosition(directionRotation!!)
+        body.positionOnPoint(spawn, position)
 
         if (spawnProps.containsKey(ConstKeys.TRIGGER)) {
             canThrowShield = true
@@ -186,9 +191,6 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
 
         type = spawnProps.getOrDefault(ConstKeys.TYPE, DEFAULT_TYPE, String::class)
         sniperJoeState = SniperJoeState.WAITING_SHIELDED
-        directionRotation = Direction.valueOf(
-            spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase()
-        )
 
         waitTimer.reset()
         throwShieldTimer.setToEnd()
