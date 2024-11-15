@@ -121,7 +121,7 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
                 ConstKeys.OWNER pairTo this,
                 ConstKeys.POSITION pairTo spawn,
                 ConstKeys.GRAVITY pairTo Vector2(0f, LAUNCH_GRAVITY * ConstVals.PPM),
-                ConstKeys.TRAJECTORY pairTo impulse
+                ConstKeys.IMPULSE pairTo impulse
             )
         )
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)

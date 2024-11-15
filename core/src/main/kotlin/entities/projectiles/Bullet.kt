@@ -42,17 +42,16 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
         const val TAG = "Bullet"
         private const val CLAMP = 10f
         private const val BOUNCE_LIMIT = 3
-        private var bulletRegion: TextureRegion? = null
+        private var region: TextureRegion? = null
     }
 
     override var directionRotation: Direction? = null
 
-    private lateinit var trajectory: Vector2
+    private var trajectory: Vector2? = null
     private var bounced = 0
 
     override fun init() {
-        if (bulletRegion == null) bulletRegion =
-            game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
         super.init()
     }
 
@@ -63,7 +62,10 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
         body.setCenter(spawn)
 
         directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
-        trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
+        trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)
+
+        val impulse = spawnProps.get(ConstKeys.IMPULSE, Vector2::class)
+        impulse?.let { body.physics.velocity.set(it) }
 
         val gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, Vector2(), Vector2::class)
         body.physics.gravity.set(gravity)
@@ -91,24 +93,25 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
             return
         }
 
-        if (isDirectionRotatedVertically()) trajectory.x *= -1f else trajectory.y *= -1f
+        val velocity = trajectory ?: body.physics.velocity
+        if (isDirectionRotatedVertically()) velocity.x *= -1f else velocity.y *= -1f
         val deflection = shieldFixture.getOrDefaultProperty(ConstKeys.DIRECTION, Direction.UP, Direction::class)
         when (deflection) {
             Direction.UP -> {
                 when (directionRotation!!) {
-                    Direction.UP -> trajectory.y = 5f * ConstVals.PPM
-                    Direction.DOWN -> trajectory.y = -5f * ConstVals.PPM
-                    Direction.LEFT -> trajectory.x = -5f * ConstVals.PPM
-                    Direction.RIGHT -> trajectory.x = 5f * ConstVals.PPM
+                    Direction.UP -> velocity.y = 5f * ConstVals.PPM
+                    Direction.DOWN -> velocity.y = -5f * ConstVals.PPM
+                    Direction.LEFT -> velocity.x = -5f * ConstVals.PPM
+                    Direction.RIGHT -> velocity.x = 5f * ConstVals.PPM
                 }
             }
 
             Direction.DOWN -> {
                 when (directionRotation!!) {
-                    Direction.UP -> trajectory.y = -5f * ConstVals.PPM
-                    Direction.DOWN -> trajectory.y = 5f * ConstVals.PPM
-                    Direction.LEFT -> trajectory.x = 5f * ConstVals.PPM
-                    Direction.RIGHT -> trajectory.x = -5f * ConstVals.PPM
+                    Direction.UP -> velocity.y = -5f * ConstVals.PPM
+                    Direction.DOWN -> velocity.y = 5f * ConstVals.PPM
+                    Direction.LEFT -> velocity.x = 5f * ConstVals.PPM
+                    Direction.RIGHT -> velocity.x = -5f * ConstVals.PPM
                 }
             }
 
@@ -148,7 +151,10 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
         body.addFixture(bodyFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            body.physics.velocity.let { if (canMove) it.set(trajectory.cpy().scl(movementScalar)) else it.setZero() }
+            when {
+                canMove -> trajectory?.let { body.physics.velocity.set(it).scl(movementScalar) }
+                else -> body.physics.velocity.setZero()
+            }
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBodyBounds() }), debug = true))
@@ -157,7 +163,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(bulletRegion!!, DrawingPriority(DrawingSection.FOREGROUND, 5))
+        val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.FOREGROUND, 5))
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
