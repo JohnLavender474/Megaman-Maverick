@@ -65,7 +65,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
     companion object {
         const val TAG = "DarknessV2"
         const val MIN_ALPHA = 0f
-        const val MAX_ALPHA = 0.75f
+        const val MAX_ALPHA = 0.85f
         private const val CAM_BOUNDS_BUFFER = 2f
         private const val DEFAULT_PPM_DIVISOR = 2
         private const val MEGAMAN_HALF_CHARGING_RADIUS = 3
