@@ -94,7 +94,7 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     private val canMove: Boolean
         get() = !game.isCameraRotating()
-    private val loop = Loop(PopupCanonState.values().toGdxArray())
+    private val loop = Loop(PopupCanonState.entries.toTypedArray().toGdxArray())
     private val timers = objectMapOf(
         "rest" pairTo Timer(REST_DUR),
         "rise" pairTo Timer(TRANS_DUR, gdxArrayOf(

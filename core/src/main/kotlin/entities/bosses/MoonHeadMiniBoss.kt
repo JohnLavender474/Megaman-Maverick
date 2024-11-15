@@ -89,16 +89,13 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, dmgDurati
     private enum class MoonHeadState { DELAY, DARK, AWAKEN, SHOOT, MOVE, CRUMBLE }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class pairTo dmgNeg(2),
-        Fireball::class pairTo dmgNeg(3),
+        Bullet::class pairTo dmgNeg(1),
+        Fireball::class pairTo dmgNeg(1),
         ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
-            if (it.fullyCharged) 3 else 2
-        },
-        ChargedShotExplosion::class pairTo dmgNeg {
-            it as ChargedShotExplosion
             if (it.fullyCharged) 2 else 1
-        }
+        },
+        ChargedShotExplosion::class pairTo dmgNeg(1)
     )
 
     private val loop = Loop(MoonHeadState.entries.toTypedArray().toGdxArray())
@@ -139,7 +136,6 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, dmgDurati
 
         area = spawnProps.get(ConstKeys.AREA, RectangleMapObject::class)!!.rectangle.toGameRectangle()
         firstSpawn = spawnProps.get(ConstKeys.FIRST, RectangleMapObject::class)!!.rectangle.getCenter()
-
 
         val asteroidsSpawnerBounds =
             spawnProps.get(AsteroidsSpawner.TAG, RectangleMapObject::class)!!.rectangle.toGameRectangle()

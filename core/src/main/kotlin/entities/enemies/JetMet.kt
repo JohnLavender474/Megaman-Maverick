@@ -35,6 +35,7 @@ import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -75,11 +76,7 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         ChargedShot::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
         ChargedShotExplosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
     )
-    override var directionRotation: Direction?
-        get() = body.cardinalRotation
-        set(value) {
-            body.cardinalRotation = value
-        }
+    override var directionRotation: Direction? = null
     override lateinit var facing: Facing
 
     private val standTimer = Timer(STAND_DUR)
@@ -99,9 +96,9 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-            regions.put("stand", atlas.findRegion("JetMet/Stand"))
-            regions.put("take_off", atlas.findRegion("JetMet/TakeOff"))
-            regions.put("jet", atlas.findRegion("JetMet/Jet"))
+            regions.put("stand", atlas.findRegion("$TAG/Stand"))
+            regions.put("take_off", atlas.findRegion("$TAG/TakeOff"))
+            regions.put("jet", atlas.findRegion("$TAG/Jet"))
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -125,17 +122,14 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         liftTarget = targets.poll()
 
         applyMovementScalarToBullet = spawnProps.getOrDefault(ConstKeys.APPLY_SCALAR_TO_CHILDREN, false, Boolean::class)
-
-        directionRotation = Direction.valueOf(
-            spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase()
-        )
+        directionRotation = getMegaman().directionRotation
 
         standTimer.reset()
         liftoffTimer.reset()
         shootTimer.reset()
 
         jetMetState = JetMetState.STAND
-        facing = when (getMegaman().directionRotation!!) {
+        facing = when (directionRotation!!) {
             Direction.UP -> if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
             Direction.DOWN -> if (getMegaman().body.x > body.x) Facing.LEFT else Facing.RIGHT
             Direction.LEFT -> if (getMegaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
@@ -151,6 +145,8 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            directionRotation = getMegaman().directionRotation
+
             if (!canMove) {
                 body.physics.velocity.setZero()
                 return@add
@@ -215,34 +211,28 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.85f * ConstVals.PPM)
+
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
+        bodyFixture.putProperty(ConstKeys.GRAVITY_ROTATABLE, false)
+        body.addFixture(bodyFixture)
+
         val debugShapes = Array<() -> IDrawableShape?>()
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
+
         return BodyComponentCreator.create(
-            this, body, BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER, FixtureType.DAMAGEABLE)
+            this, body, BodyFixtureDef.of(FixtureType.DAMAGER, FixtureType.DAMAGEABLE)
         )
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 4))
         sprite.setSize(1.5f * ConstVals.PPM)
-
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.hidden = damageBlink
-
-            val flipX = facing == Facing.RIGHT
-            val flipY = directionRotation == Direction.DOWN
-            _sprite.setFlip(flipX, flipY)
-
-            val rotation = when (directionRotation!!) {
-                Direction.UP, Direction.DOWN -> 0f
-
-                Direction.LEFT -> 90f
-                Direction.RIGHT -> 270f
-            }
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.hidden = damageBlink
+            sprite.setFlip(isFacing(Facing.RIGHT), false)
             sprite.setOriginCenter()
-            _sprite.rotation = rotation
-
+            sprite.rotation = directionRotation!!.rotation
             val position = when (directionRotation!!) {
                 Direction.UP -> Position.BOTTOM_CENTER
                 Direction.DOWN -> Position.TOP_CENTER
@@ -250,9 +240,8 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
                 Direction.RIGHT -> Position.CENTER_LEFT
             }
             val bodyPosition = body.getPositionPoint(position)
-            _sprite.setPosition(bodyPosition, position)
+            sprite.setPosition(bodyPosition, position)
         }
-
         return spritesComponent
     }
 

@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.getRandom
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -33,10 +34,12 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IOwnable
+import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.world.body.*
+import kotlin.reflect.KClass
 
 class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable {
 
@@ -46,6 +49,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable {
         const val BLUE = "Blue"
         const val MIN_ROTATION_SPEED = 0.5f
         const val MAX_ROTATION_SPEED = 1.5f
+        private val HIT_PROJS = objectSetOf<KClass<out IProjectileEntity>>(Asteroid::class, ExplodingBall::class)
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -98,8 +102,8 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable {
     }
 
     override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
-        val other = projectileFixture.getEntity()
-        if (other is Asteroid) {
+        val other = projectileFixture.getEntity() as IProjectileEntity
+        if (HIT_PROJS.contains(other::class)) {
             explodeAndDie()
             other.explodeAndDie()
         }

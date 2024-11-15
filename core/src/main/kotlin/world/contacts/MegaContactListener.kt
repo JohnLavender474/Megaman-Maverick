@@ -383,7 +383,7 @@ class MegaContactListener(
             }
             if (gravityChangeFixture.hasProperty(ConstKeys.DIRECTION)) {
                 val canChangeGravityRotation =
-                    bodyFixture.properties.getOrDefault(ConstKeys.GRAVITY_ROTATABLE, true, Boolean::class)
+                    bodyFixture.getOrDefaultProperty(ConstKeys.GRAVITY_ROTATABLE, true, Boolean::class)
                 if (canChangeGravityRotation) {
                     val direction = gravityChangeFixture.getProperty(ConstKeys.DIRECTION, Direction::class) ?: return
                     if (entity is IDirectionRotatable && entity.directionRotation != direction)
