@@ -111,7 +111,7 @@ class HeartTank(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, I
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val animation = Animation(textureRegion!!, 1, 2, 0.05f, true)
+        val animation = Animation(textureRegion!!, 1, 2, 0.15f, true)
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }
