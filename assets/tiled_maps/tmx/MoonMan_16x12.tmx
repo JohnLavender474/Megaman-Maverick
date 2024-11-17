@@ -1111,7 +1111,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="5" name="player">
+ <objectgroup id="5" name="temp">
   <object id="409" name="0" x="13344" y="1568" width="32" height="32">
    <properties>
     <property name="apply_scalar_to_children" type="bool" value="true"/>
@@ -1120,7 +1120,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="4" name="temp">
+ <objectgroup id="4" name="player">
   <object id="28" name="0" x="96" y="3040" width="32" height="32">
    <properties>
     <property name="apply_scalar_to_children" type="bool" value="true"/>
