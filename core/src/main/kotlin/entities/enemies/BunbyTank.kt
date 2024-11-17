@@ -67,7 +67,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         private const val SHOOT_TIME = 0.35f
         private const val AFTER_SHOOT_DELAY = 0.75f
         private const val GRAVITY = 0.15f
-        private const val ROCKET_SPEED = 8f
+        private const val ROCKET_SPEED = 10f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -141,8 +141,8 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     private fun shoot() {
         val spawn = body.getCenter().add(
             (when (directionRotation!!) {
-                Direction.UP -> Vector2(0.5f * facing.value, 0.175f)
-                Direction.DOWN -> Vector2(-0.5f * facing.value, 0.175f)
+                Direction.UP -> Vector2(0.5f * facing.value, 0.125f)
+                Direction.DOWN -> Vector2(-0.5f * facing.value, 0.125f)
                 Direction.LEFT -> Vector2(0.175f, 0.5f * facing.value)
                 Direction.RIGHT -> Vector2(0.175f, -0.5f * facing.value)
             }).scl(ConstVals.PPM.toFloat())
@@ -327,12 +327,12 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.85f * ConstVals.PPM)
+        sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setFlip(isFacing(Facing.LEFT), false)
-            _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation!!.rotation
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setFlip(isFacing(Facing.LEFT), false)
+            sprite.setOriginCenter()
+            sprite.rotation = directionRotation!!.rotation
 
             val position = when (directionRotation!!) {
                 Direction.UP -> Position.BOTTOM_CENTER
@@ -341,14 +341,14 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                 Direction.RIGHT -> Position.CENTER_LEFT
             }
             val bodyPosition = body.getPositionPoint(position)
-            _sprite.setPosition(bodyPosition, position)
+            sprite.setPosition(bodyPosition, position)
 
             if (directionRotation == Direction.LEFT)
-                _sprite.translateX(0.15f * ConstVals.PPM)
+                sprite.translateX(0.15f * ConstVals.PPM)
             else if (directionRotation == Direction.RIGHT)
-                _sprite.translateX(-0.15f * ConstVals.PPM)
+                sprite.translateX(-0.15f * ConstVals.PPM)
 
-            _sprite.hidden = damageBlink
+            sprite.hidden = damageBlink
         }
         return spritesComponent
     }

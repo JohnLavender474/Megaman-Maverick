@@ -243,6 +243,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Bosses2/DesertMan/defeated.png</key>
+            <key type="filename">../frames/Bosses2/DesertMan/punch.png</key>
             <key type="filename">../frames/Bosses2/InfernoMan/charging.png</key>
             <key type="filename">../frames/Bosses2/InfernoMan/defeated.png</key>
             <struct type="IndividualSpriteSettings">
@@ -272,21 +273,6 @@
                 <rect>49,49,98,98</rect>
                 <key>scale9Paddings</key>
                 <rect>49,49,98,98</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Bosses2/DesertMan/punch_long.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>49,343,98,686</rect>
-                <key>scale9Paddings</key>
-                <rect>49,343,98,686</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -352,6 +338,76 @@
                 <rect>32,48,64,96</rect>
                 <key>scale9Paddings</key>
                 <rect>32,48,64,96</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses2/MoonMan/defeated.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan/gravity_change_continue.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>24,24,48,48</rect>
+                <key>scale9Paddings</key>
+                <rect>24,24,48,48</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses2/MoonMan/gravity_change_begin.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan/jump_shoot_1.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan/shoot_0.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan/shoot_1.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan/shoot_2.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,36,24,72</rect>
+                <key>scale9Paddings</key>
+                <rect>12,36,24,72</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses2/MoonMan/gravity_change_end.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan/jump.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan/jump_shoot_0.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan/jump_shoot_2.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan/shoot_3.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,12,24,24</rect>
+                <key>scale9Paddings</key>
+                <rect>12,12,24,24</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses2/MoonMan/shoot_4.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan/stand.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,24,24,48</rect>
+                <key>scale9Paddings</key>
+                <rect>12,24,24,48</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.screens.levels.events
 
 import com.badlogic.gdx.utils.Queue
+import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -15,7 +16,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.events.EventType
 
-class BossSpawnEventHandler(private val game: MegamanMaverickGame) : Updatable {
+class BossSpawnEventHandler(private val game: MegamanMaverickGame) : Updatable, Resettable {
 
     companion object {
         const val TAG = "BossSpawnEventHandler"
@@ -60,5 +61,9 @@ class BossSpawnEventHandler(private val game: MegamanMaverickGame) : Updatable {
         val timer = timerQueue.first()
         timer.update(delta)
         if (timer.isFinished()) timerQueue.removeFirst()
+    }
+
+    override fun reset() {
+        timerQueue.clear()
     }
 }

@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.4.0</string>
+        <string>7.5.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -182,15 +182,12 @@
             <key type="filename">../frames/Faces1/Microwave Man.png</key>
             <key type="filename">../frames/Faces1/Mister Man.png</key>
             <key type="filename">../frames/Faces1/Moon Man.png</key>
-            <key type="filename">../frames/Faces1/Naval Man.png</key>
             <key type="filename">../frames/Faces1/Nuke Man.png</key>
-            <key type="filename">../frames/Faces1/Polarity Man.png</key>
             <key type="filename">../frames/Faces1/Precious Man.png</key>
             <key type="filename">../frames/Faces1/Reactor Man.png</key>
             <key type="filename">../frames/Faces1/Roaster Man.png</key>
             <key type="filename">../frames/Faces1/Rodent Man.png</key>
             <key type="filename">../frames/Faces1/Timber Woman.png</key>
-            <key type="filename">../frames/Faces1/Wintry Man.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

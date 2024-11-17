@@ -62,9 +62,9 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         const val TAG = "JetMet"
         private const val STAND_DUR = 0.15f
         private const val LIFTOFF_DUR = 0.1f
-        private const val SHOOT_DELAY = 0.85f
+        private const val SHOOT_DELAY = 1f
         private const val JET_SPEED = 4f
-        private const val BULLET_SPEED = 15f
+        private const val BULLET_SPEED = 10f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 

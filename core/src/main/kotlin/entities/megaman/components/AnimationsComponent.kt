@@ -35,97 +35,149 @@ val Megaman.slipSliding: Boolean
 val Megaman.rawAnimKey: String
     get() = currentRawAnimKey
 
-val Megaman.amendedAnimKey: String
-    get() = currentAmendedAnimKey
-
 private lateinit var currentRawAnimKey: String
 private lateinit var currentAmendedAnimKey: String
 
 internal fun Megaman.defineAnimationsComponent(): AnimationsComponent {
     val megamanAnimationKeySupplier = {
         val newAnimKey =
-            if (!roomTransPauseTimer.isFinished()) ConstKeys.INVALID
-            else if (game.isProperty(ConstKeys.ROOM_TRANSITION, true)) currentRawAnimKey
-            else if (!ready) "Stand"
-            else if (cameraRotating) {
-                if (shooting) "JumpShoot"
-                else if (fullyCharged) "JumpCharging" else if (halfCharged) "JumpHalfCharging" else "Jump"
-            } else {
-                if (isBehaviorActive(BehaviorType.JETPACKING)) {
-                    if (shooting) "JetpackShoot"
-                    else "Jetpack"
-                } else if (isBehaviorActive(BehaviorType.RIDING_CART)) {
-                    if (damaged) "Cartin_Damaged"
-                    else if (isBehaviorActive(BehaviorType.JUMPING) || !body.isSensing(BodySense.FEET_ON_GROUND)) {
-                        if (shooting) "Cartin_JumpShoot"
-                        else if (fullyCharged) "Cartin_JumpFullyCharged"
-                        else if (halfCharged) "Cartin_JumpHalfCharged"
-                        else "Cartin_Jump"
-                    } else {
-                        if (shooting) "Cartin_Shoot"
-                        else if (fullyCharged) "Cartin_FullyCharged"
-                        else if (halfCharged) "Cartin_HalfCharged"
-                        else "Cartin"
+            when {
+                !roomTransPauseTimer.isFinished() -> ConstKeys.INVALID
+                game.isProperty(ConstKeys.ROOM_TRANSITION, true) -> {
+                    if (currentRawAnimKey.contains("Stand"))
+                        currentRawAnimKey = currentRawAnimKey.replace("Stand", "Run")
+                    currentRawAnimKey
+                }
+
+                !ready -> "Stand"
+                cameraRotating -> {
+                    when {
+                        shooting -> "JumpShoot"
+                        fullyCharged -> "JumpCharging"
+                        halfCharged -> "JumpHalfCharging"
+                        else -> "Jump"
                     }
-                } else if (damaged || stunned) "Damaged"
-                else if (isBehaviorActive(BehaviorType.CLIMBING)) {
-                    if (!body.isSensing(BodySense.HEAD_TOUCHING_LADDER)) {
-                        if (shooting) "ClimbShoot"
-                        else if (fullyCharged) "FinishClimbCharging"
-                        else if (halfCharged) "FinishClimbHalfCharging" else "FinishClimb"
-                    } else {
-                        val movement =
-                            if (isDirectionRotatedHorizontally()) body.physics.velocity.x else body.physics.velocity.y
-                        if (movement != 0f) {
-                            if (shooting) "ClimbShoot"
-                            else if (fullyCharged) "ClimbCharging"
-                            else if (halfCharged) "ClimbHalfCharging" else "Climb"
-                        } else {
-                            if (shooting) "ClimbShoot"
-                            else if (fullyCharged) "StillClimbCharging"
-                            else if (halfCharged) "StillClimbHalfCharging" else "StillClimb"
+                }
+
+                else -> {
+                    when {
+                        isBehaviorActive(BehaviorType.JETPACKING) -> if (shooting) "JetpackShoot" else "Jetpack"
+                        isBehaviorActive(BehaviorType.RIDING_CART) -> {
+                            when {
+                                damaged -> "Cartin_Damaged"
+                                isBehaviorActive(BehaviorType.JUMPING) || !body.isSensing(BodySense.FEET_ON_GROUND) ->
+                                    when {
+                                        shooting -> "Cartin_JumpShoot"
+                                        fullyCharged -> "Cartin_JumpFullyCharged"
+                                        halfCharged -> "Cartin_JumpHalfCharged"
+                                        else -> "Cartin_Jump"
+                                    }
+
+                                else ->
+                                    when {
+                                        shooting -> "Cartin_Shoot"
+                                        fullyCharged -> "Cartin_FullyCharged"
+                                        halfCharged -> "Cartin_HalfCharged"
+                                        else -> "Cartin"
+                                    }
+                            }
+                        }
+
+                        damaged || stunned -> "Damaged"
+                        isBehaviorActive(BehaviorType.CLIMBING) -> {
+                            when {
+                                !body.isSensing(BodySense.HEAD_TOUCHING_LADDER) -> {
+                                    when {
+                                        shooting -> "ClimbShoot"
+                                        fullyCharged -> "FinishClimbCharging"
+                                        halfCharged -> "FinishClimbHalfCharging"
+                                        else -> "FinishClimb"
+                                    }
+                                }
+
+                                else -> {
+                                    val movement =
+                                        if (isDirectionRotatedHorizontally()) body.physics.velocity.x
+                                        else body.physics.velocity.y
+                                    when {
+                                        movement != 0f -> when {
+                                            shooting -> "ClimbShoot"
+                                            fullyCharged -> "ClimbCharging"
+                                            halfCharged -> "ClimbHalfCharging"
+                                            else -> "Climb"
+                                        }
+
+                                        else -> when {
+                                            shooting -> "ClimbShoot"
+                                            fullyCharged -> "StillClimbCharging"
+                                            halfCharged -> "StillClimbHalfCharging"
+                                            else -> "StillClimb"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        isBehaviorActive(BehaviorType.AIR_DASHING) -> when {
+                            fullyCharged -> "AirDashCharging"
+                            halfCharged -> "AirDashHalfCharging"
+                            else -> "AirDash"
+                        }
+
+                        isBehaviorActive(BehaviorType.GROUND_SLIDING) -> when {
+                            shooting -> "GroundSlideShoot"
+                            fullyCharged -> "GroundSlideCharging"
+                            halfCharged -> "GroundSlideHalfCharging"
+                            else -> "GroundSlide"
+                        }
+
+                        isBehaviorActive(BehaviorType.WALL_SLIDING) -> when {
+                            shooting -> "WallSlideShoot"
+                            fullyCharged -> "WallSlideCharging"
+                            halfCharged -> "WallSlideHalfCharging"
+                            else -> "WallSlide"
+                        }
+
+                        isBehaviorActive(BehaviorType.SWIMMING) -> when {
+                            shooting -> "SwimShoot"
+                            fullyCharged -> "SwimCharging"
+                            halfCharged -> "SwimHalfCharging"
+                            else -> "Swim"
+                        }
+
+                        body.isSensing(BodySense.FEET_ON_GROUND) && running -> when {
+                            shooting -> "RunShoot"
+                            fullyCharged -> "RunCharging"
+                            halfCharged -> "RunHalfCharging"
+                            else -> "Run"
+                        }
+
+                        isBehaviorActive(BehaviorType.JUMPING) || !body.isSensing(BodySense.FEET_ON_GROUND) -> when {
+                            shooting -> "JumpShoot"
+                            fullyCharged -> "JumpCharging"
+                            halfCharged -> "JumpHalfCharging"
+                            else -> "Jump"
+                        }
+
+                        slipSliding -> when {
+                            shooting -> "SlipSlideShoot"
+                            fullyCharged -> "SlipSlideCharging"
+                            halfCharged -> "SlipSlideHalfCharging"
+                            else -> "SlipSlide"
+                        }
+
+                        else -> when {
+                            shooting -> "StandShoot"
+                            fullyCharged -> "StandCharging"
+                            halfCharged -> "StandHalfCharging"
+                            else -> "Stand"
                         }
                     }
-                } else if (isBehaviorActive(BehaviorType.AIR_DASHING)) {
-                    if (fullyCharged) "AirDashCharging"
-                    else if (halfCharged) "AirDashHalfCharging" else "AirDash"
-                } else if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) {
-                    if (shooting) "GroundSlideShoot"
-                    else if (fullyCharged) "GroundSlideCharging"
-                    else if (halfCharged) "GroundSlideHalfCharging" else "GroundSlide"
-                } else if (isBehaviorActive(BehaviorType.WALL_SLIDING)) {
-                    if (shooting) "WallSlideShoot"
-                    else if (fullyCharged) "WallSlideCharging"
-                    else if (halfCharged) "WallSlideHalfCharging" else "WallSlide"
-                } else if (isBehaviorActive(BehaviorType.SWIMMING)) {
-                    if (shooting) "SwimShoot"
-                    else if (fullyCharged) "SwimCharging" else if (halfCharged) "SwimHalfCharging" else "Swim"
-                } else if (body.isSensing(BodySense.FEET_ON_GROUND) && running) {
-                    if (shooting) "RunShoot"
-                    else if (fullyCharged) "RunCharging" else if (halfCharged) "RunHalfCharging" else "Run"
-                } else if (isBehaviorActive(BehaviorType.JUMPING) || !body.isSensing(BodySense.FEET_ON_GROUND)
-                /*
-                (!body.isSensing(BodySense.FEET_ON_GROUND) && abs(
-                    if (directionRotation!!.isVertical()) body.physics.velocity.y
-                    else body.physics.velocity.x
-                ) > 0.1f * ConstVals.PPM)
-                 */
-                ) {
-                    if (shooting) "JumpShoot"
-                    else if (fullyCharged) "JumpCharging" else if (halfCharged) "JumpHalfCharging" else "Jump"
-                } else if (slipSliding) {
-                    if (shooting) "SlipSlideShoot"
-                    else if (fullyCharged) "SlipSlideCharging"
-                    else if (halfCharged) "SlipSlideHalfCharging" else "SlipSlide"
-                } else {
-                    if (shooting) "StandShoot"
-                    else if (fullyCharged) "StandCharging"
-                    else if (halfCharged) "StandHalfCharging" else "Stand"
                 }
             }
         if (newAnimKey != ConstKeys.INVALID) currentRawAnimKey = newAnimKey
         currentAmendedAnimKey = newAnimKey
-        if (maverick && facing == Facing.LEFT) currentAmendedAnimKey += "_Left"
+        if (maverick && isFacing(Facing.LEFT)) currentAmendedAnimKey += "_Left"
         currentAmendedAnimKey += if (maverick) "_MegamanMaverick" else "_Megaman"
         currentAmendedAnimKey += "_${currentWeapon.name}"
         currentAmendedAnimKey
@@ -135,7 +187,7 @@ internal fun Megaman.defineAnimationsComponent(): AnimationsComponent {
 
     // TODO: create missing maverick animations
     gdxArrayOf("Megaman" /*, "MegamanMaverick"*/).forEach { megamanType ->
-        for (weapon in MegamanWeapon.values()) {
+        for (weapon in MegamanWeapon.entries) {
             val assetSource = if (megamanType == "Megaman") when (weapon) {
                 MegamanWeapon.BUSTER -> TextureAsset.MEGAMAN_BUSTER.source
                 MegamanWeapon.RUSH_JETPACK -> TextureAsset.MEGAMAN_RUSH_JETPACK.source
@@ -156,17 +208,17 @@ internal fun Megaman.defineAnimationsComponent(): AnimationsComponent {
 
                 val def = animationDefMap[animationKey]
 
-                var _animationKey = animationKey
-                _animationKey += "_${megamanType}"
-                _animationKey += "_${weapon.name}"
+                var temp = animationKey
+                temp += "_${megamanType}"
+                temp += "_${weapon.name}"
 
                 GameLogger.debug(
                     MEGAMAN_ANIMATIONS_COMPONENT_TAG,
-                    "defineAnimationsComponent(): Putting animation \'${animationKey}\' with key \'${_animationKey}\'"
+                    "defineAnimationsComponent(): Putting animation \'${animationKey}\' with key \'${temp}\'"
                 )
 
                 animations.put(
-                    _animationKey, Animation(atlas.findRegion(animationKey), def.rows, def.cols, def.durations)
+                    temp, Animation(atlas.findRegion(animationKey), def.rows, def.cols, def.durations)
                 )
             }
         }

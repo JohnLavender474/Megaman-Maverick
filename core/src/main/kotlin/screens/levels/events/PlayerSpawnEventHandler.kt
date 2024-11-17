@@ -8,6 +8,7 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.interfaces.Initializable
+import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.shapes.getCenter
 import com.mega.game.engine.common.time.Timer
@@ -24,7 +25,8 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.events.EventType
 import java.util.*
 
-class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializable, Updatable, IDrawable<Batch> {
+class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializable, Updatable, IDrawable<Batch>,
+    Resettable {
 
     companion object {
         const val TAG = "PlayerSpawnEventHandler"
@@ -134,6 +136,12 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
             blinkReady = !blinkReady
             blinkTimer.reset()
         }
+    }
+
+    override fun reset() {
+        preBeamTimer.setToEnd()
+        beamDownTimer.setToEnd()
+        beamTransitionTimer.setToEnd()
     }
 
     private fun preBeam(delta: Float) {

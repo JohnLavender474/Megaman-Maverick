@@ -61,8 +61,7 @@ abstract class AbstractEnemy(
             if (hasDepletedHealth()) {
                 disintegrate()
                 if (dropItemOnDeath) {
-                    val playerHealthModifier =
-                        1f - getMegaman().getCurrentHealth().toFloat() / getMegaman().getMaxHealth().toFloat()
+                    val playerHealthModifier = 1f - getMegaman().getHealthRatio()
                     val dropChance = BASE_DROP_ITEM_CHANCE + (playerHealthModifier * MEGAMAN_HEALTH_INFLUENCE_FACTOR)
                     val rand = getRandom(0f, 1f)
                     GameLogger.debug(
@@ -136,18 +135,19 @@ abstract class AbstractEnemy(
         if (overlapsGameCamera()) playSoundNow(SoundAsset.ENEMY_DAMAGE_SOUND, false)
         val disintegration = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)
         val props = disintegrationProps ?: props(ConstKeys.POSITION pairTo body.getCenter())
-        disintegration!!.spawn(props)
+        disintegration?.spawn(props)
     }
 
     protected open fun explode(explosionProps: Properties? = null) {
         if (overlapsGameCamera()) playSoundNow(SoundAsset.EXPLOSION_2_SOUND, false)
-        val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
+        val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)
         val props = explosionProps ?: props(ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo body.getCenter())
-        explosion.spawn(props)
+        explosion?.spawn(props)
     }
 
     open fun isMegamanShootingAtMe(): Boolean {
         if (!getMegaman().shooting) return false
-        return body.x < getMegaman().body.x && getMegaman().facing == Facing.LEFT || body.x > getMegaman().body.x && getMegaman().facing == Facing.RIGHT
+        return body.x < getMegaman().body.x && getMegaman().facing == Facing.LEFT ||
+            body.x > getMegaman().body.x && getMegaman().facing == Facing.RIGHT
     }
 }

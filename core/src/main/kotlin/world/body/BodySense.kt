@@ -1,7 +1,7 @@
 package com.megaman.maverick.game.world.body
 
-import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.world.body.Body
+import com.megaman.maverick.game.ConstKeys
 
 enum class BodySense {
     FORCE_APPLIED,
@@ -21,23 +21,26 @@ enum class BodySense {
     TELEPORTING
 }
 
-fun Body.isSensing(bodySense: BodySense) = getProperty(bodySense.toString()) == true
+interface IBodySenseListener {
+    fun listenToBodySense(bodySense: BodySense, current: Boolean, old: Boolean?)
+}
+
+const val BODY_SENSE_LISTENER_KEY = "${ConstKeys.BODY}_${ConstKeys.SENSE}_${ConstKeys.LISTENER}"
+
+fun Body.isSensing(bodySense: BodySense) = getProperty(bodySense) == true
 
 fun Body.isSensingAny(bodySenses: Iterable<BodySense>) = bodySenses.any { isSensing(it) }
 
 fun Body.isSensingAny(vararg bodySenses: BodySense) = isSensingAny(bodySenses.asIterable())
 
-fun Body.isSensingAll(bodySenses: Iterable<BodySense>) = bodySenses.all { isSensing(it) }
+fun Body.setBodySense(bodySense: BodySense, value: Boolean) {
+    val old = putProperty(bodySense, value) as Boolean?
+    val listener = getBodySenseListener()
+    listener?.listenToBodySense(bodySense, value, old)
+}
 
-fun Body.isSensingAll(vararg bodySenses: BodySense) = isSensingAll(bodySenses.asIterable())
+fun Body.setBodySenseListener(listener: IBodySenseListener) = putProperty(BODY_SENSE_LISTENER_KEY, listener)
 
-fun Body.setBodySense(bodySense: BodySense, value: Boolean) =
-    putProperty(bodySense.toString(), value)
+fun Body.getBodySenseListener(): IBodySenseListener? = getProperty(BODY_SENSE_LISTENER_KEY, IBodySenseListener::class)
 
-fun Body.setBodySense(vararg bodySenses: BodySense, value: Boolean) =
-    bodySenses.forEach { setBodySense(it, value) }
-
-fun Body.setBodySense(vararg bodySenses: GamePair<BodySense, Boolean>) =
-    bodySenses.forEach { setBodySense(it.first, it.second) }
-
-fun Body.resetBodySenses() = BodySense.values().forEach { putProperty(it.toString(), false) }
+fun Body.resetBodySenses() = BodySense.entries.forEach { putProperty(it, false) }

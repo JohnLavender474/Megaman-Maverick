@@ -6,47 +6,75 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.IGameShape2D
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamageable
+import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.points.PointsComponent
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.entities.contracts.IProjectileEntity
+import com.megaman.maverick.game.entities.contracts.IHealthEntity
+import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
+import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getEntity
+import kotlin.reflect.KClass
 
-class Needle(game: MegamanMaverickGame) : AbstractProjectile(game) {
+class Needle(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity, IDamageable {
 
     companion object {
         const val TAG = "Needle"
+        private const val DAMAGE_DURATION = 0.1f
+        private val damageNegotiations = objectMapOf<KClass<out IDamager>, Int>(
+            Bullet::class pairTo 15,
+            Fireball::class pairTo ConstVals.MAX_HEALTH,
+            ChargedShot::class pairTo ConstVals.MAX_HEALTH,
+            ChargedShotExplosion::class pairTo ConstVals.MAX_HEALTH
+        )
         private var region: TextureRegion? = null
     }
 
+    override val invincible: Boolean
+        get() = !damageTimer.isFinished()
+
     lateinit var damagerFixture: Fixture
+
+    private val damageTimer = Timer(DAMAGE_DURATION)
+    private var blink = false
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
         super.init()
+        addComponent(defineUpdatablesComponent())
+        addComponent(definePointsComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
+        setHealth(ConstVals.MAX_HEALTH)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         val bodyPosition =
@@ -61,19 +89,54 @@ class Needle(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
         val damagerActive = spawnProps.getOrDefault("${ConstKeys.DAMAGER}_${ConstKeys.ACTIVE}", true, Boolean::class)
         damagerFixture.active = damagerActive
+
+        damageTimer.setToEnd()
+        blink = false
     }
 
-    override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
-        val entity = projectileFixture.getEntity() as IProjectileEntity
-        if (entity.owner != owner) explodeAndDie()
+    override fun onDestroy() {
+        super.onDestroy()
+        if (hasDepletedHealth()) explode()
     }
+
+    override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
 
-    override fun explodeAndDie(vararg params: Any?) {
-        destroy()
+    override fun canBeDamagedBy(damager: IDamager) =
+        !invincible && damageNegotiations.containsKey(damager::class)
+
+    override fun takeDamageFrom(damager: IDamager): Boolean {
+        val damagerKey = damager::class
+        if (!damageNegotiations.containsKey(damagerKey)) return false
+
+        damageTimer.reset()
+
+        val damage = damageNegotiations[damagerKey]
+        translateHealth(-damage)
+
+        if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
+
+        return true
+    }
+
+    fun explode() {
         val flash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.MUZZLE_FLASH)!!
         flash.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
+    }
+
+    override fun explodeAndDie(vararg params: Any?) {
+        explode()
+        destroy()
+    }
+
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta -> damageTimer.update(delta) })
+
+    private fun definePointsComponent(): PointsComponent {
+        val pointsComponent = PointsComponent()
+        pointsComponent.putPoints(ConstKeys.HEALTH, ConstVals.MAX_HEALTH)
+        pointsComponent.putListener(ConstKeys.HEALTH) { if (it.current <= 0) destroy() }
+        return pointsComponent
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -94,19 +157,23 @@ class Needle(game: MegamanMaverickGame) : AbstractProjectile(game) {
         damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.25f * ConstVals.PPM))
         body.addFixture(damagerFixture)
 
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameCircle().setRadius(0.25f * ConstVals.PPM))
+        body.addFixture(damageableFixture)
+
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(region!!)
+        val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.FOREGROUND, 1))
         sprite.setSize(0.75f * ConstVals.PPM)
-        sprite.setOriginCenter()
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setCenter(body.getCenter())
-            _sprite.rotation = body.physics.velocity.angleDeg() + 270f
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setCenter(body.getCenter())
+            sprite.setOriginCenter()
+            sprite.rotation = body.physics.velocity.angleDeg() + 270f
+            sprite.hidden = !damageTimer.isFinished()
         }
         return spritesComponent
     }

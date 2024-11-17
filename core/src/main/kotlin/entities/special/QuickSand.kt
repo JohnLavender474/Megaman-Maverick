@@ -23,7 +23,6 @@ import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
-import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
@@ -46,8 +45,6 @@ class QuickSand(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
         const val TAG = "QuickSand"
         private val regions = ObjectMap<String, TextureRegion>()
     }
-
-    override fun getEntityType() = EntityType.SPECIAL
 
     override fun init() {
         if (regions.isEmpty) {
@@ -91,14 +88,12 @@ class QuickSand(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
 
         cells.forEach { x, y, bounds ->
             val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
-            sprite.setSize(ConstVals.PPM.toFloat())
+            sprite.setSize(1.005f * ConstVals.PPM, ConstVals.PPM.toFloat())
 
             val key = "sand_${x}_${y}"
             sprites.put(key, sprite)
 
-            updateFunctions.put(key, UpdateFunction { _, _sprite ->
-                _sprite.setCenter(bounds!!.getCenter())
-            })
+            updateFunctions.put(key, UpdateFunction { _, _ -> sprite.setCenter(bounds!!.getCenter()) })
 
             var regionKey = if (x % 3 == 0) "Left" else if (x % 3 == 2) "Right" else "Center"
             if (y == cells.rows - 1) regionKey = "Top$regionKey"
@@ -112,4 +107,6 @@ class QuickSand(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
         addComponent(SpritesComponent(sprites, updateFunctions))
         addComponent(AnimationsComponent(animators))
     }
+
+    override fun getEntityType() = EntityType.SPECIAL
 }

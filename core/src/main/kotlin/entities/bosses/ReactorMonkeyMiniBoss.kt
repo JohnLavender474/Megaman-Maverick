@@ -227,11 +227,11 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) :
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
         sprite.setSize(7.5f * ConstVals.PPM, 8f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
-            _sprite.setFlip(isFacing(Facing.RIGHT), false)
-            _sprite.hidden = damageBlink || !ready
-            _sprite.setAlpha(if (defeated) 1f - defeatTimer.getRatio() else 1f)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            sprite.setFlip(isFacing(Facing.RIGHT), false)
+            sprite.hidden = damageBlink || !ready
+            sprite.setAlpha(if (defeated) 1f - defeatTimer.getRatio() else 1f)
         }
         return spritesComponent
     }

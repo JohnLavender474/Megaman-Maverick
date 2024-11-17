@@ -11,7 +11,6 @@ import com.mega.game.engine.animations.*
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
-import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
@@ -97,9 +96,8 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         private const val PUNCH_PERCENTAGE = 0.75f
         private const val PUNCH_Y_THRESHOLD = 1.5f
         private const val SHORT_PUNCH_WIDTH = 0.75f
-        private const val SHORT_PUNCH_X_THRESHOLD = 1.5f
         private const val LONG_PUNCH_X_THRESHOLD = 6f
-        private const val LONG_PUNCH_EXTRA_WIDTH = 1.25f
+        private const val LONG_PUNCH_EXTRA_WIDTH = 0.75f
 
         private const val BODY_WIDTH = 1.15f
         private const val BODY_HEIGHT = 1.5f
@@ -117,17 +115,17 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         private const val SPRITE_SIZE = 3f
         private const val SPRITE_Y_OFFSET = -0.25f
 
-        private const val NEEDLES = 9
         private const val NEEDLE_GRAV = -0.1f
         private const val NEEDLE_IMPULSE = 15f
         private const val NEEDLE_Y_OFFSET = 0.1f
+
         private val NEEDLE_ANGLES = gdxArrayOf(90f, 70f, 45f, 15f, 0f, 345f, 315f, 290f, 270f)
         private val NEEDLE_X_OFFSETS = gdxArrayOf(-0.2f, -0.15f, -0.1f, -0.05f, 0f, 0.05f, 0.1f, 0.15f, 0.2f)
 
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    private enum class DesertManState { INIT, STAND, JUMP, WALL_SLIDE, DANCE, PUNCH_LONG, PUNCH_SHORT, TORNADO }
+    private enum class DesertManState { INIT, STAND, JUMP, WALL_SLIDE, DANCE, PUNCH, TORNADO }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
         Bullet::class pairTo dmgNeg(1),
@@ -139,7 +137,8 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 2 else 1
-        })
+        }
+    )
     override lateinit var facing: Facing
 
     private val timers = OrderedMap<String, Timer>()
@@ -255,49 +254,36 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
                     if (timer.isFinished()) stateMachine.next()
                 }
 
-                DesertManState.PUNCH_SHORT -> {
-                    val timer = timers["punch"]
-                    timer.update(delta)
-                    if (timer.isFinished()) stateMachine.next()
-                }
-
-                DesertManState.PUNCH_LONG -> {
+                DesertManState.PUNCH -> {
                     updateArmExtensions()
 
                     val timer = timers["punch"]
                     timer.update(delta)
                     if (timer.isFinished()) {
-                        GameLogger.debug(TAG, "update(): PUNCH_LONG: timer finished")
+                        GameLogger.debug(TAG, "update(): PUNCH: timer finished")
 
-                        if (longPunchExtensionCount > ARM_EXTENSIONS_COUNT || !canExtendArm()) {
+                        if (longPunchExtensionCount > ARM_EXTENSIONS_COUNT) {
                             longPunchingForward = false
-                            GameLogger.debug(
-                                TAG, "update(): PUNCH_LONG: " +
-                                    "longPunchExtensionCount >= ARM_EXTENSIONS_COUNT || !canExtendArm(): " +
-                                    "longPunchingForward=$longPunchingForward"
-                            )
-                        }
-
-                        if (!longPunchingForward && longPunchExtensionCount <= 0) {
-                            stateMachine.next()
-                            GameLogger.debug(
-                                TAG, "update(): PUNCH_LONG: " +
-                                    "!longPunchingForward && longPunchExtensionCount < 0: set state machine to next"
-                            )
+                            GameLogger.debug(TAG, "update(): PUNCH: set longPunchingForward=false")
                         }
 
                         if (longPunchingForward) {
                             longPunchExtensionCount++
                             GameLogger.debug(
                                 TAG,
-                                "update(): PUNCH_LONG: increment longPunchExtensionCount=$longPunchExtensionCount"
+                                "update(): PUNCH: increment longPunchExtensionCount=$longPunchExtensionCount"
                             )
                         } else {
                             longPunchExtensionCount--
                             GameLogger.debug(
                                 TAG,
-                                "update(): PUNCH_LONG: decrement longPunchExtensionCount=$longPunchExtensionCount"
+                                "update(): PUNCH: decrement longPunchExtensionCount=$longPunchExtensionCount"
                             )
+
+                            if (longPunchExtensionCount <= 0) {
+                                GameLogger.debug(TAG, "update(): PUNCH: set state machine to next")
+                                stateMachine.next()
+                            }
                         }
 
                         timer.reset()
@@ -431,8 +417,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
                 if (isPunching()) {
                     val shape = t.rawShape as GameRectangle
                     shape.setWidth(
-                        if (currentState == DesertManState.PUNCH_SHORT || isTornadoPunching())
-                            SHORT_PUNCH_WIDTH * ConstVals.PPM
+                        if (isTornadoPunching()) SHORT_PUNCH_WIDTH * ConstVals.PPM
                         else (longPunchExtensionCount * SPRITE_SIZE * ConstVals.PPM) +
                             (LONG_PUNCH_EXTRA_WIDTH * ConstVals.PPM)
                     )
@@ -474,32 +459,32 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         val sprites = OrderedMap<String, GameSprite>()
         val updateFunctions = ObjectMap<String, UpdateFunction<GameSprite>>()
 
-        val mainSprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
+        val mainSprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
         mainSprite.setSize(SPRITE_SIZE * ConstVals.PPM)
         sprites.put("main", mainSprite)
-        updateFunctions.put("main") { _, _sprite ->
-            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
-            _sprite.translateY(SPRITE_Y_OFFSET * ConstVals.PPM)
+        updateFunctions.put("main") { _, sprite ->
+            sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            sprite.translateY(SPRITE_Y_OFFSET * ConstVals.PPM)
             val flipX =
                 if (currentState == DesertManState.WALL_SLIDE) body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)
                 else isFacing(Facing.RIGHT)
-            _sprite.setFlip(flipX, false)
-            _sprite.hidden = damageBlink || !ready
+            sprite.setFlip(flipX, false)
+            sprite.hidden = damageBlink || !ready
         }
 
-        for (i in 1..ARM_EXTENSIONS_COUNT) {
-            val armExtensionSprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
+        for (i in 1..ARM_EXTENSIONS_COUNT + 1) {
+            val armExtensionSprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, 10))
             armExtensionSprite.setSize(SPRITE_SIZE * ConstVals.PPM)
             sprites.put("arm_$i", armExtensionSprite)
 
-            updateFunctions.put("arm_$i") { _, _sprite ->
+            updateFunctions.put("arm_$i") { _, sprite ->
                 val position =
-                    (if (isFacing(Facing.LEFT)) leftArmExtensions[i - 1]
-                    else rightArmExtensions[i - 1]).getBottomCenterPoint()
-                _sprite.setPosition(position, Position.BOTTOM_CENTER)
-                _sprite.translateY(SPRITE_Y_OFFSET * ConstVals.PPM)
-                _sprite.setFlip(isFacing(Facing.RIGHT), false)
-                _sprite.hidden = defeated || currentState != DesertManState.PUNCH_LONG || longPunchExtensionCount < i
+                    (if (isFacing(Facing.LEFT)) leftArmExtensions[i - 1] else rightArmExtensions[i - 1])
+                        .getBottomCenterPoint()
+                sprite.setPosition(position, Position.BOTTOM_CENTER)
+                sprite.translateY(SPRITE_Y_OFFSET * ConstVals.PPM)
+                sprite.setFlip(isFacing(Facing.RIGHT), false)
+                sprite.hidden = defeated || currentState != DesertManState.PUNCH || longPunchExtensionCount < i
             }
         }
 
@@ -533,14 +518,13 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
             "tornado" pairTo Animation(regions["tornado"], 2, 1, 0.1f, true),
             "tornado_punch" pairTo Animation(regions["tornado_punch"], 2, 2, 0.05f, true),
             "tornado_start" pairTo Animation(regions["tornado_start"], 2, 1, 0.1f, false),
-            "punch_short" pairTo Animation(regions["punch_short"], 2, 1, 0.05f, true),
-            "punch_long" pairTo Animation(regions["punch_long"], 3, 1, 0.05f, false),
+            "punch" pairTo Animation(regions["punch"], 3, 1, 0.05f, false),
             "defeated" pairTo Animation(regions["defeated"], 3, 1, 0.1f, true)
         )
         val mainSpriteAnimator = Animator(mainSpriteKeySupplier, mainSpriteAnimations)
         animators.add({ mainSprite } pairTo mainSpriteAnimator)
 
-        for (i in 1..ARM_EXTENSIONS_COUNT) {
+        for (i in 1..ARM_EXTENSIONS_COUNT + 1) {
             val armSprite = sprites["arm_$i"]
             val armSpriteKeySupplier: () -> String? = {
                 if (i == longPunchExtensionCount) {
@@ -567,14 +551,8 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
             // INIT -> STAND
             .transition(DesertManState.INIT.name, DesertManState.STAND.name) { true }
             // STAND -> PUNCH, JUMP, TORNADO, DANCE
-            .transition(DesertManState.STAND.name, DesertManState.PUNCH_SHORT.name) {
-                previousAttackState != DesertManState.PUNCH_SHORT &&
-                    isMegamanInShortPunchXRange() &&
-                    isMegamanInPunchYRange() &&
-                    getRandom(0f, 1f) <= PUNCH_PERCENTAGE
-            }
-            .transition(DesertManState.STAND.name, DesertManState.PUNCH_LONG.name) {
-                previousAttackState != DesertManState.PUNCH_LONG &&
+            .transition(DesertManState.STAND.name, DesertManState.PUNCH.name) {
+                previousAttackState != DesertManState.PUNCH &&
                     isMegamanInLongPunchXRange() &&
                     isMegamanInPunchYRange() &&
                     getRandom(0f, 1f) <= PUNCH_PERCENTAGE
@@ -588,8 +566,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
             }
             .transition(DesertManState.STAND.name, DesertManState.JUMP.name) { true }
             // PUNCH -> STAND
-            .transition(DesertManState.PUNCH_SHORT.name, DesertManState.STAND.name) { true }
-            .transition(DesertManState.PUNCH_LONG.name, DesertManState.STAND.name) { true }
+            .transition(DesertManState.PUNCH.name, DesertManState.STAND.name) { true }
             // JUMP -> WALL_SLIDE, STAND
             .transition(DesertManState.JUMP.name, DesertManState.STAND.name) { shouldGoToStandState() }
             .transition(DesertManState.JUMP.name, DesertManState.WALL_SLIDE.name) { isWallSliding() }
@@ -666,17 +643,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
                 )
             }
 
-            DesertManState.PUNCH_SHORT -> {
-                updateFacing()
-                timers["punch"].reset()
-                GameLogger.debug(
-                    TAG, "onChangeState(): setting up PUNCH_SHORT state: " +
-                        "update facing=$facing, " +
-                        "punch timer reset"
-                )
-            }
-
-            DesertManState.PUNCH_LONG -> {
+            DesertManState.PUNCH -> {
                 updateFacing()
                 updateArmExtensions()
                 timers["punch"].reset()
@@ -684,7 +651,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
                 longPunchingForward = true
                 GameLogger.debug(
                     TAG,
-                    "onChangeState(): setting up PUNCH_LONG state: " +
+                    "onChangeState(): setting up PUNCH state: " +
                         "update facing=$facing, " +
                         "updated arm extensions " +
                         "punch timer reset, " +
@@ -727,7 +694,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
     }
 
     private fun spawnNeedles() {
-        for (i in 0 until NEEDLES) {
+        for (i in 0 until NEEDLE_ANGLES.size) {
             val angle = NEEDLE_ANGLES[i]
             val xOffset = NEEDLE_X_OFFSETS[i]
             val position = body.getCenter().add(xOffset * ConstVals.PPM, NEEDLE_Y_OFFSET * ConstVals.PPM)
@@ -778,16 +745,12 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
 
     private fun shouldGoToStandState() = body.physics.velocity.y <= 0f && body.isSensing(BodySense.FEET_ON_SAND)
 
-    private fun isMegamanInShortPunchXRange() =
-        abs(getMegaman().body.x - body.x) <= SHORT_PUNCH_X_THRESHOLD * ConstVals.PPM
-
     private fun isMegamanInLongPunchXRange() =
         abs(getMegaman().body.x - body.x) <= LONG_PUNCH_X_THRESHOLD * ConstVals.PPM
 
     private fun isMegamanInPunchYRange() = abs(getMegaman().body.y - body.y) <= PUNCH_Y_THRESHOLD * ConstVals.PPM
 
-    private fun isPunching() =
-        currentState.equalsAny(DesertManState.PUNCH_SHORT, DesertManState.PUNCH_LONG) || isTornadoPunching()
+    private fun isPunching() = currentState == DesertManState.PUNCH || isTornadoPunching()
 
     private fun isMegamanInTornadoYRange() =
         abs(getMegaman().body.y - body.y) <= TORNADO_Y_THRESHOLD * ConstVals.PPM
@@ -811,45 +774,20 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         timers.put("dance_needles", Timer(DANCE_SPAWN_NEEDLES_DELAY))
     }
 
-    private fun buildArmExtensions() = (0 until ARM_EXTENSIONS_COUNT).forEach { i ->
+    private fun buildArmExtensions() = (0..ARM_EXTENSIONS_COUNT).forEach { i ->
         leftArmExtensions.add(GameRectangle().setSize(SPRITE_SIZE))
         rightArmExtensions.add(GameRectangle().setSize(SPRITE_SIZE))
     }
 
     private fun updateArmExtensions() {
-        for (i in 1..ARM_EXTENSIONS_COUNT) {
+        for (i in 1..ARM_EXTENSIONS_COUNT + 1) {
             val xOffset = i * SPRITE_SIZE * ConstVals.PPM
 
-            val leftCenter = body.getBottomLeftPoint().sub(xOffset, 0f)
-            leftArmExtensions[i - 1].setBottomLeftToPoint(leftCenter)
+            val leftPos = body.getBottomLeftPoint().sub(xOffset, 0f)
+            leftArmExtensions[i - 1].setBottomLeftToPoint(leftPos)
 
-            val rightCenter = body.getBottomRightPoint().add(xOffset, 0f)
-            rightArmExtensions[i - 1].setBottomRightToPoint(rightCenter)
+            val rightPos = body.getBottomRightPoint().add(xOffset, 0f)
+            rightArmExtensions[i - 1].setBottomRightToPoint(rightPos)
         }
-    }
-
-    private fun canExtendArm(): Boolean {
-        if (longPunchExtensionCount >= ARM_EXTENSIONS_COUNT || longPunchExtensionCount < 0) {
-            GameLogger.debug(
-                TAG, "canExtendArm(): " +
-                    "return false because index >= ARM_EXTENSIONS_COUNT: " +
-                    "longPunchExtensionCount=$longPunchExtensionCount"
-            )
-            return false
-        }
-
-        val wall: GameRectangle
-        val pointToCheck: Vector2
-        if (isFacing(Facing.LEFT)) {
-            wall = leftWallBounds
-            pointToCheck = leftArmExtensions[longPunchExtensionCount].getCenterRightPoint()
-        } else {
-            wall = rightWallBounds
-            pointToCheck = rightArmExtensions[longPunchExtensionCount].getCenterLeftPoint()
-        }
-
-        val canExtendArm = !wall.contains(pointToCheck)
-        GameLogger.debug(TAG, "canExtendArm(): canExtendArm=$canExtendArm, pointToCheck=$pointToCheck, wall=$wall")
-        return canExtendArm
     }
 }

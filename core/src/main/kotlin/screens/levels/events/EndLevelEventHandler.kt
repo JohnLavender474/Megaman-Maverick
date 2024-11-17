@@ -6,6 +6,7 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.interfaces.Initializable
+import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.IDrawable
@@ -19,7 +20,8 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.events.EventType
 
-class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializable, Updatable, IDrawable<Batch> {
+class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializable, Updatable, IDrawable<Batch>,
+    Resettable {
 
     companion object {
         const val TAG = "PlayerSpawnEventHandler"
@@ -32,10 +34,10 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
 
     val finished: Boolean
         get() = startDelayTimer.isFinished() &&
-                preBeamTimer.isFinished() &&
-                beamUpTimer.isFinished() &&
-                beamTransitionTimer.isFinished() &&
-                beamEndTimer.isFinished()
+            preBeamTimer.isFinished() &&
+            beamUpTimer.isFinished() &&
+            beamTransitionTimer.isFinished() &&
+            beamEndTimer.isFinished()
 
     private val megaman = game.megaman
 
@@ -88,21 +90,37 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
     }
 
     override fun update(delta: Float) {
-        if (!startDelayTimer.isFinished()) {
-            startDelayTimer.update(delta)
-            if (startDelayTimer.isJustFinished()) {
-                GameLogger.debug(TAG, "Start delay timer just finished")
-                preBeamTimer.reset()
-                game.audioMan.playSound(SoundAsset.MM2_VICTORY_SOUND, false)
+        when {
+            !startDelayTimer.isFinished() -> {
+                startDelayTimer.update(delta)
+                if (startDelayTimer.isJustFinished()) {
+                    GameLogger.debug(TAG, "Start delay timer just finished")
+                    preBeamTimer.reset()
+                    game.audioMan.playSound(SoundAsset.MM2_VICTORY_SOUND, false)
+                }
             }
-        } else if (!preBeamTimer.isFinished()) preBeam(delta)
-        else if (!beamTransitionTimer.isFinished()) {
-            beamSprite.hidden = false
-            beamTrans(delta)
-        } else if (!beamUpTimer.isFinished()) {
-            beamSprite.setRegion(beamRegion)
-            beamUp(delta)
-        } else if (!beamEndTimer.isFinished()) beamEnd(delta)
+
+            !preBeamTimer.isFinished() -> preBeam(delta)
+            !beamTransitionTimer.isFinished() -> {
+                beamSprite.hidden = false
+                beamTrans(delta)
+            }
+
+            !beamUpTimer.isFinished() -> {
+                beamSprite.setRegion(beamRegion)
+                beamUp(delta)
+            }
+
+            !beamEndTimer.isFinished() -> beamEnd(delta)
+        }
+    }
+
+    override fun reset() {
+        startDelayTimer.setToEnd()
+        preBeamTimer.setToEnd()
+        beamUpTimer.setToEnd()
+        beamTransitionTimer.setToEnd()
+        beamEndTimer.setToEnd()
     }
 
     private fun preBeam(delta: Float) {
