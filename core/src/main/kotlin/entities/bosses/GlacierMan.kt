@@ -93,10 +93,10 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         private const val MAX_BRAKE_DUR = 0.75f
 
         private const val SNOWBALL_SIZE = 0.5f
-        private const val SNOWBALL_VEL_UP_X = 12f
+        private const val SNOWBALL_VEL_UP_X = 10f
         private const val SNOWBALL_VEL_UP_Y = 16f
         private const val SNOWBALL_VEL_STRAIGHT_X = 16f
-        private const val SNOWBALL_VEL_STRAIGHT_Y = 5f
+        private const val SNOWBALL_VEL_STRAIGHT_Y = 6f
 
         private val regions = ObjectMap<String, TextureRegion>()
     }
