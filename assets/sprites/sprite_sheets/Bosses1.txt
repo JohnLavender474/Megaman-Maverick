@@ -1,5 +1,5 @@
 Bosses1.png
-size: 1968, 1558
+size: 1840, 1558
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -19,14 +19,14 @@ Bospider/OpenEye
   index: -1
 Bospider/Still
   rotate: false
-  xy: 1824, 48
+  xy: 0, 112
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 GlacierMan/brake
   rotate: false
-  xy: 1904, 112
+  xy: 1744, 112
   size: 64, 144
   orig: 64, 144
   offset: 0, 0
@@ -75,42 +75,42 @@ GlacierMan/duck_shoot_up
   index: -1
 GlacierMan/fall
   rotate: false
-  xy: 1200, 416
+  xy: 1064, 416
   size: 128, 192
   orig: 128, 192
   offset: 0, 0
   index: -1
 GlacierMan/fall_shoot_up
   rotate: false
-  xy: 1328, 416
+  xy: 1192, 416
   size: 128, 192
   orig: 128, 192
   offset: 0, 0
   index: -1
 GlacierMan/ice_blast_attack
   rotate: false
-  xy: 320, 112
+  xy: 160, 112
   size: 64, 96
   orig: 64, 96
   offset: 0, 0
   index: -1
 GlacierMan/jump
   rotate: false
-  xy: 1456, 416
+  xy: 1320, 416
   size: 128, 192
   orig: 128, 192
   offset: 0, 0
   index: -1
 GlacierMan/sled
   rotate: false
-  xy: 384, 112
+  xy: 224, 112
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 GlacierMan/sled_shoot
   rotate: false
-  xy: 512, 112
+  xy: 352, 112
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
@@ -152,14 +152,14 @@ GutsTank/Fist
   index: -1
 GutsTank/FistLaunched
   rotate: false
-  xy: 640, 112
+  xy: 480, 112
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 GutsTank/Laughing
   rotate: false
-  xy: 1584, 416
+  xy: 1448, 416
   size: 384, 192
   orig: 384, 192
   offset: 0, 0
@@ -208,7 +208,7 @@ MoonHeadMiniBoss/Angry
   index: -1
 MoonHeadMiniBoss/Awaken
   rotate: false
-  xy: 1840, 112
+  xy: 1680, 112
   size: 64, 135
   orig: 64, 135
   offset: 0, 0
@@ -222,7 +222,7 @@ MoonHeadMiniBoss/Crumble
   index: -1
 MoonHeadMiniBoss/Damaged
   rotate: false
-  xy: 0, 112
+  xy: 128, 112
   size: 32, 81
   orig: 32, 81
   offset: 0, 0
@@ -239,41 +239,6 @@ MoonHeadMiniBoss/Shoot
   xy: 304, 0
   size: 32, 27
   orig: 32, 27
-  offset: 0, 0
-  index: -1
-MoonMan_v2/jump
-  rotate: false
-  xy: 32, 112
-  size: 96, 90
-  orig: 96, 90
-  offset: 0, 0
-  index: -1
-MoonMan_v2/jump_shoot
-  rotate: false
-  xy: 128, 112
-  size: 96, 90
-  orig: 96, 90
-  offset: 0, 0
-  index: -1
-MoonMan_v2/stand
-  rotate: false
-  xy: 912, 416
-  size: 96, 180
-  orig: 96, 180
-  offset: 0, 0
-  index: -1
-MoonMan_v2/stand_shoot
-  rotate: false
-  xy: 224, 112
-  size: 96, 90
-  orig: 96, 90
-  offset: 0, 0
-  index: -1
-MoonMan_v2/throw
-  rotate: false
-  xy: 1008, 416
-  size: 192, 180
-  orig: 192, 180
   offset: 0, 0
   index: -1
 PreciousMan/Jump
@@ -334,7 +299,7 @@ ReactMan/Jump
   index: -1
 ReactMan/Run
   rotate: false
-  xy: 688, 112
+  xy: 528, 112
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
@@ -362,7 +327,7 @@ ReactorMonkeyMiniBoss/Jump
   index: -1
 ReactorMonkeyMiniBoss/Nuclear_Monkey_Ball
   rotate: false
-  xy: 1888, 48
+  xy: 64, 112
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -376,21 +341,21 @@ ReactorMonkeyMiniBoss/Stand
   index: -1
 ReactorMonkeyMiniBoss/StandDamaged
   rotate: false
-  xy: 1776, 256
+  xy: 0, 416
   size: 152, 160
   orig: 152, 160
   offset: 0, 0
   index: -1
 ReactorMonkeyMiniBoss/Throw
   rotate: false
-  xy: 0, 416
+  xy: 152, 416
   size: 456, 160
   orig: 456, 160
   offset: 0, 0
   index: -1
 ReactorMonkeyMiniBoss/ThrowDamaged
   rotate: false
-  xy: 456, 416
+  xy: 608, 416
   size: 456, 160
   orig: 456, 160
   offset: 0, 0
@@ -558,7 +523,7 @@ SphinxMiniBoss/wait
   index: -1
 TimberWoman/damaged
   rotate: false
-  xy: 784, 112
+  xy: 624, 112
   size: 192, 96
   orig: 192, 96
   offset: 0, 0
@@ -586,7 +551,7 @@ TimberWoman/just_land
   index: -1
 TimberWoman/on_fire
   rotate: false
-  xy: 976, 112
+  xy: 816, 112
   size: 192, 96
   orig: 192, 96
   offset: 0, 0
@@ -600,7 +565,7 @@ TimberWoman/stand
   index: -1
 TimberWoman/stand_swing
   rotate: false
-  xy: 1168, 112
+  xy: 1008, 112
   size: 672, 96
   orig: 672, 96
   offset: 0, 0

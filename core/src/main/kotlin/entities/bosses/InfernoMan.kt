@@ -140,7 +140,6 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     private lateinit var stateMachine: StateMachine<InfernoManState>
     private val currentState: InfernoManState
         get() = stateMachine.getCurrent()
-    private var previousState: InfernoManState? = null
 
     private var stateIndex = 0
 
@@ -182,7 +181,6 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         updateFacing()
 
         stateMachine.reset()
-        previousState = null
         stateIndex = 0
 
         shootMethod = ShootMethod.STRAIGHT
@@ -332,9 +330,10 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
-            val flipX =
-                if (currentState == InfernoManState.WALL_SLIDE) body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)
-                else isFacing(Facing.LEFT)
+            val flipX = when (currentState) {
+                InfernoManState.WALL_SLIDE -> body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)
+                else -> isFacing(Facing.LEFT)
+            }
             sprite.setFlip(flipX, false)
             sprite.hidden = damageBlink || !ready
         }

@@ -48,9 +48,7 @@ import kotlin.reflect.KClass
 
 class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
 
-    enum class EyeeState {
-        MOVING_TO_END, WAITING_AT_END, MOVING_TO_START, WAITING_AT_START
-    }
+    enum class EyeeState { MOVING_TO_END, WAITING_AT_END, MOVING_TO_START, WAITING_AT_START }
 
     companion object {
         const val TAG = "Eyee"
@@ -88,8 +86,8 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
         super.init()
         if (openRegion == null || blinkRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-            openRegion = atlas.findRegion("Eyee/Open")
-            blinkRegion = atlas.findRegion("Eyee/Blink")
+            openRegion = atlas.findRegion("$TAG/Open")
+            blinkRegion = atlas.findRegion("$TAG/Blink")
         }
         addComponent(defineAnimationsComponent())
     }
@@ -176,11 +174,11 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
         val sprite = GameSprite()
         sprite.setSize(0.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setOriginCenter()
-            _sprite.rotation = getMegaman().directionRotation!!.rotation
-            _sprite.setCenter(body.getCenter())
-            _sprite.hidden = damageBlink
+        spritesComponent.putUpdateFunction { _, _->
+            sprite.setOriginCenter()
+            sprite.rotation = getMegaman().directionRotation!!.rotation
+            sprite.setCenter(body.getCenter())
+            sprite.hidden = damageBlink
         }
         return spritesComponent
     }

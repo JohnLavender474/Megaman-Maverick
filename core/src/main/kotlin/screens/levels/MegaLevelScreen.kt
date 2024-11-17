@@ -266,30 +266,23 @@ class MegaLevelScreen(
         EntityFactories.init()
         if (!initialized) init()
         super.show()
+
         eventsMan.addListener(this)
         engine.systems.forEach { it.on = true }
-        game.setCurrentRoomSupplier { cameraManagerForRooms.currentGameRoom?.name }
         music?.let { audioMan.playMusic(it, true) }
+
+        game.setCurrentRoomSupplier { cameraManagerForRooms.currentGameRoom?.name }
+
         if (tiledMapLoadResult == null) throw IllegalStateException("No tiled map load result found in level screen")
         game.setTiledMapLoadResult(tiledMapLoadResult!!)
-        val (map, _, worldWidth, worldHeight) = tiledMapLoadResult!!
 
         val worldContainer = SimpleGridWorldContainer(ConstVals.PPM)
-        // TODO: fix Quadtree impl (not working currently)
-        /*
-        QuadtreeWorldContainer(
-            ConstVals.PPM,
-            0,
-            0,
-            worldWidth,
-            worldHeight,
-            10,
-            10
-        )
-        */
         game.setWorldContainer(worldContainer)
 
         playerSpawnEventHandler.init()
+        playerDeathEventHandler.reset()
+        bossSpawnEventHandler.reset()
+        endLevelEventHandler.reset()
 
         camerasSetToGameCamera = false
         gameCameraPriorPosition.setZero()
@@ -549,7 +542,6 @@ class MegaLevelScreen(
 
             EventType.SET_GAME_CAM_ROTATION -> {
                 game.setCameraRotating(true)
-                // MegaGameEntitiesMap.getEntitiesOfType(EntityType.PROJECTILE).forEach { it.destroy() }
                 val direction = event.getProperty(ConstKeys.DIRECTION, Direction::class)!!
                 backgrounds.forEach { background ->
                     background.startRotation(
@@ -598,13 +590,12 @@ class MegaLevelScreen(
             gameCamera.update(delta)
 
             if (!gameCameraShaker.isFinished) gameCameraShaker.update(delta)
-
             if (!bossSpawnEventHandler.finished) bossSpawnEventHandler.update(delta)
-
-            if (!playerSpawnEventHandler.finished) playerSpawnEventHandler.update(delta)
-            else if (!playerDeathEventHandler.finished) playerDeathEventHandler.update(delta)
-            else if (!endLevelEventHandler.finished) endLevelEventHandler.update(delta)
-
+            when {
+                !playerSpawnEventHandler.finished -> playerSpawnEventHandler.update(delta)
+                !playerDeathEventHandler.finished -> playerDeathEventHandler.update(delta)
+                !endLevelEventHandler.finished -> endLevelEventHandler.update(delta)
+            }
             playerStatsHandler.update(delta)
         }
 
@@ -680,24 +671,37 @@ class MegaLevelScreen(
 
     override fun reset() {
         GameLogger.debug(TAG, "reset(): Resetting level screen")
+
+        eventsMan.removeListener(this)
+
         EntityFactories.clear()
         engine.reset()
-        eventsMan.removeListener(this)
+
         spawns.clear()
         spawnsMan.reset()
         playerSpawnsMan.reset()
+
+        playerSpawnEventHandler.reset()
         playerDeathEventHandler.reset()
-        cameraManagerForRooms.reset()
+        bossSpawnEventHandler.reset()
+        endLevelEventHandler.reset()
+
         backgrounds.forEach { background -> background.reset() }
+
+        cameraManagerForRooms.reset()
         gameCamera.reset()
+
         audioMan.unsetMusic()
+
         game.putProperty(ConstKeys.ROOM_TRANSITION, false)
+
         game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
     }
 
     override fun dispose() {
         GameLogger.debug(TAG, "dispose(): Disposing level screen")
         super.dispose()
+
         disposables.forEach { it.dispose() }
         disposables.clear()
     }

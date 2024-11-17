@@ -450,53 +450,6 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses1/MoonMan_v2/jump.png</key>
-            <key type="filename">../frames/Bosses1/MoonMan_v2/jump_shoot.png</key>
-            <key type="filename">../frames/Bosses1/MoonMan_v2/stand_shoot.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>24,23,48,45</rect>
-                <key>scale9Paddings</key>
-                <rect>24,23,48,45</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Bosses1/MoonMan_v2/stand.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>24,45,48,90</rect>
-                <key>scale9Paddings</key>
-                <rect>24,45,48,90</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Bosses1/MoonMan_v2/throw.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>48,45,96,90</rect>
-                <key>scale9Paddings</key>
-                <rect>48,45,96,90</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
             <key type="filename">../frames/Bosses1/PreciousMan/Jump.png</key>
             <key type="filename">../frames/Bosses1/PreciousMan/Stand.png</key>
             <key type="filename">../frames/Bosses1/RodentMan/Slash.png</key>

@@ -48,9 +48,7 @@ fun performStandardShieldReflection(projectileFixture: IFixture, shieldFixture: 
 fun getStandardEventCullingLogic(
     entity: ICullableEntity,
     cullEvents: ObjectSet<Any> = objectSetOf(
-        EventType.BEGIN_ROOM_TRANS,
-        EventType.GATE_INIT_OPENING,
-        EventType.PLAYER_SPAWN
+        EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING, EventType.PLAYER_SPAWN
     )
 ): CullableOnEvent {
     if (entity !is MegaGameEntity) throw IllegalArgumentException("Must be a MegaGameEntity: $entity")

@@ -49,7 +49,11 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable {
         const val BLUE = "Blue"
         const val MIN_ROTATION_SPEED = 0.5f
         const val MAX_ROTATION_SPEED = 1.5f
-        private val HIT_PROJS = objectSetOf<KClass<out IProjectileEntity>>(Asteroid::class, ExplodingBall::class)
+        private val HIT_PROJS = objectSetOf<KClass<out IProjectileEntity>>(
+            Asteroid::class,
+            ExplodingBall::class,
+            RocketBomb::class
+        )
         private val regions = ObjectMap<String, TextureRegion>()
     }
 

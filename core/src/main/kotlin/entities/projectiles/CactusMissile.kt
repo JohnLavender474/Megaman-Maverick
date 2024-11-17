@@ -110,8 +110,8 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
     override fun explodeAndDie(vararg params: Any?) {
-        destroy()
         explode()
+        destroy()
     }
 
     private fun explode() {
@@ -136,7 +136,9 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
 
         val damage = damageNegotiations[damagerKey]
         translateHealth(-damage)
+
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
+
         return true
     }
 
@@ -199,9 +201,7 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
     private fun definePointsComponent(): PointsComponent {
         val pointsComponent = PointsComponent()
         pointsComponent.putPoints(ConstKeys.HEALTH, ConstVals.MAX_HEALTH)
-        pointsComponent.putListener(ConstKeys.HEALTH) {
-            if (it.current <= 0) destroy()
-        }
+        pointsComponent.putListener(ConstKeys.HEALTH) { if (it.current <= 0) destroy() }
         return pointsComponent
     }
 
@@ -209,11 +209,11 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setOriginCenter()
-            _sprite.rotation = body.physics.velocity.angleDeg() - 90f
-            _sprite.setCenter(body.getCenter())
-            _sprite.hidden = !damageTimer.isFinished()
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setOriginCenter()
+            sprite.rotation = body.physics.velocity.angleDeg() - 90f
+            sprite.setCenter(body.getCenter())
+            sprite.hidden = !damageTimer.isFinished()
         }
         return spritesComponent
     }
