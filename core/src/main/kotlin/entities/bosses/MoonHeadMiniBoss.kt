@@ -176,7 +176,7 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, dmgDurati
 
     private fun shoot() {
         val spawn = body.getCenter().add(0f, ASTEROID_OFFSET_Y * ConstVals.PPM)
-        val impulse = getMegaman().body.getCenter().sub(spawn).nor().scl(SHOOT_SPEED * ConstVals.PPM)
+        val impulse = megaman().body.getCenter().sub(spawn).nor().scl(SHOOT_SPEED * ConstVals.PPM)
         val asteroid = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.ASTEROID)!!
         asteroid.spawn(
             props(
@@ -190,12 +190,12 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, dmgDurati
     }
 
     private fun calculateBestArcMotion(): ArcMotion {
-        val left = body.x < getMegaman().body.x
+        val left = body.x < megaman().body.x
         val position = when {
-            body.y < getMegaman().body.y -> if (left) Position.BOTTOM_LEFT else Position.BOTTOM_RIGHT
+            body.y < megaman().body.y -> if (left) Position.BOTTOM_LEFT else Position.BOTTOM_RIGHT
             else -> if (left) Position.TOP_LEFT else Position.TOP_RIGHT
         }
-        val target = getMegaman().body.getPositionPoint(position)
+        val target = megaman().body.getPositionPoint(position)
         val arcMotion1 = ArcMotion(
             startPosition = body.getCenter(),
             targetPosition = target,

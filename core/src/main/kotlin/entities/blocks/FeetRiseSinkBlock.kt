@@ -34,7 +34,7 @@ class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {
     override fun defineBodyComponent(): BodyComponent {
         val bodyComponent = super.defineBodyComponent()
         bodyComponent.body.preProcess.put(ConstKeys.MOVE) {
-            if (getMegaman().feetFixture.getShape().overlaps(body)) {
+            if (megaman().feetFixture.getShape().overlaps(body)) {
                 if (body.y > minY) body.physics.velocity.y = fallingSpeed * ConstVals.PPM
                 else body.physics.velocity.y = 0f
             } else if (body.getMaxY() < maxY) body.physics.velocity.y = risingSpeed * ConstVals.PPM

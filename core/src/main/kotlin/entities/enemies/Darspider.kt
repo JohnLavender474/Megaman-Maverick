@@ -111,8 +111,8 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                 spawnProps.getOrDefault(ConstKeys.DIRECTION, if (onCeiling) "down" else "up", String::class).uppercase()
             )
         facing = when (directionRotation) {
-            Direction.DOWN -> if (getMegaman().body.x < body.x) Facing.RIGHT else Facing.LEFT
-            else -> if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+            Direction.DOWN -> if (megaman().body.x < body.x) Facing.RIGHT else Facing.LEFT
+            else -> if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
         }
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
@@ -170,11 +170,11 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             }
 
             if (onCeiling) {
-                if (getMegaman().body.getMaxX() > body.x && getMegaman().body.x < body.getMaxX()) drop()
+                if (megaman().body.getMaxX() > body.x && megaman().body.x < body.getMaxX()) drop()
             } else if (body.isSensing(BodySense.FEET_ON_GROUND) &&
-                getMegaman().body.getMaxX() >= body.x &&
-                getMegaman().body.x <= body.getMaxX() &&
-                getMegaman().body.y >= body.getMaxY()
+                megaman().body.getMaxX() >= body.x &&
+                megaman().body.x <= body.getMaxX() &&
+                megaman().body.y >= body.getMaxY()
             ) jump()
         }
     }
@@ -203,7 +203,7 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyCenter.y = -0.375f * ConstVals.PPM
         feetFixture.setHitByBlockReceiver {
-            facing = if (getMegaman().body.x < body.x) Facing.RIGHT else Facing.LEFT
+            facing = if (megaman().body.x < body.x) Facing.RIGHT else Facing.LEFT
             if (directionRotation == Direction.UP) swapFacing()
         }
         body.addFixture(feetFixture)

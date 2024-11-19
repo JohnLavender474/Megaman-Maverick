@@ -125,7 +125,7 @@ class TotemPolem(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         loop.reset()
         timers.values().forEach { it.reset() }
         shootPositionIndex = 0
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
     }
 
     override fun onDestroy() {
@@ -158,7 +158,7 @@ class TotemPolem(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+            facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
 
             val timer = timers.get(loop.getCurrent())
             timer.update(delta)

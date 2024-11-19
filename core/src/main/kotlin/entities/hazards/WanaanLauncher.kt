@@ -83,7 +83,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
             wanaan = null
         }
         if (wanaan?.dead == true) wanaan = null
-        if (wanaan == null && sensors.any { it.overlaps(getMegaman().body as Rectangle) }) {
+        if (wanaan == null && sensors.any { it.overlaps(megaman().body as Rectangle) }) {
             timer.update(delta)
             if (timer.isFinished()) {
                 launchWanaan()

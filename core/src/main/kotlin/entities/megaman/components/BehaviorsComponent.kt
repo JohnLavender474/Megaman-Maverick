@@ -275,6 +275,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
     val groundSlide = object : AbstractBehaviorImpl() {
 
         private var directionOnInit: Direction? = null
+        private var timesBlocked = 0
 
         override fun evaluate(delta: Float): Boolean {
             if (dead || !ready || !canMove || game.isCameraRotating() || !has(MegaAbility.GROUND_SLIDE) ||
@@ -284,9 +285,9 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             if (isBehaviorActive(BehaviorType.GROUND_SLIDING) && body.isSensing(BodySense.HEAD_TOUCHING_BLOCK))
                 return true
 
-            if (damaged || groundSlideTimer.isFinished() || isAnyBehaviorActive(
-                    BehaviorType.RIDING_CART, BehaviorType.JETPACKING
-                ) || !body.isSensing(BodySense.FEET_ON_GROUND) ||
+            if (damaged || groundSlideTimer.isFinished() ||
+                isAnyBehaviorActive(BehaviorType.RIDING_CART, BehaviorType.JETPACKING) ||
+                !body.isSensing(BodySense.FEET_ON_GROUND) ||
                 !game.controllerPoller.isPressed(MegaControllerButton.DOWN)
             ) return false
 
@@ -296,8 +297,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         }
 
         override fun init() {
-            // In body pre-process, body height is reduced from .95f to .45f when ground sliding;
-            // when upside down, need to compensate, otherwise Megaman will be off the ground
             when (directionRotation) {
                 Direction.UP -> {}
                 Direction.DOWN -> body.y += ConstVals.PPM / 2f
@@ -305,7 +304,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 Direction.RIGHT -> body.x -= ConstVals.PPM / 2f
             }
 
-            GameLogger.debug(MEGAMAN_GROUND_SLIDE_BEHAVIOR_TAG, "Init method called")
+            GameLogger.debug(MEGAMAN_GROUND_SLIDE_BEHAVIOR_TAG, "init()")
 
             directionOnInit = directionRotation
         }
@@ -313,12 +312,24 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         override fun act(delta: Float) {
             groundSlideTimer.update(delta)
 
-            if (damaged || isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) ||
-                isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)
-            ) return
+            val facingBlockLeft = (isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT))
+            val facingBlockRight = (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
+            if (damaged /* || facingBlockLeft || facingBlockRight */) {
+                GameLogger.debug(
+                    MEGAMAN_GROUND_SLIDE_BEHAVIOR_TAG, "blocked from act: " +
+                        "timesBlocked=$timesBlocked, " +
+                        "damaged=$damaged, " +
+                        "facingBlockLeft=$facingBlockLeft, " +
+                        "facingBlockRight=$facingBlockRight"
+                )
+                timesBlocked++
+                return
+            }
 
-            val impulse = (if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_GROUND_SLIDE_VEL
-            else MegamanValues.GROUND_SLIDE_VEL) * ConstVals.PPM * movementScalar * facing.value
+            val impulse = (when {
+                body.isSensing(BodySense.IN_WATER) -> MegamanValues.WATER_GROUND_SLIDE_VEL
+                else -> MegamanValues.GROUND_SLIDE_VEL
+            }) * ConstVals.PPM * movementScalar * facing.value
 
             when (directionRotation) {
                 Direction.UP, Direction.DOWN -> body.physics.velocity.x = impulse
@@ -329,23 +340,18 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         override fun end() {
             groundSlideTimer.reset()
 
+            /*
             if (!game.isCameraRotating()) {
-                val endDash = (if (body.isSensing(BodySense.IN_WATER)) 2f else 5f) * ConstVals.PPM * facing.value
-
-                if (directionOnInit == directionRotation) when (directionRotation) {
-                    Direction.UP, Direction.DOWN -> body.physics.velocity.x += endDash
-                    Direction.LEFT, Direction.RIGHT -> body.physics.velocity.y += endDash
-                } else {
-                    body.physics.velocity.setZero()
-                    when (directionOnInit) {
-                        Direction.UP, Direction.DOWN -> body.physics.velocity.x = endDash
-                        Direction.LEFT, Direction.RIGHT -> body.physics.velocity.y = endDash
-                        null -> throw IllegalStateException("Direction on init cannot be null")
-                    }
+                val endDash =
+                    (if (body.isSensing(BodySense.IN_WATER)) 2f else 5f) * ConstVals.PPM * facing.value * movementScalar
+                when (directionRotation) {
+                    Direction.UP, Direction.DOWN -> body.physics.velocity.x = endDash
+                    Direction.LEFT, Direction.RIGHT -> body.physics.velocity.y = endDash
                 }
             }
+             */
 
-            GameLogger.debug(MEGAMAN_GROUND_SLIDE_BEHAVIOR_TAG, "End method called")
+            GameLogger.debug(MEGAMAN_GROUND_SLIDE_BEHAVIOR_TAG, "end()")
         }
     }
 

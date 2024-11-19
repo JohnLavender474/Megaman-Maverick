@@ -151,7 +151,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
                 block!!.body.y -= 0.4f * ConstVals.PPM
 
                 if (switchDelay.isFinished() &&
-                    block!!.body.overlaps(getMegaman().feetFixture.getShape())
+                    block!!.body.overlaps(megaman().feetFixture.getShape())
                 ) {
                     switchDelay.reset()
                     requestToPlaySound(SoundAsset.BLOOPITY_SOUND, false)
@@ -166,7 +166,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
                 block!!.body.y -= 0.3f * ConstVals.PPM
 
                 if (switchDelay.isFinished() &&
-                    block!!.body.overlaps(getMegaman().feetFixture.getShape())
+                    block!!.body.overlaps(megaman().feetFixture.getShape())
                 ) {
                     switchDelay.reset()
                     requestToPlaySound(SoundAsset.BLOOPITY_SOUND, false)

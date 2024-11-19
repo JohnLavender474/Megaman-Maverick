@@ -111,8 +111,8 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         body.setCenter(spawn)
 
         val targets = PriorityQueue { o1: Vector2, o2: Vector2 ->
-            val d1 = o1.dst2(getMegaman().body.getCenter())
-            val d2 = o2.dst2(getMegaman().body.getCenter())
+            val d1 = o1.dst2(megaman().body.getCenter())
+            val d2 = o2.dst2(megaman().body.getCenter())
             d1.compareTo(d2)
         }
         spawnProps.forEach { key, value ->
@@ -122,7 +122,7 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         liftTarget = targets.poll()
 
         applyMovementScalarToBullet = spawnProps.getOrDefault(ConstKeys.APPLY_SCALAR_TO_CHILDREN, false, Boolean::class)
-        directionRotation = getMegaman().directionRotation
+        directionRotation = megaman().directionRotation
 
         standTimer.reset()
         liftoffTimer.reset()
@@ -130,10 +130,10 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
 
         jetMetState = JetMetState.STAND
         facing = when (directionRotation) {
-            Direction.UP -> if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
-            Direction.DOWN -> if (getMegaman().body.x > body.x) Facing.LEFT else Facing.RIGHT
-            Direction.LEFT -> if (getMegaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
-            Direction.RIGHT -> if (getMegaman().body.y > body.y) Facing.LEFT else Facing.RIGHT
+            Direction.UP -> if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+            Direction.DOWN -> if (megaman().body.x > body.x) Facing.LEFT else Facing.RIGHT
+            Direction.LEFT -> if (megaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
+            Direction.RIGHT -> if (megaman().body.y > body.y) Facing.LEFT else Facing.RIGHT
         }
 
         targetReached = false
@@ -145,7 +145,7 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            directionRotation = getMegaman().directionRotation
+            directionRotation = megaman().directionRotation
 
             if (!canMove) {
                 body.physics.velocity.setZero()
@@ -164,11 +164,11 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
                 }
 
                 JetMetState.JET -> {
-                    facing = when (getMegaman().directionRotation) {
-                        Direction.UP -> if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
-                        Direction.DOWN -> if (getMegaman().body.x > body.x) Facing.LEFT else Facing.RIGHT
-                        Direction.LEFT -> if (getMegaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
-                        Direction.RIGHT -> if (getMegaman().body.y > body.y) Facing.LEFT else Facing.RIGHT
+                    facing = when (megaman().directionRotation) {
+                        Direction.UP -> if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+                        Direction.DOWN -> if (megaman().body.x > body.x) Facing.LEFT else Facing.RIGHT
+                        Direction.LEFT -> if (megaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
+                        Direction.RIGHT -> if (megaman().body.y > body.y) Facing.LEFT else Facing.RIGHT
                     }
 
                     if (!targetReached) {
@@ -190,7 +190,7 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
     private fun shoot() {
         val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
         val bulletTrajectory =
-            getMegaman().body.getCenter().sub(body.getCenter()).nor().scl(BULLET_SPEED * ConstVals.PPM)
+            megaman().body.getCenter().sub(body.getCenter()).nor().scl(BULLET_SPEED * ConstVals.PPM)
 
         val offset = ConstVals.PPM / 64f
         val spawn = body.getCenter().add(offset * facing.value, if (isDirectionRotatedDown()) -offset else offset)

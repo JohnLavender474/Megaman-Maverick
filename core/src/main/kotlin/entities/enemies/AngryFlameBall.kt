@@ -86,7 +86,7 @@ class AngryFlameBall(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+            facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
         }
     }
 

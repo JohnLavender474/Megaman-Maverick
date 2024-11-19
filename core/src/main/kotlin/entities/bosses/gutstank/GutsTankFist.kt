@@ -150,7 +150,7 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
     override fun onDamageInflictedTo(damageable: IDamageable) = (parent as GutsTank).laugh()
 
     internal fun launch() {
-        facing = if (getMegaman().body.x < body.getCenter().x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.x < body.getCenter().x) Facing.LEFT else Facing.RIGHT
         fistState = GutsTankFistState.LAUNCHED
         launchDelayTimer.reset()
     }

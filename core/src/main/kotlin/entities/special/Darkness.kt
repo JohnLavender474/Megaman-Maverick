@@ -243,12 +243,12 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
             MegaGameEntitiesMap.getEntitiesOfType(EntityType.PROJECTILE).forEach { t -> tryToLightUp(t) }
             MegaGameEntitiesMap.getEntitiesOfType(EntityType.EXPLOSION).forEach { t -> tryToLightUp(t) }
 
-            if (getMegaman().body.overlaps(bounds as Rectangle) && getMegaman().charging) {
+            if (megaman().body.overlaps(bounds as Rectangle) && megaman().charging) {
                 val lightEvent = LightEvent(
                     LightEventType.LIGHT_SOURCE,
                     LightEventDef(
                         true,
-                        getMegaman().body.getCenter(),
+                        megaman().body.getCenter(),
                         MEGAMAN_CHARGING_RADIUS,
                         MEGAMAN_CHARGING_RADIANCE
                     )

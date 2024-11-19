@@ -47,6 +47,7 @@ import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
@@ -76,9 +77,9 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         private const val BODY_WIDTH = 1.15f
         private const val BODY_HEIGHT = 1.5f
 
-        private const val JUMP_IMPULSE_Y = 8f
-        private const val JUMP_MAX_IMPULSE_X = 10f
-        private const val JUMP_MIN_HORIZONTAL_SCALAR = 0.5f
+        private const val JUMP_IMPULSE_Y = 6f
+        private const val JUMP_MAX_IMPULSE_X = 8f
+        private const val JUMP_MIN_HORIZONTAL_SCALAR = 0.75f
         private const val JUMP_MAX_HORIZONTAL_SCALAR = 1f
         private const val JUMP_HORIZONTAL_SCALAR_DENOMINATOR = 8
 
@@ -91,7 +92,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         private const val SPRITE_SIZE = 2.25f
 
         private const val INIT_DUR = 0.5f
-        private const val STAND_DUR = 0.75f
+        private const val STAND_DUR = 0.5f
         private const val SPAWN_ASTEROID_DELAY = 1f
         private const val THROW_ASTEROID_DELAY = 0.75f
         private const val ASTEROIDS_END_DUR = 1f
@@ -105,12 +106,16 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         private const val GRAVITY_CHANGE_CHANGE_DELTA = 0.1f
 
         private const val ASTEROIDS_TO_SPAWN = 4
-        private const val ASTEROID_SPEED = 10f
+        private const val ASTEROID_SPEED = 5f
 
-        private const val MEGAMAN_STRAIGHT_Y_THRESHOLD = 1f
+        private const val SHARP_STAR_SPEED = 10f
+        private const val SHARP_STAR_MOVEMENT_SCALAR = 0.5f
 
-        private val STAND_SHOOT_DURS = gdxArrayOf(0.5f, 1f, 0.5f, 1f, 0.5f)
-        private val JUMP_SHOOT_DURS = gdxArrayOf(0.2f, 0.6f, 0.2f)
+        private const val MOON_SCYTHE_SPEED = 10f
+        private const val MOON_SCYTHE_MOVEMENT_SCALAR = 0.5f
+        private val MOON_SCYTHE_DEG_OFFSETS = gdxArrayOf(7.5f, 35f, 62.5f)
+
+        private val STAND_SHOOT_DURS = gdxArrayOf(0.6f, 0.5f, 1f, 0.5f, 1f, 0.5f, 0.6f)
 
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -167,17 +172,11 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
                 "gravity_change_end",
                 "jump",
                 "shoot",
-                "jump_shoot",
                 "throw_asteroids"
             ).forEach { key ->
                 val atlasKey = "$TAG/$key"
                 when (key) {
                     "shoot" -> for (i in 0 until STAND_SHOOT_DURS.size) {
-                        val region = atlas.findRegion(atlasKey, i)
-                        regions.put("${key}_$i", region)
-                    }
-
-                    "jump_shoot" -> for (i in 0 until JUMP_SHOOT_DURS.size) {
                         val region = atlas.findRegion(atlasKey, i)
                         regions.put("${key}_$i", region)
                     }
@@ -218,7 +217,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
         gravityChangeState = ProcessState.BEGIN
 
-        val direction = getMegaman().directionRotation
+        val direction = megaman().directionRotation
         directionRotation = direction
         currentGravityChangeDir = direction
 
@@ -279,7 +278,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
                 val (asteroid, throwTimer) = iter.next()
                 throwTimer.update(delta)
                 if (throwTimer.isFinished()) {
-                    val impulse = getMegaman().body.getCenter()
+                    val impulse = megaman().body.getCenter()
                         .sub(asteroid.body.getCenter())
                         .nor().scl(ASTEROID_SPEED * ConstVals.PPM)
                     asteroid.body.physics.velocity.set(impulse)
@@ -467,16 +466,15 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
             "gravity_change_continue" pairTo Animation(regions["gravity_change_continue"], 2, 2, 0.1f, true),
             "gravity_change_end" pairTo Animation(regions["gravity_change_end"]),
             "jump" pairTo Animation(regions["jump"]),
-            "jump_shoot_1" pairTo Animation(regions["jump_shoot_0"]),
-            "jump_shoot_2" pairTo Animation(regions["jump_shoot_1"], 3, 1, 0.1f, true),
-            "jump_shoot_3" pairTo Animation(regions["jump_shoot_2"]),
-            "shoot_0" pairTo Animation(regions["shoot_0"], 3, 1, 0.1f, false),
-            "shoot_1" pairTo Animation(regions["shoot_1"], 3, 1, 0.1f, true),
-            "shoot_2" pairTo Animation(regions["shoot_2"]),
-            "shoot_3" pairTo Animation(regions["shoot_3"], 2, 1, 0.1f, true),
-            "shoot_4" pairTo Animation(regions["shoot_4"]),
+            "shoot_0" pairTo Animation(regions["shoot_0"], 3, 2, 0.1f, false),
+            "shoot_1" pairTo Animation(regions["shoot_1"], 3, 1, 0.1f, false),
+            "shoot_2" pairTo Animation(regions["shoot_2"], 3, 1, 0.1f, true),
+            "shoot_3" pairTo Animation(regions["shoot_3"]),
+            "shoot_4" pairTo Animation(regions["shoot_4"], 2, 1, 0.1f, true),
+            "shoot_5" pairTo Animation(regions["shoot_5"]),
+            "shoot_6" pairTo Animation(regions["shoot_6"], 3, 2, 0.1f, false),
             "throw_asteroids" pairTo Animation(regions["throw_asteroids"], 2, 1, 0.1f, true),
-            "stand" pairTo Animation(regions["stand"], 2, 1, gdxArrayOf(1f, 0.15f), true)
+            "stand" pairTo Animation(regions["stand"], 2, 1, gdxArrayOf(0.3f, 0.1f), true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
@@ -484,9 +482,10 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
     private fun activateGravityChange() {
         currentGravityChangeDir = if (directionRotation == Direction.UP) Direction.DOWN else Direction.UP
-        getMegaman().directionRotation = currentGravityChangeDir
+        megaman().directionRotation = currentGravityChangeDir
         gravityChangeChance = 0f
         timers["gravity_change_delay"].reset()
+        requestToPlaySound(SoundAsset.TIME_STOPPER_SOUND, false)
         GameLogger.debug(TAG, "activateGravityChange(): gravity=$currentGravityChangeDir")
     }
 
@@ -494,7 +493,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         var jumpImpulseY = JUMP_IMPULSE_Y * ConstVals.PPM
         if (directionRotation == Direction.DOWN) jumpImpulseY *= -1f
 
-        val yDiff = abs(getMegaman().body.y - body.y)
+        val yDiff = abs(megaman().body.y - body.y)
         val horizontalScalar = (yDiff / (JUMP_HORIZONTAL_SCALAR_DENOMINATOR * ConstVals.PPM))
             .coerceIn(JUMP_MIN_HORIZONTAL_SCALAR, JUMP_MAX_HORIZONTAL_SCALAR)
         val impulse = MegaUtilMethods.calculateJumpImpulse(
@@ -530,7 +529,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
             }
 
             MoonManState.JUMP -> {
-                jump(getMegaman().body.getCenter())
+                jump(megaman().body.getCenter())
                 if (canShootInJumpState()) shootIndex = 0
             }
 
@@ -589,21 +588,12 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
             timers.put(key, timer)
         }
-
-        for (i in 0 until JUMP_SHOOT_DURS.size) {
-            val key = "jump_shoot_$i"
-            val dur = JUMP_SHOOT_DURS[i]
-            timers.put(key, Timer(dur))
-        }
     }
-
-    private fun isMegamanStraightAhead() =
-        abs(getMegaman().body.y - body.y) <= MEGAMAN_STRAIGHT_Y_THRESHOLD * ConstVals.PPM
 
     private fun updateFacing() {
         when {
-            getMegaman().body.getMaxX() < body.x -> facing = Facing.LEFT
-            getMegaman().body.x > body.getMaxX() -> facing = Facing.RIGHT
+            megaman().body.getMaxX() < body.x -> facing = Facing.LEFT
+            megaman().body.x > body.getMaxX() -> facing = Facing.RIGHT
         }
     }
 
@@ -623,11 +613,44 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
     private fun canShootInJumpState() = (jumpIndex + 1) % 2 == 0
 
     private fun shootMoon() {
-        // TODO
+        for (i in 0 until MOON_SCYTHE_DEG_OFFSETS.size) {
+            val trajectory = Vector2(0f, MOON_SCYTHE_SPEED * ConstVals.PPM)
+
+            var rotOffset = MOON_SCYTHE_DEG_OFFSETS[i] * facing.value
+            if (directionRotation == Direction.DOWN) rotOffset *= -1f
+
+            val rotation = (if (isFacing(Facing.LEFT)) 90f else 270f) + rotOffset
+
+            trajectory.rotateDeg(rotation)
+
+            val moonScythe = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.MOON_SCYTHE)!!
+            moonScythe.spawn(
+                props(
+                    ConstKeys.POSITION pairTo body.getCenter().add(0.5f * ConstVals.PPM * facing.value, 0f),
+                    "${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}" pairTo MOON_SCYTHE_MOVEMENT_SCALAR,
+                    ConstKeys.TRAJECTORY pairTo trajectory,
+                    ConstKeys.ROTATION pairTo rotation,
+                    ConstKeys.FADE pairTo false
+                )
+            )
+        }
+
+        requestToPlaySound(SoundAsset.WHIP_SOUND, false)
     }
 
     private fun shootStar() {
-        // TODO
+        val trajectory = megaman().body.getCenter().sub(body.getCenter()).nor().scl(SHARP_STAR_SPEED * ConstVals.PPM)
+        val sharpStar = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SHARP_STAR)!!
+        sharpStar.spawn(
+            props(
+                ConstKeys.POSITION pairTo body.getCenter().add(0.5f * ConstVals.PPM * facing.value, 0f),
+                "${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}" pairTo SHARP_STAR_MOVEMENT_SCALAR,
+                ConstKeys.TRAJECTORY pairTo trajectory,
+                ConstKeys.ROTATION pairTo trajectory.angleDeg(),
+            )
+        )
+
+        requestToPlaySound(SoundAsset.WHIP_SOUND, false)
     }
 
     private fun spawnAsteroid() {
@@ -637,9 +660,10 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
             props(
                 ConstKeys.POSITION pairTo spawn,
                 ConstKeys.DELAY pairTo THROW_ASTEROID_DELAY,
-                ConstKeys.TYPE pairTo Asteroid.BLUE
+                ConstKeys.TYPE pairTo Asteroid.REGULAR
             )
         )
+
         asteroidsToThrow.add(asteroid pairTo Timer(THROW_ASTEROID_DELAY))
     }
 

@@ -80,7 +80,7 @@ class BigFishNeo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             minX = spawn.x
             maxX = spawn.x + xValue
         }
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
         laughTimer.setToEnd()
     }
 

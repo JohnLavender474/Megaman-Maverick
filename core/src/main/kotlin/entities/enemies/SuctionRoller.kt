@@ -98,8 +98,8 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
                         (facing == Facing.RIGHT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
 
             if (body.isSensing(BodySense.FEET_ON_GROUND)) {
-                if (getMegaman().body.getBottomRightPoint().x < body.x) facing = Facing.LEFT
-                else if (getMegaman().body.x > body.getBottomRightPoint().x) facing = Facing.RIGHT
+                if (megaman().body.getBottomRightPoint().x < body.x) facing = Facing.LEFT
+                else if (megaman().body.x > body.getBottomRightPoint().x) facing = Facing.RIGHT
             }
         }
     }

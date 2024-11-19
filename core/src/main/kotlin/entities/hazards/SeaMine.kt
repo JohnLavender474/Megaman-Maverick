@@ -107,9 +107,9 @@ class SeaMine(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IS
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         sensor.setCenter(body.getCenter())
-        if (!triggered && getMegaman().body.getBodyBounds().overlaps(sensor)) trigger()
+        if (!triggered && megaman().body.getBodyBounds().overlaps(sensor)) trigger()
         if (triggered) {
-            body.physics.velocity = getMegaman().body.getCenter().sub(body.getCenter()).nor().scl(SPEED * ConstVals.PPM)
+            body.physics.velocity = megaman().body.getCenter().sub(body.getCenter()).nor().scl(SPEED * ConstVals.PPM)
             blowTimer.update(delta)
             if (blowTimer.isFinished()) explodeAndDie()
         }

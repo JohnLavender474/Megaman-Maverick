@@ -122,7 +122,7 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
 
         loop.reset()
         loop.forEach { it.second.reset() }
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
     }
 
     override fun onDestroy() {
@@ -140,7 +140,7 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+            facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
             val (_, timer) = loop.getCurrent()
             timer.update(it)
             if (timer.isFinished()) {
@@ -252,7 +252,7 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
         val spawn = body.getTopCenterPoint()
         spawn.x += 0.25f * ConstVals.PPM * -facing.value
         val ball = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.EXPLODING_BALL)!!
-        val impulseX = (getMegaman().body.x - body.x) * 0.9f
+        val impulseX = (megaman().body.x - body.x) * 0.9f
         val impulseY = BALL_IMPULSE * ConstVals.PPM
         ball.spawn(
             props(

@@ -158,7 +158,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
     private fun definePathfindingComponent(): PathfindingComponent {
         val params = PathfinderParams(
             startCoordinateSupplier = { body.getCenter().toGridCoordinate() },
-            targetCoordinateSupplier = { getMegaman().body.getCenter().toGridCoordinate() },
+            targetCoordinateSupplier = { megaman().body.getCenter().toGridCoordinate() },
             allowDiagonal = { true },
             filter = { coordinate ->
                 val bodies = game.getWorldContainer()!!.getBodies(coordinate.x, coordinate.y)

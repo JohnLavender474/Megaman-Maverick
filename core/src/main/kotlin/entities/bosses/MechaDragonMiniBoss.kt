@@ -149,7 +149,7 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         putProperty(ConstKeys.ENTTIY_KILLED_BY_DEATH_FIXTURE, false)
         super.onSpawn(spawnProps)
 
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setBottomCenterToPoint(spawn)
@@ -202,7 +202,7 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
                 ConstKeys.OWNER pairTo this,
                 ConstKeys.POSITION pairTo spawn,
                 ConstKeys.TRAJECTORY pairTo normalizedTrajectory(
-                    spawn, getMegaman().body.getCenter(), FIRE_SPEED * ConstVals.PPM
+                    spawn, megaman().body.getCenter(), FIRE_SPEED * ConstVals.PPM
                 )
             )
         )
@@ -221,8 +221,8 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
 
             when (loop.getCurrent()) {
                 MechaDragonState.IDLE -> {
-                    if (getMegaman().body.getMaxX() < body.x) facing = Facing.LEFT
-                    else if (getMegaman().body.x > body.getMaxX()) facing = Facing.RIGHT
+                    if (megaman().body.getMaxX() < body.x) facing = Facing.LEFT
+                    else if (megaman().body.x > body.getMaxX()) facing = Facing.RIGHT
 
                     body.physics.velocity.x = HOVER_X_SWAY_SPEED * facing.value * ConstVals.PPM
                     body.physics.velocity.y = 0f
@@ -251,7 +251,7 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
                                 currentTarget = when {
                                     loop.getCurrent() == MechaDragonState.HOVER_TO_RANDOM_SPOT -> targets.random()
                                     loop.getCurrent() == MechaDragonState.HOVER_TO_ROOM_CENTER -> roomCenter
-                                    else -> getMegaman().body.getCenter()
+                                    else -> megaman().body.getCenter()
                                 }
                                 currentTarget.y = currentTarget.y.coerceIn(minY, maxY)
                             }
@@ -261,8 +261,8 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
 
                 MechaDragonState.HOVER_TO_MEGAMAN, MechaDragonState.HOVER_TO_RANDOM_SPOT, MechaDragonState.HOVER_TO_ROOM_CENTER -> {
                     when {
-                        getMegaman().body.getMaxX() < body.x -> facing = Facing.LEFT
-                        getMegaman().body.x > body.getMaxX() -> facing = Facing.RIGHT
+                        megaman().body.getMaxX() < body.x -> facing = Facing.LEFT
+                        megaman().body.x > body.getMaxX() -> facing = Facing.RIGHT
                     }
 
                     val trajectory = normalizedTrajectory(body.getCenter(), currentTarget, HOVER_SPEED * ConstVals.PPM)
@@ -287,15 +287,15 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
                 MechaDragonState.CHARGE -> {
                     if (!chargeFirstDelayTimer.isFinished()) {
                         body.physics.velocity.x = 0f
-                        val megamanCenterY = getMegaman().body.getCenter().y
+                        val megamanCenterY = megaman().body.getCenter().y
                         body.physics.velocity.y = (when {
                             megamanCenterY > body.y && megamanCenterY < body.getMaxY() -> 0f
                             else -> CHARGE_FIRST_DELAY_SPEED * if (megamanCenterY > body.getMaxY()) 1f else -1f
                         }) * ConstVals.PPM
 
                         when {
-                            getMegaman().body.getMaxX() < body.x -> facing = Facing.LEFT
-                            getMegaman().body.x > body.getMaxX() -> facing = Facing.RIGHT
+                            megaman().body.getMaxX() < body.x -> facing = Facing.LEFT
+                            megaman().body.x > body.getMaxX() -> facing = Facing.RIGHT
                         }
 
                         chargeFirstDelayTimer.update(delta)

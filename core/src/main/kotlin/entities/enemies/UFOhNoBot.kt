@@ -105,7 +105,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
         waiting = spawnProps.getOrDefault(ConstKeys.WAIT, true, Boolean::class)
         dropped = false
         rising = false
@@ -130,8 +130,8 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         triggers.clear()
     }
 
-    private fun isMegamanUnderMe() = getMegaman().body.getMaxY() <= body.y &&
-        getMegaman().body.getCenter().x >= body.x && getMegaman().body.getCenter().x <= body.getMaxX()
+    private fun isMegamanUnderMe() = megaman().body.getMaxY() <= body.y &&
+        megaman().body.getCenter().x >= body.x && megaman().body.getCenter().x <= body.getMaxX()
 
     private fun moveX() {
         val xVel = (if (dropped) X_VEL_NO_BOMB else X_VEL_WITH_BOMB) * ConstVals.PPM * facing.value
@@ -145,7 +145,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     }
 
     private fun setToHover() {
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
         moveX()
     }
 
@@ -159,7 +159,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
             if (waiting) {
-                if (triggers.any { trigger -> getMegaman().body.overlaps(trigger as Rectangle) }) {
+                if (triggers.any { trigger -> megaman().body.overlaps(trigger as Rectangle) }) {
                     waiting = false
                     rising = true
 
@@ -170,7 +170,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                     body.fixtures.forEach { (it.second as Fixture).active = true }
 
                     facing = if (trajectory.x == 0f) {
-                        if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+                        if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
                     } else if (trajectory.x < 0f) Facing.LEFT else Facing.RIGHT
                 } else return@add
             }

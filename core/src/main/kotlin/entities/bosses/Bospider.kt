@@ -70,10 +70,10 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         private const val SPAWN_DELAY = 2f
         private const val MAX_CHILDREN = 4
         private const val MIN_SPEED = 8f
-        private const val MAX_SPEED = 20f
+        private const val MAX_SPEED = 16f
         private const val START_POINT_OFFSET = 2f
         private const val OPEN_EYE_MAX_DURATION = 2f
-        private const val OPEN_EYE_MIN_DURATION = 0.5f
+        private const val OPEN_EYE_MIN_DURATION = 0.75f
         private const val CLOSE_EYE_DURATION = 0.35f
         private const val DEBUG_TIMER = 1f
         private const val WEB_SPEED = 10f
@@ -85,7 +85,6 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
     private enum class BospiderState { SPAWN, CLIMB, OPEN_EYE, CLOSE_EYE, RETREAT }
 
-    override var children = Array<IGameEntity>()
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
         Bullet::class pairTo dmgNeg(1),
         Fireball::class pairTo dmgNeg(2),
@@ -98,16 +97,22 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
             if (it.fullyCharged) 2 else 1
         }
     )
+    override var children = Array<IGameEntity>()
 
     private val paths = Array<Array<Vector2>>()
     private val currentPath = Queue<Vector2>()
+
     private val stateLoop = Loop(BospiderState.entries.toTypedArray().toGdxArray())
+
     private val childrenSpawnPoints = Array<RectangleMapObject>()
+
     private val spawnDelayTimer = Timer(SPAWN_DELAY)
     private val closeEyeTimer = Timer(CLOSE_EYE_DURATION)
     private val debugTimer = Timer(DEBUG_TIMER)
+
     private lateinit var openEyeTimer: Timer
     private lateinit var spawn: Vector2
+
     private var firstSpawn = true
 
     override fun init() {
@@ -298,9 +303,9 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
         sprite.setSize(4.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setCenter(body.getCenter())
-            _sprite.hidden = damageBlink || !ready
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setCenter(body.getCenter())
+            sprite.hidden = damageBlink || !ready
         }
         return spritesComponent
     }
@@ -345,7 +350,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
     private fun shootWebs() {
         requestToPlaySound(SoundAsset.SPLASH_SOUND, false)
-        val centerTrajectory = getMegaman().body.getCenter().sub(body.getCenter()).nor()
+        val centerTrajectory = megaman().body.getCenter().sub(body.getCenter()).nor()
         val leftTrajectory = centerTrajectory.cpy().rotateDeg(-ANGLE_X)
         val rightTrajectory = centerTrajectory.cpy().rotateDeg(ANGLE_X)
         shootWeb(centerTrajectory)

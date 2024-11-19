@@ -140,7 +140,7 @@ class TurnBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IDirectionRo
                 } else return@add
             }
 
-            val desiredAngle = (getMegaman().body.getCenter().sub(body.getCenter()).angleDeg() - 90f) % 360f
+            val desiredAngle = (megaman().body.getCenter().sub(body.getCenter()).angleDeg() - 90f) % 360f
             if (debug) GameLogger.debug(TAG, "desired angle: $desiredAngle")
 
             val currentAngle = directionRotation.rotation + angleOffset

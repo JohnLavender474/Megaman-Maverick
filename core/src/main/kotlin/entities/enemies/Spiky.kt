@@ -79,7 +79,7 @@ class Spiky(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
 
         facing = if (spawnProps.containsKey(ConstKeys.FACING))
             Facing.valueOf(spawnProps.get(ConstKeys.FACING, String::class)!!.uppercase())
-        else if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        else if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
     }
 
     override fun defineBodyComponent(): BodyComponent {

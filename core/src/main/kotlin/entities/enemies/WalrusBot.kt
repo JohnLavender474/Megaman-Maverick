@@ -117,7 +117,7 @@ class WalrusBot(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
         walrusBotState = WalrusBotState.STAND
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
     }
 
     private fun shoot() {
@@ -142,7 +142,7 @@ class WalrusBot(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
         updatablesComponent.add { delta ->
             when (walrusBotState) {
                 WalrusBotState.STAND -> {
-                    facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+                    facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
                     standTimer.update(delta)
                     if (standTimer.isFinished()) {
                         standTimer.reset()
@@ -155,12 +155,12 @@ class WalrusBot(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
                 }
 
                 WalrusBotState.SHOOT -> {
-                    if (scannerBox.overlaps(getMegaman().body as Rectangle)) stateQueudForAfterShoot =
+                    if (scannerBox.overlaps(megaman().body as Rectangle)) stateQueudForAfterShoot =
                         WalrusBotState.JET
                     shootTimer.update(delta)
                     if (shootTimer.isFinished()) {
                         shootTimer.reset()
-                        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+                        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
                         walrusBotState = stateQueudForAfterShoot
                     }
                 }
@@ -175,7 +175,7 @@ class WalrusBot(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
                 }
 
                 WalrusBotState.SLIDE -> {
-                    facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+                    facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
                     if (body.isSensing(BodySense.FEET_ON_GROUND) &&
                         abs(body.physics.velocity.x) < SLIDE_MIN_VEL * ConstVals.PPM
                     ) walrusBotState = WalrusBotState.STAND

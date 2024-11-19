@@ -79,7 +79,7 @@ class BabyPenguin(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
         super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setBottomCenterToPoint(spawn)
-        val left = spawnProps.getOrDefault(ConstKeys.LEFT, getMegaman().body.x < body.x, Boolean::class)
+        val left = spawnProps.getOrDefault(ConstKeys.LEFT, megaman().body.x < body.x, Boolean::class)
         facing = if (left) Facing.LEFT else Facing.RIGHT
     }
 

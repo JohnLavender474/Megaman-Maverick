@@ -90,7 +90,7 @@ class Pipi(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
         super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
         hasEgg = true
     }
 
@@ -98,7 +98,7 @@ class Pipi(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
             body.physics.velocity.x = FLY_SPEED * ConstVals.PPM * facing.value
-            if (hasEgg && getMegaman().body.x <= body.getMaxX() && getMegaman().body.getMaxX() >= body.x) dropEgg()
+            if (hasEgg && megaman().body.x <= body.getMaxX() && megaman().body.getMaxX() >= body.x) dropEgg()
         }
     }
 

@@ -160,7 +160,7 @@ class RainFall(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntit
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
-        GameLogger.debug(TAG, "onSpawn(): Megaman's position = ${getMegaman().body.getCenter()}")
+        GameLogger.debug(TAG, "onSpawn(): Megaman's position = ${megaman().body.getCenter()}")
         super.onSpawn(spawnProps)
         cullBounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         spawnProps.forEach { key, value ->

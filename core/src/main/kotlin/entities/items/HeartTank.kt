@@ -65,7 +65,7 @@ class HeartTank(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, I
 
     override fun canSpawn(spawnProps: Properties): Boolean {
         heartTank = MegaHeartTank.get(spawnProps.get(ConstKeys.VALUE, String::class)!!.uppercase())
-        return !getMegaman().has(heartTank)
+        return !megaman().has(heartTank)
     }
 
     override fun onSpawn(spawnProps: Properties) {

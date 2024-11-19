@@ -160,7 +160,7 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
         recalcTimer.update(delta)
         if (recalcTimer.isFinished()) {
             recalcTimer.reset()
-            val angle = getMegaman().body.getCenter().sub(body.getCenter()).angleDeg()
+            val angle = megaman().body.getCenter().sub(body.getCenter()).angleDeg()
             val roundedAngle45 = MathUtils.round(angle / 45f) * 45f
             body.physics.velocity = Vector2(0f, SPEED * ConstVals.PPM).setAngleDeg(roundedAngle45)
         }

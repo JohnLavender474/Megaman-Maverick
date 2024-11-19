@@ -104,7 +104,7 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
         shootDelayTimer.reset()
         turnTimer.setToEnd()
         turnDelayTimer.setToEnd()
@@ -148,8 +148,8 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
                 else return@add
             }
 
-            if ((isFacing(Facing.LEFT) && getMegaman().body.getX() > body.getMaxX()) ||
-                (isFacing(Facing.RIGHT) && getMegaman().body.getMaxX() < body.getX())
+            if ((isFacing(Facing.LEFT) && megaman().body.getX() > body.getMaxX()) ||
+                (isFacing(Facing.RIGHT) && megaman().body.getMaxX() < body.getX())
             ) {
                 startTurning()
                 return@add

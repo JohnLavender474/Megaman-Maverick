@@ -109,7 +109,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
                 (spawnProps.get(ConstKeys.POSITION_SUPPLIER) as () -> Vector2).invoke()
             else spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
-        facing = if (getMegaman().body.x >= body.x) Facing.RIGHT else Facing.LEFT
+        facing = if (megaman().body.x >= body.x) Facing.RIGHT else Facing.LEFT
         throwTimer.setToEnd()
         standTimer.reset()
     }
@@ -117,7 +117,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            facing = if (getMegaman().body.x >= body.x) Facing.RIGHT else Facing.LEFT
+            facing = if (megaman().body.x >= body.x) Facing.RIGHT else Facing.LEFT
             if (standing) {
                 standTimer.update(it)
                 if (standTimer.isFinished()) setToThrowingPickets()
@@ -125,7 +125,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
                 throwTimer.update(it)
                 if (throwTimer.isFinished()) setToStanding()
             }
-            if (throwTimer.isFinished()) facing = if (getMegaman().body.x >= body.x) Facing.RIGHT else Facing.LEFT
+            if (throwTimer.isFinished()) facing = if (megaman().body.x >= body.x) Facing.RIGHT else Facing.LEFT
         }
     }
 
@@ -230,7 +230,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         spawn.y += 0.4f * ConstVals.PPM
 
         val impulse = MegaUtilMethods.calculateJumpImpulse(
-            spawn, getMegaman().body.getCenter(), PICKET_IMPULSE_Y * ConstVals.PPM
+            spawn, megaman().body.getCenter(), PICKET_IMPULSE_Y * ConstVals.PPM
         ).coerceX(-MAX_IMPULSE_X * ConstVals.PPM, MAX_IMPULSE_X * ConstVals.PPM)
 
         val picket = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.PICKET)!!

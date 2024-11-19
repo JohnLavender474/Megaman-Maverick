@@ -71,7 +71,7 @@ class DropperLift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAni
     }
 
     private fun isMegamanOverlapping() =
-        getMegaman().feetFixture.getShape().overlaps(body) || getMegaman().body.overlaps(body as Rectangle)
+        megaman().feetFixture.getShape().overlaps(body) || megaman().body.overlaps(body as Rectangle)
 
     private fun setActive(active: Boolean) {
         body.physics.collisionOn = active

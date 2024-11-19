@@ -95,7 +95,7 @@ class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         body.setBottomCenterToPoint(spawn)
         slideTimer.setToEnd()
         standTimer.reset()
-        facing = if (getMegaman().body.x > body.x) Facing.RIGHT else Facing.LEFT
+        facing = if (megaman().body.x > body.x) Facing.RIGHT else Facing.LEFT
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -176,7 +176,7 @@ class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     }
 
     private fun stand(delta: Float) {
-        facing = if (getMegaman().body.x > body.x) Facing.RIGHT else Facing.LEFT
+        facing = if (megaman().body.x > body.x) Facing.RIGHT else Facing.LEFT
         standTimer.update(delta)
         if (body.isSensing(BodySense.FEET_ON_GROUND) && standTimer.isFinished()) jump()
     }

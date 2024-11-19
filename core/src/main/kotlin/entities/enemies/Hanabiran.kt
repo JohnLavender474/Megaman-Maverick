@@ -111,7 +111,7 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
     private fun shoot() {
         val start = body.getCenter()
-        val target = getMegaman().body.getCenter()
+        val target = megaman().body.getCenter()
         val trajectory = target.sub(start).nor()
 
         val petal = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.PETAL)!!

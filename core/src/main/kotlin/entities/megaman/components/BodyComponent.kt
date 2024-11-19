@@ -19,6 +19,7 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
+import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
 val Megaman.feetFixture: Fixture
@@ -42,13 +43,13 @@ val Megaman.damageableFixture: Fixture
 internal fun Megaman.defineBodyComponent(): BodyComponent {
     val body = Body(BodyType.DYNAMIC)
     body.setSize(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat())
+    body.putProperty("${ConstKeys.ICE}_${ConstKeys.FRICTION_Y}", false)
     body.physics.applyFrictionX = true
     body.physics.applyFrictionY = true
-    body.putProperty("${ConstKeys.ICE}_${ConstKeys.FRICTION_Y}", false)
     body.color = Color.BROWN
 
     val debugShapes = Array<() -> IDrawableShape?>()
-    debugShapes.add { body.getBodyBounds() }
+    // debugShapes.add { body.getBodyBounds() }
 
     val playerFixture = Fixture(body, FixtureType.PLAYER, GameRectangle(body))
     body.addFixture(playerFixture)
@@ -67,7 +68,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     feetFixture.setRunnable(onBounce)
     body.addFixture(feetFixture)
     feetFixture.rawShape.color = Color.GREEN
-    debugShapes.add { feetFixture.getShape() }
+    // debugShapes.add { feetFixture.getShape() }
     body.putProperty(ConstKeys.FEET, feetFixture)
 
     val headFixture =
@@ -76,12 +77,13 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     headFixture.setRunnable(onBounce)
     body.addFixture(headFixture)
     headFixture.rawShape.color = Color.RED
-    debugShapes.add { headFixture.getShape() }
+    // debugShapes.add { headFixture.getShape() }
     body.putProperty(ConstKeys.HEAD, headFixture)
 
     val leftFixture =
         Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.2f * ConstVals.PPM, 0.6f * ConstVals.PPM))
     leftFixture.offsetFromBodyCenter.x = -0.5f * ConstVals.PPM
+    leftFixture.offsetFromBodyCenter.y = 0.1f * ConstVals.PPM
     leftFixture.setRunnable(onBounce)
     leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
     body.addFixture(leftFixture)
@@ -92,6 +94,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     val rightFixture =
         Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.2f * ConstVals.PPM, 0.6f * ConstVals.PPM))
     rightFixture.offsetFromBodyCenter.x = 0.5f * ConstVals.PPM
+    rightFixture.offsetFromBodyCenter.y = 0.1f * ConstVals.PPM
     rightFixture.setRunnable(onBounce)
     rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
     body.addFixture(rightFixture)
@@ -100,12 +103,12 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     body.putProperty("${ConstKeys.RIGHT}_${ConstKeys.SIDE}", rightFixture)
 
     val damageableFixture =
-        Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(body.width, 1.25f * ConstVals.PPM))
-    damageableFixture.offsetFromBodyCenter.y = 0.125f * ConstVals.PPM
+        Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setWidth(body.width))
+    damageableFixture.attachedToBody = false
     body.addFixture(damageableFixture)
     body.putProperty(ConstKeys.DAMAGEABLE, damageableFixture)
     damageableFixture.rawShape.color = Color.PURPLE
-    debugShapes.add { damageableFixture.getShape() }
+    // debugShapes.add { damageableFixture.getShape() }
 
     val waterListenerFixture = Fixture(body, FixtureType.WATER_LISTENER, GameRectangle(body))
     body.addFixture(waterListenerFixture)
@@ -114,6 +117,17 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     body.addFixture(teleporterListenerFixture)
 
     body.preProcess.put(ConstKeys.DEFAULT, Updatable {
+        (damageableFixture.rawShape as GameRectangle).let {
+            it.setSize(
+                (when {
+                    isBehaviorActive(BehaviorType.GROUND_SLIDING) -> Vector2(1.25f, 0.75f)
+                    else -> Vector2(0.75f, 1.25f)
+                }).scl(ConstVals.PPM.toFloat())
+            )
+            val position = DirectionPositionMapper.getInvertedPosition(directionRotation)
+            it.positionOnPoint(body.getPositionPoint(position), position)
+        }
+
         if (!ready) {
             body.physics.velocity.setZero()
             return@Updatable
@@ -122,10 +136,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
         val wallSlidingOnIce = isBehaviorActive(BehaviorType.WALL_SLIDING) &&
             (body.isSensingAny(BodySense.SIDE_TOUCHING_ICE_LEFT, BodySense.SIDE_TOUCHING_ICE_RIGHT))
         var gravityValue = when {
-            body.isSensing(BodySense.IN_WATER) -> {
-                if (wallSlidingOnIce) waterIceGravity else waterGravity
-            }
-
+            body.isSensing(BodySense.IN_WATER) -> if (wallSlidingOnIce) waterIceGravity else waterGravity
             wallSlidingOnIce -> iceGravity
             body.isSensing(BodySense.FEET_ON_GROUND) -> groundGravity
             else -> gravity

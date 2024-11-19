@@ -11,10 +11,8 @@ import com.megaman.maverick.game.MegamanMaverickGame
 abstract class AbstractProjectile(game: MegamanMaverickGame) : MegaGameEntity(game), IProjectileEntity, ISpritesEntity {
 
     override var owner: GameEntity? = null
-
     open val canMove: Boolean
         get() = !game.isCameraRotating()
-
     protected var onDamageInflictedTo: ((IDamageable) -> Unit)? = null
     protected var movementScalar = 1f
 

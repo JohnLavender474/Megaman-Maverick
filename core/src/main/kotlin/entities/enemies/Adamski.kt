@@ -94,7 +94,7 @@ class Adamski(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
         type = spawnProps.getOrDefault(ConstKeys.TYPE, 0, Int::class)
 
-        val left = spawnProps.getOrDefault(ConstKeys.LEFT, getMegaman().body.x <= body.x, Boolean::class)
+        val left = spawnProps.getOrDefault(ConstKeys.LEFT, megaman().body.x <= body.x, Boolean::class)
         val flip = spawnProps.getOrDefault(ConstKeys.FLIP, false, Boolean::class)
         val motion = SineWave(
             body.getCenter(),

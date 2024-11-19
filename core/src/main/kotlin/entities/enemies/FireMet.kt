@@ -105,7 +105,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         spawnFlame()
 
         fireMetState = FireMetState.MOVE
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
 
         moveTimer.reset()
         shootTimer.setToEnd()
@@ -136,7 +136,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
                         body.physics.velocity.x = MOVE_SPEED * facing.value * ConstVals.PPM
                         moveTimer.update(delta)
                         if (moveTimer.isFinished()) {
-                            facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+                            facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
                             shoot()
                             shootTimer.reset()
                             fireMetState = FireMetState.SHOOT
@@ -163,7 +163,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
     private fun shoot() {
         val impulse = MegaUtilMethods.calculateJumpImpulse(
-            body.getCenter(), getMegaman().body.getCenter(), JUMP_IMPULSE_Y * ConstVals.PPM,
+            body.getCenter(), megaman().body.getCenter(), JUMP_IMPULSE_Y * ConstVals.PPM,
         ).coerceX(-MAX_SHOOT_X * ConstVals.PPM, MAX_SHOOT_Y * ConstVals.PPM)
         flame!!.launch(impulse)
         flame!!.body.physics.gravityOn = true

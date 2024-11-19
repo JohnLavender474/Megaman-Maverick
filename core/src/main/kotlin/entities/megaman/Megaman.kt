@@ -35,13 +35,14 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.bosses.*
-import com.megaman.maverick.game.entities.bosses.gutstank.GutsTankFist
 import com.megaman.maverick.game.entities.bosses.gutstank.GutsTank
+import com.megaman.maverick.game.entities.bosses.gutstank.GutsTankFist
 import com.megaman.maverick.game.entities.bosses.sigmarat.SigmaRat
 import com.megaman.maverick.game.entities.bosses.sigmarat.SigmaRatClaw
 import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.enemies.*
 import com.megaman.maverick.game.entities.explosions.*
+import com.megaman.maverick.game.entities.explosions.entities.explosions.StarExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.hazards.*
@@ -238,7 +239,11 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         MagmaGoopExplosion::class pairTo dmgNeg(4),
         MagmaWave::class pairTo dmgNeg(4),
         MagmaPellet::class pairTo dmgNeg(3),
-        MagmaFlame::class pairTo dmgNeg(3)
+        MagmaFlame::class pairTo dmgNeg(3),
+        MoonScythe::class pairTo dmgNeg(3),
+        MoonMan::class pairTo dmgNeg(3),
+        SharpStar::class pairTo dmgNeg(3),
+        StarExplosion::class pairTo dmgNeg(3)
     )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 
