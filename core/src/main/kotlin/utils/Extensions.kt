@@ -16,13 +16,11 @@ import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
-import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getMusic
 import com.mega.game.engine.common.extensions.getSound
 import com.mega.game.engine.common.objects.IntPair
 import com.mega.game.engine.common.objects.Matrix
 import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -37,19 +35,6 @@ fun IntPair.isNeighborOf(coordinate: IntPair, allowDiagonal: Boolean = true): Bo
     return if (!allowDiagonal) (dx == 1 && dy == 0) || (dx == 0 && dy == 1)
     else (dx <= 1 && dy <= 1) && !(dx == 0 && dy == 0)
 }
-
-fun IntPair.getNeighbors(includeDiagonal: Boolean = true) = if (includeDiagonal) gdxArrayOf(
-    x - 1 pairTo y,
-    x + 1 pairTo y,
-    x pairTo y - 1,
-    x pairTo y + 1,
-    x - 1 pairTo y - 1,
-    x + 1 pairTo y + 1,
-    x - 1 pairTo y + 1,
-    x + 1 pairTo y - 1
-) else gdxArrayOf(
-    x - 1 pairTo y, x + 1 pairTo y, x pairTo y - 1, x pairTo y + 1
-)
 
 fun Vector2.toGridCoordinate() = IntPair(MathUtils.floor(x / ConstVals.PPM), MathUtils.floor(y / ConstVals.PPM))
 
@@ -112,8 +97,7 @@ fun MapProperties.toProps(): Properties {
     return props
 }
 
-fun Camera.toGameRectangle(): GameRectangle {
-    val rectangle = GameRectangle()
+fun Camera.toGameRectangle(rectangle: GameRectangle = GameRectangle()): GameRectangle {
     rectangle.setSize(viewportWidth, viewportHeight)
     rectangle.setCenter(position.x, position.y)
     rectangle.setOrigin(position.x, position.y)
@@ -134,13 +118,13 @@ fun Camera.setToDefaultPosition() {
 
 fun AssetManager.getSounds(): OrderedMap<SoundAsset, Sound> {
     val sounds = OrderedMap<SoundAsset, Sound>()
-    for (ass in SoundAsset.values()) sounds.put(ass, getSound(ass.source))
+    for (ass in SoundAsset.entries) sounds.put(ass, getSound(ass.source))
     return sounds
 }
 
 fun AssetManager.getMusics(): OrderedMap<MusicAsset, Music> {
     val music = OrderedMap<MusicAsset, Music>()
-    for (ass in MusicAsset.values()) music.put(ass, getMusic(ass.source))
+    for (ass in MusicAsset.entries) music.put(ass, getMusic(ass.source))
     return music
 }
 

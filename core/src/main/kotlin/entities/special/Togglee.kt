@@ -81,7 +81,7 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
     }
 
     override var children = Array<IGameEntity>()
-    override var directionRotation: Direction? = null
+    override var directionRotation = Direction.UP
     override val eventKeyMask = objectSetOf<Any>(EventType.PLAYER_SPAWN, EventType.END_ROOM_TRANS)
 
     val moving: Boolean

@@ -38,7 +38,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
             }
 
             facing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) Facing.RIGHT else Facing.LEFT
-            if (directionRotation!!.equalsAny(Direction.DOWN, Direction.RIGHT)) swapFacing()
+            if (directionRotation.equalsAny(Direction.DOWN, Direction.RIGHT)) swapFacing()
 
             if (isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.RIDING_CART)) return@ButtonActuator
             running = !isBehaviorActive(BehaviorType.WALL_SLIDING)
@@ -84,7 +84,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
             }
 
             facing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) Facing.LEFT else Facing.RIGHT
-            if (directionRotation!!.equalsAny(Direction.DOWN, Direction.RIGHT)) swapFacing()
+            if (directionRotation.equalsAny(Direction.DOWN, Direction.RIGHT)) swapFacing()
 
             if (isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.RIDING_CART)) return@ButtonActuator
             running = !isBehaviorActive(BehaviorType.WALL_SLIDING)
@@ -120,7 +120,8 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
 
     val attack = ButtonActuator(
         onPressContinued = { _, delta ->
-            if (!ready || damaged || cameraRotating || teleporting || currentWeapon == MegamanWeapon.RUSH_JETPACK ||
+            if (!ready || damaged || game.isCameraRotating() || teleporting ||
+                currentWeapon == MegamanWeapon.RUSH_JETPACK ||
                 (!charging && !weaponHandler.canFireWeapon(currentWeapon, MegaChargeStatus.HALF_CHARGED)) ||
                 (charging && !weaponHandler.canFireWeapon(currentWeapon, MegaChargeStatus.FULLY_CHARGED) ||
                     !has(MegaAbility.CHARGE_WEAPONS))
@@ -131,7 +132,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
             chargingTimer.update(delta)
         },
         onJustReleased = {
-            if (damaged || cameraRotating || teleporting || !ready ||
+            if (damaged || game.isCameraRotating() || teleporting || !ready ||
                 !weaponHandler.canFireWeapon(currentWeapon, chargeStatus) ||
                 game.isProperty(ConstKeys.ROOM_TRANSITION, true)
             ) {

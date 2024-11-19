@@ -62,7 +62,7 @@ class MagmaGoopExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
         private var region: TextureRegion? = null
     }
 
-    override var directionRotation: Direction? = null
+    override var directionRotation = Direction.UP
 
     private val timer = Timer(EXPLOSION_DUR)
 
@@ -80,7 +80,7 @@ class MagmaGoopExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
         super.onSpawn(spawnProps)
 
         directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
-        val position = DirectionPositionMapper.getPosition(directionRotation!!).opposite()
+        val position = DirectionPositionMapper.getPosition(directionRotation).opposite()
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.positionOnPoint(spawn, position)
         timer.reset()
@@ -91,10 +91,10 @@ class MagmaGoopExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
     }
 
     private fun spawnPellets() {
-        val position = DirectionPositionMapper.getPosition(directionRotation!!)
+        val position = DirectionPositionMapper.getPosition(directionRotation)
         val spawn = body.getPositionPoint(position)
         for (i in 0 until PELLET_IMPULSES.size) {
-            val impulse = PELLET_IMPULSES[i].cpy().scl(ConstVals.PPM.toFloat()).rotateDeg(directionRotation!!.rotation)
+            val impulse = PELLET_IMPULSES[i].cpy().scl(ConstVals.PPM.toFloat()).rotateDeg(directionRotation.rotation)
             val pellet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.MAGMA_PELLET)!!
             pellet.spawn(
                 props(
@@ -132,10 +132,10 @@ class MagmaGoopExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
-            val position = DirectionPositionMapper.getInvertedPosition(directionRotation!!)
+            val position = DirectionPositionMapper.getInvertedPosition(directionRotation)
             sprite.setPosition(body.getPositionPoint(position), position)
             sprite.setOriginCenter()
-            sprite.rotation = directionRotation!!.rotation
+            sprite.rotation = directionRotation.rotation
         }
         return spritesComponent
     }

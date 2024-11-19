@@ -55,7 +55,7 @@ class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         private var region: TextureRegion? = null
     }
 
-    override var directionRotation: Direction? = null
+    override var directionRotation = Direction.UP
 
     private val timer = Timer(DURATION)
 
@@ -74,7 +74,7 @@ class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         super.onSpawn(spawnProps)
 
         directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
-        val position = DirectionPositionMapper.getPosition(directionRotation!!).opposite()
+        val position = DirectionPositionMapper.getPosition(directionRotation).opposite()
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.positionOnPoint(spawn, position)
 
@@ -108,10 +108,10 @@ class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
-            val position = DirectionPositionMapper.getInvertedPosition(directionRotation!!)
+            val position = DirectionPositionMapper.getInvertedPosition(directionRotation)
             sprite.setPosition(body.getPositionPoint(position), position)
             sprite.setOriginCenter()
-            sprite.rotation = directionRotation!!.rotation
+            sprite.rotation = directionRotation.rotation
         }
         return spritesComponent
     }

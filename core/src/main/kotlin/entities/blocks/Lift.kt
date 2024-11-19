@@ -41,7 +41,7 @@ class Lift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IDirectionR
         private const val FALL_SPEED = 2f
     }
 
-    override var directionRotation: Direction?
+    override var directionRotation: Direction
         get() = body.cardinalRotation
         set(value) {
             body.cardinalRotation = value
@@ -85,7 +85,7 @@ class Lift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IDirectionR
         /*
         body.preProcess.put(ConstKeys.HEAD) {
             (headFixture.getShape() as GameRectangle).setSize(
-                when (directionRotation!!) {
+                when (directionRotation) {
                     Direction.UP, Direction.DOWN -> Vector2(
                         ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM
                     )
@@ -96,7 +96,7 @@ class Lift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IDirectionR
                 }
             )
 
-            headFixture.offsetFromBodyCenter = when (directionRotation!!) {
+            headFixture.offsetFromBodyCenter = when (directionRotation) {
                 Direction.UP -> Vector2(0f, 0.5f * ConstVals.PPM)
                 Direction.DOWN -> Vector2(0f, -0.5f * ConstVals.PPM)
                 Direction.LEFT -> Vector2(-0.5f * ConstVals.PPM, 0f)
@@ -108,7 +108,7 @@ class Lift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IDirectionR
         return bodyComponent
     }
 
-    private fun aboveStopPoint() = when (directionRotation!!) {
+    private fun aboveStopPoint() = when (directionRotation) {
         Direction.UP -> body.getCenter().y > stopPoint.y
         Direction.DOWN -> body.getCenter().y < stopPoint.y
         Direction.LEFT -> body.getCenter().x < stopPoint.x
@@ -129,7 +129,7 @@ class Lift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IDirectionR
 
         when (currentState) {
             LiftState.LIFTING -> {
-                body.physics.velocity = when (directionRotation!!) {
+                body.physics.velocity = when (directionRotation) {
                     Direction.UP -> Vector2(0f, LIFT_SPEED * ConstVals.PPM)
                     Direction.DOWN -> Vector2(0f, -LIFT_SPEED * ConstVals.PPM)
                     Direction.LEFT -> Vector2(-LIFT_SPEED * ConstVals.PPM, 0f)
@@ -138,7 +138,7 @@ class Lift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IDirectionR
             }
 
             LiftState.FALLING -> {
-                body.physics.velocity = when (directionRotation!!) {
+                body.physics.velocity = when (directionRotation) {
                     Direction.UP -> Vector2(0f, -FALL_SPEED * ConstVals.PPM)
                     Direction.DOWN -> Vector2(0f, FALL_SPEED * ConstVals.PPM)
                     Direction.LEFT -> Vector2(FALL_SPEED * ConstVals.PPM, 0f)

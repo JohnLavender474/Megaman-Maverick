@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.screens.levels.camera
 
-import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
@@ -21,7 +20,7 @@ import com.mega.game.engine.common.time.Timer
 import kotlin.math.min
 
 class CameraManagerForRooms(
-    val camera: Camera,
+    val camera: RotatableCamera,
     var distanceOnTransition: Float,
     var transitionScannerDimensions: Vector2,
     transDelay: Float,
@@ -164,14 +163,7 @@ class CameraManagerForRooms(
         val currentRoomBounds = currentGameRoom?.rectangle?.toGameRectangle() ?: return
         if (currentRoomBounds.overlaps(focus!!.getBounds() as Rectangle)) {
             setCameraToFocusable()
-            if (camera.position.y > (currentRoomBounds.y + currentRoomBounds.height) - camera.viewportHeight / 2f)
-                camera.position.y = (currentRoomBounds.y + currentRoomBounds.height) - camera.viewportHeight / 2f
-            if (camera.position.y < currentRoomBounds.y + camera.viewportHeight / 2f)
-                camera.position.y = currentRoomBounds.y + camera.viewportHeight / 2f
-            if (camera.position.x > (currentRoomBounds.x + currentRoomBounds.width) - camera.viewportWidth / 2f)
-                camera.position.x = (currentRoomBounds.x + currentRoomBounds.width) - camera.viewportWidth / 2f
-            if (camera.position.x < currentRoomBounds.x + camera.viewportWidth / 2f)
-                camera.position.x = currentRoomBounds.x + camera.viewportWidth / 2f
+            camera.coerceIntoBounds(currentRoomBounds)
         }
 
         for (room in gameRooms!!) {

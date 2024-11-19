@@ -69,7 +69,7 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
         private const val WATER_VEL_CLAMP = 1.5f
     }
 
-    override var directionRotation: Direction?
+    override var directionRotation: Direction
         get() = body.cardinalRotation
         set(value) {
             body.cardinalRotation = value
@@ -177,7 +177,7 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
                 body.physics.velocity.setZero()
             } else {
                 body.physics.gravityOn = true
-                body.physics.gravity = when (directionRotation!!) {
+                body.physics.gravity = when (directionRotation) {
                     Direction.LEFT -> Vector2(gravity, 0f)
                     Direction.RIGHT -> Vector2(-gravity, 0f)
                     Direction.UP -> Vector2(0f, -gravity)

@@ -89,7 +89,7 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         },
         Asteroid::class pairTo dmgNeg(15)
     )
-    override var directionRotation: Direction? = null
+    override var directionRotation = Direction.UP
     override lateinit var facing: Facing
 
     private val canMove: Boolean
@@ -139,14 +139,14 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
-        when (directionRotation!!) {
+        when (directionRotation) {
             Direction.UP -> body.setBottomCenterToPoint(bounds.getBottomCenterPoint())
             Direction.DOWN -> body.setTopCenterToPoint(bounds.getTopCenterPoint())
             Direction.LEFT -> body.setCenterRightToPoint(bounds.getCenterRightPoint())
             Direction.RIGHT -> body.setCenterLeftToPoint(bounds.getCenterLeftPoint())
         }
 
-        facing = when (directionRotation!!) {
+        facing = when (directionRotation) {
             Direction.UP -> if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
             Direction.DOWN -> if (getMegaman().body.x < body.x) Facing.RIGHT else Facing.LEFT
             Direction.LEFT -> if (getMegaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
@@ -162,25 +162,30 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     private fun shoot() {
         val explodingBall = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.EXPLODING_BALL)!!
-        val offset = when (directionRotation!!) {
+
+        val offset = when (directionRotation) {
             Direction.UP -> Vector2(0.25f * facing.value, 0.125f)
             Direction.DOWN -> Vector2(0.25f * facing.value, -0.125f)
             Direction.LEFT -> Vector2(-0.125f, 0.25f * facing.value)
             Direction.RIGHT -> Vector2(0.125f, 0.25f * facing.value)
         }.scl(ConstVals.PPM.toFloat())
+
         val spawn = body.getCenter().add(offset)
-        val impulse = when (directionRotation!!) {
+
+        val impulse = when (directionRotation) {
             Direction.UP -> Vector2(SHOOT_X * facing.value, SHOOT_Y)
             Direction.DOWN -> Vector2(SHOOT_X * facing.value, -SHOOT_Y)
             Direction.LEFT -> Vector2(-SHOOT_Y, SHOOT_X * facing.value)
             Direction.RIGHT -> Vector2(SHOOT_Y, SHOOT_X * facing.value)
         }.scl(ConstVals.PPM.toFloat())
-        val gravity = when (directionRotation!!) {
+
+        val gravity = when (directionRotation) {
             Direction.UP -> Vector2(0f, -BALL_GRAVITY)
             Direction.DOWN -> Vector2(0f, BALL_GRAVITY)
             Direction.LEFT -> Vector2(BALL_GRAVITY, 0f)
             Direction.RIGHT -> Vector2(-BALL_GRAVITY, 0f)
         }.scl(ballGravityScalar * ConstVals.PPM.toFloat())
+
         explodingBall.spawn(
             props(
                 ConstKeys.POSITION pairTo spawn,
@@ -261,11 +266,11 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation!!.rotation
-            val position = DirectionPositionMapper.getPosition(directionRotation!!).opposite()
+            _sprite.rotation = directionRotation.rotation
+            val position = DirectionPositionMapper.getPosition(directionRotation).opposite()
             _sprite.setPosition(body.getPositionPoint(position), position)
             _sprite.hidden = damageBlink
-            when (directionRotation!!) {
+            when (directionRotation) {
                 Direction.UP -> _sprite.setFlip(isFacing(Facing.RIGHT), false)
                 Direction.DOWN -> _sprite.setFlip(isFacing(Facing.LEFT), false)
                 Direction.LEFT -> _sprite.setFlip(false, isFacing(Facing.RIGHT))

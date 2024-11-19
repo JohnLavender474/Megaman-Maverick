@@ -40,6 +40,8 @@ private lateinit var currentAmendedAnimKey: String
 
 internal fun Megaman.defineAnimationsComponent(): AnimationsComponent {
     val megamanAnimationKeySupplier = {
+        val cameraRotating = game.isCameraRotating()
+
         val newAnimKey =
             when {
                 !roomTransPauseTimer.isFinished() -> ConstKeys.INVALID

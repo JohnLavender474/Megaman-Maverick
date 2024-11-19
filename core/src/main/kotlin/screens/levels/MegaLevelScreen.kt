@@ -271,6 +271,7 @@ class MegaLevelScreen(
         engine.systems.forEach { it.on = true }
         music?.let { audioMan.playMusic(it, true) }
 
+        game.setCameraRotating(false)
         game.setCurrentRoomSupplier { cameraManagerForRooms.currentGameRoom?.name }
 
         if (tiledMapLoadResult == null) throw IllegalStateException("No tiled map load result found in level screen")

@@ -99,7 +99,8 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     debugShapes.add { rightFixture.getShape() }
     body.putProperty("${ConstKeys.RIGHT}_${ConstKeys.SIDE}", rightFixture)
 
-    val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(body.width, 1.25f * ConstVals.PPM))
+    val damageableFixture =
+        Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(body.width, 1.25f * ConstVals.PPM))
     damageableFixture.offsetFromBodyCenter.y = 0.125f * ConstVals.PPM
     body.addFixture(damageableFixture)
     body.putProperty(ConstKeys.DAMAGEABLE, damageableFixture)
@@ -120,15 +121,18 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
 
         val wallSlidingOnIce = isBehaviorActive(BehaviorType.WALL_SLIDING) &&
             (body.isSensingAny(BodySense.SIDE_TOUCHING_ICE_LEFT, BodySense.SIDE_TOUCHING_ICE_RIGHT))
-        var gravityValue =
-            if (body.isSensing(BodySense.IN_WATER)) {
+        var gravityValue = when {
+            body.isSensing(BodySense.IN_WATER) -> {
                 if (wallSlidingOnIce) waterIceGravity else waterGravity
-            } else if (wallSlidingOnIce) iceGravity
-            else if (body.isSensing(BodySense.FEET_ON_GROUND)) groundGravity
-            else gravity
+            }
+
+            wallSlidingOnIce -> iceGravity
+            body.isSensing(BodySense.FEET_ON_GROUND) -> groundGravity
+            else -> gravity
+        }
         gravityValue *= gravityScalar
 
-        when (directionRotation!!) {
+        when (directionRotation) {
             Direction.UP,
             Direction.DOWN -> {
                 body.physics.gravity.set(0f, gravityValue * ConstVals.PPM)

@@ -64,7 +64,7 @@ class LavaBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         FIRING
     }
 
-    override var directionRotation: Direction?
+    override var directionRotation: Direction
         get() = body.cardinalRotation
         set(value) {
             body.cardinalRotation = value
@@ -108,7 +108,7 @@ class LavaBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         super.onSpawn(spawnProps)
         directionRotation =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
-        val position = when (directionRotation!!) {
+        val position = when (directionRotation) {
             Direction.UP -> Position.TOP_CENTER
             Direction.DOWN -> Position.BOTTOM_CENTER
             Direction.LEFT -> Position.CENTER_LEFT
@@ -137,7 +137,7 @@ class LavaBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
     })
 
     private fun fireLava() {
-        val spawn = when (directionRotation!!) {
+        val spawn = when (directionRotation) {
             Direction.UP -> body.getTopCenterPoint()
             Direction.DOWN -> body.getBottomCenterPoint()
             Direction.LEFT -> body.getCenterLeftPoint()
@@ -166,7 +166,7 @@ class LavaBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation!!.rotation
+            _sprite.rotation = directionRotation.rotation
             _sprite.setCenter(body.getCenter())
         }
         return spritesComponent

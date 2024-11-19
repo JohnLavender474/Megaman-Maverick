@@ -83,7 +83,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             if (it.fullyCharged) 10 else 5
         }
     )
-    override var directionRotation: Direction?
+    override var directionRotation: Direction
         get() = body.cardinalRotation
         set(value) {
             body.cardinalRotation = value
@@ -119,7 +119,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
         directionRotation =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
-        facing = when (directionRotation!!) {
+        facing = when (directionRotation) {
             Direction.UP -> if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
             Direction.DOWN -> if (getMegaman().body.x < body.x) Facing.RIGHT else Facing.LEFT
             Direction.LEFT -> if (getMegaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
@@ -140,7 +140,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
     private fun shoot() {
         val spawn = body.getCenter().add(
-            (when (directionRotation!!) {
+            (when (directionRotation) {
                 Direction.UP -> Vector2(0.5f * facing.value, 0.125f)
                 Direction.DOWN -> Vector2(-0.5f * facing.value, 0.125f)
                 Direction.LEFT -> Vector2(0.175f, 0.5f * facing.value)
@@ -148,7 +148,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             }).scl(ConstVals.PPM.toFloat())
         )
 
-        val trajectory = when (directionRotation!!) {
+        val trajectory = when (directionRotation) {
             Direction.UP -> Vector2(ROCKET_SPEED * facing.value, 0f)
             Direction.DOWN -> Vector2(-ROCKET_SPEED * facing.value, 0f)
             Direction.LEFT -> Vector2(0f, ROCKET_SPEED * facing.value)
@@ -183,12 +183,12 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                 return@add
             }
 
-            val size = (if (directionRotation!!.isVertical()) Vector2(5f, 0.75f)
+            val size = (if (directionRotation.isVertical()) Vector2(5f, 0.75f)
             else Vector2(0.75f, 5f)).scl(ConstVals.PPM.toFloat())
             shootScanner.setSize(size)
             turnAroundScanner.setSize(size)
 
-            val position = when (directionRotation!!) {
+            val position = when (directionRotation) {
                 Direction.UP -> if (isFacing(Facing.LEFT)) Position.CENTER_RIGHT else Position.CENTER_LEFT
                 Direction.DOWN -> if (isFacing(Facing.LEFT)) Position.CENTER_LEFT else Position.CENTER_RIGHT
                 Direction.LEFT -> if (isFacing(Facing.LEFT)) Position.TOP_CENTER else Position.BOTTOM_CENTER
@@ -207,14 +207,14 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                 } else if (getMegaman().body.overlaps(turnAroundScanner as Rectangle)) swapFacing()
             }
 
-            body.physics.velocity = (when (directionRotation!!) {
+            body.physics.velocity = (when (directionRotation) {
                 Direction.UP -> Vector2(MOVE_SPEED * facing.value, 0f)
                 Direction.DOWN -> Vector2(-MOVE_SPEED * facing.value, 0f)
                 Direction.LEFT -> Vector2(0f, MOVE_SPEED * facing.value)
                 Direction.RIGHT -> Vector2(0f, -MOVE_SPEED * facing.value)
             }).scl(ConstVals.PPM.toFloat() * movementScalar)
 
-            body.physics.gravity = (when (directionRotation!!) {
+            body.physics.gravity = (when (directionRotation) {
                 Direction.UP -> Vector2(0f, -GRAVITY)
                 Direction.DOWN -> Vector2(0f, GRAVITY)
                 Direction.LEFT -> Vector2(GRAVITY, 0f)
@@ -332,9 +332,9 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setFlip(isFacing(Facing.LEFT), false)
             sprite.setOriginCenter()
-            sprite.rotation = directionRotation!!.rotation
+            sprite.rotation = directionRotation.rotation
 
-            val position = when (directionRotation!!) {
+            val position = when (directionRotation) {
                 Direction.UP -> Position.BOTTOM_CENTER
                 Direction.DOWN -> Position.TOP_CENTER
                 Direction.LEFT -> Position.CENTER_RIGHT

@@ -14,6 +14,7 @@ class BossesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         const val GLACIER_MAN = "GlacierMan"
         const val DESERT_MAN = "DesertMan"
         const val INFERNO_MAN = "InfernoMan"
+        const val MOON_MAN = "MoonMan"
         const val BOSPIDER = "Bospider"
         const val GUTS_TANK = "GutsTank"
         const val SIGMA_RAT = "SigmaRat"
@@ -29,6 +30,7 @@ class BossesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(GLACIER_MAN, GameEntityPoolCreator.create { GlacierMan(game) })
         pools.put(DESERT_MAN, GameEntityPoolCreator.create { DesertMan(game) })
         pools.put(INFERNO_MAN, GameEntityPoolCreator.create { InfernoMan(game) })
+        pools.put(MOON_MAN, GameEntityPoolCreator.create { MoonMan(game) })
         pools.put(BOSPIDER, GameEntityPoolCreator.create { Bospider(game) })
         pools.put(GUTS_TANK, GameEntityPoolCreator.create { GutsTank(game) })
         pools.put(SIGMA_RAT, GameEntityPoolCreator.create { SigmaRat(game) })

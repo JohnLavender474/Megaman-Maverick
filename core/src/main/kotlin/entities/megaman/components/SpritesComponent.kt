@@ -25,7 +25,7 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
     spritesComponent.putUpdateFunction("megaman") { _, player ->
         val direction = if (isBehaviorActive(BehaviorType.AIR_DASHING))
             getProperty(MegamanKeys.DIRECTION_ON_AIR_DASH, Direction::class)!!
-        else directionRotation!!
+        else directionRotation
 
         val flipX =
             !maverick && if (directionRotation == Direction.RIGHT) facing == Facing.RIGHT else facing == Facing.LEFT
@@ -81,7 +81,7 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
 
         val verticalOffset = -0.25f * ConstVals.PPM
         val facingOffsetScaled = -0.45f * facing.value * ConstVals.PPM
-        val offset = when (directionRotation!!) {
+        val offset = when (directionRotation) {
             Direction.UP -> floatArrayOf(facingOffsetScaled, verticalOffset)
             Direction.DOWN -> floatArrayOf(facingOffsetScaled, -verticalOffset)
             Direction.LEFT -> floatArrayOf(verticalOffset, facingOffsetScaled)

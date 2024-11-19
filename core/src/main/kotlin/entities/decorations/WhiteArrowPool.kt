@@ -32,7 +32,7 @@ class WhiteArrowPool(game: MegamanMaverickGame) : MegaGameEntity(game), ICullabl
         private const val SPAWN_DELAY_DUR = 1f
     }
 
-    override var directionRotation: Direction? = null
+    override var directionRotation = Direction.UP
 
     private val spawns = Array<Vector2>()
     private val spawnDelayTimer = Timer(SPAWN_DELAY_DUR)
@@ -58,7 +58,7 @@ class WhiteArrowPool(game: MegamanMaverickGame) : MegaGameEntity(game), ICullabl
         directionRotation = Direction.valueOf(spawnProps.get(ConstKeys.DIRECTION, String::class)!!.uppercase())
 
         val cells = bounds.splitByCellSize(ConstVals.PPM.toFloat())
-        when (directionRotation!!) {
+        when (directionRotation) {
             Direction.UP -> {
                 for (i in 0 until cells.columns) spawns.add(cells[i, 0]!!.getBottomCenterPoint())
                 maxOffset = cells.rows

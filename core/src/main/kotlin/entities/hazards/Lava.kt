@@ -65,7 +65,7 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    override var directionRotation: Direction? = null
+    override var directionRotation = Direction.UP
     override lateinit var facing: Facing
     var moveBeforeKill = false
         private set

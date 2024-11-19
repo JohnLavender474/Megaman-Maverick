@@ -43,7 +43,7 @@ class UnderwaterFan(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         private var region: TextureRegion? = null
     }
 
-    override var directionRotation: Direction?
+    override var directionRotation: Direction
         get() = body.cardinalRotation
         set(value) {
             body.cardinalRotation = value
@@ -62,7 +62,7 @@ class UnderwaterFan(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         super.onSpawn(spawnProps)
         directionRotation =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
-        val position = DirectionPositionMapper.getPosition(directionRotation!!)
+        val position = DirectionPositionMapper.getPosition(directionRotation)
         val spawnBounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.positionOnPoint(spawnBounds.getPositionPoint(position), position)
     }
@@ -101,8 +101,8 @@ class UnderwaterFan(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation!!.rotation
-            val position = DirectionPositionMapper.getInvertedPosition(directionRotation!!)
+            _sprite.rotation = directionRotation.rotation
+            val position = DirectionPositionMapper.getInvertedPosition(directionRotation)
             _sprite.setPosition(body.getPositionPoint(position), position)
         }
         return spritesComponent

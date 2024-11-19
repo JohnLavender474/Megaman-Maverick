@@ -51,7 +51,7 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    override var directionRotation: Direction?
+    override var directionRotation: Direction
         get() = body.cardinalRotation
         set(value) {
             body.cardinalRotation = value
@@ -126,7 +126,7 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
         debugShapes.add { body.getBodyBounds() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            body.physics.gravity = when (directionRotation!!) {
+            body.physics.gravity = when (directionRotation) {
                 Direction.UP -> Vector2(0f, -GRAVITY)
                 Direction.DOWN -> Vector2(0f, GRAVITY)
                 Direction.LEFT -> Vector2(GRAVITY, 0f)
@@ -149,7 +149,7 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation!!.rotation
+            _sprite.rotation = directionRotation.rotation
             _sprite.setCenter(body.getCenter())
         }
         return spritesComponent

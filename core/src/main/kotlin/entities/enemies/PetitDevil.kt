@@ -114,7 +114,7 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             )
         }
 
-        facing = when (getMegaman().directionRotation!!) {
+        facing = when (getMegaman().directionRotation) {
             Direction.UP -> if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
             Direction.DOWN -> if (getMegaman().body.x > body.x) Facing.LEFT else Facing.RIGHT
             Direction.LEFT -> if (getMegaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
@@ -173,7 +173,7 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
                 if (child.dead) iter.remove()
             }
 
-            facing = when (getMegaman().directionRotation!!) {
+            facing = when (getMegaman().directionRotation) {
                 Direction.UP -> if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
                 Direction.DOWN -> if (getMegaman().body.x > body.x) Facing.LEFT else Facing.RIGHT
                 Direction.LEFT -> if (getMegaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
@@ -201,7 +201,7 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             _sprite.hidden = damageBlink
             _sprite.setCenter(body.getCenter())
             _sprite.setOriginCenter()
-            val direction = getMegaman().directionRotation!!
+            val direction = getMegaman().directionRotation
             _sprite.setFlip(isFacing(Facing.LEFT), false)
             _sprite.rotation = direction.rotation
         }
@@ -278,7 +278,7 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
         type = spawnProps.get(ConstKeys.TYPE, String::class)!!
         scalar = START_SCALAR
 
-        facing = when (getMegaman().directionRotation!!) {
+        facing = when (getMegaman().directionRotation) {
             Direction.UP -> if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
             Direction.DOWN -> if (getMegaman().body.x > body.x) Facing.LEFT else Facing.RIGHT
             Direction.LEFT -> if (getMegaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
@@ -314,7 +314,7 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
             scalar += OUT_SPEED * delta
             body.setCenter(rotatingLine.getScaledPosition(scalar))
 
-            facing = when (getMegaman().directionRotation!!) {
+            facing = when (getMegaman().directionRotation) {
                 Direction.UP -> if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
                 Direction.DOWN -> if (getMegaman().body.x > body.x) Facing.LEFT else Facing.RIGHT
                 Direction.LEFT -> if (getMegaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
@@ -340,7 +340,7 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setOriginCenter()
-            _sprite.rotation = getMegaman().directionRotation!!.rotation
+            _sprite.rotation = getMegaman().directionRotation.rotation
             _sprite.hidden = damageBlink
             _sprite.setCenter(body.getCenter())
             _sprite.setFlip(isFacing(Facing.LEFT), false)

@@ -4,7 +4,7 @@ import com.mega.game.engine.common.enums.Direction
 
 interface IDirectionRotatable {
 
-    var directionRotation: Direction?
+    var directionRotation: Direction
 
     fun isDirectionRotatedVertically() = isDirectionRotatedUp() || isDirectionRotatedDown()
 
@@ -22,7 +22,7 @@ interface IDirectionRotatable {
 
     fun rotateLeft() {
         directionRotation =
-            when (directionRotation!!) {
+            when (directionRotation) {
                 Direction.UP -> Direction.LEFT
                 Direction.LEFT -> Direction.DOWN
                 Direction.DOWN -> Direction.RIGHT
@@ -32,7 +32,7 @@ interface IDirectionRotatable {
 
     fun rotateRight() {
         directionRotation =
-            when (directionRotation!!) {
+            when (directionRotation) {
                 Direction.UP -> Direction.RIGHT
                 Direction.RIGHT -> Direction.DOWN
                 Direction.DOWN -> Direction.LEFT
@@ -42,7 +42,7 @@ interface IDirectionRotatable {
 
     fun rotate180() {
         directionRotation =
-            when (directionRotation!!) {
+            when (directionRotation) {
                 Direction.UP -> Direction.DOWN
                 Direction.RIGHT -> Direction.LEFT
                 Direction.DOWN -> Direction.UP

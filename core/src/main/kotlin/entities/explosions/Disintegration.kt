@@ -42,7 +42,7 @@ class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
         private var region: TextureRegion? = null
     }
 
-    override var directionRotation: Direction? = null
+    override var directionRotation = Direction.UP
 
     private val durationTimer = Timer(DURATION)
     private val reusableRect = GameRectangle()
@@ -59,7 +59,7 @@ class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
         super.onSpawn(spawnProps)
 
         val rawDir = spawnProps.get(ConstKeys.DIRECTION, String::class)
-        directionRotation = rawDir?.let { Direction.valueOf(it.uppercase()) }
+        directionRotation = rawDir?.let { Direction.valueOf(it.uppercase()) } ?: getMegaman().directionRotation
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         firstSprite.setPosition(spawn, Position.CENTER)
@@ -82,7 +82,7 @@ class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setOriginCenter()
-            val rotation = directionRotation?.rotation ?: getMegaman().directionRotation!!.rotation
+            val rotation = directionRotation.rotation
             sprite.rotation = rotation
         }
         return spritesComponent
