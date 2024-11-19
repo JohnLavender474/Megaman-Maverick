@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.enemies
 
-
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
@@ -17,6 +16,7 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.vector2Of
 import com.mega.game.engine.common.interfaces.IFaceable
+
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -43,7 +43,6 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -106,7 +105,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         spawnFlame()
 
         fireMetState = FireMetState.MOVE
-        facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
 
         moveTimer.reset()
         shootTimer.setToEnd()
@@ -137,7 +136,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
                         body.physics.velocity.x = MOVE_SPEED * facing.value * ConstVals.PPM
                         moveTimer.update(delta)
                         if (moveTimer.isFinished()) {
-                            facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
+                            facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
                             shoot()
                             shootTimer.reset()
                             fireMetState = FireMetState.SHOOT
@@ -164,7 +163,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
     private fun shoot() {
         val impulse = MegaUtilMethods.calculateJumpImpulse(
-            body.getCenter(), megaman.body.getCenter(), JUMP_IMPULSE_Y * ConstVals.PPM,
+            body.getCenter(), getMegaman().body.getCenter(), JUMP_IMPULSE_Y * ConstVals.PPM,
         ).coerceX(-MAX_SHOOT_X * ConstVals.PPM, MAX_SHOOT_Y * ConstVals.PPM)
         flame!!.launch(impulse)
         flame!!.body.physics.gravityOn = true

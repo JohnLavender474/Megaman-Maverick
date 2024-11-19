@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.contracts
 
-
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.extensions.objectMapOf

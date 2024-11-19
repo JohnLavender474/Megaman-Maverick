@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.special
 
-
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
@@ -32,7 +31,6 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.entities.megaman.components.feetFixture
@@ -153,7 +151,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
                 block!!.body.y -= 0.4f * ConstVals.PPM
 
                 if (switchDelay.isFinished() &&
-                    block!!.body.overlaps(megaman.feetFixture.getShape())
+                    block!!.body.overlaps(getMegaman().feetFixture.getShape())
                 ) {
                     switchDelay.reset()
                     requestToPlaySound(SoundAsset.BLOOPITY_SOUND, false)
@@ -168,7 +166,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
                 block!!.body.y -= 0.3f * ConstVals.PPM
 
                 if (switchDelay.isFinished() &&
-                    block!!.body.overlaps(megaman.feetFixture.getShape())
+                    block!!.body.overlaps(getMegaman().feetFixture.getShape())
                 ) {
                     switchDelay.reset()
                     requestToPlaySound(SoundAsset.BLOOPITY_SOUND, false)

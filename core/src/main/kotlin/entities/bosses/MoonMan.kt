@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.bosses
 
-
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
@@ -55,7 +54,6 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -220,7 +218,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
         gravityChangeState = ProcessState.BEGIN
 
-        val direction = megaman.directionRotation
+        val direction = getMegaman().directionRotation
         directionRotation = direction
         currentGravityChangeDir = direction
 
@@ -239,7 +237,6 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         super.onDefeated(delta)
         asteroidsToThrow.forEach { it.first.destroy() }
         asteroidsToThrow.clear()
-        if (directionRotation == Direction.DOWN) megaman.directionRotation = Direction.UP
     }
 
     override fun onDestroy() {
@@ -282,7 +279,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
                 val (asteroid, throwTimer) = iter.next()
                 throwTimer.update(delta)
                 if (throwTimer.isFinished()) {
-                    val impulse = megaman.body.getCenter()
+                    val impulse = getMegaman().body.getCenter()
                         .sub(asteroid.body.getCenter())
                         .nor().scl(ASTEROID_SPEED * ConstVals.PPM)
                     asteroid.body.physics.velocity.set(impulse)
@@ -487,7 +484,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
     private fun activateGravityChange() {
         currentGravityChangeDir = if (directionRotation == Direction.UP) Direction.DOWN else Direction.UP
-        megaman.directionRotation = currentGravityChangeDir
+        getMegaman().directionRotation = currentGravityChangeDir
         gravityChangeChance = 0f
         timers["gravity_change_delay"].reset()
         GameLogger.debug(TAG, "activateGravityChange(): gravity=$currentGravityChangeDir")
@@ -497,7 +494,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         var jumpImpulseY = JUMP_IMPULSE_Y * ConstVals.PPM
         if (directionRotation == Direction.DOWN) jumpImpulseY *= -1f
 
-        val yDiff = abs(megaman.body.y - body.y)
+        val yDiff = abs(getMegaman().body.y - body.y)
         val horizontalScalar = (yDiff / (JUMP_HORIZONTAL_SCALAR_DENOMINATOR * ConstVals.PPM))
             .coerceIn(JUMP_MIN_HORIZONTAL_SCALAR, JUMP_MAX_HORIZONTAL_SCALAR)
         val impulse = MegaUtilMethods.calculateJumpImpulse(
@@ -533,7 +530,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
             }
 
             MoonManState.JUMP -> {
-                jump(megaman.body.getCenter())
+                jump(getMegaman().body.getCenter())
                 if (canShootInJumpState()) shootIndex = 0
             }
 
@@ -601,12 +598,12 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
     }
 
     private fun isMegamanStraightAhead() =
-        abs(megaman.body.y - body.y) <= MEGAMAN_STRAIGHT_Y_THRESHOLD * ConstVals.PPM
+        abs(getMegaman().body.y - body.y) <= MEGAMAN_STRAIGHT_Y_THRESHOLD * ConstVals.PPM
 
     private fun updateFacing() {
         when {
-            megaman.body.getMaxX() < body.x -> facing = Facing.LEFT
-            megaman.body.x > body.getMaxX() -> facing = Facing.RIGHT
+            getMegaman().body.getMaxX() < body.x -> facing = Facing.LEFT
+            getMegaman().body.x > body.getMaxX() -> facing = Facing.RIGHT
         }
     }
 

@@ -1,7 +1,6 @@
 package com.megaman.maverick.game.entities.blocks
 
-
-com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegamanMaverickGame
 
 class BreakableBlock(game: MegamanMaverickGame) : Block(game) {
 

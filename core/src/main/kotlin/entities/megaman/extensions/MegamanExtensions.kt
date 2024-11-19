@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.megaman.extensions
 
-
 import com.badlogic.gdx.utils.ObjectSet
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.megaman.Megaman

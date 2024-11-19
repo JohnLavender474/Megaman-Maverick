@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.enemies
 
-
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectMapOf
@@ -23,7 +22,6 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import kotlin.reflect.KClass
 
@@ -47,7 +45,7 @@ class TestEnemy(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
         arcMotion = ArcMotion(
             startPosition = spawn,
-            targetPosition = megaman.body.getCenter(),
+            targetPosition = getMegaman().body.getCenter(),
             speed = 8f * ConstVals.PPM,
             arcFactor = -0.5f
         )

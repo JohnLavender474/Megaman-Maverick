@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.sensors
 
-
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.maps.objects.RectangleMapObject

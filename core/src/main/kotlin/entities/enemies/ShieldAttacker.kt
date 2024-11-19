@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.enemies
 
-
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
@@ -38,7 +37,6 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
@@ -119,7 +117,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
                 }
             }
             body.setCenter(spawn)
-            facing = if (megaman.body.y < body.y) Facing.LEFT else Facing.RIGHT
+            facing = if (getMegaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
         } else {
             body.setSize(0.75f * ConstVals.PPM, 1.5f * ConstVals.PPM)
             val targetX = spawn.x + spawnProps.get(ConstKeys.VALUE, Float::class)!! * ConstVals.PPM
@@ -137,7 +135,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
                 }
             }
             body.setCenter(spawn)
-            facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
+            facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
         }
 
         val frameDuration = spawnProps.getOrDefault(ConstKeys.FRAME, 0.1f, Float::class)

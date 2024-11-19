@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.special
 
-
 import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.objectMapOf

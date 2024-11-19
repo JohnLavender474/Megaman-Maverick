@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.special
 
-
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Rectangle
@@ -36,7 +35,6 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntitiesMap
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.projectiles.*
@@ -245,12 +243,12 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
             MegaGameEntitiesMap.getEntitiesOfType(EntityType.PROJECTILE).forEach { t -> tryToLightUp(t) }
             MegaGameEntitiesMap.getEntitiesOfType(EntityType.EXPLOSION).forEach { t -> tryToLightUp(t) }
 
-            if (megaman.body.overlaps(bounds as Rectangle) && megaman.charging) {
+            if (getMegaman().body.overlaps(bounds as Rectangle) && getMegaman().charging) {
                 val lightEvent = LightEvent(
                     LightEventType.LIGHT_SOURCE,
                     LightEventDef(
                         true,
-                        megaman.body.getCenter(),
+                        getMegaman().body.getCenter(),
                         MEGAMAN_CHARGING_RADIUS,
                         MEGAMAN_CHARGING_RADIANCE
                     )

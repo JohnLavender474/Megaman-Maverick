@@ -1,14 +1,6 @@
 package com.megaman.maverick.game.entities.blocks
 
-
-
-import com.mega.game.engine.common.objects.Properties
-import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.world.body.BodyLabel
-import com.megaman.maverick.game.world.body.FixtureLabel
-
-com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame

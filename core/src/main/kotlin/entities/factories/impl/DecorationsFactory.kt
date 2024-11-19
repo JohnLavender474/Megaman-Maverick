@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.factories.impl
 
-
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.decorations.*
 import com.megaman.maverick.game.entities.factories.EntityFactory

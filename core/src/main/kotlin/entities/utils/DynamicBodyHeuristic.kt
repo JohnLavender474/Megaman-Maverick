@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.utils
 
-
 import com.mega.game.engine.pathfinding.heuristics.EuclideanHeuristic
 import com.mega.game.engine.pathfinding.heuristics.IHeuristic
 import com.megaman.maverick.game.MegamanMaverickGame

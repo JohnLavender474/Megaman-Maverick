@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.enemies
 
-
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.animations.Animation
@@ -34,11 +33,11 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.FixtureType
@@ -96,7 +95,7 @@ class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         body.setBottomCenterToPoint(spawn)
         slideTimer.setToEnd()
         standTimer.reset()
-        facing = if (megaman.body.x > body.x) Facing.RIGHT else Facing.LEFT
+        facing = if (getMegaman().body.x > body.x) Facing.RIGHT else Facing.LEFT
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -177,7 +176,7 @@ class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     }
 
     private fun stand(delta: Float) {
-        facing = if (megaman.body.x > body.x) Facing.RIGHT else Facing.LEFT
+        facing = if (getMegaman().body.x > body.x) Facing.RIGHT else Facing.LEFT
         standTimer.update(delta)
         if (body.isSensing(BodySense.FEET_ON_GROUND) && standTimer.isFinished()) jump()
     }

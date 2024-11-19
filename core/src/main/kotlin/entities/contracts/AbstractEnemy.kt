@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.contracts
 
-
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
@@ -64,7 +63,7 @@ abstract class AbstractEnemy(
             if (hasDepletedHealth()) {
                 disintegrate()
                 if (dropItemOnDeath) {
-                    val playerHealthModifier = 1f - megaman.getHealthRatio()
+                    val playerHealthModifier = 1f - getMegaman().getHealthRatio()
                     val dropChance = BASE_DROP_ITEM_CHANCE + (playerHealthModifier * MEGAMAN_HEALTH_INFLUENCE_FACTOR)
                     val rand = getRandom(0f, 1f)
                     GameLogger.debug(
@@ -150,8 +149,8 @@ abstract class AbstractEnemy(
     }
 
     open fun isMegamanShootingAtMe(): Boolean {
-        if (!megaman.shooting) return false
-        return body.x < megaman.body.x && megaman.facing == Facing.LEFT ||
-            body.x > megaman.body.x && megaman.facing == Facing.RIGHT
+        if (!getMegaman().shooting) return false
+        return body.x < getMegaman().body.x && getMegaman().facing == Facing.LEFT ||
+            body.x > getMegaman().body.x && getMegaman().facing == Facing.RIGHT
     }
 }

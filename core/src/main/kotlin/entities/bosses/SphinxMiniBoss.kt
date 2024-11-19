@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.bosses
 
-
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
@@ -175,10 +174,14 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
     private fun shootOrb() {
         val arigockBall = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.ARIGOCK_BALL)!!
         val spawn = chinBounds.getTopCenterPoint().add(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat())
-
+        /*
+        val impulse = if (chunkOrbs) MegaUtilMethods.calculateJumpImpulse(
+            spawn, getMegaman().body.getCenter(), MAX_CHUNK_ORB_IMPULSE * ConstVals.PPM, CHUNK_X_SCALAR
+        ) else getMegaman().body.getCenter().sub(spawn).nor().scl(ORB_SPEED * ConstVals.PPM)
+         */
         val angle = getRandom(MIN_SHOOT_ORB_ANGLE, MAX_SHOOT_ORB_ANGLE)
         val impulse = Vector2(0f, ORB_SPEED * ConstVals.PPM).rotateDeg(angle)
-        val gravityOn = false
+        val gravityOn = false // chunkOrbs
         arigockBall.spawn(
             props(
                 ConstKeys.POSITION pairTo spawn,

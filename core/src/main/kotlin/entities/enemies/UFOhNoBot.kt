@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.enemies
 
-
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
@@ -49,7 +48,6 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -107,7 +105,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
         waiting = spawnProps.getOrDefault(ConstKeys.WAIT, true, Boolean::class)
         dropped = false
         rising = false
@@ -132,8 +130,8 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         triggers.clear()
     }
 
-    private fun isMegamanUnderMe() = megaman.body.getMaxY() <= body.y &&
-        megaman.body.getCenter().x >= body.x && megaman.body.getCenter().x <= body.getMaxX()
+    private fun isMegamanUnderMe() = getMegaman().body.getMaxY() <= body.y &&
+        getMegaman().body.getCenter().x >= body.x && getMegaman().body.getCenter().x <= body.getMaxX()
 
     private fun moveX() {
         val xVel = (if (dropped) X_VEL_NO_BOMB else X_VEL_WITH_BOMB) * ConstVals.PPM * facing.value
@@ -147,7 +145,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     }
 
     private fun setToHover() {
-        facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
         moveX()
     }
 
@@ -161,7 +159,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
             if (waiting) {
-                if (triggers.any { trigger -> megaman.body.overlaps(trigger as Rectangle) }) {
+                if (triggers.any { trigger -> getMegaman().body.overlaps(trigger as Rectangle) }) {
                     waiting = false
                     rising = true
 
@@ -172,7 +170,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                     body.fixtures.forEach { (it.second as Fixture).active = true }
 
                     facing = if (trajectory.x == 0f) {
-                        if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
+                        if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
                     } else if (trajectory.x < 0f) Facing.LEFT else Facing.RIGHT
                 } else return@add
             }
@@ -258,10 +256,10 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
         sprite.setSize(2.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
-            sprite.setPosition(body.getTopCenterPoint(), Position.TOP_CENTER)
-            sprite.setFlip(isFacing(Facing.RIGHT), false)
-            sprite.hidden = damageBlink || waiting
+        spritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.setPosition(body.getTopCenterPoint(), Position.TOP_CENTER)
+            _sprite.setFlip(isFacing(Facing.RIGHT), false)
+            _sprite.hidden = damageBlink || waiting
         }
         return spritesComponent
     }

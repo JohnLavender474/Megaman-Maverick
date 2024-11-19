@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.megaman.components
 
-
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.*
 import com.mega.game.engine.common.GameLogger

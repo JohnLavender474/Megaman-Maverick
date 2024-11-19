@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.explosions
 
-
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
@@ -33,7 +32,6 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.megaman
 
 class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, IAudioEntity,
     IDirectionRotatable {
@@ -61,7 +59,7 @@ class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
         super.onSpawn(spawnProps)
 
         val rawDir = spawnProps.get(ConstKeys.DIRECTION, String::class)
-        directionRotation = rawDir?.let { Direction.valueOf(it.uppercase()) } ?: megaman.directionRotation
+        directionRotation = rawDir?.let { Direction.valueOf(it.uppercase()) } ?: getMegaman().directionRotation
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         firstSprite.setPosition(spawn, Position.CENTER)

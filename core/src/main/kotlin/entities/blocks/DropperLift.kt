@@ -1,7 +1,6 @@
 package com.megaman.maverick.game.entities.blocks
 
-
-
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Rectangle
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
@@ -28,38 +27,6 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.megaman.components.feetFixture
-import com.megaman.maverick.game.world.body.BodyLabel
-
-com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.math.Rectangle
-import com.mega.game.engine.animations.Animation
-import com.mega.game.engine.animations.AnimationsComponent
-import com.mega.game.engine.animations.Animator
-import com.mega.game.engine.animations.IAnimation
-import com.mega.game.engine.common.enums.Position
-import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.extensions.objectSetOf
-import com.mega.game.engine.common.extensions.toGdxArray
-import com.mega.game.engine.common.objects.Loop
-import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.drawables.sorting.DrawingPriority
-import com.mega.game.engine.drawables.sorting.DrawingSection
-import com.mega.game.engine.drawables.sprites.GameSprite
-import com.mega.game.engine.drawables.sprites.SpritesComponent
-import com.mega.game.engine.drawables.sprites.setPosition
-import com.mega.game.engine.entities.contracts.IAnimatedEntity
-import com.mega.game.engine.entities.contracts.ISpritesEntity
-import com.mega.game.engine.updatables.UpdatablesComponent
-import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.megaman.components.feetFixture
 import com.megaman.maverick.game.world.body.BodyLabel
 
@@ -104,7 +71,7 @@ class DropperLift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAni
     }
 
     private fun isMegamanOverlapping() =
-        megaman.feetFixture.getShape().overlaps(body) || megaman.body.overlaps(body as Rectangle)
+        getMegaman().feetFixture.getShape().overlaps(body) || getMegaman().body.overlaps(body as Rectangle)
 
     private fun setActive(active: Boolean) {
         body.physics.collisionOn = active

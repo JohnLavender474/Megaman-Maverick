@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.enemies
 
-
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
@@ -39,7 +38,6 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
@@ -160,7 +158,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
     private fun definePathfindingComponent(): PathfindingComponent {
         val params = PathfinderParams(
             startCoordinateSupplier = { body.getCenter().toGridCoordinate() },
-            targetCoordinateSupplier = { megaman.body.getCenter().toGridCoordinate() },
+            targetCoordinateSupplier = { getMegaman().body.getCenter().toGridCoordinate() },
             allowDiagonal = { true },
             filter = { coordinate ->
                 val bodies = game.getWorldContainer()!!.getBodies(coordinate.x, coordinate.y)
