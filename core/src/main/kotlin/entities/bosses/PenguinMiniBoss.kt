@@ -181,7 +181,7 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
     private fun shootSnowball() {
         val snowball = EntityFactories.fetch(EntityType.PROJECTILE, "Snowball")!! as Snowball
         val spawn = body.getBottomCenterPoint().add(0f, 0.15f * ConstVals.PPM)
-        val impulseX = (getMegaman().body.x - body.x) * 1.5f
+        val impulseX = (megaman().body.x - body.x) * 1.5f
         val impulseY = SNOWBALL_IMPULSE_Y * ConstVals.PPM
         val trajectory = Vector2(impulseX, impulseY)
         val gravity = Vector2(0f, SNOWBALL_GRAVITY * ConstVals.PPM)

@@ -50,7 +50,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable {
         const val MAX_ROTATION_SPEED = 1.5f
         private const val BLINK_DUR = 0.01f
         private val HIT_PROJS = objectSetOf<KClass<out IProjectileEntity>>(
-            Asteroid::class, ExplodingBall::class, RocketBomb::class
+            Asteroid::class, ExplodingBall::class, RocketBomb::class, Bullet::class, ChargedShot::class
         )
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -103,7 +103,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable {
 
         val active = delayTimer == null
         body.physics.collisionOn = active
-        body.fixtures.forEach { (it.second as Fixture).active = delayTimer == null  }
+        body.fixtures.forEach { (it.second as Fixture).active = delayTimer == null }
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
@@ -114,13 +114,13 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable {
                 delayTimer = null
 
                 body.physics.collisionOn = true
-                body.fixtures.forEach { (it.second as Fixture).active = true  }
+                body.fixtures.forEach { (it.second as Fixture).active = true }
 
                 return@let
             }
 
             body.physics.collisionOn = false
-            body.fixtures.forEach { (it.second as Fixture).active = false  }
+            body.fixtures.forEach { (it.second as Fixture).active = false }
 
             blinkTimer.update(delta)
             if (blinkTimer.isFinished()) {
@@ -132,7 +132,10 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable {
 
     override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val entity = bodyFixture.getEntity()
-        if (entity == owner || (entity is IOwnable && entity.owner == owner)) return
+        if (entity == owner ||
+            (entity is IOwnable && entity.owner == owner) ||
+            (entity is IDamageable && canDamage(entity))
+        ) return
         explodeAndDie()
     }
 

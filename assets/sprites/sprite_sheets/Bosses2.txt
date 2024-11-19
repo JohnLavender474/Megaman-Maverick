@@ -1,5 +1,5 @@
 Bosses2.png
-size: 256, 1744
+size: 256, 1888
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -12,7 +12,7 @@ DesertMan/arm_extension
   index: -1
 DesertMan/arm_extension_punch
   rotate: false
-  xy: 128, 1488
+  xy: 128, 1632
   size: 128, 256
   orig: 128, 256
   offset: 0, 0
@@ -33,7 +33,7 @@ DesertMan/dance_flash
   index: -1
 DesertMan/defeated
   rotate: false
-  xy: 192, 912
+  xy: 144, 1056
   size: 64, 192
   orig: 64, 192
   offset: 0, 0
@@ -47,7 +47,7 @@ DesertMan/jump
   index: -1
 DesertMan/punch
   rotate: false
-  xy: 0, 1104
+  xy: 0, 1248
   size: 64, 192
   orig: 64, 192
   offset: 0, 0
@@ -96,14 +96,14 @@ DesertMan/wall_slide
   index: -1
 InfernoMan/charging
   rotate: false
-  xy: 64, 1104
+  xy: 64, 1248
   size: 64, 192
   orig: 64, 192
   offset: 0, 0
   index: -1
 InfernoMan/defeated
   rotate: false
-  xy: 128, 1104
+  xy: 128, 1248
   size: 64, 192
   orig: 64, 192
   offset: 0, 0
@@ -117,7 +117,7 @@ InfernoMan/flame_head
   index: -1
 InfernoMan/init
   rotate: false
-  xy: 0, 1296
+  xy: 0, 1440
   size: 192, 192
   orig: 192, 192
   offset: 0, 0
@@ -166,7 +166,7 @@ InfernoMan/stand
   index: -1
 InfernoMan/stand_shoot_mega
   rotate: false
-  xy: 0, 1488
+  xy: 0, 1632
   size: 128, 192
   orig: 128, 192
   offset: 0, 0
@@ -258,38 +258,52 @@ MoonMan/jump_shoot
 MoonMan/shoot
   rotate: false
   xy: 96, 912
-  size: 48, 144
-  orig: 48, 144
+  size: 96, 144
+  orig: 96, 144
   offset: 0, 0
   index: 0
 MoonMan/shoot
   rotate: false
-  xy: 144, 912
+  xy: 192, 912
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
   index: 1
 MoonMan/shoot
   rotate: false
+  xy: 0, 1056
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: 2
+MoonMan/shoot
+  rotate: false
   xy: 192, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
-  index: 2
+  index: 3
 MoonMan/shoot
   rotate: false
   xy: 0, 272
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
-  index: 3
+  index: 4
 MoonMan/shoot
   rotate: false
   xy: 0, 48
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
-  index: 4
+  index: 5
+MoonMan/shoot
+  rotate: false
+  xy: 48, 1056
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: 6
 MoonMan/stand
   rotate: false
   xy: 48, 272

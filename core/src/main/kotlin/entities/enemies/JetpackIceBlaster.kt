@@ -143,7 +143,7 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
         distanceType = DistanceType.FAR
 
         target = if (spawnProps.containsKey(ConstKeys.TARGET)) spawnProps.get(
@@ -156,7 +156,7 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
             val target2 = spawnProps.get(
                 "${ConstKeys.TARGET}_2", RectangleMapObject::class
             )!!.rectangle.getCenter()
-            val megamanCenter = getMegaman().body.getCenter()
+            val megamanCenter = megaman().body.getCenter()
             if (target1.dst2(megamanCenter) < target2.dst2(megamanCenter)) target1 else target2
         }
         setVelocityToTarget()
@@ -227,7 +227,7 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
                 TAG,
                 "Testing if $it is best fit with facing=$facing, angle=${line.rotation}, & line=$line"
             )
-            val distance = line.worldDistanceFromPoint(getMegaman().body.getCenter(), false)
+            val distance = line.worldDistanceFromPoint(megaman().body.getCenter(), false)
             if (distance < bestDistance) {
                 bestType = it
                 bestDistance = distance
@@ -240,17 +240,17 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
     }
 
     private fun getVerticalAdjustment(): Float {
-        if (aimLine!!.overlaps(getMegaman().damageableFixture.getShape())) return 0f
+        if (aimLine!!.overlaps(megaman().damageableFixture.getShape())) return 0f
 
         val megamanLine = GameLine(0f, 0f, 0f, ConstVals.VIEW_HEIGHT * ConstVals.PPM)
-        megamanLine.setCenter(getMegaman().body.getCenter())
-        GameLogger.debug(TAG, "Megaman center = ${getMegaman().body.getCenter()}")
+        megamanLine.setCenter(megaman().body.getCenter())
+        GameLogger.debug(TAG, "Megaman center = ${megaman().body.getCenter()}")
         GameLogger.debug(TAG, "Drawing vertical line over Megaman = $megamanLine")
 
         val intersection = megamanLine.intersectionPoint(aimLine!!) ?: return 0f
         GameLogger.debug(TAG, "Intersection between aim line and Megaman line = $intersection")
 
-        var adjustment = getMegaman().body.getCenter().y - intersection.y
+        var adjustment = megaman().body.getCenter().y - intersection.y
 
         if ((adjustment > 0f && !canMoveUp) || (adjustment < 0f && !canMoveDown)) return 0f
 
@@ -269,7 +269,7 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (getMegaman().dead) {
+            if (megaman().dead) {
                 body.physics.velocity.setZero()
                 return@add
             }
@@ -281,8 +281,8 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
                         loop.next()
                         flyToTargetTimer.reset()
 
-                        if (getMegaman().body.getMaxX() < body.x) facing = Facing.LEFT
-                        else if (getMegaman().body.x > body.getMaxX()) facing = Facing.RIGHT
+                        if (megaman().body.getMaxX() < body.x) facing = Facing.LEFT
+                        else if (megaman().body.x > body.getMaxX()) facing = Facing.RIGHT
 
                         distanceType = getBestDistanceType()
                         aimLine = calculateAimLine(distanceType)

@@ -110,7 +110,7 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
         rollTimer.reset()
         openTimer.reset()
         shootTimer.reset()
@@ -157,7 +157,7 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
                 RollingBotState.SHOOTING -> {
                     body.physics.velocity.x = 0f
-                    facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+                    facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
 
                     shootTimer.update(delta)
                     if (shootTimer.isFinished()) {

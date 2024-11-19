@@ -90,11 +90,11 @@ class OLD_UFOBombBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         dropping = false
         dropDelayTimer.reset()
         dropDurationTimer.reset()
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
     }
 
-    private fun isMegamanUnderMe() = getMegaman().body.getMaxY() <= body.y &&
-            getMegaman().body.getCenter().x >= body.x && getMegaman().body.getCenter().x <= body.getMaxX()
+    private fun isMegamanUnderMe() = megaman().body.getMaxY() <= body.y &&
+            megaman().body.getCenter().x >= body.x && megaman().body.getCenter().x <= body.getMaxX()
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
@@ -104,7 +104,7 @@ class OLD_UFOBombBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
                 if (dropDurationTimer.isFinished()) {
                     dropping = false
                     dropDurationTimer.reset()
-                    facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+                    facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
                 }
             } else {
                 dropDelayTimer.update(delta)

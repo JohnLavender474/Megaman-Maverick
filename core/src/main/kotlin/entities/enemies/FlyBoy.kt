@@ -168,7 +168,7 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            facing = if (body.x > getMegaman().body.x) Facing.LEFT else Facing.RIGHT
+            facing = if (body.x > megaman().body.x) Facing.LEFT else Facing.RIGHT
             if (body.isSensing(BodySense.FEET_ON_GROUND)) body.physics.velocity.x = 0f
             if (standing && body.isSensing(BodySense.FEET_ON_GROUND)) {
                 standTimer.update(it)
@@ -200,7 +200,7 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
     }
 
     private fun impulseToPlayer() {
-        body.physics.velocity.x = 1.85f * (getMegaman().body.x - body.x)
+        body.physics.velocity.x = 1.85f * (megaman().body.x - body.x)
         body.physics.velocity.y = 0f
     }
 }

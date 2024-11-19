@@ -83,7 +83,7 @@ class TubeBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IAudioEntity
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        if (!getMegaman().ready) return@UpdatablesComponent
+        if (!megaman().ready) return@UpdatablesComponent
 
         spawnTimer.update(delta)
         if (spawnTimer.isFinished()) {

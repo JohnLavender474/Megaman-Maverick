@@ -102,7 +102,7 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         newRockOffsetY = spawnProps.get(ConstKeys.OFFSET_Y, Float::class)!!
         waitTimer.reset()
         throwing = false
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
     }
 
     override fun onDestroy() {
@@ -114,7 +114,7 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            facing = if (getMegaman().body.x >= body.x) Facing.RIGHT else Facing.LEFT
+            facing = if (megaman().body.x >= body.x) Facing.RIGHT else Facing.LEFT
             waitTimer.update(it)
             if (waitTimer.isJustFinished()) {
                 throwRock()
@@ -208,7 +208,7 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         val caveRockToThrow = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.CAVE_ROCK)!!
         val impulse = MegaUtilMethods.calculateJumpImpulse(
             body.getTopCenterPoint(),
-            getMegaman().body.getCenter(),
+            megaman().body.getCenter(),
             ROCK_IMPULSE_Y * ConstVals.PPM
         )
         impulse.x = impulse.x.coerceIn(-ROCK_IMPULSE_X * ConstVals.PPM, ROCK_IMPULSE_X * ConstVals.PPM)

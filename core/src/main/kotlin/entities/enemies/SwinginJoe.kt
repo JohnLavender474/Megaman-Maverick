@@ -96,7 +96,7 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         body.positionOnPoint(spawn, Position.BOTTOM_CENTER)
         type = if (spawnProps.containsKey(ConstKeys.TYPE))
             spawnProps.get(ConstKeys.TYPE, String::class)!! else ""
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -167,7 +167,7 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            facing = if (getMegaman().body.x > body.x) Facing.RIGHT else Facing.LEFT
+            facing = if (megaman().body.x > body.x) Facing.RIGHT else Facing.LEFT
             settingTimer.update(it)
             if (settingTimer.isJustFinished()) {
                 val index = (setting.ordinal + 1) % SwinginJoeSetting.values().size

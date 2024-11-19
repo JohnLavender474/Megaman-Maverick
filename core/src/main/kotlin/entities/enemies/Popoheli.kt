@@ -124,9 +124,9 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
                     triggers.add(TriggerDef(trigger, start, target))
                 }
             }
-            facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+            facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
         } else {
-            val center = getMegaman().body.getCenter()
+            val center = megaman().body.getCenter()
             val targets =
                 PriorityQueue<Vector2> { target1, target2 -> target1.dst2(center).compareTo(target2.dst2(center)) }
             spawnProps.getAllMatching { it.toString().startsWith(ConstKeys.TARGET) }.forEach {
@@ -159,7 +159,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
                 PopoheliState.WAITING -> {
                     body.physics.velocity.setZero()
                     triggers.forEach {
-                        if (getMegaman().body.overlaps(it.trigger)) {
+                        if (megaman().body.overlaps(it.trigger)) {
                             body.setCenter(it.start)
                             target = it.target
                             state = PopoheliState.APPROACHING

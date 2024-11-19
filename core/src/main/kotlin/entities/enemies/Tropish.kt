@@ -98,7 +98,7 @@ class Tropish(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         body.physics.gravityOn = false
         body.fixtures.forEach { (it.second as Fixture).active = false }
 
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
     }
 
     override fun canDamage(damageable: IDamageable) = tropishState != TropishState.WAIT
@@ -106,7 +106,7 @@ class Tropish(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     private fun startSwim() {
         tropishState = TropishState.SWIM
         body.setCenter(startPosition)
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
         val speed = SWIM_SPEED * ConstVals.PPM * facing.value
         body.physics.velocity.x = speed
         body.fixtures.forEach { (it.second as Fixture).active = true }
@@ -128,7 +128,7 @@ class Tropish(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            if (tropishState == TropishState.WAIT && getMegaman().body.overlaps(triggerBox as Rectangle)) startSwim()
+            if (tropishState == TropishState.WAIT && megaman().body.overlaps(triggerBox as Rectangle)) startSwim()
             else if (tropishState == TropishState.BENT && body.isSensing(BodySense.FEET_ON_GROUND)) explodeAndDie()
         }
     }

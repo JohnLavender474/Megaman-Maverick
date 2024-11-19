@@ -150,7 +150,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         throwOnJump = true
 
         currentState = ReactManState.STAND
-        facing = if (getMegaman().body.x <= body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.x <= body.x) Facing.LEFT else Facing.RIGHT
     }
 
     override fun onReady() {
@@ -185,8 +185,8 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 ReactManState.STAND -> {
                     if (projectile == null) spawnProjectile()
 
-                    if (getMegaman().body.x <= body.x) facing = Facing.LEFT
-                    else if (getMegaman().body.getMaxX() >= body.getMaxX()) facing = Facing.RIGHT
+                    if (megaman().body.x <= body.x) facing = Facing.LEFT
+                    else if (megaman().body.getMaxX() >= body.getMaxX()) facing = Facing.RIGHT
 
                     if (body.isSensing(BodySense.FEET_ON_GROUND)) {
                         body.physics.velocity.setZero()
@@ -207,8 +207,8 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                         return@add
                     }
 
-                    if (getMegaman().body.x <= body.x) facing = Facing.LEFT
-                    else if (getMegaman().body.getMaxX() >= body.getMaxX()) facing = Facing.RIGHT
+                    if (megaman().body.x <= body.x) facing = Facing.LEFT
+                    else if (megaman().body.getMaxX() >= body.getMaxX()) facing = Facing.RIGHT
 
                     if (throwOnJump) {
                         throwTimer.update(delta)
@@ -231,8 +231,8 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                     if (throwTimer.isFinished()) {
                         throwTimer.reset()
 
-                        if (getMegaman().body.x <= body.x) facing = Facing.LEFT
-                        else if (getMegaman().body.getMaxX() >= body.getMaxX()) facing = Facing.RIGHT
+                        if (megaman().body.x <= body.x) facing = Facing.LEFT
+                        else if (megaman().body.getMaxX() >= body.getMaxX()) facing = Facing.RIGHT
 
                         currentState = ReactManState.RUN
                     }
@@ -255,7 +255,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     private fun jump() {
         val impulse = MegaUtilMethods.calculateJumpImpulse(
             body.getPosition(),
-            getMegaman().body.getPosition(),
+            megaman().body.getPosition(),
             JUMP_IMPULSE * ConstVals.PPM
         )
         body.physics.velocity.set(impulse)
@@ -279,7 +279,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
     private fun throwProjectile() {
         val trajectory =
-            getMegaman().body.getCenter().sub(body.getCenter()).nor().scl(getProjectileSpeed() * ConstVals.PPM)
+            megaman().body.getCenter().sub(body.getCenter()).nor().scl(getProjectileSpeed() * ConstVals.PPM)
         projectile!!.setTrajectory(trajectory)
         projectile!!.active = true
         projectile = null

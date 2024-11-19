@@ -57,7 +57,7 @@ class RocketBomb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
         super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
-        directionRotation = getSingleMostDirectionFromStartToTarget(spawn, getMegaman().body.getCenter())
+        directionRotation = getSingleMostDirectionFromStartToTarget(spawn, megaman().body.getCenter())
         body.physics.velocity = Vector2(0f, SPEED * ConstVals.PPM).rotateDeg(directionRotation?.rotation ?: 0f)
     }
 

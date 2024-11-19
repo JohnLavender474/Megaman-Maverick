@@ -92,7 +92,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
         currentBehavior = DragonFlyBehavior.MOVE_UP
         previousBehavior = DragonFlyBehavior.MOVE_UP
         behaviorTimer.reset()
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
     }
 
     override fun defineBodyComponent(): BodyComponent {

@@ -15,7 +15,6 @@ import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
@@ -90,7 +89,7 @@ class PenguinBot(game: MegamanMaverickGame): AbstractEnemy(game), IAnimatedEntit
         val spawn = spawnProps.get(ConstKeys.POSITION, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
         penguinBotState = PenguinBotState.WADDLE
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {

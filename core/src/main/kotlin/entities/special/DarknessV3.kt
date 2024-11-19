@@ -362,12 +362,12 @@ class DarknessV3(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         MegaGameEntitiesMap.getEntitiesOfType(EntityType.PROJECTILE).forEach { t -> tryToLightUp(t) }
         MegaGameEntitiesMap.getEntitiesOfType(EntityType.EXPLOSION).forEach { t -> tryToLightUp(t) }
 
-        if (getMegaman().body.overlaps(bounds as Rectangle) && getMegaman().charging) {
+        if (megaman().body.overlaps(bounds as Rectangle) && megaman().charging) {
             val lightSourceDef = lightSourcePool.fetch()
-            lightSourceDef.center = getMegaman().body.getCenter()
+            lightSourceDef.center = megaman().body.getCenter()
             lightSourceDef.radius = MEGAMAN_CHARGING_RADIUS
             lightSourceDef.radiance = MEGAMAN_CHARGING_RADIANCE
-            queuedLightSourcesToAdd.addLast(getMegaman().mapObjectId pairTo lightSourceDef)
+            queuedLightSourcesToAdd.addLast(megaman().mapObjectId pairTo lightSourceDef)
         }
 
         while (!queuedLightSourcesToAdd.isEmpty) {

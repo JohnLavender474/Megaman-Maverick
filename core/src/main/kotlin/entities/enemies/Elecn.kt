@@ -76,8 +76,8 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override var facing = Facing.LEFT
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class pairTo dmgNeg(10), 
-        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH), 
+        Bullet::class pairTo dmgNeg(10),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
         ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
@@ -112,7 +112,7 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         body.setCenter(spawn)
         elecnLoop.reset()
         elecnTimer.reset()
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {

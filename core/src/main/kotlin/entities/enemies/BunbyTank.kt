@@ -120,10 +120,10 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         directionRotation =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
         facing = when (directionRotation) {
-            Direction.UP -> if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
-            Direction.DOWN -> if (getMegaman().body.x < body.x) Facing.RIGHT else Facing.LEFT
-            Direction.LEFT -> if (getMegaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
-            Direction.RIGHT -> if (getMegaman().body.y < body.y) Facing.RIGHT else Facing.LEFT
+            Direction.UP -> if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+            Direction.DOWN -> if (megaman().body.x < body.x) Facing.RIGHT else Facing.LEFT
+            Direction.LEFT -> if (megaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
+            Direction.RIGHT -> if (megaman().body.y < body.y) Facing.RIGHT else Facing.LEFT
         }
 
         shootTimer.setToEnd()
@@ -199,12 +199,12 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             val turnAroundScannerPosition = body.getPositionPoint(position.opposite())
             turnAroundScanner.positionOnPoint(turnAroundScannerPosition, position.opposite())
 
-            if (!getMegaman().dead) {
-                if (getMegaman().body.overlaps(shootScanner as Rectangle)) {
+            if (!megaman().dead) {
+                if (megaman().body.overlaps(shootScanner as Rectangle)) {
                     body.physics.velocity.setZero()
                     shootTimer.reset()
                     return@add
-                } else if (getMegaman().body.overlaps(turnAroundScanner as Rectangle)) swapFacing()
+                } else if (megaman().body.overlaps(turnAroundScanner as Rectangle)) swapFacing()
             }
 
             body.physics.velocity = (when (directionRotation) {

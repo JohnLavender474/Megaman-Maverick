@@ -90,7 +90,7 @@ class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
         chompTimer.setToEnd()
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
     }
 
     override fun onDestroy() {
@@ -115,7 +115,7 @@ class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
             chompTimer.update(it)
 
-            val megamanBody = getMegaman().body
+            val megamanBody = megaman().body
 
             if (body.x >= megamanBody.getMaxX()) facing = Facing.LEFT
             else if (body.getMaxX() <= megamanBody.x) facing = Facing.RIGHT

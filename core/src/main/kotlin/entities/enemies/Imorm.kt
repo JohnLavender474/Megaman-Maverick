@@ -74,7 +74,7 @@ class Imorm(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
         val position = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(position)
         slitherTimer.reset()
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
         directionRotation = Direction.valueOf(
             spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class)
                 .uppercase()

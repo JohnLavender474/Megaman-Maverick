@@ -265,7 +265,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setOriginCenter()
-            _sprite.rotation = getMegaman().directionRotation.rotation
+            _sprite.rotation = megaman().directionRotation.rotation
             _sprite.hidden = damageBlink
             _sprite.setPosition(body.getCenter(), Position.CENTER)
         }
@@ -291,7 +291,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
     private fun definePathfindingComponent(): PathfindingComponent {
         val params = PathfinderParams(
             startCoordinateSupplier = { body.getCenter().toGridCoordinate() },
-            targetCoordinateSupplier = { getMegaman().body.getCenter().toGridCoordinate() },
+            targetCoordinateSupplier = { megaman().body.getCenter().toGridCoordinate() },
             allowDiagonal = { true },
             filter = { coordinate ->
                 val bodies = game.getWorldContainer()!!.getBodies(coordinate.x, coordinate.y)
@@ -341,6 +341,6 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
 
     private fun directlyChaseMegaman() {
         body.physics.velocity =
-            getMegaman().body.getCenter().sub(body.getCenter()).nor().scl(flyToAttackSpeed * ConstVals.PPM)
+            megaman().body.getCenter().sub(body.getCenter()).nor().scl(flyToAttackSpeed * ConstVals.PPM)
     }
 }

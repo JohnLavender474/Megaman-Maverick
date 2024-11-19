@@ -85,7 +85,7 @@ class FlameHeadThrower(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimat
     private fun throwFlame() {
         val trajectory = MegaUtilMethods.calculateJumpImpulse(
             body.getTopCenterPoint(),
-            getMegaman().body.getCenter(),
+            megaman().body.getCenter(),
             IMPULSE_Y * ConstVals.PPM
         ).coerceX(-MAX_THROW_X * ConstVals.PPM, MAX_THROW_X * ConstVals.PPM)
 

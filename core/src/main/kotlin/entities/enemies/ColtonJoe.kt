@@ -103,7 +103,7 @@ class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         scanner = GameRectangle().setSize(10f * ConstVals.PPM, ConstVals.PPM.toFloat())
         shootTimer.setToEnd()
         shootDelayTimer.setToEnd()
-        facing = if (body.x < getMegaman().body.x) Facing.RIGHT else Facing.LEFT
+        facing = if (body.x < megaman().body.x) Facing.RIGHT else Facing.LEFT
     }
 
     private fun shoot() {
@@ -132,7 +132,7 @@ class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             val position = if (isFacing(Facing.LEFT)) Position.CENTER_RIGHT else Position.CENTER_LEFT
             scanner.positionOnPoint(body.getCenter(), position)
 
-            if (shootDelayTimer.isFinished() && scanner.overlaps(getMegaman().body as Rectangle)) shootDelayTimer.reset()
+            if (shootDelayTimer.isFinished() && scanner.overlaps(megaman().body as Rectangle)) shootDelayTimer.reset()
 
             if (!shootDelayTimer.isFinished()) {
                 shootDelayTimer.update(delta)
@@ -142,7 +142,7 @@ class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                 }
             }
 
-            facing = if (body.x < getMegaman().body.x) Facing.RIGHT else Facing.LEFT
+            facing = if (body.x < megaman().body.x) Facing.RIGHT else Facing.LEFT
         }
     }
 

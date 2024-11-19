@@ -122,7 +122,7 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         updatablesComponent.add {
             if (body.isSensing(BodySense.FEET_ON_GROUND)) {
                 standTimer.update(it)
-                facing = if (getMegaman().body.x > body.x) Facing.RIGHT else Facing.LEFT
+                facing = if (megaman().body.x > body.x) Facing.RIGHT else Facing.LEFT
             }
 
             if (standTimer.isFinished()) {

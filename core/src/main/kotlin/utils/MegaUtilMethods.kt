@@ -2,14 +2,15 @@ package com.megaman.maverick.game.utils
 
 import com.badlogic.gdx.math.Vector2
 import com.megaman.maverick.game.ConstVals
+import kotlin.math.roundToInt
 
 object MegaUtilMethods {
 
-    fun getSmallFontSize() = Math.round(ConstVals.PPM / 3f)
+    fun getSmallFontSize() = (ConstVals.PPM / 3f).roundToInt()
 
-    fun getDefaultFontSize() = Math.round(ConstVals.PPM / 2f)
+    fun getDefaultFontSize() = (ConstVals.PPM / 2f).roundToInt()
 
-    fun getLargeFontSize() = Math.round(ConstVals.PPM / 1.5f)
+    fun getLargeFontSize() = (ConstVals.PPM / 1.5f).roundToInt()
 
     fun calculateJumpImpulse(
         source: Vector2,

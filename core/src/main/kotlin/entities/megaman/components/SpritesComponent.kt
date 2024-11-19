@@ -48,18 +48,44 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
         val bodyPosition = body.getPositionPoint(position)
         player.setPosition(bodyPosition, position)
 
-        val xTranslation =  when (direction) {
-            Direction.UP, Direction.DOWN -> if (rawAnimKey == "JumpShoot") 0.1f * facing.value else 0f
-            Direction.LEFT -> 0.2f
-            Direction.RIGHT -> -0.2f
+        val xTranslation = when (direction) {
+            Direction.UP, Direction.DOWN -> when (rawAnimKey) {
+                "JumpShoot" -> 0.1f * facing.value
+                else -> 0f
+            }
+
+            Direction.LEFT -> {
+                when {
+                    isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0.3f
+                    else -> 0.2f
+                }
+            }
+
+            Direction.RIGHT -> {
+                when {
+                    isBehaviorActive(BehaviorType.GROUND_SLIDING) -> -0.3f
+                    else -> -0.2f
+                }
+            }
         }
         player.translateX(xTranslation * ConstVals.PPM)
 
         val yTranslation = when (direction) {
-            Direction.UP -> if (!body.isSensing(BodySense.FEET_ON_GROUND) &&
-                !isBehaviorActive(BehaviorType.WALL_SLIDING)) -0.25f else 0f
-            Direction.DOWN -> 0.1f
-            Direction.LEFT, Direction.RIGHT -> if (rawAnimKey == "JumpShoot") 0.1f * facing.value else 0f
+            Direction.UP -> when {
+                !body.isSensing(BodySense.FEET_ON_GROUND) && !isBehaviorActive(BehaviorType.WALL_SLIDING) -> -0.25f
+                isBehaviorActive(BehaviorType.GROUND_SLIDING) -> -0.15f
+                else -> 0f
+            }
+
+            Direction.DOWN -> when {
+                isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0.125f
+                else -> 0.075f
+            }
+
+            Direction.LEFT, Direction.RIGHT -> when (rawAnimKey) {
+                "JumpShoot" -> 0.1f * facing.value
+                else -> 0f
+            }
         }
         player.translateY(yTranslation * ConstVals.PPM)
 
@@ -77,7 +103,7 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
         }
 
         flame.setOriginCenter()
-        flame.rotation = directionRotation?.rotation ?: 0f
+        flame.rotation = directionRotation.rotation
 
         val verticalOffset = -0.25f * ConstVals.PPM
         val facingOffsetScaled = -0.45f * facing.value * ConstVals.PPM

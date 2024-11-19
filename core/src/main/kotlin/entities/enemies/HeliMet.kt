@@ -123,7 +123,7 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
             val target2 =
                 spawnProps.get("${ConstKeys.TARGET}_2", RectangleMapObject::class)!!
                     .rectangle.toGameRectangle().getCenter()
-            val megamanCenter = getMegaman().body.getCenter()
+            val megamanCenter = megaman().body.getCenter()
             target = if (target1.dst2(megamanCenter) < target2.dst2(megamanCenter)) target1 else target2
         }
 
@@ -168,10 +168,10 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
                 FLY -> {
                     facing = when (directionRotation) {
-                        Direction.UP -> if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
-                        Direction.DOWN -> if (getMegaman().body.x < body.x) Facing.RIGHT else Facing.LEFT
-                        Direction.LEFT -> if (getMegaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
-                        Direction.RIGHT -> if (getMegaman().body.y < body.y) Facing.RIGHT else Facing.LEFT
+                        Direction.UP -> if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+                        Direction.DOWN -> if (megaman().body.x < body.x) Facing.RIGHT else Facing.LEFT
+                        Direction.LEFT -> if (megaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
+                        Direction.RIGHT -> if (megaman().body.y < body.y) Facing.RIGHT else Facing.LEFT
                     }
 
                     sideToSideTimer.update(delta)
@@ -297,7 +297,7 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
                     0.25f * ConstVals.PPM, (ConstVals.PPM / 64f) * facing.value
                 )
         }
-        val trajectory = getMegaman().body.getCenter().sub(spawn).nor().scl(BULLET_VELOCITY * ConstVals.PPM)
+        val trajectory = megaman().body.getCenter().sub(spawn).nor().scl(BULLET_VELOCITY * ConstVals.PPM)
         val spawnProps =
             props(
                 ConstKeys.OWNER pairTo this,

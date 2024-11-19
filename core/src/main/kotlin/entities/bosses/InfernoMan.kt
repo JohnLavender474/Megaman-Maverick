@@ -433,7 +433,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
             InfernoManState.JUMP -> {
                 body.physics.applyFrictionX = false
-                jump(getMegaman().body.getCenter())
+                jump(megaman().body.getCenter())
                 resetShootTimer()
             }
 
@@ -463,7 +463,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             }
 
             InfernoManState.JUMP -> when {
-                getMegaman().body.getMaxY() < body.y -> ShootMethod.DOWN
+                megaman().body.getMaxY() < body.y -> ShootMethod.DOWN
                 isMegamanStraightAhead() -> ShootMethod.STRAIGHT
                 else -> ShootMethod.UP
             }
@@ -560,7 +560,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
     private fun spawnMeteor(targetMegaman: Boolean) {
         var x = when {
-            targetMegaman -> getMegaman().body.getCenter().x
+            targetMegaman -> megaman().body.getCenter().x
             else -> getRandom(meteorSpawner.x, meteorSpawner.getMaxX())
         }
         x = x.coerceIn(meteorSpawner.x, meteorSpawner.getMaxX())
@@ -598,12 +598,12 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     private fun shouldFinishJumping() = isWallSliding() || shouldGoToStandState()
 
     private fun isMegamanStraightAhead() =
-        abs(getMegaman().body.y - body.y) <= MEGAMAN_STRAIGHT_Y_THRESHOLD * ConstVals.PPM
+        abs(megaman().body.y - body.y) <= MEGAMAN_STRAIGHT_Y_THRESHOLD * ConstVals.PPM
 
     private fun updateFacing() {
         when {
-            getMegaman().body.getMaxX() < body.x -> facing = Facing.LEFT
-            getMegaman().body.x > body.getMaxX() -> facing = Facing.RIGHT
+            megaman().body.getMaxX() < body.x -> facing = Facing.LEFT
+            megaman().body.x > body.getMaxX() -> facing = Facing.RIGHT
         }
     }
 }

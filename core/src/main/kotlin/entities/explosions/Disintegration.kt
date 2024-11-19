@@ -59,7 +59,7 @@ class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
         super.onSpawn(spawnProps)
 
         val rawDir = spawnProps.get(ConstKeys.DIRECTION, String::class)
-        directionRotation = rawDir?.let { Direction.valueOf(it.uppercase()) } ?: getMegaman().directionRotation
+        directionRotation = rawDir?.let { Direction.valueOf(it.uppercase()) } ?: megaman().directionRotation
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         firstSprite.setPosition(spawn, Position.CENTER)

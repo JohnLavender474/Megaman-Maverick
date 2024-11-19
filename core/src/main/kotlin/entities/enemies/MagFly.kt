@@ -162,10 +162,10 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
                 forceFlashTimer.reset()
             }
 
-            val slow = getMegaman().body.overlaps(forceFixture.getShape() as Rectangle)
+            val slow = megaman().body.overlaps(forceFixture.getShape() as Rectangle)
 
-            if (!slow && getMegaman().body.y < body.y && !facingAndMMDirMatch()) facing =
-                if (getMegaman().body.x > body.x) Facing.RIGHT else Facing.LEFT
+            if (!slow && megaman().body.y < body.y && !facingAndMMDirMatch()) facing =
+                if (megaman().body.x > body.x) Facing.RIGHT else Facing.LEFT
 
             if ((facing == Facing.LEFT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) || (facing == Facing.RIGHT && body.isSensing(
                     BodySense.SIDE_TOUCHING_BLOCK_RIGHT

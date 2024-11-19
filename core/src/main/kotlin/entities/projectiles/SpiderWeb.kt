@@ -77,8 +77,8 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
     override fun init() {
         if (grayRegion == null || blinkWhiteRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
-            grayRegion = atlas.findRegion("SpiderWeb/Gray")
-            blinkWhiteRegion = atlas.findRegion("SpiderWeb/BlinkWhite")
+            grayRegion = atlas.findRegion("$TAG/Gray")
+            blinkWhiteRegion = atlas.findRegion("$TAG/BlinkWhite")
         }
         super.init()
         addComponent(defineUpdatablesComponent())
@@ -110,10 +110,10 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
             WEBS_STUCK_TO_MEGAMAN.remove(this)
             if (WEBS_STUCK_TO_MEGAMAN.isEmpty) {
                 stuckToMegaman = false
-                getMegaman().let { megaman ->
-                    megaman.canMove = true
-                    megaman.setAllBehaviorsAllowed(true)
-                    megaman.body.physics.gravityOn = true
+                megaman().let {
+                    it.canMove = true
+                    it.setAllBehaviorsAllowed(true)
+                    it.body.physics.gravityOn = true
                 }
             }
         }
@@ -137,10 +137,10 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
     private fun stickToMegaman() {
         stuckToMegaman = true
 
-        body.setCenter(getMegaman().body.getCenter())
+        body.setCenter(megaman().body.getCenter())
         trajectory.setZero()
 
-        getMegaman().let { megaman ->
+        megaman().let { megaman ->
             megaman.setAllBehaviorsAllowed(false)
             megaman.body.physics.velocity.setZero()
             megaman.body.physics.gravityOn = false
@@ -154,7 +154,7 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         val body = Body(BodyType.ABSTRACT)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
-        val debugShapes = gdxArrayOf<() -> IDrawableShape?>({ body })
+        val debugShapes = gdxArrayOf<() -> IDrawableShape?>({ body.getBodyBounds() })
         body.preProcess.put(ConstKeys.DEFAULT) { delta ->
             body.physics.velocity.set(trajectory)
             if (!stuckToMegaman) {
@@ -170,9 +170,9 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
         blinkWhiteTimer.update(it)
-        if (!stuckToMegaman && !getMegaman().dead && body.overlaps(getMegaman().body as Rectangle)) stickToMegaman()
+        if (!stuckToMegaman && !megaman().dead && body.overlaps(megaman().body as Rectangle)) stickToMegaman()
         else if (stuckToMegaman) {
-            body.setCenter(getMegaman().body.getCenter())
+            body.setCenter(megaman().body.getCenter())
             if (game.controllerPoller.isAnyJustReleased(BUTTONS_TO_GET_UNSTUCK)) {
                 presses++
                 blinkWhiteTimer.reset()
@@ -185,10 +185,10 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 5))
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setSize(body.width, body.height)
-            _sprite.setCenter(body.getCenter())
-            _sprite.setFlip(trajectory.x < 0f, false)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setSize(body.width, body.height)
+            sprite.setCenter(body.getCenter())
+            sprite.setFlip(trajectory.x < 0f, false)
         }
         return spritesComponent
     }

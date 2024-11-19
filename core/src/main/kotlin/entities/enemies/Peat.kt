@@ -91,14 +91,14 @@ class Peat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+            facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
             if (!moving) {
                 body.physics.velocity.setZero()
                 delayTimer.update(delta)
                 if (delayTimer.isFinished()) {
                     moving = true
                     startPosition = body.getCenter()
-                    targetPosition = getMegaman().body.getCenter()
+                    targetPosition = megaman().body.getCenter()
                     val midX = (startPosition!!.x + targetPosition!!.x) / 2f
                     val midY = (startPosition!!.y + targetPosition!!.y) / 2f
                     midPoint = Vector2(midX, midY)

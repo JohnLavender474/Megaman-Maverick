@@ -81,7 +81,7 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
         body.physics.velocity.setZero()
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -145,7 +145,7 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             speedUpScanner.setCenter(body.getCenter())
             turnTimer.update(it)
 
-            if (turnTimer.isJustFinished()) facing = if (getMegaman().body.x > body.x) Facing.RIGHT else Facing.LEFT
+            if (turnTimer.isJustFinished()) facing = if (megaman().body.x > body.x) Facing.RIGHT else Facing.LEFT
             if (turnTimer.isFinished() && facingWrongDirection) turnTimer.reset()
 
             bounceTimer.update(it)
@@ -158,7 +158,7 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
                 if ((isFacing(Facing.LEFT) && !body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
                     (isFacing(Facing.RIGHT) && !body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
                 ) 0f
-                else (if (getMegaman().body.overlaps(speedUpScanner)) SPEED_SUPER else SPEED_NORMAL) * ConstVals.PPM * facing.value
+                else (if (megaman().body.overlaps(speedUpScanner)) SPEED_SUPER else SPEED_NORMAL) * ConstVals.PPM * facing.value
         }
     }
 

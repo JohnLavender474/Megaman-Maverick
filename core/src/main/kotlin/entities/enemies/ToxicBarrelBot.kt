@@ -111,7 +111,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         transTimer.reset()
         openTimer.reset()
         toxicBarrelBotState = ToxicBarrelBotState.CLOSED
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
         shot = false
     }
 
@@ -120,7 +120,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         updatablesComponent.add { delta ->
             when (toxicBarrelBotState) {
                 ToxicBarrelBotState.CLOSED -> {
-                    facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+                    facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
                     closedTimer.update(delta)
                     if (closedTimer.isFinished()) {
                         val openingTop = getRandomBool()
