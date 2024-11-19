@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.factories
 
+
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.common.interfaces.IClearable
 import com.mega.game.engine.common.interfaces.Initializable

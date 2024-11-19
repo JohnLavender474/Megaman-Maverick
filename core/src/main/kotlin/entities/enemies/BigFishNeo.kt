@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
+
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
@@ -35,6 +36,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
@@ -80,7 +82,7 @@ class BigFishNeo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             minX = spawn.x
             maxX = spawn.x + xValue
         }
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
         laughTimer.setToEnd()
     }
 

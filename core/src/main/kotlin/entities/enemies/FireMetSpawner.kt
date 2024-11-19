@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
+
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
@@ -150,8 +151,8 @@ class FireMetSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParentE
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(body.getTopCenterPoint(), Position.TOP_CENTER)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setPosition(body.getTopCenterPoint(), Position.TOP_CENTER)
         }
         return spritesComponent
     }

@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
+
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
@@ -16,7 +17,6 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.interfaces.Updatable
-
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -43,6 +43,7 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -102,7 +103,7 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         newRockOffsetY = spawnProps.get(ConstKeys.OFFSET_Y, Float::class)!!
         waitTimer.reset()
         throwing = false
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
     }
 
     override fun onDestroy() {
@@ -114,7 +115,7 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            facing = if (getMegaman().body.x >= body.x) Facing.RIGHT else Facing.LEFT
+            facing = if (megaman.body.x >= body.x) Facing.RIGHT else Facing.LEFT
             waitTimer.update(it)
             if (waitTimer.isJustFinished()) {
                 throwRock()
@@ -208,7 +209,7 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         val caveRockToThrow = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.CAVE_ROCK)!!
         val impulse = MegaUtilMethods.calculateJumpImpulse(
             body.getTopCenterPoint(),
-            getMegaman().body.getCenter(),
+            megaman.body.getCenter(),
             ROCK_IMPULSE_Y * ConstVals.PPM
         )
         impulse.x = impulse.x.coerceIn(-ROCK_IMPULSE_X * ConstVals.PPM, ROCK_IMPULSE_X * ConstVals.PPM)

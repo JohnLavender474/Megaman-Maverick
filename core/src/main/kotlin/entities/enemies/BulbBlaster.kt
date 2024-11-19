@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
+
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
@@ -157,9 +158,9 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IEventListen
         val sprite = GameSprite()
         sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.hidden = damageBlink
-            _sprite.setCenter(body.getCenter())
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.hidden = damageBlink
+            sprite.setCenter(body.getCenter())
         }
         return spritesComponent
     }

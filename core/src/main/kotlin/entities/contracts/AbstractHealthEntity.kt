@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.contracts
 
+
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.objects.Properties

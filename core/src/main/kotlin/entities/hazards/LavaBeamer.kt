@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.hazards
 
+
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation

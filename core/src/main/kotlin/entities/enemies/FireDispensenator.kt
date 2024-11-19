@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
+
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Rectangle
@@ -45,6 +46,7 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -113,7 +115,7 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
         scanner = spawnProps.get(ConstKeys.SCANNER, RectangleMapObject::class)!!.rectangle
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
         timers.values().forEach { it.reset() }
         stateMachine.reset()
     }
@@ -124,7 +126,7 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
             val state = stateMachine.getCurrent()
 
             if (!state.equalsAny(FireDispensenatorState.CLOSE, FireDispensenatorState.FIRE))
-                facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+                facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
 
             val timer = timers[state.name.lowercase()]
             timer.update(delta)
@@ -176,12 +178,12 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
         builder.setOnChangeState(this::onChangeState)
         builder.initialState(FireDispensenatorState.SLEEP.name)
             .transition(FireDispensenatorState.SLEEP.name, FireDispensenatorState.OPEN.name) {
-                getMegaman().body.overlaps(scanner)
+                megaman.body.overlaps(scanner)
             }
             .transition(FireDispensenatorState.OPEN.name, FireDispensenatorState.FIRE.name) { true }
             .transition(FireDispensenatorState.FIRE.name, FireDispensenatorState.CLOSE.name) { true }
             .transition(FireDispensenatorState.CLOSE.name, FireDispensenatorState.OPEN.name) {
-                getMegaman().body.overlaps(scanner)
+                megaman.body.overlaps(scanner)
             }
             .transition(FireDispensenatorState.CLOSE.name, FireDispensenatorState.SLEEP.name) { true }
         return builder.build()
@@ -202,6 +204,7 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
                 ConstKeys.TRAJECTORY pairTo Vector2(FIRE_TRAJ_X * ConstVals.PPM * facing.value, 0f)
             )
         )
+
         requestToPlaySound(SoundAsset.ATOMIC_FIRE_SOUND, false)
     }
 }

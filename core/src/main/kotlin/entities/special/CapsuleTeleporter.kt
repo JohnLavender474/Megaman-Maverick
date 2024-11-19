@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.special
 
+
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Rectangle

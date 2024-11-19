@@ -1,6 +1,41 @@
 package com.megaman.maverick.game.entities.blocks
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion
+
+
+import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectMap
+import com.badlogic.gdx.utils.OrderedMap
+import com.mega.game.engine.animations.Animation
+import com.mega.game.engine.animations.AnimationsComponent
+import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.animations.IAnimator
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.objects.GamePair
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.entities.contracts.IDrawableShapesEntity
+import com.mega.game.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.world.body.Fixture
+import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.ConstVals
+import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.animations.AnimationDef
+import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.utils.VelocityAlteration
+import com.megaman.maverick.game.utils.VelocityAlterationType
+import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBody
+import com.megaman.maverick.game.world.body.setEntity
+import com.megaman.maverick.game.world.body.setVelocityAlteration
+
+com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap

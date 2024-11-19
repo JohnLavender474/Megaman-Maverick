@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.megaman.components
 
+
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
@@ -56,12 +57,6 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
                 body.physics.velocity.x += impulse
             else if (isDirectionRotatedHorizontally() && abs(body.physics.velocity.y) < threshold)
                 body.physics.velocity.y += impulse
-            /*
-            if (isDirectionRotatedVertically() && body.physics.velocity.x > -threshold)
-                body.physics.velocity.x -= rawImpulse * delta * movementScalar * ConstVals.PPM
-            else if (isDirectionRotatedHorizontally() && body.physics.velocity.y > -threshold)
-                body.physics.velocity.y -= rawImpulse * delta * movementScalar * ConstVals.PPM
-             */
         },
         onJustReleased = { poller ->
             GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "left actuator just released")
@@ -102,12 +97,6 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
                 body.physics.velocity.x += impulse
             else if (isDirectionRotatedHorizontally() && abs(body.physics.velocity.y) < threshold)
                 body.physics.velocity.y += impulse
-            /*
-            if (isDirectionRotatedVertically() && body.physics.velocity.x < threshold)
-                body.physics.velocity.x += impulse * delta * movementScalar * ConstVals.PPM
-            else if (isDirectionRotatedHorizontally() && body.physics.velocity.y < threshold)
-                body.physics.velocity.y += impulse * delta * movementScalar * ConstVals.PPM
-             */
         },
         onJustReleased = { poller ->
             GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "right actuator just released")
@@ -129,6 +118,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
                 stopCharging()
                 return@ButtonActuator
             }
+
             chargingTimer.update(delta)
         },
         onJustReleased = {
@@ -139,6 +129,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
                 stopCharging()
                 return@ButtonActuator
             }
+
             shoot()
             stopCharging()
         },

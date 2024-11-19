@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.projectiles
 
+
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.animations.Animation
@@ -36,7 +37,7 @@ class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
     companion object {
         const val TAG = "TubeBeam"
-        const val DEFAULT_CULL_TIME = 1f
+        const val DEFAULT_CULL_TIME = 1.5f
         private var region: TextureRegion? = null
     }
 

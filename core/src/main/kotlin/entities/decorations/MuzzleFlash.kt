@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.decorations
 
+
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.animations.Animation

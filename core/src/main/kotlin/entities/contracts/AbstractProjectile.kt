@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.contracts
 
+
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.entities.GameEntity

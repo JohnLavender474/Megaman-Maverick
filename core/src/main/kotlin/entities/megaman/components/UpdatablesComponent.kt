@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.megaman.components
 
+
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props

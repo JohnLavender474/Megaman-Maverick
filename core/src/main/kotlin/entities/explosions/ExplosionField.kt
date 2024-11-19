@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.explosions
 
+
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo

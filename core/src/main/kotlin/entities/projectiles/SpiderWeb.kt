@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.projectiles
 
+
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
@@ -40,6 +41,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
@@ -110,7 +112,7 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
             WEBS_STUCK_TO_MEGAMAN.remove(this)
             if (WEBS_STUCK_TO_MEGAMAN.isEmpty) {
                 stuckToMegaman = false
-                getMegaman().let { megaman ->
+                megaman.let { megaman ->
                     megaman.canMove = true
                     megaman.setAllBehaviorsAllowed(true)
                     megaman.body.physics.gravityOn = true
@@ -137,10 +139,10 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
     private fun stickToMegaman() {
         stuckToMegaman = true
 
-        body.setCenter(getMegaman().body.getCenter())
+        body.setCenter(megaman.body.getCenter())
         trajectory.setZero()
 
-        getMegaman().let { megaman ->
+        megaman.let { megaman ->
             megaman.setAllBehaviorsAllowed(false)
             megaman.body.physics.velocity.setZero()
             megaman.body.physics.gravityOn = false
@@ -170,9 +172,9 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
         blinkWhiteTimer.update(it)
-        if (!stuckToMegaman && !getMegaman().dead && body.overlaps(getMegaman().body as Rectangle)) stickToMegaman()
+        if (!stuckToMegaman && !megaman.dead && body.overlaps(megaman.body as Rectangle)) stickToMegaman()
         else if (stuckToMegaman) {
-            body.setCenter(getMegaman().body.getCenter())
+            body.setCenter(megaman.body.getCenter())
             if (game.controllerPoller.isAnyJustReleased(BUTTONS_TO_GET_UNSTUCK)) {
                 presses++
                 blinkWhiteTimer.reset()

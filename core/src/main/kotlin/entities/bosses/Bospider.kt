@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.entities.bosses
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion
+
+
 import com.badlogic.gdx.maps.objects.PolylineMapObject
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.MathUtils
@@ -51,6 +52,71 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
+import com.megaman.maverick.game.entities.factories.EntityFactories
+import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
+import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.projectiles.Bullet
+import com.megaman.maverick.game.entities.projectiles.ChargedShot
+import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.toProps
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.FixtureType
+import kotlin.reflect.KClass
+
+com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.maps.objects.PolylineMapObject
+import com.badlogic.gdx.maps.objects.RectangleMapObject
+import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.Queue
+import com.mega.game.engine.animations.Animation
+import com.mega.game.engine.animations.AnimationsComponent
+import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.extensions.equalsAny
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.toGdxArray
+import com.mega.game.engine.common.objects.Loop
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.shapes.toGameRectangle
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamager
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setCenter
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.IGameEntity
+import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.entities.contracts.IParentEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.Fixture
+import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.ConstVals
+import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.damage.DamageNegotiation
+import com.megaman.maverick.game.damage.dmgNeg
+import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.contracts.AbstractBoss
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
@@ -345,7 +411,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
     private fun shootWebs() {
         requestToPlaySound(SoundAsset.SPLASH_SOUND, false)
-        val centerTrajectory = getMegaman().body.getCenter().sub(body.getCenter()).nor()
+        val centerTrajectory = megaman.body.getCenter().sub(body.getCenter()).nor()
         val leftTrajectory = centerTrajectory.cpy().rotateDeg(-ANGLE_X)
         val rightTrajectory = centerTrajectory.cpy().rotateDeg(ANGLE_X)
         shootWeb(centerTrajectory)

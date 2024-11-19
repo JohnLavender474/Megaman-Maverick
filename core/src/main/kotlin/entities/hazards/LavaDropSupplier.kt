@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.hazards
 
+
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties

@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.megaman.constants
 
+
 object MegamanValues {
 
     const val START_HEALTH = 14

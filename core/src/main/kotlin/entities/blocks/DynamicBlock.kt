@@ -1,6 +1,30 @@
 package com.megaman.maverick.game.entities.blocks
 
-import com.badlogic.gdx.math.Vector2
+
+
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.entities.contracts.IDrawableShapesEntity
+import com.mega.game.engine.entities.contracts.IUpdatableEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.Fixture
+import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.factories.EntityFactories
+import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.FixtureType
+
+com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props

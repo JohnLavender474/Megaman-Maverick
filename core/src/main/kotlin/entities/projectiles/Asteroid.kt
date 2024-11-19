@@ -1,11 +1,11 @@
 package com.megaman.maverick.game.entities.projectiles
 
+
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
-import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.getRandom
@@ -15,6 +15,7 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.IGameShape2D
+import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -25,7 +26,7 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.GameEntity
-import com.mega.game.engine.points.PointsComponent
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -37,7 +38,6 @@ import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
@@ -49,6 +49,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable {
         const val BLUE = "Blue"
         const val MIN_ROTATION_SPEED = 0.5f
         const val MAX_ROTATION_SPEED = 1.5f
+        private const val BLINK_DUR = 0.01f
         private val HIT_PROJS = objectSetOf<KClass<out IProjectileEntity>>(
             Asteroid::class, ExplodingBall::class, RocketBomb::class
         )
@@ -61,6 +62,10 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable {
     private var rotation = 0f
     private var rotationSpeed = 0f
 
+    private var delayTimer: Timer? = null
+    private val blinkTimer = Timer(BLINK_DUR)
+    private var blink = false
+
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
@@ -68,7 +73,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable {
             regions.put(BLUE, atlas.findRegion("$TAG/$BLUE"))
         }
         super.init()
-        addComponent(definePointsComponent())
+        addComponent(defineUpdatablesComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -90,7 +95,41 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable {
         )
         type = spawnProps.getOrDefault(ConstKeys.TYPE, REGULAR, String::class)
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
+
+        val delay = spawnProps.get(ConstKeys.DELAY, Float::class)
+        delayTimer = if (delay != null) Timer(delay) else null
+
+        blinkTimer.reset()
+        blink = false
+
+        val active = delayTimer == null
+        body.physics.collisionOn = active
+        body.fixtures.forEach { (it.second as Fixture).active = delayTimer == null  }
     }
+
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+        delayTimer?.let { timer ->
+            timer.update(delta)
+            if (timer.isFinished()) {
+                blink = false
+                delayTimer = null
+
+                body.physics.collisionOn = true
+                body.fixtures.forEach { (it.second as Fixture).active = true  }
+
+                return@let
+            }
+
+            body.physics.collisionOn = false
+            body.fixtures.forEach { (it.second as Fixture).active = false  }
+
+            blinkTimer.update(delta)
+            if (blinkTimer.isFinished()) {
+                blink = !blink
+                blinkTimer.reset()
+            }
+        }
+    })
 
     override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val entity = bodyFixture.getEntity()
@@ -159,28 +198,15 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable {
         spritesComponent.putUpdateFunction { delta, _ ->
             val region = regions.get(type)
             sprite.setRegion(region)
+
             sprite.setCenter(body.getCenter())
+
             rotation += rotationSpeed * ConstVals.PPM * delta
             sprite.setOriginCenter()
             sprite.rotation = rotation
+
+            sprite.hidden = blink
         }
         return spritesComponent
-    }
-
-    private fun definePointsComponent(): PointsComponent {
-        val pointsComponent = PointsComponent()
-        pointsComponent.putPoints(
-            ConstKeys.HEALTH,
-            max = MegamanValues.START_HEALTH,
-            current = MegamanValues.START_HEALTH,
-            min = ConstVals.MIN_HEALTH
-        )
-        pointsComponent.putListener(ConstKeys.HEALTH) {
-            if (it.current <= ConstVals.MIN_HEALTH) {
-                GameLogger.debug(TAG, "Asteroid has died due pairTo health reaching zero.")
-                destroy()
-            }
-        }
-        return pointsComponent
     }
 }

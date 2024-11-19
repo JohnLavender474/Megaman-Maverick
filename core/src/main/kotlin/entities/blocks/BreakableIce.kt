@@ -1,6 +1,35 @@
 package com.megaman.maverick.game.entities.blocks
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion
+
+
+import com.mega.game.engine.audio.AudioComponent
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
+import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setCenter
+import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.contracts.IAudioEntity
+import com.mega.game.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.world.body.IFixture
+import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.ConstVals
+import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
+import com.megaman.maverick.game.entities.factories.EntityFactories
+import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.entities.projectiles.Bullet
+import com.megaman.maverick.game.entities.projectiles.ChargedShot
+import com.megaman.maverick.game.entities.projectiles.TeardropBlast
+import com.megaman.maverick.game.world.body.getEntity
+
+com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.objects.Properties

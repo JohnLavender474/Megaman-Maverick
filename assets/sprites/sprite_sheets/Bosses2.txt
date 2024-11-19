@@ -19,7 +19,7 @@ DesertMan/arm_extension_punch
   index: -1
 DesertMan/dance
   rotate: false
-  xy: 96, 272
+  xy: 144, 272
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
@@ -302,5 +302,12 @@ MoonMan/throw
   xy: 48, 48
   size: 48, 48
   orig: 48, 48
+  offset: 0, 0
+  index: -1
+MoonMan/throw_asteroids
+  rotate: false
+  xy: 96, 272
+  size: 48, 96
+  orig: 48, 96
   offset: 0, 0
   index: -1

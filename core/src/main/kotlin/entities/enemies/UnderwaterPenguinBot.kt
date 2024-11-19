@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
+
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
@@ -17,7 +18,6 @@ import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
-
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -44,6 +44,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
@@ -98,7 +99,7 @@ class UnderwaterPenguinBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAn
         body.physics.gravityOn = false
         body.fixtures.forEach { (it.second as Fixture).active = false }
 
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
     }
 
     override fun canDamage(damageable: IDamageable) = underwaterPenguinBotState != UnderwaterPenguinBotState.WAIT
@@ -106,7 +107,7 @@ class UnderwaterPenguinBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAn
     private fun startSwim() {
         underwaterPenguinBotState = UnderwaterPenguinBotState.SWIM
         body.setCenter(startPosition)
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
         val speed = SWIM_SPEED * ConstVals.PPM * facing.value
         body.physics.velocity.x = speed
         body.fixtures.forEach { (it.second as Fixture).active = true }
@@ -128,7 +129,7 @@ class UnderwaterPenguinBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAn
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            if (underwaterPenguinBotState == UnderwaterPenguinBotState.WAIT && getMegaman().body.overlaps(triggerBox as Rectangle)) startSwim()
+            if (underwaterPenguinBotState == UnderwaterPenguinBotState.WAIT && megaman.body.overlaps(triggerBox as Rectangle)) startSwim()
             else if (underwaterPenguinBotState == UnderwaterPenguinBotState.BENT && body.isSensing(BodySense.FEET_ON_GROUND)) explodeAndDie()
         }
     }

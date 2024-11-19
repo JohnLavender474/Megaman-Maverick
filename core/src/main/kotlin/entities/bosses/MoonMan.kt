@@ -1,7 +1,9 @@
 package com.megaman.maverick.game.entities.bosses
 
+
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
@@ -18,10 +20,13 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.getRandom
 import com.mega.game.engine.common.interfaces.IFaceable
+import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.shapes.getRandomPositionInBounds
+import com.mega.game.engine.common.shapes.toGameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -50,6 +55,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -72,8 +78,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         private const val BODY_WIDTH = 1.15f
         private const val BODY_HEIGHT = 1.5f
 
-        private const val JUMP_IMPULSE_Y = 6f
-        private const val JUMP_MAX_IMPULSE_Y = 10f
+        private const val JUMP_IMPULSE_Y = 8f
         private const val JUMP_MAX_IMPULSE_X = 10f
         private const val JUMP_MIN_HORIZONTAL_SCALAR = 0.5f
         private const val JUMP_MAX_HORIZONTAL_SCALAR = 1f
@@ -83,12 +88,15 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         private const val GROUND_GRAVITY = 0.01f
         private const val DEFAULT_GRAVITY_SCALAR = 0.25f
         private const val DEFAULT_FRICTION_X = 6f
+        private const val DEFAULT_FRICTION_Y = 1.015f
 
         private const val SPRITE_SIZE = 2.25f
 
         private const val INIT_DUR = 0.5f
         private const val STAND_DUR = 0.75f
         private const val SPAWN_ASTEROID_DELAY = 1f
+        private const val THROW_ASTEROID_DELAY = 0.75f
+        private const val ASTEROIDS_END_DUR = 1f
 
         private const val GRAVITY_CHANGE_BEGIN_DUR = 0.3f
         private const val GRAVITY_CHANGE_CONTINUE_DUR = 1.2f
@@ -103,7 +111,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
         private const val MEGAMAN_STRAIGHT_Y_THRESHOLD = 1f
 
-        private val STAND_SHOOT_DURS = gdxArrayOf(0.3f, 0.6f, 0.1f, 0.4f, 0.1f)
+        private val STAND_SHOOT_DURS = gdxArrayOf(0.5f, 1f, 0.5f, 1f, 0.5f)
         private val JUMP_SHOOT_DURS = gdxArrayOf(0.2f, 0.6f, 0.2f)
 
         private val regions = ObjectMap<String, TextureRegion>()
@@ -146,6 +154,8 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
     private var standIndex = 0
     private var jumpIndex = 0
 
+    private lateinit var asteroidSpawnBounds: GameRectangle
+    private val asteroidsToThrow = Array<GamePair<Asteroid, Timer>>()
     private var asteroidsSpawned = 0
 
     override fun init() {
@@ -160,7 +170,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
                 "jump",
                 "shoot",
                 "jump_shoot",
-                "throw"
+                "throw_asteroids"
             ).forEach { key ->
                 val atlasKey = "$TAG/$key"
                 when (key) {
@@ -203,11 +213,14 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         shootIndex = 0
         standIndex = 0
         jumpIndex = 0
+
         asteroidsSpawned = 0
+        asteroidSpawnBounds =
+            spawnProps.get(Asteroid.TAG.lowercase(), RectangleMapObject::class)!!.rectangle.toGameRectangle()
 
         gravityChangeState = ProcessState.BEGIN
 
-        val direction = getMegaman().directionRotation
+        val direction = megaman.directionRotation
         directionRotation = direction
         currentGravityChangeDir = direction
 
@@ -219,6 +232,21 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         GameLogger.debug(TAG, "onReady()")
         super.onReady()
         body.physics.gravityOn = true
+    }
+
+    override fun onDefeated(delta: Float) {
+        GameLogger.debug(TAG, "onDefeated()")
+        super.onDefeated(delta)
+        asteroidsToThrow.forEach { it.first.destroy() }
+        asteroidsToThrow.clear()
+        if (directionRotation == Direction.DOWN) megaman.directionRotation = Direction.UP
+    }
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        asteroidsToThrow.forEach { it.first.destroy() }
+        asteroidsToThrow.clear()
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -249,9 +277,35 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
                 }
             }
 
+            val iter = asteroidsToThrow.iterator()
+            while (iter.hasNext()) {
+                val (asteroid, throwTimer) = iter.next()
+                throwTimer.update(delta)
+                if (throwTimer.isFinished()) {
+                    val impulse = megaman.body.getCenter()
+                        .sub(asteroid.body.getCenter())
+                        .nor().scl(ASTEROID_SPEED * ConstVals.PPM)
+                    asteroid.body.physics.velocity.set(impulse)
+                    iter.remove()
+                }
+            }
+
             when (currentState) {
                 MoonManState.INIT, MoonManState.STAND -> {
                     if (!body.isSensing(BodySense.FEET_ON_GROUND)) return@add
+
+                    if (currentState == MoonManState.STAND && canShootInStandState() &&
+                        shootIndex < STAND_SHOOT_DURS.size
+                    ) {
+                        val timer = timers["shoot_${shootIndex}"]
+                        timer.update(delta)
+                        if (timer.isFinished()) {
+                            timer.reset()
+                            shootIndex++
+                        }
+                        return@add
+                    }
+
                     val timerKey = currentState.name.lowercase()
                     val timer = timers[timerKey]
                     timer.update(delta)
@@ -260,17 +314,22 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
                 MoonManState.JUMP -> if (shouldGoToStandState()) stateMachine.next()
                 MoonManState.THROW_ASTEROIDS -> {
-                    // TODO
-                    /*
-                    val timer = timers["spawn_asteroid_delay"]
-                    timer.update(delta)
-                    if (timer.isFinished()) {
-                        spawnAsteroid()
-                        asteroidsSpawned++
-                        if (asteroidsSpawned >= ASTEROIDS_TO_SPAWN) stateMachine.next() else timer.reset()
+                    if (asteroidsSpawned < ASTEROIDS_TO_SPAWN) {
+                        val timer = timers["spawn_asteroid_delay"]
+                        timer.update(delta)
+                        if (timer.isFinished()) {
+                            spawnAsteroid()
+                            asteroidsSpawned++
+                            timer.reset()
+                        }
+                    } else {
+                        val timer = timers["spawn_asteroids_end"]
+                        timer.update(delta)
+                        if (timer.isFinished()) {
+                            timer.reset()
+                            stateMachine.next()
+                        }
                     }
-                    */
-                    stateMachine.next()
                 }
 
                 MoonManState.GRAVITY_CHANGE -> {
@@ -305,8 +364,8 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.physics.applyFrictionY = false
         body.physics.defaultFrictionOnSelf.x = DEFAULT_FRICTION_X
+        body.physics.defaultFrictionOnSelf.y = DEFAULT_FRICTION_Y
         body.setSize(BODY_WIDTH * ConstVals.PPM, BODY_HEIGHT * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
@@ -394,10 +453,13 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         val keySupplier: () -> String? = {
             if (defeated) "defeated"
             else when (currentState) {
-                // TODO: create "init" animation
                 MoonManState.INIT -> if (body.isSensing(BodySense.FEET_ON_GROUND)) "stand" else "jump"
-                MoonManState.STAND -> if (body.isSensing(BodySense.FEET_ON_GROUND)) "stand" else "jump"
-                // TODO: shoot & jump_shoot
+                MoonManState.STAND -> {
+                    if (body.isSensing(BodySense.FEET_ON_GROUND)) {
+                        if (canShootInStandState()) "shoot_$shootIndex" else "stand"
+                    } else "jump"
+                }
+
                 MoonManState.GRAVITY_CHANGE -> "gravity_change_${gravityChangeState.name.lowercase()}"
                 else -> currentState.name.lowercase()
             }
@@ -414,33 +476,20 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
             "shoot_0" pairTo Animation(regions["shoot_0"], 3, 1, 0.1f, false),
             "shoot_1" pairTo Animation(regions["shoot_1"], 3, 1, 0.1f, true),
             "shoot_2" pairTo Animation(regions["shoot_2"]),
-            "shoot_3" pairTo Animation(regions["shoot_3"]),
+            "shoot_3" pairTo Animation(regions["shoot_3"], 2, 1, 0.1f, true),
             "shoot_4" pairTo Animation(regions["shoot_4"]),
-            "throw" pairTo Animation(regions["throw"]),
+            "throw_asteroids" pairTo Animation(regions["throw_asteroids"], 2, 1, 0.1f, true),
             "stand" pairTo Animation(regions["stand"], 2, 1, gdxArrayOf(1f, 0.15f), true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }
 
-    private fun nextShootIndex(jumping: Boolean): Boolean {
-        val max = if (jumping) JUMP_SHOOT_DURS.size else STAND_SHOOT_DURS.size
-        if (shootIndex + 1 >= max) {
-            shootIndex = 0
-            return false
-        }
-        shootIndex++
-        return true
-    }
-
     private fun activateGravityChange() {
         currentGravityChangeDir = if (directionRotation == Direction.UP) Direction.DOWN else Direction.UP
-        getMegaman().directionRotation = currentGravityChangeDir
-
+        megaman.directionRotation = currentGravityChangeDir
         gravityChangeChance = 0f
-
         timers["gravity_change_delay"].reset()
-
         GameLogger.debug(TAG, "activateGravityChange(): gravity=$currentGravityChangeDir")
     }
 
@@ -448,7 +497,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         var jumpImpulseY = JUMP_IMPULSE_Y * ConstVals.PPM
         if (directionRotation == Direction.DOWN) jumpImpulseY *= -1f
 
-        val yDiff = abs(getMegaman().body.y - body.y)
+        val yDiff = abs(megaman.body.y - body.y)
         val horizontalScalar = (yDiff / (JUMP_HORIZONTAL_SCALAR_DENOMINATOR * ConstVals.PPM))
             .coerceIn(JUMP_MIN_HORIZONTAL_SCALAR, JUMP_MAX_HORIZONTAL_SCALAR)
         val impulse = MegaUtilMethods.calculateJumpImpulse(
@@ -457,9 +506,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
             jumpImpulseY,
             horizontalScalar = horizontalScalar
         )
-
         impulse.x = impulse.x.coerceIn(-JUMP_MAX_IMPULSE_X * ConstVals.PPM, JUMP_MAX_IMPULSE_X * ConstVals.PPM)
-        impulse.y = impulse.y.coerceIn(-JUMP_MAX_IMPULSE_Y * ConstVals.PPM, JUMP_MAX_IMPULSE_Y * ConstVals.PPM)
 
         body.physics.velocity.set(impulse.x, impulse.y)
     }
@@ -480,8 +527,15 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         }
 
         when (current) {
-            MoonManState.STAND -> timers["stand"].reset()
-            MoonManState.JUMP -> jump(getMegaman().body.getCenter())
+            MoonManState.STAND -> {
+                timers["stand"].reset()
+                if (canShootInStandState()) shootIndex = 0
+            }
+
+            MoonManState.JUMP -> {
+                jump(megaman.body.getCenter())
+                if (canShootInJumpState()) shootIndex = 0
+            }
 
             MoonManState.THROW_ASTEROIDS -> {
                 timers["spawn_asteroid_delay"].reset()
@@ -510,7 +564,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
             .transition(MoonManState.STAND.name, MoonManState.GRAVITY_CHANGE.name) { shouldEnterGravityChangeState() }
             .transition(MoonManState.STAND.name, MoonManState.JUMP.name) { body.isSensing(BodySense.FEET_ON_GROUND) }
             .transition(MoonManState.GRAVITY_CHANGE.name, MoonManState.STAND.name) { true }
-            .transition(MoonManState.THROW_ASTEROIDS.name, MoonManState.STAND.name) { shouldGoToStandState() }
+            .transition(MoonManState.THROW_ASTEROIDS.name, MoonManState.STAND.name) { true }
             .transition(MoonManState.JUMP.name, MoonManState.STAND.name) { shouldGoToStandState() }
         return builder.build()
     }
@@ -523,11 +577,20 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         timers.put("gravity_change_end", Timer(GRAVITY_CHANGE_END_DUR))
         timers.put("gravity_change_delay", Timer(GRAVITY_CHANGE_DELAY_DUR))
         timers.put("spawn_asteroid_delay", Timer(SPAWN_ASTEROID_DELAY))
+        timers.put("spawn_asteroids_end", Timer(ASTEROIDS_END_DUR))
 
         for (i in 0 until STAND_SHOOT_DURS.size) {
             val key = "shoot_$i"
             val dur = STAND_SHOOT_DURS[i]
-            timers.put(key, Timer(dur))
+            val timer = Timer(dur)
+
+            timer.runOnFinished = when (i) {
+                2 -> this::shootMoon
+                4 -> this::shootStar
+                else -> null
+            }
+
+            timers.put(key, timer)
         }
 
         for (i in 0 until JUMP_SHOOT_DURS.size) {
@@ -538,12 +601,12 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
     }
 
     private fun isMegamanStraightAhead() =
-        abs(getMegaman().body.y - body.y) <= MEGAMAN_STRAIGHT_Y_THRESHOLD * ConstVals.PPM
+        abs(megaman.body.y - body.y) <= MEGAMAN_STRAIGHT_Y_THRESHOLD * ConstVals.PPM
 
     private fun updateFacing() {
         when {
-            getMegaman().body.getMaxX() < body.x -> facing = Facing.LEFT
-            getMegaman().body.x > body.getMaxX() -> facing = Facing.RIGHT
+            megaman.body.getMaxX() < body.x -> facing = Facing.LEFT
+            megaman.body.x > body.getMaxX() -> facing = Facing.RIGHT
         }
     }
 
@@ -562,11 +625,25 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
     private fun canShootInJumpState() = (jumpIndex + 1) % 2 == 0
 
+    private fun shootMoon() {
+        // TODO
+    }
+
+    private fun shootStar() {
+        // TODO
+    }
+
     private fun spawnAsteroid() {
-        val spawn = body.getCenter().add(0.5f * ConstVals.PPM * facing.value, 0f)
-        val impulse = getMegaman().body.getCenter().sub(spawn).nor().scl(ASTEROID_SPEED * ConstVals.PPM)
+        val spawn = asteroidSpawnBounds.getRandomPositionInBounds()
         val asteroid = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.ASTEROID)!! as Asteroid
-        asteroid.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.IMPULSE pairTo impulse))
+        asteroid.spawn(
+            props(
+                ConstKeys.POSITION pairTo spawn,
+                ConstKeys.DELAY pairTo THROW_ASTEROID_DELAY,
+                ConstKeys.TYPE pairTo Asteroid.BLUE
+            )
+        )
+        asteroidsToThrow.add(asteroid pairTo Timer(THROW_ASTEROID_DELAY))
     }
 
     override fun getTag() = TAG

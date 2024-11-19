@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.bosses.gutstank
 
+
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
@@ -48,6 +49,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.enemies.HeliMet
 import com.megaman.maverick.game.entities.enemies.Met
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
@@ -323,7 +325,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
             if (fist != null && fist!!.dead) fist = null
             if (fist?.fistState == GutsTankFist.GutsTankFistState.ATTACHED) {
                 launchFistDelayTimer.update(delta)
-                if (launchFistDelayTimer.isFinished() && !fist!!.body.overlaps(getMegaman().body as Rectangle)) {
+                if (launchFistDelayTimer.isFinished() && !fist!!.body.overlaps(megaman.body as Rectangle)) {
                     launchFistDelayTimer.reset()
                     fist!!.launch()
                 }
@@ -338,7 +340,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                         val spawn = body.getCenter().add(-1.65f * ConstVals.PPM, 1.85f * ConstVals.PPM)
                         val trajectory = MegaUtilMethods.calculateJumpImpulse(
                             spawn,
-                            getMegaman().body.getCenter(),
+                            megaman.body.getCenter(),
                             CHUNKED_BULLET_VELOCITY_Y * ConstVals.PPM
                         )
                         bullet.spawn(

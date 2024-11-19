@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.special
 
+
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.enums.Direction
