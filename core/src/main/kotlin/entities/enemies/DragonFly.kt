@@ -64,7 +64,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
         ChargedShot::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
         ChargedShotExplosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
     )
-    override var directionRotation: Direction? = null
+    override var directionRotation = Direction.UP
     override lateinit var facing: Facing
 
     private val behaviorTimer = Timer(CHANGE_BEHAV_DUR)
@@ -130,7 +130,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
 
             when (currentBehavior) {
                 DragonFlyBehavior.MOVE_UP -> {
-                    when (directionRotation!!) {
+                    when (directionRotation) {
                         Direction.UP -> {
                             body.physics.velocity.set(0f, VERT_SPEED * ConstVals.PPM)
                             oobScannerFixture.offsetFromBodyCenter.set(0f, VERT_SCANNER_OFFSET * ConstVals.PPM)

@@ -58,7 +58,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     }
 
     override var facing = Facing.RIGHT
-    override var directionRotation: Direction? = null
+    override var directionRotation = Direction.UP
 
     var fullyCharged = false
         private set
@@ -135,7 +135,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         if (directionRotation?.isVertical() == true) trajectory.x *= -1f else trajectory.y *= -1f
 
         val deflection = shieldFixture.getOrDefaultProperty(ConstKeys.DIRECTION, Direction.UP, Direction::class)
-        trajectory = when (directionRotation!!) {
+        trajectory = when (directionRotation) {
             Direction.UP -> {
                 when (deflection) {
                     Direction.UP -> Vector2(trajectory.x, 5f * ConstVals.PPM)
@@ -219,14 +219,14 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setFlip(
                 when {
-                    directionRotation!!.equalsAny(Direction.UP, Direction.LEFT) -> isFacing(Facing.LEFT)
+                    directionRotation.equalsAny(Direction.UP, Direction.LEFT) -> isFacing(Facing.LEFT)
                     else -> isFacing(Facing.RIGHT)
                 },
                 false
             )
             sprite.setPosition(body.getCenter(), Position.CENTER)
             sprite.setOriginCenter()
-            sprite.rotation = directionRotation!!.rotation
+            sprite.rotation = directionRotation.rotation
         }
         return spritesComponent
     }

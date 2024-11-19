@@ -40,7 +40,7 @@ class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         private var region: TextureRegion? = null
     }
 
-    override var directionRotation: Direction? = null
+    override var directionRotation = Direction.UP
 
     private lateinit var cullTimer: Timer
     private lateinit var trajectory: Vector2

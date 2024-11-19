@@ -91,7 +91,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
             it as ChargedShotExplosion
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
         })
-    override var directionRotation: Direction?
+    override var directionRotation: Direction
         get() = body.cardinalRotation
         set(value) {
             body.cardinalRotation = value
@@ -245,7 +245,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
 
             if (!canMove) body.physics.velocity.setZero()
             else if (status == BatStatus.FLYING_TO_RETREAT)
-                body.physics.velocity = when (directionRotation!!) {
+                body.physics.velocity = when (directionRotation) {
                     Direction.UP -> Vector2(0f, flyToRetreatSpeed)
                     Direction.DOWN -> Vector2(0f, -flyToRetreatSpeed)
                     Direction.LEFT -> Vector2(-flyToAttackSpeed, 0f)
@@ -265,7 +265,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setOriginCenter()
-            _sprite.rotation = getMegaman().directionRotation!!.rotation
+            _sprite.rotation = getMegaman().directionRotation.rotation
             _sprite.hidden = damageBlink
             _sprite.setPosition(body.getCenter(), Position.CENTER)
         }

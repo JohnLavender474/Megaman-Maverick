@@ -75,7 +75,7 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             if (it.fullyCharged) 15 else 10
         }
     )
-    override var directionRotation: Direction?
+    override var directionRotation: Direction
         get() = body.cardinalRotation
         set(value) {
             body.cardinalRotation = value
@@ -110,14 +110,14 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             Direction.valueOf(
                 spawnProps.getOrDefault(ConstKeys.DIRECTION, if (onCeiling) "down" else "up", String::class).uppercase()
             )
-        facing = when (directionRotation!!) {
+        facing = when (directionRotation) {
             Direction.DOWN -> if (getMegaman().body.x < body.x) Facing.RIGHT else Facing.LEFT
             else -> if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
         }
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
-            .getPositionPoint(DirectionPositionMapper.getPosition(directionRotation!!).opposite())
-        body.positionOnPoint(spawn, DirectionPositionMapper.getPosition(directionRotation!!).opposite())
+            .getPositionPoint(DirectionPositionMapper.getPosition(directionRotation).opposite())
+        body.positionOnPoint(spawn, DirectionPositionMapper.getPosition(directionRotation).opposite())
 
         minXOnCeiling =
             spawn.x - spawnProps.getOrDefault("${ConstKeys.ON}_${ConstKeys.MIN}", 0f, Float::class) * ConstVals.PPM
@@ -249,7 +249,7 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             body.putProperty(LEFT_FOOT, false)
             body.putProperty(RIGHT_FOOT, false)
             val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
-            body.physics.gravity = when (directionRotation!!) {
+            body.physics.gravity = when (directionRotation) {
                 Direction.UP -> Vector2(0f, gravity)
                 Direction.DOWN -> Vector2(0f, -gravity)
                 Direction.LEFT -> Vector2(-gravity, 0f)
@@ -268,8 +268,8 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation!!.rotation
-            val position = DirectionPositionMapper.getPosition(directionRotation!!).opposite()
+            _sprite.rotation = directionRotation.rotation
+            val position = DirectionPositionMapper.getPosition(directionRotation).opposite()
             _sprite.setPosition(body.getPositionPoint(position), position)
             _sprite.hidden = damageBlink
         }

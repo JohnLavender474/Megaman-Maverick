@@ -46,7 +46,7 @@ class LavaBeam(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         private var region: TextureRegion? = null
     }
 
-    override var directionRotation: Direction?
+    override var directionRotation: Direction
         get() = body.cardinalRotation
         set(value) {
             body.cardinalRotation = value
@@ -66,14 +66,14 @@ class LavaBeam(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         super.onSpawn(spawnProps)
         directionRotation = spawnProps.get(ConstKeys.DIRECTION, Direction::class)!!
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-        when (directionRotation!!) {
+        when (directionRotation) {
             Direction.UP -> body.setTopCenterToPoint(spawn)
             Direction.DOWN -> body.setBottomCenterToPoint(spawn)
             Direction.LEFT -> body.setCenterLeftToPoint(spawn)
             Direction.RIGHT -> body.setCenterRightToPoint(spawn)
         }
         val speed = spawnProps.get(ConstKeys.SPEED, Float::class)!!
-        val trajectory = when (directionRotation!!) {
+        val trajectory = when (directionRotation) {
             Direction.UP -> Vector2(0f, speed)
             Direction.DOWN -> Vector2(0f, -speed)
             Direction.LEFT -> Vector2(-speed, 0f)
@@ -98,7 +98,7 @@ class LavaBeam(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setCenter(body.getCenter())
             _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation!!.rotation
+            _sprite.rotation = directionRotation.rotation
         }
         return spritesComponent
     }

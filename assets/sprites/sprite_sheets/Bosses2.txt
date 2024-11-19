@@ -5,7 +5,7 @@ filter: Nearest,Nearest
 repeat: none
 DesertMan/arm_extension
   rotate: false
-  xy: 48, 48
+  xy: 96, 48
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -19,14 +19,14 @@ DesertMan/arm_extension_punch
   index: -1
 DesertMan/dance
   rotate: false
-  xy: 48, 272
+  xy: 96, 272
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 DesertMan/dance_flash
   rotate: false
-  xy: 112, 272
+  xy: 0, 400
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
@@ -40,7 +40,7 @@ DesertMan/defeated
   index: -1
 DesertMan/jump
   rotate: false
-  xy: 112, 48
+  xy: 160, 48
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -54,42 +54,42 @@ DesertMan/punch
   index: -1
 DesertMan/punch_short
   rotate: false
-  xy: 0, 400
+  xy: 128, 400
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 DesertMan/stand
   rotate: false
-  xy: 64, 400
+  xy: 192, 400
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 DesertMan/tornado
   rotate: false
-  xy: 128, 400
+  xy: 0, 528
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 DesertMan/tornado_punch
   rotate: false
-  xy: 0, 528
+  xy: 64, 528
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 DesertMan/tornado_start
   rotate: false
-  xy: 128, 528
+  xy: 192, 528
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 DesertMan/wall_slide
   rotate: false
-  xy: 176, 48
+  xy: 0, 112
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -124,7 +124,7 @@ InfernoMan/init
   index: -1
 InfernoMan/jump
   rotate: false
-  xy: 0, 112
+  xy: 64, 112
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -152,14 +152,14 @@ InfernoMan/jump_shoot_up
   index: -1
 InfernoMan/slide
   rotate: false
-  xy: 64, 112
+  xy: 128, 112
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 InfernoMan/stand
   rotate: false
-  xy: 128, 112
+  xy: 192, 112
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -194,14 +194,14 @@ InfernoMan/stand_shoot_up
   index: -1
 InfernoMan/wall_slide
   rotate: false
-  xy: 192, 112
+  xy: 0, 176
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 MoonMan/defeated
   rotate: false
-  xy: 0, 176
+  xy: 64, 176
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
@@ -215,7 +215,7 @@ MoonMan/gravity_change_begin
   index: -1
 MoonMan/gravity_change_continue
   rotate: false
-  xy: 96, 176
+  xy: 160, 176
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
@@ -278,7 +278,7 @@ MoonMan/shoot
   index: 2
 MoonMan/shoot
   rotate: false
-  xy: 192, 176
+  xy: 0, 272
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
@@ -292,8 +292,15 @@ MoonMan/shoot
   index: 4
 MoonMan/stand
   rotate: false
-  xy: 0, 272
+  xy: 48, 272
   size: 48, 96
   orig: 48, 96
+  offset: 0, 0
+  index: -1
+MoonMan/throw
+  rotate: false
+  xy: 48, 48
+  size: 48, 48
+  orig: 48, 48
   offset: 0, 0
   index: -1

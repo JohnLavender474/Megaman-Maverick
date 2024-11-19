@@ -40,7 +40,7 @@ class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity,
     override val eventKeyMask = objectSetOf<Any>(
         EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.END_ROOM_TRANS
     )
-    override var directionRotation: Direction? = null
+    override var directionRotation = Direction.UP
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -99,7 +99,7 @@ class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity,
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setOriginCenter()
             _sprite.rotation = directionRotation?.rotation ?: 0f
-            val position = when (directionRotation!!) {
+            val position = when (directionRotation) {
                 Direction.UP -> Position.TOP_CENTER
                 Direction.DOWN -> Position.BOTTOM_CENTER
                 Direction.LEFT -> Position.CENTER_LEFT

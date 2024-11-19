@@ -48,7 +48,7 @@ class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDam
     }
 
     override var owner: GameEntity? = null
-    override var directionRotation: Direction?
+    override var directionRotation: Direction
         get() = body.cardinalRotation
         set(value) {
             body.cardinalRotation = value
@@ -73,7 +73,7 @@ class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDam
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
         directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-        val position = when (directionRotation!!) {
+        val position = when (directionRotation) {
             Direction.UP -> Position.BOTTOM_CENTER
             Direction.DOWN -> Position.TOP_CENTER
             Direction.LEFT -> Position.CENTER_RIGHT
@@ -116,8 +116,8 @@ class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDam
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation!!.rotation
-            val position = when (directionRotation!!) {
+            _sprite.rotation = directionRotation.rotation
+            val position = when (directionRotation) {
                 Direction.UP -> Position.BOTTOM_CENTER
                 Direction.DOWN -> Position.TOP_CENTER
                 Direction.LEFT -> Position.CENTER_RIGHT

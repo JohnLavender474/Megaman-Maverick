@@ -53,10 +53,12 @@ abstract class AbstractEnemy(
 
     override fun init() {
         super.init()
+
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
         addComponent(AudioComponent())
         addComponent(CullablesComponent())
+
         runnablesOnDestroy.put(ConstKeys.ITEMS) {
             if (hasDepletedHealth()) {
                 disintegrate()
@@ -80,6 +82,7 @@ abstract class AbstractEnemy(
                 }
             }
         }
+
         setStandardOnTeleportStartProp(this)
         setStandardOnTeleportEndProp(this)
     }

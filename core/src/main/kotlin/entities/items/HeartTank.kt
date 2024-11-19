@@ -47,7 +47,7 @@ class HeartTank(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, I
         private var textureRegion: TextureRegion? = null
     }
 
-    override var directionRotation: Direction?
+    override var directionRotation: Direction
         get() = body.cardinalRotation
         set(value) {
             body.cardinalRotation = value
@@ -75,7 +75,7 @@ class HeartTank(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, I
         directionRotation =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
 
-        val position = DirectionPositionMapper.getInvertedPosition(directionRotation!!)
+        val position = DirectionPositionMapper.getInvertedPosition(directionRotation)
         val spawn = when {
             spawnProps.containsKey(ConstKeys.BOUNDS) ->
                 spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(position)
@@ -101,11 +101,11 @@ class HeartTank(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, I
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
-            val position = DirectionPositionMapper.getInvertedPosition(directionRotation!!)
+            val position = DirectionPositionMapper.getInvertedPosition(directionRotation)
             val bodyPosition = body.getPositionPoint(position)
             sprite.setPosition(bodyPosition, position)
             sprite.setOriginCenter()
-            sprite.rotation = directionRotation!!.rotation
+            sprite.rotation = directionRotation.rotation
         }
         return spritesComponent
     }

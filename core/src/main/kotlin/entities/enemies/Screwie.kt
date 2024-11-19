@@ -238,7 +238,7 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
                     ConstKeys.TRAJECTORY pairTo trajectory,
                     ConstKeys.POSITION pairTo spawn,
                     ConstKeys.OWNER pairTo this,
-                    ConstKeys.DIRECTION pairTo getMegaman().directionRotation!!
+                    ConstKeys.DIRECTION pairTo getMegaman().directionRotation
                 )
             )
         }

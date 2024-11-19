@@ -76,7 +76,7 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         ChargedShot::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
         ChargedShotExplosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
     )
-    override var directionRotation: Direction? = null
+    override var directionRotation = Direction.UP
     override lateinit var facing: Facing
 
     private val standTimer = Timer(STAND_DUR)
@@ -129,7 +129,7 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         shootTimer.reset()
 
         jetMetState = JetMetState.STAND
-        facing = when (directionRotation!!) {
+        facing = when (directionRotation) {
             Direction.UP -> if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
             Direction.DOWN -> if (getMegaman().body.x > body.x) Facing.LEFT else Facing.RIGHT
             Direction.LEFT -> if (getMegaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
@@ -164,7 +164,7 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
                 }
 
                 JetMetState.JET -> {
-                    facing = when (getMegaman().directionRotation!!) {
+                    facing = when (getMegaman().directionRotation) {
                         Direction.UP -> if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
                         Direction.DOWN -> if (getMegaman().body.x > body.x) Facing.LEFT else Facing.RIGHT
                         Direction.LEFT -> if (getMegaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
@@ -232,8 +232,8 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
             sprite.hidden = damageBlink
             sprite.setFlip(isFacing(Facing.RIGHT), false)
             sprite.setOriginCenter()
-            sprite.rotation = directionRotation!!.rotation
-            val position = when (directionRotation!!) {
+            sprite.rotation = directionRotation.rotation
+            val position = when (directionRotation) {
                 Direction.UP -> Position.BOTTOM_CENTER
                 Direction.DOWN -> Position.TOP_CENTER
                 Direction.LEFT -> Position.CENTER_RIGHT

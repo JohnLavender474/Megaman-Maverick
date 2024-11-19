@@ -35,12 +35,16 @@ open class Background(
 
     companion object {
         const val TAG = "Background"
+        private const val PRINT_CAM_DEBUG = false
     }
 
     protected open val backgroundSprites: SpriteMatrix =
         SpriteMatrix(model, priority, modelWidth, modelHeight, rows, columns)
+
     protected open val viewport = FitViewport(
-        ConstVals.VIEW_WIDTH * ConstVals.PPM, ConstVals.VIEW_HEIGHT * ConstVals.PPM, RotatableCamera()
+        ConstVals.VIEW_WIDTH * ConstVals.PPM,
+        ConstVals.VIEW_HEIGHT * ConstVals.PPM,
+        RotatableCamera(printDebug = PRINT_CAM_DEBUG)
     )
 
     override var priority: DrawingPriority = priority

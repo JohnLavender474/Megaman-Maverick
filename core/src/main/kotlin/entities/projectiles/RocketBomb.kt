@@ -43,7 +43,7 @@ class RocketBomb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
         private var region: TextureRegion? = null
     }
 
-    override var directionRotation: Direction? = null
+    override var directionRotation = Direction.UP
 
     override fun init() {
         if (region == null)

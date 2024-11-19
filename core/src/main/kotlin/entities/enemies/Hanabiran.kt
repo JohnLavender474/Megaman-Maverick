@@ -74,7 +74,7 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         private const val ANIMATION_FRAME_DURATION = 0.15f
     }
 
-    override var directionRotation: Direction?
+    override var directionRotation: Direction
         get() = body.cardinalRotation
         set(value) {
             body.cardinalRotation = value
@@ -248,8 +248,8 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation!!.rotation
-            val position = DirectionPositionMapper.getPosition(directionRotation!!).opposite()
+            _sprite.rotation = directionRotation.rotation
+            val position = DirectionPositionMapper.getPosition(directionRotation).opposite()
             _sprite.setPosition(body.getPositionPoint(position), position)
             _sprite.hidden = hanabiranState == HanabiranState.SLEEPING || damageBlink
         }

@@ -85,7 +85,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
             if (it.fullyCharged) 15 else 5
         }
     )
-    override var directionRotation: Direction? = Direction.UP
+    override var directionRotation: Direction = Direction.UP
 
     val shooting: Boolean get() = !shootTimer.isFinished()
 
@@ -242,7 +242,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
     }
 
     private fun shoot() {
-        val spawn = (when (directionRotation!!) {
+        val spawn = (when (directionRotation) {
             Direction.UP -> Vector2(0.25f * facing.value, 0.5f)
             Direction.DOWN -> Vector2(0.25f * facing.value, -0.5f)
             Direction.LEFT -> Vector2(-0.4f, 0.25f * facing.value)

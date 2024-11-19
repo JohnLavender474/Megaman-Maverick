@@ -45,7 +45,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
         private var region: TextureRegion? = null
     }
 
-    override var directionRotation: Direction? = null
+    override var directionRotation = Direction.UP
 
     private var trajectory: Vector2? = null
     private var bounced = 0
@@ -98,7 +98,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
         val deflection = shieldFixture.getOrDefaultProperty(ConstKeys.DIRECTION, Direction.UP, Direction::class)
         when (deflection) {
             Direction.UP -> {
-                when (directionRotation!!) {
+                when (directionRotation) {
                     Direction.UP -> velocity.y = 5f * ConstVals.PPM
                     Direction.DOWN -> velocity.y = -5f * ConstVals.PPM
                     Direction.LEFT -> velocity.x = -5f * ConstVals.PPM
@@ -107,7 +107,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
             }
 
             Direction.DOWN -> {
-                when (directionRotation!!) {
+                when (directionRotation) {
                     Direction.UP -> velocity.y = -5f * ConstVals.PPM
                     Direction.DOWN -> velocity.y = 5f * ConstVals.PPM
                     Direction.LEFT -> velocity.x = 5f * ConstVals.PPM

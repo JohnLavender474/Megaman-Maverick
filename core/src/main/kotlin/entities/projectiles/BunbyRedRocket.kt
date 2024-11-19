@@ -49,7 +49,7 @@ class BunbyRedRocket(game: MegamanMaverickGame) : AbstractProjectile(game), IAni
         private var region: TextureRegion? = null
     }
 
-    override var directionRotation: Direction?
+    override var directionRotation: Direction
         get() = body.cardinalRotation
         set(value) {
             body.cardinalRotation = value
@@ -110,7 +110,7 @@ class BunbyRedRocket(game: MegamanMaverickGame) : AbstractProjectile(game), IAni
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setFlip(isFacing(Facing.LEFT), false)
             sprite.setOriginCenter()
-            sprite.rotation = directionRotation!!.rotation
+            sprite.rotation = directionRotation.rotation
             sprite.setCenter(body.getCenter())
         }
         return spritesComponent

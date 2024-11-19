@@ -47,7 +47,7 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, IS
     }
 
     override val eventKeyMask = objectSetOf<Any>(EventType.BEGIN_ROOM_TRANS, EventType.END_ROOM_TRANS)
-    override var directionRotation: Direction?
+    override var directionRotation: Direction
         get() = body.cardinalRotation
         set(value) {
             body.cardinalRotation = value
@@ -74,7 +74,7 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, IS
 
         directionRotation =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
-        val position = DirectionPositionMapper.getPosition(directionRotation!!).opposite()
+        val position = DirectionPositionMapper.getPosition(directionRotation).opposite()
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.setSize(WIDTH * ConstVals.PPM, HEIGHT * ConstVals.PPM)
             .positionOnPoint(bounds.getPositionPoint(position), position)
@@ -144,10 +144,10 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, IS
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.hidden = hidden
             sprite.setOriginCenter()
-            sprite.rotation = directionRotation!!.rotation
+            sprite.rotation = directionRotation.rotation
             sprite.setCenter(body.getCenter())
             val offset = 0.4f * ConstVals.PPM
-            when (directionRotation!!) {
+            when (directionRotation) {
                 Direction.UP -> sprite.translateY(-offset)
                 Direction.DOWN -> sprite.translateY(offset)
                 Direction.LEFT -> sprite.translateX(offset)

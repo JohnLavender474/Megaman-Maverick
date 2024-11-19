@@ -53,7 +53,7 @@ class ToxicGoopSplash(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
     }
 
     override var owner: GameEntity? = null
-    override var directionRotation: Direction? = null
+    override var directionRotation = Direction.UP
 
     private val splashTimer = Timer(SPLASH_DUR)
 
@@ -74,7 +74,7 @@ class ToxicGoopSplash(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
         directionRotation = spawnProps.getOrDefaultNotNull(ConstKeys.DIRECTION, Direction.UP, Direction::class)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-        when (directionRotation!!) {
+        when (directionRotation) {
             Direction.UP -> body.setBottomCenterToPoint(spawn)
             Direction.DOWN -> body.setTopCenterToPoint(spawn)
             Direction.LEFT -> body.setCenterRightToPoint(spawn)

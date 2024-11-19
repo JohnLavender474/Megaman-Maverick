@@ -286,20 +286,30 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
             field = value
             sprites.get("megaman")!!.hidden = !field
         }
-    override var directionRotation: Direction?
+
+    override var directionRotation: Direction
         get() = body.cardinalRotation
         set(value) {
-            GameLogger.debug(TAG, "directionRotation: value = $value")
-            if (value == directionRotation) {
-                GameLogger.debug(TAG, "do nothing on redundant direction rotation value: $value")
-                return
+            GameLogger.debug(TAG, "directionRotation-set(): value = $value")
+
+            if (value != body.cardinalRotation) {
+                GameLogger.debug(TAG, "directionRotation-set(): value is different from field; rotating camera")
+
+                val direction = if (value.isVertical()) value else value.getOpposite()
+                game.eventsMan.submitEvent(
+                    Event(EventType.SET_GAME_CAM_ROTATION, props(ConstKeys.DIRECTION pairTo direction))
+                )
+
+                canMove = false
+                body.physics.gravityOn = false
+                body.physics.velocity.setZero()
+                resetBehavior(BehaviorType.JETPACKING)
             }
 
-            resetBehavior(BehaviorType.JETPACKING)
-
             body.cardinalRotation = value
+
             when (value) {
-                Direction.UP, Direction.RIGHT, null -> {
+                Direction.UP, Direction.RIGHT -> {
                     jumpVel = MegamanValues.JUMP_VEL
                     wallJumpVel = MegamanValues.WALL_JUMP_VEL
                     cartJumpVel = MegamanValues.CART_JUMP_VEL
@@ -329,42 +339,35 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
                     swimVel = -MegamanValues.SWIM_VEL_Y
                 }
             }
-            value?.let {
-                val direction = if (it.isVertical()) directionRotation!! else directionRotation!!.getOpposite()
-                game.eventsMan.submitEvent(
-                    Event(
-                        EventType.SET_GAME_CAM_ROTATION,
-                        props(ConstKeys.DIRECTION pairTo direction)
-                    )
-                )
-                canMove = false
-                body.physics.velocity.setZero()
-                body.physics.gravityOn = false
-                cameraRotating = true
-            }
         }
+
     override var facing: Facing
         get() = getProperty(MegamanProps.FACING) as Facing
         set(value) {
             putProperty(MegamanProps.FACING, value)
         }
+
     var aButtonTask: AButtonTask
         get() = getProperty(MegamanProps.A_BUTTON_TASK) as AButtonTask
         set(value) {
             putProperty(MegamanProps.A_BUTTON_TASK, value)
         }
+
     var currentWeapon: MegamanWeapon
         get() = getProperty(MegamanProps.WEAPON) as MegamanWeapon
         set(value) {
             putProperty(MegamanProps.WEAPON, value)
         }
+
     var running: Boolean
         get() = ready && getProperty(ConstKeys.RUNNING) as Boolean
         set(value) {
             putProperty(ConstKeys.RUNNING, value)
         }
+
     var teleporting = false
         private set
+
     var movementScalar = 1f
         set(value) {
             field = value
@@ -373,6 +376,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
                 if (animator is Animator) animator.updateScalar = value
             }
         }
+
     override var gravityScalar = 1f
 
     internal var jumpVel = 0f
@@ -387,7 +391,6 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
     internal var swimVel = 0f
     internal var applyMovementScalarToBullet = false
     internal val roomTransPauseTimer = Timer(ConstVals.ROOM_TRANS_DELAY_DURATION)
-    internal var cameraRotating = false
 
     override fun getEntityType() = EntityType.MEGAMAN
 
@@ -431,7 +434,6 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         gravityScalar = spawnProps.getOrDefault("${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}", 1f, Float::class)
         movementScalar = spawnProps.getOrDefault("${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}", 1f, Float::class)
         applyMovementScalarToBullet = spawnProps.getOrDefault(ConstKeys.APPLY_SCALAR_TO_CHILDREN, false, Boolean::class)
-        cameraRotating = false
 
         damageTimer.setToEnd()
         damageRecoveryTimer.setToEnd()
@@ -567,7 +569,6 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
             EventType.END_GAME_CAM_ROTATION -> {
                 canMove = true
                 body.physics.gravityOn = true
-                cameraRotating = false
             }
         }
     }
@@ -584,7 +585,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
     }
 
     fun stunBounce(bounds: GameRectangle) =
-        when (directionRotation!!) {
+        when (directionRotation) {
             Direction.UP -> {
                 body.physics.velocity.x =
                     (if (bounds.x > body.x) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
