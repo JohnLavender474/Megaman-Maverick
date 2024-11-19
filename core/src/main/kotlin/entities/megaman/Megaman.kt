@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.megaman
 
+
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.audio.AudioComponent
@@ -35,8 +36,8 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.bosses.*
-import com.megaman.maverick.game.entities.bosses.gutstank.GutsTankFist
 import com.megaman.maverick.game.entities.bosses.gutstank.GutsTank
+import com.megaman.maverick.game.entities.bosses.gutstank.GutsTankFist
 import com.megaman.maverick.game.entities.bosses.sigmarat.SigmaRat
 import com.megaman.maverick.game.entities.bosses.sigmarat.SigmaRatClaw
 import com.megaman.maverick.game.entities.contracts.*

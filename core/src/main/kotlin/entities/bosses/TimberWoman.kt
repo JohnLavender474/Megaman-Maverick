@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.bosses
 
+
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.extensions.objectMapOf

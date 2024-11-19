@@ -2,6 +2,7 @@
 
 package com.megaman.maverick.game.entities.special
 
+
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array

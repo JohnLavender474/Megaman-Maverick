@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
+
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
@@ -47,6 +48,7 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -147,10 +149,10 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         }
 
         facing = when (directionRotation) {
-            Direction.UP -> if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
-            Direction.DOWN -> if (getMegaman().body.x < body.x) Facing.RIGHT else Facing.LEFT
-            Direction.LEFT -> if (getMegaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
-            Direction.RIGHT -> if (getMegaman().body.x < body.x) Facing.RIGHT else Facing.LEFT
+            Direction.UP -> if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
+            Direction.DOWN -> if (megaman.body.x < body.x) Facing.RIGHT else Facing.LEFT
+            Direction.LEFT -> if (megaman.body.y < body.y) Facing.LEFT else Facing.RIGHT
+            Direction.RIGHT -> if (megaman.body.x < body.x) Facing.RIGHT else Facing.LEFT
         }
         transState = Size.SMALL
     }
@@ -201,7 +203,7 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
             if (!canMove) return@add
-            facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+            facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
             val timerKey = when (loop.getCurrent()) {
                 PopupCanonState.REST -> "rest"
                 PopupCanonState.RISE -> "rise"

@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
+
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
@@ -38,6 +39,7 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -90,7 +92,7 @@ class BombPotton(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         targetReached = false
         speed = 0f
         launchedBomb = false
-        facing = if (body.x > getMegaman().body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (body.x > megaman.body.x) Facing.LEFT else Facing.RIGHT
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -105,13 +107,13 @@ class BombPotton(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
                 if (body.getCenter().epsilonEquals(target, 0.1f * ConstVals.PPM)) {
                     speed = 0f
                     targetReached = true
-                    facing = if (body.x > getMegaman().body.x) Facing.LEFT else Facing.RIGHT
+                    facing = if (body.x > megaman.body.x) Facing.LEFT else Facing.RIGHT
                 }
             } else {
                 val trajectory = Vector2(speed * facing.value * ConstVals.PPM, 0f)
                 body.physics.velocity = trajectory
 
-                if (!launchedBomb && body.x < getMegaman().body.getMaxX() && body.getMaxX() > getMegaman().body.x) {
+                if (!launchedBomb && body.x < megaman.body.getMaxX() && body.getMaxX() > megaman.body.x) {
                     launchBomb()
                     launchedBomb = true
                 }

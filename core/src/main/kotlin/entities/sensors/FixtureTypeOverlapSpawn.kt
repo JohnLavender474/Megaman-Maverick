@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.sensors
 
+
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
 import com.badlogic.gdx.utils.OrderedSet

@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
+
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectMap
@@ -47,6 +48,7 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.Bullet
@@ -232,7 +234,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
         /*
         val scannerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.7f * ConstVals.PPM))
         val consumer: (IFixture) -> Unit = {
-            if (it.getType() == FixtureType.DAMAGEABLE && it.getEntity() == getMegaman())
+            if (it.getType() == FixtureType.DAMAGEABLE && it.getEntity() == megaman)
                 status = BatStatus.FLYING_TO_RETREAT
         }
         scannerFixture.setConsumer { _, it -> consumer(it) }
@@ -265,7 +267,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setOriginCenter()
-            _sprite.rotation = getMegaman().directionRotation.rotation
+            _sprite.rotation = megaman.directionRotation.rotation
             _sprite.hidden = damageBlink
             _sprite.setPosition(body.getCenter(), Position.CENTER)
         }
@@ -291,7 +293,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
     private fun definePathfindingComponent(): PathfindingComponent {
         val params = PathfinderParams(
             startCoordinateSupplier = { body.getCenter().toGridCoordinate() },
-            targetCoordinateSupplier = { getMegaman().body.getCenter().toGridCoordinate() },
+            targetCoordinateSupplier = { megaman.body.getCenter().toGridCoordinate() },
             allowDiagonal = { true },
             filter = { coordinate ->
                 val bodies = game.getWorldContainer()!!.getBodies(coordinate.x, coordinate.y)
@@ -341,6 +343,6 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
 
     private fun directlyChaseMegaman() {
         body.physics.velocity =
-            getMegaman().body.getCenter().sub(body.getCenter()).nor().scl(flyToAttackSpeed * ConstVals.PPM)
+            megaman.body.getCenter().sub(body.getCenter()).nor().scl(flyToAttackSpeed * ConstVals.PPM)
     }
 }

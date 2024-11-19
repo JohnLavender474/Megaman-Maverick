@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
+
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -42,6 +43,7 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -129,7 +131,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
         runOnly = spawnProps.getOrDefault(RUN_ONLY, false, Boolean::class)
         runSpeed = spawnProps.getOrDefault(ConstKeys.SPEED, RUN_SPEED, Float::class)
         type = spawnProps.getOrDefault(ConstKeys.TYPE, "", String::class)
-        val right = spawnProps.getOrDefault(ConstKeys.RIGHT, getMegaman().body.x > body.x, Boolean::class)
+        val right = spawnProps.getOrDefault(ConstKeys.RIGHT, megaman.body.x > body.x, Boolean::class)
         facing = if (right) Facing.RIGHT else Facing.LEFT
 
         directionRotation = Direction.UP
@@ -184,8 +186,8 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
                     }
 
                     facing = when (directionRotation) {
-                        Direction.UP, Direction.DOWN -> if (getMegaman().body.x > body.x) Facing.RIGHT else Facing.LEFT
-                        Direction.LEFT, Direction.RIGHT -> if (getMegaman().body.y > body.y) Facing.RIGHT else Facing.LEFT
+                        Direction.UP, Direction.DOWN -> if (megaman.body.x > body.x) Facing.RIGHT else Facing.LEFT
+                        Direction.LEFT, Direction.RIGHT -> if (megaman.body.y > body.y) Facing.RIGHT else Facing.LEFT
                     }
 
                     val popUpTimer = metBehaviorTimers.get(MetBehavior.POP_UP)

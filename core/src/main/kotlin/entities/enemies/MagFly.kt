@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
+
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Rectangle
@@ -35,13 +36,13 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.VelocityAlteration
-
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
@@ -162,10 +163,10 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
                 forceFlashTimer.reset()
             }
 
-            val slow = getMegaman().body.overlaps(forceFixture.getShape() as Rectangle)
+            val slow = megaman.body.overlaps(forceFixture.getShape() as Rectangle)
 
-            if (!slow && getMegaman().body.y < body.y && !facingAndMMDirMatch()) facing =
-                if (getMegaman().body.x > body.x) Facing.RIGHT else Facing.LEFT
+            if (!slow && megaman.body.y < body.y && !facingAndMMDirMatch()) facing =
+                if (megaman.body.x > body.x) Facing.RIGHT else Facing.LEFT
 
             if ((facing == Facing.LEFT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) || (facing == Facing.RIGHT && body.isSensing(
                     BodySense.SIDE_TOUCHING_BLOCK_RIGHT

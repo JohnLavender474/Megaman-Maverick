@@ -2,6 +2,7 @@ package com.megaman.maverick.game.assets
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.utils.Array
+import com.megaman.maverick.game.assets.TextureAsset.values
 
 const val TEXTURE_ASSET_PREFIX = "sprites/sprite_sheets/"
 

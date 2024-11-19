@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.explosions
 
+
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array

@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.bosses.sigmarat
 
+
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
@@ -46,6 +47,7 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.entities.factories.impl.HazardsFactory
@@ -144,7 +146,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
         clawState = SigmaRatClawState.LAUNCH
         launchPauseTimer.reset()
         reachedLaunchTarget = false
-        launchTarget = getMegaman().body.getCenter()
+        launchTarget = megaman.body.getCenter()
         GameLogger.debug(TAG, "Launch target: $launchTarget")
         returnTarget = body.getCenter()
         GameLogger.debug(TAG, "Return target: $returnTarget")
@@ -187,7 +189,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
         requestToPlaySound(SoundAsset.BURST_SOUND, false)
 
         shockBall!!.launch(
-            getMegaman().body.getCenter().sub(body.getCenter()).nor().scl(SHOCK_VELOCITY_Y * ConstVals.PPM)
+            megaman.body.getCenter().sub(body.getCenter()).nor().scl(SHOCK_VELOCITY_Y * ConstVals.PPM)
         )
         shockBall = null
         requestToPlaySound(SoundAsset.BLAST_1_SOUND, false)
@@ -230,7 +232,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
                             launchTarget.cpy().sub(body.getCenter()).nor().scl(LAUNCH_SPEED * ConstVals.PPM)
                         body.physics.velocity = trajectory
                         if (body.getCenter().epsilonEquals(launchTarget, EPSILON * ConstVals.PPM) ||
-                            getMegaman().body.contains(body.getCenter()) ||
+                            megaman.body.contains(body.getCenter()) ||
                             body.getMaxY() >= maxY
                         ) {
                             launchPauseTimer.reset()

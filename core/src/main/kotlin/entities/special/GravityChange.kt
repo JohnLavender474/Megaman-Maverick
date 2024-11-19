@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.special
 
+
 import com.badlogic.gdx.graphics.Color
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.gdxArrayOf

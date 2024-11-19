@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.factories
 
+
 import com.mega.game.engine.common.interfaces.IClearable
 import com.mega.game.engine.common.interfaces.Initializable
 import com.mega.game.engine.factories.Factories

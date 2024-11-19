@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.megaman.components
 
+
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position

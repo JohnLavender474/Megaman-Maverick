@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
+
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
@@ -39,6 +40,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
@@ -126,7 +128,7 @@ class BombChute(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
             var xSpeed = body.physics.velocity.x
 
-            if (body.x < getMegaman().body.x) xSpeed += X_ACCELERATION * delta * ConstVals.PPM
+            if (body.x < megaman.body.x) xSpeed += X_ACCELERATION * delta * ConstVals.PPM
             else xSpeed -= X_ACCELERATION * delta * ConstVals.PPM
 
             if (xSpeed > X_MAX_SPEED * ConstVals.PPM) xSpeed = X_MAX_SPEED * ConstVals.PPM

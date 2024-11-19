@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
+
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
@@ -41,6 +42,7 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -104,7 +106,7 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
         shootDelayTimer.reset()
         turnTimer.setToEnd()
         turnDelayTimer.setToEnd()
@@ -148,8 +150,8 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
                 else return@add
             }
 
-            if ((isFacing(Facing.LEFT) && getMegaman().body.getX() > body.getMaxX()) ||
-                (isFacing(Facing.RIGHT) && getMegaman().body.getMaxX() < body.getX())
+            if ((isFacing(Facing.LEFT) && megaman.body.getX() > body.getMaxX()) ||
+                (isFacing(Facing.RIGHT) && megaman.body.getMaxX() < body.getX())
             ) {
                 startTurning()
                 return@add

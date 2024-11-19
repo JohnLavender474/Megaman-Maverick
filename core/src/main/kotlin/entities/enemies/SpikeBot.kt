@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
+
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
@@ -41,6 +42,7 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -116,7 +118,7 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         body.setBottomCenterToPoint(spawn)
         loop.reset()
         timers.values().forEach { it.reset() }
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
         val frameDuration = 0.1f / movementScalar
         animations.values().forEach { it.setFrameDuration(frameDuration) }
     }
@@ -159,9 +161,9 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
                         (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
                     ) swapFacing()
                     else if (isFacing(Facing.LEFT) && !body.isProperty(LEFT_FOOT, true)) {
-                        if (getMegaman().body.x < body.x) jump() else swapFacing()
+                        if (megaman.body.x < body.x) jump() else swapFacing()
                     } else if (isFacing(Facing.RIGHT) && !body.isProperty(RIGHT_FOOT, true)) {
-                        if (getMegaman().body.x > body.x) jump() else swapFacing()
+                        if (megaman.body.x > body.x) jump() else swapFacing()
                     }
 
                     body.physics.velocity.x = WALK_SPEED * ConstVals.PPM * facing.value * movementScalar
@@ -174,7 +176,7 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
                 timer.reset()
                 loop.next()
                 if (loop.getCurrent() != SpikeBotState.WALK)
-                    facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+                    facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
             }
         }
     }

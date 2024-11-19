@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.projectiles
 
+
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -30,6 +31,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.world.body.BodyComponentCreator
@@ -57,7 +59,7 @@ class RocketBomb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
         super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
-        directionRotation = getSingleMostDirectionFromStartToTarget(spawn, getMegaman().body.getCenter())
+        directionRotation = getSingleMostDirectionFromStartToTarget(spawn, megaman.body.getCenter())
         body.physics.velocity = Vector2(0f, SPEED * ConstVals.PPM).rotateDeg(directionRotation?.rotation ?: 0f)
     }
 

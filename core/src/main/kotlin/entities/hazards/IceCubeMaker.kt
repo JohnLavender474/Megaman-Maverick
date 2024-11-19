@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.hazards
 
+
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.mega.game.engine.audio.AudioComponent

@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
+
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
@@ -49,10 +50,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
-import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
-import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
+import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -342,9 +340,9 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
             if (!shouldUpdate) return@add
 
             facing = when (directionRotation) {
-                Direction.UP, Direction.DOWN -> if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
-                Direction.LEFT -> if (getMegaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
-                Direction.RIGHT -> if (getMegaman().body.y < body.y) Facing.RIGHT else Facing.LEFT
+                Direction.UP, Direction.DOWN -> if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
+                Direction.LEFT -> if (megaman.body.y < body.y) Facing.LEFT else Facing.RIGHT
+                Direction.RIGHT -> if (megaman.body.y < body.y) Facing.RIGHT else Facing.LEFT
             }
 
             if (canJump && shouldJump()) jump()
@@ -464,7 +462,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         shield.spawn(
             props(
                 ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.TRAJECTORY pairTo normalizedTrajectory(
-                    body.getCenter(), getMegaman().body.getCenter(), SHIELD_VEL * ConstVals.PPM
+                    body.getCenter(), megaman.body.getCenter(), SHIELD_VEL * ConstVals.PPM
                 ), ConstKeys.OWNER pairTo this
             )
         )
@@ -473,21 +471,21 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
     private fun shouldJump(): Boolean {
         if (!body.isSensing(BodySense.FEET_ON_GROUND)) return false
         return when (directionRotation) {
-            Direction.UP -> getMegaman().body.y > body.getMaxY() &&
-                getMegaman().body.x >= body.x &&
-                getMegaman().body.getMaxX() <= body.getMaxX()
+            Direction.UP -> megaman.body.y > body.getMaxY() &&
+                megaman.body.x >= body.x &&
+                megaman.body.getMaxX() <= body.getMaxX()
 
-            Direction.DOWN -> getMegaman().body.getMaxY() < body.y &&
-                getMegaman().body.x >= body.x &&
-                getMegaman().body.getMaxX() <= body.getMaxX()
+            Direction.DOWN -> megaman.body.getMaxY() < body.y &&
+                megaman.body.x >= body.x &&
+                megaman.body.getMaxX() <= body.getMaxX()
 
-            Direction.LEFT -> getMegaman().body.getMaxX() < body.x &&
-                getMegaman().body.y >= body.y &&
-                getMegaman().body.getMaxY() <= body.getMaxY()
+            Direction.LEFT -> megaman.body.getMaxX() < body.x &&
+                megaman.body.y >= body.y &&
+                megaman.body.getMaxY() <= body.getMaxY()
 
-            Direction.RIGHT -> getMegaman().body.x > body.getMaxX() &&
-                getMegaman().body.y >= body.y &&
-                getMegaman().body.getMaxY() <= body.getMaxY()
+            Direction.RIGHT -> megaman.body.x > body.getMaxX() &&
+                megaman.body.y >= body.y &&
+                megaman.body.getMaxY() <= body.getMaxY()
         }
     }
 

@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.bosses
 
+
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
@@ -42,6 +43,7 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.enemies.BabyPenguin
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -181,7 +183,7 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
     private fun shootSnowball() {
         val snowball = EntityFactories.fetch(EntityType.PROJECTILE, "Snowball")!! as Snowball
         val spawn = body.getBottomCenterPoint().add(0f, 0.15f * ConstVals.PPM)
-        val impulseX = (getMegaman().body.x - body.x) * 1.5f
+        val impulseX = (megaman.body.x - body.x) * 1.5f
         val impulseY = SNOWBALL_IMPULSE_Y * ConstVals.PPM
         val trajectory = Vector2(impulseX, impulseY)
         val gravity = Vector2(0f, SNOWBALL_GRAVITY * ConstVals.PPM)

@@ -191,7 +191,7 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, 
 
         /*
         didOverlapMegaman = doesOverlapMegaman
-        doesOverlapMegaman = body.overlaps(getMegaman().feetFixture.getShape())
+        doesOverlapMegaman = body.overlaps(megaman.feetFixture.getShape())
 
         scalar = if (doesOverlapMegaman) min(MAX_SCALAR, scalar + SCALAR_DELTA * delta)
         else max(MIN_SCALAR, scalar - SCALAR_DELTA * delta)
@@ -200,7 +200,7 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, 
 
         if (doesOverlapMegaman && !didOverlapMegaman) {
             var force = 0.5f * -pendulum.getSwingDirection()
-            if (force == 0f) force = 0.5f * if (getMegaman().body.getCenter().x < body.getCenter().x) 1f else -1f
+            if (force == 0f) force = 0.5f * if (megaman.body.getCenter().x < body.getCenter().x) 1f else -1f
             pendulum.applyForce(force)
         }
         */

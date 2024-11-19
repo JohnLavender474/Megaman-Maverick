@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
+
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -41,6 +42,7 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -111,7 +113,7 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
     private fun shoot() {
         val start = body.getCenter()
-        val target = getMegaman().body.getCenter()
+        val target = megaman.body.getCenter()
         val trajectory = target.sub(start).nor()
 
         val petal = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.PETAL)!!

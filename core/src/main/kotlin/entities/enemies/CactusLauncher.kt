@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
+
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
@@ -81,7 +82,7 @@ class CactusLauncher(game: MegamanMaverickGame) : AbstractEnemy(game), IParentEn
     )
     override var children = Array<IGameEntity>()
 
-    private val loop = Loop(CactusLauncherState.values().toGdxArray())
+    private val loop = Loop(CactusLauncherState.entries.toTypedArray().toGdxArray())
     private val timers = objectMapOf(
         "wait" pairTo Timer(WAIT_DUR),
         "fire" pairTo Timer(FIRE_DUR),
@@ -168,11 +169,11 @@ class CactusLauncher(game: MegamanMaverickGame) : AbstractEnemy(game), IParentEn
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.hidden = damageBlink
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.hidden = damageBlink
             val bodyPosition = body.getBottomCenterPoint()
-            _sprite.setPosition(bodyPosition, Position.BOTTOM_CENTER)
-            _sprite.hidden = damageBlink
+            sprite.setPosition(bodyPosition, Position.BOTTOM_CENTER)
+            sprite.hidden = damageBlink
         }
         return spritesComponent
     }

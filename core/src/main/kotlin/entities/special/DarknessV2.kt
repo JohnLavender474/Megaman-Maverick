@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.special
 
+
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Rectangle
@@ -36,6 +37,7 @@ import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntitiesMap
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.explosions.ExplosionOrb
@@ -291,19 +293,19 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         MegaGameEntitiesMap.getEntitiesOfType(EntityType.PROJECTILE).forEach { t -> tryToLightUp(t) }
         MegaGameEntitiesMap.getEntitiesOfType(EntityType.EXPLOSION).forEach { t -> tryToLightUp(t) }
 
-        if (getMegaman().body.overlaps(bounds as Rectangle)) {
-            if (getMegaman().charging) {
-                val fullCharged = getMegaman().fullyCharged
+        if (megaman.body.overlaps(bounds as Rectangle)) {
+            if (megaman.charging) {
+                val fullCharged = megaman.fullyCharged
                 val lightSourceDef = lightSourcePool.fetch()
-                lightSourceDef.center = getMegaman().body.getCenter()
+                lightSourceDef.center = megaman.body.getCenter()
                 lightSourceDef.radius =
                     (if (fullCharged) MEGAMAN_FULL_CHARGING_RADIUS else MEGAMAN_HALF_CHARGING_RADIUS) * ConstVals.PPM
                 lightSourceDef.radiance =
                     if (fullCharged) MEGAMAN_FULL_CHARGING_RADIANCE else MEGAMAN_HALF_CHARGING_RADIANCE
                 lightSourceQueue.addLast(lightSourceDef)
-            } else if (getMegaman().isBehaviorActive(BehaviorType.JETPACKING)) {
+            } else if (megaman.isBehaviorActive(BehaviorType.JETPACKING)) {
                 val lightSourceDef = lightSourcePool.fetch()
-                lightSourceDef.center = getMegaman().body.getCenter()
+                lightSourceDef.center = megaman.body.getCenter()
                 lightSourceDef.radius = MEGAMAN_HALF_CHARGING_RADIUS * ConstVals.PPM
                 lightSourceDef.radiance = MEGAMAN_HALF_CHARGING_RADIANCE
                 lightSourceQueue.addLast(lightSourceDef)

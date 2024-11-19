@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.bosses
 
+
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
@@ -52,6 +53,7 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.decorations.Splash.SplashType
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -190,7 +192,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         stateMachine.reset()
         timers.forEach { t -> t.value.reset() }
 
-        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
         longPunchExtensionCount = 0
         longPunchingForward = false
         danceFlash = false
@@ -291,7 +293,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
                 }
 
                 DesertManState.JUMP -> {
-                    facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+                    facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
                     if (shouldFinishJumping()) stateMachine.next()
                 }
 
@@ -631,7 +633,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
 
             DesertManState.JUMP -> {
                 body.physics.applyFrictionX = false
-                val impulse = jump(getMegaman().body.getCenter())
+                val impulse = jump(megaman.body.getCenter())
                 facing = if (impulse.x < 0f) Facing.LEFT else Facing.RIGHT
                 GameLogger.debug(
                     TAG, "onChangeState(): setting up JUMP state: " +
@@ -754,21 +756,21 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
     private fun shouldGoToStandState() = body.physics.velocity.y <= 0f && body.isSensing(BodySense.FEET_ON_SAND)
 
     private fun isMegamanInLongPunchXRange() =
-        abs(getMegaman().body.x - body.x) <= LONG_PUNCH_X_THRESHOLD * ConstVals.PPM
+        abs(megaman.body.x - body.x) <= LONG_PUNCH_X_THRESHOLD * ConstVals.PPM
 
-    private fun isMegamanInPunchYRange() = abs(getMegaman().body.y - body.y) <= PUNCH_Y_THRESHOLD * ConstVals.PPM
+    private fun isMegamanInPunchYRange() = abs(megaman.body.y - body.y) <= PUNCH_Y_THRESHOLD * ConstVals.PPM
 
     private fun isPunching() = currentState == DesertManState.PUNCH || isTornadoPunching()
 
     private fun isMegamanInTornadoYRange() =
-        abs(getMegaman().body.y - body.y) <= TORNADO_Y_THRESHOLD * ConstVals.PPM
+        abs(megaman.body.y - body.y) <= TORNADO_Y_THRESHOLD * ConstVals.PPM
 
     private fun isTornadoPunching() = currentState == DesertManState.TORNADO && !timers["tornado_punch"].isFinished()
 
     private fun updateFacing() {
         when {
-            getMegaman().body.getMaxX() < body.x -> facing = Facing.LEFT
-            getMegaman().body.x > body.getMaxX() -> facing = Facing.RIGHT
+            megaman.body.getMaxX() < body.x -> facing = Facing.LEFT
+            megaman.body.x > body.getMaxX() -> facing = Facing.RIGHT
         }
     }
 

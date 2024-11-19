@@ -398,6 +398,7 @@
             </struct>
             <key type="filename">../frames/Bosses2/MoonMan/shoot_4.png</key>
             <key type="filename">../frames/Bosses2/MoonMan/stand.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan/throw_asteroids.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
