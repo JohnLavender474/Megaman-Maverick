@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.enemies
 
-
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.math.Vector2
@@ -42,7 +41,6 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -240,7 +238,7 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
                     ConstKeys.TRAJECTORY pairTo trajectory,
                     ConstKeys.POSITION pairTo spawn,
                     ConstKeys.OWNER pairTo this,
-                    ConstKeys.DIRECTION pairTo megaman.directionRotation
+                    ConstKeys.DIRECTION pairTo getMegaman().directionRotation
                 )
             )
         }

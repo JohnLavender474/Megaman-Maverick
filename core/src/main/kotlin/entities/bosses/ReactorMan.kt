@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.bosses
 
-
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
@@ -16,6 +15,7 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
+
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -44,7 +44,6 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -151,7 +150,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         throwOnJump = true
 
         currentState = ReactManState.STAND
-        facing = if (megaman.body.x <= body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (getMegaman().body.x <= body.x) Facing.LEFT else Facing.RIGHT
     }
 
     override fun onReady() {
@@ -186,8 +185,8 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 ReactManState.STAND -> {
                     if (projectile == null) spawnProjectile()
 
-                    if (megaman.body.x <= body.x) facing = Facing.LEFT
-                    else if (megaman.body.getMaxX() >= body.getMaxX()) facing = Facing.RIGHT
+                    if (getMegaman().body.x <= body.x) facing = Facing.LEFT
+                    else if (getMegaman().body.getMaxX() >= body.getMaxX()) facing = Facing.RIGHT
 
                     if (body.isSensing(BodySense.FEET_ON_GROUND)) {
                         body.physics.velocity.setZero()
@@ -208,8 +207,8 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                         return@add
                     }
 
-                    if (megaman.body.x <= body.x) facing = Facing.LEFT
-                    else if (megaman.body.getMaxX() >= body.getMaxX()) facing = Facing.RIGHT
+                    if (getMegaman().body.x <= body.x) facing = Facing.LEFT
+                    else if (getMegaman().body.getMaxX() >= body.getMaxX()) facing = Facing.RIGHT
 
                     if (throwOnJump) {
                         throwTimer.update(delta)
@@ -232,8 +231,8 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                     if (throwTimer.isFinished()) {
                         throwTimer.reset()
 
-                        if (megaman.body.x <= body.x) facing = Facing.LEFT
-                        else if (megaman.body.getMaxX() >= body.getMaxX()) facing = Facing.RIGHT
+                        if (getMegaman().body.x <= body.x) facing = Facing.LEFT
+                        else if (getMegaman().body.getMaxX() >= body.getMaxX()) facing = Facing.RIGHT
 
                         currentState = ReactManState.RUN
                     }
@@ -256,7 +255,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     private fun jump() {
         val impulse = MegaUtilMethods.calculateJumpImpulse(
             body.getPosition(),
-            megaman.body.getPosition(),
+            getMegaman().body.getPosition(),
             JUMP_IMPULSE * ConstVals.PPM
         )
         body.physics.velocity.set(impulse)
@@ -280,7 +279,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
     private fun throwProjectile() {
         val trajectory =
-            megaman.body.getCenter().sub(body.getCenter()).nor().scl(getProjectileSpeed() * ConstVals.PPM)
+            getMegaman().body.getCenter().sub(body.getCenter()).nor().scl(getProjectileSpeed() * ConstVals.PPM)
         projectile!!.setTrajectory(trajectory)
         projectile!!.active = true
         projectile = null

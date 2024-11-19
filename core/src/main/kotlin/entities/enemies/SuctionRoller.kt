@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.enemies
 
-
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
@@ -39,6 +38,7 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.FixtureType
@@ -98,8 +98,8 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
                         (facing == Facing.RIGHT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
 
             if (body.isSensing(BodySense.FEET_ON_GROUND)) {
-                if (megaman.body.getBottomRightPoint().x < body.x) facing = Facing.LEFT
-                else if (megaman.body.x > body.getBottomRightPoint().x) facing = Facing.RIGHT
+                if (getMegaman().body.getBottomRightPoint().x < body.x) facing = Facing.LEFT
+                else if (getMegaman().body.x > body.getBottomRightPoint().x) facing = Facing.RIGHT
             }
         }
     }

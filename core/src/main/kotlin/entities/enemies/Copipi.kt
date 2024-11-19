@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.enemies
 
-
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.animations.Animation
@@ -10,6 +9,7 @@ import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
+
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameCircle
@@ -93,10 +93,10 @@ class Copipi(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         val sprite = GameSprite()
         sprite.setSize(1.15f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
-            sprite.setCenter(body.getCenter())
-            sprite.hidden = damageBlink
-            sprite.setFlip(isFacing(Facing.RIGHT), false)
+        spritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.setCenter(body.getCenter())
+            _sprite.hidden = damageBlink
+            _sprite.setFlip(isFacing(Facing.RIGHT), false)
         }
         return spritesComponent
     }

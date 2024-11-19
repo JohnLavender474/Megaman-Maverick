@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.bosses.gutstank
 
-
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
@@ -49,7 +48,6 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.bosses.gutstank.GutsTank.GutsTankAttackState
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.enemies.HeliMet
 import com.megaman.maverick.game.entities.enemies.Met
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
@@ -152,7 +150,7 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
     override fun onDamageInflictedTo(damageable: IDamageable) = (parent as GutsTank).laugh()
 
     internal fun launch() {
-        facing = if (megaman.body.x < body.getCenter().x) Facing.LEFT else Facing.RIGHT
+        facing = if (getMegaman().body.x < body.getCenter().x) Facing.LEFT else Facing.RIGHT
         fistState = GutsTankFistState.LAUNCHED
         launchDelayTimer.reset()
     }

@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.bosses
 
-
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
@@ -40,7 +39,6 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -121,7 +119,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) :
 
         reactorMonkeyState = ReactorMonkeyState.STAND
 
-        facing = if (megaman.body.x >= body.x) Facing.RIGHT else Facing.LEFT
+        facing = if (getMegaman().body.x >= body.x) Facing.RIGHT else Facing.LEFT
         ballSpawnY = spawnProps.getOrDefault(BALL_SPAWN_Y_KEY, DEFAULT_BALL_SPAWN_Y, Float::class)
     }
 
@@ -157,7 +155,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) :
     fun hurlMonkeyBall() {
         val impulse = MegaUtilMethods.calculateJumpImpulse(
             ballCatchArea.getCenter(),
-            megaman.body.getPosition(),
+            getMegaman().body.getPosition(),
             BALL_IMPULSE_Y * ConstVals.PPM,
             HORIZONTAL_SCALAR,
             VERTICAL_SCALAR
@@ -180,7 +178,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) :
             }
 
             ballCatchArea.setCenter(body.getTopCenterPoint().add(0f, 1.75f * ConstVals.PPM))
-            facing = if (megaman.body.x >= body.x) Facing.RIGHT else Facing.LEFT
+            facing = if (getMegaman().body.x >= body.x) Facing.RIGHT else Facing.LEFT
 
             if (reactorMonkeyState == ReactorMonkeyState.STAND) {
                 throwDelayTimer.update(delta)

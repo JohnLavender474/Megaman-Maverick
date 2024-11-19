@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.bosses
 
-
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
@@ -50,7 +49,6 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -151,7 +149,7 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         putProperty(ConstKeys.ENTTIY_KILLED_BY_DEATH_FIXTURE, false)
         super.onSpawn(spawnProps)
 
-        facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setBottomCenterToPoint(spawn)
@@ -204,7 +202,7 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
                 ConstKeys.OWNER pairTo this,
                 ConstKeys.POSITION pairTo spawn,
                 ConstKeys.TRAJECTORY pairTo normalizedTrajectory(
-                    spawn, megaman.body.getCenter(), FIRE_SPEED * ConstVals.PPM
+                    spawn, getMegaman().body.getCenter(), FIRE_SPEED * ConstVals.PPM
                 )
             )
         )
@@ -223,8 +221,8 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
 
             when (loop.getCurrent()) {
                 MechaDragonState.IDLE -> {
-                    if (megaman.body.getMaxX() < body.x) facing = Facing.LEFT
-                    else if (megaman.body.x > body.getMaxX()) facing = Facing.RIGHT
+                    if (getMegaman().body.getMaxX() < body.x) facing = Facing.LEFT
+                    else if (getMegaman().body.x > body.getMaxX()) facing = Facing.RIGHT
 
                     body.physics.velocity.x = HOVER_X_SWAY_SPEED * facing.value * ConstVals.PPM
                     body.physics.velocity.y = 0f
@@ -253,7 +251,7 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
                                 currentTarget = when {
                                     loop.getCurrent() == MechaDragonState.HOVER_TO_RANDOM_SPOT -> targets.random()
                                     loop.getCurrent() == MechaDragonState.HOVER_TO_ROOM_CENTER -> roomCenter
-                                    else -> megaman.body.getCenter()
+                                    else -> getMegaman().body.getCenter()
                                 }
                                 currentTarget.y = currentTarget.y.coerceIn(minY, maxY)
                             }
@@ -263,8 +261,8 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
 
                 MechaDragonState.HOVER_TO_MEGAMAN, MechaDragonState.HOVER_TO_RANDOM_SPOT, MechaDragonState.HOVER_TO_ROOM_CENTER -> {
                     when {
-                        megaman.body.getMaxX() < body.x -> facing = Facing.LEFT
-                        megaman.body.x > body.getMaxX() -> facing = Facing.RIGHT
+                        getMegaman().body.getMaxX() < body.x -> facing = Facing.LEFT
+                        getMegaman().body.x > body.getMaxX() -> facing = Facing.RIGHT
                     }
 
                     val trajectory = normalizedTrajectory(body.getCenter(), currentTarget, HOVER_SPEED * ConstVals.PPM)
@@ -289,15 +287,15 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
                 MechaDragonState.CHARGE -> {
                     if (!chargeFirstDelayTimer.isFinished()) {
                         body.physics.velocity.x = 0f
-                        val megamanCenterY = megaman.body.getCenter().y
+                        val megamanCenterY = getMegaman().body.getCenter().y
                         body.physics.velocity.y = (when {
                             megamanCenterY > body.y && megamanCenterY < body.getMaxY() -> 0f
                             else -> CHARGE_FIRST_DELAY_SPEED * if (megamanCenterY > body.getMaxY()) 1f else -1f
                         }) * ConstVals.PPM
 
                         when {
-                            megaman.body.getMaxX() < body.x -> facing = Facing.LEFT
-                            megaman.body.x > body.getMaxX() -> facing = Facing.RIGHT
+                            getMegaman().body.getMaxX() < body.x -> facing = Facing.LEFT
+                            getMegaman().body.x > body.getMaxX() -> facing = Facing.RIGHT
                         }
 
                         chargeFirstDelayTimer.update(delta)
@@ -463,11 +461,11 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
         sprite.setSize(9f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
-            sprite.setCenter(body.getCenter())
-            sprite.setFlip(isFacing(Facing.LEFT), false)
-            sprite.hidden = damageBlink || !ready
-            sprite.setAlpha(if (defeated) 1f - defeatTimer.getRatio() else 1f)
+        spritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.setCenter(body.getCenter())
+            _sprite.setFlip(isFacing(Facing.LEFT), false)
+            _sprite.hidden = damageBlink || !ready
+            _sprite.setAlpha(if (defeated) 1f - defeatTimer.getRatio() else 1f)
         }
         return spritesComponent
     }

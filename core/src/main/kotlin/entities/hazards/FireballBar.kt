@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.hazards
 
-
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf

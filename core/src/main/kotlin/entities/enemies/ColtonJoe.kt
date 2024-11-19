@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.enemies
 
-
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Rectangle
@@ -18,6 +17,7 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
+
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -46,7 +46,6 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -104,7 +103,7 @@ class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         scanner = GameRectangle().setSize(10f * ConstVals.PPM, ConstVals.PPM.toFloat())
         shootTimer.setToEnd()
         shootDelayTimer.setToEnd()
-        facing = if (body.x < megaman.body.x) Facing.RIGHT else Facing.LEFT
+        facing = if (body.x < getMegaman().body.x) Facing.RIGHT else Facing.LEFT
     }
 
     private fun shoot() {
@@ -133,7 +132,7 @@ class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             val position = if (isFacing(Facing.LEFT)) Position.CENTER_RIGHT else Position.CENTER_LEFT
             scanner.positionOnPoint(body.getCenter(), position)
 
-            if (shootDelayTimer.isFinished() && scanner.overlaps(megaman.body as Rectangle)) shootDelayTimer.reset()
+            if (shootDelayTimer.isFinished() && scanner.overlaps(getMegaman().body as Rectangle)) shootDelayTimer.reset()
 
             if (!shootDelayTimer.isFinished()) {
                 shootDelayTimer.update(delta)
@@ -143,7 +142,7 @@ class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                 }
             }
 
-            facing = if (body.x < megaman.body.x) Facing.RIGHT else Facing.LEFT
+            facing = if (body.x < getMegaman().body.x) Facing.RIGHT else Facing.LEFT
         }
     }
 

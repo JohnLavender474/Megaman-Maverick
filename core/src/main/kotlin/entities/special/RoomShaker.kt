@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.special
 
-
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger

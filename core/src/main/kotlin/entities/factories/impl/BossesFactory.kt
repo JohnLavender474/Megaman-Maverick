@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.factories.impl
 
-
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.bosses.*
 import com.megaman.maverick.game.entities.bosses.gutstank.GutsTank

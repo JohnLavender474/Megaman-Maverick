@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.bosses
 
-
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
@@ -55,7 +54,6 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntitiesMap
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -435,7 +433,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
             InfernoManState.JUMP -> {
                 body.physics.applyFrictionX = false
-                jump(megaman.body.getCenter())
+                jump(getMegaman().body.getCenter())
                 resetShootTimer()
             }
 
@@ -465,7 +463,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             }
 
             InfernoManState.JUMP -> when {
-                megaman.body.getMaxY() < body.y -> ShootMethod.DOWN
+                getMegaman().body.getMaxY() < body.y -> ShootMethod.DOWN
                 isMegamanStraightAhead() -> ShootMethod.STRAIGHT
                 else -> ShootMethod.UP
             }
@@ -562,7 +560,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
     private fun spawnMeteor(targetMegaman: Boolean) {
         var x = when {
-            targetMegaman -> megaman.body.getCenter().x
+            targetMegaman -> getMegaman().body.getCenter().x
             else -> getRandom(meteorSpawner.x, meteorSpawner.getMaxX())
         }
         x = x.coerceIn(meteorSpawner.x, meteorSpawner.getMaxX())
@@ -600,12 +598,12 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     private fun shouldFinishJumping() = isWallSliding() || shouldGoToStandState()
 
     private fun isMegamanStraightAhead() =
-        abs(megaman.body.y - body.y) <= MEGAMAN_STRAIGHT_Y_THRESHOLD * ConstVals.PPM
+        abs(getMegaman().body.y - body.y) <= MEGAMAN_STRAIGHT_Y_THRESHOLD * ConstVals.PPM
 
     private fun updateFacing() {
         when {
-            megaman.body.getMaxX() < body.x -> facing = Facing.LEFT
-            megaman.body.x > body.getMaxX() -> facing = Facing.RIGHT
+            getMegaman().body.getMaxX() < body.x -> facing = Facing.LEFT
+            getMegaman().body.x > body.getMaxX() -> facing = Facing.RIGHT
         }
     }
 }

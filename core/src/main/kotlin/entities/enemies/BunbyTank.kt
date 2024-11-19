@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.enemies
 
-
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Rectangle
@@ -17,6 +16,8 @@ import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
+
+
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -47,7 +48,6 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -120,10 +120,10 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         directionRotation =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
         facing = when (directionRotation) {
-            Direction.UP -> if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
-            Direction.DOWN -> if (megaman.body.x < body.x) Facing.RIGHT else Facing.LEFT
-            Direction.LEFT -> if (megaman.body.y < body.y) Facing.LEFT else Facing.RIGHT
-            Direction.RIGHT -> if (megaman.body.y < body.y) Facing.RIGHT else Facing.LEFT
+            Direction.UP -> if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+            Direction.DOWN -> if (getMegaman().body.x < body.x) Facing.RIGHT else Facing.LEFT
+            Direction.LEFT -> if (getMegaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
+            Direction.RIGHT -> if (getMegaman().body.y < body.y) Facing.RIGHT else Facing.LEFT
         }
 
         shootTimer.setToEnd()
@@ -199,12 +199,12 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             val turnAroundScannerPosition = body.getPositionPoint(position.opposite())
             turnAroundScanner.positionOnPoint(turnAroundScannerPosition, position.opposite())
 
-            if (!megaman.dead) {
-                if (megaman.body.overlaps(shootScanner as Rectangle)) {
+            if (!getMegaman().dead) {
+                if (getMegaman().body.overlaps(shootScanner as Rectangle)) {
                     body.physics.velocity.setZero()
                     shootTimer.reset()
                     return@add
-                } else if (megaman.body.overlaps(turnAroundScanner as Rectangle)) swapFacing()
+                } else if (getMegaman().body.overlaps(turnAroundScanner as Rectangle)) swapFacing()
             }
 
             body.physics.velocity = (when (directionRotation) {

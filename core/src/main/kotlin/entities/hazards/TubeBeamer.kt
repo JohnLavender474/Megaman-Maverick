@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.hazards
 
-
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.enums.Direction
@@ -28,7 +27,6 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -85,7 +83,7 @@ class TubeBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IAudioEntity
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        if (!megaman.ready) return@UpdatablesComponent
+        if (!getMegaman().ready) return@UpdatablesComponent
 
         spawnTimer.update(delta)
         if (spawnTimer.isFinished()) {

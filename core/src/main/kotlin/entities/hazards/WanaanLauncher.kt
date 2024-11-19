@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.hazards
 
-
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.audio.AudioComponent
@@ -27,7 +26,6 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.enemies.Wanaan
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
@@ -85,7 +83,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
             wanaan = null
         }
         if (wanaan?.dead == true) wanaan = null
-        if (wanaan == null && sensors.any { it.overlaps(megaman.body as Rectangle) }) {
+        if (wanaan == null && sensors.any { it.overlaps(getMegaman().body as Rectangle) }) {
             timer.update(delta)
             if (timer.isFinished()) {
                 launchWanaan()

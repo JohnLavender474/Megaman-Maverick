@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.enemies
 
-
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
@@ -11,6 +10,7 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
+
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -39,7 +39,6 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -91,11 +90,11 @@ class OLD_UFOBombBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         dropping = false
         dropDelayTimer.reset()
         dropDurationTimer.reset()
-        facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
     }
 
-    private fun isMegamanUnderMe() = megaman.body.getMaxY() <= body.y &&
-            megaman.body.getCenter().x >= body.x && megaman.body.getCenter().x <= body.getMaxX()
+    private fun isMegamanUnderMe() = getMegaman().body.getMaxY() <= body.y &&
+            getMegaman().body.getCenter().x >= body.x && getMegaman().body.getCenter().x <= body.getMaxX()
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
@@ -105,7 +104,7 @@ class OLD_UFOBombBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
                 if (dropDurationTimer.isFinished()) {
                     dropping = false
                     dropDurationTimer.reset()
-                    facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
+                    facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
                 }
             } else {
                 dropDelayTimer.update(delta)

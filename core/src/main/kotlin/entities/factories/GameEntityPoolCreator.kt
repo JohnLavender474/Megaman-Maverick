@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.factories
 
-
 import com.mega.game.engine.common.objects.Pool
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity

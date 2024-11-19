@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.contracts
 
-
 import com.mega.game.engine.common.enums.Direction
 
 interface IDirectionRotatable {

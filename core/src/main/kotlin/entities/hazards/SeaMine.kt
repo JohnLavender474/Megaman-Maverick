@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.hazards
 
-
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
@@ -41,7 +40,6 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
@@ -109,9 +107,9 @@ class SeaMine(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IS
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         sensor.setCenter(body.getCenter())
-        if (!triggered && megaman.body.getBodyBounds().overlaps(sensor)) trigger()
+        if (!triggered && getMegaman().body.getBodyBounds().overlaps(sensor)) trigger()
         if (triggered) {
-            body.physics.velocity = megaman.body.getCenter().sub(body.getCenter()).nor().scl(SPEED * ConstVals.PPM)
+            body.physics.velocity = getMegaman().body.getCenter().sub(body.getCenter()).nor().scl(SPEED * ConstVals.PPM)
             blowTimer.update(delta)
             if (blowTimer.isFinished()) explodeAndDie()
         }

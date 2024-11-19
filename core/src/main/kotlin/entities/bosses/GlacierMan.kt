@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.bosses
 
-
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
@@ -49,7 +48,6 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntitiesMap
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.HazardsFactory
@@ -170,7 +168,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         stateMachine.reset()
         timers.forEach { if (it.key == "shoot_anim") it.value.setToEnd() else it.value.reset() }
 
-        facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
         shootUp = false
         firstUpdate = true
         iceBlastLeftHand = false
@@ -223,12 +221,12 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         val chunkIceBlast = getRandomBool()
         if (chunkIceBlast) {
             trajectory = MegaUtilMethods.calculateJumpImpulse(
-                spawn, megaman.body.getCenter(), CHUNK_ICE_BLAST_VEL_Y * ConstVals.PPM
+                spawn, getMegaman().body.getCenter(), CHUNK_ICE_BLAST_VEL_Y * ConstVals.PPM
             )
             gravityOn = true
         } else {
             trajectory =
-                megaman.body.getCenter().sub(body.getCenter()).nor().scl(ICE_BLAST_VEL * ConstVals.PPM)
+                getMegaman().body.getCenter().sub(body.getCenter()).nor().scl(ICE_BLAST_VEL * ConstVals.PPM)
             gravityOn = false
         }
 
@@ -286,7 +284,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
     private fun jump() {
         val impulse = MegaUtilMethods.calculateJumpImpulse(
-            body.getBottomCenterPoint(), megaman.body.getCenter(), JUMP_IMPULSE_Y * ConstVals.PPM
+            body.getBottomCenterPoint(), getMegaman().body.getCenter(), JUMP_IMPULSE_Y * ConstVals.PPM
         )
         body.physics.velocity.y = impulse.y
     }
@@ -327,10 +325,10 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     }
 
     private fun isMegamanAboveOffsetY() =
-        megaman.body.getMaxY() >= body.y + MEGAMAN_ABOVE_OFFSET_Y * ConstVals.PPM
+        getMegaman().body.getMaxY() >= body.y + MEGAMAN_ABOVE_OFFSET_Y * ConstVals.PPM
 
     private fun isMegamanOutsideOffsetX() =
-        abs(megaman.body.x - body.x) > MEGAMAN_OFFSET_X * ConstVals.PPM
+        abs(getMegaman().body.x - body.x) > MEGAMAN_OFFSET_X * ConstVals.PPM
 
     private fun shouldStopSledding() =
         (isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) || (isFacing(Facing.RIGHT) && body.isSensing(
@@ -380,7 +378,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 GlacierManState.STOP,
                 GlacierManState.ICE_BLAST_ATTACK -> {
                     if (state.equalsAny(GlacierManState.STAND, GlacierManState.DUCK))
-                        facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
+                        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
 
                     body.physics.velocity.x =
                         if (state == GlacierManState.SLED) SLED_SPEED * ConstVals.PPM * facing.value else 0f
@@ -396,7 +394,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 }
 
                 GlacierManState.JUMP -> {
-                    facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
+                    facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
                     if (body.physics.velocity.y <= 0f && body.isSensing(BodySense.FEET_ON_GROUND)) {
                         GameLogger.debug(TAG, "update(): end jump")
                         stateMachine.next()

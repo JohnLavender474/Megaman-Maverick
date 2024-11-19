@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.sensors
 
-
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.entities.contracts.IBodyEntity

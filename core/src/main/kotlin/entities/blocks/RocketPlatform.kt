@@ -1,44 +1,6 @@
 package com.megaman.maverick.game.entities.blocks
 
-
-
-import com.badlogic.gdx.utils.Array
-import com.mega.game.engine.animations.Animation
-import com.mega.game.engine.animations.AnimationsComponent
-import com.mega.game.engine.animations.Animator
-import com.mega.game.engine.common.enums.Direction
-import com.mega.game.engine.common.extensions.getTextureRegion
-import com.mega.game.engine.common.extensions.objectSetOf
-import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.drawables.sorting.DrawingPriority
-import com.mega.game.engine.drawables.sorting.DrawingSection
-import com.mega.game.engine.drawables.sprites.GameSprite
-import com.mega.game.engine.drawables.sprites.SpritesComponent
-import com.mega.game.engine.drawables.sprites.setCenter
-import com.mega.game.engine.drawables.sprites.setSize
-import com.mega.game.engine.entities.GameEntity
-import com.mega.game.engine.entities.IGameEntity
-import com.mega.game.engine.entities.contracts.IChildEntity
-import com.mega.game.engine.entities.contracts.IMotionEntity
-import com.mega.game.engine.entities.contracts.IParentEntity
-import com.mega.game.engine.entities.contracts.ISpritesEntity
-import com.mega.game.engine.events.Event
-import com.mega.game.engine.events.IEventListener
-import com.mega.game.engine.motion.MotionComponent
-import com.mega.game.engine.motion.MotionComponent.MotionDefinition
-import com.mega.game.engine.motion.Trajectory
-import com.mega.game.engine.world.body.BodyComponent
-import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
-import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntitySuppliers
-import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
-
-com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent

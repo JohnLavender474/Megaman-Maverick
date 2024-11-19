@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.enemies
 
-
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
@@ -240,17 +239,17 @@ class BabySpider(game: MegamanMaverickGame) : AbstractEnemy(game) {
         val sprite = GameSprite()
         sprite.setSize(1.65f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
-            sprite.hidden = damageBlink || (!waitTimer.isFinished() && waitBlink)
-            sprite.setCenter(body.getCenter())
-            sprite.setOriginCenter()
+        spritesComponent.putUpdateFunction { _, _sprite ->
+            _sprite.hidden = damageBlink || (!waitTimer.isFinished() && waitBlink)
+            _sprite.setCenter(body.getCenter())
+            _sprite.setOriginCenter()
             val rotation = when (babySpiderState) {
                 BabySpiderState.FALLING, BabySpiderState.RUNNING_ON_GROUND -> 0f
                 BabySpiderState.RUNNING_ON_CEILING -> 180f
                 BabySpiderState.SCALING_WALL_LEFT -> 270f
                 BabySpiderState.SCALING_WALL_RIGHT -> 90f
             }
-            sprite.rotation = rotation
+            _sprite.rotation = rotation
         }
         return spritesComponent
     }

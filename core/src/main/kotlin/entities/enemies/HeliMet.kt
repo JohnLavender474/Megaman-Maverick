@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.enemies
 
-
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
@@ -14,6 +13,7 @@ import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
+
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.SmoothOscillationTimer
 import com.mega.game.engine.common.objects.pairTo
@@ -46,7 +46,6 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.enemies.HeliMet.HeliMetState.*
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -124,7 +123,7 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
             val target2 =
                 spawnProps.get("${ConstKeys.TARGET}_2", RectangleMapObject::class)!!
                     .rectangle.toGameRectangle().getCenter()
-            val megamanCenter = megaman.body.getCenter()
+            val megamanCenter = getMegaman().body.getCenter()
             target = if (target1.dst2(megamanCenter) < target2.dst2(megamanCenter)) target1 else target2
         }
 
@@ -169,10 +168,10 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
                 FLY -> {
                     facing = when (directionRotation) {
-                        Direction.UP -> if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
-                        Direction.DOWN -> if (megaman.body.x < body.x) Facing.RIGHT else Facing.LEFT
-                        Direction.LEFT -> if (megaman.body.y < body.y) Facing.LEFT else Facing.RIGHT
-                        Direction.RIGHT -> if (megaman.body.y < body.y) Facing.RIGHT else Facing.LEFT
+                        Direction.UP -> if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+                        Direction.DOWN -> if (getMegaman().body.x < body.x) Facing.RIGHT else Facing.LEFT
+                        Direction.LEFT -> if (getMegaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
+                        Direction.RIGHT -> if (getMegaman().body.y < body.y) Facing.RIGHT else Facing.LEFT
                     }
 
                     sideToSideTimer.update(delta)
@@ -298,7 +297,7 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
                     0.25f * ConstVals.PPM, (ConstVals.PPM / 64f) * facing.value
                 )
         }
-        val trajectory = megaman.body.getCenter().sub(spawn).nor().scl(BULLET_VELOCITY * ConstVals.PPM)
+        val trajectory = getMegaman().body.getCenter().sub(spawn).nor().scl(BULLET_VELOCITY * ConstVals.PPM)
         val spawnProps =
             props(
                 ConstKeys.OWNER pairTo this,

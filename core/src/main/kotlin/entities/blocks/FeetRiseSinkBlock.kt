@@ -1,20 +1,10 @@
 package com.megaman.maverick.game.entities.blocks
 
-
-
+import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.world.body.BodyComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.megaman.components.feetFixture
-
-com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.world.body.BodyComponent
-import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.megaman.components.feetFixture
 
 class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {
@@ -44,7 +34,7 @@ class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {
     override fun defineBodyComponent(): BodyComponent {
         val bodyComponent = super.defineBodyComponent()
         bodyComponent.body.preProcess.put(ConstKeys.MOVE) {
-            if (megaman.feetFixture.getShape().overlaps(body)) {
+            if (getMegaman().feetFixture.getShape().overlaps(body)) {
                 if (body.y > minY) body.physics.velocity.y = fallingSpeed * ConstVals.PPM
                 else body.physics.velocity.y = 0f
             } else if (body.getMaxY() < maxY) body.physics.velocity.y = risingSpeed * ConstVals.PPM

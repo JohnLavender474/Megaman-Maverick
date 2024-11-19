@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.projectiles
 
-
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -28,7 +27,6 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
@@ -97,7 +95,7 @@ class PipiEgg(game: MegamanMaverickGame) : AbstractProjectile(game) {
             val randomAngle = getRandom(BABY_BIRDIE_MIN_ANGLE, BABY_BIRDIE_MAX_ANGLE)
             val trajectory = Vector2(0f, BABY_BIRDIE_SPEED * ConstVals.PPM).rotateDeg(randomAngle)
 
-            if (megaman.body.x < body.getMaxX()) trajectory.x *= -1f
+            if (getMegaman().body.x < body.getMaxX()) trajectory.x *= -1f
 
             val babyBirdie = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.COPIPI)!!
             babyBirdie.spawn(

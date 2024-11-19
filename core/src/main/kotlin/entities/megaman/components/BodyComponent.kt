@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.megaman.components
 
-
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array

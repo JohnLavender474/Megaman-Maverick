@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.enemies
 
-
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Rectangle
@@ -46,7 +45,6 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -119,7 +117,7 @@ class WalrusBot(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
         walrusBotState = WalrusBotState.STAND
-        facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
     }
 
     private fun shoot() {
@@ -144,7 +142,7 @@ class WalrusBot(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
         updatablesComponent.add { delta ->
             when (walrusBotState) {
                 WalrusBotState.STAND -> {
-                    facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
+                    facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
                     standTimer.update(delta)
                     if (standTimer.isFinished()) {
                         standTimer.reset()
@@ -157,12 +155,12 @@ class WalrusBot(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
                 }
 
                 WalrusBotState.SHOOT -> {
-                    if (scannerBox.overlaps(megaman.body as Rectangle)) stateQueudForAfterShoot =
+                    if (scannerBox.overlaps(getMegaman().body as Rectangle)) stateQueudForAfterShoot =
                         WalrusBotState.JET
                     shootTimer.update(delta)
                     if (shootTimer.isFinished()) {
                         shootTimer.reset()
-                        facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
+                        facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
                         walrusBotState = stateQueudForAfterShoot
                     }
                 }
@@ -177,7 +175,7 @@ class WalrusBot(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
                 }
 
                 WalrusBotState.SLIDE -> {
-                    facing = if (megaman.body.x < body.x) Facing.LEFT else Facing.RIGHT
+                    facing = if (getMegaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
                     if (body.isSensing(BodySense.FEET_ON_GROUND) &&
                         abs(body.physics.velocity.x) < SLIDE_MIN_VEL * ConstVals.PPM
                     ) walrusBotState = WalrusBotState.STAND

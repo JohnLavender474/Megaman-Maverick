@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.hazards
 
-
 import com.badlogic.gdx.graphics.Color.RED
 import com.badlogic.gdx.graphics.Color.WHITE
 import com.badlogic.gdx.graphics.g2d.TextureRegion

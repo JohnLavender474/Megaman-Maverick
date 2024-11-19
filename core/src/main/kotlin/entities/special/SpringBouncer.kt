@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.special
 
-
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
