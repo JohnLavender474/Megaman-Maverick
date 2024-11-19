@@ -1,7 +1,7 @@
 Projectiles2.png
-size: 128, 1174
+size: 128, 1270
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Linear,Linear
 repeat: none
 ArigockBall
   rotate: false
@@ -103,37 +103,44 @@ MagmaPellet
   index: -1
 MagmaWave
   rotate: false
-  xy: 0, 502
+  xy: 0, 598
   size: 96, 192
   orig: 96, 192
   offset: 0, 0
   index: -1
 MagmaWave/disintegrate
   rotate: false
-  xy: 0, 886
+  xy: 0, 982
   size: 96, 288
   orig: 96, 288
   offset: 0, 0
   index: -1
 MagmaWave/wave
   rotate: false
-  xy: 0, 694
+  xy: 0, 790
   size: 96, 192
   orig: 96, 192
   offset: 0, 0
   index: -1
 MoonMan/crescent
   rotate: false
-  xy: 0, 382
+  xy: 0, 478
   size: 64, 120
   orig: 64, 120
   offset: 0, 0
   index: -1
 MoonMan/star
   rotate: false
-  xy: 64, 382
+  xy: 64, 478
   size: 64, 120
   orig: 64, 120
+  offset: 0, 0
+  index: -1
+MoonScythe
+  rotate: false
+  xy: 48, 282
+  size: 48, 96
+  orig: 48, 96
   offset: 0, 0
   index: -1
 Needle
@@ -148,6 +155,13 @@ Pebble
   xy: 32, 32
   size: 36, 36
   orig: 36, 36
+  offset: 0, 0
+  index: -1
+SharpStar
+  rotate: false
+  xy: 0, 378
+  size: 48, 96
+  orig: 48, 96
   offset: 0, 0
   index: -1
 SmallGreenMissile
@@ -173,7 +187,7 @@ SphinxBall
   index: -1
 SpitFireball
   rotate: false
-  xy: 48, 282
+  xy: 48, 378
   size: 50, 100
   orig: 50, 100
   offset: 0, 0
