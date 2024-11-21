@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.projectiles
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.animations.Animation
@@ -12,6 +13,7 @@ import com.mega.game.engine.common.getOverlapPushDirection
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -23,10 +25,7 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.body.Body
-import com.mega.game.engine.world.body.BodyComponent
-import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.IFixture
+import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -43,9 +42,9 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     companion object {
         const val TAG = "MoonScythe"
-        private const val ROTATIONS_PER_SEC = 2f
-        private const val FADE_DUR = 0.15f
-        private const val MAX_BOUNCES = 3
+        private const val ROTATIONS_PER_SEC = 2.5f
+        private const val FADE_DUR = 0.25f
+        private const val MAX_BOUNCES = 5
         private const val SPAWN_TRAIL_DELAY = 0.1f
         private var region: TextureRegion? = null
     }
@@ -124,17 +123,25 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(ConstVals.PPM.toFloat())
+        body.setSize(0.8f * ConstVals.PPM)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
         body.preProcess.put(ConstKeys.DEFAULT) {
             if (canMove && !fade) body.physics.velocity.set(trajectory).scl(movementScalar)
             else body.physics.velocity.setZero()
         }
-        val debugShapes = gdxArrayOf<() -> IDrawableShape?>({ body.getBodyBounds() })
+
+        val debugShapes = gdxArrayOf<() -> IDrawableShape?>()
+
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.4f * ConstVals.PPM))
+        body.addFixture(damagerFixture)
+        damagerFixture.rawShape.color = Color.RED
+        debugShapes.add { damagerFixture.getShape() }
+
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
+
         return BodyComponentCreator.create(
-            this, body, BodyFixtureDef.of(FixtureType.PROJECTILE, FixtureType.DAMAGER, FixtureType.SHIELD)
+            this, body, BodyFixtureDef.of(FixtureType.PROJECTILE, FixtureType.SHIELD)
         )
     }
 

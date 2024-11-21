@@ -185,7 +185,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 }
             }
             body.physics.velocity.set(v)
-            requestToPlaySound(SoundAsset.WALL_JUMP_SOUND, false)
+            // requestToPlaySound(SoundAsset.JUMP_SOUND, false)
             GameLogger.debug(MEGAMAN_JUMP_BEHAVIOR_TAG, "init(): velocity=$v")
         },
         end = {

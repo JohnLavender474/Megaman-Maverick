@@ -174,7 +174,7 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
             if (timer.isFinished()) {
                 GameLogger.debug(TAG, "Timer finished: thisKey=$thisKey, entity=$entity, timer=$timer")
 
-                requestToPlaySound(SoundAsset.TELEPORT_SOUND, false)
+                requestToPlaySound(SoundAsset.FLOATING_PORTAL_SOUND, false)
 
                 val onPortalEnd = entity.getProperty(ConstKeys.ON_TELEPORT_END) as? () -> Unit
                 onPortalEnd?.invoke()

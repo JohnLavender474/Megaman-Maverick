@@ -15,6 +15,7 @@ import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.interpolate
 import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.shapes.getCenter
 import com.mega.game.engine.common.shapes.toGameRectangle
 import com.mega.game.engine.common.time.Timer
 import kotlin.math.min
@@ -102,7 +103,7 @@ class CameraManagerForRooms(
         )
         val nextGameRoom = gameRooms?.first { it.name == roomName } ?: return false
         transitionDirection = getSingleMostDirectionFromStartToTarget(
-            currentGameRoom!!.rectangle.getCenter(Vector2()), nextGameRoom.rectangle.getCenter(Vector2())
+            currentGameRoom!!.rectangle.getCenter(), nextGameRoom.rectangle.getCenter()
         )
         GameLogger.debug(TAG, "transitionToRoom(): transition direction = $transitionDirection")
         setTransitionValues(nextGameRoom.rectangle)

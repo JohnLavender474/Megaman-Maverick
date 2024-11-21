@@ -208,11 +208,13 @@ class MegaLevelScreen(
         cameraManagerForRooms.beginTransition = {
             GameLogger.debug(TAG, "Begin transition logic for camera manager")
 
+            val room = cameraManagerForRooms.currentGameRoom
+
             eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
             eventsMan.submitEvent(
                 Event(
                     EventType.BEGIN_ROOM_TRANS, props(
-                        ConstKeys.ROOM pairTo cameraManagerForRooms.currentGameRoom,
+                        ConstKeys.ROOM pairTo room,
                         ConstKeys.PRIOR pairTo cameraManagerForRooms.priorGameRoom,
                         ConstKeys.POSITION pairTo cameraManagerForRooms.transitionInterpolation,
                     )
@@ -222,8 +224,9 @@ class MegaLevelScreen(
             MegaGameEntitiesMap.getEntitiesOfType(EntityType.ENEMY).forEach { it.destroy() }
 
             game.getSystem(BehaviorsSystem::class).on = false
-
             game.putProperty(ConstKeys.ROOM_TRANSITION, true)
+
+            if (room?.name == ConstKeys.BOSS_ROOM) audioMan.fadeOutMusic(FADE_OUT_MUSIC_ON_BOSS_SPAWN)
         }
         cameraManagerForRooms.continueTransition = { _ ->
             if (cameraManagerForRooms.delayJustFinished) game.getSystem(AnimationsSystem::class).on = true
@@ -308,7 +311,6 @@ class MegaLevelScreen(
         gameCameraPriorPosition.setZero()
         gameCamera.position.set(ConstFuncs.getCamInitPos())
         uiCamera.position.set(ConstFuncs.getCamInitPos())
-        // gameCamera.reset()
     }
 
     override fun getLayerBuilders() = MegaMapLayerBuilders(MegaMapLayerBuildersParams(game, spawnsMan))
@@ -446,6 +448,7 @@ class MegaLevelScreen(
 
             EventType.GATE_INIT_CLOSING -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Gate init closing")
+
                 val systemsToTurnOn = gdxArrayOf(
                     AsyncPathfindingSystem::class,
                     MotionSystem::class,
@@ -461,16 +464,13 @@ class MegaLevelScreen(
 
             EventType.ENTER_BOSS_ROOM -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Enter boss room")
+
                 val bossRoom = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!
                 val bossMapObject = bossRoom.properties.get(ConstKeys.OBJECT, RectangleMapObject::class.java)
                 val bossName = bossMapObject.name
 
                 val bossSpawnProps = bossMapObject.properties.toProps()
                 bossSpawnProps.put(ConstKeys.BOUNDS, bossMapObject.rectangle.toGameRectangle())
-
-                val mini = bossSpawnProps.getOrDefault(ConstKeys.MINI, false, Boolean::class)
-                if (!mini) audioMan.fadeOutMusic(FADE_OUT_MUSIC_ON_BOSS_SPAWN)
-
                 bossSpawnEventHandler.init(bossName, bossSpawnProps)
 
                 megaman.running = false
@@ -478,8 +478,12 @@ class MegaLevelScreen(
 
             EventType.BOSS_READY -> {
                 val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
-                val runOnFinished = { game.eventsMan.submitEvent(Event(EventType.END_BOSS_SPAWN)) }
-                bossHealthHandler.set(boss, runOnFinished)
+                val runOnFirstUpdate = { game.audioMan.pauseMusic() }
+                val runOnFinished = {
+                    game.eventsMan.submitEvent(Event(EventType.END_BOSS_SPAWN))
+                    game.audioMan.playMusic()
+                }
+                bossHealthHandler.set(boss, runOnFirstUpdate, runOnFinished)
 
                 game.engine.systems.forEach {
                     if (!it.isAny(SpritesSystem::class, AnimationsSystem::class)) it.on = false
@@ -581,15 +585,15 @@ class MegaLevelScreen(
             }
 
             EventType.SET_GAME_CAM_ROTATION -> {
-                game.setCameraRotating(true)
                 val direction = event.getProperty(ConstKeys.DIRECTION, Direction::class)!!
+                gameCamera.startRotation(direction, ConstVals.GAME_CAM_ROTATE_TIME)
                 backgrounds.forEach { background ->
                     background.startRotation(
                         direction,
                         ConstVals.GAME_CAM_ROTATE_TIME
                     )
                 }
-                gameCamera.startRotation(direction, ConstVals.GAME_CAM_ROTATE_TIME)
+                game.setCameraRotating(true)
             }
         }
     }

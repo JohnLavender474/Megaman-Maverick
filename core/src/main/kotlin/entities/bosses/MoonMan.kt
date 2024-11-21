@@ -75,16 +75,19 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
     companion object {
         const val TAG = "MoonMan"
 
+        // if false, Gravity Man's direction rotation will never change
+        private const val CHANGE_GRAVITY = false
+
         private const val BODY_WIDTH = 1.15f
         private const val BODY_HEIGHT = 1.5f
 
         private const val JUMP_IMPULSE_Y = 6f
         private const val JUMP_MAX_IMPULSE_X = 8f
-        private const val JUMP_MIN_HORIZONTAL_SCALAR = 0.75f
-        private const val JUMP_MAX_HORIZONTAL_SCALAR = 1f
+        private const val JUMP_MIN_HORIZONTAL_SCALAR = 0.5f
+        private const val JUMP_MAX_HORIZONTAL_SCALAR = 0.75f
         private const val JUMP_HORIZONTAL_SCALAR_DENOMINATOR = 8
 
-        private const val GRAVITY = 0.15f
+        private const val GRAVITY = 0.25f
         private const val GROUND_GRAVITY = 0.01f
         private const val DEFAULT_GRAVITY_SCALAR = 0.25f
         private const val DEFAULT_FRICTION_X = 6f
@@ -102,14 +105,14 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         private const val GRAVITY_CHANGE_CONTINUE_DUR = 1.2f
         private const val GRAVITY_CHANGE_END_DUR = ConstVals.GAME_CAM_ROTATE_TIME
 
-        private const val GRAVITY_CHANGE_DELAY_DUR = 10f
-        private const val GRAVITY_CHANGE_START_CHANCE = 0.25f
+        private const val GRAVITY_CHANGE_DELAY_DUR = 5f
+        private const val GRAVITY_CHANGE_START_CHANCE = 0.1f
         private const val GRAVITY_CHANGE_CHANGE_DELTA = 0.1f
 
-        private const val ASTEROIDS_TO_SPAWN = 4
+        private const val ASTEROIDS_TO_SPAWN = 3
         private const val ASTEROID_SPEED = 7.5f
 
-        private const val SHARP_STAR_SPEED = 8f
+        private const val SHARP_STAR_SPEED = 10f
         private const val SHARP_STAR_MOVEMENT_SCALAR = 0.75f
 
         private const val MOON_SCYTHE_SPEED = 8f
@@ -138,7 +141,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
     override var directionRotation: Direction
         get() = body.cardinalRotation
         set(value) {
-            body.cardinalRotation = value
+            if (CHANGE_GRAVITY) body.cardinalRotation = value
         }
     override var gravityScalar = DEFAULT_GRAVITY_SCALAR
 
@@ -236,14 +239,18 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
     override fun onDefeated(delta: Float) {
         GameLogger.debug(TAG, "onDefeated()")
+
         super.onDefeated(delta)
+
         asteroidsToThrow.forEach { it.first.destroy() }
         asteroidsToThrow.clear()
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
+
         super.onDestroy()
+
         asteroidsToThrow.forEach { it.first.destroy() }
         asteroidsToThrow.clear()
     }
@@ -360,6 +367,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
+        body.physics.receiveFrictionY = false
         body.physics.defaultFrictionOnSelf.x = DEFAULT_FRICTION_X
         body.physics.defaultFrictionOnSelf.y = DEFAULT_FRICTION_Y
         body.setSize(BODY_WIDTH * ConstVals.PPM, BODY_HEIGHT * ConstVals.PPM)
@@ -481,7 +489,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
     }
 
     private fun activateGravityChange() {
-        currentGravityChangeDir = if (directionRotation == Direction.UP) Direction.DOWN else Direction.UP
+        currentGravityChangeDir = currentGravityChangeDir.getOpposite()
         megaman().directionRotation = currentGravityChangeDir
         gravityChangeChance = 0f
         timers["gravity_change_delay"].reset()
@@ -652,7 +660,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
             )
         )
 
-        requestToPlaySound(SoundAsset.WHIP_SOUND, false)
+        requestToPlaySound(SoundAsset.SOLAR_BLAZE_SOUND, false)
     }
 
     private fun spawnAsteroid() {
