@@ -33,6 +33,8 @@ class TimberWoman(game: MegamanMaverickGame): AbstractBoss(game), IAnimatedEntit
         super.onSpawn(spawnProps)
     }
 
+    override fun isReady(delta: Float) = true // TODO
+
     override fun defineBodyComponent(): BodyComponent {
         TODO("Not yet implemented")
     }

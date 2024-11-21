@@ -1,4 +1,4 @@
-package com.megaman.maverick.game.entities.explosions.entities.explosions
+package com.megaman.maverick.game.entities.explosions
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion

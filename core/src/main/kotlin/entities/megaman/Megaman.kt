@@ -7,9 +7,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
-import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.gdxArrayOf
-import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IBoundsSupplier
 import com.mega.game.engine.common.interfaces.IFaceable
@@ -31,28 +29,16 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
-import com.megaman.maverick.game.damage.DamageNegotiation
-import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.bosses.*
-import com.megaman.maverick.game.entities.bosses.gutstank.GutsTank
-import com.megaman.maverick.game.entities.bosses.gutstank.GutsTankFist
-import com.megaman.maverick.game.entities.bosses.sigmarat.SigmaRat
-import com.megaman.maverick.game.entities.bosses.sigmarat.SigmaRatClaw
 import com.megaman.maverick.game.entities.contracts.*
-import com.megaman.maverick.game.entities.enemies.*
-import com.megaman.maverick.game.entities.explosions.*
-import com.megaman.maverick.game.entities.explosions.entities.explosions.StarExplosion
+import com.megaman.maverick.game.entities.enemies.SpringHead
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-import com.megaman.maverick.game.entities.hazards.*
 import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOSION_ORB_SPEED
 import com.megaman.maverick.game.entities.megaman.extensions.clearFeetBlocks
 import com.megaman.maverick.game.entities.megaman.extensions.stopCharging
-import com.megaman.maverick.game.entities.projectiles.*
-import com.megaman.maverick.game.entities.special.Togglee
 import com.megaman.maverick.game.entities.utils.setStandardOnTeleportContinueProp
 import com.megaman.maverick.game.entities.utils.standardOnTeleportEnd
 import com.megaman.maverick.game.entities.utils.standardOnTeleportStart
@@ -60,7 +46,6 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.misc.StunType
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.isSensingAny
-import kotlin.reflect.KClass
 
 class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable, IEventListener, IFaceable,
     IDamageable, IDirectionRotatable, IBodyEntity, IHealthEntity, ISpritesEntity, IBehaviorsEntity, IPointsEntity,
@@ -88,163 +73,6 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
     internal val damageRecoveryTimer = Timer(MegamanValues.DAMAGE_RECOVERY_TIME).setToEnd()
     internal val damageFlashTimer = Timer(MegamanValues.DAMAGE_FLASH_DURATION)
 
-    private val dmgNegotations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class pairTo dmgNeg(2),
-        ChargedShot::class pairTo dmgNeg(4),
-        Bat::class pairTo dmgNeg(2),
-        Met::class pairTo dmgNeg(2),
-        DragonFly::class pairTo dmgNeg(3),
-        FloatingCan::class pairTo dmgNeg(2),
-        FlyBoy::class pairTo dmgNeg(3),
-        GapingFish::class pairTo dmgNeg(2),
-        SpringHead::class pairTo dmgNeg(3),
-        SuctionRoller::class pairTo dmgNeg(2),
-        MagFly::class pairTo dmgNeg(3),
-        Explosion::class pairTo dmgNeg(2),
-        JoeBall::class pairTo dmgNeg(3),
-        Snowball::class pairTo dmgNeg(1),
-        SnowballExplosion::class pairTo dmgNeg(1),
-        SwinginJoe::class pairTo dmgNeg(2),
-        SniperJoe::class pairTo dmgNeg(3),
-        ShieldAttacker::class pairTo dmgNeg(4),
-        Penguin::class pairTo dmgNeg(3),
-        Hanabiran::class pairTo dmgNeg(3),
-        Petal::class pairTo dmgNeg(3),
-        CaveRock::class pairTo dmgNeg(3),
-        CaveRocker::class pairTo dmgNeg(3),
-        CaveRockExplosion::class pairTo dmgNeg(2),
-        Elecn::class pairTo dmgNeg(3),
-        ElectricBall::class pairTo dmgNeg(3),
-        Ratton::class pairTo dmgNeg(2),
-        PicketJoe::class pairTo dmgNeg(3),
-        Picket::class pairTo dmgNeg(3),
-        LaserBeamer::class pairTo dmgNeg(3),
-        CartinJoe::class pairTo dmgNeg(3),
-        Bolt::class pairTo dmgNeg(3),
-        ElectrocutieChild::class pairTo dmgNeg(3),
-        Togglee::class pairTo dmgNeg(3),
-        Eyee::class pairTo dmgNeg(3),
-        Adamski::class pairTo dmgNeg(3),
-        UpNDown::class pairTo dmgNeg(3),
-        BigJumpingJoe::class pairTo dmgNeg(6),
-        SniperJoeShield::class pairTo dmgNeg(2),
-        SuicideBummer::class pairTo dmgNeg(3),
-        Gachappan::class pairTo dmgNeg(5),
-        ExplodingBall::class pairTo dmgNeg(3),
-        Imorm::class pairTo dmgNeg(3),
-        SpikeBall::class pairTo dmgNeg(8),
-        Peat::class pairTo dmgNeg(2),
-        BulbBlaster::class pairTo dmgNeg(2),
-        Bospider::class pairTo dmgNeg(5),
-        BabySpider::class pairTo dmgNeg(2),
-        GutsTank::class pairTo dmgNeg(3),
-        GutsTankFist::class pairTo dmgNeg(3),
-        PurpleBlast::class pairTo dmgNeg(3),
-        HeliMet::class pairTo dmgNeg(3),
-        SigmaRat::class pairTo dmgNeg(3),
-        SigmaRatElectricBall::class pairTo dmgNeg(3),
-        SigmaRatElectricBallExplosion::class pairTo dmgNeg(2),
-        SigmaRatClaw::class pairTo dmgNeg(2),
-        Fireball::class pairTo dmgNeg(3),
-        BoulderProjectile::class pairTo dmgNeg {
-            it as BoulderProjectile
-            when (it.size) {
-                Size.LARGE -> 4
-                Size.MEDIUM -> 2
-                Size.SMALL -> 1
-            }
-        },
-        PetitDevil::class pairTo dmgNeg(3),
-        PetitDevilChild::class pairTo dmgNeg(2),
-        Shotman::class pairTo dmgNeg(2),
-        Snowhead::class pairTo dmgNeg(2),
-        SnowheadThrower::class pairTo dmgNeg(3),
-        Spiky::class pairTo dmgNeg(4),
-        PenguinMiniBoss::class pairTo dmgNeg(3),
-        BabyPenguin::class pairTo dmgNeg(2),
-        UFOBomb::class pairTo dmgNeg(3),
-        OLD_UFOBombBot::class pairTo dmgNeg(2),
-        RollingBot::class pairTo dmgNeg(3),
-        RollingBotShot::class pairTo dmgNeg(3),
-        AcidGoop::class pairTo dmgNeg(3),
-        ToxicBarrelBot::class pairTo dmgNeg(3),
-        ToxicGoopShot::class pairTo dmgNeg(3),
-        ToxicGoopSplash::class pairTo dmgNeg(3),
-        ReactorMonkeyBall::class pairTo dmgNeg(3),
-        ReactorMonkeyMiniBoss::class pairTo dmgNeg(3),
-        SmokePuff::class pairTo dmgNeg(2),
-        TubeBeam::class pairTo dmgNeg(5),
-        ReactorMan::class pairTo dmgNeg(3),
-        ReactManProjectile::class pairTo dmgNeg(3),
-        FlameThrower::class pairTo dmgNeg(6),
-        Popoheli::class pairTo dmgNeg(3),
-        AngryFlameBall::class pairTo dmgNeg(3),
-        LavaDrop::class pairTo dmgNeg(6),
-        PopupCanon::class pairTo dmgNeg(3),
-        Asteroid::class pairTo dmgNeg(3),
-        AsteroidExplosion::class pairTo dmgNeg(3),
-        MoonHeadMiniBoss::class pairTo dmgNeg(3),
-        BunbyRedRocket::class pairTo dmgNeg(3),
-        BunbyTank::class pairTo dmgNeg(3),
-        FireMet::class pairTo dmgNeg(3),
-        FireMetFlame::class pairTo dmgNeg(3),
-        Robbit::class pairTo dmgNeg(3),
-        Pipi::class pairTo dmgNeg(3),
-        PipiEgg::class pairTo dmgNeg(3),
-        Copipi::class pairTo dmgNeg(3),
-        MechaDragonMiniBoss::class pairTo dmgNeg(3),
-        SpitFireball::class pairTo dmgNeg(3),
-        BombPotton::class pairTo dmgNeg(3),
-        SmallMissile::class pairTo dmgNeg(3),
-        GreenExplosion::class pairTo dmgNeg(3),
-        Arigock::class pairTo dmgNeg(3),
-        ArigockBall::class pairTo dmgNeg(3),
-        TotemPolem::class pairTo dmgNeg(3),
-        CactusLauncher::class pairTo dmgNeg(3),
-        CactusMissile::class pairTo dmgNeg(3),
-        ColtonJoe::class pairTo dmgNeg(3),
-        SphinxBall::class pairTo dmgNeg(3),
-        SphinxMiniBoss::class pairTo dmgNeg(3),
-        SpikeBot::class pairTo dmgNeg(3),
-        Needle::class pairTo dmgNeg(3),
-        JetpackIceBlaster::class pairTo dmgNeg(3),
-        TeardropBlast::class pairTo dmgNeg(3),
-        FallingIcicle::class pairTo dmgNeg(3),
-        SmallIceCube::class pairTo dmgNeg(1),
-        UnderwaterFan::class pairTo dmgNeg(5),
-        Tropish::class pairTo dmgNeg(3),
-        SeaMine::class pairTo dmgNeg(3),
-        Sealion::class pairTo dmgNeg(3),
-        SealionBall::class pairTo dmgNeg(3),
-        YellowTiggerSquirt::class pairTo dmgNeg(3),
-        UFOhNoBot::class pairTo dmgNeg(3),
-        TankBot::class pairTo dmgNeg(3),
-        Darspider::class pairTo dmgNeg(3),
-        WalrusBot::class pairTo dmgNeg(3),
-        BigFishNeo::class pairTo dmgNeg(4),
-        GlacierMan::class pairTo dmgNeg(4),
-        Matasaburo::class pairTo dmgNeg(3),
-        CarriCarry::class pairTo dmgNeg(3),
-        Cactus::class pairTo dmgNeg(2),
-        DesertMan::class pairTo dmgNeg(3),
-        FireDispensenator::class pairTo dmgNeg(3),
-        FireWall::class pairTo dmgNeg(4),
-        DemonMet::class pairTo dmgNeg(3),
-        FirePellet::class pairTo dmgNeg(3),
-        InfernoMan::class pairTo dmgNeg(3),
-        MagmaOrb::class pairTo dmgNeg(4),
-        MagmaMeteor::class pairTo dmgNeg(4),
-        MagmaExplosion::class pairTo dmgNeg(4),
-        MagmaGoop::class pairTo dmgNeg(4),
-        MagmaGoopExplosion::class pairTo dmgNeg(4),
-        MagmaWave::class pairTo dmgNeg(4),
-        MagmaPellet::class pairTo dmgNeg(3),
-        MagmaFlame::class pairTo dmgNeg(3),
-        MoonScythe::class pairTo dmgNeg(3),
-        MoonMan::class pairTo dmgNeg(3),
-        SharpStar::class pairTo dmgNeg(3),
-        StarExplosion::class pairTo dmgNeg(3)
-    )
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 
     internal val shootAnimTimer = Timer(MegamanValues.SHOOT_ANIM_TIME).setToEnd()
@@ -295,23 +123,27 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
     override var directionRotation: Direction
         get() = body.cardinalRotation
         set(value) {
-            GameLogger.debug(TAG, "directionRotation-set(): value = $value")
+            GameLogger.debug(TAG, "directionRotation-set(): value=$value")
 
             if (value != body.cardinalRotation) {
-                GameLogger.debug(TAG, "directionRotation-set(): value is different from field; rotating camera")
+                GameLogger.debug(TAG, "directionRotation-set(): value not same as field")
 
-                val direction = if (value.isVertical()) value else value.getOpposite()
-                game.eventsMan.submitEvent(
-                    Event(EventType.SET_GAME_CAM_ROTATION, props(ConstKeys.DIRECTION pairTo direction))
-                )
+                body.cardinalRotation = value
 
                 canMove = false
                 body.physics.gravityOn = false
                 body.physics.velocity.setZero()
                 resetBehavior(BehaviorType.JETPACKING)
-            }
 
-            body.cardinalRotation = value
+                val direction = if (value.isVertical()) value else value.getOpposite()
+                if (game.getGameCamera().directionRotation != direction)
+                    game.eventsMan.submitEvent(
+                        Event(
+                            EventType.SET_GAME_CAM_ROTATION,
+                            props(ConstKeys.DIRECTION pairTo direction)
+                        )
+                    )
+            } else GameLogger.debug(TAG, "directionRotation-set(): value same as field")
 
             when (value) {
                 Direction.UP, Direction.RIGHT -> {
@@ -505,9 +337,9 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
             EventType.BEGIN_ROOM_TRANS, EventType.CONTINUE_ROOM_TRANS -> {
                 if (event.key == EventType.BEGIN_ROOM_TRANS) roomTransPauseTimer.reset()
 
-                val position = event.properties.get(ConstKeys.POSITION) as Vector2
+                val position = event.properties.get(ConstKeys.POSITION, Vector2::class)!!
                 GameLogger.debug(
-                    MEGAMAN_EVENT_LISTENER_TAG, "BEGIN/CONTINUE ROOM TRANS: position = $position"
+                    MEGAMAN_EVENT_LISTENER_TAG, "BEGIN/CONTINUE ROOM TRANS: position=$position"
                 )
 
                 body.setCenter(position)
@@ -579,9 +411,8 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
     }
 
     override fun canBeDamagedBy(damager: IDamager) =
-        !invincible && dmgNegotations.containsKey(damager::class) &&
-            (damager is AbstractEnemy || damager is IHazard ||
-                (damager is IProjectileEntity && damager.owner != this))
+        !invincible && MegamanDamageNegotations.contains((damager as MegaGameEntity).getTag()) &&
+            (damager is AbstractEnemy || damager is IHazard || (damager is IProjectileEntity && damager.owner != this))
 
     fun setToNextWeapon() {
         val index = currentWeapon.ordinal
@@ -616,31 +447,24 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
             }
         }
 
-    /*
-    fun stunBounce(bounceOriginX: Float) {
-        body.physics.velocity.x =
-            (if (bounceOriginX > body.x) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
-        body.physics.velocity.y = MegamanValues.DMG_Y * ConstVals.PPM
-    }
-     */
-
     override fun takeDamageFrom(damager: IDamager): Boolean {
         if (canMove && !isBehaviorActive(BehaviorType.RIDING_CART) && !noDmgBounce.contains(damager::class) &&
             damager is GameEntity && damager.hasComponent(BodyComponent::class)
         ) {
             val enemyBody = damager.getComponent(BodyComponent::class)!!.body
-            // stunBounce(enemyBody.x)
             stunBounce(enemyBody)
         }
-        val damage = dmgNegotations.get(damager::class).get(damager)
+
+        val damage = MegamanDamageNegotations.get((damager as MegaGameEntity).getTag()).get(damager)
         translateHealth(-damage)
-        requestToPlaySound(SoundAsset.MEGAMAN_DAMAGE_SOUND, false)
-        stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
+
         damageTimer.reset()
+
+        stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
+        requestToPlaySound(SoundAsset.MEGAMAN_DAMAGE_SOUND, false)
+
         return true
     }
 
     override fun getBounds() = body.getBodyBounds()
-
-    override fun getTag() = TAG
 }

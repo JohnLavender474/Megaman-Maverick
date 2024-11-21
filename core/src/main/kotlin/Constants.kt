@@ -35,6 +35,7 @@ object ConstVals {
     const val GAME_CAM_ROTATE_TIME = 0.75f
     const val DEFAULT_PARALLAX_X = 0.25f
     const val DEFAULT_PARALLAX_Y = 0f
+    const val DUR_PER_BIT = 0.1f
 }
 
 object ConstKeys {

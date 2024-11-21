@@ -65,7 +65,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     companion object {
         const val TAG = "GlacierMan"
 
-        private const val INIT_DUR = 1.5f
+        private const val INIT_DUR = 1f
         private const val STAND_DUR = 0.75f
         private const val DUCK_DUR = 0.75f
         private const val SLED_DUR = 1.5f
@@ -190,6 +190,356 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
     }
+
+    override fun isReady(delta: Float) = timers["init"].isFinished()
+
+    override fun triggerDefeat() {
+        super.triggerDefeat()
+        body.physics.velocity.setZero()
+        body.physics.gravityOn = false
+    }
+
+    override fun onReady() {
+        super.onReady()
+        body.physics.gravityOn = true
+    }
+
+    override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
+        super.defineUpdatablesComponent(updatablesComponent)
+        updatablesComponent.add { delta ->
+            if (betweenReadyAndEndBossSpawnEvent) return@add
+
+            if (defeated) {
+                body.physics.velocity.setZero()
+                body.physics.gravityOn = false
+                explodeOnDefeat(delta)
+                return@add
+            }
+
+            timers["shoot_anim"].update(delta)
+
+            when (val state = stateMachine.getCurrent()) {
+                GlacierManState.INIT -> {
+                    // init state only occurs as the first state and never again
+                    val timer = timers["init"]
+                    timer.update(delta)
+                    if (timer.isFinished()) stateMachine.next()
+                }
+
+                GlacierManState.STAND,
+                GlacierManState.DUCK,
+                GlacierManState.SLED,
+                GlacierManState.STOP,
+                GlacierManState.ICE_BLAST_ATTACK -> {
+                    if (state.equalsAny(GlacierManState.STAND, GlacierManState.DUCK))
+                        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+
+                    body.physics.velocity.x =
+                        if (state == GlacierManState.SLED) SLED_SPEED * ConstVals.PPM * facing.value else 0f
+
+                    val key = state.name.lowercase()
+                    val timer = timers[key]
+                    timer.update(delta)
+                    if (timer.isFinished() || (state == GlacierManState.SLED && shouldStopSledding())) {
+                        timer.reset()
+                        val next = stateMachine.next()
+                        GameLogger.debug(TAG, "update(): current=$state, next=$next")
+                    }
+                }
+
+                GlacierManState.JUMP -> {
+                    facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+                    if (body.physics.velocity.y <= 0f && body.isSensing(BodySense.FEET_ON_GROUND)) {
+                        GameLogger.debug(TAG, "update(): end jump")
+                        stateMachine.next()
+                    } else body.physics.velocity.x += JUMP_IMPULSE_X * ConstVals.PPM * facing.value * delta
+                }
+
+                GlacierManState.BRAKE -> {
+                    val maxBrakeTimer = timers["max_brake"]
+                    maxBrakeTimer.update(delta)
+                    if ((abs(body.physics.velocity.x).epsilonEquals(0f, 0.25f * ConstVals.PPM) &&
+                            body.isSensing(BodySense.FEET_ON_GROUND)) || maxBrakeTimer.isFinished()
+                    ) {
+                        GameLogger.debug(TAG, "update(): end brake")
+                        body.physics.velocity.x = 0f
+                        maxBrakeTimer.reset()
+                        stateMachine.next()
+                    }
+                }
+            }
+        }
+    }
+
+    override fun defineBodyComponent(): BodyComponent {
+        val body = Body(BodyType.DYNAMIC)
+        body.setSize(1.15f * ConstVals.PPM, 1.5f * ConstVals.PPM)
+        body.physics.velocityClamp.set(10f * ConstVals.PPM, 25f * ConstVals.PPM)
+        body.physics.applyFrictionX = false
+
+        val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body.getBodyBounds() }
+
+        val feetFixture =
+            Fixture(
+                body,
+                FixtureType.FEET,
+                GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM)
+            )
+        feetFixture.offsetFromBodyCenter.y = -0.875f * ConstVals.PPM
+        body.addFixture(feetFixture)
+        feetFixture.rawShape.color = Color.GREEN
+        debugShapes.add { feetFixture.getShape() }
+
+        val headFixture =
+            Fixture(
+                body,
+                FixtureType.HEAD,
+                GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM)
+            )
+        headFixture.offsetFromBodyCenter.y = 0.875f * ConstVals.PPM
+        body.addFixture(headFixture)
+        headFixture.rawShape.color = Color.ORANGE
+        debugShapes.add { headFixture.getShape() }
+
+        val leftFixture =
+            Fixture(
+                body,
+                FixtureType.SIDE,
+                GameRectangle().setSize(0.1f * ConstVals.PPM, ConstVals.PPM.toFloat())
+            )
+        leftFixture.offsetFromBodyCenter.x = -0.625f * ConstVals.PPM
+        leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
+        body.addFixture(leftFixture)
+        leftFixture.rawShape.color = Color.YELLOW
+        debugShapes.add { leftFixture.getShape() }
+
+        val rightFixture =
+            Fixture(
+                body,
+                FixtureType.SIDE,
+                GameRectangle().setSize(0.1f * ConstVals.PPM, ConstVals.PPM.toFloat())
+            )
+        rightFixture.offsetFromBodyCenter.x = 0.625f * ConstVals.PPM
+        rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
+        body.addFixture(rightFixture)
+        rightFixture.rawShape.color = Color.YELLOW
+        debugShapes.add { rightFixture.getShape() }
+
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            body.physics.gravity.y =
+                (if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY) * ConstVals.PPM
+            if ((isFacing(Facing.LEFT) && body.physics.velocity.x < 0f && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
+                (isFacing(Facing.RIGHT) && body.physics.velocity.x > 0f && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
+            ) body.physics.velocity.x = 0f
+        }
+
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
+
+        return BodyComponentCreator.create(
+            this, body, BodyFixtureDef.of(
+                FixtureType.BODY, FixtureType.DAMAGEABLE, FixtureType.DAMAGER
+            )
+        )
+    }
+
+    override fun defineSpritesComponent(): SpritesComponent {
+        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
+        sprite.setSize(3f * ConstVals.PPM, 2.25f * ConstVals.PPM)
+        val spritesComponent = SpritesComponent(sprite)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            sprite.setFlip(isFacing(Facing.RIGHT), false)
+            sprite.hidden = damageBlink || game.isProperty(ConstKeys.ROOM_TRANSITION, true)
+        }
+        return spritesComponent
+    }
+
+    private fun defineAnimationsComponent(): AnimationsComponent {
+        val animations = objectMapOf<String, IAnimation>(
+            "defeated" pairTo Animation(regions["defeated"], 3, 1, 0.1f, true),
+            "stand" pairTo Animation(regions["stand"]),
+            "stand_shoot" pairTo Animation(regions["stand_shoot"]),
+            "stand_shoot_up" pairTo Animation(regions["stand_shoot_up"]),
+            "brake" pairTo Animation(regions["brake"], 3, 1, 0.1f, true),
+            "brake_shoot" pairTo Animation(regions["brake_shoot"], 3, 1, 0.1f, true),
+            "brake_shoot_up" pairTo Animation(regions["brake_shoot_up"], 3, 1, 0.1f, true),
+            "duck" pairTo Animation(regions["duck"]),
+            "duck_shoot" pairTo Animation(regions["duck_shoot"]),
+            "duck_shoot_up" pairTo Animation(regions["duck_shoot_up"]),
+            "fall" pairTo Animation(regions["fall"], 4, 2, 0.1f, true),
+            "fall_shoot_up" pairTo Animation(regions["fall_shoot_up"], 4, 2, 0.1f, true),
+            "jump" pairTo Animation(regions["jump"], 4, 2, 0.1f, true),
+            "sled" pairTo Animation(regions["sled"], 2, 2, 0.1f, true),
+            "sled_shoot" pairTo Animation(regions["sled_shoot"], 2, 2, 0.1f, true),
+            "stop" pairTo Animation(regions["stop"], 3, 3, 0.075f, false),
+            "ice_blast_attack" pairTo Animation(regions["ice_blast_attack"], 2, 1, 0.1f, true)
+        )
+        val keySupplier: () -> String? = {
+            if (defeated) "defeated"
+            else {
+                val state = stateMachine.getCurrent()
+
+                val key = if (state == GlacierManState.INIT) {
+                    if (body.isSensing(BodySense.FEET_ON_GROUND)) "stop" else "fall"
+                } else if (state == GlacierManState.JUMP) {
+                    if (body.physics.velocity.y > 0f) "jump" else "fall"
+                } else state.name.lowercase()
+
+                if (!timers["shoot_anim"].isFinished()) {
+                    val shootKey = if (shootUp) "${key}_shoot_up" else "${key}_shoot"
+                    if (animations.containsKey(shootKey)) shootKey else key
+                } else key
+            }
+        }
+        val onChangeKey: (String?, String?) -> Unit = { oldKey, newKey ->
+            if (newKey != null && oldKey != null && newKey.contains("_shoot") && !oldKey.contains("_shoot")) {
+                val newKeyRaw = newKey.removeSuffix("_shoot")
+                if (newKeyRaw == oldKey) {
+                    val oldAnimation = animations[oldKey]
+                    val currentAnimation = animations[newKey]
+                    if (oldAnimation != null && currentAnimation != null) {
+                        val oldAnimIndex = oldAnimation.getIndex()
+                        currentAnimation.setIndex(oldAnimIndex)
+                    }
+                }
+            }
+        }
+        animator = Animator(keySupplier, animations, onChangeKey = onChangeKey)
+        return AnimationsComponent(this, animator)
+    }
+
+    private fun buildStateMachine(): StateMachine<GlacierManState> {
+        val builder = StateMachineBuilder<GlacierManState>()
+        GlacierManState.entries.forEach { state -> builder.state(state.name, state) }
+        builder.setOnChangeState(this::onChangeState)
+        builder.initialState(GlacierManState.INIT.name)
+            // init state only occurs as the first state and always goes to the stand state
+            .transition(GlacierManState.INIT.name, GlacierManState.STAND.name) { ready }
+            /*
+            Transitions from the STAND state:
+            - If this is not the first update and random is less than threshold, then perform "ice blast attack" behavior.
+            - If Megaman is above the offset value from the boss's body, then the "jump" behavior will always occur.
+            The "jump" behavior includes the boss shooting numerous projectiles, which makes the player likely to
+            prefer staying toward the ground (which is what the boss wants).
+            - If Megaman is NOT above the offset value from the boss's body, then the boss will prefer to either
+            the "duck" or "sled" behavior, though it is possible for the boss to jump.
+            */
+            .transition(
+                GlacierManState.STAND.name,
+                GlacierManState.ICE_BLAST_ATTACK.name
+            ) {
+                !firstUpdate &&
+                    previousState != GlacierManState.ICE_BLAST_ATTACK &&
+                    canIceBlast() &&
+                    getRandom(0, 10) <= 4
+            }
+            .transition(
+                GlacierManState.STAND.name,
+                GlacierManState.DUCK.name
+            ) {
+                !isMegamanAboveOffsetY() &&
+                    previousState != GlacierManState.DUCK &&
+                    getRandom(0, 10) <= 5
+            }
+            .transition(
+                GlacierManState.STAND.name,
+                GlacierManState.SLED.name
+            ) {
+                isMegamanOutsideOffsetX() && previousState != GlacierManState.SLED
+            }
+            .transition(GlacierManState.STAND.name, GlacierManState.JUMP.name) { true }
+            /*
+            Transitions from the DUCK state:
+            - If Megaman is outside offset x, then start "sled" behavior.
+            - If Megaman is above the offset value from the boss's body, then jump.
+            */
+            .transition(
+                GlacierManState.DUCK.name,
+                GlacierManState.SLED.name
+            ) { isMegamanOutsideOffsetX() }
+            .transition(
+                GlacierManState.DUCK.name,
+                GlacierManState.JUMP.name
+            ) { isMegamanAboveOffsetY() }
+            /*
+            Transitions from the SLED state:
+            - If Megaman is above the offset value from the boss's body, then jump.
+            - Otherwise, go into the "brake" state.
+            */
+            .transition(
+                GlacierManState.SLED.name,
+                GlacierManState.JUMP.name
+            ) { isMegamanAboveOffsetY() }
+            .transition(GlacierManState.SLED.name, GlacierManState.BRAKE.name) { true }
+            /*
+            Transition from the JUMP state:
+            - Jump always goes to the "brake" state when "next" is called.
+            */
+            .transition(GlacierManState.JUMP.name, GlacierManState.BRAKE.name) { true }
+            /*
+            Transition from the BRAKE state:
+            - Brake always goes to the "stop" state when "next" is called.
+            */
+            .transition(GlacierManState.BRAKE.name, GlacierManState.STOP.name) { true }
+            /*
+            Transition from the STOP state:
+            - Stop always goes to "stand" state when "next" is called.
+            */
+            .transition(GlacierManState.STOP.name, GlacierManState.STAND.name) { true }
+            /*
+            Transition from the ICE_BLAST_ATTACK state:
+            - Always goes to "stand" state when "next" is called.
+            */
+            .transition(GlacierManState.ICE_BLAST_ATTACK.name, GlacierManState.STAND.name) { true }
+
+        return builder.build()
+    }
+
+    private fun buildTimers() {
+        val shootAnimTimer = Timer(SHOOT_ANIM_DUR)
+        timers.put("shoot_anim", shootAnimTimer)
+
+        val initTimer = Timer(INIT_DUR)
+        timers.put("init", initTimer)
+
+        val standTimer = Timer(STAND_DUR)
+        standTimer.setRunnables(gdxArrayOf(TimeMarkedRunnable(0.5f) { shoot() }))
+        timers.put("stand", standTimer)
+
+        val duckTimer = Timer(DUCK_DUR)
+        val duckRunnable = TimeMarkedRunnable(0.25f) { shoot() }
+        duckTimer.setRunnables(gdxArrayOf(duckRunnable))
+        timers.put("duck", duckTimer)
+
+        val sledTimer = Timer(SLED_DUR)
+        val sledRunnables = Array<TimeMarkedRunnable>()
+        for (i in 0 until 2) {
+            val time = 0.5f + 0.5f * i
+            val sledRunnable = TimeMarkedRunnable(time) { shoot() }
+            sledRunnables.add(sledRunnable)
+        }
+        sledTimer.setRunnables(sledRunnables)
+        timers.put("sled", sledTimer)
+
+        val maxBrakeTimer = Timer(MAX_BRAKE_DUR)
+        timers.put("max_brake", maxBrakeTimer)
+
+        val iceBlastAttackTimer = Timer(ICE_BLAST_ATTACK_DUR)
+        val iceBlastAttackTimerRunnables = Array<TimeMarkedRunnable>()
+        for (i in 0 until ICE_BLAST_ATTACK_COUNT) {
+            val increment = ICE_BLAST_ATTACK_DUR / ICE_BLAST_ATTACK_COUNT
+            val time = increment + i * increment
+            val iceBlastAttackRunnable = TimeMarkedRunnable(time) { iceBlast() }
+            iceBlastAttackTimerRunnables.add(iceBlastAttackRunnable)
+        }
+        iceBlastAttackTimer.setRunnables(iceBlastAttackTimerRunnables)
+        timers.put("ice_blast_attack", iceBlastAttackTimer)
+
+        val stopTimer = Timer(STOP_DUR)
+        timers.put("stop", stopTimer)
+    }
+
 
     private fun getIceBlastLeftPos() = body.getCenter().add(-0.75f * ConstVals.PPM, 0.2f * ConstVals.PPM)
 
@@ -334,355 +684,4 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         (isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) || (isFacing(Facing.RIGHT) && body.isSensing(
             BodySense.SIDE_TOUCHING_BLOCK_RIGHT
         ))
-
-    override fun triggerDefeat() {
-        super.triggerDefeat()
-        body.physics.velocity.setZero()
-        body.physics.gravityOn = false
-    }
-
-    override fun onReady() {
-        super.onReady()
-        body.physics.gravityOn = true
-    }
-
-    override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
-        super.defineUpdatablesComponent(updatablesComponent)
-        updatablesComponent.add { delta ->
-            if (!ready) {
-                body.physics.velocity.setZero()
-                body.physics.gravityOn = false
-                return@add
-            }
-            if (defeated) {
-                body.physics.velocity.setZero()
-                body.physics.gravityOn = false
-                explodeOnDefeat(delta)
-                return@add
-            }
-
-            timers["shoot_anim"].update(delta)
-
-            val state = stateMachine.getCurrent()
-            when (state) {
-                GlacierManState.INIT -> {
-                    // init state only occurs as the first state and never again
-                    val timer = timers["init"]
-                    timer.update(delta)
-                    if (timer.isFinished()) stateMachine.next()
-                }
-
-                GlacierManState.STAND,
-                GlacierManState.DUCK,
-                GlacierManState.SLED,
-                GlacierManState.STOP,
-                GlacierManState.ICE_BLAST_ATTACK -> {
-                    if (state.equalsAny(GlacierManState.STAND, GlacierManState.DUCK))
-                        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
-
-                    body.physics.velocity.x =
-                        if (state == GlacierManState.SLED) SLED_SPEED * ConstVals.PPM * facing.value else 0f
-
-                    val key = state.name.lowercase()
-                    val timer = timers[key]
-                    timer.update(delta)
-                    if (timer.isFinished() || (state == GlacierManState.SLED && shouldStopSledding())) {
-                        timer.reset()
-                        val next = stateMachine.next()
-                        GameLogger.debug(TAG, "update(): current=$state, next=$next")
-                    }
-                }
-
-                GlacierManState.JUMP -> {
-                    facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
-                    if (body.physics.velocity.y <= 0f && body.isSensing(BodySense.FEET_ON_GROUND)) {
-                        GameLogger.debug(TAG, "update(): end jump")
-                        stateMachine.next()
-                    } else body.physics.velocity.x += JUMP_IMPULSE_X * ConstVals.PPM * facing.value * delta
-                }
-
-                GlacierManState.BRAKE -> {
-                    val maxBrakeTimer = timers["max_brake"]
-                    maxBrakeTimer.update(delta)
-                    if ((abs(body.physics.velocity.x).epsilonEquals(0f, 0.25f * ConstVals.PPM) &&
-                            body.isSensing(BodySense.FEET_ON_GROUND)) || maxBrakeTimer.isFinished()
-                    ) {
-                        GameLogger.debug(TAG, "update(): end brake")
-                        body.physics.velocity.x = 0f
-                        maxBrakeTimer.reset()
-                        stateMachine.next()
-                    }
-                }
-            }
-        }
-    }
-
-    override fun defineBodyComponent(): BodyComponent {
-        val body = Body(BodyType.DYNAMIC)
-        body.setSize(1.15f * ConstVals.PPM, 1.5f * ConstVals.PPM)
-        body.physics.velocityClamp.set(10f * ConstVals.PPM, 25f * ConstVals.PPM)
-        body.physics.applyFrictionX = false
-
-        val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
-
-        val feetFixture =
-            Fixture(
-                body,
-                FixtureType.FEET,
-                GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM)
-            )
-        feetFixture.offsetFromBodyCenter.y = -0.875f * ConstVals.PPM
-        body.addFixture(feetFixture)
-        feetFixture.rawShape.color = Color.GREEN
-        debugShapes.add { feetFixture.getShape() }
-
-        val headFixture =
-            Fixture(
-                body,
-                FixtureType.HEAD,
-                GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM)
-            )
-        headFixture.offsetFromBodyCenter.y = 0.875f * ConstVals.PPM
-        body.addFixture(headFixture)
-        headFixture.rawShape.color = Color.ORANGE
-        debugShapes.add { headFixture.getShape() }
-
-        val leftFixture =
-            Fixture(
-                body,
-                FixtureType.SIDE,
-                GameRectangle().setSize(0.1f * ConstVals.PPM, ConstVals.PPM.toFloat())
-            )
-        leftFixture.offsetFromBodyCenter.x = -0.625f * ConstVals.PPM
-        leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
-        body.addFixture(leftFixture)
-        leftFixture.rawShape.color = Color.YELLOW
-        debugShapes.add { leftFixture.getShape() }
-
-        val rightFixture =
-            Fixture(
-                body,
-                FixtureType.SIDE,
-                GameRectangle().setSize(0.1f * ConstVals.PPM, ConstVals.PPM.toFloat())
-            )
-        rightFixture.offsetFromBodyCenter.x = 0.625f * ConstVals.PPM
-        rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
-        body.addFixture(rightFixture)
-        rightFixture.rawShape.color = Color.YELLOW
-        debugShapes.add { rightFixture.getShape() }
-
-        body.preProcess.put(ConstKeys.DEFAULT) {
-            body.physics.gravity.y =
-                (if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY) * ConstVals.PPM
-            if ((isFacing(Facing.LEFT) && body.physics.velocity.x < 0f && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
-                (isFacing(Facing.RIGHT) && body.physics.velocity.x > 0f && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
-            ) body.physics.velocity.x = 0f
-        }
-
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
-
-        return BodyComponentCreator.create(
-            this, body, BodyFixtureDef.of(
-                FixtureType.BODY, FixtureType.DAMAGEABLE, FixtureType.DAMAGER
-            )
-        )
-    }
-
-    override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
-        sprite.setSize(3f * ConstVals.PPM, 2.25f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
-            _sprite.setFlip(isFacing(Facing.RIGHT), false)
-            _sprite.hidden = damageBlink || !ready
-        }
-        return spritesComponent
-    }
-
-    private fun defineAnimationsComponent(): AnimationsComponent {
-        val animations = objectMapOf<String, IAnimation>(
-            "defeated" pairTo Animation(regions["defeated"], 3, 1, 0.1f, true),
-            "stand" pairTo Animation(regions["stand"]),
-            "stand_shoot" pairTo Animation(regions["stand_shoot"]),
-            "stand_shoot_up" pairTo Animation(regions["stand_shoot_up"]),
-            "brake" pairTo Animation(regions["brake"], 3, 1, 0.1f, true),
-            "brake_shoot" pairTo Animation(regions["brake_shoot"], 3, 1, 0.1f, true),
-            "brake_shoot_up" pairTo Animation(regions["brake_shoot_up"], 3, 1, 0.1f, true),
-            "duck" pairTo Animation(regions["duck"]),
-            "duck_shoot" pairTo Animation(regions["duck_shoot"]),
-            "duck_shoot_up" pairTo Animation(regions["duck_shoot_up"]),
-            "fall" pairTo Animation(regions["fall"], 4, 2, 0.1f, true),
-            "fall_shoot_up" pairTo Animation(regions["fall_shoot_up"], 4, 2, 0.1f, true),
-            "jump" pairTo Animation(regions["jump"], 4, 2, 0.1f, true),
-            "sled" pairTo Animation(regions["sled"], 2, 2, 0.1f, true),
-            "sled_shoot" pairTo Animation(regions["sled_shoot"], 2, 2, 0.1f, true),
-            "stop" pairTo Animation(regions["stop"], 3, 3, 0.075f, false),
-            "ice_blast_attack" pairTo Animation(regions["ice_blast_attack"], 2, 1, 0.1f, true)
-        )
-        val keySupplier: () -> String? = {
-            if (defeated) "defeated"
-            else {
-                val state = stateMachine.getCurrent()
-
-                val key = if (state == GlacierManState.INIT) {
-                    if (body.isSensing(BodySense.FEET_ON_GROUND)) "stand" else "fall"
-                } else if (state == GlacierManState.JUMP) {
-                    if (body.physics.velocity.y > 0f) "jump" else "fall"
-                } else state.name.lowercase()
-
-                if (!timers["shoot_anim"].isFinished()) {
-                    val shootKey = if (shootUp) "${key}_shoot_up" else "${key}_shoot"
-                    if (animations.containsKey(shootKey)) shootKey else key
-                } else key
-            }
-        }
-        val onChangeKey: (String?, String?) -> Unit = { oldKey, newKey ->
-            if (newKey != null && oldKey != null && newKey.contains("_shoot") && !oldKey.contains("_shoot")) {
-                val newKeyRaw = newKey.removeSuffix("_shoot")
-                if (newKeyRaw == oldKey) {
-                    val oldAnimation = animations[oldKey]
-                    val currentAnimation = animations[newKey]
-                    if (oldAnimation != null && currentAnimation != null) {
-                        val oldAnimIndex = oldAnimation.getIndex()
-                        currentAnimation.setIndex(oldAnimIndex)
-                    }
-                }
-            }
-        }
-        animator = Animator(keySupplier, animations, onChangeKey = onChangeKey)
-        return AnimationsComponent(this, animator)
-    }
-
-    private fun buildStateMachine(): StateMachine<GlacierManState> {
-        val builder = StateMachineBuilder<GlacierManState>()
-        GlacierManState.entries.forEach { state -> builder.state(state.name, state) }
-        builder.setOnChangeState(this::onChangeState)
-        builder.initialState(GlacierManState.INIT.name)
-            // init state only occurs as the first state and always goes to the stand state
-            .transition(GlacierManState.INIT.name, GlacierManState.STAND.name) { true }
-            /*
-            Transitions from the STAND state:
-            - If this is not the first update and random is less than threshold, then perform "ice blast attack" behavior.
-            - If Megaman is above the offset value from the boss's body, then the "jump" behavior will always occur.
-            The "jump" behavior includes the boss shooting numerous projectiles, which makes the player likely to
-            prefer staying toward the ground (which is what the boss wants).
-            - If Megaman is NOT above the offset value from the boss's body, then the boss will prefer to either
-            the "duck" or "sled" behavior, though it is possible for the boss to jump.
-            */
-            .transition(
-                GlacierManState.STAND.name,
-                GlacierManState.ICE_BLAST_ATTACK.name
-            ) {
-                !firstUpdate &&
-                previousState != GlacierManState.ICE_BLAST_ATTACK &&
-                canIceBlast() &&
-                getRandom(0, 10) <= 4
-            }
-            .transition(
-                GlacierManState.STAND.name,
-                GlacierManState.DUCK.name
-            ) {
-                !isMegamanAboveOffsetY() &&
-                previousState != GlacierManState.DUCK &&
-                getRandom(0, 10) <= 5
-            }
-            .transition(
-                GlacierManState.STAND.name,
-                GlacierManState.SLED.name
-            ) {
-                isMegamanOutsideOffsetX() && previousState != GlacierManState.SLED
-            }
-            .transition(GlacierManState.STAND.name, GlacierManState.JUMP.name) { true }
-            /*
-            Transitions from the DUCK state:
-            - If Megaman is outside offset x, then start "sled" behavior.
-            - If Megaman is above the offset value from the boss's body, then jump.
-            */
-            .transition(
-                GlacierManState.DUCK.name,
-                GlacierManState.SLED.name
-            ) { isMegamanOutsideOffsetX() }
-            .transition(
-                GlacierManState.DUCK.name,
-                GlacierManState.JUMP.name
-            ) { isMegamanAboveOffsetY() }
-            /*
-            Transitions from the SLED state:
-            - If Megaman is above the offset value from the boss's body, then jump.
-            - Otherwise, go into the "brake" state.
-            */
-            .transition(
-                GlacierManState.SLED.name,
-                GlacierManState.JUMP.name
-            ) { isMegamanAboveOffsetY() }
-            .transition(GlacierManState.SLED.name, GlacierManState.BRAKE.name) { true }
-            /*
-            Transition from the JUMP state:
-            - Jump always goes to the "brake" state when "next" is called.
-            */
-            .transition(GlacierManState.JUMP.name, GlacierManState.BRAKE.name) { true }
-            /*
-            Transition from the BRAKE state:
-            - Brake always goes to the "stop" state when "next" is called.
-            */
-            .transition(GlacierManState.BRAKE.name, GlacierManState.STOP.name) { true }
-            /*
-            Transition from the STOP state:
-            - Stop always goes to "stand" state when "next" is called.
-            */
-            .transition(GlacierManState.STOP.name, GlacierManState.STAND.name) { true }
-            /*
-            Transition from the ICE_BLAST_ATTACK state:
-            - Always goes to "stand" state when "next" is called.
-            */
-            .transition(GlacierManState.ICE_BLAST_ATTACK.name, GlacierManState.STAND.name) { true }
-
-        return builder.build()
-    }
-
-    private fun buildTimers() {
-        val shootAnimTimer = Timer(SHOOT_ANIM_DUR)
-        timers.put("shoot_anim", shootAnimTimer)
-
-        val initTimer = Timer(INIT_DUR)
-        timers.put("init", initTimer)
-
-        val standTimer = Timer(STAND_DUR)
-        standTimer.setRunnables(gdxArrayOf(TimeMarkedRunnable(0.5f) { shoot() }))
-        timers.put("stand", standTimer)
-
-        val duckTimer = Timer(DUCK_DUR)
-        val duckRunnable = TimeMarkedRunnable(0.25f) { shoot() }
-        duckTimer.setRunnables(gdxArrayOf(duckRunnable))
-        timers.put("duck", duckTimer)
-
-        val sledTimer = Timer(SLED_DUR)
-        val sledRunnables = Array<TimeMarkedRunnable>()
-        for (i in 0 until 2) {
-            val time = 0.5f + 0.5f * i
-            val sledRunnable = TimeMarkedRunnable(time) { shoot() }
-            sledRunnables.add(sledRunnable)
-        }
-        sledTimer.setRunnables(sledRunnables)
-        timers.put("sled", sledTimer)
-
-        val maxBrakeTimer = Timer(MAX_BRAKE_DUR)
-        timers.put("max_brake", maxBrakeTimer)
-
-        val iceBlastAttackTimer = Timer(ICE_BLAST_ATTACK_DUR)
-        val iceBlastAttackTimerRunnables = Array<TimeMarkedRunnable>()
-        for (i in 0 until ICE_BLAST_ATTACK_COUNT) {
-            val increment = ICE_BLAST_ATTACK_DUR / ICE_BLAST_ATTACK_COUNT
-            val time = increment + i * increment
-            val iceBlastAttackRunnable = TimeMarkedRunnable(time) { iceBlast() }
-            iceBlastAttackTimerRunnables.add(iceBlastAttackRunnable)
-        }
-        iceBlastAttackTimer.setRunnables(iceBlastAttackTimerRunnables)
-        timers.put("ice_blast_attack", iceBlastAttackTimer)
-
-        val stopTimer = Timer(STOP_DUR)
-        timers.put("stop", stopTimer)
-    }
 }

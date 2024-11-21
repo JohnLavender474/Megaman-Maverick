@@ -4,7 +4,6 @@ import com.mega.game.engine.common.GameLogger
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.explosions.*
-import com.megaman.maverick.game.entities.explosions.entities.explosions.StarExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactory
 import com.megaman.maverick.game.entities.factories.GameEntityPoolCreator
 

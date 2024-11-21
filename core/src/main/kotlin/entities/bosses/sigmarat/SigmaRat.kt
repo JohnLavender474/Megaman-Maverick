@@ -184,6 +184,8 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
         attackState = null
     }
 
+    override fun isReady(delta: Float) = true // TODO
+
     override fun onDestroy() {
         super.onDestroy()
         leftClaw?.destroy()

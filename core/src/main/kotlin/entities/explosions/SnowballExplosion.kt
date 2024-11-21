@@ -40,6 +40,7 @@ class SnowballExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
     IDamager {
 
     companion object {
+        const val TAG = "SnowballExplosion"
         const val DURATION = 0.015f
         private var region: TextureRegion? = null
     }

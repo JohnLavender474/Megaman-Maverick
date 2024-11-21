@@ -72,7 +72,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
         private const val SPRITE_SIZE = 3f
 
-        private const val INIT_DUR = 1.5f
+        private const val INIT_DUR = 1f
         private const val STAND_DUR = 1.5f
         private const val WALL_SLIDE_DUR = 0.75f
         private const val SHOOT_DUR = 0.25f
@@ -148,7 +148,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_2.source)
             InfernoManState.entries.forEach { state ->
-                var key = state.name.lowercase()
+                val key = state.name.lowercase()
                 regions.put(key, atlas.findRegion("$TAG/$key"))
             }
             gdxArrayOf(
@@ -203,6 +203,8 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         meteorSpawnDelays.clear()
     }
 
+    override fun isReady(delta: Float) = timers["init"].isFinished()
+
     override fun onReady() {
         super.onReady()
         body.physics.gravityOn = true
@@ -211,11 +213,8 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (!ready) {
-                body.physics.velocity.setZero()
-                body.physics.gravityOn = false
-                return@add
-            }
+            if (betweenReadyAndEndBossSpawnEvent) return@add
+
             if (defeated) {
                 body.physics.velocity.setZero()
                 body.physics.gravityOn = false
@@ -335,7 +334,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 else -> isFacing(Facing.LEFT)
             }
             sprite.setFlip(flipX, false)
-            sprite.hidden = damageBlink || !ready
+            sprite.hidden = damageBlink || game.isProperty(ConstKeys.ROOM_TRANSITION, true)
         }
         return spritesComponent
     }
@@ -400,7 +399,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         InfernoManState.entries.forEach { builder.state(it.name, it) }
         builder.setOnChangeState(this::onChangeState)
         builder.initialState(InfernoManState.INIT.name)
-            .transition(InfernoManState.INIT.name, InfernoManState.STAND.name) { true }
+            .transition(InfernoManState.INIT.name, InfernoManState.STAND.name) { ready }
             .transition(InfernoManState.STAND.name, InfernoManState.FLAME_HEAD.name) { stateIndex % 3 == 0 }
             .transition(InfernoManState.STAND.name, InfernoManState.JUMP.name) { true }
             .transition(InfernoManState.JUMP.name, InfernoManState.STAND.name) { shouldGoToStandState() }
@@ -545,11 +544,13 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
     private fun launchOrb(targetMegaman: Boolean) {
         setMeteorToBeSpawned(targetMegaman)
+
         val spawn = body.getTopCenterPoint().add(0.1f * ConstVals.PPM * facing.value, 0.1f * ConstVals.PPM)
         val trajectory = Vector2(0f, ORB_SPEED * ConstVals.PPM)
         val orb = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.MAGMA_ORB)!!
         orb.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.TRAJECTORY pairTo trajectory))
-        requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
+
+        requestToPlaySound(SoundAsset.WHIP_SOUND, false)
     }
 
     private fun setMeteorToBeSpawned(targetMegaman: Boolean) {

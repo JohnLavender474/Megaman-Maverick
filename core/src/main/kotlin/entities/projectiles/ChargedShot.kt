@@ -52,6 +52,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     IDirectionRotatable {
 
     companion object {
+        const val TAG = "ChargedShot"
         private const val BOUNCE_LIMIT = 3
         private var fullyChargedRegion: TextureRegion? = null
         private var halfChargedRegion: TextureRegion? = null

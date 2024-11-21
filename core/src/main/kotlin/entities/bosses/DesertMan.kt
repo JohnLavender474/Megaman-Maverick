@@ -73,6 +73,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
     companion object {
         const val TAG = "DesertMan"
 
+        private const val INIT_DUR = 1f
         private const val STAND_DUR = 1f
 
         private const val DANCE_DUR = 2.5f
@@ -207,14 +208,18 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         )!!.rectangle.toGameRectangle()
     }
 
+    override fun isReady(delta: Float) = timers["init"].isFinished()
+
+    override fun onReady() {
+        super.onReady()
+        body.physics.gravityOn = true
+    }
+
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (!ready) {
-                body.physics.velocity.setZero()
-                body.physics.gravityOn = false
-                return@add
-            }
+            if (betweenReadyAndEndBossSpawnEvent) return@add
+
             if (defeated) {
                 body.physics.velocity.setZero()
                 body.physics.gravityOn = false
@@ -224,8 +229,11 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
 
             when (currentState) {
                 DesertManState.INIT -> {
-                    body.physics.gravityOn = true
-                    if (body.isSensing(BodySense.FEET_ON_SAND)) stateMachine.next()
+                    if (body.isSensing(BodySense.FEET_ON_SAND)) {
+                        val timer = timers["init"]
+                        timer.update(delta)
+                        if (timer.isFinished()) stateMachine.next()
+                    }
                 }
 
                 DesertManState.DANCE -> {
@@ -477,7 +485,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
                 if (currentState == DesertManState.WALL_SLIDE) body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)
                 else isFacing(Facing.RIGHT)
             sprite.setFlip(flipX, false)
-            sprite.hidden = damageBlink || !ready
+            sprite.hidden = damageBlink || game.isProperty(ConstKeys.ROOM_TRANSITION, true)
         }
 
         for (i in 1..ARM_EXTENSIONS_COUNT) {
@@ -506,7 +514,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         val mainSpriteKeySupplier: () -> String? = {
             if (defeated) "defeated"
             else when (currentState) {
-                DesertManState.INIT -> "jump"
+                DesertManState.INIT -> if (body.isSensing(BodySense.FEET_ON_GROUND)) "dance" else "jump"
                 DesertManState.DANCE -> if (danceFlash) "dance_flash" else "dance"
                 DesertManState.TORNADO -> {
                     if (!timers["tornado_start"].isFinished()) "tornado_start"
@@ -557,7 +565,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         builder.setOnChangeState(this::onChangeState)
         builder.initialState(DesertManState.INIT.name)
             // INIT -> STAND
-            .transition(DesertManState.INIT.name, DesertManState.STAND.name) { true }
+            .transition(DesertManState.INIT.name, DesertManState.STAND.name) { ready }
             // STAND -> PUNCH, JUMP, TORNADO, DANCE
             .transition(DesertManState.STAND.name, DesertManState.PUNCH.name) {
                 previousAttackState != DesertManState.PUNCH &&
@@ -773,6 +781,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
     }
 
     private fun buildTimers() {
+        timers.put("init", Timer(INIT_DUR))
         timers.put("stand", Timer(STAND_DUR))
         timers.put("punch", Timer(PUNCH_DUR))
         timers.put("tornado", Timer(TORNADO_DUR))

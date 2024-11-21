@@ -59,6 +59,7 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     private enum class SwinginJoeSetting { SWING_EYES_CLOSED, SWING_EYES_OPEN, THROWING }
 
     companion object {
+        const val TAG = "SwinginJoe"
         private var atlas: TextureAtlas? = null
         private const val BALL_SPEED = 9f
         private const val SETTING_DUR = .8f

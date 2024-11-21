@@ -152,6 +152,8 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
         chunkOrbs = false
     }
 
+    override fun isReady(delta: Float) = true // TODO
+
     override fun onDestroy() {
         super.onDestroy()
         sphinxBall?.destroy()

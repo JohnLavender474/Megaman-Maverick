@@ -357,7 +357,7 @@
   <object id="305" name="Target1" x="12824" y="2072" width="16" height="16"/>
   <object id="306" name="Target2" x="12824" y="2392" width="16" height="16"/>
   <object id="345" name="Target" x="14264" y="1496" width="16" height="16"/>
-  <object id="416" name="MoonMan" x="16256" y="1456" width="32" height="32">
+  <object id="416" name="MoonMan" x="16256" y="1536" width="32" height="32">
    <properties>
     <property name="asteroid" type="object" value="421"/>
    </properties>
@@ -904,7 +904,7 @@
     <property name="spawn_type" value="spawn_now"/>
    </properties>
   </object>
-  <object id="398" name="GravityChange" x="14880" y="1376" width="416" height="288">
+  <object id="398" name="GravityChange" x="14568" y="1344" width="384" height="288">
    <properties>
     <property name="direction" value="up"/>
    </properties>
@@ -1138,7 +1138,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="5" name="player">
+ <objectgroup id="5" name="temp">
   <object id="425" name="0" x="15568" y="1632" width="32" height="32">
    <properties>
     <property name="apply_scalar_to_children" type="bool" value="true"/>
@@ -1147,7 +1147,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="4" name="temp">
+ <objectgroup id="4" name="player">
   <object id="28" name="0" x="96" y="3040" width="32" height="32">
    <properties>
     <property name="apply_scalar_to_children" type="bool" value="true"/>

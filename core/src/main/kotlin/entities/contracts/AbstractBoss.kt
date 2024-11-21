@@ -17,6 +17,7 @@ import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -53,22 +54,34 @@ abstract class AbstractBoss(
         private set
     var orbs = true
 
-    override fun getEntityType() = EntityType.BOSS
+    var betweenReadyAndEndBossSpawnEvent = false
+        private set
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         game.eventsMan.addListener(this)
+
         mini = spawnProps.getOrDefault(ConstKeys.MINI, false, Boolean::class)
+
         spawnProps.put(ConstKeys.DROP_ITEM_ON_DEATH, false)
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
+
         ready = false
         defeated = false
+        betweenReadyAndEndBossSpawnEvent = false
+
         defeatTimer.setToEnd()
+
         bossKey = spawnProps.getOrDefault(
             "${ConstKeys.BOSS}_${ConstKeys.KEY}",
             "NO_BOSS_KEY_FOR_ABSTRACT_BOSS",
             String::class
         )
+
         orbs = spawnProps.getOrDefault(ConstKeys.ORB, true, Boolean::class)
+
+        if (spawnProps.containsKey(ConstKeys.MUSIC)) putProperty(ConstKeys.MUSIC, spawnProps.get(ConstKeys.MUSIC))
+
         super.onSpawn(spawnProps)
     }
 
@@ -108,16 +121,34 @@ abstract class AbstractBoss(
     }
 
     override fun onEvent(event: Event) {
-        GameLogger.debug(TAG, "Boss received event: $event")
+        GameLogger.debug(TAG, "onEvent: event=$event")
         when (event.key) {
-            EventType.END_BOSS_SPAWN -> onReady()
+            EventType.END_BOSS_SPAWN -> {
+                if (!mini) {
+                    val music = MusicAsset.valueOf(
+                        getOrDefaultProperty(
+                            ConstKeys.MUSIC, MusicAsset.MMX6_BOSS_FIGHT_MUSIC.name, String::class
+                        ).uppercase()
+                    )
+                    game.audioMan.playMusic(music, true)
+                }
+
+                onEndBossSpawnEvent()
+            }
+
             EventType.PLAYER_SPAWN -> destroy()
         }
+        if (event.key == EventType.PLAYER_SPAWN) destroy()
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            if (!ready && isReady(delta)) {
+                ready = true
+                onReady()
+            }
+
             if (defeated) {
                 defeatTimer.update(delta)
                 onDefeated(delta)
@@ -129,11 +160,9 @@ abstract class AbstractBoss(
                 }
 
                 if (defeatTimer.isFinished()) {
-                    GameLogger.debug(TAG, "Defeat timer is finished, dying and sending BOSS_DEAD event")
-                    game.eventsMan.submitEvent(
-                        Event(EventType.BOSS_DEAD, props(ConstKeys.BOSS pairTo this))
-                    )
+                    GameLogger.debug(TAG, "update(): defeat timer finished")
                     destroy()
+                    game.eventsMan.submitEvent(Event(EventType.BOSS_DEAD, props(ConstKeys.BOSS pairTo this)))
                 }
             }
         }
@@ -150,12 +179,21 @@ abstract class AbstractBoss(
         return pointsComponent
     }
 
+    protected abstract fun isReady(delta: Float): Boolean
+
     protected open fun onReady() {
-        ready = true
+        val event = Event(EventType.BOSS_READY, props(ConstKeys.BOSS pairTo this))
+        game.eventsMan.submitEvent(event)
+
+        betweenReadyAndEndBossSpawnEvent = true
+    }
+
+    protected open fun onEndBossSpawnEvent() {
+        betweenReadyAndEndBossSpawnEvent = false
     }
 
     protected open fun triggerDefeat() {
-        GameLogger.debug(TAG, "Trigger defeat")
+        GameLogger.debug(TAG, "triggerDefeat()")
         game.eventsMan.submitEvent(Event(EventType.BOSS_DEFEATED, props(ConstKeys.BOSS pairTo this)))
         defeatTimer.reset()
         defeated = true
@@ -179,4 +217,6 @@ abstract class AbstractBoss(
             explosionTimer.reset()
         }
     }
+
+    override fun getEntityType() = EntityType.BOSS
 }

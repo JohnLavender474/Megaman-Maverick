@@ -111,6 +111,8 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
         launchPenguins = false
     }
 
+    override fun isReady(delta: Float) = true // TODO
+
     override fun onDestroy() {
         super.onDestroy()
         children.forEach { (it as GameEntity).destroy() }

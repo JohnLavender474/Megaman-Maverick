@@ -123,6 +123,8 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) :
         ballSpawnY = spawnProps.getOrDefault(BALL_SPAWN_Y_KEY, DEFAULT_BALL_SPAWN_Y, Float::class)
     }
 
+    override fun isReady(delta: Float) = true // TODO
+
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()

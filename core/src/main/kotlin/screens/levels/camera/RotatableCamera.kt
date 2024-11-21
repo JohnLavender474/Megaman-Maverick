@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.MathUtils
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
-import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
@@ -13,7 +12,7 @@ import com.megaman.maverick.game.utils.toGameRectangle
 
 // https://stackoverflow.com/questions/16509244/set-camera-rotation-in-libgdx
 class RotatableCamera(var onJustFinishedRotating: (() -> Unit)? = null, var printDebug: Boolean = true) :
-    OrthographicCamera(), Updatable, Resettable, IDirectionRotatable {
+    OrthographicCamera(), Updatable, IDirectionRotatable {
 
     companion object {
         const val TAG = "RotatableCamera"
@@ -53,6 +52,8 @@ class RotatableCamera(var onJustFinishedRotating: (() -> Unit)? = null, var prin
             if (printDebug) GameLogger.debug(
                 TAG,
                 "update(): FINISH ROTATION: " +
+                    "startRot=$startRot, " +
+                    "totRot=$totRot, " +
                     "cam_direction=$directionRotation, " +
                     "cam_pos=$position, " +
                     "coercing_bounds=${latestCoercingBounds}, " +
@@ -71,7 +72,9 @@ class RotatableCamera(var onJustFinishedRotating: (() -> Unit)? = null, var prin
         totRot += degrees
     }
 
+    /*
     override fun reset() {
+        GameLogger.debug(TAG, "reset()")
         startRot = 0f
         rotAmount = 0f
         totRot = 0f
@@ -80,34 +83,20 @@ class RotatableCamera(var onJustFinishedRotating: (() -> Unit)? = null, var prin
         accumulator = 0f
         rotateTo(0f)
     }
+     */
 
     fun getRotatedBounds() = toGameRectangle(reusableRect).getCardinallyRotatedShape(directionRotation)
 
     fun coerceIntoBounds(bounds: GameRectangle) {
         latestCoercingBounds = bounds
-        when (directionRotation) {
-            Direction.UP, Direction.DOWN -> {
-                if (position.y > bounds.getMaxY() - viewportHeight / 2f)
-                    position.y = bounds.getMaxY() - viewportHeight / 2f
-                if (position.y < bounds.y + viewportHeight / 2f)
-                    position.y = bounds.y + viewportHeight / 2f
-                if (position.x > bounds.getMaxX() - viewportWidth / 2f)
-                    position.x = bounds.getMaxX() - viewportWidth / 2f
-                if (position.x < bounds.x + viewportWidth / 2f)
-                    position.x = bounds.x + viewportWidth / 2f
-            }
-
-            else -> {
-                if (position.y > bounds.getMaxY() - viewportWidth / 2f)
-                    position.y = bounds.getMaxY() - viewportWidth / 2f
-                if (position.y < bounds.y + viewportWidth / 2f)
-                    position.y = bounds.y + viewportWidth / 2f
-                if (position.x > bounds.getMaxX() - viewportHeight / 2f)
-                    position.x = bounds.getMaxX() - viewportHeight / 2f
-                if (position.x < bounds.x + viewportHeight / 2f)
-                    position.x = bounds.x + viewportHeight / 2f
-            }
-        }
+        if (position.y > bounds.getMaxY() - viewportHeight / 2f)
+            position.y = bounds.getMaxY() - viewportHeight / 2f
+        if (position.y < bounds.y + viewportHeight / 2f)
+            position.y = bounds.y + viewportHeight / 2f
+        if (position.x > bounds.getMaxX() - viewportWidth / 2f)
+            position.x = bounds.getMaxX() - viewportWidth / 2f
+        if (position.x < bounds.x + viewportWidth / 2f)
+            position.x = bounds.x + viewportWidth / 2f
     }
 
     fun startRotation(direction: Direction, time: Float) {
@@ -125,6 +114,7 @@ class RotatableCamera(var onJustFinishedRotating: (() -> Unit)? = null, var prin
     }
 
     fun immediateRotation(direction: Direction) {
+        GameLogger.debug(TAG, "immediateRotation(): direction=$direction")
         this.directionRotation = direction
         rotateTo(direction.rotation)
         rotFinished = true
@@ -136,6 +126,10 @@ class RotatableCamera(var onJustFinishedRotating: (() -> Unit)? = null, var prin
         rotAmount = degrees
         rotTime = time
         rotFinished = false
+        GameLogger.debug(
+            TAG,
+            "startRotation(): startRot=$startRot, rotAmount=$rotAmount, rotTime=$rotTime, rotFinished=$rotFinished"
+        )
     }
 
     private fun rotateTo(degrees: Float) = rotate(degrees - totRot)

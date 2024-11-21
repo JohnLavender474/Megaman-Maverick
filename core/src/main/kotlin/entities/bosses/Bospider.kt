@@ -149,6 +149,8 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         firstSpawn = true
     }
 
+    override fun isReady(delta: Float) = true // TODO
+
     override fun onDestroy() {
         super.onDestroy()
         children.forEach { (it as GameEntity).destroy() }

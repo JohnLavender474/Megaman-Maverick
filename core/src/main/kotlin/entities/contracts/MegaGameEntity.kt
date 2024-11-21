@@ -10,10 +10,6 @@ import com.megaman.maverick.game.entities.MegaGameEntitiesMap
 
 abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEntity(game.engine), IMegaGameEntity {
 
-    companion object {
-        const val TAG = "MegaGameEntity"
-    }
-
     val runnablesOnSpawn = OrderedMap<String, () -> Unit>()
     val runnablesOnDestroy = OrderedMap<String, () -> Unit>()
 
@@ -34,7 +30,7 @@ abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEnti
         MegaGameEntitiesMap.remove(this)
     }
 
-    override fun getTag(): String = TAG
+    override fun getTag(): String = this::class.simpleName ?: ""
 
     override fun toString() = "${this::class.simpleName}: dead=$dead"
 }
