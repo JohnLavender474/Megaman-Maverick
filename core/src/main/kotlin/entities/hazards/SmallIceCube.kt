@@ -13,10 +13,10 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.cullables.CullableOnEvent
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.damage.IDamager
+import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
@@ -46,7 +46,7 @@ import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
-import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.world.body.*
 
 class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity, ISpritesEntity,
@@ -71,8 +71,6 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     private var destroyOnHitBlock = false
     private var maxHitTimes = DEFAULT_MAX_HIT_TIMES
     private var gravity = DEFAULT_GRAVITY
-
-    override fun getEntityType() = EntityType.HAZARD
 
     override fun init() {
         if (region1 == null || region2 == null) {
@@ -189,28 +187,29 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     }
 
     private fun defineCullablesComponent(): CullablesComponent {
-        val cullEvents =
-            objectSetOf<Any>(EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING)
-        val cullOnEvents = CullableOnEvent({ cullEvents.contains(it) }, cullEvents)
-        runnablesOnSpawn.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
-        runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
+        val cullOnEvents = getStandardEventCullingLogic(this)
         val cullOutOfBounds = getGameCameraCullingLogic(this, CULL_TIME)
         return CullablesComponent(
             objectMapOf(
-                ConstKeys.CULL_EVENTS pairTo cullOnEvents, ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullOutOfBounds
+                ConstKeys.CULL_EVENTS pairTo cullOnEvents,
+                ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullOutOfBounds
             )
         )
     }
 
     private fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite()
+        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
         sprite.setSize(0.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
+        spritesComponent.putUpdateFunction { _, _ ->
             val region = if (hitTimes == 0) region1 else region2
-            _sprite.setRegion(region)
-            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            sprite.setRegion(region)
+            sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
         }
         return spritesComponent
     }
+
+    override fun getTag() = TAG
+
+    override fun getEntityType() = EntityType.HAZARD
 }
