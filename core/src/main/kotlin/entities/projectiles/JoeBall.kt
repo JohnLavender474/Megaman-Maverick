@@ -40,6 +40,7 @@ import kotlin.reflect.KClass
 class JoeBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
 
     companion object {
+        const val TAG = "JoeBall"
         const val SNOW_TYPE = "Snow"
 
         private const val CLAMP = 15f

@@ -153,10 +153,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         facing = if (megaman().body.x <= body.x) Facing.LEFT else Facing.RIGHT
     }
 
-    override fun onReady() {
-        super.onReady()
-        body.physics.gravityOn = true
-    }
+    override fun isReady(delta: Float) = body.isSensing(BodySense.FEET_ON_GROUND)
 
     override fun onDestroy() {
         super.onDestroy()
@@ -167,19 +164,16 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (!ready) {
-                body.physics.velocity.setZero()
-                body.physics.gravityOn = false
-                return@add
-            }
+            projectile?.body?.setCenter(projectilePosition)
+
+            if (betweenReadyAndEndBossSpawnEvent) return@add
+
             if (defeated) {
                 body.physics.velocity.setZero()
                 body.physics.gravityOn = false
                 explodeOnDefeat(delta)
                 return@add
             }
-
-            projectile?.body?.setCenter(projectilePosition)
 
             when (currentState) {
                 ReactManState.STAND -> {
@@ -372,17 +366,17 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
         sprite.setSize(2.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
-            _sprite.setFlip(isFacing(Facing.RIGHT), false)
-            _sprite.hidden = damageBlink || !ready
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            sprite.setFlip(isFacing(Facing.RIGHT), false)
+            sprite.hidden = damageBlink || game.isProperty(ConstKeys.ROOM_TRANSITION, true)
         }
         return spritesComponent
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = {
-            if (defeated) "Defeated"
+            if (defeated) "defeated"
             else if (currentState == ReactManState.STAND) {
                 if (body.isSensing(BodySense.FEET_ON_GROUND)) ReactManState.STAND.name else ReactManState.JUMP.name
             } else if (currentState == ReactManState.JUMP && throwOnJump && throwTimer.isFinished())
@@ -396,7 +390,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             ReactManState.THROW.name pairTo Animation(regions.get(ReactManState.THROW.regionName)),
             ReactManState.RUN.name pairTo Animation(regions.get(ReactManState.RUN.regionName), 2, 2, 0.1f, true),
             ReactManState.JUMP.name pairTo Animation(regions.get(ReactManState.JUMP.regionName)),
-            "Defeated" pairTo Animation(regions.get("Defeated"), 3, 1, 0.1f, true)
+            "defeated" pairTo Animation(regions.get("Defeated"), 3, 1, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

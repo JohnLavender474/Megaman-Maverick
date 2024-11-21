@@ -34,6 +34,7 @@ import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sorting.IComparableDrawable
+import com.mega.game.engine.drawables.sprites.SpritesSystem
 import com.mega.game.engine.events.Event
 import com.mega.game.engine.events.EventsManager
 import com.mega.game.engine.events.IEventListener
@@ -68,7 +69,7 @@ import com.megaman.maverick.game.screens.levels.events.PlayerSpawnEventHandler
 import com.megaman.maverick.game.screens.levels.map.layers.MegaMapLayerBuilders
 import com.megaman.maverick.game.screens.levels.map.layers.MegaMapLayerBuildersParams
 import com.megaman.maverick.game.screens.levels.spawns.PlayerSpawnsManager
-import com.megaman.maverick.game.screens.levels.stats.EntityStatsHandler
+import com.megaman.maverick.game.screens.levels.stats.BossHealthHandler
 import com.megaman.maverick.game.screens.levels.stats.PlayerStatsHandler
 import com.megaman.maverick.game.spawns.ISpawner
 import com.megaman.maverick.game.spawns.Spawn
@@ -93,28 +94,36 @@ class MegaLevelScreen(
     override val eventKeyMask = objectSetOf<Any>(
         EventType.GAME_PAUSE,
         EventType.GAME_RESUME,
+
         EventType.PLAYER_SPAWN,
         EventType.PLAYER_READY,
         EventType.PLAYER_JUST_DIED,
         EventType.PLAYER_DONE_DYIN,
+
         EventType.ADD_PLAYER_HEALTH,
         EventType.ADD_HEART_TANK,
-        EventType.GATE_INIT_OPENING,
+
         EventType.NEXT_ROOM_REQ,
+        EventType.GATE_INIT_OPENING,
         EventType.GATE_INIT_CLOSING,
-        EventType.SHAKE_CAM,
+
         EventType.ENTER_BOSS_ROOM,
-        EventType.BEGIN_BOSS_SPAWN,
+        EventType.BOSS_READY,
         EventType.END_BOSS_SPAWN,
         EventType.BOSS_DEFEATED,
         EventType.BOSS_DEAD,
         EventType.MINI_BOSS_DEAD,
+
         EventType.VICTORY_EVENT,
         EventType.END_LEVEL,
+
         EventType.EDIT_TILED_MAP,
+
         EventType.SHOW_BACKGROUNDS,
         EventType.HIDE_BACKGROUNDS,
-        EventType.SET_GAME_CAM_ROTATION
+
+        EventType.SET_GAME_CAM_ROTATION,
+        EventType.SHAKE_CAM,
     )
 
     val engine: GameEngine
@@ -134,7 +143,7 @@ class MegaLevelScreen(
     private lateinit var playerSpawnsMan: PlayerSpawnsManager
 
     private lateinit var playerStatsHandler: PlayerStatsHandler
-    private lateinit var entityStatsHandler: EntityStatsHandler
+    private lateinit var bossHealthHandler: BossHealthHandler
 
     private lateinit var levelStateHandler: LevelStateHandler
 
@@ -167,20 +176,27 @@ class MegaLevelScreen(
         if (initialized) return
         initialized = true
 
-        spawnsMan = SpawnsManager()
         levelStateHandler = LevelStateHandler(game)
         endLevelEventHandler = EndLevelEventHandler(game)
+
         drawables = game.getDrawables()
         shapes = game.getShapes()
+
         gameCamera = game.getGameCamera()
         uiCamera = game.getUiCamera()
+
+        spawnsMan = SpawnsManager()
         playerSpawnsMan = PlayerSpawnsManager(gameCamera)
-        playerStatsHandler = PlayerStatsHandler(megaman)
-        playerStatsHandler.init()
-        entityStatsHandler = EntityStatsHandler(game)
+
         playerSpawnEventHandler = PlayerSpawnEventHandler(game)
         playerDeathEventHandler = PlayerDeathEventHandler(game)
         bossSpawnEventHandler = BossSpawnEventHandler(game)
+
+        playerStatsHandler = PlayerStatsHandler(megaman)
+        playerStatsHandler.init()
+
+        bossHealthHandler = BossHealthHandler(game)
+
         cameraManagerForRooms = CameraManagerForRooms(
             gameCamera,
             distanceOnTransition = ROOM_DISTANCE_ON_TRANSITION * ConstVals.PPM,
@@ -204,6 +220,8 @@ class MegaLevelScreen(
             )
 
             MegaGameEntitiesMap.getEntitiesOfType(EntityType.ENEMY).forEach { it.destroy() }
+
+            game.getSystem(BehaviorsSystem::class).on = false
 
             game.putProperty(ConstKeys.ROOM_TRANSITION, true)
         }
@@ -248,6 +266,8 @@ class MegaLevelScreen(
                 eventsMan.submitEvent(Event(roomEvent, props))
             } else eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
 
+            game.getSystem(BehaviorsSystem::class).on = true
+
             game.putProperty(ConstKeys.ROOM_TRANSITION, false)
         }
         cameraManagerForRooms.onSetToRoomNoTrans = {
@@ -282,14 +302,13 @@ class MegaLevelScreen(
 
         playerSpawnEventHandler.init()
         playerDeathEventHandler.reset()
-        bossSpawnEventHandler.reset()
         endLevelEventHandler.reset()
 
         camerasSetToGameCamera = false
         gameCameraPriorPosition.setZero()
         gameCamera.position.set(ConstFuncs.getCamInitPos())
         uiCamera.position.set(ConstFuncs.getCamInitPos())
-        gameCamera.reset()
+        // gameCamera.reset()
     }
 
     override fun getLayerBuilders() = MegaMapLayerBuilders(MegaMapLayerBuildersParams(game, spawnsMan))
@@ -317,6 +336,7 @@ class MegaLevelScreen(
                 GameLogger.debug(
                     MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Game pause --> pause the game"
                 )
+
                 game.pause()
             }
 
@@ -324,6 +344,7 @@ class MegaLevelScreen(
                 GameLogger.debug(
                     MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Game resume --> resume the game"
                 )
+
                 game.resume()
             }
 
@@ -332,22 +353,22 @@ class MegaLevelScreen(
                     MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG,
                     "onEvent(): Player spawn --> reset camera manager for rooms and spawn megaman"
                 )
-                cameraManagerForRooms.reset()
+
                 backgrounds.forEach { background -> background.immediateRotation(Direction.UP) }
-                gameCamera.immediateRotation(Direction.UP)
+                cameraManagerForRooms.reset()
+                // gameCamera.immediateRotation(Direction.UP)
+
+                bossHealthHandler.unset()
+
+                engine.systems.forEach { it.on = true }
+                game.putProperty(ConstKeys.ROOM_TRANSITION, false)
+
+                MegaGameEntitiesMap.getEntitiesOfType(EntityType.ENEMY).forEach { game.engine.destroy(it) }
 
                 GameLogger.debug(
                     TAG, "onEvent(): Player spawn --> spawn Megaman: ${playerSpawnsMan.currentSpawnProps!!}"
                 )
-
-                MegaGameEntitiesMap.getEntitiesOfType(EntityType.ENEMY).forEach { game.engine.destroy(it) }
-
-                engine.systems.forEach { it.on = true }
-                engine.spawn(megaman, playerSpawnsMan.currentSpawnProps!!)
-
-                entityStatsHandler.unset()
-
-                game.putProperty(ConstKeys.ROOM_TRANSITION, false)
+                megaman.spawn(playerSpawnsMan.currentSpawnProps!!)
             }
 
             EventType.PLAYER_READY -> {
@@ -359,8 +380,10 @@ class MegaLevelScreen(
                 GameLogger.debug(
                     MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Player just died --> init death handler"
                 )
+
                 audioMan.unsetMusic()
                 audioMan.stopAllLoopingSounds()
+
                 playerDeathEventHandler.init()
             }
 
@@ -368,7 +391,9 @@ class MegaLevelScreen(
                 GameLogger.debug(
                     MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Player done dying --> respawn player"
                 )
+
                 music?.let { audioMan.playMusic(it, true) }
+
                 playerSpawnEventHandler.init()
             }
 
@@ -389,13 +414,13 @@ class MegaLevelScreen(
                 GameLogger.debug(
                     MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Next room req --> start room transition"
                 )
+
                 val roomName = event.properties.get(ConstKeys.ROOM) as String
                 val isTrans = cameraManagerForRooms.transitionToRoom(roomName)
                 if (isTrans) GameLogger.debug(
                     MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG,
                     "onEvent(): Next room req --> successfully starting transition to room: $roomName"
-                )
-                else GameLogger.error(
+                ) else GameLogger.error(
                     MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG,
                     "onEvent(): Next room req --> could not start transition to room: $roomName"
                 )
@@ -405,6 +430,7 @@ class MegaLevelScreen(
                 GameLogger.debug(
                     MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Gate init opening --> start room transition"
                 )
+
                 val systemsToTurnOff = gdxArrayOf(
                     AsyncPathfindingSystem::class,
                     MotionSystem::class,
@@ -412,7 +438,9 @@ class MegaLevelScreen(
                     WorldSystem::class,
                 )
                 systemsToTurnOff.forEach { game.getSystem(it).on = false }
+
                 megaman.body.physics.velocity.setZero()
+
                 eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
             }
 
@@ -436,22 +464,33 @@ class MegaLevelScreen(
                 val bossRoom = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!
                 val bossMapObject = bossRoom.properties.get(ConstKeys.OBJECT, RectangleMapObject::class.java)
                 val bossName = bossMapObject.name
+
                 val bossSpawnProps = bossMapObject.properties.toProps()
                 bossSpawnProps.put(ConstKeys.BOUNDS, bossMapObject.rectangle.toGameRectangle())
 
                 val mini = bossSpawnProps.getOrDefault(ConstKeys.MINI, false, Boolean::class)
                 if (!mini) audioMan.fadeOutMusic(FADE_OUT_MUSIC_ON_BOSS_SPAWN)
 
-                bossSpawnEventHandler.init(bossName, bossSpawnProps, mini)
+                bossSpawnEventHandler.init(bossName, bossSpawnProps)
+
                 megaman.running = false
             }
 
-            EventType.BEGIN_BOSS_SPAWN -> {
+            EventType.BOSS_READY -> {
                 val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
-                entityStatsHandler.set(boss)
+                val runOnFinished = { game.eventsMan.submitEvent(Event(EventType.END_BOSS_SPAWN)) }
+                bossHealthHandler.set(boss, runOnFinished)
+
+                game.engine.systems.forEach {
+                    if (!it.isAny(SpritesSystem::class, AnimationsSystem::class)) it.on = false
+                }
             }
 
-            EventType.END_BOSS_SPAWN -> eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
+            EventType.END_BOSS_SPAWN -> {
+                eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
+
+                game.engine.systems.forEach { it.on = true }
+            }
 
             EventType.BOSS_DEFEATED -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Boss defeated")
@@ -476,7 +515,7 @@ class MegaLevelScreen(
                     )
                 )
                 megaman.canBeDamaged = false
-                entityStatsHandler.unset()
+                bossHealthHandler.unset()
             }
 
             EventType.BOSS_DEAD -> {
@@ -556,14 +595,20 @@ class MegaLevelScreen(
     }
 
     override fun render(delta: Float) {
-        if (controllerPoller.isJustPressed(MegaControllerButton.START) && playerStatsHandler.finished &&
-            playerSpawnEventHandler.finished && playerDeathEventHandler.finished && bossSpawnEventHandler.finished
+        if (controllerPoller.isJustPressed(MegaControllerButton.START) &&
+            playerStatsHandler.finished &&
+            playerSpawnEventHandler.finished &&
+            playerDeathEventHandler.finished
         ) {
             if (game.paused) game.resume() else game.pause()
         }
 
-        if (game.paused && (!playerStatsHandler.finished || !playerSpawnEventHandler.finished ||
-                !playerDeathEventHandler.finished)
+        if (game.paused && (
+                !playerStatsHandler.finished ||
+                    !playerSpawnEventHandler.finished ||
+                    !playerDeathEventHandler.finished ||
+                    !bossHealthHandler.finished
+                )
         ) game.resume()
 
         if (!game.paused) {
@@ -591,10 +636,10 @@ class MegaLevelScreen(
             gameCamera.update(delta)
 
             if (!gameCameraShaker.isFinished) gameCameraShaker.update(delta)
-            if (!bossSpawnEventHandler.finished) bossSpawnEventHandler.update(delta)
             when {
                 !playerSpawnEventHandler.finished -> playerSpawnEventHandler.update(delta)
                 !playerDeathEventHandler.finished -> playerDeathEventHandler.update(delta)
+                !bossHealthHandler.finished -> bossHealthHandler.update(delta)
                 !endLevelEventHandler.finished -> endLevelEventHandler.update(delta)
             }
             playerStatsHandler.update(delta)
@@ -632,7 +677,7 @@ class MegaLevelScreen(
 
         game.viewports.get(ConstKeys.UI).apply()
         batch.projectionMatrix = uiCamera.combined
-        entityStatsHandler.draw(batch)
+        bossHealthHandler.draw(batch)
         playerStatsHandler.draw(batch)
         batch.end()
 
@@ -684,18 +729,16 @@ class MegaLevelScreen(
 
         playerSpawnEventHandler.reset()
         playerDeathEventHandler.reset()
-        bossSpawnEventHandler.reset()
         endLevelEventHandler.reset()
 
         backgrounds.forEach { background -> background.reset() }
 
         cameraManagerForRooms.reset()
-        gameCamera.reset()
+        gameCamera.immediateRotation(Direction.UP)
 
         audioMan.unsetMusic()
 
         game.putProperty(ConstKeys.ROOM_TRANSITION, false)
-
         game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
     }
 

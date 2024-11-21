@@ -164,7 +164,7 @@ class ReactManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game), 
         val body = Body(BodyType.ABSTRACT)
         body.physics.gravity.set(0f, GRAVITY * ConstVals.PPM)
         body.physics.applyFrictionX = false
-body.physics.applyFrictionY = false
+        body.physics.applyFrictionY = false
 
         val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameRectangle())
         body.addFixture(projectileFixture)
@@ -190,9 +190,7 @@ body.physics.applyFrictionY = false
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 2))
         sprite.setSize(0.85f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setCenter(body.getCenter())
-        }
+        spritesComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
         return spritesComponent
     }
 

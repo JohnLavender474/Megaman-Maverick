@@ -49,6 +49,7 @@ import kotlin.reflect.KClass
 class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     companion object {
+        const val TAG = "Penguin"
         private var atlas: TextureAtlas? = null
         private const val STAND_DUR = 1f
         private const val SLIDE_DUR = 0.2f

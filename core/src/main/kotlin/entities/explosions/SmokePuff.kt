@@ -44,6 +44,7 @@ class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDam
     ISpritesEntity, IDirectionRotatable {
 
     companion object {
+        const val TAG = "SmokePuff"
         private var smokePuffRegion: TextureRegion? = null
     }
 

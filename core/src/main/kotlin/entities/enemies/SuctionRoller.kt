@@ -48,6 +48,7 @@ import kotlin.reflect.KClass
 class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     companion object {
+        const val TAG = "SuctionRoller"
         private var textureRegion: TextureRegion? = null
         private const val GRAVITY = -0.1f
         private const val VEL_X = 2.5f

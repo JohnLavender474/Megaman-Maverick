@@ -153,6 +153,8 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, dmgDurati
         }
     }
 
+    override fun isReady(delta: Float) = true // TODO
+
     override fun onDefeated(delta: Float) {
         super.onDefeated(delta)
         destroyAsteroidsSpawner()

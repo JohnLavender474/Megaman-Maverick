@@ -50,6 +50,7 @@ import kotlin.reflect.KClass
 class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     companion object {
+        const val TAG = "Ratton"
         private const val STAND_DUR = 1f
         private const val G_GRAV = -0.0015f
         private const val GRAV = -0.375f

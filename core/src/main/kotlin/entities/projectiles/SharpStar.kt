@@ -77,7 +77,7 @@ class SharpStar(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(0.75f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat())
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
         body.preProcess.put(ConstKeys.DEFAULT) {
@@ -93,7 +93,7 @@ class SharpStar(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
-        sprite.setSize(2.25f * ConstVals.PPM)
+        sprite.setSize(3f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setCenter(body.getCenter())

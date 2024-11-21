@@ -182,6 +182,8 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         loop.reset()
     }
 
+    override fun isReady(delta: Float) = true // TODO
+
     override fun onDefeated(delta: Float) {
         super.onDefeated(delta)
         if (body.getCenter().epsilonEquals(roomCenter, 0.1f * ConstVals.PPM)) {

@@ -27,6 +27,7 @@ enum class EventType {
 
     ENTER_BOSS_ROOM,
     BEGIN_BOSS_SPAWN,
+    BOSS_READY,
     END_BOSS_SPAWN,
 
     BOSS_DEFEATED,

@@ -49,6 +49,7 @@ import kotlin.reflect.KClass
 class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
 
     companion object {
+        const val TAG = "FlyBoy"
         const val STAND_DUR = 0.75f
         const val FLY_DUR = 2f
         const val FLY_VEL = 6f

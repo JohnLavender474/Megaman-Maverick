@@ -13,6 +13,7 @@ import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
@@ -91,7 +92,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
         private const val SPRITE_SIZE = 2.25f
 
-        private const val INIT_DUR = 0.5f
+        private const val INIT_DUR = 0.3f
         private const val STAND_DUR = 0.5f
         private const val SPAWN_ASTEROID_DELAY = 1f
         private const val THROW_ASTEROID_DELAY = 0.75f
@@ -106,13 +107,13 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         private const val GRAVITY_CHANGE_CHANGE_DELTA = 0.1f
 
         private const val ASTEROIDS_TO_SPAWN = 4
-        private const val ASTEROID_SPEED = 5f
+        private const val ASTEROID_SPEED = 7.5f
 
-        private const val SHARP_STAR_SPEED = 10f
-        private const val SHARP_STAR_MOVEMENT_SCALAR = 0.5f
+        private const val SHARP_STAR_SPEED = 8f
+        private const val SHARP_STAR_MOVEMENT_SCALAR = 0.75f
 
-        private const val MOON_SCYTHE_SPEED = 10f
-        private const val MOON_SCYTHE_MOVEMENT_SCALAR = 0.5f
+        private const val MOON_SCYTHE_SPEED = 8f
+        private const val MOON_SCYTHE_MOVEMENT_SCALAR = 0.75f
         private val MOON_SCYTHE_DEG_OFFSETS = gdxArrayOf(7.5f, 35f, 62.5f)
 
         private val STAND_SHOOT_DURS = gdxArrayOf(0.6f, 0.5f, 1f, 0.5f, 1f, 0.5f, 0.6f)
@@ -225,6 +226,8 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
             spawnProps.getOrDefault("${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}", DEFAULT_GRAVITY_SCALAR, Float::class)
     }
 
+    override fun isReady(delta: Float) = timers["init"].isFinished()
+
     override fun onReady() {
         GameLogger.debug(TAG, "onReady()")
         super.onReady()
@@ -248,11 +251,8 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (!ready) {
-                body.physics.velocity.setZero()
-                body.physics.gravityOn = false
-                return@add
-            }
+            if (betweenReadyAndEndBossSpawnEvent) return@add
+
             if (defeated) {
                 body.physics.velocity.setZero()
                 body.physics.gravityOn = false
@@ -440,7 +440,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
             val flipX = if (directionRotation == Direction.UP) isFacing(Facing.LEFT) else isFacing(Facing.RIGHT)
             sprite.setFlip(flipX, false)
 
-            sprite.hidden = damageBlink || !ready
+            sprite.hidden = damageBlink || game.isProperty(ConstKeys.ROOM_TRANSITION, true)
         }
         return spritesComponent
     }
@@ -449,7 +449,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         val keySupplier: () -> String? = {
             if (defeated) "defeated"
             else when (currentState) {
-                MoonManState.INIT -> if (body.isSensing(BodySense.FEET_ON_GROUND)) "stand" else "jump"
+                MoonManState.INIT -> if (body.isSensing(BodySense.FEET_ON_GROUND)) "gravity_change_begin" else "jump"
                 MoonManState.STAND -> {
                     if (body.isSensing(BodySense.FEET_ON_GROUND)) {
                         if (canShootInStandState()) "shoot_$shootIndex" else "stand"
@@ -555,7 +555,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         builder.setOnChangeState(this::onChangeState)
         builder.setTriggerChangeWhenSameElement(false)
         builder.initialState(MoonManState.INIT.name)
-            .transition(MoonManState.INIT.name, MoonManState.STAND.name) { shouldGoToStandState() }
+            .transition(MoonManState.INIT.name, MoonManState.STAND.name) { ready && shouldGoToStandState() }
             .transition(MoonManState.STAND.name, MoonManState.THROW_ASTEROIDS.name) { shouldEnterThrowAsteroidsState() }
             .transition(MoonManState.STAND.name, MoonManState.GRAVITY_CHANGE.name) { shouldEnterGravityChangeState() }
             .transition(MoonManState.STAND.name, MoonManState.JUMP.name) { body.isSensing(BodySense.FEET_ON_GROUND) }
@@ -639,7 +639,9 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
     }
 
     private fun shootStar() {
-        val trajectory = megaman().body.getCenter().sub(body.getCenter()).nor().scl(SHARP_STAR_SPEED * ConstVals.PPM)
+        val position = if (megaman().directionRotation == Direction.UP) Position.TOP_CENTER else Position.BOTTOM_CENTER
+        val trajectory =
+            megaman().body.getPositionPoint(position).sub(body.getCenter()).nor().scl(SHARP_STAR_SPEED * ConstVals.PPM)
         val sharpStar = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SHARP_STAR)!!
         sharpStar.spawn(
             props(

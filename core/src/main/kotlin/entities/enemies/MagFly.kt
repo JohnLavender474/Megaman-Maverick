@@ -48,6 +48,7 @@ import kotlin.reflect.KClass
 class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     companion object {
+        const val TAG = "MagFly"
         private const val FORCE_FLASH_DURATION = 0.1f
         private const val X_VEL_NORMAL = 3f
         private const val X_VEL_SLOW = 1f

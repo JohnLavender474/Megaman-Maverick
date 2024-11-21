@@ -230,6 +230,8 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
         heliMetsLaunched = 0
     }
 
+    override fun isReady(delta: Float) = true // TODO
+
     override fun onDestroy() {
         super.onDestroy()
 
