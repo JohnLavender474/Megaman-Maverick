@@ -31,8 +31,10 @@ class MegaCollisionHandler(private val game: MegamanMaverickGame) : ICollisionHa
 
         if (staticBody.hasBlockFilter(dynamicBody.getEntity().getTag().uppercase())) return true
 
-        if (staticBody.hasBodyLabel(BodyLabel.PRESS_UP_FALL_THRU) && dynamicBody == megaman.body &&
-            megaman.isBehaviorActive(BehaviorType.CLIMBING) && game.controllerPoller.isJustPressed(MegaControllerButton.UP)
+        if (staticBody.hasBodyLabel(BodyLabel.PRESS_UP_FALL_THRU) &&
+            dynamicBody == megaman.body &&
+            megaman.isBehaviorActive(BehaviorType.CLIMBING) &&
+            game.controllerPoller.isJustPressed(MegaControllerButton.UP)
         ) {
             dynamicBody.setMaxY(staticBody.getMaxY())
             return true
@@ -46,7 +48,7 @@ class MegaCollisionHandler(private val game: MegamanMaverickGame) : ICollisionHa
                 if (dynamicBodyEntity is IDirectionRotatable) dynamicBodyEntity.directionRotation else Direction.UP
 
             when (dynamicBodyDirection) {
-                Direction.UP, null -> {
+                Direction.UP -> {
                     if (dynamicBody.isSensing(BodySense.FEET_ON_GROUND)) {
                         dynamicBody.setY(staticBody.getMaxY())
                         dynamicBody.physics.frictionOnSelf.x += staticBody.physics.frictionToApply.x

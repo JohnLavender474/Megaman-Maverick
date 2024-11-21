@@ -326,7 +326,6 @@ class MegamanMaverickGame(
         eventsMan.run()
         audioMan.update(delta)
 
-
         currentScreen?.render(delta)
         screenController?.update(delta)
 

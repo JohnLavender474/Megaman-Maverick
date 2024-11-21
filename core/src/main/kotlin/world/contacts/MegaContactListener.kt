@@ -219,7 +219,13 @@ class MegaContactListener(
             val entity = feetFixture.getEntity()
             if (entity is Megaman) {
                 entity.aButtonTask = AButtonTask.JUMP
+
                 entity.addFeetBlock(blockFixture.getEntity() as Block)
+
+                when {
+                    !entity.firstTimeOnBlock -> entity.requestToPlaySound(SoundAsset.MEGAMAN_LAND_SOUND, false)
+                    else -> entity.firstTimeOnBlock = false
+                }
             }
 
             body.setBodySense(BodySense.FEET_ON_GROUND, true)

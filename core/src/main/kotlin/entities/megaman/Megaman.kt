@@ -130,19 +130,20 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
 
                 body.cardinalRotation = value
 
-                canMove = false
-                body.physics.gravityOn = false
-                body.physics.velocity.setZero()
-                resetBehavior(BehaviorType.JETPACKING)
-
                 val direction = if (value.isVertical()) value else value.getOpposite()
-                if (game.getGameCamera().directionRotation != direction)
+                if (game.getGameCamera().directionRotation != direction) {
                     game.eventsMan.submitEvent(
                         Event(
                             EventType.SET_GAME_CAM_ROTATION,
                             props(ConstKeys.DIRECTION pairTo direction)
                         )
                     )
+
+                    canMove = false
+                    body.physics.gravityOn = false
+                    body.physics.velocity.setZero()
+                    resetBehavior(BehaviorType.JETPACKING)
+                }
             } else GameLogger.debug(TAG, "directionRotation-set(): value same as field")
 
             when (value) {
@@ -204,6 +205,8 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
 
     var teleporting = false
         private set
+
+    var firstTimeOnBlock = true
 
     var movementScalar = 1f
         set(value) {
@@ -268,6 +271,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         canMove = true
         canBeDamaged = true
         teleporting = false
+        firstTimeOnBlock = true
         gravityScalar = spawnProps.getOrDefault("${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}", 1f, Float::class)
         movementScalar = spawnProps.getOrDefault("${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}", 1f, Float::class)
         applyMovementScalarToBullet = spawnProps.getOrDefault(ConstKeys.APPLY_SCALAR_TO_CHILDREN, false, Boolean::class)

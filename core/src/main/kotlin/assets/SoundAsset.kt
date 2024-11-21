@@ -10,7 +10,7 @@ enum class SoundAsset(src: String, val seconds: Int) : IAsset {
     DINK_SOUND("dink.mp3", 1),
     ERROR_SOUND("error.mp3", 1),
     THUMP_SOUND("thump.mp3", 1),
-    WALL_JUMP_SOUND("wall_jump.mp3", 1),
+    JUMP_SOUND("jump.mp3", 1),
     CHILL_SHOOT_SOUND("chill_shoot.mp3", 1),
     WHOOSH_SOUND("whoosh.mp3", 2),
     PAUSE_SOUND("pause_menu.mp3", 1),
@@ -42,6 +42,7 @@ enum class SoundAsset(src: String, val seconds: Int) : IAsset {
     DISAPPEARING_BLOCK_SOUND("disappearing_block.mp3", 1),
     BURST_SOUND("burst.wav", 1),
     TELEPORT_SOUND("teleport.wav", 1),
+    FLOATING_PORTAL_SOUND("floating_portal.wav", 1),
     ALARM_SOUND("alarm.wav", 1),
     TIME_STOPPER_SOUND("time_stopper.wav", 1),
     CHOMP_SOUND("chomp.wav", 1),
@@ -61,7 +62,9 @@ enum class SoundAsset(src: String, val seconds: Int) : IAsset {
     SHAKE_SOUND("shake.wav", 1),
     WHEE_SOUND("whee.wav", 1),
     WIND_1_SOUND("wind_1.wav", 3),
-    WHIP_SOUND("whip.wav", 1);
+    WHIP_SOUND("whip.wav", 1),
+    ASTEROID_EXPLODE_SOUND("asteroid_explode.wav", 1),
+    SOLAR_BLAZE_SOUND("solar_blaze.wav", 1);
 
     companion object {
         fun valuesAsIAssetArray(): Array<IAsset> {

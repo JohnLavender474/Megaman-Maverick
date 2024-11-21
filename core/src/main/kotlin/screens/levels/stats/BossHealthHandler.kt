@@ -6,7 +6,6 @@ import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.IDrawable
-import com.mega.game.engine.drawables.sprites.SpritesSystem
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
@@ -34,7 +33,7 @@ class BossHealthHandler(private val game: MegamanMaverickGame) : IDrawable<Batch
         timer?.update(delta)
     }
 
-    fun set(entity: IHealthEntity, runOnFinished: (() -> Unit)? = null) {
+    fun set(entity: IHealthEntity, runOnFirstUpdate: (() -> Unit)? = null, runOnFinished: (() -> Unit)? = null) {
         this.entity = entity
         temp = 0
 
@@ -50,7 +49,8 @@ class BossHealthHandler(private val game: MegamanMaverickGame) : IDrawable<Batch
             })
         }
         timer.setRunnables(runnables)
-        timer.runOnFinished = runOnFinished // { game.eventsMan.submitEvent(Event(EventType.END_BOSS_SPAWN)) }
+        timer.runOnFirstUpdate = runOnFirstUpdate
+        timer.runOnFinished = runOnFinished
 
         this.timer = timer
 

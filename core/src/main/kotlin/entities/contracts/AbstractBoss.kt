@@ -80,7 +80,12 @@ abstract class AbstractBoss(
 
         orbs = spawnProps.getOrDefault(ConstKeys.ORB, true, Boolean::class)
 
-        if (spawnProps.containsKey(ConstKeys.MUSIC)) putProperty(ConstKeys.MUSIC, spawnProps.get(ConstKeys.MUSIC))
+        if (!mini) {
+            val musicStr =
+                spawnProps.getOrDefault(ConstKeys.MUSIC, MusicAsset.MMX6_BOSS_FIGHT_MUSIC.name, String::class)
+            val music = MusicAsset.valueOf(musicStr.uppercase())
+            game.audioMan.playMusic(music, true)
+        }
 
         super.onSpawn(spawnProps)
     }
@@ -123,22 +128,9 @@ abstract class AbstractBoss(
     override fun onEvent(event: Event) {
         GameLogger.debug(TAG, "onEvent: event=$event")
         when (event.key) {
-            EventType.END_BOSS_SPAWN -> {
-                if (!mini) {
-                    val music = MusicAsset.valueOf(
-                        getOrDefaultProperty(
-                            ConstKeys.MUSIC, MusicAsset.MMX6_BOSS_FIGHT_MUSIC.name, String::class
-                        ).uppercase()
-                    )
-                    game.audioMan.playMusic(music, true)
-                }
-
-                onEndBossSpawnEvent()
-            }
-
+            EventType.END_BOSS_SPAWN -> onEndBossSpawnEvent()
             EventType.PLAYER_SPAWN -> destroy()
         }
-        if (event.key == EventType.PLAYER_SPAWN) destroy()
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
