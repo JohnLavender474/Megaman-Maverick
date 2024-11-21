@@ -395,4 +395,6 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }
+
+    override fun getTag() = TAG
 }
