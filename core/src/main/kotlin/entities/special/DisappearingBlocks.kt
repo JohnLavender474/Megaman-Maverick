@@ -11,7 +11,6 @@ import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
-import com.mega.game.engine.entities.GameEntity
 import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IAudioEntity
 import com.mega.game.engine.entities.contracts.IParentEntity
@@ -42,10 +41,6 @@ class DisappearingBlocks(game: MegamanMaverickGame) : MegaGameEntity(game), IPar
     private lateinit var loop: Loop<String>
     private lateinit var timer: Timer
 
-    override fun getEntityType() = EntityType.SPECIAL
-
-    override fun getTag(): String = TAG
-
     override fun init() {
         addComponent(defineUpdatablesComponent())
         addComponent(AudioComponent())
@@ -59,7 +54,7 @@ class DisappearingBlocks(game: MegamanMaverickGame) : MegaGameEntity(game), IPar
         bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
 
         val duration = spawnProps.getOrDefault(ConstKeys.DURATION, DEFAULT_DURATION, Float::class)
-        GameLogger.debug(TAG, "spawn(): duration = $duration")
+        GameLogger.debug(TAG, "onSpawn(): duration = $duration")
         timer = Timer(duration)
 
         val childrenPropsArray = convertObjectPropsToEntitySuppliers(spawnProps)
@@ -68,7 +63,7 @@ class DisappearingBlocks(game: MegamanMaverickGame) : MegaGameEntity(game), IPar
             val key2 = o2.second.get(ConstKeys.KEY, String::class)!!
             key1.compareTo(key2)
         }
-        GameLogger.debug(TAG, "spawn(): sorted childrenPropsArray = $childrenPropsArray")
+        GameLogger.debug(TAG, "onSpawn(): sorted childrenPropsArray = $childrenPropsArray")
 
         val keyArray = Array<String>()
         var currentKey: String? = null
@@ -83,11 +78,11 @@ class DisappearingBlocks(game: MegamanMaverickGame) : MegaGameEntity(game), IPar
             child.spawn(props)
 
             val thisKey = props.get(ConstKeys.KEY, String::class)!!
-            GameLogger.debug(TAG, "spawn(): thisKey = $thisKey")
+            GameLogger.debug(TAG, "onSpawn(): thisKey = $thisKey")
             if (currentKey == null || currentKey != thisKey) {
                 currentKey = thisKey
                 keyArray.add(currentKey)
-                GameLogger.debug(TAG, "spawn(): keyArray.add($currentKey)")
+                GameLogger.debug(TAG, "onSpawn(): keyArray.add($currentKey)")
             }
         }
 
@@ -139,4 +134,8 @@ class DisappearingBlocks(game: MegamanMaverickGame) : MegaGameEntity(game), IPar
         cullablesComponent.put(ConstKeys.CULL_OUT_OF_BOUNDS, cullable)
         return cullablesComponent
     }
+
+    override fun getEntityType() = EntityType.SPECIAL
+
+    override fun getTag(): String = TAG
 }

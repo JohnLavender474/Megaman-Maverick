@@ -1,8 +1,9 @@
 package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.g2d.TextureAtlas
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
@@ -14,7 +15,6 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.interfaces.Updatable
-
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -25,6 +25,7 @@ import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
+import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
@@ -41,22 +42,19 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodySense
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.isSensing
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     companion object {
         const val TAG = "Ratton"
-        private const val STAND_DUR = 1f
-        private const val G_GRAV = -0.0015f
-        private const val GRAV = -0.375f
+        private const val STAND_DUR = 1.25f
+        private const val G_GRAV = -0.01f
+        private const val GRAV = -0.15f
         private const val JUMP_X = 5f
-        private const val JUMP_Y = 12f
-        private var atlas: TextureAtlas? = null
+        private const val JUMP_Y = 8f
+        private val regions = ObjectMap<String, TextureRegion>()
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -66,13 +64,19 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         ChargedShotExplosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
     )
 
-    override var facing = Facing.RIGHT
+    override lateinit var facing: Facing
 
     private val standTimer = Timer(STAND_DUR)
 
     override fun init() {
         super.init()
-        if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+        if (regions.isEmpty) {
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            gdxArrayOf("stand", "jump").forEach {
+                val region = atlas.findRegion("$TAG/$it")
+                regions.put(it, region)
+            }
+        }
         addComponent(defineAnimationsComponent())
     }
 
@@ -81,11 +85,13 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
         standTimer.reset()
+        facing = if (megaman().body.x > body.x) Facing.RIGHT else Facing.LEFT
     }
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
         body.setSize(ConstVals.PPM.toFloat())
+        body.physics.applyFrictionY = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
@@ -95,19 +101,11 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         debugShapes.add { bodyFixture.getShape() }
 
         val feetFixture =
-            Fixture(body, FixtureType.FEET, GameRectangle().setSize(ConstVals.PPM / 4f, 0.2f * ConstVals.PPM))
+            Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.2f * ConstVals.PPM))
         feetFixture.offsetFromBodyCenter.y = -0.5f * ConstVals.PPM
         body.addFixture(feetFixture)
         feetFixture.rawShape.color = Color.GREEN
         debugShapes.add { feetFixture.getShape() }
-
-        // TODO: create head fixture, bounce megaman as reference to DK Country rat boss!
-
-        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(ConstVals.PPM.toFloat()))
-        body.addFixture(damageableFixture)
-
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(ConstVals.PPM.toFloat()))
-        body.addFixture(damagerFixture)
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
@@ -115,7 +113,7 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             body.physics.gravity.y = ConstVals.PPM * (if (body.isSensing(BodySense.FEET_ON_GROUND)) G_GRAV else GRAV)
         })
 
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.DAMAGEABLE, FixtureType.DAMAGER))
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -136,23 +134,21 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(2f * ConstVals.PPM, 1.75f * ConstVals.PPM)
+        sprite.setSize(2.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.hidden = damageBlink
-            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
-            _sprite.setFlip(isFacing(Facing.LEFT), false)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.hidden = damageBlink
+            sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            sprite.setFlip(isFacing(Facing.LEFT), false)
         }
         return spritesComponent
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = {
-            if (body.isSensing(BodySense.FEET_ON_GROUND)) "Stand" else "Jump"
-        }
+        val keySupplier: () -> String? = { if (body.isSensing(BodySense.FEET_ON_GROUND)) "Stand" else "Jump" }
         val animations = objectMapOf<String, IAnimation>(
-            "Stand" pairTo Animation(atlas!!.findRegion("Ratton/Stand"), 1, 2, gdxArrayOf(0.5f, 0.15f), true),
-            "Jump" pairTo Animation(atlas!!.findRegion("Ratton/Jump"), 1, 2, 0.1f, false)
+            "Stand" pairTo Animation(regions["stand"], 1, 2, gdxArrayOf(0.5f, 0.15f), true),
+            "Jump" pairTo Animation(regions["jump"], 1, 2, 0.1f, false)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

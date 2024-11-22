@@ -219,12 +219,10 @@ class MegaContactListener(
             val entity = feetFixture.getEntity()
             if (entity is Megaman) {
                 entity.aButtonTask = AButtonTask.JUMP
-
                 entity.addFeetBlock(blockFixture.getEntity() as Block)
-
-                when {
-                    !entity.firstTimeOnBlock -> entity.requestToPlaySound(SoundAsset.MEGAMAN_LAND_SOUND, false)
-                    else -> entity.firstTimeOnBlock = false
+                if (entity.canMakeLandSound) {
+                    entity.requestToPlaySound(SoundAsset.MEGAMAN_LAND_SOUND, false)
+                    entity.canMakeLandSound = false
                 }
             }
 
@@ -841,7 +839,10 @@ class MegaContactListener(
                 entity.aButtonTask =
                     if (entity.body.isSensing(BodySense.IN_WATER)) AButtonTask.SWIM else AButtonTask.AIR_DASH
                 entity.removeFeetBlock(blockFixture.getEntity() as Block)
-                if (!entity.hasAnyFeetBlock()) body.setBodySense(BodySense.FEET_ON_GROUND, false)
+                if (!entity.hasAnyFeetBlock()) {
+                    body.setBodySense(BodySense.FEET_ON_GROUND, false)
+                    entity.canMakeLandSound = true
+                }
             } else body.setBodySense(BodySense.FEET_ON_GROUND, false)
         }
 

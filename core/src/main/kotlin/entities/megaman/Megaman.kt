@@ -206,8 +206,6 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
     var teleporting = false
         private set
 
-    var firstTimeOnBlock = true
-
     var movementScalar = 1f
         set(value) {
             field = value
@@ -229,6 +227,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
     internal var waterGravity = 0f
     internal var waterIceGravity = 0f
     internal var swimVel = 0f
+    internal var canMakeLandSound = false
     internal var applyMovementScalarToBullet = false
     internal val roomTransPauseTimer = Timer(ConstVals.ROOM_TRANS_DELAY_DURATION)
 
@@ -271,7 +270,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         canMove = true
         canBeDamaged = true
         teleporting = false
-        firstTimeOnBlock = true
+        canMakeLandSound = false
         gravityScalar = spawnProps.getOrDefault("${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}", 1f, Float::class)
         movementScalar = spawnProps.getOrDefault("${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}", 1f, Float::class)
         applyMovementScalarToBullet = spawnProps.getOrDefault(ConstKeys.APPLY_SCALAR_TO_CHILDREN, false, Boolean::class)

@@ -53,8 +53,8 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     companion object {
         const val TAG = "Darspider"
         private const val STILL_DUR = 0.35f
-        private const val CRAWL_SPEED = 8f
-        private const val JUMP_IMPULSE = 14f
+        private const val CRAWL_SPEED = 6f
+        private const val JUMP_IMPULSE = 12f
         private const val GROUND_GRAVITY = -0.001f
         private const val GRAVITY = -0.2f
         private const val LEFT_FOOT = "${ConstKeys.LEFT}_${ConstKeys.FOOT}"
@@ -157,13 +157,13 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
             if (onCeiling &&
                 ((isFacing(Facing.RIGHT) && body.getCenter().x >= maxXOnCeiling) ||
-                        (isFacing(Facing.LEFT) && body.getCenter().x <= minXOnCeiling))
+                    (isFacing(Facing.LEFT) && body.getCenter().x <= minXOnCeiling))
             ) {
                 swapFacing()
                 stillTimer.reset()
             } else if (!onCeiling &&
                 ((isFacing(Facing.LEFT) && body.getCenter().x <= minXOffCeiling) ||
-                        (isFacing(Facing.RIGHT) && body.getCenter().x >= maxXOffCeiling))
+                    (isFacing(Facing.RIGHT) && body.getCenter().x >= maxXOffCeiling))
             ) {
                 swapFacing()
                 stillTimer.reset()
@@ -181,7 +181,7 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(0.75f * ConstVals.PPM)
+        body.setSize(0.85f * ConstVals.PPM)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
         body.putProperty(LEFT_FOOT, false)
@@ -189,15 +189,6 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBodyBounds() }
-
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
-        body.addFixture(bodyFixture)
-
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
-        body.addFixture(damagerFixture)
-
-        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle(body))
-        body.addFixture(damageableFixture)
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM))
@@ -259,19 +250,21 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(
+            this, body, BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER, FixtureType.DAMAGEABLE)
+        )
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.25f * ConstVals.PPM)
+        sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation.rotation
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setOriginCenter()
+            sprite.rotation = directionRotation.rotation
             val position = DirectionPositionMapper.getPosition(directionRotation).opposite()
-            _sprite.setPosition(body.getPositionPoint(position), position)
-            _sprite.hidden = damageBlink
+            sprite.setPosition(body.getPositionPoint(position), position)
+            sprite.hidden = damageBlink
         }
         return spritesComponent
     }

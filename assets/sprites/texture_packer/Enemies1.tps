@@ -533,8 +533,8 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Enemies1/PreciousJoe/Charge.png</key>
-            <key type="filename">../frames/Enemies1/Ratton/Jump.png</key>
-            <key type="filename">../frames/Enemies1/Ratton/Stand.png</key>
+            <key type="filename">../frames/Enemies1/Ratton/jump.png</key>
+            <key type="filename">../frames/Enemies1/Ratton/stand.png</key>
             <key type="filename">../frames/Enemies1/SnowSeal/FormSnowball.png</key>
             <key type="filename">../frames/Enemies1/SnowSeal/Stand.png</key>
             <key type="filename">../frames/Enemies1/WispyWasp/Fly.png</key>

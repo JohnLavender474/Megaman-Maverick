@@ -31,6 +31,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
     }
 
     private val presetBKGMap: ObjectMap<String, (RectangleMapObject) -> Background> = objectMapOf(
+        "UndergroundPipes" pairTo { UndergroundPipes(params.game.assMan, it) },
         "DesertCanyon" pairTo { DesertCanyon(params.game.assMan, it) },
         "DesertNoSunSky" pairTo { DesertNoSunSky(params.game.assMan, it) },
         "DesertSunSky" pairTo { DesertSunSky(params.game.assMan, it) },
@@ -123,7 +124,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
                 parallaxX = 0.1f,
                 parallaxY = 0f
             )
-        }
+        },
     )
 
     override fun build(layer: MapLayer, returnProps: Properties) {

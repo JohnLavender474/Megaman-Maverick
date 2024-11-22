@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.4.0</string>
+        <string>7.5.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -190,13 +190,29 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Platforms1/AppearingBrick.png</key>
+            <key type="filename">../frames/Platforms1/WoodPlank.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>24,8,48,16</rect>
+                <key>scale9Paddings</key>
+                <rect>24,8,48,16</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Platforms1/Boulder/Large.png</key>
             <key type="filename">../frames/Platforms1/Boulder/Medium.png</key>
             <key type="filename">../frames/Platforms1/Boulder/Small.png</key>
             <key type="filename">../frames/Platforms1/BreakableIce/1.png</key>
             <key type="filename">../frames/Platforms1/BreakableIce/2.png</key>
             <key type="filename">../frames/Platforms1/BreakableIce/3.png</key>
-            <key type="filename">../frames/Platforms1/Brick2.png</key>
+            <key type="filename">../frames/Platforms1/Brick.png</key>
             <key type="filename">../frames/Platforms1/ConveyorBelt/LeftPart-MoveLeft-Green.png</key>
             <key type="filename">../frames/Platforms1/ConveyorBelt/LeftPart-MoveRight-Green.png</key>
             <key type="filename">../frames/Platforms1/ConveyorBelt/MiddlePart-MoveLeft-Green.png</key>
@@ -233,8 +249,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Platforms1/Brick1.png</key>
-            <key type="filename">../frames/Platforms1/WoodPlank.png</key>
+            <key type="filename">../frames/Platforms1/BrickPiece.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -243,9 +258,9 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>24,8,48,16</rect>
+                <rect>80,80,160,160</rect>
                 <key>scale9Paddings</key>
-                <rect>24,8,48,16</rect>
+                <rect>80,80,160,160</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
