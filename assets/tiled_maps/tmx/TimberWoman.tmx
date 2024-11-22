@@ -334,16 +334,6 @@
   <object id="366" x="10560" y="96" width="32" height="64"/>
   <object id="367" x="10720" y="96" width="32" height="64"/>
  </objectgroup>
- <objectgroup id="3" name="player">
-  <object id="7" name="0" x="96" y="1376" width="32" height="32"/>
-  <object id="304" name="1" x="2784" y="704" width="32" height="32"/>
-  <object id="305" name="2" x="6784" y="800" width="32" height="32"/>
-  <object id="306" name="3" x="8160" y="192" width="32" height="32"/>
-  <object id="360" name="4" x="10128" y="352" width="32" height="32"/>
- </objectgroup>
- <objectgroup id="13" name="temp">
-  <object id="362" name="0" x="7296" y="128" width="32" height="32"/>
- </objectgroup>
  <objectgroup id="12" name="backgrounds">
   <object id="8" name="WindyClouds" x="0" y="1024" width="288" height="576"/>
  </objectgroup>
@@ -561,5 +551,15 @@
     <property name="room" value="boss_room"/>
    </properties>
   </object>
+ </objectgroup>
+ <objectgroup id="3" name="player">
+  <object id="7" name="0" x="96" y="1376" width="32" height="32"/>
+  <object id="304" name="1" x="2784" y="704" width="32" height="32"/>
+  <object id="305" name="2" x="6784" y="800" width="32" height="32"/>
+  <object id="306" name="3" x="8160" y="192" width="32" height="32"/>
+  <object id="360" name="4" x="10128" y="352" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup id="13" name="temp">
+  <object id="362" name="0" x="7296" y="128" width="32" height="32"/>
  </objectgroup>
 </map>
