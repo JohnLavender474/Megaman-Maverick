@@ -14,8 +14,7 @@ enum class Level(tmxSourceFile: String, val musicAss: MusicAsset) {
     TIMBER_WOMAN("TimberWoman.tmx", MusicAsset.MM3_SNAKE_MAN_MUSIC),
     INFERNO_MAN("InfernoMan_16x12.tmx", MusicAsset.MMX6_BLAZE_HEATNIX_MUSIC),
     MOON_MAN("MoonMan_16x12.tmx", MusicAsset.MMX5_DARK_DIZZY_MUSIC),
-    MAGNET_MAN("MagnetMan.tmx", MusicAsset.MMX5_IZZY_GLOW_MUSIC),
-    RODENT_MAN("Test1.tmx", MusicAsset.MM10_WILY1_MUSIC),
+    RODENT_MAN("RodentMan.tmx", MusicAsset.MM7_SLASH_MAN_MUSIC),
 
     // Final levels
     WILY_STAGE_1("WilyStage1.tmx", MusicAsset.MMX6_GATE_STAGE_MUSIC),
@@ -26,6 +25,7 @@ enum class Level(tmxSourceFile: String, val musicAss: MusicAsset) {
     DISTRIBUTOR_MAN("Test1.tmx", MusicAsset.MM3_SNAKE_MAN_MUSIC),
     ROASTER_MAN("Test1.tmx", MusicAsset.MM3_SNAKE_MAN_MUSIC),
     BLUNT_MAN("Test1.tmx", MusicAsset.MM3_SNAKE_MAN_MUSIC),
+    MAGNET_MAN("MagnetMan.tmx", MusicAsset.MMX5_IZZY_GLOW_MUSIC),
     NUKE_MAN("Test1.tmx", MusicAsset.MM3_SNAKE_MAN_MUSIC),
     CREW_MAN("CrewMan.tmx", MusicAsset.MM3_SNAKE_MAN_MUSIC),
     FREEZE_MAN("FreezeMan.tmx", MusicAsset.MMX_CHILL_PENGUIN_MUSIC),

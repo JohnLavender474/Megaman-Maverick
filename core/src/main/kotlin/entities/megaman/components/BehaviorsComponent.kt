@@ -185,7 +185,9 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 }
             }
             body.physics.velocity.set(v)
-            // requestToPlaySound(SoundAsset.JUMP_SOUND, false)
+
+            canMakeLandSound = true
+
             GameLogger.debug(MEGAMAN_JUMP_BEHAVIOR_TAG, "init(): velocity=$v")
         },
         end = {
@@ -418,6 +420,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         override fun init() {
             aButtonTask = if (body.isSensing(BodySense.IN_WATER)) AButtonTask.SWIM else AButtonTask.AIR_DASH
             body.physics.gravityOn = false
+            canMakeLandSound = false
 
             when (directionRotation) {
                 Direction.UP, Direction.DOWN -> {

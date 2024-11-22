@@ -15,6 +15,8 @@ import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
@@ -30,83 +32,108 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getPositionDelta
+import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
+import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
-class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
+class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDirectionRotatable {
 
     companion object {
         const val TAG = "Wanaan"
         private var region: TextureRegion? = null
-        private const val GRAVITY = -0.15f
+        private const val GRAVITY = 0.15f
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>()
+    override var directionRotation: Direction
+        get() = body.cardinalRotation
+        set(value) {
+            body.cardinalRotation = value
+        }
 
     val comingDown: Boolean
-        get() = body.getPositionDelta().y < 0f
+        get() {
+            val velocity = body.physics.velocity
+            return when (directionRotation) {
+                Direction.UP -> velocity.y < 0f
+                Direction.DOWN -> velocity.y > 0f
+                Direction.LEFT -> velocity.x > 0f
+                Direction.RIGHT -> velocity.x < 0f
+            }
+        }
     val cullPoint: Vector2
-        get() = body.getCenter()
-
-    private lateinit var direction: Direction
+        get() = body.getPositionPoint(DirectionPositionMapper.getPosition(directionRotation))
 
     override fun init() {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, "Wanaan")
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setBottomCenterToPoint(spawn)
-        direction = spawnProps.get(ConstKeys.DIRECTION, Direction::class)!!
-        val impulse = spawnProps.get(ConstKeys.IMPULSE, Float::class)!!
-        body.physics.velocity = when (direction) {
-            Direction.UP -> Vector2(0f, impulse)
-            Direction.DOWN -> Vector2(0f, -impulse)
-            Direction.LEFT -> Vector2(-impulse, 0f)
-            Direction.RIGHT -> Vector2(impulse, 0f)
-        }
+
+        val gravityOn = spawnProps.getOrDefault(ConstKeys.GRAVITY_ON, false, Boolean::class)
+        body.physics.gravityOn = gravityOn
+
+        directionRotation = spawnProps.get(ConstKeys.DIRECTION, Direction::class)!!
     }
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.physics.gravity.y = GRAVITY * ConstVals.PPM
+        body.physics.applyFrictionY = false
         body.setSize(ConstVals.PPM.toFloat())
 
         val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body.getBodyBounds() }
 
-        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(1f * ConstVals.PPM))
-        body.addFixture(shieldFixture)
-        shieldFixture.getShape().color = Color.GREEN
-        debugShapes.add { shieldFixture.getShape() }
+        val headFixture =
+            Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.1f * ConstVals.PPM))
+        headFixture.offsetFromBodyCenter.y = 0.5f * ConstVals.PPM
+        body.addFixture(headFixture)
+        headFixture.rawShape.color = Color.YELLOW
+        debugShapes.add { headFixture.getShape() }
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(1f * ConstVals.PPM))
-        body.addFixture(damagerFixture)
-        damagerFixture.getShape().color = Color.RED
-        debugShapes.add { damagerFixture.getShape() }
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            val velocity = body.physics.velocity
+            if (body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)) when (directionRotation) {
+                Direction.UP -> if (velocity.y > 0f) velocity.y = 0f
+                Direction.DOWN -> if (velocity.y < 0f) velocity.y = 0f
+                Direction.RIGHT -> if (velocity.x > 0f) velocity.x = 0f
+                Direction.LEFT -> if (velocity.x < 0f) velocity.x = 0f
+            }
+
+            val gravity = body.physics.gravity
+            when (directionRotation) {
+                Direction.UP -> gravity.y = -GRAVITY * ConstVals.PPM
+                Direction.DOWN -> gravity.y = GRAVITY * ConstVals.PPM
+                Direction.RIGHT -> gravity.x = -GRAVITY * ConstVals.PPM
+                Direction.LEFT -> gravity.x = GRAVITY * ConstVals.PPM
+            }
+        }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.SHIELD, FixtureType.DAMAGER))
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite()
-        sprite.setSize(1f * ConstVals.PPM)
+        val sprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, 10))
+        sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.hidden = damageBlink
-            _sprite.setCenter(body.getCenter())
-            _sprite.setFlip(false, comingDown)
-            when (direction) {
-                Direction.UP -> _sprite.rotation = 0f
-                Direction.DOWN -> _sprite.rotation = 180f
-                Direction.LEFT -> _sprite.rotation = 90f
-                Direction.RIGHT -> _sprite.rotation = 270f
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.hidden = damageBlink
+            sprite.setCenter(body.getCenter())
+            sprite.setFlip(false, comingDown)
+            when (directionRotation) {
+                Direction.UP -> sprite.rotation = 0f
+                Direction.DOWN -> sprite.rotation = 180f
+                Direction.LEFT -> sprite.rotation = 90f
+                Direction.RIGHT -> sprite.rotation = 270f
             }
         }
         return spritesComponent
@@ -117,4 +144,6 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }
+
+    override fun getTag() = TAG
 }
