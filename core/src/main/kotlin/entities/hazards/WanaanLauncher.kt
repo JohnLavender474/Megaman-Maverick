@@ -60,7 +60,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
         const val TAG = "WanaanLauncher"
         private const val NEW_WANAAN_DELAY = 0.25f
         private const val LAUNCH_DELAY = 1f
-        private const val IMPULSE = 16f
+        private const val IMPULSE = 16.5f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -158,11 +158,11 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
         val body = Body(BodyType.ABSTRACT)
         body.setSize(2f * ConstVals.PPM, ConstVals.PPM.toFloat())
         addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
-        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.BODY))
+        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.BODY, FixtureType.SHIELD))
     }
 
     private fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
+        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
         sprite.setSize(2f * ConstVals.PPM, ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->

@@ -17,6 +17,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.megaman.components.GROUND_SLIDE_SPRITE_OFFSET_Y
 import com.megaman.maverick.game.entities.megaman.components.slipSliding
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
@@ -58,8 +59,7 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
             val xOffset = ConstVals.PPM * megaman.facing.value *
                 if (megaman.isBehaviorActive(BehaviorType.RIDING_CART)) {
                     if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 1.25f else 1f
-                }
-                else if (!megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.75f
+                } else if (!megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.75f
                 else if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING)) 0.25f
                 else if (megaman.slipSliding) 0.65f
                 else 1f
@@ -80,8 +80,7 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
             } // else if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.4f * ConstVals.PPM
             else if (megaman.directionRotation == Direction.DOWN) {
                 (if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.15f else 0.25f) * ConstVals.PPM
-            }
-            else 0.135f * ConstVals.PPM
+            } else 0.135f * ConstVals.PPM
             /*
             else if (megaman.isBehaviorActive(BehaviorType.CLIMBING)) 0.15f * ConstVals.PPM
             else if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.15f * ConstVals.PPM
@@ -91,6 +90,12 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
             if (megaman.isDirectionRotatedVertically()) {
                 spawnCenter.x += xOffset
                 spawnCenter.y += if (megaman.isDirectionRotatedDown()) (-yOffset + 0.1f * ConstVals.PPM) else yOffset
+
+                if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING)) {
+                    var groundSlideOffset = GROUND_SLIDE_SPRITE_OFFSET_Y * ConstVals.PPM
+                    if (megaman.directionRotation == Direction.UP) spawnCenter.y -= groundSlideOffset
+                    else spawnCenter.y += groundSlideOffset
+                }
             } else {
                 yOffset += if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) -0.075f * ConstVals.PPM
                 else if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) -0.1f * ConstVals.PPM

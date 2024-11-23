@@ -62,8 +62,14 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
         Bullet::class pairTo dmgNeg(10),
         Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShotExplosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
+        ChargedShot::class pairTo dmgNeg {
+            it as ChargedShot
+            if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
+        },
+        ChargedShotExplosion::class pairTo dmgNeg {
+            it as ChargedShotExplosion
+            if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
+        }
     )
 
     override lateinit var facing: Facing
