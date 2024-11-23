@@ -478,15 +478,18 @@ class MegaLevelScreen(
 
             EventType.BOSS_READY -> {
                 val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
-                val runOnFirstUpdate = { game.audioMan.pauseMusic() }
-                val runOnFinished = {
-                    game.eventsMan.submitEvent(Event(EventType.END_BOSS_SPAWN))
-                    game.audioMan.playMusic()
-                }
-                bossHealthHandler.set(boss, runOnFirstUpdate, runOnFinished)
+                if (boss.mini) game.eventsMan.submitEvent(Event(EventType.END_BOSS_SPAWN))
+                else {
+                    val runOnFirstUpdate = { game.audioMan.pauseMusic() }
+                    val runOnFinished = {
+                        game.eventsMan.submitEvent(Event(EventType.END_BOSS_SPAWN))
+                        game.audioMan.playMusic()
+                    }
+                    bossHealthHandler.set(boss, runOnFirstUpdate, runOnFinished)
 
-                game.engine.systems.forEach {
-                    if (!it.isAny(SpritesSystem::class, AnimationsSystem::class)) it.on = false
+                    game.engine.systems.forEach {
+                        if (!it.isAny(SpritesSystem::class, AnimationsSystem::class)) it.on = false
+                    }
                 }
             }
 
