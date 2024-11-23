@@ -140,7 +140,7 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val animation = Animation(region!!, 1, 2, 0.1f, true)
+        val animation = Animation(region!!, 2, 1, 0.1f, true)
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }

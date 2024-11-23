@@ -113,6 +113,8 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
 
     override fun onDestroy() {
         super.onDestroy()
+        block?.destroy()
+        block = null
         parent = null
         offset.setZero()
     }
