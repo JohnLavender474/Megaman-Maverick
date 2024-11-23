@@ -16,6 +16,8 @@ import com.megaman.maverick.game.entities.megaman.constants.MegamanKeys
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.isSensing
 
+const val GROUND_SLIDE_SPRITE_OFFSET_Y = 0.1f
+
 internal fun Megaman.defineSpritesComponent(): SpritesComponent {
     val spritesComponent = SpritesComponent()
 
@@ -73,12 +75,12 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
         val yTranslation = when (direction) {
             Direction.UP -> when {
                 !body.isSensing(BodySense.FEET_ON_GROUND) && !isBehaviorActive(BehaviorType.WALL_SLIDING) -> -0.25f
-                isBehaviorActive(BehaviorType.GROUND_SLIDING) -> -0.15f
+                isBehaviorActive(BehaviorType.GROUND_SLIDING) -> -GROUND_SLIDE_SPRITE_OFFSET_Y
                 else -> 0f
             }
 
             Direction.DOWN -> when {
-                isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0.125f
+                isBehaviorActive(BehaviorType.GROUND_SLIDING) -> GROUND_SLIDE_SPRITE_OFFSET_Y
                 else -> 0.075f
             }
 
