@@ -22,6 +22,7 @@ import com.mega.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.enemies.Wanaan
@@ -66,6 +67,7 @@ class BreakableBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, I
         when (type) {
             BRICK_TYPE -> if (entity is Wanaan) {
                 destroy()
+
                 for (i in 0 until BRICK_PIECE_IMPULSES.size) {
                     val spawn = body.getCenter()
                     val impulse = BRICK_PIECE_IMPULSES[i].cpy().scl(ConstVals.PPM.toFloat())
@@ -78,6 +80,8 @@ class BreakableBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, I
                         )
                     )
                 }
+
+                game.audioMan.playSound(SoundAsset.THUMP_SOUND, false)
             }
         }
     }
