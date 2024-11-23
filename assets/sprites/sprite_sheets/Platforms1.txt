@@ -1,326 +1,326 @@
 Platforms1.png
-size: 494, 816
+size: 946, 248
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 8bitBlueBlock
   rotate: false
-  xy: 0, 0
+  xy: 160, 0
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
   index: -1
 8bitBlueBlockNoBorder
   rotate: false
-  xy: 8, 0
+  xy: 168, 0
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
   index: -1
 8bitBlueBlockTransBorder
   rotate: false
-  xy: 16, 0
+  xy: 176, 0
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
   index: -1
 AppearingBrick
   rotate: false
-  xy: 24, 0
+  xy: 360, 0
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 Boulder/Large
   rotate: false
-  xy: 120, 0
+  xy: 456, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Boulder/Medium
   rotate: false
-  xy: 152, 0
+  xy: 488, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Boulder/Small
   rotate: false
-  xy: 184, 0
+  xy: 520, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 BreakableIce/1
   rotate: false
-  xy: 216, 0
+  xy: 552, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 BreakableIce/2
   rotate: false
-  xy: 248, 0
+  xy: 584, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 BreakableIce/3
   rotate: false
-  xy: 280, 0
+  xy: 616, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 BreakableIce/Shards
   rotate: false
-  xy: 312, 0
+  xy: 648, 0
   size: 160, 32
   orig: 160, 32
   offset: 0, 0
   index: -1
 Brick
   rotate: false
-  xy: 0, 32
+  xy: 808, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 BrickPiece
   rotate: false
-  xy: 32, 32
-  size: 320, 320
-  orig: 320, 320
+  xy: 840, 0
+  size: 32, 32
+  orig: 32, 32
   offset: 0, 0
   index: -1
 ConveyorBelt/LeftPart-MoveLeft-Green
   rotate: false
-  xy: 352, 32
+  xy: 872, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ConveyorBelt/LeftPart-MoveLeft
   rotate: false
-  xy: 384, 32
+  xy: 0, 32
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 ConveyorBelt/LeftPart-MoveRight-Green
   rotate: false
-  xy: 448, 32
+  xy: 64, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ConveyorBelt/LeftPart-MoveRight
   rotate: false
-  xy: 0, 352
+  xy: 96, 32
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 ConveyorBelt/MiddlePart-MoveLeft-Green
   rotate: false
-  xy: 64, 352
+  xy: 160, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ConveyorBelt/MiddlePart-MoveRight-Green
   rotate: false
-  xy: 96, 352
+  xy: 192, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ConveyorBelt/MiddlePart
   rotate: false
-  xy: 128, 352
+  xy: 224, 32
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 ConveyorBelt/RightPart-MoveLeft-Green
   rotate: false
-  xy: 192, 352
+  xy: 288, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ConveyorBelt/RightPart-MoveLeft
   rotate: false
-  xy: 224, 352
+  xy: 320, 32
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 ConveyorBelt/RightPart-MoveRight-Green
   rotate: false
-  xy: 288, 352
+  xy: 384, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 DestroyableWoodPlank/flash
   rotate: false
-  xy: 0, 384
+  xy: 416, 32
   size: 192, 32
   orig: 192, 32
   offset: 0, 0
   index: -1
 DropperLift/Closed
   rotate: false
-  xy: 192, 384
+  xy: 608, 32
   size: 48, 32
   orig: 48, 32
   offset: 0, 0
   index: -1
 DropperLift/Open
   rotate: false
-  xy: 240, 384
+  xy: 656, 32
   size: 48, 32
   orig: 48, 32
   offset: 0, 0
   index: -1
 DropperLift/Opening
   rotate: false
-  xy: 288, 384
+  xy: 344, 184
   size: 96, 64
   orig: 96, 64
   offset: 0, 0
   index: -1
 FlipperPlatform/FlipToLeft
   rotate: false
-  xy: 0, 448
+  xy: 448, 64
   size: 430, 60
   orig: 430, 60
   offset: 0, 0
   index: -1
 FlipperPlatform/FlipToRight
   rotate: false
-  xy: 0, 508
+  xy: 0, 124
   size: 430, 60
   orig: 430, 60
   offset: 0, 0
   index: -1
 FlipperPlatform/Left
   rotate: false
-  xy: 0, 568
+  xy: 430, 124
   size: 86, 60
   orig: 86, 60
   offset: 0, 0
   index: -1
 FlipperPlatform/LeftDelay
   rotate: false
-  xy: 86, 568
+  xy: 516, 124
   size: 344, 60
   orig: 344, 60
   offset: 0, 0
   index: -1
 FlipperPlatform/Right
   rotate: false
-  xy: 0, 628
+  xy: 860, 124
   size: 86, 60
   orig: 86, 60
   offset: 0, 0
   index: -1
 FlipperPlatform/RightDelay
   rotate: false
-  xy: 86, 628
+  xy: 0, 184
   size: 344, 60
   orig: 344, 60
   offset: 0, 0
   index: -1
 GearTrolleyPlatform
   rotate: false
-  xy: 430, 628
+  xy: 704, 32
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 JeffBezosLittleDickRocket
   rotate: false
-  xy: 0, 688
+  xy: 440, 184
   size: 448, 64
   orig: 448, 64
   offset: 0, 0
   index: -1
 Lift
   rotate: false
-  xy: 448, 688
+  xy: 248, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 Platform1_64x8
   rotate: false
-  xy: 0, 752
+  xy: 184, 0
   size: 64, 8
   orig: 64, 8
   offset: 0, 0
   index: -1
 Platform2
   rotate: false
-  xy: 64, 752
+  xy: 768, 32
   size: 99, 32
   orig: 99, 32
   offset: 0, 0
   index: -1
 PropellerPlatform
   rotate: false
-  xy: 163, 752
+  xy: 0, 64
   size: 256, 32
   orig: 256, 32
   offset: 0, 0
   index: -1
 SwingingPlatform/other_small_platform
   rotate: false
-  xy: 0, 784
+  xy: 0, 0
   size: 80, 5
   orig: 80, 5
   offset: 0, 0
   index: -1
 SwingingPlatform/platform
   rotate: false
-  xy: 80, 784
+  xy: 264, 0
   size: 80, 16
   orig: 80, 16
   offset: 0, 0
   index: -1
 SwingingPlatform/ring
   rotate: false
-  xy: 160, 784
+  xy: 344, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 SwingingPlatform/small_platform
   rotate: false
-  xy: 176, 784
+  xy: 80, 0
   size: 80, 5
   orig: 80, 5
   offset: 0, 0
   index: -1
 TrackBlock
   rotate: false
-  xy: 256, 784
+  xy: 256, 64
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 WoodBlock1
   rotate: false
-  xy: 288, 784
+  xy: 288, 64
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 WoodPlank
   rotate: false
-  xy: 352, 784
+  xy: 352, 64
   size: 96, 32
   orig: 96, 32
   offset: 0, 0

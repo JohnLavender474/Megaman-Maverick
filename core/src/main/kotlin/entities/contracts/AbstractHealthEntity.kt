@@ -1,7 +1,6 @@
 package com.megaman.maverick.game.entities.contracts
 
 import com.badlogic.gdx.utils.ObjectMap
-import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamageable
@@ -33,6 +32,8 @@ abstract class AbstractHealthEntity(
     protected val damageBlinkTimer = Timer(dmgBlinkDur)
     protected var damageBlink = false
 
+    private var wasHealthDepleted = false
+
     override fun init() {
         addComponent(definePointsComponent())
         val updatablesComponent = UpdatablesComponent()
@@ -45,6 +46,7 @@ abstract class AbstractHealthEntity(
         setHealth(ConstVals.MAX_HEALTH)
         damageTimer.setToEnd()
         damageBlinkTimer.setToEnd()
+        wasHealthDepleted = false
     }
 
     override fun canBeDamagedBy(damager: IDamager) = !invincible && damageNegotiations.containsKey(damager::class)
@@ -72,8 +74,8 @@ abstract class AbstractHealthEntity(
             ConstKeys.HEALTH, max = ConstVals.MAX_HEALTH, current = ConstVals.MAX_HEALTH, min = ConstVals.MIN_HEALTH
         )
         pointsComponent.putListener(ConstKeys.HEALTH) {
-            if (it.current <= ConstVals.MIN_HEALTH) {
-                GameLogger.debug(AbstractEnemy.TAG, "Kill enemy due to depleted health")
+            if (it.current <= ConstVals.MIN_HEALTH && !wasHealthDepleted) {
+                wasHealthDepleted = true
                 onHealthDepleted()
             }
         }

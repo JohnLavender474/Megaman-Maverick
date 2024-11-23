@@ -567,12 +567,16 @@ class MegaContactListener(
                     FixtureType.FEET, FixtureType.SIDE, FixtureType.HEAD, FixtureType.BODY
                 )
             )!!
+
             val entity = otherFixture.getEntity()
+
             val canDie = entity.getOrDefaultProperty(ConstKeys.ENTTIY_KILLED_BY_DEATH_FIXTURE, true, Boolean::class)
             if (!canDie) return
+
             val deathListener = otherFixture.getOrDefaultProperty(ConstKeys.DEATH_LISTENER, true, Boolean::class)
             if (!deathListener) return
-            val instant = deathFixture.getProperty(ConstKeys.INSTANT, Boolean::class) ?: false
+
+            val instant = deathFixture.getProperty(ConstKeys.INSTANT, Boolean::class) == true
             if (entity is IDamageable && (instant || !entity.invincible)) otherFixture.depleteHealth()
         }
 

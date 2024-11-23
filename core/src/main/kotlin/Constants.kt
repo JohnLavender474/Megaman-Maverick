@@ -50,6 +50,7 @@ object ConstKeys {
     const val DESTROY = "destroy"
     const val CHILDREN = "children"
     const val SCANNER = "scanner"
+    const val THUMP = "thump"
     const val TRIGGERABLE = "triggerable"
     const val BUTTON = "button"
     const val COMMAND = "command"
