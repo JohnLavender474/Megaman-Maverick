@@ -134,8 +134,16 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
         feetFixture.rawShape.color = Color.GREEN
         debugShapes.add { feetFixture.getShape() }
 
+        val deathFixture = Fixture(body, FixtureType.DEATH, GameRectangle(body))
+        deathFixture.putProperty(ConstKeys.INSTANT, false)
+        body.addFixture(deathFixture)
+
         body.preProcess.put(ConstKeys.DEFAULT) {
+            val instant = !body.isSensing(BodySense.FEET_ON_GROUND)
+            deathFixture.putProperty(ConstKeys.INSTANT, instant)
+
             block!!.body.setCenter(body.getCenter())
+            block!!.body.physics.collisionOn = body.isSensing(BodySense.FEET_ON_GROUND)
 
             val gravityValue = if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
             body.physics.gravity = when (directionRotation) {

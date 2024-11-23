@@ -40,10 +40,10 @@ class BrickPiece(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
     companion object {
         const val TAG = "BrickPiece"
-        private const val GRAVITY = 0.15f
+        private const val GRAVITY = 0.25f
         private const val CULL_TIME = 2f
         private const val START_ROTATION = 135f
-        private const val ALPHA = 0.5f
+        private const val ALPHA = 1f
         private var region: TextureRegion? = null
     }
 
