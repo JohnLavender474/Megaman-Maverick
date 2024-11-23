@@ -51,7 +51,7 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
     companion object {
         const val TAG = "RatRobot"
-        private const val SPEED = 8f
+        private const val SPEED = 6f
         private const val GRAVITY = 0.375f
         private val regions = ObjectMap<String, TextureRegion>()
     }

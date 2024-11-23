@@ -64,7 +64,6 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
         // TODO
     )
@@ -170,7 +169,6 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
             val bust = this.hasDepletedHealth()
             val region = if (bust) regions["bust"] else regions["launcher"]
             sprite.setRegion(region)
-
             sprite.setCenter(body.getCenter())
         }
         return spritesComponent
@@ -184,10 +182,10 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
         GameLogger.debug(TAG, "launchWanaan()")
         wanaan = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.WANAAN) as Wanaan
         val spawn = when (directionRotation) {
-            Direction.UP -> body.getTopCenterPoint().sub(0f, 0.25f * ConstVals.PPM)
-            Direction.DOWN -> body.getBottomCenterPoint().add(0f, 0.25f * ConstVals.PPM)
-            Direction.LEFT -> body.getCenterLeftPoint().add(0.25f * ConstVals.PPM, 0f)
-            Direction.RIGHT -> body.getCenterRightPoint().sub(0.25f * ConstVals.PPM, 0f)
+            Direction.UP -> body.getTopCenterPoint().sub(0f, 0.5f * ConstVals.PPM)
+            Direction.DOWN -> body.getBottomCenterPoint().add(0f, 0.5f * ConstVals.PPM)
+            Direction.LEFT -> body.getCenterLeftPoint().add(0.5f * ConstVals.PPM, 0f)
+            Direction.RIGHT -> body.getCenterRightPoint().sub(0.5f * ConstVals.PPM, 0f)
         }
         wanaan!!.spawn(
             props(
