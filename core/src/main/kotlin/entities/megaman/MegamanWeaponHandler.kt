@@ -18,7 +18,6 @@ import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.megaman.components.GROUND_SLIDE_SPRITE_OFFSET_Y
-import com.megaman.maverick.game.entities.megaman.components.slipSliding
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon

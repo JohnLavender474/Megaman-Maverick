@@ -13,10 +13,66 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegamanKeys
+import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.isSensing
 
 const val GROUND_SLIDE_SPRITE_OFFSET_Y = 0.1f
+
+fun Megaman.getSpriteDirection() =
+    if (isBehaviorActive(BehaviorType.AIR_DASHING))
+        getProperty(MegamanKeys.DIRECTION_ON_AIR_DASH, Direction::class)!!
+    else directionRotation
+
+fun Megaman.shouldFlipSpriteX() =
+    !maverick && if (getSpriteDirection() == Direction.RIGHT) facing == Facing.RIGHT else facing == Facing.LEFT
+
+fun Megaman.shouldFlipSpriteY() = getSpriteDirection() == Direction.DOWN
+
+fun Megaman.getSpriteRotation() = when (getSpriteDirection()) {
+    Direction.UP, Direction.DOWN -> 0f
+    Direction.LEFT -> 90f
+    Direction.RIGHT -> 270f
+}
+
+fun Megaman.getSpriteXTranslation() = when (getSpriteDirection()) {
+    Direction.UP, Direction.DOWN -> when {
+        megamanAnimator.currentKey?.contains("JumpShoot") == true -> 0.1f * facing.value
+        else -> 0f
+    }
+
+    Direction.LEFT -> {
+        when {
+            isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0.3f
+            else -> 0.2f
+        }
+    }
+
+    Direction.RIGHT -> {
+        when {
+            isBehaviorActive(BehaviorType.GROUND_SLIDING) -> -0.3f
+            else -> -0.2f
+        }
+    }
+}
+
+fun Megaman.getSpriteYTranslation() = when (getSpriteDirection()) {
+    Direction.UP -> when {
+        !body.isSensing(BodySense.FEET_ON_GROUND) && !isBehaviorActive(BehaviorType.WALL_SLIDING) -> -0.25f
+        isBehaviorActive(BehaviorType.GROUND_SLIDING) -> -GROUND_SLIDE_SPRITE_OFFSET_Y
+        else -> 0f
+    }
+
+    Direction.DOWN -> when {
+        isBehaviorActive(BehaviorType.GROUND_SLIDING) -> GROUND_SLIDE_SPRITE_OFFSET_Y
+        else -> 0.075f
+    }
+
+    Direction.LEFT, Direction.RIGHT -> when {
+        megamanAnimator.currentKey?.contains("JumpShoot") == true -> 0.1f * facing.value
+        else -> 0f
+    }
+}
 
 internal fun Megaman.defineSpritesComponent(): SpritesComponent {
     val spritesComponent = SpritesComponent()
@@ -25,72 +81,14 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
     megamanSprite.setSize(2.5f * ConstVals.PPM)
     spritesComponent.sprites.put("megaman", megamanSprite)
     spritesComponent.putUpdateFunction("megaman") { _, player ->
-        val direction = if (isBehaviorActive(BehaviorType.AIR_DASHING))
-            getProperty(MegamanKeys.DIRECTION_ON_AIR_DASH, Direction::class)!!
-        else directionRotation
-
-        val flipX =
-            !maverick && if (directionRotation == Direction.RIGHT) facing == Facing.RIGHT else facing == Facing.LEFT
-        val flipY = direction == Direction.DOWN
-        player.setFlip(flipX, flipY)
-
+        val direction = getSpriteDirection()
+        player.setFlip(shouldFlipSpriteX(), shouldFlipSpriteY())
         player.setOriginCenter()
-        player.rotation = when (direction) {
-            Direction.UP, Direction.DOWN -> 0f
-            Direction.LEFT -> 90f
-            Direction.RIGHT -> 270f
-        }
-
-        val position = when (direction) {
-            Direction.UP -> Position.BOTTOM_CENTER
-            Direction.DOWN -> Position.TOP_CENTER
-            Direction.LEFT -> Position.CENTER_RIGHT
-            Direction.RIGHT -> Position.CENTER_LEFT
-        }
-        val bodyPosition = body.getPositionPoint(position)
-        player.setPosition(bodyPosition, position)
-
-        val xTranslation = when (direction) {
-            Direction.UP, Direction.DOWN -> when (rawAnimKey) {
-                "JumpShoot" -> 0.1f * facing.value
-                else -> 0f
-            }
-
-            Direction.LEFT -> {
-                when {
-                    isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0.3f
-                    else -> 0.2f
-                }
-            }
-
-            Direction.RIGHT -> {
-                when {
-                    isBehaviorActive(BehaviorType.GROUND_SLIDING) -> -0.3f
-                    else -> -0.2f
-                }
-            }
-        }
-        player.translateX(xTranslation * ConstVals.PPM)
-
-        val yTranslation = when (direction) {
-            Direction.UP -> when {
-                !body.isSensing(BodySense.FEET_ON_GROUND) && !isBehaviorActive(BehaviorType.WALL_SLIDING) -> -0.25f
-                isBehaviorActive(BehaviorType.GROUND_SLIDING) -> -GROUND_SLIDE_SPRITE_OFFSET_Y
-                else -> 0f
-            }
-
-            Direction.DOWN -> when {
-                isBehaviorActive(BehaviorType.GROUND_SLIDING) -> GROUND_SLIDE_SPRITE_OFFSET_Y
-                else -> 0.075f
-            }
-
-            Direction.LEFT, Direction.RIGHT -> when (rawAnimKey) {
-                "JumpShoot" -> 0.1f * facing.value
-                else -> 0f
-            }
-        }
-        player.translateY(yTranslation * ConstVals.PPM)
-
+        player.rotation = getSpriteRotation()
+        val position = DirectionPositionMapper.getInvertedPosition(direction)
+        player.setPosition(body.getPositionPoint(position), position)
+        player.translateX(getSpriteXTranslation() * ConstVals.PPM)
+        player.translateY(getSpriteYTranslation() * ConstVals.PPM)
         player.setAlpha(if (damageFlash) 0f else 1f)
     }
 

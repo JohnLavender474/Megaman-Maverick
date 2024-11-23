@@ -134,6 +134,7 @@ object ConstKeys {
     const val FALL = "fall"
     const val ELAPSE = "elapse"
     const val PRIORITY = "priority"
+    const val CURRENT = "current"
     const val SECTION = "section"
     const val PASSWORD = "password"
     const val LINES = "lines"
