@@ -42,7 +42,7 @@ class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
         private var region: TextureRegion? = null
     }
 
-    override var directionRotation = Direction.UP
+    override lateinit var directionRotation: Direction
 
     private val durationTimer = Timer(DURATION)
     private val reusableRect = GameRectangle()
@@ -82,8 +82,7 @@ class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setOriginCenter()
-            val rotation = directionRotation.rotation
-            sprite.rotation = rotation
+            sprite.rotation = directionRotation.rotation
         }
         return spritesComponent
     }

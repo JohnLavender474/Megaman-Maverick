@@ -1,21 +1,33 @@
 package com.megaman.maverick.game.entities.hazards
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.toGameRectangle
 import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.cullables.CullablesComponent
+import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.entities.contracts.IAudioEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.IDrawableShapesEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
@@ -25,34 +37,54 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
 import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.enemies.Wanaan
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
+import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getObjectProps
 import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.BodyFixtureDef
+import com.megaman.maverick.game.world.body.FixtureType
+import kotlin.reflect.KClass
 
-class WanaanLauncher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudioEntity,
-    IDrawableShapesEntity, IDirectionRotatable {
+class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEntity, IAudioEntity,
+    ICullableEntity, IDrawableShapesEntity, IDirectionRotatable {
 
     companion object {
         const val TAG = "WanaanLauncher"
-        private const val LAUNCH_DELAY = 0.75f
-        private const val IMPULSE = 12f
+        private const val NEW_WANAAN_DELAY = 0.25f
+        private const val LAUNCH_DELAY = 1f
+        private const val IMPULSE = 16f
+        private val regions = ObjectMap<String, TextureRegion>()
     }
 
+
+    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+        // TODO
+    )
     override lateinit var directionRotation: Direction
 
+    private val newWanaanDelay = Timer(NEW_WANAAN_DELAY)
     private val launchDelay = Timer(LAUNCH_DELAY)
     private val sensors = Array<GameRectangle>()
     private var wanaan: Wanaan? = null
 
     override fun init() {
-        addComponent(defineUpdatablesComponent())
-        addComponent(defineBodyComponent())
+        if (regions.isEmpty) {
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
+            gdxArrayOf("launcher", "bust").forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
+        }
+        super.init()
         addComponent(AudioComponent())
+        addComponent(defineBodyComponent())
+        addComponent(defineSpritesComponent())
+        addComponent(defineCullablesComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -73,6 +105,18 @@ class WanaanLauncher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         launchDelay.reset()
     }
 
+    override fun onHealthDepleted() {
+        wanaan?.destroy()
+        wanaan = null
+
+        sensors.clear()
+
+        val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
+        explosion.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
+
+        requestToPlaySound(SoundAsset.EXPLOSION_2_SOUND, false)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
 
@@ -82,29 +126,59 @@ class WanaanLauncher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         sensors.clear()
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        if (wanaan != null && wanaan!!.comingDown && body.contains(wanaan!!.cullPoint)) {
-            wanaan!!.destroy()
-            wanaan = null
-        }
+    override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
+        super.defineUpdatablesComponent(updatablesComponent)
+        updatablesComponent.add { delta ->
+            if (wanaan != null && wanaan!!.comingDown && body.contains(wanaan!!.cullPoint)) {
+                wanaan!!.destroy()
+                wanaan = null
+                newWanaanDelay.reset()
+            }
 
-        if (wanaan?.dead == true) wanaan = null
+            if (wanaan?.dead == true) {
+                wanaan = null
+                newWanaanDelay.reset()
+            }
 
-        if (wanaan == null && sensors.any { it.overlaps(megaman().body as Rectangle) }) {
-            spawnWanaan()
-            launchDelay.reset()
-        } else if (wanaan != null) {
-            launchDelay.update(delta)
-            if (launchDelay.isJustFinished()) launchWanaan()
+            newWanaanDelay.update(delta)
+            if (wanaan == null &&
+                !this.hasDepletedHealth() &&
+                newWanaanDelay.isFinished() &&
+                sensors.any { it.overlaps(megaman().body as Rectangle) }
+            ) {
+                spawnWanaan()
+                launchDelay.reset()
+            } else if (wanaan != null) {
+                launchDelay.update(delta)
+                if (launchDelay.isJustFinished()) launchWanaan()
+            }
         }
-    })
+    }
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(ConstVals.PPM.toFloat())
+        body.setSize(2f * ConstVals.PPM, ConstVals.PPM.toFloat())
         addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.BODY))
     }
+
+    private fun defineSpritesComponent(): SpritesComponent {
+        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
+        sprite.setSize(2f * ConstVals.PPM, ConstVals.PPM.toFloat())
+        val spritesComponent = SpritesComponent(sprite)
+        spritesComponent.putUpdateFunction { _, _ ->
+            val bust = this.hasDepletedHealth()
+            val region = if (bust) regions["bust"] else regions["launcher"]
+            sprite.setRegion(region)
+
+            sprite.setCenter(body.getCenter())
+        }
+        return spritesComponent
+    }
+
+    private fun defineCullablesComponent() = CullablesComponent(
+        objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo getGameCameraCullingLogic(this))
+    )
 
     private fun spawnWanaan() {
         GameLogger.debug(TAG, "launchWanaan()")

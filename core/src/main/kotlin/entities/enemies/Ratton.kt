@@ -49,11 +49,13 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     companion object {
         const val TAG = "Ratton"
-        private const val STAND_DUR = 1.25f
+        private const val STAND_DUR = 0.75f
         private const val G_GRAV = -0.01f
         private const val GRAV = -0.15f
         private const val JUMP_X = 5f
-        private const val JUMP_Y = 8f
+        private const val JUMP_Y = 7.5f
+        private const val DEFAULT_FRICTION_X = 1f
+        private const val GROUND_FRICTION_X = 5f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -100,6 +102,13 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         bodyFixture.rawShape.color = Color.BLUE
         debugShapes.add { bodyFixture.getShape() }
 
+        val headFixture =
+            Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.2f * ConstVals.PPM))
+        headFixture.offsetFromBodyCenter.y = 0.5f * ConstVals.PPM
+        body.addFixture(headFixture)
+        headFixture.rawShape.color = Color.ORANGE
+        debugShapes.add { headFixture.getShape() }
+
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.2f * ConstVals.PPM))
         feetFixture.offsetFromBodyCenter.y = -0.5f * ConstVals.PPM
@@ -111,6 +120,12 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             body.physics.gravity.y = ConstVals.PPM * (if (body.isSensing(BodySense.FEET_ON_GROUND)) G_GRAV else GRAV)
+
+            val frictionX = if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_FRICTION_X else DEFAULT_FRICTION_X
+            body.physics.defaultFrictionOnSelf.x = frictionX
+
+            if (body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) && body.physics.velocity.y > 0f)
+                body.physics.velocity.y = 0f
         })
 
         return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.DAMAGEABLE, FixtureType.DAMAGER))

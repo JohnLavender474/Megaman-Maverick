@@ -207,6 +207,8 @@
             <key type="filename">../frames/Hazards1/Electrocutie/Charge.png</key>
             <key type="filename">../frames/Hazards1/FlameThrower/Blink.png</key>
             <key type="filename">../frames/Hazards1/SeaMine/blow.png</key>
+            <key type="filename">../frames/Hazards1/WanaanLauncher/bust.png</key>
+            <key type="filename">../frames/Hazards1/WanaanLauncher/launcher.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -249,6 +251,7 @@
             <key type="filename">../frames/Hazards1/Spike4.png</key>
             <key type="filename">../frames/Hazards1/Spike5.png</key>
             <key type="filename">../frames/Hazards1/Spike6.png</key>
+            <key type="filename">../frames/Hazards1/Spike7.png</key>
             <key type="filename">../frames/Hazards1/SpikeBall/SpikeBall.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>

@@ -34,8 +34,13 @@ class BreakableBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, I
     companion object {
         const val TAG = "BreakableBlock"
         const val BRICK_TYPE = "Brick"
+
+        // set this to true to make brick pieces "thump" on blocks, else false
+        private const val BRICK_TYPE_THUMP = false
+
         private val BRICK_PIECE_IMPULSES =
             gdxArrayOf(Vector2(-5f, 3f), Vector2(-3f, 5f), Vector2(3f, 5f), Vector2(5f, 3f))
+
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -68,7 +73,8 @@ class BreakableBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, I
                     brickPiece.spawn(
                         props(
                             ConstKeys.POSITION pairTo spawn,
-                            ConstKeys.IMPULSE pairTo impulse
+                            ConstKeys.IMPULSE pairTo impulse,
+                            ConstKeys.THUMP pairTo BRICK_TYPE_THUMP
                         )
                     )
                 }
