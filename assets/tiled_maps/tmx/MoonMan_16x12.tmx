@@ -328,7 +328,7 @@
   </object>
   <object id="376" name="WhiteArrowPool" x="14112" y="1600" width="256" height="64">
    <properties>
-    <property name="direction" value="down"/>
+    <property name="direction" value="up"/>
    </properties>
   </object>
   <object id="412" name="SpaceSatellite" x="15080" y="1648" width="16" height="16">
@@ -904,7 +904,7 @@
     <property name="spawn_type" value="spawn_now"/>
    </properties>
   </object>
-  <object id="398" name="GravityChange" x="14568" y="1344" width="384" height="288">
+  <object id="398" name="GravityChange" x="14880" y="1408" width="384" height="256">
    <properties>
     <property name="direction" value="up"/>
    </properties>
@@ -1138,8 +1138,8 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="5" name="temp">
-  <object id="426" name="0" x="15616" y="1632" width="32" height="32">
+ <objectgroup id="5" name="player">
+  <object id="426" name="0" x="11424" y="2496" width="32" height="32">
    <properties>
     <property name="apply_scalar_to_children" type="bool" value="true"/>
     <property name="gravity_scalar" type="float" value="0.25"/>
@@ -1147,7 +1147,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="4" name="player">
+ <objectgroup id="4" name="temp">
   <object id="28" name="0" x="96" y="3040" width="32" height="32">
    <properties>
     <property name="apply_scalar_to_children" type="bool" value="true"/>

@@ -25,7 +25,6 @@ class RotatableCamera(var onJustFinishedRotating: (() -> Unit)? = null, var prin
     override var directionRotation = Direction.UP
 
     private val reusableRect = GameRectangle()
-    private var latestCoercingBounds = GameRectangle()
 
     private var accumulator = 0f
     private var startRot = 0f
@@ -56,7 +55,6 @@ class RotatableCamera(var onJustFinishedRotating: (() -> Unit)? = null, var prin
                     "totRot=$totRot, " +
                     "cam_direction=$directionRotation, " +
                     "cam_pos=$position, " +
-                    "coercing_bounds=${latestCoercingBounds}, " +
                     "cam_rotated_bounds=${getRotatedBounds()}"
             )
         }
@@ -72,31 +70,27 @@ class RotatableCamera(var onJustFinishedRotating: (() -> Unit)? = null, var prin
         totRot += degrees
     }
 
-    /*
-    override fun reset() {
-        GameLogger.debug(TAG, "reset()")
-        startRot = 0f
-        rotAmount = 0f
-        totRot = 0f
-        rotTime = 0f
-        rotFinished = true
-        accumulator = 0f
-        rotateTo(0f)
-    }
-     */
-
     fun getRotatedBounds() = toGameRectangle(reusableRect).getCardinallyRotatedShape(directionRotation)
 
     fun coerceIntoBounds(bounds: GameRectangle) {
-        latestCoercingBounds = bounds
-        if (position.y > bounds.getMaxY() - viewportHeight / 2f)
-            position.y = bounds.getMaxY() - viewportHeight / 2f
-        if (position.y < bounds.y + viewportHeight / 2f)
-            position.y = bounds.y + viewportHeight / 2f
-        if (position.x > bounds.getMaxX() - viewportWidth / 2f)
-            position.x = bounds.getMaxX() - viewportWidth / 2f
-        if (position.x < bounds.x + viewportWidth / 2f)
-            position.x = bounds.x + viewportWidth / 2f
+        val adjVpWidth: Float
+        val adjVpHeight: Float
+        if (directionRotation.isVertical()) {
+            adjVpWidth = viewportWidth
+            adjVpHeight = viewportHeight
+        } else {
+            adjVpWidth = viewportHeight
+            adjVpHeight = viewportWidth
+        }
+
+        if (position.y > bounds.getMaxY() - adjVpHeight / 2f)
+            position.y = bounds.getMaxY() - adjVpHeight / 2f
+        if (position.y < bounds.y + adjVpHeight / 2f)
+            position.y = bounds.y + adjVpHeight / 2f
+        if (position.x > bounds.getMaxX() - adjVpWidth / 2f)
+            position.x = bounds.getMaxX() - adjVpWidth / 2f
+        if (position.x < bounds.x + adjVpWidth / 2f)
+            position.x = bounds.x + adjVpWidth / 2f
     }
 
     fun startRotation(direction: Direction, time: Float) {
@@ -105,7 +99,6 @@ class RotatableCamera(var onJustFinishedRotating: (() -> Unit)? = null, var prin
             "update(): START ROTATION: " +
                 "cam_direction=$directionRotation, " +
                 "cam_pos=$position, " +
-                "coercing_bounds=${latestCoercingBounds}, " +
                 "cam_rotated_bounds=${getRotatedBounds()}"
         )
 
