@@ -45,7 +45,9 @@ import com.megaman.maverick.game.entities.utils.standardOnTeleportStart
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.misc.StunType
 import com.megaman.maverick.game.world.body.BodySense
+import com.megaman.maverick.game.world.body.isSensing
 import com.megaman.maverick.game.world.body.isSensingAny
+import kotlin.math.abs
 
 class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable, IEventListener, IFaceable,
     IDamageable, IDirectionRotatable, IBodyEntity, IHealthEntity, ISpritesEntity, IBehaviorsEntity, IPointsEntity,
@@ -214,6 +216,11 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
                 if (animator is Animator) animator.updateScalar = value
             }
         }
+
+    val slipSliding: Boolean
+        get() = body.isSensing(BodySense.FEET_ON_GROUND) && abs(
+            if (isDirectionRotatedVertically()) body.physics.velocity.x else body.physics.velocity.y
+        ) > ConstVals.PPM / 16f
 
     override var gravityScalar = 1f
 

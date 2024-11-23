@@ -4,6 +4,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.decorations.*
 import com.megaman.maverick.game.entities.factories.EntityFactory
 import com.megaman.maverick.game.entities.factories.GameEntityPoolCreator
+import com.megaman.maverick.game.entities.megaman.decorations.MegamanTrailSprite
 
 class DecorationsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
 
@@ -28,6 +29,7 @@ class DecorationsFactory(private val game: MegamanMaverickGame) : EntityFactory(
         const val LANTERN = "Lantern"
         const val SPACE_SATELLITE = "SpaceSatellite"
         const val BRICK_PIECE = "BrickPiece"
+        const val MEGAMAN_TRAIL_SPRITE = "MegamanTrailSprite"
     }
 
     override fun init() {
@@ -51,6 +53,7 @@ class DecorationsFactory(private val game: MegamanMaverickGame) : EntityFactory(
         pools.put(LANTERN, GameEntityPoolCreator.create { Lantern(game) })
         pools.put(SPACE_SATELLITE, GameEntityPoolCreator.create { SpaceSatellite(game) })
         pools.put(BRICK_PIECE, GameEntityPoolCreator.create { BrickPiece(game) })
+        pools.put(MEGAMAN_TRAIL_SPRITE, GameEntityPoolCreator.create { MegamanTrailSprite(game) })
     }
 
     override fun fetch(key: Any) = pools.get(key)?.fetch()

@@ -12,6 +12,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.megaman.decorations.MegamanTrailSprite
 import com.megaman.maverick.game.entities.megaman.extensions.stopCharging
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.isSensing
@@ -21,6 +22,9 @@ const val MEGAMAN_UPDATE_COMPONENT_TAG = "MegamanUpdateComponentTag"
 private const val UNDER_WATER_BUBBLE_DELAY = 2f
 private const val DEATH_X_OFFSET = 1.5f
 private const val DEATH_Y_OFFSET = 1.5f
+private const val TRAIL_SPRITE_DELAY = 0.1f
+
+private val trailSpriteTimer = Timer(TRAIL_SPRITE_DELAY)
 private val underWaterBubbleTimer = Timer(UNDER_WATER_BUBBLE_DELAY)
 
 internal fun Megaman.defineUpdatablesComponent() = UpdatablesComponent({ delta ->
@@ -61,7 +65,26 @@ internal fun Megaman.defineUpdatablesComponent() = UpdatablesComponent({ delta -
             underWaterBubbleTimer.reset()
         }
     }
+
+    trailSpriteTimer.update(delta)
+    if (trailSpriteTimer.isFinished()) {
+        val spawnTrailSprite = when {
+            isBehaviorActive(BehaviorType.GROUND_SLIDING) -> {
+                val type = if (shooting) MegamanTrailSprite.GROUND_SLIDE_SHOOT else MegamanTrailSprite.GROUND_SLIDE
+                spawnTrailSprite(type)
+            }
+
+            isBehaviorActive(BehaviorType.AIR_DASHING) -> spawnTrailSprite(MegamanTrailSprite.AIR_DASH)
+            else -> false
+        }
+        if (spawnTrailSprite) trailSpriteTimer.reset()
+    }
 })
+
+private fun Megaman.spawnTrailSprite(type: String): Boolean {
+    val trailSprite = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.MEGAMAN_TRAIL_SPRITE)!!
+    return trailSprite.spawn(props(ConstKeys.TYPE pairTo type))
+}
 
 private fun Megaman.spawnBubbles() {
     val bubbles = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.UNDER_WATER_BUBBLE)!!
