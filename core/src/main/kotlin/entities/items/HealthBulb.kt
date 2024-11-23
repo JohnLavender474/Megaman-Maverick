@@ -78,17 +78,18 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
 
     private val blinkTimer = Timer(BLINK_DUR)
     private val cullTimer = Timer(CULL_DUR)
+
     private lateinit var itemFixture: Fixture
-    private lateinit var waterListenerFixture: Fixture
     private lateinit var feetFixture: Fixture
+    private lateinit var waterListenerFixture: Fixture
+
     private var large = false
     private var timeCull = false
     private var blink = false
     private var warning = false
+
     private var gravity = GRAVITY
     private var velClamp = VEL_CLAMP
-
-    override fun getEntityType() = EntityType.ITEM
 
     override fun init() {
         if (textureAtlas == null) textureAtlas = game.assMan.getTextureAtlas(TextureAsset.ITEMS_1.source)
@@ -197,9 +198,9 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
         sprite.setSize(0.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setCenter(body.getCenter())
-            _sprite.hidden = blink
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setCenter(body.getCenter())
+            sprite.hidden = blink
         }
         return spritesComponent
     }
@@ -234,4 +235,8 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
         cullTimer.update(delta)
         if (cullTimer.isFinished()) destroy()
     })
+
+    override fun getEntityType() = EntityType.ITEM
+
+    override fun getTag() = TAG
 }
