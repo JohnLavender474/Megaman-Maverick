@@ -44,6 +44,7 @@ import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
@@ -67,6 +68,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
     companion object {
         const val TAG = "Bospider"
+        private const val INIT_DUR = 5f
         private const val SPAWN_DELAY = 2f
         private const val MAX_CHILDREN = 4
         private const val MIN_SPEED = 8f
@@ -115,6 +117,8 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
     private var firstSpawn = true
 
+    private val initTimer = Timer(INIT_DUR)
+
     override fun init() {
         if (climbRegion == null || stillRegion == null || openEyeRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
@@ -147,9 +151,16 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         spawnDelayTimer.reset()
 
         firstSpawn = true
+
+        initTimer.reset()
     }
 
-    override fun isReady(delta: Float) = true // TODO
+    override fun isReady(delta: Float) = initTimer.isFinished()
+
+    override fun onReady() {
+        super.onReady()
+        game.audioMan.playMusic(MusicAsset.MM7_FINAL_BOSS_LOOP_MUSIC, true)
+    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -161,7 +172,9 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (!ready) return@add
+            initTimer.update(delta)
+            if (!initTimer.isFinished()) return@add
+
             if (defeated) {
                 explodeOnDefeat(delta)
                 return@add
@@ -307,7 +320,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setCenter(body.getCenter())
-            sprite.hidden = damageBlink || !ready
+            sprite.hidden = damageBlink || !initTimer.isFinished()
         }
         return spritesComponent
     }
