@@ -1,5 +1,5 @@
 Megaman_BUSTER.png
-size: 512, 528
+size: 240, 1248
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -12,357 +12,357 @@ AirDash
   index: -1
 AirDashCharging
   rotate: false
-  xy: 192, 96
+  xy: 80, 0
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 AirDashHalfCharging
   rotate: false
-  xy: 288, 96
+  xy: 0, 48
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 Beam
   rotate: false
-  xy: 80, 0
+  xy: 96, 48
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 BeamLand
   rotate: false
-  xy: 384, 96
+  xy: 144, 48
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 Cartin
   rotate: false
-  xy: 0, 144
+  xy: 0, 96
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 Cartin_Damaged
   rotate: false
-  xy: 96, 384
+  xy: 96, 96
   size: 144, 48
   orig: 144, 48
   offset: 0, 0
   index: -1
 Cartin_FullyCharged
   rotate: false
-  xy: 96, 144
+  xy: 0, 144
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 Cartin_HalfCharged
   rotate: false
-  xy: 192, 144
+  xy: 96, 144
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 Cartin_Jump
   rotate: false
-  xy: 128, 0
+  xy: 192, 144
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Cartin_JumpFullyCharged
   rotate: false
-  xy: 288, 144
+  xy: 0, 192
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 Cartin_JumpHalfCharged
   rotate: false
-  xy: 384, 144
+  xy: 96, 192
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 Cartin_JumpShoot
   rotate: false
-  xy: 176, 0
+  xy: 192, 192
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Cartin_Shoot
   rotate: false
-  xy: 224, 0
+  xy: 0, 240
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Climb
   rotate: false
-  xy: 0, 192
+  xy: 48, 240
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 ClimbCharging
   rotate: false
-  xy: 96, 192
-  size: 96, 48
-  orig: 96, 48
+  xy: 48, 960
+  size: 96, 96
+  orig: 96, 96
   offset: 0, 0
   index: -1
 ClimbHalfCharging
   rotate: false
-  xy: 192, 192
-  size: 96, 48
-  orig: 96, 48
+  xy: 144, 960
+  size: 96, 96
+  orig: 96, 96
   offset: 0, 0
   index: -1
 ClimbShoot
   rotate: false
-  xy: 272, 0
+  xy: 144, 240
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Damaged
   rotate: false
-  xy: 192, 480
+  xy: 0, 288
   size: 240, 48
   orig: 240, 48
   offset: 0, 0
   index: -1
 FinishClimb
   rotate: false
-  xy: 320, 0
+  xy: 0, 336
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 FinishClimbCharging
   rotate: false
-  xy: 288, 192
+  xy: 48, 336
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 FinishClimbHalfCharging
   rotate: false
-  xy: 384, 192
+  xy: 144, 336
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 Frozen
   rotate: false
-  xy: 368, 0
+  xy: 0, 384
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 GroundSlide
   rotate: false
-  xy: 416, 0
+  xy: 48, 384
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 GroundSlideCharging
   rotate: false
-  xy: 0, 240
+  xy: 96, 384
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 GroundSlideHalfCharging
   rotate: false
-  xy: 96, 240
+  xy: 0, 432
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 GroundSlideShoot
   rotate: false
-  xy: 464, 0
+  xy: 96, 432
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 InitRun
   rotate: false
-  xy: 0, 48
+  xy: 144, 432
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 InitRunCharging
   rotate: false
-  xy: 48, 48
+  xy: 192, 432
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 InitRunHalfCharging
   rotate: false
-  xy: 96, 48
+  xy: 0, 480
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Jump
   rotate: false
-  xy: 144, 48
+  xy: 48, 480
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 JumpCharging
   rotate: false
-  xy: 192, 240
+  xy: 96, 480
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 JumpHalfCharging
   rotate: false
-  xy: 288, 240
+  xy: 0, 528
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 JumpShoot
   rotate: false
-  xy: 192, 48
+  xy: 96, 528
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 OnFire
   rotate: false
-  xy: 384, 240
+  xy: 144, 528
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 Run
   rotate: false
-  xy: 240, 384
+  xy: 0, 576
   size: 192, 48
   orig: 192, 48
   offset: 0, 0
   index: -1
 RunCharging
   rotate: false
-  xy: 0, 432
-  size: 192, 48
-  orig: 192, 48
+  xy: 0, 1056
+  size: 192, 96
+  orig: 192, 96
   offset: 0, 0
   index: -1
 RunHalfCharging
   rotate: false
-  xy: 192, 432
-  size: 192, 48
-  orig: 192, 48
+  xy: 0, 1152
+  size: 192, 96
+  orig: 192, 96
   offset: 0, 0
   index: -1
 RunShoot
   rotate: false
-  xy: 0, 480
+  xy: 0, 624
   size: 192, 48
   orig: 192, 48
   offset: 0, 0
   index: -1
 SlipSlide
   rotate: false
-  xy: 240, 48
+  xy: 192, 624
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 SlipSlideCharging
   rotate: false
-  xy: 0, 288
+  xy: 0, 672
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 SlipSlideHalfCharging
   rotate: false
-  xy: 96, 288
+  xy: 96, 672
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 SlipSlideShoot
   rotate: false
-  xy: 288, 48
+  xy: 192, 672
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Stand
   rotate: false
-  xy: 192, 288
+  xy: 0, 720
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 StandCharging
   rotate: false
-  xy: 288, 288
+  xy: 96, 720
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 StandHalfCharging
   rotate: false
-  xy: 384, 288
+  xy: 0, 768
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 StandShoot
   rotate: false
-  xy: 336, 48
+  xy: 96, 768
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 StandThrow
   rotate: false
-  xy: 384, 48
+  xy: 144, 768
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 StillClimb
   rotate: false
-  xy: 432, 48
+  xy: 192, 768
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 StillClimbCharging
   rotate: false
-  xy: 0, 336
+  xy: 0, 816
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 StillClimbHalfCharging
   rotate: false
-  xy: 96, 336
+  xy: 96, 816
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 Swim
   rotate: false
-  xy: 0, 96
+  xy: 192, 816
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -376,49 +376,49 @@ SwimAttack
   index: -1
 SwimCharging
   rotate: false
-  xy: 192, 336
+  xy: 0, 864
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 SwimHalfCharging
   rotate: false
-  xy: 288, 336
+  xy: 96, 864
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 SwimShoot
   rotate: false
-  xy: 48, 96
+  xy: 192, 864
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 WallSlide
   rotate: false
-  xy: 96, 96
+  xy: 0, 912
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 WallSlideCharging
   rotate: false
-  xy: 384, 336
+  xy: 48, 912
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 WallSlideHalfCharging
   rotate: false
-  xy: 0, 384
+  xy: 144, 912
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 WallSlideShoot
   rotate: false
-  xy: 144, 96
+  xy: 0, 960
   size: 48, 48
   orig: 48, 48
   offset: 0, 0

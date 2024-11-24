@@ -1,4 +1,4 @@
-package com.megaman.maverick.game.entities.megaman.decorations
+package com.megaman.maverick.game.entities.megaman.sprites
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.ObjectMap
