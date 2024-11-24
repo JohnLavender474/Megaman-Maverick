@@ -22,6 +22,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_SPRITE_SIZE
 import com.megaman.maverick.game.events.EventType
 import java.util.*
 
@@ -32,7 +33,7 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
         const val TAG = "PlayerSpawnEventHandler"
         private const val PRE_BEAM_DUR = 1f
         private const val BEAM_DOWN_DUR = 0.5f
-        private const val BEAM_TRANS_DUR = 0.2f
+        private const val BEAM_TRANS_DUR = 0.35f
         private const val BLINK_READY_DUR = 0.125f
     }
 
@@ -57,16 +58,15 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
     private var blinkReady = false
 
     override fun init() {
-        GameLogger.debug(TAG, "Initializing...")
+        GameLogger.debug(TAG, "init()")
         if (!initialized) {
-            GameLogger.debug(TAG, "First time initializing...")
             val atlas = game.assMan.getTextureAtlas(TextureAsset.MEGAMAN_BUSTER.source)
 
             beamRegion = atlas.findRegion("Beam")
             beamSprite = Sprite(beamRegion)
-            beamSprite.setSize(1.5f * ConstVals.PPM)
+            beamSprite.setSize(MEGAMAN_SPRITE_SIZE * ConstVals.PPM)
 
-            beamLandAnimation = Animation(atlas.findRegion("BeamLand"), 1, 2, 0.1f, false)
+            beamLandAnimation = Animation(atlas.findRegion("Spawn"), 1, 7, 0.05f, false)
 
             ready =
                 BitmapFontHandle(
@@ -97,7 +97,7 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
         megaman.body.physics.gravityOn = false
         megaman.setAllBehaviorsAllowed(false)
 
-        GameLogger.debug(TAG, "Submitted PLAYER_SPAWN event")
+        GameLogger.debug(TAG, "init(): submit PLAYER_SPAWN event")
         game.eventsMan.submitEvent(Event(EventType.PLAYER_SPAWN))
         game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
 
@@ -147,7 +147,7 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
     private fun preBeam(delta: Float) {
         preBeamTimer.update(delta)
         if (preBeamTimer.isJustFinished()) {
-            GameLogger.debug(TAG, "Pre-beam timer just finished")
+            GameLogger.debug(TAG, "preBeam(): pre-beam timer just finished")
             beamSprite.setRegion(beamRegion)
         }
     }
@@ -168,7 +168,7 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
         beamSprite.setRegion(beamLandAnimation.getCurrentRegion())
 
         if (beamTransitionTimer.isJustFinished()) {
-            GameLogger.debug(TAG, "Beam transition timer just finished")
+            GameLogger.debug(TAG, "beamTrans(): beam transition timer just finished")
 
             megaman.body.physics.gravityOn = true
             megaman.canBeDamaged = true

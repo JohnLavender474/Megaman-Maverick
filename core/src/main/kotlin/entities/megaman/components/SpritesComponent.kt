@@ -17,6 +17,7 @@ import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.isSensing
 
+const val MEGAMAN_SPRITE_SIZE = 2.5f
 const val GROUND_SLIDE_SPRITE_OFFSET_Y = 0.1f
 
 fun Megaman.getSpriteDirection() =
@@ -78,7 +79,7 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
     val spritesComponent = SpritesComponent()
 
     val megamanSprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
-    megamanSprite.setSize(2.5f * ConstVals.PPM)
+    megamanSprite.setSize(MEGAMAN_SPRITE_SIZE * ConstVals.PPM)
     spritesComponent.sprites.put("megaman", megamanSprite)
     spritesComponent.putUpdateFunction("megaman") { _, player ->
         val direction = getSpriteDirection()
