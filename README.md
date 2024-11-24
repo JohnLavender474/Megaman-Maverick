@@ -35,6 +35,10 @@ comprehensive listing of the credits for the artwork used in this game.
 - Megaman Title - [Mister Mike](https://www.spriters-resource.com/fullview/258/)
 - Megaman Weapon Get Sprite - [PixelBoy127](https://www.spriters-resource.com/custom_edited/megamancustoms/sheet/166239/)
 
+#### Megaman
+- Megaman compiled spritesheet - [MetroidPeter](https://www.deviantart.com/metroidpeter/art/Compiled-Mega-Man-Sprite-Sheet-634443594) 
+- Megaman airdash sprite - [IceLucario20XX](https://www.deviantart.com/icelucario20xx/art/Megaman-Dash-sprite-gb-to-nes-600445794)
+
 #### Robot Masters
 
 - Timber Woman spritesheet & mugshot- [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/TimberWoman-Megaman-Maverick-1087794591)

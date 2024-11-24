@@ -1,7 +1,7 @@
 MegamanTrailSprite.png
 size: 144, 48
 format: RGBA8888
-filter: Linear,Linear
+filter: Nearest,Nearest
 repeat: none
 air_dash
   rotate: false
