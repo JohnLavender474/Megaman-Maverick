@@ -632,7 +632,7 @@ class MegaLevelScreen(
         if (!game.paused) {
             spawnsMan.update(delta / 2f)
             spawns.addAll(spawnsMan.getSpawnsAndClear())
-            if (playerSpawnEventHandler.finished && !cameraManagerForRooms.transitioning) {
+            if (/* TODO: playerSpawnEventHandler.finished && */ !cameraManagerForRooms.transitioning) {
                 playerSpawnsMan.run()
                 spawns.forEach { spawn -> engine.spawn(spawn.entity, spawn.properties) }
                 spawns.clear()

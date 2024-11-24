@@ -213,7 +213,6 @@
             </struct>
             <key type="filename">../frames/Megaman/AirDashCharging.png</key>
             <key type="filename">../frames/Megaman/AirDashHalfCharging.png</key>
-            <key type="filename">../frames/Megaman/BeamLand.png</key>
             <key type="filename">../frames/Megaman/Cartin.png</key>
             <key type="filename">../frames/Megaman/Cartin_FullyCharged.png</key>
             <key type="filename">../frames/Megaman/Cartin_HalfCharged.png</key>
@@ -299,6 +298,21 @@
                 <rect>48,12,96,24</rect>
                 <key>scale9Paddings</key>
                 <rect>48,12,96,24</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Megaman/Spawn.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>84,12,168,24</rect>
+                <key>scale9Paddings</key>
+                <rect>84,12,168,24</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
