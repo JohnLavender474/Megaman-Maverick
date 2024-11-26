@@ -299,6 +299,7 @@ object ConstKeys {
     const val VELOCITY_ALTERATION = "velocity_alteration"
     const val LADDER = "ladder"
     const val HEALTH = "health"
+    const val COLLIDE_BODY = "${COLLIDE}_${BODY}"
 }
 
 object ConstFuncs {

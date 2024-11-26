@@ -16,8 +16,6 @@ class MegaCollisionHandler(private val game: MegamanMaverickGame) : ICollisionHa
     private fun trySpecialCollission(body1: Body, body2: Body): Boolean {
         if (!body1.physics.collisionOn || !body2.physics.collisionOn) return true
 
-        val megaman = game.megaman
-
         val staticBody: Body
         val dynamicBody: Body
 
@@ -30,6 +28,8 @@ class MegaCollisionHandler(private val game: MegamanMaverickGame) : ICollisionHa
         } else return false
 
         if (staticBody.hasBlockFilter(dynamicBody.getEntity().getTag().uppercase())) return true
+
+        val megaman = game.megaman
 
         if (staticBody.hasBodyLabel(BodyLabel.PRESS_UP_FALL_THRU) &&
             dynamicBody == megaman.body &&

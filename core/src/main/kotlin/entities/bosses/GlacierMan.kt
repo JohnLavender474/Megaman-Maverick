@@ -45,7 +45,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.MegaGameEntitiesMap
+import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
@@ -174,12 +174,12 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         iceBlastLeftHand = false
 
         val wall1Id = spawnProps.get("${ConstKeys.WALL}_1", Int::class)!!
-        val wall1 = MegaGameEntitiesMap.getEntitiesOfMapObjectId(wall1Id).firstOrNull()
+        val wall1 = MegaGameEntities.getEntitiesOfMapObjectId(wall1Id).firstOrNull()
         if (wall1 != null && wall1 is Block) walls.add(wall1)
         else GameLogger.error(TAG, "onSpawn(): no wall block 1 found for id $wall1Id; wall 1 = $wall1")
 
         val wall2Id = spawnProps.get("${ConstKeys.WALL}_2", Int::class)!!
-        val wall2 = MegaGameEntitiesMap.getEntitiesOfMapObjectId(wall2Id).firstOrNull()
+        val wall2 = MegaGameEntities.getEntitiesOfMapObjectId(wall2Id).firstOrNull()
         if (wall2 != null && wall2 is Block) walls.add(wall2)
         else GameLogger.error(TAG, "onSpawn(): no wall block 2 found for id $wall2Id; wall 2 = $wall2")
 
