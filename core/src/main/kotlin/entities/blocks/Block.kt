@@ -129,17 +129,37 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
         body.clearBlockFilters()
         if (spawnProps.containsKey(ConstKeys.BLOCK_FILTERS)) {
-            val filters = spawnProps.get(ConstKeys.BLOCK_FILTERS)
+            var filters = spawnProps.get(ConstKeys.BLOCK_FILTERS)
             if (filters is String) {
-                val filterStrings = filters.replace("\\s+", "").split(",")
-                filterStrings.forEach { body.addBlockFilter(it.uppercase()) }
+                filters = filters.replace("\\s+", "").split(",")
+                filters.forEach { tag ->
+                    body.addBlockFilter { entity, _ ->
+                        entity.getTag().uppercase() == tag.uppercase()
+                    }
+                }
+            } else if (filters is Iterable<*>) {
+                try {
+                    filters as Iterable<String>
+                    filters.forEach { tag ->
+                        body.addBlockFilter { entity, _ ->
+                            entity.getTag().uppercase() == tag.uppercase()
+                        }
+                    }
+                } catch (e: Exception) {
+                    GameLogger.debug(TAG, "onSpawn(): e=$e")
+                    filters as Iterable<(MegaGameEntity, MegaGameEntity) -> Boolean>
+                    filters.forEach { filter -> body.addBlockFilter(filter) }
+                }
             } else {
-                filters as ObjectSet<String>
-                filters.forEach { body.addBlockFilter(it.uppercase()) }
+                val filter = filters as (MegaGameEntity, MegaGameEntity) -> Boolean
+                body.addBlockFilter(filter)
             }
         }
 
-        draw = spawnProps.getOrDefault(ConstKeys.DRAW, true, Boolean::class)
+        draw = spawnProps.getOrDefault(
+            ConstKeys.DRAW, true, Boolean::
+            class
+        )
 
         val owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
         if (owner == null) removeProperty(ConstKeys.OWNER) else putProperty(ConstKeys.OWNER, owner)

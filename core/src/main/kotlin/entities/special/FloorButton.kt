@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.special
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
@@ -11,6 +12,7 @@ import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.audio.AudioComponent
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
@@ -51,9 +53,9 @@ import com.megaman.maverick.game.entities.megaman.components.feetFixture
 import com.megaman.maverick.game.entities.megaman.components.headFixture
 import com.megaman.maverick.game.entities.megaman.components.leftSideFixture
 import com.megaman.maverick.game.entities.megaman.components.rightSideFixture
-import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.setHitByBlockReceiver
@@ -72,11 +74,13 @@ class FloorButton(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
     private val pushableBlocks = OrderedSet<PushableBlock>()
     private val switchTimer = Timer(SWITCH_DUR)
     private lateinit var state: FloorButtonState
+    private lateinit var spawnRoom: String
     private var key = -1
 
     private val reusableArrayOfShapes = Array<IGameShape2D>()
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)
             gdxArrayOf("down", "switch", "up").forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
@@ -91,28 +95,34 @@ class FloorButton(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
 
+        spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)!!
         key = spawnProps.get(ConstKeys.KEY, Int::class)!!
         state = FloorButtonState.UP
         switchTimer.setToEnd()
     }
 
     override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
         deactivate()
+        pushableBlocks.clear()
     }
 
     private fun activate() {
+        GameLogger.debug(TAG, "activate()")
         switchTimer.reset()
         state = FloorButtonState.SWITCH_TO_DOWN
         game.eventsMan.submitEvent(Event(EventType.ACTIVATE_SWITCH, props(ConstKeys.KEY pairTo key)))
     }
 
     private fun deactivate() {
+        GameLogger.debug(TAG, "deactivate()")
         switchTimer.reset()
         state = FloorButtonState.SWITCH_TO_UP
         game.eventsMan.submitEvent(Event(EventType.DEACTIVATE_SWITCH, props(ConstKeys.KEY pairTo key)))
@@ -124,9 +134,11 @@ class FloorButton(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
 
     private fun defineCullablesComponent() = CullablesComponent(
         objectMapOf(
-            ConstKeys.CULL_OUT_OF_BOUNDS pairTo getGameCameraCullingLogic(this),
             ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(
-                this, objectSetOf(EventType.END_ROOM_TRANS)
+                this, objectSetOf(EventType.END_ROOM_TRANS), { event ->
+                    val room = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!.name
+                    room != spawnRoom
+                }
             )
         )
     )

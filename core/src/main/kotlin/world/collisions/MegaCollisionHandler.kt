@@ -27,7 +27,10 @@ class MegaCollisionHandler(private val game: MegamanMaverickGame) : ICollisionHa
             dynamicBody = body1
         } else return false
 
-        if (staticBody.hasBlockFilter(dynamicBody.getEntity().getTag().uppercase())) return true
+        val filters = staticBody.getBlockFilters()
+        if (filters != null &&
+            filters.any { it.invoke(dynamicBody.getEntity(), staticBody.getEntity()) }
+        ) return true
 
         val megaman = game.megaman
 

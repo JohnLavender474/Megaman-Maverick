@@ -1,7 +1,7 @@
 package com.megaman.maverick.game.world.body
 
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.utils.ObjectSet
+import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.world.body.Body
 import com.megaman.maverick.game.ConstKeys
@@ -20,17 +20,19 @@ fun Body.getPositionDelta(): Vector2 {
     return current.sub(prior)
 }
 
-fun Body.getBlockFilters(): ObjectSet<String> {
-    var filters = getProperty(ConstKeys.BLOCK_FILTERS) as ObjectSet<String>?
-    if (filters == null) {
-        filters = ObjectSet<String>()
-        putProperty(ConstKeys.BLOCK_FILTERS, filters)
-    }
-    return filters
+fun Body.hasBlockFilters(): Boolean {
+    val filters = getBlockFilters()
+    return filters != null && !filters.isEmpty
 }
 
-fun Body.addBlockFilter(key: String) = getBlockFilters().add(key)
+fun Body.getBlockFilters(): Array<(dynamic: MegaGameEntity, static: MegaGameEntity) -> Boolean>? =
+    getProperty(ConstKeys.BLOCK_FILTERS) as Array<(MegaGameEntity, MegaGameEntity) -> Boolean>?
 
-fun Body.hasBlockFilter(key: String) = getBlockFilters().contains(key)
+fun Body.addBlockFilter(filter: (dynamic: MegaGameEntity, static: MegaGameEntity) -> Boolean) {
+    if (!hasBlockFilters()) putProperty(
+        ConstKeys.BLOCK_FILTERS, Array<(dynamic: MegaGameEntity, static: MegaGameEntity) -> Boolean>()
+    )
+    getBlockFilters()!!.add(filter)
+}
 
-fun Body.clearBlockFilters() = putProperty(ConstKeys.BLOCK_FILTERS, ObjectSet<String>())
+fun Body.clearBlockFilters() = removeProperty(ConstKeys.BLOCK_FILTERS)

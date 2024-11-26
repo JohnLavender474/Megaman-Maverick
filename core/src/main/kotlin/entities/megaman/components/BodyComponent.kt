@@ -118,12 +118,12 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
 
     body.preProcess.put(ConstKeys.DEFAULT, Updatable {
         (damageableFixture.rawShape as GameRectangle).let {
-            it.setSize(
-                (when {
-                    isBehaviorActive(BehaviorType.GROUND_SLIDING) -> Vector2(1.25f, 0.75f)
-                    else -> Vector2(0.75f, 1.25f)
-                }).scl(ConstVals.PPM.toFloat())
-            )
+            val size = when {
+                isBehaviorActive(BehaviorType.GROUND_SLIDING) -> Vector2(1.25f, 0.75f)
+                else -> Vector2(0.75f, 1.25f)
+            }
+            it.setSize(size.scl(ConstVals.PPM.toFloat()))
+
             val position = DirectionPositionMapper.getInvertedPosition(directionRotation)
             it.positionOnPoint(body.getPositionPoint(position), position)
         }

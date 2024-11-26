@@ -2,8 +2,10 @@ package com.megaman.maverick.game.entities.blocks
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
@@ -41,6 +43,7 @@ import com.megaman.maverick.game.entities.megaman.components.leftSideFixture
 import com.megaman.maverick.game.entities.megaman.components.rightSideFixture
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.world.body.*
 
 class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, ICullableEntity {
@@ -57,9 +60,13 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    private var block: Block? = null
+    var block: Block? = null
+        private set
+
+    private lateinit var spawnRoom: String
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
             gdxArrayOf("MetalCrate").forEach {
@@ -74,6 +81,7 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
@@ -83,19 +91,39 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         block!!.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
-                ConstKeys.BLOCK_FILTERS pairTo TAG,
                 ConstKeys.FIXTURE_LABELS pairTo objectSetOf(FixtureLabel.NO_SIDE_TOUCHIE),
                 ConstKeys.BOUNDS pairTo GameRectangle().setSize(
                     BODY_WIDTH * ConstVals.PPM, BODY_HEIGHT * ConstVals.PPM
                 ),
+                ConstKeys.BLOCK_FILTERS pairTo { entity: MegaGameEntity, block: MegaGameEntity ->
+                    blockFilter(entity, block)
+                },
             )
         )
+
+        spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)!!
+    }
+
+    private fun blockFilter(entity: MegaGameEntity, block: MegaGameEntity) =
+        entity == this && block == this.block
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
     }
 
     private fun defineCullablesComponent() = CullablesComponent(
         objectMapOf(
             ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(
-                this, objectSetOf(EventType.END_ROOM_TRANS)
+                this, objectSetOf(EventType.END_ROOM_TRANS), { event ->
+                    val room = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!.name
+                    val cull = room != spawnRoom
+                    GameLogger.debug(
+                        TAG,
+                        "defineCullablesComponent(): currentRoom=$room, spawnRoom=$spawnRoom, cull=$cull"
+                    )
+                    cull
+                }
             )
         )
     )
@@ -149,7 +177,7 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
     }
 
     private fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0))
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setRegion(regions["MetalCrate"])
