@@ -63,7 +63,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
     override val eventKeyMask =
         objectSetOf<Any>(EventType.PLAYER_SPAWN, EventType.END_ROOM_TRANS, EventType.MINI_BOSS_DEAD)
 
-    lateinit var gateState: GateState
+    lateinit var state: GateState
         private set
     lateinit var direction: Direction
         private set
@@ -138,45 +138,45 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
     override fun reset() {
         timer.reset()
         transitionFinished = false
-        gateState = GateState.OPENABLE
+        state = GateState.OPENABLE
         triggerable = !miniBossGate
     }
 
     fun trigger() {
         if (!triggerable) return
-        gateState = GateState.OPENING
+        state = GateState.OPENING
         playSoundNow(SoundAsset.BOSS_DOOR_SOUND, false)
         game.eventsMan.submitEvent(Event(EventType.GATE_INIT_OPENING))
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
-        if (gateState == GateState.OPENING) {
+        if (state == GateState.OPENING) {
             timer.update(it)
             if (timer.isFinished()) {
                 GameLogger.debug(TAG, "update(): OPEN")
                 timer.reset()
-                gateState = GateState.OPEN
+                state = GateState.OPEN
                 game.eventsMan.submitEvent(Event(EventType.GATE_FINISH_OPENING))
                 game.eventsMan.submitEvent(Event(EventType.NEXT_ROOM_REQ, props(ConstKeys.ROOM pairTo nextRoomKey)))
             }
         }
 
-        if (gateState == GateState.OPEN) {
+        if (state == GateState.OPEN) {
             if (transitionFinished) {
                 GameLogger.debug(TAG, "update(): CLOSING")
                 transitionFinished = false
-                gateState = GateState.CLOSING
+                state = GateState.CLOSING
                 if (showCloseEvent) requestToPlaySound(SoundAsset.BOSS_DOOR_SOUND, false)
                 game.eventsMan.submitEvent(Event(EventType.GATE_INIT_CLOSING))
             }
         }
 
-        if (gateState == GateState.CLOSING) {
+        if (state == GateState.CLOSING) {
             timer.update(it)
             if (timer.isFinished()) {
                 GameLogger.debug(TAG, "update(): CLOSED")
                 timer.reset()
-                gateState = GateState.CLOSED
+                state = GateState.CLOSED
                 game.eventsMan.submitEvent(Event(EventType.GATE_FINISH_CLOSING))
             }
         }
@@ -223,7 +223,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.hidden =
-                gateState == GateState.OPEN || (gateState.equalsAny(
+                state == GateState.OPEN || (state.equalsAny(
                     GateState.CLOSING,
                     GateState.CLOSED
                 ) && !showCloseEvent)
@@ -239,7 +239,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier = {
-            when (gateState) {
+            when (state) {
                 GateState.OPENABLE, GateState.CLOSED -> "closed"
                 GateState.OPENING -> "opening"
                 GateState.OPEN -> null

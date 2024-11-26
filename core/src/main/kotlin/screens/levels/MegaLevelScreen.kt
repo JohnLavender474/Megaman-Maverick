@@ -52,7 +52,7 @@ import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.drawables.backgrounds.Background
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.MegaGameEntitiesMap
+import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -221,7 +221,7 @@ class MegaLevelScreen(
                 )
             )
 
-            MegaGameEntitiesMap.getEntitiesOfType(EntityType.ENEMY).forEach { it.destroy() }
+            MegaGameEntities.getEntitiesOfType(EntityType.ENEMY).forEach { it.destroy() }
 
             game.getSystem(BehaviorsSystem::class).on = false
             game.putProperty(ConstKeys.ROOM_TRANSITION, true)
@@ -365,7 +365,7 @@ class MegaLevelScreen(
                 engine.systems.forEach { it.on = true }
                 game.putProperty(ConstKeys.ROOM_TRANSITION, false)
 
-                MegaGameEntitiesMap.getEntitiesOfType(EntityType.ENEMY).forEach { game.engine.destroy(it) }
+                MegaGameEntities.getEntitiesOfType(EntityType.ENEMY).forEach { game.engine.destroy(it) }
 
                 GameLogger.debug(
                     TAG, "onEvent(): Player spawn --> spawn Megaman: ${playerSpawnsMan.currentSpawnProps!!}"
@@ -510,7 +510,7 @@ class MegaLevelScreen(
                 val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
                 if (!boss.mini) audioMan.unsetMusic()
 
-                MegaGameEntitiesMap.forEachEntity {
+                MegaGameEntities.forEachEntity {
                     if (it.isAny(IDamager::class, IHazard::class) && it != boss) it.destroy()
                 }
 

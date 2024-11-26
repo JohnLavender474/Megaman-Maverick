@@ -33,7 +33,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.MegaGameEntitiesMap
+import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.explosions.Explosion
@@ -240,8 +240,8 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
     private fun defineUpdatablesComponent() = UpdatablesComponent({
         val currentRoom = game.getCurrentRoom()
         if (currentRoom != null) {
-            MegaGameEntitiesMap.getEntitiesOfType(EntityType.PROJECTILE).forEach { t -> tryToLightUp(t) }
-            MegaGameEntitiesMap.getEntitiesOfType(EntityType.EXPLOSION).forEach { t -> tryToLightUp(t) }
+            MegaGameEntities.getEntitiesOfType(EntityType.PROJECTILE).forEach { t -> tryToLightUp(t) }
+            MegaGameEntities.getEntitiesOfType(EntityType.EXPLOSION).forEach { t -> tryToLightUp(t) }
 
             if (megaman().body.overlaps(bounds as Rectangle) && megaman().charging) {
                 val lightEvent = LightEvent(

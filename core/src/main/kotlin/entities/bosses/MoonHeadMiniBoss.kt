@@ -49,7 +49,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.MegaGameEntitiesMap
+import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
@@ -208,7 +208,7 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, dmgDurati
         val arcMotion2 = arcMotion1.copy()
         arcMotion2.arcFactor = -ARC_FACTOR
 
-        val blocks = MegaGameEntitiesMap.getEntitiesOfType(EntityType.BLOCK).map { it as Block }
+        val blocks = MegaGameEntities.getEntitiesOfType(EntityType.BLOCK).map { it as Block }
         val mockBody = GameRectangle(body)
 
         val totalDistance = body.getCenter().dst(target) * DISTANCE_FACTOR

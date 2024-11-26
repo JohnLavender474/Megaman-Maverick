@@ -177,7 +177,7 @@ class MegaContactListener(
             val entity = otherFixture.getEntity()
             if (entity is Megaman) {
                 val gate = gateFixture.getEntity() as Gate
-                if (gate.gateState == GateState.OPENABLE) gate.trigger()
+                if (gate.state == GateState.OPENABLE) gate.trigger()
             }
         }
 

@@ -6,7 +6,7 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.entities.GameEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.entities.MegaGameEntitiesMap
+import com.megaman.maverick.game.entities.MegaGameEntities
 
 abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEntity(game.engine), IMegaGameEntity {
 
@@ -21,13 +21,13 @@ abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEnti
         GameLogger.debug(TAG, "onSpawn(): ${this::class.simpleName}, spawnProps=$spawnProps")
         mapObjectId = spawnProps.getOrDefault(ConstKeys.ID, 0, Int::class)
         runnablesOnSpawn.values().forEach { it.invoke() }
-        MegaGameEntitiesMap.add(this)
+        MegaGameEntities.add(this)
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy(): ${this::class.simpleName}")
         runnablesOnDestroy.values().forEach { it.invoke() }
-        MegaGameEntitiesMap.remove(this)
+        MegaGameEntities.remove(this)
     }
 
     override fun getTag(): String = this::class.simpleName ?: ""

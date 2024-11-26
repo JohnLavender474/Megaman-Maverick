@@ -11,6 +11,7 @@ import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.IDrawableShapesEntity
@@ -139,6 +140,9 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         }
 
         draw = spawnProps.getOrDefault(ConstKeys.DRAW, true, Boolean::class)
+
+        val owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
+        if (owner == null) removeProperty(ConstKeys.OWNER) else putProperty(ConstKeys.OWNER, owner)
     }
 
     override fun onDestroy() {

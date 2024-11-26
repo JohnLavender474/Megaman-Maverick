@@ -51,7 +51,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.MegaGameEntitiesMap
+import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
@@ -567,7 +567,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         x = x.coerceIn(meteorSpawner.x, meteorSpawner.getMaxX())
         val spawn = Vector2(x, meteorSpawner.y)
         val trajectory = Vector2(0f, -METEOR_SPEED * ConstVals.PPM)
-        val floor = MegaGameEntitiesMap.getEntitiesOfMapObjectId(meteorCollideBlockId).first() as Block
+        val floor = MegaGameEntities.getEntitiesOfMapObjectId(meteorCollideBlockId).first() as Block
         val meteor = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.MAGMA_METEOR)!!
         meteor.spawn(
             props(

@@ -1,5 +1,5 @@
 Platforms1.png
-size: 946, 248
+size: 952, 248
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -253,6 +253,13 @@ Lift
   xy: 248, 0
   size: 16, 16
   orig: 16, 16
+  offset: 0, 0
+  index: -1
+MetalCrate
+  rotate: false
+  xy: 888, 184
+  size: 64, 64
+  orig: 64, 64
   offset: 0, 0
   index: -1
 Platform1_64x8
