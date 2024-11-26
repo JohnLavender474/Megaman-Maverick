@@ -50,6 +50,7 @@ import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 
@@ -122,7 +123,7 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         facing = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, "right", String::class).uppercase())
         speed = spawnProps.getOrDefault(ConstKeys.SPEED, 0f, Float::class)
         doCull = spawnProps.getOrDefault(ConstKeys.CULL, false, Boolean::class)
-        spawnRoom = spawnProps.get("${ConstKeys.SPAWN}_${ConstKeys.ROOM}", String::class)
+        spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)
 
         val moveX = spawnProps.getOrDefault("${ConstKeys.MOVE}_${ConstKeys.X}", 0f, Float::class)
         val moveY = spawnProps.getOrDefault("${ConstKeys.MOVE}_${ConstKeys.Y}", 0f, Float::class)

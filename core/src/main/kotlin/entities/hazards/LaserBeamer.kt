@@ -86,9 +86,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
         contactGlow.color = WHITE
         contactGlow.shapeType = Filled
 
-        addComponent(
-            DrawableShapesComponent(prodShapeSuppliers = gdxArrayOf({ contactGlow }))
-        )
+        addComponent(DrawableShapesComponent(prodShapeSuppliers = gdxArrayOf({ contactGlow })))
         addComponent(defineBodyComponent())
         addComponent(defineSpritesCompoent())
         addComponent(defineUpdatablesComponent())
@@ -98,7 +96,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
 
-        val spawn = (spawnProps.get(ConstKeys.BOUNDS) as GameRectangle).getCenter()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
         rotatingLine = RotatingLine(spawn, RADIUS * ConstVals.PPM, SPEED * ConstVals.PPM, INIT_DEGREES)
@@ -142,8 +140,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
         })
 
         body.postProcess.put(ConstKeys.DEFAULT, Updatable {
-            val end = if (contacts.isEmpty()) rotatingLine.getEndPoint()
-            else contacts.first()
+            val end = if (contacts.isEmpty()) rotatingLine.getEndPoint() else contacts.first()
             laser.setFirstLocalPoint(rotatingLine.getOrigin())
             laser.setSecondLocalPoint(end)
 
@@ -159,13 +156,12 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
     }
 
     private fun defineSpritesCompoent(): SpritesComponent {
-        val sprite = GameSprite()
+        val sprite = GameSprite(region!!)
         sprite.setSize(1.5f * ConstVals.PPM)
-        sprite.setRegion(region!!)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(rotatingLine.getOrigin(), Position.BOTTOM_CENTER)
-            _sprite.translateY(-0.06f * ConstVals.PPM)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setPosition(rotatingLine.getOrigin(), Position.BOTTOM_CENTER)
+            sprite.translateY(-0.06f * ConstVals.PPM)
         }
         return spritesComponent
     }

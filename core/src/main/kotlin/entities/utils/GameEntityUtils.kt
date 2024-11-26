@@ -18,6 +18,7 @@ import com.mega.game.engine.entities.GameEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.events.Event
 import com.mega.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.EntityType
@@ -49,10 +50,14 @@ fun getStandardEventCullingLogic(
     entity: ICullableEntity,
     cullEvents: ObjectSet<Any> = objectSetOf(
         EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING, EventType.PLAYER_SPAWN
-    )
+    ),
+    vararg additionalPredicates: (Event) -> Boolean
 ): CullableOnEvent {
     if (entity !is MegaGameEntity) throw IllegalArgumentException("Must be a MegaGameEntity: $entity")
-    val cullableOnEvents = CullableOnEvent({ event -> cullEvents.contains(event.key) }, cullEvents)
+    val cullableOnEvents = CullableOnEvent(
+        { event -> cullEvents.contains(event.key) && additionalPredicates.all { it.invoke(event) } },
+        cullEvents
+    )
     val eventsMan = entity.game.eventsMan
     entity.runnablesOnSpawn.put(ConstKeys.CULL_EVENTS) { eventsMan.addListener(cullableOnEvents) }
     entity.runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { eventsMan.removeListener(cullableOnEvents) }

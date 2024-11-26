@@ -143,7 +143,9 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable {
     }
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
-        if (blockFixture.getBody().hasBlockFilter(TAG)) return
+        val block = blockFixture.getEntity()
+        val filters = blockFixture.getBody().getBlockFilters()
+        if (filters != null && filters.any { it.invoke(this, block) }) return
         explodeAndDie()
     }
 

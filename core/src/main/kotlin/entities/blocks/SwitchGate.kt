@@ -1,7 +1,10 @@
 package com.megaman.maverick.game.entities.blocks
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.maps.objects.RectangleMapObject
+import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
+import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
@@ -14,7 +17,6 @@ import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -22,7 +24,6 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.IAudioEntity
-import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.events.Event
 import com.mega.game.engine.events.IEventListener
@@ -34,11 +35,10 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
 
 class SwitchGate(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity, IEventListener,
-    IAudioEntity, ICullableEntity {
+    IAudioEntity {
 
     companion object {
         const val TAG = "SwitchGate"
@@ -59,6 +59,9 @@ class SwitchGate(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnim
     private val closed: Boolean
         get() = state.equalsAny(SwitchGateState.CLOSING, SwitchGateState.CLOSED)
 
+    private val overlapRooms = ObjectSet<String>()
+    private val reusableRoomsArray = Array<RectangleMapObject>()
+
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.GATES.source)
@@ -68,7 +71,6 @@ class SwitchGate(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnim
             }
         }
         super.init()
-        addComponent(defineCullablesComponent())
         addComponent(defineUpdatablesComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
@@ -76,16 +78,29 @@ class SwitchGate(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnim
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
         super.onSpawn(spawnProps)
+
         game.eventsMan.addListener(this)
-        state = SwitchGateState.CLOSED
+
         switchTimer.setToEnd()
+        state = SwitchGateState.CLOSED
         key = spawnProps.get(ConstKeys.KEY, Int::class)!!
+
+        val rooms = game.getRooms(reusableRoomsArray)
+        rooms.forEach {
+            if (it.rectangle.overlaps(body)) {
+                val room = it.name
+                overlapRooms.add(room)
+            }
+        }
+        reusableRoomsArray.clear()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         game.eventsMan.removeListener(this)
+        overlapRooms.clear()
     }
 
     override fun onEvent(event: Event) {
@@ -96,7 +111,7 @@ class SwitchGate(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnim
                     state = SwitchGateState.OPENING
                     switchTimer.reset()
 
-                    requestToPlaySound(SoundAsset.BOSS_DOOR_SOUND, false)
+                    requestToPlaySwitchSound()
                 }
             }
 
@@ -106,10 +121,15 @@ class SwitchGate(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnim
                     state = SwitchGateState.CLOSING
                     switchTimer.reset()
 
-                    requestToPlaySound(SoundAsset.BOSS_DOOR_SOUND, false)
+                    requestToPlaySwitchSound()
                 }
             }
         }
+    }
+
+    private fun requestToPlaySwitchSound() {
+        val room = game.getCurrentRoom()?.name
+        if (overlapRooms.contains(room)) requestToPlaySound(SoundAsset.BOSS_DOOR_SOUND, false)
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -120,10 +140,6 @@ class SwitchGate(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnim
         }
         return bodyComponent
     }
-
-    private fun defineCullablesComponent() = CullablesComponent(
-        objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo getGameCameraCullingLogic(this))
-    )
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         if (state.equalsAny(SwitchGateState.OPENING, SwitchGateState.CLOSING)) {

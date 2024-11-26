@@ -9,10 +9,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
-import com.badlogic.gdx.utils.Disposable
-import com.badlogic.gdx.utils.ObjectMap
-import com.badlogic.gdx.utils.ObjectSet
-import com.badlogic.gdx.utils.OrderedMap
+import com.badlogic.gdx.maps.objects.RectangleMapObject
+import com.badlogic.gdx.utils.*
+import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.mega.game.engine.GameEngine
@@ -70,6 +69,7 @@ import com.megaman.maverick.game.controllers.MegaControllerPoller
 import com.megaman.maverick.game.controllers.ScreenController
 import com.megaman.maverick.game.controllers.loadButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
+import com.megaman.maverick.game.entities.blocks.PushableBlock
 import com.megaman.maverick.game.entities.blocks.SwitchGate
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -82,6 +82,7 @@ import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
 import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
+import com.megaman.maverick.game.screens.levels.map.layers.SpawnersLayerBuilder
 import com.megaman.maverick.game.screens.menus.*
 import com.megaman.maverick.game.screens.menus.bosses.BossIntroScreen
 import com.megaman.maverick.game.screens.menus.bosses.BossSelectScreen
@@ -117,7 +118,8 @@ class MegamanMaverickGame(
 
     companion object {
         const val TAG = "MegamanMaverickGame"
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(FloorButton.TAG, SwitchGate.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> =
+            objectSetOf(SpawnersLayerBuilder.TAG, PushableBlock.TAG, FloorButton.TAG, SwitchGate.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.TELEPORTER, FixtureType.TELEPORTER_LISTENER)
         }
@@ -190,14 +192,27 @@ class MegamanMaverickGame(
 
     fun <T : GameSystem> getSystem(clazz: KClass<T>) = clazz.cast(getSystems()[clazz.simpleName]!!)
 
-    fun setCurrentRoomSupplier(supplier: () -> String?) =
+    fun setRoomsSupplier(supplier: () -> Array<RectangleMapObject>?) =
+        properties.put("${ConstKeys.ROOMS}_${ConstKeys.SUPPLIER}", supplier)
+
+    fun getRooms(out: Array<RectangleMapObject>): Array<RectangleMapObject> {
+        if (properties.containsKey("${ConstKeys.ROOMS}_${ConstKeys.SUPPLIER}")) {
+            val supplier = properties.get("${ConstKeys.ROOMS}_${ConstKeys.SUPPLIER}") as () -> Array<RectangleMapObject>?
+            val rooms = supplier.invoke()
+            if (rooms != null) out.addAll(rooms)
+        }
+        return out
+    }
+
+    fun setCurrentRoomSupplier(supplier: () -> RectangleMapObject?) =
         properties.put("${ConstKeys.ROOM}_${ConstKeys.SUPPLIER}", supplier)
 
-    fun getCurrentRoom(): String? {
+    fun getCurrentRoom(): RectangleMapObject? {
         if (properties.containsKey("${ConstKeys.ROOM}_${ConstKeys.SUPPLIER}")) {
-            val supplier = properties.get("${ConstKeys.ROOM}_${ConstKeys.SUPPLIER}") as () -> String?
+            val supplier = properties.get("${ConstKeys.ROOM}_${ConstKeys.SUPPLIER}") as () -> RectangleMapObject?
             return supplier.invoke()
         }
+
         return null
     }
 

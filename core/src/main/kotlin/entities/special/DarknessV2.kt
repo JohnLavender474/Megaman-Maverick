@@ -176,7 +176,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
     override fun onEvent(event: Event) {
         when (event.key) {
             EventType.PLAYER_READY -> {
-                darkMode = rooms.contains(game.getCurrentRoom())
+                darkMode = rooms.contains(game.getCurrentRoom()?.name)
                 GameLogger.debug(TAG, "onEvent(): PLAYER_READY: darkMode=$darkMode")
             }
 
