@@ -27,18 +27,13 @@ import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.body.Body
-import com.mega.game.engine.world.body.BodyComponent
-import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.Fixture
+import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.entities.megaman.components.leftSideFixture
 import com.megaman.maverick.game.entities.megaman.components.rightSideFixture
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
@@ -53,16 +48,25 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         private const val DEFAULT_FRICTION_X = 5f
         private const val X_VEL_CLAMP = 8f
         private const val PUSH_IMPULSE = 10f
-        private const val GRAVITY = 0.375f
+        private const val PROJECTILE_IMPULSE = 5f
+        private const val GRAVITY = 0.25f
         private const val GROUND_GRAVITY = 0.01f
         private const val BODY_WIDTH = 2f
         private const val BODY_HEIGHT = 2f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    var block: Block? = null
-        private set
+    private inner class InnerBlock(game: MegamanMaverickGame, private val pushableBody: Body) : Block(game) {
 
+        override fun hitByProjectile(projectileFixture: IFixture) {
+            val projectileX = projectileFixture.getShape().getX()
+            var impulse = PROJECTILE_IMPULSE * ConstVals.PPM
+            if (projectileX > pushableBody.x) impulse *= -1f
+            pushableBody.physics.velocity.x += impulse
+        }
+    }
+
+    private var block: InnerBlock? = null
     private lateinit var spawnRoom: String
 
     override fun init() {
@@ -87,7 +91,7 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
         body.setBottomCenterToPoint(spawn)
 
-        block = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.STANDARD)!! as Block
+        block = InnerBlock(game, body)
         block!!.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
@@ -104,13 +108,15 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)!!
     }
 
-    private fun blockFilter(entity: MegaGameEntity, block: MegaGameEntity) =
-        entity == this && block == this.block
-
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+        block?.destroy()
+        block = null
     }
+
+    private fun blockFilter(entity: MegaGameEntity, block: MegaGameEntity) =
+        entity == this && block == this.block
 
     private fun defineCullablesComponent() = CullablesComponent(
         objectMapOf(
@@ -177,7 +183,7 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
     }
 
     private fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0))
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setRegion(regions["MetalCrate"])

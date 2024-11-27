@@ -581,7 +581,11 @@
     <property name="sensor" type="object" value="189"/>
    </properties>
   </object>
-  <object id="309" name="LaserBeamer" x="2392" y="1656" width="16" height="16"/>
+  <object id="309" name="Saw" x="2392" y="1656" width="16" height="16">
+   <properties>
+    <property name="type" value="p"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="6" name="sensors">
   <object id="2" name="Death" x="320" y="1488" width="352" height="112">
@@ -676,7 +680,7 @@
  </objectgroup>
  <objectgroup id="3" name="items"/>
  <objectgroup id="13" name="player">
-  <object id="310" name="0" x="2280" y="1696" width="32" height="32"/>
+  <object id="310" name="0" x="3552" y="1632" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="11" name="temp">
   <object id="14" name="0" x="96" y="1344" width="32" height="32"/>

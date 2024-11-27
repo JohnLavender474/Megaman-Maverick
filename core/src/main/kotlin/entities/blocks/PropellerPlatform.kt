@@ -40,7 +40,9 @@ class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity,
     override val eventKeyMask = objectSetOf<Any>(
         EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.END_ROOM_TRANS
     )
-    override var directionRotation = Direction.UP
+    override lateinit var directionRotation: Direction
+
+    var hidden = false
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -71,6 +73,8 @@ class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity,
             function = { value, _ -> body.physics.velocity.set(value) },
             onReset = { body.set(bounds) })
         putMotionDefinition(ConstKeys.TRAJECTORY, motionDefinition)
+
+        hidden = false
     }
 
     override fun onDestroy() {
@@ -83,11 +87,11 @@ class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity,
     override fun onEvent(event: Event) {
         when (event.key) {
             EventType.BEGIN_ROOM_TRANS -> {
-                firstSprite!!.hidden = true
+                hidden = true
                 resetMotionComponent()
             }
 
-            EventType.END_ROOM_TRANS -> firstSprite!!.hidden = false
+            EventType.END_ROOM_TRANS -> hidden = false
             EventType.PLAYER_SPAWN -> resetMotionComponent()
         }
     }
@@ -96,9 +100,9 @@ class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity,
         val sprite = GameSprite()
         sprite.setSize(1.05f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation?.rotation ?: 0f
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setOriginCenter()
+            sprite.rotation = directionRotation.rotation
             val position = when (directionRotation) {
                 Direction.UP -> Position.TOP_CENTER
                 Direction.DOWN -> Position.BOTTOM_CENTER
@@ -106,7 +110,8 @@ class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity,
                 Direction.RIGHT -> Position.CENTER_RIGHT
             }
             val bodyPosition = body.getPositionPoint(position)
-            _sprite.setPosition(bodyPosition, position)
+            sprite.setPosition(bodyPosition, position)
+            sprite.hidden = hidden
         }
         return spritesComponent
     }
