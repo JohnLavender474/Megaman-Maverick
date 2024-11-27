@@ -34,8 +34,11 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
     lateinit var blockFixture: Fixture
         private set
+
     var draw = true
+
     protected val debugShapeSuppliers = Array<() -> IDrawableShape?>()
+
     private val fixturesToRemove = ObjectSet<Fixture>()
 
     override fun init() {

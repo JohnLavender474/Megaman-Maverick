@@ -75,7 +75,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
     override fun getEntityType() = EntityType.HAZARD
 
     override fun init() {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, "LaserBeamer")
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
 
         laser = GameLine()
         laser.thickness = THICKNESS
@@ -86,7 +86,13 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
         contactGlow.color = WHITE
         contactGlow.shapeType = Filled
 
-        addComponent(DrawableShapesComponent(prodShapeSuppliers = gdxArrayOf({ contactGlow })))
+        addComponent(
+            DrawableShapesComponent(
+                prodShapeSuppliers = gdxArrayOf({ contactGlow }),
+                debugShapeSuppliers = gdxArrayOf({ rotatingLine.line }),
+                debug = true
+            )
+        )
         addComponent(defineBodyComponent())
         addComponent(defineSpritesCompoent())
         addComponent(defineUpdatablesComponent())
@@ -108,7 +114,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
         laserFixture.putProperty(ConstKeys.COLLECTION, contacts)
 
         contactTimer.reset()
-        switchTimer.setToEnd()
+        switchTimer.reset()
     }
 
     override fun getTag() = TAG
@@ -125,12 +131,12 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameLine())
         damagerFixture.attachedToBody = false
         body.addFixture(damagerFixture)
-        addProdShapeSupplier { damagerFixture.getShape() }
+        // addProdShapeSupplier { damagerFixture.getShape() }
 
         val shieldFixture = Fixture(
-            body, FixtureType.SHIELD, GameRectangle().setSize(ConstVals.PPM.toFloat(), ConstVals.PPM * 0.85f)
+            body, FixtureType.SHIELD, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.85f * ConstVals.PPM)
         )
-        shieldFixture.offsetFromBodyCenter.y = ConstVals.PPM / 2f
+        shieldFixture.offsetFromBodyCenter.y = 0.5f * ConstVals.PPM
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
         body.addFixture(shieldFixture)
 
@@ -140,9 +146,13 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
         })
 
         body.postProcess.put(ConstKeys.DEFAULT, Updatable {
+            /*
+            laser.set(rotatingLine.line)
+
             val end = if (contacts.isEmpty()) rotatingLine.getEndPoint() else contacts.first()
-            laser.setFirstLocalPoint(rotatingLine.getOrigin())
             laser.setSecondLocalPoint(end)
+
+            laser.rotation = rotatingLine.degrees
 
             GameLogger.debug(TAG, "[postProcess] Laser = $laser. End point = $end. Contacts = $contacts")
 
@@ -150,6 +160,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
             damagerFixture.rawShape = laser
 
             contactGlow.setCenter(end.x, end.y)
+             */
         })
 
         return BodyComponentCreator.create(this, body)
@@ -175,15 +186,6 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
         if (contactIndex > 2) contactIndex = 0
         contactGlow.setRadius(CONTACT_RADII[contactIndex])
 
-        /*
-        val end =
-            if (contacts.isEmpty()) rotatingLine.getEndPoint()
-            else contacts.first()
-        contacts.clear()
-        laser.setFirstLocalPoint(rotatingLine.getOrigin())
-        laser.setSecondLocalPoint(end)
-         */
-
         switchTimer.update(it)
         if (!switchTimer.isFinished()) return@UpdatablesComponent
 
@@ -192,6 +194,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
             var speed = SPEED * ConstVals.PPM
             if (clockwise) speed *= -1f
             rotatingLine.speed = speed
+
             GameLogger.debug(TAG, "update: switchTimer.isJustFinished(), clockwise = $clockwise")
         }
 

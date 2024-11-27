@@ -82,10 +82,14 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                         predicate = { event ->
                             val currentRoom = game.getCurrentRoom()?.name
                             val shouldSpawn = currentRoom == roomName
-                            GameLogger.debug(TAG, "build(): entity=${it.name}, shouldSpawn=$shouldSpawn")
+                            GameLogger.debug(
+                                TAG,
+                                "build(): entity=${it.name}, shouldSpawn=$shouldSpawn, " +
+                                    "entityRoom=$roomName, megamanRoom=$currentRoom"
+                            )
                             shouldSpawn
                         },
-                        eventKeyMask = objectSetOf<Any>(EventType.END_ROOM_TRANS),
+                        eventKeyMask = objectSetOf<Any>(EventType.PLAYER_READY, EventType.END_ROOM_TRANS),
                         spawnSupplier = spawnSupplier
                     )
                     spawners.add(spawner)
@@ -99,7 +103,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
 
                     val eventNames = (spawnProps.get(ConstKeys.EVENTS) as String).split(",")
                     eventNames.forEach { eventName ->
-                        val eventType = EventType.valueOf(eventName)
+                        val eventType = EventType.valueOf(eventName.uppercase())
                         events.add(eventType)
                     }
 
