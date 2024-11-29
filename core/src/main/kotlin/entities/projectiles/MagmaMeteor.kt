@@ -15,7 +15,6 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.IGameShape2D
-import com.mega.game.engine.common.shapes.getCenter
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -38,10 +37,9 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodyFixtureDef
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getEntity
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.toGdxRectangle
+import com.megaman.maverick.game.world.body.*
 
 class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
 
@@ -93,8 +91,8 @@ class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         val overlap = Rectangle()
         val spawn =
             if (Intersector.intersectRectangles(
-                    thisShape.getBoundingRectangle(),
-                    otherShape.getBoundingRectangle(),
+                    thisShape.toGdxRectangle(),
+                    otherShape.toGdxRectangle(),
                     overlap
                 )
             ) overlap.getCenter() else thisShape.getCenter()
@@ -108,7 +106,7 @@ class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
         return BodyComponentCreator.create(
             this,

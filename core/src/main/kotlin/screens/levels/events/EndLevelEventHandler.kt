@@ -136,7 +136,7 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
             megaman.ready = false
 
             beamSprite.setOriginCenter()
-            beamSprite.rotation = megaman.directionRotation.rotation
+            beamSprite.rotation = megaman.direction.rotation
             beamSprite.setCenter(megaman.body.getCenter())
 
             beamTransitionTimer.reset()
@@ -160,7 +160,7 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
         beamUpTimer.update(delta)
 
         beamSprite.setCenter(megaman.body.getCenter())
-        when (megaman.directionRotation) {
+        when (megaman.direction) {
             Direction.UP -> beamSprite.y += ConstVals.VIEW_HEIGHT * ConstVals.PPM * beamUpTimer.getRatio()
             Direction.DOWN -> beamSprite.y -= ConstVals.VIEW_HEIGHT * ConstVals.PPM * beamUpTimer.getRatio()
             Direction.LEFT -> beamSprite.x -= ConstVals.VIEW_HEIGHT * ConstVals.PPM * beamUpTimer.getRatio()

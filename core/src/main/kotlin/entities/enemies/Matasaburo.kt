@@ -74,7 +74,7 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
     }
 
@@ -117,7 +117,7 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             val offsetX = 5f * ConstVals.PPM * facing.value
-            blowFixture.offsetFromBodyCenter.x = offsetX
+            blowFixture.offsetFromBodyAttachment.x = offsetX
         })
 
         return BodyComponentCreator.create(this, body)
@@ -129,7 +129,7 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
-            val position = body.getBottomCenterPoint()
+            val position = body.getPositionPoint(Position.BOTTOM_CENTER)
             _sprite.setPosition(position, Position.BOTTOM_CENTER)
             _sprite.setFlip(facing == Facing.LEFT, false)
         }
@@ -139,7 +139,7 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            facing = if (game.megaman.body.x > body.x) Facing.RIGHT else Facing.LEFT
+            facing = if (game.megaman.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
         }
     }
 

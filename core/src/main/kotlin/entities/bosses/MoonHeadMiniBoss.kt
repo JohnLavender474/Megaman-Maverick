@@ -192,9 +192,9 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, dmgDurati
     }
 
     private fun calculateBestArcMotion(): ArcMotion {
-        val left = body.x < megaman().body.x
+        val left = body.getX() < megaman().body.getX()
         val position = when {
-            body.y < megaman().body.y -> if (left) Position.BOTTOM_LEFT else Position.BOTTOM_RIGHT
+            body.getY() < megaman().body.getY() -> if (left) Position.BOTTOM_LEFT else Position.BOTTOM_RIGHT
             else -> if (left) Position.TOP_LEFT else Position.TOP_RIGHT
         }
         val target = megaman().body.getPositionPoint(position)
@@ -316,21 +316,21 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, dmgDurati
         body.setSize(2.85f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameCircle().setRadius(1.35f * ConstVals.PPM))
         body.addFixture(bodyFixture)
-        bodyFixture.rawShape.color = Color.GRAY
+        bodyFixture.getShape().color = Color.GRAY
         debugShapes.add { bodyFixture.getShape() }
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(1.425f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        damagerFixture.rawShape.color = Color.RED
+        damagerFixture.getShape().color = Color.RED
         debugShapes.add { damagerFixture.getShape() }
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameCircle().setRadius(1.425f * ConstVals.PPM))
         body.addFixture(damageableFixture)
-        damageableFixture.rawShape.color = Color.PURPLE
+        damageableFixture.getShape().color = Color.PURPLE
         debugShapes.add { damageableFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {

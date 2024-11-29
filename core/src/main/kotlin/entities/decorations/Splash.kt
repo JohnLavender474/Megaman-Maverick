@@ -99,7 +99,7 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
             DrawingPriority::class
         )
 
-        firstSprite!!.let { sprite ->
+        defaultSprite.let { sprite ->
             sprite.setSize(size)
             sprite.setPosition(spawn, Position.BOTTOM_CENTER)
 

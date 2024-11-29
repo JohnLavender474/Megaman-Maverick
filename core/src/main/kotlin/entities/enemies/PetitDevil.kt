@@ -114,11 +114,11 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             )
         }
 
-        facing = when (megaman().directionRotation) {
-            Direction.UP -> if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
-            Direction.DOWN -> if (megaman().body.x > body.x) Facing.LEFT else Facing.RIGHT
-            Direction.LEFT -> if (megaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
-            Direction.RIGHT -> if (megaman().body.y > body.y) Facing.LEFT else Facing.RIGHT
+        facing = when (megaman().direction) {
+            Direction.UP -> if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+            Direction.DOWN -> if (megaman().body.getX() > body.getX()) Facing.LEFT else Facing.RIGHT
+            Direction.LEFT -> if (megaman().body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
+            Direction.RIGHT -> if (megaman().body.getY() > body.getY()) Facing.LEFT else Facing.RIGHT
         }
 
         val trajectory = megaman().body.getCenter().sub(body.getCenter()).nor().scl(SPEED * ConstVals.PPM)
@@ -173,11 +173,11 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
                 if (child.dead) iter.remove()
             }
 
-            facing = when (megaman().directionRotation) {
-                Direction.UP -> if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
-                Direction.DOWN -> if (megaman().body.x > body.x) Facing.LEFT else Facing.RIGHT
-                Direction.LEFT -> if (megaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
-                Direction.RIGHT -> if (megaman().body.y > body.y) Facing.LEFT else Facing.RIGHT
+            facing = when (megaman().direction) {
+                Direction.UP -> if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                Direction.DOWN -> if (megaman().body.getX() > body.getX()) Facing.LEFT else Facing.RIGHT
+                Direction.LEFT -> if (megaman().body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
+                Direction.RIGHT -> if (megaman().body.getY() > body.getY()) Facing.LEFT else Facing.RIGHT
             }
         }
     }
@@ -187,7 +187,7 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         body.setSize(ConstVals.PPM.toFloat())
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
-        addDebugShapeSupplier { body.getBodyBounds() }
+        addDebugShapeSupplier { body.getBounds() }
         return BodyComponentCreator.create(
             this, body, BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER, FixtureType.DAMAGEABLE)
         )
@@ -201,7 +201,7 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             _sprite.hidden = damageBlink
             _sprite.setCenter(body.getCenter())
             _sprite.setOriginCenter()
-            val direction = megaman().directionRotation
+            val direction = megaman().direction
             _sprite.setFlip(isFacing(Facing.LEFT), false)
             _sprite.rotation = direction.rotation
         }
@@ -278,11 +278,11 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
         type = spawnProps.get(ConstKeys.TYPE, String::class)!!
         scalar = START_SCALAR
 
-        facing = when (megaman().directionRotation) {
-            Direction.UP -> if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
-            Direction.DOWN -> if (megaman().body.x > body.x) Facing.LEFT else Facing.RIGHT
-            Direction.LEFT -> if (megaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
-            Direction.RIGHT -> if (megaman().body.y > body.y) Facing.LEFT else Facing.RIGHT
+        facing = when (megaman().direction) {
+            Direction.UP -> if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+            Direction.DOWN -> if (megaman().body.getX() > body.getX()) Facing.LEFT else Facing.RIGHT
+            Direction.LEFT -> if (megaman().body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
+            Direction.RIGHT -> if (megaman().body.getY() > body.getY()) Facing.LEFT else Facing.RIGHT
         }
 
         putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, object : ICullable {
@@ -314,11 +314,11 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
             scalar += OUT_SPEED * delta
             body.setCenter(rotatingLine.getScaledPosition(scalar))
 
-            facing = when (megaman().directionRotation) {
-                Direction.UP -> if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
-                Direction.DOWN -> if (megaman().body.x > body.x) Facing.LEFT else Facing.RIGHT
-                Direction.LEFT -> if (megaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
-                Direction.RIGHT -> if (megaman().body.y > body.y) Facing.LEFT else Facing.RIGHT
+            facing = when (megaman().direction) {
+                Direction.UP -> if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                Direction.DOWN -> if (megaman().body.getX() > body.getX()) Facing.LEFT else Facing.RIGHT
+                Direction.LEFT -> if (megaman().body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
+                Direction.RIGHT -> if (megaman().body.getY() > body.getY()) Facing.LEFT else Facing.RIGHT
             }
         }
     }
@@ -328,7 +328,7 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
         body.setSize(0.5f * ConstVals.PPM)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
-        addDebugShapeSupplier { body.getBodyBounds() }
+        addDebugShapeSupplier { body.getBounds() }
         return BodyComponentCreator.create(
             this, body, BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER, FixtureType.DAMAGEABLE)
         )
@@ -340,7 +340,7 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setOriginCenter()
-            _sprite.rotation = megaman().directionRotation.rotation
+            _sprite.rotation = megaman().direction.rotation
             _sprite.hidden = damageBlink
             _sprite.setCenter(body.getCenter())
             _sprite.setFlip(isFacing(Facing.LEFT), false)

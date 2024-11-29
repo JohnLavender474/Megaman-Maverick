@@ -85,7 +85,7 @@ class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         val splash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SPLASH)!!
         splash.spawn(
             props(
-                ConstKeys.POSITION pairTo body.getBottomCenterPoint(),
+                ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER),
                 /* ConstKeys.ROTATION pairTo rotation, */
                 ConstKeys.TYPE pairTo Splash.SplashType.WHITE
             )
@@ -93,7 +93,7 @@ class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
-        if (body.y <= deathY) {
+        if (body.getY() <= deathY) {
             GameLogger.debug(TAG, "update(): below death y $deathY, destroying $this")
             destroy()
         }
@@ -127,7 +127,7 @@ class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         sprite.setSize(0.1f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            _sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
         }
         return spritesComponent
     }
@@ -182,7 +182,7 @@ class RainFall(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntit
                 props(
                     ConstKeys.POSITION pairTo Vector2(
                         getRandom(rainSpawner.x, rainSpawner.getMaxX()),
-                        rainSpawner.getTopCenterPoint().y
+                        rainSpawner.getPositionPoint(Position.TOP_CENTER).y
                     ),
                     ConstKeys.TRAJECTORY pairTo Vector2(0f, VELOCITY * ConstVals.PPM).rotateDeg(ANGLE),
                     "${ConstKeys.DEATH}_${ConstKeys.Y}" pairTo deathY

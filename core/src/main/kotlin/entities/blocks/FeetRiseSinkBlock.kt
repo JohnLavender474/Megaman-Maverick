@@ -10,6 +10,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getEntity
 import kotlin.math.abs
 
@@ -35,10 +36,10 @@ class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {
         super.onSpawn(spawnProps)
 
         val max = abs(spawnProps.getOrDefault(ConstKeys.MAX, 0f, Float::class))
-        maxY = body.getMaxY() + (max * ConstVals.PPM)
+        maxY = body.getBounds().getMaxY() + (max * ConstVals.PPM)
 
         val min = abs(spawnProps.getOrDefault(ConstKeys.MIN, 0f, Float::class))
-        minY = body.y - (min * ConstVals.PPM)
+        minY = body.getY() - (min * ConstVals.PPM)
 
         fallingSpeed = -abs(spawnProps.getOrDefault(ConstKeys.FALL, 0f, Float::class))
         risingSpeed = abs(spawnProps.getOrDefault(ConstKeys.RISE, 0f, Float::class))
@@ -58,7 +59,7 @@ class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {
         bodyComponent.body.preProcess.put(ConstKeys.MOVE) {
             when {
                 !feetSet.isEmpty -> when {
-                    body.y > minY -> body.physics.velocity.y = fallingSpeed * ConstVals.PPM
+                    body.getY() > minY -> body.physics.velocity.y = fallingSpeed * ConstVals.PPM
                     else -> body.physics.velocity.y = 0f
                 }
 
@@ -68,7 +69,7 @@ class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {
 
             when {
                 body.getMaxY() > maxY -> body.setMaxY(maxY)
-                body.y < minY -> body.y = minY
+                body.getY() < minY -> body.setY(minY)
             }
         }
         return bodyComponent
@@ -78,7 +79,7 @@ class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {
         val iter = feetSet.iterator()
         while (iter.hasNext) {
             val feet = iter.next()
-            if (!feet.getShape().overlaps(body)) iter.remove()
+            if (!feet.getShape().overlaps(body.getBounds())) iter.remove()
         }
     })
 }

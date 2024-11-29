@@ -7,7 +7,7 @@ import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.toGameRectangle
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.utils.toProps
+import com.megaman.maverick.game.utils.extensions.toProps
 import java.util.*
 
 class PlayerSpawnsManager(private val camera: Camera) : Runnable, Resettable {

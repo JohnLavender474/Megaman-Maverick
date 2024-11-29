@@ -32,7 +32,6 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
@@ -41,7 +40,7 @@ import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
 import kotlin.math.abs
 
-class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRotatable {
+class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional {
 
     companion object {
         const val TAG = "SmallMissile"
@@ -51,10 +50,10 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    override var directionRotation: Direction
-        get() = body.cardinalRotation
+    override var direction: Direction
+        get() = body.direction
         set(value) {
-            body.cardinalRotation = value
+            body.direction = value
         }
 
     private lateinit var explosionType: String
@@ -74,7 +73,7 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
 
-        directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
+        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
 
         val gravityOn = spawnProps.getOrDefault(ConstKeys.GRAVITY_ON, true, Boolean::class)
         body.physics.gravityOn = gravityOn
@@ -83,7 +82,7 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
         body.physics.velocity.set(trajectory)
 
         val region = regions.get(spawnProps.getOrDefault(ConstKeys.COLOR, "green", String::class))
-        firstSprite!!.setRegion(region)
+        defaultSprite.setRegion(region)
 
         explosionType = spawnProps.getOrDefault(ConstKeys.EXPLOSION, DEFAULT_EXPLOSION, String::class)
     }
@@ -97,7 +96,7 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
     override fun hitSand(sandFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
 
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
-        val left = body.x < shieldFixture.getShape().getX()
+        val left = body.getX() < shieldFixture.getShape().getX()
         body.physics.velocity.x = if (left) -abs(body.physics.velocity.x) else abs(body.physics.velocity.x)
         requestToPlaySound(SoundAsset.DINK_SOUND, false)
     }
@@ -110,7 +109,7 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
             if (overlapsGameCamera()) playSoundNow(SoundAsset.EXPLOSION_2_SOUND, false)
         } else if (explosionType == WAVE_EXPLOSION) {
             val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.GREEN_EXPLOSION)!!
-            explosion.spawn(props(ConstKeys.OWNER pairTo owner, ConstKeys.POSITION pairTo body.getBottomCenterPoint()))
+            explosion.spawn(props(ConstKeys.OWNER pairTo owner, ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER)))
             if (overlapsGameCamera()) playSoundNow(SoundAsset.BLAST_1_SOUND, false)
         }
     }
@@ -123,10 +122,10 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
         body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            body.physics.gravity = when (directionRotation) {
+            body.physics.gravity = when (direction) {
                 Direction.UP -> Vector2(0f, -GRAVITY)
                 Direction.DOWN -> Vector2(0f, GRAVITY)
                 Direction.LEFT -> Vector2(GRAVITY, 0f)
@@ -149,7 +148,7 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation.rotation
+            _sprite.rotation = direction.rotation
             _sprite.setCenter(body.getCenter())
         }
         return spritesComponent

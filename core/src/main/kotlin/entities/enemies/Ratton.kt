@@ -90,10 +90,10 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
         standTimer.reset()
-        facing = if (megaman().body.x > body.x) Facing.RIGHT else Facing.LEFT
+        facing = if (megaman().body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -105,21 +105,21 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(ConstVals.PPM.toFloat()))
         body.addFixture(bodyFixture)
-        bodyFixture.rawShape.color = Color.BLUE
+        bodyFixture.getShape().color = Color.BLUE
         debugShapes.add { bodyFixture.getShape() }
 
         val headFixture =
             Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.2f * ConstVals.PPM))
-        headFixture.offsetFromBodyCenter.y = 0.5f * ConstVals.PPM
+        headFixture.offsetFromBodyAttachment.y = 0.5f * ConstVals.PPM
         body.addFixture(headFixture)
-        headFixture.rawShape.color = Color.ORANGE
+        headFixture.getShape().color = Color.ORANGE
         debugShapes.add { headFixture.getShape() }
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.2f * ConstVals.PPM))
-        feetFixture.offsetFromBodyCenter.y = -0.5f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -0.5f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.rawShape.color = Color.GREEN
+        feetFixture.getShape().color = Color.GREEN
         debugShapes.add { feetFixture.getShape() }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -142,7 +142,7 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         updatablesComponent.add {
             if (body.isSensing(BodySense.FEET_ON_GROUND)) {
                 standTimer.update(it)
-                facing = if (megaman().body.x > body.x) Facing.RIGHT else Facing.LEFT
+                facing = if (megaman().body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
             }
 
             if (standTimer.isFinished()) {
@@ -159,7 +159,7 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.hidden = damageBlink
-            sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             sprite.setFlip(isFacing(Facing.LEFT), false)
         }
         return spritesComponent

@@ -111,7 +111,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     private val throwTimer = Timer(THROW_DELAY)
 
     private val projectilePosition: Vector2
-        get() = body.getTopCenterPoint().add(
+        get() = body.getPositionPoint(Position.TOP_CENTER).add(
             0.15f * ConstVals.PPM * -facing.value,
             (if (body.isSensing(BodySense.FEET_ON_GROUND)) 0.175f else 0.375f) * ConstVals.PPM
         )
@@ -138,7 +138,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
 
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
 
         standTimer.reset()
@@ -150,7 +150,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         throwOnJump = true
 
         currentState = ReactManState.STAND
-        facing = if (megaman().body.x <= body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.getX() <= body.getX()) Facing.LEFT else Facing.RIGHT
     }
 
     override fun isReady(delta: Float) = body.isSensing(BodySense.FEET_ON_GROUND)
@@ -179,7 +179,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 ReactManState.STAND -> {
                     if (projectile == null) spawnProjectile()
 
-                    if (megaman().body.x <= body.x) facing = Facing.LEFT
+                    if (megaman().body.getX() <= body.getX()) facing = Facing.LEFT
                     else if (megaman().body.getMaxX() >= body.getMaxX()) facing = Facing.RIGHT
 
                     if (body.isSensing(BodySense.FEET_ON_GROUND)) {
@@ -201,7 +201,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                         return@add
                     }
 
-                    if (megaman().body.x <= body.x) facing = Facing.LEFT
+                    if (megaman().body.getX() <= body.getX()) facing = Facing.LEFT
                     else if (megaman().body.getMaxX() >= body.getMaxX()) facing = Facing.RIGHT
 
                     if (throwOnJump) {
@@ -225,7 +225,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                     if (throwTimer.isFinished()) {
                         throwTimer.reset()
 
-                        if (megaman().body.x <= body.x) facing = Facing.LEFT
+                        if (megaman().body.getX() <= body.getX()) facing = Facing.LEFT
                         else if (megaman().body.getMaxX() >= body.getMaxX()) facing = Facing.RIGHT
 
                         currentState = ReactManState.RUN
@@ -300,12 +300,12 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         body.addFixture(bodyFixture)
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
-        damagerFixture.rawShape.color = Color.RED
+        damagerFixture.getShape().color = Color.RED
         debugShapes.add { damagerFixture.getShape() }
         body.addFixture(damagerFixture)
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(1.25f * ConstVals.PPM))
-        damageableFixture.rawShape.color = Color.PURPLE
+        damageableFixture.getShape().color = Color.PURPLE
         debugShapes.add { damageableFixture.getShape() }
         body.addFixture(damageableFixture)
 
@@ -314,8 +314,8 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 0.25f * ConstVals.PPM, 0.1f * ConstVals.PPM
             )
         )
-        headFixture.offsetFromBodyCenter.y = 0.675f * ConstVals.PPM
-        headFixture.rawShape.color = Color.ORANGE
+        headFixture.offsetFromBodyAttachment.y = 0.675f * ConstVals.PPM
+        headFixture.getShape().color = Color.ORANGE
         debugShapes.add { headFixture.getShape() }
         body.addFixture(headFixture)
 
@@ -324,8 +324,8 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 0.25f * ConstVals.PPM, 0.1f * ConstVals.PPM
             )
         )
-        feetFixture.offsetFromBodyCenter.y = -0.675f * ConstVals.PPM
-        feetFixture.rawShape.color = Color.GREEN
+        feetFixture.offsetFromBodyAttachment.y = -0.675f * ConstVals.PPM
+        feetFixture.getShape().color = Color.GREEN
         debugShapes.add { feetFixture.getShape() }
         body.addFixture(feetFixture)
 
@@ -334,9 +334,9 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 0.1f * ConstVals.PPM, 0.25f * ConstVals.PPM
             )
         )
-        leftFixture.offsetFromBodyCenter.x = -0.625f * ConstVals.PPM
+        leftFixture.offsetFromBodyAttachment.x = -0.625f * ConstVals.PPM
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
-        leftFixture.rawShape.color = Color.YELLOW
+        leftFixture.getShape().color = Color.YELLOW
         debugShapes.add { leftFixture.getShape() }
 
         val rightFixture = Fixture(
@@ -344,9 +344,9 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 0.1f * ConstVals.PPM, 0.25f * ConstVals.PPM
             )
         )
-        rightFixture.offsetFromBodyCenter.x = 0.625f * ConstVals.PPM
+        rightFixture.offsetFromBodyAttachment.x = 0.625f * ConstVals.PPM
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
-        rightFixture.rawShape.color = Color.YELLOW
+        rightFixture.getShape().color = Color.YELLOW
         debugShapes.add { rightFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
@@ -367,7 +367,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         sprite.setSize(2.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
-            sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             sprite.setFlip(isFacing(Facing.RIGHT), false)
             sprite.hidden = damageBlink || game.isProperty(ConstKeys.ROOM_TRANSITION, true)
         }

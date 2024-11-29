@@ -79,7 +79,7 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
         body.fixtures.forEach { (_, fixture) ->
-            val shape = (fixture as Fixture).rawShape
+            val shape = (fixture as Fixture).getShape()
             if (shape is GameRectangle) shape.set(bounds)
         }
 
@@ -102,7 +102,7 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val waterFixture = Fixture(body, FixtureType.WATER)
         body.addFixture(waterFixture)
@@ -122,18 +122,18 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         val sprites = OrderedMap<String, GameSprite>()
 
         val waterSprite = GameSprite(waterReg!!, DrawingPriority(DrawingSection.FOREGROUND, 10))
-        waterSprite.setBounds(bounds.x, bounds.y, bounds.width, bounds.height)
+        waterSprite.setBounds(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight())
         waterSprite.setAlpha(WATER_ALPHA)
         sprites.put("water", waterSprite)
 
-        val rows = (bounds.height / ConstVals.PPM).toInt()
-        val columns = (bounds.width / ConstVals.PPM).toInt()
+        val rows = (bounds.getHeight() / ConstVals.PPM).toInt()
+        val columns = (bounds.getWidth() / ConstVals.PPM).toInt()
 
         val animators = Array<GamePair<() -> GameSprite, IAnimator>>()
 
         for (x in 0 until columns) {
             for (y in 0 until rows) {
-                val pos = Vector2(bounds.x + x * ConstVals.PPM, bounds.y + y * ConstVals.PPM)
+                val pos = Vector2(bounds.getX() + x * ConstVals.PPM, bounds.getY() + y * ConstVals.PPM)
 
                 val region = if (y == rows - 1) surfaceReg!! else underReg!!
                 val animation = Animation(region, 1, 2, 0.15f, true)

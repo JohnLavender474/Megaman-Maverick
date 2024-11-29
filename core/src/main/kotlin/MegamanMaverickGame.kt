@@ -87,8 +87,8 @@ import com.megaman.maverick.game.screens.menus.bosses.BossSelectScreen
 import com.megaman.maverick.game.screens.other.CreditsScreen
 import com.megaman.maverick.game.screens.other.SimpleEndLevelScreen
 import com.megaman.maverick.game.screens.other.SimpleInitGameScreen
-import com.megaman.maverick.game.utils.getMusics
-import com.megaman.maverick.game.utils.getSounds
+import com.megaman.maverick.game.utils.extensions.getMusics
+import com.megaman.maverick.game.utils.extensions.getSounds
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.collisions.MegaCollisionHandler
 import com.megaman.maverick.game.world.contacts.MegaContactListener
@@ -183,7 +183,7 @@ class MegamanMaverickGame(
     fun getDrawables() =
         properties.get(ConstKeys.DRAWABLES) as ObjectMap<DrawingSection, PriorityQueue<IComparableDrawable<Batch>>>
 
-    fun getShapes() = properties.get(ConstKeys.SHAPES) as PriorityQueue<IDrawableShape>
+    fun getShapes() = properties.get(ConstKeys.SHAPES) as Array<IDrawableShape>
 
     fun getSystems(): ObjectMap<String, GameSystem> =
         properties.get(ConstKeys.SYSTEMS) as ObjectMap<String, GameSystem>
@@ -433,7 +433,7 @@ class MegamanMaverickGame(
         DrawingSection.entries.forEach { section -> drawables.put(section, PriorityQueue()) }
         properties.put(ConstKeys.DRAWABLES, drawables)
 
-        val shapes = PriorityQueue<IDrawableShape> { s1, s2 -> s1.shapeType.ordinal - s2.shapeType.ordinal }
+        val shapes = Array<IDrawableShape>()
         properties.put(ConstKeys.SHAPES, shapes)
 
         val engine = GameEngine(

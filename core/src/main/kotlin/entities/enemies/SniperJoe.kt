@@ -50,7 +50,6 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
@@ -64,7 +63,7 @@ import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravityEntity, IFaceable,
-    IDirectionRotatable {
+    IDirectional {
 
     companion object {
         const val TAG = "SniperJoe"
@@ -120,10 +119,10 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
             if (it.fullyCharged) 10 else 5
         }
     )
-    override var directionRotation: Direction
-        get() = body.cardinalRotation
+    override var direction: Direction
+        get() = body.direction
         set(value) {
-            body.cardinalRotation = value
+            body.direction = value
         }
     override var facing = Facing.RIGHT
     override var gravityScalar = 1f
@@ -168,14 +167,14 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
 
-        directionRotation =
+        direction =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
 
         val spawn =
             if (spawnProps.containsKey(ConstKeys.BOUNDS)) spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
-                .getBottomCenterPoint()
+                .getPositionPoint(Position.BOTTOM_CENTER)
             else spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-        val position = DirectionPositionMapper.getInvertedPosition(directionRotation)
+        val position = DirectionPositionMapper.getInvertedPosition(direction)
         body.positionOnPoint(spawn, position)
 
         if (spawnProps.containsKey(ConstKeys.TRIGGER)) {
@@ -226,22 +225,22 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         body.addFixture(bodyFixture)
 
         val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyCenter.y = -0.75f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -0.75f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.rawShape.color = Color.GREEN
+        feetFixture.getShape().color = Color.GREEN
         // shapes.add { feetFixture.getShape() }
 
         val headFixture = Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        headFixture.offsetFromBodyCenter.y = 0.75f * ConstVals.PPM
+        headFixture.offsetFromBodyAttachment.y = 0.75f * ConstVals.PPM
         body.addFixture(headFixture)
-        headFixture.rawShape.color = Color.ORANGE
+        headFixture.getShape().color = Color.ORANGE
         // shapes.add { headFixture.getShape() }
 
         val damagerFixture = Fixture(
             body, FixtureType.DAMAGER, GameRectangle().setSize(0.75f * ConstVals.PPM, 1.25f * ConstVals.PPM)
         )
         body.addFixture(damagerFixture)
-        damagerFixture.rawShape.color = Color.RED
+        damagerFixture.getShape().color = Color.RED
         // shapes.add { damagerFixture.getShape() }
 
         val damageableFixture = Fixture(
@@ -255,7 +254,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
             body, FixtureType.SHIELD, GameRectangle().setSize(0.25f * ConstVals.PPM, 1.25f * ConstVals.PPM)
         )
         body.addFixture(shieldFixture)
-        shieldFixture.rawShape.color = Color.BLUE
+        shieldFixture.getShape().color = Color.BLUE
         shapes.add { shieldFixture.getShape() }
 
         val triggerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle())
@@ -271,14 +270,14 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             if (canThrowShield && throwShieldTrigger != null) {
                 triggerFixture.active = true
-                triggerFixture.rawShape = throwShieldTrigger!!
+                triggerFixture.getShape() = throwShieldTrigger!!
             } else triggerFixture.active = false
 
-            if (directionRotation.equalsAny(Direction.UP, Direction.DOWN)) body.physics.velocity.x = 0f
+            if (direction.equalsAny(Direction.UP, Direction.DOWN)) body.physics.velocity.x = 0f
             else body.physics.velocity.y = 0f
 
             val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) -GROUND_GRAVITY else -GRAVITY
-            body.physics.gravity = (when (directionRotation) {
+            body.physics.gravity = (when (direction) {
                 Direction.UP -> Vector2(0f, gravity)
                 Direction.DOWN -> Vector2(0f, -gravity)
                 Direction.LEFT -> Vector2(-gravity, 0f)
@@ -286,14 +285,14 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
             }).scl(ConstVals.PPM.toFloat() * gravityScalar)
 
             shieldFixture.active = shielded
-            shieldFixture.offsetFromBodyCenter.x =
+            shieldFixture.offsetFromBodyAttachment.x =
                 0.5f * ConstVals.PPM * if (isDirectionRotatedUp() || isDirectionRotatedLeft()) facing.value
                 else -facing.value
 
-            if (shielded) damageableFixture.offsetFromBodyCenter.x =
+            if (shielded) damageableFixture.offsetFromBodyAttachment.x =
                 0.25f * ConstVals.PPM * if (isDirectionRotatedUp() || isDirectionRotatedLeft()) -facing.value
                 else facing.value
-            else damageableFixture.offsetFromBodyCenter.x = 0f
+            else damageableFixture.offsetFromBodyAttachment.x = 0f
         })
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = shapes, debug = true))
@@ -309,10 +308,10 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
             sprite.hidden = damageBlink
 
             val flipX = facing == Facing.LEFT
-            val flipY = directionRotation == Direction.DOWN
+            val flipY = direction == Direction.DOWN
             sprite.setFlip(flipX, flipY)
 
-            val rotation = when (directionRotation) {
+            val rotation = when (direction) {
                 Direction.UP, Direction.DOWN -> 0f
 
                 Direction.LEFT -> 90f
@@ -321,7 +320,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
             sprite.setOriginCenter()
             sprite.rotation = rotation
 
-            val position = when (directionRotation) {
+            val position = when (direction) {
                 Direction.UP -> Position.BOTTOM_CENTER
                 Direction.DOWN -> Position.TOP_CENTER
                 Direction.LEFT -> Position.CENTER_RIGHT
@@ -330,8 +329,8 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
             val bodyPosition = body.getPositionPoint(position)
             sprite.setPosition(bodyPosition, position)
 
-            if (directionRotation == Direction.LEFT) sprite.translateX(0.15f * ConstVals.PPM)
-            else if (directionRotation == Direction.RIGHT) sprite.translateX(-0.15f * ConstVals.PPM)
+            if (direction == Direction.LEFT) sprite.translateX(0.15f * ConstVals.PPM)
+            else if (direction == Direction.RIGHT) sprite.translateX(-0.15f * ConstVals.PPM)
         }
         return spritesComponent
     }
@@ -341,14 +340,14 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         updatablesComponent.add {
             if (!shouldUpdate) return@add
 
-            facing = when (directionRotation) {
-                Direction.UP, Direction.DOWN -> if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
-                Direction.LEFT -> if (megaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
-                Direction.RIGHT -> if (megaman().body.y < body.y) Facing.RIGHT else Facing.LEFT
+            facing = when (direction) {
+                Direction.UP, Direction.DOWN -> if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                Direction.LEFT -> if (megaman().body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
+                Direction.RIGHT -> if (megaman().body.getY() < body.getY()) Facing.RIGHT else Facing.LEFT
             }
 
             if (canJump && shouldJump()) jump()
-            when (directionRotation) {
+            when (direction) {
                 Direction.UP -> if (body.physics.velocity.y > 0f &&
                     body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) &&
                     !body.isSensing(BodySense.FEET_ON_GROUND)
@@ -472,27 +471,27 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
 
     private fun shouldJump(): Boolean {
         if (!body.isSensing(BodySense.FEET_ON_GROUND)) return false
-        return when (directionRotation) {
-            Direction.UP -> megaman().body.y > body.getMaxY() &&
-                megaman().body.x >= body.x &&
+        return when (direction) {
+            Direction.UP -> megaman().body.getY() > body.getMaxY() &&
+                megaman().body.getX() >= body.getX() &&
                 megaman().body.getMaxX() <= body.getMaxX()
 
-            Direction.DOWN -> megaman().body.getMaxY() < body.y &&
-                megaman().body.x >= body.x &&
+            Direction.DOWN -> megaman().body.getMaxY() < body.getY() &&
+                megaman().body.getX() >= body.getX() &&
                 megaman().body.getMaxX() <= body.getMaxX()
 
-            Direction.LEFT -> megaman().body.getMaxX() < body.x &&
-                megaman().body.y >= body.y &&
+            Direction.LEFT -> megaman().body.getMaxX() < body.getX() &&
+                megaman().body.getY() >= body.getY() &&
                 megaman().body.getMaxY() <= body.getMaxY()
 
-            Direction.RIGHT -> megaman().body.x > body.getMaxX() &&
-                megaman().body.y >= body.y &&
+            Direction.RIGHT -> megaman().body.getX() > body.getMaxX() &&
+                megaman().body.getY() >= body.getY() &&
                 megaman().body.getMaxY() <= body.getMaxY()
         }
     }
 
     private fun jump() {
-        val impulse = (when (directionRotation) {
+        val impulse = (when (direction) {
             Direction.UP -> Vector2(0f, JUMP_IMPULSE)
             Direction.DOWN -> Vector2(0f, -JUMP_IMPULSE)
             Direction.LEFT -> Vector2(-JUMP_IMPULSE, 0f)
@@ -502,7 +501,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
     }
 
     private fun shoot() {
-        val spawn = (when (directionRotation) {
+        val spawn = (when (direction) {
             Direction.UP -> Vector2(0.35f * facing.value, -0.2f)
             Direction.DOWN -> Vector2(0.35f * facing.value, 0.2f)
             Direction.LEFT -> Vector2(0.15f, 0.35f * facing.value)
@@ -515,7 +514,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
             ConstKeys.OWNER pairTo this,
             ConstKeys.POSITION pairTo spawn,
             ConstKeys.TRAJECTORY pairTo trajectory,
-            ConstKeys.DIRECTION pairTo directionRotation
+            ConstKeys.DIRECTION pairTo direction
         )
 
         val sound: SoundAsset
@@ -538,7 +537,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
             }
 
             else -> {
-                when (directionRotation) {
+                when (direction) {
                     Direction.UP, Direction.DOWN ->
                         trajectory.set(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
 

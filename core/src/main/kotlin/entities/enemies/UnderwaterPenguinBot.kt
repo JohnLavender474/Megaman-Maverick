@@ -98,7 +98,7 @@ class UnderwaterPenguinBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAn
         body.physics.gravityOn = false
         body.fixtures.forEach { (it.second as Fixture).active = false }
 
-        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
     }
 
     override fun canDamage(damageable: IDamageable) = underwaterPenguinBotState != UnderwaterPenguinBotState.WAIT
@@ -106,7 +106,7 @@ class UnderwaterPenguinBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAn
     private fun startSwim() {
         underwaterPenguinBotState = UnderwaterPenguinBotState.SWIM
         body.setCenter(startPosition)
-        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         val speed = SWIM_SPEED * ConstVals.PPM * facing.value
         body.physics.velocity.x = speed
         body.fixtures.forEach { (it.second as Fixture).active = true }
@@ -139,7 +139,7 @@ class UnderwaterPenguinBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAn
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         body.addFixture(bodyFixture)
@@ -158,17 +158,17 @@ class UnderwaterPenguinBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAn
             ) hitNose()
         }
         body.addFixture(noseFixture)
-        noseFixture.rawShape.color = Color.BLUE
+        noseFixture.getShape().color = Color.BLUE
         debugShapes.add { noseFixture.getShape() }
 
         val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyCenter.y = -0.375f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -0.375f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.rawShape.color = Color.GREEN
+        feetFixture.getShape().color = Color.GREEN
         debugShapes.add { feetFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            noseFixture.offsetFromBodyCenter.x = 0.575f * ConstVals.PPM * facing.value
+            noseFixture.offsetFromBodyAttachment.x = 0.575f * ConstVals.PPM * facing.value
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

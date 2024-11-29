@@ -13,7 +13,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.utils.MegaUtilMethods
-import com.megaman.maverick.game.utils.setToDefaultPosition
+import com.megaman.maverick.game.utils.extensions.setToDefaultPosition
 
 object CreditsLoader {
 

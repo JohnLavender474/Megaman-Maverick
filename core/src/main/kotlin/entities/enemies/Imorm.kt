@@ -37,7 +37,6 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodySense
@@ -45,7 +44,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.isSensing
 import kotlin.reflect.KClass
 
-class Imorm(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable, IDirectionRotatable {
+class Imorm(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable, IDirectional {
 
     companion object {
         const val TAG = "Imorm"
@@ -59,7 +58,7 @@ class Imorm(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
     )
 
     override lateinit var facing: Facing
-    override var directionRotation = Direction.UP
+    override var direction = Direction.UP
 
     private val slitherTimer = Timer(SLITHER_DURATION)
     override fun init() {
@@ -71,11 +70,11 @@ class Imorm(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        val position = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val position = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(position)
         slitherTimer.reset()
-        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
-        directionRotation = Direction.valueOf(
+        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        direction = Direction.valueOf(
             spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class)
                 .uppercase()
         )
@@ -87,7 +86,7 @@ class Imorm(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
             slitherTimer.update(it)
             if (slitherTimer.isFinished()) {
                 val x = SLITHER_DISTANCE * facing.value
-                body.x += x
+                body.translate(x, 0f)
                 slitherTimer.reset()
             }
         }
@@ -125,7 +124,7 @@ class Imorm(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
             )
         )
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
-        leftFixture.offsetFromBodyCenter.x = -SLITHER_DISTANCE * 1.5f
+        leftFixture.offsetFromBodyAttachment.x = -SLITHER_DISTANCE * 1.5f
         body.addFixture(leftFixture)
         leftFixture.getShape().color = Color.YELLOW
         debugShapes.add { leftFixture.getShape() }
@@ -133,7 +132,7 @@ class Imorm(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
         val rightFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM))
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
-        rightFixture.offsetFromBodyCenter.x = SLITHER_DISTANCE * 1.5f
+        rightFixture.offsetFromBodyAttachment.x = SLITHER_DISTANCE * 1.5f
         body.addFixture(rightFixture)
         rightFixture.getShape().color = Color.YELLOW
         debugShapes.add { rightFixture.getShape() }
@@ -164,7 +163,7 @@ class Imorm(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
             _sprite.setFlip(isFacing(Facing.LEFT), false)
-            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            _sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
         }
         return spritesComponent
     }

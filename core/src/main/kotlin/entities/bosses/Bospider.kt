@@ -59,7 +59,7 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.utils.toProps
+import com.megaman.maverick.game.utils.extensions.toProps
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import kotlin.reflect.KClass
@@ -263,7 +263,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
                 BospiderState.RETREAT -> {
                     body.physics.velocity.set(0f, getCurrentSpeed())
-                    if (body.y >= spawn.y + START_POINT_OFFSET * ConstVals.PPM) {
+                    if (body.getY() >= spawn.y + START_POINT_OFFSET * ConstVals.PPM) {
                         body.physics.velocity.setZero()
                         body.setCenter(spawn.x, spawn.y + START_POINT_OFFSET * ConstVals.PPM)
                         spawnDelayTimer.reset()
@@ -287,7 +287,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         body.physics.applyFrictionY = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(2f * ConstVals.PPM))
         body.addFixture(bodyFixture)
@@ -377,7 +377,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         val web = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SPIDER_WEB)!!
         val scaledTrajectory = trajectory.scl(WEB_SPEED * ConstVals.PPM)
         val props = props(
-            ConstKeys.POSITION pairTo body.getBottomCenterPoint(),
+            ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER),
             ConstKeys.TRAJECTORY pairTo scaledTrajectory,
             ConstKeys.OWNER pairTo this
         )

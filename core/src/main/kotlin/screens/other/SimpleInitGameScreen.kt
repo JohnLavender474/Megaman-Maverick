@@ -10,7 +10,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.menus.ControllerSettingsScreen
-import com.megaman.maverick.game.utils.setToDefaultPosition
+import com.megaman.maverick.game.utils.extensions.setToDefaultPosition
 
 class SimpleInitGameScreen(private val game: MegamanMaverickGame) : BaseScreen(), Initializable {
 

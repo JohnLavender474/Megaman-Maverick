@@ -88,7 +88,7 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
         standTimer.reset()
         flyTimer.setToEnd()
@@ -109,7 +109,7 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
-        bodyFixture.rawShape.color = Color.BLUE
+        bodyFixture.getShape().color = Color.BLUE
         debugShapes.add { bodyFixture.getShape() }
 
         val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(ConstVals.PPM * 0.5f))
@@ -119,15 +119,15 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
                 false
             )
         }
-        feetFixture.offsetFromBodyCenter.y = -ConstVals.PPM.toFloat()
+        feetFixture.offsetFromBodyAttachment.y = -ConstVals.PPM.toFloat()
         body.addFixture(feetFixture)
-        feetFixture.rawShape.color = Color.GREEN
+        feetFixture.getShape().color = Color.GREEN
         debugShapes.add { feetFixture.getShape() }
 
         val headFixture = Fixture(body, FixtureType.HEAD, GameRectangle().setSize(ConstVals.PPM * 0.5f))
-        headFixture.offsetFromBodyCenter.y = ConstVals.PPM.toFloat()
+        headFixture.offsetFromBodyAttachment.y = ConstVals.PPM.toFloat()
         body.addFixture(headFixture)
-        headFixture.rawShape.color = Color.ORANGE
+        headFixture.getShape().color = Color.ORANGE
         debugShapes.add { headFixture.getShape() }
 
         val damagerFixture = Fixture(
@@ -136,12 +136,12 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
             GameRectangle().setSize(0.8f * ConstVals.PPM, 1.5f * ConstVals.PPM)
         )
         body.addFixture(damagerFixture)
-        damagerFixture.rawShape.color = Color.RED
+        damagerFixture.getShape().color = Color.RED
         debugShapes.add { damagerFixture.getShape() }
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().set(body))
         body.addFixture(damageableFixture)
-        damageableFixture.rawShape.color = Color.PURPLE
+        damageableFixture.getShape().color = Color.PURPLE
         debugShapes.add { damageableFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
@@ -160,7 +160,7 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
-            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            _sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             _sprite.setFlip(facing == Facing.LEFT, false)
         }
         return spritesComponent
@@ -169,7 +169,7 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            facing = if (body.x > megaman().body.x) Facing.LEFT else Facing.RIGHT
+            facing = if (body.getX() > megaman().body.getX()) Facing.LEFT else Facing.RIGHT
             if (body.isSensing(BodySense.FEET_ON_GROUND)) body.physics.velocity.x = 0f
             if (standing && body.isSensing(BodySense.FEET_ON_GROUND)) {
                 standTimer.update(it)
@@ -201,7 +201,7 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
     }
 
     private fun impulseToPlayer() {
-        body.physics.velocity.x = 1.85f * (megaman().body.x - body.x)
+        body.physics.velocity.x = 1.85f * (megaman().body.getX() - body.getX())
         body.physics.velocity.y = 0f
     }
 }

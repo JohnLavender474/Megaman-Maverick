@@ -11,6 +11,7 @@ import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.UtilMethods.getRandom
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.equalsAny
@@ -173,7 +174,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
         body.physics.defaultFrictionOnSelf.x = DEFAULT_FRICTION_X
         body.physics.defaultFrictionOnSelf.y = DEFAULT_FRICTION_Y
@@ -273,36 +274,36 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.2f * ConstVals.PPM))
-        feetFixture.offsetFromBodyCenter.y = -BODY_HEIGHT * ConstVals.PPM / 2f
+        feetFixture.offsetFromBodyAttachment.y = -BODY_HEIGHT * ConstVals.PPM / 2f
         body.addFixture(feetFixture)
-        feetFixture.rawShape.color = Color.GREEN
+        feetFixture.getShape().color = Color.GREEN
         debugShapes.add { feetFixture.getShape() }
 
         val headFixture =
             Fixture(body, FixtureType.HEAD, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.2f * ConstVals.PPM))
-        headFixture.offsetFromBodyCenter.y = BODY_HEIGHT * ConstVals.PPM / 2f
+        headFixture.offsetFromBodyAttachment.y = BODY_HEIGHT * ConstVals.PPM / 2f
         body.addFixture(headFixture)
-        headFixture.rawShape.color = Color.ORANGE
+        headFixture.getShape().color = Color.ORANGE
         debugShapes.add { headFixture.getShape() }
 
         val leftFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, ConstVals.PPM.toFloat()))
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
-        leftFixture.offsetFromBodyCenter.x = -BODY_WIDTH * ConstVals.PPM / 2f
+        leftFixture.offsetFromBodyAttachment.x = -BODY_WIDTH * ConstVals.PPM / 2f
         body.addFixture(leftFixture)
-        leftFixture.rawShape.color = Color.BLUE
+        leftFixture.getShape().color = Color.BLUE
         debugShapes.add { leftFixture.getShape() }
 
         val rightFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, ConstVals.PPM.toFloat()))
-        rightFixture.offsetFromBodyCenter.x = BODY_WIDTH * ConstVals.PPM / 2f
+        rightFixture.offsetFromBodyAttachment.x = BODY_WIDTH * ConstVals.PPM / 2f
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
-        rightFixture.rawShape.color = Color.BLUE
+        rightFixture.getShape().color = Color.BLUE
         debugShapes.add { rightFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
@@ -328,7 +329,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         sprite.setSize(SPRITE_SIZE * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
-            sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             val flipX = when (currentState) {
                 InfernoManState.WALL_SLIDE -> body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)
                 else -> isFacing(Facing.LEFT)
@@ -462,7 +463,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             }
 
             InfernoManState.JUMP -> when {
-                megaman().body.getMaxY() < body.y -> ShootMethod.DOWN
+                megaman().body.getMaxY() < body.getY() -> ShootMethod.DOWN
                 isMegamanStraightAhead() -> ShootMethod.STRAIGHT
                 else -> ShootMethod.UP
             }
@@ -491,7 +492,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     }
 
     private fun shootWave() {
-        val spawn = body.getBottomCenterPoint().add(0.75f * ConstVals.PPM * facing.value, 0f)
+        val spawn = body.getPositionPoint(Position.BOTTOM_CENTER).add(0.75f * ConstVals.PPM * facing.value, 0f)
         val wave = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.MAGMA_WAVE)!!
         wave.spawn(
             props(
@@ -545,7 +546,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     private fun launchOrb(targetMegaman: Boolean) {
         setMeteorToBeSpawned(targetMegaman)
 
-        val spawn = body.getTopCenterPoint().add(0.1f * ConstVals.PPM * facing.value, 0.1f * ConstVals.PPM)
+        val spawn = body.getPositionPoint(Position.TOP_CENTER).add(0.1f * ConstVals.PPM * facing.value, 0.1f * ConstVals.PPM)
         val trajectory = Vector2(0f, ORB_SPEED * ConstVals.PPM)
         val orb = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.MAGMA_ORB)!!
         orb.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.TRAJECTORY pairTo trajectory))
@@ -562,10 +563,10 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     private fun spawnMeteor(targetMegaman: Boolean) {
         var x = when {
             targetMegaman -> megaman().body.getCenter().x
-            else -> getRandom(meteorSpawner.x, meteorSpawner.getMaxX())
+            else -> getRandom(meteorSpawner.getX(), meteorSpawner.getMaxX())
         }
-        x = x.coerceIn(meteorSpawner.x, meteorSpawner.getMaxX())
-        val spawn = Vector2(x, meteorSpawner.y)
+        x = x.coerceIn(meteorSpawner.getX(), meteorSpawner.getMaxX())
+        val spawn = Vector2(x, meteorSpawner.getY())
         val trajectory = Vector2(0f, -METEOR_SPEED * ConstVals.PPM)
         val floor = MegaGameEntities.getEntitiesOfMapObjectId(meteorCollideBlockId).first() as Block
         val meteor = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.MAGMA_METEOR)!!
@@ -599,12 +600,12 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     private fun shouldFinishJumping() = isWallSliding() || shouldGoToStandState()
 
     private fun isMegamanStraightAhead() =
-        abs(megaman().body.y - body.y) <= MEGAMAN_STRAIGHT_Y_THRESHOLD * ConstVals.PPM
+        abs(megaman().body.getY() - body.getY()) <= MEGAMAN_STRAIGHT_Y_THRESHOLD * ConstVals.PPM
 
     private fun updateFacing() {
         when {
-            megaman().body.getMaxX() < body.x -> facing = Facing.LEFT
-            megaman().body.x > body.getMaxX() -> facing = Facing.RIGHT
+            megaman().body.getMaxX() < body.getX() -> facing = Facing.LEFT
+            megaman().body.getX() > body.getMaxX() -> facing = Facing.RIGHT
         }
     }
 }

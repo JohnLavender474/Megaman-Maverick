@@ -155,7 +155,7 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
     private fun beamDown(delta: Float) {
         beamDownTimer.update(delta)
 
-        val startY: Float = game.megaman.body.y + (ConstVals.VIEW_HEIGHT * ConstVals.PPM)
+        val startY: Float = game.megaman.body.getY() + (ConstVals.VIEW_HEIGHT * ConstVals.PPM)
         val offsetY: Float = (ConstVals.VIEW_HEIGHT * ConstVals.PPM) * beamDownTimer.getRatio()
 
         beamSprite.setCenterX(game.megaman.body.getCenter().x)

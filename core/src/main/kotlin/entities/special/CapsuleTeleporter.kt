@@ -102,7 +102,7 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
 
         game.eventsMan.addListener(this)
 
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
 
         teleporterBounds = spawnProps.get(ConstKeys.CHILD, RectangleMapObject::class)!!.rectangle.toGameRectangle()
@@ -118,7 +118,7 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
                     BLOCK_WIDTH * ConstVals.PPM,
                     BLOCK_HEIGHT * ConstVals.PPM
                 )
-                    .setTopCenterToPoint(body.getTopCenterPoint())
+                    .setTopCenterToPoint(body.getPositionPoint(Position.TOP_CENTER))
             )
         )
 
@@ -130,7 +130,7 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
                     BLOCK_WIDTH * ConstVals.PPM,
                     BLOCK_HEIGHT * ConstVals.PPM
                 )
-                    .setBottomCenterToPoint(body.getBottomCenterPoint())
+                    .setBottomCenterToPoint(body.getPositionPoint(Position.BOTTOM_CENTER))
             )
         )
     }
@@ -174,7 +174,7 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
             GameLogger.debug(PortalHopper.TAG, "receiveEntity(): entity already in bodiesToReceive")
             return
         }
-        val teleportPosition = lowerBlock!!.body.getTopCenterPoint()
+        val teleportPosition = lowerBlock!!.body.getPositionPoint(Position.TOP_CENTER)
         entity.body.setBottomCenterToPoint(teleportPosition)
         incomingBodies.put(entity, Timer(RECEIVE_DELAY))
     }
@@ -246,7 +246,7 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
         body.setSize(2f * ConstVals.PPM, 4f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val teleporterFixture = Fixture(body, FixtureType.TELEPORTER)
         teleporterFixture.attachedToBody = false
@@ -254,7 +254,7 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
         debugShapes.add { teleporterFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            teleporterFixture.rawShape = teleporterBounds!!
+            teleporterFixture.getShape() = teleporterBounds!!
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -274,7 +274,7 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
             orderedMapOf(
                 "frame" pairTo frameSprite, "glass" pairTo glassSprite
             ), objectMapOf("frame" pairTo UpdateFunction { _, _sprite ->
-                _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+                _sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             }, "glass" pairTo UpdateFunction { _, _sprite ->
                 _sprite.setCenter(body.getCenter())
             })

@@ -150,7 +150,7 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
     override fun onDamageInflictedTo(damageable: IDamageable) = (parent as GutsTank).laugh()
 
     internal fun launch() {
-        facing = if (megaman().body.x < body.getCenter().x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.getX() < body.getCenter().x) Facing.LEFT else Facing.RIGHT
         fistState = GutsTankFistState.LAUNCHED
         launchDelayTimer.reset()
     }
@@ -172,7 +172,7 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
                         return@add
                     }
                     if (launchDelayTimer.isJustFinished()) {
-                        target = game.megaman.body.getCenterLeftPoint()
+                        target = game.megaman.body.getPositionPoint(Position.CENTER_LEFT)
                         requestToPlaySound(SoundAsset.BURST_SOUND, false)
                     }
                     body.physics.velocity = target.cpy().sub(body.getCenter()).nor().scl(LAUNCH_SPEED * ConstVals.PPM)
@@ -210,7 +210,7 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(ConstVals.PPM.toFloat()))
         body.addFixture(bodyFixture)
-        bodyFixture.rawShape.color = Color.GRAY
+        bodyFixture.getShape().color = Color.GRAY
         debugShapes.add { bodyFixture.getShape() }
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(1.75f * ConstVals.PPM))
@@ -221,19 +221,19 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
         val damageableFixture =
             Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.2f * ConstVals.PPM, 1.05f * ConstVals.PPM))
         body.addFixture(damageableFixture)
-        damageableFixture.rawShape.color = Color.PURPLE
+        damageableFixture.getShape().color = Color.PURPLE
         debugShapes.add { damageableFixture.getShape() }
 
         val shieldFixture =
             Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(0.2f * ConstVals.PPM, 1.05f * ConstVals.PPM))
         body.addFixture(shieldFixture)
-        shieldFixture.rawShape.color = Color.BLUE
+        shieldFixture.getShape().color = Color.BLUE
         debugShapes.add { shieldFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            shieldFixture.offsetFromBodyCenter.x = 0.65f * facing.value * ConstVals.PPM
-            damageableFixture.offsetFromBodyCenter.x = 0.75f * -facing.value * ConstVals.PPM
-            damagerFixture.offsetFromBodyCenter.x = 0.5f * -facing.value * ConstVals.PPM
+            shieldFixture.offsetFromBodyAttachment.x = 0.65f * facing.value * ConstVals.PPM
+            damageableFixture.offsetFromBodyAttachment.x = 0.75f * -facing.value * ConstVals.PPM
+            damagerFixture.offsetFromBodyAttachment.x = 0.5f * -facing.value * ConstVals.PPM
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

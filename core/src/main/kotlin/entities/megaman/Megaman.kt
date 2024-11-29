@@ -50,7 +50,7 @@ import com.megaman.maverick.game.world.body.isSensingAny
 import kotlin.math.abs
 
 class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable, IEventListener, IFaceable,
-    IDamageable, IDirectionRotatable, IBodyEntity, IHealthEntity, ISpritesEntity, IBehaviorsEntity, IPointsEntity,
+    IDamageable, IDirectional, IBodyEntity, IHealthEntity, ISpritesEntity, IBehaviorsEntity, IPointsEntity,
     IAudioEntity, IAnimatedEntity, IScalableGravityEntity, IBoundsSupplier {
 
     companion object {
@@ -122,18 +122,18 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
             sprites.get("megaman")!!.hidden = !field
         }
 
-    override var directionRotation: Direction
-        get() = body.cardinalRotation
+    override var direction: Direction
+        get() = body.direction
         set(value) {
-            GameLogger.debug(TAG, "directionRotation-set(): value=$value")
+            GameLogger.debug(TAG, "direction-set(): value=$value")
 
             if (value != body.cardinalRotation) {
-                GameLogger.debug(TAG, "directionRotation-set(): value not same as field")
+                GameLogger.debug(TAG, "direction-set(): value not same as field")
 
-                body.cardinalRotation = value
+                body.direction = value
 
                 val direction = if (value.isVertical()) value else value.getOpposite()
-                if (game.getGameCamera().directionRotation != direction) {
+                if (game.getGameCamera().direction != direction) {
                     game.eventsMan.submitEvent(
                         Event(
                             EventType.SET_GAME_CAM_ROTATION,
@@ -146,7 +146,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
                     body.physics.velocity.setZero()
                     resetBehavior(BehaviorType.JETPACKING)
                 }
-            } else GameLogger.debug(TAG, "directionRotation-set(): value same as field")
+            } else GameLogger.debug(TAG, "direction-set(): value same as field")
 
             when (value) {
                 Direction.UP, Direction.RIGHT -> {
@@ -219,7 +219,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
 
     val slipSliding: Boolean
         get() = body.isSensing(BodySense.FEET_ON_GROUND) && abs(
-            if (isDirectionRotatedVertically()) body.physics.velocity.x else body.physics.velocity.y
+            if (direction.isVertical()) body.physics.velocity.x else body.physics.velocity.y
         ) > ConstVals.PPM / 16f
 
     override var gravityScalar = 1f
@@ -261,10 +261,10 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         game.eventsMan.addListener(this)
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
-        body.positionOnPoint(bounds.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+        body.positionOnPoint(bounds.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
 
         facing = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, ConstKeys.RIGHT, String::class).uppercase())
-        directionRotation =
+        direction =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
 
         setHealth(getMaxHealth())
@@ -431,29 +431,29 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
     }
 
     fun stunBounce(bounds: GameRectangle) =
-        when (directionRotation) {
+        when (direction) {
             Direction.UP -> {
                 body.physics.velocity.x =
-                    (if (bounds.x > body.x) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
+                    (if (bounds.getX() > body.getX()) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
                 body.physics.velocity.y = MegamanValues.DMG_Y * ConstVals.PPM
             }
 
             Direction.DOWN -> {
                 body.physics.velocity.x =
-                    (if (bounds.x > body.x) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
+                    (if (bounds.getX() > body.getX()) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
                 body.physics.velocity.y = -MegamanValues.DMG_Y * ConstVals.PPM
             }
 
             Direction.LEFT -> {
                 body.physics.velocity.x = -MegamanValues.DMG_Y * ConstVals.PPM
                 body.physics.velocity.y =
-                    (if (bounds.y > body.y) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
+                    (if (bounds.getY() > body.getY()) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
             }
 
             Direction.RIGHT -> {
                 body.physics.velocity.x = MegamanValues.DMG_Y * ConstVals.PPM
                 body.physics.velocity.y =
-                    (if (bounds.y > body.y) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
+                    (if (bounds.getY() > body.getY()) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
             }
         }
 
@@ -476,5 +476,5 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         return true
     }
 
-    override fun getBounds() = body.getBodyBounds()
+    override fun getBounds() = body.getBounds()
 }

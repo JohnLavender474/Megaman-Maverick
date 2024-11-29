@@ -40,7 +40,6 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -52,7 +51,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import kotlin.reflect.KClass
 
-class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDirectionRotatable {
+class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDirectional {
 
     enum class HanabiranState {
         SLEEPING,
@@ -74,10 +73,10 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         private const val ANIMATION_FRAME_DURATION = 0.15f
     }
 
-    override var directionRotation: Direction
-        get() = body.cardinalRotation
+    override var direction: Direction
+        get() = body.direction
         set(value) {
-            body.cardinalRotation = value
+            body.direction = value
         }
 
     private val sleepTimer = Timer(SLEEP_DURATION)
@@ -105,7 +104,7 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.setBottomCenterToPoint(bounds.getBottomCenterPoint())
         hanabiranState = HanabiranState.SLEEPING
-        directionRotation =
+        direction =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
     }
 
@@ -184,7 +183,7 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         body.setSize(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat())
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val fixturesRectangle = GameRectangle()
 
@@ -228,7 +227,7 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                     .scl(ConstVals.PPM.toFloat())
             )
 
-            fixturesRectangle.positionOnPoint(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            fixturesRectangle.positionOnPoint(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
 
             val fixturesOn =
                 !hanabiranState.equalsAny(HanabiranState.SLEEPING, HanabiranState.RISING, HanabiranState.DROPPING)
@@ -248,8 +247,8 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation.rotation
-            val position = DirectionPositionMapper.getPosition(directionRotation).opposite()
+            _sprite.rotation = direction.rotation
+            val position = DirectionPositionMapper.getPosition(direction).opposite()
             _sprite.setPosition(body.getPositionPoint(position), position)
             _sprite.hidden = hanabiranState == HanabiranState.SLEEPING || damageBlink
         }

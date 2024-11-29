@@ -117,7 +117,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
                 }
             }
             body.setCenter(spawn)
-            facing = if (megaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
+            facing = if (megaman().body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
         } else {
             body.setSize(0.75f * ConstVals.PPM, 1.5f * ConstVals.PPM)
             val targetX = spawn.x + spawnProps.get(ConstKeys.VALUE, Float::class)!! * ConstVals.PPM
@@ -135,7 +135,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
                 }
             }
             body.setCenter(spawn)
-            facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+            facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         }
 
         val frameDuration = spawnProps.getOrDefault(ConstKeys.FRAME, 0.1f, Float::class)
@@ -152,7 +152,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
         body.physics.applyFrictionY = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY)
         bodyFixture.putProperty(ConstKeys.GRAVITY_ROTATABLE, false)
@@ -160,44 +160,44 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER)
         body.addFixture(damagerFixture)
-        damagerFixture.rawShape.color = Color.RED
+        damagerFixture.getShape().color = Color.RED
         debugShapes.add { damagerFixture.getShape() }
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE)
         body.addFixture(damageableFixture)
-        damageableFixture.rawShape.color = Color.PURPLE
+        damageableFixture.getShape().color = Color.PURPLE
         debugShapes.add { damageableFixture.getShape() }
 
         val shieldFixture = Fixture(body, FixtureType.SHIELD)
         body.addFixture(shieldFixture)
-        shieldFixture.rawShape.color = Color.BLUE
-        debugShapes.add { shieldFixture.rawShape }
+        shieldFixture.getShape().color = Color.BLUE
+        debugShapes.add { shieldFixture.getShape() }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
-            (bodyFixture.rawShape as GameRectangle).set(body)
-            (damagerFixture.rawShape as GameRectangle).set(body)
+            (bodyFixture.getShape() as GameRectangle).set(body)
+            (damagerFixture.getShape() as GameRectangle).set(body)
 
             when {
                 vertical -> {
                     body.setSize(1.75f * ConstVals.PPM, 0.85f * ConstVals.PPM)
-                    (damageableFixture.rawShape as GameRectangle).width = body.width
-                    (shieldFixture.rawShape as GameRectangle).setSize(1.25f * ConstVals.PPM, 0.75f * ConstVals.PPM)
+                    (damageableFixture.getShape() as GameRectangle).setWidth(body.getWidth())
+                    (shieldFixture.getShape() as GameRectangle).setSize(1.25f * ConstVals.PPM, 0.75f * ConstVals.PPM)
                 }
 
                 else -> {
                     body.setSize(0.85f * ConstVals.PPM, 1.75f * ConstVals.PPM)
-                    (damageableFixture.rawShape as GameRectangle).height = body.height
-                    (shieldFixture.rawShape as GameRectangle).setSize(0.75f * ConstVals.PPM, 1.25f * ConstVals.PPM)
+                    (damageableFixture.getShape() as GameRectangle).height = body.height
+                    (shieldFixture.getShape() as GameRectangle).setSize(0.75f * ConstVals.PPM, 1.25f * ConstVals.PPM)
                 }
             }
 
-            val damageableShape = damageableFixture.rawShape as GameRectangle
+            val damageableShape = damageableFixture.getShape() as GameRectangle
             when {
                 turningAround -> {
                     shieldFixture.active = false
-                    damageableFixture.offsetFromBodyCenter.x = 0f
+                    damageableFixture.offsetFromBodyAttachment.x = 0f
                     when {
                         vertical -> damageableShape.height = 0.5f * ConstVals.PPM
                         else -> damageableShape.width = 0.5f * ConstVals.PPM
@@ -208,12 +208,12 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
                     shieldFixture.active = true
                     when {
                         vertical -> {
-                            damageableFixture.offsetFromBodyCenter.y = (if (switch) 0.5f else -0.5f) * ConstVals.PPM
+                            damageableFixture.offsetFromBodyAttachment.y = (if (switch) 0.5f else -0.5f) * ConstVals.PPM
                             damageableShape.height = 0.15f * ConstVals.PPM
                         }
 
                         else -> {
-                            damageableFixture.offsetFromBodyCenter.x = (if (switch) 0.5f else -0.5f) * ConstVals.PPM
+                            damageableFixture.offsetFromBodyAttachment.x = (if (switch) 0.5f else -0.5f) * ConstVals.PPM
                             damageableShape.width = 0.15f * ConstVals.PPM
                         }
                     }

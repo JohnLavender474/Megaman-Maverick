@@ -68,7 +68,7 @@ class SpringBouncer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesE
         bounceTimer.setToEnd()
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
-        (bounceFixture.rawShape as GameRectangle).set(bounds)
+        (bounceFixture.getShape() as GameRectangle).set(bounds)
         val directionString = spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class)
         direction =
             when (directionString) {

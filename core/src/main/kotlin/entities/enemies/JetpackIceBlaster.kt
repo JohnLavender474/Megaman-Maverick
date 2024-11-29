@@ -143,7 +143,7 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         distanceType = DistanceType.FAR
 
         target = if (spawnProps.containsKey(ConstKeys.TARGET)) spawnProps.get(
@@ -281,8 +281,8 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
                         loop.next()
                         flyToTargetTimer.reset()
 
-                        if (megaman().body.getMaxX() < body.x) facing = Facing.LEFT
-                        else if (megaman().body.x > body.getMaxX()) facing = Facing.RIGHT
+                        if (megaman().body.getMaxX() < body.getX()) facing = Facing.LEFT
+                        else if (megaman().body.getX() > body.getMaxX()) facing = Facing.RIGHT
 
                         distanceType = getBestDistanceType()
                         aimLine = calculateAimLine(distanceType)
@@ -325,7 +325,7 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
 body.physics.applyFrictionY = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         body.addFixture(bodyFixture)
@@ -338,16 +338,16 @@ body.physics.applyFrictionY = false
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyCenter.y = -0.575f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -0.575f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.rawShape.color = Color.GRAY
+        feetFixture.getShape().color = Color.GRAY
         debugShapes.add { feetFixture.getShape() }
 
         val headFixture =
             Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.1f * ConstVals.PPM))
-        headFixture.offsetFromBodyCenter.y = 0.575f * ConstVals.PPM
+        headFixture.offsetFromBodyAttachment.y = 0.575f * ConstVals.PPM
         body.addFixture(headFixture)
-        headFixture.rawShape.color = Color.BLUE
+        headFixture.getShape().color = Color.BLUE
         debugShapes.add { headFixture.getShape() }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

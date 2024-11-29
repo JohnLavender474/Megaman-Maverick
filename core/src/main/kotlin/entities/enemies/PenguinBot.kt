@@ -86,10 +86,10 @@ class PenguinBot(game: MegamanMaverickGame): AbstractEnemy(game), IAnimatedEntit
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        val spawn = spawnProps.get(ConstKeys.POSITION, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.POSITION, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
         penguinBotState = PenguinBotState.WADDLE
-        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -113,16 +113,16 @@ class PenguinBot(game: MegamanMaverickGame): AbstractEnemy(game), IAnimatedEntit
         body.addFixture(bodyFixture)
 
         val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyCenter.y = -0.75f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -0.75f * ConstVals.PPM
         body.addFixture(feetFixture)
 
         val leftFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        leftFixture.offsetFromBodyCenter.x = -0.75f * ConstVals.PPM
+        leftFixture.offsetFromBodyAttachment.x = -0.75f * ConstVals.PPM
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftFixture)
 
         val rightFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        rightFixture.offsetFromBodyCenter.x = 0.75f * ConstVals.PPM
+        rightFixture.offsetFromBodyAttachment.x = 0.75f * ConstVals.PPM
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
 
@@ -134,7 +134,7 @@ class PenguinBot(game: MegamanMaverickGame): AbstractEnemy(game), IAnimatedEntit
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            _sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             _sprite.setFlip(isFacing(Facing.LEFT), false)
             _sprite.hidden = damageBlink
         }

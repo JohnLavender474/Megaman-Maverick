@@ -122,11 +122,11 @@ class SealionBall(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
         body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameCircle().setRadius(0.325f * ConstVals.PPM))
         body.addFixture(projectileFixture)
-        projectileFixture.rawShape.color = Color.RED
+        projectileFixture.getShape().color = Color.RED
         debugShapes.add { projectileFixture.getShape() }
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.325f * ConstVals.PPM))

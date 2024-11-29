@@ -33,7 +33,6 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
@@ -43,7 +42,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import kotlin.reflect.KClass
 
-class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectionRotatable {
+class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectional {
 
     enum class DragonFlyBehavior { MOVE_UP, MOVE_DOWN, MOVE_HORIZONTAL }
 
@@ -64,7 +63,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
         ChargedShot::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
         ChargedShotExplosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
     )
-    override var directionRotation = Direction.UP
+    override var direction = Direction.UP
     override lateinit var facing: Facing
 
     private val behaviorTimer = Timer(CHANGE_BEHAV_DUR)
@@ -85,14 +84,14 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
         if (spawnProps.containsKey(ConstKeys.DIRECTION)) {
             var direction = spawnProps.get(ConstKeys.DIRECTION)
             if (direction is String) direction = Direction.valueOf(direction.uppercase())
-            directionRotation = direction as Direction
-        } else directionRotation = Direction.UP
+            direction = direction as Direction
+        } else direction = Direction.UP
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
         currentBehavior = DragonFlyBehavior.MOVE_UP
         previousBehavior = DragonFlyBehavior.MOVE_UP
         behaviorTimer.reset()
-        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -130,32 +129,32 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
 
             when (currentBehavior) {
                 DragonFlyBehavior.MOVE_UP -> {
-                    when (directionRotation) {
+                    when (direction) {
                         Direction.UP -> {
                             body.physics.velocity.set(0f, VERT_SPEED * ConstVals.PPM)
-                            oobScannerFixture.offsetFromBodyCenter.set(0f, VERT_SCANNER_OFFSET * ConstVals.PPM)
+                            oobScannerFixture.offsetFromBodyAttachment.set(0f, VERT_SCANNER_OFFSET * ConstVals.PPM)
                         }
 
                         Direction.DOWN -> {
                             body.physics.velocity.set(0f, -VERT_SPEED * ConstVals.PPM)
-                            oobScannerFixture.offsetFromBodyCenter.set(0f, -VERT_SCANNER_OFFSET * ConstVals.PPM)
+                            oobScannerFixture.offsetFromBodyAttachment.set(0f, -VERT_SCANNER_OFFSET * ConstVals.PPM)
                         }
 
                         Direction.LEFT -> {
                             body.physics.velocity.set(-VERT_SPEED * ConstVals.PPM, 0f)
-                            oobScannerFixture.offsetFromBodyCenter.set(-VERT_SCANNER_OFFSET * ConstVals.PPM, 0f)
+                            oobScannerFixture.offsetFromBodyAttachment.set(-VERT_SCANNER_OFFSET * ConstVals.PPM, 0f)
                         }
 
                         Direction.RIGHT -> {
                             body.physics.velocity.set(VERT_SPEED * ConstVals.PPM, 0f)
-                            oobScannerFixture.offsetFromBodyCenter.set(VERT_SCANNER_OFFSET * ConstVals.PPM, 0f)
+                            oobScannerFixture.offsetFromBodyAttachment.set(VERT_SCANNER_OFFSET * ConstVals.PPM, 0f)
                         }
                     }
                 }
 
                 DragonFlyBehavior.MOVE_DOWN -> {
                     body.physics.velocity.set(0f, -VERT_SPEED * ConstVals.PPM)
-                    oobScannerFixture.offsetFromBodyCenter.set(0f, -VERT_SCANNER_OFFSET * ConstVals.PPM)
+                    oobScannerFixture.offsetFromBodyAttachment.set(0f, -VERT_SCANNER_OFFSET * ConstVals.PPM)
                 }
 
                 DragonFlyBehavior.MOVE_HORIZONTAL -> {
@@ -164,7 +163,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
                     body.physics.velocity.set(xVel, 0f)
                     var xOffset: Float = HORIZ_SCANNER_OFFSET * ConstVals.PPM
                     if (toLeftBounds) xOffset *= -1f
-                    oobScannerFixture.offsetFromBodyCenter.set(xOffset, 0f)
+                    oobScannerFixture.offsetFromBodyAttachment.set(xOffset, 0f)
                 }
             }
         })
@@ -216,7 +215,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
             _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation?.rotation ?: 0f
+            _sprite.rotation = direction?.rotation ?: 0f
             _sprite.setPosition(body.getCenter(), Position.CENTER)
             if (currentBehavior == DragonFlyBehavior.MOVE_UP || currentBehavior == DragonFlyBehavior.MOVE_DOWN) {
                 facing = if (isMegamanLeft()) Facing.LEFT else Facing.RIGHT
@@ -238,7 +237,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
         behaviorTimer.reset()
     }
 
-    private fun isMegamanLeft() = game.megaman.body.getCenter().x < body.x
+    private fun isMegamanLeft() = game.megaman.body.getCenter().x < body.getX()
 
-    private fun isMegamanBelow() = game.megaman.body.getCenter().y < body.y
+    private fun isMegamanBelow() = game.megaman.body.getCenter().y < body.getY()
 }

@@ -35,7 +35,6 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -43,7 +42,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 
 class GreenExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
-    IDirectionRotatable, IOwnable, IDamager, IHazard {
+    IDirectional, IOwnable, IDamager, IHazard {
 
     companion object {
         const val TAG = "GreenExplosion"
@@ -51,10 +50,10 @@ class GreenExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         private var region: TextureRegion? = null
     }
 
-    override var directionRotation: Direction
-        get() = body.cardinalRotation
+    override var direction: Direction
+        get() = body.direction
         set(value) {
-            body.cardinalRotation = value
+            body.direction = value
         }
     override var owner: GameEntity? = null
 
@@ -98,9 +97,9 @@ class GreenExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
-        directionRotation = spawnProps.get(ConstKeys.DIRECTION, Direction::class) ?: Direction.UP
+        direction = spawnProps.get(ConstKeys.DIRECTION, Direction::class) ?: Direction.UP
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-        when (directionRotation) {
+        when (direction) {
             Direction.UP -> body.setBottomCenterToPoint(spawn)
             Direction.DOWN -> body.setTopCenterToPoint(spawn)
             Direction.LEFT -> body.setCenterRightToPoint(spawn)
@@ -122,7 +121,7 @@ class GreenExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val damagerFixture1 = Fixture(body, FixtureType.DAMAGER, GameRectangle().setHeight(ConstVals.PPM.toFloat()))
         body.addFixture(damagerFixture1)
@@ -133,18 +132,18 @@ class GreenExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         debugShapes.add { damagerFixture2.getShape() }
 
         val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setHeight(0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyCenter.y = -0.5f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -0.5f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.rawShape.color = Color.GREEN
+        feetFixture.getShape().color = Color.GREEN
         debugShapes.add { feetFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.fixtures.forEach { t ->
                 val fixture = t.second as Fixture
-                (fixture.rawShape as GameRectangle).setWidth(width * ConstVals.PPM)
+                (fixture.getShape() as GameRectangle).setWidth(width * ConstVals.PPM)
             }
-            damagerFixture1.offsetFromBodyCenter.x = damagerOffset * ConstVals.PPM
-            damagerFixture2.offsetFromBodyCenter.x = -damagerOffset * ConstVals.PPM
+            damagerFixture1.offsetFromBodyAttachment.x = damagerOffset * ConstVals.PPM
+            damagerFixture2.offsetFromBodyAttachment.x = -damagerOffset * ConstVals.PPM
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -158,8 +157,8 @@ class GreenExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation.rotation
-            val position = when (directionRotation) {
+            _sprite.rotation = direction.rotation
+            val position = when (direction) {
                 Direction.UP -> Position.BOTTOM_CENTER
                 Direction.DOWN -> Position.TOP_CENTER
                 Direction.LEFT -> Position.CENTER_RIGHT

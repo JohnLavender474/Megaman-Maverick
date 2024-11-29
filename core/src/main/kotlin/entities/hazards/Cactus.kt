@@ -99,7 +99,7 @@ class Cactus(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEntit
         super.onSpawn(spawnProps)
         big = spawnProps.getOrDefault(ConstKeys.BIG, true, Boolean::class)
         body.setHeight((if (big) 2.5f else 1.5f) * ConstVals.PPM)
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
     }
 
@@ -139,11 +139,11 @@ class Cactus(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEntit
         val body = Body(BodyType.ABSTRACT)
         body.setWidth(ConstVals.PPM.toFloat())
         body.preProcess.put(ConstKeys.DEFAULT) {
-            body.fixtures.forEach { ((it.second as Fixture).rawShape as GameRectangle).set(body) }
+            body.fixtures.forEach { ((it.second as Fixture).getShape() as GameRectangle).set(body) }
         }
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(
@@ -159,7 +159,7 @@ class Cactus(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEntit
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setRegion(regions[if (big) "big" else "small"])
-            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            _sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             _sprite.hidden = damageBlink
         }
         return spritesComponent

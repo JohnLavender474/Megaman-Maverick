@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.projectiles
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -37,9 +36,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.setHitByBlockReceiver
+import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
 class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
@@ -129,19 +126,16 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
-        body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val shieldFixture = Fixture(body, FixtureType.SHIELD, GameCircle().setRadius(ConstVals.PPM.toFloat()))
         body.addFixture(shieldFixture)
-        shieldFixture.rawShape.color = Color.BLUE
         debugShapes.add { shieldFixture.getShape() }
 
         val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameCircle().setRadius(1.25f * ConstVals.PPM))
         body.addFixture(projectileFixture)
-        projectileFixture.rawShape.color = Color.RED
         debugShapes.add { projectileFixture.getShape() }
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(1.25f * ConstVals.PPM))
@@ -149,36 +143,32 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
         val headFixture =
             Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.1f * ConstVals.PPM))
-        headFixture.offsetFromBodyCenter.y = 1.25f * ConstVals.PPM
+        headFixture.offsetFromBodyAttachment.y = 1.25f * ConstVals.PPM
         headFixture.setHitByBlockReceiver { bounce(Direction.DOWN) }
         body.addFixture(headFixture)
-        headFixture.rawShape.color = Color.YELLOW
         debugShapes.add { headFixture.getShape() }
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyCenter.y = -1.25f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -1.25f * ConstVals.PPM
         feetFixture.setHitByBlockReceiver { bounce(Direction.UP) }
         body.addFixture(feetFixture)
-        feetFixture.rawShape.color = Color.GREEN
         debugShapes.add { feetFixture.getShape() }
 
         val leftFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 1.5f * ConstVals.PPM))
-        leftFixture.offsetFromBodyCenter.x = -1.25f * ConstVals.PPM
+        leftFixture.offsetFromBodyAttachment.x = -1.25f * ConstVals.PPM
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         leftFixture.setHitByBlockReceiver { bounce(Direction.RIGHT) }
         body.addFixture(leftFixture)
-        leftFixture.rawShape.color = Color.ORANGE
         debugShapes.add { leftFixture.getShape() }
 
         val rightFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 1.5f * ConstVals.PPM))
-        rightFixture.offsetFromBodyCenter.x = 1.25f * ConstVals.PPM
+        rightFixture.offsetFromBodyAttachment.x = 1.25f * ConstVals.PPM
         rightFixture.setHitByBlockReceiver { bounce(Direction.LEFT) }
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
-        rightFixture.rawShape.color = Color.ORANGE
         debugShapes.add { rightFixture.getShape() }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -190,10 +180,10 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val sprite = GameSprite()
         sprite.setSize(3f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setCenter(body.getCenter())
-            _sprite.hidden = hidden
-            _sprite.setAlpha(if (exploding) EXPLODING_ALPHA else 1f)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setCenter(body.getCenter())
+            sprite.hidden = hidden
+            sprite.setAlpha(if (exploding) EXPLODING_ALPHA else 1f)
         }
         return spritesComponent
     }

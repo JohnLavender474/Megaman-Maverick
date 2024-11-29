@@ -31,7 +31,6 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
@@ -39,7 +38,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 
 class Bolt(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IHazard, IDamager, ISpritesEntity,
-    IAnimatedEntity, ICullableEntity, IChildEntity, IDirectionRotatable {
+    IAnimatedEntity, ICullableEntity, IChildEntity, IDirectional {
 
     companion object {
         const val TAG = "Bolt"
@@ -49,10 +48,10 @@ class Bolt(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IHaza
     }
 
     override var parent: GameEntity? = null
-    override var directionRotation: Direction
-        get() = body.cardinalRotation
+    override var direction: Direction
+        get() = body.direction
         set(value) {
-            body.cardinalRotation = value
+            body.direction = value
         }
     var scale = 1f
 
@@ -70,8 +69,8 @@ class Bolt(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IHaza
         scale = spawnProps.getOrDefault(ConstKeys.SCALE, 1f, Float::class)
         body.setSize(BODY_SIZE.cpy().scl(scale))
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-        directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
-        when (directionRotation) {
+        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
+        when (direction) {
             Direction.UP -> body.setBottomCenterToPoint(spawn)
             Direction.DOWN -> body.setTopCenterToPoint(spawn)
             Direction.LEFT -> body.setCenterRightToPoint(spawn)
@@ -101,7 +100,7 @@ class Bolt(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IHaza
         debugShapes.add { damagerFixture.getShape() }
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.setSize(BODY_SIZE.cpy().scl(scale))
-            (damagerFixture.rawShape as GameRectangle).set(body)
+            (damagerFixture.getShape() as GameRectangle).set(body)
         }
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
         return BodyComponentCreator.create(this, body)
@@ -113,8 +112,8 @@ class Bolt(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IHaza
         spritesComponent.putUpdateFunction { _, _sprite ->
             sprite.setSize(ConstVals.PPM.toFloat() * scale)
             _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation?.rotation ?: 0f
-            val position = when (directionRotation) {
+            _sprite.rotation = direction?.rotation ?: 0f
+            val position = when (direction) {
                 Direction.UP -> Position.BOTTOM_CENTER
                 Direction.DOWN -> Position.TOP_CENTER
                 Direction.LEFT -> Position.CENTER_RIGHT

@@ -191,7 +191,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         stateMachine.reset()
         timers.forEach { t -> t.value.reset() }
 
-        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         longPunchExtensionCount = 0
         longPunchingForward = false
         danceFlash = false
@@ -299,7 +299,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
                 }
 
                 DesertManState.JUMP -> {
-                    facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+                    facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
                     if (shouldFinishJumping()) stateMachine.next()
                 }
 
@@ -348,44 +348,44 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyCenter.y = -BODY_HEIGHT * ConstVals.PPM / 2f
+        feetFixture.offsetFromBodyAttachment.y = -BODY_HEIGHT * ConstVals.PPM / 2f
         feetFixture.putProperty(ConstKeys.STICK_TO_BLOCK, false)
         body.addFixture(feetFixture)
-        feetFixture.rawShape.color = Color.GREEN
+        feetFixture.getShape().color = Color.GREEN
         debugShapes.add { feetFixture.getShape() }
 
         val headFixture =
             Fixture(body, FixtureType.HEAD, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM))
-        headFixture.offsetFromBodyCenter.y = BODY_HEIGHT * ConstVals.PPM / 2f
+        headFixture.offsetFromBodyAttachment.y = BODY_HEIGHT * ConstVals.PPM / 2f
         body.addFixture(headFixture)
-        headFixture.rawShape.color = Color.ORANGE
+        headFixture.getShape().color = Color.ORANGE
         debugShapes.add { headFixture.getShape() }
 
         val leftFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, ConstVals.PPM.toFloat()))
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
-        leftFixture.offsetFromBodyCenter.x = -BODY_WIDTH * ConstVals.PPM / 2f
+        leftFixture.offsetFromBodyAttachment.x = -BODY_WIDTH * ConstVals.PPM / 2f
         body.addFixture(leftFixture)
-        leftFixture.rawShape.color = Color.BLUE
+        leftFixture.getShape().color = Color.BLUE
         debugShapes.add { leftFixture.getShape() }
 
         val rightFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, ConstVals.PPM.toFloat()))
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
-        rightFixture.offsetFromBodyCenter.x = BODY_WIDTH * ConstVals.PPM / 2f
+        rightFixture.offsetFromBodyAttachment.x = BODY_WIDTH * ConstVals.PPM / 2f
         body.addFixture(rightFixture)
-        rightFixture.rawShape.color = Color.BLUE
+        rightFixture.getShape().color = Color.BLUE
         debugShapes.add { rightFixture.getShape() }
 
         val bodyFixture =
             Fixture(body, FixtureType.BODY, GameRectangle().setWidth(BODY_WIDTH * ConstVals.PPM))
         bodyFixture.attachedToBody = false
         body.addFixture(bodyFixture)
-        bodyFixture.rawShape.color = Color.RED
+        bodyFixture.getShape().color = Color.RED
         debugShapes.add { bodyFixture.getShape() }
 
         val damagerFixture =
@@ -415,15 +415,15 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         body.preProcess.put(ConstKeys.DEFAULT) {
             val height = if (currentState == DesertManState.TORNADO) TORNADO_HEIGHT else BODY_HEIGHT
             dynamicHeightFixtures.forEach {
-                val shape = it.rawShape as GameRectangle
+                val shape = it.getShape() as GameRectangle
                 shape.setHeight(height * ConstVals.PPM)
-                shape.setBottomCenterToPoint(body.getBottomCenterPoint())
+                shape.setBottomCenterToPoint(body.getPositionPoint(Position.BOTTOM_CENTER))
             }
 
             armFixtures.forEach { t ->
                 t.active = isPunching()
                 if (isPunching()) {
-                    val shape = t.rawShape as GameRectangle
+                    val shape = t.getShape() as GameRectangle
                     shape.setWidth(
                         if (isTornadoPunching()) SHORT_PUNCH_WIDTH * ConstVals.PPM
                         else (longPunchExtensionCount * SPRITE_SIZE * ConstVals.PPM) +
@@ -479,7 +479,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         mainSprite.setSize(SPRITE_SIZE * ConstVals.PPM)
         sprites.put("main", mainSprite)
         updateFunctions.put("main") { _, sprite ->
-            sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             sprite.translateY(SPRITE_Y_OFFSET * ConstVals.PPM)
             val flipX =
                 if (currentState == DesertManState.WALL_SLIDE) body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)
@@ -496,7 +496,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
             updateFunctions.put("arm_$i") { _, sprite ->
                 val position =
                     (if (isFacing(Facing.LEFT)) leftArmExtensions[i - 1] else rightArmExtensions[i - 1])
-                        .getBottomCenterPoint()
+                        .getPositionPoint(Position.BOTTOM_CENTER)
                 sprite.setPosition(position, Position.BOTTOM_CENTER)
                 sprite.translateY(SPRITE_Y_OFFSET * ConstVals.PPM)
                 sprite.setFlip(isFacing(Facing.RIGHT), false)
@@ -734,7 +734,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         val splash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SPLASH)!!
         splash.spawn(
             props(
-                ConstKeys.POSITION pairTo body.getBottomCenterPoint(),
+                ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER),
                 ConstKeys.TYPE pairTo SplashType.SAND,
             )
         )
@@ -762,21 +762,21 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
     private fun shouldGoToStandState() = body.physics.velocity.y <= 0f && body.isSensing(BodySense.FEET_ON_SAND)
 
     private fun isMegamanInLongPunchXRange() =
-        abs(megaman().body.x - body.x) <= LONG_PUNCH_X_THRESHOLD * ConstVals.PPM
+        abs(megaman().body.getX() - body.getX()) <= LONG_PUNCH_X_THRESHOLD * ConstVals.PPM
 
-    private fun isMegamanInPunchYRange() = abs(megaman().body.y - body.y) <= PUNCH_Y_THRESHOLD * ConstVals.PPM
+    private fun isMegamanInPunchYRange() = abs(megaman().body.getY() - body.getY()) <= PUNCH_Y_THRESHOLD * ConstVals.PPM
 
     private fun isPunching() = currentState == DesertManState.PUNCH || isTornadoPunching()
 
     private fun isMegamanInTornadoYRange() =
-        abs(megaman().body.y - body.y) <= TORNADO_Y_THRESHOLD * ConstVals.PPM
+        abs(megaman().body.getY() - body.getY()) <= TORNADO_Y_THRESHOLD * ConstVals.PPM
 
     private fun isTornadoPunching() = currentState == DesertManState.TORNADO && !timers["tornado_punch"].isFinished()
 
     private fun updateFacing() {
         when {
-            megaman().body.getMaxX() < body.x -> facing = Facing.LEFT
-            megaman().body.x > body.getMaxX() -> facing = Facing.RIGHT
+            megaman().body.getMaxX() < body.getX() -> facing = Facing.LEFT
+            megaman().body.getX() > body.getMaxX() -> facing = Facing.RIGHT
         }
     }
 

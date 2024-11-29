@@ -96,7 +96,7 @@ class ToxicWaterfall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
                 toxicSplash.spawn(
                     props(
                         ConstKeys.TYPE pairTo SplashType.TOXIC,
-                        ConstKeys.POSITION pairTo overlap.getTopCenterPoint(),
+                        ConstKeys.POSITION pairTo overlap.getPositionPoint(Position.TOP_CENTER),
                         ConstKeys.PRIORITY pairTo DrawingPriority(DrawingSection.FOREGROUND, 15),
                         ConstKeys.ALPHA pairTo SPLASH_ALPHA
                     )
@@ -138,8 +138,8 @@ class ToxicWaterfall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         body.addFixture(forceFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            (consumerFixture.rawShape as GameRectangle).set(body)
-            (forceFixture.rawShape as GameRectangle).set(body)
+            (consumerFixture.getShape() as GameRectangle).set(body)
+            (forceFixture.getShape() as GameRectangle).set(body)
         }
 
         return BodyComponentCreator.create(this, body)
@@ -154,15 +154,15 @@ class ToxicWaterfall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         val sprites = OrderedMap<String, GameSprite>()
         val animators = Array<GamePair<() -> GameSprite, IAnimator>>()
 
-        val rows = (bounds.height / ConstVals.PPM).toInt()
-        val columns = (bounds.width / (2f * ConstVals.PPM)).toInt()
+        val rows = (bounds.getHeight() / ConstVals.PPM).toInt()
+        val columns = (bounds.getWidth() / (2f * ConstVals.PPM)).toInt()
 
         for (x in 0 until columns) {
             for (y in 0 until rows) {
                 val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
                 sprite.setBounds(
-                    bounds.x + 2f * x * ConstVals.PPM,
-                    bounds.y + y * ConstVals.PPM,
+                    bounds.getX() + 2f * x * ConstVals.PPM,
+                    bounds.getY() + y * ConstVals.PPM,
                     2f * ConstVals.PPM,
                     ConstVals.PPM.toFloat()
                 )

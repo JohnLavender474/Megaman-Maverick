@@ -37,7 +37,7 @@ class SpaceSatellite(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        position = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        position = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         left = spawnProps.getOrDefault(ConstKeys.LEFT, false, Boolean::class)
     }
 

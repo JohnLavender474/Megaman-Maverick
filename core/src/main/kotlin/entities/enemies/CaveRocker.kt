@@ -97,12 +97,12 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
         newRockOffsetY = spawnProps.get(ConstKeys.OFFSET_Y, Float::class)!!
         waitTimer.reset()
         throwing = false
-        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
     }
 
     override fun onDestroy() {
@@ -114,7 +114,7 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            facing = if (megaman().body.x >= body.x) Facing.RIGHT else Facing.LEFT
+            facing = if (megaman().body.getX() >= body.getX()) Facing.RIGHT else Facing.LEFT
             waitTimer.update(it)
             if (waitTimer.isJustFinished()) {
                 throwRock()
@@ -133,25 +133,25 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             body, FixtureType.BODY, GameRectangle().setSize(1.25f * ConstVals.PPM, 1.5f * ConstVals.PPM)
         )
         body.addFixture(bodyFixture)
-        bodyFixture.rawShape.color = Color.YELLOW
+        bodyFixture.getShape().color = Color.YELLOW
         debugShapes.add { bodyFixture.getShape() }
 
         val damagerFixture = Fixture(
             body, FixtureType.DAMAGER, GameRectangle().setSize(1.25f * ConstVals.PPM, 1.5f * ConstVals.PPM)
         )
         body.addFixture(damagerFixture)
-        damagerFixture.rawShape.color = Color.RED
+        damagerFixture.getShape().color = Color.RED
         debugShapes.add { damagerFixture.getShape() }
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(1.15f * ConstVals.PPM))
         body.addFixture(damageableFixture)
-        damageableFixture.rawShape.color = Color.PURPLE
+        damageableFixture.getShape().color = Color.PURPLE
         debugShapes.add { damageableFixture.getShape() }
 
         val headFixture = Fixture(
             body, FixtureType.HEAD, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM)
         )
-        headFixture.offsetFromBodyCenter.y = 0.55f * ConstVals.PPM
+        headFixture.offsetFromBodyAttachment.y = 0.55f * ConstVals.PPM
         body.addFixture(headFixture)
         headFixture.getShape().color = Color.BLUE
         debugShapes.add { headFixture.getShape() }
@@ -162,7 +162,7 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
                     GameLogger.debug(TAG, "New rock died before reaching cave rocker, so spawning a new one")
                     spawnNewRock()
                 } else if (it.body.overlaps(headFixture.getShape()) ||
-                    it.body.y < headFixture.getShape().getY()
+                    it.body.getY() < headFixture.getShape().getY()
                 ) {
                     GameLogger.debug(
                         TAG,
@@ -188,7 +188,7 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
             _sprite.setFlip(isFacing(Facing.LEFT), false)
-            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            _sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
         }
         return spritesComponent
     }
@@ -207,7 +207,7 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         throwing = true
         val caveRockToThrow = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.CAVE_ROCK)!!
         val impulse = MegaUtilMethods.calculateJumpImpulse(
-            body.getTopCenterPoint(),
+            body.getPositionPoint(Position.TOP_CENTER),
             megaman().body.getCenter(),
             ROCK_IMPULSE_Y * ConstVals.PPM
         )
@@ -215,7 +215,7 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         caveRockToThrow.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
-                ConstKeys.POSITION pairTo body.getTopCenterPoint(),
+                ConstKeys.POSITION pairTo body.getPositionPoint(Position.TOP_CENTER),
                 ConstKeys.IMPULSE pairTo impulse,
                 ConstKeys.PASS_THROUGH pairTo false
             )

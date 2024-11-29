@@ -83,8 +83,8 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
         super.onSpawn(spawnProps)
         onWall = false
         wasOnWall = false
-        facing = if (game.megaman.body.x > body.x) Facing.RIGHT else Facing.LEFT
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        facing = if (game.megaman.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.positionOnPoint(spawn, Position.BOTTOM_CENTER)
     }
 
@@ -99,8 +99,8 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
                         (facing == Facing.RIGHT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
 
             if (body.isSensing(BodySense.FEET_ON_GROUND)) {
-                if (megaman().body.getBottomRightPoint().x < body.x) facing = Facing.LEFT
-                else if (megaman().body.x > body.getBottomRightPoint().x) facing = Facing.RIGHT
+                if (megaman().body.getBottomRightPoint().x < body.getX()) facing = Facing.LEFT
+                else if (megaman().body.getX() > body.getBottomRightPoint().x) facing = Facing.RIGHT
             }
         }
     }
@@ -110,7 +110,7 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
         body.setSize(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat())
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val bodyFixture =
             Fixture(
@@ -120,14 +120,14 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
             )
         bodyFixture.putProperty(ConstKeys.GRAVITY_ROTATABLE, false)
         body.addFixture(bodyFixture)
-        bodyFixture.rawShape.color = Color.BLUE
+        bodyFixture.getShape().color = Color.BLUE
         debugShapes.add { bodyFixture.getShape() }
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(ConstVals.PPM / 4f, ConstVals.PPM / 32f))
-        feetFixture.offsetFromBodyCenter.y = -0.6f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -0.6f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.rawShape.color = Color.GREEN
+        feetFixture.getShape().color = Color.GREEN
         debugShapes.add { feetFixture.getShape() }
 
         val leftFixture =
@@ -136,11 +136,11 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
                 FixtureType.SIDE,
                 GameRectangle().setSize(ConstVals.PPM / 32f, ConstVals.PPM.toFloat())
             )
-        leftFixture.offsetFromBodyCenter.x = -0.375f * ConstVals.PPM
-        leftFixture.offsetFromBodyCenter.y = ConstVals.PPM / 5f
+        leftFixture.offsetFromBodyAttachment.x = -0.375f * ConstVals.PPM
+        leftFixture.offsetFromBodyAttachment.y = ConstVals.PPM / 5f
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftFixture)
-        leftFixture.rawShape.color = Color.ORANGE
+        leftFixture.getShape().color = Color.ORANGE
         debugShapes.add { leftFixture.getShape() }
 
         val rightFixture =
@@ -149,11 +149,11 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
                 FixtureType.SIDE,
                 GameRectangle().setSize(ConstVals.PPM / 32f, ConstVals.PPM.toFloat())
             )
-        rightFixture.offsetFromBodyCenter.x = 0.375f * ConstVals.PPM
-        rightFixture.offsetFromBodyCenter.y = ConstVals.PPM / 5f
+        rightFixture.offsetFromBodyAttachment.x = 0.375f * ConstVals.PPM
+        rightFixture.offsetFromBodyAttachment.y = ConstVals.PPM / 5f
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
-        rightFixture.rawShape.color = Color.ORANGE
+        rightFixture.getShape().color = Color.ORANGE
         debugShapes.add { rightFixture.getShape() }
 
         val damageableFixture =
@@ -180,7 +180,7 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
                 if (!wasOnWall) body.physics.velocity.x = 0f
                 body.physics.velocity.y = VEL_Y * ConstVals.PPM
             } else {
-                if (wasOnWall) body.y += ConstVals.PPM / 10f
+                if (wasOnWall) body.translate(0f, ConstVals.PPM / 10f)
                 body.physics.velocity.x = VEL_X * ConstVals.PPM * facing.value
             }
         })
@@ -206,9 +206,9 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
 
             val bodyPosition =
                 if (onWall) {
-                    if (position == Position.CENTER_LEFT) body.getCenterLeftPoint()
-                    else body.getCenterRightPoint()
-                } else body.getBottomCenterPoint()
+                    if (position == Position.CENTER_LEFT) body.getPositionPoint(Position.CENTER_LEFT)
+                    else body.getPositionPoint(Position.CENTER_RIGHT)
+                } else body.getPositionPoint(Position.BOTTOM_CENTER)
 
             _sprite.setPosition(bodyPosition, position)
 

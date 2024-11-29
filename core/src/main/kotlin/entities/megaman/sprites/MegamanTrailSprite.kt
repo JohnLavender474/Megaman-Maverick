@@ -53,18 +53,18 @@ class MegamanTrailSprite(game: MegamanMaverickGame) : MegaGameEntity(game), ISpr
         fadeTimer.reset()
 
         val type = spawnProps.get(ConstKeys.TYPE, String::class)!!
-        firstSprite.setRegion(regions[type])
+        defaultSprite.setRegion(regions[type])
 
-        firstSprite.setFlip(megaman().shouldFlipSpriteX(), megaman().shouldFlipSpriteY())
+        defaultSprite.setFlip(megaman().shouldFlipSpriteX(), megaman().shouldFlipSpriteY())
 
-        firstSprite.setOriginCenter()
-        firstSprite.rotation = megaman().getSpriteRotation()
+        defaultSprite.setOriginCenter()
+        defaultSprite.rotation = megaman().getSpriteRotation()
 
         val position = DirectionPositionMapper.getInvertedPosition(megaman().getSpriteDirection())
-        firstSprite.setPosition(megaman().body.getPositionPoint(position), position)
+        defaultSprite.setPosition(megaman().body.getPositionPoint(position), position)
 
-        firstSprite.translateX(megaman().getSpriteXTranslation() * ConstVals.PPM)
-        firstSprite.translateY(megaman().getSpriteYTranslation() * ConstVals.PPM)
+        defaultSprite.translateX(megaman().getSpriteXTranslation() * ConstVals.PPM)
+        defaultSprite.translateY(megaman().getSpriteYTranslation() * ConstVals.PPM)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->

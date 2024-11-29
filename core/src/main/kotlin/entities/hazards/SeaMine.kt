@@ -107,7 +107,7 @@ class SeaMine(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IS
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         sensor.setCenter(body.getCenter())
-        if (!triggered && megaman().body.getBodyBounds().overlaps(sensor)) trigger()
+        if (!triggered && megaman().body.getBounds().overlaps(sensor)) trigger()
         if (triggered) {
             body.physics.velocity = megaman().body.getCenter().sub(body.getCenter()).nor().scl(SPEED * ConstVals.PPM)
             blowTimer.update(delta)
@@ -121,7 +121,7 @@ class SeaMine(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IS
         body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameCircle().setRadius(0.3f * ConstVals.PPM))
         bodyFixture.setHitByBodyReceiver { trigger() }

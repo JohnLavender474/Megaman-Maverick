@@ -28,6 +28,8 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.enemies.Wanaan
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getEntity
 
 class BreakableBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity {
@@ -89,7 +91,10 @@ class BreakableBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, I
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ -> sprite.setBounds(body.getBodyBounds()) }
+        spritesComponent.putUpdateFunction { _, _ ->
+            val bounds = body.getBounds()
+            sprite.setBounds(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight())
+        }
         return spritesComponent
     }
 

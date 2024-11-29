@@ -126,7 +126,7 @@ class BombChute(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
             var xSpeed = body.physics.velocity.x
 
-            if (body.x < megaman().body.x) xSpeed += X_ACCELERATION * delta * ConstVals.PPM
+            if (body.getX() < megaman().body.getX()) xSpeed += X_ACCELERATION * delta * ConstVals.PPM
             else xSpeed -= X_ACCELERATION * delta * ConstVals.PPM
 
             if (xSpeed > X_MAX_SPEED * ConstVals.PPM) xSpeed = X_MAX_SPEED * ConstVals.PPM
@@ -142,7 +142,7 @@ class BombChute(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameCircle().setRadius(0.375f * ConstVals.PPM))
         body.addFixture(bodyFixture)

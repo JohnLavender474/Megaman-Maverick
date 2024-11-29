@@ -32,12 +32,11 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
-class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDirectionRotatable {
+class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDirectional {
 
     companion object {
         const val TAG = "Wanaan"
@@ -46,16 +45,16 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>()
-    override var directionRotation: Direction
-        get() = body.cardinalRotation
+    override var direction: Direction
+        get() = body.direction
         set(value) {
-            body.cardinalRotation = value
+            body.direction = value
         }
 
     val comingDown: Boolean
         get() {
             val velocity = body.physics.velocity
-            return when (directionRotation) {
+            return when (direction) {
                 Direction.UP -> velocity.y < 0f
                 Direction.DOWN -> velocity.y > 0f
                 Direction.LEFT -> velocity.x > 0f
@@ -63,7 +62,7 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
             }
         }
     val cullPoint: Vector2
-        get() = body.getPositionPoint(DirectionPositionMapper.getPosition(directionRotation))
+        get() = body.getPositionPoint(DirectionPositionMapper.getPosition(direction))
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, TAG)
@@ -80,7 +79,7 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         val gravityOn = spawnProps.getOrDefault(ConstKeys.GRAVITY_ON, false, Boolean::class)
         body.physics.gravityOn = gravityOn
 
-        directionRotation = spawnProps.get(ConstKeys.DIRECTION, Direction::class)!!
+        direction = spawnProps.get(ConstKeys.DIRECTION, Direction::class)!!
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -89,18 +88,18 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         body.physics.applyFrictionY = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val headFixture =
             Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.1f * ConstVals.PPM))
-        headFixture.offsetFromBodyCenter.y = 0.5f * ConstVals.PPM
+        headFixture.offsetFromBodyAttachment.y = 0.5f * ConstVals.PPM
         body.addFixture(headFixture)
-        headFixture.rawShape.color = Color.YELLOW
+        headFixture.getShape().color = Color.YELLOW
         debugShapes.add { headFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             val velocity = body.physics.velocity
-            if (body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)) when (directionRotation) {
+            if (body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)) when (direction) {
                 Direction.UP -> if (velocity.y > 0f) velocity.y = 0f
                 Direction.DOWN -> if (velocity.y < 0f) velocity.y = 0f
                 Direction.RIGHT -> if (velocity.x > 0f) velocity.x = 0f
@@ -108,7 +107,7 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
             }
 
             val gravity = body.physics.gravity
-            when (directionRotation) {
+            when (direction) {
                 Direction.UP -> gravity.y = -GRAVITY * ConstVals.PPM
                 Direction.DOWN -> gravity.y = GRAVITY * ConstVals.PPM
                 Direction.RIGHT -> gravity.x = -GRAVITY * ConstVals.PPM
@@ -129,7 +128,7 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
             sprite.hidden = damageBlink
             sprite.setCenter(body.getCenter())
             sprite.setFlip(false, comingDown)
-            when (directionRotation) {
+            when (direction) {
                 Direction.UP -> sprite.rotation = 0f
                 Direction.DOWN -> sprite.rotation = 180f
                 Direction.LEFT -> sprite.rotation = 90f

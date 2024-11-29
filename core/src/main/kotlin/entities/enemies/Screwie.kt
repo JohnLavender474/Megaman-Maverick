@@ -139,7 +139,7 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.15f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        damagerFixture.rawShape.color = Color.RED
+        damagerFixture.getShape().color = Color.RED
         shapes.add { damagerFixture.getShape() }
 
         val damageableFixture = Fixture(
@@ -148,17 +148,17 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
             GameRectangle().setSize(0.65f * ConstVals.PPM, 0.5f * ConstVals.PPM)
         )
         body.addFixture(damageableFixture)
-        damageableFixture.rawShape.color = Color.PURPLE
+        damageableFixture.getShape().color = Color.PURPLE
         shapes.add { damageableFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
-            val damageableBounds = damageableFixture.rawShape as GameRectangle
+            val damageableBounds = damageableFixture.getShape() as GameRectangle
             if (down) {
                 damageableBounds.height = 0.2f * ConstVals.PPM
-                damageableFixture.offsetFromBodyCenter.y = (if (upsideDown) 0.15f else -0.15f) * ConstVals.PPM
+                damageableFixture.offsetFromBodyAttachment.y = (if (upsideDown) 0.15f else -0.15f) * ConstVals.PPM
             } else {
                 damageableBounds.height = 0.65f * ConstVals.PPM
-                damageableFixture.offsetFromBodyCenter.y = 0f
+                damageableFixture.offsetFromBodyAttachment.y = 0f
             }
         })
 
@@ -238,7 +238,7 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
                     ConstKeys.TRAJECTORY pairTo trajectory,
                     ConstKeys.POSITION pairTo spawn,
                     ConstKeys.OWNER pairTo this,
-                    ConstKeys.DIRECTION pairTo megaman().directionRotation
+                    ConstKeys.DIRECTION pairTo megaman().direction
                 )
             )
         }

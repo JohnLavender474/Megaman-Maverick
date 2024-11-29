@@ -12,9 +12,10 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.megaman.sprites.MegamanTrailSprite
 import com.megaman.maverick.game.entities.megaman.extensions.stopCharging
+import com.megaman.maverick.game.entities.megaman.sprites.MegamanTrailSprite
 import com.megaman.maverick.game.world.body.BodySense
+import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.isSensing
 
 const val MEGAMAN_UPDATE_COMPONENT_TAG = "MegamanUpdateComponentTag"
@@ -28,7 +29,7 @@ private val trailSpriteTimer = Timer(TRAIL_SPRITE_DELAY)
 private val underWaterBubbleTimer = Timer(UNDER_WATER_BUBBLE_DELAY)
 
 internal fun Megaman.defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-    if (body.x < -DEATH_X_OFFSET * ConstVals.PPM || body.y < -DEATH_Y_OFFSET * ConstVals.PPM ||
+    if (body.getX() < -DEATH_X_OFFSET * ConstVals.PPM || body.getY() < -DEATH_Y_OFFSET * ConstVals.PPM ||
         body.getMaxX() > (game.getTiledMapLoadResult().map.properties.get("width") as Int + DEATH_X_OFFSET) * ConstVals.PPM ||
         body.getMaxY() > (game.getTiledMapLoadResult().map.properties.get("height") as Int + DEATH_Y_OFFSET) * ConstVals.PPM
     ) {

@@ -92,7 +92,7 @@ class Shotman(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity 
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
         shootLoop.reset()
         shootTimer.reset()
@@ -120,8 +120,8 @@ class Shotman(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity 
         spawn.y += 0.25f * ConstVals.PPM
 
         val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
-        val xFactor = 1f - ((abs(megaman().body.y - body.y) / ConstVals.PPM) / 10f) + 0.2f
-        val impulseX = (megaman().body.x - body.x) * xFactor
+        val xFactor = 1f - ((abs(megaman().body.getY() - body.getY()) / ConstVals.PPM) / 10f) + 0.2f
+        val impulseX = (megaman().body.getX() - body.getX()) * xFactor
 
         bullet.spawn(
             props(
@@ -135,11 +135,11 @@ class Shotman(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity 
     }
 
     private fun shootBullet() {
-        val offsetX = if (megaman().body.x > body.x) 0.5f else -0.5f
+        val offsetX = if (megaman().body.getX() > body.getX()) 0.5f else -0.5f
         val spawn = body.getCenter().add(offsetX * ConstVals.PPM, 0.2f * ConstVals.PPM)
         val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
         val impulseX =
-            if (megaman().body.x > body.x) SHOOT_SPEED_X * ConstVals.PPM else -SHOOT_SPEED_X * ConstVals.PPM
+            if (megaman().body.getX() > body.getX()) SHOOT_SPEED_X * ConstVals.PPM else -SHOOT_SPEED_X * ConstVals.PPM
         bullet.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
@@ -172,7 +172,7 @@ class Shotman(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity 
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
-            val bodyPosition = body.getBottomCenterPoint()
+            val bodyPosition = body.getPositionPoint(Position.BOTTOM_CENTER)
             _sprite.setPosition(bodyPosition, Position.BOTTOM_CENTER)
             _sprite.hidden = damageBlink
         }

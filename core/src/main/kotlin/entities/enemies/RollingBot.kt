@@ -108,9 +108,9 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "spawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
-        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         rollTimer.reset()
         openTimer.reset()
         shootTimer.reset()
@@ -122,8 +122,8 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         requestToPlaySound(SoundAsset.ICE_SHARD_2_SOUND, false)
         val rollingBotShot = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.ROLLING_BOT_SHOT)!!
         val position = if (isFacing(Facing.LEFT))
-            body.getCenterLeftPoint().add(-0.2f * ConstVals.PPM, 0.1f * ConstVals.PPM)
-        else body.getCenterRightPoint().add(0.2f * ConstVals.PPM, 0.1f * ConstVals.PPM)
+            body.getPositionPoint(Position.CENTER_LEFT).add(-0.2f * ConstVals.PPM, 0.1f * ConstVals.PPM)
+        else body.getPositionPoint(Position.CENTER_RIGHT).add(0.2f * ConstVals.PPM, 0.1f * ConstVals.PPM)
         rollingBotShot.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
@@ -157,7 +157,7 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
                 RollingBotState.SHOOTING -> {
                     body.physics.velocity.x = 0f
-                    facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+                    facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
                     shootTimer.update(delta)
                     if (shootTimer.isFinished()) {
@@ -187,7 +187,7 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         val body = Body(BodyType.DYNAMIC)
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle())
         body.addFixture(bodyFixture)
@@ -195,7 +195,7 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         body.addFixture(feetFixture)
-        feetFixture.rawShape.color = Color.GREEN
+        feetFixture.getShape().color = Color.GREEN
         debugShapes.add { feetFixture.getShape() }
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
@@ -227,13 +227,13 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
                 val fixture = it.second as Fixture
 
                 if (fixture.getType() == FixtureType.FEET) {
-                    fixture.offsetFromBodyCenter.y = feetFixtureOffset
+                    fixture.offsetFromBodyAttachment.y = feetFixtureOffset
                     return@forEach
                 }
                 else if (fixture.getType() == FixtureType.SHIELD) fixture.active = rolling
                 else if (fixture.getType() == FixtureType.DAMAGEABLE) fixture.active = !rolling
 
-                val fixtureShape = fixture.rawShape as GameRectangle
+                val fixtureShape = fixture.getShape() as GameRectangle
                 fixtureShape.set(body)
             }
 
@@ -252,7 +252,7 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setFlip(isFacing(Facing.RIGHT), false)
-            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            _sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             _sprite.hidden = damageBlink
         }
         return spritesComponent

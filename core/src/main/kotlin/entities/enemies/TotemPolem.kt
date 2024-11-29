@@ -120,12 +120,12 @@ class TotemPolem(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
         loop.reset()
         timers.values().forEach { it.reset() }
         shootPositionIndex = 0
-        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
     }
 
     override fun onDestroy() {
@@ -158,7 +158,7 @@ class TotemPolem(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+            facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
             val timer = timers.get(loop.getCurrent())
             timer.update(delta)
@@ -177,7 +177,7 @@ class TotemPolem(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(
             body, FixtureType.BODY, GameRectangle().setSize(
@@ -207,13 +207,13 @@ class TotemPolem(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
                 FixtureType.DAMAGEABLE,
                 GameRectangle().setSize(0.5f * ConstVals.PPM, 0.25f * ConstVals.PPM)
             )
-            damageableFixture.offsetFromBodyCenter.y = getShootPositionY(i) * ConstVals.PPM
+            damageableFixture.offsetFromBodyAttachment.y = getShootPositionY(i) * ConstVals.PPM
             body.addFixture(damageableFixture)
 
             damageableFixtures.add(damageableFixture)
 
             debugShapes.add {
-                damageableFixture.rawShape.color = if (damageableFixture.active) Color.PURPLE else Color.GRAY
+                damageableFixture.getShape().color = if (damageableFixture.active) Color.PURPLE else Color.GRAY
                 damageableFixture.getShape()
             }
         }
@@ -221,7 +221,7 @@ class TotemPolem(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         body.preProcess.put(ConstKeys.DEFAULT) {
             for (i in 0 until damageableFixtures.size) {
                 val d = damageableFixtures[i]
-                d.offsetFromBodyCenter.x = 0.25f * ConstVals.PPM * facing.value
+                d.offsetFromBodyAttachment.x = 0.25f * ConstVals.PPM * facing.value
                 d.active = eyesOpen
             }
         }
@@ -236,7 +236,7 @@ class TotemPolem(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         sprite.setSize(4.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            _sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             _sprite.hidden = damageBlink
             _sprite.setFlip(isFacing(Facing.RIGHT), false)
         }

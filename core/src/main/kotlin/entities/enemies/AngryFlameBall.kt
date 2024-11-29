@@ -86,7 +86,7 @@ class AngryFlameBall(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+            facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         }
     }
 
@@ -107,9 +107,9 @@ class AngryFlameBall(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         body.addFixture(damageableFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT) { delta ->
-            body.physics.gravityOn = body.y > spawnY
-            if (body.physics.velocity.y < 0f && body.y < spawnY) {
-                body.y = spawnY
+            body.physics.gravityOn = body.getY() > spawnY
+            if (body.physics.velocity.y < 0f && body.getY() < spawnY) {
+                body.getY() = spawnY
                 bounceDelayTimer.reset()
                 body.physics.velocity.setZero()
             }

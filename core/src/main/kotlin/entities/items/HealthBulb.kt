@@ -42,7 +42,6 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
 import com.megaman.maverick.game.entities.contracts.ItemEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -53,7 +52,7 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.body.*
 
 class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, ISpritesEntity, IAnimatedEntity,
-    IBodyEntity, ICullableEntity, IDirectionRotatable, IScalableGravityEntity {
+    IBodyEntity, ICullableEntity, IDirectional, IScalableGravityEntity {
 
     companion object {
         const val TAG = "HealthBulb"
@@ -69,10 +68,10 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
         private const val WATER_VEL_CLAMP = 1.5f
     }
 
-    override var directionRotation: Direction
-        get() = body.cardinalRotation
+    override var direction: Direction
+        get() = body.direction
         set(value) {
-            body.cardinalRotation = value
+            body.direction = value
         }
     override var gravityScalar = 1f
 
@@ -118,9 +117,9 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
         body.setSize((if (large) 0.5f else 0.25f) * ConstVals.PPM)
         body.setCenter(spawn)
 
-        (itemFixture.rawShape as GameRectangle).set(body)
-        (waterListenerFixture.rawShape as GameRectangle).set(body)
-        feetFixture.offsetFromBodyCenter.y = (if (large) -0.25f else -0.125f) * ConstVals.PPM
+        (itemFixture.getShape() as GameRectangle).set(body)
+        (waterListenerFixture.getShape() as GameRectangle).set(body)
+        feetFixture.offsetFromBodyAttachment.y = (if (large) -0.25f else -0.125f) * ConstVals.PPM
 
         warning = false
         blink = false
@@ -128,7 +127,7 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
         blinkTimer.setToEnd()
         cullTimer.reset()
 
-        directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
+        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
         gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, GRAVITY, Float::class)
         velClamp = spawnProps.getOrDefault(ConstKeys.CLAMP, VEL_CLAMP, Float::class)
 
@@ -153,12 +152,12 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
 
         itemFixture = Fixture(body, FixtureType.ITEM, GameRectangle())
         body.addFixture(itemFixture)
-        itemFixture.rawShape.color = Color.PURPLE
+        itemFixture.getShape().color = Color.PURPLE
         debugShapes.add { itemFixture.getShape() }
 
         feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.1f * ConstVals.PPM))
         body.addFixture(feetFixture)
-        feetFixture.rawShape.color = Color.GREEN
+        feetFixture.getShape().color = Color.GREEN
         debugShapes.add { feetFixture.getShape() }
 
         waterListenerFixture = Fixture(body, FixtureType.WATER_LISTENER, GameRectangle())
@@ -178,7 +177,7 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
                 body.physics.velocity.setZero()
             } else {
                 body.physics.gravityOn = true
-                body.physics.gravity = when (directionRotation) {
+                body.physics.gravity = when (direction) {
                     Direction.LEFT -> Vector2(gravity, 0f)
                     Direction.RIGHT -> Vector2(-gravity, 0f)
                     Direction.UP -> Vector2(0f, -gravity)

@@ -88,9 +88,9 @@ class SuicideBummer(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable,
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
-        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         wasSideOnGround = false
     }
 
@@ -118,8 +118,8 @@ class SuicideBummer(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable,
             if (
                 (wasSideOnGround && !isSideOnGround) ||
                 (isSideOnGround &&
-                    megaman().body.getMaxX() >= body.x &&
-                    megaman().body.x <= body.getMaxX() &&
+                    megaman().body.getMaxX() >= body.getX() &&
+                    megaman().body.getX() <= body.getMaxX() &&
                     megaman().body.getY() > body.getY())
             ) jump()
             wasSideOnGround = isSideOnGround
@@ -134,7 +134,7 @@ class SuicideBummer(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable,
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
-        bodyFixture.rawShape.color = Color.GRAY
+        bodyFixture.getShape().color = Color.GRAY
         debugShapes.add { bodyFixture.getShape() }
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().set(body))
@@ -145,23 +145,23 @@ class SuicideBummer(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable,
 
         val leftFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
-        leftFixture.offsetFromBodyCenter = Vector2(-0.6255f * ConstVals.PPM, -0.625f * ConstVals.PPM)
+        leftFixture.offsetFromBodyAttachment = Vector2(-0.6255f * ConstVals.PPM, -0.625f * ConstVals.PPM)
         body.addFixture(leftFixture)
-        leftFixture.rawShape.color = Color.YELLOW
+        leftFixture.getShape().color = Color.YELLOW
         debugShapes.add { leftFixture.getShape() }
 
         val rightFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
-        rightFixture.offsetFromBodyCenter = Vector2(0.625f * ConstVals.PPM, -0.625f * ConstVals.PPM)
+        rightFixture.offsetFromBodyAttachment = Vector2(0.625f * ConstVals.PPM, -0.625f * ConstVals.PPM)
         body.addFixture(rightFixture)
-        rightFixture.rawShape.color = Color.YELLOW
+        rightFixture.getShape().color = Color.YELLOW
         debugShapes.add { rightFixture.getShape() }
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyCenter.y = -0.625f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -0.625f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.rawShape.color = Color.GREEN
+        feetFixture.getShape().color = Color.GREEN
         debugShapes.add { feetFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
@@ -183,7 +183,7 @@ class SuicideBummer(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable,
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
-            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            _sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             _sprite.setFlip(isFacing(Facing.LEFT), false)
         }
         return spritesComponent

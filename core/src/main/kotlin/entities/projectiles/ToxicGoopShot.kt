@@ -61,11 +61,11 @@ class ToxicGoopShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie(
-        getOverlapPushDirection(body.getBodyBounds(), (damageable as IBodyEntity).body.getBodyBounds())
+        getOverlapPushDirection(body.getBounds(), (damageable as IBodyEntity).body.getBounds()())
     )
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie(
-        getOverlapPushDirection(body.getBodyBounds(), blockFixture.getBody().getBodyBounds())
+        getOverlapPushDirection(body.getBounds(), blockFixture.getBody().getBodyBounds())
     )
 
     override fun explodeAndDie(vararg params: Any?) {
@@ -75,7 +75,7 @@ class ToxicGoopShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
             props(
                 ConstKeys.OWNER pairTo this,
                 ConstKeys.DIRECTION pairTo params[0] as Direction?,
-                ConstKeys.POSITION pairTo body.getBottomCenterPoint()
+                ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER)
             )
         )
     }

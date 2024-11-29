@@ -20,11 +20,10 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import kotlin.math.max
 
-class WhiteArrow(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IDirectionRotatable {
+class WhiteArrow(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IDirectional {
 
     companion object {
         const val TAG = "WhiteArrow"
@@ -35,7 +34,7 @@ class WhiteArrow(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         private var region: TextureRegion? = null
     }
 
-    override var directionRotation = Direction.UP
+    override var direction = Direction.UP
 
     private val oscillationTimer = SmoothOscillationTimer(ALPHA_FREQUENCY, MIN_ALPHA, MAX_ALPHA)
     private lateinit var position: Vector2
@@ -55,9 +54,9 @@ class WhiteArrow(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         GameLogger.debug(TAG, "onSpawn(): spawnProps = $spawnProps")
         super.onSpawn(spawnProps)
         position = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-        directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
+        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
         val maxOffset = spawnProps.get(ConstKeys.MAX, Int::class)!!
-        maxValue = when (directionRotation) {
+        maxValue = when (direction) {
             Direction.UP -> position.y + maxOffset * ConstVals.PPM
             Direction.DOWN -> position.y - maxOffset * ConstVals.PPM
             Direction.LEFT -> position.x - maxOffset * ConstVals.PPM
@@ -74,7 +73,7 @@ class WhiteArrow(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        val movement = when (directionRotation) {
+        val movement = when (direction) {
             Direction.UP -> Vector2(0f, SPEED)
             Direction.DOWN -> Vector2(0f, -SPEED)
             Direction.LEFT -> Vector2(-SPEED, 0f)
@@ -89,7 +88,7 @@ class WhiteArrow(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
             if (fadeOnSpawnAlpha < MIN_ALPHA) fadeOnSpawnAlpha += (ALPHA_FREQUENCY / 2f) * delta
             else oscillationTimer.update(delta)
 
-            if (when (directionRotation) {
+            if (when (direction) {
                     Direction.UP -> position.y >= maxValue
                     Direction.DOWN -> position.y <= maxValue
                     Direction.LEFT -> position.x <= maxValue
@@ -108,7 +107,7 @@ class WhiteArrow(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation.rotation
+            _sprite.rotation = direction.rotation
             _sprite.setCenter(position)
             _sprite.setAlpha(
                 if (setToDestroy) fadeOnDestroyAlpha

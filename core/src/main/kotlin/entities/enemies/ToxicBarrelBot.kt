@@ -105,13 +105,13 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        position = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        position = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(position)
         closedTimer.reset()
         transTimer.reset()
         openTimer.reset()
         toxicBarrelBotState = ToxicBarrelBotState.CLOSED
-        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         shot = false
     }
 
@@ -120,7 +120,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         updatablesComponent.add { delta ->
             when (toxicBarrelBotState) {
                 ToxicBarrelBotState.CLOSED -> {
-                    facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+                    facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
                     closedTimer.update(delta)
                     if (closedTimer.isFinished()) {
                         val openingTop = getRandomBool()
@@ -203,12 +203,12 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle())
         body.addFixture(bodyFixture)
-        bodyFixture.rawShape.color = Color.GRAY
+        bodyFixture.getShape().color = Color.GRAY
         debugShapes.add { bodyFixture.getShape() }
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
         body.addFixture(damagerFixture)
-        damagerFixture.rawShape.color = Color.RED
+        damagerFixture.getShape().color = Color.RED
         debugShapes.add { damagerFixture.getShape() }
 
         val damageableFixture = Fixture(
@@ -216,14 +216,14 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         )
         damageableFixture.attachedToBody = false
         body.addFixture(damageableFixture)
-        damageableFixture.rawShape.color = Color.PURPLE
+        damageableFixture.getShape().color = Color.PURPLE
         debugShapes.add { damageableFixture.getShape() }
 
         val shieldFixture = Fixture(
             body, FixtureType.SHIELD, GameRectangle().setSize(0.65f * ConstVals.PPM, 0.85f * ConstVals.PPM)
         )
         body.addFixture(shieldFixture)
-        shieldFixture.rawShape.color = Color.CYAN
+        shieldFixture.getShape().color = Color.CYAN
         debugShapes.add { shieldFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
@@ -237,7 +237,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
 
             body.fixtures.forEach { entry ->
                 val fixture = entry.second as Fixture
-                val bounds = fixture.rawShape as GameRectangle
+                val bounds = fixture.getShape() as GameRectangle
 
                 when (fixture.getType()) {
                     FixtureType.DAMAGEABLE -> {
@@ -249,7 +249,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
                             )
                         ) {
                             bounds.setWidth(0.85f * ConstVals.PPM)
-                            center = body.getTopCenterPoint().sub(0f, 0.35f * ConstVals.PPM)
+                            center = body.getPositionPoint(Position.TOP_CENTER).sub(0f, 0.35f * ConstVals.PPM)
                         } else {
                             bounds.setWidth(0.5f * ConstVals.PPM)
                             center = body.getCenter().sub(0f, 0.05f * ConstVals.PPM)
@@ -259,7 +259,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
                         fixture.active = toxicBarrelBotState != ToxicBarrelBotState.CLOSED
                     }
 
-                    FixtureType.SHIELD -> bounds.setBottomCenterToPoint(body.getBottomCenterPoint())
+                    FixtureType.SHIELD -> bounds.setBottomCenterToPoint(body.getPositionPoint(Position.BOTTOM_CENTER))
                     else -> bounds.set(body)
                 }
             }
@@ -276,7 +276,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setFlip(isFacing(Facing.RIGHT), false)
-            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            _sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             _sprite.x += 0.1f * ConstVals.PPM * facing.value
             _sprite.hidden = damageBlink
         }

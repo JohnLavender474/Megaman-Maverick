@@ -93,11 +93,11 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         super.onSpawn(spawnProps)
         settingTimer.reset()
         setting = SwinginJoeSetting.SWING_EYES_CLOSED
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.positionOnPoint(spawn, Position.BOTTOM_CENTER)
         type = if (spawnProps.containsKey(ConstKeys.TYPE))
             spawnProps.get(ConstKeys.TYPE, String::class)!! else ""
-        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -109,7 +109,7 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val bodyFixture =
             Fixture(body, FixtureType.BODY, GameRectangle().setSize(0.75f * ConstVals.PPM, 1.15f * ConstVals.PPM))
         body.addFixture(bodyFixture)
-        bodyFixture.rawShape.color = Color.GRAY
+        bodyFixture.getShape().color = Color.GRAY
         debugShapes.add { bodyFixture.getShape() }
 
         val damagerFixture = Fixture(
@@ -118,7 +118,7 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             GameRectangle().setSize(0.75f * ConstVals.PPM, 1.15f * ConstVals.PPM),
         )
         body.addFixture(damagerFixture)
-        damagerFixture.rawShape.color = Color.RED
+        damagerFixture.getShape().color = Color.RED
         debugShapes.add { damagerFixture.getShape() }
 
         val damageableFixture = Fixture(
@@ -127,7 +127,7 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             GameRectangle().setSize(0.8f * ConstVals.PPM, 1.35f * ConstVals.PPM),
         )
         body.addFixture(damageableFixture)
-        damageableFixture.rawShape.color = Color.PURPLE
+        damageableFixture.getShape().color = Color.PURPLE
         debugShapes.add { damageableFixture.getShape() }
 
         val shieldFixture = Fixture(
@@ -135,16 +135,16 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         )
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
         body.addFixture(shieldFixture)
-        shieldFixture.rawShape.color = Color.BLUE
+        shieldFixture.getShape().color = Color.BLUE
         debugShapes.add { shieldFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             shieldFixture.active = setting == SwinginJoeSetting.SWING_EYES_CLOSED
             damageableFixture.active = setting != SwinginJoeSetting.SWING_EYES_CLOSED
             if (setting == SwinginJoeSetting.SWING_EYES_CLOSED) {
-                damageableFixture.offsetFromBodyCenter.x = 0.05f * ConstVals.PPM * -facing.value
-                shieldFixture.offsetFromBodyCenter.x = 0.1f * ConstVals.PPM * facing.value
-            } else damageableFixture.offsetFromBodyCenter.x = 0f
+                damageableFixture.offsetFromBodyAttachment.x = 0.05f * ConstVals.PPM * -facing.value
+                shieldFixture.offsetFromBodyAttachment.x = 0.1f * ConstVals.PPM * facing.value
+            } else damageableFixture.offsetFromBodyAttachment.x = 0f
         })
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -158,7 +158,7 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val SpritesComponent = SpritesComponent(sprite)
         SpritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
-            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            _sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             _sprite.setFlip(facing == Facing.LEFT, false)
             _sprite.translateX(-0.25f * ConstVals.PPM * facing.value)
         }
@@ -168,7 +168,7 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            facing = if (megaman().body.x > body.x) Facing.RIGHT else Facing.LEFT
+            facing = if (megaman().body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
             settingTimer.update(it)
             if (settingTimer.isJustFinished()) {
                 val index = (setting.ordinal + 1) % SwinginJoeSetting.values().size

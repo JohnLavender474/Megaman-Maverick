@@ -2,16 +2,16 @@ package com.megaman.maverick.game.entities.projectiles
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Intersector
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.UtilMethods.getOverlapPushDirection
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.getTextureRegion
-import com.mega.game.engine.common.getOverlapPushDirection
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
-import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -33,10 +33,14 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.HazardsFactory
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.utils.extensions.toGdxRectangle
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getCenter
 
 class MagmaPellet(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
@@ -76,10 +80,10 @@ class MagmaPellet(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val direction = getOverlapPushDirection(thisShape, otherShape) ?: Direction.UP
         val position = DirectionPositionMapper.getPosition(direction)
 
-        val overlap = GameRectangle()
+        val overlap = Rectangle()
         val overlapping = Intersector.intersectRectangles(
-            thisShape.getBoundingRectangle(),
-            otherShape.getBoundingRectangle(),
+            thisShape.toGdxRectangle(),
+            otherShape.toGdxRectangle(),
             overlap
         )
         val spawn = if (overlapping) overlap.getPositionPoint(position) else thisShape.getCenter()

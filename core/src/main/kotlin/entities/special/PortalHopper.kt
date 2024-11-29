@@ -125,10 +125,10 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         launch = true
 
         val hopPoint = when (thisDirection) {
-            Direction.UP -> body.getTopCenterPoint()
-            Direction.DOWN -> body.getBottomCenterPoint()
-            Direction.LEFT -> body.getCenterLeftPoint()
-            Direction.RIGHT -> body.getCenterRightPoint()
+            Direction.UP -> body.getPositionPoint(Position.TOP_CENTER)
+            Direction.DOWN -> body.getPositionPoint(Position.BOTTOM_CENTER)
+            Direction.LEFT -> body.getPositionPoint(Position.CENTER_LEFT)
+            Direction.RIGHT -> body.getPositionPoint(Position.CENTER_RIGHT)
         }
         when (thisDirection) {
             Direction.UP -> entity.body.setBottomCenterToPoint(hopPoint)

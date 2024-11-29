@@ -202,8 +202,8 @@ class DarknessV3(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
             spawnProps.getOrDefault("${ConstKeys.PPM}_${ConstKeys.DIVISOR}", DEFAULT_PPM_DIVISOR, Int::class)
         dividedPPM = ConstVals.PPM.toFloat() / ppmDivisor
 
-        val rows = (bounds.height / dividedPPM).toInt()
-        val columns = (bounds.width / dividedPPM).toInt()
+        val rows = (bounds.getHeight() / dividedPPM).toInt()
+        val columns = (bounds.getWidth() / dividedPPM).toInt()
         GameLogger.debug(TAG, "onSpawn(): rows=$rows, columns=$columns")
         allTilesMatrix = Matrix(rows, columns)
 
@@ -271,8 +271,8 @@ class DarknessV3(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
 
     private fun getTile(x: Int, y: Int): DarknessTile {
         if (allTilesMatrix[x, y] == null) {
-            val posX = bounds.x + (x * dividedPPM)
-            val posY = bounds.y + (y * dividedPPM)
+            val posX = bounds.getX() + (x * dividedPPM)
+            val posY = bounds.getY() + (y * dividedPPM)
             val tileBounds = GameRectangle(posX, posY, dividedPPM, dividedPPM)
             allTilesMatrix[x, y] = DarknessTile(tileBounds)
         }
@@ -280,10 +280,10 @@ class DarknessV3(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
     }
 
     private fun getMinsAndMaxes(rect: GameRectangle): MinsAndMaxes {
-        val minX = ((rect.x - bounds.x) / dividedPPM).toInt().coerceIn(0, allTilesMatrix.columns - 1)
-        val minY = ((rect.y - bounds.y) / dividedPPM).toInt().coerceIn(0, allTilesMatrix.rows - 1)
-        val maxX = (ceil((rect.getMaxX() - bounds.x) / dividedPPM)).toInt().coerceIn(0, allTilesMatrix.columns - 1)
-        val maxY = (ceil((rect.getMaxY() - bounds.y) / dividedPPM)).toInt().coerceIn(0, allTilesMatrix.rows - 1)
+        val minX = ((rect.x - bounds.getX()) / dividedPPM).toInt().coerceIn(0, allTilesMatrix.columns - 1)
+        val minY = ((rect.y - bounds.getY()) / dividedPPM).toInt().coerceIn(0, allTilesMatrix.rows - 1)
+        val maxX = (ceil((rect.getMaxX() - bounds.getX()) / dividedPPM)).toInt().coerceIn(0, allTilesMatrix.columns - 1)
+        val maxY = (ceil((rect.getMaxY() - bounds.getY()) / dividedPPM)).toInt().coerceIn(0, allTilesMatrix.rows - 1)
         return MinsAndMaxes(minX, minY, maxX, maxY)
     }
 

@@ -83,7 +83,7 @@ class ExplosionOrb(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     }
 
     private fun defineCullablesComponent(): CullablesComponent {
-        val cullOOB = getGameCameraCullingLogic(game.getGameCamera(), { firstSprite.boundingRectangle }, OOB_CULL_TIME)
+        val cullOOB = getGameCameraCullingLogic(game.getGameCamera(), { defaultSprite.boundingRectangle }, OOB_CULL_TIME)
         val cullEvents = getStandardEventCullingLogic(this, objectSetOf(EventType.PLAYER_SPAWN))
         return CullablesComponent(
             objectMapOf(

@@ -187,12 +187,12 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
         body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val gateFixture = Fixture(body, FixtureType.GATE, GameRectangle())
         gateFixture.attachedToBody = false
         body.addFixture(gateFixture)
-        gateFixture.rawShape.color = Color.GREEN
+        gateFixture.getShape().color = Color.GREEN
         debugShapes.add { gateFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
@@ -200,13 +200,13 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
             body.setSize(bodySize.scl(ConstVals.PPM.toFloat()))
             body.setCenter(center)
 
-            val gateShape = gateFixture.rawShape as GameRectangle
+            val gateShape = gateFixture.getShape() as GameRectangle
             val gateSize = if (direction.isHorizontal()) Vector2(1f, 3f) else Vector2(3f, 1f)
             gateShape.setSize(gateSize.scl(ConstVals.PPM.toFloat()))
 
             when (direction) {
-                Direction.UP -> gateShape.setTopCenterToPoint(body.getTopCenterPoint())
-                Direction.DOWN -> gateShape.setBottomCenterToPoint(body.getBottomCenterPoint())
+                Direction.UP -> gateShape.setTopCenterToPoint(body.getPositionPoint(Position.TOP_CENTER))
+                Direction.DOWN -> gateShape.setBottomCenterToPoint(body.getPositionPoint(Position.BOTTOM_CENTER))
                 Direction.LEFT -> gateShape.setCenterLeftToPoint(body.getCenterLeftPoint())
                 Direction.RIGHT -> gateShape.setCenterRightToPoint(body.getCenterRightPoint())
             }

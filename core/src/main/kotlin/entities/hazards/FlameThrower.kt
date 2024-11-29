@@ -38,19 +38,18 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.utils.getOpposingPosition
+import com.megaman.maverick.game.utils.extensions.getOpposingPosition
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 
 class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
-    ICullableEntity, IAudioEntity, IDirectionRotatable, IDamager, IHazard {
+    ICullableEntity, IAudioEntity, IDirectional, IDamager, IHazard {
 
     companion object {
         const val TAG = "FlameThrower"
@@ -65,7 +64,7 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     enum class FlameThrowerState { COOL, BLINK, HOT }
 
-    override var directionRotation = Direction.UP
+    override var direction = Direction.UP
 
     private val loop = Loop(FlameThrowerState.values().toGdxArray(), false)
     private val initDelayTimer = Timer(0f)
@@ -94,15 +93,15 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
 
-        directionRotation =
+        direction =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
 
         body.setSize(
-            (if (directionRotation?.isHorizontal() == true) Vector2(1f, 0.75f)
+            (if (direction?.isHorizontal() == true) Vector2(1f, 0.75f)
             else Vector2(0.75f, 1f)).scl(ConstVals.PPM.toFloat())
         )
 
-        val position = directionRotation.getOpposingPosition()
+        val position = direction.getOpposingPosition()
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(position)
         body.positionOnPoint(spawn, position)
 
@@ -162,16 +161,16 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         debugShapes.add { damagerFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            val damagerBounds = damagerFixture.rawShape as GameRectangle
+            val damagerBounds = damagerFixture.getShape() as GameRectangle
             damagerBounds.setSize(
-                (if (directionRotation?.isHorizontal() == true) Vector2(3f, 0.75f)
+                (if (direction?.isHorizontal() == true) Vector2(3f, 0.75f)
                 else Vector2(0.75f, 3f)).scl(ConstVals.PPM.toFloat())
             )
 
             damagerFixture.active = loop.getCurrent() == FlameThrowerState.HOT
             damagerBounds.color = if (damagerFixture.active) Color.RED else Color.YELLOW
 
-            damagerFixture.offsetFromBodyCenter = (when (directionRotation) {
+            damagerFixture.offsetFromBodyAttachment = (when (direction) {
                 Direction.UP -> Vector2(0f, DAMAGER_FIXTURE_VERT_OFFSET)
                 Direction.DOWN -> Vector2(0f, -DAMAGER_FIXTURE_VERT_OFFSET)
                 Direction.LEFT -> Vector2(-DAMAGER_FIXTURE_HORIZ_OFFSET, 0.1f)
@@ -198,22 +197,22 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         val spritesComponent = SpritesComponent(sprites)
         spritesComponent.putUpdateFunction("thrower") { _, _sprite ->
             _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation.rotation
-            val position = DirectionPositionMapper.getInvertedPosition(directionRotation)
+            _sprite.rotation = direction.rotation
+            val position = DirectionPositionMapper.getInvertedPosition(direction)
             _sprite.setPosition(body.getPositionPoint(position), position)
         }
         spritesComponent.putUpdateFunction("flameColumn") { _, _sprite ->
             _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation.rotation
-            var position = DirectionPositionMapper.getInvertedPosition(directionRotation)
-            val offset = (when (directionRotation) {
+            _sprite.rotation = direction.rotation
+            var position = DirectionPositionMapper.getInvertedPosition(direction)
+            val offset = (when (direction) {
                 Direction.UP -> Vector2(0f, 1.15f)
                 Direction.DOWN -> Vector2(0f, -1.15f)
                 Direction.LEFT -> Vector2(-1.5f, 0f)
                 Direction.RIGHT -> Vector2(1.5f, 0f)
             }).scl(ConstVals.PPM.toFloat())
             val bodyPosition =
-                body.getPositionPoint(if (directionRotation.isVertical()) position else position.opposite())
+                body.getPositionPoint(if (direction.isVertical()) position else position.opposite())
             _sprite.setPosition(bodyPosition, position, offset)
             _sprite.hidden = loop.getCurrent() != FlameThrowerState.HOT
         }

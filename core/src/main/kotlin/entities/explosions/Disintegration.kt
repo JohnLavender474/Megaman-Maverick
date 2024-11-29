@@ -30,11 +30,10 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 
 class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, IAudioEntity,
-    IDirectionRotatable {
+    IDirectional {
 
     companion object {
         const val TAG = "Disintegration"
@@ -42,7 +41,7 @@ class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
         private var region: TextureRegion? = null
     }
 
-    override lateinit var directionRotation: Direction
+    override lateinit var direction: Direction
 
     private val durationTimer = Timer(DURATION)
     private val reusableRect = GameRectangle()
@@ -59,10 +58,10 @@ class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
         super.onSpawn(spawnProps)
 
         val rawDir = spawnProps.get(ConstKeys.DIRECTION, String::class)
-        directionRotation = rawDir?.let { Direction.valueOf(it.uppercase()) } ?: megaman().directionRotation
+        direction = rawDir?.let { Direction.valueOf(it.uppercase()) } ?: megaman().direction
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-        firstSprite.setPosition(spawn, Position.CENTER)
+        defaultSprite.setPosition(spawn, Position.CENTER)
 
         reusableRect.setSize(ConstVals.PPM.toFloat()).setCenter(spawn)
         if (reusableRect.overlaps(getGameCamera().toGameRectangle() as Rectangle))
@@ -82,7 +81,7 @@ class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setOriginCenter()
-            sprite.rotation = directionRotation.rotation
+            sprite.rotation = direction.rotation
         }
         return spritesComponent
     }

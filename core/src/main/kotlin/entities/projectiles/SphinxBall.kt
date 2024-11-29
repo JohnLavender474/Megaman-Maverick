@@ -103,7 +103,7 @@ body.physics.applyFrictionY = false
         body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameCircle().setRadius(0.675f * ConstVals.PPM))
         body.addFixture(projectileFixture)
@@ -120,10 +120,10 @@ body.physics.applyFrictionY = false
                 ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM
             )
         )
-        feetFixture.offsetFromBodyCenter.y = -0.675f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -0.675f * ConstVals.PPM
         feetFixture.putProperty(ConstKeys.STICK_TO_BLOCK, false)
         body.addFixture(feetFixture)
-        feetFixture.rawShape.color = Color.GREEN
+        feetFixture.getShape().color = Color.GREEN
         debugShapes.add { feetFixture.getShape() }
 
         val leftFixture = Fixture(
@@ -131,11 +131,11 @@ body.physics.applyFrictionY = false
                 0.1f * ConstVals.PPM, 0.25f * ConstVals.PPM
             )
         )
-        leftFixture.offsetFromBodyCenter.x = -0.75f * ConstVals.PPM
-        leftFixture.offsetFromBodyCenter.y = ConstVals.PPM.toFloat()
+        leftFixture.offsetFromBodyAttachment.x = -0.75f * ConstVals.PPM
+        leftFixture.offsetFromBodyAttachment.y = ConstVals.PPM.toFloat()
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftFixture)
-        leftFixture.rawShape.color = Color.YELLOW
+        leftFixture.getShape().color = Color.YELLOW
         debugShapes.add { leftFixture.getShape() }
 
         val rightFixture = Fixture(
@@ -143,15 +143,15 @@ body.physics.applyFrictionY = false
                 0.1f * ConstVals.PPM, 0.25f * ConstVals.PPM
             )
         )
-        rightFixture.offsetFromBodyCenter.x = 0.75f * ConstVals.PPM
-        rightFixture.offsetFromBodyCenter.y = ConstVals.PPM.toFloat()
+        rightFixture.offsetFromBodyAttachment.x = 0.75f * ConstVals.PPM
+        rightFixture.offsetFromBodyAttachment.y = ConstVals.PPM.toFloat()
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
-        rightFixture.rawShape.color = Color.YELLOW
+        rightFixture.getShape().color = Color.YELLOW
         debugShapes.add { rightFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            block?.body?.setTopCenterToPoint(body.getTopCenterPoint())
+            block?.body?.setTopCenterToPoint(body.getPositionPoint(Position.TOP_CENTER))
             body.physics.gravityOn = !body.isSensingAny(BodySense.FEET_ON_GROUND, BodySense.FEET_ON_SAND)
             if (body.isSensingAny(BodySense.SIDE_TOUCHING_BLOCK_LEFT, BodySense.SIDE_TOUCHING_BLOCK_RIGHT)) {
                 body.physics.velocity.set(0f, -SINK_SPEED * ConstVals.PPM)

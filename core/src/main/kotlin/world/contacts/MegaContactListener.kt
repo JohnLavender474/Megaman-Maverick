@@ -212,8 +212,7 @@ class MegaContactListener(
             val stickToBlock = feetFixture.getOrDefaultProperty(ConstKeys.STICK_TO_BLOCK, true, Boolean::class)
             if (stickToBlock) {
                 val posDelta = blockFixture.getBody().getPositionDelta()
-                body.x += posDelta.x
-                body.y += posDelta.y
+                body.translate(posDelta)
             }
 
             val entity = feetFixture.getEntity()
@@ -260,7 +259,7 @@ class MegaContactListener(
                 body.physics.frictionOnSelf.set(SAND_FRICTION, SAND_FRICTION).scl(ConstVals.PPM.toFloat())
 
             val splash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SPLASH)!!
-            val position = feetFixture.getShape().getBoundingRectangle().getBottomCenterPoint()
+            val position = feetFixture.getShape().getBoundingRectangle().getPositionPoint(Position.BOTTOM_CENTER)
             splash.spawn(props(ConstKeys.POSITION pairTo position, ConstKeys.TYPE pairTo SplashType.SAND))
         }
 
@@ -364,14 +363,14 @@ class MegaContactListener(
             val pd = body.getPositionDelta()
             val bodyPointToCheck = if (pd.x > 0f) {
                 if (pd.y > 0f) body.getTopRightPoint()
-                else if (pd.y < 0f) body.getBottomRightPoint() else body.getCenterRightPoint()
+                else if (pd.y < 0f) body.getBottomRightPoint() else body.getPositionPoint(Position.CENTER_RIGHT)
             } else if (pd.x < 0f) {
                 if (body.getPositionDelta().y > 0f) body.getTopLeftPoint()
                 else if (body.getPositionDelta().y < 0f) body.getBottomLeftPoint()
-                else body.getCenterLeftPoint()
+                else body.getPositionPoint(Position.CENTER_LEFT)
             } else {
-                if (pd.y > 0f) body.getTopCenterPoint()
-                else if (pd.y < 0f) body.getBottomCenterPoint() else body.getCenter()
+                if (pd.y > 0f) body.getPositionPoint(Position.TOP_CENTER)
+                else if (pd.y < 0f) body.getPositionPoint(Position.BOTTOM_CENTER) else body.getCenter()
             }
 
             if (!gravityChangeFixture.getShape().contains(bodyPointToCheck)) return
@@ -390,8 +389,8 @@ class MegaContactListener(
                     bodyFixture.getOrDefaultProperty(ConstKeys.GRAVITY_ROTATABLE, true, Boolean::class)
                 if (canChangeGravityRotation) {
                     val direction = gravityChangeFixture.getProperty(ConstKeys.DIRECTION, Direction::class) ?: return
-                    if (entity is IDirectionRotatable && entity.directionRotation != direction)
-                        entity.directionRotation = direction
+                    if (entity is IDirectional && entity.direction != direction)
+                        entity.direction = direction
                 }
             }
         }
@@ -602,8 +601,7 @@ class MegaContactListener(
             val stickToBlock = feetFixture.getOrDefaultProperty(ConstKeys.STICK_TO_BLOCK, true, Boolean::class)
             if (stickToBlock) {
                 val posDelta = blockFixture.getBody().getPositionDelta()
-                body.x += posDelta.x
-                body.y += posDelta.y
+                body.translate(posDelta)
             }
 
             val entity = feetFixture.getEntity()
@@ -618,12 +616,12 @@ class MegaContactListener(
         else if (contact.fixturesMatch(FixtureType.FEET, FixtureType.LADDER)) {
             val (feetFixture, ladderFixture) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.LADDER)!!
             val feetEntity = feetFixture.getEntity()
-            val feetDirection = if (feetEntity is IDirectionRotatable) feetEntity.directionRotation else Direction.UP
+            val feetDirection = if (feetEntity is IDirectional) feetEntity.direction else Direction.UP
             val feetPoint = when (feetDirection!!) {
-                Direction.UP -> feetFixture.getShape().getBoundingRectangle().getBottomCenterPoint()
-                Direction.DOWN -> feetFixture.getShape().getBoundingRectangle().getTopCenterPoint()
-                Direction.LEFT -> feetFixture.getShape().getBoundingRectangle().getCenterRightPoint()
-                Direction.RIGHT -> feetFixture.getShape().getBoundingRectangle().getCenterLeftPoint()
+                Direction.UP -> feetFixture.getShape().getBoundingRectangle().getPositionPoint(Position.BOTTOM_CENTER)
+                Direction.DOWN -> feetFixture.getShape().getBoundingRectangle().getPositionPoint(Position.TOP_CENTER)
+                Direction.LEFT -> feetFixture.getShape().getBoundingRectangle().getPositionPoint(Position.CENTER_RIGHT)
+                Direction.RIGHT -> feetFixture.getShape().getBoundingRectangle().getPositionPoint(Position.CENTER_LEFT)
             }
             if (ladderFixture.getShape().contains(feetPoint)) {
                 val body = feetFixture.getBody()
@@ -636,12 +634,12 @@ class MegaContactListener(
         else if (contact.fixturesMatch(FixtureType.HEAD, FixtureType.LADDER)) {
             val (headFixture, ladderFixture) = contact.getFixturesInOrder(FixtureType.HEAD, FixtureType.LADDER)!!
             val headEntity = headFixture.getEntity()
-            val headDirection = if (headEntity is IDirectionRotatable) headEntity.directionRotation else Direction.UP
+            val headDirection = if (headEntity is IDirectional) headEntity.direction else Direction.UP
             val headPoint = when (headDirection!!) {
-                Direction.UP -> headFixture.getShape().getBoundingRectangle().getTopCenterPoint()
-                Direction.DOWN -> headFixture.getShape().getBoundingRectangle().getBottomCenterPoint()
-                Direction.LEFT -> headFixture.getShape().getBoundingRectangle().getCenterLeftPoint()
-                Direction.RIGHT -> headFixture.getShape().getBoundingRectangle().getCenterRightPoint()
+                Direction.UP -> headFixture.getShape().getBoundingRectangle().getPositionPoint(Position.TOP_CENTER)
+                Direction.DOWN -> headFixture.getShape().getBoundingRectangle().getPositionPoint(Position.BOTTOM_CENTER)
+                Direction.LEFT -> headFixture.getShape().getBoundingRectangle().getPositionPoint(Position.CENTER_LEFT)
+                Direction.RIGHT -> headFixture.getShape().getBoundingRectangle().getPositionPoint(Position.CENTER_RIGHT)
             }
             if (ladderFixture.getShape().contains(headPoint)) {
                 val body = headFixture.getBody()
@@ -726,18 +724,18 @@ class MegaContactListener(
             val pd = body.getPositionDelta()
             val bodyPointToCheck = if (pd.x > 0f) {
                 if (pd.y > 0f) body.getTopRightPoint()
-                else if (pd.y < 0f) body.getBottomRightPoint() else body.getCenterRightPoint()
+                else if (pd.y < 0f) body.getBottomRightPoint() else body.getPositionPoint(Position.CENTER_RIGHT)
             } else if (pd.x < 0f) {
                 if (body.getPositionDelta().y > 0f) body.getTopLeftPoint()
                 else if (body.getPositionDelta().y < 0f) body.getBottomLeftPoint()
-                else body.getCenterLeftPoint()
+                else body.getPositionPoint(Position.CENTER_LEFT)
             } else {
-                if (pd.y > 0f) body.getTopCenterPoint()
-                else if (pd.y < 0f) body.getBottomCenterPoint() else body.getCenter()
+                if (pd.y > 0f) body.getPositionPoint(Position.TOP_CENTER)
+                else if (pd.y < 0f) body.getPositionPoint(Position.BOTTOM_CENTER) else body.getCenter()
             }
             if (!gravityChangeFixture.getShape().contains(bodyPointToCheck)) return
             val entity = bodyFixture.getEntity()
-            if (entity is IDirectionRotatable && entity.directionRotation != direction) entity.directionRotation =
+            if (entity is IDirectional && entity.direction != direction) entity.direction =
                 direction
         }
 

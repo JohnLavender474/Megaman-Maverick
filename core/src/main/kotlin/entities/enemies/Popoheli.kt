@@ -124,7 +124,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
                     triggers.add(TriggerDef(trigger, start, target))
                 }
             }
-            facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+            facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         } else {
             val center = megaman().body.getCenter()
             val targets =
@@ -133,7 +133,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
                 targets.add((it.second as RectangleMapObject).rectangle.getCenter())
             }
             target = targets.poll()
-            facing = if (target.x < body.x) Facing.LEFT else Facing.RIGHT
+            facing = if (target.x < body.getX()) Facing.LEFT else Facing.RIGHT
         }
 
         state = if (triggerable) PopoheliState.WAITING else PopoheliState.APPROACHING
@@ -204,12 +204,12 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         body.addFixture(bodyFixture)
-        bodyFixture.rawShape.color = Color.GRAY
+        bodyFixture.getShape().color = Color.GRAY
         debugShapes.add { bodyFixture.getShape() }
 
         val damagerFixture1 = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
         body.addFixture(damagerFixture1)
-        damagerFixture1.rawShape.color = Color.RED
+        damagerFixture1.getShape().color = Color.RED
         debugShapes.add { damagerFixture1.getShape() }
 
         val damagerFixture2 = Fixture(
@@ -226,7 +226,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
             )
         )
         body.addFixture(damageableFixture)
-        damageableFixture.rawShape.color = Color.PURPLE
+        damageableFixture.getShape().color = Color.PURPLE
         debugShapes.add { damageableFixture.getShape() }
 
         val shieldFixture = Fixture(
@@ -235,7 +235,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
             )
         )
         body.addFixture(shieldFixture)
-        shieldFixture.rawShape.color = Color.GREEN
+        shieldFixture.getShape().color = Color.GREEN
         debugShapes.add { shieldFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
@@ -243,14 +243,14 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
             body.fixtures.forEach { (it.second as Fixture).active = !waiting }
             if (waiting) return@put
 
-            damagerFixture2.offsetFromBodyCenter = Vector2(
+            damagerFixture2.offsetFromBodyAttachment = Vector2(
                 FLAMES * FLAME_PADDING * facing.value * 0.65f * ConstVals.PPM, -0.5f * ConstVals.PPM
             )
             damagerFixture2.active = attacking
-            damagerFixture2.rawShape.color = if (damagerFixture2.active) Color.GRAY else Color.RED
+            damagerFixture2.getShape().color = if (damagerFixture2.active) Color.GRAY else Color.RED
 
-            damageableFixture.offsetFromBodyCenter.x = 0.4f * ConstVals.PPM * -facing.value
-            shieldFixture.offsetFromBodyCenter.x = 0.3f * ConstVals.PPM * facing.value
+            damageableFixture.offsetFromBodyAttachment.x = 0.4f * ConstVals.PPM * -facing.value
+            shieldFixture.offsetFromBodyAttachment.x = 0.3f * ConstVals.PPM * facing.value
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -278,7 +278,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
             updateFunctions.put("flame_$i") { _, _sprite ->
                 _sprite.hidden = !attacking
                 _sprite.setPosition(
-                    body.getBottomCenterPoint().add(
+                    body.getPositionPoint(Position.BOTTOM_CENTER).add(
                         i * FLAME_PADDING * ConstVals.PPM * facing.value, -0.25f * ConstVals.PPM
                     ), if (isFacing(Facing.LEFT)) Position.BOTTOM_RIGHT else Position.BOTTOM_LEFT
                 )

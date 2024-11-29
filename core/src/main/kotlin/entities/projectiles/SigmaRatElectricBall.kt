@@ -111,7 +111,7 @@ class SigmaRatElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game)
         )
         explosion!!.spawn(
             props(
-                ConstKeys.POSITION pairTo body.getBottomCenterPoint(),
+                ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER),
                 ConstKeys.DIRECTION pairTo (explosionDirection ?: Direction.UP)
             )
         )
@@ -129,12 +129,12 @@ body.physics.applyFrictionY = false
 
         val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameRectangle().setSize(ConstVals.PPM.toFloat()))
         body.addFixture(projectileFixture)
-        projectileFixture.rawShape.color = Color.BLUE
+        projectileFixture.getShape().color = Color.BLUE
         debugShapes.add { projectileFixture.getShape() }
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(ConstVals.PPM.toFloat()))
         body.addFixture(damagerFixture)
-        damagerFixture.rawShape.color = Color.RED
+        damagerFixture.getShape().color = Color.RED
         debugShapes.add { damagerFixture.getShape() }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

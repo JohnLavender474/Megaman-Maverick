@@ -70,7 +70,7 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
 
         val size = spawnProps.getOrDefault(ConstKeys.SIZE, Vector2().set(0.75f * ConstVals.PPM), Vector2::class)
         body.setSize(size)
-        firstSprite!!.setSize(size.cpy().scl(2f))
+        defaultSprite.setSize(size.cpy().scl(2f))
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
@@ -82,13 +82,13 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
 
         val noFace = spawnProps.getOrDefault("${ConstKeys.NO}_${ConstKeys.FACE}", false, Boolean::class)
-        firstSprite!!.setRegion(if (noFace) noFaceRegion!! else region!!)
-        firstSprite!!.priority.section = spawnProps.getOrDefault(
+        defaultSprite.setRegion(if (noFace) noFaceRegion!! else region!!)
+        defaultSprite.priority.section = spawnProps.getOrDefault(
             ConstKeys.SECTION,
             DrawingSection.PLAYGROUND,
             DrawingSection::class
         )
-        firstSprite!!.priority.value = spawnProps.getOrDefault(ConstKeys.PRIORITY, 0, Int::class)
+        defaultSprite.priority.value = spawnProps.getOrDefault(ConstKeys.PRIORITY, 0, Int::class)
     }
 
     private fun bounceBullets(collisionShape: IGameShape2D) {
@@ -96,10 +96,10 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
             EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SNOWBALL, SNOWBALL_TRAJECTORIES.size)
         val direction = getOverlapPushDirection(body, collisionShape) ?: Direction.UP
         val spawn = when (direction) {
-            Direction.UP -> body.getTopCenterPoint().add(0f, 0.1f * ConstVals.PPM)
-            Direction.DOWN -> body.getBottomCenterPoint().sub(0f, 0.1f * ConstVals.PPM)
-            Direction.LEFT -> body.getCenterLeftPoint().sub(0.1f * ConstVals.PPM, 0f)
-            Direction.RIGHT -> body.getCenterRightPoint().add(0.1f * ConstVals.PPM, 0f)
+            Direction.UP -> body.getPositionPoint(Position.TOP_CENTER).add(0f, 0.1f * ConstVals.PPM)
+            Direction.DOWN -> body.getPositionPoint(Position.BOTTOM_CENTER).sub(0f, 0.1f * ConstVals.PPM)
+            Direction.LEFT -> body.getPositionPoint(Position.CENTER_LEFT).sub(0.1f * ConstVals.PPM, 0f)
+            Direction.RIGHT -> body.getPositionPoint(Position.CENTER_RIGHT).add(0.1f * ConstVals.PPM, 0f)
         }
         for (i in 0 until snowballs.size) {
             val trajectory = SNOWBALL_TRAJECTORIES[i].cpy()
@@ -151,7 +151,7 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
         body.physics.applyFrictionY = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameRectangle(body))
         body.addFixture(projectileFixture)

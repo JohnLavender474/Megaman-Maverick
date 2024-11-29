@@ -84,7 +84,7 @@ class UnderWaterBubble(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyE
         body.physics.applyFrictionY = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameCircle().setRadius(0.125f * ConstVals.PPM))
         bodyFixture.setHitByProjectileReceiver { pop("Hit projectile") }
@@ -94,7 +94,7 @@ class UnderWaterBubble(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyE
 
         val waterListenerFixture =
             Fixture(body, FixtureType.WATER_LISTENER, GameCircle().setRadius(0.05f * ConstVals.PPM))
-        waterListenerFixture.offsetFromBodyCenter.y = 0.125f * ConstVals.PPM
+        waterListenerFixture.offsetFromBodyAttachment.y = 0.125f * ConstVals.PPM
         body.addFixture(waterListenerFixture)
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

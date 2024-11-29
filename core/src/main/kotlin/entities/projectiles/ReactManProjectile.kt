@@ -6,11 +6,12 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.UtilMethods.getOverlapPushDirection
 import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.getOverlapPushDirection
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -37,8 +38,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.*
 
 class ReactManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
 
@@ -132,16 +132,16 @@ class ReactManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game), 
 
     private fun shatter(shape: IGameShape2D) {
         playSoundNow(SoundAsset.BURST_SOUND, false)
-        val direction = getOverlapPushDirection(body, shape) ?: Direction.UP
+        val direction = getOverlapPushDirection(body.getBounds(), shape) ?: Direction.UP
         shatterTrajectories.get(direction).forEach { trajectory ->
             val projectile = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.REACT_MAN_PROJECTILE)!!
             projectile.spawn(
                 props(
                     ConstKeys.POSITION pairTo when (direction) {
-                        Direction.UP -> body.getTopCenterPoint()
-                        Direction.DOWN -> body.getBottomCenterPoint()
-                        Direction.LEFT -> body.getCenterLeftPoint()
-                        Direction.RIGHT -> body.getCenterRightPoint()
+                        Direction.UP -> body.getPositionPoint(Position.TOP_CENTER)
+                        Direction.DOWN -> body.getPositionPoint(Position.BOTTOM_CENTER)
+                        Direction.LEFT -> body.getPositionPoint(Position.CENTER_LEFT)
+                        Direction.RIGHT -> body.getPositionPoint(Position.CENTER_RIGHT)
                     },
                     ConstKeys.OWNER pairTo owner,
                     ConstKeys.BIG pairTo false,
@@ -176,12 +176,12 @@ class ReactManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game), 
             val size = if (big) 0.65f else 0.35f
             body.setSize(size * ConstVals.PPM)
             body.fixtures.forEach {
-                val shape = (it.second as Fixture).rawShape as GameRectangle
+                val shape = (it.second as Fixture).getShape() as GameRectangle
                 shape.setSize(size * ConstVals.PPM)
             }
         }
 
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
 
         return BodyComponentCreator.create(this, body)
     }

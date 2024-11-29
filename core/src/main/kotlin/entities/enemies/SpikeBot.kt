@@ -112,11 +112,11 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
         loop.reset()
         timers.values().forEach { it.reset() }
-        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         val frameDuration = 0.1f / movementScalar
         animations.values().forEach { it.setFrameDuration(frameDuration) }
     }
@@ -124,7 +124,7 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
     private fun shoot() {
         for (i in 0 until NEEDLES) {
             val xOffset = xOffsets[i]
-            val position = body.getTopCenterPoint().add(xOffset * ConstVals.PPM, NEEDLE_Y_OFFSET * ConstVals.PPM)
+            val position = body.getPositionPoint(Position.TOP_CENTER).add(xOffset * ConstVals.PPM, NEEDLE_Y_OFFSET * ConstVals.PPM)
 
             val angle = angles[i]
             val impulse = Vector2(0f, NEEDLE_IMPULSE * ConstVals.PPM).rotateDeg(angle).scl(movementScalar)
@@ -159,9 +159,9 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
                         (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
                     ) swapFacing()
                     else if (isFacing(Facing.LEFT) && !body.isProperty(LEFT_FOOT, true)) {
-                        if (megaman().body.x < body.x) jump() else swapFacing()
+                        if (megaman().body.getX() < body.getX()) jump() else swapFacing()
                     } else if (isFacing(Facing.RIGHT) && !body.isProperty(RIGHT_FOOT, true)) {
-                        if (megaman().body.x > body.x) jump() else swapFacing()
+                        if (megaman().body.getX() > body.getX()) jump() else swapFacing()
                     }
 
                     body.physics.velocity.x = WALK_SPEED * ConstVals.PPM * facing.value * movementScalar
@@ -174,7 +174,7 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
                 timer.reset()
                 loop.next()
                 if (loop.getCurrent() != SpikeBotState.WALK)
-                    facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+                    facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
             }
         }
     }
@@ -188,7 +188,7 @@ body.physics.applyFrictionY = false
         body.putProperty(RIGHT_FOOT, false)
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         body.addFixture(bodyFixture)
@@ -201,23 +201,23 @@ body.physics.applyFrictionY = false
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyCenter.y = -0.375f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -0.375f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.rawShape.color = Color.GREEN
+        feetFixture.getShape().color = Color.GREEN
         debugShapes.add { feetFixture.getShape() }
 
         val leftSideFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        leftSideFixture.offsetFromBodyCenter.x = -0.375f * ConstVals.PPM
+        leftSideFixture.offsetFromBodyAttachment.x = -0.375f * ConstVals.PPM
         leftSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftSideFixture)
-        leftSideFixture.rawShape.color = Color.YELLOW
+        leftSideFixture.getShape().color = Color.YELLOW
         debugShapes.add { leftSideFixture.getShape() }
 
         val rightSideFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        rightSideFixture.offsetFromBodyCenter.x = 0.375f * ConstVals.PPM
+        rightSideFixture.offsetFromBodyAttachment.x = 0.375f * ConstVals.PPM
         rightSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightSideFixture)
-        rightSideFixture.rawShape.color = Color.YELLOW
+        rightSideFixture.getShape().color = Color.YELLOW
         debugShapes.add { rightSideFixture.getShape() }
 
         val leftFootFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
@@ -225,9 +225,9 @@ body.physics.applyFrictionY = false
             if (fixture.getType() == FixtureType.BLOCK)
                 body.putProperty("${ConstKeys.LEFT}_${ConstKeys.FOOT}", true)
         }
-        leftFootFixture.offsetFromBodyCenter = vector2Of(-0.375f * ConstVals.PPM)
+        leftFootFixture.offsetFromBodyAttachment = vector2Of(-0.375f * ConstVals.PPM)
         body.addFixture(leftFootFixture)
-        leftFootFixture.rawShape.color = Color.ORANGE
+        leftFootFixture.getShape().color = Color.ORANGE
         debugShapes.add { leftFootFixture.getShape() }
 
         val rightFootFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
@@ -235,10 +235,10 @@ body.physics.applyFrictionY = false
             if (fixture.getType() == FixtureType.BLOCK)
                 body.putProperty("${ConstKeys.RIGHT}_${ConstKeys.FOOT}", true)
         }
-        rightFootFixture.offsetFromBodyCenter.x = 0.375f * ConstVals.PPM
-        rightFootFixture.offsetFromBodyCenter.y = -0.375f * ConstVals.PPM
+        rightFootFixture.offsetFromBodyAttachment.x = 0.375f * ConstVals.PPM
+        rightFootFixture.offsetFromBodyAttachment.y = -0.375f * ConstVals.PPM
         body.addFixture(rightFootFixture)
-        rightFootFixture.rawShape.color = Color.ORANGE
+        rightFootFixture.getShape().color = Color.ORANGE
         debugShapes.add { rightFootFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
@@ -259,7 +259,7 @@ body.physics.applyFrictionY = false
         sprite.setSize(1.15f * ConstVals.PPM, 1.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            _sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             _sprite.hidden = damageBlink
             _sprite.setFlip(isFacing(Facing.LEFT), false)
         }

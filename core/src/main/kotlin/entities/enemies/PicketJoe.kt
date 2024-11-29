@@ -107,9 +107,9 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
                 spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
             else if (spawnProps.containsKey(ConstKeys.POSITION_SUPPLIER))
                 (spawnProps.get(ConstKeys.POSITION_SUPPLIER) as () -> Vector2).invoke()
-            else spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+            else spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
-        facing = if (megaman().body.x >= body.x) Facing.RIGHT else Facing.LEFT
+        facing = if (megaman().body.getX() >= body.getX()) Facing.RIGHT else Facing.LEFT
         throwTimer.setToEnd()
         standTimer.reset()
     }
@@ -117,7 +117,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            facing = if (megaman().body.x >= body.x) Facing.RIGHT else Facing.LEFT
+            facing = if (megaman().body.getX() >= body.getX()) Facing.RIGHT else Facing.LEFT
             if (standing) {
                 standTimer.update(it)
                 if (standTimer.isFinished()) setToThrowingPickets()
@@ -125,7 +125,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
                 throwTimer.update(it)
                 if (throwTimer.isFinished()) setToStanding()
             }
-            if (throwTimer.isFinished()) facing = if (megaman().body.x >= body.x) Facing.RIGHT else Facing.LEFT
+            if (throwTimer.isFinished()) facing = if (megaman().body.getX() >= body.getX()) Facing.RIGHT else Facing.LEFT
         }
     }
 
@@ -137,16 +137,16 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
-        bodyFixture.rawShape.color = Color.YELLOW
+        bodyFixture.getShape().color = Color.YELLOW
         debugShapes.add { bodyFixture.getShape() }
 
         val feetFixture = Fixture(
             body, FixtureType.FEET,
             GameRectangle().setSize(0.8f * ConstVals.PPM, 0.1f * ConstVals.PPM)
         )
-        feetFixture.offsetFromBodyCenter.y = -0.5f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -0.5f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.rawShape.color = Color.GREEN
+        feetFixture.getShape().color = Color.GREEN
         debugShapes.add { feetFixture.getShape() }
 
         val shieldFixture = Fixture(
@@ -156,7 +156,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         )
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
         body.addFixture(shieldFixture)
-        shieldFixture.rawShape.color = Color.BLUE
+        shieldFixture.getShape().color = Color.BLUE
         debugShapes.add { shieldFixture.getShape() }
 
         val damagerFixture = Fixture(
@@ -165,7 +165,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             GameRectangle().setSize(0.75f * ConstVals.PPM, 1.15f * ConstVals.PPM)
         )
         body.addFixture(damagerFixture)
-        damagerFixture.rawShape.color = Color.RED
+        damagerFixture.getShape().color = Color.RED
         debugShapes.add { damagerFixture.getShape() }
 
         val damageableFixture = Fixture(
@@ -174,15 +174,15 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             GameRectangle().setSize(0.8f * ConstVals.PPM, 1.35f * ConstVals.PPM)
         )
         body.addFixture(damageableFixture)
-        damageableFixture.rawShape.color = Color.PURPLE
+        damageableFixture.getShape().color = Color.PURPLE
         debugShapes.add { damageableFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             shieldFixture.active = standing
             if (standing) {
-                damageableFixture.offsetFromBodyCenter.x = 0.25f * ConstVals.PPM * -facing.value
-                shieldFixture.offsetFromBodyCenter.x = 0.35f * ConstVals.PPM * facing.value
-            } else damageableFixture.offsetFromBodyCenter.setZero()
+                damageableFixture.offsetFromBodyAttachment.x = 0.25f * ConstVals.PPM * -facing.value
+                shieldFixture.offsetFromBodyAttachment.x = 0.35f * ConstVals.PPM * facing.value
+            } else damageableFixture.offsetFromBodyAttachment.setZero()
         })
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -196,7 +196,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setFlip(isFacing(Facing.LEFT), false)
-            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            _sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             _sprite.hidden = if (invincible) damageBlink else false
         }
         return spritesComponent

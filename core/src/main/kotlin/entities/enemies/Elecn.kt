@@ -112,7 +112,7 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         body.setCenter(spawn)
         elecnLoop.reset()
         elecnTimer.reset()
-        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -168,10 +168,10 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
             if (isFacing(Facing.LEFT)) {
                 sideFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
-                sideFixture.offsetFromBodyCenter.x = -0.5f * ConstVals.PPM
+                sideFixture.offsetFromBodyAttachment.x = -0.5f * ConstVals.PPM
             } else {
                 sideFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
-                sideFixture.offsetFromBodyCenter.x = 0.5f * ConstVals.PPM
+                sideFixture.offsetFromBodyAttachment.x = 0.5f * ConstVals.PPM
             }
 
             body.physics.velocity = if (elecnLoop.getCurrent() == ElecnState.SHOCKING) Vector2()
@@ -230,7 +230,7 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             val shock = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.ELECTRIC_BALL)!!
             shock.spawn(
                 props(
-                    ConstKeys.POSITION pairTo body.getTopCenterPoint(), ConstKeys.X pairTo xVel, ConstKeys.Y pairTo yVel
+                    ConstKeys.POSITION pairTo body.getPositionPoint(Position.TOP_CENTER), ConstKeys.X pairTo xVel, ConstKeys.Y pairTo yVel
                 )
             )
         }

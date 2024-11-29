@@ -154,7 +154,7 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
 
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
 
         headPosition = spawnProps.get(HEAD_POSITION, RectangleMapObject::class)!!.rectangle.getCenter()
@@ -387,21 +387,21 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
         debugShapes.add { body }
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.85f * ConstVals.PPM))
-        damagerFixture.offsetFromBodyCenter.y = 3f * ConstVals.PPM
+        damagerFixture.offsetFromBodyAttachment.y = 3f * ConstVals.PPM
         body.addFixture(damagerFixture)
-        damagerFixture.rawShape.color = Color.RED
+        damagerFixture.getShape().color = Color.RED
         debugShapes.add { damagerFixture.getShape() }
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.85f * ConstVals.PPM))
-        damageableFixture.offsetFromBodyCenter.y = 3f * ConstVals.PPM
+        damageableFixture.offsetFromBodyAttachment.y = 3f * ConstVals.PPM
         body.addFixture(damageableFixture)
-        damageableFixture.rawShape.color = Color.PURPLE
+        damageableFixture.getShape().color = Color.PURPLE
         debugShapes.add { damageableFixture.getShape() }
 
         val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(0.65f * ConstVals.PPM))
-        shieldFixture.offsetFromBodyCenter.y = 3f * ConstVals.PPM
+        shieldFixture.offsetFromBodyAttachment.y = 3f * ConstVals.PPM
         body.addFixture(shieldFixture)
-        shieldFixture.rawShape.color = Color.CYAN
+        shieldFixture.getShape().color = Color.CYAN
         debugShapes.add { shieldFixture.getShape() }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -414,7 +414,7 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
         sprite.setSize(10f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            _sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             _sprite.hidden = damageBlink || !ready
         }
         return spritesComponent

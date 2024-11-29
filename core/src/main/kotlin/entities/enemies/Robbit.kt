@@ -99,7 +99,7 @@ class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
         robbitLoop.reset()
         robbitTimer.reset()
@@ -110,18 +110,18 @@ class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         body.setSize(1.5f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(1.5f * ConstVals.PPM))
         body.addFixture(bodyFixture)
-        bodyFixture.rawShape.color = Color.BLUE
+        bodyFixture.getShape().color = Color.BLUE
         debugShapes.add { bodyFixture.getShape() }
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(1.35f * ConstVals.PPM, 0.2f * ConstVals.PPM))
-        feetFixture.offsetFromBodyCenter.y = -0.75f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -0.75f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.rawShape.color = Color.GREEN
+        feetFixture.getShape().color = Color.GREEN
         debugShapes.add { feetFixture.getShape() }
 
         val damageableFixture =
@@ -145,7 +145,7 @@ class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
             if (robbitLoop.getCurrent() != RobbitState.JUMPING)
-                facing = if (megaman().body.x >= body.x) Facing.RIGHT else Facing.LEFT
+                facing = if (megaman().body.getX() >= body.getX()) Facing.RIGHT else Facing.LEFT
 
             robbitTimer.update(it)
             if (robbitTimer.isJustFinished()) {
@@ -171,7 +171,7 @@ class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
-            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            _sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             _sprite.setFlip(isFacing(Facing.LEFT), false)
         }
         return spritesComponent

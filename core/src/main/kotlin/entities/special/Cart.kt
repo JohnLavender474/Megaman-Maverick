@@ -85,7 +85,7 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "Spawn cart. Hashcode = ${this.hashCode()}. Props = $spawnProps")
         super.onSpawn(spawnProps)
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
         facing = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, "right", String::class).uppercase())
     }
@@ -98,14 +98,14 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val cartFixture =
             Fixture(body, FixtureType.CART, GameRectangle().setSize(0.75f * ConstVals.PPM, 1.5f * ConstVals.PPM))
-        cartFixture.offsetFromBodyCenter.y = -0.25f * ConstVals.PPM
+        cartFixture.offsetFromBodyAttachment.y = -0.25f * ConstVals.PPM
         cartFixture.putProperty(ConstKeys.ENTITY, this)
         body.addFixture(cartFixture)
-        cartFixture.rawShape.color = Color.BLUE
+        cartFixture.getShape().color = Color.BLUE
         debugShapes.add { cartFixture.getShape() }
 
         val bodyFixture =
@@ -119,18 +119,18 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         val leftFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM))
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
-        leftFixture.offsetFromBodyCenter.x = -0.65f * ConstVals.PPM
+        leftFixture.offsetFromBodyAttachment.x = -0.65f * ConstVals.PPM
         body.addFixture(leftFixture)
 
         val rightFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM))
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
-        rightFixture.offsetFromBodyCenter.x = 0.65f * ConstVals.PPM
+        rightFixture.offsetFromBodyAttachment.x = 0.65f * ConstVals.PPM
         body.addFixture(rightFixture)
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyCenter.y = -0.4f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -0.4f * ConstVals.PPM
         body.addFixture(feetFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
@@ -149,7 +149,7 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         sprite.setSize(2.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
-            val position = body.getBottomCenterPoint()
+            val position = body.getPositionPoint(Position.BOTTOM_CENTER)
             _sprite.setPosition(position, Position.BOTTOM_CENTER)
         }
         return spritesComponent

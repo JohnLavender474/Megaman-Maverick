@@ -79,8 +79,8 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEnti
         super.onSpawn(spawnProps)
 
         bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
-        val spawn = bounds.getCenterLeftPoint()
-        val width = (bounds.width / ConstVals.PPM).toInt()
+        val spawn = bounds.getPositionPoint(Position.CENTER_LEFT)
+        val width = (bounds.getWidth() / ConstVals.PPM).toInt()
 
         val dropIndices = if (spawnProps.containsKey(DROPS))
             spawnProps.get(DROPS, String::class)!!
@@ -230,7 +230,7 @@ class RailTrackPlatform(game: MegamanMaverickGame) : Block(game), ISpritesEntity
         sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
-            val position = body.getTopCenterPoint()
+            val position = body.getPositionPoint(Position.TOP_CENTER)
             position.y += 0.1f * ConstVals.PPM
             _sprite.setPosition(position, Position.TOP_CENTER)
         }

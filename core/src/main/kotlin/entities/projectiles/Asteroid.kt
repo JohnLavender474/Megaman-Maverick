@@ -1,13 +1,12 @@
 package com.megaman.maverick.game.entities.projectiles
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
+import com.mega.game.engine.common.UtilMethods.getRandom
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectSetOf
-import com.mega.game.engine.common.getRandom
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -38,6 +37,7 @@ import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
@@ -104,7 +104,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable {
 
         val active = delayTimer == null
         body.physics.collisionOn = active
-        body.fixtures.forEach { (it.second as Fixture).active = delayTimer == null }
+        body.fixtures.forEach { it.second.setActive(delayTimer == null) }
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
@@ -115,13 +115,13 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable {
                 delayTimer = null
 
                 body.physics.collisionOn = true
-                body.fixtures.forEach { (it.second as Fixture).active = true }
+                body.fixtures.forEach { it.second.setActive(true) }
 
                 return@let
             }
 
             body.physics.collisionOn = false
-            body.fixtures.forEach { (it.second as Fixture).active = false }
+            body.fixtures.forEach { it.second.setActive(false) }
 
             blinkTimer.update(delta)
             if (blinkTimer.isFinished()) {
@@ -175,22 +175,18 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable {
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameCircle().setRadius(0.3f * ConstVals.PPM))
         body.addFixture(bodyFixture)
-        bodyFixture.rawShape.color = Color.GRAY
         debugShapes.add { bodyFixture.getShape() }
 
         val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameCircle().setRadius(0.375f * ConstVals.PPM))
         body.addFixture(projectileFixture)
-        projectileFixture.rawShape.color = Color.BLUE
         debugShapes.add { projectileFixture.getShape() }
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.375f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        damagerFixture.rawShape.color = Color.RED
         debugShapes.add { damagerFixture.getShape() }
 
         val shieldFixture = Fixture(body, FixtureType.SHIELD, GameCircle().setRadius(0.375f * ConstVals.PPM))
         body.addFixture(shieldFixture)
-        shieldFixture.rawShape.color = Color.CYAN
         debugShapes.add { shieldFixture.getShape() }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

@@ -47,8 +47,7 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         addComponent(CullablesComponent())
         addComponent(defineBodyComponent())
 
-        body.color = Color.GRAY
-        debugShapeSuppliers.add { if (draw) body.getBodyBounds() else null }
+        debugShapeSuppliers.add { if (draw) body.getBounds() else null }
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapeSuppliers, debug = true))
     }
 
@@ -118,7 +117,7 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         val collisionOn = spawnProps.getOrDefault(ConstKeys.ON, true, Boolean::class)
         body.physics.collisionOn = collisionOn
 
-        blockFixture.active = spawnProps.getOrDefault(ConstKeys.ACTIVE, true, Boolean::class)
+        blockFixture.setActive(spawnProps.getOrDefault(ConstKeys.ACTIVE, true, Boolean::class))
 
         val fixtureEntriesToAdd = spawnProps.get(ConstKeys.FIXTURES) as Array<GamePair<FixtureType, Properties>>?
         fixtureEntriesToAdd?.forEach { fixtureEntry ->
@@ -193,15 +192,13 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
     protected open fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.STATIC)
-        body.color = Color.GRAY
-        debugShapeSuppliers.add { body.getBodyBounds() }
+        debugShapeSuppliers.add { body.getBounds() }
 
         blockFixture = Fixture(body, FixtureType.BLOCK)
         body.addFixture(blockFixture)
-        blockFixture.rawShape.color = Color.BLUE
         debugShapeSuppliers.add { blockFixture.getShape() }
 
-        body.preProcess.put(ConstKeys.DEFAULT) { (blockFixture.rawShape as GameRectangle).set(body) }
+        body.preProcess.put(ConstKeys.DEFAULT) { (blockFixture.getShape() as GameRectangle).set(body) }
 
         return BodyComponentCreator.create(this, body)
     }

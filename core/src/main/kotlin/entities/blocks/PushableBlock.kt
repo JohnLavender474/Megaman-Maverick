@@ -1,12 +1,12 @@
 package com.megaman.maverick.game.entities.blocks
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
@@ -39,6 +39,7 @@ import com.megaman.maverick.game.entities.megaman.components.rightSideFixture
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
 class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, ICullableEntity {
@@ -61,7 +62,7 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         override fun hitByProjectile(projectileFixture: IFixture) {
             val projectileX = projectileFixture.getShape().getX()
             var impulse = PROJECTILE_IMPULSE * ConstVals.PPM
-            if (projectileX > pushableBody.x) impulse *= -1f
+            if (projectileX > pushableBody.getX()) impulse *= -1f
             pushableBody.physics.velocity.x += impulse
         }
     }
@@ -88,7 +89,8 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+            .getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
 
         block = InnerBlock(game, body)
@@ -138,14 +140,14 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         block!!.body.set(body)
 
         if (body.isSensing(BodySense.FEET_ON_GROUND)) when {
-            megaman().leftSideFixture.overlaps(body) &&
+            megaman().leftSideFixture.overlaps(body.getBounds()) &&
                 megaman().isFacing(Facing.LEFT) &&
                 megaman().body.physics.velocity.x < 0f -> {
                 val impulse = PUSH_IMPULSE * ConstVals.PPM * delta
                 body.physics.velocity.x -= impulse
             }
 
-            megaman().rightSideFixture.overlaps(body) &&
+            megaman().rightSideFixture.overlaps(body.getBounds()) &&
                 megaman().isFacing(Facing.RIGHT) &&
                 megaman().body.physics.velocity.x > 0f -> {
                 val impulse = PUSH_IMPULSE * ConstVals.PPM * delta
@@ -160,16 +162,14 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         body.physics.velocityClamp.x = X_VEL_CLAMP * ConstVals.PPM
         body.physics.defaultFrictionOnSelf.x = DEFAULT_FRICTION_X
         body.physics.applyFrictionY = false
-        body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(BODY_WIDTH * ConstVals.PPM, 0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyCenter.y = -ConstVals.PPM.toFloat()
+        feetFixture.offsetFromBodyAttachment.y = -ConstVals.PPM.toFloat()
         body.addFixture(feetFixture)
-        feetFixture.rawShape.color = Color.GREEN
         debugShapes.add { feetFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
@@ -187,7 +187,7 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setRegion(regions["MetalCrate"])
-            sprite.setBounds(body.getBodyBounds())
+            sprite.setBounds(body.getBounds())
         }
         return spritesComponent
     }

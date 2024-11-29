@@ -41,7 +41,6 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.enemies.Wanaan
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
@@ -54,7 +53,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import kotlin.reflect.KClass
 
 class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEntity, IAudioEntity,
-    ICullableEntity, IDrawableShapesEntity, IDirectionRotatable {
+    ICullableEntity, IDrawableShapesEntity, IDirectional {
 
     companion object {
         const val TAG = "WanaanLauncher"
@@ -67,7 +66,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
         // TODO
     )
-    override lateinit var directionRotation: Direction
+    override lateinit var direction: Direction
 
     private val newWanaanDelay = Timer(NEW_WANAAN_DELAY)
     private val launchDelay = Timer(LAUNCH_DELAY)
@@ -95,7 +94,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
         val children = getObjectProps(spawnProps)
         children.forEach { sensors.add(it.rectangle.toGameRectangle()) }
 
-        this.directionRotation = if (spawnProps.containsKey(ConstKeys.DIRECTION)) {
+        this.direction = if (spawnProps.containsKey(ConstKeys.DIRECTION)) {
             var direction = spawnProps.get(ConstKeys.DIRECTION)!!
             if (direction is String) direction = Direction.valueOf(direction.uppercase())
             direction as Direction
@@ -181,23 +180,23 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
     private fun spawnWanaan() {
         GameLogger.debug(TAG, "launchWanaan()")
         wanaan = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.WANAAN) as Wanaan
-        val spawn = when (directionRotation) {
-            Direction.UP -> body.getTopCenterPoint().sub(0f, 0.5f * ConstVals.PPM)
-            Direction.DOWN -> body.getBottomCenterPoint().add(0f, 0.5f * ConstVals.PPM)
-            Direction.LEFT -> body.getCenterLeftPoint().add(0.5f * ConstVals.PPM, 0f)
-            Direction.RIGHT -> body.getCenterRightPoint().sub(0.5f * ConstVals.PPM, 0f)
+        val spawn = when (direction) {
+            Direction.UP -> body.getPositionPoint(Position.TOP_CENTER).sub(0f, 0.5f * ConstVals.PPM)
+            Direction.DOWN -> body.getPositionPoint(Position.BOTTOM_CENTER).add(0f, 0.5f * ConstVals.PPM)
+            Direction.LEFT -> body.getPositionPoint(Position.CENTER_LEFT).add(0.5f * ConstVals.PPM, 0f)
+            Direction.RIGHT -> body.getPositionPoint(Position.CENTER_RIGHT).sub(0.5f * ConstVals.PPM, 0f)
         }
         wanaan!!.spawn(
             props(
                 ConstKeys.POSITION pairTo spawn,
-                ConstKeys.DIRECTION pairTo directionRotation,
+                ConstKeys.DIRECTION pairTo direction,
             )
         )
     }
 
     private fun launchWanaan() {
         if (wanaan == null) throw IllegalStateException("Wanaan cannot be null when launching")
-        val impulse = when (directionRotation) {
+        val impulse = when (direction) {
             Direction.UP -> Vector2(0f, IMPULSE)
             Direction.DOWN -> Vector2(0f, -IMPULSE)
             Direction.LEFT -> Vector2(-IMPULSE, 0f)

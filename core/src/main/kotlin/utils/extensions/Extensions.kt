@@ -1,4 +1,4 @@
-package com.megaman.maverick.game.utils
+package com.megaman.maverick.game.utils.extensions
 
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.audio.Music
@@ -26,6 +26,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.utils.LoopedSuppliers
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
@@ -51,7 +52,8 @@ fun MapObject.convertToProps(): Properties = when (this) {
 fun MapObject.getShape(): IGameShape2D = when (this) {
     is RectangleMapObject -> rectangle.toGameRectangle()
     is PolygonMapObject -> polygon.toGamePolygon()
-    is CircleMapObject -> circle.toGameCircle() // TODO: support polyline map object
+    is CircleMapObject -> circle.toGameCircle()
+    // TODO: support polyline map object
     else -> throw IllegalArgumentException("Unknown map object type: $this")
 }
 
@@ -97,11 +99,11 @@ fun MapProperties.toProps(): Properties {
     return props
 }
 
-fun Camera.toGameRectangle(rectangle: GameRectangle = GameRectangle()): GameRectangle {
-    rectangle.setSize(viewportWidth, viewportHeight)
-    rectangle.setCenter(position.x, position.y)
-    rectangle.setOrigin(position.x, position.y)
-    return rectangle
+fun Camera.toGameRectangle(): GameRectangle {
+    val out = LoopedSuppliers.getGameRectangle()
+    out.setSize(viewportWidth, viewportHeight)
+    out.setCenter(position.x, position.y)
+    return out
 }
 
 fun getDefaultCameraPosition(): Vector3 {
@@ -130,10 +132,10 @@ fun AssetManager.getMusics(): OrderedMap<MusicAsset, Music> {
 
 fun GamePolygon.splitIntoGameRectanglesBasedOnCenter(rectWidth: Float, rectHeight: Float): Matrix<GameRectangle> {
     val bounds = getBoundingRectangle()
-    val x = bounds.x
-    val y = bounds.y
-    val width = bounds.width
-    val height = bounds.height
+    val x = bounds.getX()
+    val y = bounds.getY()
+    val width = bounds.getWidth()
+    val height = bounds.getHeight()
     val rows = (height / rectHeight).roundToInt()
     val columns = (width / rectWidth).roundToInt()
     val matrix = Matrix<GameRectangle>(rows, columns)

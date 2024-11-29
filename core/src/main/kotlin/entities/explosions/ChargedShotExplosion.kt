@@ -81,13 +81,13 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
 
         val size = if (fullyCharged) 1.5f * ConstVals.PPM else ConstVals.PPM.toFloat()
         body.setSize(size)
-        (damagerFixture.rawShape as GameRectangle).setSize(size)
+        (damagerFixture.getShape() as GameRectangle).setSize(size)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
 
         val spriteDimension = (if (fullyCharged) 1.75f else 1.25f) * ConstVals.PPM
-        (firstSprite as GameSprite).setSize(spriteDimension)
+        (defaultSprite as GameSprite).setSize(spriteDimension)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
@@ -109,7 +109,7 @@ body.physics.applyFrictionY = false
         damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
         body.addFixture(damagerFixture)
 
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBodyBounds() }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
 
         return BodyComponentCreator.create(this, body)
     }

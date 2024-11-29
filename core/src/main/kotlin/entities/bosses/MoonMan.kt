@@ -54,7 +54,6 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -70,7 +69,7 @@ import kotlin.math.abs
 import kotlin.reflect.KClass
 
 class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, IScalableGravityEntity, IFaceable,
-    IDirectionRotatable {
+    IDirectional {
 
     companion object {
         const val TAG = "MoonMan"
@@ -138,10 +137,10 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
             if (it.fullyCharged) 2 else 1
         })
     override lateinit var facing: Facing
-    override var directionRotation: Direction
-        get() = body.cardinalRotation
+    override var direction: Direction
+        get() = body.direction
         set(value) {
-            if (CHANGE_GRAVITY) body.cardinalRotation = value
+            if (CHANGE_GRAVITY) body.direction = value
         }
     override var gravityScalar = DEFAULT_GRAVITY_SCALAR
 
@@ -221,8 +220,8 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
         gravityChangeState = ProcessState.BEGIN
 
-        val direction = megaman().directionRotation
-        directionRotation = direction
+        val direction = megaman().direction
+        direction = direction
         currentGravityChangeDir = direction
 
         gravityScalar =
@@ -344,7 +343,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
                         when (gravityChangeState) {
                             ProcessState.END -> {
                                 gravityChangeState = ProcessState.BEGIN
-                                directionRotation = currentGravityChangeDir
+                                direction = currentGravityChangeDir
 
                                 val next = stateMachine.next()
                                 GameLogger.debug(TAG, "update(): GRAVITY_CHANGE: end state, go to next=$next")
@@ -373,42 +372,42 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         body.setSize(BODY_WIDTH * ConstVals.PPM, BODY_HEIGHT * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.2f * ConstVals.PPM))
-        feetFixture.offsetFromBodyCenter.y = -BODY_HEIGHT * ConstVals.PPM / 2f
+        feetFixture.offsetFromBodyAttachment.y = -BODY_HEIGHT * ConstVals.PPM / 2f
         body.addFixture(feetFixture)
-        feetFixture.rawShape.color = Color.GREEN
+        feetFixture.getShape().color = Color.GREEN
         debugShapes.add { feetFixture.getShape() }
 
         val headFixture =
             Fixture(body, FixtureType.HEAD, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.2f * ConstVals.PPM))
-        headFixture.offsetFromBodyCenter.y = BODY_HEIGHT * ConstVals.PPM / 2f
+        headFixture.offsetFromBodyAttachment.y = BODY_HEIGHT * ConstVals.PPM / 2f
         body.addFixture(headFixture)
-        headFixture.rawShape.color = Color.ORANGE
+        headFixture.getShape().color = Color.ORANGE
         debugShapes.add { headFixture.getShape() }
 
         val leftFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, ConstVals.PPM.toFloat()))
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
-        leftFixture.offsetFromBodyCenter.x = -BODY_WIDTH * ConstVals.PPM / 2f
+        leftFixture.offsetFromBodyAttachment.x = -BODY_WIDTH * ConstVals.PPM / 2f
         body.addFixture(leftFixture)
-        leftFixture.rawShape.color = Color.BLUE
+        leftFixture.getShape().color = Color.BLUE
         debugShapes.add { leftFixture.getShape() }
 
         val rightFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, ConstVals.PPM.toFloat()))
-        rightFixture.offsetFromBodyCenter.x = BODY_WIDTH * ConstVals.PPM / 2f
+        rightFixture.offsetFromBodyAttachment.x = BODY_WIDTH * ConstVals.PPM / 2f
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
-        rightFixture.rawShape.color = Color.BLUE
+        rightFixture.getShape().color = Color.BLUE
         debugShapes.add { rightFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             if (body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)) {
                 val velocity = body.physics.velocity
-                when (directionRotation) {
+                when (direction) {
                     Direction.UP -> if (velocity.y > 0f) velocity.y = 0f
                     Direction.DOWN -> if (velocity.y < 0f) velocity.y = 0f
                     Direction.LEFT -> if (velocity.x < 0f) velocity.x = 0f
@@ -417,7 +416,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
             }
 
             val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
-            body.physics.gravity = when (directionRotation) {
+            body.physics.gravity = when (direction) {
                 Direction.UP -> Vector2(0f, -gravity)
                 Direction.DOWN -> Vector2(0f, gravity)
                 Direction.LEFT -> Vector2(-gravity, 0f)
@@ -440,12 +439,12 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setOriginCenter()
-            sprite.rotation = directionRotation.rotation
+            sprite.rotation = direction.rotation
 
-            val position = DirectionPositionMapper.getInvertedPosition(directionRotation)
+            val position = DirectionPositionMapper.getInvertedPosition(direction)
             sprite.setPosition(body.getPositionPoint(position), position)
 
-            val flipX = if (directionRotation == Direction.UP) isFacing(Facing.LEFT) else isFacing(Facing.RIGHT)
+            val flipX = if (direction == Direction.UP) isFacing(Facing.LEFT) else isFacing(Facing.RIGHT)
             sprite.setFlip(flipX, false)
 
             sprite.hidden = damageBlink || game.isProperty(ConstKeys.ROOM_TRANSITION, true)
@@ -490,7 +489,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
     private fun activateGravityChange() {
         currentGravityChangeDir = currentGravityChangeDir.getOpposite()
-        megaman().directionRotation = currentGravityChangeDir
+        megaman().direction = currentGravityChangeDir
         gravityChangeChance = 0f
         timers["gravity_change_delay"].reset()
         requestToPlaySound(SoundAsset.TIME_STOPPER_SOUND, false)
@@ -499,9 +498,9 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
     private fun jump(target: Vector2) {
         var jumpImpulseY = JUMP_IMPULSE_Y * ConstVals.PPM
-        if (directionRotation == Direction.DOWN) jumpImpulseY *= -1f
+        if (direction == Direction.DOWN) jumpImpulseY *= -1f
 
-        val yDiff = abs(megaman().body.y - body.y)
+        val yDiff = abs(megaman().body.getY() - body.getY())
         val horizontalScalar = (yDiff / (JUMP_HORIZONTAL_SCALAR_DENOMINATOR * ConstVals.PPM))
             .coerceIn(JUMP_MIN_HORIZONTAL_SCALAR, JUMP_MAX_HORIZONTAL_SCALAR)
         val impulse = MegaUtilMethods.calculateJumpImpulse(
@@ -600,8 +599,8 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
     private fun updateFacing() {
         when {
-            megaman().body.getMaxX() < body.x -> facing = Facing.LEFT
-            megaman().body.x > body.getMaxX() -> facing = Facing.RIGHT
+            megaman().body.getMaxX() < body.getX() -> facing = Facing.LEFT
+            megaman().body.getX() > body.getMaxX() -> facing = Facing.RIGHT
         }
     }
 
@@ -614,7 +613,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
     private fun shouldEnterThrowAsteroidsState() = (standIndex + 1) % 3 == 0
 
     private fun shouldGoToStandState() = body.isSensing(BodySense.FEET_ON_GROUND) &&
-        (if (directionRotation == Direction.UP) body.physics.velocity.y <= 0f else body.physics.velocity.y >= 0f)
+        (if (direction == Direction.UP) body.physics.velocity.y <= 0f else body.physics.velocity.y >= 0f)
 
     private fun canShootInStandState() = standIndex % 2 == 0
 
@@ -625,7 +624,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
             val trajectory = Vector2(0f, MOON_SCYTHE_SPEED * ConstVals.PPM)
 
             var rotOffset = MOON_SCYTHE_DEG_OFFSETS[i] * facing.value
-            if (directionRotation == Direction.DOWN) rotOffset *= -1f
+            if (direction == Direction.DOWN) rotOffset *= -1f
 
             val rotation = (if (isFacing(Facing.LEFT)) 90f else 270f) + rotOffset
 
@@ -647,7 +646,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
     }
 
     private fun shootStar() {
-        val position = if (megaman().directionRotation == Direction.UP) Position.TOP_CENTER else Position.BOTTOM_CENTER
+        val position = if (megaman().direction == Direction.UP) Position.TOP_CENTER else Position.BOTTOM_CENTER
         val trajectory =
             megaman().body.getPositionPoint(position).sub(body.getCenter()).nor().scl(SHARP_STAR_SPEED * ConstVals.PPM)
         val sharpStar = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SHARP_STAR)!!

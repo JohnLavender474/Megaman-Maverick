@@ -4,9 +4,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
+import com.mega.game.engine.common.UtilMethods.getRandom
 import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.extensions.randomVector2
-import com.mega.game.engine.common.getRandom
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -31,8 +30,11 @@ import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
+import com.megaman.maverick.game.utils.LoopedSuppliers
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getCenter
 
 class PipiEgg(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
@@ -85,17 +87,17 @@ class PipiEgg(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     private fun spawnBabyBirdies() {
         for (i in 0 until BABY_BIRDIES_TO_SPAWN) {
+            val random = LoopedSuppliers.getVector2()
+            val randomValue = getRandom(-BABY_BIRDIE_SPAWN_MAX_OFFSET, BABY_BIRDIE_SPAWN_MAX_OFFSET)
+            random.set(randomValue, randomValue)
+
             val randomSpawnPosition =
-                Vector2(body.getCenter()).add(
-                    randomVector2(
-                        -BABY_BIRDIE_SPAWN_MAX_OFFSET,
-                        BABY_BIRDIE_SPAWN_MAX_OFFSET
-                    ).scl(ConstVals.PPM.toFloat())
-                )
+                Vector2(body.getCenter()).add(random.scl(ConstVals.PPM.toFloat()))
+
             val randomAngle = getRandom(BABY_BIRDIE_MIN_ANGLE, BABY_BIRDIE_MAX_ANGLE)
             val trajectory = Vector2(0f, BABY_BIRDIE_SPEED * ConstVals.PPM).rotateDeg(randomAngle)
 
-            if (megaman().body.x < body.getMaxX()) trajectory.x *= -1f
+            if (megaman().body.getX() < body.getMaxX()) trajectory.x *= -1f
 
             val babyBirdie = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.COPIPI)!!
             babyBirdie.spawn(
@@ -125,10 +127,10 @@ class PipiEgg(game: MegamanMaverickGame) : AbstractProjectile(game) {
         body.setSize(0.35f * ConstVals.PPM)
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
         body.physics.applyFrictionX = false
-body.physics.applyFrictionY = false
+        body.physics.applyFrictionY = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameCircle().setRadius(0.175f * ConstVals.PPM))
         body.addFixture(projectileFixture)

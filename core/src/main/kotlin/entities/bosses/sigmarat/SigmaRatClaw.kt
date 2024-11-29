@@ -122,7 +122,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
         block!!.spawn(
             props(
                 ConstKeys.BOUNDS pairTo GameRectangle().setSize(1.35f * ConstVals.PPM, 0.1f * ConstVals.PPM)
-                    .setTopCenterToPoint(body.getTopCenterPoint()),
+                    .setTopCenterToPoint(body.getPositionPoint(Position.TOP_CENTER)),
                 ConstKeys.BODY_LABELS pairTo objectSetOf(BodyLabel.COLLIDE_DOWN_ONLY),
                 ConstKeys.FIXTURE_LABELS pairTo objectSetOf(
                     FixtureLabel.NO_PROJECTILE_COLLISION, FixtureLabel.NO_SIDE_TOUCHIE
@@ -256,7 +256,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
-        bodyFixture.rawShape.color = Color.YELLOW
+        bodyFixture.getShape().color = Color.YELLOW
         debugShapes.add { bodyFixture.getShape() }
 
         val damagerFixture = Fixture(
@@ -264,9 +264,9 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
                 1.5f * ConstVals.PPM, 0.5f * ConstVals.PPM
             )
         )
-        damagerFixture.offsetFromBodyCenter.y = -0.35f * ConstVals.PPM
+        damagerFixture.offsetFromBodyAttachment.y = -0.35f * ConstVals.PPM
         body.addFixture(damagerFixture)
-        damagerFixture.rawShape.color = Color.RED
+        damagerFixture.getShape().color = Color.RED
         debugShapes.add { damagerFixture.getShape() }
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().set(body))
@@ -281,18 +281,18 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
          */
 
         body.preProcess.put(ConstKeys.DEFAULT) { delta ->
-            val target = body.getTopCenterPoint().sub(0f, 0.1f * ConstVals.PPM)
-            val current = block!!.body.getTopCenterPoint()
+            val target = body.getPositionPoint(Position.TOP_CENTER).sub(0f, 0.1f * ConstVals.PPM)
+            val current = block!!.body.getPositionPoint(Position.TOP_CENTER)
             val diff = target.sub(current)
             block!!.body.physics.velocity = diff.scl(1f / delta)
 
             val swiping = clawState == SigmaRatClawState.LAUNCH/*
             TODO: shield fixture?
             shieldFixture.active = !swiping
-            shieldFixture.rawShape.color = if (!swiping) Color.BLUE else Color.GRAY
+            shieldFixture.getShape().color = if (!swiping) Color.BLUE else Color.GRAY
              */
             damageableFixture.active = swiping
-            damageableFixture.rawShape.color = if (swiping) Color.PURPLE else Color.GRAY
+            damageableFixture.getShape().color = if (swiping) Color.PURPLE else Color.GRAY
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -305,7 +305,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
         sprite.setSize(2.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(body.getTopCenterPoint(), Position.TOP_CENTER)
+            _sprite.setPosition(body.getPositionPoint(Position.TOP_CENTER), Position.TOP_CENTER)
             _sprite.translateY(0.35f * ConstVals.PPM)
             _sprite.hidden = damageBlink || !(parent as SigmaRat).ready
         }

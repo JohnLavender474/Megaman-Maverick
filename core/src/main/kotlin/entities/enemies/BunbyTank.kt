@@ -47,7 +47,6 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -58,7 +57,7 @@ import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDrawableShapesEntity, IFaceable,
-    IDirectionRotatable {
+    IDirectional {
 
     companion object {
         const val TAG = "BunbyTank"
@@ -83,10 +82,10 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             if (it.fullyCharged) 10 else 5
         }
     )
-    override var directionRotation: Direction
-        get() = body.cardinalRotation
+    override var direction: Direction
+        get() = body.direction
         set(value) {
-            body.cardinalRotation = value
+            body.direction = value
         }
     override lateinit var facing: Facing
 
@@ -114,16 +113,16 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
 
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
 
-        directionRotation =
+        direction =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
-        facing = when (directionRotation) {
-            Direction.UP -> if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
-            Direction.DOWN -> if (megaman().body.x < body.x) Facing.RIGHT else Facing.LEFT
-            Direction.LEFT -> if (megaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
-            Direction.RIGHT -> if (megaman().body.y < body.y) Facing.RIGHT else Facing.LEFT
+        facing = when (direction) {
+            Direction.UP -> if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+            Direction.DOWN -> if (megaman().body.getX() < body.getX()) Facing.RIGHT else Facing.LEFT
+            Direction.LEFT -> if (megaman().body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
+            Direction.RIGHT -> if (megaman().body.getY() < body.getY()) Facing.RIGHT else Facing.LEFT
         }
 
         shootTimer.setToEnd()
@@ -140,7 +139,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
     private fun shoot() {
         val spawn = body.getCenter().add(
-            (when (directionRotation) {
+            (when (direction) {
                 Direction.UP -> Vector2(0.5f * facing.value, 0.125f)
                 Direction.DOWN -> Vector2(-0.5f * facing.value, 0.125f)
                 Direction.LEFT -> Vector2(0.175f, 0.5f * facing.value)
@@ -148,7 +147,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             }).scl(ConstVals.PPM.toFloat())
         )
 
-        val trajectory = when (directionRotation) {
+        val trajectory = when (direction) {
             Direction.UP -> Vector2(ROCKET_SPEED * facing.value, 0f)
             Direction.DOWN -> Vector2(-ROCKET_SPEED * facing.value, 0f)
             Direction.LEFT -> Vector2(0f, ROCKET_SPEED * facing.value)
@@ -162,7 +161,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                 ConstKeys.POSITION pairTo spawn,
                 ConstKeys.TRAJECTORY pairTo trajectory,
                 ConstKeys.FACING pairTo facing,
-                ConstKeys.DIRECTION pairTo directionRotation
+                ConstKeys.DIRECTION pairTo direction
             )
         )
 
@@ -183,12 +182,12 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                 return@add
             }
 
-            val size = (if (directionRotation.isVertical()) Vector2(5f, 0.75f)
+            val size = (if (direction.isVertical()) Vector2(5f, 0.75f)
             else Vector2(0.75f, 5f)).scl(ConstVals.PPM.toFloat())
             shootScanner.setSize(size)
             turnAroundScanner.setSize(size)
 
-            val position = when (directionRotation) {
+            val position = when (direction) {
                 Direction.UP -> if (isFacing(Facing.LEFT)) Position.CENTER_RIGHT else Position.CENTER_LEFT
                 Direction.DOWN -> if (isFacing(Facing.LEFT)) Position.CENTER_LEFT else Position.CENTER_RIGHT
                 Direction.LEFT -> if (isFacing(Facing.LEFT)) Position.TOP_CENTER else Position.BOTTOM_CENTER
@@ -207,14 +206,14 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                 } else if (megaman().body.overlaps(turnAroundScanner as Rectangle)) swapFacing()
             }
 
-            body.physics.velocity = (when (directionRotation) {
+            body.physics.velocity = (when (direction) {
                 Direction.UP -> Vector2(MOVE_SPEED * facing.value, 0f)
                 Direction.DOWN -> Vector2(-MOVE_SPEED * facing.value, 0f)
                 Direction.LEFT -> Vector2(0f, MOVE_SPEED * facing.value)
                 Direction.RIGHT -> Vector2(0f, -MOVE_SPEED * facing.value)
             }).scl(ConstVals.PPM.toFloat() * movementScalar)
 
-            body.physics.gravity = (when (directionRotation) {
+            body.physics.gravity = (when (direction) {
                 Direction.UP -> Vector2(0f, -GRAVITY)
                 Direction.DOWN -> Vector2(0f, GRAVITY)
                 Direction.LEFT -> Vector2(GRAVITY, 0f)
@@ -228,21 +227,21 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         body.setSize(0.75f * ConstVals.PPM, 1.25f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         body.addFixture(bodyFixture)
-        bodyFixture.rawShape.color = Color.GRAY
+        bodyFixture.getShape().color = Color.GRAY
         debugShapes.add { bodyFixture.getShape() }
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
         body.addFixture(damagerFixture)
-        damagerFixture.rawShape.color = Color.RED
+        damagerFixture.getShape().color = Color.RED
         debugShapes.add { damagerFixture.getShape() }
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle(body))
         body.addFixture(damageableFixture)
-        damageableFixture.rawShape.color = Color.PURPLE
+        damageableFixture.getShape().color = Color.PURPLE
         debugShapes.add { damageableFixture.getShape() }
 
         val leftSideFixture = Fixture(
@@ -251,9 +250,9 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             )
         )
         leftSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
-        leftSideFixture.offsetFromBodyCenter.x = -0.5f * ConstVals.PPM
+        leftSideFixture.offsetFromBodyAttachment.x = -0.5f * ConstVals.PPM
         body.addFixture(leftSideFixture)
-        leftSideFixture.rawShape.color = Color.BLUE
+        leftSideFixture.getShape().color = Color.BLUE
         debugShapes.add { leftSideFixture.getShape() }
 
         val rightSideFixture = Fixture(
@@ -262,9 +261,9 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             )
         )
         rightSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
-        rightSideFixture.offsetFromBodyCenter.x = 0.5f * ConstVals.PPM
+        rightSideFixture.offsetFromBodyAttachment.x = 0.5f * ConstVals.PPM
         body.addFixture(rightSideFixture)
-        rightSideFixture.rawShape.color = Color.YELLOW
+        rightSideFixture.getShape().color = Color.YELLOW
         debugShapes.add { rightSideFixture.getShape() }
 
         val leftFootFixture = Fixture(
@@ -272,7 +271,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                 0.1f * ConstVals.PPM, 0.1f * ConstVals.PPM
             )
         )
-        leftFootFixture.offsetFromBodyCenter = Vector2(-0.75f * ConstVals.PPM, -0.625f * ConstVals.PPM)
+        leftFootFixture.offsetFromBodyAttachment = Vector2(-0.75f * ConstVals.PPM, -0.625f * ConstVals.PPM)
         leftFootFixture.setConsumer { _, fixture ->
             when (fixture.getType()) {
                 FixtureType.BLOCK -> leftFootFixture.putProperty(ConstKeys.BLOCK, true)
@@ -280,7 +279,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             }
         }
         body.addFixture(leftFootFixture)
-        leftFootFixture.rawShape.color = Color.GREEN
+        leftFootFixture.getShape().color = Color.GREEN
         debugShapes.add { leftFootFixture.getShape() }
 
         val rightFootFixture = Fixture(
@@ -288,7 +287,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                 0.1f * ConstVals.PPM, 0.1f * ConstVals.PPM
             )
         )
-        rightFootFixture.offsetFromBodyCenter = Vector2(0.75f * ConstVals.PPM, -0.625f * ConstVals.PPM)
+        rightFootFixture.offsetFromBodyAttachment = Vector2(0.75f * ConstVals.PPM, -0.625f * ConstVals.PPM)
         rightFootFixture.setConsumer { _, fixture ->
             when (fixture.getType()) {
                 FixtureType.BLOCK -> rightFootFixture.putProperty(ConstKeys.BLOCK, true)
@@ -296,7 +295,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             }
         }
         body.addFixture(rightFootFixture)
-        rightFootFixture.rawShape.color = Color.ORANGE
+        rightFootFixture.getShape().color = Color.ORANGE
         debugShapes.add { rightFootFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
@@ -332,9 +331,9 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setFlip(isFacing(Facing.LEFT), false)
             sprite.setOriginCenter()
-            sprite.rotation = directionRotation.rotation
+            sprite.rotation = direction.rotation
 
-            val position = when (directionRotation) {
+            val position = when (direction) {
                 Direction.UP -> Position.BOTTOM_CENTER
                 Direction.DOWN -> Position.TOP_CENTER
                 Direction.LEFT -> Position.CENTER_RIGHT
@@ -343,9 +342,9 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             val bodyPosition = body.getPositionPoint(position)
             sprite.setPosition(bodyPosition, position)
 
-            if (directionRotation == Direction.LEFT)
+            if (direction == Direction.LEFT)
                 sprite.translateX(0.15f * ConstVals.PPM)
-            else if (directionRotation == Direction.RIGHT)
+            else if (direction == Direction.RIGHT)
                 sprite.translateX(-0.15f * ConstVals.PPM)
 
             sprite.hidden = damageBlink

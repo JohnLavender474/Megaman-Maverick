@@ -39,7 +39,6 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
@@ -48,7 +47,7 @@ import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
-class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDirectionRotatable, IFaceable {
+class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDirectional, IFaceable {
 
     companion object {
         const val TAG = "Darspider"
@@ -75,10 +74,10 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             if (it.fullyCharged) 15 else 10
         }
     )
-    override var directionRotation: Direction
-        get() = body.cardinalRotation
+    override var direction: Direction
+        get() = body.direction
         set(value) {
-            body.cardinalRotation = value
+            body.direction = value
         }
     override lateinit var facing: Facing
 
@@ -106,18 +105,18 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         super.onSpawn(spawnProps)
 
         onCeiling = spawnProps.getOrDefault(ConstKeys.ON, true, Boolean::class)
-        directionRotation =
+        direction =
             Direction.valueOf(
                 spawnProps.getOrDefault(ConstKeys.DIRECTION, if (onCeiling) "down" else "up", String::class).uppercase()
             )
-        facing = when (directionRotation) {
-            Direction.DOWN -> if (megaman().body.x < body.x) Facing.RIGHT else Facing.LEFT
-            else -> if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = when (direction) {
+            Direction.DOWN -> if (megaman().body.getX() < body.getX()) Facing.RIGHT else Facing.LEFT
+            else -> if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         }
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
-            .getPositionPoint(DirectionPositionMapper.getPosition(directionRotation).opposite())
-        body.positionOnPoint(spawn, DirectionPositionMapper.getPosition(directionRotation).opposite())
+            .getPositionPoint(DirectionPositionMapper.getPosition(direction).opposite())
+        body.positionOnPoint(spawn, DirectionPositionMapper.getPosition(direction).opposite())
 
         minXOnCeiling =
             spawn.x - spawnProps.getOrDefault("${ConstKeys.ON}_${ConstKeys.MIN}", 0f, Float::class) * ConstVals.PPM
@@ -134,7 +133,7 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     private fun drop() {
         body.physics.velocity.x = 0f
         body.physics.velocity.y = -JUMP_IMPULSE * ConstVals.PPM
-        directionRotation = Direction.UP
+        direction = Direction.UP
         onCeiling = false
     }
 
@@ -170,11 +169,11 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             }
 
             if (onCeiling) {
-                if (megaman().body.getMaxX() > body.x && megaman().body.x < body.getMaxX()) drop()
+                if (megaman().body.getMaxX() > body.getX() && megaman().body.getX() < body.getMaxX()) drop()
             } else if (body.isSensing(BodySense.FEET_ON_GROUND) &&
-                megaman().body.getMaxX() >= body.x &&
-                megaman().body.x <= body.getMaxX() &&
-                megaman().body.y >= body.getMaxY()
+                megaman().body.getMaxX() >= body.getX() &&
+                megaman().body.getX() <= body.getMaxX() &&
+                megaman().body.getY() >= body.getMaxY()
             ) jump()
         }
     }
@@ -188,31 +187,31 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         body.putProperty(RIGHT_FOOT, false)
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyCenter.y = -0.375f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -0.375f * ConstVals.PPM
         feetFixture.setHitByBlockReceiver {
-            facing = if (megaman().body.x < body.x) Facing.RIGHT else Facing.LEFT
-            if (directionRotation == Direction.UP) swapFacing()
+            facing = if (megaman().body.getX() < body.getX()) Facing.RIGHT else Facing.LEFT
+            if (direction == Direction.UP) swapFacing()
         }
         body.addFixture(feetFixture)
-        feetFixture.rawShape.color = Color.GREEN
+        feetFixture.getShape().color = Color.GREEN
         debugShapes.add { feetFixture.getShape() }
 
         val leftSideFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        leftSideFixture.offsetFromBodyCenter.x = -0.375f * ConstVals.PPM
+        leftSideFixture.offsetFromBodyAttachment.x = -0.375f * ConstVals.PPM
         leftSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftSideFixture)
-        leftSideFixture.rawShape.color = Color.YELLOW
+        leftSideFixture.getShape().color = Color.YELLOW
         debugShapes.add { leftSideFixture.getShape() }
 
         val rightSideFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        rightSideFixture.offsetFromBodyCenter.x = 0.375f * ConstVals.PPM
+        rightSideFixture.offsetFromBodyAttachment.x = 0.375f * ConstVals.PPM
         rightSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightSideFixture)
-        rightSideFixture.rawShape.color = Color.YELLOW
+        rightSideFixture.getShape().color = Color.YELLOW
         debugShapes.add { rightSideFixture.getShape() }
 
         val leftFootFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
@@ -220,9 +219,9 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             if (fixture.getType() == FixtureType.BLOCK)
                 body.putProperty("${ConstKeys.LEFT}_${ConstKeys.FOOT}", true)
         }
-        leftFootFixture.offsetFromBodyCenter = vector2Of(-0.375f * ConstVals.PPM)
+        leftFootFixture.offsetFromBodyAttachment = vector2Of(-0.375f * ConstVals.PPM)
         body.addFixture(leftFootFixture)
-        leftFootFixture.rawShape.color = Color.ORANGE
+        leftFootFixture.getShape().color = Color.ORANGE
         debugShapes.add { leftFootFixture.getShape() }
 
         val rightFootFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
@@ -230,17 +229,17 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             if (fixture.getType() == FixtureType.BLOCK)
                 body.putProperty("${ConstKeys.RIGHT}_${ConstKeys.FOOT}", true)
         }
-        rightFootFixture.offsetFromBodyCenter.x = 0.375f * ConstVals.PPM
-        rightFootFixture.offsetFromBodyCenter.y = -0.375f * ConstVals.PPM
+        rightFootFixture.offsetFromBodyAttachment.x = 0.375f * ConstVals.PPM
+        rightFootFixture.offsetFromBodyAttachment.y = -0.375f * ConstVals.PPM
         body.addFixture(rightFootFixture)
-        rightFootFixture.rawShape.color = Color.ORANGE
+        rightFootFixture.getShape().color = Color.ORANGE
         debugShapes.add { rightFootFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.putProperty(LEFT_FOOT, false)
             body.putProperty(RIGHT_FOOT, false)
             val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
-            body.physics.gravity = when (directionRotation) {
+            body.physics.gravity = when (direction) {
                 Direction.UP -> Vector2(0f, gravity)
                 Direction.DOWN -> Vector2(0f, -gravity)
                 Direction.LEFT -> Vector2(-gravity, 0f)
@@ -261,8 +260,8 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setOriginCenter()
-            sprite.rotation = directionRotation.rotation
-            val position = DirectionPositionMapper.getPosition(directionRotation).opposite()
+            sprite.rotation = direction.rotation
+            val position = DirectionPositionMapper.getPosition(direction).opposite()
             sprite.setPosition(body.getPositionPoint(position), position)
             sprite.hidden = damageBlink
         }

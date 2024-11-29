@@ -45,7 +45,6 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.hazards.Lava
@@ -59,7 +58,7 @@ import com.megaman.maverick.game.world.body.setHitByPlayerReceiver
 import com.megaman.maverick.game.world.body.setHitByProjectileReceiver
 
 class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IParentEntity, ISpritesEntity,
-    IAnimatedEntity, IFontsEntity, IAudioEntity, IDirectionRotatable, IDamager, IEventListener {
+    IAnimatedEntity, IFontsEntity, IAudioEntity, IDirectional, IDamager, IEventListener {
 
     enum class ToggleeState {
         TOGGLED_ON, TOGGLED_OFF, TOGGLING_TO_ON, TOGGLING_TO_OFF;
@@ -81,7 +80,7 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
     }
 
     override var children = Array<IGameEntity>()
-    override var directionRotation = Direction.UP
+    override var direction = Direction.UP
     override val eventKeyMask = objectSetOf<Any>(EventType.PLAYER_SPAWN, EventType.END_ROOM_TRANS)
 
     val moving: Boolean
@@ -152,7 +151,7 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
         body.positionOnPoint(spawn, position)
 
         val directionString = spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class)
-        directionRotation = Direction.valueOf(directionString.uppercase())
+        direction = Direction.valueOf(directionString.uppercase())
 
         text = spawnProps.getOrDefault(ConstKeys.TEXT, "", String::class)
         getFont(ConstKeys.DEFAULT).position.set(body.getCenter().add(0f, 1.75f * ConstVals.PPM))
@@ -241,7 +240,7 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
         val body = Body(BodyType.ABSTRACT)
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle())
         bodyFixture.setHitByPlayerReceiver { if (switchTimer.isFinished()) switchToggleeState() }
@@ -258,9 +257,9 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
         debugShapes.add { if (damagerFixture.active) damagerFixture.getShape() else null }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            (bodyFixture.rawShape as GameRectangle).set(body)
+            (bodyFixture.getShape() as GameRectangle).set(body)
             damagerFixture.active = type == ENEMY_TYPE && !moving
-            damagerFixture.offsetFromBodyCenter.x =
+            damagerFixture.offsetFromBodyAttachment.x =
                 if (type == ENEMY_TYPE) (if (on) 0.5f else -0.5f) * ConstVals.PPM else 0f
         }
 

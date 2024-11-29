@@ -19,7 +19,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.drawables.backgrounds.ScrollingStars
 import com.megaman.maverick.game.entities.bosses.BossType
 import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
-import com.megaman.maverick.game.utils.getDefaultCameraPosition
+import com.megaman.maverick.game.utils.extensions.getDefaultCameraPosition
 import java.util.*
 
 class BossIntroScreen(private val game: MegamanMaverickGame) : BaseScreen(), Initializable {

@@ -4,11 +4,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.UtilMethods.getOverlapPushDirection
+import com.mega.game.engine.common.UtilMethods.getRandom
 import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.getOverlapPushDirection
-import com.mega.game.engine.common.getRandom
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -36,9 +36,7 @@ import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getEntity
+import com.megaman.maverick.game.world.body.*
 
 class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
@@ -80,7 +78,7 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
         }
         super.init()
         addComponent(defineUpdatablesComponent())
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -132,7 +130,7 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
             Size.SMALL -> throw IllegalStateException("Cannot break apart a small boulder")
         }
-        val direction = getOverlapPushDirection(body, shape) ?: return
+        val direction = getOverlapPushDirection(body.getBounds(), shape) ?: return
         trajectories.forEach { trajectory ->
             val rotatedTrajectory = trajectory.rotateDeg(direction.rotation)
             val boulder = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BOULDER_PROJECTILE)
@@ -190,7 +188,7 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
             GameLogger.debug(TAG, "On damage inflicted pairTo: $damageable")
             super.onDamageInflictedTo(damageable)
             when (size) {
-                Size.LARGE, Size.MEDIUM -> breakApart(damageable.body)
+                Size.LARGE, Size.MEDIUM -> breakApart(damageable.body.getBounds())
                 Size.SMALL -> explodeAndDie()
             }
         }
@@ -203,7 +201,7 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.physics.applyFrictionX = false
-body.physics.applyFrictionY = false
+        body.physics.applyFrictionY = false
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle())
@@ -217,9 +215,9 @@ body.physics.applyFrictionY = false
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.fixtures.forEach { (_, fixture) ->
-                val shape = (fixture as Fixture).rawShape as GameRectangle
+                val shape = (fixture as Fixture).getShape() as GameRectangle
                 if (fixture.getType() == FixtureType.DAMAGER)
-                    shape.setSize(body.width * 1.05f, body.height * 1.05f)
+                    shape.setSize(body.getWidth() * 1.05f, body.getHeight() * 1.05f)
                 else shape.set(body)
             }
         }
@@ -231,20 +229,20 @@ body.physics.applyFrictionY = false
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { delta, _sprite ->
+        spritesComponent.putUpdateFunction { delta, _ ->
             val region = when (size) {
                 Size.LARGE -> largeRegion
                 Size.MEDIUM -> mediumRegion
                 Size.SMALL -> smallRegion
             }
-            _sprite.setRegion(region!!)
-            _sprite.setOriginCenter()
-            _sprite.rotation = when (size) {
+            sprite.setRegion(region!!)
+            sprite.setOriginCenter()
+            sprite.rotation = when (size) {
                 Size.LARGE -> 0f
-                Size.MEDIUM -> _sprite.rotation + MEDIUM_ROTATION_SPEED * delta
-                Size.SMALL -> _sprite.rotation + SMALL_ROTATION_SPEED * delta
+                Size.MEDIUM -> sprite.rotation + MEDIUM_ROTATION_SPEED * delta
+                Size.SMALL -> sprite.rotation + SMALL_ROTATION_SPEED * delta
             }
-            _sprite.setCenter(body.getCenter())
+            sprite.setCenter(body.getCenter())
         }
         return spritesComponent
     }

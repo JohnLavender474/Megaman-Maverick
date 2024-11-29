@@ -152,8 +152,8 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
             spawnProps.getOrDefault("${ConstKeys.PPM}_${ConstKeys.DIVISOR}", DEFAULT_PPM_DIVISOR, Int::class)
         dividedPPM = ConstVals.PPM.toFloat() / ppmDivisor
 
-        val rows = (bounds.height / dividedPPM).toInt()
-        val columns = (bounds.width / dividedPPM).toInt()
+        val rows = (bounds.getHeight() / dividedPPM).toInt()
+        val columns = (bounds.getWidth() / dividedPPM).toInt()
         GameLogger.debug(TAG, "onSpawn(): rows=$rows, columns=$columns")
         allTiles = Matrix(rows, columns)
 
@@ -233,17 +233,17 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
     }
 
     private fun getMinsAndMaxes(rect: GameRectangle): MinsAndMaxes {
-        val minX = ((rect.x - bounds.x) / dividedPPM).toInt().coerceIn(0, allTiles.columns - 1)
-        val minY = ((rect.y - bounds.y) / dividedPPM).toInt().coerceIn(0, allTiles.rows - 1)
-        val maxX = (ceil((rect.getMaxX() - bounds.x) / dividedPPM)).toInt().coerceIn(0, allTiles.columns - 1)
-        val maxY = (ceil((rect.getMaxY() - bounds.y) / dividedPPM)).toInt().coerceIn(0, allTiles.rows - 1)
+        val minX = ((rect.x - bounds.getX()) / dividedPPM).toInt().coerceIn(0, allTiles.columns - 1)
+        val minY = ((rect.y - bounds.getY()) / dividedPPM).toInt().coerceIn(0, allTiles.rows - 1)
+        val maxX = (ceil((rect.getMaxX() - bounds.getX()) / dividedPPM)).toInt().coerceIn(0, allTiles.columns - 1)
+        val maxY = (ceil((rect.getMaxY() - bounds.getY()) / dividedPPM)).toInt().coerceIn(0, allTiles.rows - 1)
         return MinsAndMaxes(minX, minY, maxX, maxY)
     }
 
     private fun getTile(x: Int, y: Int): BlackTile {
         if (allTiles[x, y] == null) {
-            val posX = bounds.x + (x * dividedPPM)
-            val posY = bounds.y + (y * dividedPPM)
+            val posX = bounds.getX() + (x * dividedPPM)
+            val posY = bounds.getY() + (y * dividedPPM)
             val tileBounds = GameRectangle(posX, posY, dividedPPM, dividedPPM)
             allTiles[x, y] = BlackTile(tileBounds)
         }
@@ -352,7 +352,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
             if (!previousTiles.contains(tile)) tile.reset(darkMode) else tile.update(delta, darkMode)
 
             val sprite = tileSpritesPool.fetch()
-            sprite.setBounds(bounds.x + x * sprite.width, bounds.y + y * sprite.height, dividedPPM, dividedPPM)
+            sprite.setBounds(bounds.getX() + x * sprite.width, bounds.getY() + y * sprite.height, dividedPPM, dividedPPM)
             sprite.setAlpha(tile.currentAlpha)
 
             sprites.put("${x}_${y}", sprite)

@@ -92,11 +92,11 @@ class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
         slideTimer.setToEnd()
         standTimer.reset()
-        facing = if (megaman().body.x > body.x) Facing.RIGHT else Facing.LEFT
+        facing = if (megaman().body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -118,19 +118,19 @@ class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         body.addFixture(damagerFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT, Updatable {
-            val feetBounds = feetFixture.rawShape as GameRectangle
+            val feetBounds = feetFixture.getShape() as GameRectangle
             if (standing || jumping) {
                 body.setSize(0.9f * ConstVals.PPM, 1.25f * ConstVals.PPM)
                 feetBounds.width = 0.65f * ConstVals.PPM
-                feetFixture.offsetFromBodyCenter.y = -0.625f * ConstVals.PPM
+                feetFixture.offsetFromBodyAttachment.y = -0.625f * ConstVals.PPM
             } else {
                 body.setSize(ConstVals.PPM.toFloat(), 0.75f * ConstVals.PPM)
                 feetBounds.width = 0.9f * ConstVals.PPM.toFloat()
-                feetFixture.offsetFromBodyCenter.y = -0.375f * ConstVals.PPM
+                feetFixture.offsetFromBodyAttachment.y = -0.375f * ConstVals.PPM
             }
 
-            (damageableFixture.rawShape as GameRectangle).set(body)
-            (damagerFixture.rawShape as GameRectangle).set(body)
+            (damageableFixture.getShape() as GameRectangle).set(body)
+            (damagerFixture.getShape() as GameRectangle).set(body)
 
             body.physics.gravity.y =
                 (if (body.isSensing(BodySense.FEET_ON_GROUND)) G_GRAV else GRAV) * ConstVals.PPM
@@ -153,7 +153,7 @@ class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
             _sprite.setFlip(facing == Facing.LEFT, false)
-            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            _sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             if (sliding) sprite.translateY(-0.25f * ConstVals.PPM)
         }
         return spritesComponent
@@ -177,7 +177,7 @@ class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     }
 
     private fun stand(delta: Float) {
-        facing = if (megaman().body.x > body.x) Facing.RIGHT else Facing.LEFT
+        facing = if (megaman().body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
         standTimer.update(delta)
         if (body.isSensing(BodySense.FEET_ON_GROUND) && standTimer.isFinished()) jump()
     }

@@ -98,7 +98,7 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
         val angle = getRandom(MIN_ANGLE, MAX_ANGLE)
         val speed = getRandom(MIN_SPEED, MAX_SPEED)
         val impulse = Vector2(speed, 0f).rotateDeg(angle).scl(ConstVals.PPM.toFloat())
-        val posX = getRandom(bounds.x, bounds.getMaxX())
+        val posX = getRandom(bounds.getX(), bounds.getMaxX())
         val posY = bounds.getMaxY()
         val asteroid = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.ASTEROID)!!
         asteroid.spawn(

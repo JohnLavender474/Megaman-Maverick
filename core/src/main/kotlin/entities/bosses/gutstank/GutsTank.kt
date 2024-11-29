@@ -456,8 +456,8 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                         val xVel = MIN_X_VEL + (MAX_X_VEL - MIN_X_VEL) * (1f - getHealthRatio())
                         body.physics.velocity.x = -xVel * ConstVals.PPM
                         tankBlock!!.body.physics.velocity.x = -xVel * ConstVals.PPM
-                        if (body.x <= frontPoint.x) {
-                            body.x = frontPoint.x
+                        if (body.getX() <= frontPoint.x) {
+                            body.getX() = frontPoint.x
                             body.physics.velocity.x = 0f
                             moveState = GutsTankMoveState.PAUSE
                             moveToFront = false
@@ -468,8 +468,8 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                         reachedFrontFirstTime = true
                         body.physics.velocity.x = xVel * ConstVals.PPM
                         tankBlock!!.body.physics.velocity.x = xVel * ConstVals.PPM
-                        if (body.x >= backPoint.x) {
-                            body.x = backPoint.x
+                        if (body.getX() >= backPoint.x) {
+                            body.getX() = backPoint.x
                             body.physics.velocity.x = 0f
                             moveState = GutsTankMoveState.PAUSE
                             moveToFront = true
@@ -494,30 +494,30 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
         body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val damageableFixture = Fixture(
             body,
             FixtureType.DAMAGEABLE,
             GameRectangle().setSize(1.15f * ConstVals.PPM, 0.85f * ConstVals.PPM)
         )
-        damageableFixture.offsetFromBodyCenter.x = -1.45f * ConstVals.PPM
-        damageableFixture.offsetFromBodyCenter.y = 2.35f * ConstVals.PPM
+        damageableFixture.offsetFromBodyAttachment.x = -1.45f * ConstVals.PPM
+        damageableFixture.offsetFromBodyAttachment.y = 2.35f * ConstVals.PPM
         body.addFixture(damageableFixture)
         damageableFixture.getShape().color = Color.PURPLE
         // debugShapes.add { damageableFixture.getShape() }
 
         val damagerFixture1 = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(2f * ConstVals.PPM))
-        damagerFixture1.offsetFromBodyCenter.x = -ConstVals.PPM.toFloat()
-        damagerFixture1.offsetFromBodyCenter.y = 2.5f * ConstVals.PPM
+        damagerFixture1.offsetFromBodyAttachment.x = -ConstVals.PPM.toFloat()
+        damagerFixture1.offsetFromBodyAttachment.y = 2.5f * ConstVals.PPM
         body.addFixture(damagerFixture1)
         damagerFixture1.getShape().color = Color.RED
         // debugShapes.add { damagerFixture1.getShape() }
 
         val damagerFixture2 = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(2.5f * ConstVals.PPM))
-        damagerFixture2.offsetFromBodyCenter.y = ConstVals.PPM.toFloat()
+        damagerFixture2.offsetFromBodyAttachment.y = ConstVals.PPM.toFloat()
         body.addFixture(damagerFixture2)
-        damagerFixture2.rawShape.color = Color.ORANGE
+        damagerFixture2.getShape().color = Color.ORANGE
         debugShapes.add { damagerFixture2.getShape() }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

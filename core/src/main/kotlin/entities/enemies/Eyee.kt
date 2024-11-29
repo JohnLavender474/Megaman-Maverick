@@ -176,7 +176,7 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _->
             sprite.setOriginCenter()
-            sprite.rotation = megaman().directionRotation.rotation
+            sprite.rotation = megaman().direction.rotation
             sprite.setCenter(body.getCenter())
             sprite.hidden = damageBlink
         }

@@ -68,7 +68,7 @@ class IceShard(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         body.physics.velocity = TRAJECTORIES[index].cpy().scl(ConstVals.PPM.toFloat())
 
         val region = TEXTURES[index]
-        firstSprite!!.setRegion(region)
+        defaultSprite.setRegion(region)
 
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ICE_SHARD_2_SOUND, false)
     }

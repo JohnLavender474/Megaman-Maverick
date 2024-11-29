@@ -73,14 +73,14 @@ class ToxicWater(game: MegamanMaverickGame): MegaGameEntity(game), ISpritesEntit
         val sprites = OrderedMap<String, GameSprite>()
         val animators = Array<GamePair<() -> GameSprite, IAnimator>>()
 
-        val rows = (bounds.height / (0.5f * ConstVals.PPM)).toInt()
-        val columns = (bounds.width / (0.5f * ConstVals.PPM)).toInt()
+        val rows = (bounds.getHeight() / (0.5f * ConstVals.PPM)).toInt()
+        val columns = (bounds.getWidth() / (0.5f * ConstVals.PPM)).toInt()
 
         for (x in 0 until columns) {
             for (y in 0 until rows) {
                 val pos = Vector2(
-                    bounds.x + (0.5f * x * ConstVals.PPM),
-                    bounds.y + (0.5f * y * ConstVals.PPM)
+                    bounds.getX() + (0.5f * x * ConstVals.PPM),
+                    bounds.getY() + (0.5f * y * ConstVals.PPM)
                 )
                 val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
                 sprite.setBounds(pos.x, pos.y, 0.5f * ConstVals.PPM, 0.5f * ConstVals.PPM)

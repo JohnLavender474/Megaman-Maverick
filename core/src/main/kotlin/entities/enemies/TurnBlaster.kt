@@ -36,7 +36,6 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -49,7 +48,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import kotlin.reflect.KClass
 
-class TurnBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IDirectionRotatable {
+class TurnBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IDirectional {
 
     companion object {
         const val TAG = "TurnBlaster"
@@ -73,10 +72,10 @@ class TurnBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IDirectionRo
             if (it.fullyCharged) 10 else 5
         }
     )
-    override var directionRotation: Direction
-        get() = body.cardinalRotation
+    override var direction: Direction
+        get() = body.direction
         set(value) {
-            body.cardinalRotation = value
+            body.direction = value
         }
 
     private val aimTimer = Timer(AIM_DUR)
@@ -97,9 +96,9 @@ class TurnBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IDirectionRo
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        directionRotation =
+        direction =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
-        val position = when (directionRotation) {
+        val position = when (direction) {
             Direction.UP -> Position.BOTTOM_CENTER
             Direction.DOWN -> Position.TOP_CENTER
             Direction.LEFT -> Position.CENTER_RIGHT
@@ -116,7 +115,7 @@ class TurnBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IDirectionRo
     private fun spawnOrb() {
         orb =
             EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.REACT_MAN_PROJECTILE) as AbstractProjectile
-        val offset = Vector2(0f, 0.65f * ConstVals.PPM).rotateDeg(directionRotation.rotation + angleOffset)
+        val offset = Vector2(0f, 0.65f * ConstVals.PPM).rotateDeg(direction.rotation + angleOffset)
         val position = body.getCenter().add(offset)
         orb!!.spawn(props(ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo position, ConstKeys.BIG pairTo false))
     }
@@ -124,7 +123,7 @@ class TurnBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IDirectionRo
     private fun shootOrb() {
         val rOrb = orb as ReactManProjectile
         rOrb.active = true
-        rOrb.setTrajectory(Vector2(0f, ORB_SPEED * ConstVals.PPM).rotateDeg(directionRotation.rotation + angleOffset))
+        rOrb.setTrajectory(Vector2(0f, ORB_SPEED * ConstVals.PPM).rotateDeg(direction.rotation + angleOffset))
         orb = null
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
     }
@@ -143,7 +142,7 @@ class TurnBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IDirectionRo
             val desiredAngle = (megaman().body.getCenter().sub(body.getCenter()).angleDeg() - 90f) % 360f
             if (debug) GameLogger.debug(TAG, "desired angle: $desiredAngle")
 
-            val currentAngle = directionRotation.rotation + angleOffset
+            val currentAngle = direction.rotation + angleOffset
             if (debug) GameLogger.debug(TAG, "current angle: $currentAngle")
 
             val angleDiff = (desiredAngle - currentAngle + 180f) % 360f - 180f
@@ -203,7 +202,7 @@ class TurnBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IDirectionRo
                 sprite.hidden = damageBlink
 
                 sprite.setOriginCenter()
-                var rotation = directionRotation.rotation
+                var rotation = direction.rotation
                 if (key != "base") rotation += angleOffset
                 sprite.rotation = rotation
             }

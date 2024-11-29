@@ -127,10 +127,10 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableG
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
 
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
 
-        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
         waitTimer.reset()
         jumpDelayTimer.setToEnd()
@@ -175,7 +175,7 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableG
                 jumpDelayTimer.reset()
                 return@add
             } else if (!waitTimer.isFinished() && body.isSensing(BodySense.FEET_ON_GROUND)) facing =
-                if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+                if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
             jumpDelayTimer.update(it)
             if (jumpDelayTimer.isJustFinished()) {
@@ -210,7 +210,7 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableG
         val feetFixture = Fixture(
             body, FixtureType.FEET, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.2f * ConstVals.PPM)
         )
-        feetFixture.offsetFromBodyCenter.y = -ConstVals.PPM.toFloat()
+        feetFixture.offsetFromBodyAttachment.y = -ConstVals.PPM.toFloat()
         body.addFixture(feetFixture)
         feetFixture.getShape().color = Color.GREEN
         debugShapes.add { feetFixture.getShape() }
@@ -218,9 +218,9 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableG
         val headFixture = Fixture(
             body, FixtureType.HEAD, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.2f * ConstVals.PPM)
         )
-        headFixture.offsetFromBodyCenter.y = ConstVals.PPM.toFloat()
+        headFixture.offsetFromBodyAttachment.y = ConstVals.PPM.toFloat()
         body.addFixture(headFixture)
-        headFixture.rawShape.color = Color.ORANGE
+        headFixture.getShape().color = Color.ORANGE
         debugShapes.add { headFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
@@ -239,7 +239,7 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableG
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
-            val position = body.getBottomCenterPoint()
+            val position = body.getPositionPoint(Position.BOTTOM_CENTER)
             _sprite.setPosition(position, Position.BOTTOM_CENTER)
             _sprite.setFlip(facing == Facing.RIGHT, false)
         }

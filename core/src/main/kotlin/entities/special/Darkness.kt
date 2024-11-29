@@ -127,8 +127,8 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
 
         bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         ppmDivisor = spawnProps.getOrDefault("${ConstKeys.PPM}_${ConstKeys.DIVISOR}", DEFAULT_PPM_DIVISOR, Int::class)
-        val rows = (bounds.height / (ConstVals.PPM / ppmDivisor)).toInt()
-        val columns = (bounds.width / (ConstVals.PPM / ppmDivisor)).toInt()
+        val rows = (bounds.getHeight() / (ConstVals.PPM / ppmDivisor)).toInt()
+        val columns = (bounds.getWidth() / (ConstVals.PPM / ppmDivisor)).toInt()
         GameLogger.debug(TAG, "onSpawn(): rows=$rows, columns=$columns")
 
         tiles = Matrix(rows, columns)
@@ -137,8 +137,8 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
                 val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
                 sprite.setRegion(region!!)
                 sprite.setAlpha(0f)
-                val spriteX = bounds.x + (x * (ConstVals.PPM / ppmDivisor))
-                val spriteY = bounds.y + (y * (ConstVals.PPM / ppmDivisor))
+                val spriteX = bounds.getX() + (x * (ConstVals.PPM / ppmDivisor))
+                val spriteY = bounds.getY() + (y * (ConstVals.PPM / ppmDivisor))
                 sprite.setBounds(
                     spriteX,
                     spriteY,
@@ -302,13 +302,13 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
                 val adjustedRadius = radius.toFloat() * ConstVals.PPM
                 val circle = GameCircle(center, adjustedRadius)
 
-                var startX = (((center.x - adjustedRadius) - bounds.x) / (ConstVals.PPM.toFloat() / ppmDivisor)).toInt()
+                var startX = (((center.x - adjustedRadius) - bounds.getX()) / (ConstVals.PPM.toFloat() / ppmDivisor)).toInt()
                 startX = startX.coerceIn(0, tiles.columns - 1)
-                var endX = ceil(((center.x + adjustedRadius) - bounds.x) / (ConstVals.PPM / ppmDivisor)).toInt()
+                var endX = ceil(((center.x + adjustedRadius) - bounds.getX()) / (ConstVals.PPM / ppmDivisor)).toInt()
                 endX = endX.coerceIn(0, tiles.columns - 1)
-                var startY = (((center.y - adjustedRadius) - bounds.y) / (ConstVals.PPM / ppmDivisor)).toInt()
+                var startY = (((center.y - adjustedRadius) - bounds.getY()) / (ConstVals.PPM / ppmDivisor)).toInt()
                 startY = startY.coerceIn(0, tiles.rows - 1)
-                var endY = ceil(((center.y + adjustedRadius) - bounds.y) / (ConstVals.PPM / ppmDivisor)).toInt()
+                var endY = ceil(((center.y + adjustedRadius) - bounds.getY()) / (ConstVals.PPM / ppmDivisor)).toInt()
                 endY = endY.coerceIn(0, tiles.rows - 1)
 
                 GameLogger.debug(

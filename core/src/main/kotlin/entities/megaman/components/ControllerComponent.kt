@@ -38,7 +38,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
             }
 
             facing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) Facing.RIGHT else Facing.LEFT
-            if (directionRotation.equalsAny(Direction.DOWN, Direction.RIGHT)) swapFacing()
+            if (direction.equalsAny(Direction.DOWN, Direction.RIGHT)) swapFacing()
 
             if (isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.RIDING_CART)) return@ButtonActuator
             running = !isBehaviorActive(BehaviorType.WALL_SLIDING)
@@ -54,9 +54,9 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
             val impulse = rawImpulse * delta * movementScalar * ConstVals.PPM * facing.value *
                 if (isBehaviorActive(BehaviorType.WALL_SLIDING)) -1f else 1f
 
-            if (isDirectionRotatedVertically() && abs(body.physics.velocity.x) < threshold)
+            if (direction.isVertical() && abs(body.physics.velocity.x) < threshold)
                 body.physics.velocity.x += impulse
-            else if (isDirectionRotatedHorizontally() && abs(body.physics.velocity.y) < threshold)
+            else if (direction.isHorizontal() && abs(body.physics.velocity.y) < threshold)
                 body.physics.velocity.y += impulse
         },
         onJustReleased = { poller ->
@@ -80,7 +80,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
             }
 
             facing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) Facing.LEFT else Facing.RIGHT
-            if (directionRotation.equalsAny(Direction.DOWN, Direction.RIGHT)) swapFacing()
+            if (direction.equalsAny(Direction.DOWN, Direction.RIGHT)) swapFacing()
 
             if (isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.RIDING_CART)) return@ButtonActuator
             running = !isBehaviorActive(BehaviorType.WALL_SLIDING)
@@ -94,9 +94,9 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
             val impulse = rawImpulse * delta * movementScalar * ConstVals.PPM * facing.value *
                 if (isBehaviorActive(BehaviorType.WALL_SLIDING)) -1f else 1f
 
-            if (isDirectionRotatedVertically() && abs(body.physics.velocity.x) < threshold)
+            if (direction.isVertical() && abs(body.physics.velocity.x) < threshold)
                 body.physics.velocity.x += impulse
-            else if (isDirectionRotatedHorizontally() && abs(body.physics.velocity.y) < threshold)
+            else if (direction.isHorizontal() && abs(body.physics.velocity.y) < threshold)
                 body.physics.velocity.y += impulse
         },
         onJustReleased = { poller ->

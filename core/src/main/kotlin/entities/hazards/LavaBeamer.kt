@@ -37,7 +37,6 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
@@ -47,7 +46,7 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 
 class LavaBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity, ISpritesEntity,
-    IAnimatedEntity, IAudioEntity, IHazard, IDirectionRotatable {
+    IAnimatedEntity, IAudioEntity, IHazard, IDirectional {
 
     companion object {
         const val TAG = "LavaBeamer"
@@ -64,10 +63,10 @@ class LavaBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         FIRING
     }
 
-    override var directionRotation: Direction
-        get() = body.cardinalRotation
+    override var direction: Direction
+        get() = body.direction
         set(value) {
-            body.cardinalRotation = value
+            body.direction = value
         }
 
     private val loop = Loop(LavaBeamerState.values().toGdxArray())
@@ -106,9 +105,9 @@ class LavaBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        directionRotation =
+        direction =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
-        val position = when (directionRotation) {
+        val position = when (direction) {
             Direction.UP -> Position.TOP_CENTER
             Direction.DOWN -> Position.BOTTOM_CENTER
             Direction.LEFT -> Position.CENTER_LEFT
@@ -137,17 +136,17 @@ class LavaBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
     })
 
     private fun fireLava() {
-        val spawn = when (directionRotation) {
-            Direction.UP -> body.getTopCenterPoint()
-            Direction.DOWN -> body.getBottomCenterPoint()
-            Direction.LEFT -> body.getCenterLeftPoint()
-            Direction.RIGHT -> body.getCenterRightPoint()
+        val spawn = when (direction) {
+            Direction.UP -> body.getPositionPoint(Position.TOP_CENTER)
+            Direction.DOWN -> body.getPositionPoint(Position.BOTTOM_CENTER)
+            Direction.LEFT -> body.getPositionPoint(Position.CENTER_LEFT)
+            Direction.RIGHT -> body.getPositionPoint(Position.CENTER_RIGHT)
         }
         val lavaBeam = EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.LAVA_BEAM)!!
         lavaBeam.spawn(
             props(
                 ConstKeys.POSITION pairTo spawn,
-                ConstKeys.DIRECTION pairTo directionRotation,
+                ConstKeys.DIRECTION pairTo direction,
                 ConstKeys.SPEED pairTo FIRE_SPEED * ConstVals.PPM
             )
         )
@@ -166,7 +165,7 @@ class LavaBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation.rotation
+            _sprite.rotation = direction.rotation
             _sprite.setCenter(body.getCenter())
         }
         return spritesComponent

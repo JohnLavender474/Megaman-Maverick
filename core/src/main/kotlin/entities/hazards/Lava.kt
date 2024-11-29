@@ -46,7 +46,6 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.events.EventType
@@ -55,7 +54,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 
 class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity, ISpritesEntity,
-    IAnimatedEntity, IAudioEntity, IDirectionRotatable, IFaceable {
+    IAnimatedEntity, IAudioEntity, IDirectional, IFaceable {
 
     companion object {
         const val TAG = "Lava"
@@ -66,7 +65,7 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    override var directionRotation = Direction.UP
+    override var direction = Direction.UP
     override lateinit var facing: Facing
     var moveBeforeKill = false
         private set
@@ -118,7 +117,7 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         )
         spritePriorityValue = spawnProps.getOrDefault(ConstKeys.PRIORITY, if (type == FALL) 2 else 1, Int::class)
         black = spawnProps.getOrDefault(ConstKeys.BLACK, false, Boolean::class)
-        directionRotation =
+        direction =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
         facing = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, "right", String::class).uppercase())
         speed = spawnProps.getOrDefault(ConstKeys.SPEED, 0f, Float::class)
@@ -170,7 +169,7 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
                 body.physics.velocity.set(direction.scl(speed * ConstVals.PPM))
             } else body.physics.velocity.set(0f, 0f)
 
-            (deathFixture.rawShape as GameRectangle).set(body)
+            (deathFixture.getShape() as GameRectangle).set(body)
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -222,7 +221,7 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
                     val bounds = bodyMatrix[col, row]!!
                     _sprite.setCenter(bounds.getCenter())
                     _sprite.setOriginCenter()
-                    _sprite.rotation = directionRotation?.rotation ?: 0f
+                    _sprite.rotation = direction?.rotation ?: 0f
                     _sprite.setFlip(isFacing(Facing.LEFT), false)
                     _sprite.priority.section = drawingSection
                     _sprite.priority.value = spritePriorityValue

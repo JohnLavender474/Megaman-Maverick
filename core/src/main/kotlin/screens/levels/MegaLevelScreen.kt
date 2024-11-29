@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TiledMap
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.Disposable
@@ -21,13 +22,11 @@ import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.isAny
 import com.mega.game.engine.common.extensions.objectSetOf
-import com.mega.game.engine.common.extensions.vector2Of
 import com.mega.game.engine.common.interfaces.Initializable
 import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
-import com.mega.game.engine.common.shapes.toGameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.controller.polling.IControllerPoller
 import com.mega.game.engine.damage.IDamager
@@ -74,7 +73,9 @@ import com.megaman.maverick.game.screens.levels.stats.PlayerStatsHandler
 import com.megaman.maverick.game.spawns.ISpawner
 import com.megaman.maverick.game.spawns.Spawn
 import com.megaman.maverick.game.spawns.SpawnsManager
-import com.megaman.maverick.game.utils.toProps
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
+import com.megaman.maverick.game.utils.extensions.toProps
+import com.megaman.maverick.game.world.body.getCenter
 import java.util.*
 
 class MegaLevelScreen(
@@ -153,7 +154,7 @@ class MegaLevelScreen(
     private lateinit var bossSpawnEventHandler: BossSpawnEventHandler
 
     private lateinit var drawables: ObjectMap<DrawingSection, PriorityQueue<IComparableDrawable<Batch>>>
-    private lateinit var shapes: PriorityQueue<IDrawableShape>
+    private lateinit var shapes: Array<IDrawableShape>
     private lateinit var backgrounds: Array<Background>
     private lateinit var backgroundsToHide: ObjectSet<String>
 
@@ -200,7 +201,10 @@ class MegaLevelScreen(
         cameraManagerForRooms = CameraManagerForRooms(
             gameCamera,
             distanceOnTransition = ROOM_DISTANCE_ON_TRANSITION * ConstVals.PPM,
-            transitionScannerDimensions = vector2Of(TRANSITION_SCANNER_SIZE * ConstVals.PPM),
+            transitionScannerDimensions = Vector2(
+                TRANSITION_SCANNER_SIZE * ConstVals.PPM,
+                TRANSITION_SCANNER_SIZE * ConstVals.PPM
+            ),
             transDelay = ConstVals.ROOM_TRANS_DELAY_DURATION,
             transDuration = ConstVals.ROOM_TRANS_DURATION,
         )
@@ -295,7 +299,7 @@ class MegaLevelScreen(
         music?.let { audioMan.playMusic(it, true) }
 
         game.setCameraRotating(false)
-        game.setRoomsSupplier {  cameraManagerForRooms.gameRooms }
+        game.setRoomsSupplier { cameraManagerForRooms.gameRooms }
         game.setCurrentRoomSupplier { cameraManagerForRooms.currentGameRoom }
 
         if (tiledMapLoadResult == null) throw IllegalStateException("No tiled map load result found in level screen")
@@ -697,8 +701,8 @@ class MegaLevelScreen(
         val shapeRenderer = game.shapeRenderer
         shapeRenderer.projectionMatrix = gameCamera.combined
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
-        while (!shapes.isEmpty()) {
-            val shape = shapes.poll()
+        while (!shapes.isEmpty) {
+            val shape = shapes.pop()
             shape.draw(shapeRenderer)
         }
         if (game.params.debugShapes) {

@@ -9,7 +9,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.SensorsFactory
-import com.megaman.maverick.game.utils.toProps
+import com.megaman.maverick.game.utils.extensions.toProps
 
 class SensorsLayerBuilder : ITiledMapLayerBuilder {
 

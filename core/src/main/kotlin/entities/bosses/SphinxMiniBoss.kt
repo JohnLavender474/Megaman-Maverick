@@ -165,7 +165,7 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
         sphinxBall!!.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
-                ConstKeys.POSITION pairTo chinBounds.getTopCenterPoint(),
+                ConstKeys.POSITION pairTo chinBounds.getPositionPoint(Position.TOP_CENTER),
                 ConstKeys.X pairTo -BALL_SPEED,
                 ConstKeys.GRAVITY_ON pairTo false,
                 ConstKeys.SPIN pairTo true
@@ -175,7 +175,7 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
 
     private fun shootOrb() {
         val arigockBall = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.ARIGOCK_BALL)!!
-        val spawn = chinBounds.getTopCenterPoint().add(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat())
+        val spawn = chinBounds.getPositionPoint(Position.TOP_CENTER).add(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat())
         /*
         val impulse = if (chunkOrbs) MegaUtilMethods.calculateJumpImpulse(
             spawn, getMegaman().body.getCenter(), MAX_CHUNK_ORB_IMPULSE * ConstVals.PPM, CHUNK_X_SCALAR
@@ -244,15 +244,15 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
         body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val bodyFixture1 = Fixture(
             body, FixtureType.BODY, GameRectangle().setSize(
                 7f * ConstVals.PPM, 2.25f * ConstVals.PPM
             )
         )
-        bodyFixture1.offsetFromBodyCenter.x = 0.5f * ConstVals.PPM
-        bodyFixture1.offsetFromBodyCenter.y = -1.125f * ConstVals.PPM
+        bodyFixture1.offsetFromBodyAttachment.x = 0.5f * ConstVals.PPM
+        bodyFixture1.offsetFromBodyAttachment.y = -1.125f * ConstVals.PPM
         body.addFixture(bodyFixture1)
         debugShapes.add { bodyFixture1.getShape() }
 
@@ -261,8 +261,8 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
                 3f * ConstVals.PPM, ConstVals.PPM.toFloat()
             )
         )
-        bodyFixture2.offsetFromBodyCenter.x = -0.25f * ConstVals.PPM
-        bodyFixture2.offsetFromBodyCenter.y = 0.5f * ConstVals.PPM
+        bodyFixture2.offsetFromBodyAttachment.x = -0.25f * ConstVals.PPM
+        bodyFixture2.offsetFromBodyAttachment.y = 0.5f * ConstVals.PPM
         body.addFixture(bodyFixture2)
         debugShapes.add { bodyFixture2.getShape() }
 
@@ -271,8 +271,8 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
                 2f * ConstVals.PPM, 1.15f * ConstVals.PPM
             )
         )
-        bodyFixture3.offsetFromBodyCenter.x = -0.85f * ConstVals.PPM
-        bodyFixture3.offsetFromBodyCenter.y = 1.75f * ConstVals.PPM
+        bodyFixture3.offsetFromBodyAttachment.x = -0.85f * ConstVals.PPM
+        bodyFixture3.offsetFromBodyAttachment.y = 1.75f * ConstVals.PPM
         body.addFixture(bodyFixture3)
         debugShapes.add { bodyFixture3.getShape() }
 
@@ -290,10 +290,10 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
                 1.25f * ConstVals.PPM, 0.5f * ConstVals.PPM
             )
         )
-        damageableFixture.offsetFromBodyCenter.x = -1.85f * ConstVals.PPM
-        damageableFixture.offsetFromBodyCenter.y = 1.75f * ConstVals.PPM
+        damageableFixture.offsetFromBodyAttachment.x = -1.85f * ConstVals.PPM
+        damageableFixture.offsetFromBodyAttachment.y = 1.75f * ConstVals.PPM
         body.addFixture(damageableFixture)
-        damageableFixture.rawShape.color = Color.PURPLE
+        damageableFixture.getShape().color = Color.PURPLE
         debugShapes.add { damageableFixture.getShape() }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -306,7 +306,7 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
         sprite.setSize(10f * ConstVals.PPM, 9f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            _sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             _sprite.hidden = damageBlink
             _sprite.setAlpha(if (defeated) 1f - defeatTimer.getRatio() else 1f)
         }

@@ -15,6 +15,7 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegamanKeys
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.BodySense
+import com.megaman.maverick.game.world.body.getPositionPoint
 import com.megaman.maverick.game.world.body.isSensing
 
 const val MEGAMAN_SPRITE_SIZE = 2.5f
@@ -23,7 +24,7 @@ const val GROUND_SLIDE_SPRITE_OFFSET_Y = 0.1f
 fun Megaman.getSpriteDirection() =
     if (isBehaviorActive(BehaviorType.AIR_DASHING))
         getProperty(MegamanKeys.DIRECTION_ON_AIR_DASH, Direction::class)!!
-    else directionRotation
+    else direction
 
 fun Megaman.shouldFlipSpriteX() =
     !maverick && if (getSpriteDirection() == Direction.RIGHT) facing == Facing.RIGHT else facing == Facing.LEFT
@@ -104,11 +105,11 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
         }
 
         flame.setOriginCenter()
-        flame.rotation = directionRotation.rotation
+        flame.rotation = direction.rotation
 
         val verticalOffset = -0.25f * ConstVals.PPM
         val facingOffsetScaled = -0.45f * facing.value * ConstVals.PPM
-        val offset = when (directionRotation) {
+        val offset = when (direction) {
             Direction.UP -> floatArrayOf(facingOffsetScaled, verticalOffset)
             Direction.DOWN -> floatArrayOf(facingOffsetScaled, -verticalOffset)
             Direction.LEFT -> floatArrayOf(verticalOffset, facingOffsetScaled)

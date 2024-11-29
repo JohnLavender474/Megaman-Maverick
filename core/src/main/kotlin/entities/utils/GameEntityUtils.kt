@@ -26,7 +26,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
-import com.megaman.maverick.game.utils.toProps
+import com.megaman.maverick.game.utils.extensions.toProps
 import com.megaman.maverick.game.world.body.getBody
 import kotlin.math.abs
 
@@ -65,7 +65,7 @@ fun getStandardEventCullingLogic(
 }
 
 fun getGameCameraCullingLogic(entity: IBodyEntity, timeToCull: Float = 1f) =
-    getGameCameraCullingLogic((entity as MegaGameEntity).getGameCamera(), { entity.body.getBodyBounds() }, timeToCull)
+    getGameCameraCullingLogic((entity as MegaGameEntity).getGameCamera(), { entity.body.getBounds() }, timeToCull)
 
 fun getGameCameraCullingLogic(camera: RotatableCamera, bounds: () -> Rectangle, timeToCull: Float = 1f) =
     CullableOnUncontained({ camera.getRotatedBounds() }, { it.overlaps(bounds()) }, timeToCull)

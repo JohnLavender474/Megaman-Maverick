@@ -41,7 +41,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 
 class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDamager, IOwnable, IBodyEntity,
-    ISpritesEntity, IDirectionRotatable {
+    ISpritesEntity, IDirectional {
 
     companion object {
         const val TAG = "SmokePuff"
@@ -49,10 +49,10 @@ class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDam
     }
 
     override var owner: GameEntity? = null
-    override var directionRotation: Direction
-        get() = body.cardinalRotation
+    override var direction: Direction
+        get() = body.direction
         set(value) {
-            body.cardinalRotation = value
+            body.direction = value
         }
 
     private lateinit var animation: IAnimation
@@ -72,9 +72,9 @@ class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDam
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
-        directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
+        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-        val position = when (directionRotation) {
+        val position = when (direction) {
             Direction.UP -> Position.BOTTOM_CENTER
             Direction.DOWN -> Position.TOP_CENTER
             Direction.LEFT -> Position.CENTER_RIGHT
@@ -117,8 +117,8 @@ class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDam
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation.rotation
-            val position = when (directionRotation) {
+            _sprite.rotation = direction.rotation
+            val position = when (direction) {
                 Direction.UP -> Position.BOTTOM_CENTER
                 Direction.DOWN -> Position.TOP_CENTER
                 Direction.LEFT -> Position.CENTER_RIGHT

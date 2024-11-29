@@ -101,7 +101,7 @@ class CactusLauncher(game: MegamanMaverickGame) : AbstractEnemy(game), IParentEn
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
         loop.reset()
         timers.values().forEach { it.reset() }
@@ -114,7 +114,7 @@ class CactusLauncher(game: MegamanMaverickGame) : AbstractEnemy(game), IParentEn
 
     private fun launchMissile() {
         val missile = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.CACTUS_MISSILE)!!
-        missile.spawn(props(ConstKeys.POSITION pairTo body.getTopCenterPoint()))
+        missile.spawn(props(ConstKeys.POSITION pairTo body.getPositionPoint(Position.TOP_CENTER)))
         children.add(missile)
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
     }
@@ -170,7 +170,7 @@ class CactusLauncher(game: MegamanMaverickGame) : AbstractEnemy(game), IParentEn
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
-            val bodyPosition = body.getBottomCenterPoint()
+            val bodyPosition = body.getPositionPoint(Position.BOTTOM_CENTER)
             _sprite.setPosition(bodyPosition, Position.BOTTOM_CENTER)
             _sprite.hidden = damageBlink
         }

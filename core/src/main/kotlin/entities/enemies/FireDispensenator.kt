@@ -110,10 +110,10 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
         scanner = spawnProps.get(ConstKeys.SCANNER, RectangleMapObject::class)!!.rectangle
-        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         timers.values().forEach { it.reset() }
         stateMachine.reset()
     }
@@ -124,7 +124,7 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
             val state = stateMachine.getCurrent()
 
             if (!state.equalsAny(FireDispensenatorState.CLOSE, FireDispensenatorState.FIRE))
-                facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+                facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
             val timer = timers[state.name.lowercase()]
             timer.update(delta)
@@ -138,7 +138,7 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(1.5f * ConstVals.PPM)
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBodyBounds() }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
         return BodyComponentCreator.create(
             this,
             body,
@@ -151,7 +151,7 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
         sprite.setSize(2.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            _sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             _sprite.setFlip(isFacing(Facing.LEFT), false)
             _sprite.hidden = damageBlink
         }
@@ -193,7 +193,7 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
     }
 
     private fun fire() {
-        val spawn = body.getBottomCenterPoint().add(0.5f * ConstVals.PPM * facing.value, 0.1f * ConstVals.PPM)
+        val spawn = body.getPositionPoint(Position.BOTTOM_CENTER).add(0.5f * ConstVals.PPM * facing.value, 0.1f * ConstVals.PPM)
         val fireWall = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.FIRE_WALL)!!
         fireWall.spawn(
             props(

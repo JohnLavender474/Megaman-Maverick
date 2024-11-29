@@ -19,20 +19,19 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 
-class WhiteArrowPool(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntity, IDirectionRotatable {
+class WhiteArrowPool(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntity, IDirectional {
 
     companion object {
         const val TAG = "WhiteArrowPool"
         private const val SPAWN_DELAY_DUR = 1f
     }
 
-    override var directionRotation = Direction.UP
+    override var direction = Direction.UP
 
     private val spawns = Array<Vector2>()
     private val spawnDelayTimer = Timer(SPAWN_DELAY_DUR)
@@ -55,10 +54,10 @@ class WhiteArrowPool(game: MegamanMaverickGame) : MegaGameEntity(game), ICullabl
         bounds.color = Color.WHITE
         outline = spawnProps.getOrDefault(ConstKeys.OUTLINE, true, Boolean::class)
 
-        directionRotation = Direction.valueOf(spawnProps.get(ConstKeys.DIRECTION, String::class)!!.uppercase())
+        direction = Direction.valueOf(spawnProps.get(ConstKeys.DIRECTION, String::class)!!.uppercase())
 
         val cells = bounds.splitByCellSize(ConstVals.PPM.toFloat())
-        when (directionRotation) {
+        when (direction) {
             Direction.UP -> {
                 for (i in 0 until cells.columns) spawns.add(cells[i, 0]!!.getBottomCenterPoint())
                 maxOffset = cells.rows
@@ -97,7 +96,7 @@ class WhiteArrowPool(game: MegamanMaverickGame) : MegaGameEntity(game), ICullabl
             arrow.spawn(
                 props(
                     ConstKeys.POSITION pairTo spawn,
-                    ConstKeys.DIRECTION pairTo directionRotation,
+                    ConstKeys.DIRECTION pairTo direction,
                     ConstKeys.MAX pairTo maxOffset
                 )
             )

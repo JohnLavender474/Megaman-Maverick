@@ -157,7 +157,7 @@ class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
 
     private fun defineDrawableShapesComponent(): DrawableShapesComponent {
         val shapes = Array<() -> IDrawableShape?>()
-        shapes.add { firstSprite.boundingRectangle.toGameRectangle() }
+        shapes.add { defaultSprite.boundingRectangle.toGameRectangle() }
         return DrawableShapesComponent(debugShapeSuppliers = shapes, debug = true)
     }
 }

@@ -46,7 +46,6 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -58,7 +57,7 @@ import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity, IAnimatedEntity, IFaceable,
-    IDirectionRotatable {
+    IDirectional {
 
     companion object {
         const val TAG = "CartinJoe"
@@ -85,7 +84,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
             if (it.fullyCharged) 15 else 5
         }
     )
-    override var directionRotation: Direction = Direction.UP
+    override var direction: Direction = Direction.UP
 
     val shooting: Boolean get() = !shootTimer.isFinished()
 
@@ -104,7 +103,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
         val left = spawnProps.getOrDefault(ConstKeys.LEFT, true, Boolean::class)
         facing = if (left) Facing.LEFT else Facing.RIGHT
@@ -149,7 +148,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
 
         val shieldFixture =
             Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(0.85f, 0.65f * ConstVals.PPM))
-        shieldFixture.offsetFromBodyCenter.y = -0.275f * ConstVals.PPM
+        shieldFixture.offsetFromBodyAttachment.y = -0.275f * ConstVals.PPM
         body.addFixture(shieldFixture)
         shieldFixture.getShape().color = Color.BLUE
         debugShapes.add { shieldFixture.getShape() }
@@ -165,14 +164,14 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
                 ConstVals.PPM.toFloat(), 0.75f * ConstVals.PPM
             )
         )
-        damageableFixture.offsetFromBodyCenter.y = 0.45f * ConstVals.PPM
+        damageableFixture.offsetFromBodyAttachment.y = 0.45f * ConstVals.PPM
         body.addFixture(damageableFixture)
         damageableFixture.getShape().color = Color.PURPLE
         debugShapes.add { damageableFixture.getShape() }
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyCenter.y = -0.6f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -0.6f * ConstVals.PPM
         body.addFixture(feetFixture)
         feetFixture.getShape().color = Color.GREEN
         debugShapes.add { feetFixture.getShape() }
@@ -189,7 +188,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
         )
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         leftFixture.setRunnable(onBounce)
-        leftFixture.offsetFromBodyCenter.x = -0.75f * ConstVals.PPM
+        leftFixture.offsetFromBodyAttachment.x = -0.75f * ConstVals.PPM
         body.addFixture(leftFixture)
         leftFixture.getShape().color = Color.YELLOW
         debugShapes.add { leftFixture.getShape() }
@@ -198,7 +197,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM))
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         rightFixture.setRunnable(onBounce)
-        rightFixture.offsetFromBodyCenter.x = 0.75f * ConstVals.PPM
+        rightFixture.offsetFromBodyAttachment.x = 0.75f * ConstVals.PPM
         body.addFixture(rightFixture)
         rightFixture.getShape().color = Color.YELLOW
         debugShapes.add { rightFixture.getShape() }
@@ -222,7 +221,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
-            val position = body.getBottomCenterPoint()
+            val position = body.getPositionPoint(Position.BOTTOM_CENTER)
             _sprite.setPosition(position, Position.BOTTOM_CENTER)
             _sprite.setFlip(isFacing(Facing.RIGHT), false)
         }
@@ -242,7 +241,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
     }
 
     private fun shoot() {
-        val spawn = (when (directionRotation) {
+        val spawn = (when (direction) {
             Direction.UP -> Vector2(0.25f * facing.value, 0.5f)
             Direction.DOWN -> Vector2(0.25f * facing.value, -0.5f)
             Direction.LEFT -> Vector2(-0.4f, 0.25f * facing.value)
@@ -250,14 +249,14 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
         }).scl(ConstVals.PPM.toFloat()).add(body.getCenter())
 
         val trajectory = Vector2()
-        if (isDirectionRotatedVertically()) trajectory.set(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
+        if (direction.isVertical()) trajectory.set(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
         else trajectory.set(0f, BULLET_SPEED * ConstVals.PPM * facing.value)
 
         val props = props(
             ConstKeys.OWNER pairTo this,
             ConstKeys.POSITION pairTo spawn,
             ConstKeys.TRAJECTORY pairTo trajectory,
-            ConstKeys.DIRECTION pairTo directionRotation
+            ConstKeys.DIRECTION pairTo direction
         )
 
         val entity = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!

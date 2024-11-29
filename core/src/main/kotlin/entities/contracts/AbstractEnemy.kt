@@ -148,8 +148,8 @@ abstract class AbstractEnemy(
 
     open fun isMegamanShootingAtMe(): Boolean {
         if (!megaman().shooting) return false
-        return body.x < megaman().body.x && megaman().facing == Facing.LEFT ||
-            body.x > megaman().body.x && megaman().facing == Facing.RIGHT
+        return body.getX() < megaman().body.getX() && megaman().facing == Facing.LEFT ||
+            body.getX() > megaman().body.getX() && megaman().facing == Facing.RIGHT
     }
 
     override fun getEntityType() = EntityType.ENEMY

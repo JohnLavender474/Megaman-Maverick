@@ -55,7 +55,7 @@ class MuzzleFlash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-        firstSprite!!.setCenter(spawn)
+        defaultSprite.setCenter(spawn)
         cullTimer.reset()
     }
 
@@ -72,7 +72,7 @@ class MuzzleFlash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
 
         val cullOutOfBounds =
-            getGameCameraCullingLogic(game.getGameCamera(), { firstSprite!!.boundingRectangle.toGameRectangle() })
+            getGameCameraCullingLogic(game.getGameCamera(), { defaultSprite.boundingRectangle.toGameRectangle() })
 
         return CullablesComponent(
             objectMapOf(

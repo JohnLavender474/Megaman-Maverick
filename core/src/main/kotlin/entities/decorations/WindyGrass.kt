@@ -57,10 +57,10 @@ open class WindyGrass(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
         GameLogger.debug(TAG, "spawn(): spawnProps = $spawnProps")
         super.onSpawn(spawnProps)
         bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
-        val tiles = bounds.width.toInt() / ConstVals.PPM
+        val tiles = bounds.getWidth().toInt() / ConstVals.PPM
         for (i in 0 until tiles) {
-            val positionX = bounds.x + (i * ConstVals.PPM)
-            val positionY = bounds.y
+            val positionX = bounds.getX() + (i * ConstVals.PPM)
+            val positionY = bounds.getY()
             val grassSprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, 1))
             grassSprite.setSize(ConstVals.PPM.toFloat())
             grassSprite.setPosition(positionX, positionY)

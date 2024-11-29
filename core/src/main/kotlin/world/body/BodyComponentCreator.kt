@@ -27,17 +27,16 @@ object BodyComponentCreator {
             val shape = t.shape ?: GameRectangle(body)
             val fixture = Fixture(
                 body = body,
-                fixtureType = t.type,
+                type = t.type,
                 rawShape = shape,
                 active = t.active,
                 attachedToBody = t.attached,
-                offsetFromBodyCenter = t.offset.cpy(),
+                offsetFromBodyAttachment = t.offset.cpy(),
                 properties = t.props
             )
             fixture.addFixtureLabels(t.labels)
             body.addFixture(fixture)
             if (debugShapes != null) t.debugColor?.let { color ->
-                fixture.rawShape.color = color
                 debugShapes.add { fixture.getShape() }
             }
         }

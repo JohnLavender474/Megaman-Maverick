@@ -105,10 +105,10 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         body.physics.applyFrictionY = applyFrictionY
 
         val section = spawnProps.getOrDefault(ConstKeys.SECTION, DrawingSection.PLAYGROUND, DrawingSection::class)
-        firstSprite!!.priority.section = section
+        defaultSprite.priority.section = section
 
         val priority = spawnProps.getOrDefault(ConstKeys.PRIORITY, 1, Int::class)
-        firstSprite!!.priority.value = priority
+        defaultSprite.priority.value = priority
 
         val clamp = spawnProps.getOrDefault(ConstKeys.CLAMP, true, Boolean::class)
         body.physics.velocityClamp =
@@ -155,18 +155,18 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyCenter.y = -0.225f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -0.225f * ConstVals.PPM
         body.addFixture(feetFixture)
 
         val leftFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.25f * ConstVals.PPM))
-        leftFixture.offsetFromBodyCenter.x = -0.2f * ConstVals.PPM
+        leftFixture.offsetFromBodyAttachment.x = -0.2f * ConstVals.PPM
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftFixture)
 
         val rightFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.25f * ConstVals.PPM))
-        rightFixture.offsetFromBodyCenter.x = -0.2f * ConstVals.PPM
+        rightFixture.offsetFromBodyAttachment.x = -0.2f * ConstVals.PPM
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
 
@@ -204,7 +204,7 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         spritesComponent.putUpdateFunction { _, _ ->
             val region = if (hitTimes == 0) region1 else region2
             sprite.setRegion(region)
-            sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
         }
         return spritesComponent
     }

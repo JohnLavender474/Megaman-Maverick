@@ -27,7 +27,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.utils.splitIntoGameRectanglesBasedOnCenter
+import com.megaman.maverick.game.utils.extensions.splitIntoGameRectanglesBasedOnCenter
 
 class LavaFall(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity {
 
@@ -59,8 +59,8 @@ class LavaFall(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
 
             val bounds = gameRectangle.copy()
             val offset = 0.1f * ConstVals.PPM
-            bounds.height += offset
-            bounds.y -= offset
+            bounds.translateSize(0f, offset)
+            bounds.translate(0f, offset)
 
             val lavaSprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, 0))
             lavaSprite.setBounds(bounds)

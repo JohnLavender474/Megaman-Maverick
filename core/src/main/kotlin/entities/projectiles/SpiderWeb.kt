@@ -154,13 +154,13 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         val body = Body(BodyType.ABSTRACT)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
-        val debugShapes = gdxArrayOf<() -> IDrawableShape?>({ body.getBodyBounds() })
+        val debugShapes = gdxArrayOf<() -> IDrawableShape?>({ body.getBounds() })
         body.preProcess.put(ConstKeys.DEFAULT) { delta ->
             body.physics.velocity.set(trajectory)
             if (!stuckToMegaman) {
                 val oldCenter = body.getCenter()
                 val sizeIncrease = SIZE_INCREASE_PER_SECOND * delta * ConstVals.PPM
-                body.setSize(body.width + sizeIncrease, body.height + sizeIncrease)
+                body.setSize(body.getWidth() + sizeIncrease, body.getHeight() + sizeIncrease)
                 body.setCenter(oldCenter)
             }
         }
@@ -186,7 +186,7 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 5))
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
-            sprite.setSize(body.width, body.height)
+            sprite.setSize(body.getSize())
             sprite.setCenter(body.getCenter())
             sprite.setFlip(trajectory.x < 0f, false)
         }

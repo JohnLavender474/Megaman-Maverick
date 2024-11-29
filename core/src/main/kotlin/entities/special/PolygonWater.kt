@@ -38,7 +38,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
-import com.megaman.maverick.game.utils.splitIntoGameRectanglesBasedOnCenter
+import com.megaman.maverick.game.utils.extensions.splitIntoGameRectanglesBasedOnCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 
@@ -78,8 +78,8 @@ class PolygonWater(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
         val polygon = spawnProps.get(ConstKeys.POLYGON, GamePolygon::class)!!
         body.set(polygon.getBoundingRectangle())
-        waterFixture.rawShape = polygon
-        GameLogger.debug(TAG, "Body = ${body.getBodyBounds()}")
+        waterFixture.getShape() = polygon
+        GameLogger.debug(TAG, "Body = ${body.getBounds()}")
         GameLogger.debug(TAG, "Polygon = $polygon")
 
         val matrix = polygon.splitIntoGameRectanglesBasedOnCenter(ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
@@ -101,12 +101,12 @@ class PolygonWater(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
             if (bounds == null) return@forEach
 
             val blueSprite = GameSprite(blueReg!!, DrawingPriority(DrawingSection.FOREGROUND, 10))
-            blueSprite.setBounds(bounds.x, bounds.y, bounds.width, bounds.height)
+            blueSprite.setBounds(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight())
             blueSprite.setAlpha(WATER_ALPHA)
             sprites.put("blue_${x}_${y}", blueSprite)
 
             val waterSprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
-            waterSprite.setBounds(bounds.x, bounds.y, bounds.width, bounds.height)
+            waterSprite.setBounds(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight())
             waterSprite.setAlpha(WATER_ALPHA)
             sprites.put("water_${x}_${y}", waterSprite)
 
@@ -129,7 +129,7 @@ class PolygonWater(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         waterFixture = Fixture(body, FixtureType.WATER)
         waterFixture.attachedToBody = false

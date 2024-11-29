@@ -108,7 +108,7 @@ class Force(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICul
             ) else VelocityAlteration.addNone()
         }
         body.addFixture(forceFixture)
-        body.preProcess.put(ConstKeys.DEFAULT) { (forceFixture.rawShape as GameRectangle).set(body) }
+        body.preProcess.put(ConstKeys.DEFAULT) { (forceFixture.getShape() as GameRectangle).set(body) }
         return BodyComponentCreator.create(this, body)
     }
 

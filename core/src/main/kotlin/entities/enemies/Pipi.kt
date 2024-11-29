@@ -90,7 +90,7 @@ class Pipi(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
         super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
-        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         hasEgg = true
     }
 
@@ -98,13 +98,13 @@ class Pipi(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
             body.physics.velocity.x = FLY_SPEED * ConstVals.PPM * facing.value
-            if (hasEgg && megaman().body.x <= body.getMaxX() && megaman().body.getMaxX() >= body.x) dropEgg()
+            if (hasEgg && megaman().body.getX() <= body.getMaxX() && megaman().body.getMaxX() >= body.getX()) dropEgg()
         }
     }
 
     private fun dropEgg() {
         val egg = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.PIPI_EGG)!!
-        egg.spawn(props(ConstKeys.POSITION pairTo body.getBottomCenterPoint()))
+        egg.spawn(props(ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER)))
         hasEgg = false
     }
 
@@ -115,7 +115,7 @@ class Pipi(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
         body.physics.applyFrictionY = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         body.addFixture(bodyFixture)
@@ -127,17 +127,17 @@ class Pipi(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
         body.addFixture(damageableFixture)
 
         val leftSideFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        leftSideFixture.offsetFromBodyCenter.x = -0.2f * ConstVals.PPM
+        leftSideFixture.offsetFromBodyAttachment.x = -0.2f * ConstVals.PPM
         leftSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftSideFixture)
-        leftSideFixture.rawShape.color = Color.YELLOW
+        leftSideFixture.getShape().color = Color.YELLOW
         debugShapes.add { leftSideFixture.getShape() }
 
         val rightSideFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        rightSideFixture.offsetFromBodyCenter.x = 0.2f * ConstVals.PPM
+        rightSideFixture.offsetFromBodyAttachment.x = 0.2f * ConstVals.PPM
         rightSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightSideFixture)
-        rightSideFixture.rawShape.color = Color.YELLOW
+        rightSideFixture.getShape().color = Color.YELLOW
         debugShapes.add { rightSideFixture.getShape() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {

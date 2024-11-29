@@ -152,27 +152,27 @@ class BabySpider(game: MegamanMaverickGame) : AbstractEnemy(game) {
         debugShapes.add { bodyFixture.getShape() }
 
         val leftFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        leftFixture.offsetFromBodyCenter.x = -0.375f * ConstVals.PPM
+        leftFixture.offsetFromBodyAttachment.x = -0.375f * ConstVals.PPM
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftFixture)
         leftFixture.getShape().color = Color.YELLOW
         debugShapes.add { leftFixture.getShape() }
 
         val rightFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        rightFixture.offsetFromBodyCenter.x = 0.375f * ConstVals.PPM
+        rightFixture.offsetFromBodyAttachment.x = 0.375f * ConstVals.PPM
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
         rightFixture.getShape().color = Color.YELLOW
         debugShapes.add { rightFixture.getShape() }
 
         val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyCenter.y = -0.25f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -0.25f * ConstVals.PPM
         body.addFixture(feetFixture)
         feetFixture.getShape().color = Color.GREEN
         debugShapes.add { feetFixture.getShape() }
 
         val headFixture = Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        headFixture.offsetFromBodyCenter.y = 0.25f * ConstVals.PPM
+        headFixture.offsetFromBodyAttachment.y = 0.25f * ConstVals.PPM
         body.addFixture(headFixture)
         headFixture.getShape().color = Color.BLUE
         debugShapes.add { headFixture.getShape() }
@@ -183,7 +183,7 @@ class BabySpider(game: MegamanMaverickGame) : AbstractEnemy(game) {
         debugShapes.add { damagerFixture.getShape() }
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.75f * ConstVals.PPM))
-        damageableFixture.offsetFromBodyCenter.y = 0.1f * ConstVals.PPM
+        damageableFixture.offsetFromBodyAttachment.y = 0.1f * ConstVals.PPM
         body.addFixture(damageableFixture)
         damageableFixture.getShape().color = Color.PURPLE
         debugShapes.add { damageableFixture.getShape() }

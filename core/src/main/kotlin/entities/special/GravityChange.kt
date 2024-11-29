@@ -38,7 +38,7 @@ class GravityChange(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
-        (gravityChangeFixture.rawShape as GameRectangle).set(bounds)
+        (gravityChangeFixture.getShape() as GameRectangle).set(bounds)
 
         if (spawnProps.containsKey(ConstKeys.GRAVITY)) {
             val gravityScalar = spawnProps.getOrDefault(ConstKeys.GRAVITY, 1f, Float::class)

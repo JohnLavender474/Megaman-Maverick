@@ -125,7 +125,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
 
         laserFixture = Fixture(body, FixtureType.LASER, GameLine())
         laserFixture.attachedToBody = false
-        laserFixture.rawShape = laser
+        laserFixture.getShape() = laser
         body.addFixture(laserFixture)
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameLine())
@@ -136,7 +136,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
         val shieldFixture = Fixture(
             body, FixtureType.SHIELD, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.85f * ConstVals.PPM)
         )
-        shieldFixture.offsetFromBodyCenter.y = 0.5f * ConstVals.PPM
+        shieldFixture.offsetFromBodyAttachment.y = 0.5f * ConstVals.PPM
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
         body.addFixture(shieldFixture)
 
@@ -156,8 +156,8 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
 
             GameLogger.debug(TAG, "[postProcess] Laser = $laser. End point = $end. Contacts = $contacts")
 
-            laserFixture.rawShape = laser
-            damagerFixture.rawShape = laser
+            laserFixture.getShape() = laser
+            damagerFixture.getShape() = laser
 
             contactGlow.setCenter(end.x, end.y)
              */

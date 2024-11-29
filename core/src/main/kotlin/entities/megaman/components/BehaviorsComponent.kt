@@ -7,6 +7,7 @@ import com.mega.game.engine.behaviors.FunctionalBehaviorImpl
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.pairTo
@@ -22,8 +23,12 @@ import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.special.Cart
 import com.megaman.maverick.game.entities.special.Ladder
 import com.megaman.maverick.game.world.body.BodySense
+import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.world.body.getPositionPoint
 import com.megaman.maverick.game.world.body.isSensing
 import com.megaman.maverick.game.world.body.isSensingAny
+import com.megaman.maverick.game.world.body.setCenterX
+import com.megaman.maverick.game.world.body.setCenterY
 
 const val MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: WallSlideBehavior"
 const val MEGAMAN_SWIM_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: SwimBehavior"
@@ -42,10 +47,10 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             ) return@FunctionalBehaviorImpl false
 
             if ((body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && game.controllerPoller.isPressed(
-                    /* if (isDirectionRotatedDown() || isDirectionRotatedRight()) MegaControllerButtons.RIGHT
+                    /* if (direction == Direction.DOWN || isDirectionRotatedRight()) MegaControllerButtons.RIGHT
                     else */ MegaControllerButton.LEFT
                 )) || body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) && game.controllerPoller.isPressed(
-                    /* if (isDirectionRotatedDown() || isDirectionRotatedRight()) MegaControllerButtons.LEFT
+                    /* if (direction == Direction.DOWN || isDirectionRotatedRight()) MegaControllerButtons.LEFT
                     else */ MegaControllerButton.RIGHT
                 )
             ) {
@@ -85,7 +90,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             // TODO: this logic is tied to the FPS and breaks as it deviates from 60 FPS
             //  an alternative that is FPS-agnostic needs to be found
             val wallSlideFriction = MegamanValues.WALL_SLIDE_FRICTION_TO_APPLY * ConstVals.PPM
-            if (isDirectionRotatedVertically()) body.physics.frictionOnSelf.y = wallSlideFriction
+            if (direction.isVertical()) body.physics.frictionOnSelf.y = wallSlideFriction
             else body.physics.frictionOnSelf.x = wallSlideFriction
         },
         end = {
@@ -101,7 +106,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)
             ) return@FunctionalBehaviorImpl false
 
-            return@FunctionalBehaviorImpl if (isBehaviorActive(BehaviorType.SWIMMING)) when (directionRotation) {
+            return@FunctionalBehaviorImpl if (isBehaviorActive(BehaviorType.SWIMMING)) when (direction) {
                 Direction.UP -> body.physics.velocity.y > 0f
                 Direction.DOWN -> body.physics.velocity.y < 0f
                 Direction.LEFT -> body.physics.velocity.x < 0f
@@ -115,7 +120,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         },
         init = {
             body.physics.velocity.add(
-                (when (directionRotation) {
+                (when (direction) {
                     Direction.UP -> Vector2(0f, swimVel)
                     Direction.DOWN -> Vector2(0f, -swimVel)
                     Direction.LEFT -> Vector2(swimVel, 0f)
@@ -137,7 +142,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             return@FunctionalBehaviorImpl if (isBehaviorActive(BehaviorType.JUMPING)) {
                 val velocity = body.physics.velocity
-                when (directionRotation) {
+                when (direction) {
                     Direction.UP -> velocity.y > 0f
                     Direction.DOWN -> velocity.y < 0f
                     Direction.LEFT -> velocity.x < 0f
@@ -148,7 +153,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         },
         init = {
             val v = Vector2()
-            v.x = when (directionRotation) {
+            v.x = when (direction) {
                 Direction.UP, Direction.DOWN -> {
                     when {
                         isBehaviorActive(BehaviorType.WALL_SLIDING) ->
@@ -166,7 +171,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     }
                 }
             }
-            v.y = when (directionRotation) {
+            v.y = when (direction) {
                 Direction.UP, Direction.DOWN -> {
                     ConstVals.PPM * when {
                         isBehaviorActive(BehaviorType.WALL_SLIDING) -> wallJumpVel
@@ -192,7 +197,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         },
         end = {
             when {
-                isDirectionRotatedVertically() -> body.physics.velocity.y = 0f
+                direction.isVertical() -> body.physics.velocity.y = 0f
                 else -> body.physics.velocity.x = 0f
             }
             GameLogger.debug(MEGAMAN_JUMP_BEHAVIOR_TAG, "end(): velocity=${body.physics.velocity}")
@@ -227,18 +232,18 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             aButtonTask = AButtonTask.JUMP
             requestToPlaySound(SoundAsset.BRUSH_SOUND, false)
 
-            if (isDirectionRotatedVertically()) impulse.y = 0f else impulse.x = 0f
+            if (direction.isVertical()) impulse.y = 0f else impulse.x = 0f
 
             val impulseValue = facing.value * ConstVals.PPM * movementScalar *
                 (if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_AIR_DASH_VEL else MegamanValues.AIR_DASH_VEL)
-            when (directionRotation) {
+            when (direction) {
                 Direction.UP, Direction.DOWN -> impulse.x = impulseValue
 
                 Direction.LEFT, Direction.RIGHT -> impulse.y = impulseValue
             }
 
             lastFacing = facing
-            putProperty(MegamanKeys.DIRECTION_ON_AIR_DASH, directionRotation)
+            putProperty(MegamanKeys.DIRECTION_ON_AIR_DASH, direction)
         }
 
         override fun act(delta: Float) {
@@ -263,7 +268,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                         facing.value * ConstVals.PPM * if (body.isSensing(BodySense.IN_WATER))
                             MegamanValues.WATER_AIR_DASH_END_BUMP else MegamanValues.AIR_DASH_END_BUMP
 
-                    when (directionRotation) {
+                    when (direction) {
                         Direction.UP -> body.physics.velocity.x += impulseOnEnd
                         Direction.DOWN -> body.physics.velocity.x -= impulseOnEnd
                         Direction.LEFT -> body.physics.velocity.y += impulseOnEnd
@@ -294,21 +299,21 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             ) return false
 
             return if (isBehaviorActive(BehaviorType.GROUND_SLIDING))
-                game.controllerPoller.isPressed(MegaControllerButton.A) && directionOnInit == directionRotation
+                game.controllerPoller.isPressed(MegaControllerButton.A) && directionOnInit == direction
             else game.controllerPoller.isJustPressed(MegaControllerButton.A)
         }
 
         override fun init() {
-            when (directionRotation) {
+            when (direction) {
                 Direction.UP -> {}
-                Direction.DOWN -> body.y += ConstVals.PPM / 2f
-                Direction.LEFT -> body.x += ConstVals.PPM / 2f
-                Direction.RIGHT -> body.x -= ConstVals.PPM / 2f
+                Direction.DOWN -> body.translate(0f, ConstVals.PPM / 2f)
+                Direction.LEFT -> body.translate(ConstVals.PPM / 2f, 0f)
+                Direction.RIGHT -> body.translate(-ConstVals.PPM / 2f, 0f)
             }
 
             GameLogger.debug(MEGAMAN_GROUND_SLIDE_BEHAVIOR_TAG, "init()")
 
-            directionOnInit = directionRotation
+            directionOnInit = direction
 
             requestToPlaySound(SoundAsset.BRUSH_SOUND, false)
         }
@@ -335,7 +340,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 else -> MegamanValues.GROUND_SLIDE_VEL
             }) * ConstVals.PPM * movementScalar * facing.value
 
-            when (directionRotation) {
+            when (direction) {
                 Direction.UP, Direction.DOWN -> body.physics.velocity.x = impulse
                 Direction.LEFT, Direction.RIGHT -> body.physics.velocity.y = impulse
             }
@@ -348,7 +353,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             if (!game.isCameraRotating()) {
                 val endDash =
                     (if (body.isSensing(BodySense.IN_WATER)) 2f else 5f) * ConstVals.PPM * facing.value * movementScalar
-                when (directionRotation) {
+                when (direction) {
                     Direction.UP, Direction.DOWN -> body.physics.velocity.x = endDash
                     Direction.LEFT, Direction.RIGHT -> body.physics.velocity.y = endDash
                 }
@@ -381,25 +386,25 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             val center = body.getCenter()
 
             if (isBehaviorActive(BehaviorType.CLIMBING)) {
-                if (isDirectionRotatedVertically()) {
+                if (direction.isVertical()) {
                     if (!body.isSensing(BodySense.HEAD_TOUCHING_LADDER)) {
-                        if (isDirectionRotatedDown() && center.y + 0.25f * ConstVals.PPM < ladder.body.y) return false
+                        if (direction == Direction.DOWN && center.y + 0.25f * ConstVals.PPM < ladder.body.getY()) return false
                         else if (center.y - 0.25f * ConstVals.PPM > ladder.body.getMaxY()) return false
                     }
 
                     if (!body.isSensing(BodySense.FEET_TOUCHING_LADDER)) {
-                        if (isDirectionRotatedDown() && center.y - 0.25f * ConstVals.PPM > ladder.body.getMaxY()) return false
-                        else if (center.y + 0.25f * ConstVals.PPM < ladder.body.y) return false
+                        if (direction == Direction.DOWN && center.y - 0.25f * ConstVals.PPM > ladder.body.getMaxY()) return false
+                        else if (center.y + 0.25f * ConstVals.PPM < ladder.body.getY()) return false
                     }
                 } else {
                     if (!body.isSensing(BodySense.HEAD_TOUCHING_LADDER)) {
-                        if (isDirectionRotatedLeft() && center.x + 0.25f * ConstVals.PPM < ladder.body.x) return false
+                        if (direction == Direction.LEFT && center.x + 0.25f * ConstVals.PPM < ladder.body.getX()) return false
                         else if (center.x - 0.25f * ConstVals.PPM > ladder.body.getMaxX()) return false
                     }
 
                     if (!body.isSensing(BodySense.FEET_TOUCHING_LADDER)) {
-                        if (isDirectionRotatedLeft() && center.x + 0.25f * ConstVals.PPM > ladder.body.getMaxX()) return false
-                        else if (center.x - 0.25f * ConstVals.PPM < ladder.body.x) return false
+                        if (direction == Direction.LEFT && center.x + 0.25f * ConstVals.PPM > ladder.body.getMaxX()) return false
+                        else if (center.x - 0.25f * ConstVals.PPM < ladder.body.getX()) return false
                     }
                 }
 
@@ -424,26 +429,26 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             body.physics.gravityOn = false
             canMakeLandSound = false
 
-            when (directionRotation) {
+            when (direction) {
                 Direction.UP, Direction.DOWN -> {
                     body.setCenterX(ladder.body.getCenter().x)
 
-                    if (body.getMaxY() <= ladder.body.y) body.setY(ladder.body.y)
-                    else if (body.y >= ladder.body.getMaxY()) body.setMaxY(ladder.body.getMaxY())
+                    if (body.getMaxY() <= ladder.body.getY()) body.setY(ladder.body.getY())
+                    else if (body.getY() >= ladder.body.getMaxY()) body.setMaxY(ladder.body.getMaxY())
                 }
 
                 Direction.LEFT, Direction.RIGHT -> {
                     body.setCenterY(ladder.body.getCenter().y)
 
-                    if (body.getMaxX() <= ladder.body.x) body.setX(ladder.body.x)
-                    else if (body.x >= ladder.body.getMaxX()) body.setMaxX(ladder.body.getMaxX())
+                    if (body.getMaxX() <= ladder.body.getX()) body.setX(ladder.body.getX())
+                    else if (body.getX() >= ladder.body.getMaxX()) body.setMaxX(ladder.body.getMaxX())
                 }
             }
             body.physics.velocity.setZero()
         }
 
         override fun act(delta: Float) {
-            when (directionRotation) {
+            when (direction) {
                 Direction.UP, Direction.DOWN -> body.setCenterX(ladder.body.getCenter().x)
 
                 Direction.LEFT, Direction.RIGHT -> body.setCenterY(ladder.body.getCenter().y)
@@ -455,7 +460,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 return
             }
 
-            body.physics.velocity = (when (directionRotation) {
+            body.physics.velocity = (when (direction) {
                 Direction.UP -> if (game.controllerPoller.isPressed(MegaControllerButton.UP))
                     Vector2(0f, MegamanValues.CLIMB_VEL)
                 else if (game.controllerPoller.isPressed(MegaControllerButton.DOWN))
@@ -508,7 +513,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             cart = body.getProperty(ConstKeys.CART, Cart::class)!!
             cart.sprites.values().forEach { it.hidden = true }
 
-            body.setBottomCenterToPoint(cart.body.getBottomCenterPoint())
+            body.setBottomCenterToPoint(cart.body.getPositionPoint(Position.BOTTOM_CENTER))
             body.preProcess.put(ConstKeys.CART) { cart.body.setCenter(body.getCenter()) }
             gdxArrayOf(feetFixture, leftSideFixture, rightSideFixture, bodyFixture).forEach { fixture ->
                 fixture.putProperty(ConstKeys.DEATH_LISTENER, false)
@@ -533,7 +538,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             cart.sprites.values().forEach { it.hidden = false }
 
             if (!dead) {
-                body.translation(0f, ConstVals.PPM / 1.75f)
+                body.translate(0f, ConstVals.PPM / 1.75f)
                 body.physics.velocity.y = MegamanValues.JUMP_VEL * ConstVals.PPM
             }
             body.preProcess.remove(ConstKeys.CART)
@@ -575,7 +580,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         }
 
         override fun act(delta: Float) {
-            when (directionRotation) {
+            when (direction) {
                 Direction.UP -> body.physics.velocity.y =
                     MegamanValues.JETPACK_Y_IMPULSE * ConstVals.PPM * movementScalar
 

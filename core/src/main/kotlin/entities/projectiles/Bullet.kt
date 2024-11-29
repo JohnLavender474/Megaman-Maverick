@@ -9,6 +9,7 @@ import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.set
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -30,13 +31,12 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.utils.VelocityAlterator
 import com.megaman.maverick.game.world.body.*
 
-class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRotatable {
+class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional {
 
     companion object {
         const val TAG = "Bullet"
@@ -45,7 +45,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
         private var region: TextureRegion? = null
     }
 
-    override var directionRotation = Direction.UP
+    override var direction = Direction.UP
 
     private var trajectory: Vector2? = null
     private var bounced = 0
@@ -61,7 +61,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
 
-        directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
+        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
         trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)
 
         val impulse = spawnProps.get(ConstKeys.IMPULSE, Vector2::class)
@@ -94,11 +94,11 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
         }
 
         val velocity = trajectory ?: body.physics.velocity
-        if (isDirectionRotatedVertically()) velocity.x *= -1f else velocity.y *= -1f
+        if (direction.isVertical()) velocity.x *= -1f else velocity.y *= -1f
         val deflection = shieldFixture.getOrDefaultProperty(ConstKeys.DIRECTION, Direction.UP, Direction::class)
         when (deflection) {
             Direction.UP -> {
-                when (directionRotation) {
+                when (direction) {
                     Direction.UP -> velocity.y = 5f * ConstVals.PPM
                     Direction.DOWN -> velocity.y = -5f * ConstVals.PPM
                     Direction.LEFT -> velocity.x = -5f * ConstVals.PPM
@@ -107,7 +107,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
             }
 
             Direction.DOWN -> {
-                when (directionRotation) {
+                when (direction) {
                     Direction.UP -> velocity.y = -5f * ConstVals.PPM
                     Direction.DOWN -> velocity.y = 5f * ConstVals.PPM
                     Direction.LEFT -> velocity.x = 5f * ConstVals.PPM
@@ -157,7 +157,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectionRo
             }
         }
 
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBodyBounds() }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
 
         return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.PROJECTILE, FixtureType.DAMAGER))
     }
