@@ -9,7 +9,6 @@ import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
-import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -36,9 +35,11 @@ import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.VelocityAlteration
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getEntity
+import com.megaman.maverick.game.world.body.getPositionPoint
 import com.megaman.maverick.game.world.body.setVelocityAlteration
 import kotlin.reflect.KClass
 
@@ -115,10 +116,10 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(ConstVals.PPM.toFloat()))
         body.addFixture(damageableFixture)
 
-        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT) {
             val offsetX = 5f * ConstVals.PPM * facing.value
             blowFixture.offsetFromBodyAttachment.x = offsetX
-        })
+        }
 
         return BodyComponentCreator.create(this, body)
     }

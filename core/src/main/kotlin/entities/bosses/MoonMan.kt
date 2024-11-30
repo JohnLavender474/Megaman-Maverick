@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.bosses
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
@@ -11,6 +10,7 @@ import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.UtilMethods.getRandom
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
@@ -18,15 +18,13 @@ import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.getRandom
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.common.shapes.getRandomPositionInBounds
-import com.mega.game.engine.common.shapes.toGameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -62,7 +60,10 @@ import com.megaman.maverick.game.entities.projectiles.Asteroid
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.LoopedSuppliers
 import com.megaman.maverick.game.utils.MegaUtilMethods
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
@@ -221,7 +222,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         gravityChangeState = ProcessState.BEGIN
 
         val direction = megaman().direction
-        direction = direction
+        this.direction = direction
         currentGravityChangeDir = direction
 
         gravityScalar =
@@ -378,31 +379,27 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.2f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -BODY_HEIGHT * ConstVals.PPM / 2f
         body.addFixture(feetFixture)
-        feetFixture.getShape().color = Color.GREEN
-        debugShapes.add { feetFixture.getShape() }
+        debugShapes.add { feetFixture}
 
         val headFixture =
             Fixture(body, FixtureType.HEAD, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.2f * ConstVals.PPM))
         headFixture.offsetFromBodyAttachment.y = BODY_HEIGHT * ConstVals.PPM / 2f
         body.addFixture(headFixture)
-        headFixture.getShape().color = Color.ORANGE
-        debugShapes.add { headFixture.getShape() }
+        debugShapes.add { headFixture}
 
         val leftFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, ConstVals.PPM.toFloat()))
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         leftFixture.offsetFromBodyAttachment.x = -BODY_WIDTH * ConstVals.PPM / 2f
         body.addFixture(leftFixture)
-        leftFixture.getShape().color = Color.BLUE
-        debugShapes.add { leftFixture.getShape() }
+        debugShapes.add { leftFixture}
 
         val rightFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, ConstVals.PPM.toFloat()))
         rightFixture.offsetFromBodyAttachment.x = BODY_WIDTH * ConstVals.PPM / 2f
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
-        rightFixture.getShape().color = Color.BLUE
-        debugShapes.add { rightFixture.getShape() }
+        debugShapes.add { rightFixture}
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             if (body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)) {
@@ -663,7 +660,10 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
     }
 
     private fun spawnAsteroid() {
-        val spawn = asteroidSpawnBounds.getRandomPositionInBounds()
+        val spawn = LoopedSuppliers.getVector2()
+        spawn.x = getRandom(asteroidSpawnBounds.getMaxX(), asteroidSpawnBounds.getMaxX())
+        spawn.y = getRandom(asteroidSpawnBounds.getY(), asteroidSpawnBounds.getMaxY())
+
         val asteroid = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.ASTEROID)!! as Asteroid
         asteroid.spawn(
             props(

@@ -33,10 +33,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.utils.VelocityAlteration
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getEntity
-import com.megaman.maverick.game.world.body.setVelocityAlteration
+import com.megaman.maverick.game.world.body.*
 
 class SpringBouncer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IBodyEntity, IAudioEntity {
 
@@ -68,7 +65,7 @@ class SpringBouncer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesE
         bounceTimer.setToEnd()
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
-        (bounceFixture.getShape() as GameRectangle).set(bounds)
+        (bounceFixture.rawShape as GameRectangle).set(bounds)
         val directionString = spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class)
         direction =
             when (directionString) {
@@ -95,8 +92,8 @@ class SpringBouncer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesE
         sprite.setSize(SPRITE_DIM * ConstVals.PPM)
         sprite.setOriginCenter()
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.rotation =
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.rotation =
                 when (direction) {
                     Direction.UP -> 0f
                     Direction.DOWN -> 180f

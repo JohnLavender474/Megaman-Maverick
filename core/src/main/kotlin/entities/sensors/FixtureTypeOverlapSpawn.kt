@@ -48,7 +48,7 @@ class FixtureTypeOverlapSpawn(game: MegamanMaverickGame) : MegaGameEntity(game),
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
-        body.fixtures.forEach { ((it.second as Fixture).getShape() as GameRectangle).set(bounds) }
+        body.fixtures.forEach { ((it.second as Fixture).rawShape as GameRectangle).set(bounds) }
 
         entitySuppliers = convertObjectPropsToEntitySuppliers(spawnProps)
 

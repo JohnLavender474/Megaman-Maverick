@@ -48,9 +48,9 @@ import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodyFixtureDef
-import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.utils.LoopedSuppliers
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IParentEntity,
@@ -89,7 +89,6 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         }
 
         addComponent(DrawableShapesComponent())
-        isDebugShapes = true
 
         super.init()
         addComponent(defineAnimationsComponent())
@@ -197,13 +196,13 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         val sprite = GameSprite()
         sprite.setSize(1.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.hidden = damageBlink
-            _sprite.setCenter(body.getCenter())
-            _sprite.setOriginCenter()
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.hidden = damageBlink
+            sprite.setCenter(body.getCenter())
+            sprite.setOriginCenter()
             val direction = megaman().direction
-            _sprite.setFlip(isFacing(Facing.LEFT), false)
-            _sprite.rotation = direction.rotation
+            sprite.setFlip(isFacing(Facing.LEFT), false)
+            sprite.rotation = direction.rotation
         }
         return spritesComponent
     }
@@ -242,7 +241,7 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
             it as ChargedShotExplosion
             if (it.fullyCharged) 10 else 5
         })
-    override var parent: GameEntity? = null
+    override var parent: IGameEntity? = null
     override lateinit var facing: Facing
 
     private lateinit var rotatingLine: RotatingLine
@@ -258,7 +257,6 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
 
         addComponent(DrawableShapesComponent())
         addDebugShapeSupplier { rotatingLine.line }
-        isDebugShapes = true
 
         super.init()
         addComponent(defineAnimationsComponent())
@@ -312,7 +310,7 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
             rotatingLine.update(delta)
 
             scalar += OUT_SPEED * delta
-            body.setCenter(rotatingLine.getScaledPosition(scalar))
+            body.setCenter(rotatingLine.getScaledPosition(scalar, LoopedSuppliers.getVector2()))
 
             facing = when (megaman().direction) {
                 Direction.UP -> if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
@@ -338,12 +336,12 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
         val sprite = GameSprite()
         sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setOriginCenter()
-            _sprite.rotation = megaman().direction.rotation
-            _sprite.hidden = damageBlink
-            _sprite.setCenter(body.getCenter())
-            _sprite.setFlip(isFacing(Facing.LEFT), false)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setOriginCenter()
+            sprite.rotation = megaman().direction.rotation
+            sprite.hidden = damageBlink
+            sprite.setCenter(body.getCenter())
+            sprite.setFlip(isFacing(Facing.LEFT), false)
         }
         return spritesComponent
     }

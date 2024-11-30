@@ -8,6 +8,7 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -34,6 +35,7 @@ import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getPositionPoint
 
 class Flame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     ICullableEntity, IDamager, IHazard, IDirectional {
@@ -93,7 +95,7 @@ class Flame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         val sprite = GameSprite()
         sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
+        spritesComponent.putUpdateFunction { _, _ ->
             val position = when (direction) {
                 Direction.UP -> Position.BOTTOM_CENTER
                 Direction.DOWN -> Position.TOP_CENTER
@@ -101,9 +103,9 @@ class Flame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
                 Direction.RIGHT -> Position.CENTER_LEFT
             }
             val bodyPosition = body.getPositionPoint(position)
-            _sprite.setPosition(bodyPosition, position)
-            _sprite.setOriginCenter()
-            _sprite.rotation = direction?.rotation ?: 0f
+            sprite.setPosition(bodyPosition, position)
+            sprite.setOriginCenter()
+            sprite.rotation = direction.rotation
         }
         return spritesComponent
     }

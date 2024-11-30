@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.bosses
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -15,7 +14,6 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
-
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -52,10 +50,8 @@ import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.projectiles.ReactManProjectile
 import com.megaman.maverick.game.utils.MegaUtilMethods
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodySense
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.isSensing
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, IFaceable {
@@ -300,13 +296,11 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         body.addFixture(bodyFixture)
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
-        damagerFixture.getShape().color = Color.RED
-        debugShapes.add { damagerFixture.getShape() }
+        debugShapes.add { damagerFixture}
         body.addFixture(damagerFixture)
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(1.25f * ConstVals.PPM))
-        damageableFixture.getShape().color = Color.PURPLE
-        debugShapes.add { damageableFixture.getShape() }
+        debugShapes.add { damageableFixture}
         body.addFixture(damageableFixture)
 
         val headFixture = Fixture(
@@ -315,8 +309,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             )
         )
         headFixture.offsetFromBodyAttachment.y = 0.675f * ConstVals.PPM
-        headFixture.getShape().color = Color.ORANGE
-        debugShapes.add { headFixture.getShape() }
+        debugShapes.add { headFixture}
         body.addFixture(headFixture)
 
         val feetFixture = Fixture(
@@ -325,8 +318,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             )
         )
         feetFixture.offsetFromBodyAttachment.y = -0.675f * ConstVals.PPM
-        feetFixture.getShape().color = Color.GREEN
-        debugShapes.add { feetFixture.getShape() }
+        debugShapes.add { feetFixture}
         body.addFixture(feetFixture)
 
         val leftFixture = Fixture(
@@ -336,8 +328,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         )
         leftFixture.offsetFromBodyAttachment.x = -0.625f * ConstVals.PPM
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
-        leftFixture.getShape().color = Color.YELLOW
-        debugShapes.add { leftFixture.getShape() }
+        debugShapes.add { leftFixture}
 
         val rightFixture = Fixture(
             body, FixtureType.SIDE, GameRectangle().setSize(
@@ -346,8 +337,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         )
         rightFixture.offsetFromBodyAttachment.x = 0.625f * ConstVals.PPM
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
-        rightFixture.getShape().color = Color.YELLOW
-        debugShapes.add { rightFixture.getShape() }
+        debugShapes.add { rightFixture}
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             if (body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) && body.physics.velocity.y > 0f)

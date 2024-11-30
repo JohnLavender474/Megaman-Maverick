@@ -27,6 +27,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.getCenter
 
 class IceShard(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAudioEntity {
 
@@ -49,8 +50,7 @@ class IceShard(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         if (TEXTURES.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
             val region = atlas.findRegion("BreakableIce/Shards")
-            val regions = region.splitAndFlatten(1, 5)
-            regions.forEach { TEXTURES.add(it) }
+            region.splitAndFlatten(1, 5, TEXTURES)
         }
         addComponent(defineBodyComponent())
         addComponent(defineCullablesComponent())
@@ -90,9 +90,7 @@ class IceShard(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         sprite.setSize(ConstVals.PPM.toFloat())
         sprite.setAlpha(0.75f)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setCenter(body.getCenter())
-        }
+        spritesComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
         return spritesComponent
     }
 

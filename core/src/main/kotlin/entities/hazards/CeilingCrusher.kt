@@ -1,7 +1,5 @@
 package com.megaman.maverick.game.entities.hazards
 
-import com.mega.game.engine.world.body.*;
-
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
@@ -30,6 +28,7 @@ import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -43,10 +42,8 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getEntity
-import com.megaman.maverick.game.world.body.setConsumer
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.world.body.*
 
 class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, ICullableEntity,
     IAudioEntity, IHazard, IDamager {
@@ -101,10 +98,10 @@ class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
             sprite.setRegion(barRegion!!)
             sprite.setSize(2.25f * ConstVals.PPM)
             sprites.put("bar_$i", sprite)
-            putUpdateFunction("bar_$i") { _, _sprite ->
+            putUpdateFunction("bar_$i") { _, _ ->
                 val centerX = body.getCenter().x
                 val bottomY = body.getPositionPoint(Position.BOTTOM_CENTER).y + (i * 2.25f * ConstVals.PPM)
-                _sprite.setPosition(Vector2(centerX, bottomY), Position.BOTTOM_CENTER)
+                sprite.setPosition(Vector2(centerX, bottomY), Position.BOTTOM_CENTER)
             }
         }
         ceilingCrusherState = CeilingCrusherState.WAITING
@@ -121,8 +118,8 @@ class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
     override fun onDestroy() {
         GameLogger.debug(TAG, "Destroying CeilingCrusher")
         super.onDestroy()
-        val keysToRemove = Array<String>()
-        sprites.keys().forEach { if (it != SpritesComponent.SPRITE) keysToRemove.add(it) }
+        val keysToRemove = Array<Any>()
+        sprites.keys().forEach { if (it != SpritesComponent.DEFAULT_KEY) keysToRemove.add(it) }
         keysToRemove.forEach { sprites.remove(it) }
         block?.destroy()
         block = null
@@ -156,15 +153,15 @@ class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
 
         val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle())
         body.addFixture(shieldFixture)
-        shieldFixture.getShape().color = Color.BLUE
-        debugShapes.add { shieldFixture.getShape() }
+        shieldFixture.drawingColor = Color.BLUE
+        debugShapes.add { shieldFixture }
 
         val consumerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle())
         consumerFixture.attachedToBody = false
         consumerFixture.setConsumer { _, fixture -> setToCrushIfTarget(fixture) }
         body.addFixture(consumerFixture)
-        consumerFixture.getShape().color = Color.CYAN
-        debugShapes.add { consumerFixture.getShape() }
+        consumerFixture.drawingColor = Color.CYAN
+        debugShapes.add { consumerFixture }
 
         val crusherFixture = Fixture(
             body, FixtureType.DEATH, GameRectangle().setSize(
@@ -174,8 +171,8 @@ class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         crusherFixture.putProperty(ConstKeys.INSTANT, true)
         crusherFixture.attachedToBody = false
         body.addFixture(crusherFixture)
-        crusherFixture.getShape().color = Color.RED
-        debugShapes.add { crusherFixture.getShape() }
+        crusherFixture.drawingColor = Color.RED
+        debugShapes.add { crusherFixture }
 
         val bottomFixture = Fixture(
             body, FixtureType.CONSUMER, GameRectangle().setSize(
@@ -185,25 +182,25 @@ class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         bottomFixture.attachedToBody = false
         bottomFixture.setConsumer { _, fixture -> setToStopIfBlock(fixture) }
         body.addFixture(bottomFixture)
-        bottomFixture.getShape().color = Color.GREEN
-        debugShapes.add { bottomFixture.getShape() }
+        bottomFixture.drawingColor = Color.GREEN
+        debugShapes.add { bottomFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            (bodyFixture.getShape() as GameRectangle).setSize(0.5f * ConstVals.PPM, body.height)
-            (shieldFixture.getShape() as GameRectangle).setSize(0.5f * ConstVals.PPM, body.height)
+            (bodyFixture.rawShape as GameRectangle).setSize(0.5f * ConstVals.PPM, body.getHeight())
+            (shieldFixture.rawShape as GameRectangle).setSize(0.5f * ConstVals.PPM, body.getHeight())
 
-            bottomFixture.active = ceilingCrusherState == CeilingCrusherState.DROPPING
+            bottomFixture.setActive(ceilingCrusherState == CeilingCrusherState.DROPPING)
 
-            consumerFixture.active = ceilingCrusherState == CeilingCrusherState.WAITING
-            val consumer = consumerFixture.getShape() as GameRectangle
+            consumerFixture.setActive(ceilingCrusherState == CeilingCrusherState.WAITING)
+            val consumer = consumerFixture.rawShape as GameRectangle
             consumer.setSize(2f * ConstVals.PPM, 2.25f * ConstVals.PPM * height)
             consumer.setTopCenterToPoint(body.getPositionPoint(Position.BOTTOM_CENTER))
 
-            crusherFixture.active = ceilingCrusherState == CeilingCrusherState.DROPPING
-            val crusher = crusherFixture.getShape() as GameRectangle
+            crusherFixture.setActive(ceilingCrusherState == CeilingCrusherState.DROPPING)
+            val crusher = crusherFixture.rawShape as GameRectangle
             crusher.setCenter(body.getPositionPoint(Position.BOTTOM_CENTER))
 
-            val feet = bottomFixture.getShape() as GameRectangle
+            val feet = bottomFixture.rawShape as GameRectangle
             feet.setCenter(body.getPositionPoint(Position.BOTTOM_CENTER))
 
             block!!.body.setBottomCenterToPoint(body.getPositionPoint(Position.BOTTOM_CENTER))
@@ -245,8 +242,11 @@ class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         sprite.setRegion(crusherRegion!!)
         sprite.setSize(2.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setPosition(
+                body.getPositionPoint(Position.BOTTOM_CENTER),
+                Position.BOTTOM_CENTER
+            )
         }
         return spritesComponent
     }

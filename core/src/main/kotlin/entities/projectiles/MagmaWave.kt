@@ -96,13 +96,13 @@ class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         leftFixture.offsetFromBodyAttachment.x = -0.125f * ConstVals.PPM
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftFixture)
-        debugShapes.add { leftFixture.getShape() }
+        debugShapes.add { leftFixture}
 
         val rightFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         rightFixture.offsetFromBodyAttachment.x = 0.125f * ConstVals.PPM
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
-        debugShapes.add { rightFixture.getShape() }
+        debugShapes.add { rightFixture}
 
         debugShapes.add { body.getBounds() }
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

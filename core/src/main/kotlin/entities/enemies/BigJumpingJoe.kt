@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.enemies
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -51,10 +50,8 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodySense
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.isSensing
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravityEntity, IFaceable,
@@ -194,34 +191,29 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableG
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
-        bodyFixture.getShape().color = Color.GRAY
-        debugShapes.add { bodyFixture.getShape() }
+        debugShapes.add { bodyFixture}
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().set(body))
         body.addFixture(damagerFixture)
-        damagerFixture.getShape().color = Color.RED
-        debugShapes.add { damagerFixture.getShape() }
+        debugShapes.add { damagerFixture}
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().set(body))
         body.addFixture(damageableFixture)
-        damageableFixture.getShape().color = Color.PURPLE
-        debugShapes.add { damageableFixture.getShape() }
+        debugShapes.add { damageableFixture}
 
         val feetFixture = Fixture(
             body, FixtureType.FEET, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.2f * ConstVals.PPM)
         )
         feetFixture.offsetFromBodyAttachment.y = -ConstVals.PPM.toFloat()
         body.addFixture(feetFixture)
-        feetFixture.getShape().color = Color.GREEN
-        debugShapes.add { feetFixture.getShape() }
+        debugShapes.add { feetFixture}
 
         val headFixture = Fixture(
             body, FixtureType.HEAD, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.2f * ConstVals.PPM)
         )
         headFixture.offsetFromBodyAttachment.y = ConstVals.PPM.toFloat()
         body.addFixture(headFixture)
-        headFixture.getShape().color = Color.ORANGE
-        debugShapes.add { headFixture.getShape() }
+        debugShapes.add { headFixture}
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.gravity.y =
@@ -237,11 +229,11 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableG
         val sprite = GameSprite()
         sprite.setSize(2.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.hidden = damageBlink
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.hidden = damageBlink
             val position = body.getPositionPoint(Position.BOTTOM_CENTER)
-            _sprite.setPosition(position, Position.BOTTOM_CENTER)
-            _sprite.setFlip(facing == Facing.RIGHT, false)
+            sprite.setPosition(position, Position.BOTTOM_CENTER)
+            sprite.setFlip(facing == Facing.RIGHT, false)
         }
         return spritesComponent
     }

@@ -2,10 +2,11 @@ package com.megaman.maverick.game.drawables.backgrounds
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
-import com.mega.game.engine.common.interpolate
+import com.mega.game.engine.common.UtilMethods.interpolate
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
+import com.megaman.maverick.game.utils.LoopedSuppliers
 
 open class ScrollingBackground(
     key: String,
@@ -30,7 +31,7 @@ open class ScrollingBackground(
             backgroundSprites.setPosition(start)
             timer.reset()
         } else {
-            val position = interpolate(start, target, timer.getRatio())
+            val position = interpolate(start, target, timer.getRatio(), LoopedSuppliers.getVector2())
             backgroundSprites.setPosition(position)
         }
     }

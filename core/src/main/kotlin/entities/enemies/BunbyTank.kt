@@ -1,8 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
@@ -15,6 +13,7 @@ import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.IFaceable
 
 
@@ -53,6 +52,7 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
@@ -104,9 +104,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         }
         super.init()
         addComponent(defineAnimationsComponent())
-        shootScanner.color = Color.BLUE
         addDebugShapeSupplier { shootScanner }
-        turnAroundScanner.color = Color.GREEN
         addDebugShapeSupplier { turnAroundScanner }
     }
 
@@ -199,11 +197,11 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             turnAroundScanner.positionOnPoint(turnAroundScannerPosition, position.opposite())
 
             if (!megaman().dead) {
-                if (megaman().body.overlaps(shootScanner as Rectangle)) {
+                if (megaman().body.getBounds().overlaps(shootScanner)) {
                     body.physics.velocity.setZero()
                     shootTimer.reset()
                     return@add
-                } else if (megaman().body.overlaps(turnAroundScanner as Rectangle)) swapFacing()
+                } else if (megaman().body.getBounds().overlaps(turnAroundScanner)) swapFacing()
             }
 
             body.physics.velocity = (when (direction) {
@@ -231,18 +229,15 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         body.addFixture(bodyFixture)
-        bodyFixture.getShape().color = Color.GRAY
-        debugShapes.add { bodyFixture.getShape() }
+        debugShapes.add { bodyFixture}
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
         body.addFixture(damagerFixture)
-        damagerFixture.getShape().color = Color.RED
-        debugShapes.add { damagerFixture.getShape() }
+        debugShapes.add { damagerFixture}
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle(body))
         body.addFixture(damageableFixture)
-        damageableFixture.getShape().color = Color.PURPLE
-        debugShapes.add { damageableFixture.getShape() }
+        debugShapes.add { damageableFixture}
 
         val leftSideFixture = Fixture(
             body, FixtureType.SIDE, GameRectangle().setSize(
@@ -252,8 +247,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         leftSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         leftSideFixture.offsetFromBodyAttachment.x = -0.5f * ConstVals.PPM
         body.addFixture(leftSideFixture)
-        leftSideFixture.getShape().color = Color.BLUE
-        debugShapes.add { leftSideFixture.getShape() }
+        debugShapes.add { leftSideFixture}
 
         val rightSideFixture = Fixture(
             body, FixtureType.SIDE, GameRectangle().setSize(
@@ -263,8 +257,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         rightSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         rightSideFixture.offsetFromBodyAttachment.x = 0.5f * ConstVals.PPM
         body.addFixture(rightSideFixture)
-        rightSideFixture.getShape().color = Color.YELLOW
-        debugShapes.add { rightSideFixture.getShape() }
+        debugShapes.add { rightSideFixture}
 
         val leftFootFixture = Fixture(
             body, FixtureType.CONSUMER, GameRectangle().setSize(
@@ -279,8 +272,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             }
         }
         body.addFixture(leftFootFixture)
-        leftFootFixture.getShape().color = Color.GREEN
-        debugShapes.add { leftFootFixture.getShape() }
+        debugShapes.add { leftFootFixture}
 
         val rightFootFixture = Fixture(
             body, FixtureType.CONSUMER, GameRectangle().setSize(
@@ -295,8 +287,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             }
         }
         body.addFixture(rightFootFixture)
-        rightFootFixture.getShape().color = Color.ORANGE
-        debugShapes.add { rightFootFixture.getShape() }
+        debugShapes.add { rightFootFixture}
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             leftFootFixture.putProperty(ConstKeys.BLOCK, false)

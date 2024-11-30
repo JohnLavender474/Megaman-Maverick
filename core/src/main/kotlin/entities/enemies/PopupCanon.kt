@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.enemies
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -11,11 +10,13 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.toGdxArray
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
@@ -53,9 +54,9 @@ import com.megaman.maverick.game.entities.projectiles.Asteroid
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable, IDirectional {
@@ -139,10 +140,10 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         when (direction) {
-            Direction.UP -> body.setBottomCenterToPoint(bounds.getBottomCenterPoint())
+            Direction.UP -> body.setBottomCenterToPoint(bounds.getPositionPoint(Position.BOTTOM_CENTER))
             Direction.DOWN -> body.setTopCenterToPoint(bounds.getPositionPoint(Position.TOP_CENTER))
-            Direction.LEFT -> body.setCenterRightToPoint(bounds.getCenterRightPoint())
-            Direction.RIGHT -> body.setCenterLeftToPoint(bounds.getCenterLeftPoint())
+            Direction.LEFT -> body.setCenterRightToPoint(bounds.getPositionPoint(Position.CENTER_RIGHT))
+            Direction.RIGHT -> body.setCenterLeftToPoint(bounds.getPositionPoint(Position.CENTER_LEFT))
         }
 
         facing = when (direction) {
@@ -228,25 +229,23 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setWidth(1.15f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        damagerFixture.getShape().color = Color.RED
-        debugShapes.add { damagerFixture.getShape() }
+        debugShapes.add { damagerFixture}
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle(body))
         body.addFixture(damageableFixture)
-        damageableFixture.getShape().color = Color.GREEN
-        debugShapes.add { if (damageableFixture.active) damageableFixture.getShape() else null }
+        debugShapes.add { if (damageableFixture.isActive()) damageableFixture.getShape() else null }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             val damageable = loop.getCurrent() == PopupCanonState.SHOOT ||
                     (loop.getCurrent() == PopupCanonState.RISE && timers["rise"].getRatio() > TRANS_DAMAGEABLE_CUTOFF) ||
                     (loop.getCurrent() == PopupCanonState.FALL && timers["fall"].getRatio() < TRANS_DAMAGEABLE_CUTOFF)
-            damageableFixture.active = damageable
+            damageableFixture.setActive(damageable)
 
-            (damagerFixture.getShape() as GameRectangle).height = (when (transState) {
+            (damagerFixture.rawShape as GameRectangle).setHeight(when (transState) {
                 Size.LARGE -> 1.5f
                 Size.MEDIUM -> 1f
                 Size.SMALL -> 0.25f
-            }) * ConstVals.PPM
+            } * ConstVals.PPM)
             damagerFixture.offsetFromBodyAttachment.y = (when (transState) {
                 Size.LARGE -> 0f
                 Size.MEDIUM -> -0.25f

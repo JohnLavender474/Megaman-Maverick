@@ -14,12 +14,12 @@ import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.common.shapes.getCenter
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -51,6 +51,7 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 import java.util.*
 import kotlin.reflect.KClass
@@ -192,7 +193,7 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
             megaman().body.getCenter().sub(body.getCenter()).nor().scl(BULLET_SPEED * ConstVals.PPM)
 
         val offset = ConstVals.PPM / 64f
-        val spawn = body.getCenter().add(offset * facing.value, if (isDirectionRotatedDown()) -offset else offset)
+        val spawn = body.getCenter().add(offset * facing.value, if (direction == Direction.DOWN) -offset else offset)
 
         val bulletProps = props(
             ConstKeys.POSITION pairTo spawn,

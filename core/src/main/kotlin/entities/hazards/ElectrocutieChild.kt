@@ -23,6 +23,7 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.IChildEntity
@@ -40,6 +41,7 @@ import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getPositionPoint
 
 class ElectrocutieChild(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDamager, IBodyEntity,
     ISpritesEntity, IAnimatedEntity, IChildEntity {
@@ -55,7 +57,7 @@ class ElectrocutieChild(game: MegamanMaverickGame) : MegaGameEntity(game), IHaza
         private var shockRegion: TextureRegion? = null
     }
 
-    override var parent: GameEntity? = null
+    override var parent: IGameEntity? = null
 
     private lateinit var direction: Direction
     private lateinit var spawn: Vector2
@@ -90,25 +92,25 @@ class ElectrocutieChild(game: MegamanMaverickGame) : MegaGameEntity(game), IHaza
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle())
         body.addFixture(bodyFixture)
-        bodyFixture.getShape().color = Color.GRAY
-        debugShapes.add { bodyFixture.getShape() }
+        bodyFixture.drawingColor = Color.GRAY
+        debugShapes.add { bodyFixture}
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
         body.addFixture(damagerFixture)
-        damagerFixture.getShape().color = Color.RED
-        debugShapes.add { damagerFixture.getShape() }
+        damagerFixture.drawingColor = Color.RED
+        debugShapes.add { damagerFixture}
 
         val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle())
         body.addFixture(shieldFixture)
-        shieldFixture.getShape().color = Color.BLUE
-        debugShapes.add { shieldFixture.getShape() }
+        shieldFixture.drawingColor = Color.BLUE
+        debugShapes.add { shieldFixture}
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             val size = if (direction.isVertical()) Vector2(0.85f * ConstVals.PPM, 0.35f * ConstVals.PPM)
             else Vector2(0.35f * ConstVals.PPM, 0.85f * ConstVals.PPM)
 
             body.setSize(size)
-            body.fixtures.forEach { (it.second.getShape() as GameRectangle).setSize(size) }
+            body.fixtures.forEach { ((it.second as Fixture).rawShape as GameRectangle).setSize(size) }
 
             if (resetBodyPosition) {
                 when (direction) {
@@ -130,9 +132,9 @@ class ElectrocutieChild(game: MegamanMaverickGame) : MegaGameEntity(game), IHaza
         val sprite = GameSprite()
         sprite.setSize(1.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setOriginCenter()
-            _sprite.rotation = direction.rotation
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setOriginCenter()
+            sprite.rotation = direction.rotation
 
             val position = when (direction) {
                 Direction.UP -> Position.BOTTOM_CENTER
@@ -141,7 +143,7 @@ class ElectrocutieChild(game: MegamanMaverickGame) : MegaGameEntity(game), IHaza
                 Direction.RIGHT -> Position.CENTER_LEFT
             }
             val bodyPosition = body.getPositionPoint(position)
-            _sprite.setCenter(bodyPosition)
+            sprite.setCenter(bodyPosition)
 
             val offset = when (direction) {
                 Direction.UP -> Vector2(0f, 0.15f * ConstVals.PPM)
@@ -149,7 +151,7 @@ class ElectrocutieChild(game: MegamanMaverickGame) : MegaGameEntity(game), IHaza
                 Direction.LEFT -> Vector2(-0.15f * ConstVals.PPM, 0f)
                 Direction.RIGHT -> Vector2(0.15f * ConstVals.PPM, 0f)
             }
-            _sprite.translate(offset.x, offset.y)
+            sprite.translate(offset.x, offset.y)
         }
         return spritesComponent
     }

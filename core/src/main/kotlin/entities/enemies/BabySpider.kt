@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.enemies
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.animations.Animation
@@ -37,10 +36,8 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodySense
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.isSensing
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class BabySpider(game: MegamanMaverickGame) : AbstractEnemy(game) {
@@ -148,45 +145,38 @@ class BabySpider(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
-        bodyFixture.getShape().color = Color.GRAY
-        debugShapes.add { bodyFixture.getShape() }
+        debugShapes.add { bodyFixture}
 
         val leftFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         leftFixture.offsetFromBodyAttachment.x = -0.375f * ConstVals.PPM
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftFixture)
-        leftFixture.getShape().color = Color.YELLOW
-        debugShapes.add { leftFixture.getShape() }
+        debugShapes.add { leftFixture}
 
         val rightFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         rightFixture.offsetFromBodyAttachment.x = 0.375f * ConstVals.PPM
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
-        rightFixture.getShape().color = Color.YELLOW
-        debugShapes.add { rightFixture.getShape() }
+        debugShapes.add { rightFixture}
 
         val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -0.25f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.getShape().color = Color.GREEN
-        debugShapes.add { feetFixture.getShape() }
+        debugShapes.add { feetFixture}
 
         val headFixture = Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.1f * ConstVals.PPM))
         headFixture.offsetFromBodyAttachment.y = 0.25f * ConstVals.PPM
         body.addFixture(headFixture)
-        headFixture.getShape().color = Color.BLUE
-        debugShapes.add { headFixture.getShape() }
+        debugShapes.add { headFixture}
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().set(body))
         body.addFixture(damagerFixture)
-        damagerFixture.getShape().color = Color.RED
-        debugShapes.add { damagerFixture.getShape() }
+        debugShapes.add { damagerFixture}
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.75f * ConstVals.PPM))
         damageableFixture.offsetFromBodyAttachment.y = 0.1f * ConstVals.PPM
         body.addFixture(damageableFixture)
-        damageableFixture.getShape().color = Color.PURPLE
-        debugShapes.add { damageableFixture.getShape() }
+        debugShapes.add { damageableFixture}
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
@@ -239,17 +229,17 @@ class BabySpider(game: MegamanMaverickGame) : AbstractEnemy(game) {
         val sprite = GameSprite()
         sprite.setSize(1.65f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.hidden = damageBlink || (!waitTimer.isFinished() && waitBlink)
-            _sprite.setCenter(body.getCenter())
-            _sprite.setOriginCenter()
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.hidden = damageBlink || (!waitTimer.isFinished() && waitBlink)
+            sprite.setCenter(body.getCenter())
+            sprite.setOriginCenter()
             val rotation = when (babySpiderState) {
                 BabySpiderState.FALLING, BabySpiderState.RUNNING_ON_GROUND -> 0f
                 BabySpiderState.RUNNING_ON_CEILING -> 180f
                 BabySpiderState.SCALING_WALL_LEFT -> 270f
                 BabySpiderState.SCALING_WALL_RIGHT -> 90f
             }
-            _sprite.rotation = rotation
+            sprite.rotation = rotation
         }
         return spritesComponent
     }

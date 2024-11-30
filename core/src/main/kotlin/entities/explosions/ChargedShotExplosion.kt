@@ -36,6 +36,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getCenter
 
 class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
 
@@ -81,13 +82,13 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
 
         val size = if (fullyCharged) 1.5f * ConstVals.PPM else ConstVals.PPM.toFloat()
         body.setSize(size)
-        (damagerFixture.getShape() as GameRectangle).setSize(size)
+        (damagerFixture.rawShape as GameRectangle).setSize(size)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
 
         val spriteDimension = (if (fullyCharged) 1.75f else 1.25f) * ConstVals.PPM
-        (defaultSprite as GameSprite).setSize(spriteDimension)
+        defaultSprite.setSize(spriteDimension)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
@@ -109,7 +110,7 @@ body.physics.applyFrictionY = false
         damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
         body.addFixture(damagerFixture)
 
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -117,16 +118,16 @@ body.physics.applyFrictionY = false
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setOriginCenter()
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setOriginCenter()
             val rotation = when (direction) {
                 Direction.RIGHT -> 0f
                 Direction.UP -> 90f
                 Direction.LEFT -> 180f
                 Direction.DOWN -> 270f
             }
-            _sprite.rotation = rotation
-            _sprite.setCenter(body.getCenter())
+            sprite.rotation = rotation
+            sprite.setCenter(body.getCenter())
         }
         return spritesComponent
     }

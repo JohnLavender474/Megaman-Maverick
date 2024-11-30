@@ -3,9 +3,9 @@ package com.megaman.maverick.game.entities.hazards
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.UtilMethods.getRandom
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.getRandom
 import com.mega.game.engine.common.interfaces.IActivatable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo

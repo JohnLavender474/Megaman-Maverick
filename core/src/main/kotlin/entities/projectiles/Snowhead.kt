@@ -4,12 +4,13 @@ package com.megaman.maverick.game.entities.projectiles
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.mega.game.engine.common.UtilMethods.getOverlapPushDirection
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.set
-import com.mega.game.engine.common.getOverlapPushDirection
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -40,7 +41,10 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getEntity
+import com.megaman.maverick.game.world.body.getPositionPoint
 
 class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable {
 
@@ -69,7 +73,7 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
         super.onSpawn(spawnProps)
 
         val size = spawnProps.getOrDefault(ConstKeys.SIZE, Vector2().set(0.75f * ConstVals.PPM), Vector2::class)
-        body.setSize(size)
+        body.setSize(size.x, size.y)
         defaultSprite.setSize(size.cpy().scl(2f))
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
@@ -94,7 +98,7 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
     private fun bounceBullets(collisionShape: IGameShape2D) {
         val snowballs =
             EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SNOWBALL, SNOWBALL_TRAJECTORIES.size)
-        val direction = getOverlapPushDirection(body, collisionShape) ?: Direction.UP
+        val direction = getOverlapPushDirection(body.getBounds(), collisionShape) ?: Direction.UP
         val spawn = when (direction) {
             Direction.UP -> body.getPositionPoint(Position.TOP_CENTER).add(0f, 0.1f * ConstVals.PPM)
             Direction.DOWN -> body.getPositionPoint(Position.BOTTOM_CENTER).sub(0f, 0.1f * ConstVals.PPM)
@@ -167,9 +171,9 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setFlip(isFacing(Facing.RIGHT), false)
-            _sprite.setCenter(body.getCenter())
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setFlip(isFacing(Facing.RIGHT), false)
+            sprite.setCenter(body.getCenter())
         }
         return spritesComponent
     }

@@ -12,7 +12,6 @@ import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
-
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -46,10 +45,8 @@ import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.FallingIcicle
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodySense
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.isSensing
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
@@ -118,19 +115,19 @@ class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             val megamanBody = megaman().body
 
             if (body.getX() >= megamanBody.getMaxX()) facing = Facing.LEFT
-            else if (body.getMaxX() <= megamanBody.x) facing = Facing.RIGHT
+            else if (body.getMaxX() <= megamanBody.getX()) facing = Facing.RIGHT
 
             if (invincible || chomping) body.physics.velocity.setZero()
             else {
                 val vel = body.physics.velocity
                 vel.x = HORIZ_SPEED * ConstVals.PPM * facing.value
-                if (body.isSensing(BodySense.IN_WATER) || megamanBody.y < body.getY()) {
-                    if (megamanBody.y >= body.getY() && megamanBody.y <= body.getMaxY()) {
+                if (body.isSensing(BodySense.IN_WATER) || megamanBody.getY() < body.getY()) {
+                    if (megamanBody.getY() >= body.getY() && megamanBody.getY() <= body.getMaxY()) {
                         if ((isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
                             (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
                         ) vel.y = VERT_SPEED * ConstVals.PPM
                         else vel.y = 0f
-                    } else vel.y = VERT_SPEED * ConstVals.PPM * if (megamanBody.y >= body.getY()) 1 else -1
+                    } else vel.y = VERT_SPEED * ConstVals.PPM * if (megamanBody.getY() >= body.getY()) 1 else -1
                 } else vel.y = 0f
             }
         }
@@ -150,7 +147,7 @@ class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         )
         waterListenerFixture.offsetFromBodyAttachment.y = ConstVals.PPM / 4f
         body.addFixture(waterListenerFixture)
-        debugShapes.add { waterListenerFixture.getShape() }
+        debugShapes.add { waterListenerFixture}
 
         val m = GameRectangle().setSize(0.2f * ConstVals.PPM, ConstVals.PPM.toFloat())
 
@@ -158,35 +155,35 @@ class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         leftFixture.offsetFromBodyAttachment.x = -0.5f * ConstVals.PPM
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftFixture)
-        debugShapes.add { leftFixture.getShape() }
+        debugShapes.add { leftFixture}
 
         val rightFixture = Fixture(body, FixtureType.SIDE, m.copy())
         rightFixture.offsetFromBodyAttachment.x = 0.5f * ConstVals.PPM
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
-        debugShapes.add { rightFixture.getShape() }
+        debugShapes.add { rightFixture}
 
         val m1 = GameRectangle().setSize(0.75f * ConstVals.PPM, 0.2f * ConstVals.PPM)
 
         val headFixture = Fixture(body, FixtureType.HEAD, m1.copy())
         headFixture.offsetFromBodyAttachment.y = 0.375f * ConstVals.PPM
         body.addFixture(headFixture)
-        debugShapes.add { headFixture.getShape() }
+        debugShapes.add { headFixture}
 
         val feetFixture = Fixture(body, FixtureType.FEET, m1.copy())
         feetFixture.offsetFromBodyAttachment.y = -0.375f * ConstVals.PPM
         body.addFixture(feetFixture)
-        debugShapes.add { feetFixture.getShape() }
+        debugShapes.add { feetFixture}
 
         val m2 = GameRectangle().setSize(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat())
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, m2.copy())
         body.addFixture(damageableFixture)
-        debugShapes.add { damageableFixture.getShape() }
+        debugShapes.add { damageableFixture}
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, m2.copy())
         body.addFixture(damagerFixture)
-        debugShapes.add { damagerFixture.getShape() }
+        debugShapes.add { damagerFixture}
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
@@ -197,10 +194,10 @@ class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.hidden = damageBlink
-            _sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
-            _sprite.setFlip(facing == Facing.LEFT, false)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.hidden = damageBlink
+            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
+            sprite.setFlip(facing == Facing.LEFT, false)
         }
         return spritesComponent
     }

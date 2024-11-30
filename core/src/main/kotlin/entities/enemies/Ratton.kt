@@ -14,7 +14,6 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
-import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -42,6 +41,7 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
@@ -105,26 +105,23 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(ConstVals.PPM.toFloat()))
         body.addFixture(bodyFixture)
-        bodyFixture.getShape().color = Color.BLUE
-        debugShapes.add { bodyFixture.getShape() }
+        debugShapes.add { bodyFixture}
 
         val headFixture =
             Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.2f * ConstVals.PPM))
         headFixture.offsetFromBodyAttachment.y = 0.5f * ConstVals.PPM
         body.addFixture(headFixture)
-        headFixture.getShape().color = Color.ORANGE
-        debugShapes.add { headFixture.getShape() }
+        debugShapes.add { headFixture}
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.2f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -0.5f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.getShape().color = Color.GREEN
-        debugShapes.add { feetFixture.getShape() }
+        debugShapes.add { feetFixture}
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.gravity.y = ConstVals.PPM * (if (body.isSensing(BodySense.FEET_ON_GROUND)) G_GRAV else GRAV)
 
             val frictionX = if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_FRICTION_X else DEFAULT_FRICTION_X
@@ -132,7 +129,7 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
             if (body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) && body.physics.velocity.y > 0f)
                 body.physics.velocity.y = 0f
-        })
+        }
 
         return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.DAMAGEABLE, FixtureType.DAMAGER))
     }

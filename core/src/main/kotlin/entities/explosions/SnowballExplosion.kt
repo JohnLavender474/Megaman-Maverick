@@ -34,6 +34,7 @@ import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
 
 class SnowballExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IHazard,
@@ -80,7 +81,7 @@ class SnowballExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
 
         addComponent(
             DrawableShapesComponent(
-                debugShapeSuppliers = gdxArrayOf({ damagerFixture.getShape() }),
+                debugShapeSuppliers = gdxArrayOf({ damagerFixture}),
                 debug = true
             )
         )

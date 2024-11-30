@@ -44,8 +44,11 @@ import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.FallingIcicle
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.getMotionValue
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getPositionDelta
 import kotlin.reflect.KClass
 
@@ -103,23 +106,27 @@ class YellowTiggerSquirt(game: MegamanMaverickGame) : AbstractEnemy(game), IAnim
         updatablesComponent.add { delta ->
             sineWaveY.update(delta)
             sineWaveX.update(delta)
-            body.setCenter(sineWaveX.getMotionValue().y, sineWaveY.getMotionValue().y)
-            if (body.getPositionDelta().x < 0f) facing = Facing.LEFT
-            else if (body.getPositionDelta().x > 0f) facing = Facing.RIGHT
+
+            body.setCenter(sineWaveX.getMotionValue()!!.y, sineWaveY.getMotionValue()!!.y)
+
+            when {
+                body.getPositionDelta().x < 0f -> facing = Facing.LEFT
+                body.getPositionDelta().x > 0f -> facing = Facing.RIGHT
+            }
         }
     }
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.75f * ConstVals.PPM)
-        body.color = Color.GRAY
+        body.drawingColor = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBounds() }
+        debugShapes.add { body }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameCircle().setRadius(0.375f * ConstVals.PPM))
         body.addFixture(bodyFixture)
-        debugShapes.add { bodyFixture.getShape() }
+        debugShapes.add { bodyFixture }
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.375f * ConstVals.PPM))
         body.addFixture(damagerFixture)
@@ -136,10 +143,10 @@ class YellowTiggerSquirt(game: MegamanMaverickGame) : AbstractEnemy(game), IAnim
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setCenter(body.getCenter())
-            _sprite.setFlip(isFacing(Facing.LEFT), false)
-            _sprite.hidden = damageBlink
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setCenter(body.getCenter())
+            sprite.setFlip(isFacing(Facing.LEFT), false)
+            sprite.hidden = damageBlink
         }
         return spritesComponent
     }

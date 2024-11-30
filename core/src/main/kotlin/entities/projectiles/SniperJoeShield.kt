@@ -34,8 +34,11 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getEntity
 
 class SniperJoeShield(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable {
@@ -73,8 +76,8 @@ class SniperJoeShield(game: MegamanMaverickGame) : AbstractProjectile(game), IFa
         GameLogger.debug(TAG, "Spawn props = $spawnProps")
         super.onSpawn(spawnProps)
         val spawn =
-            if (spawnProps.containsKey(ConstKeys.BOUNDS)) spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
-                .getCenter()
+            if (spawnProps.containsKey(ConstKeys.BOUNDS))
+                spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
             else spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
         trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
@@ -125,12 +128,11 @@ class SniperJoeShield(game: MegamanMaverickGame) : AbstractProjectile(game), IFa
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.5f * ConstVals.PPM, ConstVals.PPM.toFloat())
         body.physics.applyFrictionX = false
-body.physics.applyFrictionY = false
+        body.physics.applyFrictionY = false
 
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
 
         val bodyShapes = Array<IGameShape2D>()
-        bodyShapes.add(body)
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle())
         body.addFixture(bodyFixture)
@@ -164,18 +166,18 @@ body.physics.applyFrictionY = false
         val sprite = GameSprite()
         sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setRegion(
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setRegion(
                 when (type) {
                     ORANGE_TYPE -> orangeRegion!!
                     BLUE_TYPE -> blueRegion!!
                     else -> throw IllegalArgumentException("Invalid type: $type")
                 }
             )
-            _sprite.setCenter(body.getCenter())
-            _sprite.setFlip(facing == Facing.LEFT, false)
-            _sprite.setOriginCenter()
-            _sprite.rotation = thrownRotations.getCurrent()
+            sprite.setCenter(body.getCenter())
+            sprite.setFlip(facing == Facing.LEFT, false)
+            sprite.setOriginCenter()
+            sprite.rotation = thrownRotations.getCurrent()
         }
         return spritesComponent
     }

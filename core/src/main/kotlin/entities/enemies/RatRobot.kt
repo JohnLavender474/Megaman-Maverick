@@ -1,8 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
@@ -44,6 +42,8 @@ import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.utils.getObjectProps
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
@@ -96,7 +96,7 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            if (!triggered && triggers.any { it.overlaps(megaman().body.getBounds() as Rectangle) }) {
+            if (!triggered && triggers.any { it.overlaps(megaman().body.getBounds()) }) {
                 facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
                 triggered = true
             }
@@ -115,22 +115,19 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -0.375f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.getShape().color = Color.GREEN
-        debugShapes.add { feetFixture.getShape() }
+        debugShapes.add { feetFixture}
 
         val leftFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         leftFixture.offsetFromBodyAttachment.x = -0.375f * ConstVals.PPM
         body.addFixture(leftFixture)
-        leftFixture.getShape().color = Color.ORANGE
-        debugShapes.add { leftFixture.getShape() }
+        debugShapes.add { leftFixture}
 
         val rightFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         rightFixture.offsetFromBodyAttachment.x = 0.375f * ConstVals.PPM
         body.addFixture(rightFixture)
-        rightFixture.getShape().color = Color.ORANGE
-        debugShapes.add { rightFixture.getShape() }
+        debugShapes.add { rightFixture}
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.gravityOn = triggered
@@ -139,7 +136,7 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
             body.physics.velocity.x =
                 if (body.isSensing(BodySense.FEET_ON_GROUND)) SPEED * ConstVals.PPM * facing.value else 0f
 
-            body.fixtures.forEach { (it.second as Fixture).active = triggered }
+            body.forEachFixture { it.setActive(triggered) }
 
             if ((isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
                 (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))

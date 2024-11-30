@@ -1,11 +1,13 @@
 package com.megaman.maverick.game.entities.decorations
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.interfaces.IDirectional
+import com.mega.game.engine.common.objects.Matrix
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -23,6 +25,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 
 class WhiteArrowPool(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntity, IDirectional {
 
@@ -40,6 +43,8 @@ class WhiteArrowPool(game: MegamanMaverickGame) : MegaGameEntity(game), ICullabl
     private var even = false
     private var maxOffset = 0
 
+    private val matrix = Matrix<GameRectangle>()
+
     override fun init() {
         super.init()
         addComponent(defineDrawableShapesComponent())
@@ -51,30 +56,29 @@ class WhiteArrowPool(game: MegamanMaverickGame) : MegaGameEntity(game), ICullabl
         super.onSpawn(spawnProps)
 
         bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
-        bounds.color = Color.WHITE
         outline = spawnProps.getOrDefault(ConstKeys.OUTLINE, true, Boolean::class)
 
         direction = Direction.valueOf(spawnProps.get(ConstKeys.DIRECTION, String::class)!!.uppercase())
 
-        val cells = bounds.splitByCellSize(ConstVals.PPM.toFloat())
+        val cells = bounds.splitByCellSize(ConstVals.PPM.toFloat(), matrix)
         when (direction) {
             Direction.UP -> {
-                for (i in 0 until cells.columns) spawns.add(cells[i, 0]!!.getBottomCenterPoint())
+                for (i in 0 until cells.columns) spawns.add(cells[i, 0]!!.getPositionPoint(Position.BOTTOM_CENTER))
                 maxOffset = cells.rows
             }
 
             Direction.DOWN -> {
-                for (i in 0 until cells.columns) spawns.add(cells[i, cells.rows - 1]!!.getTopCenterPoint())
+                for (i in 0 until cells.columns) spawns.add(cells[i, cells.rows - 1]!!.getPositionPoint(Position.TOP_CENTER))
                 maxOffset = cells.rows
             }
 
             Direction.LEFT -> {
-                for (i in 0 until cells.rows) spawns.add(cells[cells.columns - 1, i]!!.getCenterRightPoint())
+                for (i in 0 until cells.rows) spawns.add(cells[cells.columns - 1, i]!!.getPositionPoint(Position.CENTER_RIGHT))
                 maxOffset = cells.columns
             }
 
             Direction.RIGHT -> {
-                for (i in 0 until cells.rows) spawns.add(cells[0, i]!!.getCenterLeftPoint())
+                for (i in 0 until cells.rows) spawns.add(cells[0, i]!!.getPositionPoint(Position.CENTER_LEFT))
                 maxOffset = cells.columns
             }
         }

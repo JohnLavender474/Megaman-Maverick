@@ -178,12 +178,12 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameCircle().setRadius(0.625f * ConstVals.PPM))
         body.addFixture(bodyFixture)
-        debugShapes.add { bodyFixture.getShape() }
+        debugShapes.add { bodyFixture}
 
         val projectileFixture =
             Fixture(body, FixtureType.PROJECTILE, GameRectangle().setSize(0.625f * ConstVals.PPM))
         body.addFixture(projectileFixture)
-        debugShapes.add { projectileFixture.getShape() }
+        debugShapes.add { projectileFixture}
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.625f * ConstVals.PPM))
         body.addFixture(damagerFixture)

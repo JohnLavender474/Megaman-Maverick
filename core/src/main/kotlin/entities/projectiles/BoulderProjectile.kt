@@ -215,7 +215,7 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.fixtures.forEach { (_, fixture) ->
-                val shape = (fixture as Fixture).getShape() as GameRectangle
+                val shape = (fixture as Fixture).rawShape as GameRectangle
                 if (fixture.getType() == FixtureType.DAMAGER)
                     shape.setSize(body.getWidth() * 1.05f, body.getHeight() * 1.05f)
                 else shape.set(body)

@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.entities.decorations
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
@@ -38,6 +39,7 @@ open class WindyGrass(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
     }
 
     private lateinit var bounds: GameRectangle
+    private val animationsToRemove = Array<String>()
 
     override fun getEntityType() = EntityType.DECORATION
 
@@ -56,19 +58,28 @@ open class WindyGrass(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "spawn(): spawnProps = $spawnProps")
         super.onSpawn(spawnProps)
+
         bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+
         val tiles = bounds.getWidth().toInt() / ConstVals.PPM
         for (i in 0 until tiles) {
+            val key = "grass_$i"
+
             val positionX = bounds.getX() + (i * ConstVals.PPM)
             val positionY = bounds.getY()
+
             val grassSprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, 1))
             grassSprite.setSize(ConstVals.PPM.toFloat())
             grassSprite.setPosition(positionX, positionY)
-            sprites.put("grass_$i", grassSprite)
+            sprites.put(key, grassSprite)
+
             val region = if (i == 0) leftRegion else if (i == tiles - 1) rightRegion else middleRegion
             val animation = Animation(region!!, 1, 2, 0.2f, true)
             val animator = Animator(animation)
-            animators.add({ grassSprite } pairTo animator)
+
+            putAnimator(key, grassSprite, animator)
+
+            animationsToRemove.add(key)
         }
     }
 
@@ -76,7 +87,7 @@ open class WindyGrass(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
         sprites.clear()
-        animators.clear()
+        animationsToRemove.forEach { animationsComponent.removeAnimator(it) }
     }
 
     private fun defineCullablesComponent(): CullablesComponent {

@@ -29,13 +29,15 @@ import com.mega.game.engine.events.Event
 import com.mega.game.engine.events.IEventListener
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.BodyComponent
-import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getCenter
 
 class SwitchGate(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity, IEventListener,
     IAudioEntity {
@@ -89,7 +91,7 @@ class SwitchGate(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnim
 
         val rooms = game.getRooms(reusableRoomsArray)
         rooms.forEach {
-            if (it.rectangle.overlaps(body)) {
+            if (it.rectangle.toGameRectangle().overlaps(body.getBounds())) {
                 val room = it.name
                 overlapRooms.add(room)
             }
@@ -136,7 +138,7 @@ class SwitchGate(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnim
         val bodyComponent = super.defineBodyComponent()
         bodyComponent.body.preProcess.put(ConstKeys.ON) {
             body.physics.collisionOn = closed
-            body.fixtures.forEach { (it.second as Fixture).active = closed }
+            body.fixtures.forEach { it.second.setActive(closed) }
         }
         return bodyComponent
     }

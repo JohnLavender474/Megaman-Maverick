@@ -707,13 +707,16 @@ class MegaLevelScreen(
         }
         if (game.params.debugShapes) {
             val gameCamBounds = gameCamera.getRotatedBounds()
-            gameCamBounds.x += 0.1f * ConstVals.PPM
-            gameCamBounds.y += 0.1f * ConstVals.PPM
-            gameCamBounds.width -= 0.2f * ConstVals.PPM
-            gameCamBounds.height -= 0.2f * ConstVals.PPM
+            gameCamBounds.translate(0.1f * ConstVals.PPM, 0.1f * ConstVals.PPM)
+            gameCamBounds.translateSize(-0.2f * ConstVals.PPM, -0.2f * ConstVals.PPM)
             shapeRenderer.color = Color.BLUE
             shapeRenderer.set(ShapeRenderer.ShapeType.Line)
-            shapeRenderer.rect(gameCamBounds.x, gameCamBounds.y, gameCamBounds.width, gameCamBounds.height)
+            shapeRenderer.rect(
+                gameCamBounds.getX(),
+                gameCamBounds.getY(),
+                gameCamBounds.getWidth(),
+                gameCamBounds.getHeight()
+            )
         }
         shapeRenderer.end()
 

@@ -1,17 +1,16 @@
 package com.megaman.maverick.game.entities.utils
 
 import com.badlogic.gdx.maps.objects.RectangleMapObject
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.UtilMethods.getOverlapPushDirection
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.objectSetOf
-import com.mega.game.engine.common.getOverlapPushDirection
 import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.shapes.toGameRectangle
+import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullableOnEvent
 import com.mega.game.engine.cullables.CullableOnUncontained
 import com.mega.game.engine.entities.GameEntity
@@ -26,13 +25,15 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.extensions.toProps
 import com.megaman.maverick.game.world.body.getBody
+import com.megaman.maverick.game.world.body.getBounds
 import kotlin.math.abs
 
 fun performStandardShieldReflection(projectileFixture: IFixture, shieldFixture: IFixture) {
     val body = projectileFixture.getBody()
-    var direction = getOverlapPushDirection(body, shieldFixture.getShape())
+    var direction = getOverlapPushDirection(body.getBounds(), shieldFixture.getShape())
     direction?.let {
         when (it) {
             Direction.UP -> body.physics.velocity.y = abs(body.physics.velocity.y)
@@ -67,8 +68,8 @@ fun getStandardEventCullingLogic(
 fun getGameCameraCullingLogic(entity: IBodyEntity, timeToCull: Float = 1f) =
     getGameCameraCullingLogic((entity as MegaGameEntity).getGameCamera(), { entity.body.getBounds() }, timeToCull)
 
-fun getGameCameraCullingLogic(camera: RotatableCamera, bounds: () -> Rectangle, timeToCull: Float = 1f) =
-    CullableOnUncontained({ camera.getRotatedBounds() }, { it.overlaps(bounds()) }, timeToCull)
+fun getGameCameraCullingLogic(camera: RotatableCamera, bounds: () -> GameRectangle, timeToCull: Float = 1f) =
+    CullableOnUncontained<GameRectangle>({ camera.getRotatedBounds() }, { bounds.invoke().overlaps(it) }, timeToCull)
 
 fun getObjectProps(props: Properties): Array<RectangleMapObject> {
     val objectProps = Array<RectangleMapObject>()

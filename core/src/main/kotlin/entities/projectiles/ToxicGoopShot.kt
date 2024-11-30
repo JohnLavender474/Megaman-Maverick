@@ -5,10 +5,11 @@ import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.common.UtilMethods.getOverlapPushDirection
 import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
-import com.mega.game.engine.common.getOverlapPushDirection
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -35,6 +36,9 @@ import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBody
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.world.body.getPositionPoint
 
 class ToxicGoopShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
 
@@ -61,11 +65,11 @@ class ToxicGoopShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie(
-        getOverlapPushDirection(body.getBounds(), (damageable as IBodyEntity).body.getBounds()())
+        getOverlapPushDirection(body.getBounds(), (damageable as IBodyEntity).body.getBounds())
     )
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie(
-        getOverlapPushDirection(body.getBounds(), blockFixture.getBody().getBodyBounds())
+        getOverlapPushDirection(body.getBounds(), blockFixture.getBody().getBounds())
     )
 
     override fun explodeAndDie(vararg params: Any?) {
@@ -85,7 +89,7 @@ class ToxicGoopShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
         body.setSize(0.5f * ConstVals.PPM)
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
         body.physics.applyFrictionX = false
-body.physics.applyFrictionY = false
+        body.physics.applyFrictionY = false
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
@@ -96,7 +100,7 @@ body.physics.applyFrictionY = false
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().set(body))
         body.addFixture(damagerFixture)
 
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -105,9 +109,7 @@ body.physics.applyFrictionY = false
         val sprite = GameSprite()
         sprite.setSize(0.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setCenter(body.getCenter())
-        }
+        spritesComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
         return spritesComponent
     }
 

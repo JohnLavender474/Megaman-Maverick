@@ -35,9 +35,11 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.entities.megaman.components.feetFixture
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.BodyLabel
 import com.megaman.maverick.game.world.body.FixtureLabel
 import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.setCenterX
 
 class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, IAudioEntity {
 
@@ -163,10 +165,10 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
                 val position = bounds.getPositionPoint(Position.TOP_CENTER)
                 block!!.body.setTopLeftToPoint(position)
                 block!!.body.translate(0.25f * ConstVals.PPM, 0f)
-                block!!.body.getY() -= 0.3f * ConstVals.PPM
+                block!!.body.translate(0f, -0.3f * ConstVals.PPM)
 
                 if (switchDelay.isFinished() &&
-                    block!!.body.overlaps(megaman().feetFixture.getShape())
+                    block!!.body.getBounds().overlaps(megaman().feetFixture.getShape())
                 ) {
                     switchDelay.reset()
                     requestToPlaySound(SoundAsset.BLOOPITY_SOUND, false)

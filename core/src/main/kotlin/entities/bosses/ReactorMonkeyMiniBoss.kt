@@ -47,9 +47,9 @@ import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.projectiles.ReactorMonkeyBall
 import com.megaman.maverick.game.utils.MegaUtilMethods
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodyFixtureDef
-import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) :
@@ -185,14 +185,14 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) :
             if (reactorMonkeyState == ReactorMonkeyState.STAND) {
                 throwDelayTimer.update(delta)
                 if (throwDelayTimer.isFinished()) {
-                    if (monkeyBall == null) spawnNewMonkeyBall()
-                    else if (monkeyBall!!.body != null && (
-                            ballCatchArea.contains(monkeyBall!!.body.getCenter()) ||
-                                monkeyBall!!.body.getY() < ballCatchArea.getY())
-                    ) {
-                        catchMonkeyBall()
-                        reactorMonkeyState = ReactorMonkeyState.THROW
-                        throwDelayTimer.resetDuration(MIN_THROW_DELAY + (MAX_THROW_DELAY - MIN_THROW_DELAY) * getHealthRatio())
+                    when {
+                        monkeyBall == null -> spawnNewMonkeyBall()
+                        ballCatchArea.contains(monkeyBall!!.body.getCenter()) ||
+                            monkeyBall!!.body.getY() < ballCatchArea.getY() -> {
+                            catchMonkeyBall()
+                            reactorMonkeyState = ReactorMonkeyState.THROW
+                            throwDelayTimer.resetDuration(MIN_THROW_DELAY + (MAX_THROW_DELAY - MIN_THROW_DELAY) * getHealthRatio())
+                        }
                     }
                 }
             } else {
@@ -214,7 +214,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) :
         body.setSize(3.5f * ConstVals.PPM, 4.25f * ConstVals.PPM)
         addComponent(
             DrawableShapesComponent(
-                debugShapeSuppliers = gdxArrayOf({ body }, { ballCatchArea }),
+                debugShapeSuppliers = gdxArrayOf({ body.getBounds() }, { ballCatchArea }),
                 debug = true
             )
         )

@@ -12,8 +12,8 @@ import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.IFaceable
-import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -47,9 +47,12 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.world.body.getPositionPoint
 import com.megaman.maverick.game.world.body.isSensing
 import kotlin.reflect.KClass
 
@@ -150,7 +153,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
         }).scl(ConstVals.PPM.toFloat())
 
         val offset = 0.1f * ConstVals.PPM
-        val spawn = body.getCenter().add(offset * facing.value, if (isDirectionRotatedDown()) offset else -offset)
+        val spawn = body.getCenter().add(offset * facing.value, if (direction == Direction.DOWN) offset else -offset)
 
         val spawnProps = props(
             ConstKeys.OWNER pairTo this, ConstKeys.TRAJECTORY pairTo trajectory, ConstKeys.POSITION pairTo spawn
@@ -229,7 +232,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(0.75f * ConstVals.PPM))
         body.addFixture(bodyFixture)
-        debugShapes.add { bodyFixture.getShape() }
+        debugShapes.add { bodyFixture}
 
         val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.15f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -0.375f * ConstVals.PPM
@@ -246,7 +249,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.75f * ConstVals.PPM))
         body.addFixture(damagerFixture)
 
-        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.velocityClamp =
                 (if (direction.isVertical()) Vector2(VELOCITY_CLAMP_X, VELOCITY_CLAMP_Y)
                 else Vector2(VELOCITY_CLAMP_Y, VELOCITY_CLAMP_X)).scl(ConstVals.PPM.toFloat())
@@ -259,11 +262,11 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
                 Direction.RIGHT -> Vector2(-gravity, 0f)
             }).scl(ConstVals.PPM.toFloat())
 
-            shieldFixture.active = behavior == MetBehavior.SHIELDING
-            damageableFixture.active = behavior != MetBehavior.SHIELDING
+            shieldFixture.setActive(behavior == MetBehavior.SHIELDING)
+            damageableFixture.setActive(behavior != MetBehavior.SHIELDING)
 
             shieldFixture.putProperty(ConstKeys.DIRECTION, direction)
-        })
+        }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 

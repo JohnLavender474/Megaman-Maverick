@@ -17,6 +17,7 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
+import com.megaman.maverick.game.utils.LoopedSuppliers
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
@@ -64,7 +65,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     feetFixture.offsetFromBodyAttachment.y = -0.5f * ConstVals.PPM
     feetFixture.setRunnable(onBounce)
     body.addFixture(feetFixture)
-    // debugShapes.add { feetFixture.getShape() }
+    // debugShapes.add { feetFixture}
     body.putProperty(ConstKeys.FEET, feetFixture)
 
     val headFixture =
@@ -72,7 +73,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     headFixture.offsetFromBodyAttachment.y = 0.5f * ConstVals.PPM
     headFixture.setRunnable(onBounce)
     body.addFixture(headFixture)
-    // debugShapes.add { headFixture.getShape() }
+    // debugShapes.add { headFixture}
     body.putProperty(ConstKeys.HEAD, headFixture)
 
     val leftFixture =
@@ -82,7 +83,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     leftFixture.setRunnable(onBounce)
     leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
     body.addFixture(leftFixture)
-    // debugShapes.add { leftFixture.getShape() }
+    // debugShapes.add { leftFixture}
     body.putProperty("${ConstKeys.LEFT}_${ConstKeys.SIDE}", leftFixture)
 
     val rightFixture =
@@ -92,15 +93,15 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     rightFixture.setRunnable(onBounce)
     rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
     body.addFixture(rightFixture)
-    // debugShapes.add { rightFixture.getShape() }
+    // debugShapes.add { rightFixture}
     body.putProperty("${ConstKeys.RIGHT}_${ConstKeys.SIDE}", rightFixture)
 
-    val damageableFixture =
-        Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setWidth(body.getWidth()))
+    val damagableRect = GameRectangle().setWidth(body.getWidth())
+    val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, damagableRect)
     damageableFixture.attachedToBody = false
     body.addFixture(damageableFixture)
     body.putProperty(ConstKeys.DAMAGEABLE, damageableFixture)
-    debugShapes.add { damageableFixture.getShape() }
+    debugShapes.add { damageableFixture}
 
     val waterListenerFixture = Fixture(body, FixtureType.WATER_LISTENER, GameRectangle(body))
     body.addFixture(waterListenerFixture)
@@ -109,7 +110,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     body.addFixture(teleporterListenerFixture)
 
     body.preProcess.put(ConstKeys.DEFAULT) {
-        (damageableFixture.getShape() as GameRectangle).let {
+        damagableRect.let {
             val size = when {
                 isBehaviorActive(BehaviorType.GROUND_SLIDING) -> Vector2(1.25f, 0.75f)
                 else -> Vector2(0.75f, 1.25f)
@@ -140,20 +141,24 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
             Direction.DOWN -> {
                 body.physics.gravity.set(0f, gravityValue * ConstVals.PPM)
                 body.physics.defaultFrictionOnSelf.set(ConstVals.STANDARD_RESISTANCE_X, ConstVals.STANDARD_RESISTANCE_Y)
+
+                val clamp = LoopedSuppliers.getVector2()
                 body.physics.velocityClamp.set(
                     if (isBehaviorActive(BehaviorType.RIDING_CART))
-                        Vector2(MegamanValues.CART_RIDE_MAX_SPEED, MegamanValues.CLAMP_Y)
-                    else Vector2(MegamanValues.CLAMP_X, MegamanValues.CLAMP_Y)
+                        clamp.set(MegamanValues.CART_RIDE_MAX_SPEED, MegamanValues.CLAMP_Y)
+                    else clamp.set(MegamanValues.CLAMP_X, MegamanValues.CLAMP_Y)
                 ).scl(ConstVals.PPM.toFloat())
             }
 
             else -> {
                 body.physics.gravity.set(gravityValue * ConstVals.PPM, 0f)
                 body.physics.defaultFrictionOnSelf.set(ConstVals.STANDARD_RESISTANCE_Y, ConstVals.STANDARD_RESISTANCE_X)
+
+                val clamp = LoopedSuppliers.getVector2()
                 body.physics.velocityClamp.set(
                     if (isBehaviorActive(BehaviorType.RIDING_CART))
-                        Vector2(MegamanValues.CLAMP_Y, MegamanValues.CART_RIDE_MAX_SPEED)
-                    else Vector2(MegamanValues.CLAMP_Y, MegamanValues.CLAMP_X)
+                        clamp.set(MegamanValues.CLAMP_Y, MegamanValues.CART_RIDE_MAX_SPEED)
+                    else clamp.set(MegamanValues.CLAMP_Y, MegamanValues.CLAMP_X)
                 ).scl(ConstVals.PPM.toFloat())
             }
         }

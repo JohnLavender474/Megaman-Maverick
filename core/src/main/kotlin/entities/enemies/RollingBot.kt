@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.enemies
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.animations.Animation
@@ -46,10 +45,8 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodySense
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.isSensing
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
@@ -195,8 +192,7 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         body.addFixture(feetFixture)
-        feetFixture.getShape().color = Color.GREEN
-        debugShapes.add { feetFixture.getShape() }
+        debugShapes.add { feetFixture}
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
         body.addFixture(damagerFixture)
@@ -223,17 +219,17 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
                 }
             }
 
-            body.fixtures.forEach {
-                val fixture = it.second as Fixture
+            body.forEachFixture { fixture ->
+                fixture as Fixture
 
                 if (fixture.getType() == FixtureType.FEET) {
                     fixture.offsetFromBodyAttachment.y = feetFixtureOffset
-                    return@forEach
+                    return@forEachFixture
                 }
-                else if (fixture.getType() == FixtureType.SHIELD) fixture.active = rolling
-                else if (fixture.getType() == FixtureType.DAMAGEABLE) fixture.active = !rolling
+                else if (fixture.getType() == FixtureType.SHIELD) fixture.setActive(rolling)
+                else if (fixture.getType() == FixtureType.DAMAGEABLE) fixture.setActive(!rolling)
 
-                val fixtureShape = fixture.getShape() as GameRectangle
+                val fixtureShape = fixture.rawShape as GameRectangle
                 fixtureShape.set(body)
             }
 
@@ -250,10 +246,10 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         val sprite = GameSprite()
         sprite.setSize(1.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setFlip(isFacing(Facing.RIGHT), false)
-            _sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
-            _sprite.hidden = damageBlink
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setFlip(isFacing(Facing.RIGHT), false)
+            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
+            sprite.hidden = damageBlink
         }
         return spritesComponent
     }

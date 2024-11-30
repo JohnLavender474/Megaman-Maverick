@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.special
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.OrderedMap
@@ -38,9 +37,11 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.splitIntoGameRectanglesBasedOnCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
 
 class PolygonWater(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity {
 
@@ -78,7 +79,7 @@ class PolygonWater(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
         val polygon = spawnProps.get(ConstKeys.POLYGON, GamePolygon::class)!!
         body.set(polygon.getBoundingRectangle())
-        waterFixture.getShape() = polygon
+        waterFixture.setShape(polygon)
         GameLogger.debug(TAG, "Body = ${body.getBounds()}")
         GameLogger.debug(TAG, "Polygon = $polygon")
 
@@ -95,7 +96,7 @@ class PolygonWater(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     }
 
     private fun defineDrawables(cells: Matrix<GameRectangle>) {
-        val sprites = OrderedMap<String, GameSprite>()
+        val sprites = OrderedMap<Any, GameSprite>()
         val animators = Array<GamePair<() -> GameSprite, IAnimator>>()
         cells.forEach { x, y, bounds ->
             if (bounds == null) return@forEach
@@ -112,7 +113,7 @@ class PolygonWater(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
             val isSurface = try {
                 cells[x, y + 1] == null
-            } catch (e: IndexOutOfBoundsException) {
+            } catch (_: IndexOutOfBoundsException) {
                 true
             }
 
@@ -126,7 +127,6 @@ class PolygonWater(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
@@ -134,7 +134,7 @@ class PolygonWater(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         waterFixture = Fixture(body, FixtureType.WATER)
         waterFixture.attachedToBody = false
         body.addFixture(waterFixture)
-        debugShapes.add { waterFixture.getShape() }
+        debugShapes.add { waterFixture}
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 

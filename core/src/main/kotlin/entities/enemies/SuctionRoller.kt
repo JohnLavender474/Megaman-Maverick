@@ -11,7 +11,6 @@ import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
-import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -38,10 +37,13 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getPositionPoint
 import com.megaman.maverick.game.world.body.isSensing
 import kotlin.reflect.KClass
 
@@ -96,11 +98,13 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
             wasOnWall = onWall
             onWall =
                 (facing == Facing.LEFT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
-                        (facing == Facing.RIGHT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
+                    (facing == Facing.RIGHT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
 
             if (body.isSensing(BodySense.FEET_ON_GROUND)) {
-                if (megaman().body.getBottomRightPoint().x < body.getX()) facing = Facing.LEFT
-                else if (megaman().body.getX() > body.getBottomRightPoint().x) facing = Facing.RIGHT
+                if (megaman().body.getBounds().getPositionPoint(Position.BOTTOM_RIGHT).x < body.getX())
+                    facing = Facing.LEFT
+                else if (megaman().body.getX() > body.getBounds().getPositionPoint(Position.BOTTOM_RIGHT).x)
+                    facing = Facing.RIGHT
             }
         }
     }
@@ -120,15 +124,15 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
             )
         bodyFixture.putProperty(ConstKeys.GRAVITY_ROTATABLE, false)
         body.addFixture(bodyFixture)
-        bodyFixture.getShape().color = Color.BLUE
-        debugShapes.add { bodyFixture.getShape() }
+        bodyFixture.drawingColor = Color.BLUE
+        debugShapes.add { bodyFixture }
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(ConstVals.PPM / 4f, ConstVals.PPM / 32f))
         feetFixture.offsetFromBodyAttachment.y = -0.6f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.getShape().color = Color.GREEN
-        debugShapes.add { feetFixture.getShape() }
+        feetFixture.drawingColor = Color.GREEN
+        debugShapes.add { feetFixture }
 
         val leftFixture =
             Fixture(
@@ -140,8 +144,8 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
         leftFixture.offsetFromBodyAttachment.y = ConstVals.PPM / 5f
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftFixture)
-        leftFixture.getShape().color = Color.ORANGE
-        debugShapes.add { leftFixture.getShape() }
+        leftFixture.drawingColor = Color.ORANGE
+        debugShapes.add { leftFixture }
 
         val rightFixture =
             Fixture(
@@ -153,8 +157,8 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
         rightFixture.offsetFromBodyAttachment.y = ConstVals.PPM / 5f
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
-        rightFixture.getShape().color = Color.ORANGE
-        debugShapes.add { rightFixture.getShape() }
+        rightFixture.drawingColor = Color.ORANGE
+        debugShapes.add { rightFixture }
 
         val damageableFixture =
             Fixture(
@@ -171,9 +175,9 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
                 GameRectangle().setSize(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat()),
             )
         body.addFixture(damagerFixture)
-        debugShapes.add { damagerFixture.getShape() }
+        debugShapes.add { damagerFixture }
 
-        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.gravity.y =
                 if (body.isSensing(BodySense.FEET_ON_GROUND)) 0f else GRAVITY * ConstVals.PPM
             if (onWall) {
@@ -183,7 +187,7 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
                 if (wasOnWall) body.translate(0f, ConstVals.PPM / 10f)
                 body.physics.velocity.x = VEL_X * ConstVals.PPM * facing.value
             }
-        })
+        }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 

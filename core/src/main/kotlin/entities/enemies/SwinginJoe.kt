@@ -15,7 +15,6 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IFaceable
-import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -49,9 +48,12 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.world.body.getPositionPoint
 import kotlin.reflect.KClass
 
 class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
@@ -109,8 +111,8 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val bodyFixture =
             Fixture(body, FixtureType.BODY, GameRectangle().setSize(0.75f * ConstVals.PPM, 1.15f * ConstVals.PPM))
         body.addFixture(bodyFixture)
-        bodyFixture.getShape().color = Color.GRAY
-        debugShapes.add { bodyFixture.getShape() }
+        bodyFixture.drawingColor = Color.GRAY
+        debugShapes.add { bodyFixture}
 
         val damagerFixture = Fixture(
             body,
@@ -118,8 +120,8 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             GameRectangle().setSize(0.75f * ConstVals.PPM, 1.15f * ConstVals.PPM),
         )
         body.addFixture(damagerFixture)
-        damagerFixture.getShape().color = Color.RED
-        debugShapes.add { damagerFixture.getShape() }
+        damagerFixture.drawingColor = Color.RED
+        debugShapes.add { damagerFixture}
 
         val damageableFixture = Fixture(
             body,
@@ -127,25 +129,25 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             GameRectangle().setSize(0.8f * ConstVals.PPM, 1.35f * ConstVals.PPM),
         )
         body.addFixture(damageableFixture)
-        damageableFixture.getShape().color = Color.PURPLE
-        debugShapes.add { damageableFixture.getShape() }
+        damageableFixture.drawingColor = Color.PURPLE
+        debugShapes.add { damageableFixture}
 
         val shieldFixture = Fixture(
             body, FixtureType.SHIELD, GameRectangle().setSize(0.5f * ConstVals.PPM, 1.25f * ConstVals.PPM)
         )
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
         body.addFixture(shieldFixture)
-        shieldFixture.getShape().color = Color.BLUE
-        debugShapes.add { shieldFixture.getShape() }
+        shieldFixture.drawingColor = Color.BLUE
+        debugShapes.add { shieldFixture}
 
-        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
-            shieldFixture.active = setting == SwinginJoeSetting.SWING_EYES_CLOSED
-            damageableFixture.active = setting != SwinginJoeSetting.SWING_EYES_CLOSED
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            shieldFixture.setActive(setting == SwinginJoeSetting.SWING_EYES_CLOSED)
+            damageableFixture.setActive(setting != SwinginJoeSetting.SWING_EYES_CLOSED)
             if (setting == SwinginJoeSetting.SWING_EYES_CLOSED) {
                 damageableFixture.offsetFromBodyAttachment.x = 0.05f * ConstVals.PPM * -facing.value
                 shieldFixture.offsetFromBodyAttachment.x = 0.1f * ConstVals.PPM * facing.value
             } else damageableFixture.offsetFromBodyAttachment.x = 0f
-        })
+        }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
@@ -155,14 +157,14 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(2.5f * ConstVals.PPM)
-        val SpritesComponent = SpritesComponent(sprite)
-        SpritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.hidden = damageBlink
-            _sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
-            _sprite.setFlip(facing == Facing.LEFT, false)
-            _sprite.translateX(-0.25f * ConstVals.PPM * facing.value)
+        val spritesComponent = SpritesComponent(sprite)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.hidden = damageBlink
+            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
+            sprite.setFlip(facing == Facing.LEFT, false)
+            sprite.translateX(-0.25f * ConstVals.PPM * facing.value)
         }
-        return SpritesComponent
+        return spritesComponent
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {

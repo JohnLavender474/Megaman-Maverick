@@ -13,6 +13,7 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.extensions.toGdxArray
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -43,7 +44,10 @@ import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.HazardsFactory
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.world.body.getPositionPoint
 
 class LavaBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity, ISpritesEntity,
     IAnimatedEntity, IAudioEntity, IHazard, IDirectional {
@@ -69,7 +73,7 @@ class LavaBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
             body.direction = value
         }
 
-    private val loop = Loop(LavaBeamerState.values().toGdxArray())
+    private val loop = Loop(LavaBeamerState.entries.toTypedArray().toGdxArray())
     private val timers = objectMapOf(
         LavaBeamerState.IDLE pairTo Timer(IDLE_DUR),
         LavaBeamerState.SWITCHING_ON pairTo Timer(SWITCHING_ON_DUR),
@@ -163,10 +167,10 @@ class LavaBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
         sprite.setSize(3f * ConstVals.PPM, 2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setOriginCenter()
-            _sprite.rotation = direction.rotation
-            _sprite.setCenter(body.getCenter())
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setOriginCenter()
+            sprite.rotation = direction.rotation
+            sprite.setCenter(body.getCenter())
         }
         return spritesComponent
     }

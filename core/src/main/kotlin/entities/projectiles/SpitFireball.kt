@@ -7,11 +7,11 @@ import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.common.UtilMethods.getOverlapPushDirection
+import com.mega.game.engine.common.UtilMethods.getSingleMostDirectionFromStartToTarget
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
-import com.mega.game.engine.common.getOverlapPushDirection
-import com.mega.game.engine.common.getSingleMostDirectionFromStartToTarget
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -35,8 +35,11 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getCenter
 
 class SpitFireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
 
@@ -82,10 +85,8 @@ class SpitFireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnima
 
         val thisShape = params[0] as IGameShape2D
         val otherShape = params[1] as IGameShape2D
-        val direction = getOverlapPushDirection(thisShape, otherShape) ?: getSingleMostDirectionFromStartToTarget(
-            thisShape.getCenter(),
-            otherShape.getCenter()
-        )
+        val direction = getOverlapPushDirection(thisShape, otherShape) ?:
+            getSingleMostDirectionFromStartToTarget(thisShape.getCenter(), otherShape.getCenter())
 
         for (i in 0 until FIREBALLS_TO_SPAWN) {
             val fireball = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.FIREBALL)!!

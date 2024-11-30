@@ -37,8 +37,10 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
 
 class UpNDown(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAnimatedEntity {
@@ -139,10 +141,10 @@ class UpNDown(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAnim
         val sprite = GameSprite()
         sprite.setSize(0.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.hidden = damageBlink
-            _sprite.setCenter(body.getCenter())
-            _sprite.setFlip(facing == Facing.LEFT, false)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.hidden = damageBlink
+            sprite.setCenter(body.getCenter())
+            sprite.setFlip(facing == Facing.LEFT, false)
         }
         return spritesComponent
     }

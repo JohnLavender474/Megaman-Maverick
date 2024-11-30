@@ -49,9 +49,8 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodyFixtureDef
-import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class Cactus(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEntity, ISpritesEntity, ICullableEntity,
@@ -139,11 +138,11 @@ class Cactus(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEntit
         val body = Body(BodyType.ABSTRACT)
         body.setWidth(ConstVals.PPM.toFloat())
         body.preProcess.put(ConstKeys.DEFAULT) {
-            body.fixtures.forEach { ((it.second as Fixture).getShape() as GameRectangle).set(body) }
+            body.fixtures.forEach { ((it.second as Fixture).rawShape as GameRectangle).set(body) }
         }
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBounds() }
+        debugShapes.add { body }
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(
@@ -157,10 +156,10 @@ class Cactus(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEntit
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
         sprite.setSize(1.75f * ConstVals.PPM, 3f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setRegion(regions[if (big) "big" else "small"])
-            _sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
-            _sprite.hidden = damageBlink
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setRegion(regions[if (big) "big" else "small"])
+            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
+            sprite.hidden = damageBlink
         }
         return spritesComponent
     }

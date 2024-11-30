@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.blocks
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
@@ -122,7 +121,7 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         val fixtureEntriesToAdd = spawnProps.get(ConstKeys.FIXTURES) as Array<GamePair<FixtureType, Properties>>?
         fixtureEntriesToAdd?.forEach { fixtureEntry ->
             val (fixtureType, fixtureProps) = fixtureEntry
-            val fixture = Fixture(body, fixtureType, GameRectangle().set(body))
+            val fixture = Fixture(body, fixtureType, GameRectangle(body))
             fixture.putAllProperties(fixtureProps)
             fixture.setEntity(this)
             body.addFixture(fixture)
@@ -192,13 +191,14 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
     protected open fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.STATIC)
-        debugShapeSuppliers.add { body.getBounds() }
+        debugShapeSuppliers.add { body }
 
-        blockFixture = Fixture(body, FixtureType.BLOCK)
+        val blockRect = GameRectangle()
+        blockFixture = Fixture(body, FixtureType.BLOCK, blockRect)
         body.addFixture(blockFixture)
-        debugShapeSuppliers.add { blockFixture.getShape() }
+        debugShapeSuppliers.add { blockFixture}
 
-        body.preProcess.put(ConstKeys.DEFAULT) { (blockFixture.getShape() as GameRectangle).set(body) }
+        body.preProcess.put(ConstKeys.DEFAULT) { blockRect.set(body) }
 
         return BodyComponentCreator.create(this, body)
     }

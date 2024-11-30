@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.special
 
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
@@ -15,7 +14,6 @@ import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IAudioEntity
 import com.mega.game.engine.entities.contracts.IParentEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
@@ -25,6 +23,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntitySuppliers
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
+import com.megaman.maverick.game.world.body.getBounds
 import java.util.*
 
 class DisappearingBlocks(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEntity, IAudioEntity {
@@ -72,7 +71,7 @@ class DisappearingBlocks(game: MegamanMaverickGame) : MegaGameEntity(game), IPar
             children.add(child)
             props.put(ConstKeys.RUN_ON_SPAWN, Runnable {
                 child.body.physics.collisionOn = false
-                child.body.fixtures.forEach { entry -> (entry.second as Fixture).active = false }
+                child.body.fixtures.forEach { it.second.setActive(false) }
                 child.hidden = true
             })
             child.spawn(props)
@@ -112,13 +111,12 @@ class DisappearingBlocks(game: MegamanMaverickGame) : MegaGameEntity(game), IPar
                 val blockKey = spriteBlock.properties.get(ConstKeys.KEY, String::class)!!
                 val on = keysToRender.contains(blockKey)
 
-                if (blockKey == next) spriteBlock.reset()
                 spriteBlock.body.physics.collisionOn = on
-                spriteBlock.body.fixtures.forEach { entry -> (entry.second as Fixture).active = on }
+                spriteBlock.body.fixtures.forEach { it.second.setActive(on) }
                 spriteBlock.hidden = !on
 
                 val gameCamera = game.getGameCamera()
-                if (!soundRequested && gameCamera.toGameRectangle().overlaps(spriteBlock.body as Rectangle)) {
+                if (!soundRequested && gameCamera.toGameRectangle().overlaps(spriteBlock.body.getBounds())) {
                     requestToPlaySound(SoundAsset.DISAPPEARING_BLOCK_SOUND, false)
                     soundRequested = true
                 }

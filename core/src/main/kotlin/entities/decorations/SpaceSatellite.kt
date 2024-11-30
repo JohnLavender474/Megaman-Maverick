@@ -18,6 +18,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 
 class SpaceSatellite(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
 

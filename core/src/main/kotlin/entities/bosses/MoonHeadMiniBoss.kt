@@ -1,9 +1,7 @@
 package com.megaman.maverick.game.entities.bosses
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
@@ -11,20 +9,18 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.UtilMethods.getRandom
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.toGdxArray
-import com.mega.game.engine.common.getRandom
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.common.shapes.getCenter
-import com.mega.game.engine.common.shapes.toGameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -61,9 +57,15 @@ import com.megaman.maverick.game.entities.projectiles.Asteroid
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.getMotionValue
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.world.body.getPositionPoint
 import com.megaman.maverick.game.world.body.isSensing
 import kotlin.reflect.KClass
 
@@ -171,8 +173,8 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, dmgDurati
     }
 
     private fun getRandomSpawn(): Vector2 {
-        val randomX = getRandom(area.x, area.getMaxX())
-        val randomY = getRandom(area.y, area.getMaxY())
+        val randomX = getRandom(area.getX(), area.getMaxX())
+        val randomY = getRandom(area.getY(), area.getMaxY())
         return Vector2(randomX, randomY)
     }
 
@@ -220,9 +222,9 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, dmgDurati
             val pos2 = arcMotion2.compute(t)
 
             mockBody.setCenter(pos1)
-            val hitsBlockPos1 = blocks.any { it.body.overlaps(mockBody as Rectangle) }
+            val hitsBlockPos1 = blocks.any { it.body.getBounds().overlaps(mockBody) }
             mockBody.setCenter(pos2)
-            val hitsBlockPos2 = blocks.any { it.body.overlaps(mockBody as Rectangle) }
+            val hitsBlockPos2 = blocks.any { it.body.getBounds().overlaps(mockBody) }
             when {
                 hitsBlockPos1 -> {
                     winningArcMotion = arcMotion2
@@ -320,23 +322,20 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, dmgDurati
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameCircle().setRadius(1.35f * ConstVals.PPM))
         body.addFixture(bodyFixture)
-        bodyFixture.getShape().color = Color.GRAY
-        debugShapes.add { bodyFixture.getShape() }
+        debugShapes.add { bodyFixture}
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(1.425f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        damagerFixture.getShape().color = Color.RED
-        debugShapes.add { damagerFixture.getShape() }
+        debugShapes.add { damagerFixture}
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameCircle().setRadius(1.425f * ConstVals.PPM))
         body.addFixture(damageableFixture)
-        damageableFixture.getShape().color = Color.PURPLE
-        debugShapes.add { damageableFixture.getShape() }
+        debugShapes.add { damageableFixture}
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.fixtures.forEach {
-                (it.second as Fixture).active = !loop.getCurrent().equalsAny(
-                    MoonHeadState.DELAY, MoonHeadState.DARK, MoonHeadState.CRUMBLE
+                it.second.setActive(
+                    !loop.getCurrent().equalsAny(MoonHeadState.DELAY, MoonHeadState.DARK, MoonHeadState.CRUMBLE)
                 )
             }
         }

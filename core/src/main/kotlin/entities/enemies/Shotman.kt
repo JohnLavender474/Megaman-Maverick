@@ -44,8 +44,8 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 import kotlin.reflect.KClass
 
@@ -87,11 +87,14 @@ class Shotman(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity 
         }
         super.init()
         addComponent(defineAnimationsComponent())
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
     }
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
+
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
         shootLoop.reset()
@@ -170,11 +173,11 @@ class Shotman(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity 
         val sprite = GameSprite()
         sprite.setSize(1.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.hidden = damageBlink
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.hidden = damageBlink
             val bodyPosition = body.getPositionPoint(Position.BOTTOM_CENTER)
-            _sprite.setPosition(bodyPosition, Position.BOTTOM_CENTER)
-            _sprite.hidden = damageBlink
+            sprite.setPosition(bodyPosition, Position.BOTTOM_CENTER)
+            sprite.hidden = damageBlink
         }
         return spritesComponent
     }

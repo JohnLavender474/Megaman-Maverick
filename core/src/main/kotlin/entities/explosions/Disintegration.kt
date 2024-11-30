@@ -1,7 +1,6 @@
 package com.megaman.maverick.game.entities.explosions
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
@@ -10,7 +9,7 @@ import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureRegion
-import com.mega.game.engine.common.extensions.toGameRectangle
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -31,6 +30,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
 
 class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, IAudioEntity,
     IDirectional {
@@ -64,7 +64,7 @@ class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
         defaultSprite.setPosition(spawn, Position.CENTER)
 
         reusableRect.setSize(ConstVals.PPM.toFloat()).setCenter(spawn)
-        if (reusableRect.overlaps(getGameCamera().toGameRectangle() as Rectangle))
+        if (reusableRect.overlaps(getGameCamera().toGameRectangle()))
             requestToPlaySound(SoundAsset.THUMP_SOUND, false)
 
         durationTimer.reset()

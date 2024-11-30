@@ -34,8 +34,10 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getCenter
 
 class SpikeBall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IMotionEntity,
     IDrawableShapesEntity, IDamager, IHazard {
@@ -88,9 +90,9 @@ class SpikeBall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
 
             val chainDistance = tempDistance * ConstVals.PPM
 
-            putUpdateFunction(key) { _, _sprite ->
+            putUpdateFunction(key) { _, sprite ->
                 val center = pendulum.getPointFromAnchor(chainDistance)
-                _sprite.setCenter(center)
+                sprite.setCenter(center)
             }
 
             tempDistance += 0.25f
@@ -116,8 +118,8 @@ class SpikeBall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.75f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        damagerFixture.getShape().color = Color.RED
-        debugShapes.add { damagerFixture.getShape() }
+        damagerFixture.drawingColor = Color.RED
+        debugShapes.add { damagerFixture}
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
@@ -129,9 +131,7 @@ class SpikeBall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
         spikeSprite.setSize(2f * ConstVals.PPM)
         spikeSprite.setRegion(spikeRegion!!)
         val spritesComponent = SpritesComponent(spikeSprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setCenter(body.getCenter())
-        }
+        spritesComponent.putUpdateFunction { _, sprite -> sprite.setCenter(body.getCenter()) }
         return spritesComponent
     }
 

@@ -1,9 +1,9 @@
 package com.megaman.maverick.game.entities.projectiles
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
@@ -97,17 +97,16 @@ class SphinxBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.physics.applyFrictionX = false
-body.physics.applyFrictionY = false
+        body.physics.applyFrictionY = false
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
         body.setSize(1.35f * ConstVals.PPM)
-        body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
         val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameCircle().setRadius(0.675f * ConstVals.PPM))
         body.addFixture(projectileFixture)
-        debugShapes.add { projectileFixture.getShape() }
+        debugShapes.add { projectileFixture}
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.6f * ConstVals.PPM))
         body.addFixture(damagerFixture)
@@ -123,8 +122,7 @@ body.physics.applyFrictionY = false
         feetFixture.offsetFromBodyAttachment.y = -0.675f * ConstVals.PPM
         feetFixture.putProperty(ConstKeys.STICK_TO_BLOCK, false)
         body.addFixture(feetFixture)
-        feetFixture.getShape().color = Color.GREEN
-        debugShapes.add { feetFixture.getShape() }
+        debugShapes.add { feetFixture}
 
         val leftFixture = Fixture(
             body, FixtureType.SIDE, GameRectangle().setSize(
@@ -135,8 +133,7 @@ body.physics.applyFrictionY = false
         leftFixture.offsetFromBodyAttachment.y = ConstVals.PPM.toFloat()
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftFixture)
-        leftFixture.getShape().color = Color.YELLOW
-        debugShapes.add { leftFixture.getShape() }
+        debugShapes.add { leftFixture}
 
         val rightFixture = Fixture(
             body, FixtureType.SIDE, GameRectangle().setSize(
@@ -147,8 +144,7 @@ body.physics.applyFrictionY = false
         rightFixture.offsetFromBodyAttachment.y = ConstVals.PPM.toFloat()
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
-        rightFixture.getShape().color = Color.YELLOW
-        debugShapes.add { rightFixture.getShape() }
+        debugShapes.add { rightFixture}
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             block?.body?.setTopCenterToPoint(body.getPositionPoint(Position.TOP_CENTER))
@@ -170,13 +166,13 @@ body.physics.applyFrictionY = false
         sprite.setSize(2.15f * ConstVals.PPM)
         sprite.setRegion(region!!)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { delta, _sprite ->
-            _sprite.setCenter(body.getCenter())
-            _sprite.setOriginCenter()
+        spritesComponent.putUpdateFunction { delta, _ ->
+            sprite.setCenter(body.getCenter())
+            sprite.setOriginCenter()
             if (spinning) {
                 spinDelayTimer.update(delta)
                 if (spinDelayTimer.isFinished()) {
-                    _sprite.rotation += 45f
+                    sprite.rotation += 45f
                     spinDelayTimer.reset()
                 }
             }

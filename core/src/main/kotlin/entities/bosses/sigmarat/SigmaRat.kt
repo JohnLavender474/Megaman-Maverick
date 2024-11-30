@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.bosses.sigmarat
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
@@ -10,12 +9,11 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.UtilMethods.getRandomBool
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.*
-import com.mega.game.engine.common.getRandomBool
 import com.mega.game.engine.common.objects.*
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.common.shapes.getCenter
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -46,8 +44,9 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.projectiles.SigmaRatElectricBall
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
@@ -383,26 +382,22 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
         body.setSize(7.5f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        body.color = Color.YELLOW
-        debugShapes.add { body }
+        debugShapes.add { body.getBounds() }
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.85f * ConstVals.PPM))
         damagerFixture.offsetFromBodyAttachment.y = 3f * ConstVals.PPM
         body.addFixture(damagerFixture)
-        damagerFixture.getShape().color = Color.RED
-        debugShapes.add { damagerFixture.getShape() }
+        debugShapes.add { damagerFixture}
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.85f * ConstVals.PPM))
         damageableFixture.offsetFromBodyAttachment.y = 3f * ConstVals.PPM
         body.addFixture(damageableFixture)
-        damageableFixture.getShape().color = Color.PURPLE
-        debugShapes.add { damageableFixture.getShape() }
+        debugShapes.add { damageableFixture}
 
         val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(0.65f * ConstVals.PPM))
         shieldFixture.offsetFromBodyAttachment.y = 3f * ConstVals.PPM
         body.addFixture(shieldFixture)
-        shieldFixture.getShape().color = Color.CYAN
-        debugShapes.add { shieldFixture.getShape() }
+        debugShapes.add { shieldFixture}
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
@@ -413,9 +408,9 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0))
         sprite.setSize(10f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
-            _sprite.hidden = damageBlink || !ready
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
+            sprite.hidden = damageBlink || !ready
         }
         return spritesComponent
     }

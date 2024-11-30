@@ -55,10 +55,11 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
 
         fun splashOnWaterSurface(splasher: GameRectangle, water: GameRectangle) {
             GameLogger.debug(TAG, "Generating splash for splasher [$splasher] and water [$water]")
-            val numSplashes = ceil(splasher.width / ConstVals.PPM).toInt()
+            val numSplashes = ceil(splasher.getWidth() / ConstVals.PPM).toInt()
             for (i in 0 until numSplashes) {
                 val splash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SPLASH)!!
-                val spawn = Vector2(splasher.x + ConstVals.PPM / 2f + i * ConstVals.PPM, water.y + water.height)
+                val spawn =
+                    Vector2(splasher.getX() + ConstVals.PPM / 2f + i * ConstVals.PPM, water.getY() + water.getHeight())
                 splash.spawn(props(ConstKeys.POSITION pairTo spawn))
             }
         }

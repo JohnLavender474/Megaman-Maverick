@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.objects.Loop
@@ -23,7 +24,6 @@ import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -32,7 +32,9 @@ import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.HazardsFactory
-import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.world.body.*
 import kotlin.math.roundToInt
 
 class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IBodyEntity, IParentEntity {
@@ -196,7 +198,7 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
         val shock = currentState == ElectrocutieState.SHOCK
         children.forEach { child ->
             if (child is Bolt) {
-                child.body.fixtures.forEach { childFixture -> (childFixture.second as Fixture).active = shock }
+                child.body.forEachFixture { it.setActive(shock) }
                 child.sprites.values().forEach { childSprite -> childSprite.hidden = !shock }
             }
         }
@@ -204,10 +206,10 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.color = Color.GRAY
+        body.drawingColor = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBounds() }
+        debugShapes.add { body }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             children.forEach {

@@ -2,7 +2,6 @@ package com.megaman.maverick.game.entities.special
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.*
 import com.badlogic.gdx.utils.Array
@@ -41,6 +40,9 @@ import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getCenter
 import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
@@ -182,7 +184,7 @@ class DarknessV3(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         tileSpritesPool = Pool(
             startAmount = 0,
             supplier = { GameSprite(region!!, DrawingPriority(DrawingSection.FOREGROUND, 10)) },
-            onPool = { sprite -> sprite.hidden = true },
+            onFree = { sprite -> sprite.hidden = true },
             onFetch = { sprite -> sprite.hidden = false })
         lightSourcePool = Pool(startAmount = 0, supplier = { LightSourceDef(Vector2(), 0, 0f) })
     }
@@ -232,7 +234,7 @@ class DarknessV3(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
                     GameLogger.debug(
                         Darkness.Companion.TAG,
                         "onEvent(): BEGIN_ROOM_TRANS/SET_TO_ROOM_NO_TRANS: light up all: " +
-                                "event=$event, rooms=$rooms, newRoom=$newRoom"
+                            "event=$event, rooms=$rooms, newRoom=$newRoom"
                     )
                     darkMode = false
                 }
@@ -280,8 +282,8 @@ class DarknessV3(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
     }
 
     private fun getMinsAndMaxes(rect: GameRectangle): MinsAndMaxes {
-        val minX = ((rect.x - bounds.getX()) / dividedPPM).toInt().coerceIn(0, allTilesMatrix.columns - 1)
-        val minY = ((rect.y - bounds.getY()) / dividedPPM).toInt().coerceIn(0, allTilesMatrix.rows - 1)
+        val minX = ((rect.getX() - bounds.getX()) / dividedPPM).toInt().coerceIn(0, allTilesMatrix.columns - 1)
+        val minY = ((rect.getY() - bounds.getY()) / dividedPPM).toInt().coerceIn(0, allTilesMatrix.rows - 1)
         val maxX = (ceil((rect.getMaxX() - bounds.getX()) / dividedPPM)).toInt().coerceIn(0, allTilesMatrix.columns - 1)
         val maxY = (ceil((rect.getMaxY() - bounds.getY()) / dividedPPM)).toInt().coerceIn(0, allTilesMatrix.rows - 1)
         return MinsAndMaxes(minX, minY, maxX, maxY)
@@ -337,7 +339,7 @@ class DarknessV3(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
     }
 
     private fun tryToLightUp(entity: MegaGameEntity) {
-        if (entity is IBodyEntity && entity.body.overlaps(bounds as Rectangle) &&
+        if (entity is IBodyEntity && entity.body.getBounds().overlaps(bounds) &&
             lightUpEntities.containsKey(entity::class)
         ) {
             val lightSourceDef = lightSourcePool.fetch()
@@ -362,7 +364,7 @@ class DarknessV3(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         MegaGameEntities.getEntitiesOfType(EntityType.PROJECTILE).forEach { t -> tryToLightUp(t) }
         MegaGameEntities.getEntitiesOfType(EntityType.EXPLOSION).forEach { t -> tryToLightUp(t) }
 
-        if (megaman().body.overlaps(bounds as Rectangle) && megaman().charging) {
+        if (megaman().body.getBounds().overlaps(bounds) && megaman().charging) {
             val lightSourceDef = lightSourcePool.fetch()
             lightSourceDef.center = megaman().body.getCenter()
             lightSourceDef.radius = MEGAMAN_CHARGING_RADIUS
@@ -373,7 +375,7 @@ class DarknessV3(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         while (!queuedLightSourcesToAdd.isEmpty) {
             val (mapObjectId, lightSourceDef) = queuedLightSourcesToAdd.removeFirst()
             addLightSource(mapObjectId, lightSourceDef)
-            lightSourcePool.pool(lightSourceDef)
+            lightSourcePool.free(lightSourceDef)
         }
         while (!queuedLightSourcesToRemove.isEmpty) {
             val lightSourceKey = queuedLightSourcesToRemove.removeFirst()
@@ -381,12 +383,13 @@ class DarknessV3(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         }
 
         val camBounds = game.getGameCamera().getRotatedBounds()
-        camBounds.x -= CAM_BOUNDS_BUFFER * ConstVals.PPM
-        camBounds.y -= CAM_BOUNDS_BUFFER * ConstVals.PPM
-        camBounds.width += 2f * CAM_BOUNDS_BUFFER * ConstVals.PPM
-        camBounds.height += 2f * CAM_BOUNDS_BUFFER * ConstVals.PPM
+        camBounds.translate(
+            -CAM_BOUNDS_BUFFER * ConstVals.PPM,
+            -CAM_BOUNDS_BUFFER * ConstVals.PPM
+        )
+        camBounds.translateSize(2f * CAM_BOUNDS_BUFFER * ConstVals.PPM, 2f * CAM_BOUNDS_BUFFER * ConstVals.PPM)
 
-        sprites.values().forEach { t -> tileSpritesPool.pool(t) }
+        sprites.values().forEach { t -> tileSpritesPool.free(t) }
         sprites.clear()
 
         val (minX, minY, maxX, maxY) = getMinsAndMaxes(camBounds)

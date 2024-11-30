@@ -41,6 +41,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getCenter
 
 class Explosion(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IOwnable, IBodyEntity, ISpritesEntity,
     IAudioEntity, IDamager {
@@ -105,7 +106,7 @@ class Explosion(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IOwn
         body.addFixture(damagerFixture)
         addComponent(
             DrawableShapesComponent(
-                debugShapeSuppliers = gdxArrayOf({ damagerFixture.getShape() }), debug = true
+                debugShapeSuppliers = gdxArrayOf({ damagerFixture}), debug = true
             )
         )
         return BodyComponentCreator.create(this, body)

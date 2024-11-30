@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.bosses
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
@@ -9,13 +8,13 @@ import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.animations.*
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.UtilMethods.getRandom
+import com.mega.game.engine.common.UtilMethods.getRandomBool
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.getRandom
-import com.mega.game.engine.common.getRandomBool
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.interfaces.UpdateFunction
 import com.mega.game.engine.common.objects.GamePair
@@ -61,9 +60,15 @@ import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.MegaUtilMethods
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.world.body.getPositionPoint
 import com.megaman.maverick.game.world.body.isSensing
 import kotlin.math.abs
 import kotlin.reflect.KClass
@@ -345,7 +350,6 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         body.physics.velocityClamp.set(VEL_CLAMP_X * ConstVals.PPM, VEL_CLAMP_Y * ConstVals.PPM)
         body.physics.receiveFrictionX = false
         body.putProperty("${ConstKeys.TAKE_FRICTION}_${ConstKeys.SAND}", false)
-        body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
@@ -355,38 +359,33 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         feetFixture.offsetFromBodyAttachment.y = -BODY_HEIGHT * ConstVals.PPM / 2f
         feetFixture.putProperty(ConstKeys.STICK_TO_BLOCK, false)
         body.addFixture(feetFixture)
-        feetFixture.getShape().color = Color.GREEN
-        debugShapes.add { feetFixture.getShape() }
+        debugShapes.add { feetFixture}
 
         val headFixture =
             Fixture(body, FixtureType.HEAD, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM))
         headFixture.offsetFromBodyAttachment.y = BODY_HEIGHT * ConstVals.PPM / 2f
         body.addFixture(headFixture)
-        headFixture.getShape().color = Color.ORANGE
-        debugShapes.add { headFixture.getShape() }
+        debugShapes.add { headFixture}
 
         val leftFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, ConstVals.PPM.toFloat()))
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         leftFixture.offsetFromBodyAttachment.x = -BODY_WIDTH * ConstVals.PPM / 2f
         body.addFixture(leftFixture)
-        leftFixture.getShape().color = Color.BLUE
-        debugShapes.add { leftFixture.getShape() }
+        debugShapes.add { leftFixture}
 
         val rightFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, ConstVals.PPM.toFloat()))
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         rightFixture.offsetFromBodyAttachment.x = BODY_WIDTH * ConstVals.PPM / 2f
         body.addFixture(rightFixture)
-        rightFixture.getShape().color = Color.BLUE
-        debugShapes.add { rightFixture.getShape() }
+        debugShapes.add { rightFixture}
 
         val bodyFixture =
             Fixture(body, FixtureType.BODY, GameRectangle().setWidth(BODY_WIDTH * ConstVals.PPM))
         bodyFixture.attachedToBody = false
         body.addFixture(bodyFixture)
-        bodyFixture.getShape().color = Color.RED
-        debugShapes.add { bodyFixture.getShape() }
+        debugShapes.add { bodyFixture}
 
         val damagerFixture =
             Fixture(body, FixtureType.DAMAGER, GameRectangle().setWidth(BODY_WIDTH * ConstVals.PPM))
@@ -415,15 +414,15 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         body.preProcess.put(ConstKeys.DEFAULT) {
             val height = if (currentState == DesertManState.TORNADO) TORNADO_HEIGHT else BODY_HEIGHT
             dynamicHeightFixtures.forEach {
-                val shape = it.getShape() as GameRectangle
+                val shape = it.rawShape as GameRectangle
                 shape.setHeight(height * ConstVals.PPM)
                 shape.setBottomCenterToPoint(body.getPositionPoint(Position.BOTTOM_CENTER))
             }
 
             armFixtures.forEach { t ->
-                t.active = isPunching()
+                t.setActive(isPunching())
                 if (isPunching()) {
-                    val shape = t.getShape() as GameRectangle
+                    val shape = t.rawShape as GameRectangle
                     shape.setWidth(
                         if (isTornadoPunching()) SHORT_PUNCH_WIDTH * ConstVals.PPM
                         else (longPunchExtensionCount * SPRITE_SIZE * ConstVals.PPM) +
@@ -432,15 +431,15 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
 
                     when (currentState) {
                         DesertManState.TORNADO -> {
-                            if (isFacing(Facing.LEFT)) shape.setCenterRightToPoint(body.getTopLeftPoint())
-                            else shape.setCenterLeftToPoint(body.getTopRightPoint())
+                            if (isFacing(Facing.LEFT)) shape.setCenterRightToPoint(body.getPositionPoint(Position.TOP_LEFT))
+                            else shape.setCenterLeftToPoint(body.getPositionPoint(Position.TOP_RIGHT))
                         }
 
                         else -> {
-                            if (isFacing(Facing.LEFT)) shape.setCenterRightToPoint(body.getCenterLeftPoint())
-                            else shape.setCenterLeftToPoint(body.getCenterRightPoint())
+                            if (isFacing(Facing.LEFT)) shape.setCenterRightToPoint(body.getPositionPoint(Position.CENTER_LEFT))
+                            else shape.setCenterLeftToPoint(body.getPositionPoint(Position.CENTER_RIGHT))
 
-                            shape.y += ARM_OFFSET_Y * ConstVals.PPM
+                            shape.translate(0f, ARM_OFFSET_Y * ConstVals.PPM)
                         }
                     }
                 }
@@ -472,8 +471,8 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprites = OrderedMap<String, GameSprite>()
-        val updateFunctions = ObjectMap<String, UpdateFunction<GameSprite>>()
+        val sprites = OrderedMap<Any, GameSprite>()
+        val updateFunctions = ObjectMap<Any, UpdateFunction<GameSprite>>()
 
         val mainSprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
         mainSprite.setSize(SPRITE_SIZE * ConstVals.PPM)
@@ -802,10 +801,10 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         for (i in 1..ARM_EXTENSIONS_COUNT) {
             val xOffset = i * SPRITE_SIZE * ConstVals.PPM
 
-            val leftPos = body.getBottomLeftPoint().sub(xOffset, 0f)
+            val leftPos = body.getPositionPoint(Position.BOTTOM_LEFT).sub(xOffset, 0f)
             leftArmExtensions[i - 1].setBottomLeftToPoint(leftPos)
 
-            val rightPos = body.getBottomRightPoint().add(xOffset, 0f)
+            val rightPos = body.getPositionPoint(Position.BOTTOM_RIGHT).add(xOffset, 0f)
             rightArmExtensions[i - 1].setBottomRightToPoint(rightPos)
         }
     }

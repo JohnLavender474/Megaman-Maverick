@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.enemies
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
@@ -10,6 +9,7 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.UtilMethods.normalizedTrajectory
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
@@ -18,14 +18,12 @@ import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.IFaceable
-import com.mega.game.engine.common.interfaces.Updatable
-import com.mega.game.engine.common.normalizedTrajectory
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.common.shapes.toGameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
@@ -58,6 +56,9 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.LoopedSuppliers
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
@@ -227,35 +228,30 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -0.75f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.getShape().color = Color.GREEN
-        // shapes.add { feetFixture.getShape() }
+        // shapes.add { feetFixture}
 
         val headFixture = Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.1f * ConstVals.PPM))
         headFixture.offsetFromBodyAttachment.y = 0.75f * ConstVals.PPM
         body.addFixture(headFixture)
-        headFixture.getShape().color = Color.ORANGE
-        // shapes.add { headFixture.getShape() }
+        // shapes.add { headFixture}
 
         val damagerFixture = Fixture(
             body, FixtureType.DAMAGER, GameRectangle().setSize(0.75f * ConstVals.PPM, 1.25f * ConstVals.PPM)
         )
         body.addFixture(damagerFixture)
-        damagerFixture.getShape().color = Color.RED
-        // shapes.add { damagerFixture.getShape() }
+        // shapes.add { damagerFixture}
 
         val damageableFixture = Fixture(
             body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.8f * ConstVals.PPM, 1.35f * ConstVals.PPM)
         )
         body.addFixture(damageableFixture)
-        damageableFixture.getShape().color = Color.PURPLE
-        // shapes.add { damageableFixture.getShape() }
+        // shapes.add { damageableFixture}
 
         val shieldFixture = Fixture(
             body, FixtureType.SHIELD, GameRectangle().setSize(0.25f * ConstVals.PPM, 1.25f * ConstVals.PPM)
         )
         body.addFixture(shieldFixture)
-        shieldFixture.getShape().color = Color.BLUE
-        shapes.add { shieldFixture.getShape() }
+        shapes.add { shieldFixture}
 
         val triggerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle())
         triggerFixture.setConsumer { processState, fixture ->
@@ -264,14 +260,13 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         }
         triggerFixture.attachedToBody = false
         body.addFixture(triggerFixture)
-        triggerFixture.getShape().color = Color.YELLOW
-        // shapes.add { triggerFixture.getShape() }
+        // shapes.add { triggerFixture}
 
-        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT) {
             if (canThrowShield && throwShieldTrigger != null) {
-                triggerFixture.active = true
-                triggerFixture.getShape() = throwShieldTrigger!!
-            } else triggerFixture.active = false
+                triggerFixture.setActive(true)
+                triggerFixture.setShape(throwShieldTrigger!!)
+            } else triggerFixture.setActive(false)
 
             if (direction.equalsAny(Direction.UP, Direction.DOWN)) body.physics.velocity.x = 0f
             else body.physics.velocity.y = 0f
@@ -284,16 +279,16 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
                 Direction.RIGHT -> Vector2(gravity, 0f)
             }).scl(ConstVals.PPM.toFloat() * gravityScalar)
 
-            shieldFixture.active = shielded
+            shieldFixture.setActive(shielded)
             shieldFixture.offsetFromBodyAttachment.x =
-                0.5f * ConstVals.PPM * if (isDirectionRotatedUp() || isDirectionRotatedLeft()) facing.value
+                0.5f * ConstVals.PPM * if (direction.equalsAny(Direction.UP, Direction.LEFT)) facing.value
                 else -facing.value
 
             if (shielded) damageableFixture.offsetFromBodyAttachment.x =
-                0.25f * ConstVals.PPM * if (isDirectionRotatedUp() || isDirectionRotatedLeft()) -facing.value
+                0.25f * ConstVals.PPM * if (direction.equalsAny(Direction.UP, Direction.LEFT)) -facing.value
                 else facing.value
             else damageableFixture.offsetFromBodyAttachment.x = 0f
-        })
+        }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = shapes, debug = true))
 
@@ -463,7 +458,10 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         shield.spawn(
             props(
                 ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.TRAJECTORY pairTo normalizedTrajectory(
-                    body.getCenter(), megaman().body.getCenter(), SHIELD_VEL * ConstVals.PPM
+                    body.getCenter(),
+                    megaman().body.getCenter(),
+                    SHIELD_VEL * ConstVals.PPM,
+                    LoopedSuppliers.getVector2()
                 ), ConstKeys.OWNER pairTo this
             )
         )

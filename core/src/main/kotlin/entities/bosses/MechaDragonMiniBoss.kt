@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.bosses
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
@@ -11,19 +10,18 @@ import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.UtilMethods.normalizedTrajectory
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
-import com.mega.game.engine.common.normalizedTrajectory
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.common.shapes.getCenter
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -54,10 +52,9 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureLabel
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.addFixtureLabel
+import com.megaman.maverick.game.utils.LoopedSuppliers
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.world.body.*
 import kotlin.math.max
 import kotlin.reflect.KClass
 
@@ -204,7 +201,7 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
                 ConstKeys.OWNER pairTo this,
                 ConstKeys.POSITION pairTo spawn,
                 ConstKeys.TRAJECTORY pairTo normalizedTrajectory(
-                    spawn, megaman().body.getCenter(), FIRE_SPEED * ConstVals.PPM
+                    spawn, megaman().body.getCenter(), FIRE_SPEED * ConstVals.PPM, LoopedSuppliers.getVector2()
                 )
             )
         )
@@ -267,7 +264,9 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
                         megaman().body.getX() > body.getMaxX() -> facing = Facing.RIGHT
                     }
 
-                    val trajectory = normalizedTrajectory(body.getCenter(), currentTarget, HOVER_SPEED * ConstVals.PPM)
+                    val trajectory = normalizedTrajectory(
+                        body.getCenter(), currentTarget, HOVER_SPEED * ConstVals.PPM, LoopedSuppliers.getVector2()
+                    )
                     body.physics.velocity.set(trajectory)
 
                     val stopPredicate = when (MechaDragonState.HOVER_TO_MEGAMAN) {
@@ -333,7 +332,6 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(2f * ConstVals.PPM, 3f * ConstVals.PPM)
-        body.color = Color.BROWN
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
@@ -341,96 +339,83 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         bodyFixture.addFixtureLabel(FixtureLabel.NO_PROJECTILE_COLLISION)
         body.addFixture(bodyFixture)
-        bodyFixture.getShape().color = Color.GRAY
-        debugShapes.add { bodyFixture.getShape() }
+        debugShapes.add { bodyFixture}
 
         val headDamagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.75f * ConstVals.PPM))
         headDamagerFixture.offsetFromBodyAttachment.y = 1.85f * ConstVals.PPM
         body.addFixture(headDamagerFixture)
-        headDamagerFixture.getShape().color = Color.RED
-        debugShapes.add { headDamagerFixture.getShape() }
+        debugShapes.add { headDamagerFixture}
 
         val headDamageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameCircle().setRadius(0.75f * ConstVals.PPM))
         headDamageableFixture.offsetFromBodyAttachment.y = 1.85f * ConstVals.PPM
         body.addFixture(headDamageableFixture)
-        headDamageableFixture.getShape().color = Color.PURPLE
-        debugShapes.add { headDamageableFixture.getShape() }
+        debugShapes.add { headDamageableFixture}
 
         val neckDamagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.75f * ConstVals.PPM))
         neckDamagerFixture.offsetFromBodyAttachment.y = 1.35f * ConstVals.PPM
         body.addFixture(neckDamagerFixture)
-        neckDamagerFixture.getShape().color = Color.RED
-        debugShapes.add { neckDamagerFixture.getShape() }
+        debugShapes.add { neckDamagerFixture}
 
         val neckDamageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameCircle().setRadius(0.75f * ConstVals.PPM))
         neckDamageableFixture.offsetFromBodyAttachment.y = 1.35f * ConstVals.PPM
         body.addFixture(neckDamageableFixture)
-        neckDamageableFixture.getShape().color = Color.PURPLE
-        debugShapes.add { neckDamageableFixture.getShape() }
+        debugShapes.add { neckDamageableFixture}
 
         val bodyDamagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
         bodyDamagerFixture.offsetFromBodyAttachment.y = 0.5f * ConstVals.PPM
         body.addFixture(bodyDamagerFixture)
-        bodyDamagerFixture.getShape().color = Color.RED
-        debugShapes.add { bodyDamagerFixture.getShape() }
+        debugShapes.add { bodyDamagerFixture}
 
         val bodyDamageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle(body))
         bodyDamageableFixture.offsetFromBodyAttachment.y = 0.5f * ConstVals.PPM
         body.addFixture(bodyDamageableFixture)
-        bodyDamageableFixture.getShape().color = Color.PURPLE
-        debugShapes.add { bodyDamageableFixture.getShape() }
+        debugShapes.add { bodyDamageableFixture}
 
         val tailDamagerFixture1 = Fixture(
             body, FixtureType.DAMAGER, GameRectangle().setSize(0.75f * ConstVals.PPM, 2f * ConstVals.PPM)
         )
         tailDamagerFixture1.offsetFromBodyAttachment.y = -1.25f * ConstVals.PPM
         body.addFixture(tailDamagerFixture1)
-        tailDamagerFixture1.getShape().color = Color.RED
-        debugShapes.add { tailDamagerFixture1.getShape() }
+        debugShapes.add { tailDamagerFixture1}
 
         val tailDamageableFixture1 = Fixture(
             body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.75f * ConstVals.PPM, 2.25f * ConstVals.PPM)
         )
         tailDamageableFixture1.offsetFromBodyAttachment.y = -1.25f * ConstVals.PPM
         body.addFixture(tailDamageableFixture1)
-        tailDamageableFixture1.getShape().color = Color.PURPLE
-        debugShapes.add { tailDamageableFixture1.getShape() }
+        debugShapes.add { tailDamageableFixture1}
 
         val tailDamagerFixture2 =
             Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.25f * ConstVals.PPM))
         tailDamagerFixture2.offsetFromBodyAttachment.y = -2.5f * ConstVals.PPM
         body.addFixture(tailDamagerFixture2)
-        tailDamagerFixture2.getShape().color = Color.RED
-        debugShapes.add { tailDamagerFixture2.getShape() }
+        debugShapes.add { tailDamagerFixture2}
 
         val tailDamageableFixture2 =
             Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.5f * ConstVals.PPM))
         tailDamageableFixture2.offsetFromBodyAttachment.y = -2.5f * ConstVals.PPM
         body.addFixture(tailDamageableFixture2)
-        tailDamageableFixture2.getShape().color = Color.PURPLE
-        debugShapes.add { tailDamageableFixture2.getShape() }
+        debugShapes.add { tailDamageableFixture2}
 
         val tailDamagerFixture3 = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.35f * ConstVals.PPM))
         tailDamagerFixture3.offsetFromBodyAttachment.y = -2.25f * ConstVals.PPM
         body.addFixture(tailDamagerFixture3)
-        tailDamagerFixture3.getShape().color = Color.RED
-        debugShapes.add { tailDamagerFixture3.getShape() }
+        debugShapes.add { tailDamagerFixture3}
 
         val tailDamageableFixture3 =
             Fixture(body, FixtureType.DAMAGEABLE, GameCircle().setRadius(0.35f * ConstVals.PPM))
         tailDamageableFixture3.offsetFromBodyAttachment.y = -2.25f * ConstVals.PPM
         body.addFixture(tailDamageableFixture3)
-        tailDamageableFixture3.getShape().color = Color.PURPLE
-        debugShapes.add { tailDamageableFixture3.getShape() }
+        debugShapes.add { tailDamageableFixture3}
 
         gdxArrayOf(
             tailDamageableFixture1, bodyDamageableFixture, neckDamageableFixture, headDamageableFixture
         ).forEach { t ->
             val bodyFixture1 = t.copy()
-            val width = bodyFixture1.getShape().getWidth() * 0.9f
-            val height = bodyFixture1.getShape().getHeight() * 0.9f
-            bodyFixture1.getShape().setWithProps(props("width" pairTo width, "height" pairTo height))
-            bodyFixture1.fixtureType = FixtureType.BODY
+            val width = (bodyFixture1.rawShape as GameRectangle).getWidth() * 0.9f
+            val height = (bodyFixture1.rawShape as GameRectangle).getHeight() * 0.9f
+            bodyFixture1.rawShape.setWithProps(props("width" pairTo width, "height" pairTo height))
+            bodyFixture1.setType(FixtureType.BODY)
             body.addFixture(bodyFixture1)
         }
 
@@ -463,11 +448,11 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
         sprite.setSize(9f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setCenter(body.getCenter())
-            _sprite.setFlip(isFacing(Facing.LEFT), false)
-            _sprite.hidden = damageBlink || !ready
-            _sprite.setAlpha(if (defeated) 1f - defeatTimer.getRatio() else 1f)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setCenter(body.getCenter())
+            sprite.setFlip(isFacing(Facing.LEFT), false)
+            sprite.hidden = damageBlink || !ready
+            sprite.setAlpha(if (defeated) 1f - defeatTimer.getRatio() else 1f)
         }
         return spritesComponent
     }

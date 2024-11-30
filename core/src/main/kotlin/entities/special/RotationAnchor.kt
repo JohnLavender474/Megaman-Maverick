@@ -1,11 +1,10 @@
 package com.megaman.maverick.game.entities.special
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.calculateAngleDegrees
+import com.mega.game.engine.common.UtilMethods.calculateAngleDegrees
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.processAndFilter
 import com.mega.game.engine.common.objects.Properties
@@ -32,7 +31,9 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntitySuppliers
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.getCenter
 
 open class RotationAnchor(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IParentEntity, IMotionEntity,
     IDrawableShapesEntity {
@@ -81,7 +82,6 @@ open class RotationAnchor(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
             val rotation = RotatingLine(spawn, length, speed * ConstVals.PPM, degreesOnReset)
             if (childProps.get(ConstKeys.DRAW_LINE) == true) {
                 val color = childProps.get(ConstKeys.COLOR, String::class)!!
-                rotation.line.color = Color.valueOf(color)
                 addProdShapeSupplier { rotation.line }
             }
 
@@ -117,12 +117,12 @@ open class RotationAnchor(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
 
     protected open fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.preProcess.put(ConstKeys.DEFAULT) { delta ->
+        body.preProcess.put(ConstKeys.DEFAULT) {
             children.forEach { child ->
                 child as IBodyEntity
                 val target = childTargets[child as GameEntity] ?: return@forEach
                 val velocity = target.cpy().sub(child.body.getCenter())
-                child.body.physics.velocity.set(velocity.scl(1f / delta))
+                child.body.physics.velocity.set(velocity.scl(1f / ConstVals.FIXED_TIME_STEP))
             }
         }
         return BodyComponentCreator.create(this, body)

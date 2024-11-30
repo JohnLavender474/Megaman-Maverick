@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.enemies
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -13,7 +12,7 @@ import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.extensions.vector2Of
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -43,6 +42,8 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.LoopedSuppliers
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
@@ -197,32 +198,29 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             if (direction == Direction.UP) swapFacing()
         }
         body.addFixture(feetFixture)
-        feetFixture.getShape().color = Color.GREEN
-        debugShapes.add { feetFixture.getShape() }
+        debugShapes.add { feetFixture}
 
         val leftSideFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         leftSideFixture.offsetFromBodyAttachment.x = -0.375f * ConstVals.PPM
         leftSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftSideFixture)
-        leftSideFixture.getShape().color = Color.YELLOW
-        debugShapes.add { leftSideFixture.getShape() }
+        debugShapes.add { leftSideFixture}
 
         val rightSideFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         rightSideFixture.offsetFromBodyAttachment.x = 0.375f * ConstVals.PPM
         rightSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightSideFixture)
-        rightSideFixture.getShape().color = Color.YELLOW
-        debugShapes.add { rightSideFixture.getShape() }
+        debugShapes.add { rightSideFixture}
 
         val leftFootFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
         leftFootFixture.setConsumer { _, fixture ->
             if (fixture.getType() == FixtureType.BLOCK)
                 body.putProperty("${ConstKeys.LEFT}_${ConstKeys.FOOT}", true)
         }
-        leftFootFixture.offsetFromBodyAttachment = vector2Of(-0.375f * ConstVals.PPM)
+        leftFootFixture.offsetFromBodyAttachment =
+            LoopedSuppliers.getVector2().set(-0.375f * ConstVals.PPM, -0.375f * ConstVals.PPM)
         body.addFixture(leftFootFixture)
-        leftFootFixture.getShape().color = Color.ORANGE
-        debugShapes.add { leftFootFixture.getShape() }
+        debugShapes.add { leftFootFixture}
 
         val rightFootFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
         rightFootFixture.setConsumer { _, fixture ->
@@ -232,8 +230,7 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         rightFootFixture.offsetFromBodyAttachment.x = 0.375f * ConstVals.PPM
         rightFootFixture.offsetFromBodyAttachment.y = -0.375f * ConstVals.PPM
         body.addFixture(rightFootFixture)
-        rightFootFixture.getShape().color = Color.ORANGE
-        debugShapes.add { rightFootFixture.getShape() }
+        debugShapes.add { rightFootFixture}
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.putProperty(LEFT_FOOT, false)

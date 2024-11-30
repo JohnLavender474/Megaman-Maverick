@@ -170,7 +170,7 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(BODY_WIDTH * ConstVals.PPM, 0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -ConstVals.PPM.toFloat()
         body.addFixture(feetFixture)
-        debugShapes.add { feetFixture.getShape() }
+        debugShapes.add { feetFixture}
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY

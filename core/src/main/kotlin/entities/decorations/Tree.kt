@@ -22,6 +22,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.utils.extensions.getPosition
 
 class Tree(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, ICullableEntity {
 
@@ -51,9 +52,9 @@ class Tree(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IC
         val sprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, 0))
         sprite.setSize(3f * ConstVals.PPM, 6f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setRegion(region!!)
-            _sprite.setPosition(bounds.getPosition())
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setRegion(region!!)
+            sprite.setPosition(bounds.getPosition())
         }
         return spritesComponent
     }

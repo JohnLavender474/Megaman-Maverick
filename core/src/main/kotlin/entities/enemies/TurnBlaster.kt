@@ -9,7 +9,7 @@ import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.extensions.vector2Of
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.UpdateFunction
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -44,8 +44,11 @@ import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.projectiles.ReactManProjectile
+import com.megaman.maverick.game.utils.LoopedSuppliers
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
 
 class TurnBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IDirectional {
@@ -179,8 +182,8 @@ class TurnBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IDirectional
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val size = vector2Of(1.25f * ConstVals.PPM)
-        val sprites = OrderedMap<String, GameSprite>()
+        val size = LoopedSuppliers.getVector2().set(1.25f, 1.25f).scl(ConstVals.PPM.toFloat())
+        val sprites = OrderedMap<Any, GameSprite>()
 
         val baseSprite = GameSprite(regions.get("base"))
         baseSprite.setSize(size)
@@ -194,7 +197,7 @@ class TurnBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IDirectional
         tubeSprite.setSize(size)
         sprites.put("tube", tubeSprite)
 
-        val updateFunctions = ObjectMap<String, UpdateFunction<GameSprite>>()
+        val updateFunctions = ObjectMap<Any, UpdateFunction<GameSprite>>()
         sprites.forEach { entry ->
             val key = entry.key
             updateFunctions.put(key) { _, sprite ->

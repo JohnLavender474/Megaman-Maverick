@@ -2,20 +2,18 @@ package com.megaman.maverick.game.entities.special
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.UtilMethods.interpolate
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
-import com.mega.game.engine.common.interpolate
 import com.mega.game.engine.common.objects.Matrix
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.common.shapes.toGameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -40,6 +38,10 @@ import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getCenter
 import java.util.*
 import kotlin.math.ceil
 import kotlin.reflect.KClass
@@ -229,7 +231,7 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
 
     private fun tryToLightUp(entity: IGameEntity) {
         if (entity is IBodyEntity &&
-            entity.body.overlaps(bounds as Rectangle) &&
+            entity.body.getBounds().overlaps(bounds) &&
             lightUpEntities.containsKey(entity::class)
         ) {
             val lightEvent = LightEvent(LightEventType.LIGHT_SOURCE, lightUpEntities[entity::class].invoke(entity))
@@ -243,7 +245,7 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
             MegaGameEntities.getEntitiesOfType(EntityType.PROJECTILE).forEach { t -> tryToLightUp(t) }
             MegaGameEntities.getEntitiesOfType(EntityType.EXPLOSION).forEach { t -> tryToLightUp(t) }
 
-            if (megaman().body.overlaps(bounds as Rectangle) && megaman().charging) {
+            if (megaman().body.getBounds().overlaps(bounds) && megaman().charging) {
                 val lightEvent = LightEvent(
                     LightEventType.LIGHT_SOURCE,
                     LightEventDef(

@@ -47,8 +47,9 @@ import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.projectiles.SealionBall
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDrawableShapesEntity {
@@ -141,20 +142,21 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
     private fun throwBall() {
         GameLogger.debug(TAG, "Throw ball")
-        sealionBall!!.body.setBottomCenterToPoint(ballCatchBounds.getTopCenterPoint())
+        sealionBall!!.body.setBottomCenterToPoint(ballCatchBounds.getPositionPoint(Position.TOP_CENTER))
         sealionBall!!.throwBall()
         ballInHands = false
     }
 
     private fun catchBall() {
         GameLogger.debug(TAG, "Catch ball")
-        sealionBall!!.body.setBottomCenterToPoint(ballCatchBounds.getTopCenterPoint())
+        sealionBall!!.body.setBottomCenterToPoint(ballCatchBounds.getPositionPoint(Position.TOP_CENTER))
         sealionBall!!.catchBall()
         ballInHands = true
     }
 
-    private fun canCatchBall() = sealionBall!!.body.contains(ballCatchBounds.getBottomCenterPoint()) ||
-        sealionBall!!.body.getMaxY() < ballCatchBounds.y // in case ball falls below sealion before it's caught
+    private fun canCatchBall() =
+        sealionBall!!.body.getBounds().contains(ballCatchBounds.getPositionPoint(Position.BOTTOM_CENTER)) ||
+            sealionBall!!.body.getMaxY() < ballCatchBounds.getY() // in case ball falls below sealion before it's caught
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
@@ -243,13 +245,13 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
         sprite.setSize(2.25f * ConstVals.PPM, 1.4f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
-            _sprite.hidden = damageBlink
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
+            sprite.hidden = damageBlink
             if (fadingOut) {
                 val fadeOutTimer = timers["pout_fade_out"]
-                _sprite.setAlpha(1f - fadeOutTimer.getRatio())
-            } else _sprite.setAlpha(1f)
+                sprite.setAlpha(1f - fadeOutTimer.getRatio())
+            } else sprite.setAlpha(1f)
         }
         return spritesComponent
     }

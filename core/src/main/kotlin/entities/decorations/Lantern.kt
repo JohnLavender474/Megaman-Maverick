@@ -19,6 +19,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 
 class Lantern(game: MegamanMaverickGame) : LightSource(game), ISpritesEntity, IAnimatedEntity {
 
@@ -48,9 +49,7 @@ class Lantern(game: MegamanMaverickGame) : LightSource(game), ISpritesEntity, IA
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -1))
         sprite.setSize(1.65f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(bounds.getPositionPoint(spritePos), spritePos)
-        }
+        spritesComponent.putUpdateFunction { _, _ -> sprite.setPosition(bounds.getPositionPoint(spritePos), spritePos) }
         return spritesComponent
     }
 

@@ -1,21 +1,21 @@
 package com.megaman.maverick.game.entities.hazards
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.common.shapes.toGameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.damage.IDamager
@@ -47,9 +47,9 @@ import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getObjectProps
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodyFixtureDef
-import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEntity, IAudioEntity,
@@ -127,7 +127,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (wanaan != null && wanaan!!.comingDown && body.contains(wanaan!!.cullPoint)) {
+            if (wanaan != null && wanaan!!.comingDown && body.getBounds().contains(wanaan!!.cullPoint)) {
                 wanaan!!.destroy()
                 wanaan = null
                 newWanaanDelay.reset()
@@ -142,7 +142,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
             if (wanaan == null &&
                 !this.hasDepletedHealth() &&
                 newWanaanDelay.isFinished() &&
-                sensors.any { it.overlaps(megaman().body as Rectangle) }
+                sensors.any { it.overlaps(megaman().body.getBounds()) }
             ) {
                 spawnWanaan()
                 launchDelay.reset()

@@ -10,6 +10,7 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.damage.IDamager
@@ -94,8 +95,8 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
             Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         headFixture.offsetFromBodyAttachment.y = 0.5f * ConstVals.PPM
         body.addFixture(headFixture)
-        headFixture.getShape().color = Color.YELLOW
-        debugShapes.add { headFixture.getShape() }
+        headFixture.drawingColor = Color.YELLOW
+        debugShapes.add { headFixture}
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             val velocity = body.physics.velocity

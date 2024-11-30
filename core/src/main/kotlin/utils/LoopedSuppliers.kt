@@ -2,6 +2,7 @@ package com.megaman.maverick.game.utils
 
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.math.collision.BoundingBox
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.shapes.GameCircle
@@ -15,12 +16,14 @@ object LoopedSuppliers {
     const val RECT_COUNT = 5
     const val GAME_CIRCLE_COUNT = 10
     const val GAME_LINES = 5
+    const val BOUNDING_BOXES = 2
 
     private val vector2s: Loop<Vector2>
     private val gameRects: Loop<GameRectangle>
     private val rects: Loop<Rectangle>
     private val gameCircles: Loop<GameCircle>
     private val gameLines: Loop<GameLine>
+    private val boundingBoxes: Loop<BoundingBox>
 
     init {
         val vector2s = Array<Vector2>()
@@ -42,6 +45,10 @@ object LoopedSuppliers {
         val gameLines = Array<GameLine>()
         (0 until GAME_LINES).forEach { gameLines.add(GameLine()) }
         this.gameLines = Loop(gameLines)
+
+        val boundingBoxes = Array<BoundingBox>()
+        (0 until BOUNDING_BOXES).forEach { boundingBoxes.add(BoundingBox()) }
+        this.boundingBoxes = Loop(boundingBoxes)
     }
 
     fun getVector2() = vector2s.next()
@@ -53,4 +60,6 @@ object LoopedSuppliers {
     fun getGameCircle() = gameCircles.next()
 
     fun getGameLine() = gameLines.next()
+
+    fun getBoundingBox() = boundingBoxes.next()
 }

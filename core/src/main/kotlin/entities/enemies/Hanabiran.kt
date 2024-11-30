@@ -13,7 +13,7 @@ import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.interfaces.Updatable
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -46,9 +46,9 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDirectional {
@@ -102,7 +102,7 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
-        body.setBottomCenterToPoint(bounds.getBottomCenterPoint())
+        body.setBottomCenterToPoint(bounds.getPositionPoint(Position.BOTTOM_CENTER))
         hanabiranState = HanabiranState.SLEEPING
         direction =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
@@ -190,19 +190,19 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         val bodyFixture = Fixture(body, FixtureType.BODY, fixturesRectangle)
         bodyFixture.attachedToBody = false
         body.addFixture(bodyFixture)
-        debugShapes.add { bodyFixture.getShape() }
+        debugShapes.add { bodyFixture}
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, fixturesRectangle)
         damagerFixture.attachedToBody = false
         body.addFixture(damagerFixture)
-        debugShapes.add { if (damagerFixture.active) damagerFixture.getShape() else null }
+        debugShapes.add { if (damagerFixture.isActive()) damagerFixture.getShape() else null }
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, fixturesRectangle)
         damageableFixture.attachedToBody = false
         body.addFixture(damageableFixture)
-        debugShapes.add { if (damageableFixture.active) damageableFixture.getShape() else null }
+        debugShapes.add { if (damageableFixture.isActive()) damageableFixture.getShape() else null }
 
-        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT) {
             fixturesRectangle.setSize(
                 (when (hanabiranState) {
                     HanabiranState.SLEEPING -> Vector2.Zero
@@ -231,10 +231,10 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
             val fixturesOn =
                 !hanabiranState.equalsAny(HanabiranState.SLEEPING, HanabiranState.RISING, HanabiranState.DROPPING)
-            bodyFixture.active = fixturesOn
-            damagerFixture.active = fixturesOn
-            damageableFixture.active = fixturesOn
-        })
+            bodyFixture.setActive(fixturesOn)
+            damagerFixture.setActive(fixturesOn)
+            damageableFixture.setActive(fixturesOn)
+        }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
@@ -245,12 +245,12 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         val sprite = GameSprite()
         sprite.setSize(1.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setOriginCenter()
-            _sprite.rotation = direction.rotation
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setOriginCenter()
+            sprite.rotation = direction.rotation
             val position = DirectionPositionMapper.getPosition(direction).opposite()
-            _sprite.setPosition(body.getPositionPoint(position), position)
-            _sprite.hidden = hanabiranState == HanabiranState.SLEEPING || damageBlink
+            sprite.setPosition(body.getPositionPoint(position), position)
+            sprite.hidden = hanabiranState == HanabiranState.SLEEPING || damageBlink
         }
         return spritesComponent
     }

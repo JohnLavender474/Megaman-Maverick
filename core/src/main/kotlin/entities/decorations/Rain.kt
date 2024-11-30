@@ -5,17 +5,16 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.UtilMethods.getOverlapPushDirection
+import com.mega.game.engine.common.UtilMethods.getRandom
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.isAny
 import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.getOverlapPushDirection
-import com.mega.game.engine.common.getRandom
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.common.shapes.toGameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -41,10 +40,9 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.setHitByBlockReceiver
-import com.megaman.maverick.game.world.body.setHitByBodyReceiver
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
+import com.megaman.maverick.game.world.body.*
 
 class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity {
 
@@ -86,7 +84,6 @@ class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         splash.spawn(
             props(
                 ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER),
-                /* ConstKeys.ROTATION pairTo rotation, */
                 ConstKeys.TYPE pairTo Splash.SplashType.WHITE
             )
         )
@@ -107,13 +104,13 @@ class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         bodyFixture.setHitByBlockReceiver {
             GameLogger.debug(TAG, "hit block $it")
-            val direction = getOverlapPushDirection(bodyFixture.getShape(), it.body)
+            val direction = getOverlapPushDirection(bodyFixture.getShape(), it.body.getBounds())
             splash(direction?.rotation ?: 0f)
         }
         bodyFixture.setHitByBodyReceiver {
             if (!it.isAny(RainFall::class, RainDrop::class)) {
                 GameLogger.debug(TAG, "hit body $it")
-                val direction = getOverlapPushDirection(bodyFixture.getShape(), it.body)
+                val direction = getOverlapPushDirection(bodyFixture.getShape(), it.body.getBounds())
                 splash(direction?.rotation ?: 0f)
             }
         }
@@ -170,7 +167,7 @@ class RainFall(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntit
                 rainSpawners.add(rainSpawner)
             }
         }
-        deathY = spawnProps.getOrDefault("${ConstKeys.DEATH}_${ConstKeys.Y}", cullBounds.y, Float::class)
+        deathY = spawnProps.getOrDefault("${ConstKeys.DEATH}_${ConstKeys.Y}", cullBounds.getY(), Float::class)
         delayTimer = Timer(getRandom(MIN_DELAY_DUR, MAX_DELAY_DUR))
     }
 
@@ -181,7 +178,7 @@ class RainFall(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntit
             rainDrop.spawn(
                 props(
                     ConstKeys.POSITION pairTo Vector2(
-                        getRandom(rainSpawner.x, rainSpawner.getMaxX()),
+                        getRandom(rainSpawner.getX(), rainSpawner.getMaxX()),
                         rainSpawner.getPositionPoint(Position.TOP_CENTER).y
                     ),
                     ConstKeys.TRAJECTORY pairTo Vector2(0f, VELOCITY * ConstVals.PPM).rotateDeg(ANGLE),

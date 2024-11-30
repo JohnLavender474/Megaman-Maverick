@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.projectiles
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -41,6 +40,8 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
 
 class SealionBall(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProjectileEntity, ISpritesEntity,
@@ -119,15 +120,13 @@ class SealionBall(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
         val body = Body(BodyType.ABSTRACT)
         body.setSize(1.05f * ConstVals.PPM)
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
-        body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
         val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameCircle().setRadius(0.325f * ConstVals.PPM))
         body.addFixture(projectileFixture)
-        projectileFixture.getShape().color = Color.RED
-        debugShapes.add { projectileFixture.getShape() }
+        debugShapes.add { projectileFixture}
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.325f * ConstVals.PPM))
         body.addFixture(damagerFixture)
@@ -144,9 +143,9 @@ class SealionBall(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
         val sprite = GameSprite(region!!)
         sprite.setSize(2.25f * ConstVals.PPM, 1.4f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setCenter(body.getCenter())
-            _sprite.hidden = damageBlink || ballInHand
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setCenter(body.getCenter())
+            sprite.hidden = damageBlink || ballInHand
         }
         return spritesComponent
     }

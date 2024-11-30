@@ -52,7 +52,7 @@ class LavaFall(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
     }
 
     private fun defineDrawables(cells: Matrix<GameRectangle>) {
-        val sprites = OrderedMap<String, GameSprite>()
+        val sprites = OrderedMap<Any, GameSprite>()
         val animators = Array<GamePair<() -> GameSprite, IAnimator>>()
         cells.forEach { x, y, gameRectangle ->
             if (gameRectangle == null) return@forEach

@@ -2,7 +2,6 @@ package com.megaman.maverick.game.entities.special
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.OrderedMap
@@ -20,7 +19,6 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.common.shapes.toGameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -53,9 +51,9 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getEntity
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
+import com.megaman.maverick.game.world.body.*
 
 class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITeleporterEntity, IBodyEntity,
     ISpritesEntity, IAnimatedEntity, IAudioEntity, IEventListener {
@@ -234,7 +232,7 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
         val ignoredBodiesIter = ignoredBodies.iterator()
         while (ignoredBodiesIter.hasNext) {
             val entity = ignoredBodiesIter.next()
-            if ((entity as MegaGameEntity).dead || !body.overlaps(entity.body as Rectangle)) {
+            if ((entity as MegaGameEntity).dead || !body.getBounds().overlaps(entity.body.getBounds())) {
                 GameLogger.debug(TAG, "update(): remove ignored body; thisKey=$thisKey, entity=${body.getEntity()}")
                 ignoredBodiesIter.remove()
             }
@@ -251,11 +249,9 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
         val teleporterFixture = Fixture(body, FixtureType.TELEPORTER)
         teleporterFixture.attachedToBody = false
         body.addFixture(teleporterFixture)
-        debugShapes.add { teleporterFixture.getShape() }
+        debugShapes.add { teleporterFixture}
 
-        body.preProcess.put(ConstKeys.DEFAULT) {
-            teleporterFixture.getShape() = teleporterBounds!!
-        }
+        body.preProcess.put(ConstKeys.DEFAULT) { teleporterFixture.setShape(teleporterBounds!!) }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 

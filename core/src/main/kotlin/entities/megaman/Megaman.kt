@@ -10,6 +10,7 @@ import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IBoundsSupplier
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -43,8 +44,11 @@ import com.megaman.maverick.game.entities.utils.setStandardOnTeleportContinuePro
 import com.megaman.maverick.game.entities.utils.standardOnTeleportEnd
 import com.megaman.maverick.game.entities.utils.standardOnTeleportStart
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.StunType
 import com.megaman.maverick.game.world.body.BodySense
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.isSensing
 import com.megaman.maverick.game.world.body.isSensingAny
 import kotlin.math.abs
@@ -127,7 +131,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         set(value) {
             GameLogger.debug(TAG, "direction-set(): value=$value")
 
-            if (value != body.cardinalRotation) {
+            if (value != body.direction) {
                 GameLogger.debug(TAG, "direction-set(): value not same as field")
 
                 body.direction = value
@@ -211,9 +215,9 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
     var movementScalar = 1f
         set(value) {
             field = value
-            animators.forEach {
-                val animator = it.second
-                if (animator is Animator) animator.updateScalar = value
+            forEachAnimator { key, sprite, animator ->
+                animator as Animator
+                animator.updateScalar = value
             }
         }
 
@@ -461,7 +465,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         if (canMove && !isBehaviorActive(BehaviorType.RIDING_CART) && !noDmgBounce.contains(damager::class) &&
             damager is GameEntity && damager.hasComponent(BodyComponent::class)
         ) {
-            val enemyBody = damager.getComponent(BodyComponent::class)!!.body
+            val enemyBody = damager.getComponent(BodyComponent::class)!!.body.getBounds()
             stunBounce(enemyBody)
         }
 

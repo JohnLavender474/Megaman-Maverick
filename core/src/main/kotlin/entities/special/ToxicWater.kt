@@ -70,7 +70,7 @@ class ToxicWater(game: MegamanMaverickGame): MegaGameEntity(game), ISpritesEntit
     }
 
     private fun defineDrawables(bounds: GameRectangle) {
-        val sprites = OrderedMap<String, GameSprite>()
+        val sprites = OrderedMap<Any, GameSprite>()
         val animators = Array<GamePair<() -> GameSprite, IAnimator>>()
 
         val rows = (bounds.getHeight() / (0.5f * ConstVals.PPM)).toInt()

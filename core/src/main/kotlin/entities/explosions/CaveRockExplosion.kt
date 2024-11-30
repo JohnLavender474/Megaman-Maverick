@@ -37,6 +37,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getCenter
 
 class CaveRockExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IDamager, IBodyEntity, IAudioEntity,
     ISpritesEntity, IAnimatedEntity {
@@ -77,8 +78,8 @@ class CaveRockExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IDama
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(1f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        damagerFixture.getShape().color = Color.RED
-        debugShapes.add { damagerFixture.getShape() }
+        damagerFixture.drawingColor = Color.RED
+        debugShapes.add { damagerFixture}
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
@@ -94,9 +95,7 @@ class CaveRockExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IDama
         val sprite = GameSprite()
         sprite.setSize(2.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setCenter(body.getCenter())
-        }
+        spritesComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
         return spritesComponent
     }
 

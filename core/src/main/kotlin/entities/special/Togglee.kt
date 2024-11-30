@@ -1,9 +1,7 @@
 package com.megaman.maverick.game.entities.special
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
-import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
@@ -13,7 +11,11 @@ import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
-import com.mega.game.engine.common.extensions.*
+import com.mega.game.engine.common.extensions.equalsAny
+import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -51,11 +53,10 @@ import com.megaman.maverick.game.entities.hazards.Lava
 import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntitySuppliers
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType.SPAWN_ROOM
+import com.megaman.maverick.game.utils.LoopedSuppliers
 import com.megaman.maverick.game.utils.MegaUtilMethods
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.setHitByPlayerReceiver
-import com.megaman.maverick.game.world.body.setHitByProjectileReceiver
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.world.body.*
 
 class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IParentEntity, ISpritesEntity,
     IAnimatedEntity, IFontsEntity, IAudioEntity, IDirectional, IDamager, IEventListener {
@@ -138,13 +139,15 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
 
         type = spawnProps.get(ConstKeys.TYPE, String::class)!!
 
-        val size = when (type) {
-            ENEMY_TYPE -> vector2Of(2f)
-            LEVER_TYPE -> vector2Of(0.75f)
-            SWITCHAROO_ARROW_TYPE -> Vector2(3f, 6f)
+        val size = LoopedSuppliers.getVector2()
+        when (type) {
+            ENEMY_TYPE -> size.set(2f, 2f)
+            LEVER_TYPE -> size.set(0.75f, 0.75f)
+            SWITCHAROO_ARROW_TYPE -> size.set(3f, 6f)
             else -> throw IllegalStateException("Invalid type: $type")
-        }.scl(ConstVals.PPM.toFloat())
-        body.setSize(size)
+        }
+        size.scl(ConstVals.PPM.toFloat())
+        body.setSize(size.x, size.y)
 
         position = Position.valueOf(spawnProps.getOrDefault(ConstKeys.POSITION, "center", String::class).uppercase())
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(position)
@@ -248,17 +251,15 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
             if (type != SWITCHAROO_ARROW_TYPE && switchTimer.isFinished()) switchToggleeState()
         }
         body.addFixture(bodyFixture)
-        bodyFixture.getShape().color = Color.GRAY
-        debugShapes.add { bodyFixture.getShape() }
+        debugShapes.add { bodyFixture}
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(ConstVals.PPM.toFloat()))
         body.addFixture(damagerFixture)
-        damagerFixture.getShape().color = Color.RED
-        debugShapes.add { if (damagerFixture.active) damagerFixture.getShape() else null }
+        debugShapes.add { if (damagerFixture.isActive()) damagerFixture.getShape() else null }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            (bodyFixture.getShape() as GameRectangle).set(body)
-            damagerFixture.active = type == ENEMY_TYPE && !moving
+            (bodyFixture.rawShape as GameRectangle).set(body)
+            damagerFixture.setActive(type == ENEMY_TYPE && !moving)
             damagerFixture.offsetFromBodyAttachment.x =
                 if (type == ENEMY_TYPE) (if (on) 0.5f else -0.5f) * ConstVals.PPM else 0f
         }
@@ -271,16 +272,18 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { delta, _sprite ->
-            val size = when (type) {
-                LEVER_TYPE -> vector2Of(0.75f)
-                ENEMY_TYPE -> vector2Of(2f)
-                SWITCHAROO_ARROW_TYPE -> vector2Of(6f)
+        spritesComponent.putUpdateFunction { delta, _ ->
+            val size = LoopedSuppliers.getVector2()
+            when (type) {
+                LEVER_TYPE -> size.set(0.75f, 0.75f)
+                ENEMY_TYPE -> size.set(2f, 2f)
+                SWITCHAROO_ARROW_TYPE -> size.set(6f, 6f)
                 else -> throw IllegalStateException("Unknown type: $type")
-            }.scl(ConstVals.PPM.toFloat())
-            _sprite.setSize(size)
-            _sprite.setPosition(body.getPositionPoint(position), position)
-            _sprite.setFlip(false, type == SWITCHAROO_ARROW_TYPE && on)
+            }
+            size.scl(ConstVals.PPM.toFloat())
+            sprite.setSize(size)
+            sprite.setPosition(body.getPositionPoint(position), position)
+            sprite.setFlip(false, type == SWITCHAROO_ARROW_TYPE && on)
             if (type == SWITCHAROO_ARROW_TYPE) {
                 switcharooArrowBlinkTimer.update(delta)
                 if (switcharooArrowBlinkTimer.isFinished()) {
@@ -289,7 +292,7 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
                     switcharooArrowBlinkTimer.reset()
                 }
             }
-            _sprite.setAlpha(if (type == SWITCHAROO_ARROW_TYPE) switcharooAlpha else 1f)
+            sprite.setAlpha(if (type == SWITCHAROO_ARROW_TYPE) switcharooAlpha else 1f)
         }
         return spritesComponent
     }

@@ -90,7 +90,7 @@ open class DynamicBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
         body.addFixture(bodyFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            (bodyFixture.getShape() as GameRectangle).set(body)
+            (bodyFixture.rawShape as GameRectangle).set(body)
         }
 
         return BodyComponentCreator.create(this, body)

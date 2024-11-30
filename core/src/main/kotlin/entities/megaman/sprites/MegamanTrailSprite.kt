@@ -21,6 +21,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
+import com.megaman.maverick.game.world.body.getPositionPoint
 
 class MegamanTrailSprite(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
 

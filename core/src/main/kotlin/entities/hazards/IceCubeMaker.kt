@@ -10,7 +10,6 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.common.shapes.toGameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
@@ -33,7 +32,11 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.HazardsFactory
+import com.megaman.maverick.game.utils.LoopedSuppliers
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.getPositionPoint
 
 class IceCubeMaker(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, ICullableEntity,
     IAudioEntity {
@@ -75,7 +78,9 @@ class IceCubeMaker(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        if (runBounds != null && !game.getGameCamera().overlaps(runBounds!!)) return@UpdatablesComponent
+        if (runBounds != null && !game.getGameCamera()
+                .overlaps(runBounds!!, LoopedSuppliers.getBoundingBox())
+        ) return@UpdatablesComponent
 
         delayTimer.update(delta)
         if (delayTimer.isFinished()) {

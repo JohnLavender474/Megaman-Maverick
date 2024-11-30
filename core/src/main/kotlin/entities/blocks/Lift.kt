@@ -81,11 +81,11 @@ class Lift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IDirectiona
         headFixture.setEntity(this)
         headFixture.offsetFromBodyAttachment.y = 0.5f * ConstVals.PPM
         body.addFixture(headFixture)
-        debugShapeSuppliers.add { headFixture.getShape() }
+        debugShapeSuppliers.add { headFixture}
 
         /*
         body.preProcess.put(ConstKeys.HEAD) {
-            (headFixture.getShape() as GameRectangle).setSize(
+            (headFixture.rawShape as GameRectangle).setSize(
                 when (direction) {
                     Direction.UP, Direction.DOWN -> Vector2(
                         ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM

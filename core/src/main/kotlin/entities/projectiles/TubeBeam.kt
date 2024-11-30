@@ -8,6 +8,7 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -28,8 +29,12 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.utils.LoopedSuppliers
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.world.body.getSize
 
 class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IDirectional {
 
@@ -57,8 +62,16 @@ class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         direction = spawnProps.get(ConstKeys.DIRECTION, Direction::class)!!
         trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
 
-        val size = if (direction?.isHorizontal() == true) Vector2(2f, 0.75f) else Vector2(0.75f, 2f)
-        body.setSize(size.scl(ConstVals.PPM.toFloat()))
+        val size = LoopedSuppliers.getVector2()
+        if (direction.isHorizontal()) {
+            size.x = 2f
+            size.y = 0.75f
+        } else {
+            size.x = 0.75f
+            size.y = 2f
+        }
+        size.scl(ConstVals.PPM.toFloat())
+        body.setSize(size.x, size.y)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
@@ -82,10 +95,10 @@ class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.velocity.set(trajectory)
-            (damagerFixture.getShape() as GameRectangle).setSize(body.getSize())
+            (damagerFixture.rawShape as GameRectangle).setSize(body.getSize())
         }
 
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -94,10 +107,10 @@ class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         val sprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, 0))
         sprite.setSize(2f * ConstVals.PPM, 0.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setOriginCenter()
-            _sprite.rotation = if (direction?.isHorizontal() == true) 0f else 90f
-            _sprite.setCenter(body.getCenter())
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setOriginCenter()
+            sprite.rotation = if (direction.isHorizontal()) 0f else 90f
+            sprite.setCenter(body.getCenter())
         }
         return spritesComponent
     }

@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.MathUtils
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
@@ -22,8 +23,6 @@ class RotatableCamera(var onJustFinishedRotating: (() -> Unit)? = null, var prin
      * Should not set this value directly. Instead, call [startRotation].
      */
     override var direction = Direction.UP
-
-    private val reusableRect = GameRectangle()
 
     private var accumulator = 0f
     private var startRot = 0f
@@ -52,7 +51,7 @@ class RotatableCamera(var onJustFinishedRotating: (() -> Unit)? = null, var prin
                 "update(): FINISH ROTATION: " +
                     "startRot=$startRot, " +
                     "totRot=$totRot, " +
-                    "cam_direction=$directionRotation, " +
+                    "cam_direction=$direction, " +
                     "cam_pos=$position, " +
                     "cam_rotated_bounds=${getRotatedBounds()}"
             )
@@ -69,7 +68,11 @@ class RotatableCamera(var onJustFinishedRotating: (() -> Unit)? = null, var prin
         totRot += degrees
     }
 
-    fun getRotatedBounds() = toGameRectangle(reusableRect).getCardinallyRotatedShape(direction)
+    fun getRotatedBounds(): GameRectangle {
+        val rect = toGameRectangle()
+        rect.rotate(direction.rotation, position.x, position.y)
+        return rect
+    }
 
     fun coerceIntoBounds(bounds: GameRectangle) {
         val adjVpWidth: Float
@@ -96,12 +99,12 @@ class RotatableCamera(var onJustFinishedRotating: (() -> Unit)? = null, var prin
         if (printDebug) GameLogger.debug(
             TAG,
             "update(): START ROTATION: " +
-                "cam_direction=$directionRotation, " +
+                "cam_direction=$direction, " +
                 "cam_pos=$position, " +
                 "cam_rotated_bounds=${getRotatedBounds()}"
         )
 
-        direction = direction
+        this.direction = direction
         startRotation(direction.rotation, time)
     }
 
@@ -120,7 +123,7 @@ class RotatableCamera(var onJustFinishedRotating: (() -> Unit)? = null, var prin
         rotFinished = false
         GameLogger.debug(
             TAG,
-            "startRotation(): startRot=$startRot, rotAmount=$rotAmount, rotTime=$rotTime, rotFinished=$rotFinished"
+            "startRotation(): startRot=$startRot, rotAmount=$rotAmount, rotTime=$rotTime"
         )
     }
 

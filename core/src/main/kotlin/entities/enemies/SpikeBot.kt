@@ -48,6 +48,8 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.LoopedSuppliers
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
@@ -90,7 +92,7 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
     )
     override lateinit var facing: Facing
 
-    private val loop = Loop(SpikeBotState.values().toGdxArray())
+    private val loop = Loop(SpikeBotState.entries.toTypedArray().toGdxArray())
     private val timers = objectMapOf(
         "stand" pairTo Timer(STAND_DUR),
         "shoot" pairTo Timer(SHOOT_DUR, gdxArrayOf(TimeMarkedRunnable(SHOOT_TIME) { shoot() })),
@@ -124,7 +126,8 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
     private fun shoot() {
         for (i in 0 until NEEDLES) {
             val xOffset = xOffsets[i]
-            val position = body.getPositionPoint(Position.TOP_CENTER).add(xOffset * ConstVals.PPM, NEEDLE_Y_OFFSET * ConstVals.PPM)
+            val position =
+                body.getPositionPoint(Position.TOP_CENTER).add(xOffset * ConstVals.PPM, NEEDLE_Y_OFFSET * ConstVals.PPM)
 
             val angle = angles[i]
             val impulse = Vector2(0f, NEEDLE_IMPULSE * ConstVals.PPM).rotateDeg(angle).scl(movementScalar)
@@ -183,7 +186,7 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         val body = Body(BodyType.DYNAMIC)
         body.setSize(0.75f * ConstVals.PPM)
         body.physics.applyFrictionX = false
-body.physics.applyFrictionY = false
+        body.physics.applyFrictionY = false
         body.putProperty(LEFT_FOOT, false)
         body.putProperty(RIGHT_FOOT, false)
 
@@ -203,32 +206,33 @@ body.physics.applyFrictionY = false
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -0.375f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.getShape().color = Color.GREEN
-        debugShapes.add { feetFixture.getShape() }
+        feetFixture.drawingColor = Color.GREEN
+        debugShapes.add { feetFixture }
 
         val leftSideFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         leftSideFixture.offsetFromBodyAttachment.x = -0.375f * ConstVals.PPM
         leftSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftSideFixture)
-        leftSideFixture.getShape().color = Color.YELLOW
-        debugShapes.add { leftSideFixture.getShape() }
+        leftSideFixture.drawingColor = Color.YELLOW
+        debugShapes.add { leftSideFixture }
 
         val rightSideFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         rightSideFixture.offsetFromBodyAttachment.x = 0.375f * ConstVals.PPM
         rightSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightSideFixture)
-        rightSideFixture.getShape().color = Color.YELLOW
-        debugShapes.add { rightSideFixture.getShape() }
+        rightSideFixture.drawingColor = Color.YELLOW
+        debugShapes.add { rightSideFixture }
 
         val leftFootFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
         leftFootFixture.setConsumer { _, fixture ->
             if (fixture.getType() == FixtureType.BLOCK)
                 body.putProperty("${ConstKeys.LEFT}_${ConstKeys.FOOT}", true)
         }
-        leftFootFixture.offsetFromBodyAttachment = vector2Of(-0.375f * ConstVals.PPM)
+        leftFootFixture.offsetFromBodyAttachment =
+            LoopedSuppliers.getVector2().set(-0.375f, -0.375f).scl(ConstVals.PPM.toFloat())
         body.addFixture(leftFootFixture)
-        leftFootFixture.getShape().color = Color.ORANGE
-        debugShapes.add { leftFootFixture.getShape() }
+        leftFootFixture.drawingColor = Color.ORANGE
+        debugShapes.add { leftFootFixture }
 
         val rightFootFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
         rightFootFixture.setConsumer { _, fixture ->
@@ -238,8 +242,8 @@ body.physics.applyFrictionY = false
         rightFootFixture.offsetFromBodyAttachment.x = 0.375f * ConstVals.PPM
         rightFootFixture.offsetFromBodyAttachment.y = -0.375f * ConstVals.PPM
         body.addFixture(rightFootFixture)
-        rightFootFixture.getShape().color = Color.ORANGE
-        debugShapes.add { rightFootFixture.getShape() }
+        rightFootFixture.drawingColor = Color.ORANGE
+        debugShapes.add { rightFootFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.putProperty(LEFT_FOOT, false)

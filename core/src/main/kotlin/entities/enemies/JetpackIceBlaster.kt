@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.enemies
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
@@ -17,14 +16,12 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.interfaces.IFaceable
-
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameLine
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.common.shapes.getCenter
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
@@ -59,10 +56,8 @@ import com.megaman.maverick.game.entities.megaman.components.damageableFixture
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodySense
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.isSensing
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDrawableShapesEntity,
@@ -108,7 +103,7 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
     )
     override lateinit var facing: Facing
 
-    private val loop = Loop(JetpackIceShooterState.values().toGdxArray())
+    private val loop = Loop(JetpackIceShooterState.entries.toTypedArray().toGdxArray())
     private val flyToTargetTimer = Timer(FLY_TO_TARGET_MAX_DUR)
     private val shootTimer = Timer(SHOOT_DUR, gdxArrayOf(TimeMarkedRunnable(0.25f) { shoot() }))
 
@@ -125,7 +120,7 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-            DistanceType.values().forEach { d ->
+            DistanceType.entries.forEach { d ->
                 val regionKey = "${d.name.lowercase()}_thrust"
                 val region =
                     atlas.findRegion("$TAG/$regionKey") ?: throw IllegalStateException("Region is null: $regionKey")
@@ -221,7 +216,7 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
         var bestDistance = Float.MAX_VALUE
         lateinit var bestType: DistanceType
 
-        DistanceType.values().forEach {
+        DistanceType.entries.forEach {
             val line = calculateAimLine(it)
             GameLogger.debug(
                 TAG,
@@ -340,15 +335,13 @@ body.physics.applyFrictionY = false
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -0.575f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.getShape().color = Color.GRAY
-        debugShapes.add { feetFixture.getShape() }
+        debugShapes.add { feetFixture}
 
         val headFixture =
             Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         headFixture.offsetFromBodyAttachment.y = 0.575f * ConstVals.PPM
         body.addFixture(headFixture)
-        headFixture.getShape().color = Color.BLUE
-        debugShapes.add { headFixture.getShape() }
+        debugShapes.add { headFixture}
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
@@ -359,10 +352,10 @@ body.physics.applyFrictionY = false
         val sprite = GameSprite()
         sprite.setSize(1.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setCenter(body.getCenter())
-            _sprite.hidden = damageBlink
-            _sprite.setFlip(isFacing(Facing.LEFT), false)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setCenter(body.getCenter())
+            sprite.hidden = damageBlink
+            sprite.setFlip(isFacing(Facing.LEFT), false)
         }
         return spritesComponent
     }
@@ -370,7 +363,7 @@ body.physics.applyFrictionY = false
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { "${distanceType.name.lowercase()}_thrust" }
         val animations = objectMapOf<String, IAnimation>()
-        DistanceType.values().forEach { d ->
+        DistanceType.entries.forEach { d ->
             val regionKey = "${d.name.lowercase()}_thrust"
             val region = regions[regionKey]
             animations.put(regionKey, Animation(region!!, 2, 1, 0.1f, true))

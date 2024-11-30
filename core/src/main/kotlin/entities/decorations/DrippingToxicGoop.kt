@@ -52,7 +52,7 @@ class DrippingToxicGoop(game: MegamanMaverickGame) : MegaGameEntity(game), ICull
     }
 
     private fun defineDrawables(bounds: GameRectangle) {
-        val sprites = OrderedMap<String, GameSprite>()
+        val sprites = OrderedMap<Any, GameSprite>()
         val animators = Array<GamePair<() -> GameSprite, IAnimator>>()
 
         val rows = (bounds.getHeight() / ConstVals.PPM).toInt()

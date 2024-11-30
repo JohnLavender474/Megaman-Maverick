@@ -8,14 +8,13 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.UtilMethods.getRandomBool
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.getRandomBool
 import com.mega.game.engine.common.interfaces.IFaceable
-
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -48,8 +47,11 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.world.body.getPositionPoint
 import kotlin.reflect.KClass
 
 class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
@@ -203,41 +205,43 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle())
         body.addFixture(bodyFixture)
-        bodyFixture.getShape().color = Color.GRAY
-        debugShapes.add { bodyFixture.getShape() }
+        bodyFixture.drawingColor = Color.GRAY
+        debugShapes.add { bodyFixture }
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
         body.addFixture(damagerFixture)
-        damagerFixture.getShape().color = Color.RED
-        debugShapes.add { damagerFixture.getShape() }
+        damagerFixture.drawingColor = Color.RED
+        debugShapes.add { damagerFixture }
 
         val damageableFixture = Fixture(
             body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.85f * ConstVals.PPM, 0.65f * ConstVals.PPM)
         )
         damageableFixture.attachedToBody = false
         body.addFixture(damageableFixture)
-        damageableFixture.getShape().color = Color.PURPLE
-        debugShapes.add { damageableFixture.getShape() }
+        damageableFixture.drawingColor = Color.PURPLE
+        debugShapes.add { damageableFixture }
 
         val shieldFixture = Fixture(
             body, FixtureType.SHIELD, GameRectangle().setSize(0.65f * ConstVals.PPM, 0.85f * ConstVals.PPM)
         )
         body.addFixture(shieldFixture)
-        shieldFixture.getShape().color = Color.CYAN
-        debugShapes.add { shieldFixture.getShape() }
+        shieldFixture.drawingColor = Color.CYAN
+        debugShapes.add { shieldFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            body.height = if (toxicBarrelBotState.equalsAny(
-                    ToxicBarrelBotState.OPENING_TOP,
-                    ToxicBarrelBotState.OPEN_TOP,
-                    ToxicBarrelBotState.CLOSING_TOP
-                )
-            ) 1.5f * ConstVals.PPM else 0.85f * ConstVals.PPM
+            body.setHeight(
+                if (toxicBarrelBotState.equalsAny(
+                        ToxicBarrelBotState.OPENING_TOP,
+                        ToxicBarrelBotState.OPEN_TOP,
+                        ToxicBarrelBotState.CLOSING_TOP
+                    )
+                ) 1.5f * ConstVals.PPM else 0.85f * ConstVals.PPM
+            )
             body.setBottomCenterToPoint(position)
 
             body.fixtures.forEach { entry ->
                 val fixture = entry.second as Fixture
-                val bounds = fixture.getShape() as GameRectangle
+                val bounds = fixture.rawShape as GameRectangle
 
                 when (fixture.getType()) {
                     FixtureType.DAMAGEABLE -> {
@@ -256,7 +260,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
                         }
                         center.x += 0.2f * ConstVals.PPM * facing.value
                         bounds.setCenter(center)
-                        fixture.active = toxicBarrelBotState != ToxicBarrelBotState.CLOSED
+                        fixture.setActive(toxicBarrelBotState != ToxicBarrelBotState.CLOSED)
                     }
 
                     FixtureType.SHIELD -> bounds.setBottomCenterToPoint(body.getPositionPoint(Position.BOTTOM_CENTER))

@@ -10,7 +10,7 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.*
-import com.mega.game.engine.common.interfaces.Updatable
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -49,6 +49,7 @@ import com.megaman.maverick.game.entities.decorations.Splash
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
 class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, ISpritesEntity, IAnimatedEntity,
@@ -117,8 +118,8 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
         body.setSize((if (large) 0.5f else 0.25f) * ConstVals.PPM)
         body.setCenter(spawn)
 
-        (itemFixture.getShape() as GameRectangle).set(body)
-        (waterListenerFixture.getShape() as GameRectangle).set(body)
+        (itemFixture.rawShape as GameRectangle).set(body)
+        (waterListenerFixture.rawShape as GameRectangle).set(body)
         feetFixture.offsetFromBodyAttachment.y = (if (large) -0.25f else -0.125f) * ConstVals.PPM
 
         warning = false
@@ -152,24 +153,24 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
 
         itemFixture = Fixture(body, FixtureType.ITEM, GameRectangle())
         body.addFixture(itemFixture)
-        itemFixture.getShape().color = Color.PURPLE
-        debugShapes.add { itemFixture.getShape() }
+        itemFixture.drawingColor = Color.PURPLE
+        debugShapes.add { itemFixture}
 
         feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.1f * ConstVals.PPM))
         body.addFixture(feetFixture)
-        feetFixture.getShape().color = Color.GREEN
-        debugShapes.add { feetFixture.getShape() }
+        feetFixture.drawingColor = Color.GREEN
+        debugShapes.add { feetFixture}
 
         waterListenerFixture = Fixture(body, FixtureType.WATER_LISTENER, GameRectangle())
         waterListenerFixture.setHitWaterByReceiver {
             body.physics.velocity.setZero()
             gravity = WATER_GRAVITY
             velClamp = WATER_VEL_CLAMP
-            Splash.splashOnWaterSurface(body, it.body)
+            Splash.splashOnWaterSurface(body.getBounds(), it.body.getBounds())
         }
         body.addFixture(waterListenerFixture)
 
-        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.velocityClamp.set(velClamp * ConstVals.PPM)
 
             if (body.isSensingAny(BodySense.FEET_ON_GROUND, BodySense.FEET_ON_SAND)) {
@@ -186,7 +187,7 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
             }
 
             feetFixture.putProperty(ConstKeys.STICK_TO_BLOCK, !body.isSensing(BodySense.FEET_ON_SAND))
-        })
+        }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 

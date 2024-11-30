@@ -11,7 +11,6 @@ import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
-import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -37,11 +36,8 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodySense
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.isSensing
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.world.body.*
 import com.megaman.maverick.game.world.contacts.MegaContactListener
 import kotlin.math.abs
 import kotlin.reflect.KClass
@@ -117,26 +113,26 @@ class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
         body.addFixture(damagerFixture)
 
-        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
-            val feetBounds = feetFixture.getShape() as GameRectangle
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            val feetBounds = feetFixture.rawShape as GameRectangle
             if (standing || jumping) {
                 body.setSize(0.9f * ConstVals.PPM, 1.25f * ConstVals.PPM)
-                feetBounds.width = 0.65f * ConstVals.PPM
+                feetBounds.setWidth(0.65f * ConstVals.PPM)
                 feetFixture.offsetFromBodyAttachment.y = -0.625f * ConstVals.PPM
             } else {
                 body.setSize(ConstVals.PPM.toFloat(), 0.75f * ConstVals.PPM)
-                feetBounds.width = 0.9f * ConstVals.PPM.toFloat()
+                feetBounds.setWidth(0.9f * ConstVals.PPM.toFloat())
                 feetFixture.offsetFromBodyAttachment.y = -0.375f * ConstVals.PPM
             }
 
-            (damageableFixture.getShape() as GameRectangle).set(body)
-            (damagerFixture.getShape() as GameRectangle).set(body)
+            (damageableFixture.rawShape as GameRectangle).set(body)
+            (damagerFixture.rawShape as GameRectangle).set(body)
 
             body.physics.gravity.y =
                 (if (body.isSensing(BodySense.FEET_ON_GROUND)) G_GRAV else GRAV) * ConstVals.PPM
 
             if (sliding) body.physics.velocity.x = SLIDE_X * ConstVals.PPM * facing.value
-        })
+        }
 
         return BodyComponentCreator.create(this, body)
     }

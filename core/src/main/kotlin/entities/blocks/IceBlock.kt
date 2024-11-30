@@ -24,6 +24,6 @@ open class IceBlock(game: MegamanMaverickGame) : Block(game) {
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        (ice.getShape() as GameRectangle).set(body)
+        (ice.rawShape as GameRectangle).set(body)
     }
 }

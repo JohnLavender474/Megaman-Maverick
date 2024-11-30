@@ -19,6 +19,8 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.TEXTURE_ASSET_PREFIX
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.drawables.backgrounds.*
+import com.megaman.maverick.game.utils.LoopedSuppliers
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toProps
 
 class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITiledMapLayerBuilder {
@@ -39,7 +41,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
         "WindyClouds" pairTo {
             WindyClouds(
                 params.game,
-                it.rectangle.getPosition(),
+                it.rectangle.getPosition(LoopedSuppliers.getVector2()),
                 it.rectangle.width,
                 it.rectangle.height
             )
@@ -47,13 +49,13 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
         "AnimatedStars" pairTo {
             AnimatedStars(
                 params.game,
-                it.rectangle.getPosition()
+                it.rectangle.getPosition(LoopedSuppliers.getVector2())
             )
         },
         "ScrollingStars" pairTo {
             ScrollingStars(
                 params.game,
-                it.rectangle.getPosition()
+                it.rectangle.getPosition(LoopedSuppliers.getVector2())
             )
         },
         "ForestBKG" pairTo {

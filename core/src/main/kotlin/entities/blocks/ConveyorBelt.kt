@@ -76,7 +76,7 @@ class ConveyorBelt(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAn
         forceFixture!!.offsetFromBodyAttachment.y = ConstVals.PPM / 8f
         forceFixture!!.setEntity(this)
         body.addFixture(forceFixture!!)
-        addDebugShapeSupplier { forceFixture!!.getShape() }
+        addDebugShapeSupplier { forceFixture!!}
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -84,7 +84,7 @@ class ConveyorBelt(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAn
         super.onSpawn(spawnProps)
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS) as Rectangle
-        (forceFixture!!.getShape() as GameRectangle).setSize(bounds.getWidth() - ConstVals.PPM / 4f, bounds.getHeight())
+        (forceFixture!!.rawShape as GameRectangle).setSize(bounds.getWidth() - ConstVals.PPM / 4f, bounds.getHeight())
 
         val left = spawnProps.get(ConstKeys.LEFT) as Boolean
 

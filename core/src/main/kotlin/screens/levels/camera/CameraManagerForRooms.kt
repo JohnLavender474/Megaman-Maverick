@@ -5,19 +5,20 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.UtilMethods.getOverlapPushDirection
+import com.mega.game.engine.common.UtilMethods.getSingleMostDirectionFromStartToTarget
+import com.mega.game.engine.common.UtilMethods.interpolate
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.toVector2
-import com.mega.game.engine.common.getOverlapPushDirection
-import com.mega.game.engine.common.getSingleMostDirectionFromStartToTarget
 import com.mega.game.engine.common.interfaces.IBoundsSupplier
 import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.interfaces.Updatable
-import com.mega.game.engine.common.interpolate
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.common.shapes.getCenter
-import com.mega.game.engine.common.shapes.toGameRectangle
 import com.mega.game.engine.common.time.Timer
+import com.megaman.maverick.game.utils.LoopedSuppliers
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import kotlin.math.min
 
 class CameraManagerForRooms(
@@ -71,7 +72,7 @@ class CameraManagerForRooms(
         else {
             val startCopy = focusStart.cpy()
             val targetCopy = focusTarget.cpy()
-            interpolate(startCopy, targetCopy, transitionTimerRatio)
+            interpolate(startCopy, targetCopy, transitionTimerRatio, LoopedSuppliers.getVector2())
         }
     val delayJustFinished: Boolean
         get() = delayTimer.isJustFinished()
@@ -114,7 +115,7 @@ class CameraManagerForRooms(
 
     private fun setTransitionValues(next: Rectangle) {
         transitionState = ProcessState.BEGIN
-        transitionStart.set(camera.position.toVector2())
+        transitionStart.set(camera.position.toVector2(LoopedSuppliers.getVector2()))
         transitionTarget.set(transitionStart)
         focusStart.set(focus!!.getBounds().getCenter())
         focusTarget.set(focusStart)
@@ -158,17 +159,17 @@ class CameraManagerForRooms(
 
         if (focus == null) return
 
-        if (currentGameRoom != null && !currentGameRoom!!.rectangle.overlaps(focus!!.getBounds()))
+        if (currentGameRoom != null && !currentGameRoom!!.rectangle.toGameRectangle().overlaps(focus!!.getBounds()))
             currentGameRoom = null
 
         val currentRoomBounds = currentGameRoom?.rectangle?.toGameRectangle() ?: return
-        if (currentRoomBounds.overlaps(focus!!.getBounds() as Rectangle)) {
+        if (currentRoomBounds.overlaps(focus!!.getBounds())) {
             setCameraToFocusable()
             camera.coerceIntoBounds(currentRoomBounds)
         }
 
         for (room in gameRooms!!) {
-            if (room.rectangle.overlaps(focus!!.getBounds()) && room.name != currentGameRoomKey) {
+            if (room.rectangle.toGameRectangle().overlaps(focus!!.getBounds()) && room.name != currentGameRoomKey) {
                 val boundingBox = GameRectangle()
                     .setSize(transitionScannerDimensions.x, transitionScannerDimensions.y)
                     .setCenter(focus!!.getBounds().getCenter())
@@ -207,7 +208,8 @@ class CameraManagerForRooms(
                 if (!delayTimer.isFinished()) return
                 transTimer.update(delta)
 
-                val pos = interpolate(transitionStart, transitionTarget, transitionTimerRatio)
+                val pos =
+                    interpolate(transitionStart, transitionTarget, transitionTimerRatio, LoopedSuppliers.getVector2())
                 camera.position.x = pos.x
                 camera.position.y = pos.y
 

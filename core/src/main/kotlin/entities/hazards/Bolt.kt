@@ -10,6 +10,7 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullablesComponent
@@ -21,6 +22,7 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.*
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
@@ -36,6 +38,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getPositionPoint
 
 class Bolt(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IHazard, IDamager, ISpritesEntity,
     IAnimatedEntity, ICullableEntity, IChildEntity, IDirectional {
@@ -47,12 +50,13 @@ class Bolt(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IHaza
         private val BODY_SIZE = Vector2(0.15f * ConstVals.PPM, ConstVals.PPM.toFloat())
     }
 
-    override var parent: GameEntity? = null
+    override var parent: IGameEntity? = null
     override var direction: Direction
         get() = body.direction
         set(value) {
             body.direction = value
         }
+
     var scale = 1f
 
     override fun init() {
@@ -96,11 +100,11 @@ class Bolt(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IHaza
         val debugShapes = Array<() -> IDrawableShape?>()
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
         body.addFixture(damagerFixture)
-        damagerFixture.getShape().color = Color.RED
-        debugShapes.add { damagerFixture.getShape() }
+        damagerFixture.drawingColor = Color.RED
+        debugShapes.add { damagerFixture}
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.setSize(BODY_SIZE.cpy().scl(scale))
-            (damagerFixture.getShape() as GameRectangle).set(body)
+            (damagerFixture.rawShape as GameRectangle).set(body)
         }
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
         return BodyComponentCreator.create(this, body)
@@ -109,19 +113,18 @@ class Bolt(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IHaza
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
+        spritesComponent.putUpdateFunction { _, _ ->
             sprite.setSize(ConstVals.PPM.toFloat() * scale)
-            _sprite.setOriginCenter()
-            _sprite.rotation = direction?.rotation ?: 0f
+            sprite.setOriginCenter()
+            sprite.rotation = direction.rotation
             val position = when (direction) {
                 Direction.UP -> Position.BOTTOM_CENTER
                 Direction.DOWN -> Position.TOP_CENTER
                 Direction.LEFT -> Position.CENTER_RIGHT
                 Direction.RIGHT -> Position.CENTER_LEFT
-                else -> Position.BOTTOM_CENTER
             }
             val bodyPosition = body.getPositionPoint(position)
-            _sprite.setPosition(bodyPosition, position)
+            sprite.setPosition(bodyPosition, position)
         }
         return spritesComponent
     }

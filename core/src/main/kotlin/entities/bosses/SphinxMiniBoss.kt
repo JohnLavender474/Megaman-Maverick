@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.bosses
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -10,12 +9,12 @@ import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.UtilMethods.getRandom
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.toGdxArray
-import com.mega.game.engine.common.getRandom
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -50,8 +49,8 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.SphinxBall
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, IDrawableShapesEntity {
@@ -64,8 +63,6 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
         private const val LAUGH_DUR = 0.5f
         private const val BALL_SPEED = 3f
         private const val ORB_SPEED = 8f
-        private const val MAX_CHUNK_ORB_IMPULSE = 10f
-        private const val CHUNK_X_SCALAR = 1.25f
         private const val MIN_SHOOT_ORB_ANGLE = 45f
         private const val MAX_SHOOT_ORB_ANGLE = 100f
         private val chinOffsets = gdxArrayOf(
@@ -130,7 +127,6 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
         }
         super.init()
         addComponent(defineAnimationsComponent())
-        chinBounds.color = Color.BLUE
         addDebugShapeSupplier { chinBounds }
     }
 
@@ -139,7 +135,7 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
         GameLogger.debug(TAG, "spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomRightPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_RIGHT)
         body.setBottomRightToPoint(spawn)
 
         loop.reset()
@@ -241,7 +237,6 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(7.25f * ConstVals.PPM, 4.5f * ConstVals.PPM)
-        body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
@@ -254,7 +249,7 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
         bodyFixture1.offsetFromBodyAttachment.x = 0.5f * ConstVals.PPM
         bodyFixture1.offsetFromBodyAttachment.y = -1.125f * ConstVals.PPM
         body.addFixture(bodyFixture1)
-        debugShapes.add { bodyFixture1.getShape() }
+        debugShapes.add { bodyFixture1}
 
         val bodyFixture2 = Fixture(
             body, FixtureType.BODY, GameRectangle().setSize(
@@ -264,7 +259,7 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
         bodyFixture2.offsetFromBodyAttachment.x = -0.25f * ConstVals.PPM
         bodyFixture2.offsetFromBodyAttachment.y = 0.5f * ConstVals.PPM
         body.addFixture(bodyFixture2)
-        debugShapes.add { bodyFixture2.getShape() }
+        debugShapes.add { bodyFixture2}
 
         val bodyFixture3 = Fixture(
             body, FixtureType.BODY, GameRectangle().setSize(
@@ -274,13 +269,13 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
         bodyFixture3.offsetFromBodyAttachment.x = -0.85f * ConstVals.PPM
         bodyFixture3.offsetFromBodyAttachment.y = 1.75f * ConstVals.PPM
         body.addFixture(bodyFixture3)
-        debugShapes.add { bodyFixture3.getShape() }
+        debugShapes.add { bodyFixture3}
 
         // create copies of body fixtures for damager and shield fixture
-        gdxArrayOf(FixtureType.DAMAGER, FixtureType.SHIELD).forEach { fixtureType ->
+        gdxArrayOf(FixtureType.DAMAGER, FixtureType.SHIELD).forEach { type ->
             body.fixtures.map { it.second }.forEach { bodyFixture ->
                 val copy = (bodyFixture as Fixture).copy()
-                bodyFixture.fixtureType = fixtureType
+                bodyFixture.setType(type)
                 body.addFixture(copy)
             }
         }
@@ -293,8 +288,7 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
         damageableFixture.offsetFromBodyAttachment.x = -1.85f * ConstVals.PPM
         damageableFixture.offsetFromBodyAttachment.y = 1.75f * ConstVals.PPM
         body.addFixture(damageableFixture)
-        damageableFixture.getShape().color = Color.PURPLE
-        debugShapes.add { damageableFixture.getShape() }
+        debugShapes.add { damageableFixture}
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
@@ -305,10 +299,10 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
         val sprite = GameSprite()
         sprite.setSize(10f * ConstVals.PPM, 9f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
-            _sprite.hidden = damageBlink
-            _sprite.setAlpha(if (defeated) 1f - defeatTimer.getRatio() else 1f)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
+            sprite.hidden = damageBlink
+            sprite.setAlpha(if (defeated) 1f - defeatTimer.getRatio() else 1f)
         }
         return spritesComponent
     }

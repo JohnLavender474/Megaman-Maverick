@@ -90,7 +90,7 @@ class UnderWaterBubble(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyE
         bodyFixture.setHitByProjectileReceiver { pop("Hit projectile") }
         bodyFixture.setHitByBlockReceiver { pop("Hit block") }
         body.addFixture(bodyFixture)
-        debugShapes.add { bodyFixture.getShape() }
+        debugShapes.add { bodyFixture}
 
         val waterListenerFixture =
             Fixture(body, FixtureType.WATER_LISTENER, GameCircle().setRadius(0.05f * ConstVals.PPM))

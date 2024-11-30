@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.toObjectSet
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullablesComponent
@@ -20,7 +21,7 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
-import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.IChildEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
@@ -41,6 +42,7 @@ import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
 class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBodyEntity, ISpritesEntity,
@@ -58,7 +60,7 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
         set(value) {
             body.direction = value
         }
-    override var parent: GameEntity? = null
+    override var parent: IGameEntity? = null
 
     private val offset = Vector2()
     private var block: Block? = null
@@ -130,8 +132,8 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
         val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -0.5f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.getShape().color = Color.GREEN
-        debugShapes.add { feetFixture.getShape() }
+        feetFixture.drawingColor = Color.GREEN
+        debugShapes.add { feetFixture}
 
         val deathFixture = Fixture(body, FixtureType.DEATH, GameRectangle(body))
         deathFixture.putProperty(ConstKeys.INSTANT, false)

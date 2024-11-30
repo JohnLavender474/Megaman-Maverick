@@ -64,8 +64,7 @@ fun Megaman.getAnimationKey(priorAnimKey: String) = when {
 
                     else -> {
                         val movement =
-                            if (isDirectionRotatedHorizontally()) body.physics.velocity.x
-                            else body.physics.velocity.y
+                            if (direction.isHorizontal()) body.physics.velocity.x else body.physics.velocity.y
                         when {
                             movement != 0f -> when {
                                 shooting -> "ClimbShoot"

@@ -36,8 +36,8 @@ object BodyComponentCreator {
             )
             fixture.addFixtureLabels(t.labels)
             body.addFixture(fixture)
-            if (debugShapes != null) t.debugColor?.let { color ->
-                debugShapes.add { fixture.getShape() }
+            if (debugShapes != null) t.drawingColor.let { color ->
+                debugShapes.add { fixture}
             }
         }
         body.fixtures.forEach { (_, fixture) -> fixture.setEntity(entity) }
@@ -56,7 +56,7 @@ data class BodyFixtureDef(
     val attached: Boolean = true,
     val props: Properties = props(),
     val labels: ObjectSet<FixtureLabel> = ObjectSet(),
-    val debugColor: Color? = null
+    val drawingColor: Color? = null
 ) {
 
     companion object {

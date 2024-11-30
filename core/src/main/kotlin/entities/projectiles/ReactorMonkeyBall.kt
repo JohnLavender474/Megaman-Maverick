@@ -132,11 +132,11 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
         val shieldFixture = Fixture(body, FixtureType.SHIELD, GameCircle().setRadius(ConstVals.PPM.toFloat()))
         body.addFixture(shieldFixture)
-        debugShapes.add { shieldFixture.getShape() }
+        debugShapes.add { shieldFixture}
 
         val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameCircle().setRadius(1.25f * ConstVals.PPM))
         body.addFixture(projectileFixture)
-        debugShapes.add { projectileFixture.getShape() }
+        debugShapes.add { projectileFixture}
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(1.25f * ConstVals.PPM))
         body.addFixture(damagerFixture)
@@ -146,14 +146,14 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         headFixture.offsetFromBodyAttachment.y = 1.25f * ConstVals.PPM
         headFixture.setHitByBlockReceiver { bounce(Direction.DOWN) }
         body.addFixture(headFixture)
-        debugShapes.add { headFixture.getShape() }
+        debugShapes.add { headFixture}
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -1.25f * ConstVals.PPM
         feetFixture.setHitByBlockReceiver { bounce(Direction.UP) }
         body.addFixture(feetFixture)
-        debugShapes.add { feetFixture.getShape() }
+        debugShapes.add { feetFixture}
 
         val leftFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 1.5f * ConstVals.PPM))
@@ -161,7 +161,7 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         leftFixture.setHitByBlockReceiver { bounce(Direction.RIGHT) }
         body.addFixture(leftFixture)
-        debugShapes.add { leftFixture.getShape() }
+        debugShapes.add { leftFixture}
 
         val rightFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 1.5f * ConstVals.PPM))
@@ -169,7 +169,7 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         rightFixture.setHitByBlockReceiver { bounce(Direction.LEFT) }
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
-        debugShapes.add { rightFixture.getShape() }
+        debugShapes.add { rightFixture}
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 

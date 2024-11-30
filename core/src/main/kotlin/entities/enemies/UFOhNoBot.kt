@@ -22,8 +22,6 @@ import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.common.shapes.getCenter
-import com.mega.game.engine.common.shapes.toGameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -54,9 +52,14 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.world.body.getPositionPoint
 import com.megaman.maverick.game.world.body.isSensing
 import kotlin.reflect.KClass
 
@@ -120,7 +123,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
             dropDurationTimer.reset()
 
-            body.fixtures.forEach { (it.second as Fixture).active = false }
+            body.forEachFixture { it.setActive(false) }
         } else setToHover()
     }
 
@@ -159,7 +162,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
             if (waiting) {
-                if (triggers.any { trigger -> megaman().body.overlaps(trigger as Rectangle) }) {
+                if (triggers.any { trigger -> megaman().body.getBounds().overlaps(trigger) }) {
                     waiting = false
                     rising = true
 
@@ -167,7 +170,8 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
                     val trajectory = target.cpy().sub(start).nor().scl(RISE_VEL * ConstVals.PPM)
                     body.physics.velocity.set(trajectory)
-                    body.fixtures.forEach { (it.second as Fixture).active = true }
+
+                    body.forEachFixture { it.setActive(true) }
 
                     facing = if (trajectory.x == 0f) {
                         if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
@@ -201,22 +205,22 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         body.setSize(ConstVals.PPM.toFloat(), 1.25f * ConstVals.PPM)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
-        body.color = Color.GRAY
+        body.drawingColor = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameCircle().setRadius(0.4f * ConstVals.PPM))
         body.addFixture(bodyFixture)
-        bodyFixture.getShape().color = Color.RED
-        debugShapes.add { bodyFixture.getShape() }
+        bodyFixture.drawingColor = Color.RED
+        debugShapes.add { bodyFixture }
 
         val shieldFixture =
             Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(0.15f * ConstVals.PPM, 0.75f * ConstVals.PPM))
         shieldFixture.offsetFromBodyAttachment.y = -0.5f * ConstVals.PPM
         body.addFixture(shieldFixture)
-        shieldFixture.getShape().color = Color.BLUE
-        debugShapes.add { shieldFixture.getShape() }
+        shieldFixture.drawingColor = Color.BLUE
+        debugShapes.add { shieldFixture }
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.4f * ConstVals.PPM))
         body.addFixture(damagerFixture)
@@ -229,16 +233,16 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         leftSideFixture.offsetFromBodyAttachment.x = -0.5f * ConstVals.PPM
         leftSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftSideFixture)
-        leftSideFixture.getShape().color = Color.YELLOW
-        debugShapes.add { leftSideFixture.getShape() }
+        leftSideFixture.drawingColor = Color.YELLOW
+        debugShapes.add { leftSideFixture }
 
         val rightSideFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM))
         rightSideFixture.offsetFromBodyAttachment.x = 0.5f * ConstVals.PPM
         rightSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightSideFixture)
-        rightSideFixture.getShape().color = Color.YELLOW
-        debugShapes.add { rightSideFixture.getShape() }
+        rightSideFixture.drawingColor = Color.YELLOW
+        debugShapes.add { rightSideFixture }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
