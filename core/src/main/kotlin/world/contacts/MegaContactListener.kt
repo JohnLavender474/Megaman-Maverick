@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.world.contacts
 
 import com.badlogic.gdx.math.Intersector
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
@@ -50,7 +51,7 @@ import com.megaman.maverick.game.entities.sensors.Gate.GateState
 import com.megaman.maverick.game.entities.special.Cart
 import com.megaman.maverick.game.entities.special.PolygonWater
 import com.megaman.maverick.game.entities.special.Water
-import com.megaman.maverick.game.utils.LoopedSuppliers
+import com.megaman.maverick.game.utils.ObjectPools
 import com.megaman.maverick.game.utils.VelocityAlterator
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -522,7 +523,7 @@ class MegaContactListener(
                     projectile1.hitSand(otherFixture, thisShape, otherShape)
                     val splash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SPLASH)!!
 
-                    val overlap = LoopedSuppliers.getGdxRectangle()
+                    val overlap = ObjectPools.get(Rectangle::class)
                     Intersector.intersectRectangles(
                         projectileFixture.getShape().toGdxRectangle(),
                         otherFixture.getShape().toGdxRectangle(),

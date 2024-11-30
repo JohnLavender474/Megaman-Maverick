@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.hazards
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
+import com.badlogic.gdx.math.collision.BoundingBox
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureRegion
@@ -32,7 +33,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.HazardsFactory
-import com.megaman.maverick.game.utils.LoopedSuppliers
+import com.megaman.maverick.game.utils.ObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.BodyComponentCreator
@@ -79,7 +80,7 @@ class IceCubeMaker(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         if (runBounds != null && !game.getGameCamera()
-                .overlaps(runBounds!!, LoopedSuppliers.getBoundingBox())
+                .overlaps(runBounds!!, ObjectPools.get(BoundingBox::class))
         ) return@UpdatablesComponent
 
         delayTimer.update(delta)

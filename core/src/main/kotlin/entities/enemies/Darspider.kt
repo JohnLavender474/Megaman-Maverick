@@ -42,7 +42,7 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.utils.LoopedSuppliers
+import com.megaman.maverick.game.utils.ObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
@@ -218,7 +218,7 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                 body.putProperty("${ConstKeys.LEFT}_${ConstKeys.FOOT}", true)
         }
         leftFootFixture.offsetFromBodyAttachment =
-            LoopedSuppliers.getVector2().set(-0.375f * ConstVals.PPM, -0.375f * ConstVals.PPM)
+            ObjectPools.get(Vector2::class).set(-0.375f * ConstVals.PPM, -0.375f * ConstVals.PPM)
         body.addFixture(leftFootFixture)
         debugShapes.add { leftFootFixture}
 

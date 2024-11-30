@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
@@ -48,7 +49,7 @@ import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.utils.LoopedSuppliers
+import com.megaman.maverick.game.utils.ObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
@@ -310,7 +311,7 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
             rotatingLine.update(delta)
 
             scalar += OUT_SPEED * delta
-            body.setCenter(rotatingLine.getScaledPosition(scalar, LoopedSuppliers.getVector2()))
+            body.setCenter(rotatingLine.getScaledPosition(scalar, ObjectPools.get(Vector2::class)))
 
             facing = when (megaman().direction) {
                 Direction.UP -> if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT

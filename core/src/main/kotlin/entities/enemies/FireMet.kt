@@ -46,7 +46,7 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.FireMetFlame
-import com.megaman.maverick.game.utils.LoopedSuppliers
+import com.megaman.maverick.game.utils.ObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
@@ -223,7 +223,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
         val leftConsumerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
         leftConsumerFixture.offsetFromBodyAttachment =
-            LoopedSuppliers.getVector2().set(-0.5f, -0.5f).scl(ConstVals.PPM.toFloat())
+            ObjectPools.get(Vector2::class).set(-0.5f, -0.5f).scl(ConstVals.PPM.toFloat())
         leftConsumerFixture.setConsumer { _, fixture ->
             when (fixture.getType()) {
                 FixtureType.DEATH -> leftConsumerFixture.putProperty(ConstKeys.DEATH, true)

@@ -44,7 +44,7 @@ import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.projectiles.ReactManProjectile
-import com.megaman.maverick.game.utils.LoopedSuppliers
+import com.megaman.maverick.game.utils.ObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
@@ -182,7 +182,7 @@ class TurnBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IDirectional
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val size = LoopedSuppliers.getVector2().set(1.25f, 1.25f).scl(ConstVals.PPM.toFloat())
+        val size = ObjectPools.get(Vector2::class).set(1.25f, 1.25f).scl(ConstVals.PPM.toFloat())
         val sprites = OrderedMap<Any, GameSprite>()
 
         val baseSprite = GameSprite(regions.get("base"))

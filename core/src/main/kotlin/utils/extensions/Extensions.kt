@@ -26,7 +26,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
-import com.megaman.maverick.game.utils.LoopedSuppliers
+import com.megaman.maverick.game.utils.ObjectPools
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
@@ -100,7 +100,7 @@ fun MapProperties.toProps(): Properties {
 }
 
 fun Camera.toGameRectangle(): GameRectangle {
-    val out = LoopedSuppliers.getGameRectangle()
+    val out = ObjectPools.get(GameRectangle::class)
     out.setSize(viewportWidth, viewportHeight)
     out.setCenter(position.x, position.y)
     return out

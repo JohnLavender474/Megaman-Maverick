@@ -46,7 +46,7 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
-import com.megaman.maverick.game.utils.LoopedSuppliers
+import com.megaman.maverick.game.utils.ObjectPools
 import com.megaman.maverick.game.world.body.*
 
 class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity, ISpritesEntity,
@@ -112,7 +112,7 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
         val clamp = spawnProps.getOrDefault(ConstKeys.CLAMP, true, Boolean::class)
         body.physics.velocityClamp =
-            if (clamp) LoopedSuppliers.getVector2().set(CLAMP, CLAMP).scl(ConstVals.PPM.toFloat())
+            if (clamp) ObjectPools.get(Vector2::class).set(CLAMP, CLAMP).scl(ConstVals.PPM.toFloat())
             else Vector2(Float.MAX_VALUE, Float.MAX_VALUE)
 
         destroyOnHitBlock = spawnProps.getOrDefault(ConstKeys.HIT_BY_BLOCK, false, Boolean::class)

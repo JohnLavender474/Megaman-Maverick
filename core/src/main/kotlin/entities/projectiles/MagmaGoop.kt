@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.projectiles
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Intersector
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.animations.Animation
@@ -36,7 +37,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-import com.megaman.maverick.game.utils.LoopedSuppliers
+import com.megaman.maverick.game.utils.ObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGdxRectangle
@@ -86,7 +87,7 @@ class MagmaGoop(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         val direction = getOverlapPushDirection(thisShape, otherShape) ?: Direction.UP
         val position = DirectionPositionMapper.getPosition(direction)
 
-        val overlap = LoopedSuppliers.getGdxRectangle()
+        val overlap = ObjectPools.get(Rectangle::class)
         val overlapping = Intersector.intersectRectangles(
             thisShape.toGdxRectangle(),
             otherShape.toGdxRectangle(),

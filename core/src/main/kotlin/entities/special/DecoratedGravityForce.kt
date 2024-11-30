@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.special
 
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.objectMapOf
@@ -20,7 +21,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.entities.factories.impl.SpecialsFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
-import com.megaman.maverick.game.utils.LoopedSuppliers
+import com.megaman.maverick.game.utils.ObjectPools
 
 // convenience implementation that joins `GravityChange`, `Force`, and `ForceDecoration` into one entity
 class DecoratedGravityForce(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntity {
@@ -71,7 +72,7 @@ class DecoratedGravityForce(game: MegamanMaverickGame) : MegaGameEntity(game), I
         val direction =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
 
-        val splitSize = LoopedSuppliers.getVector2()
+        val splitSize = ObjectPools.get(Vector2::class)
         if (direction.isVertical()) {
             splitSize.x = 2f * ConstVals.PPM
             splitSize.y = ConstVals.PPM.toFloat()

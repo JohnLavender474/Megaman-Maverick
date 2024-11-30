@@ -56,7 +56,7 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.utils.LoopedSuppliers
+import com.megaman.maverick.game.utils.ObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
@@ -461,7 +461,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
                     body.getCenter(),
                     megaman().body.getCenter(),
                     SHIELD_VEL * ConstVals.PPM,
-                    LoopedSuppliers.getVector2()
+                    ObjectPools.get(Vector2::class)
                 ), ConstKeys.OWNER pairTo this
             )
         )

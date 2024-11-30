@@ -12,7 +12,7 @@ import com.mega.game.engine.common.time.Timer
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.screens.levels.Level
-import com.megaman.maverick.game.utils.LoopedSuppliers
+import com.megaman.maverick.game.utils.ObjectPools
 import java.util.*
 
 enum class BossType(val bossName: String, val level: Level, val position: Position, val ass: TextureAsset) {
@@ -77,7 +77,7 @@ enum class BossType(val bossName: String, val level: Level, val position: Positi
 
     MOON_MAN("Moon Man", Level.MOON_MAN, Position.BOTTOM_LEFT, TextureAsset.BOSSES_1) {
 
-        override fun getSpriteSize(): Vector2 = LoopedSuppliers.getVector2().set(1.75f, 1.75f)
+        override fun getSpriteSize(): Vector2 = ObjectPools.get(Vector2::class).set(1.75f, 1.75f)
 
         override fun getAnims(textureAtlas: TextureAtlas): MutableMap<String, Animation> {
             val anims: MutableMap<String, Animation> = HashMap<String, Animation>()

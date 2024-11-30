@@ -44,7 +44,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.utils.LoopedSuppliers
+import com.megaman.maverick.game.utils.ObjectPools
 import com.megaman.maverick.game.utils.extensions.getOpposingPosition
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
@@ -99,7 +99,7 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         direction =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
 
-        val size = LoopedSuppliers.getVector2()
+        val size = ObjectPools.get(Vector2::class)
         body.setSize(
             (if (direction.isHorizontal()) size.set(1f, 0.75f)
             else size.set(0.75f, 1f)).scl(ConstVals.PPM.toFloat())
@@ -165,7 +165,7 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         debugShapes.add { damagerFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            val size = LoopedSuppliers.getVector2()
+            val size = ObjectPools.get(Vector2::class)
 
             val damagerBounds = damagerFixture.rawShape as GameRectangle
             damagerBounds.setSize(

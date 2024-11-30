@@ -3,17 +3,18 @@ package com.megaman.maverick.game.world.body
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.world.body.IBody
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.utils.LoopedSuppliers
+import com.megaman.maverick.game.utils.ObjectPools
 
-fun IBody.getBounds() = getBounds(LoopedSuppliers.getGameRectangle())
+fun IBody.getBounds() = getBounds(ObjectPools.get(GameRectangle::class))
 
-fun IBody.getPosition() = getPosition(LoopedSuppliers.getVector2())
+fun IBody.getPosition() = getPosition(ObjectPools.get(Vector2::class))
 
-fun IBody.getCenter() = getCenter(LoopedSuppliers.getVector2())
+fun IBody.getCenter() = getCenter(ObjectPools.get(Vector2::class))
 
 fun IBody.setCenterX(x: Float): IBody {
     val center = getCenter()
@@ -27,9 +28,9 @@ fun IBody.setCenterY(y: Float): IBody {
     return this
 }
 
-fun IBody.getSize() = getSize(LoopedSuppliers.getVector2())
+fun IBody.getSize() = getSize(ObjectPools.get(Vector2::class))
 
-fun IBody.getPositionPoint(position: Position) = getPositionPoint(position, LoopedSuppliers.getVector2())
+fun IBody.getPositionPoint(position: Position) = getPositionPoint(position, ObjectPools.get(Vector2::class))
 
 fun IBody.setEntity(entity: IBodyEntity) {
     forEachFixture{ it.setEntity(entity) }

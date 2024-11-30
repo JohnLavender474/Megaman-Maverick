@@ -60,7 +60,7 @@ import com.megaman.maverick.game.entities.projectiles.Asteroid
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.utils.LoopedSuppliers
+import com.megaman.maverick.game.utils.ObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
@@ -660,7 +660,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
     }
 
     private fun spawnAsteroid() {
-        val spawn = LoopedSuppliers.getVector2()
+        val spawn = ObjectPools.get(Vector2::class)
         spawn.x = getRandom(asteroidSpawnBounds.getMaxX(), asteroidSpawnBounds.getMaxX())
         spawn.y = getRandom(asteroidSpawnBounds.getY(), asteroidSpawnBounds.getMaxY())
 

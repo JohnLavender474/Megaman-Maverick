@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.special
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
@@ -53,7 +54,7 @@ import com.megaman.maverick.game.entities.hazards.Lava
 import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntitySuppliers
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType.SPAWN_ROOM
-import com.megaman.maverick.game.utils.LoopedSuppliers
+import com.megaman.maverick.game.utils.ObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
@@ -139,7 +140,7 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
 
         type = spawnProps.get(ConstKeys.TYPE, String::class)!!
 
-        val size = LoopedSuppliers.getVector2()
+        val size = ObjectPools.get(Vector2::class)
         when (type) {
             ENEMY_TYPE -> size.set(2f, 2f)
             LEVER_TYPE -> size.set(0.75f, 0.75f)
@@ -273,7 +274,7 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
         val sprite = GameSprite()
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { delta, _ ->
-            val size = LoopedSuppliers.getVector2()
+            val size = ObjectPools.get(Vector2::class)
             when (type) {
                 LEVER_TYPE -> size.set(0.75f, 0.75f)
                 ENEMY_TYPE -> size.set(2f, 2f)

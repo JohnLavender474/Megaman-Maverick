@@ -157,10 +157,7 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
             }
         }
 
-        draw = spawnProps.getOrDefault(
-            ConstKeys.DRAW, true, Boolean::
-            class
-        )
+        draw = spawnProps.getOrDefault(ConstKeys.DRAW, true, Boolean::class)
 
         val owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
         if (owner == null) removeProperty(ConstKeys.OWNER) else putProperty(ConstKeys.OWNER, owner)

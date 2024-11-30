@@ -16,7 +16,7 @@ import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
-import com.megaman.maverick.game.utils.LoopedSuppliers
+import com.megaman.maverick.game.utils.ObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import kotlin.math.min
@@ -72,7 +72,7 @@ class CameraManagerForRooms(
         else {
             val startCopy = focusStart.cpy()
             val targetCopy = focusTarget.cpy()
-            interpolate(startCopy, targetCopy, transitionTimerRatio, LoopedSuppliers.getVector2())
+            interpolate(startCopy, targetCopy, transitionTimerRatio, ObjectPools.get(Vector2::class))
         }
     val delayJustFinished: Boolean
         get() = delayTimer.isJustFinished()
@@ -115,7 +115,7 @@ class CameraManagerForRooms(
 
     private fun setTransitionValues(next: Rectangle) {
         transitionState = ProcessState.BEGIN
-        transitionStart.set(camera.position.toVector2(LoopedSuppliers.getVector2()))
+        transitionStart.set(camera.position.toVector2(ObjectPools.get(Vector2::class)))
         transitionTarget.set(transitionStart)
         focusStart.set(focus!!.getBounds().getCenter())
         focusTarget.set(focusStart)
@@ -209,7 +209,7 @@ class CameraManagerForRooms(
                 transTimer.update(delta)
 
                 val pos =
-                    interpolate(transitionStart, transitionTarget, transitionTimerRatio, LoopedSuppliers.getVector2())
+                    interpolate(transitionStart, transitionTarget, transitionTimerRatio, ObjectPools.get(Vector2::class))
                 camera.position.x = pos.x
                 camera.position.y = pos.y
 

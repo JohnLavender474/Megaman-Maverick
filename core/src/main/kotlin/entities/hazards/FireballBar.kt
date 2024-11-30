@@ -24,7 +24,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.utils.LoopedSuppliers
+import com.megaman.maverick.game.utils.ObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 
 class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEntity, ICullableEntity {
@@ -82,7 +82,7 @@ class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEnti
         rotatingLine.update(delta)
         for (i in 0 until BALLS) {
             val child = children.get(i) as Fireball
-            val position = rotatingLine.getScaledPosition(i.toFloat() / BALLS.toFloat(), LoopedSuppliers.getVector2())
+            val position = rotatingLine.getScaledPosition(i.toFloat() / BALLS.toFloat(), ObjectPools.get(Vector2::class))
             child.body.setCenter(position)
         }
     })

@@ -3,6 +3,7 @@ package com.megaman.maverick.game.entities.hazards
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
@@ -40,7 +41,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.utils.LoopedSuppliers
+import com.megaman.maverick.game.utils.ObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
@@ -148,7 +149,7 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
 
         for (i in 0..RING_COUNT) putUpdateFunction("ring_$i") { _, sprite ->
             val scale = i.toFloat() / RING_COUNT.toFloat()
-            val center = rotation.getScaledPosition(scale, LoopedSuppliers.getVector2())
+            val center = rotation.getScaledPosition(scale, ObjectPools.get(Vector2::class))
             sprite.setCenter(center)
             sprite.hidden = false
         }

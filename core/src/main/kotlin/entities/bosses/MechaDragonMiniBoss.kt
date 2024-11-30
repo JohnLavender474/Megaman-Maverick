@@ -52,7 +52,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
-import com.megaman.maverick.game.utils.LoopedSuppliers
+import com.megaman.maverick.game.utils.ObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.max
@@ -201,7 +201,7 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
                 ConstKeys.OWNER pairTo this,
                 ConstKeys.POSITION pairTo spawn,
                 ConstKeys.TRAJECTORY pairTo normalizedTrajectory(
-                    spawn, megaman().body.getCenter(), FIRE_SPEED * ConstVals.PPM, LoopedSuppliers.getVector2()
+                    spawn, megaman().body.getCenter(), FIRE_SPEED * ConstVals.PPM, ObjectPools.get(Vector2::class)
                 )
             )
         )
@@ -265,7 +265,7 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
                     }
 
                     val trajectory = normalizedTrajectory(
-                        body.getCenter(), currentTarget, HOVER_SPEED * ConstVals.PPM, LoopedSuppliers.getVector2()
+                        body.getCenter(), currentTarget, HOVER_SPEED * ConstVals.PPM, ObjectPools.get(Vector2::class)
                     )
                     body.physics.velocity.set(trajectory)
 

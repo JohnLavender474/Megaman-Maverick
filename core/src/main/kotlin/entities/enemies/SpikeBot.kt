@@ -48,7 +48,7 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.utils.LoopedSuppliers
+import com.megaman.maverick.game.utils.ObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
@@ -229,7 +229,7 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
                 body.putProperty("${ConstKeys.LEFT}_${ConstKeys.FOOT}", true)
         }
         leftFootFixture.offsetFromBodyAttachment =
-            LoopedSuppliers.getVector2().set(-0.375f, -0.375f).scl(ConstVals.PPM.toFloat())
+            ObjectPools.get(Vector2::class).set(-0.375f, -0.375f).scl(ConstVals.PPM.toFloat())
         body.addFixture(leftFootFixture)
         leftFootFixture.drawingColor = Color.ORANGE
         debugShapes.add { leftFootFixture }

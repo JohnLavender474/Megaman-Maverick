@@ -29,7 +29,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.utils.LoopedSuppliers
+import com.megaman.maverick.game.utils.ObjectPools
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
@@ -62,7 +62,7 @@ class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         direction = spawnProps.get(ConstKeys.DIRECTION, Direction::class)!!
         trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
 
-        val size = LoopedSuppliers.getVector2()
+        val size = ObjectPools.get(Vector2::class)
         if (direction.isHorizontal()) {
             size.x = 2f
             size.y = 0.75f

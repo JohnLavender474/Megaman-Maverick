@@ -22,13 +22,8 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.special.Cart
 import com.megaman.maverick.game.entities.special.Ladder
-import com.megaman.maverick.game.world.body.BodySense
-import com.megaman.maverick.game.world.body.getCenter
-import com.megaman.maverick.game.world.body.getPositionPoint
-import com.megaman.maverick.game.world.body.isSensing
-import com.megaman.maverick.game.world.body.isSensingAny
-import com.megaman.maverick.game.world.body.setCenterX
-import com.megaman.maverick.game.world.body.setCenterY
+import com.megaman.maverick.game.utils.ObjectPools
+import com.megaman.maverick.game.world.body.*
 
 const val MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: WallSlideBehavior"
 const val MEGAMAN_SWIM_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: SwimBehavior"
@@ -152,7 +147,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 (body.isSensing(BodySense.FEET_ON_GROUND) || isBehaviorActive(BehaviorType.WALL_SLIDING))
         },
         init = {
-            val v = Vector2()
+            val v = ObjectPools.get(Vector2::class)
             v.x = when (direction) {
                 Direction.UP, Direction.DOWN -> {
                     when {

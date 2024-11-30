@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.explosions
 
+import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -16,7 +17,7 @@ import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-import com.megaman.maverick.game.utils.LoopedSuppliers
+import com.megaman.maverick.game.utils.ObjectPools
 
 class ExplosionField(game: MegamanMaverickGame): MegaGameEntity(game), IOwnable {
 
@@ -71,7 +72,7 @@ class ExplosionField(game: MegamanMaverickGame): MegaGameEntity(game), IOwnable 
         GameLogger.debug(TAG, "spawnExplosion()")
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
         explosion.spawn(props(
-            ConstKeys.POSITION pairTo bounds.getRandomPositionInBounds(LoopedSuppliers.getVector2()),
+            ConstKeys.POSITION pairTo bounds.getRandomPositionInBounds(ObjectPools.get(Vector2::class)),
             ConstKeys.SOUND pairTo SoundAsset.EXPLOSION_2_SOUND,
             ConstKeys.OWNER pairTo owner
         ))

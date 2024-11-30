@@ -17,7 +17,7 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
-import com.megaman.maverick.game.utils.LoopedSuppliers
+import com.megaman.maverick.game.utils.ObjectPools
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
@@ -142,7 +142,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
                 body.physics.gravity.set(0f, gravityValue * ConstVals.PPM)
                 body.physics.defaultFrictionOnSelf.set(ConstVals.STANDARD_RESISTANCE_X, ConstVals.STANDARD_RESISTANCE_Y)
 
-                val clamp = LoopedSuppliers.getVector2()
+                val clamp = ObjectPools.get(Vector2::class)
                 body.physics.velocityClamp.set(
                     if (isBehaviorActive(BehaviorType.RIDING_CART))
                         clamp.set(MegamanValues.CART_RIDE_MAX_SPEED, MegamanValues.CLAMP_Y)
@@ -154,7 +154,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
                 body.physics.gravity.set(gravityValue * ConstVals.PPM, 0f)
                 body.physics.defaultFrictionOnSelf.set(ConstVals.STANDARD_RESISTANCE_Y, ConstVals.STANDARD_RESISTANCE_X)
 
-                val clamp = LoopedSuppliers.getVector2()
+                val clamp = ObjectPools.get(Vector2::class)
                 body.physics.velocityClamp.set(
                     if (isBehaviorActive(BehaviorType.RIDING_CART))
                         clamp.set(MegamanValues.CLAMP_Y, MegamanValues.CART_RIDE_MAX_SPEED)

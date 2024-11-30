@@ -37,7 +37,7 @@ object BodyComponentCreator {
             fixture.addFixtureLabels(t.labels)
             body.addFixture(fixture)
             if (debugShapes != null) t.drawingColor.let { color ->
-                debugShapes.add { fixture}
+                debugShapes.add { fixture }
             }
         }
         body.fixtures.forEach { (_, fixture) -> fixture.setEntity(entity) }
