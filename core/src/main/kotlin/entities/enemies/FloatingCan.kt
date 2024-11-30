@@ -166,8 +166,8 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
                     break
                 }
 
-                if (!passable && coordinate.isNeighborOf(body.getCenter().toGridCoordinate()))
-                    blockingBody?.let { passable = !body.getBounds().overlaps(it.getBounds()) }
+                if (!passable && coordinate.isNeighborOf(body.getCenter(false).toGridCoordinate()))
+                    blockingBody?.let { passable = !body.getBounds(false).overlaps(it.getBounds(false)) }
 
                 passable
             },

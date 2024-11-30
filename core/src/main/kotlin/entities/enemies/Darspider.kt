@@ -42,7 +42,7 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.utils.ObjectPools
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
@@ -218,7 +218,7 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                 body.putProperty("${ConstKeys.LEFT}_${ConstKeys.FOOT}", true)
         }
         leftFootFixture.offsetFromBodyAttachment =
-            ObjectPools.get(Vector2::class).set(-0.375f * ConstVals.PPM, -0.375f * ConstVals.PPM)
+            GameObjectPools.fetch(Vector2::class).set(-0.375f * ConstVals.PPM, -0.375f * ConstVals.PPM)
         body.addFixture(leftFootFixture)
         debugShapes.add { leftFootFixture}
 
@@ -235,13 +235,16 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.putProperty(LEFT_FOOT, false)
             body.putProperty(RIGHT_FOOT, false)
+
             val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
-            body.physics.gravity = when (direction) {
-                Direction.UP -> Vector2(0f, gravity)
-                Direction.DOWN -> Vector2(0f, -gravity)
-                Direction.LEFT -> Vector2(-gravity, 0f)
-                Direction.RIGHT -> Vector2(gravity, 0f)
+            val gravityVec = GameObjectPools.fetch(Vector2::class)
+            when (direction) {
+                Direction.UP -> gravityVec.set(0f, gravity)
+                Direction.DOWN -> gravityVec.set(0f, -gravity)
+                Direction.LEFT -> gravityVec.set(-gravity, 0f)
+                Direction.RIGHT -> gravityVec.set(gravity, 0f)
             }.scl(ConstVals.PPM.toFloat())
+            body.physics.gravity.set(gravityVec)
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

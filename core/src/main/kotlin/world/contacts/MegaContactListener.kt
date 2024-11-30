@@ -14,7 +14,6 @@ import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameLine
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.IGameShape2D
@@ -23,7 +22,6 @@ import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
-import com.mega.game.engine.world.body.Fixture
 import com.mega.game.engine.world.body.IFixture
 import com.mega.game.engine.world.contacts.Contact
 import com.mega.game.engine.world.contacts.IContactListener
@@ -51,7 +49,8 @@ import com.megaman.maverick.game.entities.sensors.Gate.GateState
 import com.megaman.maverick.game.entities.special.Cart
 import com.megaman.maverick.game.entities.special.PolygonWater
 import com.megaman.maverick.game.entities.special.Water
-import com.megaman.maverick.game.utils.ObjectPools
+import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
 import com.megaman.maverick.game.utils.VelocityAlterator
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -272,7 +271,7 @@ class MegaContactListener(
 
             val splash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SPLASH)!!
             val position = feetFixture.getShape().getBoundingRectangle().getPositionPoint(Position.BOTTOM_CENTER)
-            splash.spawn(props(ConstKeys.POSITION pairTo position, ConstKeys.TYPE pairTo SplashType.SAND))
+            splash.spawn(pooledProps(ConstKeys.POSITION pairTo position, ConstKeys.TYPE pairTo SplashType.SAND))
         }
 
         // bouncer, feet or head or side
@@ -523,7 +522,7 @@ class MegaContactListener(
                     projectile1.hitSand(otherFixture, thisShape, otherShape)
                     val splash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SPLASH)!!
 
-                    val overlap = ObjectPools.get(Rectangle::class)
+                    val overlap = GameObjectPools.fetch(Rectangle::class)
                     Intersector.intersectRectangles(
                         projectileFixture.getShape().toGdxRectangle(),
                         otherFixture.getShape().toGdxRectangle(),
@@ -531,7 +530,7 @@ class MegaContactListener(
                     )
 
                     val position = overlap.getCenter()
-                    splash.spawn(props(ConstKeys.POSITION pairTo position, ConstKeys.TYPE pairTo SplashType.SAND))
+                    splash.spawn(pooledProps(ConstKeys.POSITION pairTo position, ConstKeys.TYPE pairTo SplashType.SAND))
                 }
 
                 FixtureType.PROJECTILE -> {
@@ -823,9 +822,8 @@ class MegaContactListener(
 
         // block, gravity change
         else if (contact.fixturesMatch(FixtureType.BLOCK, FixtureType.GRAVITY_CHANGE)) {
-            val (blockFixture, gravityChangeFixture) = contact.getFixturesInOrder(
-                FixtureType.BLOCK, FixtureType.GRAVITY_CHANGE, out
-            )!!
+            val (blockFixture, gravityChangeFixture) =
+                contact.getFixturesInOrder(FixtureType.BLOCK, FixtureType.GRAVITY_CHANGE, out)!!
 
             val direction = gravityChangeFixture.getProperty(ConstKeys.DIRECTION, Direction::class) ?: return
 
@@ -851,7 +849,7 @@ class MegaContactListener(
             val blockEntity = blockFixture.getEntity()
 
             if (laserEntity != blockEntity) {
-                val blockRectangle = (blockFixture as Fixture).rawShape as GameRectangle
+                val blockRectangle = blockFixture.getShape() as GameRectangle
                 val laserLine = laserFixture.getProperty(ConstKeys.LINE, GameLine::class)!!
                 val intersections = laserFixture.getProperty(ConstKeys.COLLECTION) as MutableCollection<Vector2>?
                 intersections?.let {

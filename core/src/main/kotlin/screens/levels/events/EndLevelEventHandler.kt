@@ -66,7 +66,7 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
             beamSprite = GameSprite(beamRegion)
             beamSprite.setSize(1.5f * ConstVals.PPM)
 
-            beamTransAnim = Animation(atlas.findRegion("BeamLand"), 1, 2, 0.1f, false).reversed()
+            beamTransAnim = Animation(atlas.findRegion("Spawn"), 1, 2, 0.1f, false).reversed()
         }
 
         startDelayTimer.reset()

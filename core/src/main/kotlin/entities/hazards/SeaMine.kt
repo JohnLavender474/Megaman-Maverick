@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.hazards
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
@@ -44,6 +45,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
@@ -107,7 +109,13 @@ class SeaMine(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IS
         sensor.setCenter(body.getCenter())
         if (!triggered && megaman().body.getBounds().overlaps(sensor)) trigger()
         if (triggered) {
-            body.physics.velocity = megaman().body.getCenter().sub(body.getCenter()).nor().scl(SPEED * ConstVals.PPM)
+            val velocity = GameObjectPools.fetch(Vector2::class)
+                .set(megaman().body.getCenter())
+                .sub(body.getCenter())
+                .nor()
+                .scl(SPEED * ConstVals.PPM)
+            body.physics.velocity.set(velocity)
+
             blowTimer.update(delta)
             if (blowTimer.isFinished()) explodeAndDie()
         }

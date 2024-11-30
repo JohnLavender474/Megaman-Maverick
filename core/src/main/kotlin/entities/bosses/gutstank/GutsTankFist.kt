@@ -54,6 +54,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
@@ -173,7 +174,14 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
                         target = game.megaman.body.getPositionPoint(Position.CENTER_LEFT)
                         requestToPlaySound(SoundAsset.BURST_SOUND, false)
                     }
-                    body.physics.velocity = target.cpy().sub(body.getCenter()).nor().scl(LAUNCH_SPEED * ConstVals.PPM)
+
+                    val velocity = GameObjectPools.fetch(Vector2::class)
+                        .set(target)
+                        .sub(body.getCenter())
+                        .nor()
+                        .scl(LAUNCH_SPEED * ConstVals.PPM)
+                    body.physics.velocity.set(velocity)
+
                     if (body.getBounds().contains(target)) {
                         GameLogger.debug(TAG, "Fist hit target")
                         fistState = GutsTankFistState.RETURNING
@@ -185,9 +193,13 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
                     facing = if (attachment.x < body.getCenter().x) Facing.LEFT else Facing.RIGHT
                     returnDelayTimer.update(delta)
                     if (returnDelayTimer.isFinished()) {
-                        body.physics.velocity = attachment.cpy().sub(body.getCenter()).nor().scl(
-                            RETURN_SPEED * ConstVals.PPM
-                        )
+                        val velocity = GameObjectPools.fetch(Vector2::class)
+                            .set(attachment)
+                            .sub(body.getCenter())
+                            .nor()
+                            .scl(RETURN_SPEED * ConstVals.PPM)
+                        body.physics.velocity.set(velocity)
+
                         if (body.getBounds().contains(attachment)) {
                             fistState = GutsTankFistState.ATTACHED
                             (parent as GutsTank).finishAttack(GutsTankAttackState.LAUNCH_FIST)

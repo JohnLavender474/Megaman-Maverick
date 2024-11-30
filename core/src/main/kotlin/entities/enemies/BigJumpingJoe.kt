@@ -50,6 +50,7 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
@@ -176,7 +177,11 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableG
 
             jumpDelayTimer.update(it)
             if (jumpDelayTimer.isJustFinished()) {
-                body.physics.velocity = Vector2(X_VEL * facing.value, Y_VEL).scl(ConstVals.PPM.toFloat())
+                val velocity = GameObjectPools.fetch(Vector2::class)
+                    .set(X_VEL * facing.value, Y_VEL)
+                    .scl(ConstVals.PPM.toFloat())
+                body.physics.velocity.set(velocity)
+
                 waitTimer.reset()
                 timesJumped++
             }

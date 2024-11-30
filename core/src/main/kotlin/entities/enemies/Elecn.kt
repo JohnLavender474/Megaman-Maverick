@@ -47,6 +47,7 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
@@ -170,12 +171,16 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
                 sideFixture.offsetFromBodyAttachment.x = 0.5f * ConstVals.PPM
             }
 
-            body.physics.velocity = if (elecnLoop.getCurrent() == ElecnState.SHOCKING) Vector2()
-            else {
-                val x = X_VEL * ConstVals.PPM * facing.value
-                val y = Y_VEL * ConstVals.PPM * (if (zigzagUp) 1 else -1)
-                Vector2(x, y)
+            val velocity = GameObjectPools.fetch(Vector2::class)
+            when (ElecnState.SHOCKING) {
+                elecnLoop.getCurrent() -> velocity.setZero()
+                else -> {
+                    val x = X_VEL * ConstVals.PPM * facing.value
+                    val y = Y_VEL * ConstVals.PPM * (if (zigzagUp) 1 else -1)
+                    velocity.set(x, y)
+                }
             }
+            body.physics.velocity.set(velocity)
         }
 
         body.postProcess.put(ConstKeys.DEFAULT) {

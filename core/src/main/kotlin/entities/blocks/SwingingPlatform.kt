@@ -38,6 +38,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getMotionValue
 import com.megaman.maverick.game.world.body.*
@@ -91,9 +92,11 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, 
 
         body.preProcess.put(ConstKeys.TARGET) {
             target?.let { target ->
-                val velocity =
-                    target.cpy().sub(body.getPositionPoint(Position.BOTTOM_CENTER)).scl(1f / ConstVals.FIXED_TIME_STEP)
-                body.physics.velocity = velocity
+                val velocity = GameObjectPools.fetch(Vector2::class)
+                velocity.set(target)
+                    .sub(body.getPositionPoint(Position.BOTTOM_CENTER))
+                    .scl(1f / ConstVals.FIXED_TIME_STEP)
+                body.physics.velocity.set(velocity)
             }
         }
         body.addBodyLabels(objectSetOf(BodyLabel.COLLIDE_DOWN_ONLY))

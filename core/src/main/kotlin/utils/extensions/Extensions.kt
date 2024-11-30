@@ -21,12 +21,15 @@ import com.mega.game.engine.common.extensions.getSound
 import com.mega.game.engine.common.objects.IntPair
 import com.mega.game.engine.common.objects.Matrix
 import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.common.shapes.*
+import com.mega.game.engine.common.shapes.GamePolygon
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.shapes.IGameShape2D
+import com.mega.game.engine.common.shapes.toGameLines
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
-import com.megaman.maverick.game.utils.ObjectPools
+import com.megaman.maverick.game.utils.GameObjectPools
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
@@ -37,9 +40,16 @@ fun IntPair.isNeighborOf(coordinate: IntPair, allowDiagonal: Boolean = true): Bo
     else (dx <= 1 && dy <= 1) && !(dx == 0 && dy == 0)
 }
 
-fun Vector2.toGridCoordinate() = IntPair(MathUtils.floor(x / ConstVals.PPM), MathUtils.floor(y / ConstVals.PPM))
+fun Vector2.toGridCoordinate(out: IntPair): IntPair {
+    out.set(MathUtils.floor(x / ConstVals.PPM), MathUtils.floor(y / ConstVals.PPM))
+    return out
+}
 
-fun IntPair.toWorldCoordinate() = Vector2(x * ConstVals.PPM.toFloat(), y * ConstVals.PPM.toFloat())
+fun Vector2.toGridCoordinate() = toGridCoordinate(GameObjectPools.fetch(IntPair::class))
+
+fun IntPair.toWorldCoordinate(out: Vector2): Vector2 = out.set(x * ConstVals.PPM.toFloat(), y * ConstVals.PPM.toFloat())
+
+fun IntPair.toWorldCoordinate() = toWorldCoordinate(GameObjectPools.fetch(Vector2::class))
 
 fun MapObject.convertToProps(): Properties = when (this) {
     is RectangleMapObject -> toProps()
@@ -50,9 +60,9 @@ fun MapObject.convertToProps(): Properties = when (this) {
 }
 
 fun MapObject.getShape(): IGameShape2D = when (this) {
-    is RectangleMapObject -> rectangle.toGameRectangle()
-    is PolygonMapObject -> polygon.toGamePolygon()
-    is CircleMapObject -> circle.toGameCircle()
+    is RectangleMapObject -> rectangle.toGameRectangle(false)
+    is PolygonMapObject -> polygon.toGamePolygon(false)
+    is CircleMapObject -> circle.toGameCircle(false)
     // TODO: support polyline map object
     else -> throw IllegalArgumentException("Unknown map object type: $this")
 }
@@ -86,7 +96,8 @@ fun CircleMapObject.toProps(): Properties {
 
 fun PolylineMapObject.toProps(): Properties {
     val props = Properties()
-    props.put(ConstKeys.NAME, name) // TODO: props.put(ConstKeys.LINES, getShape())
+    props.put(ConstKeys.NAME, name)
+    // TODO: props.put(ConstKeys.LINES, getShape())
     props.put(ConstKeys.LINES, polyline.toGameLines())
     val objProps = properties.toProps()
     props.putAll(objProps)
@@ -100,17 +111,18 @@ fun MapProperties.toProps(): Properties {
 }
 
 fun Camera.toGameRectangle(): GameRectangle {
-    val out = ObjectPools.get(GameRectangle::class)
+    val out = GameRectangle() // TODO: ObjectPools.get(GameRectangle::class)
     out.setSize(viewportWidth, viewportHeight)
     out.setCenter(position.x, position.y)
     return out
 }
 
-fun getDefaultCameraPosition(): Vector3 {
-    val v = Vector3()
-    v.x = ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f
-    v.y = ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f
-    return v
+fun getDefaultCameraPosition() = getDefaultCameraPosition(GameObjectPools.fetch(Vector3::class))
+
+fun getDefaultCameraPosition(out: Vector3): Vector3 {
+    out.x = ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f
+    out.y = ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f
+    return out
 }
 
 fun Camera.setToDefaultPosition() {
@@ -118,16 +130,14 @@ fun Camera.setToDefaultPosition() {
     position.set(v)
 }
 
-fun AssetManager.getSounds(): OrderedMap<SoundAsset, Sound> {
-    val sounds = OrderedMap<SoundAsset, Sound>()
-    for (ass in SoundAsset.entries) sounds.put(ass, getSound(ass.source))
-    return sounds
+fun AssetManager.getSounds(out: OrderedMap<SoundAsset, Sound>): OrderedMap<SoundAsset, Sound> {
+    for (ass in SoundAsset.entries) out.put(ass, getSound(ass.source))
+    return out
 }
 
-fun AssetManager.getMusics(): OrderedMap<MusicAsset, Music> {
-    val music = OrderedMap<MusicAsset, Music>()
-    for (ass in MusicAsset.entries) music.put(ass, getMusic(ass.source))
-    return music
+fun AssetManager.getMusics(out: OrderedMap<MusicAsset, Music>): OrderedMap<MusicAsset, Music> {
+    for (ass in MusicAsset.entries) out.put(ass, getMusic(ass.source))
+    return out
 }
 
 fun GamePolygon.splitIntoGameRectanglesBasedOnCenter(rectWidth: Float, rectHeight: Float): Matrix<GameRectangle> {

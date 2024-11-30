@@ -3,7 +3,6 @@ package com.megaman.maverick.game.entities.enemies
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
@@ -52,15 +51,10 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodySense
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getBounds
-import com.megaman.maverick.game.world.body.getCenter
-import com.megaman.maverick.game.world.body.getPositionPoint
-import com.megaman.maverick.game.world.body.isSensing
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
@@ -84,8 +78,10 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
     private val dropDurationTimer = Timer(DROP_DURATION)
     private val triggers = Array<GameRectangle>()
+
     private lateinit var start: Vector2
     private lateinit var target: Vector2
+
     private var waiting = true
     private var dropped = false
     private var rising = false
@@ -110,16 +106,17 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
         facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         waiting = spawnProps.getOrDefault(ConstKeys.WAIT, true, Boolean::class)
+
         dropped = false
         rising = false
 
         if (waiting) {
             spawnProps.getAllMatching { it.toString().contains(ConstKeys.TRIGGER) }.forEach {
-                val trigger = (it.second as RectangleMapObject).rectangle.toGameRectangle()
+                val trigger = (it.second as RectangleMapObject).rectangle.toGameRectangle(false)
                 triggers.add(trigger)
             }
-            start = spawnProps.get(ConstKeys.START, RectangleMapObject::class)!!.rectangle.getCenter()
-            target = spawnProps.get(ConstKeys.TARGET, RectangleMapObject::class)!!.rectangle.getCenter()
+            start = spawnProps.get(ConstKeys.START, RectangleMapObject::class)!!.rectangle.getCenter(false)
+            target = spawnProps.get(ConstKeys.TARGET, RectangleMapObject::class)!!.rectangle.getCenter(false)
 
             dropDurationTimer.reset()
 
@@ -144,7 +141,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     private fun dropBomb() {
         val bomb = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.UFO_BOMB)!!
         val spawn = body.getPositionPoint(Position.BOTTOM_CENTER).sub(0f, 0.6f * ConstVals.PPM)
-        bomb.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.OWNER pairTo this))
+        bomb.spawn(pooledProps(ConstKeys.POSITION pairTo spawn, ConstKeys.OWNER pairTo this))
     }
 
     private fun setToHover() {

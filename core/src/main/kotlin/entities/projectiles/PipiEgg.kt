@@ -30,7 +30,7 @@ import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
-import com.megaman.maverick.game.utils.ObjectPools
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
@@ -87,7 +87,7 @@ class PipiEgg(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     private fun spawnBabyBirdies() {
         for (i in 0 until BABY_BIRDIES_TO_SPAWN) {
-            val random = ObjectPools.get(Vector2::class)
+            val random = GameObjectPools.fetch(Vector2::class)
             val randomValue = getRandom(-BABY_BIRDIE_SPAWN_MAX_OFFSET, BABY_BIRDIE_SPAWN_MAX_OFFSET)
             random.set(randomValue, randomValue)
 

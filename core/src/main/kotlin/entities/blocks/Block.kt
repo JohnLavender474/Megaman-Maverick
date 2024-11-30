@@ -193,7 +193,7 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         val blockRect = GameRectangle()
         blockFixture = Fixture(body, FixtureType.BLOCK, blockRect)
         body.addFixture(blockFixture)
-        debugShapeSuppliers.add { blockFixture}
+        debugShapeSuppliers.add { blockFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) { blockRect.set(body) }
 

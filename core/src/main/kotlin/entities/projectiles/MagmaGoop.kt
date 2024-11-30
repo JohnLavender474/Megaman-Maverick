@@ -14,7 +14,6 @@ import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -37,7 +36,8 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-import com.megaman.maverick.game.utils.ObjectPools
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGdxRectangle
@@ -87,7 +87,7 @@ class MagmaGoop(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         val direction = getOverlapPushDirection(thisShape, otherShape) ?: Direction.UP
         val position = DirectionPositionMapper.getPosition(direction)
 
-        val overlap = ObjectPools.get(Rectangle::class)
+        val overlap = GameObjectPools.fetch(Rectangle::class)
         val overlapping = Intersector.intersectRectangles(
             thisShape.toGdxRectangle(),
             otherShape.toGdxRectangle(),
@@ -102,7 +102,7 @@ class MagmaGoop(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         )
 
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.MAGMA_GOOP_EXPLOSION)!!
-        explosion.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.DIRECTION pairTo direction))
+        explosion.spawn(pooledProps(ConstKeys.POSITION pairTo spawn, ConstKeys.DIRECTION pairTo direction))
     }
 
     override fun defineBodyComponent(): BodyComponent {

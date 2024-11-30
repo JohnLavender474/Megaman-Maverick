@@ -49,6 +49,7 @@ import com.megaman.maverick.game.entities.decorations.Splash
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
@@ -178,12 +179,15 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
                 body.physics.velocity.setZero()
             } else {
                 body.physics.gravityOn = true
-                body.physics.gravity = when (direction) {
-                    Direction.LEFT -> Vector2(gravity, 0f)
-                    Direction.RIGHT -> Vector2(-gravity, 0f)
-                    Direction.UP -> Vector2(0f, -gravity)
-                    Direction.DOWN -> Vector2(0f, gravity)
+
+                val gravityVec = GameObjectPools.fetch(Vector2::class)
+                when (direction) {
+                    Direction.LEFT -> gravityVec.set(gravity, 0f)
+                    Direction.RIGHT -> gravityVec.set(-gravity, 0f)
+                    Direction.UP -> gravityVec.set(0f, -gravity)
+                    Direction.DOWN -> gravityVec.set(0f, gravity)
                 }.scl(gravityScalar * ConstVals.PPM.toFloat())
+                body.physics.gravity.set(gravityVec)
             }
 
             feetFixture.putProperty(ConstKeys.STICK_TO_BLOCK, !body.isSensing(BodySense.FEET_ON_SAND))

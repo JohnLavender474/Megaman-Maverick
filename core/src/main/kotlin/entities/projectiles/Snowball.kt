@@ -55,9 +55,9 @@ class Snowball(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
 
-        body.physics.velocity = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2(), Vector2::class)
+        body.physics.velocity.set(spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2.Zero, Vector2::class))
         body.physics.gravityOn = spawnProps.getOrDefault(ConstKeys.GRAVITY_ON, false, Boolean::class)
-        body.physics.gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, Vector2(), Vector2::class)
+        body.physics.gravity.set(spawnProps.getOrDefault(ConstKeys.GRAVITY, Vector2.Zero, Vector2::class))
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) {

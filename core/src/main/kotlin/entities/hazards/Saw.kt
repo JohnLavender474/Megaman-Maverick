@@ -41,7 +41,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.utils.ObjectPools
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
@@ -149,7 +149,7 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
 
         for (i in 0..RING_COUNT) putUpdateFunction("ring_$i") { _, sprite ->
             val scale = i.toFloat() / RING_COUNT.toFloat()
-            val center = rotation.getScaledPosition(scale, ObjectPools.get(Vector2::class))
+            val center = rotation.getScaledPosition(scale, GameObjectPools.fetch(Vector2::class))
             sprite.setCenter(center)
             sprite.hidden = false
         }

@@ -1,7 +1,6 @@
 package com.megaman.maverick.game.entities.blocks
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.OrderedMap
@@ -83,15 +82,17 @@ class ConveyorBelt(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAn
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
         super.onSpawn(spawnProps)
 
-        val bounds = spawnProps.get(ConstKeys.BOUNDS) as Rectangle
+        val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         (forceFixture!!.rawShape as GameRectangle).setSize(bounds.getWidth() - ConstVals.PPM / 4f, bounds.getHeight())
 
-        val left = spawnProps.get(ConstKeys.LEFT) as Boolean
+        val left = spawnProps.get(ConstKeys.LEFT, Boolean::class)!!
 
         var forceX = FORCE_IMPULSE * ConstVals.PPM
         if (left) forceX = -forceX
+
         forceFixture!!.setVelocityAlteration { fixture, delta ->
             val body = fixture.getBody()
+
             if ((left && body.physics.velocity.x <= -FORCE_MAX * ConstVals.PPM) ||
                 (!left && body.physics.velocity.x >= FORCE_MAX * ConstVals.PPM)
             ) VelocityAlteration.addNone() else VelocityAlteration(

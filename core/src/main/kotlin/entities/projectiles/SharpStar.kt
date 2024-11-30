@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.projectiles
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.animations.Animation
@@ -10,7 +9,6 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -32,6 +30,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
@@ -45,7 +44,7 @@ class SharpStar(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         private var region: TextureRegion? = null
     }
 
-    private lateinit var trajectory: Vector2
+    private val trajectory = Vector2()
     private var rotation = 0f
 
     override fun init() {
@@ -61,14 +60,14 @@ class SharpStar(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
 
-        trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
+        trajectory.set(spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!)
         rotation = spawnProps.getOrDefault(ConstKeys.ROTATION, 0f, Float::class)
     }
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         destroy()
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.STAR_EXPLOSION)!!
-        explosion.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
+        explosion.spawn(pooledProps(ConstKeys.POSITION pairTo body.getCenter()))
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->

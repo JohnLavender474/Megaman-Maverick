@@ -28,6 +28,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
 import com.megaman.maverick.game.world.body.*
 
 class CaveRock(game: MegamanMaverickGame) : AbstractProjectile(game) {
@@ -58,8 +59,8 @@ class CaveRock(game: MegamanMaverickGame) : AbstractProjectile(game) {
         passThroughBlocks = spawnProps.getOrDefault(ConstKeys.PASS_THROUGH, false, Boolean::class)
 
         if (spawnProps.containsKey(ConstKeys.IMPULSE)) {
-            val impulse = spawnProps.get(ConstKeys.IMPULSE, Vector2::class)!!
-            body.physics.velocity = impulse
+            val impulse = spawnProps.get(ConstKeys.IMPULSE, Vector2::class)!!.cpy()
+            body.physics.velocity.set(impulse)
         }
 
         trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)
@@ -109,6 +110,6 @@ class CaveRock(game: MegamanMaverickGame) : AbstractProjectile(game) {
         destroy()
         val caveRockExplosion =
             EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.CAVE_ROCK_EXPLOSION)!!
-        caveRockExplosion.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
+        caveRockExplosion.spawn(pooledProps(ConstKeys.POSITION pairTo body.getCenter()))
     }
 }

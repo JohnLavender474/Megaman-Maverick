@@ -53,20 +53,23 @@ class SnowballExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "SnowballExplode")
-        addComponent(defineAnimationsComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
+        addComponent(defineAnimationsComponent())
         addComponent(defineUpdatablesComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
+
         damageMask = spawnProps.getOrDefault(
             ConstKeys.MASK,
             ObjectSet<KClass<out IDamageable>>()
         ) as ObjectSet<KClass<out IDamageable>>
+
         timer.reset()
     }
 
@@ -79,12 +82,7 @@ class SnowballExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
         body.addFixture(damagerFixture)
 
-        addComponent(
-            DrawableShapesComponent(
-                debugShapeSuppliers = gdxArrayOf({ damagerFixture}),
-                debug = true
-            )
-        )
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ damagerFixture }), debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -93,7 +91,7 @@ class SnowballExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
         val spriteComponent = SpritesComponent(sprite)
-        spriteComponent.putUpdateFunction { _, _sprite -> _sprite.setCenter(body.getCenter()) }
+        spriteComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
         return spriteComponent
     }
 

@@ -13,7 +13,6 @@ import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.UpdateFunction
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
@@ -44,7 +43,8 @@ import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.projectiles.ReactManProjectile
-import com.megaman.maverick.game.utils.ObjectPools
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
@@ -120,7 +120,7 @@ class TurnBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IDirectional
             EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.REACT_MAN_PROJECTILE) as AbstractProjectile
         val offset = Vector2(0f, 0.65f * ConstVals.PPM).rotateDeg(direction.rotation + angleOffset)
         val position = body.getCenter().add(offset)
-        orb!!.spawn(props(ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo position, ConstKeys.BIG pairTo false))
+        orb!!.spawn(pooledProps(ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo position, ConstKeys.BIG pairTo false))
     }
 
     private fun shootOrb() {
@@ -182,7 +182,7 @@ class TurnBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IDirectional
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val size = ObjectPools.get(Vector2::class).set(1.25f, 1.25f).scl(ConstVals.PPM.toFloat())
+        val size = GameObjectPools.fetch(Vector2::class).set(1.25f, 1.25f).scl(ConstVals.PPM.toFloat())
         val sprites = OrderedMap<Any, GameSprite>()
 
         val baseSprite = GameSprite(regions.get("base"))

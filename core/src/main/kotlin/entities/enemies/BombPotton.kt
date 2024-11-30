@@ -44,6 +44,7 @@ import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.projectiles.SmallMissile
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
@@ -99,8 +100,12 @@ class BombPotton(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             speed = minOf(MAX_SPEED, speed + ACCELERATION * delta)
 
             if (!targetReached) {
-                val trajectory = target.cpy().sub(body.getCenter()).nor().scl(speed * ConstVals.PPM)
-                body.physics.velocity = trajectory
+                val trajectory = GameObjectPools.fetch(Vector2::class)
+                    .set(target)
+                    .sub(body.getCenter())
+                    .nor()
+                    .scl(speed * ConstVals.PPM)
+                body.physics.velocity.set(trajectory)
 
                 if (body.getCenter().epsilonEquals(target, 0.1f * ConstVals.PPM)) {
                     speed = 0f
@@ -108,8 +113,9 @@ class BombPotton(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
                     facing = if (body.getX() > megaman().body.getX()) Facing.LEFT else Facing.RIGHT
                 }
             } else {
-                val trajectory = Vector2(speed * facing.value * ConstVals.PPM, 0f)
-                body.physics.velocity = trajectory
+                val trajectory = GameObjectPools.fetch(Vector2::class)
+                    .set(speed * facing.value * ConstVals.PPM, 0f)
+                body.physics.velocity.set(trajectory)
 
                 if (!launchedBomb && body.getX() < megaman().body.getMaxX() && body.getMaxX() > megaman().body.getX()) {
                     launchBomb()

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="650" height="70" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="561">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="650" height="70" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="562">
  <tileset firstgid="1" source="../tsx/GlacierManTileset.tsx"/>
  <tileset firstgid="17281" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="18305" source="../tsx/Blizzardman.tsx"/>
@@ -807,7 +807,7 @@
   </object>
  </objectgroup>
  <objectgroup id="5" name="player">
-  <object id="560" name="0" x="15040" y="832" width="32" height="32"/>
+  <object id="561" name="0" x="12192" y="800" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="10" name="temp">
   <object id="80" name="0" x="96" y="1984" width="32" height="32"/>

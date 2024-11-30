@@ -52,6 +52,7 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
@@ -204,19 +205,23 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                 } else if (megaman().body.getBounds().overlaps(turnAroundScanner)) swapFacing()
             }
 
-            body.physics.velocity = (when (direction) {
-                Direction.UP -> Vector2(MOVE_SPEED * facing.value, 0f)
-                Direction.DOWN -> Vector2(-MOVE_SPEED * facing.value, 0f)
-                Direction.LEFT -> Vector2(0f, MOVE_SPEED * facing.value)
-                Direction.RIGHT -> Vector2(0f, -MOVE_SPEED * facing.value)
-            }).scl(ConstVals.PPM.toFloat() * movementScalar)
+            val velocity = GameObjectPools.fetch(Vector2::class)
+            when (direction) {
+                Direction.UP -> velocity.set(MOVE_SPEED * facing.value, 0f)
+                Direction.DOWN -> velocity.set(-MOVE_SPEED * facing.value, 0f)
+                Direction.LEFT -> velocity.set(0f, MOVE_SPEED * facing.value)
+                Direction.RIGHT -> velocity.set(0f, -MOVE_SPEED * facing.value)
+            }.scl(ConstVals.PPM.toFloat() * movementScalar)
+            body.physics.velocity.set(velocity)
 
-            body.physics.gravity = (when (direction) {
-                Direction.UP -> Vector2(0f, -GRAVITY)
-                Direction.DOWN -> Vector2(0f, GRAVITY)
-                Direction.LEFT -> Vector2(GRAVITY, 0f)
-                Direction.RIGHT -> Vector2(-GRAVITY, 0f)
-            }).scl(ConstVals.PPM.toFloat() * movementScalar)
+            val gravity = GameObjectPools.fetch(Vector2::class)
+            when (direction) {
+                Direction.UP -> velocity.set(0f, -GRAVITY)
+                Direction.DOWN -> velocity.set(0f, GRAVITY)
+                Direction.LEFT -> velocity.set(GRAVITY, 0f)
+                Direction.RIGHT -> velocity.set(-GRAVITY, 0f)
+            }.scl(ConstVals.PPM.toFloat() * movementScalar)
+            body.physics.gravity.set(gravity)
         }
     }
 

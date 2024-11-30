@@ -44,6 +44,8 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.projectiles.SigmaRatElectricBall
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
@@ -262,7 +264,7 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
                 for (i in 0 until ELECTRIC_BALL_ANGLES.size) {
                     val electricBall =
                         EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SIGMA_RAT_ELECTRIC_BALL)!!
-                    electricBall.spawn(props(ConstKeys.POSITION pairTo headPosition))
+                    electricBall.spawn(pooledProps(ConstKeys.POSITION pairTo headPosition))
                     electricBalls.addLast(electricBall as SigmaRatElectricBall)
                 }
                 electricBallsClockwise = getRandomBool()
@@ -358,8 +360,12 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
                 fireballDelayTimer.update(delta)
                 if (fireballDelayTimer.isFinished()) {
                     val (fireball, angle) = fireballs.removeLast()
-                    val trajectory = Vector2(0f, FIREBALL_SPEED * ConstVals.PPM).setAngleDeg(angle)
-                    fireball.body.physics.velocity = trajectory
+
+                    val trajectory = GameObjectPools.fetch(Vector2::class)
+                        .set(0f, FIREBALL_SPEED * ConstVals.PPM)
+                        .setAngleDeg(angle)
+                    fireball.body.physics.velocity.set(trajectory)
+
                     fireballDelayTimer.reset()
                 }
                 if (fireballs.isEmpty) endAttack()

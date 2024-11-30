@@ -57,10 +57,13 @@ class ToxicGoopShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
-        val impulse = spawnProps.getOrDefault(ConstKeys.IMPULSE, Vector2(), Vector2::class)
+
+        val impulse = spawnProps.getOrDefault(ConstKeys.IMPULSE, Vector2.Zero, Vector2::class)
         body.physics.velocity.set(impulse)
     }
 

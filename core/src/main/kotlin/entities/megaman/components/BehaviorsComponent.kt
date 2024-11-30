@@ -22,7 +22,7 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.special.Cart
 import com.megaman.maverick.game.entities.special.Ladder
-import com.megaman.maverick.game.utils.ObjectPools
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
 
 const val MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: WallSlideBehavior"
@@ -147,7 +147,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 (body.isSensing(BodySense.FEET_ON_GROUND) || isBehaviorActive(BehaviorType.WALL_SLIDING))
         },
         init = {
-            val v = ObjectPools.get(Vector2::class)
+            val v = GameObjectPools.fetch(Vector2::class)
             v.x = when (direction) {
                 Direction.UP, Direction.DOWN -> {
                     when {
@@ -455,35 +455,62 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 return
             }
 
-            body.physics.velocity = (when (direction) {
-                Direction.UP -> if (game.controllerPoller.isPressed(MegaControllerButton.UP))
-                    Vector2(0f, MegamanValues.CLIMB_VEL)
-                else if (game.controllerPoller.isPressed(MegaControllerButton.DOWN))
-                    Vector2(0f, MegamanValues.CLIMB_VEL * -1f)
-                else Vector2()
+            val velocity = GameObjectPools.fetch(Vector2::class)
+            when (direction) {
+                Direction.UP -> when {
+                    game.controllerPoller.isPressed(MegaControllerButton.UP) -> velocity.set(
+                        0f,
+                        MegamanValues.CLIMB_VEL
+                    )
 
-                Direction.DOWN -> if (game.controllerPoller.isPressed(MegaControllerButton.DOWN))
-                    Vector2(0f, MegamanValues.CLIMB_VEL)
-                else if (game.controllerPoller.isPressed(MegaControllerButton.UP))
-                    Vector2(0f, MegamanValues.CLIMB_VEL * -1f)
-                else Vector2()
+                    game.controllerPoller.isPressed(MegaControllerButton.DOWN) -> velocity.set(
+                        0f,
+                        MegamanValues.CLIMB_VEL * -1f
+                    )
 
-                Direction.LEFT -> {
-                    if (game.controllerPoller.isPressed(MegaControllerButton.UP))
-                        Vector2(MegamanValues.CLIMB_VEL * -1f, 0f)
-                    else if (game.controllerPoller.isPressed(MegaControllerButton.DOWN))
-                        Vector2(MegamanValues.CLIMB_VEL, 0f)
-                    else Vector2()
+                    else -> velocity.setZero()
                 }
 
-                Direction.RIGHT -> {
-                    if (game.controllerPoller.isPressed(MegaControllerButton.UP))
-                        Vector2(MegamanValues.CLIMB_VEL, 0f)
-                    else if (game.controllerPoller.isPressed(MegaControllerButton.DOWN))
-                        Vector2(MegamanValues.CLIMB_VEL * -1f, 0f)
-                    else Vector2()
+                Direction.DOWN -> when {
+                    game.controllerPoller.isPressed(MegaControllerButton.DOWN) -> velocity.set(
+                        0f,
+                        MegamanValues.CLIMB_VEL
+                    )
+
+                    game.controllerPoller.isPressed(MegaControllerButton.UP) -> velocity.set(
+                        0f,
+                        MegamanValues.CLIMB_VEL * -1f
+                    )
+
+                    else -> velocity.setZero()
                 }
-            }).scl(ConstVals.PPM * movementScalar)
+
+                Direction.LEFT -> when {
+                    game.controllerPoller.isPressed(MegaControllerButton.UP) ->
+                        velocity.set(MegamanValues.CLIMB_VEL * -1f, 0f)
+
+                    game.controllerPoller.isPressed(MegaControllerButton.DOWN) ->
+                        velocity.set(MegamanValues.CLIMB_VEL, 0f)
+
+                    else -> velocity.setZero()
+
+                }
+
+                Direction.RIGHT -> when {
+                    game.controllerPoller.isPressed(MegaControllerButton.UP) -> velocity.set(
+                        MegamanValues.CLIMB_VEL,
+                        0f
+                    )
+
+                    game.controllerPoller.isPressed(MegaControllerButton.DOWN) -> velocity.set(
+                        MegamanValues.CLIMB_VEL * -1f,
+                        0f
+                    )
+
+                    else -> velocity.setZero()
+                }
+            }.scl(ConstVals.PPM * movementScalar)
+            body.physics.velocity.set(velocity)
         }
 
         override fun end() {

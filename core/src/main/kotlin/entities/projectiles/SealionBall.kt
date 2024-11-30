@@ -38,6 +38,7 @@ import com.megaman.maverick.game.entities.enemies.Sealion
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
@@ -108,7 +109,7 @@ class SealionBall(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
 
         if (overlapsGameCamera()) playSoundNow(SoundAsset.ENEMY_DAMAGE_SOUND, false)
         val disintegration = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)!!
-        disintegration.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
+        disintegration.spawn(pooledProps(ConstKeys.POSITION pairTo body.getCenter()))
 
         if (owner != null) {
             (owner as Sealion).onBallDestroyed()

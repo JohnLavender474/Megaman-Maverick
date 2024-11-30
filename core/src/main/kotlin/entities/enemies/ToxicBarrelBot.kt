@@ -47,6 +47,7 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
@@ -90,8 +91,10 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
     private val closedTimer = Timer(CLOSED_DUR)
     private val transTimer = Timer(TRANS_DUR)
     private val openTimer = Timer(OPEN_DUR)
+
     private lateinit var toxicBarrelBotState: ToxicBarrelBotState
-    private lateinit var position: Vector2
+
+    private val position = Vector2()
     private var shot = false
 
     override fun init() {
@@ -107,11 +110,14 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        position = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
+
+        position.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER))
         body.setBottomCenterToPoint(position)
+
         closedTimer.reset()
         transTimer.reset()
         openTimer.reset()
+
         toxicBarrelBotState = ToxicBarrelBotState.CLOSED
         facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         shot = false
@@ -123,11 +129,13 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
             when (toxicBarrelBotState) {
                 ToxicBarrelBotState.CLOSED -> {
                     facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+
                     closedTimer.update(delta)
                     if (closedTimer.isFinished()) {
                         val openingTop = getRandomBool()
                         toxicBarrelBotState =
                             if (openingTop) ToxicBarrelBotState.OPENING_TOP else ToxicBarrelBotState.OPENING_CENTER
+
                         closedTimer.reset()
                     }
                 }
@@ -138,20 +146,24 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
                         toxicBarrelBotState =
                             if (toxicBarrelBotState == ToxicBarrelBotState.OPENING_TOP) ToxicBarrelBotState.OPEN_TOP
                             else ToxicBarrelBotState.OPEN_CENTER
+
                         transTimer.reset()
                     }
                 }
 
                 ToxicBarrelBotState.OPEN_TOP, ToxicBarrelBotState.OPEN_CENTER -> {
                     openTimer.update(delta)
+
                     if (!shot && openTimer.time >= SHOOT_TIME) {
                         shoot()
                         shot = true
                     }
+
                     if (openTimer.isFinished()) {
                         toxicBarrelBotState =
                             if (toxicBarrelBotState == ToxicBarrelBotState.OPEN_TOP) ToxicBarrelBotState.CLOSING_TOP
                             else ToxicBarrelBotState.CLOSING_CENTER
+
                         openTimer.reset()
                     }
                 }
@@ -160,8 +172,9 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
                     transTimer.update(delta)
                     if (transTimer.isFinished()) {
                         toxicBarrelBotState = ToxicBarrelBotState.CLOSED
-                        transTimer.reset()
                         shot = false
+
+                        transTimer.reset()
                     }
                 }
             }
@@ -171,28 +184,36 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
     private fun shoot() {
         if (toxicBarrelBotState == ToxicBarrelBotState.OPEN_CENTER) {
             val spawn = body.getCenter().add(0.5f * ConstVals.PPM * facing.value, -0.05f * ConstVals.PPM)
+            val trajectory = GameObjectPools.fetch(Vector2::class)
+                .set(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
+
             val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
             bullet.spawn(
                 props(
                     ConstKeys.POSITION pairTo spawn,
-                    ConstKeys.OWNER pairTo this,
-                    ConstKeys.TRAJECTORY pairTo Vector2(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
+                    ConstKeys.TRAJECTORY pairTo trajectory,
+                    ConstKeys.OWNER pairTo this
                 )
             )
+
             requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
         } else {
             val spawn = body.getCenter().add(
                 0.25f * ConstVals.PPM * facing.value,
                 0.35f * ConstVals.PPM
             )
+            val impulse = GameObjectPools.fetch(Vector2::class)
+                .set(GOOP_SHOT_X_IMPULSE * ConstVals.PPM * facing.value, 0f)
+
             val toxicGoopShot = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.TOXIC_GOOP_SHOT)!!
             toxicGoopShot.spawn(
                 props(
                     ConstKeys.POSITION pairTo spawn,
                     ConstKeys.OWNER pairTo this,
-                    ConstKeys.IMPULSE pairTo Vector2(GOOP_SHOT_X_IMPULSE * ConstVals.PPM * facing.value, 0f)
+                    ConstKeys.IMPULSE pairTo impulse
                 )
             )
+
             requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
         }
     }
@@ -278,11 +299,11 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         val sprite = GameSprite()
         sprite.setSize(1.15f * ConstVals.PPM, 1.85f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setFlip(isFacing(Facing.RIGHT), false)
-            _sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
-            _sprite.x += 0.1f * ConstVals.PPM * facing.value
-            _sprite.hidden = damageBlink
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setFlip(isFacing(Facing.RIGHT), false)
+            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
+            sprite.x += 0.1f * ConstVals.PPM * facing.value
+            sprite.hidden = damageBlink
         }
         return spritesComponent
     }

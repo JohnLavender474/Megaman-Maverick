@@ -147,7 +147,7 @@ class SniperJoeShield(game: MegamanMaverickGame) : AbstractProjectile(game), IFa
         body.addFixture(shieldFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            body.physics.velocity = trajectory
+            body.physics.velocity.set(trajectory)
 
             val rotated = thrownRotations.getCurrent().equalsAny(1, 3)
             val size = if (rotated) Vector2(0.75f * ConstVals.PPM, 0.5f * ConstVals.PPM)

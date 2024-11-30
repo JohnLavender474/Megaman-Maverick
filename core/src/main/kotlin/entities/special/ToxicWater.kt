@@ -14,7 +14,6 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -33,8 +32,9 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.SpecialsFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
 
-class ToxicWater(game: MegamanMaverickGame): MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, ICullableEntity {
+class ToxicWater(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, ICullableEntity {
 
     companion object {
         const val TAG = "ToxicWater"
@@ -57,10 +57,12 @@ class ToxicWater(game: MegamanMaverickGame): MegaGameEntity(game), ISpritesEntit
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         defineDrawables(bounds)
+
         water = EntityFactories.fetch(EntityType.SPECIAL, SpecialsFactory.WATER)!! as Water
-        water!!.spawn(props(ConstKeys.BOUNDS pairTo bounds, ConstKeys.HIDDEN pairTo true))
+        water!!.spawn(pooledProps(ConstKeys.BOUNDS pairTo bounds, ConstKeys.HIDDEN pairTo true))
     }
 
     override fun onDestroy() {

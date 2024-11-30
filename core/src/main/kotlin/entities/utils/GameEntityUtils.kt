@@ -69,12 +69,11 @@ fun getGameCameraCullingLogic(entity: IBodyEntity, timeToCull: Float = 1f) =
     getGameCameraCullingLogic((entity as MegaGameEntity).getGameCamera(), { entity.body.getBounds() }, timeToCull)
 
 fun getGameCameraCullingLogic(camera: RotatableCamera, bounds: () -> GameRectangle, timeToCull: Float = 1f) =
-    CullableOnUncontained<GameRectangle>({ camera.getRotatedBounds() }, { bounds.invoke().overlaps(it) }, timeToCull)
+    CullableOnUncontained<GameRectangle>({ camera.getRotatedBounds() }, { bounds().overlaps(it) }, timeToCull)
 
-fun getObjectProps(props: Properties): Array<RectangleMapObject> {
-    val objectProps = Array<RectangleMapObject>()
-    props.forEach { _, value -> if (value is RectangleMapObject) objectProps.add(value) }
-    return objectProps
+fun getObjectProps(props: Properties, out: Array<RectangleMapObject>): Array<RectangleMapObject> {
+    props.forEach { _, value -> if (value is RectangleMapObject) out.add(value) }
+    return out
 }
 
 fun convertObjectPropsToEntitySuppliers(props: Properties): Array<GamePair<() -> GameEntity, Properties>> {

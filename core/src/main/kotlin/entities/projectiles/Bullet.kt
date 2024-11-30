@@ -33,6 +33,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
 import com.megaman.maverick.game.utils.VelocityAlterator
 import com.megaman.maverick.game.world.body.*
 
@@ -47,7 +48,9 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
 
     override var direction = Direction.UP
 
-    private var trajectory: Vector2? = null
+    private val trajectory = Vector2()
+    private var followTraj = true
+
     private var bounced = 0
 
     override fun init() {
@@ -62,12 +65,14 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
         body.setCenter(spawn)
 
         direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
-        trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)
+
+        followTraj = spawnProps.containsKey(ConstKeys.TRAJECTORY)
+        if (followTraj) trajectory.set(spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)) else trajectory.setZero()
 
         val impulse = spawnProps.get(ConstKeys.IMPULSE, Vector2::class)
         impulse?.let { body.physics.velocity.set(it) }
 
-        val gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, Vector2(), Vector2::class)
+        val gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, Vector2.Zero, Vector2::class)
         body.physics.gravity.set(gravity)
 
         bounced = 0
@@ -93,7 +98,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
             return
         }
 
-        val velocity = trajectory ?: body.physics.velocity
+        val velocity = if (followTraj) trajectory else body.physics.velocity
         if (direction.isVertical()) velocity.x *= -1f else velocity.y *= -1f
         val deflection = shieldFixture.getOrDefaultProperty(ConstKeys.DIRECTION, Direction.UP, Direction::class)
         when (deflection) {
@@ -124,7 +129,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
         val disintegration = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)
-        disintegration!!.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
+        disintegration!!.spawn(pooledProps(ConstKeys.POSITION pairTo body.getCenter()))
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -152,7 +157,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             when {
-                canMove -> trajectory?.let { body.physics.velocity.set(it).scl(movementScalar) }
+                canMove -> if (followTraj) body.physics.velocity.set(trajectory).scl(movementScalar)
                 else -> body.physics.velocity.setZero()
             }
         }

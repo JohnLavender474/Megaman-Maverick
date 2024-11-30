@@ -51,6 +51,7 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.BodyComponentCreator
@@ -154,7 +155,13 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         updatablesComponent.add { delta ->
             when (heliMetState) {
                 SHIELD -> {
-                    body.physics.velocity = target.cpy().sub(body.getCenter()).nor().scl(TARGET_VEL * ConstVals.PPM)
+                    val velocity = GameObjectPools.fetch(Vector2::class)
+                        .set(target)
+                        .sub(body.getCenter())
+                        .nor()
+                        .scl(TARGET_VEL * ConstVals.PPM)
+                    body.physics.velocity.set(velocity)
+
                     if (body.getBounds().contains(target)) {
                         body.setCenter(target)
                         popUpTimer.reset()

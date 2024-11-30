@@ -36,6 +36,7 @@ import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
 import com.megaman.maverick.game.world.body.*
 
 class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
@@ -102,7 +103,7 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
         val disintegration = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)
-        disintegration!!.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
+        disintegration!!.spawn(pooledProps(ConstKeys.POSITION pairTo body.getCenter()))
         if (overlapsGameCamera() && size == Size.SMALL) requestToPlaySound(SoundAsset.THUMP_SOUND, false)
     }
 

@@ -22,6 +22,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.utils.GameObjectPools
 import kotlin.math.max
 
 class WhiteArrow(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IDirectional {
@@ -38,7 +39,8 @@ class WhiteArrow(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
     override var direction = Direction.UP
 
     private val oscillationTimer = SmoothOscillationTimer(ALPHA_FREQUENCY, MIN_ALPHA, MAX_ALPHA)
-    private lateinit var position: Vector2
+    private val position = Vector2()
+
     private var maxValue = 0f
     private var fadeOnSpawnAlpha = 0f
     private var fadeOnDestroyAlpha = 0f
@@ -53,9 +55,12 @@ class WhiteArrow(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps = $spawnProps")
+
         super.onSpawn(spawnProps)
-        position = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+
+        position.set(spawnProps.get(ConstKeys.POSITION, Vector2::class)!!)
         direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
+
         val maxOffset = spawnProps.get(ConstKeys.MAX, Int::class)!!
         maxValue = when (direction) {
             Direction.UP -> position.y + maxOffset * ConstVals.PPM
@@ -63,7 +68,9 @@ class WhiteArrow(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
             Direction.LEFT -> position.x - maxOffset * ConstVals.PPM
             Direction.RIGHT -> position.x + maxOffset * ConstVals.PPM
         }
+
         oscillationTimer.reset()
+
         setToDestroy = false
         fadeOnSpawnAlpha = 0f
     }
@@ -74,11 +81,12 @@ class WhiteArrow(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        val movement = when (direction) {
-            Direction.UP -> Vector2(0f, SPEED)
-            Direction.DOWN -> Vector2(0f, -SPEED)
-            Direction.LEFT -> Vector2(-SPEED, 0f)
-            Direction.RIGHT -> Vector2(SPEED, 0f)
+        val movement = GameObjectPools.fetch(Vector2::class)
+        when (direction) {
+            Direction.UP -> movement.set(0f, SPEED)
+            Direction.DOWN -> movement.set(0f, -SPEED)
+            Direction.LEFT -> movement.set(-SPEED, 0f)
+            Direction.RIGHT -> movement.set(SPEED, 0f)
         }.scl(ConstVals.PPM.toFloat() * delta)
         position.add(movement)
 
@@ -106,14 +114,16 @@ class WhiteArrow(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.FOREGROUND, 5))
         sprite.setSize(1.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setOriginCenter()
-            _sprite.rotation = direction.rotation
-            _sprite.setCenter(position)
-            _sprite.setAlpha(
-                if (setToDestroy) fadeOnDestroyAlpha
-                else if (fadeOnSpawnAlpha < MIN_ALPHA) fadeOnSpawnAlpha
-                else oscillationTimer.getValue()
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setOriginCenter()
+            sprite.rotation = direction.rotation
+            sprite.setCenter(position)
+            sprite.setAlpha(
+                when {
+                    setToDestroy -> fadeOnDestroyAlpha
+                    fadeOnSpawnAlpha < MIN_ALPHA -> fadeOnSpawnAlpha
+                    else -> oscillationTimer.getValue()
+                }
             )
         }
         return spritesComponent

@@ -52,7 +52,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
-import com.megaman.maverick.game.utils.ObjectPools
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.max
@@ -183,12 +183,18 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
 
     override fun onDefeated(delta: Float) {
         super.onDefeated(delta)
+
         if (body.getCenter().epsilonEquals(roomCenter, 0.1f * ConstVals.PPM)) {
             body.physics.velocity.setZero()
             return
         }
-        val velocity = roomCenter.cpy().sub(body.getCenter()).nor().scl(HOVER_SPEED * ConstVals.PPM)
-        body.physics.velocity = velocity
+
+        val velocity = GameObjectPools.fetch(Vector2::class)
+            .set(roomCenter)
+            .sub(body.getCenter())
+            .nor()
+            .scl(HOVER_SPEED * ConstVals.PPM)
+        body.physics.velocity.set(velocity)
     }
 
     private fun fire() {
@@ -201,7 +207,7 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
                 ConstKeys.OWNER pairTo this,
                 ConstKeys.POSITION pairTo spawn,
                 ConstKeys.TRAJECTORY pairTo normalizedTrajectory(
-                    spawn, megaman().body.getCenter(), FIRE_SPEED * ConstVals.PPM, ObjectPools.get(Vector2::class)
+                    spawn, megaman().body.getCenter(), FIRE_SPEED * ConstVals.PPM, GameObjectPools.fetch(Vector2::class)
                 )
             )
         )
@@ -265,7 +271,7 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
                     }
 
                     val trajectory = normalizedTrajectory(
-                        body.getCenter(), currentTarget, HOVER_SPEED * ConstVals.PPM, ObjectPools.get(Vector2::class)
+                        body.getCenter(), currentTarget, HOVER_SPEED * ConstVals.PPM, GameObjectPools.fetch(Vector2::class)
                     )
                     body.physics.velocity.set(trajectory)
 

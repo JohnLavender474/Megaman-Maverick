@@ -32,6 +32,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
@@ -57,11 +58,18 @@ class RocketBomb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "spawn(): spawnProps=$spawnProps")
+
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
+
         direction = getSingleMostDirectionFromStartToTarget(spawn, megaman().body.getCenter())
-        body.physics.velocity = Vector2(0f, SPEED * ConstVals.PPM).rotateDeg(direction.rotation)
+
+        val velocity = GameObjectPools.fetch(Vector2::class)
+            .set(0f, SPEED * ConstVals.PPM)
+            .rotateDeg(direction.rotation)
+        body.physics.velocity.set(velocity)
     }
 
     override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()

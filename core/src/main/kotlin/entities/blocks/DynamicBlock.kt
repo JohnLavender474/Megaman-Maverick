@@ -68,7 +68,7 @@ open class DynamicBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
         )
         staticInnerBlock!!.spawn(staticInnerBlockProps)
 
-        val gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, Vector2(), Vector2::class)
+        val gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, Vector2.Zero, Vector2::class)
         body.physics.gravity.set(gravity)
     }
 

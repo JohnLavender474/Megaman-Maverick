@@ -27,7 +27,7 @@ class SpaceSatellite(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
         private var region: TextureRegion? = null
     }
 
-    private lateinit var position: Vector2
+    private val position = Vector2()
     private var left = false
 
     override fun init() {
@@ -38,7 +38,7 @@ class SpaceSatellite(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        position = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
+        position.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER))
         left = spawnProps.getOrDefault(ConstKeys.LEFT, false, Boolean::class)
     }
 

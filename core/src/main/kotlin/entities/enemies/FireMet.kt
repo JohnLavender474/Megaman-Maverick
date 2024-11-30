@@ -46,7 +46,7 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.FireMetFlame
-import com.megaman.maverick.game.utils.ObjectPools
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
@@ -162,7 +162,10 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     }
 
     private fun jump() {
-        body.physics.velocity = Vector2(MOVE_SPEED * facing.value, JUMP_IMPULSE_Y).scl(ConstVals.PPM.toFloat())
+        val velocity = GameObjectPools.fetch(Vector2::class)
+            .set(MOVE_SPEED * facing.value, JUMP_IMPULSE_Y)
+            .scl(ConstVals.PPM.toFloat())
+        body.physics.velocity.set(velocity)
     }
 
     private fun shoot() {
@@ -170,6 +173,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
             body.getCenter(), megaman().body.getCenter(), JUMP_IMPULSE_Y * ConstVals.PPM,
         ).coerceX(-MAX_SHOOT_X * ConstVals.PPM, MAX_SHOOT_Y * ConstVals.PPM)
         flame!!.launch(impulse)
+
         flame!!.body.physics.gravityOn = true
         flame = null
     }
@@ -223,7 +227,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
         val leftConsumerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
         leftConsumerFixture.offsetFromBodyAttachment =
-            ObjectPools.get(Vector2::class).set(-0.5f, -0.5f).scl(ConstVals.PPM.toFloat())
+            GameObjectPools.fetch(Vector2::class).set(-0.5f, -0.5f).scl(ConstVals.PPM.toFloat())
         leftConsumerFixture.setConsumer { _, fixture ->
             when (fixture.getType()) {
                 FixtureType.DEATH -> leftConsumerFixture.putProperty(ConstKeys.DEATH, true)

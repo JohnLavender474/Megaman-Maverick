@@ -47,13 +47,9 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodySense
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getCenter
-import com.megaman.maverick.game.world.body.getPositionPoint
-import com.megaman.maverick.game.world.body.isSensing
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectional {
@@ -254,13 +250,15 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
                 (if (direction.isVertical()) Vector2(VELOCITY_CLAMP_X, VELOCITY_CLAMP_Y)
                 else Vector2(VELOCITY_CLAMP_Y, VELOCITY_CLAMP_X)).scl(ConstVals.PPM.toFloat())
 
-            val gravity = (if (body.isSensing(BodySense.FEET_ON_GROUND)) GRAVITY_ON_GROUND else GRAVITY_IN_AIR)
-            body.physics.gravity = (when (direction) {
-                Direction.UP -> Vector2(0f, -gravity)
-                Direction.DOWN -> Vector2(0f, gravity)
-                Direction.LEFT -> Vector2(gravity, 0f)
-                Direction.RIGHT -> Vector2(-gravity, 0f)
-            }).scl(ConstVals.PPM.toFloat())
+            val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) GRAVITY_ON_GROUND else GRAVITY_IN_AIR
+            val gravityVec = GameObjectPools.fetch(Vector2::class)
+            when (direction) {
+                Direction.UP -> gravityVec.set(0f, gravity)
+                Direction.DOWN -> gravityVec.set(0f, -gravity)
+                Direction.LEFT -> gravityVec.set(-gravity, 0f)
+                Direction.RIGHT -> gravityVec.set(gravity, 0f)
+            }.scl(ConstVals.PPM.toFloat())
+            body.physics.gravity.set(gravityVec)
 
             shieldFixture.setActive(behavior == MetBehavior.SHIELDING)
             damageableFixture.setActive(behavior != MetBehavior.SHIELDING)

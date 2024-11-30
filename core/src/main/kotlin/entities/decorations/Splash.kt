@@ -31,6 +31,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
 import kotlin.math.ceil
 
 class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
@@ -60,7 +61,7 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
                 val splash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SPLASH)!!
                 val spawn =
                     Vector2(splasher.getX() + ConstVals.PPM / 2f + i * ConstVals.PPM, water.getY() + water.getHeight())
-                splash.spawn(props(ConstKeys.POSITION pairTo spawn))
+                splash.spawn(pooledProps(ConstKeys.POSITION pairTo spawn))
             }
         }
     }

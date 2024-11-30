@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.megaman.components
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.enums.Direction
@@ -17,7 +18,8 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
-import com.megaman.maverick.game.utils.ObjectPools
+import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
@@ -96,12 +98,12 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     // debugShapes.add { rightFixture}
     body.putProperty("${ConstKeys.RIGHT}_${ConstKeys.SIDE}", rightFixture)
 
-    val damagableRect = GameRectangle().setWidth(body.getWidth())
+    val damagableRect = GameRectangle()
     val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, damagableRect)
-    damageableFixture.attachedToBody = false
     body.addFixture(damageableFixture)
     body.putProperty(ConstKeys.DAMAGEABLE, damageableFixture)
-    debugShapes.add { damageableFixture}
+    damageableFixture.drawingColor = Color.PURPLE
+    debugShapes.add { damageableFixture }
 
     val waterListenerFixture = Fixture(body, FixtureType.WATER_LISTENER, GameRectangle(body))
     body.addFixture(waterListenerFixture)
@@ -111,14 +113,15 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
 
     body.preProcess.put(ConstKeys.DEFAULT) {
         damagableRect.let {
-            val size = when {
-                isBehaviorActive(BehaviorType.GROUND_SLIDING) -> Vector2(1.25f, 0.75f)
-                else -> Vector2(0.75f, 1.25f)
+            val size = GameObjectPools.fetch(Vector2::class)
+            when {
+                isBehaviorActive(BehaviorType.GROUND_SLIDING) -> size.set(1.25f, 0.75f)
+                else -> size.set(0.75f, 1.25f)
             }
             it.setSize(size.scl(ConstVals.PPM.toFloat()))
 
             val position = DirectionPositionMapper.getInvertedPosition(direction)
-            it.positionOnPoint(body.getPositionPoint(position), position)
+            it.positionOnPoint(body.getBounds().getPositionPoint(position), position)
         }
 
         if (!ready) {
@@ -128,6 +131,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
 
         val wallSlidingOnIce = isBehaviorActive(BehaviorType.WALL_SLIDING) &&
             (body.isSensingAny(BodySense.SIDE_TOUCHING_ICE_LEFT, BodySense.SIDE_TOUCHING_ICE_RIGHT))
+
         var gravityValue = when {
             body.isSensing(BodySense.IN_WATER) -> if (wallSlidingOnIce) waterIceGravity else waterGravity
             wallSlidingOnIce -> iceGravity
@@ -142,7 +146,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
                 body.physics.gravity.set(0f, gravityValue * ConstVals.PPM)
                 body.physics.defaultFrictionOnSelf.set(ConstVals.STANDARD_RESISTANCE_X, ConstVals.STANDARD_RESISTANCE_Y)
 
-                val clamp = ObjectPools.get(Vector2::class)
+                val clamp = GameObjectPools.fetch(Vector2::class)
                 body.physics.velocityClamp.set(
                     if (isBehaviorActive(BehaviorType.RIDING_CART))
                         clamp.set(MegamanValues.CART_RIDE_MAX_SPEED, MegamanValues.CLAMP_Y)
@@ -154,7 +158,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
                 body.physics.gravity.set(gravityValue * ConstVals.PPM, 0f)
                 body.physics.defaultFrictionOnSelf.set(ConstVals.STANDARD_RESISTANCE_Y, ConstVals.STANDARD_RESISTANCE_X)
 
-                val clamp = ObjectPools.get(Vector2::class)
+                val clamp = GameObjectPools.fetch(Vector2::class)
                 body.physics.velocityClamp.set(
                     if (isBehaviorActive(BehaviorType.RIDING_CART))
                         clamp.set(MegamanValues.CLAMP_Y, MegamanValues.CART_RIDE_MAX_SPEED)

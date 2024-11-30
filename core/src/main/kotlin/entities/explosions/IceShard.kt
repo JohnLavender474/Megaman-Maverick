@@ -26,6 +26,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getCenter
 
@@ -65,7 +66,10 @@ class IceShard(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         body.setCenter(spawn)
 
         val index = spawnProps.get(ConstKeys.INDEX, Int::class)!!
-        body.physics.velocity = TRAJECTORIES[index].cpy().scl(ConstVals.PPM.toFloat())
+        val velocity = GameObjectPools.fetch(Vector2::class)
+            .set(TRAJECTORIES[index])
+            .scl(ConstVals.PPM.toFloat())
+        body.physics.velocity.set(velocity)
 
         val region = TEXTURES[index]
         defaultSprite.setRegion(region)

@@ -11,7 +11,6 @@ import com.mega.game.engine.animations.IAnimator
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -36,9 +35,9 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getBounds
 
 class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity {
 
@@ -78,8 +77,9 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
+
         body.fixtures.forEach { (_, fixture) ->
-            val shape = (fixture as Fixture).getShape()
+            val shape = (fixture as Fixture).rawShape
             if (shape is GameRectangle) shape.set(bounds)
         }
 
@@ -101,11 +101,11 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         val body = Body(BodyType.ABSTRACT)
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBounds() }
+        debugShapes.add { body }
 
         val waterFixture = Fixture(body, FixtureType.WATER)
         body.addFixture(waterFixture)
-        debugShapes.add { waterFixture}
+        debugShapes.add { waterFixture }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
@@ -119,6 +119,7 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
 
     private fun defineDrawables(bounds: GameRectangle) {
         val sprites = OrderedMap<Any, GameSprite>()
+        val animators = OrderedMap<Any, IAnimator>()
 
         val waterSprite = GameSprite(waterReg!!, DrawingPriority(DrawingSection.FOREGROUND, 10))
         waterSprite.setBounds(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight())
@@ -128,27 +129,24 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         val rows = (bounds.getHeight() / ConstVals.PPM).toInt()
         val columns = (bounds.getWidth() / ConstVals.PPM).toInt()
 
-        val animators = Array<GamePair<() -> GameSprite, IAnimator>>()
+        for (x in 0 until columns) for (y in 0 until rows) {
+            val pos = GameObjectPools.fetch(Vector2::class)
+                .set(bounds.getX() + x * ConstVals.PPM, bounds.getY() + y * ConstVals.PPM)
 
-        for (x in 0 until columns) {
-            for (y in 0 until rows) {
-                val pos = Vector2(bounds.getX() + x * ConstVals.PPM, bounds.getY() + y * ConstVals.PPM)
+            val region = if (y == rows - 1) surfaceReg!! else underReg!!
+            val animation = Animation(region, 1, 2, 0.15f, true)
 
-                val region = if (y == rows - 1) surfaceReg!! else underReg!!
-                val animation = Animation(region, 1, 2, 0.15f, true)
+            val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 11))
+            sprite.setBounds(pos.x, pos.y, ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
+            sprite.setAlpha(WATER_ALPHA)
 
-                val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
-                sprite.setBounds(pos.x, pos.y, ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
-                sprite.setAlpha(WATER_ALPHA)
-
-                sprites.put("animated_water_${x}_${y}", sprite)
-
-                val animator = Animator(animation)
-                animators.add({ sprite } pairTo animator)
-            }
+            val key = "animated_water_${x}_${y}"
+            sprites.put(key, sprite)
+            val animator = Animator(animation)
+            animators.put(key, animator)
         }
 
         addComponent(SpritesComponent(sprites))
-        addComponent(AnimationsComponent(animators))
+        addComponent(AnimationsComponent(animators, sprites))
     }
 }

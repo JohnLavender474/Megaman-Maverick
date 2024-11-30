@@ -10,7 +10,6 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -36,6 +35,8 @@ import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
@@ -77,7 +78,7 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
         val gravityOn = spawnProps.getOrDefault(ConstKeys.GRAVITY_ON, true, Boolean::class)
         body.physics.gravityOn = gravityOn
 
-        val trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2(), Vector2::class)
+        val trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2.Zero, Vector2::class)
         body.physics.velocity.set(trajectory)
 
         val region = regions.get(spawnProps.getOrDefault(ConstKeys.COLOR, "green", String::class))
@@ -104,11 +105,11 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
         destroy()
         if (explosionType == DEFAULT_EXPLOSION) {
             val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
-            explosion.spawn(props(ConstKeys.OWNER pairTo owner, ConstKeys.POSITION pairTo body.getCenter()))
+            explosion.spawn(pooledProps(ConstKeys.OWNER pairTo owner, ConstKeys.POSITION pairTo body.getCenter()))
             if (overlapsGameCamera()) playSoundNow(SoundAsset.EXPLOSION_2_SOUND, false)
         } else if (explosionType == WAVE_EXPLOSION) {
             val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.GREEN_EXPLOSION)!!
-            explosion.spawn(props(ConstKeys.OWNER pairTo owner, ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER)))
+            explosion.spawn(pooledProps(ConstKeys.OWNER pairTo owner, ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER)))
             if (overlapsGameCamera()) playSoundNow(SoundAsset.BLAST_1_SOUND, false)
         }
     }
@@ -123,12 +124,14 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
         debugShapes.add { body.getBounds() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            body.physics.gravity = when (direction) {
-                Direction.UP -> Vector2(0f, -GRAVITY)
-                Direction.DOWN -> Vector2(0f, GRAVITY)
-                Direction.LEFT -> Vector2(GRAVITY, 0f)
-                Direction.RIGHT -> Vector2(-GRAVITY, 0f)
+            val gravityVec = GameObjectPools.fetch(Vector2::class)
+            when (direction) {
+                Direction.UP -> gravityVec.set(0f, GRAVITY)
+                Direction.DOWN -> gravityVec.set(0f, -GRAVITY)
+                Direction.LEFT -> gravityVec.set(-GRAVITY, 0f)
+                Direction.RIGHT -> gravityVec.set(GRAVITY, 0f)
             }.scl(ConstVals.PPM.toFloat())
+            body.physics.gravity.set(gravityVec)
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

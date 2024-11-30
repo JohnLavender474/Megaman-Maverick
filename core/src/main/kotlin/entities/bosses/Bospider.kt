@@ -59,6 +59,7 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.extensions.toProps
@@ -347,18 +348,20 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
     }
 
     private fun moveToSpawn() {
-        val target = spawn.cpy()
-        val center = body.getCenter()
-        val directionToSpawn = target.sub(center).nor()
-        val velocity = directionToSpawn.scl(MIN_SPEED).scl(ConstVals.PPM.toFloat())
+        val velocity = GameObjectPools.fetch(Vector2::class)
+            .set(spawn)
+            .sub(body.getCenter())
+            .nor()
+            .scl(MIN_SPEED * ConstVals.PPM)
         body.physics.velocity.set(velocity)
     }
 
     private fun moveToNextTarget() {
-        val target = currentPath.first().cpy()
-        val center = body.getCenter()
-        val directionToTarget = target.sub(center).nor()
-        val velocity = directionToTarget.scl(getCurrentSpeed())
+        val velocity = GameObjectPools.fetch(Vector2::class)
+            .set(currentPath.first())
+            .sub(body.getCenter())
+            .nor()
+            .scl(getCurrentSpeed())
         body.physics.velocity.set(velocity)
     }
 

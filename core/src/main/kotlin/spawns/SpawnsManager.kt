@@ -4,20 +4,13 @@ import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.interfaces.Updatable
 
-class SpawnsManager : Updatable, Resettable {
+class SpawnsManager(val spawns: Array<Spawn>) : Updatable, Resettable {
 
     companion object {
         const val TAG = "SpawnsManager"
     }
 
-    internal val spawns = Array<Spawn>()
-    internal val spawners = Array<ISpawner>()
-
-    fun getSpawnsAndClear(): Array<Spawn> {
-        val spawnsToReturn = Array(spawns)
-        spawns.clear()
-        return spawnsToReturn
-    }
+    private val spawners = Array<ISpawner>()
 
     fun setSpawners(spawners: Array<ISpawner>) {
         this.spawners.clear()

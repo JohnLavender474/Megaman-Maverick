@@ -66,12 +66,17 @@ class PurpleBlast(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         facing = spawnProps.get(ConstKeys.FACING, Facing::class)!!
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
+
         body.physics.velocity.setZero()
+
         val trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
-        body.physics.velocity = trajectory
+        body.physics.velocity.set(trajectory)
+
         chargeDelayTimer.reset()
     }
 

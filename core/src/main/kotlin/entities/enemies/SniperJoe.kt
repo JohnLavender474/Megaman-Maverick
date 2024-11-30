@@ -56,7 +56,7 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.utils.ObjectPools
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
@@ -271,13 +271,15 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
             if (direction.equalsAny(Direction.UP, Direction.DOWN)) body.physics.velocity.x = 0f
             else body.physics.velocity.y = 0f
 
-            val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) -GROUND_GRAVITY else -GRAVITY
-            body.physics.gravity = (when (direction) {
-                Direction.UP -> Vector2(0f, gravity)
-                Direction.DOWN -> Vector2(0f, -gravity)
-                Direction.LEFT -> Vector2(-gravity, 0f)
-                Direction.RIGHT -> Vector2(gravity, 0f)
-            }).scl(ConstVals.PPM.toFloat() * gravityScalar)
+            val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
+            val gravityVec = GameObjectPools.fetch(Vector2::class)
+            when (direction) {
+                Direction.UP -> gravityVec.set(0f, -gravity)
+                Direction.DOWN -> gravityVec.set(0f, gravity)
+                Direction.LEFT -> gravityVec.set(gravity, 0f)
+                Direction.RIGHT -> gravityVec.set(-gravity, 0f)
+            }.scl(ConstVals.PPM.toFloat() * gravityScalar)
+            body.physics.gravity.set(gravityVec)
 
             shieldFixture.setActive(shielded)
             shieldFixture.offsetFromBodyAttachment.x =
@@ -461,7 +463,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
                     body.getCenter(),
                     megaman().body.getCenter(),
                     SHIELD_VEL * ConstVals.PPM,
-                    ObjectPools.get(Vector2::class)
+                    GameObjectPools.fetch(Vector2::class)
                 ), ConstKeys.OWNER pairTo this
             )
         )
@@ -489,13 +491,14 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
     }
 
     private fun jump() {
-        val impulse = (when (direction) {
-            Direction.UP -> Vector2(0f, JUMP_IMPULSE)
-            Direction.DOWN -> Vector2(0f, -JUMP_IMPULSE)
-            Direction.LEFT -> Vector2(-JUMP_IMPULSE, 0f)
-            Direction.RIGHT -> Vector2(JUMP_IMPULSE, 0f)
-        }).scl(ConstVals.PPM.toFloat())
-        body.physics.velocity = impulse
+        val impulse = GameObjectPools.fetch(Vector2::class)
+        when (direction) {
+            Direction.UP -> impulse.set(0f, JUMP_IMPULSE)
+            Direction.DOWN -> impulse.set(0f, -JUMP_IMPULSE)
+            Direction.LEFT -> impulse.set(-JUMP_IMPULSE, 0f)
+            Direction.RIGHT -> impulse.set(JUMP_IMPULSE, 0f)
+        }.scl(ConstVals.PPM.toFloat())
+        body.physics.velocity.set(impulse)
     }
 
     private fun shoot() {

@@ -49,7 +49,7 @@ import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.utils.ObjectPools
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
@@ -121,8 +121,12 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             Direction.RIGHT -> if (megaman().body.getY() > body.getY()) Facing.LEFT else Facing.RIGHT
         }
 
-        val trajectory = megaman().body.getCenter().sub(body.getCenter()).nor().scl(SPEED * ConstVals.PPM)
-        body.physics.velocity = trajectory
+        val trajectory = GameObjectPools.fetch(Vector2::class)
+            .set(megaman().body.getCenter())
+            .sub(body.getCenter())
+            .nor()
+            .scl(SPEED * ConstVals.PPM)
+        body.physics.velocity.set(trajectory)
 
         putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, object : ICullable {
 
@@ -311,7 +315,7 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
             rotatingLine.update(delta)
 
             scalar += OUT_SPEED * delta
-            body.setCenter(rotatingLine.getScaledPosition(scalar, ObjectPools.get(Vector2::class)))
+            body.setCenter(rotatingLine.getScaledPosition(scalar, GameObjectPools.fetch(Vector2::class)))
 
             facing = when (megaman().direction) {
                 Direction.UP -> if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT

@@ -11,7 +11,10 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
-import com.mega.game.engine.common.extensions.*
+import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
@@ -48,7 +51,6 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.utils.ObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
@@ -114,11 +116,14 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
+
         loop.reset()
         timers.values().forEach { it.reset() }
         facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+
         val frameDuration = 0.1f / movementScalar
         animations.values().forEach { it.setFrameDuration(frameDuration) }
     }
@@ -175,6 +180,7 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
             timer.update(delta)
             if (timer.isFinished()) {
                 timer.reset()
+
                 loop.next()
                 if (loop.getCurrent() != SpikeBotState.WALK)
                     facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
@@ -225,22 +231,18 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
         val leftFootFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
         leftFootFixture.setConsumer { _, fixture ->
-            if (fixture.getType() == FixtureType.BLOCK)
-                body.putProperty("${ConstKeys.LEFT}_${ConstKeys.FOOT}", true)
+            if (fixture.getType() == FixtureType.BLOCK) body.putProperty(LEFT_FOOT, true)
         }
-        leftFootFixture.offsetFromBodyAttachment =
-            ObjectPools.get(Vector2::class).set(-0.375f, -0.375f).scl(ConstVals.PPM.toFloat())
+        leftFootFixture.offsetFromBodyAttachment.set(-0.375f, -0.375f).scl(ConstVals.PPM.toFloat())
         body.addFixture(leftFootFixture)
         leftFootFixture.drawingColor = Color.ORANGE
         debugShapes.add { leftFootFixture }
 
         val rightFootFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
         rightFootFixture.setConsumer { _, fixture ->
-            if (fixture.getType() == FixtureType.BLOCK)
-                body.putProperty("${ConstKeys.RIGHT}_${ConstKeys.FOOT}", true)
+            if (fixture.getType() == FixtureType.BLOCK) body.putProperty(RIGHT_FOOT, true)
         }
-        rightFootFixture.offsetFromBodyAttachment.x = 0.375f * ConstVals.PPM
-        rightFootFixture.offsetFromBodyAttachment.y = -0.375f * ConstVals.PPM
+        rightFootFixture.offsetFromBodyAttachment.set(0.375f, -0.375f).scl(ConstVals.PPM.toFloat())
         body.addFixture(rightFootFixture)
         rightFootFixture.drawingColor = Color.ORANGE
         debugShapes.add { rightFootFixture }
@@ -262,10 +264,10 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         val sprite = GameSprite()
         sprite.setSize(1.15f * ConstVals.PPM, 1.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
-            _sprite.hidden = damageBlink
-            _sprite.setFlip(isFacing(Facing.LEFT), false)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
+            sprite.hidden = damageBlink
+            sprite.setFlip(isFacing(Facing.LEFT), false)
         }
         return spritesComponent
     }

@@ -53,9 +53,8 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
 
     var onSpawnAsteroidListener: ((Asteroid) -> Unit)? = null
 
-    private lateinit var bounds: GameRectangle
+    private val bounds = GameRectangle()
     private lateinit var spawnTimer: Timer
-
     private var destroyChildren = false
 
     override fun init() {
@@ -67,7 +66,7 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
 
-        bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+        bounds.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!)
 
         val cullOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
         if (cullOutOfBounds) putCullable(

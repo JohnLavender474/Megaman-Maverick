@@ -43,6 +43,7 @@ import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
@@ -154,7 +155,11 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
 
         if (!upTimer.isFinished()) {
             upTimer.update(delta)
-            body.physics.velocity = Vector2(0f, SPEED * ConstVals.PPM)
+
+            val velocity = GameObjectPools.fetch(Vector2::class)
+            velocity.y = SPEED * ConstVals.PPM
+            body.physics.velocity.set(velocity)
+
             return@UpdatablesComponent
         }
 
@@ -163,7 +168,11 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
             recalcTimer.reset()
             val angle = megaman().body.getCenter().sub(body.getCenter()).angleDeg()
             val roundedAngle45 = MathUtils.round(angle / 45f) * 45f
-            body.physics.velocity = Vector2(0f, SPEED * ConstVals.PPM).setAngleDeg(roundedAngle45)
+
+            val velocity = GameObjectPools.fetch(Vector2::class)
+                .set(0f, SPEED * ConstVals.PPM)
+                .setAngleDeg(roundedAngle45)
+            body.physics.velocity.set(velocity)
         }
     })
 

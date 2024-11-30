@@ -45,7 +45,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.utils.ObjectPools
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
@@ -194,7 +194,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
         debugShapes.add { gateFixture}
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            val size = ObjectPools.get(Vector2::class)
+            val size = GameObjectPools.fetch(Vector2::class)
             if (direction.isHorizontal()) {
                 size.x = 2f
                 size.y = 3f
@@ -208,7 +208,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
             body.setCenter(center)
 
             val gateShape = gateFixture.rawShape as GameRectangle
-            val gateSize = ObjectPools.get(Vector2::class)
+            val gateSize = GameObjectPools.fetch(Vector2::class)
             if (direction.isHorizontal()) {
                 gateSize.x = 1f
                 gateSize.y = 3f

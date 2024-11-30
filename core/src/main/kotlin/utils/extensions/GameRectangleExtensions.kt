@@ -3,12 +3,13 @@ package com.megaman.maverick.game.utils.extensions
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.megaman.maverick.game.utils.ObjectPools
+import com.megaman.maverick.game.utils.GameObjectPools
 
-fun GameRectangle.getSize() = getSize(ObjectPools.get(Vector2::class))
+fun GameRectangle.getSize(reclaim: Boolean = true) = getSize(GameObjectPools.fetch(Vector2::class, reclaim))
 
-fun GameRectangle.getCenter() = getCenter(ObjectPools.get(Vector2::class))
+fun GameRectangle.getCenter(reclaim: Boolean = true) = getCenter(GameObjectPools.fetch(Vector2::class, reclaim))
 
-fun GameRectangle.getPosition() = getPosition(ObjectPools.get(Vector2::class))
+fun GameRectangle.getPosition(reclaim: Boolean = true) = getPosition(GameObjectPools.fetch(Vector2::class, reclaim))
 
-fun GameRectangle.getPositionPoint(position: Position) = getPositionPoint(position, ObjectPools.get(Vector2::class))
+fun GameRectangle.getPositionPoint(position: Position, reclaim: Boolean = true) =
+    getPositionPoint(position, GameObjectPools.fetch(Vector2::class, reclaim))

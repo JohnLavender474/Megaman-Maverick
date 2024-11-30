@@ -21,6 +21,7 @@ import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getSize
 import com.megaman.maverick.game.world.body.getCenter
 
@@ -49,7 +50,7 @@ open class AnimatedBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntit
         GameLogger.debug(TAG, "spawn(): spawnProps = $spawnProps")
         super.onSpawn(spawnProps)
 
-        trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2(), Vector2::class)
+        trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2.Zero, Vector2::class).cpy()
         deathPredicate = spawnProps.get(ConstKeys.DEATH) as ArgsPredicate<Properties>?
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
@@ -72,12 +73,11 @@ open class AnimatedBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntit
 
     protected open fun defineUpdateablesComponent(updateablesComponent: UpdatablesComponent) {
         updateablesComponent.add {
-            body.physics.velocity = trajectory
-            if (deathPredicate != null && deathPredicate!!.test(
-                    props(
-                        ConstKeys.DELTA pairTo it, ConstKeys.ENTITY pairTo this
-                    )
-                )
+            val velocity = GameObjectPools.fetch(Vector2::class).set(trajectory)
+            body.physics.velocity.set(velocity)
+
+            if (deathPredicate != null &&
+                deathPredicate!!.test(props(ConstKeys.DELTA pairTo it, ConstKeys.ENTITY pairTo this))
             ) destroy()
         }
     }

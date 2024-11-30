@@ -8,13 +8,13 @@ import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.world.body.IBody
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.utils.ObjectPools
+import com.megaman.maverick.game.utils.GameObjectPools
 
-fun IBody.getBounds() = getBounds(ObjectPools.get(GameRectangle::class))
+fun IBody.getBounds(reclaim: Boolean = true) = getBounds(GameObjectPools.fetch(GameRectangle::class, reclaim))
 
-fun IBody.getPosition() = getPosition(ObjectPools.get(Vector2::class))
+fun IBody.getPosition(reclaim: Boolean = true) = getPosition(GameObjectPools.fetch(Vector2::class, reclaim))
 
-fun IBody.getCenter() = getCenter(ObjectPools.get(Vector2::class))
+fun IBody.getCenter(reclaim: Boolean = true) = getCenter(GameObjectPools.fetch(Vector2::class, reclaim))
 
 fun IBody.setCenterX(x: Float): IBody {
     val center = getCenter()
@@ -28,12 +28,13 @@ fun IBody.setCenterY(y: Float): IBody {
     return this
 }
 
-fun IBody.getSize() = getSize(ObjectPools.get(Vector2::class))
+fun IBody.getSize(reclaim: Boolean = true) = getSize(GameObjectPools.fetch(Vector2::class, reclaim))
 
-fun IBody.getPositionPoint(position: Position) = getPositionPoint(position, ObjectPools.get(Vector2::class))
+fun IBody.getPositionPoint(position: Position, reclaim: Boolean = true) =
+    getPositionPoint(position, GameObjectPools.fetch(Vector2::class, reclaim))
 
 fun IBody.setEntity(entity: IBodyEntity) {
-    forEachFixture{ it.setEntity(entity) }
+    forEachFixture { it.setEntity(entity) }
     putProperty(ConstKeys.ENTITY, entity)
 }
 

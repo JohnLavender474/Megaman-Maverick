@@ -37,6 +37,7 @@ import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
@@ -83,9 +84,9 @@ class Needle(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntit
         body.positionOnPoint(spawn, bodyPosition)
 
         val gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, 0f, Float::class)
-        body.physics.gravity = Vector2(0f, gravity)
+        body.physics.gravity.set(0f, gravity)
 
-        val impulse = spawnProps.getOrDefault(ConstKeys.IMPULSE, Vector2(), Vector2::class)
+        val impulse = spawnProps.getOrDefault(ConstKeys.IMPULSE, Vector2.Zero, Vector2::class)
         body.physics.velocity.set(impulse)
 
         val damagerActive = spawnProps.getOrDefault("${ConstKeys.DAMAGER}_${ConstKeys.ACTIVE}", true, Boolean::class)
@@ -123,7 +124,7 @@ class Needle(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntit
 
     fun explode() {
         val flash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.MUZZLE_FLASH)!!
-        flash.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
+        flash.spawn(pooledProps(ConstKeys.POSITION pairTo body.getCenter()))
     }
 
     override fun explodeAndDie(vararg params: Any?) {

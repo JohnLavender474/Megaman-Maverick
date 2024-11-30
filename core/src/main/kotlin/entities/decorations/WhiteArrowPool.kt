@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.decorations
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.enums.Direction
@@ -38,7 +39,9 @@ class WhiteArrowPool(game: MegamanMaverickGame) : MegaGameEntity(game), ICullabl
 
     private val spawns = Array<Vector2>()
     private val spawnDelayTimer = Timer(SPAWN_DELAY_DUR)
-    private lateinit var bounds: GameRectangle
+
+    private val bounds = GameRectangle()
+
     private var outline = true
     private var even = false
     private var maxOffset = 0
@@ -50,35 +53,39 @@ class WhiteArrowPool(game: MegamanMaverickGame) : MegaGameEntity(game), ICullabl
         addComponent(defineDrawableShapesComponent())
         addComponent(defineUpdatablesComponent())
         addComponent(defineCullablesComponent())
+        bounds.drawingColor = Color.WHITE
     }
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
 
-        bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+        bounds.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!)
         outline = spawnProps.getOrDefault(ConstKeys.OUTLINE, true, Boolean::class)
-
         direction = Direction.valueOf(spawnProps.get(ConstKeys.DIRECTION, String::class)!!.uppercase())
 
         val cells = bounds.splitByCellSize(ConstVals.PPM.toFloat(), matrix)
         when (direction) {
             Direction.UP -> {
-                for (i in 0 until cells.columns) spawns.add(cells[i, 0]!!.getPositionPoint(Position.BOTTOM_CENTER))
+                for (i in 0 until cells.columns)
+                    spawns.add(cells[i, 0]!!.getPositionPoint(Position.BOTTOM_CENTER, false))
                 maxOffset = cells.rows
             }
 
             Direction.DOWN -> {
-                for (i in 0 until cells.columns) spawns.add(cells[i, cells.rows - 1]!!.getPositionPoint(Position.TOP_CENTER))
+                for (i in 0 until cells.columns)
+                    spawns.add(cells[i, cells.rows - 1]!!.getPositionPoint(Position.TOP_CENTER, false))
                 maxOffset = cells.rows
             }
 
             Direction.LEFT -> {
-                for (i in 0 until cells.rows) spawns.add(cells[cells.columns - 1, i]!!.getPositionPoint(Position.CENTER_RIGHT))
+                for (i in 0 until cells.rows)
+                    spawns.add(cells[cells.columns - 1, i]!!.getPositionPoint(Position.CENTER_RIGHT, false))
                 maxOffset = cells.columns
             }
 
             Direction.RIGHT -> {
-                for (i in 0 until cells.rows) spawns.add(cells[0, i]!!.getPositionPoint(Position.CENTER_LEFT))
+                for (i in 0 until cells.rows)
+                    spawns.add(cells[0, i]!!.getPositionPoint(Position.CENTER_LEFT, false))
                 maxOffset = cells.columns
             }
         }
@@ -95,7 +102,7 @@ class WhiteArrowPool(game: MegamanMaverickGame) : MegaGameEntity(game), ICullabl
     private fun spawnArrows() {
         var i = if (even) 0 else 1
         while (i < spawns.size) {
-            val spawn = spawns[i].cpy()
+            val spawn = spawns[i]
             val arrow = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.WHITE_ARROW)!!
             arrow.spawn(
                 props(

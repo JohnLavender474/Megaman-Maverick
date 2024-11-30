@@ -60,13 +60,7 @@ import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getMotionValue
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodySense
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getBounds
-import com.megaman.maverick.game.world.body.getCenter
-import com.megaman.maverick.game.world.body.getPositionPoint
-import com.megaman.maverick.game.world.body.isSensing
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, dmgDuration = DAMAGE_DUR), IAnimatedEntity {
@@ -112,10 +106,12 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, dmgDurati
         "shoot" pairTo Timer(SHOOT_DUR),
         "crumble" pairTo Timer(CRUMBLE_DUR),
     )
-    private lateinit var area: GameRectangle
-    private lateinit var arcMotion: ArcMotion
-    private var firstSpawn: Vector2? = null
+    private val area = GameRectangle()
+    private val firstSpawnPos = Vector2()
+    private var firstSpawn = true
+
     private var asteroidsSpawner: AsteroidsSpawner? = null
+    private lateinit var arcMotion: ArcMotion
 
     override fun init() {
         if (regions.isEmpty) {
@@ -138,8 +134,9 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, dmgDurati
         loop.reset()
         timers.values().forEach { it.reset() }
 
-        area = spawnProps.get(ConstKeys.AREA, RectangleMapObject::class)!!.rectangle.toGameRectangle()
-        firstSpawn = spawnProps.get(ConstKeys.FIRST, RectangleMapObject::class)!!.rectangle.getCenter()
+        area.set(spawnProps.get(ConstKeys.AREA, RectangleMapObject::class)!!.rectangle.toGameRectangle())
+        firstSpawnPos.set(spawnProps.get(ConstKeys.FIRST, RectangleMapObject::class)!!.rectangle.getCenter())
+        firstSpawn = true
 
         if (spawnProps.containsKey(AsteroidsSpawner.TAG)) {
             val asteroidsSpawnerBounds =
@@ -258,18 +255,25 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, dmgDurati
                 MoonHeadState.DELAY, MoonHeadState.DARK, MoonHeadState.AWAKEN, MoonHeadState.CRUMBLE -> {
                     val key = loop.getCurrent().name.lowercase()
                     val timer = timers[key]
+
                     timer.update(delta)
                     if (timer.isFinished()) {
                         timer.reset()
+
                         loop.next()
 
-                        if (loop.getCurrent() == MoonHeadState.DARK) {
-                            val spawn = if (firstSpawn != null) firstSpawn!! else getRandomSpawn()
-                            firstSpawn = null
-                            body.setCenter(spawn)
-                        } else if (loop.getCurrent() == MoonHeadState.AWAKEN) requestToPlaySound(
-                            SoundAsset.SHAKE_SOUND, false
-                        )
+                        when {
+                            loop.getCurrent() == MoonHeadState.DARK -> {
+                                val spawn = if (firstSpawn) firstSpawnPos else getRandomSpawn()
+                                firstSpawn = false
+                                body.setCenter(spawn)
+                            }
+
+                            loop.getCurrent() == MoonHeadState.AWAKEN -> requestToPlaySound(
+                                SoundAsset.SHAKE_SOUND,
+                                false
+                            )
+                        }
                     }
                 }
 
@@ -322,15 +326,15 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, dmgDurati
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameCircle().setRadius(1.35f * ConstVals.PPM))
         body.addFixture(bodyFixture)
-        debugShapes.add { bodyFixture}
+        debugShapes.add { bodyFixture }
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(1.425f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        debugShapes.add { damagerFixture}
+        debugShapes.add { damagerFixture }
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameCircle().setRadius(1.425f * ConstVals.PPM))
         body.addFixture(damageableFixture)
-        debugShapes.add { damageableFixture}
+        debugShapes.add { damageableFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.fixtures.forEach {

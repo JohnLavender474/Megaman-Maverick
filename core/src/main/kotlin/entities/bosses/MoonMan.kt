@@ -60,7 +60,7 @@ import com.megaman.maverick.game.entities.projectiles.Asteroid
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.utils.ObjectPools
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
@@ -161,7 +161,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
     private var standIndex = 0
     private var jumpIndex = 0
 
-    private lateinit var asteroidSpawnBounds: GameRectangle
+    private val asteroidSpawnBounds = GameRectangle()
     private val asteroidsToThrow = Array<GamePair<Asteroid, Timer>>()
     private var asteroidsSpawned = 0
 
@@ -216,8 +216,12 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         jumpIndex = 0
 
         asteroidsSpawned = 0
-        asteroidSpawnBounds =
-            spawnProps.get(Asteroid.TAG.lowercase(), RectangleMapObject::class)!!.rectangle.toGameRectangle()
+        asteroidSpawnBounds.set(
+            spawnProps.get(
+                Asteroid.TAG.lowercase(),
+                RectangleMapObject::class
+            )!!.rectangle.toGameRectangle()
+        )
 
         gravityChangeState = ProcessState.BEGIN
 
@@ -379,27 +383,27 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.2f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -BODY_HEIGHT * ConstVals.PPM / 2f
         body.addFixture(feetFixture)
-        debugShapes.add { feetFixture}
+        debugShapes.add { feetFixture }
 
         val headFixture =
             Fixture(body, FixtureType.HEAD, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.2f * ConstVals.PPM))
         headFixture.offsetFromBodyAttachment.y = BODY_HEIGHT * ConstVals.PPM / 2f
         body.addFixture(headFixture)
-        debugShapes.add { headFixture}
+        debugShapes.add { headFixture }
 
         val leftFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, ConstVals.PPM.toFloat()))
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         leftFixture.offsetFromBodyAttachment.x = -BODY_WIDTH * ConstVals.PPM / 2f
         body.addFixture(leftFixture)
-        debugShapes.add { leftFixture}
+        debugShapes.add { leftFixture }
 
         val rightFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, ConstVals.PPM.toFloat()))
         rightFixture.offsetFromBodyAttachment.x = BODY_WIDTH * ConstVals.PPM / 2f
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
-        debugShapes.add { rightFixture}
+        debugShapes.add { rightFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             if (body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)) {
@@ -413,12 +417,14 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
             }
 
             val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
-            body.physics.gravity = when (direction) {
-                Direction.UP -> Vector2(0f, -gravity)
-                Direction.DOWN -> Vector2(0f, gravity)
-                Direction.LEFT -> Vector2(-gravity, 0f)
-                Direction.RIGHT -> Vector2(gravity, 0f)
+            val gravityVec = GameObjectPools.fetch(Vector2::class)
+            when (direction) {
+                Direction.UP -> gravityVec.set(0f, -gravity)
+                Direction.DOWN -> gravityVec.set(0f, gravity)
+                Direction.LEFT -> gravityVec.set(-gravity, 0f)
+                Direction.RIGHT -> gravityVec.set(gravity, 0f)
             }.scl(ConstVals.PPM * gravityScalar)
+            body.physics.gravity.set(gravityVec)
 
             body.physics.applyFrictionX = body.isSensing(BodySense.FEET_ON_GROUND)
         }
@@ -618,17 +624,15 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
     private fun shootMoon() {
         for (i in 0 until MOON_SCYTHE_DEG_OFFSETS.size) {
-            val trajectory = Vector2(0f, MOON_SCYTHE_SPEED * ConstVals.PPM)
+            val trajectory = GameObjectPools.fetch(Vector2::class).set(0f, MOON_SCYTHE_SPEED * ConstVals.PPM)
 
             var rotOffset = MOON_SCYTHE_DEG_OFFSETS[i] * facing.value
             if (direction == Direction.DOWN) rotOffset *= -1f
-
             val rotation = (if (isFacing(Facing.LEFT)) 90f else 270f) + rotOffset
-
             trajectory.rotateDeg(rotation)
 
-            val moonScythe = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.MOON_SCYTHE)!!
-            moonScythe.spawn(
+            val scythe = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.MOON_SCYTHE)!!
+            scythe.spawn(
                 props(
                     ConstKeys.POSITION pairTo body.getCenter().add(0.5f * ConstVals.PPM * facing.value, 0f),
                     "${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}" pairTo MOON_SCYTHE_MOVEMENT_SCALAR,
@@ -660,7 +664,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
     }
 
     private fun spawnAsteroid() {
-        val spawn = ObjectPools.get(Vector2::class)
+        val spawn = GameObjectPools.fetch(Vector2::class)
         spawn.x = getRandom(asteroidSpawnBounds.getMaxX(), asteroidSpawnBounds.getMaxX())
         spawn.y = getRandom(asteroidSpawnBounds.getY(), asteroidSpawnBounds.getMaxY())
 

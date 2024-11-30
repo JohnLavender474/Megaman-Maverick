@@ -76,11 +76,15 @@ class SigmaRatElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game)
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
-        val trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2(), Vector2::class)
-        body.physics.velocity = trajectory
+
+        val trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2.Zero, Vector2::class)
+        body.physics.velocity.set(trajectory)
+
         hit = false
         hitTimer.reset()
     }
@@ -98,7 +102,7 @@ class SigmaRatElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game)
     }
 
     internal fun launch(trajectory: Vector2) {
-        body.physics.velocity = trajectory
+        body.physics.velocity.set(trajectory)
         requestToPlaySound(SoundAsset.BLAST_1_SOUND, false)
     }
 

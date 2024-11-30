@@ -6,7 +6,7 @@ import com.mega.game.engine.common.UtilMethods.interpolate
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
-import com.megaman.maverick.game.utils.ObjectPools
+import com.megaman.maverick.game.utils.GameObjectPools
 
 open class ScrollingBackground(
     key: String,
@@ -31,7 +31,7 @@ open class ScrollingBackground(
             backgroundSprites.setPosition(start)
             timer.reset()
         } else {
-            val position = interpolate(start, target, timer.getRatio(), ObjectPools.get(Vector2::class))
+            val position = interpolate(start, target, timer.getRatio(), GameObjectPools.fetch(Vector2::class))
             backgroundSprites.setPosition(position)
         }
     }

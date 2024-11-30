@@ -51,6 +51,7 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 import java.util.*
@@ -88,7 +89,13 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
 
     private lateinit var animations: ObjectMap<String, IAnimation>
     private lateinit var jetMetState: JetMetState
-    private lateinit var liftTarget: Vector2
+
+    private val target = Vector2()
+    val targetPQ = PriorityQueue { o1: Vector2, o2: Vector2 ->
+        val d1 = o1.dst2(megaman().body.getCenter())
+        val d2 = o2.dst2(megaman().body.getCenter())
+        d1.compareTo(d2)
+    }
 
     private var applyMovementScalarToBullet = false
     private var targetReached = false
@@ -110,16 +117,12 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        val targets = PriorityQueue { o1: Vector2, o2: Vector2 ->
-            val d1 = o1.dst2(megaman().body.getCenter())
-            val d2 = o2.dst2(megaman().body.getCenter())
-            d1.compareTo(d2)
-        }
         spawnProps.forEach { key, value ->
             if (key.toString().contains(ConstKeys.TARGET) && value is RectangleMapObject)
-                targets.add(value.rectangle.getCenter())
+                targetPQ.add(value.rectangle.getCenter())
         }
-        liftTarget = targets.poll()
+        target.set(targetPQ.poll())
+        targetPQ.clear()
 
         applyMovementScalarToBullet = spawnProps.getOrDefault(ConstKeys.APPLY_SCALAR_TO_CHILDREN, false, Boolean::class)
         direction = megaman().direction
@@ -172,9 +175,14 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
                     }
 
                     if (!targetReached) {
-                        val direction = liftTarget.cpy().sub(body.getCenter()).nor()
-                        body.physics.velocity.set(direction.scl(JET_SPEED * ConstVals.PPM * movementScalar))
-                        targetReached = body.getCenter().epsilonEquals(liftTarget, 0.1f * ConstVals.PPM)
+                        val velocity = GameObjectPools.fetch(Vector2::class)
+                            .set(target)
+                            .sub(body.getCenter())
+                            .nor()
+                            .scl(JET_SPEED * ConstVals.PPM * movementScalar)
+                        body.physics.velocity.set(velocity)
+
+                        targetReached = body.getCenter().epsilonEquals(target, 0.1f * ConstVals.PPM)
                     } else body.physics.velocity.setZero()
 
                     shootTimer.update(delta)
@@ -189,21 +197,26 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
 
     private fun shoot() {
         val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
-        val bulletTrajectory =
-            megaman().body.getCenter().sub(body.getCenter()).nor().scl(BULLET_SPEED * ConstVals.PPM)
+
+        val trajectory = GameObjectPools.fetch(Vector2::class)
+            .set(megaman().body.getCenter())
+            .sub(body.getCenter())
+            .nor()
+            .scl(BULLET_SPEED * ConstVals.PPM)
 
         val offset = ConstVals.PPM / 64f
-        val spawn = body.getCenter().add(offset * facing.value, if (direction == Direction.DOWN) -offset else offset)
+        val spawn = GameObjectPools.fetch(Vector2::class)
+            .set(body.getCenter())
+            .add(offset * facing.value, if (direction == Direction.DOWN) -offset else offset)
 
-        val bulletProps = props(
-            ConstKeys.POSITION pairTo spawn,
-            ConstKeys.TRAJECTORY pairTo bulletTrajectory,
+        val props = props(
             ConstKeys.OWNER pairTo this,
+            ConstKeys.POSITION pairTo spawn,
+            ConstKeys.TRAJECTORY pairTo trajectory,
             ConstKeys.DIRECTION pairTo direction
         )
-        if (applyMovementScalarToBullet) bulletProps.put("${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}", movementScalar)
-
-        bullet.spawn(bulletProps)
+        if (applyMovementScalarToBullet) props.put("${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}", movementScalar)
+        bullet.spawn(props)
 
         requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
     }

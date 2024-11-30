@@ -29,12 +29,8 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.utils.ObjectPools
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getBounds
-import com.megaman.maverick.game.world.body.getCenter
-import com.megaman.maverick.game.world.body.getSize
+import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.world.body.*
 
 class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IDirectional {
 
@@ -62,12 +58,12 @@ class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         direction = spawnProps.get(ConstKeys.DIRECTION, Direction::class)!!
         trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
 
-        val size = ObjectPools.get(Vector2::class)
+        val size = GameObjectPools.fetch(Vector2::class)
         if (direction.isHorizontal()) {
             size.x = 2f
-            size.y = 0.75f
+            size.y = 1f
         } else {
-            size.x = 0.75f
+            size.x = 1f
             size.y = 2f
         }
         size.scl(ConstVals.PPM.toFloat())

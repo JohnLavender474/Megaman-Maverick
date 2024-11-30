@@ -32,6 +32,7 @@ import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.HazardsFactory
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
@@ -183,8 +184,9 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
         else if (!left && currentPosition >= maxPosition) left = true
 
         val speed = (if (left) -SPEED else SPEED) * ConstVals.PPM
-        body.physics.velocity = if (vertical) Vector2(speed, 0f)
-        else Vector2(0f, speed)
+        val velocity = GameObjectPools.fetch(Vector2::class)
+        if (vertical) velocity.x = speed else velocity.y = speed
+        body.physics.velocity.set(velocity)
 
         val currentState = loop.getCurrent()
 

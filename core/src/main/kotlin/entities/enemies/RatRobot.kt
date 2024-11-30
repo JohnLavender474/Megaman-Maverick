@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
@@ -16,7 +17,6 @@ import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.common.shapes.toGameRectangle
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -67,6 +67,8 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
     private val triggers = Array<GameRectangle>()
     private var triggered = false
 
+    private val objs = Array<RectangleMapObject>()
+
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
@@ -82,7 +84,7 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        getObjectProps(spawnProps).forEach { triggers.add(it.rectangle.toGameRectangle()) }
+        getObjectProps(spawnProps, objs).forEach { triggers.add(it.rectangle.toGameRectangle(false)) }
         triggered = triggers.isEmpty
 
         facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
@@ -115,19 +117,19 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -0.375f * ConstVals.PPM
         body.addFixture(feetFixture)
-        debugShapes.add { feetFixture}
+        debugShapes.add { feetFixture }
 
         val leftFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         leftFixture.offsetFromBodyAttachment.x = -0.375f * ConstVals.PPM
         body.addFixture(leftFixture)
-        debugShapes.add { leftFixture}
+        debugShapes.add { leftFixture }
 
         val rightFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         rightFixture.offsetFromBodyAttachment.x = 0.375f * ConstVals.PPM
         body.addFixture(rightFixture)
-        debugShapes.add { rightFixture}
+        debugShapes.add { rightFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.gravityOn = triggered

@@ -75,8 +75,11 @@ class RotatableCamera(var onJustFinishedRotating: (() -> Unit)? = null, var prin
     }
 
     fun coerceIntoBounds(bounds: GameRectangle) {
+        if (printDebug) GameLogger.debug(TAG, "coerceIntoBounds(): bounds=$bounds")
+
         val adjVpWidth: Float
         val adjVpHeight: Float
+
         if (direction.isVertical()) {
             adjVpWidth = viewportWidth
             adjVpHeight = viewportHeight

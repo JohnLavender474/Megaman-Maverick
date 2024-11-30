@@ -99,7 +99,7 @@ class ElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
             val size = if (large) ConstVals.PPM.toFloat() else ConstVals.PPM / 4f
             body.setSize(size)
             bounds.setSize(size)
-            body.physics.velocity = trajectory
+            body.physics.velocity.set(trajectory)
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

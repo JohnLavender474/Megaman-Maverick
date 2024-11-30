@@ -37,6 +37,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
@@ -83,7 +84,7 @@ class FireMetFlame(game: MegamanMaverickGame) : AbstractProjectile(game), IAnima
         destroy()
 
         val smokePuff = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SMOKE_PUFF)!!
-        smokePuff.spawn(props(ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER), ConstKeys.OWNER pairTo owner))
+        smokePuff.spawn(pooledProps(ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER), ConstKeys.OWNER pairTo owner))
 
         if (overlapsGameCamera()) playSoundNow(SoundAsset.WHOOSH_SOUND, false)
     }

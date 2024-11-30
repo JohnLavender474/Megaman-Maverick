@@ -46,6 +46,7 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.*
@@ -166,8 +167,12 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
                 }
 
                 PopoheliState.APPROACHING -> {
-                    val trajectory = target.cpy().sub(body.getCenter()).nor().scl(SPEED * ConstVals.PPM)
-                    body.physics.velocity = trajectory
+                    val trajectory = GameObjectPools.fetch(Vector2::class)
+                        .set(target)
+                        .sub(body.getCenter())
+                        .nor()
+                        .scl(SPEED * ConstVals.PPM)
+                    body.physics.velocity.set(trajectory)
 
                     if (body.getCenter().epsilonEquals(target, 0.1f * ConstVals.PPM)) {
                         body.physics.velocity.setZero()

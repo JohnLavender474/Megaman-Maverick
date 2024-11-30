@@ -99,7 +99,7 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         body.setCenter(spawn)
 
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
-        trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2(), Vector2::class)
+        trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2.Zero, Vector2::class)
         stuckToMegaman = false
         presses = 0
 

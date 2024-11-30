@@ -37,7 +37,7 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.utils.ObjectPools
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
@@ -180,7 +180,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
             when (currentBehavior) {
                 DragonFlyBehavior.MOVE_UP -> {
                     if (!game.getGameCamera().overlaps(
-                            oobScannerFixture.getShape().getBoundingRectangle(), ObjectPools.get(BoundingBox::class)
+                            oobScannerFixture.getShape().getBoundingRectangle(), GameObjectPools.fetch(BoundingBox::class)
                         )
                     ) {
                         changeBehavior(DragonFlyBehavior.MOVE_HORIZONTAL)
@@ -191,7 +191,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
                 DragonFlyBehavior.MOVE_DOWN -> {
                     if (megamanScannerFixture.getShape().contains(game.megaman.body.getCenter()) ||
                         (!isMegamanBelow() && !game.getGameCamera().overlaps(
-                            oobScannerFixture.getShape().getBoundingRectangle(), ObjectPools.get(BoundingBox::class)
+                            oobScannerFixture.getShape().getBoundingRectangle(), GameObjectPools.fetch(BoundingBox::class)
                         ))
                     ) {
                         changeBehavior(DragonFlyBehavior.MOVE_HORIZONTAL)
@@ -202,7 +202,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
                 DragonFlyBehavior.MOVE_HORIZONTAL -> {
                     val doChange = (toLeftBounds && !isMegamanLeft()) || (!toLeftBounds && isMegamanLeft())
                     if (doChange && !game.getGameCamera().overlaps(
-                            oobScannerFixture.getShape().getBoundingRectangle(), ObjectPools.get(BoundingBox::class)
+                            oobScannerFixture.getShape().getBoundingRectangle(), GameObjectPools.fetch(BoundingBox::class)
                         )
                     ) {
                         changeBehavior(

@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.entities.hazards
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
@@ -47,6 +48,8 @@ import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getObjectProps
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.*
@@ -73,6 +76,8 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
     private val sensors = Array<GameRectangle>()
     private var wanaan: Wanaan? = null
 
+    private val objs = Array<RectangleMapObject>()
+
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
@@ -91,8 +96,8 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        val children = getObjectProps(spawnProps)
-        children.forEach { sensors.add(it.rectangle.toGameRectangle()) }
+        val children = getObjectProps(spawnProps, objs)
+        children.forEach { sensors.add(it.rectangle.toGameRectangle(false)) }
 
         this.direction = if (spawnProps.containsKey(ConstKeys.DIRECTION)) {
             var direction = spawnProps.get(ConstKeys.DIRECTION)!!
@@ -110,7 +115,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
         sensors.clear()
 
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
-        explosion.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
+        explosion.spawn(pooledProps(ConstKeys.POSITION pairTo body.getCenter()))
 
         requestToPlaySound(SoundAsset.EXPLOSION_2_SOUND, false)
     }
@@ -196,11 +201,12 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
 
     private fun launchWanaan() {
         if (wanaan == null) throw IllegalStateException("Wanaan cannot be null when launching")
-        val impulse = when (direction) {
-            Direction.UP -> Vector2(0f, IMPULSE)
-            Direction.DOWN -> Vector2(0f, -IMPULSE)
-            Direction.LEFT -> Vector2(-IMPULSE, 0f)
-            Direction.RIGHT -> Vector2(IMPULSE, 0f)
+        val impulse = GameObjectPools.fetch(Vector2::class)
+        when (direction) {
+            Direction.UP -> impulse.set(0f, IMPULSE)
+            Direction.DOWN -> impulse.set(0f, -IMPULSE)
+            Direction.LEFT -> impulse.set(-IMPULSE, 0f)
+            Direction.RIGHT -> impulse.set(IMPULSE, 0f)
         }.scl(ConstVals.PPM.toFloat())
         wanaan!!.body.physics.velocity.set(impulse)
         wanaan!!.body.physics.gravityOn = true

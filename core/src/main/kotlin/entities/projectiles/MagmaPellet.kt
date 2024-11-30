@@ -33,6 +33,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.HazardsFactory
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGdxRectangle
@@ -95,7 +96,7 @@ class MagmaPellet(game: MegamanMaverickGame) : AbstractProjectile(game) {
         )
 
         val explosion = EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.MAGMA_FLAME)!!
-        explosion.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.DIRECTION pairTo direction))
+        explosion.spawn(pooledProps(ConstKeys.POSITION pairTo spawn, ConstKeys.DIRECTION pairTo direction))
     }
 
     override fun defineBodyComponent(): BodyComponent {

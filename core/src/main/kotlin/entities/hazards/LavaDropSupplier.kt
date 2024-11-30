@@ -24,6 +24,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.HazardsFactory
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getCenter
@@ -60,7 +61,7 @@ class LavaDropSupplier(game: MegamanMaverickGame) : MegaGameEntity(game), IHazar
 
     private fun createLavaDrop() {
         lavaDrop = EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.LAVA_DROP) as LavaDrop?
-        lavaDrop!!.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
+        lavaDrop!!.spawn(pooledProps(ConstKeys.POSITION pairTo body.getCenter()))
     }
 
     private fun dropLavaDrop() = lavaDrop!!.setToFall()

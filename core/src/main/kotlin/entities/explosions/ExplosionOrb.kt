@@ -58,9 +58,11 @@ class ExplosionOrb(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
-        body.physics.velocity = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
+
+        body.physics.velocity = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!.cpy()
     }
 
     private fun defineBodyComponent(): BodyComponent {

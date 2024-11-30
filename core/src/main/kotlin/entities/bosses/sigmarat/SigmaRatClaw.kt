@@ -51,6 +51,7 @@ import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.entities.factories.impl.HazardsFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.SigmaRatElectricBall
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getMotionValue
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
@@ -218,17 +219,25 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
                     launchPauseTimer.update(delta)
                     if (!launchPauseTimer.isFinished()) body.physics.velocity.setZero()
                     else if (reachedLaunchTarget) {
-                        val trajectory =
-                            returnTarget.cpy().sub(body.getCenter()).nor().scl(RETURN_SPEED * ConstVals.PPM)
-                        body.physics.velocity = trajectory
+                        val trajectory = GameObjectPools.fetch(Vector2::class)
+                            .set(returnTarget)
+                            .sub(body.getCenter())
+                            .nor()
+                            .scl(RETURN_SPEED * ConstVals.PPM)
+                        body.physics.velocity.set(trajectory)
+
                         if (body.getCenter().epsilonEquals(returnTarget, EPSILON * ConstVals.PPM)) {
                             clawState = SigmaRatClawState.ROTATE
                             body.physics.velocity.setZero()
                         }
                     } else {
-                        val trajectory =
-                            launchTarget.cpy().sub(body.getCenter()).nor().scl(LAUNCH_SPEED * ConstVals.PPM)
-                        body.physics.velocity = trajectory
+                        val trajectory = GameObjectPools.fetch(Vector2::class)
+                            .set(launchTarget)
+                            .sub(body.getCenter())
+                            .nor()
+                            .scl(LAUNCH_SPEED * ConstVals.PPM)
+                        body.physics.velocity.set(trajectory)
+
                         if (body.getCenter().epsilonEquals(launchTarget, EPSILON * ConstVals.PPM) ||
                             megaman().body.getBounds().contains(body.getCenter()) ||
                             body.getMaxY() >= maxY
@@ -279,10 +288,11 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
          */
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            val target = body.getPositionPoint(Position.TOP_CENTER).sub(0f, 0.1f * ConstVals.PPM)
-            val current = block!!.body.getPositionPoint(Position.TOP_CENTER)
-            val diff = target.sub(current)
-            block!!.body.physics.velocity = diff.scl(1f / ConstVals.FIXED_TIME_STEP)
+            val velocity = GameObjectPools.fetch(Vector2::class)
+                .set(body.getPositionPoint(Position.TOP_CENTER).sub(0f, 0.1f * ConstVals.PPM))
+                .sub(block!!.body.getPositionPoint(Position.TOP_CENTER))
+                .scl(1f / ConstVals.FIXED_TIME_STEP)
+            block!!.body.physics.velocity.set(velocity)
 
             val swiping = clawState == SigmaRatClawState.LAUNCH
             /*

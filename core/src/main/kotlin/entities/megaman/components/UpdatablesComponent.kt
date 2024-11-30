@@ -14,6 +14,7 @@ import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.extensions.stopCharging
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanTrailSprite
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.isSensing
@@ -84,7 +85,7 @@ internal fun Megaman.defineUpdatablesComponent() = UpdatablesComponent({ delta -
 
 private fun Megaman.spawnTrailSprite(type: String): Boolean {
     val trailSprite = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.MEGAMAN_TRAIL_SPRITE)!!
-    return trailSprite.spawn(props(ConstKeys.TYPE pairTo type))
+    return trailSprite.spawn(pooledProps(ConstKeys.TYPE pairTo type))
 }
 
 private fun Megaman.spawnBubbles() {

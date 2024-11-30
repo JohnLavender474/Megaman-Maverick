@@ -38,7 +38,7 @@ import com.mega.game.engine.events.Event
 import com.mega.game.engine.events.EventsManager
 import com.mega.game.engine.events.IEventListener
 import com.mega.game.engine.motion.MotionSystem
-import com.mega.game.engine.pathfinding.AsyncPathfindingSystem
+import com.mega.game.engine.pathfinding.SimplePathfindingSystem
 import com.mega.game.engine.screens.levels.tiledmap.TiledMapLevelScreen
 import com.mega.game.engine.world.WorldSystem
 import com.mega.game.engine.world.container.SimpleGridWorldContainer
@@ -186,7 +186,7 @@ class MegaLevelScreen(
         gameCamera = game.getGameCamera()
         uiCamera = game.getUiCamera()
 
-        spawnsMan = SpawnsManager()
+        spawnsMan = SpawnsManager(spawns)
         playerSpawnsMan = PlayerSpawnsManager(gameCamera)
 
         playerSpawnEventHandler = PlayerSpawnEventHandler(game)
@@ -439,7 +439,7 @@ class MegaLevelScreen(
                 )
 
                 val systemsToTurnOff = gdxArrayOf(
-                    AsyncPathfindingSystem::class,
+                    SimplePathfindingSystem::class,
                     MotionSystem::class,
                     BehaviorsSystem::class,
                     WorldSystem::class,
@@ -455,7 +455,7 @@ class MegaLevelScreen(
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Gate init closing")
 
                 val systemsToTurnOn = gdxArrayOf(
-                    AsyncPathfindingSystem::class,
+                    SimplePathfindingSystem::class,
                     MotionSystem::class,
                     BehaviorsSystem::class,
                     WorldSystem::class
@@ -625,10 +625,14 @@ class MegaLevelScreen(
 
         if (!game.paused) {
             spawnsMan.update(delta / 2f)
-            spawns.addAll(spawnsMan.getSpawnsAndClear())
+
             if (playerSpawnEventHandler.finished && !cameraManagerForRooms.transitioning) {
-                spawns.forEach { spawn -> engine.spawn(spawn.entity, spawn.properties) }
-                spawns.clear()
+                val spawnsIter = spawns.iterator()
+                while (spawnsIter.hasNext()) {
+                    val spawn = spawnsIter.next()
+                    engine.spawn(spawn.entity, spawn.properties)
+                    spawnsIter.remove()
+                }
             }
         }
 
@@ -636,11 +640,16 @@ class MegaLevelScreen(
 
         if (!game.paused) {
             spawnsMan.update(delta / 2f)
-            spawns.addAll(spawnsMan.getSpawnsAndClear())
-            if (/* TODO: playerSpawnEventHandler.finished && */ !cameraManagerForRooms.transitioning) {
+
+            if (playerSpawnEventHandler.finished && !cameraManagerForRooms.transitioning) {
                 playerSpawnsMan.run()
-                spawns.forEach { spawn -> engine.spawn(spawn.entity, spawn.properties) }
-                spawns.clear()
+
+                val spawnsIter = spawns.iterator()
+                while (spawnsIter.hasNext()) {
+                    val spawn = spawnsIter.next()
+                    engine.spawn(spawn.entity, spawn.properties)
+                    spawnsIter.remove()
+                }
             }
 
             backgrounds.forEach { it.update(delta) }
@@ -648,12 +657,14 @@ class MegaLevelScreen(
             gameCamera.update(delta)
 
             if (!gameCameraShaker.isFinished) gameCameraShaker.update(delta)
+
             when {
                 !playerSpawnEventHandler.finished -> playerSpawnEventHandler.update(delta)
                 !playerDeathEventHandler.finished -> playerDeathEventHandler.update(delta)
                 !bossHealthHandler.finished -> bossHealthHandler.update(delta)
                 !endLevelEventHandler.finished -> endLevelEventHandler.update(delta)
             }
+
             playerStatsHandler.update(delta)
         }
 

@@ -22,6 +22,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.FixtureType
@@ -130,21 +131,25 @@ class Lift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IDirectiona
 
         when (currentState) {
             LiftState.LIFTING -> {
-                body.physics.velocity = when (direction) {
-                    Direction.UP -> Vector2(0f, LIFT_SPEED * ConstVals.PPM)
-                    Direction.DOWN -> Vector2(0f, -LIFT_SPEED * ConstVals.PPM)
-                    Direction.LEFT -> Vector2(-LIFT_SPEED * ConstVals.PPM, 0f)
-                    Direction.RIGHT -> Vector2(LIFT_SPEED * ConstVals.PPM, 0f)
+                val velocity = GameObjectPools.fetch(Vector2::class)
+                when (direction) {
+                    Direction.UP -> velocity.set(0f, LIFT_SPEED * ConstVals.PPM)
+                    Direction.DOWN -> velocity.set(0f, -LIFT_SPEED * ConstVals.PPM)
+                    Direction.LEFT -> velocity.set(-LIFT_SPEED * ConstVals.PPM, 0f)
+                    Direction.RIGHT -> velocity.set(LIFT_SPEED * ConstVals.PPM, 0f)
                 }
+                body.physics.velocity.set(velocity)
             }
 
             LiftState.FALLING -> {
-                body.physics.velocity = when (direction) {
-                    Direction.UP -> Vector2(0f, -FALL_SPEED * ConstVals.PPM)
-                    Direction.DOWN -> Vector2(0f, FALL_SPEED * ConstVals.PPM)
-                    Direction.LEFT -> Vector2(FALL_SPEED * ConstVals.PPM, 0f)
-                    Direction.RIGHT -> Vector2(-FALL_SPEED * ConstVals.PPM, 0f)
+                val velocity = GameObjectPools.fetch(Vector2::class)
+                when (direction) {
+                    Direction.UP -> velocity.set(0f, -FALL_SPEED * ConstVals.PPM)
+                    Direction.DOWN -> velocity.set(0f, FALL_SPEED * ConstVals.PPM)
+                    Direction.LEFT -> velocity.set(FALL_SPEED * ConstVals.PPM, 0f)
+                    Direction.RIGHT -> velocity.set(-FALL_SPEED * ConstVals.PPM, 0f)
                 }
+                body.physics.velocity.set(velocity)
             }
 
             else -> {
