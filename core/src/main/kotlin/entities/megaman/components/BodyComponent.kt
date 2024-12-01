@@ -124,12 +124,11 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
             it.positionOnPoint(body.getBounds().getPositionPoint(position), position)
         }
 
-        /*
         if (!ready) {
             body.physics.velocity.setZero()
+            body.physics.gravity.setZero()
             return@put
         }
-         */
 
         val wallSlidingOnIce = isBehaviorActive(BehaviorType.WALL_SLIDING) &&
             (body.isSensingAny(BodySense.SIDE_TOUCHING_ICE_LEFT, BodySense.SIDE_TOUCHING_ICE_RIGHT))
