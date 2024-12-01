@@ -230,8 +230,8 @@ class MegaContactListener(
             val block = blockFixture.getEntity() as Block
 
             if (entity is Megaman) {
+                entity.addFeetBlock(block)
                 entity.aButtonTask = AButtonTask.JUMP
-                entity.addFeetBlock(blockFixture.getEntity() as Block)
 
                 val blockMakesSound = block.getOrDefaultProperty("${ConstKeys.FEET}_${ConstKeys.SOUND}", true, Boolean::class)
                 if (blockMakesSound && entity.canMakeLandSound) {

@@ -71,9 +71,9 @@ import com.megaman.maverick.game.controllers.MegaControllerPoller
 import com.megaman.maverick.game.controllers.ScreenController
 import com.megaman.maverick.game.controllers.loadButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
+import com.megaman.maverick.game.entities.blocks.FeetRiseSinkBlock
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.hazards.Lava
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
@@ -118,7 +118,7 @@ class MegamanMaverickGame(
 
     companion object {
         const val TAG = "MegamanMaverickGame"
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(Lava.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(FeetRiseSinkBlock.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.TELEPORTER, FixtureType.TELEPORTER_LISTENER)
         }

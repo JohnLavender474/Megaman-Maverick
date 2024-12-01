@@ -2,10 +2,9 @@ package com.megaman.maverick.game.entities.blocks
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.utils.OrderedSet
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.isAny
 import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -30,7 +29,37 @@ class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {
 
     override fun init() {
         super.init()
-        addComponent(defineUpdatablesComponent())
+        body.preProcess.put(ConstKeys.MOVE) {
+            val iter = feetSet.iterator()
+            while (iter.hasNext) {
+                val feet = iter.next()
+                if (!feet.getShape().overlaps(body.getBounds())) {
+                    iter.remove()
+                    GameLogger.debug(
+                        TAG,
+                        "body.preProcess(): remove feet from body: " +
+                            "feetSet.size=${feetSet.size}, " +
+                            "entity=${feet.getEntity().getTag()}"
+                    )
+                }
+            }
+
+            when {
+                !feetSet.isEmpty -> when {
+                    body.getY() > minY -> body.physics.velocity.y = fallingSpeed * ConstVals.PPM
+                    else -> body.physics.velocity.y = 0f
+                }
+
+                body.getMaxY() < maxY -> body.physics.velocity.y = risingSpeed * ConstVals.PPM
+                else -> body.physics.velocity.y = 0f
+            }
+
+            when {
+                body.getMaxY() > maxY -> body.setMaxY(maxY)
+                body.getY() < minY -> body.setY(minY)
+            }
+        }
+        body.drawingColor = Color.BLUE
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -50,40 +79,15 @@ class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {
 
     private fun shouldListenToFeet(feetFixture: IFixture): Boolean {
         val entity = feetFixture.getEntity()
-        return entity.isAny(Megaman::class, PushableBlock::class)
+        val shouldListen = entity.isAny(Megaman::class, PushableBlock::class)
+        GameLogger.debug(TAG, "shouldListenToFeet(): shouldListen=$shouldListen, entity=${entity.getTag()}")
+        return shouldListen
     }
 
     override fun hitByFeet(feetFixture: IFixture) {
-        if (shouldListenToFeet(feetFixture)) feetSet.add(feetFixture)
-    }
-
-    override fun defineBodyComponent(): BodyComponent {
-        val bodyComponent = super.defineBodyComponent()
-        bodyComponent.body.preProcess.put(ConstKeys.MOVE) {
-            when {
-                !feetSet.isEmpty -> when {
-                    body.getY() > minY -> body.physics.velocity.y = fallingSpeed * ConstVals.PPM
-                    else -> body.physics.velocity.y = 0f
-                }
-
-                body.getMaxY() < maxY -> body.physics.velocity.y = risingSpeed * ConstVals.PPM
-                else -> body.physics.velocity.y = 0f
-            }
-
-            when {
-                body.getMaxY() > maxY -> body.setMaxY(maxY)
-                body.getY() < minY -> body.setY(minY)
-            }
+        if (shouldListenToFeet(feetFixture)) {
+            feetSet.add(feetFixture)
+            GameLogger.debug(TAG, "hitByFeet(): feetSet.size=${feetSet.size}")
         }
-        bodyComponent.body.drawingColor = Color.BLUE
-        return bodyComponent
     }
-
-    private fun defineUpdatablesComponent() = UpdatablesComponent({
-        val iter = feetSet.iterator()
-        while (iter.hasNext) {
-            val feet = iter.next()
-            if (!feet.getShape().overlaps(body.getBounds())) iter.remove()
-        }
-    })
 }

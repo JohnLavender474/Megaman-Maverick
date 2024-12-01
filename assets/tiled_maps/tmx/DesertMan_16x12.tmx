@@ -462,7 +462,7 @@
     <property name="fall" type="float" value="-0.5"/>
     <property name="fixture_labels" value="no_projectile_collision"/>
     <property name="min" type="float" value="2"/>
-    <property name="rise" type="float" value="3"/>
+    <property name="rise" type="float" value="1.5"/>
    </properties>
   </object>
   <object id="10" name="FeetRiseSinkBlock" x="800" y="1664" width="128" height="32">
@@ -470,7 +470,7 @@
     <property name="fall" type="float" value="-0.5"/>
     <property name="fixture_labels" value="no_projectile_collision"/>
     <property name="min" type="float" value="2"/>
-    <property name="rise" type="float" value="3"/>
+    <property name="rise" type="float" value="1.5"/>
    </properties>
   </object>
   <object id="13" x="0" y="1664" width="256" height="96"/>
@@ -499,7 +499,7 @@
     <property name="fall" type="float" value="-0.5"/>
     <property name="fixture_labels" value="no_projectile_collision"/>
     <property name="min" type="float" value="2"/>
-    <property name="rise" type="float" value="3"/>
+    <property name="rise" type="float" value="1.5"/>
    </properties>
   </object>
   <object id="34" name="FeetRiseSinkBlock" x="2400" y="1664" width="224" height="32">
@@ -507,7 +507,7 @@
     <property name="fall" type="float" value="-0.5"/>
     <property name="fixture_labels" value="no_projectile_collision"/>
     <property name="min" type="float" value="2"/>
-    <property name="rise" type="float" value="3"/>
+    <property name="rise" type="float" value="1.5"/>
    </properties>
   </object>
   <object id="37" x="2688" y="1344" width="512" height="128"/>
@@ -526,7 +526,7 @@
     <property name="fall" type="float" value="-0.5"/>
     <property name="fixture_labels" value="no_projectile_collision"/>
     <property name="min" type="float" value="2"/>
-    <property name="rise" type="float" value="3"/>
+    <property name="rise" type="float" value="1.5"/>
    </properties>
   </object>
   <object id="68" x="3520" y="1568" width="128" height="32"/>
@@ -586,7 +586,7 @@
     <property name="fall" type="float" value="-0.5"/>
     <property name="fixture_labels" value="no_projectile_collision"/>
     <property name="min" type="float" value="2"/>
-    <property name="rise" type="float" value="3"/>
+    <property name="rise" type="float" value="1.5"/>
    </properties>
   </object>
   <object id="554" x="11424" y="960" width="448" height="64"/>
@@ -672,10 +672,10 @@
   <object id="788" x="16160" y="384" width="96" height="128"/>
   <object id="791" name="FeetRiseSinkBlock" x="20096" y="768" width="1120" height="32">
    <properties>
-    <property name="fall" type="float" value="-0.5"/>
+    <property name="fall" type="float" value="-0.25"/>
     <property name="fixture_labels" value="no_projectile_collision"/>
     <property name="min" type="float" value="0.5"/>
-    <property name="rise" type="float" value="3"/>
+    <property name="rise" type="float" value="2"/>
    </properties>
   </object>
   <object id="797" x="20704" y="384" width="64" height="576"/>
@@ -1084,7 +1084,7 @@
   <object id="769" name="PicketJoe" x="4984" y="1200" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="5" name="player">
-  <object id="844" name="0" x="20064" y="704" width="32" height="32"/>
+  <object id="844" name="0" x="18992" y="640" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="4" name="temp">
   <object id="24" name="0" x="96" y="1632" width="32" height="32"/>
