@@ -61,13 +61,13 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
     override fun init() {
         GameLogger.debug(TAG, "init()")
         if (!initialized) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.MEGAMAN_BUSTER.source)
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.MEGAMAN_V2_BUSTER.source)
 
-            beamRegion = atlas.findRegion("Beam")
+            beamRegion = atlas.findRegion(ConstKeys.BEAM)
             beamSprite = Sprite(beamRegion)
             beamSprite.setSize(MEGAMAN_SPRITE_SIZE * ConstVals.PPM)
 
-            beamLandAnimation = Animation(atlas.findRegion("Spawn"), 1, 7, 0.05f, false)
+            beamLandAnimation = Animation(atlas.findRegion(ConstKeys.SPAWN), 1, 7, 0.05f, false)
 
             ready =
                 BitmapFontHandle(

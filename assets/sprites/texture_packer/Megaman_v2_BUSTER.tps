@@ -174,6 +174,7 @@
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
             <key type="filename">../frames/Megaman_v2/airdash.png</key>
+            <key type="filename">../frames/Megaman_v2/beam.png</key>
             <key type="filename">../frames/Megaman_v2/climb_finish.png</key>
             <key type="filename">../frames/Megaman_v2/climb_shoot.png</key>
             <key type="filename">../frames/Megaman_v2/groundslide.png</key>
@@ -229,6 +230,21 @@
                 <rect>24,24,48,48</rect>
                 <key>scale9Paddings</key>
                 <rect>24,24,48,48</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Megaman_v2/spawn.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>84,12,168,24</rect>
+                <key>scale9Paddings</key>
+                <rect>84,12,168,24</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
