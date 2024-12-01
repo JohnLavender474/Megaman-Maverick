@@ -30,7 +30,7 @@ class MegamanTrailSprite(game: MegamanMaverickGame) : MegaGameEntity(game), ISpr
         const val AIR_DASH = "air_dash"
         const val GROUND_SLIDE = "ground_slide"
         const val GROUND_SLIDE_SHOOT = "ground_slide_shoot"
-        private const val FADE_DUR = 0.2f
+        private const val FADE_DUR = 0.1f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
