@@ -17,7 +17,7 @@ import com.megaman.maverick.game.spawns.ISpawner
 import com.megaman.maverick.game.spawns.Spawn
 import com.megaman.maverick.game.spawns.SpawnerFactory
 import com.megaman.maverick.game.spawns.SpawnerShapeFactory
-import com.megaman.maverick.game.utils.convertToProps
+import com.megaman.maverick.game.utils.extensions.convertToProps
 
 class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITiledMapLayerBuilder {
 
@@ -89,7 +89,11 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                             )
                             shouldSpawn
                         },
-                        eventKeyMask = objectSetOf<Any>(EventType.PLAYER_READY, EventType.END_ROOM_TRANS),
+                        eventKeyMask = objectSetOf<Any>(
+                            EventType.PLAYER_READY,
+                            EventType.SET_TO_ROOM_NO_TRANS,
+                            EventType.END_ROOM_TRANS
+                        ),
                         spawnSupplier = spawnSupplier
                     )
                     spawners.add(spawner)

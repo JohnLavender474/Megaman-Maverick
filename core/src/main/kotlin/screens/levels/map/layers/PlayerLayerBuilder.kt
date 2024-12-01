@@ -7,19 +7,12 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.screens.levels.tiledmap.builders.ITiledMapLayerBuilder
 import com.megaman.maverick.game.ConstKeys
 
-/** This class is responsible for building the player spawns layer. */
 class PlayerLayerBuilder : ITiledMapLayerBuilder {
 
     companion object {
         const val TAG = "PlayerLayerBuilder"
     }
 
-    /**
-     * Builds the player spawns layer.
-     *
-     * @param layer the [MapLayer] to build.
-     * @param returnProps the [Properties] to use as a return container.
-     */
     override fun build(layer: MapLayer, returnProps: Properties) {
         val spawns = Array<RectangleMapObject>()
         layer.objects.forEach { if (it is RectangleMapObject) spawns.add(it) }

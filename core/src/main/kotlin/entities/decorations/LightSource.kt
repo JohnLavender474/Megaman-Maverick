@@ -22,6 +22,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.extensions.getCenter
 
 open class LightSource(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntity {
 

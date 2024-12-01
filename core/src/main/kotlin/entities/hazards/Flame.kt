@@ -8,6 +8,7 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -30,21 +31,21 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getPositionPoint
 
 class Flame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
-    ICullableEntity, IDamager, IHazard, IDirectionRotatable {
+    ICullableEntity, IDamager, IHazard, IDirectional {
 
     companion object {
         const val TAG = "Flame"
         private var region: TextureRegion? = null
     }
 
-    override var directionRotation = Direction.UP
+    override var direction = Direction.UP
 
     private lateinit var cullTimer: Timer
     private var perpetual = true
@@ -61,9 +62,9 @@ class Flame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
+        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-        when (directionRotation) {
+        when (direction) {
             Direction.UP -> body.setBottomCenterToPoint(spawn)
             Direction.DOWN -> body.setTopCenterToPoint(spawn)
             Direction.LEFT -> body.setCenterRightToPoint(spawn)
@@ -94,17 +95,17 @@ class Flame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         val sprite = GameSprite()
         sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            val position = when (directionRotation) {
+        spritesComponent.putUpdateFunction { _, _ ->
+            val position = when (direction) {
                 Direction.UP -> Position.BOTTOM_CENTER
                 Direction.DOWN -> Position.TOP_CENTER
                 Direction.LEFT -> Position.CENTER_RIGHT
                 Direction.RIGHT -> Position.CENTER_LEFT
             }
             val bodyPosition = body.getPositionPoint(position)
-            _sprite.setPosition(bodyPosition, position)
-            _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation?.rotation ?: 0f
+            sprite.setPosition(bodyPosition, position)
+            sprite.setOriginCenter()
+            sprite.rotation = direction.rotation
         }
         return spritesComponent
     }

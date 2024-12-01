@@ -26,7 +26,9 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.getCenter
 
 class IceShard(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAudioEntity {
 
@@ -49,8 +51,7 @@ class IceShard(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         if (TEXTURES.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
             val region = atlas.findRegion("BreakableIce/Shards")
-            val regions = region.splitAndFlatten(1, 5)
-            regions.forEach { TEXTURES.add(it) }
+            region.splitAndFlatten(1, 5, TEXTURES)
         }
         addComponent(defineBodyComponent())
         addComponent(defineCullablesComponent())
@@ -65,10 +66,13 @@ class IceShard(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         body.setCenter(spawn)
 
         val index = spawnProps.get(ConstKeys.INDEX, Int::class)!!
-        body.physics.velocity = TRAJECTORIES[index].cpy().scl(ConstVals.PPM.toFloat())
+        val velocity = GameObjectPools.fetch(Vector2::class)
+            .set(TRAJECTORIES[index])
+            .scl(ConstVals.PPM.toFloat())
+        body.physics.velocity.set(velocity)
 
         val region = TEXTURES[index]
-        firstSprite!!.setRegion(region)
+        defaultSprite.setRegion(region)
 
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ICE_SHARD_2_SOUND, false)
     }
@@ -90,9 +94,7 @@ class IceShard(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         sprite.setSize(ConstVals.PPM.toFloat())
         sprite.setAlpha(0.75f)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setCenter(body.getCenter())
-        }
+        spritesComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
         return spritesComponent
     }
 

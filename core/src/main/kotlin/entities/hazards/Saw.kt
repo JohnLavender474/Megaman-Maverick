@@ -3,6 +3,7 @@ package com.megaman.maverick.game.entities.hazards
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
@@ -40,8 +41,11 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getCenter
 
 class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IMotionEntity,
     ICullableEntity, IFaceable {
@@ -103,33 +107,32 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
             })
         )
 
-        for (i in 0..RING_COUNT) putUpdateFunction("ring_$i") { _, _sprite ->
+        for (i in 0..RING_COUNT) putUpdateFunction("ring_$i") { _, sprite ->
             val distance = (i.toFloat() / RING_COUNT.toFloat()) * pendulum.length
             val center = pendulum.getPointFromAnchor(distance)
-            _sprite.setCenter(center)
-            _sprite.hidden = false
+            sprite.setCenter(center)
+            sprite.hidden = false
         }
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
         debugShapes.add {
             val line = GameLine(pendulum.anchor, body.getCenter())
-            line.color = Color.DARK_GRAY
-            line.shapeType = ShapeRenderer.ShapeType.Filled
-            line.thickness = ConstVals.PPM / 8f
+            line.drawingColor = Color.DARK_GRAY
+            line.drawingShapeType = ShapeRenderer.ShapeType.Filled
             line
         }
 
         val circle1 = GameCircle()
         circle1.setRadius(ConstVals.PPM / 8f)
-        circle1.shapeType = ShapeRenderer.ShapeType.Filled
-        circle1.color = Color.DARK_GRAY
+        circle1.drawingShapeType = ShapeRenderer.ShapeType.Filled
+        circle1.drawingColor = Color.DARK_GRAY
         debugShapes.add { circle1.setCenter(pendulum.anchor) }
 
         val circle2 = GameCircle()
         circle2.setRadius(ConstVals.PPM / 4f)
-        circle2.shapeType = ShapeRenderer.ShapeType.Filled
-        circle2.color = Color.DARK_GRAY
+        circle2.drawingShapeType = ShapeRenderer.ShapeType.Filled
+        circle2.drawingColor = Color.DARK_GRAY
         debugShapes.add { circle2.setCenter(body.getCenter()) }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -144,33 +147,32 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
             ConstKeys.ROTATION, MotionDefinition(motion = rotation, function = { value, _ -> body.setCenter(value) })
         )
 
-        for (i in 0..RING_COUNT) putUpdateFunction("ring_$i") { _, _sprite ->
+        for (i in 0..RING_COUNT) putUpdateFunction("ring_$i") { _, sprite ->
             val scale = i.toFloat() / RING_COUNT.toFloat()
-            val center = rotation.getScaledPosition(scale)
-            _sprite.setCenter(center)
-            _sprite.hidden = false
+            val center = rotation.getScaledPosition(scale, GameObjectPools.fetch(Vector2::class))
+            sprite.setCenter(center)
+            sprite.hidden = false
         }
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
         debugShapes.add {
             val line = GameLine(rotation.getOrigin(), body.getCenter())
-            line.color = Color.DARK_GRAY
-            line.shapeType = ShapeRenderer.ShapeType.Filled
-            line.thickness = ConstVals.PPM / 8f
+            line.drawingColor = Color.DARK_GRAY
+            line.drawingShapeType = ShapeRenderer.ShapeType.Filled
             line
         }
 
         val circle1 = GameCircle()
         circle1.setRadius(ConstVals.PPM / 8f)
-        circle1.color = Color.DARK_GRAY
-        circle1.shapeType = ShapeRenderer.ShapeType.Filled
+        circle1.drawingColor = Color.DARK_GRAY
+        circle1.drawingShapeType = ShapeRenderer.ShapeType.Filled
         debugShapes.add { circle1.setCenter(rotation.getOrigin()) }
 
         val circle2 = GameCircle()
         circle2.setRadius(ConstVals.PPM / 4f)
-        circle2.color = Color.DARK_GRAY
-        circle2.shapeType = ShapeRenderer.ShapeType.Filled
+        circle2.drawingColor = Color.DARK_GRAY
+        circle2.drawingShapeType = ShapeRenderer.ShapeType.Filled
         debugShapes.add { circle2.setCenter(body.getCenter()) }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -187,7 +189,7 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
                 onReset = { body.setCenter(spawn) })
         )
 
-        for (i in 0..RING_COUNT) putUpdateFunction("ring_$i") { _, _sprite -> _sprite.hidden = true }
+        for (i in 0..RING_COUNT) putUpdateFunction("ring_$i") { _, sprite -> sprite.hidden = true }
     }
 
     private fun defineBodyComponent(): BodyComponent {
@@ -211,9 +213,9 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
         val sawSprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
         sawSprite.setSize(2f * ConstVals.PPM)
         spritesComponent.sprites.put("saw", sawSprite)
-        spritesComponent.putUpdateFunction("saw") { _, _sprite ->
-            _sprite.setPosition(body.getCenter(), Position.CENTER)
-            _sprite.setFlip(isFacing(Facing.LEFT), false)
+        spritesComponent.putUpdateFunction("saw") { _, sprite ->
+            sprite.setPosition(body.getCenter(), Position.CENTER)
+            sprite.setFlip(isFacing(Facing.LEFT), false)
         }
 
         for (i in 0..RING_COUNT) {
@@ -228,6 +230,9 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
     private fun defineAnimationsComponent(): AnimationsComponent {
         val animation = Animation(sawRegion!!, 1, 2, 0.1f, true)
         val animator = Animator(animation)
-        return AnimationsComponent(this, animator)
+
+        val animationsComponent = AnimationsComponent()
+        animationsComponent.putAnimator("saw", sprites["saw"], animator)
+        return animationsComponent
     }
 }

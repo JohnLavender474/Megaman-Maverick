@@ -2,7 +2,6 @@
 
 package com.megaman.maverick.game.entities.special
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.animations.Animation
@@ -16,7 +15,6 @@ import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IFaceable
-import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -46,10 +44,8 @@ import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodySense
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.isSensing
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.world.body.*
 
 class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity, ISpritesEntity,
     IAnimatedEntity, IOwnable, IFaceable {
@@ -85,7 +81,7 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "Spawn cart. Hashcode = ${this.hashCode()}. Props = $spawnProps")
         super.onSpawn(spawnProps)
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
         facing = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, "right", String::class).uppercase())
     }
@@ -95,18 +91,16 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         body.setSize(1.25f * ConstVals.PPM, 0.75f * ConstVals.PPM)
         body.physics.defaultFrictionOnSelf.x = FRICTION_X
         body.physics.defaultFrictionOnSelf.y = FRICTION_Y
-        body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val cartFixture =
             Fixture(body, FixtureType.CART, GameRectangle().setSize(0.75f * ConstVals.PPM, 1.5f * ConstVals.PPM))
-        cartFixture.offsetFromBodyCenter.y = -0.25f * ConstVals.PPM
+        cartFixture.offsetFromBodyAttachment.y = -0.25f * ConstVals.PPM
         cartFixture.putProperty(ConstKeys.ENTITY, this)
         body.addFixture(cartFixture)
-        cartFixture.rawShape.color = Color.BLUE
-        debugShapes.add { cartFixture.getShape() }
+        debugShapes.add { cartFixture}
 
         val bodyFixture =
             Fixture(body, FixtureType.BODY, GameRectangle().setSize(1.25f * ConstVals.PPM, 0.75f * ConstVals.PPM))
@@ -119,24 +113,24 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         val leftFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM))
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
-        leftFixture.offsetFromBodyCenter.x = -0.65f * ConstVals.PPM
+        leftFixture.offsetFromBodyAttachment.x = -0.65f * ConstVals.PPM
         body.addFixture(leftFixture)
 
         val rightFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM))
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
-        rightFixture.offsetFromBodyCenter.x = 0.65f * ConstVals.PPM
+        rightFixture.offsetFromBodyAttachment.x = 0.65f * ConstVals.PPM
         body.addFixture(rightFixture)
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyCenter.y = -0.4f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -0.4f * ConstVals.PPM
         body.addFixture(feetFixture)
 
-        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.gravity.y =
                 if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY * ConstVals.PPM else GRAVITY * ConstVals.PPM
-        })
+        }
         body.fixtures.forEach { it.second.putProperty(ConstKeys.DEATH_LISTENER, false) }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -148,9 +142,9 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         val sprite = GameSprite()
         sprite.setSize(2.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            val position = body.getBottomCenterPoint()
-            _sprite.setPosition(position, Position.BOTTOM_CENTER)
+        spritesComponent.putUpdateFunction { _, _ ->
+            val position = body.getPositionPoint(Position.BOTTOM_CENTER)
+            sprite.setPosition(position, Position.BOTTOM_CENTER)
         }
         return spritesComponent
     }

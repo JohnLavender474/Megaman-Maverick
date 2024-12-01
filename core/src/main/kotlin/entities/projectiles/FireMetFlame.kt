@@ -37,8 +37,11 @@ import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getPositionPoint
 
 class FireMetFlame(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IFaceable {
 
@@ -81,7 +84,7 @@ class FireMetFlame(game: MegamanMaverickGame) : AbstractProjectile(game), IAnima
         destroy()
 
         val smokePuff = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SMOKE_PUFF)!!
-        smokePuff.spawn(props(ConstKeys.POSITION pairTo body.getBottomCenterPoint(), ConstKeys.OWNER pairTo owner))
+        smokePuff.spawn(pooledProps(ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER), ConstKeys.OWNER pairTo owner))
 
         if (overlapsGameCamera()) playSoundNow(SoundAsset.WHOOSH_SOUND, false)
     }
@@ -96,11 +99,11 @@ class FireMetFlame(game: MegamanMaverickGame) : AbstractProjectile(game), IAnima
 body.physics.applyFrictionY = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameCircle().setRadius(0.25f * ConstVals.PPM))
         body.addFixture(projectileFixture)
-        debugShapes.add { projectileFixture.getShape() }
+        debugShapes.add { projectileFixture}
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.25f * ConstVals.PPM))
         body.addFixture(damagerFixture)
@@ -114,9 +117,9 @@ body.physics.applyFrictionY = false
         val sprite = GameSprite()
         sprite.setSize(1.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
-            _sprite.setFlip(isFacing(Facing.LEFT), false)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
+            sprite.setFlip(isFacing(Facing.LEFT), false)
         }
         return spritesComponent
     }

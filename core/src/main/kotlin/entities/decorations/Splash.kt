@@ -31,6 +31,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
 import kotlin.math.ceil
 
 class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
@@ -55,11 +56,12 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
 
         fun splashOnWaterSurface(splasher: GameRectangle, water: GameRectangle) {
             GameLogger.debug(TAG, "Generating splash for splasher [$splasher] and water [$water]")
-            val numSplashes = ceil(splasher.width / ConstVals.PPM).toInt()
+            val numSplashes = ceil(splasher.getWidth() / ConstVals.PPM).toInt()
             for (i in 0 until numSplashes) {
                 val splash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SPLASH)!!
-                val spawn = Vector2(splasher.x + ConstVals.PPM / 2f + i * ConstVals.PPM, water.y + water.height)
-                splash.spawn(props(ConstKeys.POSITION pairTo spawn))
+                val spawn =
+                    Vector2(splasher.getX() + ConstVals.PPM / 2f + i * ConstVals.PPM, water.getY() + water.getHeight())
+                splash.spawn(pooledProps(ConstKeys.POSITION pairTo spawn))
             }
         }
     }
@@ -99,7 +101,7 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
             DrawingPriority::class
         )
 
-        firstSprite!!.let { sprite ->
+        defaultSprite.let { sprite ->
             sprite.setSize(size)
             sprite.setPosition(spawn, Position.BOTTOM_CENTER)
 

@@ -11,6 +11,7 @@ import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
@@ -35,15 +36,15 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getPositionPoint
 
 class GreenExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
-    IDirectionRotatable, IOwnable, IDamager, IHazard {
+    IDirectional, IOwnable, IDamager, IHazard {
 
     companion object {
         const val TAG = "GreenExplosion"
@@ -51,10 +52,10 @@ class GreenExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         private var region: TextureRegion? = null
     }
 
-    override var directionRotation: Direction
-        get() = body.cardinalRotation
+    override var direction: Direction
+        get() = body.direction
         set(value) {
-            body.cardinalRotation = value
+            body.direction = value
         }
     override var owner: GameEntity? = null
 
@@ -98,9 +99,9 @@ class GreenExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
-        directionRotation = spawnProps.get(ConstKeys.DIRECTION, Direction::class) ?: Direction.UP
+        direction = spawnProps.get(ConstKeys.DIRECTION, Direction::class) ?: Direction.UP
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-        when (directionRotation) {
+        when (direction) {
             Direction.UP -> body.setBottomCenterToPoint(spawn)
             Direction.DOWN -> body.setTopCenterToPoint(spawn)
             Direction.LEFT -> body.setCenterRightToPoint(spawn)
@@ -119,32 +120,32 @@ class GreenExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(3.5f * ConstVals.PPM, ConstVals.PPM.toFloat())
-        body.color = Color.GRAY
+        body.drawingColor = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body }
 
         val damagerFixture1 = Fixture(body, FixtureType.DAMAGER, GameRectangle().setHeight(ConstVals.PPM.toFloat()))
         body.addFixture(damagerFixture1)
-        debugShapes.add { damagerFixture1.getShape() }
+        debugShapes.add { damagerFixture1 }
 
         val damagerFixture2 = Fixture(body, FixtureType.DAMAGER, GameRectangle().setHeight(ConstVals.PPM.toFloat()))
         body.addFixture(damagerFixture2)
-        debugShapes.add { damagerFixture2.getShape() }
+        debugShapes.add { damagerFixture2 }
 
         val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setHeight(0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyCenter.y = -0.5f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -0.5f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.rawShape.color = Color.GREEN
-        debugShapes.add { feetFixture.getShape() }
+        feetFixture.drawingColor = Color.GREEN
+        debugShapes.add { feetFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.fixtures.forEach { t ->
                 val fixture = t.second as Fixture
                 (fixture.rawShape as GameRectangle).setWidth(width * ConstVals.PPM)
             }
-            damagerFixture1.offsetFromBodyCenter.x = damagerOffset * ConstVals.PPM
-            damagerFixture2.offsetFromBodyCenter.x = -damagerOffset * ConstVals.PPM
+            damagerFixture1.offsetFromBodyAttachment.x = damagerOffset * ConstVals.PPM
+            damagerFixture2.offsetFromBodyAttachment.x = -damagerOffset * ConstVals.PPM
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -156,17 +157,17 @@ class GreenExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         val sprite = GameSprite()
         sprite.setSize(3.5f * ConstVals.PPM, ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation.rotation
-            val position = when (directionRotation) {
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setOriginCenter()
+            sprite.rotation = direction.rotation
+            val position = when (direction) {
                 Direction.UP -> Position.BOTTOM_CENTER
                 Direction.DOWN -> Position.TOP_CENTER
                 Direction.LEFT -> Position.CENTER_RIGHT
                 Direction.RIGHT -> Position.CENTER_LEFT
             }
             val bodyPosition = body.getPositionPoint(position)
-            _sprite.setPosition(bodyPosition, position)
+            sprite.setPosition(bodyPosition, position)
         }
         return spritesComponent
     }

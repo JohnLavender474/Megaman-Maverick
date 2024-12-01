@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.enemies
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
@@ -13,7 +12,6 @@ import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
-import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -41,8 +39,8 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
@@ -117,7 +115,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
                 }
             }
             body.setCenter(spawn)
-            facing = if (megaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
+            facing = if (megaman().body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
         } else {
             body.setSize(0.75f * ConstVals.PPM, 1.5f * ConstVals.PPM)
             val targetX = spawn.x + spawnProps.get(ConstKeys.VALUE, Float::class)!! * ConstVals.PPM
@@ -135,7 +133,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
                 }
             }
             body.setCenter(spawn)
-            facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+            facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         }
 
         val frameDuration = spawnProps.getOrDefault(ConstKeys.FRAME, 0.1f, Float::class)
@@ -152,7 +150,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
         body.physics.applyFrictionY = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY)
         bodyFixture.putProperty(ConstKeys.GRAVITY_ROTATABLE, false)
@@ -160,66 +158,64 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER)
         body.addFixture(damagerFixture)
-        damagerFixture.rawShape.color = Color.RED
-        debugShapes.add { damagerFixture.getShape() }
+        debugShapes.add { damagerFixture}
 
-        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE)
+        val damageableRect = GameRectangle(body)
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, damageableRect)
         body.addFixture(damageableFixture)
-        damageableFixture.rawShape.color = Color.PURPLE
-        debugShapes.add { damageableFixture.getShape() }
+        debugShapes.add { damageableFixture}
 
-        val shieldFixture = Fixture(body, FixtureType.SHIELD)
+        val shieldRect = GameRectangle(body)
+        val shieldFixture = Fixture(body, FixtureType.SHIELD, shieldRect)
         body.addFixture(shieldFixture)
-        shieldFixture.rawShape.color = Color.BLUE
-        debugShapes.add { shieldFixture.rawShape }
+        debugShapes.add { shieldFixture}
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
-            (bodyFixture.rawShape as GameRectangle).set(body)
-            (damagerFixture.rawShape as GameRectangle).set(body)
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            bodyFixture.setShape(body.getBounds())
+            damagerFixture.setShape(body.getBounds())
 
             when {
                 vertical -> {
                     body.setSize(1.75f * ConstVals.PPM, 0.85f * ConstVals.PPM)
-                    (damageableFixture.rawShape as GameRectangle).width = body.width
-                    (shieldFixture.rawShape as GameRectangle).setSize(1.25f * ConstVals.PPM, 0.75f * ConstVals.PPM)
+                    damageableRect.setWidth(body.getWidth())
+                    shieldRect.setSize(1.25f * ConstVals.PPM, 0.75f * ConstVals.PPM)
                 }
 
                 else -> {
                     body.setSize(0.85f * ConstVals.PPM, 1.75f * ConstVals.PPM)
-                    (damageableFixture.rawShape as GameRectangle).height = body.height
-                    (shieldFixture.rawShape as GameRectangle).setSize(0.75f * ConstVals.PPM, 1.25f * ConstVals.PPM)
+                    damageableRect.setHeight(body.getHeight())
+                    shieldRect.setSize(0.75f * ConstVals.PPM, 1.25f * ConstVals.PPM)
                 }
             }
 
-            val damageableShape = damageableFixture.rawShape as GameRectangle
             when {
                 turningAround -> {
-                    shieldFixture.active = false
-                    damageableFixture.offsetFromBodyCenter.x = 0f
+                    shieldFixture.setActive(false)
+                    damageableFixture.offsetFromBodyAttachment.x = 0f
                     when {
-                        vertical -> damageableShape.height = 0.5f * ConstVals.PPM
-                        else -> damageableShape.width = 0.5f * ConstVals.PPM
+                        vertical -> damageableRect.setHeight(0.5f * ConstVals.PPM)
+                        else -> damageableRect.setWidth(0.5f * ConstVals.PPM)
                     }
                 }
 
                 else -> {
-                    shieldFixture.active = true
+                    shieldFixture.setActive(true)
                     when {
                         vertical -> {
-                            damageableFixture.offsetFromBodyCenter.y = (if (switch) 0.5f else -0.5f) * ConstVals.PPM
-                            damageableShape.height = 0.15f * ConstVals.PPM
+                            damageableFixture.offsetFromBodyAttachment.y = (if (switch) 0.5f else -0.5f) * ConstVals.PPM
+                            damageableRect.setHeight(0.15f * ConstVals.PPM)
                         }
 
                         else -> {
-                            damageableFixture.offsetFromBodyCenter.x = (if (switch) 0.5f else -0.5f) * ConstVals.PPM
-                            damageableShape.width = 0.15f * ConstVals.PPM
+                            damageableFixture.offsetFromBodyAttachment.x = (if (switch) 0.5f else -0.5f) * ConstVals.PPM
+                            damageableRect.setWidth(0.15f * ConstVals.PPM)
                         }
                     }
                 }
             }
-        })
+        }
 
         return BodyComponentCreator.create(this, body)
     }

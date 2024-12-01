@@ -1,9 +1,7 @@
 package com.megaman.maverick.game.entities.special
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.OrderedSet
@@ -56,9 +54,8 @@ import com.megaman.maverick.game.entities.megaman.components.rightSideFixture
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.setHitByBlockReceiver
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.world.body.*
 
 class FloorButton(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     ICullableEntity, IAudioEntity {
@@ -98,7 +95,8 @@ class FloorButton(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+            .getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
 
         spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)!!
@@ -145,7 +143,7 @@ class FloorButton(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         reusableArrayOfShapes.clear()
-        reusableArrayOfShapes.add(megaman().body.getBodyBounds())
+        reusableArrayOfShapes.add(megaman().body.getBounds())
         reusableArrayOfShapes.add(megaman().leftSideFixture.getShape())
         reusableArrayOfShapes.add(megaman().rightSideFixture.getShape())
         reusableArrayOfShapes.add(megaman().feetFixture.getShape())
@@ -153,16 +151,16 @@ class FloorButton(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
 
         when (state) {
             FloorButtonState.UP ->
-                if (reusableArrayOfShapes.any { it.overlaps(body) } || !pushableBlocks.isEmpty) activate()
+                if (reusableArrayOfShapes.any { it.overlaps(body.getBounds()) } || !pushableBlocks.isEmpty) activate()
 
             FloorButtonState.DOWN -> {
                 val iter = pushableBlocks.iterator()
                 while (iter.hasNext) {
                     val block = iter.next()
-                    if (!block.body.overlaps(body as Rectangle)) exitPushableBlock(block)
+                    if (!block.body.getBounds().overlaps(body.getBounds())) exitPushableBlock(block)
                 }
 
-                if (reusableArrayOfShapes.none { it.overlaps(body) } && pushableBlocks.isEmpty) deactivate()
+                if (reusableArrayOfShapes.none { it.overlaps(body.getBounds()) } && pushableBlocks.isEmpty) deactivate()
             }
 
             FloorButtonState.SWITCH_TO_DOWN -> {
@@ -186,10 +184,9 @@ class FloorButton(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(ConstVals.PPM.toFloat())
-        body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         bodyFixture.setHitByBlockReceiver { block ->
@@ -208,7 +205,7 @@ class FloorButton(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
         sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
-            sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
         }
         return spritesComponent
     }

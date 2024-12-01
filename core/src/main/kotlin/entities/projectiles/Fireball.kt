@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.projectiles
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -8,12 +7,12 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.UtilMethods.getOverlapPushDirection
+import com.mega.game.engine.common.UtilMethods.mask
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.getOverlapPushDirection
-import com.mega.game.engine.common.mask
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -44,9 +43,8 @@ import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getEntity
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+import com.megaman.maverick.game.world.body.*
 
 class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
@@ -83,17 +81,17 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
 
-        val spawn = spawnProps.getOrDefault(ConstKeys.POSITION, Vector2(), Vector2::class)
+        val spawn = spawnProps.getOrDefault(ConstKeys.POSITION, Vector2.Zero, Vector2::class)
         body.setCenter(spawn)
 
-        val trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2(), Vector2::class)
-        body.physics.velocity = trajectory
+        val trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2.Zero, Vector2::class)
+        body.physics.velocity.set(trajectory)
 
         val cullTime = spawnProps.getOrDefault(ConstKeys.CULL_TIME, BURST_CULL_DUR, Float::class)
         burstCullTimer = Timer(cullTime)
 
-        val gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, Vector2(), Vector2::class)
-        body.physics.gravity = gravity
+        val gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, Vector2.Zero, Vector2::class)
+        body.physics.gravity.set(gravity)
 
         burstOnDamageInflicted = spawnProps.getOrDefault(BURST_ON_DAMAGE_INFLICTED, false, Boolean::class)
         burstOnHitBody = spawnProps.getOrDefault(BURST_ON_HIT_BODY, false, Boolean::class)
@@ -116,14 +114,14 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         if (burstOnHitBody && mask(owner, bodyFixture.getEntity(), { it is Megaman }, { it is AbstractEnemy })) {
-            burstDirection = getOverlapPushDirection(body, bodyFixture.getShape()) ?: Direction.UP
+            burstDirection = getOverlapPushDirection(body.getBounds(), bodyFixture.getShape()) ?: Direction.UP
             explodeAndDie()
         }
     }
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         if (burstOnHitBlock) {
-            burstDirection = getOverlapPushDirection(body, blockFixture.getShape()) ?: Direction.UP
+            burstDirection = getOverlapPushDirection(body.getBounds(), blockFixture.getShape()) ?: Direction.UP
             explodeAndDie()
         }
     }
@@ -137,7 +135,7 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         destroy()
         val smokePuff = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SMOKE_PUFF)!!
         val spawn = Vector2(body.getCenter().x, waterFixture.getShape().getMaxY())
-        smokePuff.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.OWNER pairTo owner))
+        smokePuff.spawn(pooledProps(ConstKeys.POSITION pairTo spawn, ConstKeys.OWNER pairTo owner))
         playSoundNow(SoundAsset.WHOOSH_SOUND, false)
     }
 
@@ -151,10 +149,10 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
             val smokePuff = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SMOKE_PUFF)!!
             val position = when (burstDirection) {
-                Direction.UP -> body.getBottomCenterPoint()
-                Direction.DOWN -> body.getTopCenterPoint()
-                Direction.LEFT -> body.getCenterRightPoint()
-                Direction.RIGHT -> body.getCenterLeftPoint()
+                Direction.UP -> body.getPositionPoint(Position.BOTTOM_CENTER)
+                Direction.DOWN -> body.getPositionPoint(Position.TOP_CENTER)
+                Direction.LEFT -> body.getPositionPoint(Position.CENTER_RIGHT)
+                Direction.RIGHT -> body.getPositionPoint(Position.CENTER_LEFT)
             }
             smokePuff.spawn(
                 props(
@@ -169,23 +167,20 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.physics.applyFrictionX = false
-body.physics.applyFrictionY = false
+        body.physics.applyFrictionY = false
         body.setSize(0.6f * ConstVals.PPM)
-        body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val projectileFixture =
             Fixture(body, FixtureType.PROJECTILE, GameCircle().setRadius(0.25f * ConstVals.PPM))
         body.addFixture(projectileFixture)
-        projectileFixture.rawShape.color = Color.GREEN
-        debugShapes.add { projectileFixture.getShape() }
+        debugShapes.add { projectileFixture}
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.25f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        damagerFixture.rawShape.color = Color.RED
-        debugShapes.add { damagerFixture.getShape() }
+        debugShapes.add { damagerFixture}
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 

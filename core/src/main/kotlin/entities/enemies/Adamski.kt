@@ -42,8 +42,10 @@ import com.megaman.maverick.game.entities.projectiles.Asteroid
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
 
 class Adamski(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IMotionEntity {
@@ -94,7 +96,7 @@ class Adamski(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
         type = spawnProps.getOrDefault(ConstKeys.TYPE, 0, Int::class)
 
-        val left = spawnProps.getOrDefault(ConstKeys.LEFT, megaman().body.x <= body.x, Boolean::class)
+        val left = spawnProps.getOrDefault(ConstKeys.LEFT, megaman().body.getX() <= body.getX(), Boolean::class)
         val flip = spawnProps.getOrDefault(ConstKeys.FLIP, false, Boolean::class)
         val motion = SineWave(
             body.getCenter(),
@@ -122,18 +124,15 @@ class Adamski(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
-        bodyFixture.getShape().color = Color.GRAY
-        debugShapes.add { bodyFixture.getShape() }
+        debugShapes.add { bodyFixture}
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().set(body))
         body.addFixture(damagerFixture)
-        damagerFixture.getShape().color = Color.RED
-        debugShapes.add { damagerFixture.getShape() }
+        debugShapes.add { damagerFixture}
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().set(body))
         body.addFixture(damageableFixture)
-        damageableFixture.getShape().color = Color.PURPLE
-        debugShapes.add { damageableFixture.getShape() }
+        debugShapes.add { damageableFixture}
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
@@ -144,9 +143,9 @@ class Adamski(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.hidden = damageBlink
-            _sprite.setCenter(body.getCenter())
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.hidden = damageBlink
+            sprite.setCenter(body.getCenter())
         }
         return spritesComponent
     }

@@ -38,8 +38,9 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.world.body.BodyLabel
-import com.megaman.maverick.game.world.body.FixtureLabel
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.world.body.*
 
 class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntity, ISpritesEntity {
 
@@ -79,8 +80,8 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEnti
         super.onSpawn(spawnProps)
 
         bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
-        val spawn = bounds.getCenterLeftPoint()
-        val width = (bounds.width / ConstVals.PPM).toInt()
+        val spawn = bounds.getPositionPoint(Position.CENTER_LEFT)
+        val width = (bounds.getWidth() / ConstVals.PPM).toInt()
 
         val dropIndices = if (spawnProps.containsKey(DROPS))
             spawnProps.get(DROPS, String::class)!!
@@ -144,15 +145,15 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEnti
         if (platformRight && platform!!.pivot.getMaxX() >= bounds.getMaxX() - 0.5f * ConstVals.PPM) {
             platform!!.body.physics.velocity.x = PLATFORM_SPEED * ConstVals.PPM * -1f
             platformRight = false
-        } else if (!platformRight && platform!!.pivot.x <= bounds.getX() + 0.5f * ConstVals.PPM) {
+        } else if (!platformRight && platform!!.pivot.getX() <= bounds.getX() + 0.5f * ConstVals.PPM) {
             platform!!.body.physics.velocity.x = PLATFORM_SPEED * ConstVals.PPM
             platformRight = true
         }
 
         val pivot = platform!!.pivot
-        if (platform!!.dropped && drops.none { drop -> pivot.x >= drop.x && pivot.getMaxX() <= drop.getMaxX() })
+        if (platform!!.dropped && drops.none { drop -> pivot.getX() >= drop.getX() && pivot.getMaxX() <= drop.getMaxX() })
             platform!!.raise()
-        else if (!platform!!.dropped && drops.any { drop -> pivot.x >= drop.x && pivot.getMaxX() <= drop.getMaxX() })
+        else if (!platform!!.dropped && drops.any { drop -> pivot.getX() >= drop.getX() && pivot.getMaxX() <= drop.getMaxX() })
             platform!!.drop()
     })
 
@@ -189,7 +190,7 @@ class RailTrackPlatform(game: MegamanMaverickGame) : Block(game), ISpritesEntity
         addComponent(defineUpdatablesComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -229,10 +230,10 @@ class RailTrackPlatform(game: MegamanMaverickGame) : Block(game), ISpritesEntity
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
         sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            val position = body.getTopCenterPoint()
+        spritesComponent.putUpdateFunction { _, _ ->
+            val position = body.getPositionPoint(Position.TOP_CENTER)
             position.y += 0.1f * ConstVals.PPM
-            _sprite.setPosition(position, Position.TOP_CENTER)
+            sprite.setPosition(position, Position.TOP_CENTER)
         }
         return spritesComponent
     }

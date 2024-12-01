@@ -1,8 +1,6 @@
 package com.megaman.maverick.game.entities.blocks
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
@@ -40,6 +38,9 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.getMotionValue
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.PI
 
@@ -53,7 +54,6 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, 
         private const val TIME_TO_SPAWN_ENEMY = 0.25f
         private const val MAX_SCALAR = 1.25f
         private const val MIN_SCALAR = 0.25f
-        private const val SCALAR_DELTA = 0.5f
         private const val RING_COUNT = 10
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -90,10 +90,13 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, 
         scalar = MAX_SCALAR
         setPendulum(bounds)
 
-        body.preProcess.put(ConstKeys.TARGET) { delta ->
+        body.preProcess.put(ConstKeys.TARGET) {
             target?.let { target ->
-                val velocity = target.cpy().sub(body.getBottomCenterPoint()).scl(1f / delta)
-                body.physics.velocity = velocity
+                val velocity = GameObjectPools.fetch(Vector2::class)
+                velocity.set(target)
+                    .sub(body.getPositionPoint(Position.BOTTOM_CENTER))
+                    .scl(1f / ConstVals.FIXED_TIME_STEP)
+                body.physics.velocity.set(velocity)
             }
         }
         body.addBodyLabels(objectSetOf(BodyLabel.COLLIDE_DOWN_ONLY))
@@ -141,24 +144,22 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, 
         )
 
         addDebugShapeSupplier {
-            val line = GameLine(pendulum.anchor, pendulum.getMotionValue())
-            line.color = Color.DARK_GRAY
-            line.shapeType = ShapeRenderer.ShapeType.Line
-            line.thickness = ConstVals.PPM / 8f
-            line
+            val value = pendulum.getMotionValue()
+            if (value == null) return@addDebugShapeSupplier null
+            GameLine(pendulum.anchor, value)
         }
 
         val circle1 = GameCircle()
         circle1.setRadius(ConstVals.PPM / 4f)
-        circle1.shapeType = ShapeRenderer.ShapeType.Filled
-        circle1.color = Color.BROWN
         addDebugShapeSupplier { circle1.setCenter(pendulum.anchor) }
 
         val circle2 = GameCircle()
         circle2.setRadius(ConstVals.PPM / 4f)
-        circle2.shapeType = ShapeRenderer.ShapeType.Line
-        circle2.color = Color.DARK_GRAY
-        addDebugShapeSupplier { circle2.setCenter(pendulum.getMotionValue()) }
+        addDebugShapeSupplier {
+            val value = pendulum.getMotionValue()
+            if (value == null) return@addDebugShapeSupplier null
+            circle2.setCenter(value)
+        }
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
@@ -171,7 +172,8 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, 
                         children.add(picketJoe)
                         picketJoe.spawn(
                             props(
-                                ConstKeys.POSITION pairTo body.getTopCenterPoint(), ConstKeys.CULL_OUT_OF_BOUNDS pairTo false
+                                ConstKeys.POSITION pairTo body.getPositionPoint(Position.TOP_CENTER),
+                                ConstKeys.CULL_OUT_OF_BOUNDS pairTo false
                             )
                         )
                     }
@@ -181,7 +183,8 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, 
                         children.add(sniperJoe)
                         sniperJoe.spawn(
                             props(
-                                ConstKeys.POSITION pairTo body.getTopCenterPoint(), ConstKeys.CULL_OUT_OF_BOUNDS pairTo false
+                                ConstKeys.POSITION pairTo body.getPositionPoint(Position.TOP_CENTER),
+                                ConstKeys.CULL_OUT_OF_BOUNDS pairTo false
                             )
                         )
                     }

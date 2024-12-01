@@ -3,7 +3,6 @@ package com.megaman.maverick.game.entities.enemies
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
@@ -17,12 +16,9 @@ import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
-
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.common.shapes.getCenter
-import com.mega.game.engine.common.shapes.toGameRectangle
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -49,6 +45,8 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
@@ -91,25 +89,29 @@ class Tropish(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        triggerBox = spawnProps.get(ConstKeys.TRIGGER, RectangleMapObject::class)!!.rectangle.toGameRectangle()
-        startPosition = spawnProps.get(ConstKeys.START, RectangleMapObject::class)!!.rectangle.getCenter()
+        triggerBox = spawnProps.get(ConstKeys.TRIGGER, RectangleMapObject::class)!!.rectangle.toGameRectangle(false)
+        startPosition = spawnProps.get(ConstKeys.START, RectangleMapObject::class)!!.rectangle.getCenter(false)
 
         tropishState = TropishState.WAIT
         body.physics.gravityOn = false
-        body.fixtures.forEach { (it.second as Fixture).active = false }
+        body.forEachFixture { it.setActive(false) }
 
-        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
     }
 
     override fun canDamage(damageable: IDamageable) = tropishState != TropishState.WAIT
 
     private fun startSwim() {
         tropishState = TropishState.SWIM
+
         body.setCenter(startPosition)
-        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+
+        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+
         val speed = SWIM_SPEED * ConstVals.PPM * facing.value
         body.physics.velocity.x = speed
-        body.fixtures.forEach { (it.second as Fixture).active = true }
+
+        body.forEachFixture { it.setActive(true) }
     }
 
     private fun hitNose() {
@@ -128,8 +130,10 @@ class Tropish(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            if (tropishState == TropishState.WAIT && megaman().body.overlaps(triggerBox as Rectangle)) startSwim()
-            else if (tropishState == TropishState.BENT && body.isSensing(BodySense.FEET_ON_GROUND)) explodeAndDie()
+            when {
+                tropishState == TropishState.WAIT && megaman().body.getBounds().overlaps(triggerBox) -> startSwim()
+                tropishState == TropishState.BENT && body.isSensing(BodySense.FEET_ON_GROUND) -> explodeAndDie()
+            }
         }
     }
 
@@ -138,10 +142,10 @@ class Tropish(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         body.setSize(1.25f * ConstVals.PPM, 0.75f * ConstVals.PPM)
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
         body.physics.applyFrictionX = false
-body.physics.applyFrictionY = false
+        body.physics.applyFrictionY = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         body.addFixture(bodyFixture)
@@ -160,17 +164,17 @@ body.physics.applyFrictionY = false
             ) hitNose()
         }
         body.addFixture(noseFixture)
-        noseFixture.rawShape.color = Color.BLUE
-        debugShapes.add { noseFixture.getShape() }
+        noseFixture.drawingColor = Color.BLUE
+        debugShapes.add { noseFixture }
 
         val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyCenter.y = -0.375f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -0.375f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.rawShape.color = Color.GREEN
-        debugShapes.add { feetFixture.getShape() }
+        feetFixture.drawingColor = Color.GREEN
+        debugShapes.add { feetFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            noseFixture.offsetFromBodyCenter.x = 0.625f * ConstVals.PPM * facing.value
+            noseFixture.offsetFromBodyAttachment.x = 0.625f * ConstVals.PPM * facing.value
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -182,17 +186,18 @@ body.physics.applyFrictionY = false
         val sprite = GameSprite()
         sprite.setSize(2.5f * ConstVals.PPM, 2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setFlip(isFacing(Facing.RIGHT), false)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setFlip(isFacing(Facing.RIGHT), false)
             val position = if (isFacing(Facing.LEFT)) Position.CENTER_LEFT else Position.CENTER_RIGHT
-            _sprite.setPosition(body.getPositionPoint(position), position)
-            _sprite.hidden = damageBlink || tropishState == TropishState.WAIT
+            sprite.setPosition(body.getPositionPoint(position), position)
+            sprite.hidden = damageBlink || tropishState == TropishState.WAIT
         }
         return spritesComponent
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { if (tropishState == TropishState.WAIT) null else tropishState.name.lowercase() }
+        val keySupplier: () -> String? =
+            { if (tropishState == TropishState.WAIT) null else tropishState.name.lowercase() }
         val animations = objectMapOf<String, IAnimation>(
             "swim" pairTo Animation(regions["swim"], 2, 1, 0.1f, true),
             "bent" pairTo Animation(regions["bent"], 2, 1, 0.25f, true)

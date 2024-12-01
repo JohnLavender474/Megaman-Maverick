@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.special
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
@@ -36,6 +35,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 
@@ -45,6 +45,8 @@ class QuickSand(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
         const val TAG = "QuickSand"
         private val regions = ObjectMap<String, TextureRegion>()
     }
+
+    private val matrix = Matrix<GameRectangle>()
 
     override fun init() {
         if (regions.isEmpty) {
@@ -64,7 +66,7 @@ class QuickSand(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
         body.fixtures.forEach { ((it.second as Fixture).rawShape as GameRectangle).set(bounds) }
-        defineDrawables(bounds.splitByCellSize(ConstVals.PPM.toFloat()))
+        defineDrawables(bounds.splitByCellSize(ConstVals.PPM.toFloat(), matrix))
     }
 
     private fun defineBodyComponent(): BodyComponent {
@@ -73,8 +75,7 @@ class QuickSand(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
 
         val sandFixture = Fixture(body, FixtureType.SAND, GameRectangle())
         body.addFixture(sandFixture)
-        sandFixture.rawShape.color = Color.RED
-        debugShapes.add { sandFixture.getShape() }
+        debugShapes.add { sandFixture}
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
@@ -82,8 +83,8 @@ class QuickSand(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
     }
 
     private fun defineDrawables(cells: Matrix<GameRectangle>) {
-        val sprites = OrderedMap<String, GameSprite>()
-        val updateFunctions = ObjectMap<String, UpdateFunction<GameSprite>>()
+        val sprites = OrderedMap<Any, GameSprite>()
+        val updateFunctions = ObjectMap<Any, UpdateFunction<GameSprite>>()
         val animators = Array<GamePair<() -> GameSprite, IAnimator>>()
 
         cells.forEach { x, y, bounds ->

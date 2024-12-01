@@ -10,6 +10,7 @@ import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
@@ -43,8 +44,11 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.ITeleporterEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.world.body.getPositionPoint
 
 class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     ITeleporterEntity, IAudioEntity, IEventListener {
@@ -125,10 +129,10 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         launch = true
 
         val hopPoint = when (thisDirection) {
-            Direction.UP -> body.getTopCenterPoint()
-            Direction.DOWN -> body.getBottomCenterPoint()
-            Direction.LEFT -> body.getCenterLeftPoint()
-            Direction.RIGHT -> body.getCenterRightPoint()
+            Direction.UP -> body.getPositionPoint(Position.TOP_CENTER)
+            Direction.DOWN -> body.getPositionPoint(Position.BOTTOM_CENTER)
+            Direction.LEFT -> body.getPositionPoint(Position.CENTER_LEFT)
+            Direction.RIGHT -> body.getPositionPoint(Position.CENTER_RIGHT)
         }
         when (thisDirection) {
             Direction.UP -> entity.body.setBottomCenterToPoint(hopPoint)
@@ -206,10 +210,10 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         val sprite = GameSprite()
         sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setCenter(body.getCenter())
-            _sprite.setOriginCenter()
-            _sprite.rotation = rotation
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setCenter(body.getCenter())
+            sprite.setOriginCenter()
+            sprite.rotation = rotation
         }
         return spritesComponent
     }

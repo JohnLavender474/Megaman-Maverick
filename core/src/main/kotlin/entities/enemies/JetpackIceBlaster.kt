@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.enemies
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
@@ -17,14 +16,12 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.interfaces.IFaceable
-
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameLine
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.common.shapes.getCenter
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
@@ -59,10 +56,10 @@ import com.megaman.maverick.game.entities.megaman.components.damageableFixture
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodySense
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.isSensing
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDrawableShapesEntity,
@@ -108,7 +105,7 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
     )
     override lateinit var facing: Facing
 
-    private val loop = Loop(JetpackIceShooterState.values().toGdxArray())
+    private val loop = Loop(JetpackIceShooterState.entries.toTypedArray().toGdxArray())
     private val flyToTargetTimer = Timer(FLY_TO_TARGET_MAX_DUR)
     private val shootTimer = Timer(SHOOT_DUR, gdxArrayOf(TimeMarkedRunnable(0.25f) { shoot() }))
 
@@ -125,7 +122,7 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-            DistanceType.values().forEach { d ->
+            DistanceType.entries.forEach { d ->
                 val regionKey = "${d.name.lowercase()}_thrust"
                 val region =
                     atlas.findRegion("$TAG/$regionKey") ?: throw IllegalStateException("Region is null: $regionKey")
@@ -143,22 +140,20 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         distanceType = DistanceType.FAR
 
-        target = if (spawnProps.containsKey(ConstKeys.TARGET)) spawnProps.get(
-            ConstKeys.TARGET, RectangleMapObject::class
-        )!!.rectangle.getCenter()
-        else {
-            val target1 = spawnProps.get(
-                "${ConstKeys.TARGET}_1", RectangleMapObject::class
-            )!!.rectangle.getCenter()
-            val target2 = spawnProps.get(
-                "${ConstKeys.TARGET}_2", RectangleMapObject::class
-            )!!.rectangle.getCenter()
-            val megamanCenter = megaman().body.getCenter()
-            if (target1.dst2(megamanCenter) < target2.dst2(megamanCenter)) target1 else target2
-        }
+        target =
+            if (spawnProps.containsKey(ConstKeys.TARGET))
+                spawnProps.get(ConstKeys.TARGET, RectangleMapObject::class)!!.rectangle.getCenter(false)
+            else {
+                val target1 =
+                    spawnProps.get("${ConstKeys.TARGET}_1", RectangleMapObject::class)!!.rectangle.getCenter(false)
+                val target2 =
+                    spawnProps.get("${ConstKeys.TARGET}_2", RectangleMapObject::class)!!.rectangle.getCenter(false)
+                val megamanCenter = megaman().body.getCenter()
+                if (target1.dst2(megamanCenter) < target2.dst2(megamanCenter)) target1 else target2
+            }
         setVelocityToTarget()
 
         loop.reset()
@@ -166,20 +161,24 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
     }
 
     private fun shoot() {
-        val blast = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.TEARDROP_BLAST)!!
         val originOffsetX = (calculateAimLineOriginOffset(distanceType).x + when (distanceType) {
             DistanceType.STRAIGHT, DistanceType.FAR -> 0.5f
             DistanceType.MID -> 0.35f
             DistanceType.UNDER -> 0.05f
         }) * facing.value
+
         val originOffsetY = when (distanceType) {
             DistanceType.STRAIGHT -> 0.15f
             DistanceType.FAR -> -0.1f
             DistanceType.MID -> -0.25f
             DistanceType.UNDER -> -0.5f
         }
+
         val spawn = body.getCenter().add(originOffsetX * ConstVals.PPM, originOffsetY * ConstVals.PPM)
+
         val trajectory = Vector2(0f, BLAST_SPEED * ConstVals.PPM).rotateDeg(aimLine!!.rotation)
+
+        val blast = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.TEARDROP_BLAST)!!
         blast.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
@@ -188,22 +187,26 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
             )
         )
 
-        val muzzleFlash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.MUZZLE_FLASH)!!
-        muzzleFlash.spawn(props(ConstKeys.POSITION pairTo spawn))
+        val flash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.MUZZLE_FLASH)!!
+        flash.spawn(pooledProps(ConstKeys.POSITION pairTo spawn))
 
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.BLAST_1_SOUND, false)
     }
 
-    private fun calculateAimLineOriginOffset(distanceType: DistanceType) =
+    private fun calculateAimLineOriginOffset(distanceType: DistanceType): Vector2 {
+        val offset = GameObjectPools.fetch(Vector2::class)
         when (distanceType) {
-            DistanceType.STRAIGHT -> Vector2(0.25f, -0.1f)
-            DistanceType.FAR -> Vector2(0.15f, 0f)
-            DistanceType.MID -> Vector2(0.1f, 0f)
-            DistanceType.UNDER -> Vector2(0.075f, 0f)
+            DistanceType.STRAIGHT -> offset.set(0.25f, -0.1f)
+            DistanceType.FAR -> offset.set(0.15f, 0f)
+            DistanceType.MID -> offset.set(0.1f, 0f)
+            DistanceType.UNDER -> offset.set(0.075f, 0f)
         }
+        return offset
+    }
 
     private fun calculateAimLine(distanceType: DistanceType): GameLine {
-        val line = GameLine(body.getCenter(), body.getCenter().add(0f, 10f * ConstVals.PPM))
+        val line = GameObjectPools.fetch(GameLine::class)
+            .set(body.getCenter(), body.getCenter().add(0f, 10f * ConstVals.PPM))
 
         val originOffset = calculateAimLineOriginOffset(distanceType)
         line.setOrigin(
@@ -221,7 +224,7 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
         var bestDistance = Float.MAX_VALUE
         lateinit var bestType: DistanceType
 
-        DistanceType.values().forEach {
+        DistanceType.entries.forEach {
             val line = calculateAimLine(it)
             GameLogger.debug(
                 TAG,
@@ -236,18 +239,21 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
         }
 
         GameLogger.debug(TAG, "Best distance type = $bestType")
+
         return bestType
     }
 
     private fun getVerticalAdjustment(): Float {
         if (aimLine!!.overlaps(megaman().damageableFixture.getShape())) return 0f
 
-        val megamanLine = GameLine(0f, 0f, 0f, ConstVals.VIEW_HEIGHT * ConstVals.PPM)
+        val megamanLine = GameObjectPools.fetch(GameLine::class)
+            .set(0f, 0f, 0f, ConstVals.VIEW_HEIGHT * ConstVals.PPM)
         megamanLine.setCenter(megaman().body.getCenter())
+
         GameLogger.debug(TAG, "Megaman center = ${megaman().body.getCenter()}")
         GameLogger.debug(TAG, "Drawing vertical line over Megaman = $megamanLine")
 
-        val intersection = megamanLine.intersectionPoint(aimLine!!) ?: return 0f
+        val intersection = megamanLine.intersectionPoint(aimLine!!, GameObjectPools.fetch(Vector2::class)) ?: return 0f
         GameLogger.debug(TAG, "Intersection between aim line and Megaman line = $intersection")
 
         var adjustment = megaman().body.getCenter().y - intersection.y
@@ -258,12 +264,17 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
         else if (adjustment < -MAX_Y_AIM_ADJUSTMENT * ConstVals.PPM) adjustment = -MAX_Y_AIM_ADJUSTMENT * ConstVals.PPM
 
         GameLogger.debug(TAG, "Vertical adjustment calculated = $adjustment")
+
         return adjustment
     }
 
     private fun setVelocityToTarget() {
-        val velocity = target.cpy().sub(body.getCenter()).nor().scl(FLY_TO_TARGET_SPEED * ConstVals.PPM)
-        body.physics.velocity = velocity
+        val velocity = GameObjectPools.fetch(Vector2::class)
+            .set(target)
+            .sub(body.getCenter())
+            .nor()
+            .scl(FLY_TO_TARGET_SPEED * ConstVals.PPM)
+        body.physics.velocity.set(velocity)
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -281,14 +292,14 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
                         loop.next()
                         flyToTargetTimer.reset()
 
-                        if (megaman().body.getMaxX() < body.x) facing = Facing.LEFT
-                        else if (megaman().body.x > body.getMaxX()) facing = Facing.RIGHT
+                        if (megaman().body.getMaxX() < body.getX()) facing = Facing.LEFT
+                        else if (megaman().body.getX() > body.getMaxX()) facing = Facing.RIGHT
 
                         distanceType = getBestDistanceType()
                         aimLine = calculateAimLine(distanceType)
 
                         val adjustment = getVerticalAdjustment()
-                        target = body.getCenter().add(0f, adjustment)
+                        target.set(body.getCenter().add(0f, adjustment))
                         setVelocityToTarget()
 
                         GameLogger.debug(TAG, "Setting state to next = ${loop.getCurrent()}")
@@ -322,10 +333,10 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
         val body = Body(BodyType.DYNAMIC)
         body.setSize(1.15f * ConstVals.PPM, 1.5f * ConstVals.PPM)
         body.physics.applyFrictionX = false
-body.physics.applyFrictionY = false
+        body.physics.applyFrictionY = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         body.addFixture(bodyFixture)
@@ -338,17 +349,15 @@ body.physics.applyFrictionY = false
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyCenter.y = -0.575f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -0.575f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.rawShape.color = Color.GRAY
-        debugShapes.add { feetFixture.getShape() }
+        debugShapes.add { feetFixture }
 
         val headFixture =
             Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.1f * ConstVals.PPM))
-        headFixture.offsetFromBodyCenter.y = 0.575f * ConstVals.PPM
+        headFixture.offsetFromBodyAttachment.y = 0.575f * ConstVals.PPM
         body.addFixture(headFixture)
-        headFixture.rawShape.color = Color.BLUE
-        debugShapes.add { headFixture.getShape() }
+        debugShapes.add { headFixture }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
@@ -359,10 +368,10 @@ body.physics.applyFrictionY = false
         val sprite = GameSprite()
         sprite.setSize(1.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setCenter(body.getCenter())
-            _sprite.hidden = damageBlink
-            _sprite.setFlip(isFacing(Facing.LEFT), false)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setCenter(body.getCenter())
+            sprite.hidden = damageBlink
+            sprite.setFlip(isFacing(Facing.LEFT), false)
         }
         return spritesComponent
     }
@@ -370,7 +379,7 @@ body.physics.applyFrictionY = false
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { "${distanceType.name.lowercase()}_thrust" }
         val animations = objectMapOf<String, IAnimation>()
-        DistanceType.values().forEach { d ->
+        DistanceType.entries.forEach { d ->
             val regionKey = "${d.name.lowercase()}_thrust"
             val region = regions[regionKey]
             animations.put(regionKey, Animation(region!!, 2, 1, 0.1f, true))

@@ -42,8 +42,11 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.MegaUtilMethods
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.world.body.getPositionPoint
 import kotlin.reflect.KClass
 
 class FlameHeadThrower(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
@@ -76,7 +79,7 @@ class FlameHeadThrower(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimat
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
         standTimer.reset()
         throwTimer.setToEnd()
@@ -84,7 +87,7 @@ class FlameHeadThrower(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimat
 
     private fun throwFlame() {
         val trajectory = MegaUtilMethods.calculateJumpImpulse(
-            body.getTopCenterPoint(),
+            body.getPositionPoint(Position.TOP_CENTER),
             megaman().body.getCenter(),
             IMPULSE_Y * ConstVals.PPM
         ).coerceX(-MAX_THROW_X * ConstVals.PPM, MAX_THROW_X * ConstVals.PPM)
@@ -135,10 +138,10 @@ class FlameHeadThrower(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimat
         val sprite = GameSprite()
         sprite.setSize(1.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
-            _sprite.hidden = damageBlink
-            _sprite.setFlip(isFacing(Facing.LEFT), false)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
+            sprite.hidden = damageBlink
+            sprite.setFlip(isFacing(Facing.LEFT), false)
         }
         return spritesComponent
     }

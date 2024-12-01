@@ -35,8 +35,11 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.entities.megaman.components.feetFixture
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.BodyLabel
 import com.megaman.maverick.game.world.body.FixtureLabel
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.setCenterX
 
 class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, IAudioEntity {
 
@@ -145,13 +148,12 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
             }
 
             FlipperPlatformState.LEFT -> {
-                val position = bounds.getTopCenterPoint()
+                val position = bounds.getPositionPoint(Position.TOP_CENTER)
                 block!!.body.setTopRightToPoint(position)
-                block!!.body.x -= 0.25f * ConstVals.PPM
-                block!!.body.y -= 0.4f * ConstVals.PPM
+                block!!.body.translate(-0.25f * ConstVals.PPM, -0.4f * ConstVals.PPM)
 
                 if (switchDelay.isFinished() &&
-                    block!!.body.overlaps(megaman().feetFixture.getShape())
+                    block!!.body.getBounds().overlaps(megaman().feetFixture.getShape())
                 ) {
                     switchDelay.reset()
                     requestToPlaySound(SoundAsset.BLOOPITY_SOUND, false)
@@ -160,13 +162,13 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
 
 
             FlipperPlatformState.RIGHT -> {
-                val position = bounds.getTopCenterPoint()
+                val position = bounds.getPositionPoint(Position.TOP_CENTER)
                 block!!.body.setTopLeftToPoint(position)
-                block!!.body.x += 0.25f * ConstVals.PPM
-                block!!.body.y -= 0.3f * ConstVals.PPM
+                block!!.body.translate(0.25f * ConstVals.PPM, 0f)
+                block!!.body.translate(0f, -0.3f * ConstVals.PPM)
 
                 if (switchDelay.isFinished() &&
-                    block!!.body.overlaps(megaman().feetFixture.getShape())
+                    block!!.body.getBounds().overlaps(megaman().feetFixture.getShape())
                 ) {
                     switchDelay.reset()
                     requestToPlaySound(SoundAsset.BLOOPITY_SOUND, false)
@@ -186,7 +188,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
         sprite.setSize(2.6875f * ConstVals.PPM, 1.875f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(bounds.getTopCenterPoint(), Position.TOP_CENTER)
+            _sprite.setPosition(bounds.getPositionPoint(Position.TOP_CENTER), Position.TOP_CENTER)
         }
         return spritesComponent
     }

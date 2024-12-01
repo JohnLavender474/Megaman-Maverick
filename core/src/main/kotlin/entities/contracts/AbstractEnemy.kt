@@ -2,10 +2,10 @@ package com.megaman.maverick.game.entities.contracts
 
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.UtilMethods.getRandom
+import com.mega.game.engine.common.UtilMethods.getRandomBool
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.extensions.objectSetOf
-import com.mega.game.engine.common.getRandom
-import com.mega.game.engine.common.getRandomBool
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -30,6 +30,7 @@ import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.setStandardOnTeleportEndProp
 import com.megaman.maverick.game.entities.utils.setStandardOnTeleportStartProp
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.world.body.getCenter
 
 abstract class AbstractEnemy(
     game: MegamanMaverickGame,
@@ -148,8 +149,8 @@ abstract class AbstractEnemy(
 
     open fun isMegamanShootingAtMe(): Boolean {
         if (!megaman().shooting) return false
-        return body.x < megaman().body.x && megaman().facing == Facing.LEFT ||
-            body.x > megaman().body.x && megaman().facing == Facing.RIGHT
+        return body.getX() < megaman().body.getX() && megaman().facing == Facing.LEFT ||
+            body.getX() > megaman().body.getX() && megaman().facing == Facing.RIGHT
     }
 
     override fun getEntityType() = EntityType.ENEMY

@@ -12,6 +12,7 @@ import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -36,14 +37,14 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getPositionPoint
 
 class SigmaRatElectricBallExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity,
-    IAnimatedEntity, IDamager, IHazard, IDirectionRotatable {
+    IAnimatedEntity, IDamager, IHazard, IDirectional {
 
     companion object {
         const val TAG = "SigmaRatElectricBallExplosion"
@@ -53,10 +54,10 @@ class SigmaRatElectricBallExplosion(game: MegamanMaverickGame) : MegaGameEntity(
         private var dissipateRegion: TextureRegion? = null
     }
 
-    override var directionRotation: Direction
-        get() = body.cardinalRotation
+    override var direction: Direction
+        get() = body.direction
         set(value) {
-            body.cardinalRotation = value
+            body.direction = value
         }
 
     private val shockTimer = Timer(SHOCK_DUR)
@@ -80,7 +81,7 @@ class SigmaRatElectricBallExplosion(game: MegamanMaverickGame) : MegaGameEntity(
         super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setBottomCenterToPoint(spawn)
-        directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
+        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
         shockTimer.reset()
         dissipateTimer.reset()
     }
@@ -96,10 +97,10 @@ class SigmaRatElectricBallExplosion(game: MegamanMaverickGame) : MegaGameEntity(
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.65f * ConstVals.PPM, 1.05f * ConstVals.PPM)
-        body.color = Color.GRAY
+        body.drawingColor = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body }
 
         val damagerFixture = Fixture(
             body, FixtureType.DAMAGER, GameRectangle().setSize(
@@ -108,8 +109,8 @@ class SigmaRatElectricBallExplosion(game: MegamanMaverickGame) : MegaGameEntity(
             )
         )
         body.addFixture(damagerFixture)
-        damagerFixture.rawShape.color = Color.RED
-        debugShapes.add { damagerFixture.getShape() }
+        damagerFixture.drawingColor = Color.RED
+        debugShapes.add { damagerFixture}
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
@@ -120,10 +121,10 @@ class SigmaRatElectricBallExplosion(game: MegamanMaverickGame) : MegaGameEntity(
         val sprite = GameSprite()
         sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
-            _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation?.rotation ?: 0f
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
+            sprite.setOriginCenter()
+            sprite.rotation = direction.rotation
         }
         return spritesComponent
     }

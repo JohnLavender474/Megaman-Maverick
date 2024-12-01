@@ -2,7 +2,6 @@ package com.megaman.maverick.game.entities.special
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectSet
 import com.badlogic.gdx.utils.OrderedSet
@@ -42,6 +41,9 @@ import com.megaman.maverick.game.entities.explosions.ExplosionOrb
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getCenter
 import kotlin.math.ceil
 import kotlin.math.min
 import kotlin.reflect.KClass
@@ -132,7 +134,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         tileSpritesPool = Pool(
             startAmount = 0,
             supplier = { GameSprite(region!!, DrawingPriority(DrawingSection.FOREGROUND, 10)) },
-            onPool = { sprite -> sprite.hidden = true },
+            onFree = { sprite -> sprite.hidden = true },
             onFetch = { sprite -> sprite.hidden = false })
         lightSourcePool = Pool(startAmount = 0, supplier = { LightSourceDef(Vector2(), 0, 0f) })
     }
@@ -152,8 +154,8 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
             spawnProps.getOrDefault("${ConstKeys.PPM}_${ConstKeys.DIVISOR}", DEFAULT_PPM_DIVISOR, Int::class)
         dividedPPM = ConstVals.PPM.toFloat() / ppmDivisor
 
-        val rows = (bounds.height / dividedPPM).toInt()
-        val columns = (bounds.width / dividedPPM).toInt()
+        val rows = (bounds.getHeight() / dividedPPM).toInt()
+        val columns = (bounds.getWidth() / dividedPPM).toInt()
         GameLogger.debug(TAG, "onSpawn(): rows=$rows, columns=$columns")
         allTiles = Matrix(rows, columns)
 
@@ -233,17 +235,17 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
     }
 
     private fun getMinsAndMaxes(rect: GameRectangle): MinsAndMaxes {
-        val minX = ((rect.x - bounds.x) / dividedPPM).toInt().coerceIn(0, allTiles.columns - 1)
-        val minY = ((rect.y - bounds.y) / dividedPPM).toInt().coerceIn(0, allTiles.rows - 1)
-        val maxX = (ceil((rect.getMaxX() - bounds.x) / dividedPPM)).toInt().coerceIn(0, allTiles.columns - 1)
-        val maxY = (ceil((rect.getMaxY() - bounds.y) / dividedPPM)).toInt().coerceIn(0, allTiles.rows - 1)
+        val minX = ((rect.getX() - bounds.getX()) / dividedPPM).toInt().coerceIn(0, allTiles.columns - 1)
+        val minY = ((rect.getY() - bounds.getY()) / dividedPPM).toInt().coerceIn(0, allTiles.rows - 1)
+        val maxX = (ceil((rect.getMaxX() - bounds.getX()) / dividedPPM)).toInt().coerceIn(0, allTiles.columns - 1)
+        val maxY = (ceil((rect.getMaxY() - bounds.getY()) / dividedPPM)).toInt().coerceIn(0, allTiles.rows - 1)
         return MinsAndMaxes(minX, minY, maxX, maxY)
     }
 
     private fun getTile(x: Int, y: Int): BlackTile {
         if (allTiles[x, y] == null) {
-            val posX = bounds.x + (x * dividedPPM)
-            val posY = bounds.y + (y * dividedPPM)
+            val posX = bounds.getX() + (x * dividedPPM)
+            val posY = bounds.getY() + (y * dividedPPM)
             val tileBounds = GameRectangle(posX, posY, dividedPPM, dividedPPM)
             allTiles[x, y] = BlackTile(tileBounds)
         }
@@ -252,7 +254,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
 
     private fun tryToLightUp(entity: IGameEntity) {
         if (entity is IBodyEntity &&
-            entity.body.overlaps(bounds as Rectangle) &&
+            entity.body.getBounds().overlaps(bounds) &&
             lightUpEntities.containsKey((entity as IBodyEntity)::class)
         ) {
             val lightSourceDef = lightSourcePool.fetch()
@@ -291,7 +293,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         MegaGameEntities.getEntitiesOfType(EntityType.PROJECTILE).forEach { t -> tryToLightUp(t) }
         MegaGameEntities.getEntitiesOfType(EntityType.EXPLOSION).forEach { t -> tryToLightUp(t) }
 
-        if (megaman().body.overlaps(bounds as Rectangle)) {
+        if (megaman().body.getBounds().overlaps(bounds)) {
             if (megaman().charging) {
                 val fullCharged = megaman().fullyCharged
                 val lightSourceDef = lightSourcePool.fetch()
@@ -325,21 +327,22 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         while (!lightSourceQueue.isEmpty()) {
             val lightSourceDef = lightSourceQueue.removeFirst()
             handleLightSource(lightSourceDef)
-            lightSourcePool.pool(lightSourceDef)
+            lightSourcePool.free(lightSourceDef)
         }
 
         val camBounds = game.getGameCamera().getRotatedBounds()
-        camBounds.x -= CAM_BOUNDS_BUFFER * ConstVals.PPM
-        camBounds.y -= CAM_BOUNDS_BUFFER * ConstVals.PPM
-        camBounds.width += 2f * CAM_BOUNDS_BUFFER * ConstVals.PPM
-        camBounds.height += 2f * CAM_BOUNDS_BUFFER * ConstVals.PPM
+        camBounds.translate(-CAM_BOUNDS_BUFFER * ConstVals.PPM, -CAM_BOUNDS_BUFFER * ConstVals.PPM)
+        camBounds.translateSize(
+            2f * CAM_BOUNDS_BUFFER * ConstVals.PPM,
+            2f * CAM_BOUNDS_BUFFER * ConstVals.PPM
+        )
 
-        previousTiles.forEach { t -> if (!camBounds.overlaps(t.bounds as Rectangle)) t.reset(darkMode) }
+        previousTiles.forEach { t -> if (!camBounds.overlaps(t.bounds)) t.reset(darkMode) }
         previousTiles.clear()
         previousTiles.addAll(currentTiles)
         currentTiles.clear()
 
-        sprites.values().forEach { t -> tileSpritesPool.pool(t) }
+        sprites.values().forEach { t -> tileSpritesPool.free(t) }
         sprites.clear()
 
         val startTime = System.currentTimeMillis()
@@ -352,7 +355,12 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
             if (!previousTiles.contains(tile)) tile.reset(darkMode) else tile.update(delta, darkMode)
 
             val sprite = tileSpritesPool.fetch()
-            sprite.setBounds(bounds.x + x * sprite.width, bounds.y + y * sprite.height, dividedPPM, dividedPPM)
+            sprite.setBounds(
+                bounds.getX() + x * sprite.width,
+                bounds.getY() + y * sprite.height,
+                dividedPPM,
+                dividedPPM
+            )
             sprite.setAlpha(tile.currentAlpha)
 
             sprites.put("${x}_${y}", sprite)

@@ -1,7 +1,6 @@
 package com.megaman.maverick.game.entities.explosions
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
@@ -10,7 +9,7 @@ import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureRegion
-import com.mega.game.engine.common.extensions.toGameRectangle
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -30,11 +29,11 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
 
 class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, IAudioEntity,
-    IDirectionRotatable {
+    IDirectional {
 
     companion object {
         const val TAG = "Disintegration"
@@ -42,7 +41,7 @@ class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
         private var region: TextureRegion? = null
     }
 
-    override lateinit var directionRotation: Direction
+    override lateinit var direction: Direction
 
     private val durationTimer = Timer(DURATION)
     private val reusableRect = GameRectangle()
@@ -59,13 +58,13 @@ class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
         super.onSpawn(spawnProps)
 
         val rawDir = spawnProps.get(ConstKeys.DIRECTION, String::class)
-        directionRotation = rawDir?.let { Direction.valueOf(it.uppercase()) } ?: megaman().directionRotation
+        direction = rawDir?.let { Direction.valueOf(it.uppercase()) } ?: megaman().direction
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-        firstSprite.setPosition(spawn, Position.CENTER)
+        defaultSprite.setPosition(spawn, Position.CENTER)
 
         reusableRect.setSize(ConstVals.PPM.toFloat()).setCenter(spawn)
-        if (reusableRect.overlaps(getGameCamera().toGameRectangle() as Rectangle))
+        if (reusableRect.overlaps(getGameCamera().toGameRectangle()))
             requestToPlaySound(SoundAsset.THUMP_SOUND, false)
 
         durationTimer.reset()
@@ -82,7 +81,7 @@ class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setOriginCenter()
-            sprite.rotation = directionRotation.rotation
+            sprite.rotation = direction.rotation
         }
         return spritesComponent
     }

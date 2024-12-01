@@ -18,6 +18,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 
 class SpaceSatellite(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
 
@@ -26,7 +27,7 @@ class SpaceSatellite(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
         private var region: TextureRegion? = null
     }
 
-    private lateinit var position: Vector2
+    private val position = Vector2()
     private var left = false
 
     override fun init() {
@@ -37,7 +38,7 @@ class SpaceSatellite(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        position = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        position.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER))
         left = spawnProps.getOrDefault(ConstKeys.LEFT, false, Boolean::class)
     }
 

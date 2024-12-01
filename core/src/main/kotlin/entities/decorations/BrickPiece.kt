@@ -32,8 +32,10 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.setHitByBlockReceiver
 
 class BrickPiece(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAudioEntity {
@@ -76,7 +78,7 @@ class BrickPiece(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
     private fun explodeAndDie() {
         destroy()
         val disintegration = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)!!
-        disintegration.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
+        disintegration.spawn(pooledProps(ConstKeys.POSITION pairTo body.getCenter()))
         requestToPlaySound(SoundAsset.THUMP_SOUND, false)
     }
 

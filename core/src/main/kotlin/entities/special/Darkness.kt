@@ -2,20 +2,18 @@ package com.megaman.maverick.game.entities.special
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.UtilMethods.interpolate
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
-import com.mega.game.engine.common.interpolate
 import com.mega.game.engine.common.objects.Matrix
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.common.shapes.toGameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -40,6 +38,10 @@ import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getCenter
 import java.util.*
 import kotlin.math.ceil
 import kotlin.reflect.KClass
@@ -127,8 +129,8 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
 
         bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         ppmDivisor = spawnProps.getOrDefault("${ConstKeys.PPM}_${ConstKeys.DIVISOR}", DEFAULT_PPM_DIVISOR, Int::class)
-        val rows = (bounds.height / (ConstVals.PPM / ppmDivisor)).toInt()
-        val columns = (bounds.width / (ConstVals.PPM / ppmDivisor)).toInt()
+        val rows = (bounds.getHeight() / (ConstVals.PPM / ppmDivisor)).toInt()
+        val columns = (bounds.getWidth() / (ConstVals.PPM / ppmDivisor)).toInt()
         GameLogger.debug(TAG, "onSpawn(): rows=$rows, columns=$columns")
 
         tiles = Matrix(rows, columns)
@@ -137,8 +139,8 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
                 val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
                 sprite.setRegion(region!!)
                 sprite.setAlpha(0f)
-                val spriteX = bounds.x + (x * (ConstVals.PPM / ppmDivisor))
-                val spriteY = bounds.y + (y * (ConstVals.PPM / ppmDivisor))
+                val spriteX = bounds.getX() + (x * (ConstVals.PPM / ppmDivisor))
+                val spriteY = bounds.getY() + (y * (ConstVals.PPM / ppmDivisor))
                 sprite.setBounds(
                     spriteX,
                     spriteY,
@@ -229,7 +231,7 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
 
     private fun tryToLightUp(entity: IGameEntity) {
         if (entity is IBodyEntity &&
-            entity.body.overlaps(bounds as Rectangle) &&
+            entity.body.getBounds().overlaps(bounds) &&
             lightUpEntities.containsKey(entity::class)
         ) {
             val lightEvent = LightEvent(LightEventType.LIGHT_SOURCE, lightUpEntities[entity::class].invoke(entity))
@@ -243,7 +245,7 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
             MegaGameEntities.getEntitiesOfType(EntityType.PROJECTILE).forEach { t -> tryToLightUp(t) }
             MegaGameEntities.getEntitiesOfType(EntityType.EXPLOSION).forEach { t -> tryToLightUp(t) }
 
-            if (megaman().body.overlaps(bounds as Rectangle) && megaman().charging) {
+            if (megaman().body.getBounds().overlaps(bounds) && megaman().charging) {
                 val lightEvent = LightEvent(
                     LightEventType.LIGHT_SOURCE,
                     LightEventDef(
@@ -302,13 +304,13 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
                 val adjustedRadius = radius.toFloat() * ConstVals.PPM
                 val circle = GameCircle(center, adjustedRadius)
 
-                var startX = (((center.x - adjustedRadius) - bounds.x) / (ConstVals.PPM.toFloat() / ppmDivisor)).toInt()
+                var startX = (((center.x - adjustedRadius) - bounds.getX()) / (ConstVals.PPM.toFloat() / ppmDivisor)).toInt()
                 startX = startX.coerceIn(0, tiles.columns - 1)
-                var endX = ceil(((center.x + adjustedRadius) - bounds.x) / (ConstVals.PPM / ppmDivisor)).toInt()
+                var endX = ceil(((center.x + adjustedRadius) - bounds.getX()) / (ConstVals.PPM / ppmDivisor)).toInt()
                 endX = endX.coerceIn(0, tiles.columns - 1)
-                var startY = (((center.y - adjustedRadius) - bounds.y) / (ConstVals.PPM / ppmDivisor)).toInt()
+                var startY = (((center.y - adjustedRadius) - bounds.getY()) / (ConstVals.PPM / ppmDivisor)).toInt()
                 startY = startY.coerceIn(0, tiles.rows - 1)
-                var endY = ceil(((center.y + adjustedRadius) - bounds.y) / (ConstVals.PPM / ppmDivisor)).toInt()
+                var endY = ceil(((center.y + adjustedRadius) - bounds.getY()) / (ConstVals.PPM / ppmDivisor)).toInt()
                 endY = endY.coerceIn(0, tiles.rows - 1)
 
                 GameLogger.debug(

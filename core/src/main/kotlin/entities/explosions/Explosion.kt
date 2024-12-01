@@ -41,6 +41,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getCenter
 
 class Explosion(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IOwnable, IBodyEntity, ISpritesEntity,
     IAudioEntity, IDamager {
@@ -67,10 +68,14 @@ class Explosion(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IOwn
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        val spawn = spawnProps.get(ConstKeys.POSITION) as Vector2
+
+        val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
+
         durationTimer.reset()
+
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
+
         if (spawnProps.containsKey(ConstKeys.SOUND) && overlapsGameCamera()) {
             val sound = spawnProps.get(ConstKeys.SOUND, SoundAsset::class)!!
             requestToPlaySound(sound, false)
@@ -104,9 +109,7 @@ class Explosion(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IOwn
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(ConstVals.PPM.toFloat()))
         body.addFixture(damagerFixture)
         addComponent(
-            DrawableShapesComponent(
-                debugShapeSuppliers = gdxArrayOf({ damagerFixture.getShape() }), debug = true
-            )
+            DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ damagerFixture }), debug = true)
         )
         return BodyComponentCreator.create(this, body)
     }

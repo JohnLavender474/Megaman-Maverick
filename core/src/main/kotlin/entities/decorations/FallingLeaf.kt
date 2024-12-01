@@ -6,11 +6,10 @@ import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.common.UtilMethods.getRandom
 import com.mega.game.engine.common.extensions.getTextureRegion
-import com.mega.game.engine.common.getRandom
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.common.shapes.toGameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -28,6 +27,8 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
 
 class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, ICullableEntity {
 
@@ -157,7 +158,7 @@ class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
 
     private fun defineDrawableShapesComponent(): DrawableShapesComponent {
         val shapes = Array<() -> IDrawableShape?>()
-        shapes.add { firstSprite.boundingRectangle.toGameRectangle() }
+        shapes.add { defaultSprite.boundingRectangle.toGameRectangle() }
         return DrawableShapesComponent(debugShapeSuppliers = shapes, debug = true)
     }
 }

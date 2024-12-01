@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.projectiles
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -38,8 +37,11 @@ import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
 
 class Needle(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity, IDamageable {
@@ -82,13 +84,13 @@ class Needle(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntit
         body.positionOnPoint(spawn, bodyPosition)
 
         val gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, 0f, Float::class)
-        body.physics.gravity = Vector2(0f, gravity)
+        body.physics.gravity.set(0f, gravity)
 
-        val impulse = spawnProps.getOrDefault(ConstKeys.IMPULSE, Vector2(), Vector2::class)
+        val impulse = spawnProps.getOrDefault(ConstKeys.IMPULSE, Vector2.Zero, Vector2::class)
         body.physics.velocity.set(impulse)
 
         val damagerActive = spawnProps.getOrDefault("${ConstKeys.DAMAGER}_${ConstKeys.ACTIVE}", true, Boolean::class)
-        damagerFixture.active = damagerActive
+        damagerFixture.setActive(damagerActive)
 
         damageTimer.setToEnd()
         blink = false
@@ -122,7 +124,7 @@ class Needle(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntit
 
     fun explode() {
         val flash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.MUZZLE_FLASH)!!
-        flash.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
+        flash.spawn(pooledProps(ConstKeys.POSITION pairTo body.getCenter()))
     }
 
     override fun explodeAndDie(vararg params: Any?) {
@@ -144,15 +146,13 @@ class Needle(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntit
         body.setSize(0.5f * ConstVals.PPM)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
-        body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameCircle().setRadius(0.25f * ConstVals.PPM))
         body.addFixture(projectileFixture)
-        projectileFixture.rawShape.color = Color.RED
-        debugShapes.add { projectileFixture.getShape() }
+        debugShapes.add { projectileFixture}
 
         damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.25f * ConstVals.PPM))
         body.addFixture(damagerFixture)

@@ -9,6 +9,7 @@ import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -34,14 +35,11 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodyFixtureDef
-import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.*
 
-class BunbyRedRocket(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IDirectionRotatable,
+class BunbyRedRocket(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IDirectional,
     IFaceable {
 
     companion object {
@@ -49,10 +47,10 @@ class BunbyRedRocket(game: MegamanMaverickGame) : AbstractProjectile(game), IAni
         private var region: TextureRegion? = null
     }
 
-    override var directionRotation: Direction
-        get() = body.cardinalRotation
+    override var direction: Direction
+        get() = body.direction
         set(value) {
-            body.cardinalRotation = value
+            body.direction = value
         }
     override lateinit var facing: Facing
 
@@ -60,7 +58,7 @@ class BunbyRedRocket(game: MegamanMaverickGame) : AbstractProjectile(game), IAni
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBodyBounds() }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -73,7 +71,7 @@ class BunbyRedRocket(game: MegamanMaverickGame) : AbstractProjectile(game), IAni
         body.physics.velocity.set(trajectory)
 
         facing = spawnProps.get(ConstKeys.FACING, Facing::class)!!
-        directionRotation = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
+        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
     }
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
@@ -110,7 +108,7 @@ class BunbyRedRocket(game: MegamanMaverickGame) : AbstractProjectile(game), IAni
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setFlip(isFacing(Facing.LEFT), false)
             sprite.setOriginCenter()
-            sprite.rotation = directionRotation.rotation
+            sprite.rotation = direction.rotation
             sprite.setCenter(body.getCenter())
         }
         return spritesComponent

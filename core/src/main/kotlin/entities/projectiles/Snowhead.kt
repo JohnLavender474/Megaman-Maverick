@@ -4,12 +4,13 @@ package com.megaman.maverick.game.entities.projectiles
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.mega.game.engine.common.UtilMethods.getOverlapPushDirection
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.set
-import com.mega.game.engine.common.getOverlapPushDirection
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -38,9 +39,13 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getEntity
+import com.megaman.maverick.game.world.body.getPositionPoint
 
 class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable {
 
@@ -69,37 +74,39 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
         super.onSpawn(spawnProps)
 
         val size = spawnProps.getOrDefault(ConstKeys.SIZE, Vector2().set(0.75f * ConstVals.PPM), Vector2::class)
-        body.setSize(size)
-        firstSprite!!.setSize(size.cpy().scl(2f))
+        body.setSize(size.x, size.y)
+        defaultSprite.setSize(size.cpy().scl(2f))
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
-        val trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2(), Vector2::class)
-        body.physics.velocity = trajectory
+
+        val trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2.Zero, Vector2::class)
+        body.physics.velocity.set(trajectory)
+
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
 
         facing = if (trajectory.x > 0f) Facing.RIGHT else Facing.LEFT
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
 
         val noFace = spawnProps.getOrDefault("${ConstKeys.NO}_${ConstKeys.FACE}", false, Boolean::class)
-        firstSprite!!.setRegion(if (noFace) noFaceRegion!! else region!!)
-        firstSprite!!.priority.section = spawnProps.getOrDefault(
+        defaultSprite.setRegion(if (noFace) noFaceRegion!! else region!!)
+        defaultSprite.priority.section = spawnProps.getOrDefault(
             ConstKeys.SECTION,
             DrawingSection.PLAYGROUND,
             DrawingSection::class
         )
-        firstSprite!!.priority.value = spawnProps.getOrDefault(ConstKeys.PRIORITY, 0, Int::class)
+        defaultSprite.priority.value = spawnProps.getOrDefault(ConstKeys.PRIORITY, 0, Int::class)
     }
 
     private fun bounceBullets(collisionShape: IGameShape2D) {
         val snowballs =
             EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SNOWBALL, SNOWBALL_TRAJECTORIES.size)
-        val direction = getOverlapPushDirection(body, collisionShape) ?: Direction.UP
+        val direction = getOverlapPushDirection(body.getBounds(), collisionShape) ?: Direction.UP
         val spawn = when (direction) {
-            Direction.UP -> body.getTopCenterPoint().add(0f, 0.1f * ConstVals.PPM)
-            Direction.DOWN -> body.getBottomCenterPoint().sub(0f, 0.1f * ConstVals.PPM)
-            Direction.LEFT -> body.getCenterLeftPoint().sub(0.1f * ConstVals.PPM, 0f)
-            Direction.RIGHT -> body.getCenterRightPoint().add(0.1f * ConstVals.PPM, 0f)
+            Direction.UP -> body.getPositionPoint(Position.TOP_CENTER).add(0f, 0.1f * ConstVals.PPM)
+            Direction.DOWN -> body.getPositionPoint(Position.BOTTOM_CENTER).sub(0f, 0.1f * ConstVals.PPM)
+            Direction.LEFT -> body.getPositionPoint(Position.CENTER_LEFT).sub(0.1f * ConstVals.PPM, 0f)
+            Direction.RIGHT -> body.getPositionPoint(Position.CENTER_RIGHT).add(0.1f * ConstVals.PPM, 0f)
         }
         for (i in 0 until snowballs.size) {
             val trajectory = SNOWBALL_TRAJECTORIES[i].cpy()
@@ -120,7 +127,7 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
         destroy()
         if (overlapsGameCamera()) playSoundNow(SoundAsset.CHILL_SHOOT_SOUND, false)
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SNOWBALL_EXPLOSION)!!
-        explosion.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
+        explosion.spawn(pooledProps(ConstKeys.POSITION pairTo body.getCenter()))
     }
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
@@ -151,7 +158,7 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
         body.physics.applyFrictionY = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameRectangle(body))
         body.addFixture(projectileFixture)
@@ -167,9 +174,9 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setFlip(isFacing(Facing.RIGHT), false)
-            _sprite.setCenter(body.getCenter())
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setFlip(isFacing(Facing.RIGHT), false)
+            sprite.setCenter(body.getCenter())
         }
         return spritesComponent
     }

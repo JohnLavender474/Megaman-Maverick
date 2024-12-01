@@ -52,18 +52,18 @@ class DrippingToxicGoop(game: MegamanMaverickGame) : MegaGameEntity(game), ICull
     }
 
     private fun defineDrawables(bounds: GameRectangle) {
-        val sprites = OrderedMap<String, GameSprite>()
+        val sprites = OrderedMap<Any, GameSprite>()
         val animators = Array<GamePair<() -> GameSprite, IAnimator>>()
 
-        val rows = (bounds.height / ConstVals.PPM).toInt()
-        val columns = (bounds.width / ConstVals.PPM).toInt()
+        val rows = (bounds.getHeight() / ConstVals.PPM).toInt()
+        val columns = (bounds.getWidth() / ConstVals.PPM).toInt()
 
         for (x in 0 until columns) {
             for (y in 0 until rows) {
                 val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
                 sprite.setBounds(
-                    bounds.x + x * ConstVals.PPM,
-                    bounds.y + y * ConstVals.PPM,
+                    bounds.getX() + x * ConstVals.PPM,
+                    bounds.getY() + y * ConstVals.PPM,
                     ConstVals.PPM.toFloat(),
                     ConstVals.PPM.toFloat()
                 )

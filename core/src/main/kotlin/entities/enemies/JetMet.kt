@@ -14,12 +14,12 @@ import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.common.shapes.getCenter
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -45,18 +45,19 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 import java.util.*
 import kotlin.reflect.KClass
 
-class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDirectionRotatable, IFaceable {
+class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDirectional, IFaceable {
 
     companion object {
         const val TAG = "JetMet"
@@ -76,7 +77,7 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         ChargedShot::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
         ChargedShotExplosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
     )
-    override var directionRotation = Direction.UP
+    override var direction = Direction.UP
     override lateinit var facing: Facing
 
     private val standTimer = Timer(STAND_DUR)
@@ -88,7 +89,13 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
 
     private lateinit var animations: ObjectMap<String, IAnimation>
     private lateinit var jetMetState: JetMetState
-    private lateinit var liftTarget: Vector2
+
+    private val target = Vector2()
+    val targetPQ = PriorityQueue { o1: Vector2, o2: Vector2 ->
+        val d1 = o1.dst2(megaman().body.getCenter())
+        val d2 = o2.dst2(megaman().body.getCenter())
+        d1.compareTo(d2)
+    }
 
     private var applyMovementScalarToBullet = false
     private var targetReached = false
@@ -110,30 +117,26 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        val targets = PriorityQueue { o1: Vector2, o2: Vector2 ->
-            val d1 = o1.dst2(megaman().body.getCenter())
-            val d2 = o2.dst2(megaman().body.getCenter())
-            d1.compareTo(d2)
-        }
         spawnProps.forEach { key, value ->
             if (key.toString().contains(ConstKeys.TARGET) && value is RectangleMapObject)
-                targets.add(value.rectangle.getCenter())
+                targetPQ.add(value.rectangle.getCenter())
         }
-        liftTarget = targets.poll()
+        target.set(targetPQ.poll())
+        targetPQ.clear()
 
         applyMovementScalarToBullet = spawnProps.getOrDefault(ConstKeys.APPLY_SCALAR_TO_CHILDREN, false, Boolean::class)
-        directionRotation = megaman().directionRotation
+        direction = megaman().direction
 
         standTimer.reset()
         liftoffTimer.reset()
         shootTimer.reset()
 
         jetMetState = JetMetState.STAND
-        facing = when (directionRotation) {
-            Direction.UP -> if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
-            Direction.DOWN -> if (megaman().body.x > body.x) Facing.LEFT else Facing.RIGHT
-            Direction.LEFT -> if (megaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
-            Direction.RIGHT -> if (megaman().body.y > body.y) Facing.LEFT else Facing.RIGHT
+        facing = when (direction) {
+            Direction.UP -> if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+            Direction.DOWN -> if (megaman().body.getX() > body.getX()) Facing.LEFT else Facing.RIGHT
+            Direction.LEFT -> if (megaman().body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
+            Direction.RIGHT -> if (megaman().body.getY() > body.getY()) Facing.LEFT else Facing.RIGHT
         }
 
         targetReached = false
@@ -145,7 +148,7 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            directionRotation = megaman().directionRotation
+            direction = megaman().direction
 
             if (!canMove) {
                 body.physics.velocity.setZero()
@@ -164,17 +167,22 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
                 }
 
                 JetMetState.JET -> {
-                    facing = when (megaman().directionRotation) {
-                        Direction.UP -> if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
-                        Direction.DOWN -> if (megaman().body.x > body.x) Facing.LEFT else Facing.RIGHT
-                        Direction.LEFT -> if (megaman().body.y < body.y) Facing.LEFT else Facing.RIGHT
-                        Direction.RIGHT -> if (megaman().body.y > body.y) Facing.LEFT else Facing.RIGHT
+                    facing = when (megaman().direction) {
+                        Direction.UP -> if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                        Direction.DOWN -> if (megaman().body.getX() > body.getX()) Facing.LEFT else Facing.RIGHT
+                        Direction.LEFT -> if (megaman().body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
+                        Direction.RIGHT -> if (megaman().body.getY() > body.getY()) Facing.LEFT else Facing.RIGHT
                     }
 
                     if (!targetReached) {
-                        val direction = liftTarget.cpy().sub(body.getCenter()).nor()
-                        body.physics.velocity.set(direction.scl(JET_SPEED * ConstVals.PPM * movementScalar))
-                        targetReached = body.getCenter().epsilonEquals(liftTarget, 0.1f * ConstVals.PPM)
+                        val velocity = GameObjectPools.fetch(Vector2::class)
+                            .set(target)
+                            .sub(body.getCenter())
+                            .nor()
+                            .scl(JET_SPEED * ConstVals.PPM * movementScalar)
+                        body.physics.velocity.set(velocity)
+
+                        targetReached = body.getCenter().epsilonEquals(target, 0.1f * ConstVals.PPM)
                     } else body.physics.velocity.setZero()
 
                     shootTimer.update(delta)
@@ -189,21 +197,26 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
 
     private fun shoot() {
         val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
-        val bulletTrajectory =
-            megaman().body.getCenter().sub(body.getCenter()).nor().scl(BULLET_SPEED * ConstVals.PPM)
+
+        val trajectory = GameObjectPools.fetch(Vector2::class)
+            .set(megaman().body.getCenter())
+            .sub(body.getCenter())
+            .nor()
+            .scl(BULLET_SPEED * ConstVals.PPM)
 
         val offset = ConstVals.PPM / 64f
-        val spawn = body.getCenter().add(offset * facing.value, if (isDirectionRotatedDown()) -offset else offset)
+        val spawn = GameObjectPools.fetch(Vector2::class)
+            .set(body.getCenter())
+            .add(offset * facing.value, if (direction == Direction.DOWN) -offset else offset)
 
-        val bulletProps = props(
-            ConstKeys.POSITION pairTo spawn,
-            ConstKeys.TRAJECTORY pairTo bulletTrajectory,
+        val props = props(
             ConstKeys.OWNER pairTo this,
-            ConstKeys.DIRECTION pairTo directionRotation
+            ConstKeys.POSITION pairTo spawn,
+            ConstKeys.TRAJECTORY pairTo trajectory,
+            ConstKeys.DIRECTION pairTo direction
         )
-        if (applyMovementScalarToBullet) bulletProps.put("${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}", movementScalar)
-
-        bullet.spawn(bulletProps)
+        if (applyMovementScalarToBullet) props.put("${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}", movementScalar)
+        bullet.spawn(props)
 
         requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
     }
@@ -232,8 +245,8 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
             sprite.hidden = damageBlink
             sprite.setFlip(isFacing(Facing.RIGHT), false)
             sprite.setOriginCenter()
-            sprite.rotation = directionRotation.rotation
-            val position = when (directionRotation) {
+            sprite.rotation = direction.rotation
+            val position = when (direction) {
                 Direction.UP -> Position.BOTTOM_CENTER
                 Direction.DOWN -> Position.TOP_CENTER
                 Direction.LEFT -> Position.CENTER_RIGHT

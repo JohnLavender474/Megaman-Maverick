@@ -14,7 +14,6 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -33,8 +32,9 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.SpecialsFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
 
-class ToxicWater(game: MegamanMaverickGame): MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, ICullableEntity {
+class ToxicWater(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, ICullableEntity {
 
     companion object {
         const val TAG = "ToxicWater"
@@ -57,10 +57,12 @@ class ToxicWater(game: MegamanMaverickGame): MegaGameEntity(game), ISpritesEntit
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         defineDrawables(bounds)
+
         water = EntityFactories.fetch(EntityType.SPECIAL, SpecialsFactory.WATER)!! as Water
-        water!!.spawn(props(ConstKeys.BOUNDS pairTo bounds, ConstKeys.HIDDEN pairTo true))
+        water!!.spawn(pooledProps(ConstKeys.BOUNDS pairTo bounds, ConstKeys.HIDDEN pairTo true))
     }
 
     override fun onDestroy() {
@@ -70,17 +72,17 @@ class ToxicWater(game: MegamanMaverickGame): MegaGameEntity(game), ISpritesEntit
     }
 
     private fun defineDrawables(bounds: GameRectangle) {
-        val sprites = OrderedMap<String, GameSprite>()
+        val sprites = OrderedMap<Any, GameSprite>()
         val animators = Array<GamePair<() -> GameSprite, IAnimator>>()
 
-        val rows = (bounds.height / (0.5f * ConstVals.PPM)).toInt()
-        val columns = (bounds.width / (0.5f * ConstVals.PPM)).toInt()
+        val rows = (bounds.getHeight() / (0.5f * ConstVals.PPM)).toInt()
+        val columns = (bounds.getWidth() / (0.5f * ConstVals.PPM)).toInt()
 
         for (x in 0 until columns) {
             for (y in 0 until rows) {
                 val pos = Vector2(
-                    bounds.x + (0.5f * x * ConstVals.PPM),
-                    bounds.y + (0.5f * y * ConstVals.PPM)
+                    bounds.getX() + (0.5f * x * ConstVals.PPM),
+                    bounds.getY() + (0.5f * y * ConstVals.PPM)
                 )
                 val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
                 sprite.setBounds(pos.x, pos.y, 0.5f * ConstVals.PPM, 0.5f * ConstVals.PPM)

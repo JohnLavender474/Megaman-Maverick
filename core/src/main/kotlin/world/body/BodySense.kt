@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.world.body
 
 import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.IBody
 import com.megaman.maverick.game.ConstKeys
 
 enum class BodySense {
@@ -27,20 +28,20 @@ interface IBodySenseListener {
 
 const val BODY_SENSE_LISTENER_KEY = "${ConstKeys.BODY}_${ConstKeys.SENSE}_${ConstKeys.LISTENER}"
 
-fun Body.isSensing(bodySense: BodySense) = getProperty(bodySense) == true
+fun IBody.isSensing(bodySense: BodySense) = getProperty(bodySense) == true
 
-fun Body.isSensingAny(bodySenses: Iterable<BodySense>) = bodySenses.any { isSensing(it) }
+fun IBody.isSensingAny(bodySenses: Iterable<BodySense>) = bodySenses.any { isSensing(it) }
 
-fun Body.isSensingAny(vararg bodySenses: BodySense) = isSensingAny(bodySenses.asIterable())
+fun IBody.isSensingAny(vararg bodySenses: BodySense) = isSensingAny(bodySenses.asIterable())
 
-fun Body.setBodySense(bodySense: BodySense, value: Boolean) {
+fun IBody.setBodySense(bodySense: BodySense, value: Boolean) {
     val old = putProperty(bodySense, value) as Boolean?
     val listener = getBodySenseListener()
     listener?.listenToBodySense(bodySense, value, old)
 }
 
-fun Body.setBodySenseListener(listener: IBodySenseListener) = putProperty(BODY_SENSE_LISTENER_KEY, listener)
+fun IBody.setBodySenseListener(listener: IBodySenseListener) = putProperty(BODY_SENSE_LISTENER_KEY, listener)
 
-fun Body.getBodySenseListener(): IBodySenseListener? = getProperty(BODY_SENSE_LISTENER_KEY, IBodySenseListener::class)
+fun IBody.getBodySenseListener(): IBodySenseListener? = getProperty(BODY_SENSE_LISTENER_KEY, IBodySenseListener::class)
 
-fun Body.resetBodySenses() = BodySense.entries.forEach { putProperty(it, false) }
+fun IBody.resetBodySenses() = BodySense.entries.forEach { putProperty(it, false) }

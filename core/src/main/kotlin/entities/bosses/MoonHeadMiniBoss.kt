@@ -1,9 +1,7 @@
 package com.megaman.maverick.game.entities.bosses
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
@@ -11,20 +9,18 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.UtilMethods.getRandom
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.toGdxArray
-import com.mega.game.engine.common.getRandom
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.common.shapes.getCenter
-import com.mega.game.engine.common.shapes.toGameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -61,10 +57,10 @@ import com.megaman.maverick.game.entities.projectiles.Asteroid
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodySense
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.isSensing
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.getMotionValue
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, dmgDuration = DAMAGE_DUR), IAnimatedEntity {
@@ -110,10 +106,12 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, dmgDurati
         "shoot" pairTo Timer(SHOOT_DUR),
         "crumble" pairTo Timer(CRUMBLE_DUR),
     )
-    private lateinit var area: GameRectangle
-    private lateinit var arcMotion: ArcMotion
-    private var firstSpawn: Vector2? = null
+    private val area = GameRectangle()
+    private val firstSpawnPos = Vector2()
+    private var firstSpawn = true
+
     private var asteroidsSpawner: AsteroidsSpawner? = null
+    private lateinit var arcMotion: ArcMotion
 
     override fun init() {
         if (regions.isEmpty) {
@@ -136,8 +134,9 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, dmgDurati
         loop.reset()
         timers.values().forEach { it.reset() }
 
-        area = spawnProps.get(ConstKeys.AREA, RectangleMapObject::class)!!.rectangle.toGameRectangle()
-        firstSpawn = spawnProps.get(ConstKeys.FIRST, RectangleMapObject::class)!!.rectangle.getCenter()
+        area.set(spawnProps.get(ConstKeys.AREA, RectangleMapObject::class)!!.rectangle.toGameRectangle())
+        firstSpawnPos.set(spawnProps.get(ConstKeys.FIRST, RectangleMapObject::class)!!.rectangle.getCenter())
+        firstSpawn = true
 
         if (spawnProps.containsKey(AsteroidsSpawner.TAG)) {
             val asteroidsSpawnerBounds =
@@ -171,8 +170,8 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, dmgDurati
     }
 
     private fun getRandomSpawn(): Vector2 {
-        val randomX = getRandom(area.x, area.getMaxX())
-        val randomY = getRandom(area.y, area.getMaxY())
+        val randomX = getRandom(area.getX(), area.getMaxX())
+        val randomY = getRandom(area.getY(), area.getMaxY())
         return Vector2(randomX, randomY)
     }
 
@@ -192,9 +191,9 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, dmgDurati
     }
 
     private fun calculateBestArcMotion(): ArcMotion {
-        val left = body.x < megaman().body.x
+        val left = body.getX() < megaman().body.getX()
         val position = when {
-            body.y < megaman().body.y -> if (left) Position.BOTTOM_LEFT else Position.BOTTOM_RIGHT
+            body.getY() < megaman().body.getY() -> if (left) Position.BOTTOM_LEFT else Position.BOTTOM_RIGHT
             else -> if (left) Position.TOP_LEFT else Position.TOP_RIGHT
         }
         val target = megaman().body.getPositionPoint(position)
@@ -220,9 +219,9 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, dmgDurati
             val pos2 = arcMotion2.compute(t)
 
             mockBody.setCenter(pos1)
-            val hitsBlockPos1 = blocks.any { it.body.overlaps(mockBody as Rectangle) }
+            val hitsBlockPos1 = blocks.any { it.body.getBounds().overlaps(mockBody) }
             mockBody.setCenter(pos2)
-            val hitsBlockPos2 = blocks.any { it.body.overlaps(mockBody as Rectangle) }
+            val hitsBlockPos2 = blocks.any { it.body.getBounds().overlaps(mockBody) }
             when {
                 hitsBlockPos1 -> {
                     winningArcMotion = arcMotion2
@@ -256,18 +255,25 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, dmgDurati
                 MoonHeadState.DELAY, MoonHeadState.DARK, MoonHeadState.AWAKEN, MoonHeadState.CRUMBLE -> {
                     val key = loop.getCurrent().name.lowercase()
                     val timer = timers[key]
+
                     timer.update(delta)
                     if (timer.isFinished()) {
                         timer.reset()
+
                         loop.next()
 
-                        if (loop.getCurrent() == MoonHeadState.DARK) {
-                            val spawn = if (firstSpawn != null) firstSpawn!! else getRandomSpawn()
-                            firstSpawn = null
-                            body.setCenter(spawn)
-                        } else if (loop.getCurrent() == MoonHeadState.AWAKEN) requestToPlaySound(
-                            SoundAsset.SHAKE_SOUND, false
-                        )
+                        when {
+                            loop.getCurrent() == MoonHeadState.DARK -> {
+                                val spawn = if (firstSpawn) firstSpawnPos else getRandomSpawn()
+                                firstSpawn = false
+                                body.setCenter(spawn)
+                            }
+
+                            loop.getCurrent() == MoonHeadState.AWAKEN -> requestToPlaySound(
+                                SoundAsset.SHAKE_SOUND,
+                                false
+                            )
+                        }
                     }
                 }
 
@@ -316,27 +322,24 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, dmgDurati
         body.setSize(2.85f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameCircle().setRadius(1.35f * ConstVals.PPM))
         body.addFixture(bodyFixture)
-        bodyFixture.rawShape.color = Color.GRAY
-        debugShapes.add { bodyFixture.getShape() }
+        debugShapes.add { bodyFixture }
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(1.425f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        damagerFixture.rawShape.color = Color.RED
-        debugShapes.add { damagerFixture.getShape() }
+        debugShapes.add { damagerFixture }
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameCircle().setRadius(1.425f * ConstVals.PPM))
         body.addFixture(damageableFixture)
-        damageableFixture.rawShape.color = Color.PURPLE
-        debugShapes.add { damageableFixture.getShape() }
+        debugShapes.add { damageableFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.fixtures.forEach {
-                (it.second as Fixture).active = !loop.getCurrent().equalsAny(
-                    MoonHeadState.DELAY, MoonHeadState.DARK, MoonHeadState.CRUMBLE
+                it.second.setActive(
+                    !loop.getCurrent().equalsAny(MoonHeadState.DELAY, MoonHeadState.DARK, MoonHeadState.CRUMBLE)
                 )
             }
         }

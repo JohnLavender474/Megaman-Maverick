@@ -1,7 +1,7 @@
 package com.megaman.maverick.game.utils
 
 import com.badlogic.gdx.math.Vector2
-import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.IBody
 
 enum class VelocityAlterationType {
     SET,
@@ -28,8 +28,7 @@ data class VelocityAlteration(
 
 object VelocityAlterator {
 
-    fun alterate(body: Body, alteration: VelocityAlteration) =
-        alterate(body.physics.velocity, alteration)
+    fun alterate(body: IBody, alteration: VelocityAlteration) = alterate(body.physics.velocity, alteration)
 
     fun alterate(velocity: Vector2, alteration: VelocityAlteration) {
         velocity.x =

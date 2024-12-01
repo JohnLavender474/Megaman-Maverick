@@ -47,9 +47,9 @@ import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.projectiles.ReactorMonkeyBall
 import com.megaman.maverick.game.utils.MegaUtilMethods
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodyFixtureDef
-import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) :
@@ -111,7 +111,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) :
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
 
         throwDelayTimer = Timer(MAX_THROW_DELAY)
@@ -119,7 +119,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) :
 
         reactorMonkeyState = ReactorMonkeyState.STAND
 
-        facing = if (megaman().body.x >= body.x) Facing.RIGHT else Facing.LEFT
+        facing = if (megaman().body.getX() >= body.getX()) Facing.RIGHT else Facing.LEFT
         ballSpawnY = spawnProps.getOrDefault(BALL_SPAWN_Y_KEY, DEFAULT_BALL_SPAWN_Y, Float::class)
     }
 
@@ -136,7 +136,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) :
         if (monkeyBall != null) throw IllegalStateException("Monkey ball should be null when a new one is spawned")
         monkeyBall =
             EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.REACTOR_MONKEY_BALL)!! as ReactorMonkeyBall
-        val spawn = body.getTopCenterPoint().add(0f, ballSpawnY * ConstVals.PPM)
+        val spawn = body.getPositionPoint(Position.TOP_CENTER).add(0f, ballSpawnY * ConstVals.PPM)
         monkeyBall!!.spawn(
             props(
                 ConstKeys.POSITION pairTo spawn,
@@ -179,20 +179,20 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) :
                 return@add
             }
 
-            ballCatchArea.setCenter(body.getTopCenterPoint().add(0f, 1.75f * ConstVals.PPM))
-            facing = if (megaman().body.x >= body.x) Facing.RIGHT else Facing.LEFT
+            ballCatchArea.setCenter(body.getPositionPoint(Position.TOP_CENTER).add(0f, 1.75f * ConstVals.PPM))
+            facing = if (megaman().body.getX() >= body.getX()) Facing.RIGHT else Facing.LEFT
 
             if (reactorMonkeyState == ReactorMonkeyState.STAND) {
                 throwDelayTimer.update(delta)
                 if (throwDelayTimer.isFinished()) {
-                    if (monkeyBall == null) spawnNewMonkeyBall()
-                    else if (monkeyBall!!.body != null && (
-                            ballCatchArea.contains(monkeyBall!!.body.getCenter()) ||
-                                monkeyBall!!.body.y < ballCatchArea.getY())
-                    ) {
-                        catchMonkeyBall()
-                        reactorMonkeyState = ReactorMonkeyState.THROW
-                        throwDelayTimer.resetDuration(MIN_THROW_DELAY + (MAX_THROW_DELAY - MIN_THROW_DELAY) * getHealthRatio())
+                    when {
+                        monkeyBall == null -> spawnNewMonkeyBall()
+                        ballCatchArea.contains(monkeyBall!!.body.getCenter()) ||
+                            monkeyBall!!.body.getY() < ballCatchArea.getY() -> {
+                            catchMonkeyBall()
+                            reactorMonkeyState = ReactorMonkeyState.THROW
+                            throwDelayTimer.resetDuration(MIN_THROW_DELAY + (MAX_THROW_DELAY - MIN_THROW_DELAY) * getHealthRatio())
+                        }
                     }
                 }
             } else {
@@ -214,7 +214,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) :
         body.setSize(3.5f * ConstVals.PPM, 4.25f * ConstVals.PPM)
         addComponent(
             DrawableShapesComponent(
-                debugShapeSuppliers = gdxArrayOf({ body }, { ballCatchArea }),
+                debugShapeSuppliers = gdxArrayOf({ body.getBounds() }, { ballCatchArea }),
                 debug = true
             )
         )
@@ -230,7 +230,7 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) :
         sprite.setSize(7.5f * ConstVals.PPM, 8f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
-            sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             sprite.setFlip(isFacing(Facing.RIGHT), false)
             sprite.hidden = damageBlink || !ready
             sprite.setAlpha(if (defeated) 1f - defeatTimer.getRatio() else 1f)

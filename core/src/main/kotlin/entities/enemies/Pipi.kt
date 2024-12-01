@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.enemies
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
@@ -9,10 +8,10 @@ import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.enums.Facing
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
-
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -44,10 +43,9 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodySense
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.isSensing
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class Pipi(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
@@ -90,7 +88,7 @@ class Pipi(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
         super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
-        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         hasEgg = true
     }
 
@@ -98,13 +96,13 @@ class Pipi(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
             body.physics.velocity.x = FLY_SPEED * ConstVals.PPM * facing.value
-            if (hasEgg && megaman().body.x <= body.getMaxX() && megaman().body.getMaxX() >= body.x) dropEgg()
+            if (hasEgg && megaman().body.getX() <= body.getMaxX() && megaman().body.getMaxX() >= body.getX()) dropEgg()
         }
     }
 
     private fun dropEgg() {
         val egg = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.PIPI_EGG)!!
-        egg.spawn(props(ConstKeys.POSITION pairTo body.getBottomCenterPoint()))
+        egg.spawn(pooledProps(ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER)))
         hasEgg = false
     }
 
@@ -115,7 +113,7 @@ class Pipi(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
         body.physics.applyFrictionY = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         body.addFixture(bodyFixture)
@@ -127,18 +125,16 @@ class Pipi(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
         body.addFixture(damageableFixture)
 
         val leftSideFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        leftSideFixture.offsetFromBodyCenter.x = -0.2f * ConstVals.PPM
+        leftSideFixture.offsetFromBodyAttachment.x = -0.2f * ConstVals.PPM
         leftSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftSideFixture)
-        leftSideFixture.rawShape.color = Color.YELLOW
-        debugShapes.add { leftSideFixture.getShape() }
+        debugShapes.add { leftSideFixture}
 
         val rightSideFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        rightSideFixture.offsetFromBodyCenter.x = 0.2f * ConstVals.PPM
+        rightSideFixture.offsetFromBodyAttachment.x = 0.2f * ConstVals.PPM
         rightSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightSideFixture)
-        rightSideFixture.rawShape.color = Color.YELLOW
-        debugShapes.add { rightSideFixture.getShape() }
+        debugShapes.add { rightSideFixture}
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             if ((isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
@@ -155,10 +151,10 @@ class Pipi(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
         val sprite = GameSprite()
         sprite.setSize(1.125f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setCenter(body.getCenter())
-            _sprite.hidden = damageBlink
-            _sprite.setFlip(isFacing(Facing.RIGHT), false)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setCenter(body.getCenter())
+            sprite.hidden = damageBlink
+            sprite.setFlip(isFacing(Facing.RIGHT), false)
         }
         return spritesComponent
     }

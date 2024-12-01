@@ -35,6 +35,7 @@ import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
 
 class JoeBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
@@ -125,9 +126,9 @@ body.physics.applyFrictionY = false
         val sprite = GameSprite()
         sprite.setSize(1.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setFlip(trajectory.x < 0f, false)
-            _sprite.setCenter(body.getCenter())
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setFlip(trajectory.x < 0f, false)
+            sprite.setCenter(body.getCenter())
         }
         return spritesComponent
     }

@@ -15,6 +15,7 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegamanKeys
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.BodySense
+import com.megaman.maverick.game.world.body.getPositionPoint
 import com.megaman.maverick.game.world.body.isSensing
 
 const val MEGAMAN_SPRITE_SIZE = 2.5f
@@ -23,7 +24,7 @@ const val GROUND_SLIDE_SPRITE_OFFSET_Y = 0.1f
 fun Megaman.getSpriteDirection() =
     if (isBehaviorActive(BehaviorType.AIR_DASHING))
         getProperty(MegamanKeys.DIRECTION_ON_AIR_DASH, Direction::class)!!
-    else directionRotation
+    else direction
 
 fun Megaman.shouldFlipSpriteX() =
     !maverick && if (getSpriteDirection() == Direction.RIGHT) facing == Facing.RIGHT else facing == Facing.LEFT
@@ -38,7 +39,7 @@ fun Megaman.getSpriteRotation() = when (getSpriteDirection()) {
 
 fun Megaman.getSpriteXTranslation() = when (getSpriteDirection()) {
     Direction.UP, Direction.DOWN -> when {
-        megamanAnimator.currentKey?.contains("JumpShoot") == true -> 0.1f * facing.value
+        currentAnimKey?.contains("JumpShoot") == true -> 0.1f * facing.value
         else -> 0f
     }
 
@@ -70,7 +71,7 @@ fun Megaman.getSpriteYTranslation() = when (getSpriteDirection()) {
     }
 
     Direction.LEFT, Direction.RIGHT -> when {
-        megamanAnimator.currentKey?.contains("JumpShoot") == true -> 0.1f * facing.value
+        currentAnimKey?.contains("JumpShoot") == true -> 0.1f * facing.value
         else -> 0f
     }
 }
@@ -81,7 +82,7 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
     val megamanSprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
     megamanSprite.setSize(MEGAMAN_SPRITE_SIZE * ConstVals.PPM)
     spritesComponent.sprites.put("megaman", megamanSprite)
-    spritesComponent.putUpdateFunction("megaman") { _, player ->
+    spritesComponent.putUpdateFunction("megaman") { delta, player ->
         val direction = getSpriteDirection()
         player.setFlip(shouldFlipSpriteX(), shouldFlipSpriteY())
         player.setOriginCenter()
@@ -91,6 +92,7 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
         player.translateX(getSpriteXTranslation() * ConstVals.PPM)
         player.translateY(getSpriteYTranslation() * ConstVals.PPM)
         player.setAlpha(if (damageFlash) 0f else 1f)
+        player.hidden = !ready || !spawnHiddenTimer.isFinished()
     }
 
     val jetpackFlameSprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0), false)
@@ -104,11 +106,11 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
         }
 
         flame.setOriginCenter()
-        flame.rotation = directionRotation.rotation
+        flame.rotation = direction.rotation
 
         val verticalOffset = -0.25f * ConstVals.PPM
         val facingOffsetScaled = -0.45f * facing.value * ConstVals.PPM
-        val offset = when (directionRotation) {
+        val offset = when (direction) {
             Direction.UP -> floatArrayOf(facingOffsetScaled, verticalOffset)
             Direction.DOWN -> floatArrayOf(facingOffsetScaled, -verticalOffset)
             Direction.LEFT -> floatArrayOf(verticalOffset, facingOffsetScaled)

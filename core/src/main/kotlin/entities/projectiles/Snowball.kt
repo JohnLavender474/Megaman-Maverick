@@ -30,6 +30,7 @@ import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getEntity
 import kotlin.reflect.KClass
 
@@ -54,9 +55,9 @@ class Snowball(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
 
-        body.physics.velocity = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2(), Vector2::class)
+        body.physics.velocity.set(spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2.Zero, Vector2::class))
         body.physics.gravityOn = spawnProps.getOrDefault(ConstKeys.GRAVITY_ON, false, Boolean::class)
-        body.physics.gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, Vector2(), Vector2::class)
+        body.physics.gravity.set(spawnProps.getOrDefault(ConstKeys.GRAVITY, Vector2.Zero, Vector2::class))
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) {
@@ -110,9 +111,7 @@ class Snowball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         sprite.setSize(0.5f * ConstVals.PPM)
         sprite.setRegion(region!!)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setCenter(body.getCenter())
-        }
+        spritesComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
         return spritesComponent
     }
 }

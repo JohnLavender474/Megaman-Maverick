@@ -1,7 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import com.badlogic.gdx.math.Rectangle
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
@@ -35,6 +34,7 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.VelocityAlterationType
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
@@ -62,11 +62,12 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     private val turnTimer = Timer(TURN_DELAY)
     private val bounceTimer = Timer(BOUNCE_DUR)
-    private val speedUpScanner = Rectangle().setSize(ConstVals.VIEW_WIDTH * ConstVals.PPM, ConstVals.PPM / 4f)
+    private val speedUpScanner = GameRectangle().setSize(ConstVals.VIEW_WIDTH * ConstVals.PPM, ConstVals.PPM / 4f)
     private val facingWrongDirection: Boolean
         get() {
             val megamanBody = game.megaman.body
-            return (body.x < megamanBody.x && isFacing(Facing.LEFT)) || (body.x > megamanBody.x && isFacing(Facing.RIGHT))
+            return (body.getX() < megamanBody.getX() && isFacing(Facing.LEFT)) ||
+                (body.getX() > megamanBody.getX() && isFacing(Facing.RIGHT))
         }
 
     override fun init() {
@@ -78,10 +79,10 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
         bounceTimer.setToEnd()
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
         body.physics.velocity.setZero()
-        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -90,12 +91,12 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
         val leftFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
-        leftFixture.offsetFromBodyCenter.set(-0.4f * ConstVals.PPM, -0.25f * ConstVals.PPM)
+        leftFixture.offsetFromBodyAttachment.set(-0.4f * ConstVals.PPM, -0.25f * ConstVals.PPM)
         body.addFixture(leftFixture)
 
         val rightFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
-        rightFixture.offsetFromBodyCenter.set(0.4f * ConstVals.PPM, -0.25f * ConstVals.PPM)
+        rightFixture.offsetFromBodyAttachment.set(0.4f * ConstVals.PPM, -0.25f * ConstVals.PPM)
         body.addFixture(rightFixture)
 
         val c1 = GameRectangle().setSize(ConstVals.PPM.toFloat())
@@ -112,14 +113,15 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             GameRectangle().setSize(0.85f * ConstVals.PPM, 0.6f * ConstVals.PPM),
         )
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
-        shieldFixture.offsetFromBodyCenter.y = 0.1f * ConstVals.PPM
+        shieldFixture.offsetFromBodyAttachment.y = 0.1f * ConstVals.PPM
         body.addFixture(shieldFixture)
 
         val bouncerFixture = Fixture(
             body, FixtureType.BOUNCER, GameRectangle().setSize(0.5f * ConstVals.PPM)
         )
-        bouncerFixture.offsetFromBodyCenter.y = 0.1f * ConstVals.PPM
-        bouncerFixture.putProperty(ConstKeys.VELOCITY_ALTERATION,
+        bouncerFixture.offsetFromBodyAttachment.y = 0.1f * ConstVals.PPM
+        bouncerFixture.putProperty(
+            ConstKeys.VELOCITY_ALTERATION,
             { bounceable: Fixture, _: Float -> velocityAlteration(bounceable) })
         body.addFixture(bouncerFixture)
 
@@ -133,7 +135,7 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
         val bounceableBody = bounceable.getBody()
         bounceTimer.reset()
-        val x = (if (body.x > bounceableBody.x) -X_BOUNCE else X_BOUNCE) * ConstVals.PPM
+        val x = (if (body.getX() > bounceableBody.getX()) -X_BOUNCE else X_BOUNCE) * ConstVals.PPM
         return VelocityAlteration(
             x, Y_BOUNCE * ConstVals.PPM, VelocityAlterationType.ADD, VelocityAlterationType.SET
         )
@@ -145,7 +147,8 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             speedUpScanner.setCenter(body.getCenter())
             turnTimer.update(it)
 
-            if (turnTimer.isJustFinished()) facing = if (megaman().body.x > body.x) Facing.RIGHT else Facing.LEFT
+            if (turnTimer.isJustFinished()) facing =
+                if (megaman().body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
             if (turnTimer.isFinished() && facingWrongDirection) turnTimer.reset()
 
             bounceTimer.update(it)
@@ -158,7 +161,8 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
                 if ((isFacing(Facing.LEFT) && !body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
                     (isFacing(Facing.RIGHT) && !body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
                 ) 0f
-                else (if (megaman().body.overlaps(speedUpScanner)) SPEED_SUPER else SPEED_NORMAL) * ConstVals.PPM * facing.value
+                else (if (megaman().body.getBounds().overlaps(speedUpScanner)
+                ) SPEED_SUPER else SPEED_NORMAL) * ConstVals.PPM * facing.value
         }
     }
 
@@ -168,7 +172,7 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
-            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            _sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             _sprite.setFlip(facing == Facing.LEFT, false)
         }
         return spritesComponent

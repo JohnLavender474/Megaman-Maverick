@@ -3,9 +3,9 @@ package com.megaman.maverick.game.entities.hazards
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.UtilMethods.getRandom
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.getRandom
 import com.mega.game.engine.common.interfaces.IActivatable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -53,9 +53,8 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
 
     var onSpawnAsteroidListener: ((Asteroid) -> Unit)? = null
 
-    private lateinit var bounds: GameRectangle
+    private val bounds = GameRectangle()
     private lateinit var spawnTimer: Timer
-
     private var destroyChildren = false
 
     override fun init() {
@@ -67,7 +66,7 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
 
-        bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+        bounds.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!)
 
         val cullOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
         if (cullOutOfBounds) putCullable(
@@ -98,7 +97,7 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
         val angle = getRandom(MIN_ANGLE, MAX_ANGLE)
         val speed = getRandom(MIN_SPEED, MAX_SPEED)
         val impulse = Vector2(speed, 0f).rotateDeg(angle).scl(ConstVals.PPM.toFloat())
-        val posX = getRandom(bounds.x, bounds.getMaxX())
+        val posX = getRandom(bounds.getX(), bounds.getMaxX())
         val posY = bounds.getMaxY()
         val asteroid = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.ASTEROID)!!
         asteroid.spawn(

@@ -48,10 +48,8 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodySense
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.isSensing
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
@@ -102,9 +100,9 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "spawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
-        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         shootDelayTimer.reset()
         turnTimer.setToEnd()
         turnDelayTimer.setToEnd()
@@ -176,10 +174,10 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
         body.setSize(ConstVals.PPM.toFloat(), 0.85f * ConstVals.PPM)
-        body.color = Color.GRAY
+        body.drawingColor = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         body.addFixture(bodyFixture)
@@ -191,18 +189,18 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         body.addFixture(damageableFixture)
 
         val leftFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        leftFixture.offsetFromBodyCenter = Vector2(-0.65f * ConstVals.PPM, -0.5f * ConstVals.PPM)
+        leftFixture.offsetFromBodyAttachment = Vector2(-0.65f * ConstVals.PPM, -0.5f * ConstVals.PPM)
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftFixture)
-        leftFixture.rawShape.color = Color.YELLOW
-        debugShapes.add { leftFixture.getShape() }
+        leftFixture.drawingColor = Color.YELLOW
+        debugShapes.add { leftFixture}
 
         val rightFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        rightFixture.offsetFromBodyCenter = Vector2(0.65f * ConstVals.PPM, -0.5f * ConstVals.PPM)
+        rightFixture.offsetFromBodyAttachment = Vector2(0.65f * ConstVals.PPM, -0.5f * ConstVals.PPM)
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
-        rightFixture.rawShape.color = Color.YELLOW
-        debugShapes.add { rightFixture.getShape() }
+        rightFixture.drawingColor = Color.YELLOW
+        debugShapes.add { rightFixture}
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
@@ -213,10 +211,10 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM, 1.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
-            _sprite.setFlip(isFacing(Facing.LEFT), false)
-            _sprite.hidden = damageBlink
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
+            sprite.setFlip(isFacing(Facing.LEFT), false)
+            sprite.hidden = damageBlink
         }
         return spritesComponent
     }

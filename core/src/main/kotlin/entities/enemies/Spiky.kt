@@ -39,9 +39,12 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getPositionPoint
 import com.megaman.maverick.game.world.body.isSensing
 import kotlin.reflect.KClass
 
@@ -74,26 +77,25 @@ class Spiky(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
         spawnProps.put(ConstKeys.CULL_TIME, CULL_TIME)
         super.onSpawn(spawnProps)
 
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
 
         facing = if (spawnProps.containsKey(ConstKeys.FACING))
             Facing.valueOf(spawnProps.get(ConstKeys.FACING, String::class)!!.uppercase())
-        else if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        else if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
     }
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
         body.setSize(1.25f * ConstVals.PPM)
-        body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameCircle().setRadius(0.625f * ConstVals.PPM))
         body.addFixture(bodyFixture)
-        bodyFixture.rawShape.color = Color.BLUE
-        debugShapes.add { bodyFixture.getShape() }
+        bodyFixture.drawingColor = Color.BLUE
+        debugShapes.add { bodyFixture}
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.625f * ConstVals.PPM))
         body.addFixture(damagerFixture)
@@ -106,32 +108,32 @@ class Spiky(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
                 0.75f * ConstVals.PPM, 0.1f * ConstVals.PPM
             )
         )
-        feetFixture.offsetFromBodyCenter.y = -0.625f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -0.625f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.rawShape.color = Color.GREEN
-        debugShapes.add { feetFixture.getShape() }
+        feetFixture.drawingColor = Color.GREEN
+        debugShapes.add { feetFixture}
 
         val leftFixture = Fixture(
             body, FixtureType.SIDE, GameRectangle().setSize(
                 0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM
             )
         )
-        leftFixture.offsetFromBodyCenter.x = -0.625f * ConstVals.PPM
+        leftFixture.offsetFromBodyAttachment.x = -0.625f * ConstVals.PPM
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftFixture)
-        leftFixture.rawShape.color = Color.YELLOW
-        debugShapes.add { leftFixture.getShape() }
+        leftFixture.drawingColor = Color.YELLOW
+        debugShapes.add { leftFixture}
 
         val rightFixture = Fixture(
             body, FixtureType.SIDE, GameRectangle().setSize(
                 0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM
             )
         )
-        rightFixture.offsetFromBodyCenter.x = 0.625f * ConstVals.PPM
+        rightFixture.offsetFromBodyAttachment.x = 0.625f * ConstVals.PPM
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
-        rightFixture.rawShape.color = Color.YELLOW
-        debugShapes.add { rightFixture.getShape() }
+        rightFixture.drawingColor = Color.YELLOW
+        debugShapes.add { rightFixture}
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             when (facing) {
@@ -158,10 +160,10 @@ class Spiky(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
         val sprite = GameSprite()
         sprite.setSize(1.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.hidden = damageBlink
-            _sprite.setFlip(isFacing(Facing.LEFT), false)
-            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.hidden = damageBlink
+            sprite.setFlip(isFacing(Facing.LEFT), false)
+            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
         }
         return spritesComponent
     }

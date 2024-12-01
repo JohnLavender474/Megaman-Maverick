@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.enemies
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -13,7 +12,6 @@ import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -47,8 +45,11 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.world.body.getPositionPoint
 import kotlin.reflect.KClass
 
 class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
@@ -139,8 +140,7 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.15f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        damagerFixture.rawShape.color = Color.RED
-        shapes.add { damagerFixture.getShape() }
+        shapes.add { damagerFixture}
 
         val damageableFixture = Fixture(
             body,
@@ -148,19 +148,18 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
             GameRectangle().setSize(0.65f * ConstVals.PPM, 0.5f * ConstVals.PPM)
         )
         body.addFixture(damageableFixture)
-        damageableFixture.rawShape.color = Color.PURPLE
-        shapes.add { damageableFixture.getShape() }
+        shapes.add { damageableFixture}
 
-        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT) {
             val damageableBounds = damageableFixture.rawShape as GameRectangle
             if (down) {
-                damageableBounds.height = 0.2f * ConstVals.PPM
-                damageableFixture.offsetFromBodyCenter.y = (if (upsideDown) 0.15f else -0.15f) * ConstVals.PPM
+                damageableBounds.setHeight(0.2f * ConstVals.PPM)
+                damageableFixture.offsetFromBodyAttachment.y = (if (upsideDown) 0.15f else -0.15f) * ConstVals.PPM
             } else {
-                damageableBounds.height = 0.65f * ConstVals.PPM
-                damageableFixture.offsetFromBodyCenter.y = 0f
+                damageableBounds.setHeight(0.65f * ConstVals.PPM)
+                damageableFixture.offsetFromBodyAttachment.y = 0f
             }
-        })
+        }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = shapes, debug = true))
 
@@ -192,12 +191,12 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.hidden = damageBlink
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.hidden = damageBlink
             val position = if (upsideDown) Position.TOP_CENTER else Position.BOTTOM_CENTER
             val bodyPosition = body.getPositionPoint(position)
-            _sprite.setPosition(bodyPosition, position)
-            _sprite.setFlip(false, upsideDown)
+            sprite.setPosition(bodyPosition, position)
+            sprite.setFlip(false, upsideDown)
         }
         return spritesComponent
     }
@@ -238,7 +237,7 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
                     ConstKeys.TRAJECTORY pairTo trajectory,
                     ConstKeys.POSITION pairTo spawn,
                     ConstKeys.OWNER pairTo this,
-                    ConstKeys.DIRECTION pairTo megaman().directionRotation
+                    ConstKeys.DIRECTION pairTo megaman().direction
                 )
             )
         }

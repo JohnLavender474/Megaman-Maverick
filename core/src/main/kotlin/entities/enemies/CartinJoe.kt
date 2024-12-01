@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.enemies
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -14,10 +13,8 @@ import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.IFaceable
-import com.mega.game.engine.common.interfaces.Updatable
-
-
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -46,7 +43,6 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -54,11 +50,12 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity, IAnimatedEntity, IFaceable,
-    IDirectionRotatable {
+    IDirectional {
 
     companion object {
         const val TAG = "CartinJoe"
@@ -85,7 +82,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
             if (it.fullyCharged) 15 else 5
         }
     )
-    override var directionRotation: Direction = Direction.UP
+    override var direction: Direction = Direction.UP
 
     val shooting: Boolean get() = !shootTimer.isFinished()
 
@@ -104,7 +101,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
         val left = spawnProps.getOrDefault(ConstKeys.LEFT, true, Boolean::class)
         facing = if (left) Facing.LEFT else Facing.RIGHT
@@ -145,37 +142,32 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
             body, FixtureType.BODY, GameRectangle().setSize(1.25f * ConstVals.PPM, 1.85f * ConstVals.PPM)
         )
         body.addFixture(bodyFixture)
-        bodyFixture.getShape().color = Color.GRAY
 
         val shieldFixture =
             Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(0.85f, 0.65f * ConstVals.PPM))
-        shieldFixture.offsetFromBodyCenter.y = -0.275f * ConstVals.PPM
+        shieldFixture.offsetFromBodyAttachment.y = -0.275f * ConstVals.PPM
         body.addFixture(shieldFixture)
-        shieldFixture.getShape().color = Color.BLUE
-        debugShapes.add { shieldFixture.getShape() }
+        debugShapes.add { shieldFixture}
 
         val damagerFixture =
             Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(ConstVals.PPM.toFloat(), 1.25f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        damagerFixture.getShape().color = Color.RED
-        debugShapes.add { damagerFixture.getShape() }
+        debugShapes.add { damagerFixture}
 
         val damageableFixture = Fixture(
             body, FixtureType.DAMAGEABLE, GameRectangle().setSize(
                 ConstVals.PPM.toFloat(), 0.75f * ConstVals.PPM
             )
         )
-        damageableFixture.offsetFromBodyCenter.y = 0.45f * ConstVals.PPM
+        damageableFixture.offsetFromBodyAttachment.y = 0.45f * ConstVals.PPM
         body.addFixture(damageableFixture)
-        damageableFixture.getShape().color = Color.PURPLE
-        debugShapes.add { damageableFixture.getShape() }
+        debugShapes.add { damageableFixture}
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyCenter.y = -0.6f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -0.6f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.getShape().color = Color.GREEN
-        debugShapes.add { feetFixture.getShape() }
+        debugShapes.add { feetFixture}
 
         val onBounce: () -> Unit = {
             swapFacing()
@@ -189,25 +181,23 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
         )
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         leftFixture.setRunnable(onBounce)
-        leftFixture.offsetFromBodyCenter.x = -0.75f * ConstVals.PPM
+        leftFixture.offsetFromBodyAttachment.x = -0.75f * ConstVals.PPM
         body.addFixture(leftFixture)
-        leftFixture.getShape().color = Color.YELLOW
-        debugShapes.add { leftFixture.getShape() }
+        debugShapes.add { leftFixture}
 
         val rightFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM))
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         rightFixture.setRunnable(onBounce)
-        rightFixture.offsetFromBodyCenter.x = 0.75f * ConstVals.PPM
+        rightFixture.offsetFromBodyAttachment.x = 0.75f * ConstVals.PPM
         body.addFixture(rightFixture)
-        rightFixture.getShape().color = Color.YELLOW
-        debugShapes.add { rightFixture.getShape() }
+        debugShapes.add { rightFixture}
 
-        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.gravity.y =
                 ConstVals.PPM * if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
             body.physics.velocity.x = VEL_X * ConstVals.PPM * facing.value
-        })
+        }
 
         body.fixtures.forEach { it.second.putProperty(ConstKeys.DEATH_LISTENER, false) }
 
@@ -222,7 +212,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
             _sprite.hidden = damageBlink
-            val position = body.getBottomCenterPoint()
+            val position = body.getPositionPoint(Position.BOTTOM_CENTER)
             _sprite.setPosition(position, Position.BOTTOM_CENTER)
             _sprite.setFlip(isFacing(Facing.RIGHT), false)
         }
@@ -242,7 +232,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
     }
 
     private fun shoot() {
-        val spawn = (when (directionRotation) {
+        val spawn = (when (direction) {
             Direction.UP -> Vector2(0.25f * facing.value, 0.5f)
             Direction.DOWN -> Vector2(0.25f * facing.value, -0.5f)
             Direction.LEFT -> Vector2(-0.4f, 0.25f * facing.value)
@@ -250,14 +240,14 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
         }).scl(ConstVals.PPM.toFloat()).add(body.getCenter())
 
         val trajectory = Vector2()
-        if (isDirectionRotatedVertically()) trajectory.set(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
+        if (direction.isVertical()) trajectory.set(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
         else trajectory.set(0f, BULLET_SPEED * ConstVals.PPM * facing.value)
 
         val props = props(
             ConstKeys.OWNER pairTo this,
             ConstKeys.POSITION pairTo spawn,
             ConstKeys.TRAJECTORY pairTo trajectory,
-            ConstKeys.DIRECTION pairTo directionRotation
+            ConstKeys.DIRECTION pairTo direction
         )
 
         val entity = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!

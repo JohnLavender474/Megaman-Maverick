@@ -1,16 +1,12 @@
 package com.megaman.maverick.game.entities.hazards
 
-import com.badlogic.gdx.graphics.Color.RED
-import com.badlogic.gdx.graphics.Color.WHITE
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType.Filled
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
-import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameLine
@@ -39,6 +35,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import java.util.*
@@ -78,13 +75,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
 
         laser = GameLine()
-        laser.thickness = THICKNESS
-        laser.shapeType = Filled
-        laser.color = RED
-
         contactGlow = GameCircle()
-        contactGlow.color = WHITE
-        contactGlow.shapeType = Filled
 
         addComponent(
             DrawableShapesComponent(
@@ -125,27 +116,27 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
 
         laserFixture = Fixture(body, FixtureType.LASER, GameLine())
         laserFixture.attachedToBody = false
-        laserFixture.rawShape = laser
+        laserFixture.setShape(laser)
         body.addFixture(laserFixture)
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameLine())
         damagerFixture.attachedToBody = false
         body.addFixture(damagerFixture)
-        // addProdShapeSupplier { damagerFixture.getShape() }
+        // addProdShapeSupplier { damagerFixture}
 
         val shieldFixture = Fixture(
             body, FixtureType.SHIELD, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.85f * ConstVals.PPM)
         )
-        shieldFixture.offsetFromBodyCenter.y = 0.5f * ConstVals.PPM
+        shieldFixture.offsetFromBodyAttachment.y = 0.5f * ConstVals.PPM
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
         body.addFixture(shieldFixture)
 
-        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT) {
             laserFixture.putProperty(ConstKeys.LINE, rotatingLine.line)
             contacts.clear()
-        })
+        }
 
-        body.postProcess.put(ConstKeys.DEFAULT, Updatable {
+        body.postProcess.put(ConstKeys.DEFAULT) {
             /*
             laser.set(rotatingLine.line)
 
@@ -156,12 +147,12 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
 
             GameLogger.debug(TAG, "[postProcess] Laser = $laser. End point = $end. Contacts = $contacts")
 
-            laserFixture.rawShape = laser
-            damagerFixture.rawShape = laser
+            laserFixture.getShape() = laser
+            damagerFixture.getShape() = laser
 
             contactGlow.setCenter(end.x, end.y)
              */
-        })
+        }
 
         return BodyComponentCreator.create(this, body)
     }

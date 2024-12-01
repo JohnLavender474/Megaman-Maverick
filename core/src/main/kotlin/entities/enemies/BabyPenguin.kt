@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.enemies
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -12,7 +11,6 @@ import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
-
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -41,10 +39,7 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodySense
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.isSensing
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class BabyPenguin(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
@@ -79,7 +74,7 @@ class BabyPenguin(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
         super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setBottomCenterToPoint(spawn)
-        val left = spawnProps.getOrDefault(ConstKeys.LEFT, megaman().body.x < body.x, Boolean::class)
+        val left = spawnProps.getOrDefault(ConstKeys.LEFT, megaman().body.getX() < body.getX(), Boolean::class)
         facing = if (left) Facing.LEFT else Facing.RIGHT
     }
 
@@ -97,15 +92,13 @@ class BabyPenguin(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
         body.setSize(0.75f * ConstVals.PPM)
-        body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
-        bodyFixture.rawShape.color = Color.GRAY
-        debugShapes.add { bodyFixture.getShape() }
+        debugShapes.add { bodyFixture}
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().set(body))
         body.addFixture(damagerFixture)
@@ -114,24 +107,21 @@ class BabyPenguin(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
         body.addFixture(damageableFixture)
 
         val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyCenter.y = -0.375f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -0.375f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.rawShape.color = Color.GREEN
-        debugShapes.add { feetFixture.getShape() }
+        debugShapes.add { feetFixture}
 
         val leftFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
-        leftFixture.offsetFromBodyCenter.x = -0.375f * ConstVals.PPM
+        leftFixture.offsetFromBodyAttachment.x = -0.375f * ConstVals.PPM
         body.addFixture(leftFixture)
-        leftFixture.rawShape.color = Color.YELLOW
-        debugShapes.add { leftFixture.getShape() }
+        debugShapes.add { leftFixture}
 
         val rightFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
-        rightFixture.offsetFromBodyCenter.x = 0.375f * ConstVals.PPM
+        rightFixture.offsetFromBodyAttachment.x = 0.375f * ConstVals.PPM
         body.addFixture(rightFixture)
-        rightFixture.rawShape.color = Color.YELLOW
-        debugShapes.add { rightFixture.getShape() }
+        debugShapes.add { rightFixture}
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
@@ -147,10 +137,10 @@ class BabyPenguin(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
         sprite.setSize(ConstVals.PPM.toFloat(), 0.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
-            _sprite.setFlip(isFacing(Facing.RIGHT), false)
-            _sprite.hidden = damageBlink
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
+            sprite.setFlip(isFacing(Facing.RIGHT), false)
+            sprite.hidden = damageBlink
         }
         return spritesComponent
     }

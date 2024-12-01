@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.objects.Matrix
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -20,6 +21,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.entities.factories.impl.SpecialsFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.utils.GameObjectPools
 
 // convenience implementation that joins `GravityChange`, `Force`, and `ForceDecoration` into one entity
 class DecoratedGravityForce(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntity {
@@ -34,6 +36,8 @@ class DecoratedGravityForce(game: MegamanMaverickGame) : MegaGameEntity(game), I
     private var gravityChange: GravityChange? = null
     private var force: Force? = null
     private lateinit var bounds: GameRectangle
+
+    private val matrix = Matrix<GameRectangle>()
 
     override fun getEntityType() = EntityType.SPECIAL
 
@@ -67,11 +71,17 @@ class DecoratedGravityForce(game: MegamanMaverickGame) : MegaGameEntity(game), I
 
         val direction =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
-        val splitSize = if (direction.isVertical()) Vector2(
-            2f * ConstVals.PPM,
-            ConstVals.PPM.toFloat()
-        ) else Vector2(ConstVals.PPM.toFloat(), 2f * ConstVals.PPM)
-        val matrix = bounds.splitByCellSize(splitSize.x, splitSize.y)
+
+        val splitSize = GameObjectPools.fetch(Vector2::class)
+        if (direction.isVertical()) {
+            splitSize.x = 2f * ConstVals.PPM
+            splitSize.y = ConstVals.PPM.toFloat()
+        } else {
+            splitSize.x = ConstVals.PPM.toFloat()
+            splitSize.y = 2f * ConstVals.PPM
+        }
+
+        val matrix = bounds.splitByCellSize(splitSize.x, splitSize.y, matrix)
         val decorationBounds = Array<GameRectangle>()
         when (direction) {
             Direction.UP -> for (i in 0 until matrix.columns) decorationBounds.add(matrix[i, 0])

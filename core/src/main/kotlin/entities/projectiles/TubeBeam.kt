@@ -8,6 +8,7 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -28,11 +29,10 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.world.body.*
 
-class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IDirectionRotatable {
+class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IDirectional {
 
     companion object {
         const val TAG = "TubeBeam"
@@ -40,7 +40,7 @@ class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         private var region: TextureRegion? = null
     }
 
-    override var directionRotation = Direction.UP
+    override var direction = Direction.UP
 
     private lateinit var cullTimer: Timer
     private lateinit var trajectory: Vector2
@@ -55,11 +55,19 @@ class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
 
-        directionRotation = spawnProps.get(ConstKeys.DIRECTION, Direction::class)!!
+        direction = spawnProps.get(ConstKeys.DIRECTION, Direction::class)!!
         trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
 
-        val size = if (directionRotation?.isHorizontal() == true) Vector2(2f, 0.75f) else Vector2(0.75f, 2f)
-        body.setSize(size.scl(ConstVals.PPM.toFloat()))
+        val size = GameObjectPools.fetch(Vector2::class)
+        if (direction.isHorizontal()) {
+            size.x = 2f
+            size.y = 1f
+        } else {
+            size.x = 1f
+            size.y = 2f
+        }
+        size.scl(ConstVals.PPM.toFloat())
+        body.setSize(size.x, size.y)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
@@ -86,7 +94,7 @@ class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
             (damagerFixture.rawShape as GameRectangle).setSize(body.getSize())
         }
 
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -95,10 +103,10 @@ class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         val sprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, 0))
         sprite.setSize(2f * ConstVals.PPM, 0.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setOriginCenter()
-            _sprite.rotation = if (directionRotation?.isHorizontal() == true) 0f else 90f
-            _sprite.setCenter(body.getCenter())
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setOriginCenter()
+            sprite.rotation = if (direction.isHorizontal()) 0f else 90f
+            sprite.setCenter(body.getCenter())
         }
         return spritesComponent
     }

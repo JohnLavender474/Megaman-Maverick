@@ -8,7 +8,6 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.interfaces.ArgsPredicate
-import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -22,8 +21,11 @@ import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getSize
+import com.megaman.maverick.game.world.body.getCenter
 
-open class AnimatedBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity, Resettable {
+open class AnimatedBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "AnimatedBlock"
@@ -47,30 +49,35 @@ open class AnimatedBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntit
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "spawn(): spawnProps = $spawnProps")
         super.onSpawn(spawnProps)
-        trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2(), Vector2::class)
+
+        trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2.Zero, Vector2::class).cpy()
         deathPredicate = spawnProps.get(ConstKeys.DEATH) as ArgsPredicate<Properties>?
+
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
+
         spriteSize = spawnProps.getOrDefault(ConstKeys.SIZE, bounds.getSize(), Vector2::class)
-        spriteSize.x = spawnProps.getOrDefault(ConstKeys.WIDTH, bounds.width, Float::class)
-        spriteSize.y = spawnProps.getOrDefault(ConstKeys.HEIGHT, bounds.height, Float::class)
+        spriteSize.x = spawnProps.getOrDefault(ConstKeys.WIDTH, bounds.getWidth(), Float::class)
+        spriteSize.y = spawnProps.getOrDefault(ConstKeys.HEIGHT, bounds.getHeight(), Float::class)
+
         val animation = spawnProps.get(ConstKeys.ANIMATION, String::class)!!
         AnimatedBlockAnimators.createAndSetAnimations(animation, this)
+
         if (spawnProps.containsKey(ConstKeys.RUN_ON_SPAWN)) {
             val runOnSpawn = spawnProps.get(ConstKeys.RUN_ON_SPAWN, Runnable::class)!!
             runOnSpawn.run()
         }
+
         if (spawnProps.containsKey(ConstKeys.KEY)) putProperty(ConstKeys.KEY, spawnProps.get(ConstKeys.KEY))
     }
 
     protected open fun defineUpdateablesComponent(updateablesComponent: UpdatablesComponent) {
         updateablesComponent.add {
-            body.physics.velocity = trajectory
-            if (deathPredicate != null && deathPredicate!!.test(
-                    props(
-                        ConstKeys.DELTA pairTo it, ConstKeys.ENTITY pairTo this
-                    )
-                )
+            val velocity = GameObjectPools.fetch(Vector2::class).set(trajectory)
+            body.physics.velocity.set(velocity)
+
+            if (deathPredicate != null &&
+                deathPredicate!!.test(props(ConstKeys.DELTA pairTo it, ConstKeys.ENTITY pairTo this))
             ) destroy()
         }
     }
@@ -78,15 +85,13 @@ open class AnimatedBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntit
     protected open fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setSize(spriteSize.x, spriteSize.y)
-            _sprite.setCenter(body.getCenter())
-            _sprite.hidden = hidden
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setSize(spriteSize.x, spriteSize.y)
+            sprite.setCenter(body.getCenter())
+            sprite.hidden = hidden
         }
         return spritesComponent
     }
-
-    override fun reset() = animators.forEach { it.second.reset() }
 }
 
 object AnimatedBlockAnimators {
@@ -94,9 +99,6 @@ object AnimatedBlockAnimators {
     const val TAG = "AnimatedBlockAnimators"
 
     fun createAndSetAnimations(key: String, animatedBlock: AnimatedBlock) {
-        val animators = animatedBlock.animators
-        animators.clear()
-
         val assMan = animatedBlock.game.assMan
 
         val animation: Animation = when (key) {
@@ -119,6 +121,6 @@ object AnimatedBlockAnimators {
         }
 
         val animator = Animator(animation)
-        animators.add({ animatedBlock.firstSprite!! } pairTo animator)
+        animatedBlock.putAnimator(animatedBlock.defaultSprite, animator)
     }
 }

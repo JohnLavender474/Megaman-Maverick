@@ -1,7 +1,6 @@
 package com.megaman.maverick.game.entities.blocks
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.math.Rectangle
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
@@ -29,6 +28,8 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.megaman.components.feetFixture
 import com.megaman.maverick.game.world.body.BodyLabel
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getPositionPoint
 
 class DropperLift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity {
 
@@ -47,7 +48,7 @@ class DropperLift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAni
     val currentState: DropperLiftState
         get() = loop.getCurrent()
 
-    private val loop = Loop(DropperLiftState.values().toGdxArray())
+    private val loop = Loop(DropperLiftState.entries.toTypedArray().toGdxArray())
     private val timer = Timer(DURATION)
 
     override fun init() {
@@ -71,11 +72,12 @@ class DropperLift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAni
     }
 
     private fun isMegamanOverlapping() =
-        megaman().feetFixture.getShape().overlaps(body) || megaman().body.overlaps(body as Rectangle)
+        megaman().feetFixture.getShape().overlaps(body.getBounds()) ||
+            megaman().body.getBounds().overlaps(body.getBounds())
 
     private fun setActive(active: Boolean) {
         body.physics.collisionOn = active
-        blockFixture.active = active
+        blockFixture.setActive(active)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
@@ -117,8 +119,8 @@ class DropperLift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAni
         sprite.setSize(ConstVals.PPM * 1.5f, ConstVals.PPM.toFloat())
 
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(body.getTopCenterPoint(), Position.TOP_CENTER)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setPosition(body.getPositionPoint(Position.TOP_CENTER), Position.TOP_CENTER)
         }
 
         return spritesComponent

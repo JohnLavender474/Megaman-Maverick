@@ -18,6 +18,7 @@ import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.interfaces.UpdateFunction
 import com.mega.game.engine.common.objects.GamePair
@@ -46,16 +47,19 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
+import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getCenter
 
 class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity, ISpritesEntity,
-    IAnimatedEntity, IAudioEntity, IDirectionRotatable, IFaceable {
+    IAnimatedEntity, IAudioEntity, IDirectional, IFaceable {
 
     companion object {
         const val TAG = "Lava"
@@ -66,8 +70,9 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    override var directionRotation = Direction.UP
+    override var direction = Direction.UP
     override lateinit var facing: Facing
+
     var moveBeforeKill = false
         private set
     var movingBeforeKill = false
@@ -75,15 +80,21 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
 
     private val moving: Boolean
         get() = !body.getCenter().epsilonEquals(moveTarget, 0.1f * ConstVals.PPM)
-    private lateinit var drawingSection: DrawingSection
+
     private lateinit var type: String
-    private lateinit var moveTarget: Vector2
+    private lateinit var drawingSection: DrawingSection
     private lateinit var bodyMatrix: Matrix<GameRectangle>
+
+    private val moveTarget = Vector2()
+
     private var spawnRoom: String? = null
-    private var speed = 0f
     private var spritePriorityValue = 0
+    private var speed = 0f
     private var doCull = false
     private var black = false
+
+    private val pair = GamePair<Int, Int>(0, 0)
+    private val matrix = Matrix<GameRectangle>()
 
     override fun init() {
         if (regions.isEmpty) {
@@ -107,6 +118,7 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
@@ -114,20 +126,20 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
 
         type = spawnProps.getOrDefault(ConstKeys.TYPE, FLOW, String::class)
         drawingSection = DrawingSection.valueOf(
-            spawnProps.getOrDefault(ConstKeys.SECTION, "foreground", String::class).uppercase()
+            spawnProps.getOrDefault(ConstKeys.SECTION, ConstKeys.FOREGROUND, String::class).uppercase()
         )
         spritePriorityValue = spawnProps.getOrDefault(ConstKeys.PRIORITY, if (type == FALL) 2 else 1, Int::class)
         black = spawnProps.getOrDefault(ConstKeys.BLACK, false, Boolean::class)
-        directionRotation =
-            Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
-        facing = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, "right", String::class).uppercase())
+        direction =
+            Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
+        facing = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, ConstKeys.RIGHT, String::class).uppercase())
         speed = spawnProps.getOrDefault(ConstKeys.SPEED, 0f, Float::class)
         doCull = spawnProps.getOrDefault(ConstKeys.CULL, false, Boolean::class)
         spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)
 
         val moveX = spawnProps.getOrDefault("${ConstKeys.MOVE}_${ConstKeys.X}", 0f, Float::class)
         val moveY = spawnProps.getOrDefault("${ConstKeys.MOVE}_${ConstKeys.Y}", 0f, Float::class)
-        moveTarget = body.getCenter().add(moveX * ConstVals.PPM, moveY * ConstVals.PPM)
+        moveTarget.set(body.getCenter()).add(moveX * ConstVals.PPM, moveY * ConstVals.PPM)
 
         moveBeforeKill = spawnProps.containsKey(MOVE_BEFORE_KILL)
         removeProperty(MOVE_BEFORE_KILL)
@@ -137,38 +149,49 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         val playSound = spawnProps.getOrDefault(ConstKeys.SOUND, false, Boolean::class)
         if (playSound && overlapsGameCamera()) requestToPlaySound(SoundAsset.ATOMIC_FIRE_SOUND, false)
 
-        val dimensions = bounds.getSplitDimensions(ConstVals.PPM.toFloat())
+        val dimensions = bounds.getSplitDimensions(ConstVals.PPM.toFloat(), pair)
         defineDrawables(dimensions.first, dimensions.second)
     }
 
     fun moveBeforeKill() {
         movingBeforeKill = true
-        val moveBeforeKillTargetRaw = getProperty(MOVE_BEFORE_KILL, String::class)!!.split(",").map { it.toFloat() }
-        val targetOffset = Vector2(moveBeforeKillTargetRaw[0], moveBeforeKillTargetRaw[1]).scl(ConstVals.PPM.toFloat())
+
+        val moveBeforeKillTargetRaw = getProperty(MOVE_BEFORE_KILL, String::class)!!
+            .split(",")
+            .map { it.toFloat() }
+        val targetOffset = GameObjectPools.fetch(Vector2::class)
+            .set(moveBeforeKillTargetRaw[0], moveBeforeKillTargetRaw[1])
+            .scl(ConstVals.PPM.toFloat())
         moveTarget.add(targetOffset)
+
+        GameLogger.debug(TAG, "moveBeforeKill(): moveTarget=$moveTarget")
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
-        bodyMatrix = body.splitByCellSize(ConstVals.PPM.toFloat())
+        bodyMatrix = body.getBounds().splitByCellSize(ConstVals.PPM.toFloat(), matrix)
         if (movingBeforeKill && !moving) destroy()
     })
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.color = Color.BLUE
+        body.drawingColor = Color.BLUE
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body }
 
-        val deathFixture = Fixture(body, FixtureType.DEATH, GameRectangle())
+        val deathFixture = Fixture(body, FixtureType.DEATH)
         deathFixture.putProperty(ConstKeys.INSTANT, true)
         body.addFixture(deathFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             if (moving) {
-                val direction = moveTarget.cpy().sub(body.getCenter()).nor()
-                body.physics.velocity.set(direction.scl(speed * ConstVals.PPM))
-            } else body.physics.velocity.set(0f, 0f)
+                val direction = GameObjectPools.fetch(Vector2::class)
+                    .set(moveTarget)
+                    .sub(body.getCenter())
+                    .nor()
+                    .scl(speed * ConstVals.PPM)
+                body.physics.velocity.set(direction)
+            } else body.physics.velocity.setZero()
 
             (deathFixture.rawShape as GameRectangle).set(body)
         }
@@ -206,8 +229,8 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
     }
 
     private fun defineDrawables(rows: Int, cols: Int) {
-        val sprites = OrderedMap<String, GameSprite>()
-        val updateFunctions = ObjectMap<String, UpdateFunction<GameSprite>>()
+        val sprites = OrderedMap<Any, GameSprite>()
+        val updateFunctions = ObjectMap<Any, UpdateFunction<GameSprite>>()
         val animators = Array<GamePair<() -> GameSprite, IAnimator>>()
 
         for (row in 0 until rows) {
@@ -218,14 +241,14 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
                 val spriteKey = "lava_$${col}_${row}"
                 sprites.put(spriteKey, sprite)
 
-                updateFunctions.put(spriteKey, UpdateFunction { _, _sprite ->
+                updateFunctions.put(spriteKey, UpdateFunction { _, _ ->
                     val bounds = bodyMatrix[col, row]!!
-                    _sprite.setCenter(bounds.getCenter())
-                    _sprite.setOriginCenter()
-                    _sprite.rotation = directionRotation?.rotation ?: 0f
-                    _sprite.setFlip(isFacing(Facing.LEFT), false)
-                    _sprite.priority.section = drawingSection
-                    _sprite.priority.value = spritePriorityValue
+                    sprite.setCenter(bounds.getCenter())
+                    sprite.setOriginCenter()
+                    sprite.rotation = direction.rotation
+                    sprite.setFlip(isFacing(Facing.LEFT), false)
+                    sprite.priority.section = drawingSection
+                    sprite.priority.value = spritePriorityValue
                 })
 
                 val region = if (type == FLOW) {

@@ -20,6 +20,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.world.body.getCenter
 
 class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializable, Updatable, IDrawable<Batch>,
     Resettable {
@@ -65,7 +66,7 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
             beamSprite = GameSprite(beamRegion)
             beamSprite.setSize(1.5f * ConstVals.PPM)
 
-            beamTransAnim = Animation(atlas.findRegion("BeamLand"), 1, 2, 0.1f, false).reversed()
+            beamTransAnim = Animation(atlas.findRegion("Spawn"), 1, 2, 0.1f, false).reversed()
         }
 
         startDelayTimer.reset()
@@ -136,7 +137,7 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
             megaman.ready = false
 
             beamSprite.setOriginCenter()
-            beamSprite.rotation = megaman.directionRotation.rotation
+            beamSprite.rotation = megaman.direction.rotation
             beamSprite.setCenter(megaman.body.getCenter())
 
             beamTransitionTimer.reset()
@@ -160,7 +161,7 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
         beamUpTimer.update(delta)
 
         beamSprite.setCenter(megaman.body.getCenter())
-        when (megaman.directionRotation) {
+        when (megaman.direction) {
             Direction.UP -> beamSprite.y += ConstVals.VIEW_HEIGHT * ConstVals.PPM * beamUpTimer.getRatio()
             Direction.DOWN -> beamSprite.y -= ConstVals.VIEW_HEIGHT * ConstVals.PPM * beamUpTimer.getRatio()
             Direction.LEFT -> beamSprite.x -= ConstVals.VIEW_HEIGHT * ConstVals.PPM * beamUpTimer.getRatio()

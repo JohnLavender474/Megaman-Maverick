@@ -26,9 +26,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodyFixtureDef
-import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.*
 
 class MagmaOrb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
 
@@ -58,7 +56,7 @@ class MagmaOrb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
         return BodyComponentCreator.create(
             this,

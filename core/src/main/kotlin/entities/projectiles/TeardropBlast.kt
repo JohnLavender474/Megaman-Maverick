@@ -30,8 +30,11 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getCenter
 
 class TeardropBlast(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
 
@@ -64,23 +67,21 @@ class TeardropBlast(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
         val muzzleFlash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.MUZZLE_FLASH)!!
-        muzzleFlash.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
+        muzzleFlash.spawn(pooledProps(ConstKeys.POSITION pairTo body.getCenter()))
     }
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.25f * ConstVals.PPM)
-        body.color = Color.GRAY
         body.physics.applyFrictionX = false
-body.physics.applyFrictionY = false
+        body.physics.applyFrictionY = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameCircle().setRadius(0.25f * ConstVals.PPM))
         body.addFixture(projectileFixture)
-        projectileFixture.rawShape.color = Color.RED
-        debugShapes.add { projectileFixture.getShape() }
+        debugShapes.add { projectileFixture}
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.25f * ConstVals.PPM))
         body.addFixture(damagerFixture)
@@ -95,9 +96,9 @@ body.physics.applyFrictionY = false
         sprite.setSize(0.5f * ConstVals.PPM)
         sprite.setOriginCenter()
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setCenter(body.getCenter())
-            _sprite.rotation = rotation
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setCenter(body.getCenter())
+            sprite.rotation = rotation
         }
         return spritesComponent
     }

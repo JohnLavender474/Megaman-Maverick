@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.enums.Direction
-import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -19,6 +18,8 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
+import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
@@ -46,10 +47,9 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     body.putProperty("${ConstKeys.ICE}_${ConstKeys.FRICTION_Y}", false)
     body.physics.applyFrictionX = true
     body.physics.applyFrictionY = true
-    body.color = Color.BROWN
 
     val debugShapes = Array<() -> IDrawableShape?>()
-    // debugShapes.add { body.getBodyBounds() }
+    // debugShapes.add { body.getBounds() }
 
     val playerFixture = Fixture(body, FixtureType.PLAYER, GameRectangle(body))
     body.addFixture(playerFixture)
@@ -64,51 +64,46 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
 
     val feetFixture =
         Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.55f * ConstVals.PPM, 0.15f * ConstVals.PPM))
-    feetFixture.offsetFromBodyCenter.y = -0.5f * ConstVals.PPM
+    feetFixture.offsetFromBodyAttachment.y = -0.5f * ConstVals.PPM
     feetFixture.setRunnable(onBounce)
     body.addFixture(feetFixture)
-    feetFixture.rawShape.color = Color.GREEN
-    // debugShapes.add { feetFixture.getShape() }
+    // debugShapes.add { feetFixture}
     body.putProperty(ConstKeys.FEET, feetFixture)
 
     val headFixture =
         Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.55f * ConstVals.PPM, 0.15f * ConstVals.PPM))
-    headFixture.offsetFromBodyCenter.y = 0.5f * ConstVals.PPM
+    headFixture.offsetFromBodyAttachment.y = 0.5f * ConstVals.PPM
     headFixture.setRunnable(onBounce)
     body.addFixture(headFixture)
-    headFixture.rawShape.color = Color.RED
-    // debugShapes.add { headFixture.getShape() }
+    // debugShapes.add { headFixture}
     body.putProperty(ConstKeys.HEAD, headFixture)
 
     val leftFixture =
         Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.2f * ConstVals.PPM, 0.6f * ConstVals.PPM))
-    leftFixture.offsetFromBodyCenter.x = -0.5f * ConstVals.PPM
-    leftFixture.offsetFromBodyCenter.y = 0.1f * ConstVals.PPM
+    leftFixture.offsetFromBodyAttachment.x = -0.5f * ConstVals.PPM
+    leftFixture.offsetFromBodyAttachment.y = 0.1f * ConstVals.PPM
     leftFixture.setRunnable(onBounce)
     leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
     body.addFixture(leftFixture)
-    leftFixture.rawShape.color = Color.YELLOW
-    // debugShapes.add { leftFixture.getShape() }
+    // debugShapes.add { leftFixture}
     body.putProperty("${ConstKeys.LEFT}_${ConstKeys.SIDE}", leftFixture)
 
     val rightFixture =
         Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.2f * ConstVals.PPM, 0.6f * ConstVals.PPM))
-    rightFixture.offsetFromBodyCenter.x = 0.5f * ConstVals.PPM
-    rightFixture.offsetFromBodyCenter.y = 0.1f * ConstVals.PPM
+    rightFixture.offsetFromBodyAttachment.x = 0.5f * ConstVals.PPM
+    rightFixture.offsetFromBodyAttachment.y = 0.1f * ConstVals.PPM
     rightFixture.setRunnable(onBounce)
     rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
     body.addFixture(rightFixture)
-    rightFixture.rawShape.color = Color.BLUE
-    // debugShapes.add { rightFixture.getShape() }
+    // debugShapes.add { rightFixture}
     body.putProperty("${ConstKeys.RIGHT}_${ConstKeys.SIDE}", rightFixture)
 
-    val damageableFixture =
-        Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setWidth(body.width))
-    damageableFixture.attachedToBody = false
+    val damagableRect = GameRectangle()
+    val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, damagableRect)
     body.addFixture(damageableFixture)
     body.putProperty(ConstKeys.DAMAGEABLE, damageableFixture)
-    damageableFixture.rawShape.color = Color.PURPLE
-    debugShapes.add { damageableFixture.getShape() }
+    damageableFixture.drawingColor = Color.PURPLE
+    debugShapes.add { damageableFixture }
 
     val waterListenerFixture = Fixture(body, FixtureType.WATER_LISTENER, GameRectangle(body))
     body.addFixture(waterListenerFixture)
@@ -116,25 +111,28 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     val teleporterListenerFixture = Fixture(body, FixtureType.TELEPORTER_LISTENER, GameRectangle(body))
     body.addFixture(teleporterListenerFixture)
 
-    body.preProcess.put(ConstKeys.DEFAULT, Updatable {
-        (damageableFixture.rawShape as GameRectangle).let {
-            val size = when {
-                isBehaviorActive(BehaviorType.GROUND_SLIDING) -> Vector2(1.25f, 0.75f)
-                else -> Vector2(0.75f, 1.25f)
+    body.preProcess.put(ConstKeys.DEFAULT) {
+        damagableRect.let {
+            val size = GameObjectPools.fetch(Vector2::class)
+            when {
+                isBehaviorActive(BehaviorType.GROUND_SLIDING) -> size.set(1.25f, 0.75f)
+                else -> size.set(0.75f, 1.25f)
             }
             it.setSize(size.scl(ConstVals.PPM.toFloat()))
 
-            val position = DirectionPositionMapper.getInvertedPosition(directionRotation)
-            it.positionOnPoint(body.getPositionPoint(position), position)
+            val position = DirectionPositionMapper.getInvertedPosition(direction)
+            it.positionOnPoint(body.getBounds().getPositionPoint(position), position)
         }
 
         if (!ready) {
             body.physics.velocity.setZero()
-            return@Updatable
+            body.physics.gravity.setZero()
+            return@put
         }
 
         val wallSlidingOnIce = isBehaviorActive(BehaviorType.WALL_SLIDING) &&
             (body.isSensingAny(BodySense.SIDE_TOUCHING_ICE_LEFT, BodySense.SIDE_TOUCHING_ICE_RIGHT))
+
         var gravityValue = when {
             body.isSensing(BodySense.IN_WATER) -> if (wallSlidingOnIce) waterIceGravity else waterGravity
             wallSlidingOnIce -> iceGravity
@@ -143,29 +141,33 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
         }
         gravityValue *= gravityScalar
 
-        when (directionRotation) {
+        when (direction) {
             Direction.UP,
             Direction.DOWN -> {
                 body.physics.gravity.set(0f, gravityValue * ConstVals.PPM)
                 body.physics.defaultFrictionOnSelf.set(ConstVals.STANDARD_RESISTANCE_X, ConstVals.STANDARD_RESISTANCE_Y)
+
+                val clamp = GameObjectPools.fetch(Vector2::class)
                 body.physics.velocityClamp.set(
                     if (isBehaviorActive(BehaviorType.RIDING_CART))
-                        Vector2(MegamanValues.CART_RIDE_MAX_SPEED, MegamanValues.CLAMP_Y)
-                    else Vector2(MegamanValues.CLAMP_X, MegamanValues.CLAMP_Y)
+                        clamp.set(MegamanValues.CART_RIDE_MAX_SPEED, MegamanValues.CLAMP_Y)
+                    else clamp.set(MegamanValues.CLAMP_X, MegamanValues.CLAMP_Y)
                 ).scl(ConstVals.PPM.toFloat())
             }
 
             else -> {
                 body.physics.gravity.set(gravityValue * ConstVals.PPM, 0f)
                 body.physics.defaultFrictionOnSelf.set(ConstVals.STANDARD_RESISTANCE_Y, ConstVals.STANDARD_RESISTANCE_X)
+
+                val clamp = GameObjectPools.fetch(Vector2::class)
                 body.physics.velocityClamp.set(
                     if (isBehaviorActive(BehaviorType.RIDING_CART))
-                        Vector2(MegamanValues.CLAMP_Y, MegamanValues.CART_RIDE_MAX_SPEED)
-                    else Vector2(MegamanValues.CLAMP_Y, MegamanValues.CLAMP_X)
+                        clamp.set(MegamanValues.CLAMP_Y, MegamanValues.CART_RIDE_MAX_SPEED)
+                    else clamp.set(MegamanValues.CLAMP_Y, MegamanValues.CLAMP_X)
                 ).scl(ConstVals.PPM.toFloat())
             }
         }
-    })
+    }
 
     addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 

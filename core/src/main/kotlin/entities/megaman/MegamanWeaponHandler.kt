@@ -23,6 +23,7 @@ import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.world.body.BodySense
+import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.isSensing
 
 class MegaWeaponEntry(
@@ -77,7 +78,7 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
             else if (megaman.isBehaviorActive(BehaviorType.RIDING_CART)) {
                 if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.6f * ConstVals.PPM else 0.3f * ConstVals.PPM
             } // else if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.4f * ConstVals.PPM
-            else if (megaman.directionRotation == Direction.DOWN) {
+            else if (megaman.direction == Direction.DOWN) {
                 (if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.15f else 0.25f) * ConstVals.PPM
             } else 0.135f * ConstVals.PPM
             /*
@@ -86,20 +87,20 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
             else 0.15f * ConstVals.PPM
              */
 
-            if (megaman.isDirectionRotatedVertically()) {
+            if (megaman.direction.isVertical()) {
                 spawnCenter.x += xOffset
-                spawnCenter.y += if (megaman.isDirectionRotatedDown()) (-yOffset + 0.1f * ConstVals.PPM) else yOffset
+                spawnCenter.y += if (megaman.direction == Direction.DOWN) (-yOffset + 0.1f * ConstVals.PPM) else yOffset
 
                 if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING)) {
                     var groundSlideOffset = GROUND_SLIDE_SPRITE_OFFSET_Y * ConstVals.PPM
-                    if (megaman.directionRotation == Direction.UP) spawnCenter.y -= groundSlideOffset
+                    if (megaman.direction == Direction.UP) spawnCenter.y -= groundSlideOffset
                     else spawnCenter.y += groundSlideOffset
                 }
             } else {
                 yOffset += if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) -0.075f * ConstVals.PPM
                 else if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) -0.1f * ConstVals.PPM
                 else 0.05f * ConstVals.PPM
-                spawnCenter.x += if (megaman.isDirectionRotatedLeft()) -yOffset else yOffset
+                spawnCenter.x += if (megaman.direction == Direction.LEFT) -yOffset else yOffset
                 spawnCenter.y += xOffset
             }
 
@@ -206,7 +207,7 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
 
     private fun fireMegaBuster(stat: MegaChargeStatus): AbstractProjectile {
         val trajectory = Vector2()
-        if (megaman.isDirectionRotatedVertically()) trajectory.x = MEGA_BUSTER_BULLET_VEL * megaman.facing.value
+        if (megaman.direction.isVertical()) trajectory.x = MEGA_BUSTER_BULLET_VEL * megaman.facing.value
         else trajectory.y = MEGA_BUSTER_BULLET_VEL * megaman.facing.value
         trajectory.scl(ConstVals.PPM.toFloat())
 
@@ -215,7 +216,7 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
         val props = Properties()
         props.put(ConstKeys.OWNER, megaman)
         props.put(ConstKeys.TRAJECTORY, trajectory)
-        props.put(ConstKeys.DIRECTION, megaman.directionRotation)
+        props.put(ConstKeys.DIRECTION, megaman.direction)
 
         val megaBusterShot = when (stat) {
             MegaChargeStatus.NOT_CHARGED -> EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)

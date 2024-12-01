@@ -8,11 +8,11 @@ import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.UtilMethods.interpolate
 import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.toGdxArray
-import com.mega.game.engine.common.interpolate
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -41,9 +41,12 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
 
 class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
@@ -72,7 +75,7 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
         }
     )
 
-    private val loop = Loop(EyeeState.values().toGdxArray())
+    private val loop = Loop(EyeeState.entries.toTypedArray().toGdxArray())
     private val currentState: EyeeState
         get() = loop.getCurrent()
     private val canMove: Boolean
@@ -155,7 +158,7 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
                 }
             }
 
-            val center = interpolate(start, end, progress)
+            val center = interpolate(start, end, progress, GameObjectPools.fetch(Vector2::class))
             body.setCenter(center)
         }
     }
@@ -176,7 +179,7 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _->
             sprite.setOriginCenter()
-            sprite.rotation = megaman().directionRotation.rotation
+            sprite.rotation = megaman().direction.rotation
             sprite.setCenter(body.getCenter())
             sprite.hidden = damageBlink
         }

@@ -32,7 +32,9 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.getCenter
 
 
 class ExplosionOrb(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, ICullableEntity {
@@ -56,9 +58,11 @@ class ExplosionOrb(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
-        body.physics.velocity = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
+
+        body.physics.velocity = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!.cpy()
     }
 
     private fun defineBodyComponent(): BodyComponent {
@@ -72,7 +76,7 @@ class ExplosionOrb(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 20))
         sprite.setSize(3f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite -> _sprite.setCenter(body.getCenter()) }
+        spritesComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
         return spritesComponent
     }
 
@@ -83,7 +87,11 @@ class ExplosionOrb(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     }
 
     private fun defineCullablesComponent(): CullablesComponent {
-        val cullOOB = getGameCameraCullingLogic(game.getGameCamera(), { firstSprite.boundingRectangle }, OOB_CULL_TIME)
+        val cullOOB = getGameCameraCullingLogic(
+            game.getGameCamera(),
+            { defaultSprite.boundingRectangle.toGameRectangle() },
+            OOB_CULL_TIME
+        )
         val cullEvents = getStandardEventCullingLogic(this, objectSetOf(EventType.PLAYER_SPAWN))
         return CullablesComponent(
             objectMapOf(
