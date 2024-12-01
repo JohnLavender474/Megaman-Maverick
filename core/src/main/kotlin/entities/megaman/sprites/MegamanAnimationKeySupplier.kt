@@ -6,10 +6,10 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.isSensing
 
-fun Megaman.getAnimationKey(priorAnimKey: String) = when {
-    !roomTransPauseTimer.isFinished() -> ConstKeys.INVALID
+fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
+    !roomTransPauseTimer.isFinished() -> null
 
-    game.isProperty(ConstKeys.ROOM_TRANSITION, true) -> {
+    priorAnimKey != null && game.isProperty(ConstKeys.ROOM_TRANSITION, true) -> {
         var key = priorAnimKey
         if (key.contains("Stand")) key = key.replace("Stand", "Run")
         key

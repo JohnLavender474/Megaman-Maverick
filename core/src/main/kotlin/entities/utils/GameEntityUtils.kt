@@ -83,19 +83,17 @@ fun convertObjectPropsToEntitySuppliers(props: Properties): Array<GamePair<() ->
         if (value is RectangleMapObject) {
             val childProps = value.toProps()
             if (childProps.containsKey(ConstKeys.ENTITY_TYPE)) {
-                val entityTypeString = childProps.get(ConstKeys.ENTITY_TYPE) as String
+                val entityTypeString = childProps.get(ConstKeys.ENTITY_TYPE, String::class)!!
                 val entityType = EntityType.valueOf(entityTypeString.uppercase())
 
-                val childEntitySupplier: () -> GameEntity = {
-                    EntityFactories.fetch(entityType, value.name)!!
-                }
+                val childEntitySupplier: () -> GameEntity = { EntityFactories.fetch(entityType, value.name)!! }
 
                 GameLogger.debug(
                     "convertObjectPropsToEntities()", "entityType=$entityType,name=${value.name}"
                 )
 
                 childProps.put(ConstKeys.CHILD_KEY, key)
-                childProps.put(ConstKeys.BOUNDS, value.rectangle.toGameRectangle())
+                childProps.put(ConstKeys.BOUNDS, value.rectangle.toGameRectangle(false))
 
                 childEntitySuppliers.add(childEntitySupplier pairTo childProps)
             }

@@ -112,12 +112,14 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
     override fun onDestroy() {
         super.onDestroy()
+
         flame?.destroy()
         flame = null
     }
 
     private fun spawnFlame() {
         if (flame != null) throw IllegalStateException("Flame must be null before spawning new flame")
+
         flame = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.FIRE_MET_FLAME) as FireMetFlame?
         flame!!.spawn(
             props(
@@ -138,11 +140,14 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
                     if (body.isSensing(BodySense.FEET_ON_GROUND)) {
                         body.physics.velocity.x = MOVE_SPEED * facing.value * ConstVals.PPM
+
                         moveTimer.update(delta)
                         if (moveTimer.isFinished()) {
                             facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+
                             shoot()
                             shootTimer.reset()
+
                             fireMetState = FireMetState.SHOOT
                         }
                     }
@@ -150,6 +155,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
                 FireMetState.SHOOT -> {
                     body.physics.velocity.x = 0f
+
                     shootTimer.update(delta)
                     if (shootTimer.isJustFinished()) {
                         spawnFlame()
@@ -183,7 +189,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         body.setSize(0.65f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBounds() }
+        debugShapes.add { body }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         body.addFixture(bodyFixture)
@@ -201,7 +207,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         )
         feetFixture.offsetFromBodyAttachment.y = -0.375f * ConstVals.PPM
         body.addFixture(feetFixture)
-        debugShapes.add { feetFixture}
+        debugShapes.add { feetFixture }
 
         val leftSideFixture = Fixture(
             body, FixtureType.SIDE, GameRectangle().setSize(
@@ -212,7 +218,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         leftSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         leftSideFixture.putProperty(ConstKeys.DEATH_LISTENER, false)
         body.addFixture(leftSideFixture)
-        debugShapes.add { leftSideFixture}
+        debugShapes.add { leftSideFixture }
 
         val rightSideFixture = Fixture(
             body, FixtureType.SIDE, GameRectangle().setSize(
@@ -223,11 +229,10 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         rightSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         rightSideFixture.putProperty(ConstKeys.DEATH_LISTENER, false)
         body.addFixture(rightSideFixture)
-        debugShapes.add { rightSideFixture}
+        debugShapes.add { rightSideFixture }
 
         val leftConsumerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        leftConsumerFixture.offsetFromBodyAttachment =
-            GameObjectPools.fetch(Vector2::class).set(-0.5f, -0.5f).scl(ConstVals.PPM.toFloat())
+        leftConsumerFixture.offsetFromBodyAttachment.set(-0.5f, -0.5f).scl(ConstVals.PPM.toFloat())
         leftConsumerFixture.setConsumer { _, fixture ->
             when (fixture.getType()) {
                 FixtureType.DEATH -> leftConsumerFixture.putProperty(ConstKeys.DEATH, true)
@@ -235,10 +240,10 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
             }
         }
         body.addFixture(leftConsumerFixture)
-        debugShapes.add { leftConsumerFixture}
+        debugShapes.add { leftConsumerFixture }
 
         val rightConsumerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.2f * ConstVals.PPM))
-        rightConsumerFixture.offsetFromBodyAttachment = Vector2(0.5f * ConstVals.PPM, -0.5f * ConstVals.PPM)
+        rightConsumerFixture.offsetFromBodyAttachment.set(0.5f * ConstVals.PPM, -0.5f * ConstVals.PPM)
         rightConsumerFixture.setConsumer { _, fixture ->
             when (fixture.getType()) {
                 FixtureType.DEATH -> rightConsumerFixture.putProperty(ConstKeys.DEATH, true)
@@ -246,7 +251,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
             }
         }
         body.addFixture(rightConsumerFixture)
-        debugShapes.add { rightConsumerFixture}
+        debugShapes.add { rightConsumerFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.gravity.y =
@@ -260,26 +265,30 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
         body.postProcess.put(ConstKeys.DEFAULT) {
             if (isFacing(Facing.LEFT)) {
-                if (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) ||
-                    leftConsumerFixture.isProperty(ConstKeys.DEATH, true)
-                ) facing = Facing.RIGHT
-                else if (fireMetState == FireMetState.MOVE &&
-                    body.isSensing(BodySense.FEET_ON_GROUND) &&
-                    leftConsumerFixture.isProperty(ConstKeys.BLOCK, false)
-                ) {
-                    jump()
-                    moveTimer.reset()
+                when {
+                    body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) ||
+                        leftConsumerFixture.isProperty(ConstKeys.DEATH, true) ->
+                        facing = Facing.RIGHT
+
+                    fireMetState == FireMetState.MOVE &&
+                        body.isSensing(BodySense.FEET_ON_GROUND) &&
+                        leftConsumerFixture.isProperty(ConstKeys.BLOCK, false) -> {
+                        jump()
+                        moveTimer.reset()
+                    }
                 }
             } else if (isFacing(Facing.RIGHT)) {
-                if (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) ||
-                    rightConsumerFixture.isProperty(ConstKeys.DEATH, true)
-                ) facing = Facing.LEFT
-                else if (fireMetState == FireMetState.MOVE &&
-                    body.isSensing(BodySense.FEET_ON_GROUND) &&
-                    rightConsumerFixture.isProperty(ConstKeys.BLOCK, false)
-                ) {
-                    jump()
-                    moveTimer.reset()
+                when {
+                    body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) ||
+                        rightConsumerFixture.isProperty(ConstKeys.DEATH, true) ->
+                        facing = Facing.LEFT
+
+                    fireMetState == FireMetState.MOVE &&
+                        body.isSensing(BodySense.FEET_ON_GROUND) &&
+                        rightConsumerFixture.isProperty(ConstKeys.BLOCK, false) -> {
+                        jump()
+                        moveTimer.reset()
+                    }
                 }
             }
         }

@@ -89,7 +89,11 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                             )
                             shouldSpawn
                         },
-                        eventKeyMask = objectSetOf<Any>(EventType.PLAYER_READY, EventType.END_ROOM_TRANS),
+                        eventKeyMask = objectSetOf<Any>(
+                            EventType.PLAYER_READY,
+                            EventType.SET_TO_ROOM_NO_TRANS,
+                            EventType.END_ROOM_TRANS
+                        ),
                         spawnSupplier = spawnSupplier
                     )
                     spawners.add(spawner)

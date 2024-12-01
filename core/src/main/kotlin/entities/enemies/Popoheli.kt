@@ -92,9 +92,9 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         get() = state == PopoheliState.WAITING
 
     private lateinit var state: PopoheliState
-    private lateinit var target: Vector2
     private lateinit var faceOnEnd: Facing
 
+    private val target = Vector2()
     private val triggers = Array<TriggerDef>()
 
     override fun init() {
@@ -117,21 +117,25 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
             spawnProps.getAllMatching { it.toString().startsWith(ConstKeys.TRIGGER) }.forEach {
                 val value = it.second
                 if (value is RectangleMapObject) {
-                    val trigger = value.rectangle.toGameRectangle()
-                    val start = (value.properties.get(ConstKeys.START) as RectangleMapObject).rectangle.getCenter()
-                    val target = (value.properties.get(ConstKeys.TARGET) as RectangleMapObject).rectangle.getCenter()
+                    val trigger = value.rectangle.toGameRectangle(false)
+                    val start =
+                        (value.properties.get(ConstKeys.START) as RectangleMapObject).rectangle.getCenter(false)
+                    val target =
+                        (value.properties.get(ConstKeys.TARGET) as RectangleMapObject).rectangle.getCenter(false)
                     triggers.add(TriggerDef(trigger, start, target))
                 }
             }
             facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         } else {
             val center = megaman().body.getCenter()
+            
             val targets =
                 PriorityQueue<Vector2> { target1, target2 -> target1.dst2(center).compareTo(target2.dst2(center)) }
             spawnProps.getAllMatching { it.toString().startsWith(ConstKeys.TARGET) }.forEach {
                 targets.add((it.second as RectangleMapObject).rectangle.getCenter())
             }
-            target = targets.poll()
+            target.set(targets.poll())
+
             facing = if (target.x < body.getX()) Facing.LEFT else Facing.RIGHT
         }
 
@@ -160,7 +164,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
                     triggers.forEach {
                         if (megaman().body.getBounds().overlaps(it.trigger)) {
                             body.setCenter(it.start)
-                            target = it.target
+                            target.set(it.target)
                             state = PopoheliState.APPROACHING
                         }
                     }
@@ -207,11 +211,11 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         body.addFixture(bodyFixture)
-        debugShapes.add { bodyFixture}
+        debugShapes.add { bodyFixture }
 
         val damagerFixture1 = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
         body.addFixture(damagerFixture1)
-        debugShapes.add { damagerFixture1}
+        debugShapes.add { damagerFixture1 }
 
         val damagerFixture2 = Fixture(
             body, FixtureType.DAMAGER, GameRectangle().setSize(
@@ -219,7 +223,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
             )
         )
         body.addFixture(damagerFixture2)
-        debugShapes.add { damagerFixture2}
+        debugShapes.add { damagerFixture2 }
 
         val damageableFixture = Fixture(
             body, FixtureType.DAMAGEABLE, GameRectangle().setSize(
@@ -227,7 +231,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
             )
         )
         body.addFixture(damageableFixture)
-        debugShapes.add { damageableFixture}
+        debugShapes.add { damageableFixture }
 
         val shieldFixture = Fixture(
             body, FixtureType.SHIELD, GameRectangle().setSize(
@@ -235,7 +239,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
             )
         )
         body.addFixture(shieldFixture)
-        debugShapes.add { shieldFixture}
+        debugShapes.add { shieldFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.collisionOn = !waiting

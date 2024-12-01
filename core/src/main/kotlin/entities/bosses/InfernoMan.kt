@@ -133,7 +133,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         get() = !timers["shoot"].isFinished()
     private val meteorSpawnDelays = Array<Timer>()
 
-    private lateinit var meteorSpawner: GameRectangle
+    private val meteorSpawner = GameRectangle()
     private var meteorCollideBlockId = 0
 
     private var shootMethod = ShootMethod.STRAIGHT
@@ -192,10 +192,9 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             else it.value.reset()
         }
 
-        meteorSpawner = spawnProps.get(ConstKeys.SPAWNER, RectangleMapObject::class)!!.rectangle.toGameRectangle()
+        meteorSpawner.set(spawnProps.get(ConstKeys.SPAWNER, RectangleMapObject::class)!!.rectangle.toGameRectangle())
         meteorCollideBlockId =
-            spawnProps.get(ConstKeys.COLLIDE, RectangleMapObject::class)!!
-                .properties.get(ConstKeys.ID, Int::class.java)
+            spawnProps.get(ConstKeys.COLLIDE, RectangleMapObject::class)!!.properties.get(ConstKeys.ID, Int::class.java)
     }
 
     override fun onDestroy() {
@@ -279,27 +278,27 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.2f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -BODY_HEIGHT * ConstVals.PPM / 2f
         body.addFixture(feetFixture)
-        debugShapes.add { feetFixture}
+        debugShapes.add { feetFixture }
 
         val headFixture =
             Fixture(body, FixtureType.HEAD, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.2f * ConstVals.PPM))
         headFixture.offsetFromBodyAttachment.y = BODY_HEIGHT * ConstVals.PPM / 2f
         body.addFixture(headFixture)
-        debugShapes.add { headFixture}
+        debugShapes.add { headFixture }
 
         val leftFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, ConstVals.PPM.toFloat()))
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         leftFixture.offsetFromBodyAttachment.x = -BODY_WIDTH * ConstVals.PPM / 2f
         body.addFixture(leftFixture)
-        debugShapes.add { leftFixture}
+        debugShapes.add { leftFixture }
 
         val rightFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, ConstVals.PPM.toFloat()))
         rightFixture.offsetFromBodyAttachment.x = BODY_WIDTH * ConstVals.PPM / 2f
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
-        debugShapes.add { rightFixture}
+        debugShapes.add { rightFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             if (body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) && body.physics.velocity.y > 0f)
@@ -541,7 +540,8 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     private fun launchOrb(targetMegaman: Boolean) {
         setMeteorToBeSpawned(targetMegaman)
 
-        val spawn = body.getPositionPoint(Position.TOP_CENTER).add(0.1f * ConstVals.PPM * facing.value, 0.1f * ConstVals.PPM)
+        val spawn =
+            body.getPositionPoint(Position.TOP_CENTER).add(0.1f * ConstVals.PPM * facing.value, 0.1f * ConstVals.PPM)
         val trajectory = Vector2(0f, ORB_SPEED * ConstVals.PPM)
         val orb = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.MAGMA_ORB)!!
         orb.spawn(pooledProps(ConstKeys.POSITION pairTo spawn, ConstKeys.TRAJECTORY pairTo trajectory))

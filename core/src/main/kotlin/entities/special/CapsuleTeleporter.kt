@@ -51,6 +51,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.*
@@ -72,9 +73,12 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
     private val outgoingBodies = OrderedMap<IBodyEntity, Timer>()
     private val incomingBodies = OrderedMap<IBodyEntity, Timer>()
     private val ignoredBodies = OrderedSet<IBodyEntity>()
-    private var teleporterBounds: GameRectangle? = null
+
+    private val teleporterBounds = GameRectangle()
+
     private var upperBlock: Block? = null
     private var lowerBlock: Block? = null
+
     private var thisKey = -1
     private var nextKey = -1
 
@@ -103,31 +107,29 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
 
-        teleporterBounds = spawnProps.get(ConstKeys.CHILD, RectangleMapObject::class)!!.rectangle.toGameRectangle()
+        teleporterBounds.set(spawnProps.get(ConstKeys.CHILD, RectangleMapObject::class)!!.rectangle.toGameRectangle())
 
         thisKey = spawnProps.get(ConstKeys.KEY, Int::class)!!
         nextKey = spawnProps.get(ConstKeys.NEXT, Int::class)!!
 
+        val rect1 = GameObjectPools.fetch(GameRectangle::class)
         upperBlock = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.STANDARD) as Block
         upperBlock!!.spawn(
             props(
                 ConstKeys.CULL_OUT_OF_BOUNDS pairTo false,
-                ConstKeys.BOUNDS pairTo GameRectangle().setSize(
-                    BLOCK_WIDTH * ConstVals.PPM,
-                    BLOCK_HEIGHT * ConstVals.PPM
-                )
+                ConstKeys.BOUNDS pairTo rect1
+                    .setSize(BLOCK_WIDTH * ConstVals.PPM, BLOCK_HEIGHT * ConstVals.PPM)
                     .setTopCenterToPoint(body.getPositionPoint(Position.TOP_CENTER))
             )
         )
 
+        val rect2 = GameObjectPools.fetch(GameRectangle::class)
         lowerBlock = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.STANDARD) as Block
         lowerBlock!!.spawn(
             props(
                 ConstKeys.CULL_OUT_OF_BOUNDS pairTo false,
-                ConstKeys.BOUNDS pairTo GameRectangle().setSize(
-                    BLOCK_WIDTH * ConstVals.PPM,
-                    BLOCK_HEIGHT * ConstVals.PPM
-                )
+                ConstKeys.BOUNDS pairTo rect2
+                    .setSize(BLOCK_WIDTH * ConstVals.PPM, BLOCK_HEIGHT * ConstVals.PPM)
                     .setBottomCenterToPoint(body.getPositionPoint(Position.BOTTOM_CENTER))
             )
         )
@@ -150,12 +152,15 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
 
     override fun teleportEntity(entity: IBodyEntity) {
         GameLogger.debug(TAG, "teleportEntity(): thisKey=$thisKey, entity=$entity")
+
         if (ignoredBodies.contains(entity) || incomingBodies.containsKey(entity) || outgoingBodies.containsKey(entity)) {
             GameLogger.debug(TAG, "teleportEntity(): entity already in bodiesToSend")
             return
         }
+
         val onPortalStart = entity.getProperty(ConstKeys.ON_TELEPORT_START) as? () -> Unit
         onPortalStart?.invoke()
+
         outgoingBodies.put(entity, Timer(SEND_DELAY))
     }
 
@@ -168,12 +173,15 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
 
     private fun receiveEntity(entity: IBodyEntity) {
         GameLogger.debug(PortalHopper.TAG, "receiveEntity(): thisKey=$thisKey, entity=$entity")
+
         if (incomingBodies.containsKey(entity)) {
             GameLogger.debug(PortalHopper.TAG, "receiveEntity(): entity already in bodiesToReceive")
             return
         }
+
         val teleportPosition = lowerBlock!!.body.getPositionPoint(Position.TOP_CENTER)
         entity.body.setBottomCenterToPoint(teleportPosition)
+
         incomingBodies.put(entity, Timer(RECEIVE_DELAY))
     }
 
@@ -221,10 +229,14 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
             timer.update(delta)
             if (timer.isFinished()) {
                 GameLogger.debug(PortalHopper.TAG, "update(): receive timer finished; thisKey=$thisKey, entity=$entity")
+
                 requestToPlaySound(SoundAsset.TELEPORT_SOUND, false)
+
                 val onPortalEnd = entity.getProperty(ConstKeys.ON_TELEPORT_END) as? () -> Unit
                 onPortalEnd?.invoke()
+
                 ignoredBodies.add(entity)
+
                 receiveIter.remove()
             }
         }
@@ -251,7 +263,7 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
         body.addFixture(teleporterFixture)
         debugShapes.add { teleporterFixture}
 
-        body.preProcess.put(ConstKeys.DEFAULT) { teleporterFixture.setShape(teleporterBounds!!) }
+        body.preProcess.put(ConstKeys.DEFAULT) { teleporterFixture.setShape(teleporterBounds) }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 

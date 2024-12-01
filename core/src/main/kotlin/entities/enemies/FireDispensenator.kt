@@ -91,7 +91,8 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
         "sleep" pairTo Timer(SLEEP_DUR)
     )
     private lateinit var stateMachine: StateMachine<FireDispensenatorState>
-    private lateinit var scanner: GameRectangle
+
+    private val scanner = GameRectangle()
 
     override fun init() {
         if (regions.isEmpty) {
@@ -108,11 +109,16 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
+
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
-        scanner = spawnProps.get(ConstKeys.SCANNER, RectangleMapObject::class)!!.rectangle.toGameRectangle()
+
+        scanner.set(spawnProps.get(ConstKeys.SCANNER, RectangleMapObject::class)!!.rectangle.toGameRectangle())
+
         facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+
         timers.values().forEach { it.reset() }
         stateMachine.reset()
     }

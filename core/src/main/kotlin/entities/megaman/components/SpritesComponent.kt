@@ -39,7 +39,7 @@ fun Megaman.getSpriteRotation() = when (getSpriteDirection()) {
 
 fun Megaman.getSpriteXTranslation() = when (getSpriteDirection()) {
     Direction.UP, Direction.DOWN -> when {
-        megamanAnimator.currentKey?.contains("JumpShoot") == true -> 0.1f * facing.value
+        currentAnimKey?.contains("JumpShoot") == true -> 0.1f * facing.value
         else -> 0f
     }
 
@@ -71,7 +71,7 @@ fun Megaman.getSpriteYTranslation() = when (getSpriteDirection()) {
     }
 
     Direction.LEFT, Direction.RIGHT -> when {
-        megamanAnimator.currentKey?.contains("JumpShoot") == true -> 0.1f * facing.value
+        currentAnimKey?.contains("JumpShoot") == true -> 0.1f * facing.value
         else -> 0f
     }
 }

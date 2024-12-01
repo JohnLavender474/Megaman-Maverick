@@ -81,17 +81,17 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    override var children = Array<IGameEntity>()
     override var direction = Direction.UP
+    override var children = Array<IGameEntity>()
     override val eventKeyMask = objectSetOf<Any>(EventType.PLAYER_SPAWN, EventType.END_ROOM_TRANS)
 
     val moving: Boolean
-        get() = toggleeState.equalsAny(ToggleeState.TOGGLING_TO_ON, ToggleeState.TOGGLING_TO_OFF)
+        get() = state.equalsAny(ToggleeState.TOGGLING_TO_ON, ToggleeState.TOGGLING_TO_OFF)
     val on: Boolean
-        get() = toggleeState == ToggleeState.TOGGLED_ON
+        get() = state == ToggleeState.TOGGLED_ON
 
     lateinit var type: String
-    lateinit var toggleeState: ToggleeState
+    lateinit var state: ToggleeState
         private set
     lateinit var text: String
         private set
@@ -102,12 +102,10 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
     private val switcharooArrowBlinkTimer = Timer(SWITCHAROO_ARROW_BLINK_DUR)
 
     private lateinit var switchTimer: Timer
-    private lateinit var position: Position
     private lateinit var spawnRoom: String
+    private lateinit var position: Position
 
     private var switcharooAlpha = 1f
-
-    override fun getEntityType() = EntityType.SPECIAL
 
     override fun init() {
         if (regions.isEmpty) {
@@ -135,8 +133,9 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        game.eventsMan.addListener(this)
         super.onSpawn(spawnProps)
+
+        game.eventsMan.addListener(this)
 
         type = spawnProps.get(ConstKeys.TYPE, String::class)!!
 
@@ -148,13 +147,14 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
             else -> throw IllegalStateException("Invalid type: $type")
         }
         size.scl(ConstVals.PPM.toFloat())
-        body.setSize(size.x, size.y)
+        body.setSize(size)
 
-        position = Position.valueOf(spawnProps.getOrDefault(ConstKeys.POSITION, "center", String::class).uppercase())
+        position =
+            Position.valueOf(spawnProps.getOrDefault(ConstKeys.POSITION, ConstKeys.CENTER, String::class).uppercase())
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(position)
         body.positionOnPoint(spawn, position)
 
-        val directionString = spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class)
+        val directionString = spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class)
         direction = Direction.valueOf(directionString.uppercase())
 
         text = spawnProps.getOrDefault(ConstKeys.TEXT, "", String::class)
@@ -168,7 +168,7 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
             if (childType) onEntitySuppliers.add(it) else offEntitySuppliers.add(it)
         }
 
-        toggleeState = ToggleeState.TOGGLED_OFF
+        state = ToggleeState.TOGGLED_OFF
 
         val switchDuration = when (type) {
             ENEMY_TYPE -> ENEMY_SWITCH_DUR
@@ -186,9 +186,12 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
 
     override fun onDestroy() {
         super.onDestroy()
+
         game.eventsMan.removeListener(this)
+
         children.forEach { (it as GameEntity).destroy() }
         children.clear()
+
         offEntitySuppliers.clear()
         onEntitySuppliers.clear()
     }
@@ -222,15 +225,16 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
     }
 
     private fun switchToggleeState() {
-        toggleeState = if (on) ToggleeState.TOGGLING_TO_OFF else ToggleeState.TOGGLING_TO_ON
+        state = if (on) ToggleeState.TOGGLING_TO_OFF else ToggleeState.TOGGLING_TO_ON
         switchTimer.reset()
+
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.SELECT_PING_SOUND, false)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         switchTimer.update(delta)
         if (switchTimer.isJustFinished()) {
-            toggleeState = if (toggleeState == ToggleeState.TOGGLING_TO_OFF) {
+            state = if (state == ToggleeState.TOGGLING_TO_OFF) {
                 spawnEntities(false)
                 ToggleeState.TOGGLED_OFF
             } else {
@@ -252,7 +256,7 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
             if (type != SWITCHAROO_ARROW_TYPE && switchTimer.isFinished()) switchToggleeState()
         }
         body.addFixture(bodyFixture)
-        debugShapes.add { bodyFixture}
+        debugShapes.add { bodyFixture }
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(ConstVals.PPM.toFloat()))
         body.addFixture(damagerFixture)
@@ -283,8 +287,11 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
             }
             size.scl(ConstVals.PPM.toFloat())
             sprite.setSize(size)
+
             sprite.setPosition(body.getPositionPoint(position), position)
+
             sprite.setFlip(false, type == SWITCHAROO_ARROW_TYPE && on)
+
             if (type == SWITCHAROO_ARROW_TYPE) {
                 switcharooArrowBlinkTimer.update(delta)
                 if (switcharooArrowBlinkTimer.isFinished()) {
@@ -293,6 +300,7 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
                     switcharooArrowBlinkTimer.reset()
                 }
             }
+
             sprite.setAlpha(if (type == SWITCHAROO_ARROW_TYPE) switcharooAlpha else 1f)
         }
         return spritesComponent
@@ -301,7 +309,7 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = {
             when (type) {
-                ENEMY_TYPE -> "${type}/${toggleeState.name}"
+                ENEMY_TYPE -> "${type}/${state.name}"
                 LEVER_TYPE -> "${type}/${if (on) "on" else "off"}"
                 SWITCHAROO_ARROW_TYPE -> SWITCHAROO_ARROW_TYPE
                 else -> throw IllegalStateException("Invalid type: $type")
@@ -350,4 +358,6 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
         )
         return FontsComponent(ConstKeys.DEFAULT pairTo font)
     }
+
+    override fun getEntityType() = EntityType.SPECIAL
 }

@@ -53,6 +53,7 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.max
@@ -119,9 +120,9 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         get() = !fireTimer.isFinished()
 
     private val targets = Array<Vector2>()
-    private lateinit var currentTarget: Vector2
-    private lateinit var returnSpot: Vector2
-    private lateinit var roomCenter: Vector2
+    private val currentTarget = Vector2()
+    private val returnSpot = Vector2()
+    private val roomCenter = Vector2()
 
     private var maxX = 0f
     private var minX = 0f
@@ -129,6 +130,10 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
     private var minY = 0f
 
     private var firesShot = 0
+
+    init {
+        (0 until TARGETS_COUNT).forEach { targets.add(Vector2()) }
+    }
 
     override fun init() {
         if (regions.isEmpty) {
@@ -155,19 +160,20 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
             val key = "${ConstKeys.SPOT}_$i"
             val targetObject = spawnProps.get(key, RectangleMapObject::class)!!
             val spot = targetObject.rectangle.getCenter()
-            if (targetObject.properties.get(ConstKeys.START, false, Boolean::class.java)) currentTarget = spot
-            targets.add(spot)
+            if (targetObject.properties.get(ConstKeys.START, false, Boolean::class.java)) currentTarget.set(spot)
+            targets[i - 1].set(spot)
             maxY = max(maxY, spot.y)
         }
 
-        roomCenter = spawnProps.get(ConstKeys.CENTER, RectangleMapObject::class)!!.rectangle.getCenter()
+        roomCenter.set(spawnProps.get(ConstKeys.CENTER, RectangleMapObject::class)!!.rectangle.getCenter())
 
         maxX = spawnProps.get("${ConstKeys.MAX}_${ConstKeys.X}", RectangleMapObject::class)!!.rectangle.getCenter().x
         minX = spawnProps.get("${ConstKeys.MIN}_${ConstKeys.X}", RectangleMapObject::class)!!.rectangle.getCenter().x
         minY = spawnProps.get("${ConstKeys.MIN}_${ConstKeys.Y}", RectangleMapObject::class)!!.rectangle.y
 
-        returnSpot =
+        returnSpot.set(
             spawnProps.get("${ConstKeys.RETURN}_${ConstKeys.SPOT}", RectangleMapObject::class)!!.rectangle.getCenter()
+        )
 
         firesShot = 0
 
@@ -253,11 +259,11 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
                                 loop.next()
                                 GameLogger.debug(TAG, "To state: ${loop.getCurrent()}")
 
-                                currentTarget = when {
+                                currentTarget.set(when {
                                     loop.getCurrent() == MechaDragonState.HOVER_TO_RANDOM_SPOT -> targets.random()
                                     loop.getCurrent() == MechaDragonState.HOVER_TO_ROOM_CENTER -> roomCenter
                                     else -> megaman().body.getCenter()
-                                }
+                                })
                                 currentTarget.y = currentTarget.y.coerceIn(minY, maxY)
                             }
                         }
@@ -271,7 +277,10 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
                     }
 
                     val trajectory = normalizedTrajectory(
-                        body.getCenter(), currentTarget, HOVER_SPEED * ConstVals.PPM, GameObjectPools.fetch(Vector2::class)
+                        body.getCenter(),
+                        currentTarget,
+                        HOVER_SPEED * ConstVals.PPM,
+                        GameObjectPools.fetch(Vector2::class)
                     )
                     body.physics.velocity.set(trajectory)
 
@@ -285,15 +294,16 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
                     if (stopPredicate) {
                         body.physics.velocity.setZero()
 
-                        GameLogger.debug(TAG, "From state: ${loop.getCurrent()}")
+                        GameLogger.debug(TAG, "from state: ${loop.getCurrent()}")
                         loop.next()
-                        GameLogger.debug(TAG, "To state: ${loop.getCurrent()}")
+                        GameLogger.debug(TAG, "to state: ${loop.getCurrent()}")
                     }
                 }
 
                 MechaDragonState.CHARGE -> {
                     if (!chargeFirstDelayTimer.isFinished()) {
                         body.physics.velocity.x = 0f
+
                         val megamanCenterY = megaman().body.getCenter().y
                         body.physics.velocity.y = (when {
                             megamanCenterY > body.getY() && megamanCenterY < body.getMaxY() -> 0f
@@ -345,81 +355,84 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         bodyFixture.addFixtureLabel(FixtureLabel.NO_PROJECTILE_COLLISION)
         body.addFixture(bodyFixture)
-        debugShapes.add { bodyFixture}
+        debugShapes.add { bodyFixture }
 
         val headDamagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.75f * ConstVals.PPM))
         headDamagerFixture.offsetFromBodyAttachment.y = 1.85f * ConstVals.PPM
         body.addFixture(headDamagerFixture)
-        debugShapes.add { headDamagerFixture}
+        debugShapes.add { headDamagerFixture }
 
-        val headDamageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameCircle().setRadius(0.75f * ConstVals.PPM))
+        val headDamageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(1.5f * ConstVals.PPM))
         headDamageableFixture.offsetFromBodyAttachment.y = 1.85f * ConstVals.PPM
         body.addFixture(headDamageableFixture)
-        debugShapes.add { headDamageableFixture}
+        debugShapes.add { headDamageableFixture }
 
         val neckDamagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.75f * ConstVals.PPM))
         neckDamagerFixture.offsetFromBodyAttachment.y = 1.35f * ConstVals.PPM
         body.addFixture(neckDamagerFixture)
-        debugShapes.add { neckDamagerFixture}
+        debugShapes.add { neckDamagerFixture }
 
-        val neckDamageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameCircle().setRadius(0.75f * ConstVals.PPM))
+        val neckDamageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(1.5f * ConstVals.PPM))
         neckDamageableFixture.offsetFromBodyAttachment.y = 1.35f * ConstVals.PPM
         body.addFixture(neckDamageableFixture)
-        debugShapes.add { neckDamageableFixture}
+        debugShapes.add { neckDamageableFixture }
 
         val bodyDamagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
         bodyDamagerFixture.offsetFromBodyAttachment.y = 0.5f * ConstVals.PPM
         body.addFixture(bodyDamagerFixture)
-        debugShapes.add { bodyDamagerFixture}
+        debugShapes.add { bodyDamagerFixture }
 
         val bodyDamageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle(body))
         bodyDamageableFixture.offsetFromBodyAttachment.y = 0.5f * ConstVals.PPM
         body.addFixture(bodyDamageableFixture)
-        debugShapes.add { bodyDamageableFixture}
+        debugShapes.add { bodyDamageableFixture }
 
         val tailDamagerFixture1 = Fixture(
             body, FixtureType.DAMAGER, GameRectangle().setSize(0.75f * ConstVals.PPM, 2f * ConstVals.PPM)
         )
         tailDamagerFixture1.offsetFromBodyAttachment.y = -1.25f * ConstVals.PPM
         body.addFixture(tailDamagerFixture1)
-        debugShapes.add { tailDamagerFixture1}
+        debugShapes.add { tailDamagerFixture1 }
 
         val tailDamageableFixture1 = Fixture(
             body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.75f * ConstVals.PPM, 2.25f * ConstVals.PPM)
         )
         tailDamageableFixture1.offsetFromBodyAttachment.y = -1.25f * ConstVals.PPM
         body.addFixture(tailDamageableFixture1)
-        debugShapes.add { tailDamageableFixture1}
+        debugShapes.add { tailDamageableFixture1 }
 
         val tailDamagerFixture2 =
             Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.25f * ConstVals.PPM))
         tailDamagerFixture2.offsetFromBodyAttachment.y = -2.5f * ConstVals.PPM
         body.addFixture(tailDamagerFixture2)
-        debugShapes.add { tailDamagerFixture2}
+        debugShapes.add { tailDamagerFixture2 }
 
         val tailDamageableFixture2 =
             Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.5f * ConstVals.PPM))
         tailDamageableFixture2.offsetFromBodyAttachment.y = -2.5f * ConstVals.PPM
         body.addFixture(tailDamageableFixture2)
-        debugShapes.add { tailDamageableFixture2}
+        debugShapes.add { tailDamageableFixture2 }
 
         val tailDamagerFixture3 = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.35f * ConstVals.PPM))
         tailDamagerFixture3.offsetFromBodyAttachment.y = -2.25f * ConstVals.PPM
         body.addFixture(tailDamagerFixture3)
-        debugShapes.add { tailDamagerFixture3}
+        debugShapes.add { tailDamagerFixture3 }
 
         val tailDamageableFixture3 =
             Fixture(body, FixtureType.DAMAGEABLE, GameCircle().setRadius(0.35f * ConstVals.PPM))
         tailDamageableFixture3.offsetFromBodyAttachment.y = -2.25f * ConstVals.PPM
         body.addFixture(tailDamageableFixture3)
-        debugShapes.add { tailDamageableFixture3}
+        debugShapes.add { tailDamageableFixture3 }
 
         gdxArrayOf(
-            tailDamageableFixture1, bodyDamageableFixture, neckDamageableFixture, headDamageableFixture
+            tailDamageableFixture1,
+            bodyDamageableFixture,
+            neckDamageableFixture,
+            headDamageableFixture
         ).forEach { t ->
             val bodyFixture1 = t.copy()
-            val width = (bodyFixture1.rawShape as GameRectangle).getWidth() * 0.9f
-            val height = (bodyFixture1.rawShape as GameRectangle).getHeight() * 0.9f
+            val width = bodyFixture1.getShape().getBoundingRectangle().getWidth() * 0.9f
+            val height = bodyFixture1.getShape().getBoundingRectangle().getHeight() * 0.9f
             bodyFixture1.rawShape.setWithProps(props("width" pairTo width, "height" pairTo height))
             bodyFixture1.setType(FixtureType.BODY)
             body.addFixture(bodyFixture1)

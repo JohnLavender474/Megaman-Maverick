@@ -220,6 +220,7 @@ object ConstKeys {
     const val DURATION = "duration"
     const val NAME = "name"
     const val KEY = "key"
+    const val ANIMATION_KEY = "${ANIMATION}_${KEY}"
     const val FACING = "facing"
     const val ROWS = "rows"
     const val COLUMNS = "columns"

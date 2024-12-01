@@ -97,7 +97,6 @@ fun CircleMapObject.toProps(): Properties {
 fun PolylineMapObject.toProps(): Properties {
     val props = Properties()
     props.put(ConstKeys.NAME, name)
-    // TODO: props.put(ConstKeys.LINES, getShape())
     props.put(ConstKeys.LINES, polyline.toGameLines())
     val objProps = properties.toProps()
     props.putAll(objProps)
@@ -110,8 +109,7 @@ fun MapProperties.toProps(): Properties {
     return props
 }
 
-fun Camera.toGameRectangle(): GameRectangle {
-    val out = GameRectangle() // TODO: ObjectPools.get(GameRectangle::class)
+fun Camera.toGameRectangle(out: GameRectangle = GameObjectPools.fetch(GameRectangle::class)): GameRectangle {
     out.setSize(viewportWidth, viewportHeight)
     out.setCenter(position.x, position.y)
     return out
@@ -140,22 +138,32 @@ fun AssetManager.getMusics(out: OrderedMap<MusicAsset, Music>): OrderedMap<Music
     return out
 }
 
-fun GamePolygon.splitIntoGameRectanglesBasedOnCenter(rectWidth: Float, rectHeight: Float): Matrix<GameRectangle> {
+fun GamePolygon.splitIntoGameRectanglesBasedOnCenter(
+    rectWidth: Float,
+    rectHeight: Float,
+    out: Matrix<GameRectangle>
+): Matrix<GameRectangle> {
     val bounds = getBoundingRectangle()
+
     val x = bounds.getX()
     val y = bounds.getY()
     val width = bounds.getWidth()
     val height = bounds.getHeight()
+
     val rows = (height / rectHeight).roundToInt()
     val columns = (width / rectWidth).roundToInt()
-    val matrix = Matrix<GameRectangle>(rows, columns)
-    for (row in 0 until rows) {
-        for (column in 0 until columns) {
-            val rectangle = GameRectangle(x + column * rectWidth, y + row * rectHeight, rectWidth, rectHeight)
-            if (contains(rectangle.getCenter())) matrix[column, row] = rectangle
-        }
+
+    out.clear()
+    out.rows = rows
+    out.columns = columns
+
+    for (row in 0 until rows) for (column in 0 until columns) {
+        val rectangle = GameObjectPools.fetch(GameRectangle::class)
+            .set(x + column * rectWidth, y + row * rectHeight, rectWidth, rectHeight)
+        if (contains(rectangle.getCenter())) out[column, row] = rectangle
     }
-    return matrix
+
+    return out
 }
 
 fun Direction.getOpposingPosition() = when (this) {
