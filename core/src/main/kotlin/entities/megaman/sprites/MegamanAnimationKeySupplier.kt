@@ -11,133 +11,50 @@ fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
 
     priorAnimKey != null && game.isProperty(ConstKeys.ROOM_TRANSITION, true) -> {
         var key = priorAnimKey
-        if (key.contains("Stand")) key = key.replace("Stand", "Run")
+        if (key.contains("stand")) key = key.replace("stand", "run")
         key
     }
 
-    !ready -> "Stand"
+    !ready -> "stand"
+    game.isCameraRotating() -> amendKey("jump")
+    else -> when {
+        isBehaviorActive(BehaviorType.JETPACKING) -> amendKey("jetpack")
+        isBehaviorActive(BehaviorType.RIDING_CART) -> {
+            when {
+                damaged -> "cartin_damaged"
+                isBehaviorActive(BehaviorType.JUMPING) || !body.isSensing(BodySense.FEET_ON_GROUND) ->
+                    amendKey("cartin_jump")
 
-    game.isCameraRotating() -> {
-        when {
-            shooting -> "JumpShoot"
-            fullyCharged -> "JumpCharging"
-            halfCharged -> "JumpHalfCharging"
-            else -> "Jump"
-        }
-    }
-
-    else -> {
-        when {
-            isBehaviorActive(BehaviorType.JETPACKING) -> if (shooting) "JetpackShoot" else "Jetpack"
-            isBehaviorActive(BehaviorType.RIDING_CART) -> {
-                when {
-                    damaged -> "Cartin_Damaged"
-                    isBehaviorActive(BehaviorType.JUMPING) || !body.isSensing(BodySense.FEET_ON_GROUND) ->
-                        when {
-                            shooting -> "Cartin_JumpShoot"
-                            fullyCharged -> "Cartin_JumpFullyCharged"
-                            halfCharged -> "Cartin_JumpHalfCharged"
-                            else -> "Cartin_Jump"
-                        }
-
-                    else ->
-                        when {
-                            shooting -> "Cartin_Shoot"
-                            fullyCharged -> "Cartin_FullyCharged"
-                            halfCharged -> "Cartin_HalfCharged"
-                            else -> "Cartin"
-                        }
-                }
-            }
-
-            damaged || stunned -> "Damaged"
-            isBehaviorActive(BehaviorType.CLIMBING) -> {
-                when {
-                    !body.isSensing(BodySense.HEAD_TOUCHING_LADDER) -> {
-                        when {
-                            shooting -> "ClimbShoot"
-                            fullyCharged -> "FinishClimbCharging"
-                            halfCharged -> "FinishClimbHalfCharging"
-                            else -> "FinishClimb"
-                        }
-                    }
-
-                    else -> {
-                        val movement =
-                            if (direction.isHorizontal()) body.physics.velocity.x else body.physics.velocity.y
-                        when {
-                            movement != 0f -> when {
-                                shooting -> "ClimbShoot"
-                                fullyCharged -> "ClimbCharging"
-                                halfCharged -> "ClimbHalfCharging"
-                                else -> "Climb"
-                            }
-
-                            else -> when {
-                                shooting -> "ClimbShoot"
-                                fullyCharged -> "StillClimbCharging"
-                                halfCharged -> "StillClimbHalfCharging"
-                                else -> "StillClimb"
-                            }
-                        }
-                    }
-                }
-            }
-
-            isBehaviorActive(BehaviorType.AIR_DASHING) -> when {
-                fullyCharged -> "AirDashCharging"
-                halfCharged -> "AirDashHalfCharging"
-                else -> "AirDash"
-            }
-
-            isBehaviorActive(BehaviorType.GROUND_SLIDING) -> when {
-                shooting -> "GroundSlideShoot"
-                fullyCharged -> "GroundSlideCharging"
-                halfCharged -> "GroundSlideHalfCharging"
-                else -> "GroundSlide"
-            }
-
-            isBehaviorActive(BehaviorType.WALL_SLIDING) -> when {
-                shooting -> "WallSlideShoot"
-                fullyCharged -> "WallSlideCharging"
-                halfCharged -> "WallSlideHalfCharging"
-                else -> "WallSlide"
-            }
-
-            isBehaviorActive(BehaviorType.SWIMMING) -> when {
-                shooting -> "SwimShoot"
-                fullyCharged -> "SwimCharging"
-                halfCharged -> "SwimHalfCharging"
-                else -> "Swim"
-            }
-
-            body.isSensing(BodySense.FEET_ON_GROUND) && running -> when {
-                shooting -> "RunShoot"
-                fullyCharged -> "RunCharging"
-                halfCharged -> "RunHalfCharging"
-                else -> "Run"
-            }
-
-            isBehaviorActive(BehaviorType.JUMPING) || !body.isSensing(BodySense.FEET_ON_GROUND) -> when {
-                shooting -> "JumpShoot"
-                fullyCharged -> "JumpCharging"
-                halfCharged -> "JumpHalfCharging"
-                else -> "Jump"
-            }
-
-            slipSliding -> when {
-                shooting -> "SlipSlideShoot"
-                fullyCharged -> "SlipSlideCharging"
-                halfCharged -> "SlipSlideHalfCharging"
-                else -> "SlipSlide"
-            }
-
-            else -> when {
-                shooting -> "StandShoot"
-                fullyCharged -> "StandCharging"
-                halfCharged -> "StandHalfCharging"
-                else -> "Stand"
+                else -> amendKey("cartin")
             }
         }
+
+        damaged || stunned -> "damaged"
+
+        isBehaviorActive(BehaviorType.CLIMBING) -> {
+            if (!body.isSensing(BodySense.HEAD_TOUCHING_LADDER)) amendKey("climb_finish")
+            else {
+                val movement = if (direction.isHorizontal()) body.physics.velocity.x else body.physics.velocity.y
+                if (movement != 0f) amendKey("climb") else amendKey("climb_still")
+            }
+        }
+
+        isBehaviorActive(BehaviorType.AIR_DASHING) -> amendKey("airdash")
+        isBehaviorActive(BehaviorType.GROUND_SLIDING) -> amendKey("groundslide")
+        isBehaviorActive(BehaviorType.WALL_SLIDING) -> amendKey("wallslide")
+        isBehaviorActive(BehaviorType.SWIMMING) -> amendKey("swim")
+        body.isSensing(BodySense.FEET_ON_GROUND) && running -> amendKey("run")
+        isBehaviorActive(BehaviorType.JUMPING) || !body.isSensing(BodySense.FEET_ON_GROUND) -> amendKey("jump")
+        slipSliding -> amendKey("slip")
+        else -> amendKey("stand")
     }
 }
+
+private fun Megaman.amendKey(baseKey: String) = when {
+    shooting -> "${baseKey}_shoot"
+    fullyCharged -> "${baseKey}_charge_full"
+    halfCharged -> "${baseKey}_charge_half"
+    else -> baseKey
+
+}
+

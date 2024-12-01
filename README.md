@@ -30,6 +30,10 @@ comprehensive listing of the credits for the artwork used in this game.
 
 ### Pixel Art
 
+#### Megaman
+
+- Megaman Redesigned - [SamuelX4](https://www.deviantart.com/samuelx4) 
+
 #### Title Screen
 
 - Megaman Title - [Mister Mike](https://www.spriters-resource.com/fullview/258/)

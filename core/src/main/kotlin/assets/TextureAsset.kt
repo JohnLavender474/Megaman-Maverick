@@ -27,6 +27,7 @@ enum class TextureAsset(src: String) : IAsset {
     BACKGROUNDS_6("Backgrounds6.txt"),
     UI_1("Ui1.txt"),
     FACES_1("Faces1.txt"),
+    MEGAMAN_V2_BUSTER("Megaman_v2_BUSTER.txt"),
     MEGAMAN_BUSTER("Megaman_BUSTER.txt"),
     MEGAMAN_MAVERICK_BUSTER("MegamanMaverick_BUSTER.txt"),
     MEGAMAN_FLAME_TOSS("Megaman_FLAME_TOSS.txt"),

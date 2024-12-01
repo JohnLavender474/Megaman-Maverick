@@ -25,7 +25,7 @@ class MegamanAnimations(private val game: MegamanMaverickGame) : Initializable,
     override fun init() {
         MegamanWeapon.entries.forEach { weapon ->
             val assetSource = when (weapon) {
-                MegamanWeapon.BUSTER -> TextureAsset.MEGAMAN_BUSTER.source
+                MegamanWeapon.BUSTER -> TextureAsset.MEGAMAN_V2_BUSTER.source
                 MegamanWeapon.RUSH_JETPACK -> TextureAsset.MEGAMAN_RUSH_JETPACK.source
                 // TODO: MegamanWeapon.FLAME_TOSS -> "" // TODO: TextureAsset.MEGAMAN_FLAME_TOSS.source
             }
