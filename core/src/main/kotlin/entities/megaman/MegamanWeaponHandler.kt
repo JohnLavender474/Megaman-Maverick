@@ -64,7 +64,7 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
                 else if (megaman.slipSliding) 0.65f
                 else 1f
 
-            var yOffset = ConstVals.PPM / 16f
+            var yOffset = 0f // ConstVals.PPM / 24f
 
             /*
             if (!megaman.body.isSensing(BodySense.FEET_ON_GROUND) &&
