@@ -16,7 +16,7 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.toObjectSet
-import com.mega.game.engine.common.interfaces.Updatable
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.IntPair
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -34,10 +34,7 @@ import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.pathfinding.PathfinderParams
 import com.mega.game.engine.pathfinding.PathfindingComponent
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.body.Body
-import com.mega.game.engine.world.body.BodyComponent
-import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.Fixture
+import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -46,7 +43,6 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.Bullet
@@ -54,11 +50,13 @@ import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.utils.DynamicBodyHeuristic
 import com.megaman.maverick.game.pathfinding.StandardPathfinderResultConsumer
-import com.megaman.maverick.game.utils.toGridCoordinate
+import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.utils.extensions.toGridCoordinate
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
-class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDirectionRotatable {
+class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDirectional {
 
     enum class BatStatus(val region: String) {
         HANGING("Hang"),
@@ -91,20 +89,23 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
             it as ChargedShotExplosion
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
         })
-    override var directionRotation: Direction
-        get() = body.cardinalRotation
+    override var direction: Direction
+        get() = body.direction
         set(value) {
-            body.cardinalRotation = value
+            body.direction = value
         }
 
     private val hangTimer = Timer(HANG_DURATION)
     private val releasePerchTimer = Timer(RELEASE_FROM_PERCH_DURATION)
     private val debugPathfindingTimer = Timer(DEBUG_PATHFINDING_DURATION)
+
     private val canMove: Boolean
         get() = !game.isCameraRotating()
+
     private lateinit var type: String
     private lateinit var status: BatStatus
     private lateinit var animations: ObjectMap<String, IAnimation>
+
     private var flyToAttackSpeed = DEFAULT_FLY_TO_ATTACK_SPEED
     private var flyToRetreatSpeed = DEFAULT_FLY_TO_RETREAT_SPEED
 
@@ -125,8 +126,8 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
         releasePerchTimer.reset()
         status = BatStatus.HANGING
 
-        val bounds = spawnProps.get(ConstKeys.BOUNDS) as GameRectangle
-        body.setTopCenterToPoint(bounds.getTopCenterPoint())
+        val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+        body.setTopCenterToPoint(bounds.getPositionPoint(Position.TOP_CENTER))
 
         type = spawnProps.getOrDefault(ConstKeys.TYPE, "", String::class)
 
@@ -141,7 +142,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
             Float::class
         )
 
-        directionRotation =
+        direction =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
 
         debugPathfindingTimer.reset()
@@ -161,13 +162,15 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
                     printDebugFilter = true
                     val coordinate = body.getCenter().toGridCoordinate()
                     val surroundingEntityTypes = OrderedMap<IntPair, ObjectSet<EntityType>>()
-                    for (i in -1..1) {
-                        for (j in -1..1) {
-                            val entityTypes = game.getWorldContainer()!!.getBodies(coordinate.x + i, coordinate.y + j)
-                                .map { body -> body.getEntity().getEntityType() }.toObjectSet()
-                            surroundingEntityTypes.put(IntPair(coordinate.x + i, coordinate.y + j), entityTypes)
-                        }
+                    for (i in -1..1) for (j in -1..1) {
+                        val entityTypes =
+                            game.getWorldContainer()!!
+                                .getBodies(coordinate.x + i, coordinate.y + j)
+                                .map { body -> body.getEntity().getEntityType() }
+                                .toObjectSet()
+                        surroundingEntityTypes.put(IntPair(coordinate.x + i, coordinate.y + j), entityTypes)
                     }
+
                     GameLogger.debug(TAG, "Current coordinate: $coordinate")
                     GameLogger.debug(TAG, "Surrounding coordinates: $surroundingEntityTypes")
                     debugPathfindingTimer.reset()
@@ -214,7 +217,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
         val headFixture = Fixture(
             body, FixtureType.HEAD, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.175f * ConstVals.PPM)
         )
-        headFixture.offsetFromBodyCenter.y = 0.375f * ConstVals.PPM
+        headFixture.offsetFromBodyAttachment.y = 0.375f * ConstVals.PPM
         body.addFixture(headFixture)
 
         val model = GameRectangle().setSize(0.75f * ConstVals.PPM)
@@ -239,22 +242,28 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
         body.addFixture(scannerFixture)
          */
 
-        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
-            shieldFixture.active = status == BatStatus.HANGING
-            damageableFixture.active = status != BatStatus.HANGING
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            shieldFixture.setActive(status == BatStatus.HANGING)
+            damageableFixture.setActive(status != BatStatus.HANGING)
 
-            if (!canMove) body.physics.velocity.setZero()
-            else if (status == BatStatus.FLYING_TO_RETREAT)
-                body.physics.velocity = when (directionRotation) {
-                    Direction.UP -> Vector2(0f, flyToRetreatSpeed)
-                    Direction.DOWN -> Vector2(0f, -flyToRetreatSpeed)
-                    Direction.LEFT -> Vector2(-flyToAttackSpeed, 0f)
-                    Direction.RIGHT -> Vector2(flyToRetreatSpeed, 0f)
-                }.scl(ConstVals.PPM.toFloat())
-            else if (status != BatStatus.FLYING_TO_ATTACK) body.physics.velocity.setZero()
-        })
+            when {
+                !canMove -> body.physics.velocity.setZero()
+                status == BatStatus.FLYING_TO_RETREAT -> {
+                    val velocity = GameObjectPools.fetch(Vector2::class)
+                    when (direction) {
+                        Direction.UP -> velocity.set(0f, flyToRetreatSpeed)
+                        Direction.DOWN -> velocity.set(0f, -flyToRetreatSpeed)
+                        Direction.LEFT -> velocity.set(-flyToAttackSpeed, 0f)
+                        Direction.RIGHT -> velocity.set(flyToRetreatSpeed, 0f)
+                    }.scl(ConstVals.PPM.toFloat())
+                    body.physics.velocity.set(velocity)
+                }
 
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
+                status != BatStatus.FLYING_TO_ATTACK -> body.physics.velocity.setZero()
+            }
+        }
+
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -263,11 +272,11 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setOriginCenter()
-            _sprite.rotation = megaman().directionRotation.rotation
-            _sprite.hidden = damageBlink
-            _sprite.setPosition(body.getCenter(), Position.CENTER)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setOriginCenter()
+            sprite.rotation = megaman().direction.rotation
+            sprite.hidden = damageBlink
+            sprite.setPosition(body.getCenter(), Position.CENTER)
         }
         return spritesComponent
     }
@@ -296,7 +305,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
             filter = { coordinate ->
                 val bodies = game.getWorldContainer()!!.getBodies(coordinate.x, coordinate.y)
                 var passable = true
-                var blockingBody: Body? = null
+                var blockingBody: IBody? = null
 
                 for (otherBody in bodies) if (otherBody.getEntity().getEntityType() == EntityType.BLOCK) {
                     passable = false
@@ -326,7 +335,6 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
                     body = body,
                     start = body.getCenter(),
                     speed = { flyToAttackSpeed * ConstVals.PPM },
-                    targetPursuer = body,
                     stopOnTargetReached = false,
                     onTargetNull = { directlyChaseMegaman() },
                     stopOnTargetNull = false,
@@ -339,8 +347,11 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
         return pathfindingComponent
     }
 
-    private fun directlyChaseMegaman() {
-        body.physics.velocity =
-            megaman().body.getCenter().sub(body.getCenter()).nor().scl(flyToAttackSpeed * ConstVals.PPM)
-    }
+    private fun directlyChaseMegaman() = body.physics.velocity.set(
+        megaman().body
+            .getCenter()
+            .sub(body.getCenter())
+            .nor()
+            .scl(flyToAttackSpeed * ConstVals.PPM)
+    )
 }

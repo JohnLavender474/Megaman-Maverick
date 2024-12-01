@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.decorations
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Intersector
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.animations.Animation
@@ -9,6 +10,7 @@ import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimator
 import com.mega.game.engine.audio.AudioComponent
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.isAny
@@ -44,6 +46,8 @@ import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.VelocityAlteration
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.utils.extensions.toGdxRectangle
 import com.megaman.maverick.game.world.body.*
 
 class ToxicWaterfall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
@@ -89,14 +93,18 @@ class ToxicWaterfall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
             if (timer.isFinished()) {
                 val entity = entry.key
 
-                val overlap = GameRectangle()
-                Intersector.intersectRectangles(body, entity.body, overlap)
+                val overlap = Rectangle()
+                Intersector.intersectRectangles(
+                    body.getBounds().toGdxRectangle(),
+                    entity.body.getBounds().toGdxRectangle(),
+                    overlap
+                )
 
                 val toxicSplash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SPLASH)!!
                 toxicSplash.spawn(
                     props(
                         ConstKeys.TYPE pairTo SplashType.TOXIC,
-                        ConstKeys.POSITION pairTo overlap.getTopCenterPoint(),
+                        ConstKeys.POSITION pairTo overlap.getPositionPoint(Position.TOP_CENTER),
                         ConstKeys.PRIORITY pairTo DrawingPriority(DrawingSection.FOREGROUND, 15),
                         ConstKeys.ALPHA pairTo SPLASH_ALPHA
                     )
@@ -151,18 +159,18 @@ class ToxicWaterfall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
     }
 
     private fun defineDrawables(bounds: GameRectangle) {
-        val sprites = OrderedMap<String, GameSprite>()
+        val sprites = OrderedMap<Any, GameSprite>()
         val animators = Array<GamePair<() -> GameSprite, IAnimator>>()
 
-        val rows = (bounds.height / ConstVals.PPM).toInt()
-        val columns = (bounds.width / (2f * ConstVals.PPM)).toInt()
+        val rows = (bounds.getHeight() / ConstVals.PPM).toInt()
+        val columns = (bounds.getWidth() / (2f * ConstVals.PPM)).toInt()
 
         for (x in 0 until columns) {
             for (y in 0 until rows) {
                 val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
                 sprite.setBounds(
-                    bounds.x + 2f * x * ConstVals.PPM,
-                    bounds.y + y * ConstVals.PPM,
+                    bounds.getX() + 2f * x * ConstVals.PPM,
+                    bounds.getY() + y * ConstVals.PPM,
                     2f * ConstVals.PPM,
                     ConstVals.PPM.toFloat()
                 )

@@ -10,6 +10,10 @@ import com.megaman.maverick.game.entities.MegaGameEntities
 
 abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEntity(game.engine), IMegaGameEntity {
 
+    companion object {
+        const val TAG = "MegaGameEntity"
+    }
+
     val runnablesOnSpawn = OrderedMap<String, () -> Unit>()
     val runnablesOnDestroy = OrderedMap<String, () -> Unit>()
 

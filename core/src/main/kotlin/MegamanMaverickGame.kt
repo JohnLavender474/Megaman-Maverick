@@ -4,6 +4,8 @@ import com.badlogic.gdx.Application.ApplicationType
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.assets.AssetManager
+import com.badlogic.gdx.audio.Music
+import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.Batch
@@ -45,10 +47,10 @@ import com.mega.game.engine.events.Event
 import com.mega.game.engine.events.EventsManager
 import com.mega.game.engine.events.IEventListener
 import com.mega.game.engine.motion.MotionSystem
-import com.mega.game.engine.pathfinding.AsyncPathfindingSystem
 import com.mega.game.engine.pathfinding.IPathfinder
 import com.mega.game.engine.pathfinding.IPathfinderFactory
 import com.mega.game.engine.pathfinding.PathfinderParams
+import com.mega.game.engine.pathfinding.SimplePathfindingSystem
 import com.mega.game.engine.pathfinding.heuristics.EuclideanHeuristic
 import com.mega.game.engine.pathfinding.heuristics.IHeuristic
 import com.mega.game.engine.points.PointsSystem
@@ -69,7 +71,7 @@ import com.megaman.maverick.game.controllers.MegaControllerPoller
 import com.megaman.maverick.game.controllers.ScreenController
 import com.megaman.maverick.game.controllers.loadButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
-import com.megaman.maverick.game.entities.blocks.PropellerPlatform
+import com.megaman.maverick.game.entities.blocks.FeetRiseSinkBlock
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
@@ -80,15 +82,15 @@ import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
 import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
-import com.megaman.maverick.game.screens.levels.map.layers.SpawnersLayerBuilder
 import com.megaman.maverick.game.screens.menus.*
 import com.megaman.maverick.game.screens.menus.bosses.BossIntroScreen
 import com.megaman.maverick.game.screens.menus.bosses.BossSelectScreen
 import com.megaman.maverick.game.screens.other.CreditsScreen
 import com.megaman.maverick.game.screens.other.SimpleEndLevelScreen
 import com.megaman.maverick.game.screens.other.SimpleInitGameScreen
-import com.megaman.maverick.game.utils.getMusics
-import com.megaman.maverick.game.utils.getSounds
+import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getMusics
+import com.megaman.maverick.game.utils.extensions.getSounds
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.collisions.MegaCollisionHandler
 import com.megaman.maverick.game.world.contacts.MegaContactListener
@@ -116,8 +118,7 @@ class MegamanMaverickGame(
 
     companion object {
         const val TAG = "MegamanMaverickGame"
-        val TAGS_TO_LOG: ObjectSet<String> =
-            objectSetOf(SpawnersLayerBuilder.TAG, PropellerPlatform.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(FeetRiseSinkBlock.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.TELEPORTER, FixtureType.TELEPORTER_LISTENER)
         }
@@ -183,7 +184,7 @@ class MegamanMaverickGame(
     fun getDrawables() =
         properties.get(ConstKeys.DRAWABLES) as ObjectMap<DrawingSection, PriorityQueue<IComparableDrawable<Batch>>>
 
-    fun getShapes() = properties.get(ConstKeys.SHAPES) as PriorityQueue<IDrawableShape>
+    fun getShapes() = properties.get(ConstKeys.SHAPES) as Array<IDrawableShape>
 
     fun getSystems(): ObjectMap<String, GameSystem> =
         properties.get(ConstKeys.SYSTEMS) as ObjectMap<String, GameSystem>
@@ -258,7 +259,9 @@ class MegamanMaverickGame(
 
         debugFPSText = MegaFontHandle({ "FPS: ${Gdx.graphics.framesPerSecond}" })
 
-        audioMan = MegaAudioManager(assMan.getSounds(), assMan.getMusics())
+        val sounds = OrderedMap<SoundAsset, Sound>()
+        val music = OrderedMap<MusicAsset, Music>()
+        audioMan = MegaAudioManager(assMan.getSounds(sounds), assMan.getMusics(music))
         audioMan.musicVolume = params.musicVolume
         audioMan.soundVolume = params.soundVolume
 
@@ -350,6 +353,8 @@ class MegamanMaverickGame(
             debugFPSText.draw(batch)
             batch.end()
         }
+
+        GameObjectPools.performNextReclaim()
     }
 
     override fun resize(width: Int, height: Int) {
@@ -433,7 +438,7 @@ class MegamanMaverickGame(
         DrawingSection.entries.forEach { section -> drawables.put(section, PriorityQueue()) }
         properties.put(ConstKeys.DRAWABLES, drawables)
 
-        val shapes = PriorityQueue<IDrawableShape> { s1, s2 -> s1.shapeType.ordinal - s2.shapeType.ordinal }
+        val shapes = Array<IDrawableShape>()
         properties.put(ConstKeys.SHAPES, shapes)
 
         val engine = GameEngine(
@@ -488,7 +493,7 @@ class MegamanMaverickGame(
                     }
                 }),
                 MotionSystem(),
-                AsyncPathfindingSystem(
+                SimplePathfindingSystem(
                     factory = object : IPathfinderFactory {
                         override fun getPathfinder(params: PathfinderParams): IPathfinder {
                             val tiledMapResult = getTiledMapLoadResult()

@@ -2,7 +2,7 @@ package com.megaman.maverick.game.world.body
 
 import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.entities.contracts.IBodyEntity
-import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.IBody
 import com.mega.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.blocks.Block
@@ -14,7 +14,7 @@ import com.megaman.maverick.game.entities.special.Water
 import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.VelocityAlterator
 
-fun IFixture.getBody(): Body = (getEntity() as IBodyEntity).body
+fun IFixture.getBody(): IBody = (getEntity() as IBodyEntity).body
 
 fun IFixture.setEntity(entity: IBodyEntity): IFixture {
     properties.put(ConstKeys.ENTITY, entity)

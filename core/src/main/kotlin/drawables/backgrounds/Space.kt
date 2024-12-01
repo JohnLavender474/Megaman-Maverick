@@ -4,11 +4,11 @@ import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.common.extensions.getTextureRegion
-import com.mega.game.engine.common.shapes.getCenter
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.utils.extensions.getCenter
 
 class Space(assMan: AssetManager, it: RectangleMapObject) : AnimatedBackground(
     TAG,

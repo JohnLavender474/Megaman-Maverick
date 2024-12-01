@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.toObjectSet
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullablesComponent
@@ -20,7 +21,7 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
-import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.IChildEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
@@ -35,17 +36,18 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.blocks.Block
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
 class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBodyEntity, ISpritesEntity,
-    ICullableEntity, IDirectionRotatable {
+    ICullableEntity, IDirectional {
 
     companion object {
         const val TAG = "Spike"
@@ -54,12 +56,12 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
         private var atlas: TextureAtlas? = null
     }
 
-    override var directionRotation: Direction
-        get() = body.cardinalRotation
+    override var direction: Direction
+        get() = body.direction
         set(value) {
-            body.cardinalRotation = value
+            body.direction = value
         }
-    override var parent: GameEntity? = null
+    override var parent: IGameEntity? = null
 
     private val offset = Vector2()
     private var block: Block? = null
@@ -83,7 +85,7 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
 
         if (!gravityOn) parent?.let { if (it is IBodyEntity) offset.set(body.getCenter().sub(it.body.getCenter())) }
 
-        directionRotation =
+        direction =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
 
         val regionKey = spawnProps.get(ConstKeys.REGION, String::class)!!
@@ -126,13 +128,13 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
         body.physics.applyFrictionY = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyCenter.y = -0.5f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -0.5f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.rawShape.color = Color.GREEN
-        debugShapes.add { feetFixture.getShape() }
+        feetFixture.drawingColor = Color.GREEN
+        debugShapes.add { feetFixture}
 
         val deathFixture = Fixture(body, FixtureType.DEATH, GameRectangle(body))
         deathFixture.putProperty(ConstKeys.INSTANT, false)
@@ -145,13 +147,15 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
             block!!.body.setCenter(body.getCenter())
             block!!.body.physics.collisionOn = body.isSensing(BodySense.FEET_ON_GROUND)
 
-            val gravityValue = if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
-            body.physics.gravity = when (directionRotation) {
-                Direction.UP -> Vector2(0f, -gravityValue)
-                Direction.DOWN -> Vector2(0f, gravityValue)
-                Direction.LEFT -> Vector2(gravityValue, 0f)
-                Direction.RIGHT -> Vector2(-gravityValue, 0f)
+            val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
+            val gravityVec = GameObjectPools.fetch(Vector2::class)
+            when (direction) {
+                Direction.UP -> gravityVec.set(0f, -gravity)
+                Direction.DOWN -> gravityVec.set(0f, gravity)
+                Direction.LEFT -> gravityVec.set(gravity, 0f)
+                Direction.RIGHT -> gravityVec.set(-gravity, 0f)
             }.scl(ConstVals.PPM.toFloat())
+            body.physics.gravity.set(gravityVec)
 
             parent?.let { p ->
                 if (!body.physics.gravityOn && p is IBodyEntity) {
@@ -177,7 +181,7 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
             sprite.setRegion(region)
             sprite.setCenter(body.getCenter())
             sprite.setOriginCenter()
-            sprite.rotation = directionRotation.rotation
+            sprite.rotation = direction.rotation
         }
         return spritesComponent
     }

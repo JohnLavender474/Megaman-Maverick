@@ -1138,8 +1138,8 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="5" name="player">
-  <object id="426" name="0" x="11424" y="2496" width="32" height="32">
+ <objectgroup id="5" name="temp">
+  <object id="426" name="0" x="15712" y="1632" width="32" height="32">
    <properties>
     <property name="apply_scalar_to_children" type="bool" value="true"/>
     <property name="gravity_scalar" type="float" value="0.25"/>
@@ -1147,7 +1147,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="4" name="temp">
+ <objectgroup id="4" name="player">
   <object id="28" name="0" x="96" y="3040" width="32" height="32">
    <properties>
     <property name="apply_scalar_to_children" type="bool" value="true"/>

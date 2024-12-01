@@ -34,6 +34,8 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.getMotionValue
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 
@@ -105,18 +107,18 @@ class SwingingAxe(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         sprite.setSize(8f * ConstVals.PPM)
         sprite.setRegion(textureRegion!!)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { delta, _sprite ->
+        spritesComponent.putUpdateFunction { delta, _ ->
             val center = pendulum.anchor
-            _sprite.setCenter(center)
-            _sprite.setOriginCenter()
-            _sprite.setFlip(false, true)
+            sprite.setCenter(center)
+            sprite.setOriginCenter()
+            sprite.setFlip(false, true)
             if (DEBUG_SWING_ROTATION) {
                 debugSwingRotationTimer.update(delta)
                 if (debugSwingRotationTimer.isFinished()) {
-                    _sprite.rotation -= 1f
+                    sprite.rotation -= 1f
                     debugSwingRotationTimer.reset()
                 }
-            } else _sprite.rotation = MathUtils.radiansToDegrees * pendulum.angle * -1
+            } else sprite.rotation = MathUtils.radiansToDegrees * pendulum.angle * -1
         }
         return spritesComponent
     }
@@ -133,23 +135,22 @@ class SwingingAxe(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         )
 
         addDebugShapeSupplier {
-            val line = GameLine(pendulum.anchor, pendulum.getMotionValue())
-            line.color = Color.DARK_GRAY
-            line.shapeType = ShapeRenderer.ShapeType.Line
-            line.thickness = ConstVals.PPM / 8f
+            val line = GameLine(pendulum.anchor, pendulum.getMotionValue()!!)
+            line.drawingColor = Color.DARK_GRAY
+            line.drawingShapeType = ShapeRenderer.ShapeType.Line
             line
         }
 
         val circle1 = GameCircle()
         circle1.setRadius(ConstVals.PPM / 4f)
-        circle1.shapeType = ShapeRenderer.ShapeType.Filled
-        circle1.color = Color.BROWN
+        circle1.drawingShapeType = ShapeRenderer.ShapeType.Filled
+        circle1.drawingColor = Color.BROWN
         addDebugShapeSupplier { circle1.setCenter(pendulum.anchor) }
 
         val circle2 = GameCircle()
         circle2.setRadius(ConstVals.PPM / 4f)
-        circle2.shapeType = ShapeRenderer.ShapeType.Line
-        circle2.color = Color.DARK_GRAY
-        addDebugShapeSupplier { circle2.setCenter(pendulum.getMotionValue()) }
+        circle2.drawingShapeType = ShapeRenderer.ShapeType.Line
+        circle2.drawingColor = Color.DARK_GRAY
+        addDebugShapeSupplier { circle2.setCenter(pendulum.getMotionValue()!!) }
     }
 }

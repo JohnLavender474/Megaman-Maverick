@@ -1,15 +1,17 @@
 package com.megaman.maverick.game.pathfinding
 
 import com.badlogic.gdx.math.MathUtils
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.shapes.GameLine
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.pathfinding.PathfinderResult
 import com.mega.game.engine.world.body.Body
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.utils.toWorldCoordinate
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.toWorldCoordinate
+import com.megaman.maverick.game.world.body.getBounds
 
 object StandardPathfinderResultConsumer {
 
@@ -20,7 +22,7 @@ object StandardPathfinderResultConsumer {
         body: Body,
         start: Vector2,
         speed: () -> Float,
-        targetPursuer: GameRectangle = body,
+        targetPursuer: GameRectangle = body.getBounds(),
         onTargetReached: () -> Unit = {},
         stopOnTargetReached: Boolean = true,
         onTargetNull: () -> Unit = {},
@@ -28,7 +30,7 @@ object StandardPathfinderResultConsumer {
         preProcess: (() -> Unit)? = null,
         trajectoryConsumer: (Vector2) -> Unit = { body.physics.velocity.set(it) },
         postProcess: (() -> Unit)? = null,
-        shapes: MutableCollection<IDrawableShape>? = null
+        shapes: Array<IDrawableShape>? = null
     ): Boolean {
         preProcess?.invoke()
 
@@ -52,7 +54,7 @@ object StandardPathfinderResultConsumer {
             }
         }
 
-        val target: Vector2? = worldPath.firstOrNull { !targetPursuer.overlaps(it as Rectangle) }?.getCenter()
+        val target: Vector2? = worldPath.firstOrNull { !targetPursuer.overlaps(it) }?.getCenter()
         if (target == null) {
             if (stopOnTargetNull) body.physics.velocity.setZero()
             onTargetNull.invoke()

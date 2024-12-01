@@ -42,9 +42,12 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
 
 class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IEventListener, IAnimatedEntity, IMotionEntity {
@@ -90,7 +93,7 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IEventListen
         body.setCenter(spawn)
 
         lightSource = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.LIGHT_SOURCE)!! as LightSource
-        lightSource!!.spawn(props(ConstKeys.BOUNDS pairTo body))
+        lightSource!!.spawn(pooledProps(ConstKeys.BOUNDS pairTo body))
 
         light = spawnProps.getOrDefault(ConstKeys.LIGHT, false, Boolean::class)
         keys = spawnProps.get(ConstKeys.KEYS, String::class)!!
@@ -157,9 +160,9 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IEventListen
         val sprite = GameSprite()
         sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.hidden = damageBlink
-            _sprite.setCenter(body.getCenter())
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.hidden = damageBlink
+            sprite.setCenter(body.getCenter())
         }
         return spritesComponent
     }

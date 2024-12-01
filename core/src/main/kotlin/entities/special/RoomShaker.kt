@@ -131,7 +131,7 @@ class RoomShaker(game: MegamanMaverickGame) : MegaGameEntity(game), IEventListen
                 )
             )
 
-            sound?.let { requestToPlaySound(sound, false) }
+            sound?.let { requestToPlaySound(it, false) }
 
             delayTimer.reset()
         }

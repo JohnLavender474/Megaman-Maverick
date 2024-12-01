@@ -14,8 +14,6 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.interfaces.IFaceable
-import com.mega.game.engine.common.interfaces.Updatable
-
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -49,10 +47,9 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodySense
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.isSensing
+import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
@@ -112,7 +109,7 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         body.setCenter(spawn)
         elecnLoop.reset()
         elecnTimer.reset()
-        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -142,7 +139,7 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         body.setSize(0.85f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body }
+        debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(
             body,
@@ -165,27 +162,31 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
+        body.preProcess.put(ConstKeys.DEFAULT) {
             if (isFacing(Facing.LEFT)) {
                 sideFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
-                sideFixture.offsetFromBodyCenter.x = -0.5f * ConstVals.PPM
+                sideFixture.offsetFromBodyAttachment.x = -0.5f * ConstVals.PPM
             } else {
                 sideFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
-                sideFixture.offsetFromBodyCenter.x = 0.5f * ConstVals.PPM
+                sideFixture.offsetFromBodyAttachment.x = 0.5f * ConstVals.PPM
             }
 
-            body.physics.velocity = if (elecnLoop.getCurrent() == ElecnState.SHOCKING) Vector2()
-            else {
-                val x = X_VEL * ConstVals.PPM * facing.value
-                val y = Y_VEL * ConstVals.PPM * (if (zigzagUp) 1 else -1)
-                Vector2(x, y)
+            val velocity = GameObjectPools.fetch(Vector2::class)
+            when (ElecnState.SHOCKING) {
+                elecnLoop.getCurrent() -> velocity.setZero()
+                else -> {
+                    val x = X_VEL * ConstVals.PPM * facing.value
+                    val y = Y_VEL * ConstVals.PPM * (if (zigzagUp) 1 else -1)
+                    velocity.set(x, y)
+                }
             }
-        })
+            body.physics.velocity.set(velocity)
+        }
 
-        body.postProcess.put(ConstKeys.DEFAULT, Updatable {
+        body.postProcess.put(ConstKeys.DEFAULT) {
             if (isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) facing = Facing.RIGHT
             else if (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)) facing = Facing.LEFT
-        })
+        }
 
         return BodyComponentCreator.create(this, body)
     }
@@ -194,10 +195,10 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.hidden = damageBlink
-            _sprite.setCenter(body.getCenter())
-            _sprite.setFlip(isFacing(Facing.LEFT), false)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.hidden = damageBlink
+            sprite.setCenter(body.getCenter())
+            sprite.setFlip(isFacing(Facing.LEFT), false)
         }
         return spritesComponent
     }
@@ -221,7 +222,7 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     private fun shock() {
         requestToPlaySound(SoundAsset.MM3_ELECTRIC_PULSE_SOUND, false)
-        Position.values().forEach {
+        Position.entries.forEach {
             if (it == Position.CENTER) return@forEach
 
             val xVel = ConstVals.PPM * (if (it.x == 1) 0f else if (it.x > 1) SHOCK_VEL else -SHOCK_VEL)
@@ -230,7 +231,9 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             val shock = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.ELECTRIC_BALL)!!
             shock.spawn(
                 props(
-                    ConstKeys.POSITION pairTo body.getTopCenterPoint(), ConstKeys.X pairTo xVel, ConstKeys.Y pairTo yVel
+                    ConstKeys.POSITION pairTo body.getPositionPoint(Position.TOP_CENTER),
+                    ConstKeys.X pairTo xVel,
+                    ConstKeys.Y pairTo yVel
                 )
             )
         }

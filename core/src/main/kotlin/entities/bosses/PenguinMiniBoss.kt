@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.bosses
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -50,8 +49,11 @@ import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.projectiles.Snowball
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getPositionPoint
 import kotlin.reflect.KClass
 
 class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity, IAnimatedEntity, IFaceable {
@@ -102,11 +104,16 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
     override fun onSpawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.MINI, true)
         super.onSpawn(spawnProps)
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+            .getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
+
         penguinMiniBossState = PenguinMiniBossState.IDLE
+
         val left = spawnProps.getOrDefault(ConstKeys.LEFT, true, Boolean::class)
         facing = if (left) Facing.LEFT else Facing.RIGHT
+
         snowballsLaunched = 0
         launchPenguins = false
     }
@@ -182,8 +189,8 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
 
     private fun shootSnowball() {
         val snowball = EntityFactories.fetch(EntityType.PROJECTILE, "Snowball")!! as Snowball
-        val spawn = body.getBottomCenterPoint().add(0f, 0.15f * ConstVals.PPM)
-        val impulseX = (megaman().body.x - body.x) * 1.5f
+        val spawn = body.getPositionPoint(Position.BOTTOM_CENTER).add(0f, 0.15f * ConstVals.PPM)
+        val impulseX = (megaman().body.getX() - body.getX()) * 1.5f
         val impulseY = SNOWBALL_IMPULSE_Y * ConstVals.PPM
         val trajectory = Vector2(impulseX, impulseY)
         val gravity = Vector2(0f, SNOWBALL_GRAVITY * ConstVals.PPM)
@@ -201,7 +208,7 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
 
     private fun launchBabyPenguin() {
         val penguin = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.BABY_PENGUIN)!! as BabyPenguin
-        val spawn = body.getBottomCenterPoint().add(0f, 0.15f * ConstVals.PPM)
+        val spawn = body.getPositionPoint(Position.BOTTOM_CENTER).add(0f, 0.15f * ConstVals.PPM)
         penguin.spawn(
             props(
                 ConstKeys.POSITION pairTo spawn,
@@ -214,33 +221,28 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(2.5f * ConstVals.PPM, 3f * ConstVals.PPM)
-        body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
-        bodyFixture.rawShape.color = Color.GRAY
-        debugShapes.add { bodyFixture.getShape() }
+        debugShapes.add { bodyFixture}
 
         val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(2f * ConstVals.PPM))
-        shieldFixture.offsetFromBodyCenter.y = -0.35f * ConstVals.PPM
+        shieldFixture.offsetFromBodyAttachment.y = -0.35f * ConstVals.PPM
         body.addFixture(shieldFixture)
-        shieldFixture.rawShape.color = Color.BLUE
-        debugShapes.add { shieldFixture.getShape() }
+        debugShapes.add { shieldFixture}
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(2f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        damagerFixture.rawShape.color = Color.RED
-        debugShapes.add { damagerFixture.getShape() }
+        debugShapes.add { damagerFixture}
 
         val damageableFixture =
             Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.35f * ConstVals.PPM))
-        damageableFixture.offsetFromBodyCenter.y = 1.25f * ConstVals.PPM
+        damageableFixture.offsetFromBodyAttachment.y = 1.25f * ConstVals.PPM
         body.addFixture(damageableFixture)
-        damageableFixture.rawShape.color = Color.PURPLE
-        debugShapes.add { damageableFixture.getShape() }
+        debugShapes.add { damageableFixture}
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
@@ -252,7 +254,7 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
         sprite.setSize(2.5f * ConstVals.PPM, 3f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            _sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             _sprite.hidden = damageBlink
         }
         return spritesComponent

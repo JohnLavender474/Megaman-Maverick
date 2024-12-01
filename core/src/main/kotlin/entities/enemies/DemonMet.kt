@@ -10,6 +10,7 @@ import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.enums.Facing
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
@@ -18,7 +19,6 @@ import com.mega.game.engine.common.objects.SmoothOscillationTimer
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.common.shapes.getCenter
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -34,7 +34,6 @@ import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -52,9 +51,11 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodyFixtureDef
-import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.world.body.*
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -88,10 +89,18 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
     private val standTimer = Timer(STAND_DUR)
     private val fireTimer = Timer(FIRE_DELAY)
+
     private val alphaOscillation = SmoothOscillationTimer(ALPHA_OSCILLATION_DUR, 0.5f, 0.75f)
     private val xOscillation = SmoothOscillationTimer(X_OSCILLATION_DUR, -1f, 1f)
+
     private lateinit var state: DemonMetState
-    private lateinit var target: Vector2
+
+    private val target = Vector2()
+    private val targetsPQ = PriorityQueue { o1: Vector2, o2: Vector2 ->
+        val d1 = o1.dst2(megaman().body.getCenter())
+        val d2 = o2.dst2(megaman().body.getCenter())
+        d1.compareTo(d2)
+    }
     private var targetReached = false
     private var exploded = false
 
@@ -110,24 +119,19 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
 
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
-
-        val targets = PriorityQueue { o1: Vector2, o2: Vector2 ->
-            val d1 = o1.dst2(megaman().body.getCenter())
-            val d2 = o2.dst2(megaman().body.getCenter())
-            d1.compareTo(d2)
-        }
 
         spawnProps.forEach { key, value ->
             if (key.toString().contains(ConstKeys.TARGET) && value is RectangleMapObject)
-                targets.add(value.rectangle.getCenter())
+                targetsPQ.add(value.rectangle.getCenter())
         }
-        target = targets.poll()
+        target.set(targetsPQ.poll())
+        targetsPQ.clear()
         targetReached = false
 
         state = DemonMetState.STAND
-        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
         standTimer.reset()
         fireTimer.reset()
@@ -148,7 +152,7 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
     private fun explode() {
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.MAGMA_EXPLOSION)!!
-        explosion.spawn(props(ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo body.getCenter()))
+        explosion.spawn(pooledProps(ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo body.getCenter()))
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -164,18 +168,18 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
             when (state) {
                 DemonMetState.STAND -> {
-                    facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+                    facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
                     standTimer.update(delta)
                     if (standTimer.isFinished()) state = DemonMetState.FLY
                 }
 
                 DemonMetState.FLY -> {
-                    facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+                    facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
                     if (!targetReached && body.getCenter().epsilonEquals(target, 0.1f * ConstVals.PPM)) {
                         targetReached = true
-                        target = body.getCenter()
+                        target.set(body.getCenter())
                     }
 
                     if (targetReached) {
@@ -183,7 +187,11 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
                         xOscillation.update(delta)
                         body.physics.velocity.x = xOscillation.getValue() * X_OSCILLATION * ConstVals.PPM
                     } else {
-                        val trajectory = target.cpy().sub(body.getCenter()).nor().scl(FLY_SPEED * ConstVals.PPM)
+                        val trajectory = GameObjectPools.fetch(Vector2::class)
+                            .set(target)
+                            .sub(body.getCenter())
+                            .nor()
+                            .scl(FLY_SPEED * ConstVals.PPM)
                         body.physics.velocity.set(trajectory)
                     }
                 }
@@ -203,7 +211,7 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
         body.preProcess.put(ConstKeys.DEFAULT) {
-            body.fixtures.forEach { (it.second as Fixture).active = state != DemonMetState.ANGEL }
+            body.fixtures.forEach { it.second.setActive(state != DemonMetState.ANGEL) }
         }
         val debugShapes = Array<() -> IDrawableShape?>()
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -216,15 +224,15 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 4))
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { delta, _sprite ->
-            _sprite.setCenter(body.getCenter())
-            _sprite.setFlip(isFacing(Facing.RIGHT), false)
-            _sprite.hidden = damageBlink
+        spritesComponent.putUpdateFunction { delta, _ ->
+            sprite.setCenter(body.getCenter())
+            sprite.setFlip(isFacing(Facing.RIGHT), false)
+            sprite.hidden = damageBlink
             val alpha = if (state == DemonMetState.ANGEL) {
                 alphaOscillation.update(delta)
                 alphaOscillation.getValue()
             } else 1f
-            _sprite.setAlpha(alpha)
+            sprite.setAlpha(alpha)
         }
         return spritesComponent
     }
@@ -248,7 +256,8 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
                 2 -> impulse.rotateDeg(FIRE_PELLET_ANGLE_OFFSET)
             }
             val firePellet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.FIRE_PELLET)!!
-            val spawn = body.getBottomCenterPoint().add(0.1f * ConstVals.PPM * facing.value, 0.1f * ConstVals.PPM)
+            val spawn = body.getPositionPoint(Position.BOTTOM_CENTER)
+                .add(0.1f * ConstVals.PPM * facing.value, 0.1f * ConstVals.PPM)
             firePellet.spawn(
                 props(
                     ConstKeys.POSITION pairTo spawn,
@@ -256,6 +265,7 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
                 )
             )
         }
+
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.WHIP_SOUND, false)
     }
 }

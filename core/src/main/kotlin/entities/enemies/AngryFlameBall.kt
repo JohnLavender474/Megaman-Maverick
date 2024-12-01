@@ -38,8 +38,10 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
 
 class AngryFlameBall(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
@@ -86,7 +88,7 @@ class AngryFlameBall(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+            facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         }
     }
 
@@ -106,15 +108,16 @@ class AngryFlameBall(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameCircle().setRadius(0.5f * ConstVals.PPM))
         body.addFixture(damageableFixture)
 
-        body.preProcess.put(ConstKeys.DEFAULT) { delta ->
-            body.physics.gravityOn = body.y > spawnY
-            if (body.physics.velocity.y < 0f && body.y < spawnY) {
-                body.y = spawnY
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            body.physics.gravityOn = body.getY() > spawnY
+            if (body.physics.velocity.y < 0f && body.getY() < spawnY) {
+                body.setY(spawnY)
                 bounceDelayTimer.reset()
                 body.physics.velocity.setZero()
             }
 
-            bounceDelayTimer.update(delta)
+            bounceDelayTimer.update(ConstVals.FIXED_TIME_STEP)
+
             if (!bounceDelayTimer.isFinished()) body.physics.velocity.setZero()
             else if (bounceDelayTimer.isJustFinished()) {
                 requestToPlaySound(SoundAsset.MARIO_FIREBALL_SOUND, false)
@@ -124,7 +127,7 @@ class AngryFlameBall(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
 
         addComponent(
             DrawableShapesComponent(
-                debugShapeSuppliers = gdxArrayOf({ bodyFixture.getShape() }),
+                debugShapeSuppliers = gdxArrayOf({ bodyFixture}),
                 debug = true
             )
         )
@@ -136,10 +139,10 @@ class AngryFlameBall(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         val sprite = GameSprite()
         sprite.setSize(1.15f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setCenter(body.getCenter())
-            _sprite.setFlip(isFacing(Facing.RIGHT), false)
-            _sprite.hidden = damageBlink
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setCenter(body.getCenter())
+            sprite.setFlip(isFacing(Facing.RIGHT), false)
+            sprite.hidden = damageBlink
         }
         return spritesComponent
     }

@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.bosses.sigmarat
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -29,6 +28,7 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.IChildEntity
 import com.mega.game.engine.motion.RotatingLine
@@ -51,10 +51,9 @@ import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.entities.factories.impl.HazardsFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.SigmaRatElectricBall
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodyLabel
-import com.megaman.maverick.game.world.body.FixtureLabel
-import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getMotionValue
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntity, IAnimatedEntity {
@@ -77,7 +76,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
     enum class SigmaRatClawState { ROTATE, SHOCK, LAUNCH, TITTY_GRAB }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>()
-    override var parent: GameEntity? = null
+    override var parent: IGameEntity? = null
 
     lateinit var clawState: SigmaRatClawState
         private set
@@ -116,13 +115,14 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         val speed = spawnProps.get(ConstKeys.SPEED, Float::class)!!
         rotatingLine = RotatingLine(spawn, ConstVals.PPM.toFloat(), speed * ConstVals.PPM, DEGREES_ON_RESET)
-        body.setCenter(rotatingLine.getMotionValue())
+        val center = rotatingLine.getMotionValue()!!
+        body.setCenter(center.x, center.y)
 
         block = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.STANDARD)!! as Block
         block!!.spawn(
             props(
                 ConstKeys.BOUNDS pairTo GameRectangle().setSize(1.35f * ConstVals.PPM, 0.1f * ConstVals.PPM)
-                    .setTopCenterToPoint(body.getTopCenterPoint()),
+                    .setTopCenterToPoint(body.getPositionPoint(Position.TOP_CENTER)),
                 ConstKeys.BODY_LABELS pairTo objectSetOf(BodyLabel.COLLIDE_DOWN_ONLY),
                 ConstKeys.FIXTURE_LABELS pairTo objectSetOf(
                     FixtureLabel.NO_PROJECTILE_COLLISION, FixtureLabel.NO_SIDE_TOUCHIE
@@ -136,7 +136,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
 
     override fun onDestroy() {
         super.onDestroy()
-        block?.let { it.destroy() }
+        block?.destroy()
         block = null
     }
 
@@ -199,7 +199,8 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
             when (clawState) {
                 SigmaRatClawState.ROTATE -> {
                     rotatingLine.update(delta)
-                    body.setCenter(rotatingLine.getMotionValue())
+                    val center = rotatingLine.getMotionValue()!!
+                    body.setCenter(center.x, center.y)
                 }
 
                 SigmaRatClawState.SHOCK -> {
@@ -218,19 +219,27 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
                     launchPauseTimer.update(delta)
                     if (!launchPauseTimer.isFinished()) body.physics.velocity.setZero()
                     else if (reachedLaunchTarget) {
-                        val trajectory =
-                            returnTarget.cpy().sub(body.getCenter()).nor().scl(RETURN_SPEED * ConstVals.PPM)
-                        body.physics.velocity = trajectory
+                        val trajectory = GameObjectPools.fetch(Vector2::class)
+                            .set(returnTarget)
+                            .sub(body.getCenter())
+                            .nor()
+                            .scl(RETURN_SPEED * ConstVals.PPM)
+                        body.physics.velocity.set(trajectory)
+
                         if (body.getCenter().epsilonEquals(returnTarget, EPSILON * ConstVals.PPM)) {
                             clawState = SigmaRatClawState.ROTATE
                             body.physics.velocity.setZero()
                         }
                     } else {
-                        val trajectory =
-                            launchTarget.cpy().sub(body.getCenter()).nor().scl(LAUNCH_SPEED * ConstVals.PPM)
-                        body.physics.velocity = trajectory
+                        val trajectory = GameObjectPools.fetch(Vector2::class)
+                            .set(launchTarget)
+                            .sub(body.getCenter())
+                            .nor()
+                            .scl(LAUNCH_SPEED * ConstVals.PPM)
+                        body.physics.velocity.set(trajectory)
+
                         if (body.getCenter().epsilonEquals(launchTarget, EPSILON * ConstVals.PPM) ||
-                            megaman().body.contains(body.getCenter()) ||
+                            megaman().body.getBounds().contains(body.getCenter()) ||
                             body.getMaxY() >= maxY
                         ) {
                             launchPauseTimer.reset()
@@ -256,43 +265,42 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
-        bodyFixture.rawShape.color = Color.YELLOW
-        debugShapes.add { bodyFixture.getShape() }
+        debugShapes.add { bodyFixture}
 
         val damagerFixture = Fixture(
             body, FixtureType.DAMAGER, GameRectangle().setSize(
                 1.5f * ConstVals.PPM, 0.5f * ConstVals.PPM
             )
         )
-        damagerFixture.offsetFromBodyCenter.y = -0.35f * ConstVals.PPM
+        damagerFixture.offsetFromBodyAttachment.y = -0.35f * ConstVals.PPM
         body.addFixture(damagerFixture)
-        damagerFixture.rawShape.color = Color.RED
-        debugShapes.add { damagerFixture.getShape() }
+        debugShapes.add { damagerFixture}
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().set(body))
         body.addFixture(damageableFixture)
-        debugShapes.add { damageableFixture.getShape() }
+        debugShapes.add { damageableFixture}
 
         /*
         TODO: should this have a shield fixture?
         val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle().set(body))
         body.addFixture(shieldFixture)
-        debugShapes.add { shieldFixture.getShape() }
+        debugShapes.add { shieldFixture}
          */
 
-        body.preProcess.put(ConstKeys.DEFAULT) { delta ->
-            val target = body.getTopCenterPoint().sub(0f, 0.1f * ConstVals.PPM)
-            val current = block!!.body.getTopCenterPoint()
-            val diff = target.sub(current)
-            block!!.body.physics.velocity = diff.scl(1f / delta)
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            val velocity = GameObjectPools.fetch(Vector2::class)
+                .set(body.getPositionPoint(Position.TOP_CENTER).sub(0f, 0.1f * ConstVals.PPM))
+                .sub(block!!.body.getPositionPoint(Position.TOP_CENTER))
+                .scl(1f / ConstVals.FIXED_TIME_STEP)
+            block!!.body.physics.velocity.set(velocity)
 
-            val swiping = clawState == SigmaRatClawState.LAUNCH/*
+            val swiping = clawState == SigmaRatClawState.LAUNCH
+            /*
             TODO: shield fixture?
-            shieldFixture.active = !swiping
-            shieldFixture.rawShape.color = if (!swiping) Color.BLUE else Color.GRAY
+                shieldFixture.active = !swiping
+                shieldFixture.drawingColor = if (!swiping) Color.BLUE else Color.GRAY
              */
-            damageableFixture.active = swiping
-            damageableFixture.rawShape.color = if (swiping) Color.PURPLE else Color.GRAY
+            damageableFixture.setActive(swiping)
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -304,10 +312,10 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(2.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(body.getTopCenterPoint(), Position.TOP_CENTER)
-            _sprite.translateY(0.35f * ConstVals.PPM)
-            _sprite.hidden = damageBlink || !(parent as SigmaRat).ready
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setPosition(body.getPositionPoint(Position.TOP_CENTER), Position.TOP_CENTER)
+            sprite.translateY(0.35f * ConstVals.PPM)
+            sprite.hidden = damageBlink || !(parent as SigmaRat).ready
         }
         return spritesComponent
     }

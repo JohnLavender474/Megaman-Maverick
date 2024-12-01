@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.hazards
 
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
@@ -24,6 +25,8 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getCenter
 
 class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEntity, ICullableEntity {
 
@@ -47,12 +50,16 @@ class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEnti
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         var speed = spawnProps.getOrDefault(ConstKeys.SPEED, DEFAULT_SPEED, Float::class)
+
         val flip = spawnProps.getOrDefault(ConstKeys.FLIP, false, Boolean::class)
         if (flip) speed *= -1f
+
         rotatingLine = RotatingLine(spawn, RADIUS * ConstVals.PPM, speed * ConstVals.PPM)
-        for (i in 0 until BALLS) {
+
+        (0 until BALLS).forEach {
             val fireball = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.FIREBALL)!!
             fireball.spawn(
                 props(
@@ -76,7 +83,8 @@ class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEnti
         rotatingLine.update(delta)
         for (i in 0 until BALLS) {
             val child = children.get(i) as Fireball
-            val position = rotatingLine.getScaledPosition(i.toFloat() / BALLS.toFloat())
+            val position =
+                rotatingLine.getScaledPosition(i.toFloat() / BALLS.toFloat(), GameObjectPools.fetch(Vector2::class))
             child.body.setCenter(position)
         }
     })

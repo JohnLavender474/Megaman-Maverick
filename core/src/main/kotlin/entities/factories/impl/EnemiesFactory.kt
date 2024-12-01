@@ -53,7 +53,6 @@ class EnemiesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         const val SNOWHEAD_THROWER = "SnowheadThrower"
         const val SPIKY = "Spiky"
         const val BABY_PENGUIN = "BabyPenguin"
-        const val UFO_BOMB_BOT = "UFOBombBot"
         const val ROLLING_BOT = "RollingBot"
         const val TOXIC_BARREL_BOT = "ToxicBarrelBot"
         const val ANGRY_FLAME_BALL = "AngryFlameBall"
@@ -133,7 +132,6 @@ class EnemiesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(SNOWHEAD_THROWER, GameEntityPoolCreator.create { SnowheadThrower(game) })
         pools.put(SPIKY, GameEntityPoolCreator.create { Spiky(game) })
         pools.put(BABY_PENGUIN, GameEntityPoolCreator.create { BabyPenguin(game) })
-        pools.put(UFO_BOMB_BOT, GameEntityPoolCreator.create { OLD_UFOBombBot(game) })
         pools.put(ROLLING_BOT, GameEntityPoolCreator.create { RollingBot(game) })
         pools.put(TOXIC_BARREL_BOT, GameEntityPoolCreator.create { ToxicBarrelBot(game) })
         pools.put(ANGRY_FLAME_BALL, GameEntityPoolCreator.create { AngryFlameBall(game) })

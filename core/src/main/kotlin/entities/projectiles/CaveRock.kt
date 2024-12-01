@@ -28,9 +28,8 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodyFixtureDef
-import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+import com.megaman.maverick.game.world.body.*
 
 class CaveRock(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
@@ -60,8 +59,8 @@ class CaveRock(game: MegamanMaverickGame) : AbstractProjectile(game) {
         passThroughBlocks = spawnProps.getOrDefault(ConstKeys.PASS_THROUGH, false, Boolean::class)
 
         if (spawnProps.containsKey(ConstKeys.IMPULSE)) {
-            val impulse = spawnProps.get(ConstKeys.IMPULSE, Vector2::class)!!
-            body.physics.velocity = impulse
+            val impulse = spawnProps.get(ConstKeys.IMPULSE, Vector2::class)!!.cpy()
+            body.physics.velocity.set(impulse)
         }
 
         trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)
@@ -89,7 +88,7 @@ class CaveRock(game: MegamanMaverickGame) : AbstractProjectile(game) {
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
         body.setSize(0.75f * ConstVals.PPM)
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
         return BodyComponentCreator.create(
             this,
             body,
@@ -102,7 +101,7 @@ class CaveRock(game: MegamanMaverickGame) : AbstractProjectile(game) {
         sprite.setSize(2.75f * ConstVals.PPM)
         sprite.setRegion(rockRegion!!)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite -> _sprite.setCenter(body.getCenter()) }
+        spritesComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
         return spritesComponent
     }
 
@@ -111,6 +110,6 @@ class CaveRock(game: MegamanMaverickGame) : AbstractProjectile(game) {
         destroy()
         val caveRockExplosion =
             EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.CAVE_ROCK_EXPLOSION)!!
-        caveRockExplosion.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
+        caveRockExplosion.spawn(pooledProps(ConstKeys.POSITION pairTo body.getCenter()))
     }
 }

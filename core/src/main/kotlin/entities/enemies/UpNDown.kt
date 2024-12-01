@@ -37,8 +37,10 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
 
 class UpNDown(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAnimatedEntity {
@@ -105,7 +107,7 @@ class UpNDown(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAnim
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+            facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         }
     }
 
@@ -123,8 +125,8 @@ class UpNDown(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAnim
         body.addFixture(damageableFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            if (left && body.x <= minX) left = false
-            else if (!left && body.x >= maxX) left = true
+            if (left && body.getX() <= minX) left = false
+            else if (!left && body.getX() >= maxX) left = true
 
             body.physics.velocity.x = VEL_X * ConstVals.PPM * if (left) -1 else 1
             body.physics.velocity.y = VEL_Y * ConstVals.PPM * if (up) 1 else -1
@@ -139,10 +141,10 @@ class UpNDown(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAnim
         val sprite = GameSprite()
         sprite.setSize(0.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.hidden = damageBlink
-            _sprite.setCenter(body.getCenter())
-            _sprite.setFlip(facing == Facing.LEFT, false)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.hidden = damageBlink
+            sprite.setCenter(body.getCenter())
+            sprite.setFlip(facing == Facing.LEFT, false)
         }
         return spritesComponent
     }

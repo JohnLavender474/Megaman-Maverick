@@ -1,7 +1,6 @@
 package com.megaman.maverick.game.entities.blocks
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.OrderedMap
@@ -73,25 +72,27 @@ class ConveyorBelt(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAn
         super.init()
 
         forceFixture = Fixture(body, FixtureType.FORCE, GameRectangle())
-        forceFixture!!.offsetFromBodyCenter.y = ConstVals.PPM / 8f
+        forceFixture!!.offsetFromBodyAttachment.y = ConstVals.PPM / 8f
         forceFixture!!.setEntity(this)
         body.addFixture(forceFixture!!)
-        addDebugShapeSupplier { forceFixture!!.getShape() }
+        addDebugShapeSupplier { forceFixture!!}
     }
 
     override fun onSpawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
         super.onSpawn(spawnProps)
 
-        val bounds = spawnProps.get(ConstKeys.BOUNDS) as Rectangle
-        (forceFixture!!.rawShape as GameRectangle).setSize(bounds.width - ConstVals.PPM / 4f, bounds.height)
+        val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+        (forceFixture!!.rawShape as GameRectangle).setSize(bounds.getWidth() - ConstVals.PPM / 4f, bounds.getHeight())
 
-        val left = spawnProps.get(ConstKeys.LEFT) as Boolean
+        val left = spawnProps.get(ConstKeys.LEFT, Boolean::class)!!
 
         var forceX = FORCE_IMPULSE * ConstVals.PPM
         if (left) forceX = -forceX
+
         forceFixture!!.setVelocityAlteration { fixture, delta ->
             val body = fixture.getBody()
+
             if ((left && body.physics.velocity.x <= -FORCE_MAX * ConstVals.PPM) ||
                 (!left && body.physics.velocity.x >= FORCE_MAX * ConstVals.PPM)
             ) VelocityAlteration.addNone() else VelocityAlteration(
@@ -102,9 +103,9 @@ class ConveyorBelt(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAn
 
         val type = spawnProps.getOrDefault(ConstKeys.TYPE, DEFAULT_TYPE, String::class)
 
-        val sprites = OrderedMap<String, GameSprite>()
+        val sprites = OrderedMap<Any, GameSprite>()
         val animators = Array<GamePair<() -> GameSprite, IAnimator>>()
-        val numParts = (bounds.width / ConstVals.PPM).toInt()
+        val numParts = (bounds.getWidth() / ConstVals.PPM).toInt()
         for (i in 0 until numParts) {
             val part = if (i == 0) "left" else if (i == numParts - 1) "right" else "middle $i"
             var regionKey = when (part) {
@@ -124,7 +125,7 @@ class ConveyorBelt(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAn
             val animation = Animation(region, animDef.rows, animDef.cols, animDef.durations, true)
 
             val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -1))
-            sprite.setBounds(bounds.x + i * ConstVals.PPM, bounds.y, ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
+            sprite.setBounds(bounds.getX() + i * ConstVals.PPM, bounds.getY(), ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
 
             sprites.put(part, sprite)
             animators.add({ sprite } pairTo Animator(animation))

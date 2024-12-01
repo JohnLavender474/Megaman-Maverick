@@ -22,6 +22,8 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getCenter
 
 open class DynamicBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IUpdatableEntity,
     IDrawableShapesEntity {
@@ -66,7 +68,7 @@ open class DynamicBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
         )
         staticInnerBlock!!.spawn(staticInnerBlockProps)
 
-        val gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, Vector2(), Vector2::class)
+        val gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, Vector2.Zero, Vector2::class)
         body.physics.gravity.set(gravity)
     }
 
@@ -82,7 +84,7 @@ open class DynamicBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
 
     protected open fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        addDebugShapeSupplier { body.getBodyBounds() }
+        addDebugShapeSupplier { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle())
         body.addFixture(bodyFixture)

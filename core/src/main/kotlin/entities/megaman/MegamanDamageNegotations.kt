@@ -93,7 +93,6 @@ object MegamanDamageNegotations{
         PenguinMiniBoss.TAG pairTo dmgNeg(3),
         BabyPenguin.TAG pairTo dmgNeg(2),
         UFOBomb.TAG pairTo dmgNeg(3),
-        OLD_UFOBombBot.TAG pairTo dmgNeg(2),
         RollingBot.TAG pairTo dmgNeg(3),
         RollingBotShot.TAG pairTo dmgNeg(3),
         AcidGoop.TAG pairTo dmgNeg(3),

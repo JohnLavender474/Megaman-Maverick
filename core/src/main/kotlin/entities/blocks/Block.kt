@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.blocks
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
@@ -47,8 +46,7 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         addComponent(CullablesComponent())
         addComponent(defineBodyComponent())
 
-        body.color = Color.GRAY
-        debugShapeSuppliers.add { if (draw) body.getBodyBounds() else null }
+        debugShapeSuppliers.add { if (draw) body.getBounds() else null }
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapeSuppliers, debug = true))
     }
 
@@ -118,12 +116,12 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         val collisionOn = spawnProps.getOrDefault(ConstKeys.ON, true, Boolean::class)
         body.physics.collisionOn = collisionOn
 
-        blockFixture.active = spawnProps.getOrDefault(ConstKeys.ACTIVE, true, Boolean::class)
+        blockFixture.setActive(spawnProps.getOrDefault(ConstKeys.ACTIVE, true, Boolean::class))
 
         val fixtureEntriesToAdd = spawnProps.get(ConstKeys.FIXTURES) as Array<GamePair<FixtureType, Properties>>?
         fixtureEntriesToAdd?.forEach { fixtureEntry ->
             val (fixtureType, fixtureProps) = fixtureEntry
-            val fixture = Fixture(body, fixtureType, GameRectangle().set(body))
+            val fixture = Fixture(body, fixtureType, GameRectangle(body))
             fixture.putAllProperties(fixtureProps)
             fixture.setEntity(this)
             body.addFixture(fixture)
@@ -159,10 +157,7 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
             }
         }
 
-        draw = spawnProps.getOrDefault(
-            ConstKeys.DRAW, true, Boolean::
-            class
-        )
+        draw = spawnProps.getOrDefault(ConstKeys.DRAW, true, Boolean::class)
 
         val owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
         if (owner == null) removeProperty(ConstKeys.OWNER) else putProperty(ConstKeys.OWNER, owner)
@@ -193,15 +188,14 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
     protected open fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.STATIC)
-        body.color = Color.GRAY
-        debugShapeSuppliers.add { body.getBodyBounds() }
+        debugShapeSuppliers.add { body }
 
-        blockFixture = Fixture(body, FixtureType.BLOCK)
+        val blockRect = GameRectangle()
+        blockFixture = Fixture(body, FixtureType.BLOCK, blockRect)
         body.addFixture(blockFixture)
-        blockFixture.rawShape.color = Color.BLUE
-        debugShapeSuppliers.add { blockFixture.getShape() }
+        debugShapeSuppliers.add { blockFixture }
 
-        body.preProcess.put(ConstKeys.DEFAULT) { (blockFixture.rawShape as GameRectangle).set(body) }
+        body.preProcess.put(ConstKeys.DEFAULT) { blockRect.set(body) }
 
         return BodyComponentCreator.create(this, body)
     }

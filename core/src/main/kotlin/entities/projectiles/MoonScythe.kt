@@ -1,15 +1,14 @@
 package com.megaman.maverick.game.entities.projectiles
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
-import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.UtilMethods.getOverlapPushDirection
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
-import com.mega.game.engine.common.getOverlapPushDirection
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -34,9 +33,11 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getCenter
 
 class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
@@ -46,13 +47,17 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game) {
         private const val FADE_DUR = 0.25f
         private const val MAX_BOUNCES = 5
         private const val SPAWN_TRAIL_DELAY = 0.1f
+        private const val DEBUG_FADING = false
         private var region: TextureRegion? = null
     }
 
     private val fadeTimer = Timer(FADE_DUR)
     private val spawnTrailDelay = Timer(SPAWN_TRAIL_DELAY)
 
-    private lateinit var trajectory: Vector2
+    private val trajectory = Vector2()
+
+    private val shouldDebug: Boolean
+        get() = !fade || DEBUG_FADING
 
     private var fade = false
     private var rotation = 0f
@@ -68,35 +73,40 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game) {
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
 
+        fade = spawnProps.getOrDefault(ConstKeys.FADE, false, Boolean::class)
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
 
-        fade = spawnProps.getOrDefault(ConstKeys.FADE, false, Boolean::class)
         fadeTimer.reset()
-
         spawnTrailDelay.reset()
 
-        trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2(), Vector2::class)
+        trajectory.set(spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!)
+
         rotation = spawnProps.getOrDefault(ConstKeys.ROTATION, 0f, Float::class)
         bounces = 0
+
+        if (shouldDebug) GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
     }
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         bounces++
-        if (bounces > MAX_BOUNCES) fade = true
-        else {
-            val direction = getOverlapPushDirection(thisShape, otherShape)
-            when (direction) {
-                Direction.UP -> if (trajectory.y < 0f) trajectory.y *= -1f
-                Direction.DOWN -> if (trajectory.y > 0f) trajectory.y *= -1f
-                Direction.LEFT -> if (trajectory.x > 0f) trajectory.x *= -1f
-                Direction.RIGHT -> if (trajectory.x < 0f) trajectory.x *= -1f
-                null -> {
-                    trajectory.x *= -1f
-                    trajectory.y *= -1f
-                }
-            }
+
+        if (bounces > MAX_BOUNCES) {
+            if (shouldDebug) GameLogger.debug(TAG, "hitBlock(): start to fade")
+            fade = true
         }
+
+        if (shouldDebug) GameLogger.debug(TAG, "hitBlock(): old trajectory = $trajectory")
+
+        val direction = getOverlapPushDirection(thisShape, otherShape)
+        when {
+            direction == null -> trajectory.scl(-1f)
+            direction.isVertical() -> trajectory.y *= -1f
+            else -> trajectory.x *= -1f
+        }
+
+        if (shouldDebug) GameLogger.debug(TAG, "hitBlock(): direction=$direction, trajectory=$trajectory")
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
@@ -108,10 +118,12 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game) {
         } else {
             spawnTrailDelay.update(delta)
             if (spawnTrailDelay.isFinished()) {
+                val trajectory = GameObjectPools.fetch(Vector2::class).setZero()
                 val moonScythe = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.MOON_SCYTHE)!!
                 moonScythe.spawn(
                     props(
                         ConstKeys.POSITION pairTo body.getCenter(),
+                        ConstKeys.TRAJECTORY pairTo trajectory,
                         ConstKeys.ROTATION pairTo rotation,
                         ConstKeys.FADE pairTo true
                     )
@@ -135,14 +147,11 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.4f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        damagerFixture.rawShape.color = Color.RED
-        debugShapes.add { damagerFixture.getShape() }
+        debugShapes.add { damagerFixture }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(
-            this, body, BodyFixtureDef.of(FixtureType.PROJECTILE, FixtureType.SHIELD)
-        )
+        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.PROJECTILE, FixtureType.SHIELD))
     }
 
     override fun defineSpritesComponent(): SpritesComponent {

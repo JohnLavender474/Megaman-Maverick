@@ -1,28 +1,28 @@
 package com.megaman.maverick.game.world.collisions
 
 import com.mega.game.engine.common.enums.Direction
-import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.IBody
 import com.mega.game.engine.world.collisions.ICollisionHandler
 import com.mega.game.engine.world.collisions.StandardCollisionHandler
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.world.body.*
 
 class MegaCollisionHandler(private val game: MegamanMaverickGame) : ICollisionHandler {
 
-    private fun trySpecialCollission(body1: Body, body2: Body): Boolean {
+    private fun trySpecialCollission(body1: IBody, body2: IBody): Boolean {
         if (!body1.physics.collisionOn || !body2.physics.collisionOn) return true
 
-        val staticBody: Body
-        val dynamicBody: Body
+        val staticBody: IBody
+        val dynamicBody: IBody
 
-        if (body1.bodyType == BodyType.STATIC && body2.bodyType == BodyType.DYNAMIC) {
+        if (body1.type == BodyType.STATIC && body2.type == BodyType.DYNAMIC) {
             staticBody = body1
             dynamicBody = body2
-        } else if (body2.bodyType == BodyType.STATIC && body1.bodyType == BodyType.DYNAMIC) {
+        } else if (body2.type == BodyType.STATIC && body1.type == BodyType.DYNAMIC) {
             staticBody = body2
             dynamicBody = body1
         } else return false
@@ -48,7 +48,7 @@ class MegaCollisionHandler(private val game: MegamanMaverickGame) : ICollisionHa
 
             val dynamicBodyEntity = dynamicBody.getEntity()
             val dynamicBodyDirection =
-                if (dynamicBodyEntity is IDirectionRotatable) dynamicBodyEntity.directionRotation else Direction.UP
+                if (dynamicBodyEntity is IDirectional) dynamicBodyEntity.direction else Direction.UP
 
             when (dynamicBodyDirection) {
                 Direction.UP -> {
@@ -58,27 +58,27 @@ class MegaCollisionHandler(private val game: MegamanMaverickGame) : ICollisionHa
                         return true
                     }
 
-                    return dynamicBody.y < staticBody.getMaxY()
+                    return dynamicBody.getY() < staticBody.getMaxY()
                 }
 
                 Direction.DOWN -> {
                     if (dynamicBody.isSensing(BodySense.FEET_ON_GROUND)) {
-                        dynamicBody.setMaxY(staticBody.y)
+                        dynamicBody.setMaxY(staticBody.getY())
                         dynamicBody.physics.frictionOnSelf.x += staticBody.physics.frictionToApply.x
                         return true
                     }
 
-                    return dynamicBody.getMaxY() > staticBody.y
+                    return dynamicBody.getMaxY() > staticBody.getY()
                 }
 
                 Direction.LEFT -> {
                     if (dynamicBody.isSensing(BodySense.FEET_ON_GROUND)) {
-                        dynamicBody.setMaxX(staticBody.x)
+                        dynamicBody.setMaxX(staticBody.getX())
                         dynamicBody.physics.frictionOnSelf.y += staticBody.physics.frictionToApply.y
                         return true
                     }
 
-                    return dynamicBody.getMaxX() > staticBody.x
+                    return dynamicBody.getMaxX() > staticBody.getX()
                 }
 
                 Direction.RIGHT -> {
@@ -88,11 +88,11 @@ class MegaCollisionHandler(private val game: MegamanMaverickGame) : ICollisionHa
                         return true
                     }
 
-                    return dynamicBody.x < staticBody.getMaxX()
+                    return dynamicBody.getX() < staticBody.getMaxX()
                 }
             }
         } else if (staticBody.hasBodyLabel(BodyLabel.COLLIDE_UP_ONLY)) {
-            // TODO: account for IDirectionRotatable logic similar to "collide up only" logic
+            // TODO: account for IDirectional logic similar to "collide up only" logic
 
             if (dynamicBody == megaman.body && megaman.isBehaviorActive(BehaviorType.CLIMBING)) return true
 
@@ -108,6 +108,6 @@ class MegaCollisionHandler(private val game: MegamanMaverickGame) : ICollisionHa
         return false
     }
 
-    override fun handleCollision(body1: Body, body2: Body) =
+    override fun handleCollision(body1: IBody, body2: IBody) =
         trySpecialCollission(body1, body2) || StandardCollisionHandler.handleCollision(body1, body2)
 }

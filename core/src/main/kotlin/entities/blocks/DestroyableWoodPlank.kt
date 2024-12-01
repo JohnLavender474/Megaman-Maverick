@@ -13,6 +13,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.world.body.getCenter
 
 class DestroyableWoodPlank(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity {
 
@@ -43,7 +44,7 @@ class DestroyableWoodPlank(game: MegamanMaverickGame) : Block(game), ISpritesEnt
         val sprite = GameSprite(regions["plank"])
         sprite.setSize(WIDTH * ConstVals.PPM.toFloat(), HEIGHT * ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite -> _sprite.setCenter(body.getCenter()) }
+        spritesComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
         return spritesComponent
     }
 

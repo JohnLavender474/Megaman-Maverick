@@ -1,9 +1,7 @@
 package com.megaman.maverick.game.entities.bosses.gutstank
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.OrderedSet
@@ -11,10 +9,10 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.UtilMethods.getRandom
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.*
-import com.mega.game.engine.common.getRandom
 import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -57,10 +55,18 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.PurpleBlast
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureLabel
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.world.body.getPositionPoint
 import kotlin.reflect.KClass
 
 class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity {
@@ -178,7 +184,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
 
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomLeftPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_LEFT)
         body.setSize(BODY_WIDTH * ConstVals.PPM, BODY_HEIGHT * ConstVals.PPM)
         body.setBottomLeftToPoint(spawn)
 
@@ -198,10 +204,16 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
         tankBlockOffset = tankBlockBounds.getCenter().sub(body.getCenter())
 
         fist = GutsTankFist(game)
-        fist!!.spawn(props(ConstKeys.PARENT pairTo this))
+        fist!!.spawn(pooledProps(ConstKeys.PARENT pairTo this))
 
-        frontPoint = spawnProps.get(ConstKeys.FRONT, RectangleMapObject::class)!!.rectangle.getPosition()
-        backPoint = spawnProps.get(ConstKeys.BACK, RectangleMapObject::class)!!.rectangle.getPosition()
+        frontPoint = spawnProps.get(
+            ConstKeys.FRONT,
+            RectangleMapObject::class
+        )!!.rectangle.getPosition(GameObjectPools.fetch(Vector2::class))
+        backPoint = spawnProps.get(
+            ConstKeys.BACK,
+            RectangleMapObject::class
+        )!!.rectangle.getPosition(GameObjectPools.fetch(Vector2::class))
 
         heliMetTargets.clear()
         val fly1Target = spawnProps.get(FLY1, RectangleMapObject::class)!!.rectangle.getCenter()
@@ -325,7 +337,9 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
             if (fist != null && fist!!.dead) fist = null
             if (fist?.fistState == GutsTankFist.GutsTankFistState.ATTACHED) {
                 launchFistDelayTimer.update(delta)
-                if (launchFistDelayTimer.isFinished() && !fist!!.body.overlaps(megaman().body as Rectangle)) {
+                if (launchFistDelayTimer.isFinished() &&
+                    !fist!!.body.getBounds().overlaps(megaman().body.getBounds())
+                ) {
                     launchFistDelayTimer.reset()
                     fist!!.launch()
                 }
@@ -456,8 +470,8 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                         val xVel = MIN_X_VEL + (MAX_X_VEL - MIN_X_VEL) * (1f - getHealthRatio())
                         body.physics.velocity.x = -xVel * ConstVals.PPM
                         tankBlock!!.body.physics.velocity.x = -xVel * ConstVals.PPM
-                        if (body.x <= frontPoint.x) {
-                            body.x = frontPoint.x
+                        if (body.getX() <= frontPoint.x) {
+                            body.setX(frontPoint.x)
                             body.physics.velocity.x = 0f
                             moveState = GutsTankMoveState.PAUSE
                             moveToFront = false
@@ -468,8 +482,8 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                         reachedFrontFirstTime = true
                         body.physics.velocity.x = xVel * ConstVals.PPM
                         tankBlock!!.body.physics.velocity.x = xVel * ConstVals.PPM
-                        if (body.x >= backPoint.x) {
-                            body.x = backPoint.x
+                        if (body.getX() >= backPoint.x) {
+                            body.setX(backPoint.x)
                             body.physics.velocity.x = 0f
                             moveState = GutsTankMoveState.PAUSE
                             moveToFront = true
@@ -491,34 +505,29 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val damageableFixture = Fixture(
             body,
             FixtureType.DAMAGEABLE,
             GameRectangle().setSize(1.15f * ConstVals.PPM, 0.85f * ConstVals.PPM)
         )
-        damageableFixture.offsetFromBodyCenter.x = -1.45f * ConstVals.PPM
-        damageableFixture.offsetFromBodyCenter.y = 2.35f * ConstVals.PPM
+        damageableFixture.offsetFromBodyAttachment.x = -1.45f * ConstVals.PPM
+        damageableFixture.offsetFromBodyAttachment.y = 2.35f * ConstVals.PPM
         body.addFixture(damageableFixture)
-        damageableFixture.getShape().color = Color.PURPLE
-        // debugShapes.add { damageableFixture.getShape() }
+        // debugShapes.add { damageableFixture}
 
         val damagerFixture1 = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(2f * ConstVals.PPM))
-        damagerFixture1.offsetFromBodyCenter.x = -ConstVals.PPM.toFloat()
-        damagerFixture1.offsetFromBodyCenter.y = 2.5f * ConstVals.PPM
+        damagerFixture1.offsetFromBodyAttachment.x = -ConstVals.PPM.toFloat()
+        damagerFixture1.offsetFromBodyAttachment.y = 2.5f * ConstVals.PPM
         body.addFixture(damagerFixture1)
-        damagerFixture1.getShape().color = Color.RED
-        // debugShapes.add { damagerFixture1.getShape() }
 
         val damagerFixture2 = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(2.5f * ConstVals.PPM))
-        damagerFixture2.offsetFromBodyCenter.y = ConstVals.PPM.toFloat()
+        damagerFixture2.offsetFromBodyAttachment.y = ConstVals.PPM.toFloat()
         body.addFixture(damagerFixture2)
-        damagerFixture2.rawShape.color = Color.ORANGE
-        debugShapes.add { damagerFixture2.getShape() }
+        debugShapes.add { damagerFixture2}
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
@@ -529,9 +538,9 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0))
         sprite.setSize(8f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(body.getBottomLeftPoint(), Position.BOTTOM_LEFT)
-            _sprite.hidden = damageBlink
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_LEFT), Position.BOTTOM_LEFT)
+            sprite.hidden = damageBlink
         }
         return spritesComponent
     }

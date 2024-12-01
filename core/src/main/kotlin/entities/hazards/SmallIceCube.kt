@@ -8,10 +8,8 @@ import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
-import com.mega.game.engine.common.extensions.vector2Of
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.damage.IDamageable
@@ -47,6 +45,8 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
 
 class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity, ISpritesEntity,
@@ -54,7 +54,7 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     companion object {
         const val TAG = "FragileIceCube"
-        private const val DEFAULT_GRAVITY = -0.1f
+        private const val DEFAULT_GRAVITY = -0.15f
         private const val GROUND_GRAVITY = -0.01f
         private const val CLAMP = 10f
         private const val CULL_TIME = 2f
@@ -90,7 +90,7 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
 
-        val trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2(), Vector2::class)
+        val trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2.Zero, Vector2::class)
         body.physics.velocity.set(trajectory)
 
         gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, DEFAULT_GRAVITY, Float::class)
@@ -105,14 +105,15 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         body.physics.applyFrictionY = applyFrictionY
 
         val section = spawnProps.getOrDefault(ConstKeys.SECTION, DrawingSection.PLAYGROUND, DrawingSection::class)
-        firstSprite!!.priority.section = section
+        defaultSprite.priority.section = section
 
         val priority = spawnProps.getOrDefault(ConstKeys.PRIORITY, 1, Int::class)
-        firstSprite!!.priority.value = priority
+        defaultSprite.priority.value = priority
 
-        val clamp = spawnProps.getOrDefault(ConstKeys.CLAMP, true, Boolean::class)
-        body.physics.velocityClamp =
-            if (clamp) vector2Of(CLAMP * ConstVals.PPM) else Vector2(Float.MAX_VALUE, Float.MAX_VALUE)
+        val doClamp = spawnProps.getOrDefault(ConstKeys.CLAMP, true, Boolean::class)
+        val clamp = GameObjectPools.fetch(Vector2::class)
+        if (doClamp) clamp.set(CLAMP, CLAMP).scl(ConstVals.PPM.toFloat()) else clamp.set(Float.MAX_VALUE, Float.MAX_VALUE)
+        body.physics.velocityClamp.set(clamp)
 
         destroyOnHitBlock = spawnProps.getOrDefault(ConstKeys.HIT_BY_BLOCK, false, Boolean::class)
         maxHitTimes = spawnProps.getOrDefault(ConstKeys.MAX, DEFAULT_MAX_HIT_TIMES, Int::class)
@@ -125,7 +126,7 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         destroy()
         for (i in 0 until 5) {
             val iceShard = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.ICE_SHARD)!!
-            iceShard.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.INDEX pairTo i))
+            iceShard.spawn(pooledProps(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.INDEX pairTo i))
         }
     }
 
@@ -155,18 +156,18 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyCenter.y = -0.225f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -0.225f * ConstVals.PPM
         body.addFixture(feetFixture)
 
         val leftFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.25f * ConstVals.PPM))
-        leftFixture.offsetFromBodyCenter.x = -0.2f * ConstVals.PPM
+        leftFixture.offsetFromBodyAttachment.x = -0.2f * ConstVals.PPM
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftFixture)
 
         val rightFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.25f * ConstVals.PPM))
-        rightFixture.offsetFromBodyCenter.x = -0.2f * ConstVals.PPM
+        rightFixture.offsetFromBodyAttachment.x = -0.2f * ConstVals.PPM
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
 
@@ -204,7 +205,7 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         spritesComponent.putUpdateFunction { _, _ ->
             val region = if (hitTimes == 0) region1 else region2
             sprite.setRegion(region)
-            sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
         }
         return spritesComponent
     }

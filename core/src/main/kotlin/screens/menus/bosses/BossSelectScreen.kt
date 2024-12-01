@@ -29,7 +29,7 @@ import com.megaman.maverick.game.screens.menus.MegaMenuScreen
 import com.megaman.maverick.game.screens.utils.BlinkingArrow
 import com.megaman.maverick.game.screens.utils.ScreenSlide
 import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
-import com.megaman.maverick.game.utils.getDefaultCameraPosition
+import com.megaman.maverick.game.utils.extensions.getDefaultCameraPosition
 import java.util.*
 import java.util.function.Supplier
 

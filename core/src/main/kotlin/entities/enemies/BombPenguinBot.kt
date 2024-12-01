@@ -70,12 +70,12 @@ class BombPenguinBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         body.addFixture(damageableFixture)
 
         val leftSideFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        leftSideFixture.offsetFromBodyCenter.x = -0.375f * ConstVals.PPM
+        leftSideFixture.offsetFromBodyAttachment.x = -0.375f * ConstVals.PPM
         leftSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftSideFixture)
 
         val rightSideFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        rightSideFixture.offsetFromBodyCenter.x = 0.375f * ConstVals.PPM
+        rightSideFixture.offsetFromBodyAttachment.x = 0.375f * ConstVals.PPM
         rightSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightSideFixture)
 

@@ -10,7 +10,6 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.interfaces.Initializable
 import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.interfaces.Updatable
-import com.mega.game.engine.common.shapes.getCenter
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.IDrawable
 import com.mega.game.engine.drawables.fonts.BitmapFontHandle
@@ -24,6 +23,8 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_SPRITE_SIZE
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.world.body.getCenter
 import java.util.*
 
 class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializable, Updatable, IDrawable<Batch>,
@@ -155,7 +156,7 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
     private fun beamDown(delta: Float) {
         beamDownTimer.update(delta)
 
-        val startY: Float = game.megaman.body.y + (ConstVals.VIEW_HEIGHT * ConstVals.PPM)
+        val startY: Float = game.megaman.body.getY() + (ConstVals.VIEW_HEIGHT * ConstVals.PPM)
         val offsetY: Float = (ConstVals.VIEW_HEIGHT * ConstVals.PPM) * beamDownTimer.getRatio()
 
         beamSprite.setCenterX(game.megaman.body.getCenter().x)

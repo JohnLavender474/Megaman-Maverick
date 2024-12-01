@@ -27,6 +27,8 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.world.body.getCenter
 
 class GearTrolley(game: MegamanMaverickGame) : Block(game), IMotionEntity, ISpritesEntity, IEventListener {
 
@@ -77,11 +79,11 @@ class GearTrolley(game: MegamanMaverickGame) : Block(game), IMotionEntity, ISpri
     override fun onEvent(event: Event) {
         when (event.key) {
             EventType.BEGIN_ROOM_TRANS -> {
-                firstSprite!!.hidden = true
+                defaultSprite.hidden = true
                 resetMotionComponent()
             }
 
-            EventType.END_ROOM_TRANS -> firstSprite!!.hidden = false
+            EventType.END_ROOM_TRANS -> defaultSprite.hidden = false
             EventType.PLAYER_SPAWN -> resetMotionComponent()
         }
     }
@@ -90,9 +92,9 @@ class GearTrolley(game: MegamanMaverickGame) : Block(game), IMotionEntity, ISpri
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -1))
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(body.getCenter(), Position.CENTER)
-            _sprite.translateY(-ConstVals.PPM / 16f)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setPosition(body.getCenter(), Position.CENTER)
+            sprite.translateY(-ConstVals.PPM / 16f)
         }
         return spritesComponent
     }

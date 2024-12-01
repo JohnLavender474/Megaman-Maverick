@@ -1,8 +1,7 @@
 package com.megaman.maverick.game.entities.enemies
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
@@ -18,7 +17,6 @@ import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.common.shapes.toGameRectangle
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -44,6 +42,8 @@ import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.utils.getObjectProps
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
@@ -67,6 +67,8 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
     private val triggers = Array<GameRectangle>()
     private var triggered = false
 
+    private val objs = Array<RectangleMapObject>()
+
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
@@ -82,10 +84,10 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        getObjectProps(spawnProps).forEach { triggers.add(it.rectangle.toGameRectangle()) }
+        getObjectProps(spawnProps, objs).forEach { triggers.add(it.rectangle.toGameRectangle(false)) }
         triggered = triggers.isEmpty
 
-        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
     }
 
     override fun onDestroy() {
@@ -96,8 +98,8 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            if (!triggered && triggers.any { it.overlaps(megaman().body.getBodyBounds() as Rectangle) }) {
-                facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+            if (!triggered && triggers.any { it.overlaps(megaman().body.getBounds()) }) {
+                facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
                 triggered = true
             }
         }
@@ -109,28 +111,25 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         body.physics.applyFrictionX = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyCenter.y = -0.375f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -0.375f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.rawShape.color = Color.GREEN
-        debugShapes.add { feetFixture.getShape() }
+        debugShapes.add { feetFixture }
 
         val leftFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
-        leftFixture.offsetFromBodyCenter.x = -0.375f * ConstVals.PPM
+        leftFixture.offsetFromBodyAttachment.x = -0.375f * ConstVals.PPM
         body.addFixture(leftFixture)
-        leftFixture.rawShape.color = Color.ORANGE
-        debugShapes.add { leftFixture.getShape() }
+        debugShapes.add { leftFixture }
 
         val rightFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
-        rightFixture.offsetFromBodyCenter.x = 0.375f * ConstVals.PPM
+        rightFixture.offsetFromBodyAttachment.x = 0.375f * ConstVals.PPM
         body.addFixture(rightFixture)
-        rightFixture.rawShape.color = Color.ORANGE
-        debugShapes.add { rightFixture.getShape() }
+        debugShapes.add { rightFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.gravityOn = triggered
@@ -139,7 +138,7 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
             body.physics.velocity.x =
                 if (body.isSensing(BodySense.FEET_ON_GROUND)) SPEED * ConstVals.PPM * facing.value else 0f
 
-            body.fixtures.forEach { (it.second as Fixture).active = triggered }
+            body.forEachFixture { it.setActive(triggered) }
 
             if ((isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
                 (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
@@ -158,7 +157,7 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
-            sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
+            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             sprite.setFlip(isFacing(Facing.LEFT), false)
             sprite.hidden = !triggered || damageBlink
         }

@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.objects.Loop
@@ -23,7 +24,6 @@ import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -32,7 +32,10 @@ import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.HazardsFactory
-import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.world.body.*
 import kotlin.math.roundToInt
 
 class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IBodyEntity, IParentEntity {
@@ -94,7 +97,7 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
             maxPosition = bounds.getCenter().x + (max * ConstVals.PPM)
 
             val bottomElectrocutieChildProps = props(
-                ConstKeys.POSITION pairTo bounds.getBottomCenterPoint(),
+                ConstKeys.POSITION pairTo bounds.getPositionPoint(Position.BOTTOM_CENTER),
                 ConstKeys.DIRECTION pairTo Direction.UP,
                 ConstKeys.PARENT pairTo this
             )
@@ -104,7 +107,7 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
             children.add(bottomElectrocutieChild)
 
             val topElectrocutieProps = props(
-                ConstKeys.POSITION pairTo bounds.getTopCenterPoint(),
+                ConstKeys.POSITION pairTo bounds.getPositionPoint(Position.TOP_CENTER),
                 ConstKeys.DIRECTION pairTo Direction.DOWN,
                 ConstKeys.PARENT pairTo this
             )
@@ -113,9 +116,9 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
             topElectrocutieChild.spawn(topElectrocutieProps)
             children.add(topElectrocutieChild)
 
-            val length = bounds.height.roundToInt() / ConstVals.PPM
+            val length = bounds.getHeight().roundToInt() / ConstVals.PPM
             for (i in 0 until length) {
-                val position = body.getBottomCenterPoint().add(0f, i * ConstVals.PPM.toFloat())
+                val position = body.getPositionPoint(Position.BOTTOM_CENTER).add(0f, i * ConstVals.PPM.toFloat())
                 val bolt = EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.BOLT)!! as Bolt
                 bolt.spawn(
                     props(
@@ -132,7 +135,7 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
             maxPosition = bounds.getCenter().y + (max * ConstVals.PPM)
 
             val bottomElectrocutieProps = props(
-                ConstKeys.POSITION pairTo bounds.getCenterLeftPoint(),
+                ConstKeys.POSITION pairTo bounds.getPositionPoint(Position.CENTER_LEFT),
                 ConstKeys.DIRECTION pairTo Direction.RIGHT,
                 ConstKeys.PARENT pairTo this
             )
@@ -142,7 +145,7 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
             children.add(bottomElectrocutieChild)
 
             val topElectrocutieProps = props(
-                ConstKeys.POSITION pairTo bounds.getCenterRightPoint(),
+                ConstKeys.POSITION pairTo bounds.getPositionPoint(Position.CENTER_RIGHT),
                 ConstKeys.DIRECTION pairTo Direction.LEFT,
                 ConstKeys.PARENT pairTo this
             )
@@ -151,9 +154,9 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
             topElectrocutieChild.spawn(topElectrocutieProps)
             children.add(topElectrocutieChild)
 
-            val length = bounds.width.roundToInt() / ConstVals.PPM
+            val length = bounds.getWidth().roundToInt() / ConstVals.PPM
             for (i in 0 until length) {
-                val position = body.getCenterLeftPoint().add(i * ConstVals.PPM.toFloat(), 0f)
+                val position = body.getPositionPoint(Position.CENTER_LEFT).add(i * ConstVals.PPM.toFloat(), 0f)
                 val bolt = Bolt(game)
                 bolt.spawn(
                     props(
@@ -181,8 +184,9 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
         else if (!left && currentPosition >= maxPosition) left = true
 
         val speed = (if (left) -SPEED else SPEED) * ConstVals.PPM
-        body.physics.velocity = if (vertical) Vector2(speed, 0f)
-        else Vector2(0f, speed)
+        val velocity = GameObjectPools.fetch(Vector2::class)
+        if (vertical) velocity.x = speed else velocity.y = speed
+        body.physics.velocity.set(velocity)
 
         val currentState = loop.getCurrent()
 
@@ -196,7 +200,7 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
         val shock = currentState == ElectrocutieState.SHOCK
         children.forEach { child ->
             if (child is Bolt) {
-                child.body.fixtures.forEach { childFixture -> (childFixture.second as Fixture).active = shock }
+                child.body.forEachFixture { it.setActive(shock) }
                 child.sprites.values().forEach { childSprite -> childSprite.hidden = !shock }
             }
         }
@@ -204,10 +208,10 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.color = Color.GRAY
+        body.drawingColor = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             children.forEach {

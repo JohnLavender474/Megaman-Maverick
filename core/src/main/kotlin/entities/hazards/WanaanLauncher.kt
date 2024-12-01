@@ -1,21 +1,22 @@
 package com.megaman.maverick.game.entities.hazards
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.common.shapes.toGameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.damage.IDamager
@@ -41,20 +42,21 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.enemies.Wanaan
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getObjectProps
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodyFixtureDef
-import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEntity, IAudioEntity,
-    ICullableEntity, IDrawableShapesEntity, IDirectionRotatable {
+    ICullableEntity, IDrawableShapesEntity, IDirectional {
 
     companion object {
         const val TAG = "WanaanLauncher"
@@ -67,12 +69,14 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
         // TODO
     )
-    override lateinit var directionRotation: Direction
+    override lateinit var direction: Direction
 
     private val newWanaanDelay = Timer(NEW_WANAAN_DELAY)
     private val launchDelay = Timer(LAUNCH_DELAY)
     private val sensors = Array<GameRectangle>()
     private var wanaan: Wanaan? = null
+
+    private val objs = Array<RectangleMapObject>()
 
     override fun init() {
         if (regions.isEmpty) {
@@ -92,10 +96,10 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        val children = getObjectProps(spawnProps)
-        children.forEach { sensors.add(it.rectangle.toGameRectangle()) }
+        val children = getObjectProps(spawnProps, objs)
+        children.forEach { sensors.add(it.rectangle.toGameRectangle(false)) }
 
-        this.directionRotation = if (spawnProps.containsKey(ConstKeys.DIRECTION)) {
+        this.direction = if (spawnProps.containsKey(ConstKeys.DIRECTION)) {
             var direction = spawnProps.get(ConstKeys.DIRECTION)!!
             if (direction is String) direction = Direction.valueOf(direction.uppercase())
             direction as Direction
@@ -111,7 +115,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
         sensors.clear()
 
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
-        explosion.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
+        explosion.spawn(pooledProps(ConstKeys.POSITION pairTo body.getCenter()))
 
         requestToPlaySound(SoundAsset.EXPLOSION_2_SOUND, false)
     }
@@ -128,7 +132,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (wanaan != null && wanaan!!.comingDown && body.contains(wanaan!!.cullPoint)) {
+            if (wanaan != null && wanaan!!.comingDown && body.getBounds().contains(wanaan!!.cullPoint)) {
                 wanaan!!.destroy()
                 wanaan = null
                 newWanaanDelay.reset()
@@ -143,7 +147,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
             if (wanaan == null &&
                 !this.hasDepletedHealth() &&
                 newWanaanDelay.isFinished() &&
-                sensors.any { it.overlaps(megaman().body as Rectangle) }
+                sensors.any { it.overlaps(megaman().body.getBounds()) }
             ) {
                 spawnWanaan()
                 launchDelay.reset()
@@ -181,27 +185,28 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
     private fun spawnWanaan() {
         GameLogger.debug(TAG, "launchWanaan()")
         wanaan = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.WANAAN) as Wanaan
-        val spawn = when (directionRotation) {
-            Direction.UP -> body.getTopCenterPoint().sub(0f, 0.5f * ConstVals.PPM)
-            Direction.DOWN -> body.getBottomCenterPoint().add(0f, 0.5f * ConstVals.PPM)
-            Direction.LEFT -> body.getCenterLeftPoint().add(0.5f * ConstVals.PPM, 0f)
-            Direction.RIGHT -> body.getCenterRightPoint().sub(0.5f * ConstVals.PPM, 0f)
+        val spawn = when (direction) {
+            Direction.UP -> body.getPositionPoint(Position.TOP_CENTER).sub(0f, 0.5f * ConstVals.PPM)
+            Direction.DOWN -> body.getPositionPoint(Position.BOTTOM_CENTER).add(0f, 0.5f * ConstVals.PPM)
+            Direction.LEFT -> body.getPositionPoint(Position.CENTER_LEFT).add(0.5f * ConstVals.PPM, 0f)
+            Direction.RIGHT -> body.getPositionPoint(Position.CENTER_RIGHT).sub(0.5f * ConstVals.PPM, 0f)
         }
         wanaan!!.spawn(
             props(
                 ConstKeys.POSITION pairTo spawn,
-                ConstKeys.DIRECTION pairTo directionRotation,
+                ConstKeys.DIRECTION pairTo direction,
             )
         )
     }
 
     private fun launchWanaan() {
         if (wanaan == null) throw IllegalStateException("Wanaan cannot be null when launching")
-        val impulse = when (directionRotation) {
-            Direction.UP -> Vector2(0f, IMPULSE)
-            Direction.DOWN -> Vector2(0f, -IMPULSE)
-            Direction.LEFT -> Vector2(-IMPULSE, 0f)
-            Direction.RIGHT -> Vector2(IMPULSE, 0f)
+        val impulse = GameObjectPools.fetch(Vector2::class)
+        when (direction) {
+            Direction.UP -> impulse.set(0f, IMPULSE)
+            Direction.DOWN -> impulse.set(0f, -IMPULSE)
+            Direction.LEFT -> impulse.set(-IMPULSE, 0f)
+            Direction.RIGHT -> impulse.set(IMPULSE, 0f)
         }.scl(ConstVals.PPM.toFloat())
         wanaan!!.body.physics.velocity.set(impulse)
         wanaan!!.body.physics.gravityOn = true

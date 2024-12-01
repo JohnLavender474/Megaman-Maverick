@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TiledMap
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.Disposable
@@ -21,13 +22,11 @@ import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.isAny
 import com.mega.game.engine.common.extensions.objectSetOf
-import com.mega.game.engine.common.extensions.vector2Of
 import com.mega.game.engine.common.interfaces.Initializable
 import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
-import com.mega.game.engine.common.shapes.toGameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.controller.polling.IControllerPoller
 import com.mega.game.engine.damage.IDamager
@@ -39,7 +38,7 @@ import com.mega.game.engine.events.Event
 import com.mega.game.engine.events.EventsManager
 import com.mega.game.engine.events.IEventListener
 import com.mega.game.engine.motion.MotionSystem
-import com.mega.game.engine.pathfinding.AsyncPathfindingSystem
+import com.mega.game.engine.pathfinding.SimplePathfindingSystem
 import com.mega.game.engine.screens.levels.tiledmap.TiledMapLevelScreen
 import com.mega.game.engine.world.WorldSystem
 import com.mega.game.engine.world.container.SimpleGridWorldContainer
@@ -74,7 +73,9 @@ import com.megaman.maverick.game.screens.levels.stats.PlayerStatsHandler
 import com.megaman.maverick.game.spawns.ISpawner
 import com.megaman.maverick.game.spawns.Spawn
 import com.megaman.maverick.game.spawns.SpawnsManager
-import com.megaman.maverick.game.utils.toProps
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
+import com.megaman.maverick.game.utils.extensions.toProps
+import com.megaman.maverick.game.world.body.getCenter
 import java.util.*
 
 class MegaLevelScreen(
@@ -153,7 +154,7 @@ class MegaLevelScreen(
     private lateinit var bossSpawnEventHandler: BossSpawnEventHandler
 
     private lateinit var drawables: ObjectMap<DrawingSection, PriorityQueue<IComparableDrawable<Batch>>>
-    private lateinit var shapes: PriorityQueue<IDrawableShape>
+    private lateinit var shapes: Array<IDrawableShape>
     private lateinit var backgrounds: Array<Background>
     private lateinit var backgroundsToHide: ObjectSet<String>
 
@@ -185,7 +186,7 @@ class MegaLevelScreen(
         gameCamera = game.getGameCamera()
         uiCamera = game.getUiCamera()
 
-        spawnsMan = SpawnsManager()
+        spawnsMan = SpawnsManager(spawns)
         playerSpawnsMan = PlayerSpawnsManager(gameCamera)
 
         playerSpawnEventHandler = PlayerSpawnEventHandler(game)
@@ -200,7 +201,10 @@ class MegaLevelScreen(
         cameraManagerForRooms = CameraManagerForRooms(
             gameCamera,
             distanceOnTransition = ROOM_DISTANCE_ON_TRANSITION * ConstVals.PPM,
-            transitionScannerDimensions = vector2Of(TRANSITION_SCANNER_SIZE * ConstVals.PPM),
+            transitionScannerDimensions = Vector2(
+                TRANSITION_SCANNER_SIZE * ConstVals.PPM,
+                TRANSITION_SCANNER_SIZE * ConstVals.PPM
+            ),
             transDelay = ConstVals.ROOM_TRANS_DELAY_DURATION,
             transDuration = ConstVals.ROOM_TRANS_DURATION,
         )
@@ -295,7 +299,7 @@ class MegaLevelScreen(
         music?.let { audioMan.playMusic(it, true) }
 
         game.setCameraRotating(false)
-        game.setRoomsSupplier {  cameraManagerForRooms.gameRooms }
+        game.setRoomsSupplier { cameraManagerForRooms.gameRooms }
         game.setCurrentRoomSupplier { cameraManagerForRooms.currentGameRoom }
 
         if (tiledMapLoadResult == null) throw IllegalStateException("No tiled map load result found in level screen")
@@ -435,7 +439,7 @@ class MegaLevelScreen(
                 )
 
                 val systemsToTurnOff = gdxArrayOf(
-                    AsyncPathfindingSystem::class,
+                    SimplePathfindingSystem::class,
                     MotionSystem::class,
                     BehaviorsSystem::class,
                     WorldSystem::class,
@@ -451,7 +455,7 @@ class MegaLevelScreen(
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Gate init closing")
 
                 val systemsToTurnOn = gdxArrayOf(
-                    AsyncPathfindingSystem::class,
+                    SimplePathfindingSystem::class,
                     MotionSystem::class,
                     BehaviorsSystem::class,
                     WorldSystem::class
@@ -621,10 +625,14 @@ class MegaLevelScreen(
 
         if (!game.paused) {
             spawnsMan.update(delta / 2f)
-            spawns.addAll(spawnsMan.getSpawnsAndClear())
+
             if (playerSpawnEventHandler.finished && !cameraManagerForRooms.transitioning) {
-                spawns.forEach { spawn -> engine.spawn(spawn.entity, spawn.properties) }
-                spawns.clear()
+                val spawnsIter = spawns.iterator()
+                while (spawnsIter.hasNext()) {
+                    val spawn = spawnsIter.next()
+                    engine.spawn(spawn.entity, spawn.properties)
+                    spawnsIter.remove()
+                }
             }
         }
 
@@ -632,11 +640,16 @@ class MegaLevelScreen(
 
         if (!game.paused) {
             spawnsMan.update(delta / 2f)
-            spawns.addAll(spawnsMan.getSpawnsAndClear())
-            if (/* TODO: playerSpawnEventHandler.finished && */ !cameraManagerForRooms.transitioning) {
+
+            if (playerSpawnEventHandler.finished && !cameraManagerForRooms.transitioning) {
                 playerSpawnsMan.run()
-                spawns.forEach { spawn -> engine.spawn(spawn.entity, spawn.properties) }
-                spawns.clear()
+
+                val spawnsIter = spawns.iterator()
+                while (spawnsIter.hasNext()) {
+                    val spawn = spawnsIter.next()
+                    engine.spawn(spawn.entity, spawn.properties)
+                    spawnsIter.remove()
+                }
             }
 
             backgrounds.forEach { it.update(delta) }
@@ -644,12 +657,14 @@ class MegaLevelScreen(
             gameCamera.update(delta)
 
             if (!gameCameraShaker.isFinished) gameCameraShaker.update(delta)
+
             when {
                 !playerSpawnEventHandler.finished -> playerSpawnEventHandler.update(delta)
                 !playerDeathEventHandler.finished -> playerDeathEventHandler.update(delta)
                 !bossHealthHandler.finished -> bossHealthHandler.update(delta)
                 !endLevelEventHandler.finished -> endLevelEventHandler.update(delta)
             }
+
             playerStatsHandler.update(delta)
         }
 
@@ -697,19 +712,22 @@ class MegaLevelScreen(
         val shapeRenderer = game.shapeRenderer
         shapeRenderer.projectionMatrix = gameCamera.combined
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
-        while (!shapes.isEmpty()) {
-            val shape = shapes.poll()
+        while (!shapes.isEmpty) {
+            val shape = shapes.pop()
             shape.draw(shapeRenderer)
         }
         if (game.params.debugShapes) {
             val gameCamBounds = gameCamera.getRotatedBounds()
-            gameCamBounds.x += 0.1f * ConstVals.PPM
-            gameCamBounds.y += 0.1f * ConstVals.PPM
-            gameCamBounds.width -= 0.2f * ConstVals.PPM
-            gameCamBounds.height -= 0.2f * ConstVals.PPM
+            gameCamBounds.translate(0.1f * ConstVals.PPM, 0.1f * ConstVals.PPM)
+            gameCamBounds.translateSize(-0.2f * ConstVals.PPM, -0.2f * ConstVals.PPM)
             shapeRenderer.color = Color.BLUE
             shapeRenderer.set(ShapeRenderer.ShapeType.Line)
-            shapeRenderer.rect(gameCamBounds.x, gameCamBounds.y, gameCamBounds.width, gameCamBounds.height)
+            shapeRenderer.rect(
+                gameCamBounds.getX(),
+                gameCamBounds.getY(),
+                gameCamBounds.getWidth(),
+                gameCamBounds.getHeight()
+            )
         }
         shapeRenderer.end()
 

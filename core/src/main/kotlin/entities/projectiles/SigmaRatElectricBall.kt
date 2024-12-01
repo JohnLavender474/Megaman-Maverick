@@ -8,10 +8,11 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.UtilMethods.getOverlapPushDirection
 import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.getOverlapPushDirection
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -42,6 +43,9 @@ import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBody
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.world.body.getPositionPoint
 
 class SigmaRatElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
 
@@ -72,26 +76,33 @@ class SigmaRatElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game)
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
-        val trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2(), Vector2::class)
-        body.physics.velocity = trajectory
+
+        val trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2.Zero, Vector2::class)
+        body.physics.velocity.set(trajectory)
+
         hit = false
         hitTimer.reset()
     }
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         super.hitBlock(blockFixture, thisShape, otherShape)
+
         body.physics.velocity.setZero()
         hit = true
-        val blockBounds = blockFixture.getBody()
-        explosionDirection = getOverlapPushDirection(body, blockBounds)
+
+        val blockBounds = blockFixture.getBody().getBounds()
+        explosionDirection = getOverlapPushDirection(body.getBounds(), blockBounds)
+
         requestToPlaySound(SoundAsset.BASSY_BLAST_SOUND, false)
     }
 
     internal fun launch(trajectory: Vector2) {
-        body.physics.velocity = trajectory
+        body.physics.velocity.set(trajectory)
         requestToPlaySound(SoundAsset.BLAST_1_SOUND, false)
     }
 
@@ -111,7 +122,7 @@ class SigmaRatElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game)
         )
         explosion!!.spawn(
             props(
-                ConstKeys.POSITION pairTo body.getBottomCenterPoint(),
+                ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER),
                 ConstKeys.DIRECTION pairTo (explosionDirection ?: Direction.UP)
             )
         )
@@ -121,21 +132,18 @@ class SigmaRatElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game)
         val body = Body(BodyType.ABSTRACT)
         body.setSize(ConstVals.PPM.toFloat())
         body.physics.applyFrictionX = false
-body.physics.applyFrictionY = false
+        body.physics.applyFrictionY = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        body.color = Color.YELLOW
-        debugShapes.add { body }
+        debugShapes.add { body.getBounds() }
 
         val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameRectangle().setSize(ConstVals.PPM.toFloat()))
         body.addFixture(projectileFixture)
-        projectileFixture.rawShape.color = Color.BLUE
-        debugShapes.add { projectileFixture.getShape() }
+        debugShapes.add { projectileFixture}
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(ConstVals.PPM.toFloat()))
         body.addFixture(damagerFixture)
-        damagerFixture.rawShape.color = Color.RED
-        debugShapes.add { damagerFixture.getShape() }
+        debugShapes.add { damagerFixture}
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
@@ -146,9 +154,7 @@ body.physics.applyFrictionY = false
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 3))
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setCenter(body.getCenter())
-        }
+        spritesComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
         return spritesComponent
     }
 

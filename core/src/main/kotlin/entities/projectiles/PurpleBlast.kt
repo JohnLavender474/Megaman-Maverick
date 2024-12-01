@@ -37,6 +37,8 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getCenter
 
 class PurpleBlast(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IFaceable {
 
@@ -64,12 +66,17 @@ class PurpleBlast(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         facing = spawnProps.get(ConstKeys.FACING, Facing::class)!!
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
+
         body.physics.velocity.setZero()
+
         val trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
-        body.physics.velocity = trajectory
+        body.physics.velocity.set(trajectory)
+
         chargeDelayTimer.reset()
     }
 
@@ -81,10 +88,10 @@ class PurpleBlast(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.5f * ConstVals.PPM)
         body.physics.applyFrictionX = false
-body.physics.applyFrictionY = false
+        body.physics.applyFrictionY = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body }
+        debugShapes.add { body.getBounds() }
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.5f * ConstVals.PPM))
         body.addFixture(damagerFixture)
@@ -101,12 +108,12 @@ body.physics.applyFrictionY = false
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 15))
         sprite.setSize(1f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setCenter(body.getCenter())
-            _sprite.setFlip(isFacing(Facing.LEFT), false)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setCenter(body.getCenter())
+            sprite.setFlip(isFacing(Facing.LEFT), false)
             val angle = body.physics.velocity.angleDeg()
-            _sprite.setOriginCenter()
-            _sprite.setRotation(angle)
+            sprite.setOriginCenter()
+            sprite.setRotation(angle)
         }
         return spritesComponent
     }

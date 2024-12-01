@@ -27,8 +27,8 @@ import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.utils.BlinkingArrow
 import com.megaman.maverick.game.screens.utils.ScreenSlide
 import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
-import com.megaman.maverick.game.utils.getDefaultCameraPosition
-import com.megaman.maverick.game.utils.setToDefaultPosition
+import com.megaman.maverick.game.utils.extensions.getDefaultCameraPosition
+import com.megaman.maverick.game.utils.extensions.setToDefaultPosition
 
 class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScreenButton.START_NEW_GAME.text),
     Initializable {

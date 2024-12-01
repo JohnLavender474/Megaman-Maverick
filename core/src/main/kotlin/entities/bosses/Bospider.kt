@@ -12,6 +12,7 @@ import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
@@ -21,7 +22,6 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.common.shapes.toGameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -59,9 +59,11 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.utils.toProps
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
+import com.megaman.maverick.game.utils.extensions.toProps
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, IParentEntity {
@@ -263,7 +265,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
                 BospiderState.RETREAT -> {
                     body.physics.velocity.set(0f, getCurrentSpeed())
-                    if (body.y >= spawn.y + START_POINT_OFFSET * ConstVals.PPM) {
+                    if (body.getY() >= spawn.y + START_POINT_OFFSET * ConstVals.PPM) {
                         body.physics.velocity.setZero()
                         body.setCenter(spawn.x, spawn.y + START_POINT_OFFSET * ConstVals.PPM)
                         spawnDelayTimer.reset()
@@ -287,7 +289,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         body.physics.applyFrictionY = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(2f * ConstVals.PPM))
         body.addFixture(bodyFixture)
@@ -304,8 +306,8 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         body.preProcess.put(ConstKeys.DEFAULT) {
             val shielded =
                 stateLoop.getCurrent().equalsAny(BospiderState.SPAWN, BospiderState.CLIMB, BospiderState.RETREAT)
-            shieldFixture.active = shielded
-            damageableFixture.active = !shielded
+            shieldFixture.setActive(shielded)
+            damageableFixture.setActive(!shielded)
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -346,18 +348,20 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
     }
 
     private fun moveToSpawn() {
-        val target = spawn.cpy()
-        val center = body.getCenter()
-        val directionToSpawn = target.sub(center).nor()
-        val velocity = directionToSpawn.scl(MIN_SPEED).scl(ConstVals.PPM.toFloat())
+        val velocity = GameObjectPools.fetch(Vector2::class)
+            .set(spawn)
+            .sub(body.getCenter())
+            .nor()
+            .scl(MIN_SPEED * ConstVals.PPM)
         body.physics.velocity.set(velocity)
     }
 
     private fun moveToNextTarget() {
-        val target = currentPath.first().cpy()
-        val center = body.getCenter()
-        val directionToTarget = target.sub(center).nor()
-        val velocity = directionToTarget.scl(getCurrentSpeed())
+        val velocity = GameObjectPools.fetch(Vector2::class)
+            .set(currentPath.first())
+            .sub(body.getCenter())
+            .nor()
+            .scl(getCurrentSpeed())
         body.physics.velocity.set(velocity)
     }
 
@@ -377,7 +381,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         val web = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SPIDER_WEB)!!
         val scaledTrajectory = trajectory.scl(WEB_SPEED * ConstVals.PPM)
         val props = props(
-            ConstKeys.POSITION pairTo body.getBottomCenterPoint(),
+            ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER),
             ConstKeys.TRAJECTORY pairTo scaledTrajectory,
             ConstKeys.OWNER pairTo this
         )

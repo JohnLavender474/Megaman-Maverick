@@ -9,6 +9,7 @@ import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -26,11 +27,11 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.world.body.getPositionPoint
 
 class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity, ISpritesEntity, IAnimatedEntity,
-    IEventListener, IDirectionRotatable {
+    IEventListener, IDirectional {
 
     companion object {
         const val TAG = "PropellerPlatform"
@@ -40,7 +41,7 @@ class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity,
     override val eventKeyMask = objectSetOf<Any>(
         EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.END_ROOM_TRANS
     )
-    override lateinit var directionRotation: Direction
+    override lateinit var direction: Direction
 
     var hidden = false
 
@@ -65,8 +66,8 @@ class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity,
         if (spawnProps.containsKey(ConstKeys.DIRECTION)) {
             var direction = spawnProps.get(ConstKeys.DIRECTION)
             if (direction is String) direction = Direction.valueOf(direction.uppercase())
-            directionRotation = direction as Direction
-        } else directionRotation = Direction.UP
+            direction = direction as Direction
+        } else direction = Direction.UP
 
         val trajectory = Trajectory(spawnProps.get(ConstKeys.TRAJECTORY) as String, ConstVals.PPM)
         val motionDefinition = MotionComponent.MotionDefinition(motion = trajectory,
@@ -102,8 +103,8 @@ class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity,
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setOriginCenter()
-            sprite.rotation = directionRotation.rotation
-            val position = when (directionRotation) {
+            sprite.rotation = direction.rotation
+            val position = when (direction) {
                 Direction.UP -> Position.TOP_CENTER
                 Direction.DOWN -> Position.BOTTOM_CENTER
                 Direction.LEFT -> Position.CENTER_LEFT

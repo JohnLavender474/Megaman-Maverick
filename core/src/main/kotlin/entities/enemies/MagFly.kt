@@ -1,8 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
@@ -41,6 +39,7 @@ import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.VelocityAlteration
+import com.megaman.maverick.game.utils.extensions.getCenter
 
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
@@ -87,32 +86,32 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         body.setSize(ConstVals.PPM.toFloat())
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(ConstVals.PPM.toFloat()))
         body.addFixture(bodyFixture)
-        debugShapes.add { bodyFixture.getShape() }
+        debugShapes.add { bodyFixture}
 
         val leftFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
-        leftFixture.offsetFromBodyCenter.x = -0.6f * ConstVals.PPM
-        leftFixture.offsetFromBodyCenter.y = 0.4f * ConstVals.PPM
+        leftFixture.offsetFromBodyAttachment.x = -0.6f * ConstVals.PPM
+        leftFixture.offsetFromBodyAttachment.y = 0.4f * ConstVals.PPM
         body.addFixture(leftFixture)
-        debugShapes.add { leftFixture.getShape() }
+        debugShapes.add { leftFixture}
 
         val rightFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
-        rightFixture.offsetFromBodyCenter.x = 0.6f * ConstVals.PPM
-        rightFixture.offsetFromBodyCenter.y = 0.4f * ConstVals.PPM
+        rightFixture.offsetFromBodyAttachment.x = 0.6f * ConstVals.PPM
+        rightFixture.offsetFromBodyAttachment.y = 0.4f * ConstVals.PPM
         body.addFixture(rightFixture)
-        debugShapes.add { rightFixture.getShape() }
+        debugShapes.add { rightFixture}
 
         forceFixture = Fixture(
             body,
             FixtureType.FORCE,
             GameRectangle().setSize(ConstVals.PPM / 2f, ConstVals.VIEW_HEIGHT * ConstVals.PPM)
         )
-        forceFixture.offsetFromBodyCenter.y = -ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f
+        forceFixture.offsetFromBodyAttachment.y = -ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f
         forceFixture.setVelocityAlteration { fixture, delta ->
             val entity = fixture.getEntity()
             if (entity is AbstractEnemy || (entity is Megaman && entity.damaged)) return@setVelocityAlteration VelocityAlteration.addNone()
@@ -124,18 +123,15 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             return@setVelocityAlteration VelocityAlteration.add(x, y)
         }
         body.addFixture(forceFixture)
-        forceFixture.rawShape.color = Color.YELLOW
-        debugShapes.add { forceFixture.getShape() }
+        debugShapes.add { forceFixture}
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(ConstVals.PPM.toFloat()))
         body.addFixture(damageableFixture)
-        damageableFixture.rawShape.color = Color.PURPLE
-        debugShapes.add { damageableFixture.getShape() }
+        debugShapes.add { damageableFixture}
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.95f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        damagerFixture.rawShape.color = Color.RED
-        debugShapes.add { damagerFixture.getShape() }
+        debugShapes.add { damagerFixture}
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
@@ -146,10 +142,10 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.hidden = damageBlink
-            _sprite.setCenter(body.getCenter())
-            _sprite.setFlip(facing == Facing.LEFT, false)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.hidden = damageBlink
+            sprite.setCenter(body.getCenter())
+            sprite.setFlip(facing == Facing.LEFT, false)
         }
         return spritesComponent
     }
@@ -163,10 +159,10 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
                 forceFlashTimer.reset()
             }
 
-            val slow = megaman().body.overlaps(forceFixture.getShape() as Rectangle)
+            val slow = megaman().body.getBounds().overlaps(forceFixture.getShape())
 
-            if (!slow && megaman().body.y < body.y && !facingAndMMDirMatch()) facing =
-                if (megaman().body.x > body.x) Facing.RIGHT else Facing.LEFT
+            if (!slow && megaman().body.getY() < body.getY() && !facingAndMMDirMatch()) facing =
+                if (megaman().body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
 
             if ((facing == Facing.LEFT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) || (facing == Facing.RIGHT && body.isSensing(
                     BodySense.SIDE_TOUCHING_BLOCK_RIGHT
@@ -183,5 +179,5 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     }
 
     private fun facingAndMMDirMatch() =
-        (game.megaman.body.x > body.x && facing == Facing.RIGHT) || (game.megaman.body.x < body.x && facing == Facing.LEFT)
+        (game.megaman.body.getX() > body.getX() && facing == Facing.RIGHT) || (game.megaman.body.getX() < body.getX() && facing == Facing.LEFT)
 }

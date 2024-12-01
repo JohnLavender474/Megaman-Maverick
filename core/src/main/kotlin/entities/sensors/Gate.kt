@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.sensors
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
@@ -11,12 +10,12 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.Resettable
-import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -46,8 +45,9 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.world.body.*
 
 class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudioEntity, ISpritesEntity, IEventListener,
     Resettable {
@@ -184,33 +184,48 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.color = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val gateFixture = Fixture(body, FixtureType.GATE, GameRectangle())
         gateFixture.attachedToBody = false
         body.addFixture(gateFixture)
-        gateFixture.rawShape.color = Color.GREEN
-        debugShapes.add { gateFixture.getShape() }
+        debugShapes.add { gateFixture}
 
-        body.preProcess.put(ConstKeys.DEFAULT, Updatable {
-            val bodySize = if (direction.isHorizontal()) Vector2(2f, 3f) else Vector2(3f, 2f)
-            body.setSize(bodySize.scl(ConstVals.PPM.toFloat()))
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            val size = GameObjectPools.fetch(Vector2::class)
+            if (direction.isHorizontal()) {
+                size.x = 2f
+                size.y = 3f
+            } else {
+                size.x = 3f
+                size.y = 2f
+            }
+            size.scl(ConstVals.PPM.toFloat())
+            body.setSize(size.x, size.y)
+
             body.setCenter(center)
 
             val gateShape = gateFixture.rawShape as GameRectangle
-            val gateSize = if (direction.isHorizontal()) Vector2(1f, 3f) else Vector2(3f, 1f)
-            gateShape.setSize(gateSize.scl(ConstVals.PPM.toFloat()))
+            val gateSize = GameObjectPools.fetch(Vector2::class)
+            if (direction.isHorizontal()) {
+                gateSize.x = 1f
+                gateSize.y = 3f
+            } else {
+                gateSize.x = 3f
+                gateSize.y = 1f
+            }
+            gateSize.scl(ConstVals.PPM.toFloat())
+            gateShape.setSize(gateSize)
 
             when (direction) {
-                Direction.UP -> gateShape.setTopCenterToPoint(body.getTopCenterPoint())
-                Direction.DOWN -> gateShape.setBottomCenterToPoint(body.getBottomCenterPoint())
-                Direction.LEFT -> gateShape.setCenterLeftToPoint(body.getCenterLeftPoint())
-                Direction.RIGHT -> gateShape.setCenterRightToPoint(body.getCenterRightPoint())
+                Direction.UP -> gateShape.setTopCenterToPoint(body.getPositionPoint(Position.TOP_CENTER))
+                Direction.DOWN -> gateShape.setBottomCenterToPoint(body.getPositionPoint(Position.BOTTOM_CENTER))
+                Direction.LEFT -> gateShape.setCenterLeftToPoint(body.getPositionPoint(Position.CENTER_LEFT))
+                Direction.RIGHT -> gateShape.setCenterRightToPoint(body.getPositionPoint(Position.CENTER_RIGHT))
             }
-        })
+        }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 

@@ -4,7 +4,6 @@ import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.interfaces.Initializable
 import com.mega.game.engine.drawables.sprites.containsRegion
@@ -24,34 +23,22 @@ class MegamanAnimations(private val game: MegamanMaverickGame) : Initializable,
     private var initialized = false
 
     override fun init() {
-        gdxArrayOf("Megaman" /*"MegamanMaverick"*/).forEach { megamanType ->
-            for (weapon in MegamanWeapon.entries) {
-                val assetSource = if (megamanType == "Megaman") when (weapon) {
-                    MegamanWeapon.BUSTER -> TextureAsset.MEGAMAN_BUSTER.source
-                    MegamanWeapon.RUSH_JETPACK -> TextureAsset.MEGAMAN_RUSH_JETPACK.source
-                    // TODO: MegamanWeapon.FLAME_TOSS -> "" // TODO: TextureAsset.MEGAMAN_FLAME_TOSS.source
-                }
-                else when (weapon) {
-                    MegamanWeapon.BUSTER -> TextureAsset.MEGAMAN_MAVERICK_BUSTER.source
-                    MegamanWeapon.RUSH_JETPACK -> "" // TODO: TextureAsset.MEGAMAN_MAVERICK_RUSH_JETPACK.source
-                    // TODO: MegamanWeapon.FLAME_TOSS -> "" // TODO: create texture atlas
-                }
-                if (assetSource == "") continue
-                val atlas = game.assMan.getTextureAtlas(assetSource)
+        MegamanWeapon.entries.forEach { weapon ->
+            val assetSource = when (weapon) {
+                MegamanWeapon.BUSTER -> TextureAsset.MEGAMAN_BUSTER.source
+                MegamanWeapon.RUSH_JETPACK -> TextureAsset.MEGAMAN_RUSH_JETPACK.source
+                // TODO: MegamanWeapon.FLAME_TOSS -> "" // TODO: TextureAsset.MEGAMAN_FLAME_TOSS.source
+            }
 
-                MegamanAnimationDefs.getKeys().forEach { key ->
-                    if (!atlas.containsRegion(key) || (megamanType == "Megaman" && key.contains("Left"))) return@forEach
+            val atlas = game.assMan.getTextureAtlas(assetSource)
+            MegamanAnimationDefs.getKeys().forEach { defKey ->
+                if (!atlas.containsRegion(defKey)) return@forEach
 
-                    val def = MegamanAnimationDefs.get(key)
+                val def = MegamanAnimationDefs.get(defKey)
+                val key = "${defKey}_${weapon.name}"
+                animations.put(key, Animation(atlas.findRegion(defKey), def.rows, def.cols, def.durations))
 
-                    var temp = key
-                    temp += "_${megamanType}"
-                    temp += "_${weapon.name}"
-
-                    GameLogger.debug(TAG, "init(): putting animation \'${key}\' with key \'${temp}\'")
-
-                    animations.put(temp, Animation(atlas.findRegion(key), def.rows, def.cols, def.durations))
-                }
+                GameLogger.debug(TAG, "init(): put animation \'$defKey\' with key \'$key\'")
             }
         }
     }

@@ -19,7 +19,7 @@ import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.utils.BlinkingArrow
-import com.megaman.maverick.game.utils.setToDefaultPosition
+import com.megaman.maverick.game.utils.extensions.setToDefaultPosition
 
 class SimpleSelectLevelScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, BETA), Initializable {
 

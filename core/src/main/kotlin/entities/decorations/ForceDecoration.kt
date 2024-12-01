@@ -26,6 +26,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.utils.extensions.getCenter
 
 class ForceDecoration(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity,
     ICullableEntity {
@@ -59,11 +60,11 @@ class ForceDecoration(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 2))
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setOriginCenter()
-            _sprite.rotation = rotation
-            _sprite.setCenter(bounds.getCenter())
-            _sprite.setAlpha(0.5f)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setOriginCenter()
+            sprite.rotation = rotation
+            sprite.setCenter(bounds.getCenter())
+            sprite.setAlpha(0.5f)
         }
         return spritesComponent
     }

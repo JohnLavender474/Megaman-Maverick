@@ -16,9 +16,9 @@ object GamePasswords {
         val password = IntArray(36)
         val multiCollectionIterable = MultiCollectionIterable(
             gdxArrayOf(
-                BossType.values().toGdxArray(),
-                MegaHeartTank.values().toGdxArray(),
-                MegaHealthTank.values().toGdxArray(),
+                BossType.entries.toTypedArray().toGdxArray(),
+                MegaHeartTank.entries.toTypedArray().toGdxArray(),
+                MegaHealthTank.entries.toTypedArray().toGdxArray(),
                 // MegaAbility.values().toGdxArray()
             )
         )
@@ -43,9 +43,9 @@ object GamePasswords {
         val passwordArray = password.map { it.toString().toInt() }.toIntArray()
         val multiCollectionIterable = MultiCollectionIterable(
             gdxArrayOf(
-                BossType.values().toGdxArray(),
-                MegaHeartTank.values().toGdxArray(),
-                MegaHealthTank.values().toGdxArray(),
+                BossType.entries.toTypedArray().toGdxArray(),
+                MegaHeartTank.entries.toTypedArray().toGdxArray(),
+                MegaHealthTank.entries.toTypedArray().toGdxArray(),
                 // MegaAbility.values().toGdxArray()
             )
         )

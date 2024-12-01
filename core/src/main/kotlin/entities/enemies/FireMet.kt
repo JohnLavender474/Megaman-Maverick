@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.enemies
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -14,9 +13,7 @@ import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.coerceX
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.extensions.vector2Of
 import com.mega.game.engine.common.interfaces.IFaceable
-
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -49,7 +46,9 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.FireMetFlame
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
@@ -98,14 +97,14 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
         val spawn =
             if (spawnProps.containsKey(ConstKeys.BOUNDS))
-                spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+                spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
             else spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setBottomCenterToPoint(spawn)
 
         spawnFlame()
 
         fireMetState = FireMetState.MOVE
-        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
         moveTimer.reset()
         shootTimer.setToEnd()
@@ -113,14 +112,21 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
     override fun onDestroy() {
         super.onDestroy()
+
         flame?.destroy()
         flame = null
     }
 
     private fun spawnFlame() {
         if (flame != null) throw IllegalStateException("Flame must be null before spawning new flame")
+
         flame = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.FIRE_MET_FLAME) as FireMetFlame?
-        flame!!.spawn(props(ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo body.getTopCenterPoint()))
+        flame!!.spawn(
+            props(
+                ConstKeys.OWNER pairTo this,
+                ConstKeys.POSITION pairTo body.getPositionPoint(Position.TOP_CENTER)
+            )
+        )
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -128,17 +134,20 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         updatablesComponent.add { delta ->
             when (fireMetState) {
                 FireMetState.MOVE -> {
-                    flame!!.body?.setBottomCenterToPoint(body.getTopCenterPoint())
+                    flame!!.body.setBottomCenterToPoint(body.getPositionPoint(Position.TOP_CENTER))
                     flame!!.whooshing = !body.isSensing(BodySense.FEET_ON_GROUND)
                     flame!!.facing = facing
 
                     if (body.isSensing(BodySense.FEET_ON_GROUND)) {
                         body.physics.velocity.x = MOVE_SPEED * facing.value * ConstVals.PPM
+
                         moveTimer.update(delta)
                         if (moveTimer.isFinished()) {
-                            facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+                            facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+
                             shoot()
                             shootTimer.reset()
+
                             fireMetState = FireMetState.SHOOT
                         }
                     }
@@ -146,6 +155,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
                 FireMetState.SHOOT -> {
                     body.physics.velocity.x = 0f
+
                     shootTimer.update(delta)
                     if (shootTimer.isJustFinished()) {
                         spawnFlame()
@@ -158,7 +168,10 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     }
 
     private fun jump() {
-        body.physics.velocity = Vector2(MOVE_SPEED * facing.value, JUMP_IMPULSE_Y).scl(ConstVals.PPM.toFloat())
+        val velocity = GameObjectPools.fetch(Vector2::class)
+            .set(MOVE_SPEED * facing.value, JUMP_IMPULSE_Y)
+            .scl(ConstVals.PPM.toFloat())
+        body.physics.velocity.set(velocity)
     }
 
     private fun shoot() {
@@ -166,6 +179,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
             body.getCenter(), megaman().body.getCenter(), JUMP_IMPULSE_Y * ConstVals.PPM,
         ).coerceX(-MAX_SHOOT_X * ConstVals.PPM, MAX_SHOOT_Y * ConstVals.PPM)
         flame!!.launch(impulse)
+
         flame!!.body.physics.gravityOn = true
         flame = null
     }
@@ -175,7 +189,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         body.setSize(0.65f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         body.addFixture(bodyFixture)
@@ -191,37 +205,34 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
                 0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM
             )
         )
-        feetFixture.offsetFromBodyCenter.y = -0.375f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -0.375f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.rawShape.color = Color.GREEN
-        debugShapes.add { feetFixture.getShape() }
+        debugShapes.add { feetFixture }
 
         val leftSideFixture = Fixture(
             body, FixtureType.SIDE, GameRectangle().setSize(
                 0.1f * ConstVals.PPM, 0.25f * ConstVals.PPM
             )
         )
-        leftSideFixture.offsetFromBodyCenter.x = -0.375f * ConstVals.PPM
+        leftSideFixture.offsetFromBodyAttachment.x = -0.375f * ConstVals.PPM
         leftSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         leftSideFixture.putProperty(ConstKeys.DEATH_LISTENER, false)
         body.addFixture(leftSideFixture)
-        leftSideFixture.rawShape.color = Color.YELLOW
-        debugShapes.add { leftSideFixture.getShape() }
+        debugShapes.add { leftSideFixture }
 
         val rightSideFixture = Fixture(
             body, FixtureType.SIDE, GameRectangle().setSize(
                 0.1f * ConstVals.PPM, 0.25f * ConstVals.PPM
             )
         )
-        rightSideFixture.offsetFromBodyCenter.x = 0.375f * ConstVals.PPM
+        rightSideFixture.offsetFromBodyAttachment.x = 0.375f * ConstVals.PPM
         rightSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         rightSideFixture.putProperty(ConstKeys.DEATH_LISTENER, false)
         body.addFixture(rightSideFixture)
-        rightSideFixture.rawShape.color = Color.YELLOW
-        debugShapes.add { rightSideFixture.getShape() }
+        debugShapes.add { rightSideFixture }
 
         val leftConsumerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        leftConsumerFixture.offsetFromBodyCenter = vector2Of(-0.5f * ConstVals.PPM)
+        leftConsumerFixture.offsetFromBodyAttachment.set(-0.5f, -0.5f).scl(ConstVals.PPM.toFloat())
         leftConsumerFixture.setConsumer { _, fixture ->
             when (fixture.getType()) {
                 FixtureType.DEATH -> leftConsumerFixture.putProperty(ConstKeys.DEATH, true)
@@ -229,11 +240,10 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
             }
         }
         body.addFixture(leftConsumerFixture)
-        leftConsumerFixture.rawShape.color = Color.ORANGE
-        debugShapes.add { leftConsumerFixture.getShape() }
+        debugShapes.add { leftConsumerFixture }
 
         val rightConsumerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.2f * ConstVals.PPM))
-        rightConsumerFixture.offsetFromBodyCenter = Vector2(0.5f * ConstVals.PPM, -0.5f * ConstVals.PPM)
+        rightConsumerFixture.offsetFromBodyAttachment.set(0.5f * ConstVals.PPM, -0.5f * ConstVals.PPM)
         rightConsumerFixture.setConsumer { _, fixture ->
             when (fixture.getType()) {
                 FixtureType.DEATH -> rightConsumerFixture.putProperty(ConstKeys.DEATH, true)
@@ -241,8 +251,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
             }
         }
         body.addFixture(rightConsumerFixture)
-        rightConsumerFixture.rawShape.color = Color.ORANGE
-        debugShapes.add { rightConsumerFixture.getShape() }
+        debugShapes.add { rightConsumerFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.gravity.y =
@@ -256,26 +265,30 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
         body.postProcess.put(ConstKeys.DEFAULT) {
             if (isFacing(Facing.LEFT)) {
-                if (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) ||
-                    leftConsumerFixture.isProperty(ConstKeys.DEATH, true)
-                ) facing = Facing.RIGHT
-                else if (fireMetState == FireMetState.MOVE &&
-                    body.isSensing(BodySense.FEET_ON_GROUND) &&
-                    leftConsumerFixture.isProperty(ConstKeys.BLOCK, false)
-                ) {
-                    jump()
-                    moveTimer.reset()
+                when {
+                    body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) ||
+                        leftConsumerFixture.isProperty(ConstKeys.DEATH, true) ->
+                        facing = Facing.RIGHT
+
+                    fireMetState == FireMetState.MOVE &&
+                        body.isSensing(BodySense.FEET_ON_GROUND) &&
+                        leftConsumerFixture.isProperty(ConstKeys.BLOCK, false) -> {
+                        jump()
+                        moveTimer.reset()
+                    }
                 }
             } else if (isFacing(Facing.RIGHT)) {
-                if (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) ||
-                    rightConsumerFixture.isProperty(ConstKeys.DEATH, true)
-                ) facing = Facing.LEFT
-                else if (fireMetState == FireMetState.MOVE &&
-                    body.isSensing(BodySense.FEET_ON_GROUND) &&
-                    rightConsumerFixture.isProperty(ConstKeys.BLOCK, false)
-                ) {
-                    jump()
-                    moveTimer.reset()
+                when {
+                    body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) ||
+                        rightConsumerFixture.isProperty(ConstKeys.DEATH, true) ->
+                        facing = Facing.LEFT
+
+                    fireMetState == FireMetState.MOVE &&
+                        body.isSensing(BodySense.FEET_ON_GROUND) &&
+                        rightConsumerFixture.isProperty(ConstKeys.BLOCK, false) -> {
+                        jump()
+                        moveTimer.reset()
+                    }
                 }
             }
         }
@@ -289,10 +302,10 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         val sprite = GameSprite()
         sprite.setSize(1.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(body.getBottomCenterPoint(), Position.BOTTOM_CENTER)
-            _sprite.setFlip(isFacing(Facing.LEFT), false)
-            _sprite.hidden = damageBlink
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
+            sprite.setFlip(isFacing(Facing.LEFT), false)
+            sprite.hidden = damageBlink
         }
         return spritesComponent
     }

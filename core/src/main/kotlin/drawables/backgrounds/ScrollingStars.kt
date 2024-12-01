@@ -5,7 +5,6 @@ import com.mega.game.engine.common.extensions.getTextureRegion
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.drawables.sprites.ScrollingBackground
 
 class ScrollingStars(
     game: MegamanMaverickGame,

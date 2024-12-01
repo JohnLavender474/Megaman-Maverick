@@ -48,8 +48,11 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getPositionPoint
 import kotlin.reflect.KClass
 
 class CactusLauncher(game: MegamanMaverickGame) : AbstractEnemy(game), IParentEntity, IAnimatedEntity {
@@ -81,7 +84,7 @@ class CactusLauncher(game: MegamanMaverickGame) : AbstractEnemy(game), IParentEn
     )
     override var children = Array<IGameEntity>()
 
-    private val loop = Loop(CactusLauncherState.values().toGdxArray())
+    private val loop = Loop(CactusLauncherState.entries.toTypedArray().toGdxArray())
     private val timers = objectMapOf(
         "wait" pairTo Timer(WAIT_DUR),
         "fire" pairTo Timer(FIRE_DUR),
@@ -101,7 +104,7 @@ class CactusLauncher(game: MegamanMaverickGame) : AbstractEnemy(game), IParentEn
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getBottomCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
         loop.reset()
         timers.values().forEach { it.reset() }
@@ -114,7 +117,7 @@ class CactusLauncher(game: MegamanMaverickGame) : AbstractEnemy(game), IParentEn
 
     private fun launchMissile() {
         val missile = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.CACTUS_MISSILE)!!
-        missile.spawn(props(ConstKeys.POSITION pairTo body.getTopCenterPoint()))
+        missile.spawn(pooledProps(ConstKeys.POSITION pairTo body.getPositionPoint(Position.TOP_CENTER)))
         children.add(missile)
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
     }
@@ -168,11 +171,11 @@ class CactusLauncher(game: MegamanMaverickGame) : AbstractEnemy(game), IParentEn
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.hidden = damageBlink
-            val bodyPosition = body.getBottomCenterPoint()
-            _sprite.setPosition(bodyPosition, Position.BOTTOM_CENTER)
-            _sprite.hidden = damageBlink
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.hidden = damageBlink
+            val bodyPosition = body.getPositionPoint(Position.BOTTOM_CENTER)
+            sprite.setPosition(bodyPosition, Position.BOTTOM_CENTER)
+            sprite.hidden = damageBlink
         }
         return spritesComponent
     }

@@ -21,7 +21,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.utils.BlinkingArrow
 import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
-import com.megaman.maverick.game.utils.setToDefaultPosition
+import com.megaman.maverick.game.utils.extensions.setToDefaultPosition
 
 class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), Initializable {
 

@@ -1,9 +1,7 @@
 package com.megaman.maverick.game.entities.enemies
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
@@ -22,7 +20,6 @@ import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.common.shapes.getCenter
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -49,8 +46,10 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
+import com.megaman.maverick.game.world.body.*
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -69,7 +68,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
     private enum class PopoheliState { WAITING, APPROACHING, ATTACKING, FLEEING }
 
-    private class TriggerDef(val trigger: Rectangle, val start: Vector2, val target: Vector2)
+    private class TriggerDef(val trigger: GameRectangle, val start: Vector2, val target: Vector2)
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
         Bullet::class pairTo dmgNeg(15),
@@ -93,9 +92,9 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         get() = state == PopoheliState.WAITING
 
     private lateinit var state: PopoheliState
-    private lateinit var target: Vector2
     private lateinit var faceOnEnd: Facing
 
+    private val target = Vector2()
     private val triggers = Array<TriggerDef>()
 
     override fun init() {
@@ -118,22 +117,26 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
             spawnProps.getAllMatching { it.toString().startsWith(ConstKeys.TRIGGER) }.forEach {
                 val value = it.second
                 if (value is RectangleMapObject) {
-                    val trigger = value.rectangle
-                    val start = (value.properties.get(ConstKeys.START) as RectangleMapObject).rectangle.getCenter()
-                    val target = (value.properties.get(ConstKeys.TARGET) as RectangleMapObject).rectangle.getCenter()
+                    val trigger = value.rectangle.toGameRectangle(false)
+                    val start =
+                        (value.properties.get(ConstKeys.START) as RectangleMapObject).rectangle.getCenter(false)
+                    val target =
+                        (value.properties.get(ConstKeys.TARGET) as RectangleMapObject).rectangle.getCenter(false)
                     triggers.add(TriggerDef(trigger, start, target))
                 }
             }
-            facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+            facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         } else {
             val center = megaman().body.getCenter()
+            
             val targets =
                 PriorityQueue<Vector2> { target1, target2 -> target1.dst2(center).compareTo(target2.dst2(center)) }
             spawnProps.getAllMatching { it.toString().startsWith(ConstKeys.TARGET) }.forEach {
                 targets.add((it.second as RectangleMapObject).rectangle.getCenter())
             }
-            target = targets.poll()
-            facing = if (target.x < body.x) Facing.LEFT else Facing.RIGHT
+            target.set(targets.poll())
+
+            facing = if (target.x < body.getX()) Facing.LEFT else Facing.RIGHT
         }
 
         state = if (triggerable) PopoheliState.WAITING else PopoheliState.APPROACHING
@@ -159,17 +162,21 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
                 PopoheliState.WAITING -> {
                     body.physics.velocity.setZero()
                     triggers.forEach {
-                        if (megaman().body.overlaps(it.trigger)) {
+                        if (megaman().body.getBounds().overlaps(it.trigger)) {
                             body.setCenter(it.start)
-                            target = it.target
+                            target.set(it.target)
                             state = PopoheliState.APPROACHING
                         }
                     }
                 }
 
                 PopoheliState.APPROACHING -> {
-                    val trajectory = target.cpy().sub(body.getCenter()).nor().scl(SPEED * ConstVals.PPM)
-                    body.physics.velocity = trajectory
+                    val trajectory = GameObjectPools.fetch(Vector2::class)
+                        .set(target)
+                        .sub(body.getCenter())
+                        .nor()
+                        .scl(SPEED * ConstVals.PPM)
+                    body.physics.velocity.set(trajectory)
 
                     if (body.getCenter().epsilonEquals(target, 0.1f * ConstVals.PPM)) {
                         body.physics.velocity.setZero()
@@ -204,13 +211,11 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         body.addFixture(bodyFixture)
-        bodyFixture.rawShape.color = Color.GRAY
-        debugShapes.add { bodyFixture.getShape() }
+        debugShapes.add { bodyFixture }
 
         val damagerFixture1 = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
         body.addFixture(damagerFixture1)
-        damagerFixture1.rawShape.color = Color.RED
-        debugShapes.add { damagerFixture1.getShape() }
+        debugShapes.add { damagerFixture1 }
 
         val damagerFixture2 = Fixture(
             body, FixtureType.DAMAGER, GameRectangle().setSize(
@@ -218,7 +223,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
             )
         )
         body.addFixture(damagerFixture2)
-        debugShapes.add { damagerFixture2.getShape() }
+        debugShapes.add { damagerFixture2 }
 
         val damageableFixture = Fixture(
             body, FixtureType.DAMAGEABLE, GameRectangle().setSize(
@@ -226,8 +231,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
             )
         )
         body.addFixture(damageableFixture)
-        damageableFixture.rawShape.color = Color.PURPLE
-        debugShapes.add { damageableFixture.getShape() }
+        debugShapes.add { damageableFixture }
 
         val shieldFixture = Fixture(
             body, FixtureType.SHIELD, GameRectangle().setSize(
@@ -235,22 +239,20 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
             )
         )
         body.addFixture(shieldFixture)
-        shieldFixture.rawShape.color = Color.GREEN
-        debugShapes.add { shieldFixture.getShape() }
+        debugShapes.add { shieldFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.collisionOn = !waiting
-            body.fixtures.forEach { (it.second as Fixture).active = !waiting }
+            body.forEachFixture { it.setActive(!waiting) }
             if (waiting) return@put
 
-            damagerFixture2.offsetFromBodyCenter = Vector2(
+            damagerFixture2.offsetFromBodyAttachment = Vector2(
                 FLAMES * FLAME_PADDING * facing.value * 0.65f * ConstVals.PPM, -0.5f * ConstVals.PPM
             )
-            damagerFixture2.active = attacking
-            damagerFixture2.rawShape.color = if (damagerFixture2.active) Color.GRAY else Color.RED
+            damagerFixture2.setActive(attacking)
 
-            damageableFixture.offsetFromBodyCenter.x = 0.4f * ConstVals.PPM * -facing.value
-            shieldFixture.offsetFromBodyCenter.x = 0.3f * ConstVals.PPM * facing.value
+            damageableFixture.offsetFromBodyAttachment.x = 0.4f * ConstVals.PPM * -facing.value
+            shieldFixture.offsetFromBodyAttachment.x = 0.3f * ConstVals.PPM * facing.value
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -259,8 +261,8 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprites = OrderedMap<String, GameSprite>()
-        val updateFunctions = ObjectMap<String, UpdateFunction<GameSprite>>()
+        val sprites = OrderedMap<Any, GameSprite>()
+        val updateFunctions = ObjectMap<Any, UpdateFunction<GameSprite>>()
 
         val heliSprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0))
         heliSprite.setSize(1.5f * ConstVals.PPM)
@@ -278,7 +280,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
             updateFunctions.put("flame_$i") { _, _sprite ->
                 _sprite.hidden = !attacking
                 _sprite.setPosition(
-                    body.getBottomCenterPoint().add(
+                    body.getPositionPoint(Position.BOTTOM_CENTER).add(
                         i * FLAME_PADDING * ConstVals.PPM * facing.value, -0.25f * ConstVals.PPM
                     ), if (isFacing(Facing.LEFT)) Position.BOTTOM_RIGHT else Position.BOTTOM_LEFT
                 )

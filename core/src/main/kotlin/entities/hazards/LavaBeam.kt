@@ -9,6 +9,7 @@ import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.cullables.CullablesComponent
@@ -30,26 +31,26 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getCenter
 
 class LavaBeam(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
-    ICullableEntity, IHazard, IDirectionRotatable {
+    ICullableEntity, IHazard, IDirectional {
 
     companion object {
         const val TAG = "LavaBeam"
         private var region: TextureRegion? = null
     }
 
-    override var directionRotation: Direction
-        get() = body.cardinalRotation
+    override var direction: Direction
+        get() = body.direction
         set(value) {
-            body.cardinalRotation = value
+            body.direction = value
         }
 
     override fun getEntityType() = EntityType.HAZARD
@@ -64,16 +65,16 @@ class LavaBeam(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        directionRotation = spawnProps.get(ConstKeys.DIRECTION, Direction::class)!!
+        direction = spawnProps.get(ConstKeys.DIRECTION, Direction::class)!!
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-        when (directionRotation) {
+        when (direction) {
             Direction.UP -> body.setTopCenterToPoint(spawn)
             Direction.DOWN -> body.setBottomCenterToPoint(spawn)
             Direction.LEFT -> body.setCenterLeftToPoint(spawn)
             Direction.RIGHT -> body.setCenterRightToPoint(spawn)
         }
         val speed = spawnProps.get(ConstKeys.SPEED, Float::class)!!
-        val trajectory = when (directionRotation) {
+        val trajectory = when (direction) {
             Direction.UP -> Vector2(0f, speed)
             Direction.DOWN -> Vector2(0f, -speed)
             Direction.LEFT -> Vector2(-speed, 0f)
@@ -87,7 +88,7 @@ class LavaBeam(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         body.setSize(2f * ConstVals.PPM, 5f * ConstVals.PPM)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBodyBounds() }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
         return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.DEATH))
     }
 
@@ -95,10 +96,10 @@ class LavaBeam(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         val sprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, 0))
         sprite.setSize(2f * ConstVals.PPM, 5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setCenter(body.getCenter())
-            _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation.rotation
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setCenter(body.getCenter())
+            sprite.setOriginCenter()
+            sprite.rotation = direction.rotation
         }
         return spritesComponent
     }

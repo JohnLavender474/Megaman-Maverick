@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.projectiles
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -90,25 +89,22 @@ class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         body.setSize(0.25f * ConstVals.PPM, 2f * ConstVals.PPM)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
-        body.color = Color.BLUE
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
         val leftFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        leftFixture.offsetFromBodyCenter.x = -0.125f * ConstVals.PPM
+        leftFixture.offsetFromBodyAttachment.x = -0.125f * ConstVals.PPM
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftFixture)
-        leftFixture.rawShape.color = Color.BLUE
-        debugShapes.add { leftFixture.getShape() }
+        debugShapes.add { leftFixture}
 
         val rightFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        rightFixture.offsetFromBodyCenter.x = 0.125f * ConstVals.PPM
+        rightFixture.offsetFromBodyAttachment.x = 0.125f * ConstVals.PPM
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
-        rightFixture.rawShape.color = Color.BLUE
-        debugShapes.add { rightFixture.getShape() }
+        debugShapes.add { rightFixture}
 
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         body.preProcess.put(ConstKeys.DEFAULT) {

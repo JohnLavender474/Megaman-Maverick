@@ -37,10 +37,9 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodySense
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.isSensing
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.world.body.*
 
 
 class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
@@ -74,7 +73,8 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getTopCenterPoint()
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+            .getPositionPoint(Position.TOP_CENTER)
         body.setTopCenterToPoint(spawn)
         body.physics.gravityOn = false
         fallingIcicleState = FallingIcicleState.STILL
@@ -87,7 +87,8 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
         super.onDestroy()
     }
 
-    override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
+    override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) =
+        explodeAndDie()
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
 
@@ -100,16 +101,16 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
         destroy()
         for (i in 0 until 5) {
             val iceShard = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.ICE_SHARD)!!
-            iceShard.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.INDEX pairTo i))
+            iceShard.spawn(pooledProps(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.INDEX pairTo i))
         }
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         when (fallingIcicleState) {
             FallingIcicleState.STILL -> {
-                if (megaman().body.y < body.getMaxY() &&
-                    megaman().body.getMaxX() > body.x &&
-                    megaman().body.x < body.getMaxX()
+                if (megaman().body.getY() < body.getMaxY() &&
+                    megaman().body.getMaxX() > body.getX() &&
+                    megaman().body.getX() < body.getMaxX()
                 ) fallingIcicleState = FallingIcicleState.SHAKE
             }
 
@@ -131,14 +132,14 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         body.addFixture(bodyFixture)
 
         val projectileFixture =
             Fixture(body, FixtureType.PROJECTILE, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.75f * ConstVals.PPM))
-        projectileFixture.offsetFromBodyCenter.y = -0.125f * ConstVals.PPM
+        projectileFixture.offsetFromBodyAttachment.y = -0.125f * ConstVals.PPM
         body.addFixture(projectileFixture)
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
@@ -161,8 +162,8 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
         sprite.setSize(1.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(body.getTopCenterPoint(), Position.TOP_CENTER)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setPosition(body.getPositionPoint(Position.TOP_CENTER), Position.TOP_CENTER)
         }
         return spritesComponent
     }

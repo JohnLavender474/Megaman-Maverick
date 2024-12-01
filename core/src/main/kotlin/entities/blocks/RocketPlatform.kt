@@ -8,6 +8,7 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -32,13 +33,14 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntitySuppliers
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
+import com.megaman.maverick.game.world.body.getCenter
 
 class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, ISpritesEntity, IMotionEntity,
-    IEventListener, IDirectionRotatable {
+    IEventListener, IDirectional {
 
     companion object {
         private var region: TextureRegion? = null
@@ -47,10 +49,10 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, IS
     }
 
     override val eventKeyMask = objectSetOf<Any>(EventType.BEGIN_ROOM_TRANS, EventType.END_ROOM_TRANS)
-    override var directionRotation: Direction
-        get() = body.cardinalRotation
+    override var direction: Direction
+        get() = body.direction
         set(value) {
-            body.cardinalRotation = value
+            body.direction = value
         }
     override var children = Array<IGameEntity>()
 
@@ -72,9 +74,9 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, IS
         super.onSpawn(spawnProps)
         game.eventsMan.addListener(this)
 
-        directionRotation =
+        direction =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
-        val position = DirectionPositionMapper.getPosition(directionRotation).opposite()
+        val position = DirectionPositionMapper.getPosition(direction).opposite()
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.setSize(WIDTH * ConstVals.PPM, HEIGHT * ConstVals.PPM)
             .positionOnPoint(bounds.getPositionPoint(position), position)
@@ -144,10 +146,10 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, IS
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.hidden = hidden
             sprite.setOriginCenter()
-            sprite.rotation = directionRotation.rotation
+            sprite.rotation = direction.rotation
             sprite.setCenter(body.getCenter())
             val offset = 0.4f * ConstVals.PPM
-            when (directionRotation) {
+            when (direction) {
                 Direction.UP -> sprite.translateY(-offset)
                 Direction.DOWN -> sprite.translateY(offset)
                 Direction.LEFT -> sprite.translateX(offset)

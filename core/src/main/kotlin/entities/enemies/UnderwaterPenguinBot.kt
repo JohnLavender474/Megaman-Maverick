@@ -3,7 +3,6 @@ package com.megaman.maverick.game.entities.enemies
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
@@ -17,12 +16,9 @@ import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
-
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.common.shapes.getCenter
-import com.mega.game.engine.common.shapes.toGameRectangle
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -49,6 +45,8 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
@@ -96,20 +94,24 @@ class UnderwaterPenguinBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAn
 
         underwaterPenguinBotState = UnderwaterPenguinBotState.WAIT
         body.physics.gravityOn = false
-        body.fixtures.forEach { (it.second as Fixture).active = false }
+        body.forEachFixture { it.setActive(false) }
 
-        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
     }
 
     override fun canDamage(damageable: IDamageable) = underwaterPenguinBotState != UnderwaterPenguinBotState.WAIT
 
     private fun startSwim() {
         underwaterPenguinBotState = UnderwaterPenguinBotState.SWIM
+
         body.setCenter(startPosition)
-        facing = if (megaman().body.x < body.x) Facing.LEFT else Facing.RIGHT
+
+        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+
         val speed = SWIM_SPEED * ConstVals.PPM * facing.value
         body.physics.velocity.x = speed
-        body.fixtures.forEach { (it.second as Fixture).active = true }
+
+        body.forEachFixture { it.setActive(true) }
     }
 
     private fun hitNose() {
@@ -128,8 +130,13 @@ class UnderwaterPenguinBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAn
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            if (underwaterPenguinBotState == UnderwaterPenguinBotState.WAIT && megaman().body.overlaps(triggerBox as Rectangle)) startSwim()
-            else if (underwaterPenguinBotState == UnderwaterPenguinBotState.BENT && body.isSensing(BodySense.FEET_ON_GROUND)) explodeAndDie()
+            when {
+                underwaterPenguinBotState == UnderwaterPenguinBotState.WAIT &&
+                    megaman().body.getBounds().overlaps(triggerBox) -> startSwim()
+
+                underwaterPenguinBotState == UnderwaterPenguinBotState.BENT &&
+                    body.isSensing(BodySense.FEET_ON_GROUND) -> explodeAndDie()
+            }
         }
     }
 
@@ -139,7 +146,7 @@ class UnderwaterPenguinBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAn
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBodyBounds() }
+        debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         body.addFixture(bodyFixture)
@@ -158,17 +165,17 @@ class UnderwaterPenguinBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAn
             ) hitNose()
         }
         body.addFixture(noseFixture)
-        noseFixture.rawShape.color = Color.BLUE
-        debugShapes.add { noseFixture.getShape() }
+        noseFixture.drawingColor = Color.BLUE
+        debugShapes.add { noseFixture }
 
         val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyCenter.y = -0.375f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -0.375f * ConstVals.PPM
         body.addFixture(feetFixture)
-        feetFixture.rawShape.color = Color.GREEN
-        debugShapes.add { feetFixture.getShape() }
+        feetFixture.drawingColor = Color.GREEN
+        debugShapes.add { feetFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            noseFixture.offsetFromBodyCenter.x = 0.575f * ConstVals.PPM * facing.value
+            noseFixture.offsetFromBodyAttachment.x = 0.575f * ConstVals.PPM * facing.value
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -180,11 +187,11 @@ class UnderwaterPenguinBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAn
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM, 0.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setFlip(isFacing(Facing.LEFT), false)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setFlip(isFacing(Facing.LEFT), false)
             val position = if (isFacing(Facing.LEFT)) Position.CENTER_LEFT else Position.CENTER_RIGHT
-            _sprite.setPosition(body.getPositionPoint(position), position)
-            _sprite.hidden = damageBlink || underwaterPenguinBotState == UnderwaterPenguinBotState.WAIT
+            sprite.setPosition(body.getPositionPoint(position), position)
+            sprite.hidden = damageBlink || underwaterPenguinBotState == UnderwaterPenguinBotState.WAIT
         }
         return spritesComponent
     }

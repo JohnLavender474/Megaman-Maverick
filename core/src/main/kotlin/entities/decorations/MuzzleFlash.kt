@@ -10,7 +10,6 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.shapes.toGameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.cullables.CullableOnEvent
 import com.mega.game.engine.cullables.CullablesComponent
@@ -31,6 +30,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
 
 class MuzzleFlash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity {
 
@@ -55,7 +55,7 @@ class MuzzleFlash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-        firstSprite!!.setCenter(spawn)
+        defaultSprite.setCenter(spawn)
         cullTimer.reset()
     }
 
@@ -72,7 +72,7 @@ class MuzzleFlash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
 
         val cullOutOfBounds =
-            getGameCameraCullingLogic(game.getGameCamera(), { firstSprite!!.boundingRectangle.toGameRectangle() })
+            getGameCameraCullingLogic(game.getGameCamera(), { defaultSprite.boundingRectangle.toGameRectangle() })
 
         return CullablesComponent(
             objectMapOf(

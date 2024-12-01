@@ -11,8 +11,6 @@ import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.shapes.getCenter
-import com.mega.game.engine.common.shapes.getPosition
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.screens.levels.tiledmap.builders.ITiledMapLayerBuilder
@@ -21,7 +19,9 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.TEXTURE_ASSET_PREFIX
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.drawables.backgrounds.*
-import com.megaman.maverick.game.utils.toProps
+import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.toProps
 
 class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITiledMapLayerBuilder {
 
@@ -41,7 +41,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
         "WindyClouds" pairTo {
             WindyClouds(
                 params.game,
-                it.rectangle.getPosition(),
+                it.rectangle.getPosition(GameObjectPools.fetch(Vector2::class)),
                 it.rectangle.width,
                 it.rectangle.height
             )
@@ -49,13 +49,13 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
         "AnimatedStars" pairTo {
             AnimatedStars(
                 params.game,
-                it.rectangle.getPosition()
+                it.rectangle.getPosition(GameObjectPools.fetch(Vector2::class))
             )
         },
         "ScrollingStars" pairTo {
             ScrollingStars(
                 params.game,
-                it.rectangle.getPosition()
+                it.rectangle.getPosition(GameObjectPools.fetch(Vector2::class))
             )
         },
         "ForestBKG" pairTo {

@@ -13,6 +13,7 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.extensions.toGdxArray
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -37,17 +38,19 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.IDirectionRotatable
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.HazardsFactory
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.world.body.getPositionPoint
 
 class LavaBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity, ISpritesEntity,
-    IAnimatedEntity, IAudioEntity, IHazard, IDirectionRotatable {
+    IAnimatedEntity, IAudioEntity, IHazard, IDirectional {
 
     companion object {
         const val TAG = "LavaBeamer"
@@ -64,13 +67,13 @@ class LavaBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         FIRING
     }
 
-    override var directionRotation: Direction
-        get() = body.cardinalRotation
+    override var direction: Direction
+        get() = body.direction
         set(value) {
-            body.cardinalRotation = value
+            body.direction = value
         }
 
-    private val loop = Loop(LavaBeamerState.values().toGdxArray())
+    private val loop = Loop(LavaBeamerState.entries.toTypedArray().toGdxArray())
     private val timers = objectMapOf(
         LavaBeamerState.IDLE pairTo Timer(IDLE_DUR),
         LavaBeamerState.SWITCHING_ON pairTo Timer(SWITCHING_ON_DUR),
@@ -106,9 +109,9 @@ class LavaBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        directionRotation =
+        direction =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
-        val position = when (directionRotation) {
+        val position = when (direction) {
             Direction.UP -> Position.TOP_CENTER
             Direction.DOWN -> Position.BOTTOM_CENTER
             Direction.LEFT -> Position.CENTER_LEFT
@@ -137,17 +140,17 @@ class LavaBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
     })
 
     private fun fireLava() {
-        val spawn = when (directionRotation) {
-            Direction.UP -> body.getTopCenterPoint()
-            Direction.DOWN -> body.getBottomCenterPoint()
-            Direction.LEFT -> body.getCenterLeftPoint()
-            Direction.RIGHT -> body.getCenterRightPoint()
+        val spawn = when (direction) {
+            Direction.UP -> body.getPositionPoint(Position.TOP_CENTER)
+            Direction.DOWN -> body.getPositionPoint(Position.BOTTOM_CENTER)
+            Direction.LEFT -> body.getPositionPoint(Position.CENTER_LEFT)
+            Direction.RIGHT -> body.getPositionPoint(Position.CENTER_RIGHT)
         }
         val lavaBeam = EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.LAVA_BEAM)!!
         lavaBeam.spawn(
             props(
                 ConstKeys.POSITION pairTo spawn,
-                ConstKeys.DIRECTION pairTo directionRotation,
+                ConstKeys.DIRECTION pairTo direction,
                 ConstKeys.SPEED pairTo FIRE_SPEED * ConstVals.PPM
             )
         )
@@ -164,10 +167,10 @@ class LavaBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
         sprite.setSize(3f * ConstVals.PPM, 2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setOriginCenter()
-            _sprite.rotation = directionRotation.rotation
-            _sprite.setCenter(body.getCenter())
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setOriginCenter()
+            sprite.rotation = direction.rotation
+            sprite.setCenter(body.getCenter())
         }
         return spritesComponent
     }
