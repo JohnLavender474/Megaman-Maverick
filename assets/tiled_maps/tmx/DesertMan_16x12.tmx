@@ -586,7 +586,7 @@
     <property name="fall" type="float" value="-0.5"/>
     <property name="fixture_labels" value="no_projectile_collision"/>
     <property name="min" type="float" value="2"/>
-    <property name="rise" type="float" value="1.5"/>
+    <property name="rise" type="float" value="3"/>
    </properties>
   </object>
   <object id="554" x="11424" y="960" width="448" height="64"/>
@@ -672,10 +672,10 @@
   <object id="788" x="16160" y="384" width="96" height="128"/>
   <object id="791" name="FeetRiseSinkBlock" x="20096" y="768" width="1120" height="32">
    <properties>
-    <property name="fall" type="float" value="-0.25"/>
+    <property name="fall" type="float" value="-0.5"/>
     <property name="fixture_labels" value="no_projectile_collision"/>
     <property name="min" type="float" value="0.5"/>
-    <property name="rise" type="float" value="2"/>
+    <property name="rise" type="float" value="3"/>
    </properties>
   </object>
   <object id="797" x="20704" y="384" width="64" height="576"/>
@@ -1083,10 +1083,10 @@
   <object id="759" name="CactusLauncher" x="16792" y="720" width="16" height="16"/>
   <object id="769" name="PicketJoe" x="4984" y="1200" width="16" height="16"/>
  </objectgroup>
- <objectgroup id="5" name="player">
-  <object id="844" name="0" x="18992" y="640" width="32" height="32"/>
+ <objectgroup id="5" name="temp">
+  <object id="844" name="0" x="20640" y="736" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="4" name="temp">
+ <objectgroup id="4" name="player">
   <object id="24" name="0" x="96" y="1632" width="32" height="32"/>
   <object id="364" name="1" x="2816" y="1568" width="32" height="32"/>
   <object id="365" name="2" x="4032" y="1280" width="32" height="32"/>
