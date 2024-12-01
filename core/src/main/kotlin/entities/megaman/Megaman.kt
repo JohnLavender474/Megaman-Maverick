@@ -121,10 +121,6 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
     var damageFlash = false
     var maverick = false
     var ready = false
-        set(value) {
-            field = value
-            sprites.get("megaman")!!.hidden = !field
-        }
 
     override var direction: Direction
         get() = body.direction
@@ -242,7 +238,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
     internal var applyMovementScalarToBullet = false
     internal val roomTransPauseTimer = Timer(ConstVals.ROOM_TRANS_DELAY_DURATION)
 
-    override fun getEntityType() = EntityType.MEGAMAN
+    internal val spawnHiddenTimer = Timer(MegamanValues.SPAWN_HIDDEN_DUR)
 
     override fun init() {
         GameLogger.debug(TAG, "init")
@@ -295,6 +291,8 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         chargingTimer.reset()
         airDashTimer.reset()
         roomTransPauseTimer.setToEnd()
+
+        spawnHiddenTimer.reset()
 
         putProperty(ConstKeys.ON_TELEPORT_START, {
             standardOnTeleportStart(this)
@@ -481,4 +479,6 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
     }
 
     override fun getBounds() = body.getBounds()
+
+    override fun getEntityType() = EntityType.MEGAMAN
 }

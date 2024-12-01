@@ -82,7 +82,7 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
     val megamanSprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
     megamanSprite.setSize(MEGAMAN_SPRITE_SIZE * ConstVals.PPM)
     spritesComponent.sprites.put("megaman", megamanSprite)
-    spritesComponent.putUpdateFunction("megaman") { _, player ->
+    spritesComponent.putUpdateFunction("megaman") { delta, player ->
         val direction = getSpriteDirection()
         player.setFlip(shouldFlipSpriteX(), shouldFlipSpriteY())
         player.setOriginCenter()
@@ -92,6 +92,7 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
         player.translateX(getSpriteXTranslation() * ConstVals.PPM)
         player.translateY(getSpriteYTranslation() * ConstVals.PPM)
         player.setAlpha(if (damageFlash) 0f else 1f)
+        player.hidden = !ready || !spawnHiddenTimer.isFinished()
     }
 
     val jetpackFlameSprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0), false)

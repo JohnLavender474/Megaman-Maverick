@@ -549,7 +549,6 @@
   <object id="102" x="4480" y="1312" width="32" height="32"/>
   <object id="107" x="5600" y="1248" width="768" height="224"/>
   <object id="371" x="12960" y="768" width="544" height="192"/>
-  <object id="373" x="13792" y="640" width="192" height="320"/>
   <object id="375" x="13984" y="736" width="128" height="32"/>
   <object id="376" x="14336" y="736" width="128" height="32"/>
   <object id="377" x="14112" y="640" width="192" height="32"/>
@@ -637,7 +636,7 @@
   <object id="672" x="13088" y="128" width="64" height="128"/>
   <object id="673" x="13152" y="128" width="64" height="256"/>
   <object id="674" x="13216" y="128" width="64" height="352"/>
-  <object id="678" x="13760" y="640" width="32" height="320"/>
+  <object id="678" x="13760" y="640" width="224" height="320"/>
   <object id="679" x="13408" y="384" width="64" height="224"/>
   <object id="680" x="13504" y="704" width="256" height="256"/>
   <object id="681" x="13984" y="800" width="1184" height="160"/>
@@ -1084,10 +1083,10 @@
   <object id="759" name="CactusLauncher" x="16792" y="720" width="16" height="16"/>
   <object id="769" name="PicketJoe" x="4984" y="1200" width="16" height="16"/>
  </objectgroup>
- <objectgroup id="5" name="temp">
-  <object id="844" name="0" x="20000" y="704" width="32" height="32"/>
+ <objectgroup id="5" name="player">
+  <object id="844" name="0" x="20064" y="704" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="4" name="player">
+ <objectgroup id="4" name="temp">
   <object id="24" name="0" x="96" y="1632" width="32" height="32"/>
   <object id="364" name="1" x="2816" y="1568" width="32" height="32"/>
   <object id="365" name="2" x="4032" y="1280" width="32" height="32"/>

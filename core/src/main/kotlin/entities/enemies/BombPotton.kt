@@ -72,7 +72,8 @@ class BombPotton(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     )
     override lateinit var facing: Facing
 
-    private lateinit var target: Vector2
+    private val target = Vector2()
+
     private var speed = 0f
     private var targetReached = false
     private var launchedBomb = false
@@ -85,10 +86,13 @@ class BombPotton(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         val position = spawnProps.get(ConstKeys.START, RectangleMapObject::class)!!.rectangle.getCenter()
         body.setCenter(position)
-        target = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
+
+        target.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter())
         targetReached = false
+
         speed = 0f
         launchedBomb = false
         facing = if (body.getX() > megaman().body.getX()) Facing.LEFT else Facing.RIGHT
@@ -131,7 +135,7 @@ class BombPotton(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             props(
                 ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER),
                 ConstKeys.OWNER pairTo this,
-                ConstKeys.DIRECTION pairTo Direction.DOWN,
+                ConstKeys.DIRECTION pairTo Direction.UP,
                 ConstKeys.EXPLOSION pairTo SmallMissile.WAVE_EXPLOSION
             )
         )
@@ -148,7 +152,7 @@ class BombPotton(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         }
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBounds() }
+        debugShapes.add { body }
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(
@@ -160,12 +164,12 @@ class BombPotton(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.45f * ConstVals.PPM)
+        sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setCenter(body.getCenter())
-            _sprite.setFlip(isFacing(Facing.RIGHT), false)
-            _sprite.hidden = damageBlink
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setCenter(body.getCenter())
+            sprite.setFlip(isFacing(Facing.RIGHT), false)
+            sprite.hidden = damageBlink
         }
         return spritesComponent
     }

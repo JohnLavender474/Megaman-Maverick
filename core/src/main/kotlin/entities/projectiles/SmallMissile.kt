@@ -35,8 +35,8 @@ import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
 import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
@@ -46,7 +46,7 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
         const val TAG = "SmallMissile"
         const val WAVE_EXPLOSION = "wave_explosion"
         const val DEFAULT_EXPLOSION = "default_explosion"
-        private const val GRAVITY = -0.15f
+        private const val GRAVITY = 0.15f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -73,7 +73,7 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
 
-        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
+        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.DOWN, Direction::class)
 
         val gravityOn = spawnProps.getOrDefault(ConstKeys.GRAVITY_ON, true, Boolean::class)
         body.physics.gravityOn = gravityOn
@@ -81,7 +81,7 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
         val trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2.Zero, Vector2::class)
         body.physics.velocity.set(trajectory)
 
-        val region = regions.get(spawnProps.getOrDefault(ConstKeys.COLOR, "green", String::class))
+        val region = regions.get(spawnProps.getOrDefault(ConstKeys.COLOR, ConstKeys.GREEN, String::class))
         defaultSprite.setRegion(region)
 
         explosionType = spawnProps.getOrDefault(ConstKeys.EXPLOSION, DEFAULT_EXPLOSION, String::class)
@@ -98,19 +98,32 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val left = body.getX() < shieldFixture.getShape().getX()
         body.physics.velocity.x = if (left) -abs(body.physics.velocity.x) else abs(body.physics.velocity.x)
+
         requestToPlaySound(SoundAsset.DINK_SOUND, false)
     }
 
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
-        if (explosionType == DEFAULT_EXPLOSION) {
-            val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
-            explosion.spawn(pooledProps(ConstKeys.OWNER pairTo owner, ConstKeys.POSITION pairTo body.getCenter()))
-            if (overlapsGameCamera()) playSoundNow(SoundAsset.EXPLOSION_2_SOUND, false)
-        } else if (explosionType == WAVE_EXPLOSION) {
-            val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.GREEN_EXPLOSION)!!
-            explosion.spawn(pooledProps(ConstKeys.OWNER pairTo owner, ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER)))
-            if (overlapsGameCamera()) playSoundNow(SoundAsset.BLAST_1_SOUND, false)
+
+        when (explosionType) {
+            DEFAULT_EXPLOSION -> {
+                val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
+                explosion.spawn(pooledProps(ConstKeys.OWNER pairTo owner, ConstKeys.POSITION pairTo body.getCenter()))
+
+                if (overlapsGameCamera()) playSoundNow(SoundAsset.EXPLOSION_2_SOUND, false)
+            }
+
+            WAVE_EXPLOSION -> {
+                val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.GREEN_EXPLOSION)!!
+                explosion.spawn(
+                    pooledProps(
+                        ConstKeys.OWNER pairTo owner,
+                        ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER)
+                    )
+                )
+
+                if (overlapsGameCamera()) playSoundNow(SoundAsset.BLAST_1_SOUND, false)
+            }
         }
     }
 
@@ -126,10 +139,10 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
         body.preProcess.put(ConstKeys.DEFAULT) {
             val gravityVec = GameObjectPools.fetch(Vector2::class)
             when (direction) {
-                Direction.UP -> gravityVec.set(0f, GRAVITY)
-                Direction.DOWN -> gravityVec.set(0f, -GRAVITY)
-                Direction.LEFT -> gravityVec.set(-GRAVITY, 0f)
-                Direction.RIGHT -> gravityVec.set(GRAVITY, 0f)
+                Direction.UP -> gravityVec.set(0f, -GRAVITY)
+                Direction.DOWN -> gravityVec.set(0f, GRAVITY)
+                Direction.LEFT -> gravityVec.set(GRAVITY, 0f)
+                Direction.RIGHT -> gravityVec.set(-GRAVITY, 0f)
             }.scl(ConstVals.PPM.toFloat())
             body.physics.gravity.set(gravityVec)
         }
@@ -137,9 +150,7 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(
-            this,
-            body,
-            BodyFixtureDef.of(FixtureType.BODY, FixtureType.PROJECTILE, FixtureType.DAMAGER)
+            this, body, BodyFixtureDef.of(FixtureType.BODY, FixtureType.PROJECTILE, FixtureType.DAMAGER)
         )
     }
 
@@ -147,10 +158,10 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
         sprite.setSize(0.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setOriginCenter()
-            _sprite.rotation = direction.rotation
-            _sprite.setCenter(body.getCenter())
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setOriginCenter()
+            sprite.rotation = body.physics.velocity.angleDeg() + 270f
+            sprite.setCenter(body.getCenter())
         }
         return spritesComponent
     }

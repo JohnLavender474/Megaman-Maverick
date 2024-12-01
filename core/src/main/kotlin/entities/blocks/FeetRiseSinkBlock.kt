@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.blocks
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.utils.OrderedSet
 import com.mega.game.engine.common.extensions.isAny
 import com.mega.game.engine.common.objects.Properties
@@ -24,8 +25,8 @@ class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {
 
     private var maxY = 0f
     private var minY = 0f
-    private var fallingSpeed = 0f
     private var risingSpeed = 0f
+    private var fallingSpeed = 0f
 
     override fun init() {
         super.init()
@@ -36,13 +37,15 @@ class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {
         super.onSpawn(spawnProps)
 
         val max = abs(spawnProps.getOrDefault(ConstKeys.MAX, 0f, Float::class))
-        maxY = body.getBounds().getMaxY() + (max * ConstVals.PPM)
+        maxY = body.getMaxY() + (max * ConstVals.PPM)
 
         val min = abs(spawnProps.getOrDefault(ConstKeys.MIN, 0f, Float::class))
         minY = body.getY() - (min * ConstVals.PPM)
 
         fallingSpeed = -abs(spawnProps.getOrDefault(ConstKeys.FALL, 0f, Float::class))
         risingSpeed = abs(spawnProps.getOrDefault(ConstKeys.RISE, 0f, Float::class))
+
+        putProperty("${ConstKeys.FEET}_${ConstKeys.SOUND}", false)
     }
 
     private fun shouldListenToFeet(feetFixture: IFixture): Boolean {
@@ -72,6 +75,7 @@ class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {
                 body.getY() < minY -> body.setY(minY)
             }
         }
+        bodyComponent.body.drawingColor = Color.BLUE
         return bodyComponent
     }
 
