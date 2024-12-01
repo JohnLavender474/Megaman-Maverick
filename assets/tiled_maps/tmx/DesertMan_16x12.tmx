@@ -185,7 +185,7 @@
   <object id="83" name="room4" x="3968" y="992" width="7936" height="384"/>
   <object id="112" name="room2" x="2752" y="1376" width="1216" height="384"/>
   <object id="480" name="room9" x="17664" y="480" width="2560" height="384"/>
-  <object id="483" name="boss_room" x="20736" y="480" width="512" height="384">
+  <object id="483" name="boss_room" x="19920" y="392" width="512" height="384">
    <properties>
     <property name="event" value="boss"/>
     <property name="object" type="object" value="794"/>

@@ -1,7 +1,7 @@
 Megaman_v2_BUSTER.png
-size: 96, 672
+size: 432, 192
 format: RGBA8888
-filter: Linear,Linear
+filter: Nearest,Nearest
 repeat: none
 airdash
   rotate: false
@@ -10,114 +10,128 @@ airdash
   orig: 48, 48
   offset: 0, 0
   index: -1
-climb
+beam
   rotate: false
   xy: 48, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+climb
+  rotate: false
+  xy: 144, 96
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 climb_finish
   rotate: false
-  xy: 0, 96
+  xy: 96, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 climb_shoot
   rotate: false
-  xy: 48, 96
+  xy: 144, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 groundslide
   rotate: false
-  xy: 0, 144
+  xy: 192, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 jump
   rotate: false
-  xy: 48, 144
+  xy: 240, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 jump_shoot
   rotate: false
-  xy: 0, 192
+  xy: 288, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 run
   rotate: false
-  xy: 0, 240
+  xy: 192, 96
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 run_shoot
   rotate: false
-  xy: 0, 336
+  xy: 288, 96
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 run_start
   rotate: false
-  xy: 0, 432
+  xy: 336, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 run_start_shoot
   rotate: false
-  xy: 48, 432
+  xy: 384, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 slip
   rotate: false
-  xy: 0, 480
+  xy: 0, 48
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 slip_shoot
   rotate: false
-  xy: 48, 480
+  xy: 48, 48
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
+spawn
+  rotate: false
+  xy: 96, 48
+  size: 336, 48
+  orig: 336, 48
+  offset: 0, 0
+  index: -1
 stand
   rotate: false
-  xy: 0, 528
+  xy: 384, 96
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 stand_shoot
   rotate: false
-  xy: 48, 528
+  xy: 0, 96
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 wallslide
   rotate: false
-  xy: 0, 624
+  xy: 48, 96
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 wallslide_shoot
   rotate: false
-  xy: 48, 624
+  xy: 96, 96
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
