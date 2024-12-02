@@ -37,7 +37,7 @@ import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
@@ -163,7 +163,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable {
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.ASTEROID_EXPLOSION)!!
-        explosion.spawn(pooledProps(ConstKeys.POSITION pairTo body.getCenter()))
+        explosion.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
     }
 
     override fun defineBodyComponent(): BodyComponent {

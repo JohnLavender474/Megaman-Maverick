@@ -185,7 +185,7 @@
   <object id="83" name="room4" x="3968" y="992" width="7936" height="384"/>
   <object id="112" name="room2" x="2752" y="1376" width="1216" height="384"/>
   <object id="480" name="room9" x="17664" y="480" width="2560" height="384"/>
-  <object id="483" name="boss_room" x="19920" y="392" width="512" height="384">
+  <object id="483" name="boss_room" x="20736" y="480" width="512" height="384">
    <properties>
     <property name="event" value="boss"/>
     <property name="object" type="object" value="794"/>
@@ -802,7 +802,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="14" name="specials" visible="0">
+ <objectgroup id="14" name="specials">
   <object id="7" name="QuickSand" x="1600" y="1664" width="64" height="96">
    <properties>
     <property name="spawn_type" value="spawn_now"/>
@@ -1083,10 +1083,10 @@
   <object id="759" name="CactusLauncher" x="16792" y="720" width="16" height="16"/>
   <object id="769" name="PicketJoe" x="4984" y="1200" width="16" height="16"/>
  </objectgroup>
- <objectgroup id="5" name="temp">
+ <objectgroup id="5" name="player">
   <object id="844" name="0" x="20640" y="736" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="4" name="player">
+ <objectgroup id="4" name="temp">
   <object id="24" name="0" x="96" y="1632" width="32" height="32"/>
   <object id="364" name="1" x="2816" y="1568" width="32" height="32"/>
   <object id="365" name="2" x="4032" y="1280" width="32" height="32"/>

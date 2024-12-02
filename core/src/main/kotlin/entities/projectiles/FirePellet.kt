@@ -29,7 +29,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+
 import com.megaman.maverick.game.world.body.*
 
 class FirePellet(game: MegamanMaverickGame) : AbstractProjectile(game) {
@@ -58,7 +58,7 @@ class FirePellet(game: MegamanMaverickGame) : AbstractProjectile(game) {
         destroy()
         if (overlapsGameCamera()) playSoundNow(SoundAsset.ENEMY_DAMAGE_SOUND, false)
         val disintegration = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)!!
-        disintegration.spawn(pooledProps(ConstKeys.POSITION pairTo body.getCenter()))
+        disintegration.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
     }
 
     override fun defineBodyComponent(): BodyComponent {

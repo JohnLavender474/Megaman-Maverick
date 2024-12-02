@@ -56,7 +56,7 @@
 </data>
  </layer>
  <objectgroup id="2" name="game_rooms">
-  <object id="12" name="room1" x="0" y="960" width="928" height="608"/>
+  <object id="12" name="room1" x="32" y="992" width="832" height="512"/>
  </objectgroup>
  <objectgroup id="5" name="blocks">
   <object id="1" x="0" y="960" width="64" height="640"/>
@@ -73,6 +73,6 @@
   <object id="8" name="Ladder" x="768" y="1184" width="32" height="288"/>
  </objectgroup>
  <objectgroup id="4" name="player">
-  <object id="13" name="0" x="128" y="1440" width="32" height="32"/>
+  <object id="13" name="0" x="624" y="1440" width="32" height="32"/>
  </objectgroup>
 </map>

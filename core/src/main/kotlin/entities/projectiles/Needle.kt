@@ -37,7 +37,7 @@ import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
-import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
@@ -124,7 +124,7 @@ class Needle(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntit
 
     fun explode() {
         val flash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.MUZZLE_FLASH)!!
-        flash.spawn(pooledProps(ConstKeys.POSITION pairTo body.getCenter()))
+        flash.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
     }
 
     override fun explodeAndDie(vararg params: Any?) {

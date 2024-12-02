@@ -37,7 +37,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGdxRectangle
 import com.megaman.maverick.game.world.body.*
@@ -98,7 +98,7 @@ class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
                 )
             ) overlap.getCenter() else thisShape.getCenter()
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.MAGMA_EXPLOSION)!!
-        explosion.spawn(pooledProps(ConstKeys.POSITION pairTo spawn))
+        explosion.spawn(props(ConstKeys.POSITION pairTo spawn))
     }
 
     override fun defineBodyComponent(): BodyComponent {

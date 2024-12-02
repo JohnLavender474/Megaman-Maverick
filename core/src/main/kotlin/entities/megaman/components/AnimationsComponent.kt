@@ -4,11 +4,9 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimator
-import com.mega.game.engine.common.extensions.gdxArrayOf
-import com.mega.game.engine.common.extensions.getTextureRegion
-import com.mega.game.engine.common.objects.GamePair
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.orderedMapOf
 import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.drawables.sprites.GameSprite
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.megaman.Megaman
@@ -32,13 +30,15 @@ internal fun Megaman.defineAnimationsComponent(): AnimationsComponent {
     val animations = MegamanAnimations(game).get()
     val megamanAnimator = Animator(megamanAnimKeySupplier, animations)
 
-    val jetpackFlameRegion = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, "JetpackFlame")
+    val decorationsAtlas = game.assMan.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
+
+    val jetpackFlameRegion = decorationsAtlas.findRegion("JetpackFlame")
     val jetpackFlameAnimation = Animation(jetpackFlameRegion, 1, 3, 0.1f, true)
     val jetpackFlameAnimator = Animator(jetpackFlameAnimation)
 
-    val animatorSpritePairs = gdxArrayOf<GamePair<() -> GameSprite, IAnimator>>(
-        { sprites.get("megaman") } pairTo megamanAnimator,
-        { sprites.get("jetpackFlame") } pairTo jetpackFlameAnimator
+    val animators = orderedMapOf<Any, IAnimator>(
+        MEGAMAN_SPRITE_KEY pairTo megamanAnimator,
+        JETPACK_FLAME_SPRITE_KEY pairTo jetpackFlameAnimator
     )
-    return AnimationsComponent(animatorSpritePairs)
+    return AnimationsComponent(animators, sprites)
 }

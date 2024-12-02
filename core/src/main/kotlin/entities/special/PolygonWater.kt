@@ -34,6 +34,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.contracts.IWater
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
@@ -42,7 +43,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 
-class PolygonWater(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity {
+class PolygonWater(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity, IWater {
 
     companion object {
         const val TAG = "PolygonWater"
@@ -58,7 +59,7 @@ class PolygonWater(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     private val matrix = Matrix<GameRectangle>()
     private lateinit var waterFixture: Fixture
 
-    var splashSound = false
+    private var splashSound = false
 
     override fun init() {
         val atlas = game.assMan.getTextureAtlas(TextureAsset.ENVIRONS_1.source)
@@ -91,6 +92,8 @@ class PolygonWater(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         GameLogger.debug(Water.TAG, "onDestroy()")
         super.onDestroy()
     }
+
+    override fun doMakeSplashSound() = splashSound
 
     private fun defineDrawables(cells: Matrix<GameRectangle>) {
         val sprites = OrderedMap<Any, GameSprite>()

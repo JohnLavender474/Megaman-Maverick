@@ -28,6 +28,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.enemies.Wanaan
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
+
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getEntity

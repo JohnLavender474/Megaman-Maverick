@@ -51,7 +51,7 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.*
@@ -141,7 +141,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     private fun dropBomb() {
         val bomb = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.UFO_BOMB)!!
         val spawn = body.getPositionPoint(Position.BOTTOM_CENTER).sub(0f, 0.6f * ConstVals.PPM)
-        bomb.spawn(pooledProps(ConstKeys.POSITION pairTo spawn, ConstKeys.OWNER pairTo this))
+        bomb.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.OWNER pairTo this))
     }
 
     private fun setToHover() {

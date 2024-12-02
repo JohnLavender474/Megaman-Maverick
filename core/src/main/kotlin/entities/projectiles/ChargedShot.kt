@@ -3,15 +3,17 @@ package com.megaman.maverick.game.entities.projectiles
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.extensions.gdxArrayOf
-import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.IFaceable
@@ -41,7 +43,9 @@ import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.factories.EntityFactories
+import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
@@ -51,8 +55,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     companion object {
         const val TAG = "ChargedShot"
         private const val BOUNCE_LIMIT = 3
-        private var fullyChargedRegion: TextureRegion? = null
-        private var halfChargedRegion: TextureRegion? = null
+        private val regions = ObjectMap<String, TextureRegion>()
     }
 
     override var facing = Facing.RIGHT
@@ -61,16 +64,15 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     var fullyCharged = false
         private set
 
-    private lateinit var trajectory: Vector2
+    private val trajectory = Vector2()
     private var bounced = 0
 
     override fun init() {
-        if (fullyChargedRegion == null)
-            fullyChargedRegion =
-                game.assMan.getTextureRegion(TextureAsset.MEGAMAN_CHARGED_SHOT.source, "Shoot")
-        if (halfChargedRegion == null)
-            halfChargedRegion =
-                game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "HalfChargedShot")
+        if (regions.isEmpty) {
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
+            regions.put("full", atlas.findRegion("ChargedShot"))
+            regions.put("half", atlas.findRegion("HalfChargedShot"))
+        }
         super.init()
         addComponent(defineAnimationsComponent())
         addComponent(defineUpdatablesComponent())
@@ -91,7 +93,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         body.setSize(bodyDimension)
         body.fixtures.forEach { ((it.second as Fixture).rawShape as GameRectangle).setSize(bodyDimension) }
 
-        trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
+        trajectory.set(spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!)
 
         facing = when {
             direction.isVertical() == true -> if (trajectory.x > 0f) Facing.RIGHT else Facing.LEFT
@@ -103,6 +105,27 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         body.setCenter(spawn)
 
         bounced = 0
+
+        spawnResidual()
+    }
+
+    private fun spawnResidual() {
+        val position = when (direction) {
+            Direction.UP, Direction.DOWN ->
+                if (isFacing(Facing.LEFT)) Position.CENTER_RIGHT else Position.CENTER_LEFT
+            Direction.LEFT, Direction.RIGHT ->
+                if (isFacing(Facing.LEFT)) Position.BOTTOM_CENTER else Position.TOP_CENTER
+        }
+        val residual = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.CHARGED_SHOT_RESIDUAL)!!
+        residual.spawn(
+            props(
+                ConstKeys.SPAWN pairTo body.getCenter(),
+                ConstKeys.POSITION pairTo position,
+                ConstKeys.DIRECTION pairTo direction,
+                ConstKeys.FACING pairTo facing,
+                ConstKeys.BOOLEAN pairTo fullyCharged
+            )
+        )
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) {
@@ -133,36 +156,36 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         if (direction.isVertical() == true) trajectory.x *= -1f else trajectory.y *= -1f
 
         val deflection = shieldFixture.getOrDefaultProperty(ConstKeys.DIRECTION, Direction.UP, Direction::class)
-        trajectory = when (direction) {
+        when (direction) {
             Direction.UP -> {
                 when (deflection) {
-                    Direction.UP -> Vector2(trajectory.x, 5f * ConstVals.PPM)
-                    Direction.DOWN -> Vector2(trajectory.x, -5f * ConstVals.PPM)
-                    else -> Vector2(trajectory.x, 0f)
+                    Direction.UP -> trajectory.set(trajectory.x, 5f * ConstVals.PPM)
+                    Direction.DOWN -> trajectory.set(trajectory.x, -5f * ConstVals.PPM)
+                    else -> trajectory.set(trajectory.x, 0f)
                 }
             }
 
             Direction.DOWN -> {
                 when (deflection) {
-                    Direction.UP -> Vector2(trajectory.x, -5f * ConstVals.PPM)
-                    Direction.DOWN -> Vector2(trajectory.x, 5f * ConstVals.PPM)
-                    else -> Vector2(trajectory.x, 0f)
+                    Direction.UP -> trajectory.set(trajectory.x, -5f * ConstVals.PPM)
+                    Direction.DOWN -> trajectory.set(trajectory.x, 5f * ConstVals.PPM)
+                    else -> trajectory.set(trajectory.x, 0f)
                 }
             }
 
             Direction.LEFT -> {
                 when (deflection) {
-                    Direction.UP -> Vector2(-5f * ConstVals.PPM, trajectory.y)
-                    Direction.DOWN -> Vector2(5f * ConstVals.PPM, trajectory.y)
-                    else -> Vector2(0f, trajectory.y)
+                    Direction.UP -> trajectory.set(-5f * ConstVals.PPM, trajectory.y)
+                    Direction.DOWN -> trajectory.set(5f * ConstVals.PPM, trajectory.y)
+                    else -> trajectory.set(0f, trajectory.y)
                 }
             }
 
             Direction.RIGHT -> {
                 when (deflection) {
-                    Direction.UP -> Vector2(5f * ConstVals.PPM, trajectory.y)
-                    Direction.DOWN -> Vector2(-5f * ConstVals.PPM, trajectory.y)
-                    else -> Vector2(0f, trajectory.y)
+                    Direction.UP -> trajectory.set(5f * ConstVals.PPM, trajectory.y)
+                    Direction.DOWN -> trajectory.set(-5f * ConstVals.PPM, trajectory.y)
+                    else -> trajectory.set(0f, trajectory.y)
                 }
             }
         }
@@ -174,17 +197,20 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         destroy()
 
         val e = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.CHARGED_SHOT_EXPLOSION)!!
-        val direction =
-            if (abs(trajectory.y) > abs(trajectory.x))
-                (if (trajectory.y > 0f) Direction.UP else Direction.DOWN)
-            else if (trajectory.x > 0f) Direction.RIGHT else Direction.LEFT
-        val props =
-            props(
-                ConstKeys.POSITION pairTo body.getCenter(),
-                ConstKeys.OWNER pairTo owner,
-                ConstKeys.DIRECTION pairTo direction,
-                ConstKeys.BOOLEAN pairTo fullyCharged,
-            )
+
+        val direction = when {
+            abs(trajectory.y) > abs(trajectory.x) -> (if (trajectory.y > 0f) Direction.UP else Direction.DOWN)
+            trajectory.x > 0f -> Direction.RIGHT
+            else -> Direction.LEFT
+        }
+
+        val props = props(
+            ConstKeys.POSITION pairTo body.getCenter(),
+            ConstKeys.OWNER pairTo owner,
+            ConstKeys.DIRECTION pairTo direction,
+            ConstKeys.BOOLEAN pairTo fullyCharged,
+        )
+
         e.spawn(props)
     }
 
@@ -201,13 +227,12 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val chargedAnimation = Animation(fullyChargedRegion!!, 1, 2, 0.05f, true)
-        val halfChargedAnimation = Animation(halfChargedRegion!!, 1, 2, 0.05f, true)
-        val animator =
-            Animator(
-                { if (fullyCharged) "charged" else "half" },
-                objectMapOf("charged" pairTo chargedAnimation, "half" pairTo halfChargedAnimation)
-            )
+        val keySupplier: () -> String = { if (fullyCharged) "full" else "half" }
+        val animations = objectMapOf<String, IAnimation>(
+            "full" pairTo Animation(regions["full"], 2, 1, 0.05f, true),
+            "half" pairTo Animation(regions["half"], 2, 1, 0.05f, true)
+        )
+        val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }
 

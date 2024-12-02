@@ -2,12 +2,14 @@ package com.megaman.maverick.game.entities.explosions
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.gdxArrayOf
-import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -44,9 +46,7 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
         private const val FULLY_CHARGED_DURATION = 0.6f
         private const val HALF_CHARGED_DURATION = 0.3f
         private const val SOUND_INTERVAL = 0.15f
-
-        private var fullyChargedRegion: TextureRegion? = null
-        private var halfChargedRegion: TextureRegion? = null
+        private val regions = ObjectMap<String, TextureRegion>()
     }
 
     var fullyCharged = false
@@ -58,10 +58,11 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
     private lateinit var direction: Direction
 
     override fun init() {
-        if (fullyChargedRegion == null) fullyChargedRegion =
-            game.assMan.getTextureRegion(TextureAsset.MEGAMAN_CHARGED_SHOT.source, "Collide")
-        if (halfChargedRegion == null) halfChargedRegion =
-            game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "HalfChargedShot")
+        if (regions.isEmpty) {
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.EXPLOSIONS_1.source)
+            regions.put("full", atlas.findRegion("ChargedShotExplosion"))
+            regions.put("half", atlas.findRegion("HalfChargedShotExplosion"))
+        }
         super.init()
         addComponent(defineAnimationsComponent())
         addComponent(defineUpdatablesComponent())
@@ -105,7 +106,7 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.physics.applyFrictionX = false
-body.physics.applyFrictionY = false
+        body.physics.applyFrictionY = false
 
         damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
         body.addFixture(damagerFixture)
@@ -133,12 +134,12 @@ body.physics.applyFrictionY = false
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val chargedAnimation = Animation(fullyChargedRegion!!, 1, 3, .05f, true)
-        val halfChargedAnimation = Animation(halfChargedRegion!!, 1, 3, .05f, true)
-        val animator = Animator(
-            { if (fullyCharged) "charged" else "halfCharged" },
-            objectMapOf("charged" pairTo chargedAnimation, "halfCharged" pairTo halfChargedAnimation)
+        val keySupplier: () -> String = { if (fullyCharged) "full" else "half" }
+        val animations = objectMapOf<String, IAnimation>(
+            "full" pairTo Animation(regions["full"], 3, 1, 0.05f, true),
+            "half" pairTo Animation(regions["half"], 3, 1, 0.05f, true)
         )
+        val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }
 }

@@ -51,6 +51,7 @@ import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.projectiles.ReactManProjectile
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.GameObjectPools
+
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass

@@ -14,6 +14,7 @@ import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
+import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameLine
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.IGameShape2D
@@ -47,10 +48,8 @@ import com.megaman.maverick.game.entities.megaman.extensions.removeFeetBlock
 import com.megaman.maverick.game.entities.sensors.Gate
 import com.megaman.maverick.game.entities.sensors.Gate.GateState
 import com.megaman.maverick.game.entities.special.Cart
-import com.megaman.maverick.game.entities.special.PolygonWater
-import com.megaman.maverick.game.entities.special.Water
 import com.megaman.maverick.game.utils.GameObjectPools
-import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+
 import com.megaman.maverick.game.utils.VelocityAlterator
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -233,7 +232,8 @@ class MegaContactListener(
                 entity.addFeetBlock(block)
                 entity.aButtonTask = AButtonTask.JUMP
 
-                val blockMakesSound = block.getOrDefaultProperty("${ConstKeys.FEET}_${ConstKeys.SOUND}", true, Boolean::class)
+                val blockMakesSound =
+                    block.getOrDefaultProperty("${ConstKeys.FEET}_${ConstKeys.SOUND}", true, Boolean::class)
                 if (blockMakesSound && entity.canMakeLandSound) {
                     entity.requestToPlaySound(SoundAsset.MEGAMAN_LAND_SOUND, false)
                     entity.canMakeLandSound = false
@@ -272,9 +272,17 @@ class MegaContactListener(
             if (takeFriction)
                 body.physics.frictionOnSelf.set(SAND_FRICTION, SAND_FRICTION).scl(ConstVals.PPM.toFloat())
 
-            val splash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SPLASH)!!
-            val position = feetFixture.getShape().getBoundingRectangle().getPositionPoint(Position.BOTTOM_CENTER)
-            splash.spawn(pooledProps(ConstKeys.POSITION pairTo position, ConstKeys.TYPE pairTo SplashType.SAND))
+            if (game.megaman.ready) {
+                val splash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SPLASH)!!
+                val position = feetFixture.getShape().getBoundingRectangle().getPositionPoint(Position.BOTTOM_CENTER)
+                splash.spawn(
+                    props(
+                        ConstKeys.POSITION pairTo position,
+                        ConstKeys.TYPE pairTo SplashType.SAND,
+                        ConstKeys.SOUND pairTo true
+                    )
+                )
+            }
         }
 
         // bouncer, feet or head or side
@@ -332,21 +340,18 @@ class MegaContactListener(
             val body = listenerFixture.getBody()
             body.setBodySense(BodySense.IN_WATER, true)
 
-            val water = waterFixture.getEntity()
-            if (water is Water && listenerFixture.hasHitByWaterByReceiver()) listenerFixture.getHitByWater(water)
+            val water = waterFixture.getEntity() as IWater
+            if (listenerFixture.hasHitByWaterByReceiver()) listenerFixture.getHitByWater(water)
+            Splash.splashOnWaterSurface(listenerFixture.getBody().getBounds(), waterFixture.getBody().getBounds())
+            if (water.doMakeSplashSound()) game.audioMan.playSound(SoundAsset.SPLASH_SOUND, false)
 
             val entity = listenerFixture.getEntity()
             if (entity is Megaman) {
-                Splash.splashOnWaterSurface(listenerFixture.getBody().getBounds(), waterFixture.getBody().getBounds())
-
                 if (!entity.body.isSensing(BodySense.FEET_ON_GROUND) &&
                     !entity.isBehaviorActive(BehaviorType.WALL_SLIDING)
                 ) entity.aButtonTask = AButtonTask.SWIM
 
                 entity.gravityScalar = MegamanValues.WATER_GRAVITY_SCALAR
-
-                if ((water is Water && water.splashSound) || (water is PolygonWater && water.splashSound))
-                    game.audioMan.playSound(SoundAsset.SPLASH_SOUND, false)
             }
         }
 
@@ -533,7 +538,13 @@ class MegaContactListener(
                     )
 
                     val position = overlap.getCenter()
-                    splash.spawn(pooledProps(ConstKeys.POSITION pairTo position, ConstKeys.TYPE pairTo SplashType.SAND))
+                    splash.spawn(
+                        props(
+                            ConstKeys.TYPE pairTo SplashType.SAND,
+                            ConstKeys.POSITION pairTo position,
+                            ConstKeys.SOUND pairTo true
+                        )
+                    )
                 }
 
                 FixtureType.PROJECTILE -> {
@@ -765,9 +776,8 @@ class MegaContactListener(
             body.setBodySense(BodySense.IN_WATER, true)
 
             val entity = listenerFixture.getEntity()
-            if (entity is Megaman && !entity.body.isSensing(BodySense.FEET_ON_GROUND) && !entity.isBehaviorActive(
-                    BehaviorType.WALL_SLIDING
-                )
+            if (entity is Megaman && !entity.body.isSensing(BodySense.FEET_ON_GROUND) &&
+                !entity.isBehaviorActive(BehaviorType.WALL_SLIDING)
             ) entity.aButtonTask = AButtonTask.SWIM
         }
 

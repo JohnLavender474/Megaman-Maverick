@@ -45,8 +45,7 @@ class SimpleSelectLevelScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, 
                 Level.WILY_STAGE_3
             ),
             TEST pairTo gdxArrayOf(
-                Level.TEST1,
-                Level.TEST2
+                Level.TEST8
             )
         )
         private const val LEVEL_X = 8f

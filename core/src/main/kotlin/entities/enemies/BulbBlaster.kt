@@ -42,7 +42,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
-import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodyFixtureDef
@@ -93,7 +93,7 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IEventListen
         body.setCenter(spawn)
 
         lightSource = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.LIGHT_SOURCE)!! as LightSource
-        lightSource!!.spawn(pooledProps(ConstKeys.BOUNDS pairTo body))
+        lightSource!!.spawn(props(ConstKeys.BOUNDS pairTo body))
 
         light = spawnProps.getOrDefault(ConstKeys.LIGHT, false, Boolean::class)
         keys = spawnProps.get(ConstKeys.KEYS, String::class)!!

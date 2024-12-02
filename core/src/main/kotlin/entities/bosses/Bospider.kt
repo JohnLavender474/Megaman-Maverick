@@ -63,6 +63,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.extensions.toProps
+import com.megaman.maverick.game.utils.misc.HealthFillType
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
@@ -115,7 +116,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
     private val debugTimer = Timer(DEBUG_TIMER)
 
     private lateinit var openEyeTimer: Timer
-    private lateinit var spawn: Vector2
+    private val spawn = Vector2()
 
     private var firstSpawn = true
 
@@ -135,7 +136,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
 
-        spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
+        spawn.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter())
         body.setCenter(spawn.x, spawn.y + START_POINT_OFFSET * ConstVals.PPM)
 
         paths.clear()
@@ -156,6 +157,8 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
         initTimer.reset()
     }
+
+    override fun getHealthFillType() = HealthFillType.ALL_AT_ONCE
 
     override fun isReady(delta: Float) = initTimer.isFinished()
 

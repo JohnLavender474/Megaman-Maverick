@@ -225,7 +225,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             GameLogger.debug(MEGAMAN_AIR_DASH_BEHAVIOR_TAG, "init()")
             body.physics.gravityOn = false
             aButtonTask = AButtonTask.JUMP
-            requestToPlaySound(SoundAsset.BRUSH_SOUND, false)
 
             if (direction.isVertical()) impulse.y = 0f else impulse.x = 0f
 
@@ -239,6 +238,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             lastFacing = facing
             putProperty(MegamanKeys.DIRECTION_ON_AIR_DASH, direction)
+
+            // requestToPlaySound(SoundAsset.WHOOSH_SOUND, false)
         }
 
         override fun act(delta: Float) {
@@ -310,7 +311,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             directionOnInit = direction
 
-            requestToPlaySound(SoundAsset.BRUSH_SOUND, false)
+            // requestToPlaySound(SoundAsset.WHOOSH_SOUND, false)
         }
 
         override fun act(delta: Float) {

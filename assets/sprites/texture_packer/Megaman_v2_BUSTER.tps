@@ -176,8 +176,10 @@
             <key type="filename">../frames/Megaman_v2/airdash.png</key>
             <key type="filename">../frames/Megaman_v2/beam.png</key>
             <key type="filename">../frames/Megaman_v2/climb_finish.png</key>
-            <key type="filename">../frames/Megaman_v2/climb_shoot.png</key>
+            <key type="filename">../frames/Megaman_v2/climb_still.png</key>
+            <key type="filename">../frames/Megaman_v2/climb_still_shoot.png</key>
             <key type="filename">../frames/Megaman_v2/groundslide.png</key>
+            <key type="filename">../frames/Megaman_v2/groundslide_shoot.png</key>
             <key type="filename">../frames/Megaman_v2/jump.png</key>
             <key type="filename">../frames/Megaman_v2/jump_shoot.png</key>
             <key type="filename">../frames/Megaman_v2/run_start.png</key>
@@ -185,6 +187,8 @@
             <key type="filename">../frames/Megaman_v2/slip.png</key>
             <key type="filename">../frames/Megaman_v2/slip_shoot.png</key>
             <key type="filename">../frames/Megaman_v2/stand_shoot.png</key>
+            <key type="filename">../frames/Megaman_v2/swim.png</key>
+            <key type="filename">../frames/Megaman_v2/swim_shoot.png</key>
             <key type="filename">../frames/Megaman_v2/wallslide.png</key>
             <key type="filename">../frames/Megaman_v2/wallslide_shoot.png</key>
             <struct type="IndividualSpriteSettings">
@@ -201,8 +205,41 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Megaman_v2/airdash_charge_full.png</key>
+            <key type="filename">../frames/Megaman_v2/airdash_charge_half.png</key>
+            <key type="filename">../frames/Megaman_v2/climb_finish_charge_half.png</key>
+            <key type="filename">../frames/Megaman_v2/climb_still_charge_half.png</key>
+            <key type="filename">../frames/Megaman_v2/damaged.png</key>
+            <key type="filename">../frames/Megaman_v2/groundslide_charge_half.png</key>
+            <key type="filename">../frames/Megaman_v2/jump_charge_half.png</key>
+            <key type="filename">../frames/Megaman_v2/slip_charge_half.png</key>
+            <key type="filename">../frames/Megaman_v2/stand_charge_half.png</key>
+            <key type="filename">../frames/Megaman_v2/swim_charge_half.png</key>
+            <key type="filename">../frames/Megaman_v2/wallslide_charge_half.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,36,24,72</rect>
+                <key>scale9Paddings</key>
+                <rect>12,36,24,72</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Megaman_v2/climb.png</key>
+            <key type="filename">../frames/Megaman_v2/climb_finish_charge_full.png</key>
+            <key type="filename">../frames/Megaman_v2/climb_still_charge_full.png</key>
+            <key type="filename">../frames/Megaman_v2/groundslide_charge_full.png</key>
+            <key type="filename">../frames/Megaman_v2/jump_charge_full.png</key>
+            <key type="filename">../frames/Megaman_v2/slip_charge_full.png</key>
             <key type="filename">../frames/Megaman_v2/stand.png</key>
+            <key type="filename">../frames/Megaman_v2/stand_charge_full.png</key>
+            <key type="filename">../frames/Megaman_v2/swim_charge_full.png</key>
+            <key type="filename">../frames/Megaman_v2/wallslide_charge_full.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -217,7 +254,9 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Megaman_v2/climb_charge_full.png</key>
             <key type="filename">../frames/Megaman_v2/run.png</key>
+            <key type="filename">../frames/Megaman_v2/run_charge_half.png</key>
             <key type="filename">../frames/Megaman_v2/run_shoot.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -230,6 +269,36 @@
                 <rect>24,24,48,48</rect>
                 <key>scale9Paddings</key>
                 <rect>24,24,48,48</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Megaman_v2/climb_charge_half.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>24,36,48,72</rect>
+                <key>scale9Paddings</key>
+                <rect>24,36,48,72</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Megaman_v2/run_charge_full.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>48,24,96,48</rect>
+                <key>scale9Paddings</key>
+                <rect>48,24,96,48</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

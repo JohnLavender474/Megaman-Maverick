@@ -24,6 +24,8 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOSION_ORB_SPEED
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.misc.HealthFillType
+
 import com.megaman.maverick.game.world.body.getCenter
 
 abstract class AbstractBoss(
@@ -172,10 +174,17 @@ abstract class AbstractBoss(
         return pointsComponent
     }
 
+    protected open fun getHealthFillType() = HealthFillType.BIT_BY_BIT
+
     protected abstract fun isReady(delta: Float): Boolean
 
     protected open fun onReady() {
-        val event = Event(EventType.BOSS_READY, props(ConstKeys.BOSS pairTo this))
+        val event = Event(
+            EventType.BOSS_READY, props(
+                ConstKeys.BOSS pairTo this,
+                ConstKeys.HEALTH_FILL_TYPE pairTo getHealthFillType()
+            )
+        )
         game.eventsMan.submitEvent(event)
 
         betweenReadyAndEndBossSpawnEvent = true

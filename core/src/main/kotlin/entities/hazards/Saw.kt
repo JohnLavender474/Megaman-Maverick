@@ -65,10 +65,6 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
 
     override lateinit var facing: Facing
 
-    override fun getTag() = TAG
-
-    override fun getEntityType() = EntityType.HAZARD
-
     override fun init() {
         if (sawRegion == null || ringRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
@@ -100,11 +96,9 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
     private fun setToPendulum(bounds: GameRectangle, spawnProps: Properties) {
         val length = spawnProps.getOrDefault(ConstKeys.LENGTH, LENGTH, Float::class)
         val gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, PENDULUM_GRAVITY, Float::class)
-        val pendulum = Pendulum(length * ConstVals.PPM, gravity * ConstVals.PPM, bounds.getCenter(), 1 / 60f)
+        val pendulum = Pendulum(length * ConstVals.PPM, gravity * ConstVals.PPM, bounds.getCenter(false), 1 / 60f)
         putMotionDefinition(
-            ConstKeys.PENDULUM, MotionDefinition(motion = pendulum, function = { value, _ ->
-                body.setCenter(value)
-            })
+            ConstKeys.PENDULUM, MotionDefinition(motion = pendulum, function = { value, _ -> body.setCenter(value) })
         )
 
         for (i in 0..RING_COUNT) putUpdateFunction("ring_$i") { _, sprite ->
@@ -142,7 +136,8 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
         val length = spawnProps.getOrDefault(ConstKeys.LENGTH, LENGTH, Float::class)
         val startRotation = spawnProps.getOrDefault(ConstKeys.ROTATION, 0f, Float::class)
         val speed = spawnProps.getOrDefault(ConstKeys.SPEED, ROTATION_SPEED, Float::class)
-        val rotation = RotatingLine(bounds.getCenter(), length * ConstVals.PPM, speed * ConstVals.PPM, startRotation)
+        val rotation =
+            RotatingLine(bounds.getCenter(false), length * ConstVals.PPM, speed * ConstVals.PPM, startRotation)
         putMotionDefinition(
             ConstKeys.ROTATION, MotionDefinition(motion = rotation, function = { value, _ -> body.setCenter(value) })
         )
@@ -184,7 +179,8 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
 
         val trajectory = Trajectory(trajectoryDefinition, ConstVals.PPM)
         putMotionDefinition(
-            ConstKeys.TRAJECTORY, MotionDefinition(motion = trajectory,
+            ConstKeys.TRAJECTORY, MotionDefinition(
+                motion = trajectory,
                 function = { value, _ -> body.setCenter(value) },
                 onReset = { body.setCenter(spawn) })
         )
@@ -235,4 +231,8 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
         animationsComponent.putAnimator("saw", sprites["saw"], animator)
         return animationsComponent
     }
+
+    override fun getTag() = TAG
+
+    override fun getEntityType() = EntityType.HAZARD
 }

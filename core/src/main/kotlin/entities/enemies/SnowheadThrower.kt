@@ -45,7 +45,7 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
@@ -110,7 +110,7 @@ class SnowheadThrower(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
 
     override fun explode(explosionProps: Properties?) {
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SNOWBALL_EXPLOSION)!!
-        explosion.spawn(pooledProps(ConstKeys.POSITION pairTo body.getCenter()))
+        explosion.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
     }
 
     private fun throwHead() {

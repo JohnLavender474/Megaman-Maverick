@@ -33,13 +33,14 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.contracts.IWater
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 
-class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity {
+class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity, IWater {
 
     companion object {
         const val TAG = "Water"
@@ -55,9 +56,7 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         private const val WATER_ALPHA = 0.2f
     }
 
-    var splashSound = true
-
-    override fun getEntityType() = EntityType.SPECIAL
+    private var splashSound = true
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -96,6 +95,8 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         super.onDestroy()
         GameLogger.debug(TAG, "onDestroy()")
     }
+
+    override fun doMakeSplashSound() = splashSound
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
@@ -149,4 +150,8 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         addComponent(SpritesComponent(sprites))
         addComponent(AnimationsComponent(animators, sprites))
     }
+
+    override fun getEntityType() = EntityType.SPECIAL
+
+    override fun getTag() = TAG
 }

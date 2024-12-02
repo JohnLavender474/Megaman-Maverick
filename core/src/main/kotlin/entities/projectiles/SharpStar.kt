@@ -9,6 +9,7 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
+import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -30,7 +31,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
@@ -67,7 +68,7 @@ class SharpStar(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         destroy()
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.STAR_EXPLOSION)!!
-        explosion.spawn(pooledProps(ConstKeys.POSITION pairTo body.getCenter()))
+        explosion.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->

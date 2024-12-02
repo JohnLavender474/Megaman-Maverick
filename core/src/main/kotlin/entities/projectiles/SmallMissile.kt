@@ -10,6 +10,7 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
+import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -36,7 +37,7 @@ import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.utils.GameObjectPools
-import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
@@ -108,7 +109,7 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
         when (explosionType) {
             DEFAULT_EXPLOSION -> {
                 val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
-                explosion.spawn(pooledProps(ConstKeys.OWNER pairTo owner, ConstKeys.POSITION pairTo body.getCenter()))
+                explosion.spawn(props(ConstKeys.OWNER pairTo owner, ConstKeys.POSITION pairTo body.getCenter()))
 
                 if (overlapsGameCamera()) playSoundNow(SoundAsset.EXPLOSION_2_SOUND, false)
             }
@@ -116,7 +117,7 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
             WAVE_EXPLOSION -> {
                 val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.GREEN_EXPLOSION)!!
                 explosion.spawn(
-                    pooledProps(
+                    props(
                         ConstKeys.OWNER pairTo owner,
                         ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER)
                     )

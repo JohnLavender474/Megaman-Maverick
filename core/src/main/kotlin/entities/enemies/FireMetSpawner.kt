@@ -43,7 +43,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getCenter
@@ -109,7 +109,7 @@ class FireMetSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParentE
 
     private fun spawnFireMet() {
         val fireMet = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.FIRE_MET)!!
-        fireMet.spawn(pooledProps(ConstKeys.POSITION pairTo body.getCenter()))
+        fireMet.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
         children.add(fireMet)
     }
 

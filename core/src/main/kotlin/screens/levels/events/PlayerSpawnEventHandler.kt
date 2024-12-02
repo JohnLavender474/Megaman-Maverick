@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.interfaces.Initializable
 import com.mega.game.engine.common.interfaces.Resettable
@@ -132,7 +133,6 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
         else if (!beamTransitionTimer.isFinished()) beamTrans(delta)
 
         blinkTimer.update(delta)
-
         if (blinkTimer.isFinished()) {
             blinkReady = !blinkReady
             blinkTimer.reset()
@@ -167,6 +167,7 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
         beamTransitionTimer.update(delta)
         beamLandAnimation.update(delta)
         beamSprite.setRegion(beamLandAnimation.getCurrentRegion())
+        beamSprite.setFlip(megaman.isFacing(Facing.LEFT), false)
 
         if (beamTransitionTimer.isJustFinished()) {
             GameLogger.debug(TAG, "beamTrans(): beam transition timer just finished")

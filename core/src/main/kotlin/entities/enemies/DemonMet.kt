@@ -52,7 +52,7 @@ import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.GameObjectPools
-import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
@@ -152,7 +152,7 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
     private fun explode() {
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.MAGMA_EXPLOSION)!!
-        explosion.spawn(pooledProps(ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo body.getCenter()))
+        explosion.spawn(props(ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo body.getCenter()))
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
