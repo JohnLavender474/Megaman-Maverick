@@ -158,8 +158,6 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         initTimer.reset()
     }
 
-    override fun getHealthFillType() = HealthFillType.ALL_AT_ONCE
-
     override fun isReady(delta: Float) = initTimer.isFinished()
 
     override fun onReady() {

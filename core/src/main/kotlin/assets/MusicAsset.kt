@@ -6,7 +6,7 @@ import com.badlogic.gdx.utils.Array
 const val MUSIC_ASSET_PREFIX = "music/"
 
 enum class MusicAsset(src: String) : IAsset {
-    MMX6_SIGMA("MMX6_Sigma.mp3"),
+    MMX6_SIGMA_2_BATTLE_MUSIC("MMX6_Sigma.mp3"),
     MM6_WILY_BATTLE_MUSIC("MM6_WilyBattle.mp3"),
     MM8_FROST_MAN_MUSIC("MM8_FrostMan.mp3"),
     MM8_FROST_MAN_ALT_MUSIC("MM8_FrostMan_Alt.mp3"),

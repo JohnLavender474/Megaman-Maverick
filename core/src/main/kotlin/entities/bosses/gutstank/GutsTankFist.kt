@@ -96,7 +96,7 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
     private val launchDelayTimer = Timer(LAUNCH_DELAY)
     private val returnDelayTimer = Timer(RETURN_DELAY)
 
-    private lateinit var target: Vector2
+    private val target = Vector2()
 
     private val attachment: Vector2
         get() = (parent as GutsTank).body.getCenter().add(FIST_OFFSET_X * ConstVals.PPM, FIST_OFFSET_Y * ConstVals.PPM)
@@ -172,7 +172,7 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
                         return@add
                     }
                     if (launchDelayTimer.isJustFinished()) {
-                        target = game.megaman.body.getPositionPoint(Position.CENTER_LEFT)
+                        target.set(megaman().body.getPositionPoint(Position.CENTER_LEFT))
                         requestToPlaySound(SoundAsset.BURST_SOUND, false)
                     }
 
@@ -251,16 +251,16 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(2.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.hidden = damageBlink
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.hidden = damageBlink
             val position = when (fistState) {
                 GutsTankFistState.ATTACHED, GutsTankFistState.LAUNCHED -> Position.CENTER_LEFT
 
                 GutsTankFistState.RETURNING -> Position.CENTER_RIGHT
             }
             val bodyPosition = body.getPositionPoint(position)
-            _sprite.setPosition(bodyPosition, position)
-            _sprite.setFlip(isFacing(Facing.LEFT), false)
+            sprite.setPosition(bodyPosition, position)
+            sprite.setFlip(isFacing(Facing.LEFT), false)
         }
         return spritesComponent
     }

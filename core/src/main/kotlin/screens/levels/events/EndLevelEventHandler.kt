@@ -20,6 +20,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_SPRITE_SIZE
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.body.getCenter
 
@@ -65,7 +66,7 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
             val atlas = game.assMan.getTextureAtlas(TextureAsset.MEGAMAN_V2_BUSTER.source)
             beamRegion = atlas.findRegion(ConstKeys.BEAM)
             beamSprite = GameSprite(beamRegion)
-            beamSprite.setSize(1.5f * ConstVals.PPM)
+            beamSprite.setSize(MEGAMAN_SPRITE_SIZE * ConstVals.PPM)
 
             beamTransAnim = Animation(atlas.findRegion(ConstKeys.SPAWN), 1, 7, 0.05f, false).reversed()
         }

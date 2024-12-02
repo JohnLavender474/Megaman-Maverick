@@ -103,8 +103,6 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
     private var runningAllowed = false
     private var runSpeed = RUN_SPEED
 
-    override fun getTag() = TAG
-
     override fun init() {
         super.init()
         if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
@@ -126,7 +124,9 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
         runningAllowed = spawnProps.getOrDefault(RUNNING_ALLOWED, true, Boolean::class)
         runOnly = spawnProps.getOrDefault(RUN_ONLY, false, Boolean::class)
         runSpeed = spawnProps.getOrDefault(ConstKeys.SPEED, RUN_SPEED, Float::class)
+
         type = spawnProps.getOrDefault(ConstKeys.TYPE, "", String::class)
+
         val right = spawnProps.getOrDefault(ConstKeys.RIGHT, megaman().body.getX() > body.getX(), Boolean::class)
         facing = if (right) Facing.RIGHT else Facing.LEFT
 
@@ -253,10 +253,10 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
             val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) GRAVITY_ON_GROUND else GRAVITY_IN_AIR
             val gravityVec = GameObjectPools.fetch(Vector2::class)
             when (direction) {
-                Direction.UP -> gravityVec.set(0f, gravity)
-                Direction.DOWN -> gravityVec.set(0f, -gravity)
-                Direction.LEFT -> gravityVec.set(-gravity, 0f)
-                Direction.RIGHT -> gravityVec.set(gravity, 0f)
+                Direction.UP -> gravityVec.set(0f, -gravity)
+                Direction.DOWN -> gravityVec.set(0f, gravity)
+                Direction.LEFT -> gravityVec.set(gravity, 0f)
+                Direction.RIGHT -> gravityVec.set(-gravity, 0f)
             }.scl(ConstVals.PPM.toFloat())
             body.physics.gravity.set(gravityVec)
 
@@ -276,12 +276,12 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
         sprite.setSize(1.65f * ConstVals.PPM)
 
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.hidden = damageBlink
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.hidden = damageBlink
 
             val flipX = facing == Facing.LEFT
             val flipY = direction == Direction.DOWN
-            _sprite.setFlip(flipX, flipY)
+            sprite.setFlip(flipX, flipY)
 
             val rotation = when (direction) {
                 Direction.UP, Direction.DOWN -> 0f
@@ -290,7 +290,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
                 Direction.RIGHT -> 270f
             }
             sprite.setOriginCenter()
-            _sprite.rotation = rotation
+            sprite.rotation = rotation
 
             val position = when (direction) {
                 Direction.UP -> Position.BOTTOM_CENTER
@@ -299,7 +299,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
                 Direction.RIGHT -> Position.CENTER_LEFT
             }
             val bodyPosition = body.getPositionPoint(position)
-            _sprite.setPosition(bodyPosition, position)
+            sprite.setPosition(bodyPosition, position)
         }
 
         return spritesComponent
@@ -327,4 +327,6 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
         )
         return AnimationsComponent(this, animator)
     }
+
+    override fun getTag() = TAG
 }
