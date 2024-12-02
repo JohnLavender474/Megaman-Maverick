@@ -39,6 +39,7 @@ import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
@@ -114,6 +115,9 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
         private var laughingRegion: TextureRegion? = null
         private var mouthOpenRegion: TextureRegion? = null
         private var mouthClosedRegion: TextureRegion? = null
+
+        private val FIXTURE_LABELS = objectSetOf(FixtureLabel.NO_PROJECTILE_COLLISION)
+        private val FIXTURES = gdxArrayOf(GamePair(FixtureType.SHIELD, props()))
     }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -145,16 +149,18 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
     private val laughing: Boolean
         get() = !laughTimer.isFinished()
     private val metSpawn: Vector2
-        get() = Vector2(
+        get() = GameObjectPools.fetch(Vector2::class).set(
             body.getCenter().x - 1.25f * ConstVals.PPM,
             tankBlock!!.body.getMaxY() + 0.75f * ConstVals.PPM
         )
 
-    private lateinit var frontPoint: Vector2
-    private lateinit var backPoint: Vector2
-    private lateinit var tankBlockOffset: Vector2
+    private val frontPoint = Vector2()
+    private val backPoint = Vector2()
+    private val tankBlockOffset = Vector2()
+
+    private val killerWall = GameRectangle()
+
     private lateinit var moveState: GutsTankMoveState
-    private lateinit var killerWall: GameRectangle
     private lateinit var blastAngles: OrderedSet<Float>
 
     private var attackState: GutsTankAttackState? = null
@@ -184,36 +190,40 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
         body.setSize(BODY_WIDTH * ConstVals.PPM, BODY_HEIGHT * ConstVals.PPM)
         body.setBottomLeftToPoint(spawn)
 
-        killerWall = spawnProps.get(KILLER_WALL, RectangleMapObject::class)!!.rectangle.toGameRectangle()
+        killerWall.set(spawnProps.get(KILLER_WALL, RectangleMapObject::class)!!.rectangle.toGameRectangle())
 
         tankBlock = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.STANDARD)!! as Block
-        val tankBlockBounds =
-            GameRectangle(spawn.x, spawn.y, BODY_WIDTH * ConstVals.PPM, TANK_BLOCK_HEIGHT * ConstVals.PPM)
+        val tankBlockBounds = GameObjectPools.fetch(GameRectangle::class)
+            .set(spawn.x, spawn.y, BODY_WIDTH * ConstVals.PPM, TANK_BLOCK_HEIGHT * ConstVals.PPM)
         tankBlock!!.spawn(
             props(
                 ConstKeys.CULL_OUT_OF_BOUNDS pairTo false,
                 ConstKeys.BOUNDS pairTo tankBlockBounds,
-                ConstKeys.FIXTURE_LABELS pairTo objectSetOf(FixtureLabel.NO_PROJECTILE_COLLISION),
-                ConstKeys.FIXTURES pairTo gdxArrayOf(GamePair(FixtureType.SHIELD, props()))
+                ConstKeys.FIXTURE_LABELS pairTo FIXTURE_LABELS,
+                ConstKeys.FIXTURES pairTo FIXTURES
             )
         )
-        tankBlockOffset = tankBlockBounds.getCenter().sub(body.getCenter())
+        tankBlockOffset.set(tankBlockBounds.getCenter().sub(body.getCenter()))
 
         fist = GutsTankFist(game)
         fist!!.spawn(props(ConstKeys.PARENT pairTo this))
 
-        frontPoint = spawnProps.get(
-            ConstKeys.FRONT,
-            RectangleMapObject::class
-        )!!.rectangle.getPosition(GameObjectPools.fetch(Vector2::class))
-        backPoint = spawnProps.get(
-            ConstKeys.BACK,
-            RectangleMapObject::class
-        )!!.rectangle.getPosition(GameObjectPools.fetch(Vector2::class))
+        frontPoint.set(
+            spawnProps.get(
+                ConstKeys.FRONT,
+                RectangleMapObject::class
+            )!!.rectangle.getPosition(GameObjectPools.fetch(Vector2::class))
+        )
+        backPoint.set(
+            spawnProps.get(
+                ConstKeys.BACK,
+                RectangleMapObject::class
+            )!!.rectangle.getPosition(GameObjectPools.fetch(Vector2::class))
+        )
 
         heliMetTargets.clear()
-        val fly1Target = spawnProps.get(FLY1, RectangleMapObject::class)!!.rectangle.getCenter()
-        val fly2Target = spawnProps.get(FLY2, RectangleMapObject::class)!!.rectangle.getCenter()
+        val fly1Target = spawnProps.get(FLY1, RectangleMapObject::class)!!.rectangle.getCenter(false)
+        val fly2Target = spawnProps.get(FLY2, RectangleMapObject::class)!!.rectangle.getCenter(false)
         heliMetTargets.addAll(fly1Target, fly2Target)
 
         moveState = GutsTankMoveState.MOVE
@@ -238,7 +248,14 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
         heliMetsLaunched = 0
     }
 
-    override fun isReady(delta: Float) = true // TODO
+    override fun playMusicOnSpawn() = false
+
+    override fun isReady(delta: Float) = megaman().body.isSensing(BodySense.FEET_ON_GROUND)
+
+    override fun onReady() {
+        super.onReady()
+        game.audioMan.playMusic(MusicAsset.MMX6_SIGMA_2_BATTLE_MUSIC, false)
+    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -292,8 +309,10 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
             val runningMetIter = runningMets.iterator()
             while (runningMetIter.hasNext()) {
                 val met = runningMetIter.next()
-                if (met.dead) runningMetIter.remove()
-                else if (met.body.getMaxX() <= killerWall.getMaxX()) met.destroy()
+                when {
+                    met.dead -> runningMetIter.remove()
+                    met.body.getMaxX() <= killerWall.getMaxX() -> met.destroy()
+                }
             }
 
             val heliMetIter = heliMets.iterator()
@@ -346,27 +365,33 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                     bulletChunkDelayTimer.update(delta)
                     if (bulletChunkDelayTimer.isFinished()) {
                         requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
+
                         val bullet = EntityFactories.fetch(EntityType.PROJECTILE, Bullet.TAG)!!
                         val spawn = body.getCenter().add(-1.65f * ConstVals.PPM, 1.85f * ConstVals.PPM)
-                        val trajectory = MegaUtilMethods.calculateJumpImpulse(
+                        val impulse = MegaUtilMethods.calculateJumpImpulse(
                             spawn,
                             megaman().body.getCenter(),
                             CHUNKED_BULLET_VELOCITY_Y * ConstVals.PPM
                         )
+                        val gravity =
+                            GameObjectPools.fetch(Vector2::class).set(0f, CHUNKED_BULLET_GRAVITY * ConstVals.PPM)
                         bullet.spawn(
                             props(
                                 ConstKeys.OWNER pairTo this,
                                 ConstKeys.POSITION pairTo spawn,
-                                ConstKeys.TRAJECTORY pairTo trajectory,
-                                ConstKeys.GRAVITY pairTo Vector2(0f, CHUNKED_BULLET_GRAVITY * ConstVals.PPM),
+                                ConstKeys.IMPULSE pairTo impulse,
+                                ConstKeys.GRAVITY pairTo gravity,
                                 ConstKeys.CULL_OUT_OF_BOUNDS pairTo false,
                                 ConstKeys.ON_DAMAGE_INFLICTED_TO pairTo { damageable: IDamageable ->
                                     if (damageable is Megaman) laugh()
                                 }
                             )
                         )
+
                         bulletsChunked++
+
                         bulletChunkDelayTimer.reset()
+
                         if (bulletsChunked >= BULLETS_TO_CHUNK) finishAttack(attackState!!)
                     }
                 }
@@ -408,6 +433,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                         runningMetDelayTimer.update(delta)
                         if (runningMetDelayTimer.isFinished()) {
                             requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
+
                             val runningMet = EntityFactories.fetch(EntityType.ENEMY, Met.TAG)!! as Met
                             runningMet.spawn(
                                 props(
@@ -422,7 +448,9 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                                 )
                             )
                             runningMets.add(runningMet)
+
                             runningMetsLaunched++
+
                             runningMetDelayTimer.reset()
                         }
                     }
@@ -523,7 +551,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
         val damagerFixture2 = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(2.5f * ConstVals.PPM))
         damagerFixture2.offsetFromBodyAttachment.y = ConstVals.PPM.toFloat()
         body.addFixture(damagerFixture2)
-        debugShapes.add { damagerFixture2}
+        debugShapes.add { damagerFixture2 }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 

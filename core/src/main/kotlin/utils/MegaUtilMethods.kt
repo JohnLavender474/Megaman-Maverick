@@ -1,18 +1,10 @@
 package com.megaman.maverick.game.utils
 
 import com.badlogic.gdx.math.Vector2
-import com.mega.game.engine.common.objects.GamePair
-import com.mega.game.engine.common.objects.Properties
 import com.megaman.maverick.game.ConstVals
 import kotlin.math.roundToInt
 
 object MegaUtilMethods {
-
-    fun pooledProps(vararg entries: GamePair<Any, Any?>): Properties {
-        val props = GameObjectPools.fetch(Properties::class)
-        entries.forEach { props.put(it.first, it.second) }
-        return props
-    }
 
     fun getSmallFontSize() = (ConstVals.PPM / 3f).roundToInt()
 

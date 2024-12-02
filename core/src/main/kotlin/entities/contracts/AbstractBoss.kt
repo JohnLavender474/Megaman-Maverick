@@ -83,7 +83,7 @@ abstract class AbstractBoss(
 
         orbs = spawnProps.getOrDefault(ConstKeys.ORB, true, Boolean::class)
 
-        if (!mini) {
+        if (playMusicOnSpawn()) {
             val musicStr =
                 spawnProps.getOrDefault(ConstKeys.MUSIC, MusicAsset.MMX6_BOSS_FIGHT_MUSIC.name, String::class)
             val music = MusicAsset.valueOf(musicStr.uppercase())
@@ -173,6 +173,8 @@ abstract class AbstractBoss(
         }
         return pointsComponent
     }
+
+    protected open fun playMusicOnSpawn() = !mini
 
     protected open fun getHealthFillType() = HealthFillType.BIT_BY_BIT
 
